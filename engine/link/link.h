@@ -571,6 +571,8 @@ class REGINA_API Link : public Packet {
             /**< The HOMFLY polynomial of the link, as a polynomial in
                  \a alpha and \a z.  This property will be known if and
                  only if \a homflyLM_ is known. */
+        mutable Property<Laurent2<Integer>, StoreManagedPtr> khovanovQ_;
+            /**< The Khovanov homology of the link over the rationals. */
         mutable Property<Laurent<Integer>, StoreManagedPtr> bracket_;
             /**< The Kauffman bracket polynomial of the link diagram. */
 
@@ -665,6 +667,32 @@ class REGINA_API Link : public Packet {
          * for homflyAZVarY for further details.
          */
         static const char* homflyVarY;
+
+        /**
+         * The name of the first variable used in the Khovanov homology,
+         * as returned by khovanov().  This is provided to help with
+         * pretty-printing Khovanov invariants for human consumption.
+         *
+         * Since khovanov() returns a Laurent polynomial in \a q and \a t,
+         * this string just contains the single character \a q.
+         *
+         * To pretty-print Khovanov homology for human consumption, you can call
+         * <tt>Laurent2::str(Link::khovanovVarX, Link::khovanovVarY)</tt>.
+         */
+        static const char* khovanovVarX;
+
+        /**
+         * The name of the second variable used in the Khovanov homology,
+         * as returned by khovanov().  This is provided to help with
+         * pretty-printing Khovanov invariants for human consumption.
+         *
+         * Since khovanov() returns a Laurent polynomial in \a q and \a t,
+         * this string just contains the single character \a t.
+         *
+         * To pretty-print Khovanov homology for human consumption, you can call
+         * <tt>Laurent2::str(Link::khovanovVarX, Link::khovanovVarY)</tt>.
+         */
+        static const char* khovanovVarY;
 
     public:
         /**
@@ -2003,6 +2031,62 @@ class REGINA_API Link : public Packet {
          * @return \c true if and only if this property is already known.
          */
         bool knowsHomfly() const;
+
+        /**
+         * Returns a description of the Khovanov homology of this link,
+         * computed over the rationals.
+         *
+         * This routine returns a Laurent polynomial in the two variables
+         * \a q and \a t (which are represented by \a x and \a y
+         * respectively in the class Laurent2).
+         *
+         * We follow the conventions described in Dror Bar-Natan,
+         * "On Khovanov's categorifiction of the Jones polynomial",
+         * Algebraic & Geometric Topology 2 (2002), 337-370.  In particular,
+         * the polynomial that is returned is a sum of terms of the form
+         * <tt>p_i(q) t^i</tt>, where <tt>p_i(q)</tt> is a Laurent polynomial
+         * in the single variable \a q describing the graded dimension of the
+         * <i>i</i>th homology group.
+         *
+         * You can recover the Jones polynomial from the Khovanov homology
+         * by substituting <tt>q = -x</tt> and <tt>t = -1</tt> into this
+         * polynomial.
+         *
+         * If this is the empty link, then this routine will return the zero
+         * polynomial.
+         *
+         * To pretty-print this polynomial for human consumption, you can call
+         * <tt>Laurent2::str(Link::khovanovVarX, Link::khovanovVarY)</tt>.
+         *
+         * Bear in mind that each time the link changes, all of its
+         * polynomials will be deleted.  Thus the reference that is
+         * returned from this routine should not be kept for later use.
+         * Instead, khovanov() should be called again; this will be
+         * instantaneous if the Khovanov polynomial has already been calculated.
+         *
+         * \warning The current implementation of this routine has
+         * exponential time \e and space complexity.
+         *
+         * \warning If there are too many crossings and/or components for the
+         * algorithm to handle, then this routine will return the zero
+         * polynomial.  Currently this happens when the total number of
+         * crossings plus components exceeds 29 (the maximum \a n that can be
+         * passed to binomMedium()).  The intention is for this constraint to
+         * be removed when Regina switches to a more sophisticated algorithm.
+         *
+         * @return a description of the Khovanov homology over the rationals.
+         */
+        const Laurent2<Integer>& khovanov() const;
+        /**
+         * Is the Khovanov homology of this link already known?
+         * See khovanov() for further details.
+         *
+         * If this property is already known, future calls to khovanov()
+         * will all be very fast (simply returning the precalculated values).
+         *
+         * @return \c true if and only if this property is already known.
+         */
+        bool knowsKhovanov() const;
 
         /**
          * Returns a nice tree decomposition of the planar 4-valent
@@ -3636,6 +3720,10 @@ inline bool Link::knowsHomfly() const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
     return homflyAZ_.known();
 }
+inline bool Link::knowsKhovanov() const {
+    return khovanovQ_.known();
+}
+
 inline bool Link::r2(Crossing* crossing, bool check, bool perform) {
     return r2(StrandRef(crossing, 1), check, perform);
 }
