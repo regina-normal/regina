@@ -1,0 +1,106 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-connections">
+ <refmeta>
+  <refentrytitle>connections</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>connections</refname>
+  <refpurpose>The connections between crossings in a knot/link diagram</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+connections ::= (#PCDATA)</synopsis>
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-connections; element encodes the connections between the
+   different crossings in a knot/link diagram.
+   Recall that knot/link diagrams in &regina; are oriented, and the
+   crossings in a diagram are numbered 0, 1, 2, and so on.
+  </para>
+  <para>
+   If a link diagram has <replaceable>n</replaceable> crossings, then
+   the character data of this &xml; element should be a
+   whitespace-separated list of exactly 2<replaceable>n</replaceable> tokens.
+   These represent the connections from the upper strand of
+   crossing&nbsp;0, then the lower strand of crossing&nbsp;0,
+   then the upper strand of crossing&nbsp;1, then the lower strand of
+   crossing&nbsp;1, and so on.
+   By &ldquo;the connection from&rdquo; some strand of some
+   crossing, we mean the <emphasis>next</emphasis> crossing that you
+   encounter if you traverse the (oriented) link from the original
+   strand/crossing.
+  </para>
+  <para>
+   Each such token encodes either the upper or lower strand of some crossing.
+   It should be in the form
+   <literal>^</literal><replaceable>k</replaceable> to encode the
+   upper strand of crossing number <replaceable>k</replaceable>,
+   or the form <literal>_</literal><replaceable>k</replaceable> to encode the
+   lower strand of crossing number <replaceable>k</replaceable>.
+   Here the symbols <literal>^</literal> and <literal>_</literal> are
+   literal characters, whereas <replaceable>k</replaceable> should be
+   replaced by a crossing number.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>connections</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-link;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>connections</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents the Whitehead link.
+  </para>
+  <programlisting>
+&lt;crossings size=&quot;5&quot;&gt;
+- - + + -
+&lt;/crossings&gt;
+&lt;connections&gt;
+_1 ^1
+_2 ^4
+_4 ^3
+_0 ^2
+_3 ^0
+&lt;/connections&gt;
+&lt;components size=&quot;2&quot;&gt;
+^0 _0
+&lt;/components&gt;
+  </programlisting>
+ </refsect1>
+</refentry>

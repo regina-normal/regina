@@ -1,0 +1,111 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-packet-link">
+ <refmeta>
+  <refentrytitle>packet (link)</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>packet (link)</refname>
+  <refpurpose>A knot/link packet</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+packet ::= (&xml-crossings;, &xml-connections;, &xml-components;,
+            &xml-tag;*, &xml-packet;*)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      See the general &xml-packet; element documentation.
+     </entry></row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A <emphasis>knot/link</emphasis>
+   packet stores the diagram of an oriented link in 3-dimensional space.
+  </para>
+  <para>
+   The number of crossings in the diagram and the signs of these
+   crossings are stored in the child &xml-crossings; element,
+   and the connections between these crossings are stored in the child
+   &xml-connections; element.
+   The child &xml-components; element stores a starting point for each
+   component of the link.
+  </para>
+  <para>
+   The roles played by the child &xml-tag; and &xml-packet; elements are
+   described in the general &xml-packet; element documentation.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>packet</sgmltag> for
+    a knot/link packet:
+    <simplelist type="inline">
+     <member>&xml-packet;</member>
+     <member>&xml-reginadata;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    The following elements occur in <sgmltag>packet</sgmltag> for
+    a knot/link packet:
+    <simplelist type="inline">
+     <member>&xml-components;</member>
+     <member>&xml-connections;</member>
+     <member>&xml-crossings;</member>
+     <member>&xml-packet;</member>
+     <member>&xml-tag;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents the Whitehead link.
+  </para>
+  <programlisting>
+&lt;packet label=&quot;Whitehead link&quot; type=&quot;Link&quot; typeid=&quot;17&quot; parent=&quot;&quot;&gt;
+&lt;crossings size=&quot;5&quot;&gt;
+- - + + -
+&lt;/crossings&gt;
+&lt;connections&gt;
+_1 ^1
+_2 ^4
+_4 ^3
+_0 ^2
+_3 ^0
+&lt;/connections&gt;
+&lt;components size=&quot;2&quot;&gt;
+^0 _0
+&lt;/components&gt;
+&lt;/packet&gt;
+  </programlisting>
+ </refsect1>
+</refentry>
