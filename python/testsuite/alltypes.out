@@ -1854,6 +1854,9 @@ Equality type : BY_REFERENCE
 SurfaceFilterProperties : class
 Equality type : BY_REFERENCE
 
+Tangle : class
+Equality type : BY_REFERENCE
+
 Tetrahedron10 : typedef ->  Face10_3
 
 Tetrahedron11 : typedef ->  Face11_3
