@@ -188,8 +188,7 @@
  <sect2 id="features-dim4">
   <title>4-Manifold Triangulations</title>
   <para>
-   Since version&nbsp;5.0, &regina; now offers rich support for
-   triangulated 4-manifolds.
+   &regina; also offers rich support for triangulated 4-manifolds.
   </para>
   <para>
    You can create 4-manifold triangulations using similar methods to
@@ -235,13 +234,38 @@
   </para>
  </sect2>
 
+ <sect2 id="features-links">
+  <title>Knots and Links</title>
+  <para>
+   Since version&nbsp;5.2, &regina; now offers
+   native support for knots and links.
+  </para>
+  <para>
+   You can create knots and links from Gauss or Dowker-Thistlethwaite codes,
+   or by construction of ready-made examples.
+  </para>
+  <para>
+   &regina; computes several link invariants including the
+   Jones and HOMFLY-PT polynomials, allows you to build and study the
+   underlying 4-valent graph and its tree decompositions, offers tools
+   for isomorphism testing and isomorphism signatures, and allows you to
+   build the knot/link complement as a 3-manifold triangulation.
+  </para>
+  <para>
+   To manipulate knots and links, you can edit individual crossings,
+   perform Reidemeister moves, or run more sophisticated simplification
+   tools.
+  </para>
+ </sect2>
+
  <sect2 id="features-census">
   <title>Census Creation and Lookup</title>
   <para>
    &regina; can be used to form censuses of all triangulations
    that satisfy various constraints, through the command-line tool
    <link linkend="man-tricensus"><command>tricensus</command></link>.
-   Census enumeration is currently available in dimensions 2, 3 and 4.
+   Census enumeration is currently available for triangulations
+   in dimensions 2, 3 and 4.
   </para>
   <para>
    The census algorithms are heavily optimised; see

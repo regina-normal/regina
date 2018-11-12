@@ -7,9 +7,9 @@
   highly optimised toolkit with a focus on normal surface theory,
   angle structures, and the combinatorial structures of triangulations,
   and it now performs many high-level topological algorithms for 3-manifolds.
-  Since version&nbsp;5.0, &regina; also offers a rich toolkit for
-  triangulated 4-manifolds, plus basic combinatorial support for
-  manifolds of dimension 5&ndash;15.
+  &regina; also offers rich toolkits for knots and links and
+  triangulated 4-manifolds, and offers more basic combinatorial support
+  for manifolds of dimension 5&ndash;15.
   For more on these and its many other features, see the
   <link linkend="featureset">full feature set</link>
   later in this introduction.
