@@ -314,7 +314,20 @@ MACRO_LOG_FEATURE(JANSSON_FOUND
   "http://www.digip.org/jansson/"
   TRUE)
 
-FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python)
+IF (DISABLE_PYTHON)
+  MESSAGE (STATUS "Searching for Boost with no python component")
+  FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams)
+ELSE (DISABLE_PYTHON)
+  MESSAGE (STATUS "Searching for Boost using python27 component")
+  FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python27)
+  IF (Boost_FOUND)
+    SET (Boost_PYTHON_LIBRARY ${Boost_PYTHON27_LIBRARY})
+  ELSE (Boost_FOUND)
+    MESSAGE (STATUS "Searching for Boost using python component")
+    FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python)
+  ENDIF (Boost_FOUND)
+ENDIF (DISABLE_PYTHON)
+
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
   "Boost (>= 1.55)"
