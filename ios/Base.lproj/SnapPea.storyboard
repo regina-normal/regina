@@ -173,7 +173,15 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="J5d-Wf-Nvv" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4265" y="5979"/>
+            <point key="canvasLocation" x="3332.03125" y="3503.3203125"/>
+        </scene>
+        <!--textPopover-->
+        <scene sceneID="qNb-fG-Z8V">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="textPopover" storyboardName="Main" referencedIdentifier="textPopover" id="wrt-7K-SU9" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="2UV-KE-FMH" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3692" y="3339"/>
         </scene>
         <!--Gluings-->
         <scene sceneID="Q7i-JM-JZt">

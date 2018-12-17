@@ -231,6 +231,7 @@
 - (void)embedViewer:(NSString*)viewerID
 {
     UIViewController* from = self.contents;
+    // Note: all relevant viewerIDs either live on, or have references on, the main storyboard.
     UIViewController* to = [self.storyboard instantiateViewControllerWithIdentifier:viewerID];
     self.contents = to;
 

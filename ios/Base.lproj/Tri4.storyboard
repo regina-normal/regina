@@ -2396,7 +2396,15 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="w9Z-PZ-4v3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="11406" y="6128"/>
+            <point key="canvasLocation" x="8910.9375" y="3590.6249999999995"/>
+        </scene>
+        <!--textPopover-->
+        <scene sceneID="j2P-O2-Zq6">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="textPopover" storyboardName="Main" referencedIdentifier="textPopover" id="fCW-Vg-qPC" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="JNs-4k-McE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="9080" y="3847"/>
         </scene>
     </scenes>
     <resources>

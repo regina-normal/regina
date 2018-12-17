@@ -52,6 +52,8 @@
     id page;
     self.pages = [NSMutableArray array];
     for (id i in storyboardIDs) {
+        // Here we require that each tab lives on the same storyboard as the
+        // enclosing packet creator.
         page = [self.storyboard instantiateViewControllerWithIdentifier:i];
         if (! page)
             NSLog(@"No view controller for storyboard ID: %@", i);

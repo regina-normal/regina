@@ -165,7 +165,15 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DvY-PL-T4W" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="10097" y="3660"/>
+            <point key="canvasLocation" x="7888.28125" y="2144.53125"/>
+        </scene>
+        <!--textPopover-->
+        <scene sceneID="Hwe-a9-DKk">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="textPopover" storyboardName="Main" referencedIdentifier="textPopover" id="W6J-TR-ETU" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="rCh-Df-hpm" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="7778" y="2516"/>
         </scene>
         <!--New Tri2 Surface Page-->
         <scene sceneID="t9M-ia-tWq">

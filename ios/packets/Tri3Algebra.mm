@@ -453,6 +453,7 @@
 
         [detail addAttributes:@{NSFontAttributeName: cell.detailTextLabel.font} range:NSMakeRange(0, detail.length)];
 
+        // All triangulation storyboards contain a reference to the TextPopover controller.
         TextPopover* c = [self.storyboard instantiateViewControllerWithIdentifier:@"textPopover"];
         c.text = detail;
         UIPopoverController* detailPopover = [[UIPopoverController alloc] initWithContentViewController:c];

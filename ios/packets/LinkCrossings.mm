@@ -297,6 +297,7 @@ static NSString* unknotText = @"Unknot, no crossings";
 }
 
 - (IBAction)reidemeister:(id)sender {
+    // Note: LinkMoves lives on the same storyboard as LinkCrossings.
     UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"linkMoves"];
     static_cast<LinkMoves*>(sheet).packet = self.packet;
     [self presentViewController:sheet animated:YES completion:nil];

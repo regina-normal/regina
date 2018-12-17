@@ -1544,7 +1544,63 @@
                 <viewControllerPlaceholder storyboardIdentifier="viewTri4" storyboardName="Tri4" referencedIdentifier="viewTri4" id="1EL-Jm-5eB" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="U1j-wl-TG3" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3401" y="-2168"/>
+            <point key="canvasLocation" x="2657.03125" y="-1270.3125"/>
+        </scene>
+        <!--newTri2-->
+        <scene sceneID="z26-2q-Ufw">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="newTri2" storyboardName="Tri2" referencedIdentifier="newTri2" id="LeT-kV-1rS" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="5TK-Rr-SGU" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2809" y="-1320"/>
+        </scene>
+        <!--newTri3-->
+        <scene sceneID="26e-Uc-YZs">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="newTri3" storyboardName="Tri3" referencedIdentifier="newTri3" id="wdv-0L-Sap" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fyC-bm-BAX" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2809" y="-1295"/>
+        </scene>
+        <!--newTri4-->
+        <scene sceneID="CcC-sE-NcR">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="newTri4" storyboardName="Tri4" referencedIdentifier="newTri4" id="dnf-QO-Ixt" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="opo-1W-1yl" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2809" y="-1270"/>
+        </scene>
+        <!--newSnapPea-->
+        <scene sceneID="P1w-1R-d2A">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="newSnapPea" storyboardName="SnapPea" referencedIdentifier="newSnapPea" id="pkj-gE-wGW" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="21R-KE-owE" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2817" y="-1247"/>
+        </scene>
+        <!--newSurfaces-->
+        <scene sceneID="qXj-9P-hjk">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="newSurfaces" storyboardName="Surfaces" referencedIdentifier="newSurfaces" id="kSR-sh-s6f" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gDb-UT-ITo" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2817" y="-1221"/>
+        </scene>
+        <!--newHypersurfaces-->
+        <scene sceneID="m07-EE-pCF">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="newHypersurfaces" storyboardName="Hypersurfaces" referencedIdentifier="newHypersurfaces" id="Pl3-Xp-5sl" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Wm4-Sk-m0S" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2827" y="-1198"/>
+        </scene>
+        <!--newLink-->
+        <scene sceneID="KRQ-oB-m6i">
+            <objects>
+                <viewControllerPlaceholder storyboardIdentifier="newLink" storyboardName="Link" referencedIdentifier="newLink" id="cEH-ph-GCY" sceneMemberID="viewController"/>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="y9b-OK-fdk" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2809" y="-1173"/>
         </scene>
         <!--viewSnapPea-->
         <scene sceneID="vIQ-Df-yYc">
