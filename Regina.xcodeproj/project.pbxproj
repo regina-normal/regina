@@ -2181,7 +2181,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
-			script = "~/Qt5.11.2/5.11.2/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}\n";
+			script = "~/Qt5.12.1/5.12.1/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}\n";
 		};
 		05617AD71D9D3CBD00B1E33B /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
