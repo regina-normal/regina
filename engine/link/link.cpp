@@ -512,6 +512,222 @@ void Link::composeWith(const Link& other) {
     clearAllProperties();
 }
 
+Link* Link::parallel(int k) const {
+    // Get the special cases out of the way.
+    if (k == 0 || components_.empty())
+        return new Link;
+    if (k == 1)
+        return new Link(*this);
+    if (crossings_.empty())
+        return new Link(components_.size() * k);
+
+    Link* ans = new Link;
+    Crossing** tmp = new Crossing*[k*k]; // Used to build grids of crossings
+
+    // Crossing i of knot:
+    //
+    // +ve:    |                 -ve:    ^
+    //     --- | --->                --- | --->
+    //         v                         |
+    //
+    // Crossings (k^2 i, ..., k^2 (i+1) - 1) of this tangle:
+    //
+    //  k^2 i       | ... | k^2 (i+1) - k     k^2 i + k-1 ^ ... ^ k^2 (i+1) - 1
+    //          --- | --- | --->                      --- | --- | --->
+    //          ... | ... | ...                       ... | ... | ...
+    //          --- | --- | --->                      --- | --- | --->
+    //  k^2 i + k-1 v ... v k^2 (i+1) - 1     k^2 i       | ... | k^2 (i+1) - k
+
+    // Create the k^2 crossings for each original, and join them
+    // together internally.
+    int i, j;
+    for (Crossing* c : crossings_) {
+        for (i = 0; i < k * k; ++i)
+            ans->crossings_.push_back(tmp[i] = new Crossing(c->sign()));
+
+        for (i = 0; i < k; ++i)
+            for (j = 0; j < k - 1; ++j)
+                Link::join(tmp[k*i + j]->upper(), tmp[k*i + j+1]->upper());
+        for (i = 0; i < k - 1; ++i)
+            for (j = 0; j < k; ++j)
+                Link::join(tmp[k*i + j]->lower(), tmp[k*(i+1) + j]->lower());
+    }
+
+    // Walk around the original knot, and keep track of the left-hand
+    // and right-hand crossings of the new tangle where we (i) enter the
+    // grid configuration, and (ii) leave this configuration.
+
+    StrandRef s;
+    int idx;
+    int enterL, exitL;
+    int enterStrand, exitStrand;
+    int enterDelta, exitDelta;
+    int startL;
+    int startStrand;
+    int startDelta;
+    int writhe;
+    for (const StrandRef& start : components_) {
+        if (! start) {
+            // This component is a 0-crossing unknot.
+            for (i = 0; i < k; ++i)
+                ans->components_.push_back(StrandRef());
+            continue;
+        }
+
+        writhe = 0;
+        s = start;
+        exitL = -1;
+        do {
+            idx = s.crossing()->index();
+            if (s.crossing()->sign() > 0) {
+                if (s.strand() == 1) {
+                    enterL = k*k * (idx+1) - k;
+                    enterDelta = -k;
+                } else {
+                    enterL = k*k * idx;
+                    enterDelta = 1;
+                }
+            } else {
+                if (s.strand() == 1) {
+                    enterL = k*k * idx;
+                    enterDelta = k;
+                } else {
+                    enterL = k*k * idx + k-1;
+                    enterDelta = -1;
+                }
+            }
+            enterStrand = s.strand();
+
+            // Connect the previous grid to this.
+            if (exitL >= 0) {
+                for (i = 0; i < k; ++i)
+                    Link::join(
+                        ans->crossings_[exitL + i * exitDelta]->
+                            strand(exitStrand),
+                        ans->crossings_[enterL + i * enterDelta]->
+                            strand(enterStrand));
+            } else {
+                startL = enterL;
+                startDelta = enterDelta;
+                startStrand = enterStrand;
+            }
+
+            exitL = enterL + (k-1) * (s.strand() == 1 ? 1 : k);
+            exitDelta = enterDelta;
+            exitStrand = enterStrand;
+
+            if (s.strand())
+                writhe += s.crossing()->sign();
+
+            ++s;
+        } while (s != start);
+
+        if (writhe > 0) {
+            // Insert the requisite number of negative twists.
+            for (i = 0; i < writhe * k; ++i) {
+                for (j = 0; j < k - 1; ++j)
+                    ans->crossings_.push_back(tmp[j] = new Crossing(-1));
+
+                for (j = 0; j < k - 2; ++j)
+                    Link::join(tmp[j]->lower(), tmp[j + 1]->lower());
+
+                if (i == 0) {
+                    Link::join(
+                        ans->crossings_[exitL]->strand(exitStrand),
+                        tmp[0]->lower());
+                    for (j = 1; j < k; ++j)
+                        Link::join(
+                            ans->crossings_[exitL + j * exitDelta]->
+                                strand(exitStrand),
+                            tmp[j - 1]->upper());
+                } else {
+                    Link::join(
+                        ans->crossings_[exitL]->upper(), tmp[0]->lower());
+                    for (j = 1; j < k - 1; ++j)
+                        Link::join(
+                            ans->crossings_[exitL + j]->upper(),
+                            tmp[j - 1]->upper());
+                    Link::join(
+                        ans->crossings_[exitL + (k - 2)]->lower(),
+                        tmp[k - 2]->upper());
+                }
+
+                exitL = tmp[0]->index();
+            }
+
+            for (j = 0; j < k - 1; ++j)
+                Link::join(
+                    ans->crossings_[exitL + j]->upper(),
+                    ans->crossings_[startL + j * startDelta]->
+                        strand(startStrand));
+            Link::join(
+                ans->crossings_[exitL + (k - 2)]->lower(),
+                ans->crossings_[startL + (k - 1) * startDelta]->
+                    strand(startStrand));
+        } else if (writhe < 0) {
+            // Insert the requisite number of positive twists.
+            for (i = 0; i < (-writhe) * k; ++i) {
+                for (j = 0; j < k - 1; ++j)
+                    ans->crossings_.push_back(tmp[j] = new Crossing(1));
+
+                for (j = 0; j < k - 2; ++j)
+                    Link::join(tmp[j]->upper(), tmp[j + 1]->upper());
+
+                if (i == 0) {
+                    Link::join(
+                        ans->crossings_[exitL]->strand(exitStrand),
+                        tmp[0]->upper());
+                    for (j = 1; j < k; ++j)
+                        Link::join(
+                            ans->crossings_[exitL + j * exitDelta]->
+                                strand(exitStrand),
+                            tmp[j - 1]->lower());
+                } else {
+                    Link::join(
+                        ans->crossings_[exitL]->lower(), tmp[0]->upper());
+                    for (j = 1; j < k - 1; ++j)
+                        Link::join(
+                            ans->crossings_[exitL + j]->lower(),
+                            tmp[j - 1]->lower());
+                    Link::join(
+                        ans->crossings_[exitL + (k - 2)]->upper(),
+                        tmp[k - 2]->lower());
+                }
+
+                exitL = tmp[0]->index();
+            }
+
+            for (j = 0; j < k - 1; ++j)
+                Link::join(
+                    ans->crossings_[exitL + j]->lower(),
+                    ans->crossings_[startL + j * startDelta]->
+                        strand(startStrand));
+            Link::join(
+                ans->crossings_[exitL + (k - 2)]->upper(),
+                ans->crossings_[startL + (k - 1) * startDelta]->
+                    strand(startStrand));
+        } else {
+            // No extra twists were required.
+            // Just close up the k new parallel link components.
+            for (i = 0; i < k; ++i)
+                Link::join(
+                    ans->crossings_[exitL + i * exitDelta]->
+                        strand(exitStrand),
+                    ans->crossings_[startL + i * startDelta]->
+                        strand(startStrand));
+        }
+
+        // Take note of the k new link components.
+        for (i = 0; i < k; ++i)
+            ans->components_.push_back(
+                ans->crossings_[startL + i * startDelta]->
+                    strand(startStrand));
+    }
+
+    delete[] tmp;
+    return ans;
+}
+
 std::string Link::dumpConstruction() const {
     std::ostringstream out;
 

@@ -224,6 +224,8 @@ void addLink() {
         .def("writhe", &Link::writhe)
         .def("complement", &Link::complement,
             OL_complement()[return_value_policy<to_held_type<>>()])
+        .def("parallel", &Link::parallel,
+            return_value_policy<to_held_type<>>())
         .def("connected", &Link::connected)
         .def("bracket", &Link::bracket,
             OL_bracket()[return_internal_reference<>()])

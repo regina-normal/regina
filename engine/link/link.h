@@ -1765,6 +1765,34 @@ class REGINA_API Link : public Packet {
         Triangulation<3>* complement(bool simplify = true) const;
 
         /**
+         * Returns \a k cables of this link, all parallel to each
+         * other using the canonical Seifert framing.
+         *
+         * This routine creates a new link by:
+         *
+         * - treating each component of this link as a ribbon, using the
+         *   canonical Seifert framing (which is defined algebraically,
+         *   and is independent of the choice of projection);
+         *
+         * - creating \a k parallel copies of the original link,
+         *   following each other side-by-side along these ribbons.
+         *
+         * The linking number of the resulting link will be the original
+         * linking number multiplied by \a k squared.  In particular,
+         * if this is a knot, then the result will have linking number zero.
+         *
+         * This link will not be modified.
+         *
+         * The result will returned as a new link, and it is the
+         * responsibility of the caller of this routine to destroy it.
+         *
+         * @param k the number of parallel copies to create.
+         * This must be non-negative.
+         * @return \a k parallel copies of this link, as a newly-created object.
+         */
+        Link* parallel(int k) const;
+
+        /**
          * Returns the Kauffman bracket polynomial of this link diagram.
          *
          * Note that the bracket polynomial is not an invariant - it is
