@@ -67,6 +67,7 @@ namespace {
 
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_complement, Link::complement,
         0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_parallel, Link::parallel, 1, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r1a, Link::r1, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r1b, Link::r1, 3, 5);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2a, Link::r2, 1, 3);
@@ -153,6 +154,16 @@ namespace {
 }
 
 void addLink() {
+    scope global;
+
+    enum_<regina::Framing>("Framing")
+        .value("FRAMING_SEIFERT", regina::FRAMING_SEIFERT)
+        .value("FRAMING_BLACKBOARD", regina::FRAMING_BLACKBOARD)
+        ;
+
+    global.attr("FRAMING_SEIFERT") = regina::FRAMING_SEIFERT;
+    global.attr("FRAMING_BLACKBOARD") = regina::FRAMING_BLACKBOARD;
+
     class_<StrandRef>("StrandRef", init<>())
         .def(init<Crossing*, int>())
         .def(init<const StrandRef&>())
@@ -225,7 +236,7 @@ void addLink() {
         .def("complement", &Link::complement,
             OL_complement()[return_value_policy<to_held_type<>>()])
         .def("parallel", &Link::parallel,
-            return_value_policy<to_held_type<>>())
+            OL_parallel()[return_value_policy<to_held_type<>>()])
         .def("connected", &Link::connected)
         .def("bracket", &Link::bracket,
             OL_bracket()[return_internal_reference<>()])

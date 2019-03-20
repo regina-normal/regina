@@ -68,6 +68,38 @@ template <typename T> class Laurent2;
 template <int> class Triangulation;
 
 /**
+ * Indicates one of the standard framing of a knot or link.
+ * Here a \e framing refers to a choice of normal vector field along the
+ * knot or link.  Equivalently, a framing refers to a choice of longitude
+ * on the torus bounding each component of the link.
+ */
+enum Framing {
+    /**
+     * Indicates the <i>Seifert framing</i>, which is defined
+     * algebraically and is independent of the knot/link projection.
+     *
+     * For each component of the link, draw a Seifert surface (i.e., an
+     * orientable surface embedded in the 3-sphere that is bounded by the
+     * corresponding knot).  The Seifert framing is the vector field
+     * that points into the corresponding surface.
+     *
+     * Equivalently, for each component of the link, the Seifert framing
+     * chooses the unique longitude for the corresponding knot that is
+     * trivial in the homology of the knot complement.
+     */
+    FRAMING_SEIFERT = 1,
+    /**
+     * Indicates the <i>blackboard framing</i>, which is specific to the
+     * knot/link projection.
+     *
+     * For the blackboard framing, the normal vector field stays within
+     * the projection plane.  Equivalently, the blackboard framing chooses
+     * longitudes whose projections do not intersect the original link diagram.
+     */
+    FRAMING_BLACKBOARD = 2
+};
+
+/**
  * A reference to one of the two strands of a link that pass each other
  * at a crossing.
  *
@@ -1766,20 +1798,15 @@ class REGINA_API Link : public Packet {
 
         /**
          * Returns \a k cables of this link, all parallel to each
-         * other using the canonical Seifert framing.
+         * other using the given framing.
          *
          * This routine creates a new link by:
          *
          * - treating each component of this link as a ribbon, using the
-         *   canonical Seifert framing (which is defined algebraically,
-         *   and is independent of the choice of projection);
+         *   given framing;
          *
          * - creating \a k parallel copies of the original link,
          *   following each other side-by-side along these ribbons.
-         *
-         * The linking number of the resulting link will be the original
-         * linking number multiplied by \a k squared.  In particular,
-         * if this is a knot, then the result will have linking number zero.
          *
          * This link will not be modified.
          *
@@ -1790,7 +1817,7 @@ class REGINA_API Link : public Packet {
          * This must be non-negative.
          * @return \a k parallel copies of this link, as a newly-created object.
          */
-        Link* parallel(int k) const;
+        Link* parallel(int k, Framing framing = FRAMING_SEIFERT) const;
 
         /**
          * Returns the Kauffman bracket polynomial of this link diagram.

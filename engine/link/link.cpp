@@ -512,7 +512,7 @@ void Link::composeWith(const Link& other) {
     clearAllProperties();
 }
 
-Link* Link::parallel(int k) const {
+Link* Link::parallel(int k, Framing framing) const {
     // Get the special cases out of the way.
     if (k == 0 || components_.empty())
         return new Link;
@@ -622,8 +622,18 @@ Link* Link::parallel(int k) const {
             ++s;
         } while (s != start);
 
-        if (writhe > 0) {
-            // Insert the requisite number of negative twists.
+        if (writhe == 0 || framing == FRAMING_BLACKBOARD) {
+            // Close up the k new parallel link components.
+            for (i = 0; i < k; ++i)
+                Link::join(
+                    ans->crossings_[exitL + i * exitDelta]->
+                        strand(exitStrand),
+                    ans->crossings_[startL + i * startDelta]->
+                        strand(startStrand));
+        } else if (writhe > 0) {
+            // We want the Seifert framing, and the writhe is positive.
+            // Insert the requisite number of negative twists
+            // before closing off the k parallel link components.
             for (i = 0; i < writhe * k; ++i) {
                 for (j = 0; j < k - 1; ++j)
                     ans->crossings_.push_back(tmp[j] = new Crossing(-1));
@@ -664,8 +674,10 @@ Link* Link::parallel(int k) const {
                 ans->crossings_[exitL + (k - 2)]->lower(),
                 ans->crossings_[startL + (k - 1) * startDelta]->
                     strand(startStrand));
-        } else if (writhe < 0) {
-            // Insert the requisite number of positive twists.
+        } else {
+            // We want the Seifert framing, and the writhe is negative.
+            // Insert the requisite number of positive twists
+            // before closing off the k parallel link components.
             for (i = 0; i < (-writhe) * k; ++i) {
                 for (j = 0; j < k - 1; ++j)
                     ans->crossings_.push_back(tmp[j] = new Crossing(1));
@@ -706,15 +718,6 @@ Link* Link::parallel(int k) const {
                 ans->crossings_[exitL + (k - 2)]->upper(),
                 ans->crossings_[startL + (k - 1) * startDelta]->
                     strand(startStrand));
-        } else {
-            // No extra twists were required.
-            // Just close up the k new parallel link components.
-            for (i = 0; i < k; ++i)
-                Link::join(
-                    ans->crossings_[exitL + i * exitDelta]->
-                        strand(exitStrand),
-                    ans->crossings_[startL + i * startDelta]->
-                        strand(startStrand));
         }
 
         // Take note of the k new link components.
