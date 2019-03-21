@@ -232,6 +232,7 @@ void addLink() {
         .def("resolve", &Link::resolve)
         .def("composeWith", &Link::composeWith)
         .def("isAlternating", &Link::isAlternating)
+        .def("linking", &Link::linking)
         .def("writhe", &Link::writhe)
         .def("complement", &Link::complement,
             OL_complement()[return_value_policy<to_held_type<>>()])

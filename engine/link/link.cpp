@@ -151,6 +151,44 @@ bool Link::isAlternating() const {
     return true;
 }
 
+long Link::linking() const {
+    if (crossings_.empty())
+        return 0;
+
+    // This algorithm is linear time.
+
+    // Firat sum the signs of all crossings.
+    long ans = 0;
+    for (const Crossing* c : crossings_)
+        ans += c->sign();
+
+    // Now work through each component, and subtract off crossings that
+    // involve that component twice.
+    bool* seen = new bool[crossings_.size()];
+    std::fill(seen, seen + crossings_.size(), false);
+
+    StrandRef s;
+    for (StrandRef start : components_) {
+        s = start;
+
+        do {
+            if (seen[s.crossing()->index()])
+                ans -= s.crossing()->sign();
+            else
+                seen[s.crossing()->index()] = true;
+            ++s;
+        } while (s != start);
+
+        do {
+            seen[s.crossing()->index()] = false;
+            ++s;
+        } while (s != start);
+    }
+    delete[] seen;
+
+    return ans / 2;
+}
+
 void Link::writeTextShort(std::ostream& out) const {
     if (components_.empty())
         out << "empty link";

@@ -1751,10 +1751,24 @@ class REGINA_API Link : public Packet {
         bool isAlternating() const;
 
         /**
+         * Returns the linking number of this link.
+         *
+         * This is an invariant of the link, computed as half the sum of the
+         * signs of all crossings that involve different link components.
+         *
+         * The algorithm to compute linking number is linear time.
+         *
+         * @return the linking number.
+         */
+        long linking() const;
+
+        /**
          * Returns the writhe of this link diagram.
          *
-         * The \e writhe sums the signs of all crossings.  It is
-         * preserved under Reidemeister moves II and III, but not I.
+         * This is \e not an invariant of the link; instead it depends
+         * on the particular link diagram.  It is computed as the sum
+         * of the signs of all crossings.  It is preserved under
+         * Reidemeister moves II and III, but not I.
          *
          * @return the writhe.
          */
