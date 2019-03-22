@@ -169,6 +169,9 @@ long Link::linking() const {
 
     StrandRef s;
     for (StrandRef start : components_) {
+        if (! start)
+            continue;
+
         s = start;
 
         do {
@@ -179,6 +182,7 @@ long Link::linking() const {
             ++s;
         } while (s != start);
 
+        // Reset the seen[] array to all false.
         do {
             seen[s.crossing()->index()] = false;
             ++s;
@@ -603,7 +607,11 @@ Link* Link::parallel(int k, Framing framing) const {
     int startL;
     int startStrand;
     int startDelta;
+
     int writhe;
+    bool* seen = new bool[crossings_.size()];
+    std::fill(seen, seen + crossings_.size(), false);
+
     for (const StrandRef& start : components_) {
         if (! start) {
             // This component is a 0-crossing unknot.
@@ -654,9 +662,17 @@ Link* Link::parallel(int k, Framing framing) const {
             exitDelta = enterDelta;
             exitStrand = enterStrand;
 
-            if (s.strand())
+            if (seen[s.crossing()->index()])
                 writhe += s.crossing()->sign();
+            else
+                seen[s.crossing()->index()] = true;
 
+            ++s;
+        } while (s != start);
+
+        // Reset the seen[] array to all false.
+        do {
+            seen[s.crossing()->index()] = false;
             ++s;
         } while (s != start);
 
@@ -765,6 +781,7 @@ Link* Link::parallel(int k, Framing framing) const {
                     strand(startStrand));
     }
 
+    delete[] seen;
     delete[] tmp;
     return ans;
 }

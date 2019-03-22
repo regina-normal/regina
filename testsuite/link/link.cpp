@@ -60,6 +60,8 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(LinkTest);
 
     CPPUNIT_TEST(components);
+    CPPUNIT_TEST(linking);
+    CPPUNIT_TEST(parallel);
     CPPUNIT_TEST(jones);
     CPPUNIT_TEST(homfly);
     CPPUNIT_TEST(complement);
@@ -242,6 +244,154 @@ class LinkTest : public CppUnit::TestFixture {
             testComponents(trefoil_unknot_overlap, 2);
             testComponents(rht_rht, 1);
             testComponents(rht_lht, 1);
+        }
+
+        void testLinking(const Link* l, long expected) {
+            long ans = l->linking();
+            if (ans != expected) {
+                std::ostringstream msg;
+                msg << l->label() << ": expected lk = " << expected
+                    << ", computed " << ans << " instead.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void linking() {
+            testLinking(empty, 0);
+            testLinking(unknot0, 0);
+            testLinking(unknot1, 0);
+            testLinking(unknot3, 0);
+            testLinking(unknotMonster, 0);
+            testLinking(unknotGordian, 0);
+            testLinking(trefoilLeft, 0);
+            testLinking(trefoilRight, 0);
+            testLinking(figureEight, 0);
+            testLinking(unlink2_0, 0);
+            testLinking(unlink3_0, 0);
+            testLinking(unlink2_r2, 0);
+            testLinking(unlink2_r1r1, 0);
+            testLinking(hopf, 1);
+            testLinking(whitehead, 0);
+            testLinking(borromean, 0);
+            testLinking(trefoil_unknot0, 0);
+            testLinking(trefoil_unknot1, 0);
+            testLinking(trefoil_unknot_overlap, 0);
+            testLinking(rht_rht, 0);
+            testLinking(rht_lht, 0);
+        }
+
+        void testParallel(const Link* l) {
+            long writhe = l->writhe();
+            long linking = l->linking();
+
+            // Compute the sum of writhe and |writhe| for each individual
+            // component.  We do this in quadratic time, so the code is simple
+            // enough to be sure it's right.
+            long writheSame = 0, absWritheSame = 0;
+            for (size_t i = 0; i < l->countComponents(); ++i) {
+                StrandRef start = l->component(i);
+                if (! start)
+                    continue;
+
+                long writhe = 0;
+                StrandRef s = start;
+                do {
+                    StrandRef t = s;
+                    for (++t; t != start; ++t) {
+                        if (t.crossing() == s.crossing()) {
+                            writhe += t.crossing()->sign();
+                            break;
+                        }
+                    }
+                    ++s;
+                } while (s != start);
+
+                writheSame += writhe;
+                absWritheSame += (writhe >= 0 ? writhe : -writhe);
+            }
+
+            Link* p;
+            for (int k = 0; k <= 3; ++k) {
+                p = l->parallel(k, regina::FRAMING_BLACKBOARD);
+                if (p->countComponents() != k * l->countComponents()) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": parallel(" << k << ", blackboard) "
+                        "has the wrong number of components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (p->size() != k * k * l->size()) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": parallel(" << k << ", blackboard) "
+                        "has the wrong number of crossings.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (p->writhe() != k * k * writhe) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": parallel(" << k << ", blackboard) "
+                        "has the wrong writhe.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (p->linking() != k * k * linking +
+                        (k * (k-1) * writheSame) / 2) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": parallel(" << k << ", blackboard) "
+                        "has the wrong linking number.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                delete p;
+
+                p = l->parallel(k, regina::FRAMING_SEIFERT);
+                if (p->countComponents() != k * l->countComponents()) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": parallel(" << k << ", seifert) "
+                        "has the wrong number of components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (p->size() != k * k * l->size() +
+                        k * (k-1) * absWritheSame) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": parallel(" << k << ", seifert) "
+                        "has the wrong number of crossings.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (p->writhe() != k * k * writhe - k * (k-1) * writheSame) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": parallel(" << k << ", seifert) "
+                        "has the wrong writhe.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (p->linking() != k * k * linking) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": parallel(" << k << ", seifert) "
+                        "has the wrong linking number.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                delete p;
+            }
+        }
+
+        void parallel() {
+            testParallel(empty);
+            testParallel(unknot0);
+            testParallel(unknot1);
+            testParallel(unknot3);
+            testParallel(unknotMonster);
+            testParallel(unknotGordian);
+            testParallel(trefoilLeft);
+            testParallel(trefoilRight);
+            testParallel(figureEight);
+            testParallel(unlink2_0);
+            testParallel(unlink3_0);
+            testParallel(unlink2_r2);
+            testParallel(unlink2_r1r1);
+            testParallel(hopf);
+            testParallel(whitehead);
+            testParallel(borromean);
+            testParallel(trefoil_unknot0);
+            testParallel(trefoil_unknot1);
+            testParallel(trefoil_unknot_overlap);
+            testParallel(rht_rht);
+            testParallel(rht_lht);
         }
 
         void testJones(Link* l, const char* expected) {
