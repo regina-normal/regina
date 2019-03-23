@@ -445,10 +445,88 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             delete partial[child->index()];
             partial[child->index()] = nullptr;
         } else {
-            // TODO: Join bag.
+            // Join bag.
             std::cerr << "JOIN" << std::endl;
             child = bag->children();
             sibling = child->sibling();
+
+            partial[index] = new SolnSet;
+
+            const Key *k1, *k2;
+            const Value *v1, *v2;
+            Key *kNew;
+            Value *vNew;
+            size_t strand, loops1, loops2;
+
+            for (auto& soln1 : *(partial[child->index()])) {
+                k1 = soln1.first;
+                v1 = soln1.second;
+                for (auto& soln2 : *(partial[sibling->index()])) {
+                    k2 = soln2.first;
+                    v2 = soln2.second;
+
+                    // Combine the two child keys and values.
+                    kNew = new Key(nStrands);
+                    for (strand = 0; strand < nStrands; ++strand)
+                        if ((*k1)[strand] == -2)
+                            (*kNew)[strand] = (*k2)[strand];
+                        else if ((*k2)[strand] == -2)
+                            (*kNew)[strand] = (*k1)[strand];
+                        else
+                            std::cerr <<
+                                "ERROR: Incompatible keys in join bag"
+                                << std::endl;
+
+                    vNew = new Value(maxLoops + 1);
+                    for (loops = 0; loops <= maxLoops; ++loops) {
+                        (*vNew)[loops] = nullptr;
+
+                        for (loops1 = 0; loops1 <= loops; ++loops1) {
+                            loops2 = loops - loops1;
+
+                            if ((*v1)[loops1] && (*v2)[loops2]) {
+                                Laurent<Integer>* term = new Laurent<Integer>(
+                                    *(*v1)[loops1]);
+                                (*term) *= *(*v2)[loops2];
+
+                                if ((*vNew)[loops]) {
+                                    *(*vNew)[loops] += *term;
+                                    delete term;
+                                } else {
+                                    (*vNew)[loops] = term;
+                                }
+                            }
+                        }
+
+                        if ((*vNew)[loops] && (*vNew)[loops]->isZero()) {
+                            delete (*vNew)[loops];
+                            (*vNew)[loops] = nullptr;
+                        }
+                    }
+
+                    if (! partial[index]->insert(
+                            std::make_pair(kNew, vNew)).second)
+                        std::cerr << "ERROR: Combined keys in join bag "
+                            "are not unique" << std::endl;
+                }
+            }
+
+            for (auto& soln : *(partial[child->index()])) {
+                delete soln.first;
+                for (auto* laurent : *soln.second)
+                    delete laurent;
+                delete soln.second;
+            }
+            for (auto& soln : *(partial[sibling->index()])) {
+                delete soln.first;
+                for (auto* laurent : *soln.second)
+                    delete laurent;
+                delete soln.second;
+            }
+
+            delete partial[child->index()];
+            delete partial[sibling->index()];
+            partial[child->index()] = partial[sibling->index()] = nullptr;
         }
 
         std::cerr << "Bag " << index << ":" << std::endl;
