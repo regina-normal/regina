@@ -33,6 +33,7 @@
 #include "link/link.h"
 #include "maths/laurent.h"
 #include "utilities/bitmanip.h"
+#include "utilities/sequence.h"
 
 namespace regina {
 
@@ -192,8 +193,311 @@ Laurent<Integer>* Link::bracketNaive() const {
 }
 
 Laurent<Integer>* Link::bracketTreewidth() const {
-    // TODO: implement
-    return bracketNaive();
+    if (crossings_.empty())
+        return bracketNaive();
+
+    // We are guaranteed >= 1 crossing and >= 1 component.
+
+    // How many zero-crossing components do we start with?
+    size_t initLoops = 0;
+    for (StrandRef s : components_)
+        if (! s)
+            ++initLoops;
+
+    // Build a nice tree decomposition.:
+    const TreeDecomposition& d = niceTreeDecomposition();
+    size_t nBags = d.size();
+
+    const TreeBag *bag, *child, *sibling;
+    int index;
+
+    // For each bag, identify where each crossing sits with respect to
+    // the current bag and the subtree beneath it.
+    // Values are from the NodeType enum.
+
+    /*
+    LightweightSequence<NodeType>* type =
+        new LightweightSequence<NodeType>[nBags];
+
+    int i, j;
+    for (bag = d.first(); bag; bag = bag->next()) {
+        index = bag->index();
+        type[index].init(size());
+
+        if (bag->isLeaf()) {
+            // Leaf bag.
+        }
+    }
+
+    delete[] type;
+    */
+
+    // Each partial solution is a key-value map.
+    //
+    // Each key pairs off strands that connect a crossing in the bag with a
+    // crossing that has been forgotten. Strands are numbered 0..(2n-1),
+    // where strand i of crossing c is numbered 2c+i.
+    //
+    // The key is stored as a sequence x[0 .. 2n-1], where
+    // - if strand k is being paired off then x[k] is its partner strand;
+    // - if strand k connects two forgotten crossings then x[k] = -1;
+    // - otherwise x[k] = -2.
+    //
+    // Each value is a sequence p[0 .. max], where each p[i] points to a
+    // Laurent polynomial where the coefficient of each A^k reflects the
+    // number of resolutions with i completed loops and multiplier A^k.
+    //
+    // We always have #loops <= #components + #crossings, and so we set
+    // max = size() + countComponents().
+    //
+    // We allow p[i] = null if the corresponding polynomial is zero.
+
+    size_t nStrands = 2 * size();
+    size_t maxLoops = size() + countComponents();
+    size_t loops;
+
+    typedef LightweightSequence<int> Key;
+    typedef LightweightSequence<Laurent<Integer>*> Value;
+
+    typedef std::map<Key*, Value*, Key::Less> SolnSet;
+
+    SolnSet** partial = new SolnSet*[nBags];
+    std::fill(partial, partial + nBags, nullptr);
+
+    for (bag = d.first(); bag; bag = bag->next()) {
+        index = bag->index();
+
+        if (bag->isLeaf()) {
+            // Leaf bag.
+            std::cerr << "LEAF" << std::endl;
+            partial[index] = new SolnSet;
+
+            Key* k = new Key(nStrands);
+            std::fill(k->begin(), k->end(), -2);
+
+            Value* v = new Value(maxLoops + 1);
+            std::fill(v->begin(), v->end(), nullptr);
+            (*v)[0] = new Laurent<Integer>(0); // Initialised to x^0 = 1.
+
+            partial[index]->insert(std::make_pair(k, v));
+        } else if (bag->type() == NICE_INTRODUCE) {
+            // Introduce bag.
+            std::cerr << "INTRODUCE" << std::endl;
+            child = bag->children();
+
+            // When introducing a new crossing, all of its arcs must
+            // lead to unseen crossings or crossings already in the bag.
+            // Therefore the keys and values remain unchanged.
+
+            partial[index] = partial[child->index()];
+            partial[child->index()] = nullptr;
+        } else if (bag->type() == NICE_FORGET) {
+            // Forget bag.
+            std::cerr << "FORGET" << std::endl;
+            child = bag->children();
+
+            Crossing* forget = crossings_[child->element(bag->subtype())];
+
+            // The A resolution connects strands conn[0][0][0-1], and
+            // connects strands conn[0][1][0-1].
+            // The A^{-1} resolution connects strands conn[1][0][0-1], and
+            // connects strands conn[1][1][0-1].
+            StrandRef conn[2][2][2];
+            conn[0][0][0] = conn[1][0][0] = forget->upper().prev();
+            if (forget->sign() > 0) {
+                conn[0][0][1] = conn[1][1][0] = forget->lower();
+                conn[0][1][0] = conn[1][0][1] = forget->lower().prev();
+            } else {
+                conn[0][0][1] = conn[1][1][0] = forget->lower().prev();
+                conn[0][1][0] = conn[1][0][1] = forget->lower();
+            }
+            conn[0][1][1] = conn[1][1][1] = forget->upper();
+
+            size_t connIdx[2][2][2];
+            int i, j, k;
+            for (i = 0; i < 2; ++i)
+                for (j = 0; j < 2; ++j)
+                    for (k = 0; k < 2; ++k)
+                        connIdx[i][j][k] =
+                            2 * conn[i][j][k].crossing()->index() +
+                            conn[i][j][k].strand();
+
+            partial[index] = new SolnSet;
+
+            const Key *kChild;
+            Key *kNew;
+            const Value *vChild;
+            Value *vNew;
+            size_t newLoops;
+            for (auto& soln : *(partial[child->index()])) {
+                kChild = soln.first;
+                vChild = soln.second;
+
+                // Adjust the key and value to reflect the fact the newly
+                // forgotten crossing, under both possible resolutions.
+                for (i = 0; i < 2; ++i) {
+                    // i = 0: A resolution
+                    // i = 1: A^{-1} resolution
+
+                    kNew = new Key(nStrands);
+                    std::copy(kChild->begin(), kChild->end(), kNew->begin());
+
+                    newLoops = initLoops;
+                    for (j = 0; j < 2; ++j) {
+                        // Connect strands conn[i][j][0-1].
+                        if ((*kNew)[connIdx[i][j][0]] == -2 &&
+                                (*kNew)[connIdx[i][j][1]] == -2) {
+                            // Both strands stay in or above the bag.
+                            if (connIdx[i][j][0] == connIdx[i][j][1]) {
+                                // The two strands form a loop.
+                                // Bury them in the forgotten region.
+                                (*kNew)[connIdx[i][j][0]] = -1;
+                                (*kNew)[connIdx[i][j][1]] = -1;
+                                ++newLoops;
+                            } else {
+                                // The two strands go separate ways.
+                                // Make them the endponts of a new path that
+                                // enters and exits the forgotten region.
+                                (*kNew)[connIdx[i][j][0]] = connIdx[i][j][1];
+                                (*kNew)[connIdx[i][j][1]] = connIdx[i][j][0];
+                            }
+                        } else if ((*kNew)[connIdx[i][j][0]] == -2) {
+                            // We cannot have one strand as -2 and the
+                            // other as -1, since -2 means neither end
+                            // of the strand is forgotten and -1 means
+                            // both ends are forgotten.
+
+                            // In this case we lengthen a section of the link
+                            // that passes through the forgotten region.
+                            (*kNew)[connIdx[i][j][0]] =
+                                (*kNew)[connIdx[i][j][1]];
+                            (*kNew)[(*kNew)[connIdx[i][j][1]]] =
+                                connIdx[i][j][0];
+                            (*kNew)[connIdx[i][j][1]] = -1;
+                        } else if ((*kNew)[connIdx[i][j][1]] == -2) {
+                            // As before, we lengthen a section of the link
+                            // that passes through the forgotten region.
+                            (*kNew)[connIdx[i][j][1]] =
+                                (*kNew)[connIdx[i][j][0]];
+                            (*kNew)[(*kNew)[connIdx[i][j][0]]] =
+                                connIdx[i][j][1];
+                            (*kNew)[connIdx[i][j][0]] = -1;
+                        } else {
+                            // Both strands head down into the forgotten region.
+                            if ((*kNew)[connIdx[i][j][0]] ==
+                                    connIdx[i][j][1]) {
+                                // We have closed off a loop.
+                                ++newLoops;
+                            } else {
+                                // We connect two sections of the link
+                                // that pass through the forgotten region.
+                                (*kNew)[(*kNew)[connIdx[i][j][0]]] =
+                                    (*kNew)[connIdx[i][j][1]];
+                                (*kNew)[(*kNew)[connIdx[i][j][1]]] =
+                                    (*kNew)[connIdx[i][j][0]];
+                            }
+                            (*kNew)[connIdx[i][j][0]] = -1;
+                            (*kNew)[connIdx[i][j][1]] = -1;
+                        }
+                    }
+
+                    vNew = new Value(maxLoops + 1);
+                    for (loops = 0; loops < newLoops; ++loops)
+                        (*vNew)[loops] = nullptr;
+                    for (loops = newLoops; loops <= maxLoops; ++loops) {
+                        if ((*vChild)[loops - newLoops]) {
+                            (*vNew)[loops] = new Laurent<Integer>(
+                                *(*vChild)[loops - newLoops]);
+                            (*vNew)[loops]->shift(i == 0 ? 1 : -1);
+                        } else {
+                            (*vNew)[loops] = nullptr;
+                        }
+                    }
+
+                    // Insert the new key/value into our partial
+                    // solution, aggregating if need be.
+                    auto existingSoln = partial[index]->insert(
+                        std::make_pair(kNew, vNew));
+                    if (! existingSoln.second) {
+                        for (loops = 0; loops <= maxLoops; ++loops) {
+                            if (! (*vNew)[loops])
+                                continue;
+                            if (! (*(existingSoln.first->second))[loops]) {
+                                (*(existingSoln.first->second))[loops] =
+                                    (*vNew)[loops];
+                            } else {
+                                *(*(existingSoln.first->second))[loops] +=
+                                    *(*vNew)[loops];
+                                delete (*vNew)[loops];
+                            }
+                        }
+                        delete kNew;
+                        delete vNew;
+                    }
+                }
+
+                delete kChild;
+                for (auto* laurent : *vChild)
+                    delete laurent;
+                delete vChild;
+            }
+
+            delete partial[child->index()];
+            partial[child->index()] = nullptr;
+        } else {
+            // TODO: Join bag.
+            std::cerr << "JOIN" << std::endl;
+            child = bag->children();
+            sibling = child->sibling();
+        }
+
+        std::cerr << "Bag " << index << ":" << std::endl;
+        for (auto& soln : *partial[index]) {
+            for (int i = 0; i < nStrands; ++i)
+                std::cerr << (*soln.first)[i] << ' ';
+            std::cerr << "->";
+            for (int i = 0; i <= maxLoops; ++i) {
+                std::cerr << ' ' << i << ':';
+                if ((*soln.second)[i])
+                    std::cerr << *(*soln.second)[i];
+                else
+                    std::cerr << "null";
+                std::cerr << ' ';
+            }
+            std::cerr << std::endl;
+        }
+    }
+
+    // Collect the final answer from partial[nBags - 1].
+    std::cerr << "FINISH" << std::endl;
+    Laurent<Integer>* ans = new Laurent<Integer>;
+    Value* value = partial[nBags - 1]->begin()->second;
+
+    Laurent<Integer> loopPoly;
+    loopPoly.set(0, -1);
+    loopPoly.set(4, -1);
+    loopPoly.shift(-2);
+
+    Laurent<Integer> loopPow(0); // Initialises to x^0 == 1.
+    // Note: (*value)[0] should be 0, since there is at least one crossing.
+    for (loops = 1; loops <= maxLoops; ++loops) {
+        if ((*value)[loops] && ! (*value)[loops]->isZero()) {
+            (*((*value)[loops])) *= loopPow;
+            (*ans) += *((*value)[loops]);
+        }
+        loopPow *= loopPoly;
+    }
+
+    for (auto& soln : *(partial[nBags - 1])) {
+        delete soln.first;
+        for (auto* laurent : *soln.second)
+            delete laurent;
+        delete soln.second;
+    }
+    delete partial[nBags - 1];
+
+    delete[] partial;
+    return ans;
 }
 
 const Laurent<Integer>& Link::bracket(Algorithm alg) const {

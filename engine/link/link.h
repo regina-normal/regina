@@ -1862,6 +1862,10 @@ class REGINA_API Link : public Packet {
          *
          * @return alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
+         * If you wish to specify a particular algorithm, there are
+         * currently two choices: ALG_NAIVE will compute the Kauffman bracket
+         * by resolving all crossings in all possible ways, and ALG_TREEWIDTH
+         * will use a fixed-parameter tractable treewidth-based algorithm.
          * @return the bracket polynomial.
          */
         const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT) const;
@@ -1929,9 +1933,10 @@ class REGINA_API Link : public Packet {
          *
          * @return alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * Currently there is only one implementation (and so this argument
-         * will be ignored), but this is expected to change in future
-         * versions of Regina..
+         * If you wish to specify a particular algorithm, there are
+         * currently two choices: ALG_NAIVE will compute the Kauffman bracket
+         * by resolving all crossings in all possible ways, and ALG_TREEWIDTH
+         * will use a fixed-parameter tractable treewidth-based algorithm.
          * @return the Jones polynomial.
          */
         const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT) const;
