@@ -211,27 +211,6 @@ Laurent<Integer>* Link::bracketTreewidth() const {
     const TreeBag *bag, *child, *sibling;
     int index;
 
-    // For each bag, identify where each crossing sits with respect to
-    // the current bag and the subtree beneath it.
-    // Values are from the NodeType enum.
-
-    /*
-    LightweightSequence<NodeType>* type =
-        new LightweightSequence<NodeType>[nBags];
-
-    int i, j;
-    for (bag = d.first(); bag; bag = bag->next()) {
-        index = bag->index();
-        type[index].init(size());
-
-        if (bag->isLeaf()) {
-            // Leaf bag.
-        }
-    }
-
-    delete[] type;
-    */
-
     // Each partial solution is a key-value map.
     //
     // Each key pairs off strands that connect a crossing in the bag with a
