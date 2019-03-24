@@ -395,13 +395,27 @@ class LinkTest : public CppUnit::TestFixture {
         }
 
         void testJones(Link* l, const char* expected) {
-            std::ostringstream s;
-            s << l->jones();
+            // Since we are computing the Jones polynomial multiple times
+            // (using different algorithms), we work with clones of l
+            // that do not clone any already-computed properties.
 
-            if (s.str() != expected) {
+            std::ostringstream s1;
+            s1 << Link(*l, false).jones(regina::ALG_NAIVE);
+
+            if (s1.str() != expected) {
                 std::ostringstream msg;
                 msg << l->label() << ": expected V(link) = " << expected
-                    << ", found " << s.str() << ".";
+                    << ", found " << s1.str() << " using naive algorithm.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            std::ostringstream s2;
+            s2 << Link(*l, false).jones(regina::ALG_TREEWIDTH);
+
+            if (s2.str() != expected) {
+                std::ostringstream msg;
+                msg << l->label() << ": expected V(link) = " << expected
+                    << ", found " << s2.str() << " using treewidth algorithm.";
                 CPPUNIT_FAIL(msg.str());
             }
         }
