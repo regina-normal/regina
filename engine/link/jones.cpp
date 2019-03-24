@@ -230,9 +230,13 @@ Laurent<Integer>* Link::bracketTreewidth() const {
     // max = size() + countComponents().
     //
     // We allow p[i] = null if the corresponding polynomial is zero.
+    //
+    // We ignore any 0-crossing unknot components throughout this
+    // calculation, and only factor them in at the very end when we
+    // extract the final bracket polynomial.
 
     size_t nStrands = 2 * size();
-    size_t maxLoops = size() + countComponents();
+    size_t maxLoops = size() + countComponents() - initLoops;
     size_t loops;
 
     typedef LightweightSequence<int> Key;
@@ -321,7 +325,7 @@ Laurent<Integer>* Link::bracketTreewidth() const {
                     kNew = new Key(nStrands);
                     std::copy(kChild->begin(), kChild->end(), kNew->begin());
 
-                    newLoops = initLoops;
+                    newLoops = 0;
                     for (j = 0; j < 2; ++j) {
                         // Connect strands conn[i][j][0-1].
                         if ((*kNew)[connIdx[i][j][0]] == -2 &&
@@ -536,6 +540,8 @@ Laurent<Integer>* Link::bracketTreewidth() const {
     loopPoly.shift(-2);
 
     Laurent<Integer> loopPow(0); // Initialises to x^0 == 1.
+    for (loops = 0; loops < initLoops; ++loops)
+        loopPow *= loopPoly;
     // Note: (*value)[0] should be 0, since there is at least one crossing.
     for (loops = 1; loops <= maxLoops; ++loops) {
         if ((*value)[loops] && ! (*value)[loops]->isZero()) {
