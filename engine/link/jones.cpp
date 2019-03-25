@@ -198,11 +198,10 @@ Laurent<Integer>* Link::bracketTreewidth() const {
 
     // We are guaranteed >= 1 crossing and >= 1 component.
 
-    // How many zero-crossing components do we start with?
-    size_t initLoops = 0;
-    for (StrandRef s : components_)
-        if (! s)
-            ++initLoops;
+    Laurent<Integer> loopPoly;
+    loopPoly.set(0, -1);
+    loopPoly.set(4, -1);
+    loopPoly.shift(-2);
 
     // Build a nice tree decomposition.:
     const TreeDecomposition& d = niceTreeDecomposition();
@@ -222,25 +221,19 @@ Laurent<Integer>* Link::bracketTreewidth() const {
     // - if strand k connects two forgotten crossings then x[k] = -1;
     // - otherwise x[k] = -2.
     //
-    // Each value is a sequence p[0 .. max], where each p[i] points to a
-    // Laurent polynomial where the coefficient of each A^k reflects the
-    // number of resolutions with i completed loops and multiplier A^k.
-    //
-    // We always have #loops <= #components + #crossings, and so we set
-    // max = size() + countComponents().
-    //
-    // We allow p[i] = null if the corresponding polynomial is zero.
+    // Each value is a Laurent polynomial, which is essentially a
+    // partially computed bracket polynomial that accounts for those
+    // crossings that have already been forgotten.
     //
     // We ignore any 0-crossing unknot components throughout this
     // calculation, and only factor them in at the very end when we
     // extract the final bracket polynomial.
 
     size_t nStrands = 2 * size();
-    size_t maxLoops = size() + countComponents() - initLoops;
     size_t loops;
 
     typedef LightweightSequence<int> Key;
-    typedef LightweightSequence<Laurent<Integer>*> Value;
+    typedef Laurent<Integer> Value;
 
     typedef std::map<Key*, Value*, Key::Less> SolnSet;
 
@@ -259,9 +252,7 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             Key* k = new Key(nStrands);
             std::fill(k->begin(), k->end(), -2);
 
-            Value* v = new Value(maxLoops + 1);
-            std::fill(v->begin(), v->end(), nullptr);
-            (*v)[0] = new Laurent<Integer>(0); // Initialised to x^0 = 1.
+            Value* v = new Laurent<Integer>(0); // Initialised to x^0 = 1.
 
             partial[index]->insert(std::make_pair(k, v));
         } else if (bag->type() == NICE_INTRODUCE) {
@@ -386,44 +377,31 @@ Laurent<Integer>* Link::bracketTreewidth() const {
                         }
                     }
 
-                    vNew = new Value(maxLoops + 1);
+                    // We start at each leaf with the polynomial 1,
+                    // which effectively adds one closed loop that we
+                    // didn't have.  So in the very last iteration (which
+                    // is guaranteed to close off at least one loop),
+                    // subtract one closed loop to compensate.
+                    if (index == nBags - 1)
+                        --newLoops;
+
+                    vNew = new Value(*vChild);
+                    vNew->shift(i == 0 ? 1 : -1);
                     for (loops = 0; loops < newLoops; ++loops)
-                        (*vNew)[loops] = nullptr;
-                    for (loops = newLoops; loops <= maxLoops; ++loops) {
-                        if ((*vChild)[loops - newLoops]) {
-                            (*vNew)[loops] = new Laurent<Integer>(
-                                *(*vChild)[loops - newLoops]);
-                            (*vNew)[loops]->shift(i == 0 ? 1 : -1);
-                        } else {
-                            (*vNew)[loops] = nullptr;
-                        }
-                    }
+                        (*vNew) *= loopPoly;
 
                     // Insert the new key/value into our partial
                     // solution, aggregating if need be.
                     auto existingSoln = partial[index]->insert(
                         std::make_pair(kNew, vNew));
                     if (! existingSoln.second) {
-                        for (loops = 0; loops <= maxLoops; ++loops) {
-                            if (! (*vNew)[loops])
-                                continue;
-                            if (! (*(existingSoln.first->second))[loops]) {
-                                (*(existingSoln.first->second))[loops] =
-                                    (*vNew)[loops];
-                            } else {
-                                *(*(existingSoln.first->second))[loops] +=
-                                    *(*vNew)[loops];
-                                delete (*vNew)[loops];
-                            }
-                        }
+                        *(existingSoln.first->second) += *vNew;
                         delete kNew;
                         delete vNew;
                     }
                 }
 
                 delete kChild;
-                for (auto* laurent : *vChild)
-                    delete laurent;
                 delete vChild;
             }
 
@@ -464,32 +442,8 @@ Laurent<Integer>* Link::bracketTreewidth() const {
                                 "ERROR: Incompatible keys in join bag"
                                 << std::endl;
 
-                    vNew = new Value(maxLoops + 1);
-                    for (loops = 0; loops <= maxLoops; ++loops) {
-                        (*vNew)[loops] = nullptr;
-
-                        for (loops1 = 0; loops1 <= loops; ++loops1) {
-                            loops2 = loops - loops1;
-
-                            if ((*v1)[loops1] && (*v2)[loops2]) {
-                                Laurent<Integer>* term = new Laurent<Integer>(
-                                    *(*v1)[loops1]);
-                                (*term) *= *(*v2)[loops2];
-
-                                if ((*vNew)[loops]) {
-                                    *(*vNew)[loops] += *term;
-                                    delete term;
-                                } else {
-                                    (*vNew)[loops] = term;
-                                }
-                            }
-                        }
-
-                        if ((*vNew)[loops] && (*vNew)[loops]->isZero()) {
-                            delete (*vNew)[loops];
-                            (*vNew)[loops] = nullptr;
-                        }
-                    }
+                    vNew = new Value(*v1);
+                    *vNew *= *v2;
 
                     if (! partial[index]->insert(
                             std::make_pair(kNew, vNew)).second)
@@ -500,14 +454,10 @@ Laurent<Integer>* Link::bracketTreewidth() const {
 
             for (auto& soln : *(partial[child->index()])) {
                 delete soln.first;
-                for (auto* laurent : *soln.second)
-                    delete laurent;
                 delete soln.second;
             }
             for (auto& soln : *(partial[sibling->index()])) {
                 delete soln.first;
-                for (auto* laurent : *soln.second)
-                    delete laurent;
                 delete soln.second;
             }
 
@@ -537,35 +487,22 @@ Laurent<Integer>* Link::bracketTreewidth() const {
 
     // Collect the final answer from partial[nBags - 1].
     std::cerr << "FINISH" << std::endl;
-    Laurent<Integer>* ans = new Laurent<Integer>;
-    Value* value = partial[nBags - 1]->begin()->second;
-
-    Laurent<Integer> loopPoly;
-    loopPoly.set(0, -1);
-    loopPoly.set(4, -1);
-    loopPoly.shift(-2);
-
-    Laurent<Integer> loopPow(0); // Initialises to x^0 == 1.
-    for (loops = 0; loops < initLoops; ++loops)
-        loopPow *= loopPoly;
-    // Note: (*value)[0] should be 0, since there is at least one crossing.
-    for (loops = 1; loops <= maxLoops; ++loops) {
-        if ((*value)[loops] && ! (*value)[loops]->isZero()) {
-            (*((*value)[loops])) *= loopPow;
-            (*ans) += *((*value)[loops]);
-        }
-        loopPow *= loopPoly;
-    }
+    Value* ans = partial[nBags - 1]->begin()->second;
 
     for (auto& soln : *(partial[nBags - 1])) {
         delete soln.first;
-        for (auto* laurent : *soln.second)
-            delete laurent;
-        delete soln.second;
+        if (soln.second != ans)
+            delete soln.second;
     }
     delete partial[nBags - 1];
 
     delete[] partial;
+
+    // Finally, factor in any zero-crossing components.
+    for (StrandRef s : components_)
+        if (! s)
+            (*ans) *= loopPoly;
+
     return ans;
 }
 
