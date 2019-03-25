@@ -249,6 +249,7 @@ Laurent<Integer>* Link::bracketTreewidth() const {
 
     for (bag = d.first(); bag; bag = bag->next()) {
         index = bag->index();
+        std::cerr << "Bag " << index << " [" << bag->size() << "] ";
 
         if (bag->isLeaf()) {
             // Leaf bag.
@@ -276,8 +277,9 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             partial[child->index()] = nullptr;
         } else if (bag->type() == NICE_FORGET) {
             // Forget bag.
-            std::cerr << "FORGET" << std::endl;
             child = bag->children();
+            std::cerr << "FORGET -> 2 x " <<
+                partial[child->index()]->size() << std::endl;
 
             Crossing* forget = crossings_[child->element(bag->subtype())];
 
@@ -429,9 +431,11 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             partial[child->index()] = nullptr;
         } else {
             // Join bag.
-            std::cerr << "JOIN" << std::endl;
             child = bag->children();
             sibling = child->sibling();
+            std::cerr << "JOIN -> " <<
+                partial[child->index()]->size() << " x " <<
+                partial[sibling->index()]->size() << std::endl;
 
             partial[index] = new SolnSet;
 
@@ -512,6 +516,7 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             partial[child->index()] = partial[sibling->index()] = nullptr;
         }
 
+        /*
         std::cerr << "Bag " << index << ":" << std::endl;
         for (auto& soln : *partial[index]) {
             for (int i = 0; i < nStrands; ++i)
@@ -527,6 +532,7 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             }
             std::cerr << std::endl;
         }
+        */
     }
 
     // Collect the final answer from partial[nBags - 1].
