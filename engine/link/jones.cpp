@@ -465,24 +465,6 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             delete partial[sibling->index()];
             partial[child->index()] = partial[sibling->index()] = nullptr;
         }
-
-        /*
-        std::cerr << "Bag " << index << ":" << std::endl;
-        for (auto& soln : *partial[index]) {
-            for (int i = 0; i < nStrands; ++i)
-                std::cerr << (*soln.first)[i] << ' ';
-            std::cerr << "->";
-            for (int i = 0; i <= maxLoops; ++i) {
-                std::cerr << ' ' << i << ':';
-                if ((*soln.second)[i])
-                    std::cerr << *(*soln.second)[i];
-                else
-                    std::cerr << "null";
-                std::cerr << ' ';
-            }
-            std::cerr << std::endl;
-        }
-        */
     }
 
     // Collect the final answer from partial[nBags - 1].
