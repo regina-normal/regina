@@ -421,7 +421,7 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             const Value *v1, *v2;
             Key *kNew;
             Value *vNew;
-            size_t strand, loops1, loops2;
+            size_t strand;
 
             for (auto& soln1 : *(partial[child->index()])) {
                 k1 = soln1.first;
