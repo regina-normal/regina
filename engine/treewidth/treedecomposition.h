@@ -1013,9 +1013,9 @@ extern template REGINA_API TreeDecomposition::TreeDecomposition(
 inline TreeBag::TreeBag(int size) :
         size_(size),
         elements_(new int[size_]),
-        parent_(0),
-        sibling_(0),
-        children_(0),
+        parent_(nullptr),
+        sibling_(nullptr),
+        children_(nullptr),
         type_(0),
         subtype_(0) {
 }
@@ -1023,9 +1023,9 @@ inline TreeBag::TreeBag(int size) :
 inline TreeBag::TreeBag(const TreeBag& cloneMe) :
         size_(cloneMe.size_),
         elements_(new int[cloneMe.size_]),
-        parent_(0),
-        sibling_(0),
-        children_(0),
+        parent_(nullptr),
+        sibling_(nullptr),
+        children_(nullptr),
         type_(0),
         subtype_(0) {
     for (int i = 0; i < size_; ++i)

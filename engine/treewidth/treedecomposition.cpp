@@ -105,7 +105,7 @@ const TreeBag* TreeBag::nextPrefix() const {
     const TreeBag* b = this;
     while (b && ! b->sibling_)
         b = b->parent_;
-    return (b ? b->sibling_ : 0);
+    return (b ? b->sibling_ : nullptr);
 }
 
 const TreeBag* TreeBag::next() const {
@@ -139,7 +139,7 @@ void TreeDecomposition::Graph::dump(std::ostream& out) const {
 
 TreeDecomposition::TreeDecomposition(const Link& link,
         TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
+        width_(0), root_(nullptr) {
     Graph g(link.size());
 
     int i, j;
@@ -289,7 +289,7 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
 
 const TreeBag* TreeDecomposition::first() const {
     if (! root_)
-        return 0;
+        return nullptr;
 
     TreeBag* b = root_;
     while (b->children_)
@@ -307,7 +307,7 @@ bool TreeDecomposition::compress() {
 
     bool changed = false;
     TreeBag* b = root_->children_;
-    TreeBag* siblingOf = 0;
+    TreeBag* siblingOf = nullptr;
     TreeBag* next;
     TreeBag* nextIsSiblingOf;
     TreeBag* child;
@@ -324,7 +324,7 @@ bool TreeDecomposition::compress() {
         // traversal runs as expected even if we merge b into its parent.
         if (b->children_) {
             next = b->children_;
-            nextIsSiblingOf = 0;
+            nextIsSiblingOf = nullptr;
         } else {
             next = b;
             while (next && ! next->sibling_)
@@ -383,7 +383,7 @@ bool TreeDecomposition::compress() {
             }
 
             // Ensure that deleting b does not cascade to its children.
-            b->children_ = 0;
+            b->children_ = nullptr;
 
             delete b;
 
@@ -408,7 +408,7 @@ void TreeDecomposition::makeNice() {
 
     if (root_ && (! root_->children()) && root_->size_ == 0) {
         delete root_;
-        root_ = 0;
+        root_ = nullptr;
         size_ = 0;
         // width_ is unchanged (it must have been -1 already).
         return;
@@ -449,7 +449,7 @@ void TreeDecomposition::makeNice() {
 
             tmp->children_ = b->children_;
             tmp->children_->parent_ = tmp;
-            tmp->children_->sibling_ = 0;
+            tmp->children_->sibling_ = nullptr;
 
             b->children_ = tmp;
             tmp->sibling_ = tmp2;
@@ -521,7 +521,7 @@ void TreeDecomposition::makeNice() {
             // between b and next.
             tmp->parent_->children_ = tmp->children_;
             tmp->children_->parent_ = tmp->parent_;
-            tmp->children_ = 0;
+            tmp->children_ = nullptr;
             delete tmp;
 
             // Done!  Jump to the bottom of the sequence and continue.
