@@ -45,6 +45,9 @@ using regina::TreeBag;
 using regina::TreeDecomposition;
 
 namespace {
+    TreeDecomposition* (*fromPACE_str)(const std::string&) =
+        &TreeDecomposition::fromPACE;
+
     TreeDecomposition* fromListAlg(boost::python::list graph,
             regina::TreeDecompositionAlg alg = regina::TD_UPPER) {
         long len = boost::python::len(graph);
@@ -205,8 +208,11 @@ void addTreeDecomposition() {
         .def("makeNice", &TreeDecomposition::makeNice)
         .def("writeDot", writeDot_stdio)
         .def("dot", &TreeDecomposition::dot)
+        .def("fromPACE", fromPACE_str,
+            return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
+        .staticmethod("fromPACE")
     ;
 
     scope().attr("NTreeBag") = scope().attr("TreeBag");

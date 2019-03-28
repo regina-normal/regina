@@ -513,6 +513,23 @@ class REGINA_API TreeBag :
          */
         void swapContents(TreeBag& other);
 
+        /**
+         * Adjusts the links between bags to make this bag the root of
+         * the tree decomposition.  If the tree decomposition is still
+         * being constructed and therefore consists of several disjoint trees,
+         * this routine will only affect the tree containing this bag.
+         *
+         * This routine adjusts the \a parent_, \a children_ and \a sibling_
+         * links of various bags, but nothing else.  The caller of this
+         * routine must (if appropriate) separately set
+         * TreeDecomposition::root_ to this bag, and call
+         * TreeDecomposition::reindex() to update the bag indices to
+         * follow a leaves-to-root ordering as expected.
+         *
+         * This routine runs in linear time.
+         */
+        void makeRoot();
+
     friend class TreeDecomposition;
 };
 
@@ -937,7 +954,102 @@ class REGINA_API TreeDecomposition :
          */
         void writeTextLong(std::ostream& out) const;
 
+        /**
+         * Builds a tree decomposition from a string using the PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ .
+         *
+         * In short, the format contains a number of lines of text:
+         *
+         * - Any line beginning with \c c is considered a comment, and
+         *   will be ignored.
+         *
+         * - The first non-comment line should be of the form
+         *   <tt>s&nbsp;td&nbsp;<i>num_bags</i>&nbsp;<i>max_bag_size</i>&nbsp;<i>num_vertices</i></tt>.
+         *
+         * - The next \e num_bags non-comment lines should describe the
+         *   contents of the bags.  Each such line should be of the form
+         *   <tt>b&nbsp;<i>bag_number</i>&nbsp;<i>element</i>&nbsp;<i>element</i>&nbsp;...</tt>.
+         *   The bags are numbered 1,2,...,\e num_bags, and may appear in any
+         *   order.  Likewise, the vertices of the graph are numbered
+         *   1,2,...,\e num_vertices, and within each bag they may again
+         *   appear in any order.
+         *
+         * - The remaining \e num_bags - 1 non-comment lines should
+         *   indicate the connections between the bags in the tree
+         *   decomposition.  Each such line should be of the form
+         *   <tt><i>first_bag_index</i>&nbsp;<i>second_bag_index</i></tt>,
+         *   where \e first_bag_index is smaller than \e second_bag_index.
+         *
+         * Bags may be empty, but there must be at least one bag, and the
+         * connections between the bags must form a tree.  This routine will
+         * choose the root of the tree arbitrarily.
+         *
+         * An example of this text format is as follows:
+         *
+           \verbatim
+           c A tree decomposition with 4 bags and width 2
+           s td 4 3 5
+           b 1 1 2 3
+           b 2 2 3 4
+           b 3 3 4 5
+           b 4
+           1 2
+           2 3
+           2 4
+           \endverbatim
+         *
+         * This routine does some basic error checking as it reads the input,
+         * but this checking is not exhaustive; in particular, it does
+         * not verify that the connections between bags actually form a tree.
+         *
+         * There are two variants of this routine.  This variant
+         * contains a single string containing the entire text representation.
+         * The other variant takes an input stream, from which the text
+         * representation will be read.
+         *
+         * @param str a text representation of the tree
+         * decomposition using the PACE text format.
+         * @return a newly constructed tree decomposition, or \c null if
+         * the input was found to be invalid.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        static TreeDecomposition* fromPACE(const std::string& str);
+        /**
+         * Builds a tree decomposition from an input stream using the PACE
+         * text format.  The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ .
+         *
+         * See the constructor TreeDecomposition(const std::string&) for
+         * a description of this text format.
+         *
+         * There are two variants of this routine.  The other variant
+         * contains a single string containing the entire text representation.
+         * This variant takes an input stream, from which the text
+         * representation will be read.
+         *
+         * This routine assumes that it should exhaust the input stream
+         * (i.e., it should contain no additional text after this text
+         * representation).
+         *
+         * \ifacespython Not present.
+         *
+         * @param paceFormat an input stream that provides a text
+         * representation of the tree decomposition using the PACE text format.
+         * @return a newly constructed tree decomposition, or \c null if
+         * the input was found to be invalid.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        static TreeDecomposition* fromPACE(std::istream& in);
+
     private:
+        /**
+         * A constructor that initialises all data members to zero
+         * and/or \c null.
+         */
+        TreeDecomposition();
         /**
          * Called by the various constructors to build this tree
          * decomposition from the given graph, using the given algorithm.
@@ -1090,6 +1202,10 @@ inline void TreeBag::swapContents(TreeBag& other) {
 }
 
 // Inline functions for TreeDecomposition
+
+inline TreeDecomposition::TreeDecomposition() :
+        width_(0), size_(0), root_(nullptr) {
+}
 
 inline TreeDecomposition::~TreeDecomposition() {
     delete root_;
