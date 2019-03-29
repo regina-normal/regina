@@ -76,6 +76,7 @@ Version 5.2  [ 29 September, 2017 ]
               would sometimes retriangulate unexpectedly during the
               SnapPeaTriangulation(const Triangulation<3>&) constructor.
         Class TreeDecomposition:
+            - New copy constructor.
             - New constructor that takes a Link.
             - New routines fromPACE() to read from the PACE text format.
             - New routine reroot() to hang the tree from a different root.
