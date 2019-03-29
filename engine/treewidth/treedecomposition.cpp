@@ -138,6 +138,55 @@ void TreeDecomposition::Graph::dump(std::ostream& out) const {
     }
 }
 
+TreeDecomposition::TreeDecomposition(const TreeDecomposition& cloneMe) :
+        width_(cloneMe.width_), size_(cloneMe.size_) {
+    TreeBag *me, *myPrev;
+    const TreeBag *you, *yourPrev;
+
+    // Clone the bags from root to leaves.
+    you = cloneMe.root_;
+    yourPrev = nullptr;
+    while (true) {
+        me = new TreeBag(*you);
+        me->type_ = you->type_;
+        me->subtype_ = you->subtype_;
+        me->index_ = you->index_;
+
+        // myPrev / yourPrev either points to the previous sibling or,
+        // if there is none, the parent.
+        if (yourPrev) {
+            // This is not the root bag.  Hook it into the tree.
+            if (yourPrev->children_ == you) {
+                myPrev->children_ = me;
+                me->parent_ = myPrev;
+            } else {
+                myPrev->sibling_ = me;
+                me->parent_ = myPrev->parent_;
+            }
+        } else {
+            // This is the root bag.
+            root_ = me;
+        }
+
+        if (you->children_) {
+            yourPrev = you;
+            myPrev = me;
+            you = you->children_;
+        } else {
+            while (you && ! you->sibling_) {
+                you = you->parent_;
+                me = me->parent_;
+            }
+            if (you) {
+                yourPrev = you;
+                myPrev = me;
+                you = you->sibling_;
+            } else
+                break;
+        }
+    }
+}
+
 TreeDecomposition::TreeDecomposition(const Link& link,
         TreeDecompositionAlg alg) :
         width_(0), root_(nullptr) {

@@ -194,6 +194,7 @@ void addTreeDecomposition() {
         .def(init<const regina::Link&>())
         .def(init<const regina::Link&,
             regina::TreeDecompositionAlg>())
+        .def(init<const regina::TreeDecomposition&>())
         .def("__init__", make_constructor(fromListAlg))
         .def("__init__", make_constructor(fromList))
         .def("width", &TreeDecomposition::width)

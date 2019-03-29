@@ -484,8 +484,9 @@ class REGINA_API TreeBag :
          * Creates a new bag containing the same graph nodes as the given bag.
          *
          * Specifically, only the list of nodes stored in the given bag will
-         * be cloned.  This new bag will not be inserted into the tree, and
-         * will not be assigned any other information (such as index,
+         * be cloned.  This new bag will not be inserted into the tree
+         * (instead all parent, child and sibling pointers will be \c null),
+         * and it will not be assigned any other information (such as index,
          * type or subtype).
          *
          * @param cloneMe the bag whose contents should be cloned.
@@ -656,6 +657,16 @@ class REGINA_API TreeDecomposition :
             /**< The bag at the root of the underlying tree. */
 
     public:
+        /**
+         * Builds a new copy of the given tree decomposition.
+         *
+         * This will be a deep copy, in the sense that all of the bags
+         * of \a cloneMe will be cloned also.
+         *
+         * @param cloneMe the tree decomposition to clone.
+         */
+        TreeDecomposition(const TreeDecomposition& cloneMe);
+
         /**
          * Builds a tree decomposition of the facet pairing graph of the
          * given triangulation.
