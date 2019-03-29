@@ -903,6 +903,28 @@ class REGINA_API TreeDecomposition :
         void makeNice();
 
         /**
+         * Reverses child-parent relationships so that the given bag
+         * becomes the root of the tree decomposition.
+         *
+         * All pointers to bags will remain valid, and the contents of
+         * the bags will not change.  However:
+         *
+         * - the bags will be reindexed, to reflect the changes in the
+         *   leaves-to-root ordering;
+         *
+         * - all bag types will be reset to 0, since in general rerooting may
+         *   break whatever properties the bag types and subtypes represent.
+         *
+         * If the given bag is already the root bag, then this routine
+         * does nothing (and in particular, types and subtypes are preserved).
+         *
+         * @param newRoot the bag that should become the root of this
+         * tree decomposition.  This must already be a bag of this tree
+         * decomposition.
+         */
+        void reroot(TreeBag* newRoot);
+
+        /**
          * Outputs this tree decomposition in the Graphviz DOT language.
          * This produces a standalone DOT file that can be run through
          * Graphviz in order to visualise the tree decomposition.
@@ -1072,6 +1094,8 @@ class REGINA_API TreeDecomposition :
          *
          * The postfix iteration is the same iteration defined by
          * TreeDecomposition::first() and TreeBag::next().
+         *
+         * This routine also recomputes the data member \a size_.
          */
         void reindex();
 };

@@ -293,7 +293,6 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
 
     TreeDecomposition* ans = new TreeDecomposition();
     ans->width_ = maxBagSize - 1;
-    ans->size_ = nBags;
 
     for (ans->root_ = bags[0]; ans->root_->parent_;
             ans->root_ = ans->root_->parent_)
@@ -734,6 +733,19 @@ void TreeDecomposition::makeNice() {
             b = next;
         }
     }
+
+    reindex();
+}
+
+void TreeDecomposition::reroot(TreeBag* newRoot) {
+    if (root_ == newRoot)
+        return;
+
+    newRoot->makeRoot();
+    root_ = newRoot;
+
+    for (const TreeBag* b = first(); b; b = b->next())
+        const_cast<TreeBag*>(b)->type_ = 0;
 
     reindex();
 }

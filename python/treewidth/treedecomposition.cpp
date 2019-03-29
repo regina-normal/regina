@@ -206,6 +206,7 @@ void addTreeDecomposition() {
             return_value_policy<reference_existing_object>())
         .def("compress", &TreeDecomposition::compress)
         .def("makeNice", &TreeDecomposition::makeNice)
+        .def("reroot", &TreeDecomposition::reroot)
         .def("writeDot", writeDot_stdio)
         .def("dot", &TreeDecomposition::dot)
         .def("fromPACE", fromPACE_str,

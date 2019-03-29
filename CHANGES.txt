@@ -78,6 +78,7 @@ Version 5.2  [ 29 September, 2017 ]
         Class TreeDecomposition:
             - New constructor that takes a Link.
             - New routines fromPACE() to read from the PACE text format.
+            - New routine reroot() to hang the tree from a different root.
         Class Triangulation<dim>:
             - Now implements the Boost Graph Library (BGL) interface.  The dual
               graph of a triangulation can be accessed seamlessly through the
