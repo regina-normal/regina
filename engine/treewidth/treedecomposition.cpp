@@ -343,7 +343,7 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
     TreeDecomposition* ans = new TreeDecomposition();
     ans->width_ = maxBagSize - 1;
 
-    for (ans->root_ = bags[0]; ans->root_->parent_;
+    for (ans->root_ = bags[nBags - 1]; ans->root_->parent_;
             ans->root_ = ans->root_->parent_)
         ;
 
@@ -848,6 +848,40 @@ void TreeDecomposition::writeDot(std::ostream& out) const {
 std::string TreeDecomposition::dot() const {
     std::ostringstream out;
     writeDot(out);
+    return out.str();
+}
+
+void TreeDecomposition::writePACE(std::ostream& out) const {
+    out << "c Output from Regina using TreeDecomposition::writePACE()"
+        << std::endl;
+
+    const TreeBag* b;
+    int i;
+
+    int nVert = 0;
+    for (b = first(); b; b = b->next()) {
+        if (b->size() && nVert <= b->elements_[b->size_ - 1])
+            nVert = b->elements_[b->size_ - 1] + 1;
+    }
+
+    out << "s td " << size_ << ' ' << (width_ + 1) << ' ' << nVert << std::endl;
+
+    for (b = first(); b; b = b->next()) {
+        out << "b " << (b->index() + 1);
+        for (i = 0; i < b->size_; ++i)
+            out << ' ' << (b->elements_[i] + 1);
+        out << std::endl;
+    }
+    for (b = first(); b; b = b->next()) {
+        if (b->parent())
+            out << (b->index() + 1) << ' '
+                << (b->parent()->index() + 1) << std::endl;
+    }
+}
+
+std::string TreeDecomposition::pace() const {
+    std::ostringstream out;
+    writePACE(out);
     return out.str();
 }
 

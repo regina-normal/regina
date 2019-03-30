@@ -1002,6 +1002,46 @@ class REGINA_API TreeDecomposition :
         std::string dot() const;
 
         /**
+         * Outputs this tree decomposition using the PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ ,
+         * and is documented in detail by the routine
+         * fromPACE(const std::string&).
+         *
+         * If you write a tree decomposition using pace() or writePACE()
+         * and then read it again using fromPACE(), you are \e not guaranteed
+         * to obtain an identical tree decomposition.  This is because
+         * the PACE text format stores the connections between bags as an
+         * undirected, unrooted tree.
+         *
+         * \ifacespython The \a out argument is not present; instead
+         * standard output is assumed.
+         *
+         * @param out the output stream to which to write.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        void writePACE(std::ostream& out) const;
+        /**
+         * Returns a text representation of this tree decomposition
+         * using the PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ ,
+         * and is documented in detail by the routine
+         * fromPACE(const std::string&).
+         *
+         * This routine simply returns the output of writePACE() as a
+         * string, instead of writing it to an output stream.
+         *
+         * See the writePACE() notes for further details.
+         *
+         * @return the output of writePACE(), as outlined above.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        std::string pace() const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
