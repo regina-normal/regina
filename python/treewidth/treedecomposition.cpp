@@ -205,6 +205,8 @@ void addTreeDecomposition() {
             return_value_policy<reference_existing_object>())
         .def("firstPrefix", &TreeDecomposition::firstPrefix,
             return_value_policy<reference_existing_object>())
+        .def("bag", &TreeDecomposition::bag,
+            return_value_policy<reference_existing_object>())
         .def("compress", &TreeDecomposition::compress)
         .def("makeNice", &TreeDecomposition::makeNice)
         .def("reroot", &TreeDecomposition::reroot)

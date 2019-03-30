@@ -533,6 +533,16 @@ void TreeBag::makeRoot() {
     }
 }
 
+const TreeBag* TreeDecomposition::bag(int index) const {
+    const TreeBag* b = root_;
+    while (b->index() != index) {
+        b = b->children();
+        while (b->index() < index)
+            b = b->sibling();
+    }
+    return b;
+}
+
 bool TreeDecomposition::compress() {
     // Do a prefix enumeration (root first), and compress edges up to
     // parents when one bag is a subset of the other.

@@ -221,8 +221,8 @@ class REGINA_API TreeBag :
                  in the tree decomposition.  See subtype() for details. */
         int index_;
             /**< Indicates the index of this bag within the underlying
-                 tree decomposition, following a leaves-to-root ordering
-                 of the bags.  See index() for details. */
+                 tree decomposition, following a leaves-to-root, left-to-right
+                 ordering of the bags.  See index() for details. */
 
     public:
         /**
@@ -276,9 +276,14 @@ class REGINA_API TreeBag :
          * Then these bags are automatically numbered 0,1,...,<i>n</i>-1.
          * This member function returns the number of this particular bag.
          *
-         * The numbering of bags follows a leaves-to-root scheme.  In other
-         * words, for any non-root bag \a b we have
-         * <tt>b.index() &lt; b.parent()->index()</tt>.
+         * The numbering of bags follows a leaves-to-root, left-to-right
+         * scheme:
+         *
+         * - for any non-root bag \a b, we have
+         *   <tt>b.index() &lt; b.parent()->index()</tt>;
+         *
+         * - for any bag \a b with a next sibling, we have
+         *   <tt>b.index() &lt; b.sibling()->index()</tt>;
          *
          * @return the index of this bag within the full tree decomposition
          * \a d; this will be between 0 and <tt>d.size()-1</tt> inclusive.
@@ -523,9 +528,9 @@ class REGINA_API TreeBag :
          * This routine adjusts the \a parent_, \a children_ and \a sibling_
          * links of various bags, but nothing else.  The caller of this
          * routine must (if appropriate) separately set
-         * TreeDecomposition::root_ to this bag, and call
+         * TreeDecomposition::root_ to this bag, and must (eventually) call
          * TreeDecomposition::reindex() to update the bag indices to
-         * follow a leaves-to-root ordering as expected.
+         * follow a leaves-to-root, left-to-right ordering as expected.
          *
          * This routine runs in linear time.
          */
@@ -581,14 +586,20 @@ class REGINA_API TreeBag :
  * nodes of \a G are numbered 0,1,2,..., and so the bags simply store the
  * numbers of the nodes that they contain.
  *
- * This class also numbers its bags 0,1,...,size()-1 in a leaves-to-root
- * manner; that is, for each non-root bag \a b, the parent of \a b will
- * have a higher index than \a b itself.  This may be useful if you wish
- * to store auxiliary information alongside each bag in a separate array.
- * You can access this numbering through the function TreeBag::index().
- * (Note that TreeDecomposition does not store its bags in an array, and so
- * does not offer a "random access" function to access the bag at an
- * arbitrary index.)
+ * This class also numbers its bags 0,1,...,size()-1 in a leaves-to-root,
+ * left-to-right manner:
+ *
+ * - for each non-root bag \a b, the parent of \a b will have a higher index
+ *   than \a b;
+ *
+ * - for each bag \a b with a next sibling, the next sibling of \a b will
+ *   have a higher index than \a b.
+ *
+ * This bag numbering may be useful if you wish to store auxiliary information
+ * alongside each bag in a separate array.  You can access this numbering
+ * through the function TreeBag::index().  However, note that
+ * TreeDecomposition does \e not store its bags in an array, and so
+ * the "random access" function bag() is slow, with worst-case linear time.
  *
  * There are two broad classes of algorithms for building tree
  * decompositions: (i) \e exact algorithms, which are slow but guarantee to
@@ -845,6 +856,29 @@ class REGINA_API TreeDecomposition :
         const TreeBag* firstPrefix() const;
 
         /**
+         * A slow (linear-time) routine that returns the bag at the
+         * given index.
+         *
+         * Recall that the bags in a tree decomposition are numbered
+         * 0,1,...,size()-1.  This routine returns the bag with the
+         * given number.
+         *
+         * This routine is linear-time, and so you should \e not use it
+         * to iterate through all bags.  Instead, to iterate through all
+         * bags, use TreeDecomposition::first() and TreeBag::next().
+         *
+         * \warning This routine is \e slow, with a worst-case linear time.
+         * This is because the bags are not stored internally in an
+         * array, and so this routine must search the tree from the root
+         * downwards to find the bag that is being requested.
+         *
+         * @param index the number of a bag; this must be between 0 and
+         * size()-1 inclusive.
+         * @return the bag with the given number.
+         */
+        const TreeBag* bag(int index) const;
+
+        /**
          * Removes redundant bags from this tree decomposition.
          *
          * Specifically, this routine "compresses" the tree decomposition
@@ -921,7 +955,7 @@ class REGINA_API TreeDecomposition :
          * the bags will not change.  However:
          *
          * - the bags will be reindexed, to reflect the changes in the
-         *   leaves-to-root ordering;
+         *   leaves-to-root, left-to-right ordering;
          *
          * - all bag types will be reset to 0, since in general rerooting may
          *   break whatever properties the bag types and subtypes represent.
