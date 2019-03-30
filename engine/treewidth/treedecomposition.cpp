@@ -522,8 +522,11 @@ void TreeBag::makeRoot() {
         }
 
         child->parent_ = newParent;
-        child->sibling_ = newParent->children_;
-        newParent->children_ = child;
+        if (newParent) {
+            child->sibling_ = newParent->children_;
+            newParent->children_ = child;
+        } else
+            child->sibling_ = nullptr;
 
         newParent = child;
         child = oldParent;
