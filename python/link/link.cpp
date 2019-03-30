@@ -254,6 +254,7 @@ void addLink() {
         .def("knowsHomfly", &Link::knowsHomfly)
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             return_internal_reference<>())
+        .def("useTreeDecomposition", &Link::useTreeDecomposition)
         .def("brief", &Link::brief)
         .def("gauss", gauss_str)
         .def("orientedGauss", orientedGauss_str)

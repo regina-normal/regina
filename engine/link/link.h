@@ -2098,9 +2098,47 @@ class REGINA_API Link : public Packet {
          * not been changed) then the same tree decomposition will be
          * returned immediately.
          *
+         * If you wish to supply your own tree decomposition (as opposed
+         * to relying on the greedy heuristics that Regina implements),
+         * then you can supply it by calling useTreeDecomposition().
+         *
          * @return a nice tree decomposition of this link diagram.
          */
         const TreeDecomposition& niceTreeDecomposition() const;
+
+        /**
+         * Instructs Regina to use the given tree decomposition as the
+         * starting point whenever it needs a tree decomposition for this link.
+         *
+         * For some link routines, including niceTreeDecomposition() as
+         * well as computations such as jones() that support the option
+         * ALG_TREEWIDTH, Regina needs a tree decomposition of the
+         * planar 4-valent multigraph formed by this link diagram.
+         *
+         * By default, Regina will compute (and then cache) such a tree
+         * decomposition itself, using in-built greedy heuristics.  This
+         * routine allows you to supply your \e own tree decomposition
+         * (which, for example, might be a smaller-width tree decomposition
+         * that you found using third-party software).  By supplying
+         * your own tree decomposition \e td through this routine,
+         * Regina will throw away any pre-computed tree decomposition
+         * that it has cached, and will instead cache \e td for future
+         * use instead.
+         *
+         * Regina will not claim ownership of \e td, and will not edit
+         * it in any way.  Instead, it will make a deep copy of \e td
+         * and then modify this copy for its purposes.
+         *
+         * In particular, \e td does not need to be a \e nice tree
+         * decomposition (indeed, it does not need to have any special
+         * properties beyond the definition of a tree decomposition).
+         * Regina will automatically create a nice tree decomposition
+         * from it if \e td is not nice already.
+         *
+         * @param td a tree decomposition of the planar 4-valent
+         * multigraph formed by this link diagram.
+         */
+        void useTreeDecomposition(const TreeDecomposition& td);
 
         /*@}*/
         /**
@@ -3735,6 +3773,12 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
     TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
     ans->makeNice();
     return *(niceTreeDecomposition_ = ans);
+}
+
+inline void Link::useTreeDecomposition(const TreeDecomposition& td) {
+    TreeDecomposition* use = new TreeDecomposition(td);
+    use->makeNice();
+    niceTreeDecomposition_ = use;
 }
 
 inline bool Link::dependsOnParent() const {
