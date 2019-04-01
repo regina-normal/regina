@@ -2458,6 +2458,69 @@ class REGINA_API Link : public Packet {
         void dt(std::ostream& out, bool alpha = false) const;
 
         /**
+         * Outputs the underlying planar 4-valent multigraph using the
+         * PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ .
+         *
+         * In summary, the output will consist of several lines of text:
+         *
+         * - If this link has a packet label, then the output will begin with
+         *   a descriptive comment line of the form <tt>c <i>label</i></tt>.
+         *   Otherwise this initial comment line will be omitted.
+         *
+         * - Next will be a line of the form
+         *   <tt>p&nbsp;tw&nbsp;<i>num_vertices</i>&nbsp;<i>num_edges</i></tt>.
+         *   Note that, since the underlying graph comes from a link diagram,
+         *   we will always have \e num_edges equal to twice \e num_vertices.
+         *
+         * - Following this will be \e num_edges lines, one for each
+         *   edge, each of the form <tt><i>u&nbsp;v</i></tt>, indicating
+         *   an edge from vertex number \e u to vertex number \e v.
+         *   In this format, vertices are numbered 1,2,...,\e num_vertices.
+         *
+         * An example of this text format is as follows:
+         *
+           \verbatim
+           c Figure eight knot
+           p tw 4 8
+           1 2
+           1 4
+           1 2
+           2 3
+           3 4
+           1 3
+           3 4
+           2 4
+           \endverbatim
+         *
+         * \ifacespython The \a out argument is not present; instead
+         * standard output is assumed.
+         *
+         * @param out the output stream to which to write.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        void writePACE(std::ostream& out) const;
+        /**
+         * Returns a text representation of the underlying planar
+         * 4-valent multigraph, using the PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ ,
+         * and is documented in detail by the routine writePACE().
+         *
+         * This routine simply returns the output of writePACE() as a
+         * string, instead of writing it to an output stream.
+         *
+         * See the writePACE() notes for further details.
+         *
+         * @return the output of writePACE(), as outlined above.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        std::string pace() const;
+
+        /**
          * Returns C++ code that can be used to reconstruct this link.
          *
          * This code will use the Link constructor that takes a series of

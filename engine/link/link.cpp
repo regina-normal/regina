@@ -858,5 +858,30 @@ void Link::writeXMLPacketData(std::ostream& out) const {
     out << "\n  </components>\n";
 }
 
+std::string Link::pace() const {
+    std::ostringstream out;
+    writePACE(out);
+    return out.str();
+}
+
+void Link::writePACE(std::ostream& out) const {
+    if (! label().empty())
+        out << "c " << label() << std::endl;
+    out << "p tw " << size() << ' ' << (size() * 2) << std::endl;
+
+    int i;
+    const Crossing* adj;
+    for (const Crossing* c : crossings_) {
+        for (i = 0; i < 2; ++i) {
+            adj = c->next(i).crossing();
+            if (adj->index() >= c->index())
+                out << (c->index() + 1) << ' ' << (adj->index() + 1);
+            else
+                out << (adj->index() + 1) << ' ' << (c->index() + 1);
+            out << std::endl;
+        }
+    }
+}
+
 } // namespace regina
 

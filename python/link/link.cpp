@@ -151,6 +151,10 @@ namespace {
     void strand_dec_operator(StrandRef& s) {
        --s;
     }
+
+    void writePACE_stdio(const Link& l) {
+        l.writePACE(std::cout);
+    }
 }
 
 void addLink() {
@@ -260,6 +264,8 @@ void addLink() {
         .def("orientedGauss", orientedGauss_str)
         .def("jenkins", jenkins_str)
         .def("dt", dt_str, OL_dt())
+        .def("writePACE", writePACE_stdio)
+        .def("pace", &Link::pace)
         .def("knotSig", &Link::knotSig, OL_knotSig())
         .def("dumpConstruction", &Link::dumpConstruction)
         .def("r1", r1a, OL_r1a())
