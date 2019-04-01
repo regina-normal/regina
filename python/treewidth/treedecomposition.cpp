@@ -47,6 +47,8 @@ using regina::TreeDecomposition;
 namespace {
     TreeDecomposition* (*fromPACE_str)(const std::string&) =
         &TreeDecomposition::fromPACE;
+    void (TreeDecomposition::*reroot_bag)(TreeBag*) =
+        &TreeDecomposition::reroot;
 
     TreeDecomposition* fromListAlg(boost::python::list graph,
             regina::TreeDecompositionAlg alg = regina::TD_UPPER) {
@@ -213,7 +215,7 @@ void addTreeDecomposition() {
             return_value_policy<reference_existing_object>())
         .def("compress", &TreeDecomposition::compress)
         .def("makeNice", &TreeDecomposition::makeNice)
-        .def("reroot", &TreeDecomposition::reroot)
+        .def("reroot", reroot_bag)
         .def("writeDot", writeDot_stdio)
         .def("dot", &TreeDecomposition::dot)
         .def("writePACE", writePACE_stdio)
