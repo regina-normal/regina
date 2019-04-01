@@ -528,6 +528,36 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     if (td.size() <= 1)
         return;
 
+    // In order to estimate processing costs, we need to be able to
+    // query whether a given node appears in a given subtree.
+    // Do some preprocessing to make these queries constant time.
+    //
+    // For crossing i, crossingSubtree[i] will contain highest index
+    // bag that contains that crossing.
+    //
+    // For bag j, subtreeStart[j] will contain the lowest index bag
+    // within the subtree rooted at bag j (including j itself).
+    // Due to our leaf-to-root indexing, it follows that the subtree
+    // rooted at j contains precisely those bags with indices k for
+    // which subtreeStart[j] <= k <= j.
+
+    int* crossingSubtree = new int[size()];
+    int* subtreeStart = new int[td.size()];
+
+    const TreeBag* b;
+    for (b = td.first(); b; b = b->next())
+        if (b->children())
+            subtreeStart[b->index()] = subtreeStart[b->children()->index()];
+        else
+            subtreeStart[b->index()] = b->index();
+
+    int i;
+    for (b = td.first(); b; b = b->next())
+        for (i = 0; i < b->size(); ++i)
+            crossingSubtree[b->element(i)] = b->index();
+
+    // Now we can build our cost estimates.
+
     int* costSame = new int[td.size()];
     int* costReverse = new int[td.size()];
     int* costRoot = new int[td.size()];
@@ -546,11 +576,10 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     std::fill(costReverse, costReverse + td.size(), 0);
     std::fill(costRoot, costRoot + td.size(), 0);
 
-    int i;
     int p, q;
     Crossing *c;
-    int adj;
-    const TreeBag *b, *desc;
+    int adj, adjRoot;
+    const TreeBag *desc;
     for (b = td.first(); b; b = b->next()) {
         for (i = 0; i < b->size(); ++i) {
             c = crossings_[b->element(i)];
@@ -564,17 +593,10 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
                         ++costRoot[b->index()];
 
                         // Is adj buried within b's descendants?
-                        // TODO: Make this faster.
-                        for (desc = b; desc->children();
-                                desc = desc->children())
-                            ;
-                        while (desc != b) {
-                            if (desc->contains(adj)) {
-                                ++costSame[b->index()];
-                                break;
-                            }
-                            desc = desc->next();
-                        }
+                        adjRoot = crossingSubtree[adj];
+                        if (adjRoot >= subtreeStart[b->index()] &&
+                                adjRoot < b->index())
+                            ++costSame[b->index()];
                     }
                 }
         }
@@ -591,25 +613,18 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
                             // that leads to a crossing not in b's parent.
 
                             // Is adj *not* buried within b or its descendants?
-                            // TODO: Make this faster.
-                            if (! b->contains(adj)) {
-                                for (desc = b; desc->children();
-                                        desc = desc->children())
-                                    ;
-                                while (desc != b) {
-                                    if (desc->contains(adj)) {
-                                        break;
-                                    }
-                                    desc = desc->next();
-                                }
-                                if (desc == b)
-                                    ++costReverse[b->index()];
-                            }
+                            adjRoot = crossingSubtree[adj];
+                            if (! (adjRoot >= subtreeStart[b->index()] &&
+                                    adjRoot <= b->index()))
+                                ++costReverse[b->index()];
                         }
                     }
             }
         }
     }
+
+    delete[] subtreeStart;
+    delete[] crossingSubtree;
 
     td.reroot(costSame, costReverse, costRoot);
 
