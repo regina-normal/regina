@@ -970,6 +970,105 @@ class REGINA_API TreeDecomposition :
         void reroot(TreeBag* newRoot);
 
         /**
+         * Reroots the tree by reversing child-parent relationships, in a way
+         * that minimises a maximum estimated processing cost amongst all bags.
+         *
+         * The user needs to supply three arrays, which are used to
+         * estimate the cost of hanging the tree from any possible root.
+         * This routine then identifies which root minimises this cost, and
+         * reroots the underlying tree from that bag.
+         *
+         * The three arrays play the following roles.  Let \a b be some bag
+         * at index \a i in the original tree decomposition, and let \a p be
+         * its parent bag.
+         *
+         * - <tt>costSame[i]</tt> indicates the cost of \e preserving the
+         *   parent-child relationship between \a b and \a p (i.e.,
+         *   after rerooting, \a p is still the parent bag of \a b).
+         *   If \e b is the root bag of the original tree decomposition
+         *   then <tt>costSame[i]</tt> is ignored.
+         *
+         * - <tt>costReverse[i]</tt> indicates the cost of \e reversing the
+         *   parent-child relationship between \a b and \a p (i.e.,
+         *   after rerooting, \a b is now the parent bag of \a p).
+         *   Again, if \e b is the root bag of the original tree decomposition
+         *   then <tt>costReverse[i]</tt> is ignored.
+         *
+         * - <tt>costRoot[i]</tt> is an additional cost that is incurred
+         *   if and only if \a b becomes the new root bag.  The argument
+         *   \a costRoot may be \c null, in which case these additional
+         *   costs are all assumed to be zero.
+         *
+         * It follows that, for each potential new root, there are size()
+         * costs to aggregate: this comes from size()-1 costs from the arrays
+         * \a costSame and/or \a costReverse (one for each connection
+         * between bags in the underlying tree), and one cost from \a costRoot.
+         * These costs will be aggregated by taking the \e maximum over
+         * all individual costs.  This means that you do not need to
+         * estimate running times and/or memory consumption accurately;
+         * instead you only need to find some heuristic that aims to be
+         * \e monotonic in time and/or memory.
+         *
+         * So: in essence then, this routine minimises the maximum cost.
+         * In the case of a tie, it then minimises multiplicity; that is,
+         * it minimises the \e number of times that this maximum cost occurs
+         * over the individual size() costs that are being aggregated.
+         *
+         * Note that the \a costSame and \a costReverse arrays are
+         * technically defined as a cost per arc, not a cost per bag.
+         * If you wish to estimate a cost per bag, the typical way of
+         * doing this would be:
+         *
+         * - <tt>costSame[i]</tt> estimates the processing cost at bag \a i
+         *   if its relationship with its parent is preserved;
+         *
+         * - <tt>costReverse[i]</tt> estimates the processing cost at the
+         *   original \e parent of bag \a i if its relationship with bag \a i
+         *   is reversed (i.e., it becomes a child of bag \a i);
+         *
+         * - <tt>costRoot[i]</tt> estimates the processing cost at bag \a i
+         *   if bag \a i becomes the root.
+         *
+         * This scheme ensures that, for any possible rerooting, each
+         * bag is costed exactly once amongst the three arrays.
+         *
+         * After rerooting, all pointers to bags will remain valid, and the
+         * contents of the bags will not change.  However:
+         *
+         * - the bags will be reindexed, to reflect the changes in the
+         *   leaves-to-root, left-to-right ordering;
+         *
+         * - all bag types will be reset to 0, since in general rerooting may
+         *   break whatever properties the bag types and subtypes represent.
+         *
+         * If the given bag is already the root bag, then this routine
+         * does nothing (and in particular, types and subtypes are preserved).
+         *
+         * \headers This routine is implemented in a separate header
+         * (treedecomposition-impl.h), which is not included automatically
+         * by this file.  However, typical end users should never need this
+         * extra header, since Regina's calculation engine already includes
+         * explicit instantiations for common types.
+         *
+         * \ifacespython Not present.
+         *
+         * \tparam T the type being used to estimate costs.
+         * It must be possible to assign 0 to a variable of type \a T
+         * using both constructors and the assignment operator.
+         *
+         * @param costSame An array of size() elements giving an
+         * estimated cost of preserving each child-parent connection;
+         * @param costReverse An array of size() elements giving an
+         * estimated cost of reversing each child-parent connection;
+         * @param costRoot An array of size() elements giving an
+         * additional estimated cost for each bag being the new root.
+         * This array may be \c null.
+         */
+        template <typename T>
+        void reroot(const T* costSame, const T* costReverse,
+            const T* costRoot = nullptr);
+
+        /**
          * Outputs this tree decomposition in the Graphviz DOT language.
          * This produces a standalone DOT file that can be run through
          * Graphviz in order to visualise the tree decomposition.

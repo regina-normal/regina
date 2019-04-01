@@ -64,6 +64,9 @@ template REGINA_API TreeDecomposition::TreeDecomposition(
 template REGINA_API TreeDecomposition::TreeDecomposition(
     unsigned, int const** const, TreeDecompositionAlg);
 
+template REGINA_API void TreeDecomposition::reroot(
+    const int*, const int*, const int*);
+
 bool TreeBag::contains(int element) const {
     return std::binary_search(elements_, elements_ + size_, element);
 }
