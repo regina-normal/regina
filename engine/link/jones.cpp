@@ -493,11 +493,11 @@ const Laurent<Integer>& Link::bracket(Algorithm alg) const {
         return *bracket_.value();
 
     switch (alg) {
-        case ALG_TREEWIDTH:
-            bracket_ = bracketTreewidth();
+        case ALG_NAIVE:
+            bracket_ = bracketNaive();
             break;
         default:
-            bracket_ = bracketNaive();
+            bracket_ = bracketTreewidth();
             break;
     }
     return *bracket_.value();
