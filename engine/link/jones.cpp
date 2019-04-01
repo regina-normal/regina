@@ -523,5 +523,100 @@ const Laurent<Integer>& Link::jones(Algorithm alg) const {
     return *(jones_ = ans);
 }
 
+void Link::optimiseForJones(TreeDecomposition& td) const {
+    td.compress();
+    if (td.size() <= 1)
+        return;
+
+    int* costSame = new int[td.size()];
+    int* costReverse = new int[td.size()];
+    int* costRoot = new int[td.size()];
+
+    // For a bag b:
+    //
+    // costRoot: Count strands from crossings in b to crossings not in b.
+    //
+    // costSame: Count strands from crossings in b to crossings not in b,
+    // but in one of b's descendants.
+    //
+    // costReverse: Count strands from crossings in b->parent to crossings
+    // not in b->parent and not in b or any of b's descendants.
+
+    std::fill(costSame, costSame + td.size(), 0);
+    std::fill(costReverse, costReverse + td.size(), 0);
+    std::fill(costRoot, costRoot + td.size(), 0);
+
+    int i;
+    int p, q;
+    Crossing *c;
+    int adj;
+    const TreeBag *b, *desc;
+    for (b = td.first(); b; b = b->next()) {
+        for (i = 0; i < b->size(); ++i) {
+            c = crossings_[b->element(i)];
+            for (p = 0; p < 2; ++p)
+                for (q = 0; q < 2; ++q) {
+                    adj = (p == 0 ? c->prev(q).crossing() :
+                        c->next(q).crossing())->index();
+                    if (! b->contains(adj)) {
+                        // We have a strand from a crossing in b that
+                        // leads to a crossing not in b.
+                        ++costRoot[b->index()];
+
+                        // Is adj buried within b's descendants?
+                        // TODO: Make this faster.
+                        for (desc = b; desc->children();
+                                desc = desc->children())
+                            ;
+                        while (desc != b) {
+                            if (desc->contains(adj)) {
+                                ++costSame[b->index()];
+                                break;
+                            }
+                            desc = desc->next();
+                        }
+                    }
+                }
+        }
+
+        if (b->parent()) {
+            for (i = 0; i < b->parent()->size(); ++i) {
+                c = crossings_[b->parent()->element(i)];
+                for (p = 0; p < 2; ++p)
+                    for (q = 0; q < 2; ++q) {
+                        adj = (p == 0 ? c->prev(q).crossing() :
+                            c->next(q).crossing())->index();
+                        if (! b->parent()->contains(adj)) {
+                            // We have a strand from a crossing in b's parent
+                            // that leads to a crossing not in b's parent.
+
+                            // Is adj *not* buried within b or its descendants?
+                            // TODO: Make this faster.
+                            if (! b->contains(adj)) {
+                                for (desc = b; desc->children();
+                                        desc = desc->children())
+                                    ;
+                                while (desc != b) {
+                                    if (desc->contains(adj)) {
+                                        break;
+                                    }
+                                    desc = desc->next();
+                                }
+                                if (desc == b)
+                                    ++costReverse[b->index()];
+                            }
+                        }
+                    }
+            }
+        }
+    }
+
+    td.reroot(costSame, costReverse, costRoot);
+
+    delete[] costSame;
+    delete[] costReverse;
+    delete[] costRoot;
+}
+
 } // namespace regina
 

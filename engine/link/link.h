@@ -3315,6 +3315,24 @@ class REGINA_API Link : public Packet {
         Laurent2<Integer>* homflyTreewidth() const;
 
         /**
+         * Optimises the given tree decomposition for computing the
+         * Jones polynomial.
+         *
+         * This optimisation may involve compressing and/or rerooting the
+         * given tree decomposition.  The aim is to minimise the estimated
+         * processing time and memory consumption of calling
+         * <tt>jones(ALG_TREEWIDTH)</tt> and/or <tt>bracket(ALG_TREEWIDTH)</tt>.
+         *
+         * The rerooting procedure essentially estimates the number of
+         * partial solutions that are expected at each bag in the
+         * treewidth-based dynamic programming algorithm, and chooses a
+         * root that minimises the maximum such estimate over all bags.
+         *
+         * @param td the tree decomposition to optimise.
+         */
+        void optimiseForJones(TreeDecomposition& td) const;
+
+        /**
          * A non-templated version of rewrite().
          *
          * This is identical to rewrite(), except that the action
@@ -3771,12 +3789,14 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
         return *niceTreeDecomposition_.value();
 
     TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
+    optimiseForJones(*ans);
     ans->makeNice();
     return *(niceTreeDecomposition_ = ans);
 }
 
 inline void Link::useTreeDecomposition(const TreeDecomposition& td) {
     TreeDecomposition* use = new TreeDecomposition(td);
+    optimiseForJones(*use);
     use->makeNice();
     niceTreeDecomposition_ = use;
 }
