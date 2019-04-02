@@ -46,58 +46,61 @@ const char* Link::homflyLMVarY = "m";
 const char* Link::homflyVarX = homflyAZVarX;
 const char* Link::homflyVarY = homflyAZVarY;
 
-// Possible states of crossings:
-
-enum CrossingState {
+namespace {
     /**
-     * Not yet visited.  Moreover, this state indicates that - if there
-     * is a decision to make - we should first attempt to switch this crossing.
+     * Possible states of crossings.  Used by Kauffman's algorithm.
      */
-    CROSSING_UNSEEN = 0,
+    enum CrossingState {
+        /**
+         * Not yet visited.  Moreover, this state indicates that - if there is
+         * a decision to make - we should first attempt to switch this crossing.
+         */
+        CROSSING_UNSEEN = 0,
 
-    /**
-     * Not yet visited.  Moreover, this state indicates that - if there
-     * is a decision to make - we have already attempted switching the
-     * crossing, and we should now try to splice instead.
-     */
-    CROSSING_TRIED = 1,
+        /**
+         * Not yet visited.  Moreover, this state indicates that - if there
+         * is a decision to make - we have already attempted switching the
+         * crossing, and we should now try to splice instead.
+         */
+        CROSSING_TRIED = 1,
 
-    /**
-     * First seen on the upper strand, and so the crossing was kept intact.
-     * Visited only once so far.
-     */
-    CROSSING_KEEP_1 = 2,
+        /**
+         * First seen on the upper strand, and so the crossing was kept intact.
+         * Visited only once so far.
+         */
+        CROSSING_KEEP_1 = 2,
 
-    /**
-     * First seen on the upper strand, and so the crossing was kept intact.
-     * Visited twice (first upper, then lower).
-     */
-    CROSSING_KEEP_2 = 3,
+        /**
+         * First seen on the upper strand, and so the crossing was kept intact.
+         * Visited twice (first upper, then lower).
+         */
+        CROSSING_KEEP_2 = 3,
 
-    /**
-     * First seen on the lower strand, and the decision was made to
-     * switch the crossing.  Visited only once so far.
-     */
-    CROSSING_SWITCH_1 = 4,
+        /**
+         * First seen on the lower strand, and the decision was made to
+         * switch the crossing.  Visited only once so far.
+         */
+        CROSSING_SWITCH_1 = 4,
 
-    /**
-     * First seen on the lower strand, and the decision was made to
-     * switch the crossing.  Visited twice.
-     */
-    CROSSING_SWITCH_2 = 5,
+        /**
+         * First seen on the lower strand, and the decision was made to
+         * switch the crossing.  Visited twice.
+         */
+        CROSSING_SWITCH_2 = 5,
 
-    /**
-     * First seen on the lower strand, and the decision was made to
-     * splice.  Visited only once so far.
-     */
-    CROSSING_SPLICE_1 = 6,
+        /**
+         * First seen on the lower strand, and the decision was made to
+         * splice.  Visited only once so far.
+         */
+        CROSSING_SPLICE_1 = 6,
 
-    /**
-     * First seen on the lower strand, and the decision was made to
-     * splice.  Visited twice.
-     */
-    CROSSING_SPLICE_2 = 7
-};
+        /**
+         * First seen on the lower strand, and the decision was made to
+         * splice.  Visited twice.
+         */
+        CROSSING_SPLICE_2 = 7
+    };
+}
 
 Laurent2<Integer>* Link::homflyKauffman() const {
     // Throughout this code, delta = (alpha - alpha^-1) / z.
