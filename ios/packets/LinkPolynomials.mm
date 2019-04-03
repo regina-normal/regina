@@ -33,6 +33,7 @@
 #import "LinkViewController.h"
 #import "LinkPolynomials.h"
 #import "ReginaHelper.h"
+#import "MBProgressHUD.h"
 #import "link/link.h"
 
 #define MAX_LINK_AUTO_POLYNOMIALS 6
@@ -40,6 +41,7 @@
 
 @interface LinkPolynomials () <UITextFieldDelegate> {
     UILabel* copyFrom;
+    regina::ProgressTracker* tracker; // for cancellation
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 
@@ -52,6 +54,8 @@
 @property (weak, nonatomic) IBOutlet UISegmentedControl *homflyType;
 
 @property (assign, nonatomic) regina::Link* packet;
+
+@property (strong, nonatomic) NSLock* trackerLock; // locks the tracker _pointer_, not the tracker itself.
 @end
 
 @implementation LinkPolynomials
@@ -134,18 +138,80 @@
     self.homflyType.enabled = YES;
 }
 
+- (IBAction)computeBracket:(id)sender {
+    [self computeBracketJones:@"Computing Kauffman bracket…"];
+}
+
 - (IBAction)computeJones:(id)sender {
+    [self computeBracketJones:@"Computing Jones polynomial…"];
+}
+
+- (void)computeBracketJones:(NSString*)message {
     self.calculateJones.enabled = NO;
     self.calculateHomfly.enabled = NO;
     self.calculateBracket.enabled = NO;
     self.homflyType.enabled = NO;
-    [ReginaHelper runWithHUD:@"Calculating…"
-                        code:^{
-                            self.packet->jones();
-                        }
-                     cleanup:^{
-                         [self reloadPacket];
-                     }];
+    
+    if (! self.trackerLock)
+        self.trackerLock = [[NSLock alloc] init];
+    
+    // Run the computation within a HUD.
+    [UIApplication sharedApplication].idleTimerDisabled = YES;
+    
+    UIView* root = [UIApplication sharedApplication].keyWindow.rootViewController.view;
+    MBProgressHUD* hud = [MBProgressHUD showHUDAddedTo:root animated:YES];
+    hud.label.text = message;
+    hud.mode = MBProgressHUDModeDeterminateHorizontalBar;
+    hud.progress = 0;
+    
+    [hud.button setTitle:@"Cancel" forState:UIControlStateNormal];
+    [hud.button addTarget:self action:@selector(cancelCompute:) forControlEvents:UIControlEventTouchUpInside];
+    
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        regina::ProgressTracker* tracker = new regina::ProgressTracker();
+        bool cancelled = false;
+        
+        [self.trackerLock lock];
+        self->tracker = tracker;
+        [self.trackerLock unlock];
+        
+        self.packet->jones(regina::ALG_DEFAULT, tracker);
+        
+        NSString* desc;
+        float progress;
+        while (! tracker->isFinished()) {
+            if (tracker->descriptionChanged()) {
+                desc = [NSString stringWithUTF8String:tracker->description().c_str()];
+                progress = tracker->percent() / 100;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    hud.detailsLabel.text = desc;
+                    hud.progress = progress;
+                });
+            } else if (tracker->percentChanged()) {
+                progress = tracker->percent() / 100;
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    hud.progress = progress;
+                });
+            }
+            usleep(250000);
+        }
+        [self.trackerLock lock];
+        self->tracker = nullptr;
+        [self.trackerLock unlock];
+        
+        cancelled = tracker->isCancelled();
+        delete tracker;
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [hud hideAnimated:NO];
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
+            
+            // If the computation finished, this displays the polynomials.
+            // If the computation was cancelled, this re-enabled the buttons.
+            [self reloadPacket];
+        });
+    });
+
 }
 
 - (IBAction)computeHomfly:(id)sender {
@@ -162,24 +228,23 @@
                      }];
 }
 
-- (IBAction)computeBracket:(id)sender {
-    self.calculateBracket.enabled = NO;
-    self.calculateJones.enabled = NO;
-    self.calculateHomfly.enabled = NO;
-    self.homflyType.enabled = NO;
-    [ReginaHelper runWithHUD:@"Calculating…"
-                        code:^{
-                            self.packet->bracket();
-                        }
-                     cleanup:^{
-                         [self reloadPacket];
-                     }];
-}
-
 - (IBAction)homflyTypeChanged:(id)sender {
     [[NSUserDefaults standardUserDefaults] setInteger:self.homflyType.selectedSegmentIndex forKey:KEY_LINK_HOMFLY_TYPE];
     if (self.packet->knowsHomfly())
         [self reloadPacket];
+}
+
+- (IBAction)cancelCompute:(id)sender {
+    // Cancel the polynomial computation, if one is running.
+    
+    // Note: the lock is created before the HUD (and the HUD calls this routine),
+    // so by the time this routine is called, we are guaranteed that self.trackerLock
+    // is non-nil.
+    
+    [self.trackerLock lock];
+    if (self->tracker)
+        self->tracker->cancel();
+    [self.trackerLock unlock];
 }
 
 #pragma mark - UIResponder
