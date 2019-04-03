@@ -38,6 +38,7 @@
 #ifndef __PROGRESSDIALOGS_H
 #define __PROGRESSDIALOGS_H
 
+#include <QFontMetrics>
 #include <QProgressDialog>
 
 namespace regina {
@@ -65,6 +66,8 @@ class ProgressDialogNumeric : public QProgressDialog {
         regina::ProgressTracker* tracker_;
             /**< The progress tracker handling the inter-thread
                  communication. */
+        QFontMetrics metrics_;
+            /**< Used to estimate the size of text. */
 
     public:
         /**
