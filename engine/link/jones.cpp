@@ -390,19 +390,14 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                 if (tracker) {
                     percent += increment;
                     if (! tracker->setPercent(percent)) {
-                        // In normal processing, this loop through solutions
+                        // In normal processing, the loop through solutions
                         // deletes the child keys and values as it goes.
-                        // Therefore we need to make sure that all
-                        // remaining child keys and values are deleted,
-                        // even if we are not processing them.
-                        for (auto it = partial[child->index()]->find(
-                                soln.first);
-                                it != partial[child->index()]->end();
-                                ++it) {
-                            delete soln.first;
-                            delete soln.second;
-                        }
-                        break;
+                        // Therefore we need to finish the loop to ensure that
+                        // all remaining child keys and values are deleted,
+                        // even if we do not want to process them.
+                        delete soln.first;
+                        delete soln.second;
+                        continue;
                     }
                 }
 
