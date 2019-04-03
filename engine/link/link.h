@@ -62,6 +62,7 @@ namespace regina {
 
 class Crossing;
 class Link;
+class ProgressTracker;
 class Tangle;
 template <typename T> class Laurent;
 template <typename T> class Laurent2;
@@ -1848,27 +1849,48 @@ class REGINA_API Link : public Packet {
          * Instead, bracket() should be called again; this will be
          * instantaneous if the bracket polynomial has already been calculated.
          *
-         * \warning If there are too many crossings for the algorithm to handle,
-         * then this routine will return the zero polynomial.  Currently this
-         * happens when the link contains at least 2^<i>b</i> crossings,
-         * where \a b is the number of bits in a long integer (typically 64
-         * on a modern machine).  The intention is for this constraint to be
-         * removed when Regina switches to a more sophisticated algorithm.
+         * If this polynomial has already been computed, then the result will
+         * be cached and so this routine will be very fast (since it just
+         * returns the previously computed result).  Otherwise the computation
+         * could be quite slow, particularly for larger numbers of crossings.
+         * This (potentially) long computation can be managed by passing
+         * a progress tracker:
          *
-         * \warning The current implementation is naive, with a running
-         * time of O(<i>n</i> 2^<i>n</i>) where \a n is the number of
-         * crossings.  This will eventually be replaced with a more
-         * efficient implementation.
+         * - If a progress tracker is passed and the polynomial has not yet
+         *   been computed, then the calculation will take place in a
+         *   new thread and this routine will return immediately.  Once the
+         *   progress tracker indicates that the calculation has finished,
+         *   you can call bracket() again to retrieve the polynomial.
          *
-         * @return alg the algorithm with which to compute the polynomial.
+         * - If no progress tracker is passed and the polynomial has
+         *   not yet been computed, the calculation will run in the current
+         *   thread and this routine will not return until it is complete.
+         *
+         * - If the requested invariant has already been computed, then this
+         *   routine will return immediately with the pre-computed value.  If
+         *   a progress tracker is passed then it will be marked as finished.
+         *
+         * \warning The naive algorithm can only handle a limited number
+         * of crossings (currently less than the number of bits in a long,
+         * which on a typical machine is 64).  If you pass ALG_NAIVE and
+         * you have too many crossings (which is not advised, since the
+         * naive algorithm requires 2^<i>n</i> time), then this routine
+         * will ignore your choice of algorithm and use the treewidth-based
+         * algorithm regardless.
+         *
+         * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_NAIVE will compute the Kauffman bracket
-         * by resolving all crossings in all possible ways, and ALG_TREEWIDTH
-         * will use a fixed-parameter tractable treewidth-based algorithm.
+         * currently two choices: ALG_NAIVE is a slow algorithm that computes
+         * the Kauffman bracket by resolving all crossings in all possible
+         * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
+         * treewidth-based algorithm.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
          * @return the bracket polynomial.
          */
-        const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT) const;
+        const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Kauffman bracket polynomial of this link diagram
          * already known?  See bracket() for further details.
@@ -1917,29 +1939,48 @@ class REGINA_API Link : public Packet {
          * Instead, jones() should be called again; this will be
          * instantaneous if the Jones polynomial has already been calculated.
          *
-         * \warning If there are too many crossings for the algorithm to handle,
-         * then this routine will return the zero polynomial.  Currently this
-         * happens when the link contains at least 2^<i>b</i> crossings,
-         * where \a b is the number of bits in a long integer (typically 64
-         * on a modern machine).  The intention is for this constraint to be
-         * removed when Regina switches to a more sophisticated algorithm.
+         * If this polynomial has already been computed, then the result will
+         * be cached and so this routine will be very fast (since it just
+         * returns the previously computed result).  Otherwise the computation
+         * could be quite slow, particularly for larger numbers of crossings.
+         * This (potentially) long computation can be managed by passing
+         * a progress tracker:
          *
-         * \warning The current implementation is naive, with a running
-         * time of O(<i>n</i> 2^<i>n</i>) where \a n is the number of
-         * crossings.  This will eventually be replaced with a more
-         * efficient implementation.  Currently homfly() is much faster,
-         * and if you are simply trying to distinguish links then you
-         * should call homfly() instead.
+         * - If a progress tracker is passed and the polynomial has not yet
+         *   been computed, then the calculation will take place in a
+         *   new thread and this routine will return immediately.  Once the
+         *   progress tracker indicates that the calculation has finished,
+         *   you can call bracket() again to retrieve the polynomial.
          *
-         * @return alg the algorithm with which to compute the polynomial.
+         * - If no progress tracker is passed and the polynomial has
+         *   not yet been computed, the calculation will run in the current
+         *   thread and this routine will not return until it is complete.
+         *
+         * - If the requested invariant has already been computed, then this
+         *   routine will return immediately with the pre-computed value.  If
+         *   a progress tracker is passed then it will be marked as finished.
+         *
+         * \warning The naive algorithm can only handle a limited number
+         * of crossings (currently less than the number of bits in a long,
+         * which on a typical machine is 64).  If you pass ALG_NAIVE and
+         * you have too many crossings (which is not advised, since the
+         * naive algorithm requires 2^<i>n</i> time), then this routine
+         * will ignore your choice of algorithm and use the treewidth-based
+         * algorithm regardless.
+         *
+         * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
-         * currently two choices: ALG_NAIVE will compute the Kauffman bracket
-         * by resolving all crossings in all possible ways, and ALG_TREEWIDTH
-         * will use a fixed-parameter tractable treewidth-based algorithm.
+         * currently two choices: ALG_NAIVE is a slow algorithm that computes
+         * the Kauffman bracket by resolving all crossings in all possible
+         * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
+         * treewidth-based algorithm.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
          * @return the Jones polynomial.
          */
-        const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT) const;
+        const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Jones polynomial of this link diagram already known?
          * See jones() for further details.
@@ -3339,22 +3380,23 @@ class REGINA_API Link : public Packet {
          * Compute the Kauffman bracket polynomial using a naive
          * algorithm that sums over all resolutions of all crossings.
          *
+         * The given progress tracker may be \c null.
+         * This routine does \e not mark the tracker as finished.
+         *
          * See bracket() for further details.
          */
-        Laurent<Integer>* bracketNaive() const;
+        Laurent<Integer>* bracketNaive(ProgressTracker* tracker) const;
 
         /**
          * Compute the Kauffman bracket polynomial using a fixed-parameter
          * tractable algorithm based on a tree decomposition.
          *
-         * See bracket() for further details.
+         * The given progress tracker may be \c null.
+         * This routine does \e not mark the tracker as finished.
          *
-         * \warning This routine is not yet implemented!  Currently it
-         * just a placeholder (not accessible to external code) that
-         * falls back to bracketNaive().  This algorithm is expected to be
-         * implemented in a future version of Regina.
+         * See bracket() for further details.
          */
-        Laurent<Integer>* bracketTreewidth() const;
+        Laurent<Integer>* bracketTreewidth(ProgressTracker* tracker) const;
 
         /**
          * Compute the HOMFLY polynomial of this link, as a polynomial
@@ -3394,6 +3436,18 @@ class REGINA_API Link : public Packet {
          * @param td the tree decomposition to optimise.
          */
         void optimiseForJones(TreeDecomposition& td) const;
+
+        /**
+         * Sets the cached Kauffman bracket polynomial and Jones polynomial.
+         *
+         * The Kauffman bracket polynomial will be set to the argument
+         * \a bracket, and the Jones polynomial will be derived from it.
+         *
+         * This link will claim ownership of the given polynomial.
+         *
+         * @param bracket the Kauffman bracket polynomial of this link.
+         */
+        void setPropertiesFromBracket(Laurent<Integer>* bracket) const;
 
         /**
          * A non-templated version of rewrite().

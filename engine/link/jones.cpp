@@ -32,8 +32,16 @@
 
 #include "link/link.h"
 #include "maths/laurent.h"
+#include "progress/progresstracker.h"
 #include "utilities/bitmanip.h"
 #include "utilities/sequence.h"
+#include <thread>
+
+// When tracking progress, try to give much more weight to larger bags.
+// (Of course, this should *really* be exponential, but it's nice to see
+// some visual progress for smaller bags, so we try not to completely
+// dwarf them in the weightings.)
+#define HARD_BAG_WEIGHT(bag) (double(bag->size())*(bag->size())*(bag->size()))
 
 namespace regina {
 
@@ -116,7 +124,7 @@ size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
     return loops;
 }
 
-Laurent<Integer>* Link::bracketNaive() const {
+Laurent<Integer>* Link::bracketNaive(ProgressTracker* tracker) const {
     /**
      * \ /         \ /            \_/
      *  /   ->   A | |   +   A^-1  _
@@ -128,6 +136,13 @@ Laurent<Integer>* Link::bracketNaive() const {
     if (components_.size() == 0)
         return new Laurent<Integer>();
 
+    size_t n = crossings_.size();
+    if (n >= sizeof(long) * 8) {
+        // We cannot use the backtracking algorithm, since an
+        // unsigned long (used for a bitmask) does not contain enough bits.
+        return bracketTreewidth(tracker);
+    }
+
     // It is guaranteed that we have at least one strand, though we
     // might have zero crossings.
 
@@ -136,10 +151,6 @@ Laurent<Integer>* Link::bracketNaive() const {
     for (StrandRef s : components_)
         if (! s)
             ++initLoops;
-
-    size_t n = crossings_.size();
-    if (n >= sizeof(long) * 8)
-        return nullptr;
 
     // In count[i-1], the coefficient of A^k reflects the number of
     // resolutions with i loops and multiplier A^k.
@@ -151,10 +162,19 @@ Laurent<Integer>* Link::bracketNaive() const {
     static_assert(BitManipulator<unsigned long>::specialised,
         "BitManipulator is not specialised for the mask type.");
 
+    if (tracker)
+        tracker->newStage("Enumerating resolutions");
+
     size_t loops;
     long shift;
     for (unsigned long mask = 0; mask != (1 << n); ++mask) {
         //std::cerr << "Mask: " << mask << std::endl;
+
+        // Check for cancellation every 1000(ish) steps.
+        if (tracker && ((mask & 1023) == 0)) {
+            if (! tracker->setPercent(double(mask) * 100.0 / double(1 << n)))
+                break;
+        }
 
         loops = initLoops + resolutionLoops(mask);
         if (loops > maxLoops)
@@ -168,6 +188,11 @@ Laurent<Integer>* Link::bracketNaive() const {
             count[loops].set(shift, 1);
         else
             count[loops].set(shift, count[loops][shift] + 1);
+    }
+
+    if (tracker && tracker->isCancelled()) {
+        delete[] count;
+        return nullptr;
     }
 
     Laurent<Integer>* ans = new Laurent<Integer>;
@@ -192,9 +217,9 @@ Laurent<Integer>* Link::bracketNaive() const {
     return ans;
 }
 
-Laurent<Integer>* Link::bracketTreewidth() const {
+Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
     if (crossings_.empty())
-        return bracketNaive();
+        return bracketNaive(tracker);
 
     // We are guaranteed >= 1 crossing and >= 1 component.
 
@@ -203,12 +228,33 @@ Laurent<Integer>* Link::bracketTreewidth() const {
     loopPoly.set(4, -1);
     loopPoly.shift(-2);
 
-    // Build a nice tree decomposition.:
+    // Build a nice tree decomposition.
+    if (tracker)
+        tracker->newStage("Building tree decomposition", 0.05);
+
     const TreeDecomposition& d = niceTreeDecomposition();
     size_t nBags = d.size();
 
     const TreeBag *bag, *child, *sibling;
     int index;
+
+    size_t nEasyBags = 0;
+    double hardBagWeightSum = 0;
+    double increment, percent;
+    if (tracker) {
+        // Estimate processing stages.
+        for (bag = d.first(); bag; bag = bag->next()) {
+            switch (bag->type()) {
+                case NICE_FORGET:
+                case NICE_JOIN:
+                    hardBagWeightSum += HARD_BAG_WEIGHT(bag);
+                    break;
+                default:
+                    ++nEasyBags;
+                    break;
+            }
+        }
+    }
 
     // Each partial solution is a key-value map.
     //
@@ -242,11 +288,22 @@ Laurent<Integer>* Link::bracketTreewidth() const {
 
     for (bag = d.first(); bag; bag = bag->next()) {
         index = bag->index();
-        std::cerr << "Bag " << index << " [" << bag->size() << "] ";
+        if (! tracker)
+            std::cerr << "Bag " << index << " [" << bag->size() << "] ";
 
         if (bag->isLeaf()) {
             // Leaf bag.
-            std::cerr << "LEAF" << std::endl;
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing leaf bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.05 / nEasyBags);
+            } else
+                std::cerr << "LEAF" << std::endl;
+
             partial[index] = new SolnSet;
 
             Key* k = new Key(nStrands);
@@ -257,8 +314,17 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             partial[index]->insert(std::make_pair(k, v));
         } else if (bag->type() == NICE_INTRODUCE) {
             // Introduce bag.
-            std::cerr << "INTRODUCE" << std::endl;
             child = bag->children();
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing introduce bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.05 / nEasyBags);
+            } else
+                std::cerr << "INTRODUCE" << std::endl;
 
             // When introducing a new crossing, all of its arcs must
             // lead to unseen crossings or crossings already in the bag.
@@ -269,8 +335,23 @@ Laurent<Integer>* Link::bracketTreewidth() const {
         } else if (bag->type() == NICE_FORGET) {
             // Forget bag.
             child = bag->children();
-            std::cerr << "FORGET -> 2 x " <<
-                partial[child->index()]->size() << std::endl;
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing forget bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+
+                percent = 0;
+                if (partial[child->index()]->empty())
+                    increment = 0;
+                else
+                    increment = 100.0 / partial[child->index()]->size();
+            } else
+                std::cerr << "FORGET -> 2 x " <<
+                    partial[child->index()]->size() << std::endl;
 
             Crossing* forget = crossings_[child->element(bag->subtype())];
 
@@ -306,6 +387,25 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             Value *vNew;
             size_t newLoops;
             for (auto& soln : *(partial[child->index()])) {
+                if (tracker) {
+                    percent += increment;
+                    if (! tracker->setPercent(percent)) {
+                        // In normal processing, this loop through solutions
+                        // deletes the child keys and values as it goes.
+                        // Therefore we need to make sure that all
+                        // remaining child keys and values are deleted,
+                        // even if we are not processing them.
+                        for (auto it = partial[child->index()]->find(
+                                soln.first);
+                                it != partial[child->index()]->end();
+                                ++it) {
+                            delete soln.first;
+                            delete soln.second;
+                        }
+                        break;
+                    }
+                }
+
                 kChild = soln.first;
                 vChild = soln.second;
 
@@ -411,9 +511,24 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             // Join bag.
             child = bag->children();
             sibling = child->sibling();
-            std::cerr << "JOIN -> " <<
-                partial[child->index()]->size() << " x " <<
-                partial[sibling->index()]->size() << std::endl;
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing join bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+
+                percent = 0;
+                if (partial[child->index()]->empty())
+                    increment = 0;
+                else
+                    increment = 100.0 / partial[child->index()]->size();
+            } else
+                std::cerr << "JOIN -> " <<
+                    partial[child->index()]->size() << " x " <<
+                    partial[sibling->index()]->size() << std::endl;
 
             partial[index] = new SolnSet;
 
@@ -424,6 +539,12 @@ Laurent<Integer>* Link::bracketTreewidth() const {
             size_t strand;
 
             for (auto& soln1 : *(partial[child->index()])) {
+                if (tracker) {
+                    percent += increment;
+                    if (! tracker->setPercent(percent))
+                        break;
+                }
+
                 k1 = soln1.first;
                 v1 = soln1.second;
                 for (auto& soln2 : *(partial[sibling->index()])) {
@@ -467,6 +588,21 @@ Laurent<Integer>* Link::bracketTreewidth() const {
         }
     }
 
+    if (tracker && tracker->isCancelled()) {
+        // We don't know which elements of partial[] have been
+        // deallocated, so check them all.
+        for (size_t i = 0; i < nBags; ++i)
+            if (partial[i]) {
+                for (auto& soln : *(partial[i])) {
+                    delete soln.first;
+                    delete soln.second;
+                }
+                delete partial[i];
+            }
+        delete[] partial;
+        return nullptr;
+    }
+
     // Collect the final answer from partial[nBags - 1].
     std::cerr << "FINISH" << std::endl;
     Value* ans = partial[nBags - 1]->begin()->second;
@@ -488,39 +624,92 @@ Laurent<Integer>* Link::bracketTreewidth() const {
     return ans;
 }
 
-const Laurent<Integer>& Link::bracket(Algorithm alg) const {
-    if (bracket_.known())
+const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
+        const {
+    if (bracket_.known()) {
+        if (tracker)
+            tracker->setFinished();
         return *bracket_.value();
-
-    switch (alg) {
-        case ALG_NAIVE:
-            bracket_ = bracketNaive();
-            break;
-        default:
-            bracket_ = bracketTreewidth();
-            break;
     }
-    return *bracket_.value();
+
+    if (tracker) {
+        std::thread([=]{
+            Laurent<Integer>* ans;
+            switch (alg) {
+                case ALG_NAIVE:
+                    ans = bracketNaive(tracker);
+                    break;
+                default:
+                    ans = bracketTreewidth(tracker);
+                    break;
+            }
+
+            if (! tracker->isCancelled())
+                setPropertiesFromBracket(ans);
+
+            tracker->setFinished();
+        }).detach();
+
+        // Return nothing (the zero polynomial) for now.
+        // The user needs to poll the tracker to find out when the
+        // computation is complete.
+        return Laurent<Integer>();
+    } else {
+        Laurent<Integer>* ans;
+        switch (alg) {
+            case ALG_NAIVE:
+                ans = bracketNaive(nullptr);
+                break;
+            default:
+                ans = bracketTreewidth(nullptr);
+                break;
+        }
+        setPropertiesFromBracket(ans);
+        return *bracket_.value();
+    }
 }
 
-const Laurent<Integer>& Link::jones(Algorithm alg) const {
-    if (jones_.known())
+const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker)
+        const {
+    if (tracker) {
+        if (jones_.known()) {
+            tracker->setFinished();
+            return *jones_.value();
+        }
+
+        // Start the bracket computation in a new thread.  This computes
+        // Jones as a side-effect, and runs the full life cycle of the tracker.
+        bracket(alg, tracker);
+
+        // Return nothing for now; the user needs to poll the tracker to
+        // find out when the computation is actually complete.
+        return Laurent<Integer>();
+    } else {
+        if (jones_.known()) {
+            return *jones_.value();
+        }
+
+        // Computing bracket_ will also set jones_.
+        bracket(alg);
         return *jones_.value();
+    }
+}
 
+void Link::setPropertiesFromBracket(Laurent<Integer>* bracket) const {
+    bracket_ = bracket;
+
+    // Convert bracket into jones:
     // (-A^3)^(-w) * bracket, then multiply all exponents by -1/4.
-    Laurent<Integer>* ans = new Laurent<Integer>(bracket(alg));
-    if (! ans)
-        return *(jones_ = new Laurent<Integer>());
-
+    Laurent<Integer>* jones = new Laurent<Integer>(*bracket);
     long w = writhe();
-    ans->shift(-3 * w);
+    jones->shift(-3 * w);
     if (w % 2)
-        ans->negate();
+        jones->negate();
 
     // We only scale exponents by -1/2, since we are returning a Laurent
     // polynomial in sqrt(t).
-    ans->scaleDown(-2);
-    return *(jones_ = ans);
+    jones->scaleDown(-2);
+    jones_ = jones;
 }
 
 void Link::optimiseForJones(TreeDecomposition& td) const {

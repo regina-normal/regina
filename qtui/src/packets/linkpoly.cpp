@@ -38,6 +38,7 @@
 // UI includes:
 #include "linkpoly.h"
 #include "patiencedialog.h"
+#include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 
@@ -283,13 +284,14 @@ void LinkPolynomialUI::refresh() {
 }
 
 void LinkPolynomialUI::calculateJones() {
-    PatienceDialog* dlg = PatienceDialog::warn(tr(
-        "Computing Jones polynomials can be slow\n"
-        "for larger knots and links.\n\n"
-        "Please be patient."), ui);
-    link->jones();
-    delete dlg;
+    regina::ProgressTracker tracker;
+    ProgressDialogNumeric dlg(&tracker, tr("Computing Jones polynomial"), ui);
+    link->jones(regina::ALG_NAIVE, &tracker);
+    if (! dlg.run())
+        return;
+    dlg.hide();
 
+    // Now calling jones() should be instantaneous.
     refresh();
 }
 
@@ -305,13 +307,14 @@ void LinkPolynomialUI::calculateHomfly() {
 }
 
 void LinkPolynomialUI::calculateBracket() {
-    PatienceDialog* dlg = PatienceDialog::warn(tr(
-        "Computing Kauffman brackets can be slow\n"
-        "for larger knots and links.\n\n"
-        "Please be patient."), ui);
-    link->bracket();
-    delete dlg;
+    regina::ProgressTracker tracker;
+    ProgressDialogNumeric dlg(&tracker, tr("Computing Kauffman bracket"), ui);
+    link->jones(regina::ALG_NAIVE, &tracker);
+    if (! dlg.run())
+        return;
+    dlg.hide();
 
+    // Now calling jones() should be instantaneous.
     refresh();
 }
 
