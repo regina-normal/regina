@@ -599,7 +599,8 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
     }
 
     // Collect the final answer from partial[nBags - 1].
-    std::cerr << "FINISH" << std::endl;
+    if (! tracker)
+        std::cerr << "FINISH" << std::endl;
     Value* ans = partial[nBags - 1]->begin()->second;
 
     for (auto& soln : *(partial[nBags - 1])) {
