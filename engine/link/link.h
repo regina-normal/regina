@@ -194,6 +194,19 @@ class REGINA_API StrandRef {
         int strand() const;
 
         /**
+         * An integer that uniquely identifies this strand within the link.
+         *
+         * This integer will be 2<i>c</i>+<i>s</i>, where \e c is the
+         * index of the crossing, and \e s is 0 or 1 for the lower or
+         * upper strand respectively.
+         *
+         * If this is a null reference, then id() will return -1.
+         *
+         * @return the unique ID of this strand within the link.
+         */
+        int id() const;
+
+        /**
          * Tests whether this and the given reference are identical.
          *
          * Two references are identical if and only if they return the
@@ -3694,6 +3707,10 @@ inline Crossing* StrandRef::crossing() const {
 
 inline int StrandRef::strand() const {
     return strand_;
+}
+
+inline int StrandRef::id() const {
+    return (crossing_ ? (2 * crossing()->index() + strand_) : -1);
 }
 
 inline bool StrandRef::operator == (const StrandRef& rhs) const {
