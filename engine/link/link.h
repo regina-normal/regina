@@ -1602,7 +1602,7 @@ class REGINA_API Link : public Packet {
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * @return If a progress tracker is passed, then this routine
          * will return \c true or \c false immediately according to
          * whether a new thread could or could not be started.  If no
@@ -1611,7 +1611,7 @@ class REGINA_API Link : public Packet {
          * fewer crossings.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
-            ProgressTrackerOpen* tracker = 0);
+            ProgressTrackerOpen* tracker = nullptr);
 
         /**
          * Explores all knot diagrams that can be reached from this via
@@ -3386,8 +3386,8 @@ class REGINA_API Link : public Packet {
          * @return the resulting number of loops after all crossings are
          * resolved.
          */
-        size_t resolutionLoops(unsigned long mask, size_t* loopIDs = 0,
-            size_t* loopLengths = 0) const;
+        size_t resolutionLoops(unsigned long mask, size_t* loopIDs = nullptr,
+            size_t* loopLengths = nullptr) const;
 
         /**
          * Compute the Kauffman bracket polynomial using a naive
@@ -3754,7 +3754,7 @@ inline void StrandRef::jump() {
 }
 
 inline StrandRef::operator bool() const {
-    return (crossing_ != 0);
+    return (crossing_ != nullptr);
 }
 
 inline std::ostream& operator << (std::ostream& out, const StrandRef& s) {
