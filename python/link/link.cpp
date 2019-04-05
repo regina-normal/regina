@@ -174,6 +174,7 @@ void addLink() {
         .def("crossing", &StrandRef::crossing,
             return_value_policy<reference_existing_object>())
         .def("strand", &StrandRef::strand)
+        .def("id", &StrandRef::id)
         .def("inc", strand_inc_operator)
         .def("dec", strand_dec_operator)
         .def("next", &StrandRef::next)
