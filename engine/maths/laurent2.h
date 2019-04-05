@@ -121,6 +121,18 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         Laurent2(const Laurent2<T>& value);
 
         /**
+         * Creates a copy of the given polynomial with all terms
+         * multiplied by <tt>x^d y^e</tt> for some integers \a d and \a e.
+         *
+         * @param toShift the polynomial to clone and shift.
+         * @param xShift the integer \a d, which will be added to all
+         * exponents for \a x.
+         * @param yShift the integer \a e, which will be added to all
+         * exponents for \a y.
+         */
+        Laurent2(const Laurent2<T>& toShift, long xShift, long yShift);
+
+        /**
          * Creates a new copy of the given polynomial.
          *
          * \pre Objects of type \a T can be assigned values of type \a U.
@@ -390,6 +402,14 @@ inline Laurent2<T>::Laurent2(long xExp, long yExp) {
 template <typename T>
 inline Laurent2<T>::Laurent2(const Laurent2<T>& value) :
         coeff_(value.coeff_) {
+}
+
+template <typename T>
+Laurent2<T>::Laurent2(const Laurent2<T>& toShift, long xShift, long yShift) {
+    for (const auto& entry : toShift.coeff_)
+        coeff_.emplace_hint(coeff_.end(),
+            std::make_pair(entry.first.first + xShift,
+                entry.first.second + yShift), entry.second);
 }
 
 template <typename T>

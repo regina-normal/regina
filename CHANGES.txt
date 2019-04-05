@@ -28,6 +28,11 @@ Version 5.2  [ 29 September, 2017 ]
         Class Isomorphism<dim>:
             - The random() function now takes an optional argument to enforce
               orientation-preserving isomorphisms only.
+        Class Laurent2:
+            - New constuctor that shifts a given polynomial by x^e y^e.
+        Class LightweightSequence:
+            - New copy constructor and assignment operator for deep copies.
+            - Constructor by size is now marked as explicit.
         Class Link, Crossing, StrandRef, Tangle:
             - New classes to support knots and links, plus other additional
               classes and methods to interface with the Boost Graph Library.
