@@ -288,8 +288,8 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
 
     for (bag = d.first(); bag; bag = bag->next()) {
         index = bag->index();
-        if (! tracker)
-            std::cerr << "Bag " << index << " [" << bag->size() << "] ";
+        // if (! tracker)
+        //     std::cerr << "Bag " << index << " [" << bag->size() << "] ";
 
         if (bag->isLeaf()) {
             // Leaf bag.
@@ -301,8 +301,9 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                     "Processing leaf bag (" + std::to_string(index) +
                         '/' + std::to_string(nBags) + ')',
                     0.05 / nEasyBags);
-            } else
-                std::cerr << "LEAF" << std::endl;
+            }
+            // else
+            //     std::cerr << "LEAF" << std::endl;
 
             partial[index] = new SolnSet;
 
@@ -323,8 +324,9 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                     "Processing introduce bag (" + std::to_string(index) +
                         '/' + std::to_string(nBags) + ')',
                     0.05 / nEasyBags);
-            } else
-                std::cerr << "INTRODUCE" << std::endl;
+            }
+            // else
+            //     std::cerr << "INTRODUCE" << std::endl;
 
             // When introducing a new crossing, all of its arcs must
             // lead to unseen crossings or crossings already in the bag.
@@ -349,9 +351,10 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                     increment = 0;
                 else
                     increment = 100.0 / partial[child->index()]->size();
-            } else
-                std::cerr << "FORGET -> 2 x " <<
-                    partial[child->index()]->size() << std::endl;
+            }
+            // else
+            //     std::cerr << "FORGET -> 2 x " <<
+            //         partial[child->index()]->size() << std::endl;
 
             Crossing* forget = crossings_[child->element(bag->subtype())];
 
@@ -520,10 +523,11 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                     increment = 0;
                 else
                     increment = 100.0 / partial[child->index()]->size();
-            } else
-                std::cerr << "JOIN -> " <<
-                    partial[child->index()]->size() << " x " <<
-                    partial[sibling->index()]->size() << std::endl;
+            }
+            // else
+            //     std::cerr << "JOIN -> " <<
+            //         partial[child->index()]->size() << " x " <<
+            //         partial[sibling->index()]->size() << std::endl;
 
             partial[index] = new SolnSet;
 
@@ -599,8 +603,8 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
     }
 
     // Collect the final answer from partial[nBags - 1].
-    if (! tracker)
-        std::cerr << "FINISH" << std::endl;
+    // if (! tracker)
+    //     std::cerr << "FINISH" << std::endl;
     Value* ans = partial[nBags - 1]->begin()->second;
 
     for (auto& soln : *(partial[nBags - 1])) {
