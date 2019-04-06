@@ -1948,9 +1948,44 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             size_t pairs2 = partial[sibling->index()]->begin()->first->size()/2;
             size_t pairs = pairs1 + pairs2;
 
-            // std::cerr << "JOIN -> " <<
-            //     partial[child->index()]->size() << " x " <<
-            //     partial[sibling->index()]->size() << std::endl;
+            if (pairs1 == 0) {
+                // The keys are exactly the keys from the second child,
+                // so we steal the second child solution set entirely
+                // without copying solutions individually.
+                //
+                // The first child should have exactly one key (which is
+                // empty), and we just need to multiply all values by
+                // the corresponding value.
+
+                auto emptySoln = partial[child->index()]->begin();
+
+                partial[index] = partial[sibling->index()];
+                for (auto& soln : *(partial[index]))
+                    (*soln.second) *= *(emptySoln->second);
+
+                delete emptySoln->first;
+                delete emptySoln->second;
+                delete partial[child->index()];
+
+                partial[child->index()] = partial[sibling->index()] = nullptr;
+                continue;
+            } else if (pairs2 == 0) {
+                // As before, but with the two children the other way around.
+                auto emptySoln = partial[sibling->index()]->begin();
+
+                partial[index] = partial[child->index()];
+                for (auto& soln : *(partial[index]))
+                    (*soln.second) *= *(emptySoln->second);
+
+                delete emptySoln->first;
+                delete emptySoln->second;
+                delete partial[sibling->index()];
+
+                partial[child->index()] = partial[sibling->index()] = nullptr;
+                continue;
+            }
+
+            // Both child bags have positive length keys.
 
             partial[index] = new SolnSet;
             const Key *k1, *k2;
@@ -1959,6 +1994,8 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             Value *vNew;
 
             // TODO: Make this work for arbitrary sized bags.
+            // Currently we can only handle sizeof(long) * 8 pairs,
+            // which means at most sizeof(long) * 4 crossings per bag.
             typedef unsigned long Mask;
             Mask mask;
             int pos1, pos2, pos;
@@ -1972,53 +2009,35 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
 
                     // Combine the two child keys and values in all
                     // possible ways.
-                    if (pairs1 == 0) {
-                        kNew = new Key(*k2);
-                        vNew = new Value(*v1);
-                        *vNew *= *v2;
+                    Value val(*v1);
+                    val *= *v2;
 
-                        if (! partial[index]->emplace(kNew, vNew).second)
-                            std::cerr << "ERROR: Combined keys in join "
-                                "bag are not unique" << std::endl;
-                    } else if (pairs2 == 0) {
-                        kNew = new Key(*k1);
-                        vNew = new Value(*v1);
-                        *vNew *= *v2;
+                    for (mask = ((Mask)(1) << pairs2) - 1;
+                            mask && ! (mask & ((Mask)(1) << pairs));
+                            mask = BitManipulator<Mask>::nextPermutation(mask)) {
+                        // The bits of mask correspond to the
+                        // positions of pairs in the final key.
+                        kNew = new Key(k1->size() + k2->size());
 
-                        if (! partial[index]->emplace(kNew, vNew).second)
-                            std::cerr << "ERROR: Combined keys in join "
-                                "bag are not unique" << std::endl;
-                    } else {
-                        Value val(*v1);
-                        val *= *v2;
-
-                        for (mask = ((Mask)(1) << pairs2) - 1;
-                                mask && ! (mask & ((Mask)(1) << pairs));
-                                mask = BitManipulator<Mask>::nextPermutation(mask)) {
-                            // The bits of mask correspond to the
-                            // positions of pairs in the final key.
-                            kNew = new Key(k1->size() + k2->size());
-
-                            pos1 = pos2 = 0;
-                            for (pos = 0; pos < pairs; ++pos) {
-                                if (mask & ((Mask)(1) << pos)) {
-                                    // Use the next pair from k2.
-                                    (*kNew)[2 * pos] = (*k2)[2 * pos2];
-                                    (*kNew)[2 * pos + 1] = (*k2)[2 * pos2 + 1];
-                                    ++pos2;
-                                } else {
-                                    // Use the next pair from k1.
-                                    (*kNew)[2 * pos] = (*k1)[2 * pos1];
-                                    (*kNew)[2 * pos + 1] = (*k1)[2 * pos1 + 1];
-                                    ++pos1;
-                                }
+                        pos1 = pos2 = 0;
+                        for (pos = 0; pos < pairs; ++pos) {
+                            if (mask & ((Mask)(1) << pos)) {
+                                // Use the next pair from k2.
+                                (*kNew)[2 * pos] = (*k2)[2 * pos2];
+                                (*kNew)[2 * pos + 1] = (*k2)[2 * pos2 + 1];
+                                ++pos2;
+                            } else {
+                                // Use the next pair from k1.
+                                (*kNew)[2 * pos] = (*k1)[2 * pos1];
+                                (*kNew)[2 * pos + 1] = (*k1)[2 * pos1 + 1];
+                                ++pos1;
                             }
-
-                            if (! partial[index]->emplace(
-                                    kNew, new Value(val)).second)
-                                std::cerr << "ERROR: Combined keys in join "
-                                    "bag are not unique" << std::endl;
                         }
+
+                        if (! partial[index]->emplace(
+                                kNew, new Value(val)).second)
+                            std::cerr << "ERROR: Combined keys in join "
+                                "bag are not unique" << std::endl;
                     }
                 }
             }
