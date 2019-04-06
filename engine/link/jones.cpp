@@ -310,9 +310,7 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
             Key* k = new Key(nStrands);
             std::fill(k->begin(), k->end(), -2);
 
-            Value* v = new Laurent<Integer>(0); // Initialised to x^0 = 1.
-
-            partial[index]->insert(std::make_pair(k, v));
+            partial[index]->emplace(k, new Laurent<Integer>(0) /* x^0 = 1 */);
         } else if (bag->type() == NICE_INTRODUCE) {
             // Introduce bag.
             child = bag->children();
@@ -490,8 +488,7 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
 
                     // Insert the new key/value into our partial
                     // solution, aggregating if need be.
-                    auto existingSoln = partial[index]->insert(
-                        std::make_pair(kNew, vNew));
+                    auto existingSoln = partial[index]->emplace(kNew, vNew);
                     if (! existingSoln.second) {
                         *(existingSoln.first->second) += *vNew;
                         delete kNew;
@@ -565,8 +562,7 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                     vNew = new Value(*v1);
                     *vNew *= *v2;
 
-                    if (! partial[index]->insert(
-                            std::make_pair(kNew, vNew)).second)
+                    if (! partial[index]->emplace(kNew, vNew).second)
                         std::cerr << "ERROR: Combined keys in join bag "
                             "are not unique" << std::endl;
                 }

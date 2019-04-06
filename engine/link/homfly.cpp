@@ -108,7 +108,7 @@ namespace {
             std::map<LightweightSequence<int>*, Laurent2<Integer>*,
                 LightweightSequence<int>::Less>* solns,
             LightweightSequence<int>* key, Laurent2<Integer>* value) {
-        auto existingSoln = solns->insert(std::make_pair(key, value));
+        auto existingSoln = solns->emplace(key, value);
         if (! existingSoln.second) {
             *(existingSoln.first->second) += *value;
             delete key;
@@ -432,8 +432,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             // std::cerr << "LEAF" << std::endl;
 
             partial[index] = new SolnSet;
-            partial[index]->insert(std::make_pair(
-                new Key(), new Laurent2<Integer>(0, 0) /* 1 */));
+            partial[index]->emplace(new Key(), new Laurent2<Integer>(0, 0));
         } else if (bag->type() == NICE_INTRODUCE) {
             // Introduce bag.
             child = bag->children();
@@ -1978,8 +1977,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         vNew = new Value(*v1);
                         *vNew *= *v2;
 
-                        if (! partial[index]->insert(
-                                std::make_pair(kNew, vNew)).second)
+                        if (! partial[index]->emplace(kNew, vNew).second)
                             std::cerr << "ERROR: Combined keys in join "
                                 "bag are not unique" << std::endl;
                     } else if (pairs2 == 0) {
@@ -1987,8 +1985,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         vNew = new Value(*v1);
                         *vNew *= *v2;
 
-                        if (! partial[index]->insert(
-                                std::make_pair(kNew, vNew)).second)
+                        if (! partial[index]->emplace(kNew, vNew).second)
                             std::cerr << "ERROR: Combined keys in join "
                                 "bag are not unique" << std::endl;
                     } else {
@@ -2017,8 +2014,8 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 }
                             }
 
-                            if (! partial[index]->insert(std::make_pair(
-                                    kNew, new Value(val))).second)
+                            if (! partial[index]->emplace(
+                                    kNew, new Value(val)).second)
                                 std::cerr << "ERROR: Combined keys in join "
                                     "bag are not unique" << std::endl;
                         }
