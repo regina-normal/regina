@@ -167,8 +167,8 @@ Laurent<Integer>* Link::bracketNaive(ProgressTracker* tracker) const {
 
     size_t loops;
     long shift;
-    for (unsigned long mask = 0; mask != (1 << n); ++mask) {
-        //std::cerr << "Mask: " << mask << std::endl;
+    for (unsigned long mask = 0; mask != ((unsigned long)(1) << n); ++mask) {
+        // std::cerr << "Mask: " << mask << std::endl;
 
         // Check for cancellation every 1000(ish) steps.
         if (tracker && ((mask & 1023) == 0)) {
