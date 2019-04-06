@@ -32,6 +32,8 @@
 
 #include "link/link.h"
 #include "maths/laurent2.h"
+#include "utilities/bitmanip.h"
+#include "utilities/sequence.h"
 
 // #define DUMP_STATES
 
@@ -100,6 +102,37 @@ namespace {
          */
         CROSSING_SPLICE_2 = 7
     };
+
+    // Convenience functions for the treewidth HOMFLY algorithm:
+    inline void aggregate(
+            std::map<LightweightSequence<int>*, Laurent2<Integer>*,
+                LightweightSequence<int>::Less>* solns,
+            LightweightSequence<int>* key, Laurent2<Integer>* value) {
+        auto existingSoln = solns->insert(std::make_pair(key, value));
+        if (! existingSoln.second) {
+            *(existingSoln.first->second) += *value;
+            delete key;
+            delete value;
+        }
+    }
+
+    inline Laurent2<Integer>* passValue(const Laurent2<Integer>* from) {
+        return new Laurent2<Integer>(*from);
+    }
+
+    inline Laurent2<Integer>* switchValue(const Laurent2<Integer>* from,
+            Crossing* c) {
+        return new Laurent2<Integer>(*from, (c->sign() > 0 ? -2 : 2), 0);
+    }
+
+    inline Laurent2<Integer>* spliceValue(const Laurent2<Integer>* from,
+            Crossing* c) {
+        Laurent2<Integer>* ans = new Laurent2<Integer>(*from,
+            (c->sign() > 0 ? -1 : 1), 1);
+        if (c->sign() < 0)
+            ans->negate();
+        return ans;
+    }
 }
 
 Laurent2<Integer>* Link::homflyKauffman() const {
@@ -366,8 +399,1675 @@ Laurent2<Integer>* Link::homflyKauffman() const {
 }
 
 Laurent2<Integer>* Link::homflyTreewidth() const {
-    // TODO: Implement this!
-    return homflyKauffman();
+    // We know from the precondition that there is at least one crossing.
+
+    Laurent2<Integer> delta(1, -1);
+    delta.set(-1, -1, -1);
+
+    // Build a nice tree decomposition.
+    const TreeDecomposition& d = niceTreeDecomposition();
+    size_t nBags = d.size();
+
+    const TreeBag *bag, *child, *sibling;
+    int index;
+
+    // Each partial solution is a key-value map.
+    //
+    // Each key TODO.
+
+    typedef LightweightSequence<int> Key;
+    typedef Laurent2<Integer> Value;
+
+    typedef std::map<Key*, Value*, Key::Less> SolnSet;
+
+    SolnSet** partial = new SolnSet*[nBags];
+    std::fill(partial, partial + nBags, nullptr);
+
+    for (bag = d.first(); bag; bag = bag->next()) {
+        index = bag->index();
+        // std::cerr << "Bag " << index << " [" << bag->size() << "] ";
+
+        if (bag->isLeaf()) {
+            // Leaf bag.
+            // std::cerr << "LEAF" << std::endl;
+
+            partial[index] = new SolnSet;
+            partial[index]->insert(std::make_pair(
+                new Key(), new Laurent2<Integer>(0, 0) /* 1 */));
+        } else if (bag->type() == NICE_INTRODUCE) {
+            // Introduce bag.
+            child = bag->children();
+            // std::cerr << "INTRODUCE" << std::endl;
+
+            // When introducing a new crossing, all of its arcs must
+            // lead to unseen crossings or crossings already in the bag.
+            // Therefore the keys and values remain unchanged.
+
+            partial[index] = partial[child->index()];
+            partial[child->index()] = nullptr;
+        } else if (bag->type() == NICE_FORGET) {
+            // Forget bag.
+            child = bag->children();
+            // std::cerr << "FORGET -> 2 x " <<
+            //     partial[child->index()]->size() << std::endl;
+
+            Crossing* c = crossings_[child->element(bag->subtype())];
+
+            if (c->next(0).crossing() == c && c->next(1).crossing() == c) {
+                // The crossing is part of two loops.
+                // This means that we are forgetting a complete
+                // 1-crossing unknot component.
+                //
+                // Steal the list of solutions directly from the child
+                // bag, and just factor the extra unknot into each value.
+                partial[index] = partial[child->index()];
+                partial[child->index()] = nullptr;
+
+                // We do *not* factor in the extra unknot if this is the
+                // last crossing to ever be forgotten.  This is because
+                // the HOMFLY formula requires us to subtract 1 from the
+                // total number of loops.
+                if (index != nBags - 1)
+                    for (auto& soln : *(partial[index]))
+                        (*soln.second) *= delta;
+
+                continue;
+            }
+
+            partial[index] = new SolnSet;
+
+            const Key *kChild;
+            Key *kNew;
+            const Value *vChild;
+            Value *vNew;
+
+            // Identify if/where the four strands touching this
+            // crossing appear in the key:
+            //   - id[0:lower, 1:upper][0:in, 1:out] is the unique
+            //     strand ID (2 * crossing + strand);
+            //   - pos[0:lower, 1:upper][0:in, 1:out] is index,
+            //     or -1 if not present.
+            // We also make a bitmask indicating which of these
+            // four strands head into the forgotten zone.
+            //
+            // Both id and mask are independent of which partial solution we're
+            // looking at, so we just extract them from the first key in
+            // the child bag.  (Every bag must contain at least one solution,
+            // since there is always some way to traverse the link.)
+            // However, pos depends on the key, and so we compute that
+            // every time.
+            int id[2][2];
+            int pos[2][2];
+            int i, j;
+            char mask;
+
+            id[0][0] = c->prev(0).id();
+            id[0][1] = c->lower().id();
+            id[1][0] = c->prev(1).id();
+            id[1][1] = c->upper().id();
+
+            kChild = partial[child->index()]->begin()->first;
+
+            pos[0][0] = pos[0][1] = pos[1][0] = pos[1][1] = -1;
+            mask = 0;
+            for (i = 0; i < kChild->size(); ++i) {
+                if ((*kChild)[i] == id[0][0]) {
+                    pos[0][0] = i;
+                    mask |= 1;
+                } else if ((*kChild)[i] == id[0][1]) {
+                    pos[0][1] = i;
+                    mask |= 2;
+                } else if ((*kChild)[i] == id[1][0]) {
+                    pos[1][0] = i;
+                    mask |= 4;
+                } else if ((*kChild)[i] == id[1][1]) {
+                    pos[1][1] = i;
+                    mask |= 8;
+                }
+            }
+
+            for (auto& soln : *(partial[child->index()])) {
+                kChild = soln.first;
+                vChild = soln.second;
+
+                // Recompute the pos array.
+                // We don't need to reset it, since the same strands
+                // will be found each time.
+                for (i = 0; i < kChild->size(); ++i) {
+                    if ((*kChild)[i] == id[0][0])
+                        pos[0][0] = i;
+                    else if ((*kChild)[i] == id[0][1])
+                        pos[0][1] = i;
+                    else if ((*kChild)[i] == id[1][0])
+                        pos[1][0] = i;
+                    else if ((*kChild)[i] == id[1][1])
+                        pos[1][1] = i;
+                }
+
+                // There are *many* different cases that we need to deal
+                // with here.
+
+                if (c->next(0).crossing() == c) {
+                    // TODO: Case verified.
+                    // Case: the crossing is part of one loop (lower -> upper)
+                    // Work out which strands to/from the crossing run
+                    // into the forgotten zone.
+                    // In all of our analysis, we silently untwist the loop at
+                    // crossing c, and pretend there is no crossing at all.
+                    switch (mask) {
+                        case 0:
+                            // Neither strand is from the forgotten zone.
+                            for (i = 0; i <= kChild->size(); i += 2) {
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + i,
+                                    kNew->begin());
+                                (*kNew)[i] = id[0][0];
+                                (*kNew)[i + 1] = id[1][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->end(),
+                                    kNew->begin() + i + 2);
+
+                                vNew = passValue(vChild);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            break;
+                        case 1:
+                            // One strand is from a forgotten crossing.
+                            // Merge it with the other.
+                            std::cerr << "loop1a 1 merge" << std::endl;
+                            kNew = new Key(*kChild);
+                            (*kNew)[pos[0][0]] = id[1][1];
+
+                            vNew = passValue(vChild);
+                            aggregate(partial[index], kNew, vNew);
+                            break;
+                        case 8:
+                            // One strand is from a forgotten crossing.
+                            // Merge it with the other.
+                            std::cerr << "loop1a 8 merge" << std::endl;
+                            kNew = new Key(*kChild);
+                            (*kNew)[pos[1][1]] = id[0][0];
+
+                            vNew = passValue(vChild);
+                            aggregate(partial[index], kNew, vNew);
+                            break;
+                        case 9:
+                            // Both strands are from the forgotten zone.
+                            if (pos[1][1] + 1 == pos[0][0]) {
+                                // We are closing off a loop.
+                                if (pos[1][1] == kChild->size() - 2) {
+                                    std::cerr << "loop1a 9 pass" << std::endl;
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->end() - 2, kNew->begin());
+
+                                    // This is one of the few cases that
+                                    // could describe the last forget bag,
+                                    // where we must remember to subtract 1
+                                    // from the total number of loops.
+                                    vNew = passValue(vChild);
+                                    if (index != nBags - 1)
+                                        (*vNew) *= delta;
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else {
+                                // Just merge the two free ends.
+                                if (pos[0][0] + 1 == pos[1][1]) {
+                                    std::cerr << "loop1a 9 merge" << std::endl;
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[0][0],
+                                        kNew->begin());
+                                    std::copy(
+                                        kChild->begin() + pos[0][0] + 2,
+                                        kChild->end(),
+                                        kNew->begin() + pos[0][0]);
+
+                                    vNew = passValue(vChild);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            }
+                            break;
+                    }
+                } else if (c->next(1).crossing() == c) {
+                    // TODO: Case verified.
+                    // Case: the crossing is part of one loop (upper -> lower)
+                    // Work out which strands to/from the crossing run
+                    // into the forgotten zone.
+                    // In all of our analysis, we silently untwist the loop at
+                    // crossing c, and pretend there is no crossing at all.
+                    switch (mask) {
+                        case 0:
+                            // Neither strand is from the forgotten zone.
+                            for (i = 0; i <= kChild->size(); i += 2) {
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + i,
+                                    kNew->begin());
+                                (*kNew)[i] = id[1][0];
+                                (*kNew)[i + 1] = id[0][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->end(),
+                                    kNew->begin() + i + 2);
+
+                                vNew = passValue(vChild);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            break;
+                        case 2:
+                            // One strand is from a forgotten crossing.
+                            // Merge it with the other.
+                            std::cerr << "loop1b 2 merge" << std::endl;
+                            kNew = new Key(*kChild);
+                            (*kNew)[pos[0][1]] = id[1][0];
+
+                            vNew = passValue(vChild);
+                            aggregate(partial[index], kNew, vNew);
+                            break;
+                        case 4:
+                            // One strand is from a forgotten crossing.
+                            // Merge it with the other.
+                            std::cerr << "loop1b 4 merge" << std::endl;
+                            kNew = new Key(*kChild);
+                            (*kNew)[pos[1][0]] = id[0][1];
+
+                            vNew = passValue(vChild);
+                            aggregate(partial[index], kNew, vNew);
+                            break;
+                        case 6:
+                            // Both strands are from the forgotten zone.
+                            if (pos[0][1] + 1 == pos[1][0]) {
+                                // We are closing off a loop.
+                                if (pos[0][1] == kChild->size() - 2) {
+                                    std::cerr << "loop1b 6 pass" << std::endl;
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->end() - 2, kNew->begin());
+
+                                    // This is one of the few cases that
+                                    // could describe the last forget bag,
+                                    // where we must remember to subtract 1
+                                    // from the total number of loops.
+                                    vNew = passValue(vChild);
+                                    if (index != nBags - 1)
+                                        (*vNew) *= delta;
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else {
+                                // Just merge the two free ends.
+                                if (pos[1][0] + 1 == pos[0][1]) {
+                                    std::cerr << "loop1b 6 merge" << std::endl;
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[1][0],
+                                        kNew->begin());
+                                    std::copy(
+                                        kChild->begin() + pos[1][0] + 2,
+                                        kChild->end(),
+                                        kNew->begin() + pos[1][0]);
+
+                                    vNew = passValue(vChild);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            }
+                            break;
+                    }
+                } else {
+                    // Case: the crossing is part of no loops.
+                    // Work out which strands to/from the crossing run
+                    // into the forgotten zone.
+                    switch (mask) {
+                        case 0:
+                            // Case verified.
+                            // No strands are from forgotten crossings.
+                            for (i = 0; i <= kChild->size(); i += 2)
+                                for (j = i; j <= kChild->size(); j += 2) {
+                                    // Pass:
+                                    kNew = new Key(kChild->size() + 4);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + i,
+                                        kNew->begin());
+                                    (*kNew)[i] = id[1][0];
+                                    (*kNew)[i + 1] = id[1][1];
+                                    std::copy(kChild->begin() + i,
+                                        kChild->begin() + j,
+                                        kNew->begin() + i + 2);
+                                    (*kNew)[j + 2] = id[0][0];
+                                    (*kNew)[j + 3] = id[0][1];
+                                    std::copy(kChild->begin() + j,
+                                        kChild->end(),
+                                        kNew->begin() + j + 4);
+
+                                    vNew = passValue(vChild);
+                                    aggregate(partial[index], kNew, vNew);
+
+                                    // Switch:
+                                    kNew = new Key(kChild->size() + 4);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + i,
+                                        kNew->begin());
+                                    (*kNew)[i] = id[0][0];
+                                    (*kNew)[i + 1] = id[0][1];
+                                    std::copy(kChild->begin() + i,
+                                        kChild->begin() + j,
+                                        kNew->begin() + i + 2);
+                                    (*kNew)[j + 2] = id[1][0];
+                                    (*kNew)[j + 3] = id[1][1];
+                                    std::copy(kChild->begin() + j,
+                                        kChild->end(),
+                                        kNew->begin() + j + 4);
+
+                                    vNew = switchValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+
+                                    // Splice:
+                                    kNew = new Key(kChild->size() + 4);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + i,
+                                        kNew->begin());
+                                    (*kNew)[i] = id[0][0];
+                                    (*kNew)[i + 1] = id[1][1];
+                                    std::copy(kChild->begin() + i,
+                                        kChild->begin() + j,
+                                        kNew->begin() + i + 2);
+                                    (*kNew)[j + 2] = id[1][0];
+                                    (*kNew)[j + 3] = id[0][1];
+                                    std::copy(kChild->begin() + j,
+                                        kChild->end(),
+                                        kNew->begin() + j + 4);
+
+                                    vNew = spliceValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            break;
+                        case 1:
+                            // Case verified.
+                            for (i = 0; i < pos[0][0]; i += 2) {
+                                // Pass:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + i,
+                                    kNew->begin());
+                                (*kNew)[i] = id[1][0];
+                                (*kNew)[i + 1] = id[1][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->begin() + pos[0][0],
+                                    kNew->begin() + i + 2);
+                                (*kNew)[pos[0][0] + 2] = id[0][1];
+                                std::copy(kChild->begin() + pos[0][0] + 1,
+                                    kChild->end(),
+                                    kNew->begin() + pos[0][0] + 3);
+
+                                vNew = passValue(vChild);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            for (i = pos[0][0] + 1; i <= kChild->size();
+                                    i += 2) {
+                                // Switch:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + pos[0][0],
+                                    kNew->begin());
+                                (*kNew)[pos[0][0]] = id[0][1];
+                                std::copy(kChild->begin() + pos[0][0] + 1,
+                                    kChild->begin() + i,
+                                    kNew->begin() + pos[0][0] + 1);
+                                (*kNew)[i] = id[1][0];
+                                (*kNew)[i + 1] = id[1][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->end(),
+                                    kNew->begin() + i + 2);
+
+                                vNew = switchValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+
+                                // Splice:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + pos[0][0],
+                                    kNew->begin());
+                                (*kNew)[pos[0][0]] = id[1][1];
+                                std::copy(kChild->begin() + pos[0][0] + 1,
+                                    kChild->begin() + i,
+                                    kNew->begin() + pos[0][0] + 1);
+                                (*kNew)[i] = id[1][0];
+                                (*kNew)[i + 1] = id[0][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->end(),
+                                    kNew->begin() + i + 2);
+
+                                vNew = spliceValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            break;
+                        case 2:
+                            // Case verified.
+                            for (i = 0; i <= pos[0][1]; i += 2) {
+                                // Pass:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + i,
+                                    kNew->begin());
+                                (*kNew)[i] = id[1][0];
+                                (*kNew)[i + 1] = id[1][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->begin() + pos[0][1],
+                                    kNew->begin() + i + 2);
+                                (*kNew)[pos[0][1] + 2] = id[0][0];
+                                std::copy(kChild->begin() + pos[0][1] + 1,
+                                    kChild->end(),
+                                    kNew->begin() + pos[0][1] + 3);
+
+                                vNew = passValue(vChild);
+                                aggregate(partial[index], kNew, vNew);
+
+                                // Splice:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + i,
+                                    kNew->begin());
+                                (*kNew)[i] = id[0][0];
+                                (*kNew)[i + 1] = id[1][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->begin() + pos[0][1],
+                                    kNew->begin() + i + 2);
+                                (*kNew)[pos[0][1] + 2] = id[1][0];
+                                std::copy(kChild->begin() + pos[0][1] + 1,
+                                    kChild->end(),
+                                    kNew->begin() + pos[0][1] + 3);
+
+                                vNew = spliceValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            for (i = pos[0][1] + 2; i <= kChild->size();
+                                    i += 2) {
+                                // Switch:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + pos[0][1],
+                                    kNew->begin());
+                                (*kNew)[pos[0][1]] = id[0][0];
+                                std::copy(kChild->begin() + pos[0][1] + 1,
+                                    kChild->begin() + i,
+                                    kNew->begin() + pos[0][1] + 1);
+                                (*kNew)[i] = id[1][0];
+                                (*kNew)[i + 1] = id[1][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->end(),
+                                    kNew->begin() + i + 2);
+
+                                vNew = switchValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            break;
+                        case 3:
+                            // TODO: Case verified.
+                            if (pos[0][1] + 1 == pos[0][0]) {
+                                // d=a
+                                // Pass:
+                                if (pos[0][1] == kChild->size() - 2) {
+                                    std::cerr << "3a pass" << std::endl;
+                                    for (i = 0; i < kChild->size(); i += 2) {
+                                        kNew = new Key(kChild->size());
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + i,
+                                            kNew->begin());
+                                        (*kNew)[i] = id[1][0];
+                                        (*kNew)[i + 1] = id[1][1];
+                                        std::copy(kChild->begin() + i,
+                                            kChild->end() - 2,
+                                            kNew->begin() + i + 2);
+
+                                        vNew = passValue(vChild);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                }
+                            } else if (pos[0][0] < pos[0][1]) {
+                                // Splice:
+                                std::cerr << "3b splice" << std::endl;
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[0][0]] = id[1][1];
+                                (*kNew)[pos[0][1]] = id[1][0];
+
+                                vNew = spliceValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+
+                                if (pos[0][0] + 1 == pos[0][1]) {
+                                    // Pass and switch:
+                                    std::cerr << "3b pass/switch" << std::endl;
+                                    for (i = 0; i < pos[0][0]; i += 2) {
+                                        kNew = new Key(kChild->size());
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + i,
+                                            kNew->begin());
+                                        (*kNew)[i] = id[1][0];
+                                        (*kNew)[i + 1] = id[1][1];
+                                        std::copy(kChild->begin() + i,
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin() + i + 2);
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[0][0] + 2);
+
+                                        vNew = passValue(vChild);
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                    for (i = pos[0][1] + 2;
+                                            i <= kChild->size(); i += 2) {
+                                        kNew = new Key(kChild->size());
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 2,
+                                            kChild->begin() + i,
+                                            kNew->begin() + pos[0][0]);
+                                        (*kNew)[i - 2] = id[1][0];
+                                        (*kNew)[i - 1] = id[1][1];
+                                        std::copy(kChild->begin() + i,
+                                            kChild->end(),
+                                            kNew->begin() + i);
+
+                                        vNew = switchValue(vChild, c);
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                }
+                            }
+                            break;
+                        case 4:
+                            // Case verified.
+                            for (i = 0; i < pos[1][0]; i += 2) {
+                                // Switch:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + i,
+                                    kNew->begin());
+                                (*kNew)[i] = id[0][0];
+                                (*kNew)[i + 1] = id[0][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->begin() + pos[1][0],
+                                    kNew->begin() + i + 2);
+                                (*kNew)[pos[1][0] + 2] = id[1][1];
+                                std::copy(kChild->begin() + pos[1][0] + 1,
+                                    kChild->end(),
+                                    kNew->begin() + pos[1][0] + 3);
+
+                                vNew = switchValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+
+                                // Splice:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + i,
+                                    kNew->begin());
+                                (*kNew)[i] = id[0][0];
+                                (*kNew)[i + 1] = id[1][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->begin() + pos[1][0],
+                                    kNew->begin() + i + 2);
+                                (*kNew)[pos[1][0] + 2] = id[0][1];
+                                std::copy(kChild->begin() + pos[1][0] + 1,
+                                    kChild->end(),
+                                    kNew->begin() + pos[1][0] + 3);
+
+                                vNew = spliceValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            for (i = pos[1][0] + 1; i <= kChild->size();
+                                    i += 2) {
+                                // Pass:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + pos[1][0],
+                                    kNew->begin());
+                                (*kNew)[pos[1][0]] = id[1][1];
+                                std::copy(kChild->begin() + pos[1][0] + 1,
+                                    kChild->begin() + i,
+                                    kNew->begin() + pos[1][0] + 1);
+                                (*kNew)[i] = id[0][0];
+                                (*kNew)[i + 1] = id[0][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->end(),
+                                    kNew->begin() + i + 2);
+
+                                vNew = passValue(vChild);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            break;
+                        case 5:
+                            // Case verified.
+                            // Both incoming strands are from
+                            // forgotten crossings.
+                            if (pos[0][0] < pos[1][0]) {
+                                // Switch:
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[0][0]] = id[0][1];
+                                (*kNew)[pos[1][0]] = id[1][1];
+
+                                vNew = switchValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+
+                                // Splice:
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[0][0]] = id[1][1];
+                                (*kNew)[pos[1][0]] = id[0][1];
+
+                                vNew = spliceValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+                            } else {
+                                // Pass:
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[0][0]] = id[0][1];
+                                (*kNew)[pos[1][0]] = id[1][1];
+
+                                vNew = passValue(vChild);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            break;
+                        case 6:
+                            // Case verified.
+                            if (pos[0][1] + 1 == pos[1][0]) {
+                                // d=b
+                                // Switch:
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[0][1]] = id[0][0];
+                                (*kNew)[pos[1][0]] = id[1][1];
+
+                                vNew = switchValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+
+                                if (pos[0][1] == kChild->size() - 2) {
+                                    // Splice:
+                                    for (i = 0; i < kChild->size(); i += 2) {
+                                        kNew = new Key(kChild->size());
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + i,
+                                            kNew->begin());
+                                        (*kNew)[i] = id[0][0];
+                                        (*kNew)[i + 1] = id[1][1];
+                                        std::copy(kChild->begin() + i,
+                                            kChild->end() - 2,
+                                            kNew->begin() + i + 2);
+
+                                        vNew = spliceValue(vChild, c);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                }
+                            } else {
+                                if (pos[1][0] < pos[0][1]) {
+                                    // Pass:
+                                    kNew = new Key(*kChild);
+                                    (*kNew)[pos[0][1]] = id[0][0];
+                                    (*kNew)[pos[1][0]] = id[1][1];
+
+                                    vNew = passValue(vChild);
+                                    aggregate(partial[index], kNew, vNew);
+
+                                    if (pos[1][0] + 1 == pos[0][1]) {
+                                        // Splice:
+                                        for (i = 0; i < pos[1][0]; i += 2) {
+                                            kNew = new Key(kChild->size());
+                                            std::copy(kChild->begin(),
+                                                kChild->begin() + i,
+                                                kNew->begin());
+                                            (*kNew)[i] = id[0][0];
+                                            (*kNew)[i + 1] = id[1][1];
+                                            std::copy(kChild->begin() + i,
+                                                kChild->begin() + pos[1][0],
+                                                kNew->begin() + i + 2);
+                                            std::copy(
+                                                kChild->begin() + pos[1][0] + 2,
+                                                kChild->end(),
+                                                kNew->begin() + pos[1][0] + 2);
+
+                                            vNew = spliceValue(vChild, c);
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
+                                    }
+                                } else {
+                                    // Switch:
+                                    kNew = new Key(*kChild);
+                                    (*kNew)[pos[0][1]] = id[0][0];
+                                    (*kNew)[pos[1][0]] = id[1][1];
+
+                                    vNew = switchValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            }
+                            break;
+                        case 7:
+                            // Case verified.
+                            if (pos[0][1] + 1 == pos[1][0]) {
+                                // d=b
+                                // Switch and splice:
+                                if (pos[0][0] + 1 == pos[0][1]) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[0][0],
+                                        kNew->begin());
+                                    (*kNew)[pos[0][0]] = id[1][1];
+                                    std::copy(kChild->begin() + pos[0][0] + 3,
+                                        kChild->end(),
+                                        kNew->begin() + pos[0][0] + 1);
+
+                                    vNew = switchValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                                if (pos[0][1] == kChild->size() - 2) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->end() - 2, kNew->begin());
+                                    (*kNew)[pos[0][0]] = id[1][1];
+
+                                    vNew = spliceValue(vChild, c);
+                                    (*vNew) *= delta;
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else if (pos[0][1] + 1 == pos[0][0]) {
+                                // d=a
+                                // Pass:
+                                if (pos[0][1] == kChild->size() - 2) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->end() - 2, kNew->begin());
+                                    (*kNew)[pos[1][0]] = id[1][1];
+
+                                    vNew = passValue(vChild);
+                                    (*vNew) *= delta;
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else {
+                                if (pos[0][0] + 1 == pos[0][1]) {
+                                    // Pass and switch:
+                                    kNew = new Key(kChild->size() - 2);
+                                    if (pos[1][0] < pos[0][0]) {
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[0][0]);
+                                        (*kNew)[pos[1][0]] = id[1][1];
+
+                                        vNew = passValue(vChild);
+                                    } else {
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[0][0]);
+                                        (*kNew)[pos[1][0] - 2] = id[1][1];
+
+                                        vNew = switchValue(vChild, c);
+                                    }
+                                    aggregate(partial[index], kNew, vNew);
+                                } else if (pos[1][0] + 1 == pos[0][1] &&
+                                        pos[0][0] < pos[1][0]) {
+                                    // Splice:
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[1][0],
+                                        kNew->begin());
+                                    std::copy(
+                                        kChild->begin() + pos[1][0] + 2,
+                                        kChild->end(),
+                                        kNew->begin() + pos[1][0]);
+                                    (*kNew)[pos[0][0]] = id[1][1];
+
+                                    vNew = spliceValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            }
+                            break;
+                        case 8:
+                            // Case verified.
+                            for (i = 0; i <= pos[1][1]; i += 2) {
+                                // Switch:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + i,
+                                    kNew->begin());
+                                (*kNew)[i] = id[0][0];
+                                (*kNew)[i + 1] = id[0][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->begin() + pos[1][1],
+                                    kNew->begin() + i + 2);
+                                (*kNew)[pos[1][1] + 2] = id[1][0];
+                                std::copy(kChild->begin() + pos[1][1] + 1,
+                                    kChild->end(),
+                                    kNew->begin() + pos[1][1] + 3);
+
+                                vNew = switchValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            for (i = pos[1][1] + 2; i <= kChild->size();
+                                    i += 2) {
+                                // Pass:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + pos[1][1],
+                                    kNew->begin());
+                                (*kNew)[pos[1][1]] = id[1][0];
+                                std::copy(kChild->begin() + pos[1][1] + 1,
+                                    kChild->begin() + i,
+                                    kNew->begin() + pos[1][1] + 1);
+                                (*kNew)[i] = id[0][0];
+                                (*kNew)[i + 1] = id[0][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->end(),
+                                    kNew->begin() + i + 2);
+
+                                vNew = passValue(vChild);
+                                aggregate(partial[index], kNew, vNew);
+
+                                // Splice:
+                                kNew = new Key(kChild->size() + 2);
+                                std::copy(kChild->begin(),
+                                    kChild->begin() + pos[1][1],
+                                    kNew->begin());
+                                (*kNew)[pos[1][1]] = id[0][0];
+                                std::copy(kChild->begin() + pos[1][1] + 1,
+                                    kChild->begin() + i,
+                                    kNew->begin() + pos[1][1] + 1);
+                                (*kNew)[i] = id[1][0];
+                                (*kNew)[i + 1] = id[0][1];
+                                std::copy(kChild->begin() + i,
+                                    kChild->end(),
+                                    kNew->begin() + i + 2);
+
+                                vNew = spliceValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            break;
+                        case 9:
+                            // Case verified.
+                            if (pos[1][1] + 1 == pos[0][0]) {
+                                // c=a
+                                // Pass:
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[1][1]] = id[1][0];
+                                (*kNew)[pos[0][0]] = id[0][1];
+
+                                vNew = passValue(vChild);
+                                aggregate(partial[index], kNew, vNew);
+                            } else {
+                                if (pos[1][1] < pos[0][0]) {
+                                    // Pass:
+                                    kNew = new Key(*kChild);
+                                    (*kNew)[pos[1][1]] = id[1][0];
+                                    (*kNew)[pos[0][0]] = id[0][1];
+
+                                    vNew = passValue(vChild);
+                                    aggregate(partial[index], kNew, vNew);
+                                } else {
+                                    // Switch:
+                                    kNew = new Key(*kChild);
+                                    (*kNew)[pos[1][1]] = id[1][0];
+                                    (*kNew)[pos[0][0]] = id[0][1];
+
+                                    vNew = switchValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+
+                                    if (pos[0][0] + 1 == pos[1][1]) {
+                                        // Splice:
+                                        for (i = pos[1][1] + 2;
+                                                i <= kChild->size(); i += 2) {
+                                            kNew = new Key(kChild->size());
+                                            std::copy(kChild->begin(),
+                                                kChild->begin() + pos[0][0],
+                                                kNew->begin());
+                                            std::copy(
+                                                kChild->begin() + pos[0][0] + 2,
+                                                kChild->begin() + i,
+                                                kNew->begin() + pos[0][0]);
+                                            (*kNew)[i - 2] = id[1][0];
+                                            (*kNew)[i - 1] = id[0][1];
+                                            std::copy(kChild->begin() + i,
+                                                kChild->end(),
+                                                kNew->begin() + i);
+
+                                            vNew = spliceValue(vChild, c);
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
+                                    }
+                                }
+                            }
+                            break;
+                        case 10:
+                            // Case verified.
+                            // Both outgoing strands are to
+                            // forgotten crossings.
+                            if (pos[0][1] < pos[1][1]) {
+                                // Switch:
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[0][1]] = id[0][0];
+                                (*kNew)[pos[1][1]] = id[1][0];
+
+                                vNew = switchValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+                            } else {
+                                // Pass:
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[0][1]] = id[0][0];
+                                (*kNew)[pos[1][1]] = id[1][0];
+
+                                vNew = passValue(vChild);
+                                aggregate(partial[index], kNew, vNew);
+
+                                // Splice:
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[0][1]] = id[1][0];
+                                (*kNew)[pos[1][1]] = id[0][0];
+
+                                vNew = spliceValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+                            }
+                            break;
+                        case 11:
+                            // Case verified.
+                            if (pos[0][1] + 1 == pos[0][0]) {
+                                // d=a
+                                // Pass:
+                                if (pos[0][1] == kChild->size() - 2) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->end() - 2, kNew->begin());
+                                    (*kNew)[pos[1][1]] = id[1][0];
+
+                                    vNew = passValue(vChild);
+                                    (*vNew) *= delta;
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else if (pos[1][1] + 1 == pos[0][0]) {
+                                // c=a
+                                // Pass:
+                                if (pos[0][0] + 1 == pos[0][1]) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[1][1],
+                                        kNew->begin());
+                                    (*kNew)[pos[1][1]] = id[1][0];
+                                    std::copy(kChild->begin() + pos[1][1] + 3,
+                                        kChild->end(),
+                                        kNew->begin() + pos[1][1] + 1);
+
+                                    vNew = passValue(vChild);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else {
+                                if (pos[0][0] + 1 == pos[0][1]) {
+                                    // Pass and switch:
+                                    kNew = new Key(kChild->size() - 2);
+                                    if (pos[1][1] < pos[0][1]) {
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[0][0]);
+                                        (*kNew)[pos[1][1]] = id[1][0];
+
+                                        vNew = passValue(vChild);
+                                    } else {
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[0][0]);
+                                        (*kNew)[pos[1][1] - 2] = id[1][0];
+
+                                        vNew = switchValue(vChild, c);
+                                    }
+                                    aggregate(partial[index], kNew, vNew);
+                                } else if (pos[0][0] + 1 == pos[1][1] &&
+                                        pos[1][1] < pos[0][1]) {
+                                    // Splice:
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[0][0],
+                                        kNew->begin());
+                                    std::copy(
+                                        kChild->begin() + pos[0][0] + 2,
+                                        kChild->end(),
+                                        kNew->begin() + pos[0][0]);
+                                    (*kNew)[pos[0][1] - 2] = id[1][0];
+
+                                    vNew = spliceValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            }
+                            break;
+                        case 12:
+                            // TODO: Case verified.
+                            if (pos[1][1] + 1 == pos[1][0]) {
+                                // c=b
+                                // Splice:
+                                std::cerr << "12a splice" << std::endl;
+                                kNew = new Key(*kChild);
+                                (*kNew)[pos[1][1]] = id[0][0];
+                                (*kNew)[pos[1][0]] = id[0][1];
+
+                                vNew = spliceValue(vChild, c);
+                                aggregate(partial[index], kNew, vNew);
+
+                                if (pos[1][1] == kChild->size() - 2) {
+                                    // Switch:
+                                    std::cerr << "12a switch" << std::endl;
+                                    for (i = 0; i < kChild->size(); i += 2) {
+                                        kNew = new Key(kChild->size());
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + i,
+                                            kNew->begin());
+                                        (*kNew)[i] = id[0][0];
+                                        (*kNew)[i + 1] = id[0][1];
+                                        std::copy(kChild->begin() + i,
+                                            kChild->end() - 2,
+                                            kNew->begin() + i + 2);
+
+                                        vNew = switchValue(vChild, c);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                }
+                            } else {
+                                if (pos[1][1] < pos[1][0]) {
+                                    // Splice:
+                                    std::cerr << "12b splice" << std::endl;
+                                    kNew = new Key(*kChild);
+                                    (*kNew)[pos[1][1]] = id[0][0];
+                                    (*kNew)[pos[1][0]] = id[0][1];
+
+                                    vNew = spliceValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                } else if (pos[1][0] + 1 == pos[1][1]) {
+                                    // Pass and switch:
+                                    std::cerr << "12b pass/switch" << std::endl;
+                                    for (i = 0; i < pos[1][0]; i += 2) {
+                                        kNew = new Key(kChild->size());
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + i,
+                                            kNew->begin());
+                                        (*kNew)[i] = id[0][0];
+                                        (*kNew)[i + 1] = id[0][1];
+                                        std::copy(kChild->begin() + i,
+                                            kChild->begin() + pos[1][0],
+                                            kNew->begin() + i + 2);
+                                        std::copy(
+                                            kChild->begin() + pos[1][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[1][0] + 2);
+
+                                        vNew = switchValue(vChild, c);
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                    for (i = pos[1][1] + 2;
+                                            i <= kChild->size(); i += 2) {
+                                        kNew = new Key(kChild->size());
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[1][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[1][0] + 2,
+                                            kChild->begin() + i,
+                                            kNew->begin() + pos[1][0]);
+                                        (*kNew)[i - 2] = id[0][0];
+                                        (*kNew)[i - 1] = id[0][1];
+                                        std::copy(kChild->begin() + i,
+                                            kChild->end(),
+                                            kNew->begin() + i);
+
+                                        vNew = passValue(vChild);
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                }
+                            }
+                            break;
+                        case 13:
+                            // Case verified.
+                            if (pos[1][1] + 1 == pos[0][0]) {
+                                // c=a
+                                // Pass:
+                                if (pos[1][0] + 1 == pos[1][1]) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[1][0],
+                                        kNew->begin());
+                                    (*kNew)[pos[1][0]] = id[0][1];
+                                    std::copy(kChild->begin() + pos[1][0] + 3,
+                                        kChild->end(),
+                                        kNew->begin() + pos[1][0] + 1);
+
+                                    vNew = passValue(vChild);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else if (pos[1][1] + 1 == pos[1][0]) {
+                                // c=b
+                                // Switch and splice:
+                                if (pos[1][1] == kChild->size() - 2) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->end() - 2, kNew->begin());
+                                    (*kNew)[pos[0][0]] = id[0][1];
+
+                                    vNew = switchValue(vChild, c);
+                                    (*vNew) *= delta;
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                                if (pos[0][0] + 1 == pos[1][1]) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[0][0],
+                                        kNew->begin());
+                                    (*kNew)[pos[0][0]] = id[0][1];
+                                    std::copy(kChild->begin() + pos[0][0] + 3,
+                                        kChild->end(),
+                                        kNew->begin() + pos[0][0] + 1);
+
+                                    vNew = spliceValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else {
+                                if (pos[1][0] + 1 == pos[1][1]) {
+                                    // Pass and switch:
+                                    kNew = new Key(kChild->size() - 2);
+                                    if (pos[1][0] < pos[0][0]) {
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[1][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[1][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[1][0]);
+                                        (*kNew)[pos[0][0] - 2] = id[0][1];
+
+                                        vNew = passValue(vChild);
+                                    } else {
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[1][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[1][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[1][0]);
+                                        (*kNew)[pos[0][0]] = id[0][1];
+
+                                        vNew = switchValue(vChild, c);
+                                    }
+                                    aggregate(partial[index], kNew, vNew);
+                                } else if (pos[0][0] + 1 == pos[1][1] &&
+                                        pos[0][0] < pos[1][0]) {
+                                    // Splice:
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[0][0],
+                                        kNew->begin());
+                                    std::copy(
+                                        kChild->begin() + pos[0][0] + 2,
+                                        kChild->end(),
+                                        kNew->begin() + pos[0][0]);
+                                    (*kNew)[pos[1][0] - 2] = id[0][1];
+
+                                    vNew = spliceValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            }
+                            break;
+                        case 14:
+                            // Case verified.
+                            if (pos[0][1] + 1 == pos[1][0]) {
+                                // d=b
+                                // Switch and splice:
+                                if (pos[1][0] + 1 == pos[1][1]) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[0][1],
+                                        kNew->begin());
+                                    (*kNew)[pos[0][1]] = id[0][0];
+                                    std::copy(kChild->begin() + pos[0][1] + 3,
+                                        kChild->end(),
+                                        kNew->begin() + pos[0][1] + 1);
+
+                                    vNew = switchValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                } else if (pos[0][1] == kChild->size() - 2) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->end() - 2, kNew->begin());
+                                    (*kNew)[pos[1][1]] = id[0][0];
+
+                                    vNew = spliceValue(vChild, c);
+                                    (*vNew) *= delta;
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else if (pos[1][1] + 1 == pos[1][0]) {
+                                // c=b
+                                // Switch and splice:
+                                if (pos[1][0] + 1 == pos[0][1]) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[1][1],
+                                        kNew->begin());
+                                    (*kNew)[pos[1][1]] = id[0][0];
+                                    std::copy(kChild->begin() + pos[1][1] + 3,
+                                        kChild->end(),
+                                        kNew->begin() + pos[1][1] + 1);
+
+                                    vNew = spliceValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                } else if (pos[1][1] == kChild->size() - 2) {
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->end() - 2, kNew->begin());
+                                    (*kNew)[pos[0][1]] = id[0][0];
+
+                                    vNew = switchValue(vChild, c);
+                                    (*vNew) *= delta;
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            } else {
+                                if (pos[1][0] + 1 == pos[1][1]) {
+                                    // Pass and switch:
+                                    kNew = new Key(kChild->size() - 2);
+                                    if (pos[1][1] < pos[0][1]) {
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[1][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[1][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[1][0]);
+                                        (*kNew)[pos[0][1] - 2] = id[0][0];
+
+                                        vNew = passValue(vChild);
+                                    } else {
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[1][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[1][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[1][0]);
+                                        (*kNew)[pos[0][1]] = id[0][0];
+
+                                        vNew = switchValue(vChild, c);
+                                    }
+                                    aggregate(partial[index], kNew, vNew);
+                                } else if (pos[1][0] + 1 == pos[0][1] &&
+                                        pos[1][1] < pos[0][1]) {
+                                    // Splice:
+                                    kNew = new Key(kChild->size() - 2);
+                                    std::copy(kChild->begin(),
+                                        kChild->begin() + pos[1][0],
+                                        kNew->begin());
+                                    std::copy(
+                                        kChild->begin() + pos[1][0] + 2,
+                                        kChild->end(),
+                                        kNew->begin() + pos[1][0]);
+                                    (*kNew)[pos[1][1]] = id[0][0];
+
+                                    vNew = spliceValue(vChild, c);
+                                    aggregate(partial[index], kNew, vNew);
+                                }
+                            }
+                            break;
+                        case 15:
+                            // All strands are from forgotten crossings.
+                            if (pos[0][1] + 1 == pos[0][0]) {
+                                if (pos[1][1] + 1 == pos[1][0]) {
+                                    // d=a, c=b
+                                    // Pass:
+                                    if (pos[1][1] == kChild->size() - 4 &&
+                                            pos[0][1] == kChild->size() - 2) {
+                                        kNew = new Key(kChild->size() - 4);
+                                        std::copy(kChild->begin(),
+                                            kChild->end() - 4, kNew->begin());
+
+                                        // This is one of the few cases that
+                                        // could describe the last forget bag,
+                                        // where we must remember to subtract 1
+                                        // from the total number of loops.
+                                        vNew = passValue(vChild);
+                                        (*vNew) *= delta;
+                                        if (index != nBags - 1)
+                                            (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                } else {
+                                    // TODO: Subcase verified.
+                                    // d=a
+                                    // Pass:
+                                    if (pos[0][1] == kChild->size() - 2 &&
+                                            pos[1][0] + 1 == pos[1][1]) {
+                                        std::cerr << "15b pass" << std::endl;
+                                        kNew = new Key(kChild->size() - 4);
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[1][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[1][0] + 2,
+                                            kChild->end() - 2,
+                                            kNew->begin() + pos[1][0]);
+
+                                        vNew = passValue(vChild);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                }
+                            } else if (pos[0][1] + 1 == pos[1][0]) {
+                                if (pos[1][1] + 1 == pos[0][0]) {
+                                    // d=b, c=a
+                                    // Pass:
+                                    if (pos[1][1] == kChild->size() - 4 &&
+                                            pos[0][1] == kChild->size() - 2) {
+                                        kNew = new Key(kChild->size() - 4);
+                                        std::copy(kChild->begin(),
+                                            kChild->end() - 4, kNew->begin());
+
+                                        // This is one of the few cases that
+                                        // could describe the last forget bag,
+                                        // where we must remember to subtract 1
+                                        // from the total number of loops.
+                                        vNew = passValue(vChild);
+                                        if (index != nBags - 1)
+                                            (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                } else {
+                                    // d=b
+                                    // Switch and splice:
+                                    if (pos[1][0] + 1 == pos[1][1] &&
+                                            pos[0][0] + 1 == pos[0][1]) {
+                                        kNew = new Key(kChild->size() - 4);
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 4,
+                                            kChild->end(),
+                                            kNew->begin() + pos[0][0]);
+
+                                        vNew = switchValue(vChild, c);
+                                        aggregate(partial[index], kNew, vNew);
+                                    } else if (pos[0][0] + 1 == pos[1][1] &&
+                                            pos[0][1] == kChild->size() - 2) {
+                                        kNew = new Key(kChild->size() - 4);
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 2,
+                                            kChild->end() - 2,
+                                            kNew->begin() + pos[0][0]);
+
+                                        vNew = spliceValue(vChild, c);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                }
+                            } else {
+                                if (pos[1][1] + 1 == pos[1][0]) {
+                                    // TODO: Subcase verified.
+                                    // c=b
+                                    // Switch and splice:
+                                    if (pos[0][0] + 1 == pos[0][1] &&
+                                            pos[1][1] == kChild->size() - 2) {
+                                        std::cerr << "15e switch" << std::endl;
+                                        kNew = new Key(kChild->size() - 4);
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 2,
+                                            kChild->end() - 2,
+                                            kNew->begin() + pos[0][0]);
+
+                                        vNew = switchValue(vChild, c);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    } else if (pos[0][0] + 1 == pos[1][1] &&
+                                            pos[1][0] + 1 == pos[0][1]) {
+                                        std::cerr << "15e splice" << std::endl;
+                                        kNew = new Key(kChild->size() - 4);
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 4,
+                                            kChild->end(),
+                                            kNew->begin() + pos[0][0]);
+
+                                        vNew = spliceValue(vChild, c);
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                } else if (pos[1][1] + 1 == pos[0][0]) {
+                                    // c=a
+                                    // Pass:
+                                    if (pos[1][0] + 1 == pos[1][1] &&
+                                            pos[0][0] + 1 == pos[0][1]) {
+                                        kNew = new Key(kChild->size() - 4);
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[1][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[1][0] + 4,
+                                            kChild->end(),
+                                            kNew->begin() + pos[1][0]);
+
+                                        vNew = passValue(vChild);
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                } else {
+                                    // Pass, switch and splice:
+                                    if (pos[0][0] + 1 == pos[0][1] &&
+                                            pos[1][0] + 1 == pos[1][1]) {
+                                        kNew = new Key(kChild->size() - 4);
+                                        if (pos[1][0] < pos[0][0]) {
+                                            std::copy(kChild->begin(),
+                                                kChild->begin() + pos[1][0],
+                                                kNew->begin());
+                                            std::copy(
+                                                kChild->begin() + pos[1][0] + 2,
+                                                kChild->begin() + pos[0][0],
+                                                kNew->begin() + pos[1][0]);
+                                            std::copy(
+                                                kChild->begin() + pos[0][0] + 2,
+                                                kChild->end(),
+                                                kNew->begin() + pos[0][0] - 2);
+
+                                            vNew = passValue(vChild);
+                                        } else {
+                                            std::copy(kChild->begin(),
+                                                kChild->begin() + pos[0][0],
+                                                kNew->begin());
+                                            std::copy(
+                                                kChild->begin() + pos[0][0] + 2,
+                                                kChild->begin() + pos[1][0],
+                                                kNew->begin() + pos[0][0]);
+                                            std::copy(
+                                                kChild->begin() + pos[1][0] + 2,
+                                                kChild->end(),
+                                                kNew->begin() + pos[1][0] - 2);
+
+                                            vNew = switchValue(vChild, c);
+                                        }
+                                        aggregate(partial[index], kNew, vNew);
+                                    } else if (pos[0][0] + 1 == pos[1][1] &&
+                                            pos[1][0] + 1 == pos[0][1] &&
+                                            pos[0][0] < pos[1][0]) {
+                                        kNew = new Key(kChild->size() - 4);
+                                        std::copy(kChild->begin(),
+                                            kChild->begin() + pos[0][0],
+                                            kNew->begin());
+                                        std::copy(
+                                            kChild->begin() + pos[0][0] + 2,
+                                            kChild->begin() + pos[1][0],
+                                            kNew->begin() + pos[0][0]);
+                                        std::copy(
+                                            kChild->begin() + pos[1][0] + 2,
+                                            kChild->end(),
+                                            kNew->begin() + pos[1][0] - 2);
+
+                                        vNew = spliceValue(vChild, c);
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
+                                }
+                            }
+                            break;
+                    }
+                }
+
+                delete kChild;
+                delete vChild;
+            }
+
+            delete partial[child->index()];
+            partial[child->index()] = nullptr;
+        } else {
+            // Join bag.
+            child = bag->children();
+            sibling = child->sibling();
+
+            // Extract the sizes of each bag's keys.
+            // The key size depends only on the bag, not the particular
+            // key-value solution at that bag.
+            //
+            // We can get this information from the first solution in
+            // each child bag, since each bag is guaranteed to have at
+            // least one solution (since there is always some way to
+            // traverse the link).
+            size_t pairs1 = partial[child->index()]->begin()->first->size()/2;
+            size_t pairs2 = partial[sibling->index()]->begin()->first->size()/2;
+            size_t pairs = pairs1 + pairs2;
+
+            // std::cerr << "JOIN -> " <<
+            //     partial[child->index()]->size() << " x " <<
+            //     partial[sibling->index()]->size() << std::endl;
+
+            partial[index] = new SolnSet;
+            const Key *k1, *k2;
+            const Value *v1, *v2;
+            Key *kNew;
+            Value *vNew;
+
+            // TODO: Make this work for arbitrary sized bags.
+            typedef unsigned long Mask;
+            Mask mask;
+            int pos1, pos2, pos;
+            for (auto& soln1 : *(partial[child->index()])) {
+                k1 = soln1.first;
+                v1 = soln1.second;
+
+                for (auto& soln2 : *(partial[sibling->index()])) {
+                    k2 = soln2.first;
+                    v2 = soln2.second;
+
+                    // Combine the two child keys and values in all
+                    // possible ways.
+                    if (pairs1 == 0) {
+                        kNew = new Key(*k2);
+                        vNew = new Value(*v1);
+                        *vNew *= *v2;
+
+                        if (! partial[index]->insert(
+                                std::make_pair(kNew, vNew)).second)
+                            std::cerr << "ERROR: Combined keys in join "
+                                "bag are not unique" << std::endl;
+                    } else if (pairs2 == 0) {
+                        kNew = new Key(*k1);
+                        vNew = new Value(*v1);
+                        *vNew *= *v2;
+
+                        if (! partial[index]->insert(
+                                std::make_pair(kNew, vNew)).second)
+                            std::cerr << "ERROR: Combined keys in join "
+                                "bag are not unique" << std::endl;
+                    } else {
+                        Value val(*v1);
+                        val *= *v2;
+
+                        for (mask = ((Mask)(1) << pairs2) - 1;
+                                mask && ! (mask & ((Mask)(1) << pairs));
+                                mask = BitManipulator<Mask>::nextPermutation(mask)) {
+                            // The bits of mask correspond to the
+                            // positions of pairs in the final key.
+                            kNew = new Key(k1->size() + k2->size());
+
+                            pos1 = pos2 = 0;
+                            for (pos = 0; pos < pairs; ++pos) {
+                                if (mask & ((Mask)(1) << pos)) {
+                                    // Use the next pair from k2.
+                                    (*kNew)[2 * pos] = (*k2)[2 * pos2];
+                                    (*kNew)[2 * pos + 1] = (*k2)[2 * pos2 + 1];
+                                    ++pos2;
+                                } else {
+                                    // Use the next pair from k1.
+                                    (*kNew)[2 * pos] = (*k1)[2 * pos1];
+                                    (*kNew)[2 * pos + 1] = (*k1)[2 * pos1 + 1];
+                                    ++pos1;
+                                }
+                            }
+
+                            if (! partial[index]->insert(std::make_pair(
+                                    kNew, new Value(val))).second)
+                                std::cerr << "ERROR: Combined keys in join "
+                                    "bag are not unique" << std::endl;
+                        }
+                    }
+                }
+            }
+
+            for (auto& soln : *(partial[child->index()])) {
+                delete soln.first;
+                delete soln.second;
+            }
+            for (auto& soln : *(partial[sibling->index()])) {
+                delete soln.first;
+                delete soln.second;
+            }
+
+            delete partial[child->index()];
+            delete partial[sibling->index()];
+            partial[child->index()] = partial[sibling->index()] = nullptr;
+        }
+
+        /*
+        for (const auto& soln : *(partial[index])) {
+            for (int i = 0; i < soln.first->size(); ++i)
+                std::cerr << (*soln.first)[i] << ' ';
+            std::cerr << "-> " << (*soln.second) << std::endl;
+        }
+        */
+    }
+
+    // Collect the final answer from partial[nBags - 1].
+    // std::cerr << "FINISH" << std::endl;
+    Value* ans = partial[nBags - 1]->begin()->second;
+
+    for (auto& soln : *(partial[nBags - 1])) {
+        delete soln.first;
+        if (soln.second != ans)
+            delete soln.second;
+    }
+    delete partial[nBags - 1];
+
+    delete[] partial;
+
+    // Finally, factor in any zero-crossing components.
+    for (StrandRef s : components_)
+        if (! s)
+            (*ans) *= delta;
+
+    return ans;
 }
 
 const Laurent2<Integer>& Link::homflyAZ(Algorithm alg) const {
