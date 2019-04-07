@@ -103,7 +103,250 @@ namespace {
         CROSSING_SPLICE_2 = 7
     };
 
+    /**
+     * Helper data used to test whether a key is viable; that is,
+     * whether the data from that key might survive all the way up to
+     * the root of the tree decomposition.
+     */
+    struct ViabilityData {
+        const Link* link;
+
+        /**
+         * An array that gives the bag index at which each crossing is
+         * eventually forgotten.
+         *
+         * It is assumed that the underlying tree decomposition is nice.
+         */
+        int* forgetCrossing;
+
+        /**
+         * An array that, for each strand ID, records which of the two
+         * crossings is forgotten last.  This array stores crossing IDs.
+         */
+        int* lastCrossing;
+
+        /**
+         * An array that, for each strand ID, records the bag index at
+         * which the entire strand is forgotten.
+         */
+        int* forgetStrand;
+
+        /**
+         * The remaining data is specific to each bag, but not each key.
+         *
+         * For a crossing at index i, mask[i] is a bitwise combination of:
+         *
+         * * 1 if the lower incoming strand comes from the forgotten zone;
+         * * 2 if the upper incoming strand comes from the forgotten zone;
+         * * 4 if the lower outgoing strand goes into the forgotten zone;
+         * * 8 if the upper outgoing strand goes into the forgotten zone.
+         *
+         * Since maskReady is filled on demand, we also keep a boolean
+         * to tell us whether or not this has been done yet.
+         */
+        char* mask;
+        bool maskReady;
+
+        ViabilityData(const Link* l, const TreeDecomposition& d) :
+                link(l),
+                forgetCrossing(new int[l->size()]),
+                lastCrossing(new int[2 * l->size()]),
+                forgetStrand(new int[2 * l->size()]),
+                mask(new char[l->size()]) {
+            for (const TreeBag* b = d.first(); b; b = b->next())
+                if (b->type() == NICE_FORGET)
+                    forgetCrossing[b->children()->element(b->subtype())] =
+                        b->index();
+
+            int from, to;
+            for (int i = 0; i < 2 * l->size(); ++i) {
+                from = i / 2;
+                to = l->crossing(from)->next(i % 2).crossing()->index();
+                if (forgetCrossing[from] >= forgetCrossing[to]) {
+                    lastCrossing[i] = from;
+                    forgetStrand[i] = forgetCrossing[from];
+                } else {
+                    lastCrossing[i] = to;
+                    forgetStrand[i] = forgetCrossing[to];
+                }
+            }
+        }
+
+        void initBag() {
+            std::fill(mask, mask + link->size(), 0);
+            maskReady = false;
+        }
+
+        ~ViabilityData() {
+            delete[] mask;
+            delete[] forgetStrand;
+            delete[] lastCrossing;
+            delete[] forgetCrossing;
+        }
+
+        /**
+         * Tests whether the data from the given key might survive all the way
+         * up to the root of the tree decomposition.
+         *
+         * Side-effect: if the answer is no, then this routine deletes the key.
+         *
+         * TODO: Remove the now-redundant argument l.
+         */
+        bool keyViable(LightweightSequence<int>* key) {
+            int n = key->size();
+            int i;
+
+            if (! maskReady) {
+                Crossing* c;
+                int strandID;
+                StrandRef strand;
+
+                for (i = 0; i < n; i += 2) {
+                    // (*key)[i]   : bag -> forgotten zone
+                    // (*key)[i+1] : forgotten zone -> bag
+                    strandID = (*key)[i];
+                    c = link->crossing(strandID / 2);
+                    strand = c->strand(strandID % 2);
+
+                    if (strand.strand() == 0)
+                        mask[c->index()] |= 4;
+                    else
+                        mask[c->index()] |= 8;
+
+                    strandID = (*key)[i + 1];
+                    strand = link->crossing(strandID / 2)->next(strandID % 2);
+                    c = strand.crossing();
+
+                    if (strand.strand() == 0)
+                        mask[c->index()] |= 1;
+                    else
+                        mask[c->index()] |= 2;
+                }
+
+                maskReady = true;
+            }
+
+            // Of all the strands passed so far that leave a crossing c to enter
+            // the forgotten zone, what is the highest bag at which we forget
+            // such a crossing c?
+            int maxForgetEnter = -1;
+
+            // Of all the strands passed so far that exit the forgotten zone to
+            // return to a crossing c, what is the highest bag at which we forget
+            // such a crossing c?
+            int maxForgetExit = -1;
+
+            int exit, enter;
+            int strandID;
+            for (i = n - 2; i >= 0; i -= 2) {
+                // Examine the pair starting at position i in the key.
+
+                // We are entering and then exiting the forgotten zone.
+                // Identify the crossings in the bag at which these events happen.
+                enter = lastCrossing[(*key)[i]];
+                exit = lastCrossing[(*key)[i + 1]];
+
+                if (maxForgetEnter < forgetStrand[(*key)[i]])
+                    maxForgetEnter = forgetStrand[(*key)[i]];
+                if (maxForgetExit < forgetStrand[(*key)[i + 1]])
+                    maxForgetExit = forgetStrand[(*key)[i + 1]];
+
+                if ((mask[enter] & 3) == 3) {
+                    // We enter the forgotten zone from crossing #enter,
+                    // and both incoming strands at #enter come *from* the
+                    // forgotten zone.  Therefore either one of them must
+                    // appear immediately prior to this, or else it must be
+                    // possible for this to be the beginning of a closed-off loop.
+
+                    if (i == 0 || lastCrossing[(*key)[i-1]] != enter) {
+                        // We need to be starting a loop.
+                        if (maxForgetExit != forgetStrand[(*key)[i]] ||
+                                maxForgetEnter > forgetStrand[(*key)[i]]) {
+                            // This cannot start a loop.
+                            delete key;
+                            return false;
+                        }
+                    }
+                }
+
+                if ((mask[exit] & 12) == 12) {
+                    // We exit the forgotten zone back into crossing #exit,
+                    // and both outgoing strands at #exit lead back into the
+                    // forgotten zone.  Therefore either one of them must
+                    // appear immediately after this, or else it must be
+                    // possible for this to be the end of a closed-off loop.
+
+                    if (i == n - 2 || lastCrossing[(*key)[i+2]] != exit) {
+                        // We need to be closing off a loop.
+                        if (maxForgetExit > forgetCrossing[exit] ||
+                                maxForgetEnter > forgetCrossing[exit]) {
+                            // Definitely cannot be the end of a loop.
+                            delete key;
+                            return false;
+                        }
+
+                        // Look for the closest possible entry into the
+                        // forgotten zone from this same crossing.
+                        int j;
+                        for (j = i; j >= 0; j -= 2) {
+                            if (lastCrossing[(*key)[j]] == exit)
+                                break;
+                            if (forgetStrand[(*key)[j]] >
+                                    forgetCrossing[exit]) {
+                                delete key;
+                                return false;
+                            }
+                            if (j < i && forgetStrand[(*key)[j+1]] >=
+                                    forgetCrossing[exit]) {
+                                delete key;
+                                return false;
+                            }
+                        }
+                        if (j < 0) {
+                            delete key;
+                            return false;
+                        }
+
+                        // TODO: Also test that, if we need to end a loop, there
+                        // is an appropriate start point beforehand with this
+                        // crossing, and with no higher subsequent crossing.
+                    }
+                }
+            }
+
+            /*
+            for (i = 1; i < n - 1; i += 2) {
+                // We are emerging from and then re-entering the forgotten zone.
+                // Identify the crossing in the bag that we emerge into, and
+                // the crossing that we next descend from.
+                strandID = (*key)[i];
+                exit = l->crossing(strandID / 2)->next(strandID % 2).crossing();
+
+                enter = l->crossing((*key)[i + 1] / 2);
+
+                if ((mask[exit->index()] & 12) == 12) {
+                    // At exit, *both* outgoing strands lead back into the
+                    // forgotten zone.  One of them must therefore come
+                    // immediately after.
+                    if (enter != exit)
+                        return false;
+                }
+                if (false && (mask[enter->index()] & 3) == 3) {
+                    // At enter, *both* incoming strands are returning from the
+                    // forgotten zone.  One of them must therefore come
+                    // immediately before.
+                    if (enter != exit)
+                        return false;
+                }
+            }
+            */
+
+            return true;
+        }
+    };
+
     // Convenience functions for the treewidth HOMFLY algorithm:
+
     inline void aggregate(
             std::map<LightweightSequence<int>*, Laurent2<Integer>*,
                 LightweightSequence<int>::Less>* solns,
@@ -423,20 +666,24 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
     SolnSet** partial = new SolnSet*[nBags];
     std::fill(partial, partial + nBags, nullptr);
 
+    ViabilityData vData(this, d);
+
     for (bag = d.first(); bag; bag = bag->next()) {
         index = bag->index();
-        // std::cerr << "Bag " << index << " [" << bag->size() << "] ";
+        std::cerr << "Bag " << index << " [" << bag->size() << "] ";
+
+        vData.initBag();
 
         if (bag->isLeaf()) {
             // Leaf bag.
-            // std::cerr << "LEAF" << std::endl;
+            std::cerr << "LEAF" << std::endl;
 
             partial[index] = new SolnSet;
             partial[index]->emplace(new Key(), new Laurent2<Integer>(0, 0));
         } else if (bag->type() == NICE_INTRODUCE) {
             // Introduce bag.
             child = bag->children();
-            // std::cerr << "INTRODUCE" << std::endl;
+            std::cerr << "INTRODUCE" << std::endl;
 
             // When introducing a new crossing, all of its arcs must
             // lead to unseen crossings or crossings already in the bag.
@@ -447,8 +694,8 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
         } else if (bag->type() == NICE_FORGET) {
             // Forget bag.
             child = bag->children();
-            // std::cerr << "FORGET -> 2 x " <<
-            //     partial[child->index()]->size() << std::endl;
+            std::cerr << "FORGET -> 2 x " <<
+                partial[child->index()]->size() << std::endl;
 
             Crossing* c = crossings_[child->element(bag->subtype())];
 
@@ -567,8 +814,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                vNew = passValue(vChild);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        passValue(vChild));
                             }
                             break;
                         case 1:
@@ -578,8 +826,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             kNew = new Key(*kChild);
                             (*kNew)[pos[0][0]] = id[1][1];
 
-                            vNew = passValue(vChild);
-                            aggregate(partial[index], kNew, vNew);
+                            if (vData.keyViable(kNew))
+                                aggregate(partial[index], kNew,
+                                    passValue(vChild));
                             break;
                         case 8:
                             // One strand is from a forgotten crossing.
@@ -588,8 +837,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             kNew = new Key(*kChild);
                             (*kNew)[pos[1][1]] = id[0][0];
 
-                            vNew = passValue(vChild);
-                            aggregate(partial[index], kNew, vNew);
+                            if (vData.keyViable(kNew))
+                                aggregate(partial[index], kNew,
+                                    passValue(vChild));
                             break;
                         case 9:
                             // Both strands are from the forgotten zone.
@@ -605,10 +855,12 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // could describe the last forget bag,
                                     // where we must remember to subtract 1
                                     // from the total number of loops.
-                                    vNew = passValue(vChild);
-                                    if (index != nBags - 1)
-                                        (*vNew) *= delta;
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew)) {
+                                        vNew = passValue(vChild);
+                                        if (index != nBags - 1)
+                                            (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
                                 }
                             } else {
                                 // Just merge the two free ends.
@@ -623,8 +875,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[0][0]);
 
-                                    vNew = passValue(vChild);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            passValue(vChild));
                                 }
                             }
                             break;
@@ -650,8 +903,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                vNew = passValue(vChild);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        passValue(vChild));
                             }
                             break;
                         case 2:
@@ -661,8 +915,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             kNew = new Key(*kChild);
                             (*kNew)[pos[0][1]] = id[1][0];
 
-                            vNew = passValue(vChild);
-                            aggregate(partial[index], kNew, vNew);
+                            if (vData.keyViable(kNew))
+                                aggregate(partial[index], kNew,
+                                    passValue(vChild));
                             break;
                         case 4:
                             // One strand is from a forgotten crossing.
@@ -671,8 +926,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             kNew = new Key(*kChild);
                             (*kNew)[pos[1][0]] = id[0][1];
 
-                            vNew = passValue(vChild);
-                            aggregate(partial[index], kNew, vNew);
+                            if (vData.keyViable(kNew))
+                                aggregate(partial[index], kNew,
+                                    passValue(vChild));
                             break;
                         case 6:
                             // Both strands are from the forgotten zone.
@@ -688,10 +944,12 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // could describe the last forget bag,
                                     // where we must remember to subtract 1
                                     // from the total number of loops.
-                                    vNew = passValue(vChild);
-                                    if (index != nBags - 1)
-                                        (*vNew) *= delta;
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew)) {
+                                        vNew = passValue(vChild);
+                                        if (index != nBags - 1)
+                                            (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
                                 }
                             } else {
                                 // Just merge the two free ends.
@@ -706,8 +964,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[1][0]);
 
-                                    vNew = passValue(vChild);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            passValue(vChild));
                                 }
                             }
                             break;
@@ -738,8 +997,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + j + 4);
 
-                                    vNew = passValue(vChild);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            passValue(vChild));
 
                                     // Switch:
                                     kNew = new Key(kChild->size() + 4);
@@ -757,8 +1017,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + j + 4);
 
-                                    vNew = switchValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            switchValue(vChild, c));
 
                                     // Splice:
                                     kNew = new Key(kChild->size() + 4);
@@ -776,8 +1037,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + j + 4);
 
-                                    vNew = spliceValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            spliceValue(vChild, c));
                                 }
                             break;
                         case 1:
@@ -798,8 +1060,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[0][0] + 3);
 
-                                vNew = passValue(vChild);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        passValue(vChild));
                             }
                             for (i = pos[0][0] + 1; i <= kChild->size();
                                     i += 2) {
@@ -818,8 +1081,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                vNew = switchValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        switchValue(vChild, c));
 
                                 // Splice:
                                 kNew = new Key(kChild->size() + 2);
@@ -836,8 +1100,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                vNew = spliceValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        spliceValue(vChild, c));
                             }
                             break;
                         case 2:
@@ -858,8 +1123,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[0][1] + 3);
 
-                                vNew = passValue(vChild);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        passValue(vChild));
 
                                 // Splice:
                                 kNew = new Key(kChild->size() + 2);
@@ -876,8 +1142,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[0][1] + 3);
 
-                                vNew = spliceValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        spliceValue(vChild, c));
                             }
                             for (i = pos[0][1] + 2; i <= kChild->size();
                                     i += 2) {
@@ -896,8 +1163,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                vNew = switchValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        switchValue(vChild, c));
                             }
                             break;
                         case 3:
@@ -918,9 +1186,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + i + 2);
 
-                                        vNew = passValue(vChild);
-                                        (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew)) {
+                                            vNew = passValue(vChild);
+                                            (*vNew) *= delta;
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
                                     }
                                 }
                             } else if (pos[0][0] < pos[0][1]) {
@@ -930,8 +1200,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][0]] = id[1][1];
                                 (*kNew)[pos[0][1]] = id[1][0];
 
-                                vNew = spliceValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        spliceValue(vChild, c));
 
                                 if (pos[0][0] + 1 == pos[0][1]) {
                                     // Pass and switch:
@@ -951,8 +1222,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[0][0] + 2);
 
-                                        vNew = passValue(vChild);
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                passValue(vChild));
                                     }
                                     for (i = pos[0][1] + 2;
                                             i <= kChild->size(); i += 2) {
@@ -970,8 +1242,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + i);
 
-                                        vNew = switchValue(vChild, c);
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                switchValue(vChild, c));
                                     }
                                 }
                             }
@@ -994,8 +1267,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[1][0] + 3);
 
-                                vNew = switchValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        switchValue(vChild, c));
 
                                 // Splice:
                                 kNew = new Key(kChild->size() + 2);
@@ -1012,8 +1286,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[1][0] + 3);
 
-                                vNew = spliceValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        spliceValue(vChild, c));
                             }
                             for (i = pos[1][0] + 1; i <= kChild->size();
                                     i += 2) {
@@ -1032,8 +1307,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                vNew = passValue(vChild);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        passValue(vChild));
                             }
                             break;
                         case 5:
@@ -1046,24 +1322,27 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][0]] = id[0][1];
                                 (*kNew)[pos[1][0]] = id[1][1];
 
-                                vNew = switchValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        switchValue(vChild, c));
 
                                 // Splice:
                                 kNew = new Key(*kChild);
                                 (*kNew)[pos[0][0]] = id[1][1];
                                 (*kNew)[pos[1][0]] = id[0][1];
 
-                                vNew = spliceValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        spliceValue(vChild, c));
                             } else {
                                 // Pass:
                                 kNew = new Key(*kChild);
                                 (*kNew)[pos[0][0]] = id[0][1];
                                 (*kNew)[pos[1][0]] = id[1][1];
 
-                                vNew = passValue(vChild);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        passValue(vChild));
                             }
                             break;
                         case 6:
@@ -1075,8 +1354,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][1]] = id[0][0];
                                 (*kNew)[pos[1][0]] = id[1][1];
 
-                                vNew = switchValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        switchValue(vChild, c));
 
                                 if (pos[0][1] == kChild->size() - 2) {
                                     // Splice:
@@ -1091,9 +1371,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + i + 2);
 
-                                        vNew = spliceValue(vChild, c);
-                                        (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew)) {
+                                            vNew = spliceValue(vChild, c);
+                                            (*vNew) *= delta;
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
                                     }
                                 }
                             } else {
@@ -1103,8 +1385,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     (*kNew)[pos[0][1]] = id[0][0];
                                     (*kNew)[pos[1][0]] = id[1][1];
 
-                                    vNew = passValue(vChild);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            passValue(vChild));
 
                                     if (pos[1][0] + 1 == pos[0][1]) {
                                         // Splice:
@@ -1123,8 +1406,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                                 kChild->end(),
                                                 kNew->begin() + pos[1][0] + 2);
 
-                                            vNew = spliceValue(vChild, c);
-                                            aggregate(partial[index], kNew, vNew);
+                                            if (vData.keyViable(kNew))
+                                                aggregate(partial[index], kNew,
+                                                    spliceValue(vChild, c));
                                         }
                                     }
                                 } else {
@@ -1133,8 +1417,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     (*kNew)[pos[0][1]] = id[0][0];
                                     (*kNew)[pos[1][0]] = id[1][1];
 
-                                    vNew = switchValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            switchValue(vChild, c));
                                 }
                             }
                             break;
@@ -1153,8 +1438,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[0][0] + 1);
 
-                                    vNew = switchValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            switchValue(vChild, c));
                                 }
                                 if (pos[0][1] == kChild->size() - 2) {
                                     kNew = new Key(kChild->size() - 2);
@@ -1162,9 +1448,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[0][0]] = id[1][1];
 
-                                    vNew = spliceValue(vChild, c);
-                                    (*vNew) *= delta;
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew)) {
+                                        vNew = spliceValue(vChild, c);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
                                 }
                             } else if (pos[0][1] + 1 == pos[0][0]) {
                                 // d=a
@@ -1175,9 +1463,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[1][0]] = id[1][1];
 
-                                    vNew = passValue(vChild);
-                                    (*vNew) *= delta;
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew)) {
+                                        vNew = passValue(vChild);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
                                 }
                             } else {
                                 if (pos[0][0] + 1 == pos[0][1]) {
@@ -1193,7 +1483,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[0][0]);
                                         (*kNew)[pos[1][0]] = id[1][1];
 
-                                        vNew = passValue(vChild);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                passValue(vChild));
                                     } else {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
@@ -1204,9 +1496,10 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[0][0]);
                                         (*kNew)[pos[1][0] - 2] = id[1][1];
 
-                                        vNew = switchValue(vChild, c);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                switchValue(vChild, c));
                                     }
-                                    aggregate(partial[index], kNew, vNew);
                                 } else if (pos[1][0] + 1 == pos[0][1] &&
                                         pos[0][0] < pos[1][0]) {
                                     // Splice:
@@ -1220,8 +1513,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kNew->begin() + pos[1][0]);
                                     (*kNew)[pos[0][0]] = id[1][1];
 
-                                    vNew = spliceValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            spliceValue(vChild, c));
                                 }
                             }
                             break;
@@ -1243,8 +1537,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[1][1] + 3);
 
-                                vNew = switchValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        switchValue(vChild, c));
                             }
                             for (i = pos[1][1] + 2; i <= kChild->size();
                                     i += 2) {
@@ -1263,8 +1558,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                vNew = passValue(vChild);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        passValue(vChild));
 
                                 // Splice:
                                 kNew = new Key(kChild->size() + 2);
@@ -1281,8 +1577,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                vNew = spliceValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        spliceValue(vChild, c));
                             }
                             break;
                         case 9:
@@ -1294,8 +1591,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[1][1]] = id[1][0];
                                 (*kNew)[pos[0][0]] = id[0][1];
 
-                                vNew = passValue(vChild);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        passValue(vChild));
                             } else {
                                 if (pos[1][1] < pos[0][0]) {
                                     // Pass:
@@ -1303,16 +1601,18 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     (*kNew)[pos[1][1]] = id[1][0];
                                     (*kNew)[pos[0][0]] = id[0][1];
 
-                                    vNew = passValue(vChild);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            passValue(vChild));
                                 } else {
                                     // Switch:
                                     kNew = new Key(*kChild);
                                     (*kNew)[pos[1][1]] = id[1][0];
                                     (*kNew)[pos[0][0]] = id[0][1];
 
-                                    vNew = switchValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            switchValue(vChild, c));
 
                                     if (pos[0][0] + 1 == pos[1][1]) {
                                         // Splice:
@@ -1332,8 +1632,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                                 kChild->end(),
                                                 kNew->begin() + i);
 
-                                            vNew = spliceValue(vChild, c);
-                                            aggregate(partial[index], kNew, vNew);
+                                            if (vData.keyViable(kNew))
+                                                aggregate(partial[index], kNew,
+                                                    spliceValue(vChild, c));
                                         }
                                     }
                                 }
@@ -1349,24 +1650,27 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][1]] = id[0][0];
                                 (*kNew)[pos[1][1]] = id[1][0];
 
-                                vNew = switchValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        switchValue(vChild, c));
                             } else {
                                 // Pass:
                                 kNew = new Key(*kChild);
                                 (*kNew)[pos[0][1]] = id[0][0];
                                 (*kNew)[pos[1][1]] = id[1][0];
 
-                                vNew = passValue(vChild);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        passValue(vChild));
 
                                 // Splice:
                                 kNew = new Key(*kChild);
                                 (*kNew)[pos[0][1]] = id[1][0];
                                 (*kNew)[pos[1][1]] = id[0][0];
 
-                                vNew = spliceValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        spliceValue(vChild, c));
                             }
                             break;
                         case 11:
@@ -1380,9 +1684,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[1][1]] = id[1][0];
 
-                                    vNew = passValue(vChild);
-                                    (*vNew) *= delta;
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew)) {
+                                        vNew = passValue(vChild);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
                                 }
                             } else if (pos[1][1] + 1 == pos[0][0]) {
                                 // c=a
@@ -1397,8 +1703,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[1][1] + 1);
 
-                                    vNew = passValue(vChild);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            passValue(vChild));
                                 }
                             } else {
                                 if (pos[0][0] + 1 == pos[0][1]) {
@@ -1414,7 +1721,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[0][0]);
                                         (*kNew)[pos[1][1]] = id[1][0];
 
-                                        vNew = passValue(vChild);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                passValue(vChild));
                                     } else {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
@@ -1425,9 +1734,10 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[0][0]);
                                         (*kNew)[pos[1][1] - 2] = id[1][0];
 
-                                        vNew = switchValue(vChild, c);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                switchValue(vChild, c));
                                     }
-                                    aggregate(partial[index], kNew, vNew);
                                 } else if (pos[0][0] + 1 == pos[1][1] &&
                                         pos[1][1] < pos[0][1]) {
                                     // Splice:
@@ -1441,8 +1751,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kNew->begin() + pos[0][0]);
                                     (*kNew)[pos[0][1] - 2] = id[1][0];
 
-                                    vNew = spliceValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            spliceValue(vChild, c));
                                 }
                             }
                             break;
@@ -1456,8 +1767,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[1][1]] = id[0][0];
                                 (*kNew)[pos[1][0]] = id[0][1];
 
-                                vNew = spliceValue(vChild, c);
-                                aggregate(partial[index], kNew, vNew);
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], kNew,
+                                        spliceValue(vChild, c));
 
                                 if (pos[1][1] == kChild->size() - 2) {
                                     // Switch:
@@ -1473,9 +1785,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + i + 2);
 
-                                        vNew = switchValue(vChild, c);
-                                        (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew)) {
+                                            vNew = switchValue(vChild, c);
+                                            (*vNew) *= delta;
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
                                     }
                                 }
                             } else {
@@ -1486,8 +1800,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     (*kNew)[pos[1][1]] = id[0][0];
                                     (*kNew)[pos[1][0]] = id[0][1];
 
-                                    vNew = spliceValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            spliceValue(vChild, c));
                                 } else if (pos[1][0] + 1 == pos[1][1]) {
                                     // Pass and switch:
                                     std::cerr << "12b pass/switch" << std::endl;
@@ -1506,8 +1821,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[1][0] + 2);
 
-                                        vNew = switchValue(vChild, c);
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                switchValue(vChild, c));
                                     }
                                     for (i = pos[1][1] + 2;
                                             i <= kChild->size(); i += 2) {
@@ -1525,8 +1841,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + i);
 
-                                        vNew = passValue(vChild);
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                passValue(vChild));
                                     }
                                 }
                             }
@@ -1546,8 +1863,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[1][0] + 1);
 
-                                    vNew = passValue(vChild);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            passValue(vChild));
                                 }
                             } else if (pos[1][1] + 1 == pos[1][0]) {
                                 // c=b
@@ -1558,9 +1876,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[0][0]] = id[0][1];
 
-                                    vNew = switchValue(vChild, c);
-                                    (*vNew) *= delta;
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew)) {
+                                        vNew = switchValue(vChild, c);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
                                 }
                                 if (pos[0][0] + 1 == pos[1][1]) {
                                     kNew = new Key(kChild->size() - 2);
@@ -1572,8 +1892,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[0][0] + 1);
 
-                                    vNew = spliceValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            spliceValue(vChild, c));
                                 }
                             } else {
                                 if (pos[1][0] + 1 == pos[1][1]) {
@@ -1589,7 +1910,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[1][0]);
                                         (*kNew)[pos[0][0] - 2] = id[0][1];
 
-                                        vNew = passValue(vChild);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                passValue(vChild));
                                     } else {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
@@ -1600,9 +1923,10 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[1][0]);
                                         (*kNew)[pos[0][0]] = id[0][1];
 
-                                        vNew = switchValue(vChild, c);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                switchValue(vChild, c));
                                     }
-                                    aggregate(partial[index], kNew, vNew);
                                 } else if (pos[0][0] + 1 == pos[1][1] &&
                                         pos[0][0] < pos[1][0]) {
                                     // Splice:
@@ -1616,8 +1940,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kNew->begin() + pos[0][0]);
                                     (*kNew)[pos[1][0] - 2] = id[0][1];
 
-                                    vNew = spliceValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            spliceValue(vChild, c));
                                 }
                             }
                             break;
@@ -1636,17 +1961,20 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[0][1] + 1);
 
-                                    vNew = switchValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            switchValue(vChild, c));
                                 } else if (pos[0][1] == kChild->size() - 2) {
                                     kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[1][1]] = id[0][0];
 
-                                    vNew = spliceValue(vChild, c);
-                                    (*vNew) *= delta;
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew)) {
+                                        vNew = spliceValue(vChild, c);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
                                 }
                             } else if (pos[1][1] + 1 == pos[1][0]) {
                                 // c=b
@@ -1661,17 +1989,20 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[1][1] + 1);
 
-                                    vNew = spliceValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            spliceValue(vChild, c));
                                 } else if (pos[1][1] == kChild->size() - 2) {
                                     kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[0][1]] = id[0][0];
 
-                                    vNew = switchValue(vChild, c);
-                                    (*vNew) *= delta;
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew)) {
+                                        vNew = switchValue(vChild, c);
+                                        (*vNew) *= delta;
+                                        aggregate(partial[index], kNew, vNew);
+                                    }
                                 }
                             } else {
                                 if (pos[1][0] + 1 == pos[1][1]) {
@@ -1687,7 +2018,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[1][0]);
                                         (*kNew)[pos[0][1] - 2] = id[0][0];
 
-                                        vNew = passValue(vChild);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                passValue(vChild));
                                     } else {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
@@ -1698,9 +2031,10 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[1][0]);
                                         (*kNew)[pos[0][1]] = id[0][0];
 
-                                        vNew = switchValue(vChild, c);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                switchValue(vChild, c));
                                     }
-                                    aggregate(partial[index], kNew, vNew);
                                 } else if (pos[1][0] + 1 == pos[0][1] &&
                                         pos[1][1] < pos[0][1]) {
                                     // Splice:
@@ -1714,12 +2048,14 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kNew->begin() + pos[1][0]);
                                     (*kNew)[pos[1][1]] = id[0][0];
 
-                                    vNew = spliceValue(vChild, c);
-                                    aggregate(partial[index], kNew, vNew);
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], kNew,
+                                            spliceValue(vChild, c));
                                 }
                             }
                             break;
                         case 15:
+                            // Case verified.
                             // All strands are from forgotten crossings.
                             if (pos[0][1] + 1 == pos[0][0]) {
                                 if (pos[1][1] + 1 == pos[1][0]) {
@@ -1735,19 +2071,19 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         // could describe the last forget bag,
                                         // where we must remember to subtract 1
                                         // from the total number of loops.
-                                        vNew = passValue(vChild);
-                                        (*vNew) *= delta;
-                                        if (index != nBags - 1)
+                                        if (vData.keyViable(kNew)) {
+                                            vNew = passValue(vChild);
                                             (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                            if (index != nBags - 1)
+                                                (*vNew) *= delta;
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
                                     }
                                 } else {
-                                    // TODO: Subcase verified.
                                     // d=a
                                     // Pass:
                                     if (pos[0][1] == kChild->size() - 2 &&
                                             pos[1][0] + 1 == pos[1][1]) {
-                                        std::cerr << "15b pass" << std::endl;
                                         kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
@@ -1757,9 +2093,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + pos[1][0]);
 
-                                        vNew = passValue(vChild);
-                                        (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew)) {
+                                            vNew = passValue(vChild);
+                                            (*vNew) *= delta;
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
                                     }
                                 }
                             } else if (pos[0][1] + 1 == pos[1][0]) {
@@ -1776,10 +2114,12 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         // could describe the last forget bag,
                                         // where we must remember to subtract 1
                                         // from the total number of loops.
-                                        vNew = passValue(vChild);
-                                        if (index != nBags - 1)
-                                            (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew)) {
+                                            vNew = passValue(vChild);
+                                            if (index != nBags - 1)
+                                                (*vNew) *= delta;
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
                                     }
                                 } else {
                                     // d=b
@@ -1795,8 +2135,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[0][0]);
 
-                                        vNew = switchValue(vChild, c);
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                switchValue(vChild, c));
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[0][1] == kChild->size() - 2) {
                                         kNew = new Key(kChild->size() - 4);
@@ -1808,19 +2149,19 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + pos[0][0]);
 
-                                        vNew = spliceValue(vChild, c);
-                                        (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew)) {
+                                            vNew = spliceValue(vChild, c);
+                                            (*vNew) *= delta;
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
                                     }
                                 }
                             } else {
                                 if (pos[1][1] + 1 == pos[1][0]) {
-                                    // TODO: Subcase verified.
                                     // c=b
                                     // Switch and splice:
                                     if (pos[0][0] + 1 == pos[0][1] &&
                                             pos[1][1] == kChild->size() - 2) {
-                                        std::cerr << "15e switch" << std::endl;
                                         kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
@@ -1830,12 +2171,13 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + pos[0][0]);
 
-                                        vNew = switchValue(vChild, c);
-                                        (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew)) {
+                                            vNew = switchValue(vChild, c);
+                                            (*vNew) *= delta;
+                                            aggregate(partial[index], kNew, vNew);
+                                        }
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[1][0] + 1 == pos[0][1]) {
-                                        std::cerr << "15e splice" << std::endl;
                                         kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
@@ -1845,8 +2187,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[0][0]);
 
-                                        vNew = spliceValue(vChild, c);
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                spliceValue(vChild, c));
                                     }
                                 } else if (pos[1][1] + 1 == pos[0][0]) {
                                     // c=a
@@ -1862,8 +2205,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[1][0]);
 
-                                        vNew = passValue(vChild);
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                passValue(vChild));
                                     }
                                 } else {
                                     // Pass, switch and splice:
@@ -1883,7 +2227,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                                 kChild->end(),
                                                 kNew->begin() + pos[0][0] - 2);
 
-                                            vNew = passValue(vChild);
+                                            if (vData.keyViable(kNew))
+                                                aggregate(partial[index], kNew,
+                                                    passValue(vChild));
                                         } else {
                                             std::copy(kChild->begin(),
                                                 kChild->begin() + pos[0][0],
@@ -1897,9 +2243,10 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                                 kChild->end(),
                                                 kNew->begin() + pos[1][0] - 2);
 
-                                            vNew = switchValue(vChild, c);
+                                            if (vData.keyViable(kNew))
+                                                aggregate(partial[index], kNew,
+                                                    switchValue(vChild, c));
                                         }
-                                        aggregate(partial[index], kNew, vNew);
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[1][0] + 1 == pos[0][1] &&
                                             pos[0][0] < pos[1][0]) {
@@ -1916,8 +2263,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[1][0] - 2);
 
-                                        vNew = spliceValue(vChild, c);
-                                        aggregate(partial[index], kNew, vNew);
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index], kNew,
+                                                spliceValue(vChild, c));
                                     }
                                 }
                             }
@@ -1935,6 +2283,10 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             // Join bag.
             child = bag->children();
             sibling = child->sibling();
+
+            std::cerr << "JOIN -> " <<
+                partial[child->index()]->size() << " x " <<
+                partial[sibling->index()]->size() << std::endl;
 
             // Extract the sizes of each bag's keys.
             // The key size depends only on the bag, not the particular
@@ -2034,10 +2386,12 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             }
                         }
 
-                        if (! partial[index]->emplace(
-                                kNew, new Value(val)).second)
-                            std::cerr << "ERROR: Combined keys in join "
-                                "bag are not unique" << std::endl;
+                        if (vData.keyViable(kNew)) {
+                            if (! partial[index]->emplace(
+                                    kNew, new Value(val)).second)
+                                std::cerr << "ERROR: Combined keys in join "
+                                    "bag are not unique" << std::endl;
+                        }
                     }
                 }
             }
