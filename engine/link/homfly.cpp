@@ -104,9 +104,10 @@ namespace {
     };
 
     /**
-     * Helper data used to test whether a key is viable; that is,
-     * whether the data from that key might survive all the way up to
-     * the root of the tree decomposition.
+     * Helper data used by the treewidth-based algorithm to test whether a
+     * key is viable.  In other words, this tests whether the data from
+     * a given key \e might survive all the way up to the root of the
+     * tree decomposition.
      */
     struct ViabilityData {
         const Link* link;
@@ -116,36 +117,43 @@ namespace {
          * eventually forgotten.
          *
          * It is assumed that the underlying tree decomposition is nice.
+         *
+         * This array is a function of the link only, and is initialised
+         * in the ViabilityData constructor.
          */
         int* forgetCrossing;
 
         /**
          * An array that, for each strand ID, records which of the two
          * crossings is forgotten last.  This array stores crossing IDs.
+         *
+         * This array is a function of the link only, and is initialised
+         * in the ViabilityData constructor.
          */
         int* lastCrossing;
 
         /**
          * An array that, for each strand ID, records the bag index at
          * which the entire strand is forgotten.
+         *
+         * This array is a function of the link only, and is initialised
+         * in the ViabilityData constructor.
          */
         int* forgetStrand;
 
         /**
-         * The remaining data is specific to each bag, but not each key.
-         *
-         * For a crossing at index i, mask[i] is a bitwise combination of:
+         * For a crossing at index i that lives in the current bag,
+         * mask[i] is a bitwise combination of:
          *
          * * 1 if the lower incoming strand comes from the forgotten zone;
          * * 2 if the upper incoming strand comes from the forgotten zone;
          * * 4 if the lower outgoing strand goes into the forgotten zone;
          * * 8 if the upper outgoing strand goes into the forgotten zone.
          *
-         * Since maskReady is filled on demand, we also keep a boolean
-         * to tell us whether or not this has been done yet.
+         * This array is a function of the bag being processed, and is
+         * initialised by initForgetBag() and initJoinBag().
          */
         char* mask;
-        bool maskReady;
 
         ViabilityData(const Link* l, const TreeDecomposition& d) :
                 link(l),
@@ -172,11 +180,6 @@ namespace {
             }
         }
 
-        void initBag() {
-            std::fill(mask, mask + link->size(), 0);
-            maskReady = false;
-        }
-
         ~ViabilityData() {
             delete[] mask;
             delete[] forgetStrand;
@@ -184,47 +187,116 @@ namespace {
             delete[] forgetCrossing;
         }
 
+        void initForgetBag(const TreeBag* bag,
+                const LightweightSequence<int>* childKey,
+                const Crossing* forget) {
+            std::fill(mask, mask + link->size(), 0);
+
+            // Identify all strands where one crossing is forgotten and
+            // the other is not.
+            int strandID;
+            StrandRef from, to;
+            for (int i = 0; i < childKey->size(); ++i) {
+                strandID = (*childKey)[i];
+
+                // In the child bag, this strand ran between the bag and the
+                // forgotten zone.
+
+                from = StrandRef(link->crossing(strandID / 2), strandID % 2);
+                to = from.next();
+
+                if (from.crossing() == forget || to.crossing() == forget) {
+                    // The entire strand is lost in this (the parent bag).
+                    continue;
+                }
+
+                // The strand survives through to this bag.
+                if (lastCrossing[strandID] == from.crossing()->index()) {
+                    // The strand runs from the bag into the forgotten zone.
+                    if (from.strand() == 0)
+                        mask[from.crossing()->index()] |= 4;
+                    else
+                        mask[from.crossing()->index()] |= 8;
+                } else {
+                    // The strand runs from the forgotten zone into the bag.
+                    if (to.strand() == 0)
+                        mask[to.crossing()->index()] |= 1;
+                    else
+                        mask[to.crossing()->index()] |= 2;
+                }
+            }
+
+            // We also need to collect strands that run between the
+            // newly-forgotten crossing and the bag.
+
+            for (int i = 0; i < 2; ++i) {
+                // From newly-forgotten crossing into the bag:
+                to = forget->next(i);
+                if (forgetCrossing[to.crossing()->index()] > bag->index()) {
+                    if (to.strand() == 0)
+                        mask[to.crossing()->index()] |= 1;
+                    else
+                        mask[to.crossing()->index()] |= 2;
+                }
+
+                // From the bag into the newly-forgotten crossing:
+                from = forget->prev(i);
+                if (forgetCrossing[from.crossing()->index()] > bag->index()) {
+                    if (from.strand() == 0)
+                        mask[from.crossing()->index()] |= 4;
+                    else
+                        mask[from.crossing()->index()] |= 8;
+                }
+            }
+        }
+
+        void initJoinBag(const LightweightSequence<int>* leftChildKey,
+                const LightweightSequence<int>* rightChildKey) {
+            std::fill(mask, mask + link->size(), 0);
+
+            // Identify all strands where one crossing is forgotten and
+            // the other is not.
+            const LightweightSequence<int>* childKey;
+            int strandID;
+            StrandRef from, to;
+            int side, i;
+            for (side = 0; side < 2; ++side) {
+                childKey = (side == 0 ? leftChildKey : rightChildKey);
+                for (i = 0; i < childKey->size(); ++i) {
+                    strandID = (*childKey)[i];
+
+                    // This strand runs between the bag and the forgotten zone.
+
+                    from = StrandRef(link->crossing(strandID / 2),
+                        strandID % 2);
+                    to = from.next();
+
+                    if (lastCrossing[strandID] == from.crossing()->index()) {
+                        // The strand runs from the bag into the forgotten zone.
+                        if (from.strand() == 0)
+                            mask[from.crossing()->index()] |= 4;
+                        else
+                            mask[from.crossing()->index()] |= 8;
+                    } else {
+                        // The strand runs from the forgotten zone into the bag.
+                        if (to.strand() == 0)
+                            mask[to.crossing()->index()] |= 1;
+                        else
+                            mask[to.crossing()->index()] |= 2;
+                    }
+                }
+            }
+        }
+
         /**
          * Tests whether the data from the given key might survive all the way
          * up to the root of the tree decomposition.
          *
          * Side-effect: if the answer is no, then this routine deletes the key.
-         *
-         * TODO: Remove the now-redundant argument l.
          */
         bool keyViable(LightweightSequence<int>* key) {
             int n = key->size();
             int i;
-
-            if (! maskReady) {
-                Crossing* c;
-                int strandID;
-                StrandRef strand;
-
-                for (i = 0; i < n; i += 2) {
-                    // (*key)[i]   : bag -> forgotten zone
-                    // (*key)[i+1] : forgotten zone -> bag
-                    strandID = (*key)[i];
-                    c = link->crossing(strandID / 2);
-                    strand = c->strand(strandID % 2);
-
-                    if (strand.strand() == 0)
-                        mask[c->index()] |= 4;
-                    else
-                        mask[c->index()] |= 8;
-
-                    strandID = (*key)[i + 1];
-                    strand = link->crossing(strandID / 2)->next(strandID % 2);
-                    c = strand.crossing();
-
-                    if (strand.strand() == 0)
-                        mask[c->index()] |= 1;
-                    else
-                        mask[c->index()] |= 2;
-                }
-
-                maskReady = true;
-            }
 
             // Of all the strands passed so far that leave a crossing c to enter
             // the forgotten zone, what is the highest bag at which we forget
@@ -232,8 +304,8 @@ namespace {
             int maxForgetEnter = -1;
 
             // Of all the strands passed so far that exit the forgotten zone to
-            // return to a crossing c, what is the highest bag at which we forget
-            // such a crossing c?
+            // return to a crossing c, what is the highest bag at which we
+            // forget such a crossing c?
             int maxForgetExit = -1;
 
             int exit, enter;
@@ -242,7 +314,8 @@ namespace {
                 // Examine the pair starting at position i in the key.
 
                 // We are entering and then exiting the forgotten zone.
-                // Identify the crossings in the bag at which these events happen.
+                // Identify the crossings in the bag at which these events
+                // happen.
                 enter = lastCrossing[(*key)[i]];
                 exit = lastCrossing[(*key)[i + 1]];
 
@@ -252,11 +325,11 @@ namespace {
                     maxForgetExit = forgetStrand[(*key)[i + 1]];
 
                 if ((mask[enter] & 3) == 3) {
-                    // We enter the forgotten zone from crossing #enter,
-                    // and both incoming strands at #enter come *from* the
+                    // We enter the forgotten zone from crossing #enter, and
+                    // both incoming strands at #enter come *from* the
                     // forgotten zone.  Therefore either one of them must
                     // appear immediately prior to this, or else it must be
-                    // possible for this to be the beginning of a closed-off loop.
+                    // possible for this to start a closed-off loop.
 
                     if (i == 0 || lastCrossing[(*key)[i-1]] != enter) {
                         // We need to be starting a loop.
@@ -306,40 +379,9 @@ namespace {
                             delete key;
                             return false;
                         }
-
-                        // TODO: Also test that, if we need to end a loop, there
-                        // is an appropriate start point beforehand with this
-                        // crossing, and with no higher subsequent crossing.
                     }
                 }
             }
-
-            /*
-            for (i = 1; i < n - 1; i += 2) {
-                // We are emerging from and then re-entering the forgotten zone.
-                // Identify the crossing in the bag that we emerge into, and
-                // the crossing that we next descend from.
-                strandID = (*key)[i];
-                exit = l->crossing(strandID / 2)->next(strandID % 2).crossing();
-
-                enter = l->crossing((*key)[i + 1] / 2);
-
-                if ((mask[exit->index()] & 12) == 12) {
-                    // At exit, *both* outgoing strands lead back into the
-                    // forgotten zone.  One of them must therefore come
-                    // immediately after.
-                    if (enter != exit)
-                        return false;
-                }
-                if (false && (mask[enter->index()] & 3) == 3) {
-                    // At enter, *both* incoming strands are returning from the
-                    // forgotten zone.  One of them must therefore come
-                    // immediately before.
-                    if (enter != exit)
-                        return false;
-                }
-            }
-            */
 
             return true;
         }
@@ -657,6 +699,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
     // Each partial solution is a key-value map.
     //
     // Each key TODO.
+    //
+    // An important fact: each bag is guaranteed to have at least one solution,
+    // since there is always some way to traverse the link.
 
     typedef LightweightSequence<int> Key;
     typedef Laurent2<Integer> Value;
@@ -671,8 +716,6 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
     for (bag = d.first(); bag; bag = bag->next()) {
         index = bag->index();
         std::cerr << "Bag " << index << " [" << bag->size() << "] ";
-
-        vData.initBag();
 
         if (bag->isLeaf()) {
             // Leaf bag.
@@ -698,6 +741,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                 partial[child->index()]->size() << std::endl;
 
             Crossing* c = crossings_[child->element(bag->subtype())];
+
+            vData.initForgetBag(bag,
+                partial[child->index()]->begin()->first, c);
 
             if (c->next(0).crossing() == c && c->next(1).crossing() == c) {
                 // The crossing is part of two loops.
@@ -738,8 +784,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             //
             // Both id and mask are independent of which partial solution we're
             // looking at, so we just extract them from the first key in
-            // the child bag.  (Every bag must contain at least one solution,
-            // since there is always some way to traverse the link.)
+            // the child bag.
             // However, pos depends on the key, and so we compute that
             // every time.
             int id[2][2];
@@ -2290,12 +2335,8 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
 
             // Extract the sizes of each bag's keys.
             // The key size depends only on the bag, not the particular
-            // key-value solution at that bag.
-            //
-            // We can get this information from the first solution in
-            // each child bag, since each bag is guaranteed to have at
-            // least one solution (since there is always some way to
-            // traverse the link).
+            // key-value solution at that bag, and so we get this data
+            // by looking at the first solution in each bag.
             size_t pairs1 = partial[child->index()]->begin()->first->size()/2;
             size_t pairs2 = partial[sibling->index()]->begin()->first->size()/2;
             size_t pairs = pairs1 + pairs2;
@@ -2338,6 +2379,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             }
 
             // Both child bags have positive length keys.
+
+            vData.initJoinBag(partial[child->index()]->begin()->first,
+                partial[sibling->index()]->begin()->first);
 
             partial[index] = new SolnSet;
             const Key *k1, *k2;
