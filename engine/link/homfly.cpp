@@ -155,11 +155,14 @@ namespace {
          */
         char* mask;
 
+        int *startLoop;
+
         ViabilityData(const Link* l, const TreeDecomposition& d) :
                 link(l),
                 forgetCrossing(new int[l->size()]),
                 lastCrossing(new int[2 * l->size()]),
                 forgetStrand(new int[2 * l->size()]),
+                startLoop(new int[l->size()]),
                 mask(new char[l->size()]) {
             for (const TreeBag* b = d.first(); b; b = b->next())
                 if (b->type() == NICE_FORGET)
@@ -182,6 +185,7 @@ namespace {
 
         ~ViabilityData() {
             delete[] mask;
+            delete[] startLoop;
             delete[] forgetStrand;
             delete[] lastCrossing;
             delete[] forgetCrossing;
@@ -288,6 +292,28 @@ namespace {
             }
         }
 
+        void analyseLoops(LightweightSequence<int>* key,
+                int fromPos, int maxForget) {
+            std::fill(startLoop, startLoop + link->size(), -1);
+
+            for ( ; fromPos >= 0; fromPos -= 2) {
+                // Examine the pair starting at position i in the key.
+
+                // We are entering and then exiting the forgotten zone.
+                // Identify the crossings in the bag at which these events
+                // happen.
+                if (maxForget < forgetStrand[(*key)[fromPos + 1]])
+                    maxForget = forgetStrand[(*key)[fromPos + 1]];
+
+                if (maxForget <= forgetStrand[(*key)[fromPos]]) {
+                    maxForget = forgetStrand[(*key)[fromPos]];
+
+                    // We can start a loop from position i in the key.
+                    startLoop[(*key)[fromPos] / 2] = fromPos;
+                }
+            }
+        }
+
         /**
          * Tests whether the data from the given key might survive all the way
          * up to the root of the tree decomposition.
@@ -295,6 +321,8 @@ namespace {
          * Side-effect: if the answer is no, then this routine deletes the key.
          */
         bool keyViable(LightweightSequence<int>* key) {
+            bool analysedLoops = false;
+
             int n = key->size();
             int i;
 
@@ -351,31 +379,13 @@ namespace {
 
                     if (i == n - 2 || lastCrossing[(*key)[i+2]] != exit) {
                         // We need to be closing off a loop.
-                        if (maxForgetExit > forgetCrossing[exit] ||
-                                maxForgetEnter > forgetCrossing[exit]) {
-                            // Definitely cannot be the end of a loop.
-                            delete key;
-                            return false;
+                        if (! analysedLoops) {
+                            analyseLoops(key, i,
+                                (maxForgetExit > maxForgetEnter) ?
+                                maxForgetExit : maxForgetEnter);
+                            analysedLoops = true;
                         }
-
-                        // Look for the closest possible entry into the
-                        // forgotten zone from this same crossing.
-                        int j;
-                        for (j = i; j >= 0; j -= 2) {
-                            if (lastCrossing[(*key)[j]] == exit)
-                                break;
-                            if (forgetStrand[(*key)[j]] >
-                                    forgetCrossing[exit]) {
-                                delete key;
-                                return false;
-                            }
-                            if (j < i && forgetStrand[(*key)[j+1]] >=
-                                    forgetCrossing[exit]) {
-                                delete key;
-                                return false;
-                            }
-                        }
-                        if (j < 0) {
+                        if (startLoop[exit] < 0 || startLoop[exit] > i) {
                             delete key;
                             return false;
                         }
