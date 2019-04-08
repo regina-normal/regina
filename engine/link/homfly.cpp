@@ -33,6 +33,7 @@
 #include "link/link.h"
 #include "maths/laurent2.h"
 #include "utilities/bitmask.h"
+#include "utilities/bitmanip.h"
 #include "utilities/sequence.h"
 
 // #define DUMP_STATES
@@ -157,13 +158,26 @@ namespace {
 
         int *startLoop;
 
+        /**
+         * The number of pairs in each key at a join bag (that is, half
+         * the key length).
+         *
+         * This is only available for join bags, and is initialised by
+         * initJoinBag().
+         */
+        int pairs;
+
+        int *maxForgetEnter;
+        int *maxForgetExit;
+
         ViabilityData(const Link* l, const TreeDecomposition& d) :
                 link(l),
                 forgetCrossing(new int[l->size()]),
                 lastCrossing(new int[2 * l->size()]),
                 forgetStrand(new int[2 * l->size()]),
                 startLoop(new int[l->size()]),
-                mask(new char[l->size()]) {
+                mask(new char[l->size()]),
+                maxForgetEnter(nullptr), maxForgetExit(nullptr) {
             for (const TreeBag* b = d.first(); b; b = b->next())
                 if (b->type() == NICE_FORGET)
                     forgetCrossing[b->children()->element(b->subtype())] =
@@ -184,6 +198,8 @@ namespace {
         }
 
         ~ViabilityData() {
+            delete[] maxForgetExit;
+            delete[] maxForgetEnter;
             delete[] mask;
             delete[] startLoop;
             delete[] forgetStrand;
@@ -290,38 +306,25 @@ namespace {
                     }
                 }
             }
-        }
 
-        void analyseLoops(const LightweightSequence<int>* key,
-                int fromPos, int maxForget) {
-            std::fill(startLoop, startLoop + link->size(), -1);
+            // Compute the number of pairs in the join key.
+            pairs = (leftChildKey->size() + rightChildKey->size()) / 2;
 
-            for ( ; fromPos >= 0; fromPos -= 2) {
-                // Examine the pair starting at position i in the key.
+            // Set up our stacks of partially computed values.
+            delete[] maxForgetExit;
+            delete[] maxForgetEnter;
 
-                // We are entering and then exiting the forgotten zone.
-                // Identify the crossings in the bag at which these events
-                // happen.
-                if (maxForget < forgetStrand[(*key)[fromPos + 1]])
-                    maxForget = forgetStrand[(*key)[fromPos + 1]];
-
-                if (maxForget <= forgetStrand[(*key)[fromPos]]) {
-                    maxForget = forgetStrand[(*key)[fromPos]];
-
-                    // We can start a loop from position i in the key.
-                    startLoop[(*key)[fromPos] / 2] = fromPos;
-                }
-            }
+            maxForgetEnter = new int[pairs + 1];
+            maxForgetExit = new int[pairs + 1];
+            maxForgetEnter[pairs] = maxForgetExit[pairs] = -1;
         }
 
         /**
          * Tests whether the data from the given key might survive all the way
          * up to the root of the tree decomposition.
          */
-        bool keyViable(const LightweightSequence<int>* key) {
-            bool analysedLoops = false;
-
-            int n = key->size();
+        bool keyViable(const LightweightSequence<int>& key) {
+            int n = key.size();
             int i;
 
             // Of all the strands passed so far that leave a crossing c to enter
@@ -334,6 +337,11 @@ namespace {
             // forget such a crossing c?
             int maxForgetExit = -1;
 
+            // If needLoop is non-negative, this means we are looking for the
+            // beginning of a closed-off loop that starts and ends at that
+            // crossing number.
+            int needLoop = -1;
+
             int exit, enter;
             int strandID;
             for (i = n - 2; i >= 0; i -= 2) {
@@ -342,13 +350,13 @@ namespace {
                 // We are entering and then exiting the forgotten zone.
                 // Identify the crossings in the bag at which these events
                 // happen.
-                enter = lastCrossing[(*key)[i]];
-                exit = lastCrossing[(*key)[i + 1]];
+                enter = lastCrossing[key[i]];
+                exit = lastCrossing[key[i + 1]];
 
-                if (maxForgetEnter < forgetStrand[(*key)[i]])
-                    maxForgetEnter = forgetStrand[(*key)[i]];
-                if (maxForgetExit < forgetStrand[(*key)[i + 1]])
-                    maxForgetExit = forgetStrand[(*key)[i + 1]];
+                if (maxForgetEnter < forgetStrand[key[i]])
+                    maxForgetEnter = forgetStrand[key[i]];
+                if (maxForgetExit < forgetStrand[key[i + 1]])
+                    maxForgetExit = forgetStrand[key[i + 1]];
 
                 if ((mask[enter] & 3) == 3) {
                     // We enter the forgotten zone from crossing #enter, and
@@ -357,10 +365,10 @@ namespace {
                     // appear immediately prior to this, or else it must be
                     // possible for this to start a closed-off loop.
 
-                    if (i == 0 || lastCrossing[(*key)[i-1]] != enter) {
+                    if (i == 0 || lastCrossing[key[i-1]] != enter) {
                         // We need to be starting a loop.
-                        if (maxForgetExit != forgetStrand[(*key)[i]] ||
-                                maxForgetEnter > forgetStrand[(*key)[i]])
+                        if (maxForgetExit != forgetStrand[key[i]] ||
+                                maxForgetEnter > forgetStrand[key[i]])
                             return false;
                     }
                 }
@@ -372,30 +380,61 @@ namespace {
                     // appear immediately after this, or else it must be
                     // possible for this to be the end of a closed-off loop.
 
-                    if (i == n - 2 || lastCrossing[(*key)[i+2]] != exit) {
+                    if (i == n - 2 || lastCrossing[key[i+2]] != exit) {
                         // We need to be closing off a loop.
-                        if (! analysedLoops) {
-                            analyseLoops(key, i,
-                                (maxForgetExit > maxForgetEnter) ?
-                                maxForgetExit : maxForgetEnter);
-                            analysedLoops = true;
+                        if (needLoop >= 0) {
+                            // We are already looking for the start of some
+                            // other loop.  Since loops cannot be nested,
+                            // this key is not viable.
+                            return false;
                         }
-                        if (startLoop[exit] < 0 || startLoop[exit] > i)
+                        needLoop = exit;
+                    }
+                }
+
+                // See if we have located the start of a loop that we
+                // were searching for, and/or if we can certify that we
+                // will never find it.
+                if (needLoop >= 0) {
+                    if (maxForgetEnter > forgetCrossing[needLoop] ||
+                            maxForgetExit > forgetCrossing[needLoop])
+                        return false;
+                    if (enter == needLoop)
+                        needLoop = -1;
+                }
+            }
+
+            // Are we still waiting on the start of a loop that we never found?
+            if (needLoop >= 0)
+                return false;
+
+            return true;
+        }
+
+        bool partialKeyViable(const LightweightSequence<int>& key, int pos) {
+            maxForgetEnter[pos] = std::max(maxForgetEnter[pos + 1],
+                forgetStrand[key[2 * pos]]);
+            maxForgetExit[pos] = std::max(maxForgetExit[pos + 1],
+                forgetStrand[key[2 * pos + 1]]);
+
+            // This code mirrors keyViable(); see that routine for
+            // further documentation.
+            if (pos < pairs - 1) {
+                int enter = key[2 * pos + 2] / 2;
+                if ((mask[enter] & 3) == 3) {
+                    if (lastCrossing[key[2 * pos + 1]] != enter) {
+                        // We need to be starting a loop
+                        // from key[2 * pos + 2].
+                        if (maxForgetExit[pos + 1] !=
+                                forgetStrand[key[2 * pos + 2]] ||
+                                maxForgetEnter[pos + 1] >
+                                forgetStrand[key[2 * pos + 2]])
                             return false;
                     }
                 }
             }
 
             return true;
-        }
-
-        inline bool keyViableOrDelete(LightweightSequence<int>* key) {
-            if (keyViable(key))
-                return true;
-            else {
-                delete key;
-                return false;
-            }
         }
     };
 
@@ -781,7 +820,6 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             partial[index] = new SolnSet;
 
             const Key *kChild;
-            Key *kNew;
             const Value *vChild;
             Value *vNew;
 
@@ -829,6 +867,14 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                 }
             }
 
+            // Compute the size of the new key.
+            // We will use the same key object throughout processing to
+            // avoid repeated costly new/delete operations.
+            Key kNew(kChild->size() +
+                (c->next(0).crossing() == c || c->next(1).crossing() == c ?
+                    2 : 4) -
+                2 * BitManipulator<char>::bits(mask));
+
             for (auto& soln : *(partial[child->index()])) {
                 kChild = soln.first;
                 vChild = soln.second;
@@ -861,18 +907,17 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         case 0:
                             // Neither strand is from the forgotten zone.
                             for (i = 0; i <= kChild->size(); i += 2) {
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + i,
-                                    kNew->begin());
-                                (*kNew)[i] = id[0][0];
-                                (*kNew)[i + 1] = id[1][1];
+                                    kNew.begin());
+                                kNew[i] = id[0][0];
+                                kNew[i + 1] = id[1][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->end(),
-                                    kNew->begin() + i + 2);
+                                    kNew.begin() + i + 2);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         passValue(vChild));
                             }
                             break;
@@ -880,22 +925,22 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             // One strand is from a forgotten crossing.
                             // Merge it with the other.
                             std::cerr << "loop1a 1 merge" << std::endl;
-                            kNew = new Key(*kChild);
-                            (*kNew)[pos[0][0]] = id[1][1];
+                            kNew = *kChild;
+                            kNew[pos[0][0]] = id[1][1];
 
-                            if (vData.keyViableOrDelete(kNew))
-                                aggregate(partial[index], kNew,
+                            if (vData.keyViable(kNew))
+                                aggregate(partial[index], new Key(kNew),
                                     passValue(vChild));
                             break;
                         case 8:
                             // One strand is from a forgotten crossing.
                             // Merge it with the other.
                             std::cerr << "loop1a 8 merge" << std::endl;
-                            kNew = new Key(*kChild);
-                            (*kNew)[pos[1][1]] = id[0][0];
+                            kNew = *kChild;
+                            kNew[pos[1][1]] = id[0][0];
 
-                            if (vData.keyViableOrDelete(kNew))
-                                aggregate(partial[index], kNew,
+                            if (vData.keyViable(kNew))
+                                aggregate(partial[index], new Key(kNew),
                                     passValue(vChild));
                             break;
                         case 9:
@@ -904,36 +949,35 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 // We are closing off a loop.
                                 if (pos[1][1] == kChild->size() - 2) {
                                     std::cerr << "loop1a 9 pass" << std::endl;
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
-                                        kChild->end() - 2, kNew->begin());
+                                        kChild->end() - 2, kNew.begin());
 
                                     // This is one of the few cases that
                                     // could describe the last forget bag,
                                     // where we must remember to subtract 1
                                     // from the total number of loops.
-                                    if (vData.keyViableOrDelete(kNew)) {
+                                    if (vData.keyViable(kNew)) {
                                         vNew = passValue(vChild);
                                         if (index != nBags - 1)
                                             (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        aggregate(partial[index],
+                                            new Key(kNew), vNew);
                                     }
                                 }
                             } else {
                                 // Just merge the two free ends.
                                 if (pos[0][0] + 1 == pos[1][1]) {
                                     std::cerr << "loop1a 9 merge" << std::endl;
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[0][0],
-                                        kNew->begin());
+                                        kNew.begin());
                                     std::copy(
                                         kChild->begin() + pos[0][0] + 2,
                                         kChild->end(),
-                                        kNew->begin() + pos[0][0]);
+                                        kNew.begin() + pos[0][0]);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             passValue(vChild));
                                 }
                             }
@@ -950,18 +994,17 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         case 0:
                             // Neither strand is from the forgotten zone.
                             for (i = 0; i <= kChild->size(); i += 2) {
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + i,
-                                    kNew->begin());
-                                (*kNew)[i] = id[1][0];
-                                (*kNew)[i + 1] = id[0][1];
+                                    kNew.begin());
+                                kNew[i] = id[1][0];
+                                kNew[i + 1] = id[0][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->end(),
-                                    kNew->begin() + i + 2);
+                                    kNew.begin() + i + 2);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         passValue(vChild));
                             }
                             break;
@@ -969,22 +1012,22 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             // One strand is from a forgotten crossing.
                             // Merge it with the other.
                             std::cerr << "loop1b 2 merge" << std::endl;
-                            kNew = new Key(*kChild);
-                            (*kNew)[pos[0][1]] = id[1][0];
+                            kNew = *kChild;
+                            kNew[pos[0][1]] = id[1][0];
 
-                            if (vData.keyViableOrDelete(kNew))
-                                aggregate(partial[index], kNew,
+                            if (vData.keyViable(kNew))
+                                aggregate(partial[index], new Key(kNew),
                                     passValue(vChild));
                             break;
                         case 4:
                             // One strand is from a forgotten crossing.
                             // Merge it with the other.
                             std::cerr << "loop1b 4 merge" << std::endl;
-                            kNew = new Key(*kChild);
-                            (*kNew)[pos[1][0]] = id[0][1];
+                            kNew = *kChild;
+                            kNew[pos[1][0]] = id[0][1];
 
-                            if (vData.keyViableOrDelete(kNew))
-                                aggregate(partial[index], kNew,
+                            if (vData.keyViable(kNew))
+                                aggregate(partial[index], new Key(kNew),
                                     passValue(vChild));
                             break;
                         case 6:
@@ -993,36 +1036,35 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 // We are closing off a loop.
                                 if (pos[0][1] == kChild->size() - 2) {
                                     std::cerr << "loop1b 6 pass" << std::endl;
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
-                                        kChild->end() - 2, kNew->begin());
+                                        kChild->end() - 2, kNew.begin());
 
                                     // This is one of the few cases that
                                     // could describe the last forget bag,
                                     // where we must remember to subtract 1
                                     // from the total number of loops.
-                                    if (vData.keyViableOrDelete(kNew)) {
+                                    if (vData.keyViable(kNew)) {
                                         vNew = passValue(vChild);
                                         if (index != nBags - 1)
                                             (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        aggregate(partial[index],
+                                            new Key(kNew), vNew);
                                     }
                                 }
                             } else {
                                 // Just merge the two free ends.
                                 if (pos[1][0] + 1 == pos[0][1]) {
                                     std::cerr << "loop1b 6 merge" << std::endl;
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[1][0],
-                                        kNew->begin());
+                                        kNew.begin());
                                     std::copy(
                                         kChild->begin() + pos[1][0] + 2,
                                         kChild->end(),
-                                        kNew->begin() + pos[1][0]);
+                                        kNew.begin() + pos[1][0]);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             passValue(vChild));
                                 }
                             }
@@ -1039,63 +1081,60 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             for (i = 0; i <= kChild->size(); i += 2)
                                 for (j = i; j <= kChild->size(); j += 2) {
                                     // Pass:
-                                    kNew = new Key(kChild->size() + 4);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + i,
-                                        kNew->begin());
-                                    (*kNew)[i] = id[1][0];
-                                    (*kNew)[i + 1] = id[1][1];
+                                        kNew.begin());
+                                    kNew[i] = id[1][0];
+                                    kNew[i + 1] = id[1][1];
                                     std::copy(kChild->begin() + i,
                                         kChild->begin() + j,
-                                        kNew->begin() + i + 2);
-                                    (*kNew)[j + 2] = id[0][0];
-                                    (*kNew)[j + 3] = id[0][1];
+                                        kNew.begin() + i + 2);
+                                    kNew[j + 2] = id[0][0];
+                                    kNew[j + 3] = id[0][1];
                                     std::copy(kChild->begin() + j,
                                         kChild->end(),
-                                        kNew->begin() + j + 4);
+                                        kNew.begin() + j + 4);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             passValue(vChild));
 
                                     // Switch:
-                                    kNew = new Key(kChild->size() + 4);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + i,
-                                        kNew->begin());
-                                    (*kNew)[i] = id[0][0];
-                                    (*kNew)[i + 1] = id[0][1];
+                                        kNew.begin());
+                                    kNew[i] = id[0][0];
+                                    kNew[i + 1] = id[0][1];
                                     std::copy(kChild->begin() + i,
                                         kChild->begin() + j,
-                                        kNew->begin() + i + 2);
-                                    (*kNew)[j + 2] = id[1][0];
-                                    (*kNew)[j + 3] = id[1][1];
+                                        kNew.begin() + i + 2);
+                                    kNew[j + 2] = id[1][0];
+                                    kNew[j + 3] = id[1][1];
                                     std::copy(kChild->begin() + j,
                                         kChild->end(),
-                                        kNew->begin() + j + 4);
+                                        kNew.begin() + j + 4);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             switchValue(vChild, c));
 
                                     // Splice:
-                                    kNew = new Key(kChild->size() + 4);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + i,
-                                        kNew->begin());
-                                    (*kNew)[i] = id[0][0];
-                                    (*kNew)[i + 1] = id[1][1];
+                                        kNew.begin());
+                                    kNew[i] = id[0][0];
+                                    kNew[i + 1] = id[1][1];
                                     std::copy(kChild->begin() + i,
                                         kChild->begin() + j,
-                                        kNew->begin() + i + 2);
-                                    (*kNew)[j + 2] = id[1][0];
-                                    (*kNew)[j + 3] = id[0][1];
+                                        kNew.begin() + i + 2);
+                                    kNew[j + 2] = id[1][0];
+                                    kNew[j + 3] = id[0][1];
                                     std::copy(kChild->begin() + j,
                                         kChild->end(),
-                                        kNew->begin() + j + 4);
+                                        kNew.begin() + j + 4);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             spliceValue(vChild, c));
                                 }
                             break;
@@ -1103,62 +1142,59 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             // Case verified.
                             for (i = 0; i < pos[0][0]; i += 2) {
                                 // Pass:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + i,
-                                    kNew->begin());
-                                (*kNew)[i] = id[1][0];
-                                (*kNew)[i + 1] = id[1][1];
+                                    kNew.begin());
+                                kNew[i] = id[1][0];
+                                kNew[i + 1] = id[1][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->begin() + pos[0][0],
-                                    kNew->begin() + i + 2);
-                                (*kNew)[pos[0][0] + 2] = id[0][1];
+                                    kNew.begin() + i + 2);
+                                kNew[pos[0][0] + 2] = id[0][1];
                                 std::copy(kChild->begin() + pos[0][0] + 1,
                                     kChild->end(),
-                                    kNew->begin() + pos[0][0] + 3);
+                                    kNew.begin() + pos[0][0] + 3);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         passValue(vChild));
                             }
                             for (i = pos[0][0] + 1; i <= kChild->size();
                                     i += 2) {
                                 // Switch:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + pos[0][0],
-                                    kNew->begin());
-                                (*kNew)[pos[0][0]] = id[0][1];
+                                    kNew.begin());
+                                kNew[pos[0][0]] = id[0][1];
                                 std::copy(kChild->begin() + pos[0][0] + 1,
                                     kChild->begin() + i,
-                                    kNew->begin() + pos[0][0] + 1);
-                                (*kNew)[i] = id[1][0];
-                                (*kNew)[i + 1] = id[1][1];
+                                    kNew.begin() + pos[0][0] + 1);
+                                kNew[i] = id[1][0];
+                                kNew[i + 1] = id[1][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->end(),
-                                    kNew->begin() + i + 2);
+                                    kNew.begin() + i + 2);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         switchValue(vChild, c));
 
                                 // Splice:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + pos[0][0],
-                                    kNew->begin());
-                                (*kNew)[pos[0][0]] = id[1][1];
+                                    kNew.begin());
+                                kNew[pos[0][0]] = id[1][1];
                                 std::copy(kChild->begin() + pos[0][0] + 1,
                                     kChild->begin() + i,
-                                    kNew->begin() + pos[0][0] + 1);
-                                (*kNew)[i] = id[1][0];
-                                (*kNew)[i + 1] = id[0][1];
+                                    kNew.begin() + pos[0][0] + 1);
+                                kNew[i] = id[1][0];
+                                kNew[i + 1] = id[0][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->end(),
-                                    kNew->begin() + i + 2);
+                                    kNew.begin() + i + 2);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         spliceValue(vChild, c));
                             }
                             break;
@@ -1166,62 +1202,59 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             // Case verified.
                             for (i = 0; i <= pos[0][1]; i += 2) {
                                 // Pass:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + i,
-                                    kNew->begin());
-                                (*kNew)[i] = id[1][0];
-                                (*kNew)[i + 1] = id[1][1];
+                                    kNew.begin());
+                                kNew[i] = id[1][0];
+                                kNew[i + 1] = id[1][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->begin() + pos[0][1],
-                                    kNew->begin() + i + 2);
-                                (*kNew)[pos[0][1] + 2] = id[0][0];
+                                    kNew.begin() + i + 2);
+                                kNew[pos[0][1] + 2] = id[0][0];
                                 std::copy(kChild->begin() + pos[0][1] + 1,
                                     kChild->end(),
-                                    kNew->begin() + pos[0][1] + 3);
+                                    kNew.begin() + pos[0][1] + 3);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         passValue(vChild));
 
                                 // Splice:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + i,
-                                    kNew->begin());
-                                (*kNew)[i] = id[0][0];
-                                (*kNew)[i + 1] = id[1][1];
+                                    kNew.begin());
+                                kNew[i] = id[0][0];
+                                kNew[i + 1] = id[1][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->begin() + pos[0][1],
-                                    kNew->begin() + i + 2);
-                                (*kNew)[pos[0][1] + 2] = id[1][0];
+                                    kNew.begin() + i + 2);
+                                kNew[pos[0][1] + 2] = id[1][0];
                                 std::copy(kChild->begin() + pos[0][1] + 1,
                                     kChild->end(),
-                                    kNew->begin() + pos[0][1] + 3);
+                                    kNew.begin() + pos[0][1] + 3);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         spliceValue(vChild, c));
                             }
                             for (i = pos[0][1] + 2; i <= kChild->size();
                                     i += 2) {
                                 // Switch:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + pos[0][1],
-                                    kNew->begin());
-                                (*kNew)[pos[0][1]] = id[0][0];
+                                    kNew.begin());
+                                kNew[pos[0][1]] = id[0][0];
                                 std::copy(kChild->begin() + pos[0][1] + 1,
                                     kChild->begin() + i,
-                                    kNew->begin() + pos[0][1] + 1);
-                                (*kNew)[i] = id[1][0];
-                                (*kNew)[i + 1] = id[1][1];
+                                    kNew.begin() + pos[0][1] + 1);
+                                kNew[i] = id[1][0];
+                                kNew[i + 1] = id[1][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->end(),
-                                    kNew->begin() + i + 2);
+                                    kNew.begin() + i + 2);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         switchValue(vChild, c));
                             }
                             break;
@@ -1233,74 +1266,74 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 if (pos[0][1] == kChild->size() - 2) {
                                     std::cerr << "3a pass" << std::endl;
                                     for (i = 0; i < kChild->size(); i += 2) {
-                                        kNew = new Key(kChild->size());
                                         std::copy(kChild->begin(),
                                             kChild->begin() + i,
-                                            kNew->begin());
-                                        (*kNew)[i] = id[1][0];
-                                        (*kNew)[i + 1] = id[1][1];
+                                            kNew.begin());
+                                        kNew[i] = id[1][0];
+                                        kNew[i + 1] = id[1][1];
                                         std::copy(kChild->begin() + i,
                                             kChild->end() - 2,
-                                            kNew->begin() + i + 2);
+                                            kNew.begin() + i + 2);
 
-                                        if (vData.keyViableOrDelete(kNew)) {
+                                        if (vData.keyViable(kNew)) {
                                             vNew = passValue(vChild);
                                             (*vNew) *= delta;
-                                            aggregate(partial[index], kNew, vNew);
+                                            aggregate(partial[index],
+                                                new Key(kNew), vNew);
                                         }
                                     }
                                 }
                             } else if (pos[0][0] < pos[0][1]) {
                                 // Splice:
                                 std::cerr << "3b splice" << std::endl;
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[0][0]] = id[1][1];
-                                (*kNew)[pos[0][1]] = id[1][0];
+                                kNew = *kChild;
+                                kNew[pos[0][0]] = id[1][1];
+                                kNew[pos[0][1]] = id[1][0];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         spliceValue(vChild, c));
 
                                 if (pos[0][0] + 1 == pos[0][1]) {
                                     // Pass and switch:
                                     std::cerr << "3b pass/switch" << std::endl;
                                     for (i = 0; i < pos[0][0]; i += 2) {
-                                        kNew = new Key(kChild->size());
                                         std::copy(kChild->begin(),
                                             kChild->begin() + i,
-                                            kNew->begin());
-                                        (*kNew)[i] = id[1][0];
-                                        (*kNew)[i + 1] = id[1][1];
+                                            kNew.begin());
+                                        kNew[i] = id[1][0];
+                                        kNew[i + 1] = id[1][1];
                                         std::copy(kChild->begin() + i,
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin() + i + 2);
+                                            kNew.begin() + i + 2);
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[0][0] + 2);
+                                            kNew.begin() + pos[0][0] + 2);
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 passValue(vChild));
                                     }
                                     for (i = pos[0][1] + 2;
                                             i <= kChild->size(); i += 2) {
-                                        kNew = new Key(kChild->size());
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 2,
                                             kChild->begin() + i,
-                                            kNew->begin() + pos[0][0]);
-                                        (*kNew)[i - 2] = id[1][0];
-                                        (*kNew)[i - 1] = id[1][1];
+                                            kNew.begin() + pos[0][0]);
+                                        kNew[i - 2] = id[1][0];
+                                        kNew[i - 1] = id[1][1];
                                         std::copy(kChild->begin() + i,
                                             kChild->end(),
-                                            kNew->begin() + i);
+                                            kNew.begin() + i);
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 switchValue(vChild, c));
                                     }
                                 }
@@ -1310,62 +1343,59 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             // Case verified.
                             for (i = 0; i < pos[1][0]; i += 2) {
                                 // Switch:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + i,
-                                    kNew->begin());
-                                (*kNew)[i] = id[0][0];
-                                (*kNew)[i + 1] = id[0][1];
+                                    kNew.begin());
+                                kNew[i] = id[0][0];
+                                kNew[i + 1] = id[0][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->begin() + pos[1][0],
-                                    kNew->begin() + i + 2);
-                                (*kNew)[pos[1][0] + 2] = id[1][1];
+                                    kNew.begin() + i + 2);
+                                kNew[pos[1][0] + 2] = id[1][1];
                                 std::copy(kChild->begin() + pos[1][0] + 1,
                                     kChild->end(),
-                                    kNew->begin() + pos[1][0] + 3);
+                                    kNew.begin() + pos[1][0] + 3);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         switchValue(vChild, c));
 
                                 // Splice:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + i,
-                                    kNew->begin());
-                                (*kNew)[i] = id[0][0];
-                                (*kNew)[i + 1] = id[1][1];
+                                    kNew.begin());
+                                kNew[i] = id[0][0];
+                                kNew[i + 1] = id[1][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->begin() + pos[1][0],
-                                    kNew->begin() + i + 2);
-                                (*kNew)[pos[1][0] + 2] = id[0][1];
+                                    kNew.begin() + i + 2);
+                                kNew[pos[1][0] + 2] = id[0][1];
                                 std::copy(kChild->begin() + pos[1][0] + 1,
                                     kChild->end(),
-                                    kNew->begin() + pos[1][0] + 3);
+                                    kNew.begin() + pos[1][0] + 3);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         spliceValue(vChild, c));
                             }
                             for (i = pos[1][0] + 1; i <= kChild->size();
                                     i += 2) {
                                 // Pass:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + pos[1][0],
-                                    kNew->begin());
-                                (*kNew)[pos[1][0]] = id[1][1];
+                                    kNew.begin());
+                                kNew[pos[1][0]] = id[1][1];
                                 std::copy(kChild->begin() + pos[1][0] + 1,
                                     kChild->begin() + i,
-                                    kNew->begin() + pos[1][0] + 1);
-                                (*kNew)[i] = id[0][0];
-                                (*kNew)[i + 1] = id[0][1];
+                                    kNew.begin() + pos[1][0] + 1);
+                                kNew[i] = id[0][0];
+                                kNew[i + 1] = id[0][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->end(),
-                                    kNew->begin() + i + 2);
+                                    kNew.begin() + i + 2);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         passValue(vChild));
                             }
                             break;
@@ -1375,30 +1405,30 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             // forgotten crossings.
                             if (pos[0][0] < pos[1][0]) {
                                 // Switch:
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[0][0]] = id[0][1];
-                                (*kNew)[pos[1][0]] = id[1][1];
+                                kNew = *kChild;
+                                kNew[pos[0][0]] = id[0][1];
+                                kNew[pos[1][0]] = id[1][1];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         switchValue(vChild, c));
 
                                 // Splice:
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[0][0]] = id[1][1];
-                                (*kNew)[pos[1][0]] = id[0][1];
+                                kNew = *kChild;
+                                kNew[pos[0][0]] = id[1][1];
+                                kNew[pos[1][0]] = id[0][1];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         spliceValue(vChild, c));
                             } else {
                                 // Pass:
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[0][0]] = id[0][1];
-                                (*kNew)[pos[1][0]] = id[1][1];
+                                kNew = *kChild;
+                                kNew[pos[0][0]] = id[0][1];
+                                kNew[pos[1][0]] = id[1][1];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         passValue(vChild));
                             }
                             break;
@@ -1407,75 +1437,75 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             if (pos[0][1] + 1 == pos[1][0]) {
                                 // d=b
                                 // Switch:
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[0][1]] = id[0][0];
-                                (*kNew)[pos[1][0]] = id[1][1];
+                                kNew = *kChild;
+                                kNew[pos[0][1]] = id[0][0];
+                                kNew[pos[1][0]] = id[1][1];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         switchValue(vChild, c));
 
                                 if (pos[0][1] == kChild->size() - 2) {
                                     // Splice:
                                     for (i = 0; i < kChild->size(); i += 2) {
-                                        kNew = new Key(kChild->size());
                                         std::copy(kChild->begin(),
                                             kChild->begin() + i,
-                                            kNew->begin());
-                                        (*kNew)[i] = id[0][0];
-                                        (*kNew)[i + 1] = id[1][1];
+                                            kNew.begin());
+                                        kNew[i] = id[0][0];
+                                        kNew[i + 1] = id[1][1];
                                         std::copy(kChild->begin() + i,
                                             kChild->end() - 2,
-                                            kNew->begin() + i + 2);
+                                            kNew.begin() + i + 2);
 
-                                        if (vData.keyViableOrDelete(kNew)) {
+                                        if (vData.keyViable(kNew)) {
                                             vNew = spliceValue(vChild, c);
                                             (*vNew) *= delta;
-                                            aggregate(partial[index], kNew, vNew);
+                                            aggregate(partial[index],
+                                                new Key(kNew), vNew);
                                         }
                                     }
                                 }
                             } else {
                                 if (pos[1][0] < pos[0][1]) {
                                     // Pass:
-                                    kNew = new Key(*kChild);
-                                    (*kNew)[pos[0][1]] = id[0][0];
-                                    (*kNew)[pos[1][0]] = id[1][1];
+                                    kNew = *kChild;
+                                    kNew[pos[0][1]] = id[0][0];
+                                    kNew[pos[1][0]] = id[1][1];
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             passValue(vChild));
 
                                     if (pos[1][0] + 1 == pos[0][1]) {
                                         // Splice:
                                         for (i = 0; i < pos[1][0]; i += 2) {
-                                            kNew = new Key(kChild->size());
                                             std::copy(kChild->begin(),
                                                 kChild->begin() + i,
-                                                kNew->begin());
-                                            (*kNew)[i] = id[0][0];
-                                            (*kNew)[i + 1] = id[1][1];
+                                                kNew.begin());
+                                            kNew[i] = id[0][0];
+                                            kNew[i + 1] = id[1][1];
                                             std::copy(kChild->begin() + i,
                                                 kChild->begin() + pos[1][0],
-                                                kNew->begin() + i + 2);
+                                                kNew.begin() + i + 2);
                                             std::copy(
                                                 kChild->begin() + pos[1][0] + 2,
                                                 kChild->end(),
-                                                kNew->begin() + pos[1][0] + 2);
+                                                kNew.begin() + pos[1][0] + 2);
 
-                                            if (vData.keyViableOrDelete(kNew))
-                                                aggregate(partial[index], kNew,
+                                            if (vData.keyViable(kNew))
+                                                aggregate(partial[index],
+                                                    new Key(kNew),
                                                     spliceValue(vChild, c));
                                         }
                                     }
                                 } else {
                                     // Switch:
-                                    kNew = new Key(*kChild);
-                                    (*kNew)[pos[0][1]] = id[0][0];
-                                    (*kNew)[pos[1][0]] = id[1][1];
+                                    kNew = *kChild;
+                                    kNew[pos[0][1]] = id[0][0];
+                                    kNew[pos[1][0]] = id[1][1];
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             switchValue(vChild, c));
                                 }
                             }
@@ -1486,92 +1516,91 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 // d=b
                                 // Switch and splice:
                                 if (pos[0][0] + 1 == pos[0][1]) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[0][0],
-                                        kNew->begin());
-                                    (*kNew)[pos[0][0]] = id[1][1];
+                                        kNew.begin());
+                                    kNew[pos[0][0]] = id[1][1];
                                     std::copy(kChild->begin() + pos[0][0] + 3,
                                         kChild->end(),
-                                        kNew->begin() + pos[0][0] + 1);
+                                        kNew.begin() + pos[0][0] + 1);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             switchValue(vChild, c));
                                 }
                                 if (pos[0][1] == kChild->size() - 2) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
-                                        kChild->end() - 2, kNew->begin());
-                                    (*kNew)[pos[0][0]] = id[1][1];
+                                        kChild->end() - 2, kNew.begin());
+                                    kNew[pos[0][0]] = id[1][1];
 
-                                    if (vData.keyViableOrDelete(kNew)) {
+                                    if (vData.keyViable(kNew)) {
                                         vNew = spliceValue(vChild, c);
                                         (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        aggregate(partial[index],
+                                            new Key(kNew), vNew);
                                     }
                                 }
                             } else if (pos[0][1] + 1 == pos[0][0]) {
                                 // d=a
                                 // Pass:
                                 if (pos[0][1] == kChild->size() - 2) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
-                                        kChild->end() - 2, kNew->begin());
-                                    (*kNew)[pos[1][0]] = id[1][1];
+                                        kChild->end() - 2, kNew.begin());
+                                    kNew[pos[1][0]] = id[1][1];
 
-                                    if (vData.keyViableOrDelete(kNew)) {
+                                    if (vData.keyViable(kNew)) {
                                         vNew = passValue(vChild);
                                         (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        aggregate(partial[index],
+                                            new Key(kNew), vNew);
                                     }
                                 }
                             } else {
                                 if (pos[0][0] + 1 == pos[0][1]) {
                                     // Pass and switch:
-                                    kNew = new Key(kChild->size() - 2);
                                     if (pos[1][0] < pos[0][0]) {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[0][0]);
-                                        (*kNew)[pos[1][0]] = id[1][1];
+                                            kNew.begin() + pos[0][0]);
+                                        kNew[pos[1][0]] = id[1][1];
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 passValue(vChild));
                                     } else {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[0][0]);
-                                        (*kNew)[pos[1][0] - 2] = id[1][1];
+                                            kNew.begin() + pos[0][0]);
+                                        kNew[pos[1][0] - 2] = id[1][1];
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 switchValue(vChild, c));
                                     }
                                 } else if (pos[1][0] + 1 == pos[0][1] &&
                                         pos[0][0] < pos[1][0]) {
                                     // Splice:
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[1][0],
-                                        kNew->begin());
+                                        kNew.begin());
                                     std::copy(
                                         kChild->begin() + pos[1][0] + 2,
                                         kChild->end(),
-                                        kNew->begin() + pos[1][0]);
-                                    (*kNew)[pos[0][0]] = id[1][1];
+                                        kNew.begin() + pos[1][0]);
+                                    kNew[pos[0][0]] = id[1][1];
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             spliceValue(vChild, c));
                                 }
                             }
@@ -1580,62 +1609,59 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             // Case verified.
                             for (i = 0; i <= pos[1][1]; i += 2) {
                                 // Switch:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + i,
-                                    kNew->begin());
-                                (*kNew)[i] = id[0][0];
-                                (*kNew)[i + 1] = id[0][1];
+                                    kNew.begin());
+                                kNew[i] = id[0][0];
+                                kNew[i + 1] = id[0][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->begin() + pos[1][1],
-                                    kNew->begin() + i + 2);
-                                (*kNew)[pos[1][1] + 2] = id[1][0];
+                                    kNew.begin() + i + 2);
+                                kNew[pos[1][1] + 2] = id[1][0];
                                 std::copy(kChild->begin() + pos[1][1] + 1,
                                     kChild->end(),
-                                    kNew->begin() + pos[1][1] + 3);
+                                    kNew.begin() + pos[1][1] + 3);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         switchValue(vChild, c));
                             }
                             for (i = pos[1][1] + 2; i <= kChild->size();
                                     i += 2) {
                                 // Pass:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + pos[1][1],
-                                    kNew->begin());
-                                (*kNew)[pos[1][1]] = id[1][0];
+                                    kNew.begin());
+                                kNew[pos[1][1]] = id[1][0];
                                 std::copy(kChild->begin() + pos[1][1] + 1,
                                     kChild->begin() + i,
-                                    kNew->begin() + pos[1][1] + 1);
-                                (*kNew)[i] = id[0][0];
-                                (*kNew)[i + 1] = id[0][1];
+                                    kNew.begin() + pos[1][1] + 1);
+                                kNew[i] = id[0][0];
+                                kNew[i + 1] = id[0][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->end(),
-                                    kNew->begin() + i + 2);
+                                    kNew.begin() + i + 2);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         passValue(vChild));
 
                                 // Splice:
-                                kNew = new Key(kChild->size() + 2);
                                 std::copy(kChild->begin(),
                                     kChild->begin() + pos[1][1],
-                                    kNew->begin());
-                                (*kNew)[pos[1][1]] = id[0][0];
+                                    kNew.begin());
+                                kNew[pos[1][1]] = id[0][0];
                                 std::copy(kChild->begin() + pos[1][1] + 1,
                                     kChild->begin() + i,
-                                    kNew->begin() + pos[1][1] + 1);
-                                (*kNew)[i] = id[1][0];
-                                (*kNew)[i + 1] = id[0][1];
+                                    kNew.begin() + pos[1][1] + 1);
+                                kNew[i] = id[1][0];
+                                kNew[i + 1] = id[0][1];
                                 std::copy(kChild->begin() + i,
                                     kChild->end(),
-                                    kNew->begin() + i + 2);
+                                    kNew.begin() + i + 2);
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         spliceValue(vChild, c));
                             }
                             break;
@@ -1644,53 +1670,53 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             if (pos[1][1] + 1 == pos[0][0]) {
                                 // c=a
                                 // Pass:
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[1][1]] = id[1][0];
-                                (*kNew)[pos[0][0]] = id[0][1];
+                                kNew = *kChild;
+                                kNew[pos[1][1]] = id[1][0];
+                                kNew[pos[0][0]] = id[0][1];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         passValue(vChild));
                             } else {
                                 if (pos[1][1] < pos[0][0]) {
                                     // Pass:
-                                    kNew = new Key(*kChild);
-                                    (*kNew)[pos[1][1]] = id[1][0];
-                                    (*kNew)[pos[0][0]] = id[0][1];
+                                    kNew = *kChild;
+                                    kNew[pos[1][1]] = id[1][0];
+                                    kNew[pos[0][0]] = id[0][1];
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             passValue(vChild));
                                 } else {
                                     // Switch:
-                                    kNew = new Key(*kChild);
-                                    (*kNew)[pos[1][1]] = id[1][0];
-                                    (*kNew)[pos[0][0]] = id[0][1];
+                                    kNew = *kChild;
+                                    kNew[pos[1][1]] = id[1][0];
+                                    kNew[pos[0][0]] = id[0][1];
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             switchValue(vChild, c));
 
                                     if (pos[0][0] + 1 == pos[1][1]) {
                                         // Splice:
                                         for (i = pos[1][1] + 2;
                                                 i <= kChild->size(); i += 2) {
-                                            kNew = new Key(kChild->size());
                                             std::copy(kChild->begin(),
                                                 kChild->begin() + pos[0][0],
-                                                kNew->begin());
+                                                kNew.begin());
                                             std::copy(
                                                 kChild->begin() + pos[0][0] + 2,
                                                 kChild->begin() + i,
-                                                kNew->begin() + pos[0][0]);
-                                            (*kNew)[i - 2] = id[1][0];
-                                            (*kNew)[i - 1] = id[0][1];
+                                                kNew.begin() + pos[0][0]);
+                                            kNew[i - 2] = id[1][0];
+                                            kNew[i - 1] = id[0][1];
                                             std::copy(kChild->begin() + i,
                                                 kChild->end(),
-                                                kNew->begin() + i);
+                                                kNew.begin() + i);
 
-                                            if (vData.keyViableOrDelete(kNew))
-                                                aggregate(partial[index], kNew,
+                                            if (vData.keyViable(kNew))
+                                                aggregate(partial[index],
+                                                    new Key(kNew),
                                                     spliceValue(vChild, c));
                                         }
                                     }
@@ -1703,30 +1729,30 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             // forgotten crossings.
                             if (pos[0][1] < pos[1][1]) {
                                 // Switch:
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[0][1]] = id[0][0];
-                                (*kNew)[pos[1][1]] = id[1][0];
+                                kNew = *kChild;
+                                kNew[pos[0][1]] = id[0][0];
+                                kNew[pos[1][1]] = id[1][0];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         switchValue(vChild, c));
                             } else {
                                 // Pass:
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[0][1]] = id[0][0];
-                                (*kNew)[pos[1][1]] = id[1][0];
+                                kNew = *kChild;
+                                kNew[pos[0][1]] = id[0][0];
+                                kNew[pos[1][1]] = id[1][0];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         passValue(vChild));
 
                                 // Splice:
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[0][1]] = id[1][0];
-                                (*kNew)[pos[1][1]] = id[0][0];
+                                kNew = *kChild;
+                                kNew[pos[0][1]] = id[1][0];
+                                kNew[pos[1][1]] = id[0][0];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         spliceValue(vChild, c));
                             }
                             break;
@@ -1736,80 +1762,79 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 // d=a
                                 // Pass:
                                 if (pos[0][1] == kChild->size() - 2) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
-                                        kChild->end() - 2, kNew->begin());
-                                    (*kNew)[pos[1][1]] = id[1][0];
+                                        kChild->end() - 2, kNew.begin());
+                                    kNew[pos[1][1]] = id[1][0];
 
-                                    if (vData.keyViableOrDelete(kNew)) {
+                                    if (vData.keyViable(kNew)) {
                                         vNew = passValue(vChild);
                                         (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        aggregate(partial[index],
+                                            new Key(kNew), vNew);
                                     }
                                 }
                             } else if (pos[1][1] + 1 == pos[0][0]) {
                                 // c=a
                                 // Pass:
                                 if (pos[0][0] + 1 == pos[0][1]) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[1][1],
-                                        kNew->begin());
-                                    (*kNew)[pos[1][1]] = id[1][0];
+                                        kNew.begin());
+                                    kNew[pos[1][1]] = id[1][0];
                                     std::copy(kChild->begin() + pos[1][1] + 3,
                                         kChild->end(),
-                                        kNew->begin() + pos[1][1] + 1);
+                                        kNew.begin() + pos[1][1] + 1);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             passValue(vChild));
                                 }
                             } else {
                                 if (pos[0][0] + 1 == pos[0][1]) {
                                     // Pass and switch:
-                                    kNew = new Key(kChild->size() - 2);
                                     if (pos[1][1] < pos[0][1]) {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[0][0]);
-                                        (*kNew)[pos[1][1]] = id[1][0];
+                                            kNew.begin() + pos[0][0]);
+                                        kNew[pos[1][1]] = id[1][0];
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 passValue(vChild));
                                     } else {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[0][0]);
-                                        (*kNew)[pos[1][1] - 2] = id[1][0];
+                                            kNew.begin() + pos[0][0]);
+                                        kNew[pos[1][1] - 2] = id[1][0];
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 switchValue(vChild, c));
                                     }
                                 } else if (pos[0][0] + 1 == pos[1][1] &&
                                         pos[1][1] < pos[0][1]) {
                                     // Splice:
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[0][0],
-                                        kNew->begin());
+                                        kNew.begin());
                                     std::copy(
                                         kChild->begin() + pos[0][0] + 2,
                                         kChild->end(),
-                                        kNew->begin() + pos[0][0]);
-                                    (*kNew)[pos[0][1] - 2] = id[1][0];
+                                        kNew.begin() + pos[0][0]);
+                                    kNew[pos[0][1] - 2] = id[1][0];
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             spliceValue(vChild, c));
                                 }
                             }
@@ -1820,32 +1845,32 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 // c=b
                                 // Splice:
                                 std::cerr << "12a splice" << std::endl;
-                                kNew = new Key(*kChild);
-                                (*kNew)[pos[1][1]] = id[0][0];
-                                (*kNew)[pos[1][0]] = id[0][1];
+                                kNew = *kChild;
+                                kNew[pos[1][1]] = id[0][0];
+                                kNew[pos[1][0]] = id[0][1];
 
-                                if (vData.keyViableOrDelete(kNew))
-                                    aggregate(partial[index], kNew,
+                                if (vData.keyViable(kNew))
+                                    aggregate(partial[index], new Key(kNew),
                                         spliceValue(vChild, c));
 
                                 if (pos[1][1] == kChild->size() - 2) {
                                     // Switch:
                                     std::cerr << "12a switch" << std::endl;
                                     for (i = 0; i < kChild->size(); i += 2) {
-                                        kNew = new Key(kChild->size());
                                         std::copy(kChild->begin(),
                                             kChild->begin() + i,
-                                            kNew->begin());
-                                        (*kNew)[i] = id[0][0];
-                                        (*kNew)[i + 1] = id[0][1];
+                                            kNew.begin());
+                                        kNew[i] = id[0][0];
+                                        kNew[i + 1] = id[0][1];
                                         std::copy(kChild->begin() + i,
                                             kChild->end() - 2,
-                                            kNew->begin() + i + 2);
+                                            kNew.begin() + i + 2);
 
-                                        if (vData.keyViableOrDelete(kNew)) {
+                                        if (vData.keyViable(kNew)) {
                                             vNew = switchValue(vChild, c);
                                             (*vNew) *= delta;
-                                            aggregate(partial[index], kNew, vNew);
+                                            aggregate(partial[index],
+                                                new Key(kNew), vNew);
                                         }
                                     }
                                 }
@@ -1853,53 +1878,53 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 if (pos[1][1] < pos[1][0]) {
                                     // Splice:
                                     std::cerr << "12b splice" << std::endl;
-                                    kNew = new Key(*kChild);
-                                    (*kNew)[pos[1][1]] = id[0][0];
-                                    (*kNew)[pos[1][0]] = id[0][1];
+                                    kNew = *kChild;
+                                    kNew[pos[1][1]] = id[0][0];
+                                    kNew[pos[1][0]] = id[0][1];
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             spliceValue(vChild, c));
                                 } else if (pos[1][0] + 1 == pos[1][1]) {
                                     // Pass and switch:
                                     std::cerr << "12b pass/switch" << std::endl;
                                     for (i = 0; i < pos[1][0]; i += 2) {
-                                        kNew = new Key(kChild->size());
                                         std::copy(kChild->begin(),
                                             kChild->begin() + i,
-                                            kNew->begin());
-                                        (*kNew)[i] = id[0][0];
-                                        (*kNew)[i + 1] = id[0][1];
+                                            kNew.begin());
+                                        kNew[i] = id[0][0];
+                                        kNew[i + 1] = id[0][1];
                                         std::copy(kChild->begin() + i,
                                             kChild->begin() + pos[1][0],
-                                            kNew->begin() + i + 2);
+                                            kNew.begin() + i + 2);
                                         std::copy(
                                             kChild->begin() + pos[1][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[1][0] + 2);
+                                            kNew.begin() + pos[1][0] + 2);
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 switchValue(vChild, c));
                                     }
                                     for (i = pos[1][1] + 2;
                                             i <= kChild->size(); i += 2) {
-                                        kNew = new Key(kChild->size());
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[1][0] + 2,
                                             kChild->begin() + i,
-                                            kNew->begin() + pos[1][0]);
-                                        (*kNew)[i - 2] = id[0][0];
-                                        (*kNew)[i - 1] = id[0][1];
+                                            kNew.begin() + pos[1][0]);
+                                        kNew[i - 2] = id[0][0];
+                                        kNew[i - 1] = id[0][1];
                                         std::copy(kChild->begin() + i,
                                             kChild->end(),
-                                            kNew->begin() + i);
+                                            kNew.begin() + i);
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 passValue(vChild));
                                     }
                                 }
@@ -1911,94 +1936,92 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 // c=a
                                 // Pass:
                                 if (pos[1][0] + 1 == pos[1][1]) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[1][0],
-                                        kNew->begin());
-                                    (*kNew)[pos[1][0]] = id[0][1];
+                                        kNew.begin());
+                                    kNew[pos[1][0]] = id[0][1];
                                     std::copy(kChild->begin() + pos[1][0] + 3,
                                         kChild->end(),
-                                        kNew->begin() + pos[1][0] + 1);
+                                        kNew.begin() + pos[1][0] + 1);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             passValue(vChild));
                                 }
                             } else if (pos[1][1] + 1 == pos[1][0]) {
                                 // c=b
                                 // Switch and splice:
                                 if (pos[1][1] == kChild->size() - 2) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
-                                        kChild->end() - 2, kNew->begin());
-                                    (*kNew)[pos[0][0]] = id[0][1];
+                                        kChild->end() - 2, kNew.begin());
+                                    kNew[pos[0][0]] = id[0][1];
 
-                                    if (vData.keyViableOrDelete(kNew)) {
+                                    if (vData.keyViable(kNew)) {
                                         vNew = switchValue(vChild, c);
                                         (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        aggregate(partial[index],
+                                            new Key(kNew), vNew);
                                     }
                                 }
                                 if (pos[0][0] + 1 == pos[1][1]) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[0][0],
-                                        kNew->begin());
-                                    (*kNew)[pos[0][0]] = id[0][1];
+                                        kNew.begin());
+                                    kNew[pos[0][0]] = id[0][1];
                                     std::copy(kChild->begin() + pos[0][0] + 3,
                                         kChild->end(),
-                                        kNew->begin() + pos[0][0] + 1);
+                                        kNew.begin() + pos[0][0] + 1);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             spliceValue(vChild, c));
                                 }
                             } else {
                                 if (pos[1][0] + 1 == pos[1][1]) {
                                     // Pass and switch:
-                                    kNew = new Key(kChild->size() - 2);
                                     if (pos[1][0] < pos[0][0]) {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[1][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[1][0]);
-                                        (*kNew)[pos[0][0] - 2] = id[0][1];
+                                            kNew.begin() + pos[1][0]);
+                                        kNew[pos[0][0] - 2] = id[0][1];
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 passValue(vChild));
                                     } else {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[1][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[1][0]);
-                                        (*kNew)[pos[0][0]] = id[0][1];
+                                            kNew.begin() + pos[1][0]);
+                                        kNew[pos[0][0]] = id[0][1];
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 switchValue(vChild, c));
                                     }
                                 } else if (pos[0][0] + 1 == pos[1][1] &&
                                         pos[0][0] < pos[1][0]) {
                                     // Splice:
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[0][0],
-                                        kNew->begin());
+                                        kNew.begin());
                                     std::copy(
                                         kChild->begin() + pos[0][0] + 2,
                                         kChild->end(),
-                                        kNew->begin() + pos[0][0]);
-                                    (*kNew)[pos[1][0] - 2] = id[0][1];
+                                        kNew.begin() + pos[0][0]);
+                                    kNew[pos[1][0] - 2] = id[0][1];
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             spliceValue(vChild, c));
                                 }
                             }
@@ -2009,104 +2032,102 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 // d=b
                                 // Switch and splice:
                                 if (pos[1][0] + 1 == pos[1][1]) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[0][1],
-                                        kNew->begin());
-                                    (*kNew)[pos[0][1]] = id[0][0];
+                                        kNew.begin());
+                                    kNew[pos[0][1]] = id[0][0];
                                     std::copy(kChild->begin() + pos[0][1] + 3,
                                         kChild->end(),
-                                        kNew->begin() + pos[0][1] + 1);
+                                        kNew.begin() + pos[0][1] + 1);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             switchValue(vChild, c));
                                 } else if (pos[0][1] == kChild->size() - 2) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
-                                        kChild->end() - 2, kNew->begin());
-                                    (*kNew)[pos[1][1]] = id[0][0];
+                                        kChild->end() - 2, kNew.begin());
+                                    kNew[pos[1][1]] = id[0][0];
 
-                                    if (vData.keyViableOrDelete(kNew)) {
+                                    if (vData.keyViable(kNew)) {
                                         vNew = spliceValue(vChild, c);
                                         (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        aggregate(partial[index],
+                                            new Key(kNew), vNew);
                                     }
                                 }
                             } else if (pos[1][1] + 1 == pos[1][0]) {
                                 // c=b
                                 // Switch and splice:
                                 if (pos[1][0] + 1 == pos[0][1]) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[1][1],
-                                        kNew->begin());
-                                    (*kNew)[pos[1][1]] = id[0][0];
+                                        kNew.begin());
+                                    kNew[pos[1][1]] = id[0][0];
                                     std::copy(kChild->begin() + pos[1][1] + 3,
                                         kChild->end(),
-                                        kNew->begin() + pos[1][1] + 1);
+                                        kNew.begin() + pos[1][1] + 1);
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             spliceValue(vChild, c));
                                 } else if (pos[1][1] == kChild->size() - 2) {
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
-                                        kChild->end() - 2, kNew->begin());
-                                    (*kNew)[pos[0][1]] = id[0][0];
+                                        kChild->end() - 2, kNew.begin());
+                                    kNew[pos[0][1]] = id[0][0];
 
-                                    if (vData.keyViableOrDelete(kNew)) {
+                                    if (vData.keyViable(kNew)) {
                                         vNew = switchValue(vChild, c);
                                         (*vNew) *= delta;
-                                        aggregate(partial[index], kNew, vNew);
+                                        aggregate(partial[index],
+                                            new Key(kNew), vNew);
                                     }
                                 }
                             } else {
                                 if (pos[1][0] + 1 == pos[1][1]) {
                                     // Pass and switch:
-                                    kNew = new Key(kChild->size() - 2);
                                     if (pos[1][1] < pos[0][1]) {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[1][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[1][0]);
-                                        (*kNew)[pos[0][1] - 2] = id[0][0];
+                                            kNew.begin() + pos[1][0]);
+                                        kNew[pos[0][1] - 2] = id[0][0];
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 passValue(vChild));
                                     } else {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[1][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[1][0]);
-                                        (*kNew)[pos[0][1]] = id[0][0];
+                                            kNew.begin() + pos[1][0]);
+                                        kNew[pos[0][1]] = id[0][0];
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 switchValue(vChild, c));
                                     }
                                 } else if (pos[1][0] + 1 == pos[0][1] &&
                                         pos[1][1] < pos[0][1]) {
                                     // Splice:
-                                    kNew = new Key(kChild->size() - 2);
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[1][0],
-                                        kNew->begin());
+                                        kNew.begin());
                                     std::copy(
                                         kChild->begin() + pos[1][0] + 2,
                                         kChild->end(),
-                                        kNew->begin() + pos[1][0]);
-                                    (*kNew)[pos[1][1]] = id[0][0];
+                                        kNew.begin() + pos[1][0]);
+                                    kNew[pos[1][1]] = id[0][0];
 
-                                    if (vData.keyViableOrDelete(kNew))
-                                        aggregate(partial[index], kNew,
+                                    if (vData.keyViable(kNew))
+                                        aggregate(partial[index], new Key(kNew),
                                             spliceValue(vChild, c));
                                 }
                             }
@@ -2120,20 +2141,20 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // Pass:
                                     if (pos[1][1] == kChild->size() - 4 &&
                                             pos[0][1] == kChild->size() - 2) {
-                                        kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
-                                            kChild->end() - 4, kNew->begin());
+                                            kChild->end() - 4, kNew.begin());
 
                                         // This is one of the few cases that
                                         // could describe the last forget bag,
                                         // where we must remember to subtract 1
                                         // from the total number of loops.
-                                        if (vData.keyViableOrDelete(kNew)) {
+                                        if (vData.keyViable(kNew)) {
                                             vNew = passValue(vChild);
                                             (*vNew) *= delta;
                                             if (index != nBags - 1)
                                                 (*vNew) *= delta;
-                                            aggregate(partial[index], kNew, vNew);
+                                            aggregate(partial[index],
+                                                new Key(kNew), vNew);
                                         }
                                     }
                                 } else {
@@ -2141,19 +2162,19 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // Pass:
                                     if (pos[0][1] == kChild->size() - 2 &&
                                             pos[1][0] + 1 == pos[1][1]) {
-                                        kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[1][0] + 2,
                                             kChild->end() - 2,
-                                            kNew->begin() + pos[1][0]);
+                                            kNew.begin() + pos[1][0]);
 
-                                        if (vData.keyViableOrDelete(kNew)) {
+                                        if (vData.keyViable(kNew)) {
                                             vNew = passValue(vChild);
                                             (*vNew) *= delta;
-                                            aggregate(partial[index], kNew, vNew);
+                                            aggregate(partial[index],
+                                                new Key(kNew), vNew);
                                         }
                                     }
                                 }
@@ -2163,19 +2184,19 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // Pass:
                                     if (pos[1][1] == kChild->size() - 4 &&
                                             pos[0][1] == kChild->size() - 2) {
-                                        kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
-                                            kChild->end() - 4, kNew->begin());
+                                            kChild->end() - 4, kNew.begin());
 
                                         // This is one of the few cases that
                                         // could describe the last forget bag,
                                         // where we must remember to subtract 1
                                         // from the total number of loops.
-                                        if (vData.keyViableOrDelete(kNew)) {
+                                        if (vData.keyViable(kNew)) {
                                             vNew = passValue(vChild);
                                             if (index != nBags - 1)
                                                 (*vNew) *= delta;
-                                            aggregate(partial[index], kNew, vNew);
+                                            aggregate(partial[index],
+                                                new Key(kNew), vNew);
                                         }
                                     }
                                 } else {
@@ -2183,33 +2204,33 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // Switch and splice:
                                     if (pos[1][0] + 1 == pos[1][1] &&
                                             pos[0][0] + 1 == pos[0][1]) {
-                                        kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 4,
                                             kChild->end(),
-                                            kNew->begin() + pos[0][0]);
+                                            kNew.begin() + pos[0][0]);
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 switchValue(vChild, c));
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[0][1] == kChild->size() - 2) {
-                                        kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 2,
                                             kChild->end() - 2,
-                                            kNew->begin() + pos[0][0]);
+                                            kNew.begin() + pos[0][0]);
 
-                                        if (vData.keyViableOrDelete(kNew)) {
+                                        if (vData.keyViable(kNew)) {
                                             vNew = spliceValue(vChild, c);
                                             (*vNew) *= delta;
-                                            aggregate(partial[index], kNew, vNew);
+                                            aggregate(partial[index],
+                                                new Key(kNew), vNew);
                                         }
                                     }
                                 }
@@ -2219,33 +2240,33 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // Switch and splice:
                                     if (pos[0][0] + 1 == pos[0][1] &&
                                             pos[1][1] == kChild->size() - 2) {
-                                        kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 2,
                                             kChild->end() - 2,
-                                            kNew->begin() + pos[0][0]);
+                                            kNew.begin() + pos[0][0]);
 
-                                        if (vData.keyViableOrDelete(kNew)) {
+                                        if (vData.keyViable(kNew)) {
                                             vNew = switchValue(vChild, c);
                                             (*vNew) *= delta;
-                                            aggregate(partial[index], kNew, vNew);
+                                            aggregate(partial[index],
+                                                new Key(kNew), vNew);
                                         }
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[1][0] + 1 == pos[0][1]) {
-                                        kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 4,
                                             kChild->end(),
-                                            kNew->begin() + pos[0][0]);
+                                            kNew.begin() + pos[0][0]);
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 spliceValue(vChild, c));
                                     }
                                 } else if (pos[1][1] + 1 == pos[0][0]) {
@@ -2253,75 +2274,76 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // Pass:
                                     if (pos[1][0] + 1 == pos[1][1] &&
                                             pos[0][0] + 1 == pos[0][1]) {
-                                        kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[1][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[1][0] + 4,
                                             kChild->end(),
-                                            kNew->begin() + pos[1][0]);
+                                            kNew.begin() + pos[1][0]);
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 passValue(vChild));
                                     }
                                 } else {
                                     // Pass, switch and splice:
                                     if (pos[0][0] + 1 == pos[0][1] &&
                                             pos[1][0] + 1 == pos[1][1]) {
-                                        kNew = new Key(kChild->size() - 4);
                                         if (pos[1][0] < pos[0][0]) {
                                             std::copy(kChild->begin(),
                                                 kChild->begin() + pos[1][0],
-                                                kNew->begin());
+                                                kNew.begin());
                                             std::copy(
                                                 kChild->begin() + pos[1][0] + 2,
                                                 kChild->begin() + pos[0][0],
-                                                kNew->begin() + pos[1][0]);
+                                                kNew.begin() + pos[1][0]);
                                             std::copy(
                                                 kChild->begin() + pos[0][0] + 2,
                                                 kChild->end(),
-                                                kNew->begin() + pos[0][0] - 2);
+                                                kNew.begin() + pos[0][0] - 2);
 
-                                            if (vData.keyViableOrDelete(kNew))
-                                                aggregate(partial[index], kNew,
+                                            if (vData.keyViable(kNew))
+                                                aggregate(partial[index],
+                                                    new Key(kNew),
                                                     passValue(vChild));
                                         } else {
                                             std::copy(kChild->begin(),
                                                 kChild->begin() + pos[0][0],
-                                                kNew->begin());
+                                                kNew.begin());
                                             std::copy(
                                                 kChild->begin() + pos[0][0] + 2,
                                                 kChild->begin() + pos[1][0],
-                                                kNew->begin() + pos[0][0]);
+                                                kNew.begin() + pos[0][0]);
                                             std::copy(
                                                 kChild->begin() + pos[1][0] + 2,
                                                 kChild->end(),
-                                                kNew->begin() + pos[1][0] - 2);
+                                                kNew.begin() + pos[1][0] - 2);
 
-                                            if (vData.keyViableOrDelete(kNew))
-                                                aggregate(partial[index], kNew,
+                                            if (vData.keyViable(kNew))
+                                                aggregate(partial[index],
+                                                    new Key(kNew),
                                                     switchValue(vChild, c));
                                         }
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
                                             pos[1][0] + 1 == pos[0][1] &&
                                             pos[0][0] < pos[1][0]) {
-                                        kNew = new Key(kChild->size() - 4);
                                         std::copy(kChild->begin(),
                                             kChild->begin() + pos[0][0],
-                                            kNew->begin());
+                                            kNew.begin());
                                         std::copy(
                                             kChild->begin() + pos[0][0] + 2,
                                             kChild->begin() + pos[1][0],
-                                            kNew->begin() + pos[0][0]);
+                                            kNew.begin() + pos[0][0]);
                                         std::copy(
                                             kChild->begin() + pos[1][0] + 2,
                                             kChild->end(),
-                                            kNew->begin() + pos[1][0] - 2);
+                                            kNew.begin() + pos[1][0] - 2);
 
-                                        if (vData.keyViableOrDelete(kNew))
-                                            aggregate(partial[index], kNew,
+                                        if (vData.keyViable(kNew))
+                                            aggregate(partial[index],
+                                                new Key(kNew),
                                                 spliceValue(vChild, c));
                                     }
                                 }
@@ -2409,11 +2431,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
 
             const Key *k1, *k2;
             const Value *v1, *v2;
-            int count = 0;
+            // int count = 0;
             for (auto& soln1 : *(partial[child->index()])) {
                 k1 = soln1.first;
                 v1 = soln1.second;
-                if ((++count) % 100 == 0) std::cerr << count << std::endl;
+                // if ((++count) % 100 == 0) std::cerr << count << std::endl;
 
                 for (auto& soln2 : *(partial[sibling->index()])) {
                     k2 = soln2.first;
@@ -2436,7 +2458,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         // position pos in the final key.
                         if (pos < 0) {
                             // Try the key.
-                            if (vData.keyViable(&kNew)) {
+                            if (vData.keyViable(kNew)) {
                                 if (! partial[index]->emplace(
                                         new Key(kNew), new Value(val)).second)
                                     std::cerr << "ERROR: Combined keys in join "
@@ -2448,29 +2470,33 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             if (pos1 >= 0) {
                                 kNew[2 * pos] = (*k1)[2 * pos1];
                                 kNew[2 * pos + 1] = (*k1)[2 * pos1 + 1];
-                                --pos1;
-                                --pos;
-                                continue;
-                            } else {
-                                // We cannot use key 1.
-                                // Try key 2 instead.
-                                choice.set(pos, true);
-                                continue;
+
+                                if (vData.partialKeyViable(kNew, pos)) {
+                                    --pos1;
+                                    --pos;
+                                    continue;
+                                }
                             }
+                            // We cannot use key 1.
+                            // Try key 2 instead.
+                            choice.set(pos, true);
+                            continue;
                         } else {
                             // Try key 2, if we can.
                             if (pos2 >= 0) {
                                 kNew[2 * pos] = (*k2)[2 * pos2];
                                 kNew[2 * pos + 1] = (*k2)[2 * pos2 + 1];
-                                --pos2;
-                                --pos;
-                                continue;
-                            } else {
-                                // We cannot use key 2.
-                                // Reset this bit, and fall through to the
-                                // backtrack step.
-                                choice.set(pos, false);
+
+                                if (vData.partialKeyViable(kNew, pos)) {
+                                    --pos2;
+                                    --pos;
+                                    continue;
+                                }
                             }
+                            // We cannot use key 2.
+                            // Reset this bit, and fall through to the
+                            // backtrack step.
+                            choice.set(pos, false);
                         }
 
                         // Backtrack!
