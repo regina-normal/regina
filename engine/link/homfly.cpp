@@ -292,7 +292,7 @@ namespace {
             }
         }
 
-        void analyseLoops(LightweightSequence<int>* key,
+        void analyseLoops(const LightweightSequence<int>* key,
                 int fromPos, int maxForget) {
             std::fill(startLoop, startLoop + link->size(), -1);
 
@@ -317,10 +317,8 @@ namespace {
         /**
          * Tests whether the data from the given key might survive all the way
          * up to the root of the tree decomposition.
-         *
-         * Side-effect: if the answer is no, then this routine deletes the key.
          */
-        bool keyViable(LightweightSequence<int>* key) {
+        bool keyViable(const LightweightSequence<int>* key) {
             bool analysedLoops = false;
 
             int n = key->size();
@@ -362,11 +360,8 @@ namespace {
                     if (i == 0 || lastCrossing[(*key)[i-1]] != enter) {
                         // We need to be starting a loop.
                         if (maxForgetExit != forgetStrand[(*key)[i]] ||
-                                maxForgetEnter > forgetStrand[(*key)[i]]) {
-                            // This cannot start a loop.
-                            delete key;
+                                maxForgetEnter > forgetStrand[(*key)[i]])
                             return false;
-                        }
                     }
                 }
 
@@ -385,15 +380,22 @@ namespace {
                                 maxForgetExit : maxForgetEnter);
                             analysedLoops = true;
                         }
-                        if (startLoop[exit] < 0 || startLoop[exit] > i) {
-                            delete key;
+                        if (startLoop[exit] < 0 || startLoop[exit] > i)
                             return false;
-                        }
                     }
                 }
             }
 
             return true;
+        }
+
+        inline bool keyViableOrDelete(LightweightSequence<int>* key) {
+            if (keyViable(key))
+                return true;
+            else {
+                delete key;
+                return false;
+            }
         }
     };
 
@@ -869,7 +871,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         passValue(vChild));
                             }
@@ -881,7 +883,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             kNew = new Key(*kChild);
                             (*kNew)[pos[0][0]] = id[1][1];
 
-                            if (vData.keyViable(kNew))
+                            if (vData.keyViableOrDelete(kNew))
                                 aggregate(partial[index], kNew,
                                     passValue(vChild));
                             break;
@@ -892,7 +894,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             kNew = new Key(*kChild);
                             (*kNew)[pos[1][1]] = id[0][0];
 
-                            if (vData.keyViable(kNew))
+                            if (vData.keyViableOrDelete(kNew))
                                 aggregate(partial[index], kNew,
                                     passValue(vChild));
                             break;
@@ -910,7 +912,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // could describe the last forget bag,
                                     // where we must remember to subtract 1
                                     // from the total number of loops.
-                                    if (vData.keyViable(kNew)) {
+                                    if (vData.keyViableOrDelete(kNew)) {
                                         vNew = passValue(vChild);
                                         if (index != nBags - 1)
                                             (*vNew) *= delta;
@@ -930,7 +932,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[0][0]);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             passValue(vChild));
                                 }
@@ -958,7 +960,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         passValue(vChild));
                             }
@@ -970,7 +972,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             kNew = new Key(*kChild);
                             (*kNew)[pos[0][1]] = id[1][0];
 
-                            if (vData.keyViable(kNew))
+                            if (vData.keyViableOrDelete(kNew))
                                 aggregate(partial[index], kNew,
                                     passValue(vChild));
                             break;
@@ -981,7 +983,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             kNew = new Key(*kChild);
                             (*kNew)[pos[1][0]] = id[0][1];
 
-                            if (vData.keyViable(kNew))
+                            if (vData.keyViableOrDelete(kNew))
                                 aggregate(partial[index], kNew,
                                     passValue(vChild));
                             break;
@@ -999,7 +1001,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     // could describe the last forget bag,
                                     // where we must remember to subtract 1
                                     // from the total number of loops.
-                                    if (vData.keyViable(kNew)) {
+                                    if (vData.keyViableOrDelete(kNew)) {
                                         vNew = passValue(vChild);
                                         if (index != nBags - 1)
                                             (*vNew) *= delta;
@@ -1019,7 +1021,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[1][0]);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             passValue(vChild));
                                 }
@@ -1052,7 +1054,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + j + 4);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             passValue(vChild));
 
@@ -1072,7 +1074,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + j + 4);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             switchValue(vChild, c));
 
@@ -1092,7 +1094,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + j + 4);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             spliceValue(vChild, c));
                                 }
@@ -1115,7 +1117,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[0][0] + 3);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         passValue(vChild));
                             }
@@ -1136,7 +1138,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         switchValue(vChild, c));
 
@@ -1155,7 +1157,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         spliceValue(vChild, c));
                             }
@@ -1178,7 +1180,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[0][1] + 3);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         passValue(vChild));
 
@@ -1197,7 +1199,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[0][1] + 3);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         spliceValue(vChild, c));
                             }
@@ -1218,7 +1220,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         switchValue(vChild, c));
                             }
@@ -1241,7 +1243,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + i + 2);
 
-                                        if (vData.keyViable(kNew)) {
+                                        if (vData.keyViableOrDelete(kNew)) {
                                             vNew = passValue(vChild);
                                             (*vNew) *= delta;
                                             aggregate(partial[index], kNew, vNew);
@@ -1255,7 +1257,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][0]] = id[1][1];
                                 (*kNew)[pos[0][1]] = id[1][0];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         spliceValue(vChild, c));
 
@@ -1277,7 +1279,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[0][0] + 2);
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 passValue(vChild));
                                     }
@@ -1297,7 +1299,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + i);
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 switchValue(vChild, c));
                                     }
@@ -1322,7 +1324,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[1][0] + 3);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         switchValue(vChild, c));
 
@@ -1341,7 +1343,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[1][0] + 3);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         spliceValue(vChild, c));
                             }
@@ -1362,7 +1364,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         passValue(vChild));
                             }
@@ -1377,7 +1379,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][0]] = id[0][1];
                                 (*kNew)[pos[1][0]] = id[1][1];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         switchValue(vChild, c));
 
@@ -1386,7 +1388,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][0]] = id[1][1];
                                 (*kNew)[pos[1][0]] = id[0][1];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         spliceValue(vChild, c));
                             } else {
@@ -1395,7 +1397,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][0]] = id[0][1];
                                 (*kNew)[pos[1][0]] = id[1][1];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         passValue(vChild));
                             }
@@ -1409,7 +1411,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][1]] = id[0][0];
                                 (*kNew)[pos[1][0]] = id[1][1];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         switchValue(vChild, c));
 
@@ -1426,7 +1428,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + i + 2);
 
-                                        if (vData.keyViable(kNew)) {
+                                        if (vData.keyViableOrDelete(kNew)) {
                                             vNew = spliceValue(vChild, c);
                                             (*vNew) *= delta;
                                             aggregate(partial[index], kNew, vNew);
@@ -1440,7 +1442,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     (*kNew)[pos[0][1]] = id[0][0];
                                     (*kNew)[pos[1][0]] = id[1][1];
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             passValue(vChild));
 
@@ -1461,7 +1463,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                                 kChild->end(),
                                                 kNew->begin() + pos[1][0] + 2);
 
-                                            if (vData.keyViable(kNew))
+                                            if (vData.keyViableOrDelete(kNew))
                                                 aggregate(partial[index], kNew,
                                                     spliceValue(vChild, c));
                                         }
@@ -1472,7 +1474,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     (*kNew)[pos[0][1]] = id[0][0];
                                     (*kNew)[pos[1][0]] = id[1][1];
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             switchValue(vChild, c));
                                 }
@@ -1493,7 +1495,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[0][0] + 1);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             switchValue(vChild, c));
                                 }
@@ -1503,7 +1505,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[0][0]] = id[1][1];
 
-                                    if (vData.keyViable(kNew)) {
+                                    if (vData.keyViableOrDelete(kNew)) {
                                         vNew = spliceValue(vChild, c);
                                         (*vNew) *= delta;
                                         aggregate(partial[index], kNew, vNew);
@@ -1518,7 +1520,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[1][0]] = id[1][1];
 
-                                    if (vData.keyViable(kNew)) {
+                                    if (vData.keyViableOrDelete(kNew)) {
                                         vNew = passValue(vChild);
                                         (*vNew) *= delta;
                                         aggregate(partial[index], kNew, vNew);
@@ -1538,7 +1540,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[0][0]);
                                         (*kNew)[pos[1][0]] = id[1][1];
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 passValue(vChild));
                                     } else {
@@ -1551,7 +1553,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[0][0]);
                                         (*kNew)[pos[1][0] - 2] = id[1][1];
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 switchValue(vChild, c));
                                     }
@@ -1568,7 +1570,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kNew->begin() + pos[1][0]);
                                     (*kNew)[pos[0][0]] = id[1][1];
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             spliceValue(vChild, c));
                                 }
@@ -1592,7 +1594,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + pos[1][1] + 3);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         switchValue(vChild, c));
                             }
@@ -1613,7 +1615,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         passValue(vChild));
 
@@ -1632,7 +1634,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     kChild->end(),
                                     kNew->begin() + i + 2);
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         spliceValue(vChild, c));
                             }
@@ -1646,7 +1648,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[1][1]] = id[1][0];
                                 (*kNew)[pos[0][0]] = id[0][1];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         passValue(vChild));
                             } else {
@@ -1656,7 +1658,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     (*kNew)[pos[1][1]] = id[1][0];
                                     (*kNew)[pos[0][0]] = id[0][1];
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             passValue(vChild));
                                 } else {
@@ -1665,7 +1667,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     (*kNew)[pos[1][1]] = id[1][0];
                                     (*kNew)[pos[0][0]] = id[0][1];
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             switchValue(vChild, c));
 
@@ -1687,7 +1689,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                                 kChild->end(),
                                                 kNew->begin() + i);
 
-                                            if (vData.keyViable(kNew))
+                                            if (vData.keyViableOrDelete(kNew))
                                                 aggregate(partial[index], kNew,
                                                     spliceValue(vChild, c));
                                         }
@@ -1705,7 +1707,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][1]] = id[0][0];
                                 (*kNew)[pos[1][1]] = id[1][0];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         switchValue(vChild, c));
                             } else {
@@ -1714,7 +1716,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][1]] = id[0][0];
                                 (*kNew)[pos[1][1]] = id[1][0];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         passValue(vChild));
 
@@ -1723,7 +1725,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[0][1]] = id[1][0];
                                 (*kNew)[pos[1][1]] = id[0][0];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         spliceValue(vChild, c));
                             }
@@ -1739,7 +1741,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[1][1]] = id[1][0];
 
-                                    if (vData.keyViable(kNew)) {
+                                    if (vData.keyViableOrDelete(kNew)) {
                                         vNew = passValue(vChild);
                                         (*vNew) *= delta;
                                         aggregate(partial[index], kNew, vNew);
@@ -1758,7 +1760,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[1][1] + 1);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             passValue(vChild));
                                 }
@@ -1776,7 +1778,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[0][0]);
                                         (*kNew)[pos[1][1]] = id[1][0];
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 passValue(vChild));
                                     } else {
@@ -1789,7 +1791,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[0][0]);
                                         (*kNew)[pos[1][1] - 2] = id[1][0];
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 switchValue(vChild, c));
                                     }
@@ -1806,7 +1808,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kNew->begin() + pos[0][0]);
                                     (*kNew)[pos[0][1] - 2] = id[1][0];
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             spliceValue(vChild, c));
                                 }
@@ -1822,7 +1824,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 (*kNew)[pos[1][1]] = id[0][0];
                                 (*kNew)[pos[1][0]] = id[0][1];
 
-                                if (vData.keyViable(kNew))
+                                if (vData.keyViableOrDelete(kNew))
                                     aggregate(partial[index], kNew,
                                         spliceValue(vChild, c));
 
@@ -1840,7 +1842,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + i + 2);
 
-                                        if (vData.keyViable(kNew)) {
+                                        if (vData.keyViableOrDelete(kNew)) {
                                             vNew = switchValue(vChild, c);
                                             (*vNew) *= delta;
                                             aggregate(partial[index], kNew, vNew);
@@ -1855,7 +1857,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                     (*kNew)[pos[1][1]] = id[0][0];
                                     (*kNew)[pos[1][0]] = id[0][1];
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             spliceValue(vChild, c));
                                 } else if (pos[1][0] + 1 == pos[1][1]) {
@@ -1876,7 +1878,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[1][0] + 2);
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 switchValue(vChild, c));
                                     }
@@ -1896,7 +1898,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + i);
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 passValue(vChild));
                                     }
@@ -1918,7 +1920,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[1][0] + 1);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             passValue(vChild));
                                 }
@@ -1931,7 +1933,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[0][0]] = id[0][1];
 
-                                    if (vData.keyViable(kNew)) {
+                                    if (vData.keyViableOrDelete(kNew)) {
                                         vNew = switchValue(vChild, c);
                                         (*vNew) *= delta;
                                         aggregate(partial[index], kNew, vNew);
@@ -1947,7 +1949,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[0][0] + 1);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             spliceValue(vChild, c));
                                 }
@@ -1965,7 +1967,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[1][0]);
                                         (*kNew)[pos[0][0] - 2] = id[0][1];
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 passValue(vChild));
                                     } else {
@@ -1978,7 +1980,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[1][0]);
                                         (*kNew)[pos[0][0]] = id[0][1];
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 switchValue(vChild, c));
                                     }
@@ -1995,7 +1997,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kNew->begin() + pos[0][0]);
                                     (*kNew)[pos[1][0] - 2] = id[0][1];
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             spliceValue(vChild, c));
                                 }
@@ -2016,7 +2018,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[0][1] + 1);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             switchValue(vChild, c));
                                 } else if (pos[0][1] == kChild->size() - 2) {
@@ -2025,7 +2027,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[1][1]] = id[0][0];
 
-                                    if (vData.keyViable(kNew)) {
+                                    if (vData.keyViableOrDelete(kNew)) {
                                         vNew = spliceValue(vChild, c);
                                         (*vNew) *= delta;
                                         aggregate(partial[index], kNew, vNew);
@@ -2044,7 +2046,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end(),
                                         kNew->begin() + pos[1][1] + 1);
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             spliceValue(vChild, c));
                                 } else if (pos[1][1] == kChild->size() - 2) {
@@ -2053,7 +2055,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kChild->end() - 2, kNew->begin());
                                     (*kNew)[pos[0][1]] = id[0][0];
 
-                                    if (vData.keyViable(kNew)) {
+                                    if (vData.keyViableOrDelete(kNew)) {
                                         vNew = switchValue(vChild, c);
                                         (*vNew) *= delta;
                                         aggregate(partial[index], kNew, vNew);
@@ -2073,7 +2075,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[1][0]);
                                         (*kNew)[pos[0][1] - 2] = id[0][0];
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 passValue(vChild));
                                     } else {
@@ -2086,7 +2088,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kNew->begin() + pos[1][0]);
                                         (*kNew)[pos[0][1]] = id[0][0];
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 switchValue(vChild, c));
                                     }
@@ -2103,7 +2105,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         kNew->begin() + pos[1][0]);
                                     (*kNew)[pos[1][1]] = id[0][0];
 
-                                    if (vData.keyViable(kNew))
+                                    if (vData.keyViableOrDelete(kNew))
                                         aggregate(partial[index], kNew,
                                             spliceValue(vChild, c));
                                 }
@@ -2126,7 +2128,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         // could describe the last forget bag,
                                         // where we must remember to subtract 1
                                         // from the total number of loops.
-                                        if (vData.keyViable(kNew)) {
+                                        if (vData.keyViableOrDelete(kNew)) {
                                             vNew = passValue(vChild);
                                             (*vNew) *= delta;
                                             if (index != nBags - 1)
@@ -2148,7 +2150,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + pos[1][0]);
 
-                                        if (vData.keyViable(kNew)) {
+                                        if (vData.keyViableOrDelete(kNew)) {
                                             vNew = passValue(vChild);
                                             (*vNew) *= delta;
                                             aggregate(partial[index], kNew, vNew);
@@ -2169,7 +2171,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         // could describe the last forget bag,
                                         // where we must remember to subtract 1
                                         // from the total number of loops.
-                                        if (vData.keyViable(kNew)) {
+                                        if (vData.keyViableOrDelete(kNew)) {
                                             vNew = passValue(vChild);
                                             if (index != nBags - 1)
                                                 (*vNew) *= delta;
@@ -2190,7 +2192,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[0][0]);
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 switchValue(vChild, c));
                                     } else if (pos[0][0] + 1 == pos[1][1] &&
@@ -2204,7 +2206,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + pos[0][0]);
 
-                                        if (vData.keyViable(kNew)) {
+                                        if (vData.keyViableOrDelete(kNew)) {
                                             vNew = spliceValue(vChild, c);
                                             (*vNew) *= delta;
                                             aggregate(partial[index], kNew, vNew);
@@ -2226,7 +2228,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end() - 2,
                                             kNew->begin() + pos[0][0]);
 
-                                        if (vData.keyViable(kNew)) {
+                                        if (vData.keyViableOrDelete(kNew)) {
                                             vNew = switchValue(vChild, c);
                                             (*vNew) *= delta;
                                             aggregate(partial[index], kNew, vNew);
@@ -2242,7 +2244,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[0][0]);
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 spliceValue(vChild, c));
                                     }
@@ -2260,7 +2262,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[1][0]);
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 passValue(vChild));
                                     }
@@ -2282,7 +2284,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                                 kChild->end(),
                                                 kNew->begin() + pos[0][0] - 2);
 
-                                            if (vData.keyViable(kNew))
+                                            if (vData.keyViableOrDelete(kNew))
                                                 aggregate(partial[index], kNew,
                                                     passValue(vChild));
                                         } else {
@@ -2298,7 +2300,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                                 kChild->end(),
                                                 kNew->begin() + pos[1][0] - 2);
 
-                                            if (vData.keyViable(kNew))
+                                            if (vData.keyViableOrDelete(kNew))
                                                 aggregate(partial[index], kNew,
                                                     switchValue(vChild, c));
                                         }
@@ -2318,7 +2320,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                             kChild->end(),
                                             kNew->begin() + pos[1][0] - 2);
 
-                                        if (vData.keyViable(kNew))
+                                        if (vData.keyViableOrDelete(kNew))
                                             aggregate(partial[index], kNew,
                                                 spliceValue(vChild, c));
                                     }
@@ -2395,10 +2397,10 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                 partial[sibling->index()]->begin()->first);
 
             partial[index] = new SolnSet;
+            Key kNew(2 * pairs);
+
             const Key *k1, *k2;
             const Value *v1, *v2;
-            Key *kNew;
-            Value *vNew;
 
             // TODO: Make this work for arbitrary sized bags.
             // Currently we can only handle sizeof(long) * 8 pairs,
@@ -2424,26 +2426,25 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             mask = BitManipulator<Mask>::nextPermutation(mask)) {
                         // The bits of mask correspond to the
                         // positions of pairs in the final key.
-                        kNew = new Key(k1->size() + k2->size());
 
                         pos1 = pos2 = 0;
                         for (pos = 0; pos < pairs; ++pos) {
                             if (mask & ((Mask)(1) << pos)) {
                                 // Use the next pair from k2.
-                                (*kNew)[2 * pos] = (*k2)[2 * pos2];
-                                (*kNew)[2 * pos + 1] = (*k2)[2 * pos2 + 1];
+                                kNew[2 * pos] = (*k2)[2 * pos2];
+                                kNew[2 * pos + 1] = (*k2)[2 * pos2 + 1];
                                 ++pos2;
                             } else {
                                 // Use the next pair from k1.
-                                (*kNew)[2 * pos] = (*k1)[2 * pos1];
-                                (*kNew)[2 * pos + 1] = (*k1)[2 * pos1 + 1];
+                                kNew[2 * pos] = (*k1)[2 * pos1];
+                                kNew[2 * pos + 1] = (*k1)[2 * pos1 + 1];
                                 ++pos1;
                             }
                         }
 
-                        if (vData.keyViable(kNew)) {
+                        if (vData.keyViable(&kNew)) {
                             if (! partial[index]->emplace(
-                                    kNew, new Value(val)).second)
+                                    new Key(kNew), new Value(val)).second)
                                 std::cerr << "ERROR: Combined keys in join "
                                     "bag are not unique" << std::endl;
                         }
