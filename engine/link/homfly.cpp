@@ -32,7 +32,7 @@
 
 #include "link/link.h"
 #include "maths/laurent2.h"
-#include "utilities/bitmanip.h"
+#include "utilities/bitmask.h"
 #include "utilities/sequence.h"
 
 // #define DUMP_STATES
@@ -2345,9 +2345,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             // The key size depends only on the bag, not the particular
             // key-value solution at that bag, and so we get this data
             // by looking at the first solution in each bag.
-            size_t pairs1 = partial[child->index()]->begin()->first->size()/2;
-            size_t pairs2 = partial[sibling->index()]->begin()->first->size()/2;
-            size_t pairs = pairs1 + pairs2;
+            int pairs1 = partial[child->index()]->begin()->first->size()/2;
+            int pairs2 = partial[sibling->index()]->begin()->first->size()/2;
+            int pairs = pairs1 + pairs2;
 
             std::cerr << "JOIN -> " <<
                 partial[child->index()]->size() << " x " <<
@@ -2397,20 +2397,23 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                 partial[sibling->index()]->begin()->first);
 
             partial[index] = new SolnSet;
+
             Key kNew(2 * pairs);
+
+            // The bits of choice correspond to the positions of pairs in the
+            // final key.  A 0 bit means we take a pair from k1, and a 1 bit
+            // means we take a pair from k2.
+            Bitmask choice(pairs);
+
+            int pos1, pos2, pos;
 
             const Key *k1, *k2;
             const Value *v1, *v2;
-
-            // TODO: Make this work for arbitrary sized bags.
-            // Currently we can only handle sizeof(long) * 8 pairs,
-            // which means at most sizeof(long) * 4 crossings per bag.
-            typedef unsigned long Mask;
-            Mask mask;
-            int pos1, pos2, pos;
+            int count = 0;
             for (auto& soln1 : *(partial[child->index()])) {
                 k1 = soln1.first;
                 v1 = soln1.second;
+                if ((++count) % 100 == 0) std::cerr << count << std::endl;
 
                 for (auto& soln2 : *(partial[sibling->index()])) {
                     k2 = soln2.first;
@@ -2421,32 +2424,70 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                     Value val(*v1);
                     val *= *v2;
 
-                    for (mask = ((Mask)(1) << pairs2) - 1;
-                            mask && ! (mask & ((Mask)(1) << pairs));
-                            mask = BitManipulator<Mask>::nextPermutation(mask)) {
-                        // The bits of mask correspond to the
-                        // positions of pairs in the final key.
+                    // Fill the final key from the end to the beginning, so
+                    // that we can more aggressively test for non-viable keys.
+                    choice.reset();
+                    pos = pairs - 1;
+                    pos1 = pairs1 - 1;
+                    pos2 = pairs2 - 1;
 
-                        pos1 = pos2 = 0;
-                        for (pos = 0; pos < pairs; ++pos) {
-                            if (mask & ((Mask)(1) << pos)) {
-                                // Use the next pair from k2.
-                                kNew[2 * pos] = (*k2)[2 * pos2];
-                                kNew[2 * pos + 1] = (*k2)[2 * pos2 + 1];
-                                ++pos2;
-                            } else {
-                                // Use the next pair from k1.
+                    while (pos < pairs) {
+                        // We are about to try the current option for
+                        // position pos in the final key.
+                        if (pos < 0) {
+                            // Try the key.
+                            if (vData.keyViable(&kNew)) {
+                                if (! partial[index]->emplace(
+                                        new Key(kNew), new Value(val)).second)
+                                    std::cerr << "ERROR: Combined keys in join "
+                                        "bag are not unique" << std::endl;
+                            }
+                            // Fall through to the backtrack step.
+                        } else if (! choice.get(pos)) {
+                            // Try key 1, if we can.
+                            if (pos1 >= 0) {
                                 kNew[2 * pos] = (*k1)[2 * pos1];
                                 kNew[2 * pos + 1] = (*k1)[2 * pos1 + 1];
-                                ++pos1;
+                                --pos1;
+                                --pos;
+                                continue;
+                            } else {
+                                // We cannot use key 1.
+                                // Try key 2 instead.
+                                choice.set(pos, true);
+                                continue;
+                            }
+                        } else {
+                            // Try key 2, if we can.
+                            if (pos2 >= 0) {
+                                kNew[2 * pos] = (*k2)[2 * pos2];
+                                kNew[2 * pos + 1] = (*k2)[2 * pos2 + 1];
+                                --pos2;
+                                --pos;
+                                continue;
+                            } else {
+                                // We cannot use key 2.
+                                // Reset this bit, and fall through to the
+                                // backtrack step.
+                                choice.set(pos, false);
                             }
                         }
 
-                        if (vData.keyViable(&kNew)) {
-                            if (! partial[index]->emplace(
-                                    new Key(kNew), new Value(val)).second)
-                                std::cerr << "ERROR: Combined keys in join "
-                                    "bag are not unique" << std::endl;
+                        // Backtrack!
+                        ++pos;
+                        while (pos < pairs) {
+                            // Try the next option at this position.
+                            if (! choice.get(pos)) {
+                                ++pos1;
+                                choice.set(pos, true);
+                                break;
+                            } else {
+                                ++pos2;
+                                // We are out of options for this bit.
+                                // Reset the bit and move further up.
+                                choice.set(pos, false);
+                                ++pos;
+                            }
                         }
                     }
                 }
