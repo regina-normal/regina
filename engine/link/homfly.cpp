@@ -737,7 +737,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
         } else if (bag->type() == NICE_FORGET) {
             // Forget bag.
             child = bag->children();
-            std::cerr << "FORGET -> 2 x " <<
+            std::cerr << "FORGET -> " <<
                 partial[child->index()]->size() << std::endl;
 
             Crossing* c = crossings_[child->element(bag->subtype())];
@@ -2329,10 +2329,6 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             child = bag->children();
             sibling = child->sibling();
 
-            std::cerr << "JOIN -> " <<
-                partial[child->index()]->size() << " x " <<
-                partial[sibling->index()]->size() << std::endl;
-
             // Extract the sizes of each bag's keys.
             // The key size depends only on the bag, not the particular
             // key-value solution at that bag, and so we get this data
@@ -2340,6 +2336,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             size_t pairs1 = partial[child->index()]->begin()->first->size()/2;
             size_t pairs2 = partial[sibling->index()]->begin()->first->size()/2;
             size_t pairs = pairs1 + pairs2;
+
+            std::cerr << "JOIN -> " <<
+                partial[child->index()]->size() << " x " <<
+                partial[sibling->index()]->size() << " : #pairs = " <<
+                pairs1 << " / " << pairs2 << std::endl;
 
             if (pairs1 == 0) {
                 // The keys are exactly the keys from the second child,
