@@ -325,26 +325,24 @@ namespace {
          */
         bool keyViable(const LightweightSequence<int>& key) {
             int n = key.size();
-            int i;
 
-            // Of all the strands passed so far that leave a crossing c to enter
-            // the forgotten zone, what is the highest bag at which we forget
-            // such a crossing c?
-            int maxForgetEnter = -1;
-
-            // Of all the strands passed so far that exit the forgotten zone to
-            // return to a crossing c, what is the highest bag at which we
+            // Of all the strands passed so far that run between a crossing c
+            // and the forgotten zone, what is the highest bag at which we
             // forget such a crossing c?
-            int maxForgetExit = -1;
+            int maxForget = -1;
 
-            // If needLoop is non-negative, this means we are looking for the
-            // beginning of a closed-off loop that starts and ends at that
+            // If needStartLoop is non-negative, this means we are looking for
+            // the beginning of a closed-off loop that starts and ends at that
             // crossing number.
-            int needLoop = -1;
+            int needStartLoop = -1;
+
+            // If couldEndLoop is non-negative, then it represents the
+            // (unique) crossing that could potentially end a closed-off
+            // loop that starts and ends at that crossing.
+            int couldEndLoop = -1;
 
             int exit, enter;
-            int strandID;
-            for (i = n - 2; i >= 0; i -= 2) {
+            for (int i = n - 2; i >= 0; i -= 2) {
                 // Examine the pair starting at position i in the key.
 
                 // We are entering and then exiting the forgotten zone.
@@ -353,10 +351,14 @@ namespace {
                 enter = lastCrossing[key[i]];
                 exit = lastCrossing[key[i + 1]];
 
-                if (maxForgetEnter < forgetStrand[key[i]])
-                    maxForgetEnter = forgetStrand[key[i]];
-                if (maxForgetExit < forgetStrand[key[i + 1]])
-                    maxForgetExit = forgetStrand[key[i + 1]];
+                if (maxForget < forgetStrand[key[i]]) {
+                    maxForget = forgetStrand[key[i]];
+                    couldEndLoop = -1;
+                }
+                if (maxForget <= forgetStrand[key[i + 1]]) {
+                    maxForget = forgetStrand[key[i + 1]];
+                    couldEndLoop = exit;
+                }
 
                 if ((mask[enter] & 3) == 3) {
                     // We enter the forgotten zone from crossing #enter, and
@@ -367,8 +369,10 @@ namespace {
 
                     if (i == 0 || lastCrossing[key[i-1]] != enter) {
                         // We need to be starting a loop.
-                        if (maxForgetExit != forgetStrand[key[i]] ||
-                                maxForgetEnter > forgetStrand[key[i]])
+                        // Have we seen its potential end point?
+                        if (couldEndLoop == enter)
+                            couldEndLoop = -1;
+                        else
                             return false;
                     }
                 }
@@ -382,30 +386,29 @@ namespace {
 
                     if (i == n - 2 || lastCrossing[key[i+2]] != exit) {
                         // We need to be closing off a loop.
-                        if (needLoop >= 0) {
+                        if (needStartLoop >= 0) {
                             // We are already looking for the start of some
                             // other loop.  Since loops cannot be nested,
                             // this key is not viable.
                             return false;
                         }
-                        needLoop = exit;
+                        needStartLoop = exit;
                     }
                 }
 
                 // See if we have located the start of a loop that we
                 // were searching for, and/or if we can certify that we
                 // will never find it.
-                if (needLoop >= 0) {
-                    if (maxForgetEnter > forgetCrossing[needLoop] ||
-                            maxForgetExit > forgetCrossing[needLoop])
+                if (needStartLoop >= 0) {
+                    if (maxForget > forgetCrossing[needStartLoop])
                         return false;
-                    if (enter == needLoop)
-                        needLoop = -1;
+                    if (enter == needStartLoop)
+                        needStartLoop = -1;
                 }
             }
 
             // Are we still waiting on the start of a loop that we never found?
-            if (needLoop >= 0)
+            if (needStartLoop >= 0)
                 return false;
 
             return true;
