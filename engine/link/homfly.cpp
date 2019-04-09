@@ -167,8 +167,9 @@ namespace {
          */
         int pairs;
 
-        int *maxForgetEnter;
-        int *maxForgetExit;
+        int *maxForget;
+        int *needStartLoop;
+        int *couldEndLoop;
 
         ViabilityData(const Link* l, const TreeDecomposition& d) :
                 link(l),
@@ -177,7 +178,9 @@ namespace {
                 forgetStrand(new int[2 * l->size()]),
                 startLoop(new int[l->size()]),
                 mask(new char[l->size()]),
-                maxForgetEnter(nullptr), maxForgetExit(nullptr) {
+                maxForget(nullptr),
+                needStartLoop(nullptr),
+                couldEndLoop(nullptr) {
             for (const TreeBag* b = d.first(); b; b = b->next())
                 if (b->type() == NICE_FORGET)
                     forgetCrossing[b->children()->element(b->subtype())] =
@@ -198,8 +201,9 @@ namespace {
         }
 
         ~ViabilityData() {
-            delete[] maxForgetExit;
-            delete[] maxForgetEnter;
+            delete[] couldEndLoop;
+            delete[] needStartLoop;
+            delete[] maxForget;
             delete[] mask;
             delete[] startLoop;
             delete[] forgetStrand;
@@ -311,12 +315,14 @@ namespace {
             pairs = (leftChildKey->size() + rightChildKey->size()) / 2;
 
             // Set up our stacks of partially computed values.
-            delete[] maxForgetExit;
-            delete[] maxForgetEnter;
+            delete[] couldEndLoop;
+            delete[] needStartLoop;
+            delete[] maxForget;
 
-            maxForgetEnter = new int[pairs + 1];
-            maxForgetExit = new int[pairs + 1];
-            maxForgetEnter[pairs] = maxForgetExit[pairs] = -1;
+            maxForget = new int[pairs + 1];
+            needStartLoop = new int[pairs + 1];
+            couldEndLoop = new int[pairs + 1];
+            maxForget[pairs] = needStartLoop[pairs] = couldEndLoop[pairs] = -1;
         }
 
         /**
@@ -414,27 +420,83 @@ namespace {
             return true;
         }
 
+        // TODO: PRE: pairs > 0.
         bool partialKeyViable(const LightweightSequence<int>& key, int pos) {
-            maxForgetEnter[pos] = std::max(maxForgetEnter[pos + 1],
-                forgetStrand[key[2 * pos]]);
-            maxForgetExit[pos] = std::max(maxForgetExit[pos + 1],
-                forgetStrand[key[2 * pos + 1]]);
-
             // This code mirrors keyViable(); see that routine for
             // further documentation.
+
+            if (pos < 0) {
+                // Finish analysing our now-completed key.
+                int enter = lastCrossing[key[0]];
+                if ((mask[enter] & 3) == 3) {
+                    // This is the very first entry: it must start a loop.
+                    if (couldEndLoop[0] != enter)
+                        return false;
+                }
+
+                return (needStartLoop[0] < 0);
+            }
+
+            // Continue the analysis of an only partially-completed key.
+            couldEndLoop[pos] = couldEndLoop[pos + 1];
+
+            int enter = lastCrossing[key[2 * pos + 2]];
             if (pos < pairs - 1) {
-                int enter = key[2 * pos + 2] / 2;
                 if ((mask[enter] & 3) == 3) {
                     if (lastCrossing[key[2 * pos + 1]] != enter) {
-                        // We need to be starting a loop
-                        // from key[2 * pos + 2].
-                        if (maxForgetExit[pos + 1] !=
-                                forgetStrand[key[2 * pos + 2]] ||
-                                maxForgetEnter[pos + 1] >
-                                forgetStrand[key[2 * pos + 2]])
+                        // We need to be starting a loop from key[2 * pos + 2].
+                        if (couldEndLoop[pos + 1] == enter)
+                            couldEndLoop[pos] = -1;
+                        else
                             return false;
                     }
                 }
+            }
+
+            if (maxForget[pos + 1] < forgetStrand[key[2 * pos]]) {
+                maxForget[pos] = forgetStrand[key[2 * pos]];
+                couldEndLoop[pos] = -1;
+            } else {
+                maxForget[pos] = maxForget[pos + 1];
+            }
+
+            if (maxForget[pos] <= forgetStrand[key[2 * pos + 1]]) {
+                maxForget[pos] = forgetStrand[key[2 * pos + 1]];
+                couldEndLoop[pos] = lastCrossing[key[2 * pos + 1]];
+            }
+
+            needStartLoop[pos] = needStartLoop[pos + 1];
+
+            enter = lastCrossing[key[2 * pos]];
+            int exit = lastCrossing[key[2 * pos + 1]];
+            if ((mask[exit] & 12) == 12) {
+                // We exit the forgotten zone back into crossing #exit,
+                // and both outgoing strands at #exit lead back into the
+                // forgotten zone.  Therefore either one of them must
+                // appear immediately after this, or else it must be
+                // possible for this to be the end of a closed-off loop.
+
+                if (pos == pairs - 1 ||
+                        lastCrossing[key[2 * pos + 2]] != exit) {
+                    // We need to be closing off a loop.
+                    if (needStartLoop[pos + 1] >= 0) {
+                        // We are already looking for the start of some
+                        // other loop.  Since loops cannot be nested,
+                        // this key is not viable.
+                        return false;
+                    }
+                    needStartLoop[pos] = exit;
+                }
+            }
+
+            // See if we have located the start of a loop that we
+            // were searching for, and/or if we can certify that we
+            // will never find it.
+            if (needStartLoop[pos] >= 0) {
+                if (maxForget[pos] > forgetCrossing[needStartLoop[pos]])
+                    return false;
+                if (enter == needStartLoop[pos])
+                    needStartLoop[pos] = -1;
             }
 
             return true;
@@ -2461,7 +2523,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         // position pos in the final key.
                         if (pos < 0) {
                             // Try the key.
-                            if (vData.keyViable(kNew)) {
+                            if (vData.partialKeyViable(kNew, pos)) {
                                 if (! partial[index]->emplace(
                                         new Key(kNew), new Value(val)).second)
                                     std::cerr << "ERROR: Combined keys in join "
