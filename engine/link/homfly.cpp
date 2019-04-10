@@ -391,6 +391,10 @@ namespace {
             // If couldEndLoop is non-negative, then it represents the
             // (unique) crossing that could potentially end a closed-off
             // loop that starts and ends at that crossing.
+            //
+            // The crossing number is shifted left one bit; the last bit
+            // is 0 if any strand will do, or 1 if the loop must start on the
+            // upper strand.
             int couldEndLoop = -1;
 
             int c;
@@ -411,7 +415,7 @@ namespace {
                             // it follows that c must begin a closed loop,
                             // and we should have already seen the loop
                             // end again at c later in the key.
-                            if (couldEndLoop == c) {
+                            if (couldEndLoop >> 1 == c) {
                                 if (needStartLoop >= 0) {
                                     // We are still looking for the beginning
                                     // of a different loop (which ends
@@ -420,6 +424,8 @@ namespace {
                                     // cannot overlap, this key is non-viable.
                                     return false;
                                 }
+                                if ((couldEndLoop & 1) && ! (key[i + 2] & 1))
+                                    return false;
 
                                 couldEndLoop = -1;
                             } else
@@ -465,13 +471,30 @@ namespace {
                     }
                 }
 
+                if (maxForget < forgetStrand[key[i + 1]]) {
+                    maxForget = forgetStrand[key[i + 1]];
+                    couldEndLoop = lastCrossing[key[i + 1]] << 1;
+                } else if (maxForget == forgetStrand[key[i + 1]]) {
+                    // If this ends a loop, then the matching loop start will
+                    // be the first time we see this crossing.  Therefore
+                    // it must happen at a pass over the upper strand,
+                    // and the loop must finish here again on the upper strand.
+                    if (link->crossing(lastCrossing[key[i + 1]])->next(
+                            key[i + 1] % 2).strand() == 1)
+                        couldEndLoop = (lastCrossing[key[i + 1]] << 1) | 1;
+                    else if (couldEndLoop == (lastCrossing[key[i + 1]] << 1)) {
+                        // We cannot offer ourselves as a loop end here, but
+                        // the same crossing is still offering itself as a loop
+                        // end later on.  However, we can now certify that the
+                        // loop start will be the first instance of the
+                        // crossing, and so we insist that the loop starts on
+                        // the upper strand.
+                        couldEndLoop ^= 1;
+                    }
+                }
                 if (maxForget < forgetStrand[key[i]]) {
                     maxForget = forgetStrand[key[i]];
                     couldEndLoop = -1;
-                }
-                if (maxForget <= forgetStrand[key[i + 1]]) {
-                    maxForget = forgetStrand[key[i + 1]];
-                    couldEndLoop = lastCrossing[key[i + 1]];
                 }
 
                 // See if we have located the start of a loop that we
@@ -500,9 +523,12 @@ namespace {
             // Check if the very first crossing must start a closed-off loop
             // whose end should have been seen later in the key.
             c = lastCrossing[key[0]];
-            if ((mask[c] & 3) == 3)
-                if (couldEndLoop != c)
+            if ((mask[c] & 3) == 3) {
+                if (couldEndLoop >> 1 != c)
                     return false;
+                if ((couldEndLoop & 1) && ! (key[0] & 1))
+                    return false;
+            }
 
             // Are we still waiting on the start of a loop that we never found?
             if (needStartLoop >= 0)
@@ -561,9 +587,12 @@ namespace {
                 // This code mirrors what happens after the main loop in
                 // keyViable().
                 int c = lastCrossing[key[0]];
-                if ((mask[c] & 3) == 3)
-                    if (couldEndLoop[0] != c)
+                if ((mask[c] & 3) == 3) {
+                    if (couldEndLoop[0] >> 1 != c)
                         return false;
+                    if ((couldEndLoop[0] & 1) && ! (key[0] & 1))
+                        return false;
+                }
 
                 if (needStartLoop[0] >= 0)
                     return false;
@@ -589,8 +618,11 @@ namespace {
                 if (pos < pairs - 1) {
                     c = lastCrossing[key[2 * pos + 2]];
                     if ((mask[c] & 3) == 3) {
-                        if (couldEndLoop[pos + 1] == c) {
+                        if (couldEndLoop[pos + 1] >> 1 == c) {
                             if (needStartLoop[pos + 1] >= 0)
+                                return false;
+                            if ((couldEndLoop[pos + 1] & 1) &&
+                                    ! (key[2 * pos + 2] & 1))
                                 return false;
                             couldEndLoop[pos] = -1;
                         } else
@@ -616,16 +648,24 @@ namespace {
                 }
             }
 
-            if (maxForget[pos + 1] < forgetStrand[key[2 * pos]]) {
+            if (maxForget[pos + 1] < forgetStrand[key[2 * pos + 1]]) {
+                maxForget[pos] = forgetStrand[key[2 * pos + 1]];
+                couldEndLoop[pos] = lastCrossing[key[2 * pos + 1]] << 1;
+            } else if (maxForget[pos + 1] == forgetStrand[key[2 * pos + 1]]) {
+                maxForget[pos] = forgetStrand[key[2 * pos + 1]];
+                if (link->crossing(lastCrossing[key[2 * pos + 1]])->next(
+                        key[2 * pos + 1] % 2).strand() == 1)
+                    couldEndLoop[pos] =
+                        (lastCrossing[key[2 * pos + 1]] << 1) | 1;
+                else if (couldEndLoop[pos] ==
+                        (lastCrossing[key[2 * pos + 1]] << 1))
+                    couldEndLoop[pos] ^= 1;
+            } else
+                maxForget[pos] = maxForget[pos + 1];
+
+            if (maxForget[pos] < forgetStrand[key[2 * pos]]) {
                 maxForget[pos] = forgetStrand[key[2 * pos]];
                 couldEndLoop[pos] = -1;
-            } else {
-                maxForget[pos] = maxForget[pos + 1];
-            }
-
-            if (maxForget[pos] <= forgetStrand[key[2 * pos + 1]]) {
-                maxForget[pos] = forgetStrand[key[2 * pos + 1]];
-                couldEndLoop[pos] = lastCrossing[key[2 * pos + 1]];
             }
 
             if (needStartLoop[pos] >= 0) {
