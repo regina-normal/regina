@@ -411,9 +411,18 @@ namespace {
                             // it follows that c must begin a closed loop,
                             // and we should have already seen the loop
                             // end again at c later in the key.
-                            if (couldEndLoop == c)
+                            if (couldEndLoop == c) {
+                                if (needStartLoop >= 0) {
+                                    // We are still looking for the beginning
+                                    // of a different loop (which ends
+                                    // at key[i+3] or beyond, and starts
+                                    // at key[i] or before).  Since loops
+                                    // cannot overlap, this key is non-viable.
+                                    return false;
+                                }
+
                                 couldEndLoop = -1;
-                            else
+                            } else
                                 return false;
                         }
                     }
@@ -580,9 +589,11 @@ namespace {
                 if (pos < pairs - 1) {
                     c = lastCrossing[key[2 * pos + 2]];
                     if ((mask[c] & 3) == 3) {
-                        if (couldEndLoop[pos + 1] == c)
+                        if (couldEndLoop[pos + 1] == c) {
+                            if (needStartLoop[pos + 1] >= 0)
+                                return false;
                             couldEndLoop[pos] = -1;
-                        else
+                        } else
                             return false;
                     }
                 }
