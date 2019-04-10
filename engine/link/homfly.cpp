@@ -335,6 +335,39 @@ namespace {
         }
 
         /**
+         * Determines whether the strands at positions pos-1 and pos in
+         * the key could follow immediately one after another in some
+         * traversal of the link (allowing for potential switches and/or
+         * splices where these are legal).
+         *
+         * PRE: pos is even, and is between 0 and key.size() inclusive.
+         */
+        bool couldConnect(const LightweightSequence<int>& key, int pos) {
+            if (pos <= 0 || pos >= key.size())
+                return false;
+            int enter = key[pos] / 2;
+            if (lastCrossing[key[pos - 1]] != enter)
+                return false;
+            if (((mask[enter] & 12) == 12) &&
+                    link->crossing(key[pos - 1] / 2)->next(key[pos - 1] % 2).
+                    strand() == 1 && (! (key[pos] & 1))) {
+                // We enter the crossing from the upper strand, but exit
+                // from the lower strand.  This can only happen if this
+                // is the second pass through the crossing, which means we
+                // must not enter the forgotten zone from that crossing again.
+                // (We can exit into that crossing if that forms the end
+                // of a closed loop whose corresponding entry was before pos.)
+                //
+                // We test mask[enter] because, without both outgoing bits
+                // in the mask, there is no possibiity of returning false here.
+                for (int i = pos + 2; i < key.size(); i += 2)
+                    if (lastCrossing[key[i]] == enter)
+                        return false;
+            }
+            return true;
+        }
+
+        /**
          * Tests whether the data from the given key might survive all the way
          * up to the root of the tree decomposition.
          */
@@ -356,15 +389,48 @@ namespace {
             // loop that starts and ends at that crossing.
             int couldEndLoop = -1;
 
-            int exit, enter;
+            int c;
             for (int i = n - 2; i >= 0; i -= 2) {
-                // Examine the pair starting at position i in the key.
+                // Examine the connection between the strands at
+                // positions i+1 and i+2 in the key.
+                if (! couldConnect(key, i + 2)) {
+                    // The strand at key[i + 1] is the last that we see
+                    // from some closed loop in the link traversal, and
+                    // the strand at key[i + 2] is the first that we see
+                    // from some later closed loop in the link traversal.
+                    if (i < n - 2) {
+                        c = lastCrossing[key[i + 2]];
+                        if ((mask[c] & 3) == 3) {
+                            // We enter the forgotten zone from crossing c, and
+                            // both incoming strands at c come back from the
+                            // forgotten zone.  Since couldConnect() was false,
+                            // it follows that c must begin a closed loop,
+                            // and we should have already seen the loop
+                            // end again at c later in the key.
+                            if (couldEndLoop == c)
+                                couldEndLoop = -1;
+                            else
+                                return false;
+                        }
+                    }
 
-                // We are entering and then exiting the forgotten zone.
-                // Identify the crossings in the bag at which these events
-                // happen.
-                enter = lastCrossing[key[i]];
-                exit = lastCrossing[key[i + 1]];
+                    c = lastCrossing[key[i + 1]];
+                    if ((mask[c] & 12) == 12) {
+                        // We exit the forgotten zone back into crossing c,
+                        // and both outgoing strands at c lead back into the
+                        // forgotten zone.  Since couldConnect() was false,
+                        // it follows that c must end a closed loop,
+                        // and we should expect to see the loop begin
+                        // also at c, at an earlier position in the key.
+                        if (needStartLoop >= 0) {
+                            // We are already looking for the start of some
+                            // other loop.  Since loops cannot be nested,
+                            // this key is not viable.
+                            return false;
+                        }
+                        needStartLoop = c;
+                    }
+                }
 
                 if (maxForget < forgetStrand[key[i]]) {
                     maxForget = forgetStrand[key[i]];
@@ -372,43 +438,7 @@ namespace {
                 }
                 if (maxForget <= forgetStrand[key[i + 1]]) {
                     maxForget = forgetStrand[key[i + 1]];
-                    couldEndLoop = exit;
-                }
-
-                if ((mask[enter] & 3) == 3) {
-                    // We enter the forgotten zone from crossing #enter, and
-                    // both incoming strands at #enter come *from* the
-                    // forgotten zone.  Therefore either one of them must
-                    // appear immediately prior to this, or else it must be
-                    // possible for this to start a closed-off loop.
-
-                    if (i == 0 || lastCrossing[key[i-1]] != enter) {
-                        // We need to be starting a loop.
-                        // Have we seen its potential end point?
-                        if (couldEndLoop == enter)
-                            couldEndLoop = -1;
-                        else
-                            return false;
-                    }
-                }
-
-                if ((mask[exit] & 12) == 12) {
-                    // We exit the forgotten zone back into crossing #exit,
-                    // and both outgoing strands at #exit lead back into the
-                    // forgotten zone.  Therefore either one of them must
-                    // appear immediately after this, or else it must be
-                    // possible for this to be the end of a closed-off loop.
-
-                    if (i == n - 2 || lastCrossing[key[i+2]] != exit) {
-                        // We need to be closing off a loop.
-                        if (needStartLoop >= 0) {
-                            // We are already looking for the start of some
-                            // other loop.  Since loops cannot be nested,
-                            // this key is not viable.
-                            return false;
-                        }
-                        needStartLoop = exit;
-                    }
+                    couldEndLoop = lastCrossing[key[i + 1]];
                 }
 
                 // See if we have located the start of a loop that we
@@ -417,14 +447,58 @@ namespace {
                 if (needStartLoop >= 0) {
                     if (maxForget > forgetCrossing[needStartLoop])
                         return false;
-                    if (enter == needStartLoop)
+                    if (needStartLoop == lastCrossing[key[i]])
                         needStartLoop = -1;
                 }
             }
 
+            // Check if the very first crossing must start a closed-off loop
+            // whose end should have been seen later in the key.
+            c = lastCrossing[key[0]];
+            if ((mask[c] & 3) == 3)
+                if (couldEndLoop != c)
+                    return false;
+
             // Are we still waiting on the start of a loop that we never found?
             if (needStartLoop >= 0)
                 return false;
+
+            if (key.size() > 0) {
+                // Let c be the first crossing ever seen in the key.
+                //
+                // If we can guarantee that (a) this is the first of two
+                // appearances of c when resolving/traversing the link, and
+                // (b) crossing c is the beginning of a closed loop in the
+                // entire traversal, then (c) we *must* be making a
+                // pass operation on c's upper strand.
+                if (! (key[0] & 1)) {
+                    // We are exiting from c's lower strand, which
+                    // contradicts (c) above.  If both (a) and (b) above are
+                    // true then we have a contradiction.
+                    //
+                    // We can guarantee (a) in different ways:
+                    // - If both incoming strands at c appear in the key,
+                    //   then this is the first appearance of c.
+                    //   This corresponds to testing (mask & 3).
+                    // - If both outgoing strands at c appear in the key,
+                    //   then this is likewise the first appearance of c.
+                    //   We already see the lower outgoing strand, so we
+                    //   just need to test upper outgoing (mask & 8).
+                    //
+                    // If (b) is false, then the only way to exit on c's
+                    // lower strand the first time we pass through c is to
+                    // enter on c's lower strand from some non-forgotten
+                    // crossing and perform a switch.
+                    // Therfore we guarantee (b) if we know we enter on
+                    // c's lower strand from a *forgotten* crossing.
+                    // This corresponds to testing (mask & 1).
+                    //
+                    // Note: 3 | 1 == 3, and 8 | 1 == 9.  So we actually test
+                    // mask against 3 and 9.
+                    if ((mask[c] & 3) == 3 || (mask[c] & 9) == 9)
+                        return false;
+                }
+            }
 
 #ifdef IDENTIFY_NONVIABLE_KEYS
             foundViable = true;
@@ -438,38 +512,50 @@ namespace {
             // further documentation.
 
             if (pos < 0) {
-                // Finish analysing our now-completed key.
-                int enter = lastCrossing[key[0]];
-                if ((mask[enter] & 3) == 3) {
-                    // This is the very first entry: it must start a loop.
-                    if (couldEndLoop[0] != enter)
+                // Finish the analysis of a fully-completed key.
+                // This code mirrors what happens after the main loop in
+                // keyViable().
+                int c = lastCrossing[key[0]];
+                if ((mask[c] & 3) == 3)
+                    if (couldEndLoop[0] != c)
                         return false;
-                }
+
+                if (needStartLoop[0] >= 0)
+                    return false;
+
+                if (! (key[0] & 1))
+                    if ((mask[c] & 3) == 3 || (mask[c] & 9) == 9)
+                        return false;
 
 #ifdef IDENTIFY_NONVIABLE_KEYS
-                if (needStartLoop[0] < 0) {
-                    foundViable = true;
-                    return true;
-                } else
-                    return false;
-#else
-                return (needStartLoop[0] < 0);
+                foundViable = true;
 #endif
+                return true;
             }
 
             // Continue the analysis of an only partially-completed key.
+            // This code mirrors what happens in a single iteration of the
+            // main loop in keyViable().
             couldEndLoop[pos] = couldEndLoop[pos + 1];
+            needStartLoop[pos] = needStartLoop[pos + 1];
 
-            int enter = lastCrossing[key[2 * pos + 2]];
-            if (pos < pairs - 1) {
-                if ((mask[enter] & 3) == 3) {
-                    if (lastCrossing[key[2 * pos + 1]] != enter) {
-                        // We need to be starting a loop from key[2 * pos + 2].
-                        if (couldEndLoop[pos + 1] == enter)
+            int c;
+            if (! couldConnect(key, 2 * pos + 2)) {
+                if (pos < pairs - 1) {
+                    c = lastCrossing[key[2 * pos + 2]];
+                    if ((mask[c] & 3) == 3) {
+                        if (couldEndLoop[pos + 1] == c)
                             couldEndLoop[pos] = -1;
                         else
                             return false;
                     }
+                }
+
+                c = lastCrossing[key[2 * pos + 1]];
+                if ((mask[c] & 12) == 12) {
+                    if (needStartLoop[pos + 1] >= 0)
+                        return false;
+                    needStartLoop[pos] = c;
                 }
             }
 
@@ -485,37 +571,10 @@ namespace {
                 couldEndLoop[pos] = lastCrossing[key[2 * pos + 1]];
             }
 
-            needStartLoop[pos] = needStartLoop[pos + 1];
-
-            enter = lastCrossing[key[2 * pos]];
-            int exit = lastCrossing[key[2 * pos + 1]];
-            if ((mask[exit] & 12) == 12) {
-                // We exit the forgotten zone back into crossing #exit,
-                // and both outgoing strands at #exit lead back into the
-                // forgotten zone.  Therefore either one of them must
-                // appear immediately after this, or else it must be
-                // possible for this to be the end of a closed-off loop.
-
-                if (pos == pairs - 1 ||
-                        lastCrossing[key[2 * pos + 2]] != exit) {
-                    // We need to be closing off a loop.
-                    if (needStartLoop[pos + 1] >= 0) {
-                        // We are already looking for the start of some
-                        // other loop.  Since loops cannot be nested,
-                        // this key is not viable.
-                        return false;
-                    }
-                    needStartLoop[pos] = exit;
-                }
-            }
-
-            // See if we have located the start of a loop that we
-            // were searching for, and/or if we can certify that we
-            // will never find it.
             if (needStartLoop[pos] >= 0) {
                 if (maxForget[pos] > forgetCrossing[needStartLoop[pos]])
                     return false;
-                if (enter == needStartLoop[pos])
+                if (needStartLoop[pos] == lastCrossing[key[2 * pos]])
                     needStartLoop[pos] = -1;
             }
 
