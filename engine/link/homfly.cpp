@@ -157,8 +157,6 @@ namespace {
          */
         char* mask;
 
-        int *startLoop;
-
         /**
          * The number of pairs in each key at a join bag (that is, half
          * the key length).
@@ -189,7 +187,6 @@ namespace {
                 forgetCrossing(new int[l->size()]),
                 lastCrossing(new int[2 * l->size()]),
                 forgetStrand(new int[2 * l->size()]),
-                startLoop(new int[l->size()]),
                 mask(new char[l->size()]),
                 maxForget(nullptr),
                 needStartLoop(nullptr),
@@ -218,7 +215,6 @@ namespace {
             delete[] needStartLoop;
             delete[] maxForget;
             delete[] mask;
-            delete[] startLoop;
             delete[] forgetStrand;
             delete[] lastCrossing;
             delete[] forgetCrossing;
