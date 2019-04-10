@@ -144,6 +144,14 @@ namespace {
         int* forgetStrand;
 
         /**
+         * The last crossing to be forgotten.
+         *
+         * This is a function of the link only, and is initialised in
+         * the ViabilityData constructor.
+         */
+        int rootCrossing;
+
+        /**
          * For a crossing at index i that lives in the current bag,
          * mask[i] is a bitwise combination of:
          *
@@ -191,10 +199,14 @@ namespace {
                 maxForget(nullptr),
                 needStartLoop(nullptr),
                 couldEndLoop(nullptr) {
-            for (const TreeBag* b = d.first(); b; b = b->next())
+            const TreeBag* b;
+            for (b = d.first(); b; b = b->next())
                 if (b->type() == NICE_FORGET)
                     forgetCrossing[b->children()->element(b->subtype())] =
                         b->index();
+
+            b = d.root();
+            rootCrossing = b->children()->element(b->subtype());
 
             int from, to;
             for (int i = 0; i < 2 * l->size(); ++i) {
@@ -399,6 +411,12 @@ namespace {
 
             int c;
             for (int i = n - 2; i >= 0; i -= 2) {
+                // We know the very first strand ever in a full
+                // traversal *must* be (2 * rootCrossing + 1).
+                // If we see it anywhere in the key, it must be at key[0].
+                if (i > 0 && key[i] == 2 * rootCrossing + 1)
+                    return false;
+
                 // Examine the connection between the strands at
                 // positions i+1 and i+2 in the key.
                 if (! couldConnect(key, i + 2)) {
@@ -610,6 +628,9 @@ namespace {
             // Continue the analysis of an only partially-completed key.
             // This code mirrors what happens in a single iteration of the
             // main loop in keyViable().
+            if (pos > 0 && key[2 * pos] == 2 * rootCrossing + 1)
+                return false;
+
             couldEndLoop[pos] = couldEndLoop[pos + 1];
             needStartLoop[pos] = needStartLoop[pos + 1];
 
