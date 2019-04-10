@@ -505,14 +505,14 @@ namespace {
                         return false;
                     if ((needStartLoop >> 1) == lastCrossing[key[i]]) {
                         // We found the crossing we were after.
-                        if (needStartLoop ^ 1) {
+                        if (needStartLoop & 1) {
                             // We are specifically seeking the upper strand.
                             // The only time this happens is when all
                             // other occurrences of the crossing have
                             // been passed, so if this is not the upper
                             // strand then there is no hope for viability.
                             // TODO: Test this when needStartLoop is set.
-                            if (! (key[i] ^ 1))
+                            if (! (key[i] & 1))
                                 return false;
                         }
                         needStartLoop = -1;
@@ -672,8 +672,8 @@ namespace {
                 if (maxForget[pos] > forgetCrossing[needStartLoop[pos] >> 1])
                     return false;
                 if ((needStartLoop[pos] >> 1) == lastCrossing[key[2 * pos]]) {
-                    if (needStartLoop[pos] ^ 1)
-                        if (! (key[2 * pos] ^ 1))
+                    if (needStartLoop[pos] & 1)
+                        if (! (key[2 * pos] & 1))
                             return false;
                     needStartLoop[pos] = -1;
                 }
