@@ -520,21 +520,21 @@ namespace {
                 }
             }
 
-            // Check if the very first crossing must start a closed-off loop
-            // whose end should have been seen later in the key.
-            c = lastCrossing[key[0]];
-            if ((mask[c] & 3) == 3) {
-                if (couldEndLoop >> 1 != c)
-                    return false;
-                if ((couldEndLoop & 1) && ! (key[0] & 1))
-                    return false;
-            }
-
             // Are we still waiting on the start of a loop that we never found?
             if (needStartLoop >= 0)
                 return false;
 
             if (key.size() > 0) {
+                // Check if the very first crossing must start a closed-off loop
+                // whose end should have been seen later in the key.
+                c = lastCrossing[key[0]];
+                if ((mask[c] & 3) == 3) {
+                    if (couldEndLoop >> 1 != c)
+                        return false;
+                    if ((couldEndLoop & 1) && ! (key[0] & 1))
+                        return false;
+                }
+
                 // Let c be the first crossing ever seen in the key.
                 //
                 // If we can guarantee that (a) this is the first of two
@@ -586,6 +586,9 @@ namespace {
                 // Finish the analysis of a fully-completed key.
                 // This code mirrors what happens after the main loop in
                 // keyViable().
+                if (needStartLoop[0] >= 0)
+                    return false;
+
                 int c = lastCrossing[key[0]];
                 if ((mask[c] & 3) == 3) {
                     if (couldEndLoop[0] >> 1 != c)
@@ -593,9 +596,6 @@ namespace {
                     if ((couldEndLoop[0] & 1) && ! (key[0] & 1))
                         return false;
                 }
-
-                if (needStartLoop[0] >= 0)
-                    return false;
 
                 if (! (key[0] & 1))
                     if ((mask[c] & 3) == 3 || (mask[c] & 9) == 9)
