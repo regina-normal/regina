@@ -37,6 +37,7 @@
 #include "utilities/sequence.h"
 
 // #define DUMP_STATES
+#define IDENTIFY_NONVIABLE_KEYS
 
 namespace regina {
 
@@ -170,6 +171,18 @@ namespace {
         int *maxForget;
         int *needStartLoop;
         int *couldEndLoop;
+
+#ifdef IDENTIFY_NONVIABLE_KEYS
+        /**
+         * Marked as \c true when a key is determined to be viable.
+         * This allows diagnostic code to determine whether \e any of a set
+         * of potential keys was found to be viable.
+         *
+         * This class never initialises \a foundViable or marks it as \c false;
+         * that is the job of whatever diagnostic code uses it.
+         */
+        bool foundViable;
+#endif
 
         ViabilityData(const Link* l, const TreeDecomposition& d) :
                 link(l),
@@ -417,6 +430,9 @@ namespace {
             if (needStartLoop >= 0)
                 return false;
 
+#ifdef IDENTIFY_NONVIABLE_KEYS
+            foundViable = true;
+#endif
             return true;
         }
 
@@ -434,7 +450,15 @@ namespace {
                         return false;
                 }
 
+#ifdef IDENTIFY_NONVIABLE_KEYS
+                if (needStartLoop[0] < 0) {
+                    foundViable = true;
+                    return true;
+                } else
+                    return false;
+#else
                 return (needStartLoop[0] < 0);
+#endif
             }
 
             // Continue the analysis of an only partially-completed key.
@@ -943,6 +967,10 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             for (auto& soln : *(partial[child->index()])) {
                 kChild = soln.first;
                 vChild = soln.second;
+
+#ifdef IDENTIFY_NONVIABLE_KEYS
+                vData.foundViable = false;
+#endif
 
                 // Recompute the pos array.
                 // We don't need to reset it, since the same strands
@@ -2417,6 +2445,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                     }
                 }
 
+#ifdef IDENTIFY_NONVIABLE_KEYS
+                if (! vData.foundViable)
+                    std::cerr << "UNUSED: " << *kChild << std::endl;
+#endif
+
                 delete kChild;
                 delete vChild;
             }
@@ -2502,6 +2535,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                 v1 = soln1.second;
                 // if ((++count) % 100 == 0) std::cerr << count << std::endl;
 
+#ifdef IDENTIFY_NONVIABLE_KEYS
+                vData.foundViable = false;
+#endif
                 for (auto& soln2 : *(partial[sibling->index()])) {
                     k2 = soln2.first;
                     v2 = soln2.second;
@@ -2582,6 +2618,11 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         }
                     }
                 }
+
+#ifdef IDENTIFY_NONVIABLE_KEYS
+                if (! vData.foundViable)
+                    std::cerr << "UNUSED: " << *k1 << std::endl;
+#endif
             }
 
             for (auto& soln : *(partial[child->index()])) {
