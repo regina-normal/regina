@@ -381,7 +381,11 @@ namespace {
 
             // If needStartLoop is non-negative, this means we are looking for
             // the beginning of a closed-off loop that starts and ends at that
-            // crossing number.
+            // crossing.
+            //
+            // The crossing number is shifted left one bit; the last bit
+            // is 0 if any strand will do, or 1 if the loop must start on the
+            // upper strand.
             int needStartLoop = -1;
 
             // If couldEndLoop is non-negative, then it represents the
@@ -428,7 +432,21 @@ namespace {
                             // this key is not viable.
                             return false;
                         }
-                        needStartLoop = c;
+                        if (maxForget > forgetCrossing[c]) {
+                            // We cannot have a loop to/from c, since subsequent
+                            // strands involve later-forgotten crossings.
+                            return false;
+                        }
+                        if (maxForget == forgetCrossing[c]) {
+                            // The start and of this loop will be our
+                            // first traversal through c, which means it
+                            // must be a pass from upper to upper.
+                            if (link->crossing(c)->next(key[i + 1] % 2)
+                                    .strand() == 0)
+                                return false;
+                            needStartLoop = (c << 1) | 1;
+                        } else
+                            needStartLoop = c << 1;
                     }
                 }
 
@@ -445,10 +463,22 @@ namespace {
                 // were searching for, and/or if we can certify that we
                 // will never find it.
                 if (needStartLoop >= 0) {
-                    if (maxForget > forgetCrossing[needStartLoop])
+                    if (maxForget > forgetCrossing[needStartLoop >> 1])
                         return false;
-                    if (needStartLoop == lastCrossing[key[i]])
+                    if ((needStartLoop >> 1) == lastCrossing[key[i]]) {
+                        // We found the crossing we were after.
+                        if (needStartLoop ^ 1) {
+                            // We are specifically seeking the upper strand.
+                            // The only time this happens is when all
+                            // other occurrences of the crossing have
+                            // been passed, so if this is not the upper
+                            // strand then there is no hope for viability.
+                            // TODO: Test this when needStartLoop is set.
+                            if (! (key[i] ^ 1))
+                                return false;
+                        }
                         needStartLoop = -1;
+                    }
                 }
             }
 
@@ -555,7 +585,15 @@ namespace {
                 if ((mask[c] & 12) == 12) {
                     if (needStartLoop[pos + 1] >= 0)
                         return false;
-                    needStartLoop[pos] = c;
+                    if (maxForget[pos + 1] > forgetCrossing[c])
+                        return false;
+                    if (maxForget[pos + 1] == forgetCrossing[c]) {
+                        if (link->crossing(c)->next(key[2 * pos + 1] % 2)
+                                .strand() == 0)
+                            return false;
+                        needStartLoop[pos] = (c << 1) | 1;
+                    } else
+                        needStartLoop[pos] = c << 1;
                 }
             }
 
@@ -572,10 +610,14 @@ namespace {
             }
 
             if (needStartLoop[pos] >= 0) {
-                if (maxForget[pos] > forgetCrossing[needStartLoop[pos]])
+                if (maxForget[pos] > forgetCrossing[needStartLoop[pos] >> 1])
                     return false;
-                if (needStartLoop[pos] == lastCrossing[key[2 * pos]])
+                if ((needStartLoop[pos] >> 1) == lastCrossing[key[2 * pos]]) {
+                    if (needStartLoop[pos] ^ 1)
+                        if (! (key[2 * pos] ^ 1))
+                            return false;
                     needStartLoop[pos] = -1;
+                }
             }
 
             return true;
