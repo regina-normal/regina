@@ -447,6 +447,12 @@ namespace {
                             needStartLoop = (c << 1) | 1;
                         } else
                             needStartLoop = c << 1;
+
+                        // Now we are looking for a loop beginning, which
+                        // means we are in a new loop that must end at key[i+1].
+                        // Any previous couldEndLoop (which would have ended
+                        // at key[i+3] or later) is therefore unusable.
+                        couldEndLoop = -1;
                     }
                 }
 
@@ -594,6 +600,8 @@ namespace {
                         needStartLoop[pos] = (c << 1) | 1;
                     } else
                         needStartLoop[pos] = c << 1;
+
+                    couldEndLoop[pos] = -1;
                 }
             }
 
