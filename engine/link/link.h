@@ -202,6 +202,8 @@ class REGINA_API StrandRef {
          *
          * If this is a null reference, then id() will return -1.
          *
+         * A strand can be restored from its ID by calling Link::strand().
+         *
          * @return the unique ID of this strand within the link.
          */
         int id() const;
@@ -852,6 +854,21 @@ class REGINA_API Link : public Packet {
          * has no crossings.
          */
         StrandRef component(size_t index) const;
+
+        /**
+         * Returns the strand in the link with the given integer ID.
+         *
+         * Each strand ID is of the form 2<i>c</i>+<i>s</i>, where \e c is the
+         * index of the crossing, and \e s is 0 or 1 for the lower or
+         * upper strand respectively.  A null strand reference (as used to
+         * indicate 0-crossing unknot components) has an ID of -1.
+         *
+         * @param id an integer between -1 and 2*size()-1 inclusive.
+         * @return the strand of this link with the corresponding ID.
+         *
+         * @see StrandRef::id()
+         */
+        StrandRef strand(int id) const;
 
         /**
          * Translates a strand reference for some other link into the
@@ -3710,7 +3727,7 @@ inline int StrandRef::strand() const {
 }
 
 inline int StrandRef::id() const {
-    return (crossing_ ? (2 * crossing()->index() + strand_) : -1);
+    return (crossing_ ? ((crossing()->index() << 1) | strand_) : -1);
 }
 
 inline bool StrandRef::operator == (const StrandRef& rhs) const {
@@ -3877,6 +3894,11 @@ inline Crossing* Link::crossing(size_t index) const {
 
 inline StrandRef Link::component(size_t index) const {
     return components_[index];
+}
+
+inline StrandRef Link::strand(int id) const {
+    return (id >= 0 ? StrandRef(crossings_[id >> 1]->strand(id & 1)) :
+        StrandRef());
 }
 
 inline long Link::writhe() const {

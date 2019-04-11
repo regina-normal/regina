@@ -211,6 +211,7 @@ void addLink() {
         .def("countComponents", &Link::countComponents)
         .def("crossing", &Link::crossing, return_internal_reference<>())
         .def("component", &Link::component)
+        .def("strand", &Link::strand)
         .def("translate", &Link::translate)
         .def("fromGauss", fromGauss_list,
             return_value_policy<to_held_type<>>())
