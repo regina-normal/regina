@@ -360,19 +360,19 @@ namespace {
             int enter = key[pos] / 2;
             if (lastCrossing[key[pos - 1]] != enter)
                 return false;
-            if (((mask[enter] & 12) == 12) &&
+            if ((mask[enter] != 6) &&
                     link->crossing(key[pos - 1] / 2)->next(key[pos - 1] % 2).
                     strand() == 1 && (! (key[pos] & 1))) {
                 // We enter the crossing from the upper strand, but exit
                 // from the lower strand.  This can only happen if this
-                // is the second pass through the crossing, which means we
-                // must not enter the forgotten zone from that crossing again.
-                // (We can exit into that crossing if that forms the end
-                // of a closed loop whose corresponding entry was before pos.)
+                // is the second pass through the crossing, *and* the first
+                // pass was not the beginning of a closed loop.  This means we
+                // must not see that crossing again later in the key.
                 //
-                // We test mask[enter] because, without both outgoing bits
-                // in the mask, there is no possibiity of returning false here.
-                for (int i = pos + 2; i < key.size(); i += 2)
+                // If mask[enter] == 6 then the only two strands in the
+                // key that touch this crossing are the two we're looking at
+                // now.  So we avoid the linear-time test in this case.
+                for (int i = pos + 1; i < key.size(); ++i)
                     if (lastCrossing[key[i]] == enter)
                         return false;
             }
