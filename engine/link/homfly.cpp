@@ -144,12 +144,15 @@ namespace {
         int* forgetStrand;
 
         /**
-         * The last crossing to be forgotten.
+         * The first few steps of any link traversal are forced (for as
+         * long as we perform only pass moves).  For each strand ID, this
+         * array stores the position of the strand in these forced initial
+         * steps, or -1 if it does not appear amongst these forced steps.
          *
-         * This is a function of the link only, and is initialised in
-         * the ViabilityData constructor.
+         * This array is a function of the link only, and is initialised
+         * in the ViabilityData constructor.
          */
-        int rootCrossing;
+        int* prefix;
 
         /**
          * For a crossing at index i that lives in the current bag,
@@ -230,6 +233,7 @@ namespace {
                 forgetCrossing(new int[l->size()]),
                 lastCrossing(new int[2 * l->size()]),
                 forgetStrand(new int[2 * l->size()]),
+                prefix(new int[2 * l->size()]),
                 mask(new char[l->size()]),
                 maxForget(nullptr),
                 needStartLoop(nullptr),
@@ -239,9 +243,6 @@ namespace {
                 if (b->type() == NICE_FORGET)
                     forgetCrossing[b->children()->element(b->subtype())] =
                         b->index();
-
-            b = d.root();
-            rootCrossing = b->children()->element(b->subtype());
 
             int from, to;
             for (int i = 0; i < 2 * l->size(); ++i) {
@@ -255,6 +256,22 @@ namespace {
                     forgetStrand[i] = forgetCrossing[to];
                 }
             }
+
+            // Fill prefix[] by following from the upper strand of the root
+            // crossing for as far as we can go using only pass moves.
+            std::fill(prefix, prefix + 2 * l->size(), -1);
+
+            b = d.root();
+            StrandRef start(
+                link->crossing(b->children()->element(b->subtype())), 1);
+
+            StrandRef s = start;
+            int pos = 0;
+            do {
+                prefix[s.id()] = pos++;
+                ++s;
+            } while (! (s == start /* finished a link component */ ||
+                (s.strand() == 0 && prefix[s.id() | 1] < 0) /* not a pass */));
         }
 
         ~ViabilityData() {
@@ -262,6 +279,7 @@ namespace {
             delete[] needStartLoop;
             delete[] maxForget;
             delete[] mask;
+            delete[] prefix;
             delete[] forgetStrand;
             delete[] lastCrossing;
             delete[] forgetCrossing;
@@ -414,6 +432,34 @@ namespace {
         }
 
         /**
+         * Examines where key[pos] appears, if at all, amongst the initial
+         * steps of any link traversal that are forced (due to only using
+         * pass moves, and therefore not making any branching decisions).
+         *
+         * Returns \c true if everything looks okay, or \c false if an
+         * inconsistency is found that makes the entire key non-viable.
+         */
+        bool verifyPrefix(const LightweightSequence<int>& key, int pos) {
+            // If key[pos] is not forced, then key[pos+1] must not be
+            // forced either.
+            if (prefix[key[pos]] < 0)
+                return (pos == key.size() - 1 || prefix[key[pos + 1]] < 0);
+
+            // From here on, we know that key[pos] is forced.
+
+            // If key[pos] is forced, then we must be able to fill the
+            // remainder of the key before key[pos] with strands that
+            // we know are forced to appear before key[pos].
+            if (prefix[key[pos]] < pos)
+                return false;
+
+            // If both key[pos] and key[pos+1] are forced, then key[pos]
+            // must be forced to appear *earlier* than key[pos+1].
+            return (pos == key.size() - 1 || prefix[key[pos + 1]] < 0 ||
+                prefix[key[pos + 1]] > prefix[key[pos]]);
+        }
+
+        /**
          * Tests whether the data from the given key might survive all the way
          * up to the root of the tree decomposition.
          */
@@ -445,10 +491,9 @@ namespace {
 
             int c;
             for (int i = n - 2; i >= 0; i -= 2) {
-                // We know the very first strand ever in a full
-                // traversal *must* be (2 * rootCrossing + 1).
-                // If we see it anywhere in the key, it must be at key[0].
-                if (i > 0 && key[i] == 2 * rootCrossing + 1)
+                if (! verifyPrefix(key, i + 1))
+                    return false;
+                if (! verifyPrefix(key, i))
                     return false;
 
                 // Examine the connection between the strands at
@@ -680,7 +725,9 @@ namespace {
             // Continue the analysis of an only partially-completed key.
             // This code mirrors what happens in a single iteration of the
             // main loop in keyViable().
-            if (pos > 0 && key[2 * pos] == 2 * rootCrossing + 1)
+            if (! verifyPrefix(key, 2 * pos + 1))
+                return false;
+            if (! verifyPrefix(key, 2 * pos))
                 return false;
 
             couldEndLoop[pos] = couldEndLoop[pos + 1];
