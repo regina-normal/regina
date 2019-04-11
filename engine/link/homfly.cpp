@@ -174,8 +174,43 @@ namespace {
          */
         int pairs;
 
+        /**
+         * An array that tracks the values of maxForget, a single variable used
+         * in keyViable(), over successive calls to partialKeyViable().
+         * By using this array, we are able to access previous values of
+         * maxForget when backtracking.
+         *
+         * The role of this variable is documented within keyViable().
+         *
+         * This is only available for join bags, and is initialised by
+         * initJoinBag().
+         */
         int *maxForget;
+
+        /**
+         * An array that tracks the values of needStartLoop, an integer variable
+         * used in keyViable(), over successive calls to partialKeyViable().
+         * By using this array, we are able to access previous values of
+         * needStartLoop when backtracking.
+         *
+         * The role of this variable is documented within keyViable().
+         *
+         * This is only available for join bags, and is initialised by
+         * initJoinBag().
+         */
         int *needStartLoop;
+
+        /**
+         * An array that tracks the values of couldEndLoop, an integer variable
+         * used in keyViable(), over successive calls to partialKeyViable().
+         * By using this array, we are able to access previous values of
+         * couldEndLoop when backtracking.
+         *
+         * The role of this variable is documented within keyViable().
+         *
+         * This is only available for join bags, and is initialised by
+         * initJoinBag().
+         */
         int *couldEndLoop;
 
 #ifdef IDENTIFY_NONVIABLE_KEYS
@@ -529,7 +564,9 @@ namespace {
                             // other occurrences of the crossing have
                             // been passed, so if this is not the upper
                             // strand then there is no hope for viability.
-                            // TODO: Test this when needStartLoop is set.
+                            //
+                            // TODO: Test this earlier, when needStartLoop is
+                            // set.
                             if (! (key[i] & 1))
                                 return false;
                         }
@@ -595,7 +632,25 @@ namespace {
             return true;
         }
 
-        // TODO: PRE: pairs > 0.
+        /**
+         * Used to call keyViable() in pieces, which is useful when
+         * recursively constructing different keys.
+         *
+         * To test whether a key is viable, you must call
+         * partialKeyViable(p-1), partialKeyViable(p-2), ...,
+         * partialKeyViable(0), partialKeyViable(-1), in that order,
+         * where p is the number of pairs in the key (i.e., half the key
+         * length).  For each i >= 0, when calling partialKeyViable(i) you
+         * must have filled in the key elements key[2*i, ..., 2*p-1].
+         * When calling partialKeyViable(-1) the key must be complete.
+         *
+         * Calling partialKeyViable(i) does not overwrite any internal
+         * data used to compute partialKeyViable(i+1, i+2, ...), which
+         * essentially means that you can backtrack without needing to restore
+         * internal variables.
+         *
+         * PRE: The key cannot have zero length (i.e., p > 0).
+         */
         bool partialKeyViable(const LightweightSequence<int>& key, int pos) {
             // This code mirrors keyViable(); see that routine for
             // further documentation.
@@ -1015,7 +1070,25 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
 
     // Each partial solution is a key-value map.
     //
-    // Each key TODO.
+    // Each key is an ordered sequence of strands s_1 s_2 ... s_{2k}.
+    // For odd i, s_i is the ID of a strand that runs from the bag into
+    // the forgotten zone.  For even i, s_i is the ID of a strand that
+    // runs from the forgotten zone back into the bag.
+    //
+    // The key represents those strands of a full link traversal that cross
+    // the border of the forgotten zone, in the order in which we traverse
+    // them.  Here "full link traversal" is the kind of traversal used in
+    // Kauffman's skein template algorithm, including switches and/or splices.
+    // The ordering of crossings that we use with Kauffman's algorithm is
+    // according to where in the nice tree decomposition a crossing is
+    // forgotten - crossings that are forgotten in later bags (closer to the
+    // root) are considered first as potential traversal starting points.
+    //
+    // Each corresponding value represents a "partial HOMFLY polynomial",
+    // aggregated over all "partial traversals" that follow the strands
+    // seen in the key in and out of the forgotten zone in the same order.
+    // Only the actions taken within the forgotten zone are factored into
+    // this polynomial.
     //
     // An important fact: each bag is guaranteed to have at least one solution,
     // since there is always some way to traverse the link.
@@ -1167,7 +1240,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                 // with here.
 
                 if (c->next(0).crossing() == c) {
-                    // TODO: Case verified.
+                    // TODO: Find a test link that verifies this case.
                     // Case: the crossing is part of one loop (lower -> upper)
                     // Work out which strands to/from the crossing run
                     // into the forgotten zone.
@@ -1254,7 +1327,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             break;
                     }
                 } else if (c->next(1).crossing() == c) {
-                    // TODO: Case verified.
+                    // TODO: Find a test link that verifies this case.
                     // Case: the crossing is part of one loop (upper -> lower)
                     // Work out which strands to/from the crossing run
                     // into the forgotten zone.
@@ -1529,7 +1602,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             }
                             break;
                         case 3:
-                            // TODO: Case verified.
+                            // TODO: Find a test link that verifies this case.
                             if (pos[0][1] + 1 == pos[0][0]) {
                                 // d=a
                                 // Pass:
@@ -2110,7 +2183,7 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             }
                             break;
                         case 12:
-                            // TODO: Case verified.
+                            // TODO: Find a test link that verifies this case.
                             if (pos[1][1] + 1 == pos[1][0]) {
                                 // c=b
                                 // Splice:
