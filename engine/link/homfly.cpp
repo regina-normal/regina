@@ -474,8 +474,8 @@ namespace {
                             // The start and of this loop will be our
                             // first traversal through c, which means it
                             // must be a pass from upper to upper.
-                            if (link->crossing(c)->next(key[i + 1] % 2)
-                                    .strand() == 0)
+                            if (link->crossing(key[i + 1] / 2)->
+                                    next(key[i + 1] % 2).strand() == 0)
                                 return false;
                             needStartLoop = (c << 1) | 1;
                         } else
@@ -497,10 +497,10 @@ namespace {
                     // be the first time we see this crossing.  Therefore
                     // it must happen at a pass over the upper strand,
                     // and the loop must finish here again on the upper strand.
-                    c = lastCrossing[key[i + 1]];
-                    if (link->crossing(c)->next(key[i + 1] % 2).strand() == 1)
-                        couldEndLoop = (c << 1) | 1;
-                    else if (couldEndLoop == (c << 1)) {
+                    if (link->crossing(key[i + 1] / 2)->
+                            next(key[i + 1] % 2).strand() == 1)
+                        couldEndLoop = (lastCrossing[key[i + 1]] << 1) | 1;
+                    else if (couldEndLoop == (lastCrossing[key[i + 1]] << 1)) {
                         // We cannot offer ourselves as a loop end here, but
                         // the same crossing is still offering itself as a loop
                         // end later on.  However, we can now certify that the
@@ -658,8 +658,8 @@ namespace {
                     if (maxForget[pos + 1] > forgetCrossing[c])
                         return false;
                     if (maxForget[pos + 1] == forgetCrossing[c]) {
-                        if (link->crossing(c)->next(key[2 * pos + 1] % 2)
-                                .strand() == 0)
+                        if (link->crossing(key[2 * pos + 1] / 2)->
+                                next(key[2 * pos + 1] % 2).strand() == 0)
                             return false;
                         needStartLoop[pos] = (c << 1) | 1;
                     } else
@@ -674,10 +674,12 @@ namespace {
                 couldEndLoop[pos] = lastCrossing[key[2 * pos + 1]] << 1;
             } else if (maxForget[pos + 1] == forgetStrand[key[2 * pos + 1]]) {
                 maxForget[pos] = forgetStrand[key[2 * pos + 1]];
-                c = lastCrossing[key[2 * pos + 1]];
-                if (link->crossing(c)->next(key[2 * pos + 1] % 2).strand() == 1)
-                    couldEndLoop[pos] = (c << 1) | 1;
-                else if (couldEndLoop[pos] == (c << 1))
+                if (link->crossing(key[2 * pos + 1] / 2)->
+                        next(key[2 * pos + 1] % 2).strand() == 1)
+                    couldEndLoop[pos] =
+                        (lastCrossing[key[2 * pos + 1]] << 1) | 1;
+                else if (couldEndLoop[pos] ==
+                        (lastCrossing[key[2 * pos + 1]] << 1))
                     couldEndLoop[pos] ^= 1;
             } else
                 maxForget[pos] = maxForget[pos + 1];
