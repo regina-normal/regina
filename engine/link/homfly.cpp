@@ -246,7 +246,7 @@ namespace {
             int from, to;
             for (int i = 0; i < 2 * l->size(); ++i) {
                 from = i / 2;
-                to = l->crossing(from)->next(i % 2).crossing()->index();
+                to = l->strand(i).next().crossing()->index();
                 if (forgetCrossing[from] >= forgetCrossing[to]) {
                     lastCrossing[i] = from;
                     forgetStrand[i] = forgetCrossing[from];
@@ -282,7 +282,7 @@ namespace {
                 // In the child bag, this strand ran between the bag and the
                 // forgotten zone.
 
-                from = StrandRef(link->crossing(strandID / 2), strandID % 2);
+                from = link->strand(strandID);
                 to = from.next();
 
                 if (from.crossing() == forget || to.crossing() == forget) {
@@ -347,8 +347,7 @@ namespace {
 
                     // This strand runs between the bag and the forgotten zone.
 
-                    from = StrandRef(link->crossing(strandID / 2),
-                        strandID % 2);
+                    from = link->strand(strandID);
                     to = from.next();
 
                     if (lastCrossing[strandID] == from.crossing()->index()) {
@@ -396,8 +395,8 @@ namespace {
             if (lastCrossing[key[pos - 1]] != enter)
                 return false;
             if ((mask[enter] != 6) &&
-                    link->crossing(key[pos - 1] / 2)->next(key[pos - 1] % 2).
-                    strand() == 1 && (! (key[pos] & 1))) {
+                    link->strand(key[pos - 1]).next().strand() == 1 &&
+                    (! (key[pos] & 1))) {
                 // We enter the crossing from the upper strand, but exit
                 // from the lower strand.  This can only happen if this
                 // is the second pass through the crossing, *and* the first
@@ -509,8 +508,7 @@ namespace {
                             // The start and of this loop will be our
                             // first traversal through c, which means it
                             // must be a pass from upper to upper.
-                            if (link->crossing(key[i + 1] / 2)->
-                                    next(key[i + 1] % 2).strand() == 0)
+                            if (link->strand(key[i + 1]).next().strand() == 0)
                                 return false;
                             needStartLoop = (c << 1) | 1;
                         } else
@@ -532,8 +530,7 @@ namespace {
                     // be the first time we see this crossing.  Therefore
                     // it must happen at a pass over the upper strand,
                     // and the loop must finish here again on the upper strand.
-                    if (link->crossing(key[i + 1] / 2)->
-                            next(key[i + 1] % 2).strand() == 1)
+                    if (link->strand(key[i + 1]).next().strand() == 1)
                         couldEndLoop = (lastCrossing[key[i + 1]] << 1) | 1;
                     else if (couldEndLoop == (lastCrossing[key[i + 1]] << 1)) {
                         // We cannot offer ourselves as a loop end here, but
@@ -713,8 +710,7 @@ namespace {
                     if (maxForget[pos + 1] > forgetCrossing[c])
                         return false;
                     if (maxForget[pos + 1] == forgetCrossing[c]) {
-                        if (link->crossing(key[2 * pos + 1] / 2)->
-                                next(key[2 * pos + 1] % 2).strand() == 0)
+                        if (link->strand(key[2 * pos + 1]).next().strand() == 0)
                             return false;
                         needStartLoop[pos] = (c << 1) | 1;
                     } else
@@ -729,8 +725,7 @@ namespace {
                 couldEndLoop[pos] = lastCrossing[key[2 * pos + 1]] << 1;
             } else if (maxForget[pos + 1] == forgetStrand[key[2 * pos + 1]]) {
                 maxForget[pos] = forgetStrand[key[2 * pos + 1]];
-                if (link->crossing(key[2 * pos + 1] / 2)->
-                        next(key[2 * pos + 1] % 2).strand() == 1)
+                if (link->strand(key[2 * pos + 1]).next().strand() == 1)
                     couldEndLoop[pos] =
                         (lastCrossing[key[2 * pos + 1]] << 1) | 1;
                 else if (couldEndLoop[pos] ==
