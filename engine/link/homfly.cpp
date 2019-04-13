@@ -37,7 +37,7 @@
 #include "utilities/sequence.h"
 
 // #define DUMP_STATES
-#define IDENTIFY_NONVIABLE_KEYS
+// #define IDENTIFY_NONVIABLE_KEYS
 
 namespace regina {
 
