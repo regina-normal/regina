@@ -149,10 +149,28 @@ namespace {
          * array stores the position of the strand in these forced initial
          * steps, or -1 if it does not appear amongst these forced steps.
          *
+         * Currently this code will not discover any forced steps beyond
+         * the first closed loop (though these only occur if the link
+         * has a (somewhat) trivially identified unlinked unknot component.
+         *
          * This array is a function of the link only, and is initialised
          * in the ViabilityData constructor.
          */
         int* prefix;
+
+        /**
+         * The crossing number at which we are forced to make our first
+         * switch-or-splice decision when traversing the link.  This is
+         * the crossing that appears immediately after the forced prefix
+         * (see the prefix documentation above).
+         *
+         * This may be -1 if no such decision is required, or if the
+         * prefix was not computed beyond the first closed loop.
+         *
+         * This is a function of the link only, and is initialised
+         * in the ViabilityData constructor.
+         */
+        int firstChoice;
 
         /**
          * For a crossing at index i that lives in the current bag,
@@ -272,6 +290,8 @@ namespace {
                 ++s;
             } while (! (s == start /* finished a link component */ ||
                 (s.strand() == 0 && prefix[s.id() | 1] < 0) /* not a pass */));
+
+            firstChoice = (s == start ? -1 : s.crossing()->index());
         }
 
         ~ViabilityData() {
@@ -489,12 +509,28 @@ namespace {
             // upper strand.
             int couldEndLoop = -1;
 
+            // This becomes true once we see a strand that exits the crossing
+            // where the first switch/splice choice needs to be made.
+            // If firstCrossing is -1 then this remains always false.
+            bool seenFirstChoice = false;
+
             int c;
             for (int i = n - 2; i >= 0; i -= 2) {
                 if (! verifyPrefix(key, i + 1))
                     return false;
                 if (! verifyPrefix(key, i))
                     return false;
+
+                if (i < n - 2 && (key[i + 2] >> 1) == firstChoice) {
+                    if (seenFirstChoice) {
+                        // We have now seen both exits from the crossing where
+                        // the first switch/splice choice is made.  Therefore
+                        // key[0 .. 2*pos+1] must all be in the forced prefix.
+                        if (prefix[key[i + 1]] < 0)
+                            return false;
+                    } else
+                        seenFirstChoice = true;
+                }
 
                 // Examine the connection between the strands at
                 // positions i+1 and i+2 in the key.
@@ -729,6 +765,19 @@ namespace {
                 return false;
             if (! verifyPrefix(key, 2 * pos))
                 return false;
+
+            // Here we reorganise the test from keyViable() that uses
+            // seenFirstChoice, to take into account the fact that we do
+            // not actually have a seenFirstChoice variable available.
+            if (pos < pairs - 1 && (key[2 * pos + 2] >> 1) == firstChoice &&
+                    prefix[key[2 * pos + 1]] < 0 &&
+                    (mask[firstChoice] & 12) == 12) {
+                // There is another exit from firstChoice somewhere, and
+                // for this key to be viable it must *not* have been seen.
+                for (int i = 2 * pos + 4; i < key.size(); i += 2)
+                    if ((key[i] >> 1) == firstChoice)
+                        return false;
+            }
 
             couldEndLoop[pos] = couldEndLoop[pos + 1];
             needStartLoop[pos] = needStartLoop[pos + 1];
