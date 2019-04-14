@@ -196,43 +196,37 @@ namespace {
         int pairs;
 
         /**
-         * An array that tracks the values of maxForget, a single variable used
+         * Contains copies of several local variables that are used
+         * within keyViable().
+         *
+         * The point of this struct is so that, if you are recursively filling
+         * a key and repeatedly calling partialKeyViable() (as opposed
+         * to making a single call to keyViable()), then you can backup
+         * and restore these local variables when backtracking.
+         *
+         * The roles of the individual data members are documented within
+         * keyViable().
+         */
+        struct LocalData {
+            int maxForget;
+            int needStartLoop;
+            int couldEndLoop;
+
+            inline void initRecursion() {
+                maxForget = needStartLoop = couldEndLoop = -1;
+            }
+        };
+
+        /**
+         * An array that tracks the values of local variables used
          * in keyViable(), over successive calls to partialKeyViable().
-         * By using this array, we are able to access previous values of
-         * maxForget when backtracking.
+         * By using this array, we are able to backup and restore previous
+         * values of these local variables when backtracking.
          *
-         * The role of this variable is documented within keyViable().
-         *
-         * This is only available for join bags, and is initialised by
+         * This array is only available for join bags, and is initialised by
          * initJoinBag().
          */
-        int *maxForget;
-
-        /**
-         * An array that tracks the values of needStartLoop, an integer variable
-         * used in keyViable(), over successive calls to partialKeyViable().
-         * By using this array, we are able to access previous values of
-         * needStartLoop when backtracking.
-         *
-         * The role of this variable is documented within keyViable().
-         *
-         * This is only available for join bags, and is initialised by
-         * initJoinBag().
-         */
-        int *needStartLoop;
-
-        /**
-         * An array that tracks the values of couldEndLoop, an integer variable
-         * used in keyViable(), over successive calls to partialKeyViable().
-         * By using this array, we are able to access previous values of
-         * couldEndLoop when backtracking.
-         *
-         * The role of this variable is documented within keyViable().
-         *
-         * This is only available for join bags, and is initialised by
-         * initJoinBag().
-         */
-        int *couldEndLoop;
+        LocalData* local;
 
 #ifdef IDENTIFY_NONVIABLE_KEYS
         /**
@@ -253,9 +247,7 @@ namespace {
                 forgetStrand(new int[2 * l->size()]),
                 prefix(new int[2 * l->size()]),
                 mask(new char[l->size()]),
-                maxForget(nullptr),
-                needStartLoop(nullptr),
-                couldEndLoop(nullptr) {
+                local(nullptr) {
             const TreeBag* b;
             for (b = d.first(); b; b = b->next())
                 if (b->type() == NICE_FORGET)
@@ -295,9 +287,7 @@ namespace {
         }
 
         ~ViabilityData() {
-            delete[] couldEndLoop;
-            delete[] needStartLoop;
-            delete[] maxForget;
+            delete[] local;
             delete[] mask;
             delete[] prefix;
             delete[] forgetStrand;
@@ -408,14 +398,10 @@ namespace {
             pairs = (leftChildKey->size() + rightChildKey->size()) / 2;
 
             // Set up our stacks of partially computed values.
-            delete[] couldEndLoop;
-            delete[] needStartLoop;
-            delete[] maxForget;
+            delete[] local;
 
-            maxForget = new int[pairs + 1];
-            needStartLoop = new int[pairs + 1];
-            couldEndLoop = new int[pairs + 1];
-            maxForget[pairs] = needStartLoop[pairs] = couldEndLoop[pairs] = -1;
+            local = new LocalData[pairs + 1];
+            local[pairs].initRecursion();
         }
 
         /**
@@ -760,23 +746,24 @@ namespace {
             // This code mirrors keyViable(); see that routine for
             // further documentation.
 
-            // Identify which pair of strands we are looking at.
-            // This runs through pairs-1, pairs-2, ..., 0, -1
-            // on successive calls to partialKeyViable().
-            int idx = (pos - key.begin()) >> 1;
-
             if (pos < key.begin()) {
                 // Finish the analysis of a fully-completed key.
                 // This code mirrors what happens after the main loop in
                 // keyViable().
-                if (needStartLoop[0] >= 0)
+
+                // Regarding the local variables used in keyViable():
+                // in this code we just need to query the values that
+                // remained after the previous call to partialKeyViable().
+                // These will be stored in local[0], and so we access
+                // these below as local->... .
+                if (local->needStartLoop >= 0)
                     return false;
 
                 int c = lastCrossing[key[0]];
                 if ((mask[c] & 3) == 3) {
-                    if (couldEndLoop[0] >> 1 != c)
+                    if (local->couldEndLoop >> 1 != c)
                         return false;
-                    if ((couldEndLoop[0] & 1) && ! (key[0] & 1))
+                    if ((local->couldEndLoop & 1) && ! (key[0] & 1))
                         return false;
                 }
 
@@ -790,6 +777,13 @@ namespace {
                 return true;
             }
 
+            // Identify which local variables from keyViable() we
+            // will use for this call to partialKeyViable(), and
+            // initialise them with the values that were computed
+            // in the previous call to partialKeyViable().
+            LocalData* data = local + ((pos - key.begin()) >> 1);
+            *data = *(data + 1);
+
             // Continue the analysis of an only partially-completed key.
             // This code mirrors what happens in a single iteration of the
             // main loop in keyViable().
@@ -801,7 +795,7 @@ namespace {
             // Here we reorganise the test from keyViable() that uses
             // seenFirstChoice, to take into account the fact that we do
             // not actually have a seenFirstChoice variable available.
-            if (idx < pairs - 1 && (*(pos + 2) >> 1) == firstChoice &&
+            if (pos + 2 != key.end() && (*(pos + 2) >> 1) == firstChoice &&
                     prefix[*(pos + 1)] < 0 &&
                     (mask[firstChoice] & 12) == 12) {
                 // There is another exit from firstChoice somewhere, and
@@ -811,21 +805,18 @@ namespace {
                         return false;
             }
 
-            couldEndLoop[idx] = couldEndLoop[idx + 1];
-            needStartLoop[idx] = needStartLoop[idx + 1];
-
             int c;
             if (! couldConnect(key, pos + 2)) {
-                if (idx < pairs - 1) {
+                if (pos + 2 != key.end()) {
                     c = lastCrossing[*(pos + 2)];
                     if ((mask[c] & 3) == 3) {
-                        if (couldEndLoop[idx + 1] >> 1 == c) {
-                            if (needStartLoop[idx + 1] >= 0)
+                        if (data->couldEndLoop >> 1 == c) {
+                            if (data->needStartLoop >= 0)
                                 return false;
-                            if ((couldEndLoop[idx + 1] & 1) &&
+                            if ((data->couldEndLoop & 1) &&
                                     ! (*(pos + 2) & 1))
                                 return false;
-                            couldEndLoop[idx] = -1;
+                            data->couldEndLoop = -1;
                         } else
                             return false;
                     }
@@ -833,48 +824,46 @@ namespace {
 
                 c = lastCrossing[*(pos + 1)];
                 if ((mask[c] & 12) == 12) {
-                    if (needStartLoop[idx + 1] >= 0)
+                    if (data->needStartLoop >= 0)
                         return false;
-                    if (maxForget[idx + 1] > forgetCrossing[c])
+                    if (data->maxForget > forgetCrossing[c])
                         return false;
-                    if (maxForget[idx + 1] == forgetCrossing[c]) {
+                    if (data->maxForget == forgetCrossing[c]) {
                         if (link->strand(*(pos + 1)).next().strand() == 0)
                             return false;
-                        needStartLoop[idx] = (c << 1) | 1;
+                        data->needStartLoop = (c << 1) | 1;
                     } else
-                        needStartLoop[idx] = c << 1;
+                        data->needStartLoop = c << 1;
 
-                    couldEndLoop[idx] = -1;
+                    data->couldEndLoop = -1;
                 }
             }
 
-            if (maxForget[idx + 1] < forgetStrand[*(pos + 1)]) {
-                maxForget[idx] = forgetStrand[*(pos + 1)];
-                couldEndLoop[idx] = lastCrossing[*(pos + 1)] << 1;
-            } else if (maxForget[idx + 1] == forgetStrand[*(pos + 1)]) {
-                maxForget[idx] = forgetStrand[*(pos + 1)];
+            if (data->maxForget < forgetStrand[*(pos + 1)]) {
+                data->maxForget = forgetStrand[*(pos + 1)];
+                data->couldEndLoop = lastCrossing[*(pos + 1)] << 1;
+            } else if (data->maxForget == forgetStrand[*(pos + 1)]) {
                 if (link->strand(*(pos + 1)).next().strand() == 1)
-                    couldEndLoop[idx] =
+                    data->couldEndLoop =
                         (lastCrossing[*(pos + 1)] << 1) | 1;
-                else if (couldEndLoop[idx] ==
+                else if (data->couldEndLoop ==
                         (lastCrossing[*(pos + 1)] << 1))
-                    couldEndLoop[idx] ^= 1;
-            } else
-                maxForget[idx] = maxForget[idx + 1];
-
-            if (maxForget[idx] < forgetStrand[*pos]) {
-                maxForget[idx] = forgetStrand[*pos];
-                couldEndLoop[idx] = -1;
+                    data->couldEndLoop ^= 1;
             }
 
-            if (needStartLoop[idx] >= 0) {
-                if (maxForget[idx] > forgetCrossing[needStartLoop[idx] >> 1])
+            if (data->maxForget < forgetStrand[*pos]) {
+                data->maxForget = forgetStrand[*pos];
+                data->couldEndLoop = -1;
+            }
+
+            if (data->needStartLoop >= 0) {
+                if (data->maxForget > forgetCrossing[data->needStartLoop >> 1])
                     return false;
-                if ((needStartLoop[idx] >> 1) == lastCrossing[*pos]) {
-                    if (needStartLoop[idx] & 1)
+                if ((data->needStartLoop >> 1) == lastCrossing[*pos]) {
+                    if (data->needStartLoop & 1)
                         if (! (*pos & 1))
                             return false;
-                    needStartLoop[idx] = -1;
+                    data->needStartLoop = -1;
                 }
             }
 
