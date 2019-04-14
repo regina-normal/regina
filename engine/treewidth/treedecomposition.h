@@ -937,11 +937,11 @@ class REGINA_API TreeDecomposition :
          * If the underlying graph is empty, then this routine will
          * produce a tree decomposition with no bags at all.
          *
-         * You may optionally pass an argument \a heightHint, which is
-         * an array indicating how close to the root of the tree you
-         * would like each node to be.  At present, this only affects
-         * continuous chains of forget bags - if \a heightHint is
-         * passed, then such chains will be ordered so that nodes with a
+         * You may optionally pass an argument \a heightHint, which is an array
+         * indicating how close to the root of the tree you would like each
+         * node to be.  At present, this only affects the final chain of
+         * forget bags leading up to the root bag - if \a heightHint is
+         * passed, then this chain will be ordered so that nodes with a
          * larger \a heightHint will be forgotten closer to the root bag.
          * These should be considered hints only, in that their effect on the
          * final tree decomposition might change in future versions of Regina.

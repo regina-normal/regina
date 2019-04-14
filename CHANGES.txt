@@ -87,6 +87,8 @@ Version 5.2  [ 29 September, 2017 ]
               the PACE text format.
             - New reroot() routines to hang the tree from different roots.
             - New linear-time routine bag() for slow random access to bags.
+            - Routine makeNice() now takes optional hints on the preferred
+              nice tree structure.
         Class Triangulation<dim>:
             - Now implements the Boost Graph Library (BGL) interface.  The dual
               graph of a triangulation can be accessed seamlessly through the
