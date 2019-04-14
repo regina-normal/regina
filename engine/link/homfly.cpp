@@ -796,8 +796,7 @@ namespace {
             // seenFirstChoice, to take into account the fact that we do
             // not actually have a seenFirstChoice variable available.
             if (pos + 2 != key.end() && (*(pos + 2) >> 1) == firstChoice &&
-                    prefix[*(pos + 1)] < 0 &&
-                    (mask[firstChoice] & 12) == 12) {
+                    prefix[*(pos + 1)] < 0 && (mask[firstChoice] & 12) == 12) {
                 // There is another exit from firstChoice somewhere, and
                 // for this key to be viable it must *not* have been seen.
                 for (auto i = pos + 4; i != key.end(); i += 2)
@@ -813,8 +812,7 @@ namespace {
                         if (data->couldEndLoop >> 1 == c) {
                             if (data->needStartLoop >= 0)
                                 return false;
-                            if ((data->couldEndLoop & 1) &&
-                                    ! (*(pos + 2) & 1))
+                            if ((data->couldEndLoop & 1) && ! (*(pos + 2) & 1))
                                 return false;
                             data->couldEndLoop = -1;
                         } else
@@ -844,10 +842,8 @@ namespace {
                 data->couldEndLoop = lastCrossing[*(pos + 1)] << 1;
             } else if (data->maxForget == forgetStrand[*(pos + 1)]) {
                 if (link->strand(*(pos + 1)).next().strand() == 1)
-                    data->couldEndLoop =
-                        (lastCrossing[*(pos + 1)] << 1) | 1;
-                else if (data->couldEndLoop ==
-                        (lastCrossing[*(pos + 1)] << 1))
+                    data->couldEndLoop = (lastCrossing[*(pos + 1)] << 1) | 1;
+                else if (data->couldEndLoop == (lastCrossing[*(pos + 1)] << 1))
                     data->couldEndLoop ^= 1;
             }
 
