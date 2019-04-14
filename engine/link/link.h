@@ -3468,6 +3468,14 @@ class REGINA_API Link : public Packet {
         void optimiseForJones(TreeDecomposition& td) const;
 
         /**
+         * Takes an arbitrary tree decomposition for this link, and
+         * modifies and optimises it so that it is ready for use as a
+         * nice tree decomposition for the internal treewidth-based
+         * algorithms in the Link class.
+         */
+        void prepareTreeDecomposition(TreeDecomposition& td) const;
+
+        /**
          * Sets the cached Kauffman bracket polynomial and Jones polynomial.
          *
          * The Kauffman bracket polynomial will be set to the argument
@@ -3945,15 +3953,13 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
         return *niceTreeDecomposition_.value();
 
     TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
-    optimiseForJones(*ans);
-    ans->makeNice();
+    prepareTreeDecomposition(*ans);
     return *(niceTreeDecomposition_ = ans);
 }
 
 inline void Link::useTreeDecomposition(const TreeDecomposition& td) {
     TreeDecomposition* use = new TreeDecomposition(td);
-    optimiseForJones(*use);
-    use->makeNice();
+    prepareTreeDecomposition(*use);
     niceTreeDecomposition_ = use;
 }
 

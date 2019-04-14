@@ -649,7 +649,7 @@ bool TreeDecomposition::compress() {
     return changed;
 }
 
-void TreeDecomposition::makeNice() {
+void TreeDecomposition::makeNice(int* heightHint) {
     if (! root_)
         return;
 
@@ -667,16 +667,37 @@ void TreeDecomposition::makeNice() {
     // new empty bag.
     TreeBag* b = root_;
     TreeBag *tmp, *tmp2, *tmp3;
-    int i;
-    for (i = b->size_ - 1; i >= 0; --i) {
-        tmp = new TreeBag(i);
-        std::copy(b->elements_, b->elements_ + i, tmp->elements_);
+    int* pos;
+    int forget;
+    while (root_->size_ > 0) {
+        // Work out which node of root_ we wish to forget.
+        if (heightHint) {
+            // This makes building the forget chain quadratic time.
+            // We could always sort the elements at the beginning of the
+            // chain and then make this faster, but the copy operation
+            // still gives us quadratic time overall so we don't stress
+            // too hard about this.
+            forget = std::min_element(root_->elements_,
+                root_->elements_ + root_->size_,
+                [heightHint](int a, int b) {
+                    return heightHint[a] < heightHint[b];
+                }) - root_->elements_;
+        } else
+            forget = root_->size_ - 1;
+
+        tmp = new TreeBag(root_->size_ - 1);
+        std::copy(root_->elements_,
+            root_->elements_ + forget,
+            tmp->elements_);
+        std::copy(root_->elements_ + forget + 1,
+            root_->elements_ + root_->size_,
+            tmp->elements_ + forget);
         tmp->children_ = root_;
         root_->parent_ = tmp;
         root_ = tmp;
 
         tmp->type_ = NICE_FORGET;
-        tmp->subtype_ = i;
+        tmp->subtype_ = forget;
     }
 
     TreeBag* next;
@@ -784,7 +805,7 @@ void TreeDecomposition::makeNice() {
             b->subtype_ = b->size_ - 1;
 
             tmp = b;
-            for (i = b->size_ - 1; i > 0; --i) {
+            for (int i = b->size_ - 1; i > 0; --i) {
                 tmp2 = new TreeBag(i);
                 std::copy(b->elements_, b->elements_ + i, tmp2->elements_);
                 tmp->children_ = tmp2;

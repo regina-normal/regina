@@ -111,11 +111,15 @@ namespace {
         return fromListAlg(graph);
     }
 
-    void writeDot_stdio(const TreeDecomposition& t) {
+    inline void makeNice_void(TreeDecomposition& t) {
+        t.makeNice();
+    }
+
+    inline void writeDot_stdio(const TreeDecomposition& t) {
         t.writeDot(std::cout);
     }
 
-    void writePACE_stdio(const TreeDecomposition& t) {
+    inline void writePACE_stdio(const TreeDecomposition& t) {
         t.writePACE(std::cout);
     }
 }
@@ -214,7 +218,7 @@ void addTreeDecomposition() {
         .def("bag", &TreeDecomposition::bag,
             return_value_policy<reference_existing_object>())
         .def("compress", &TreeDecomposition::compress)
-        .def("makeNice", &TreeDecomposition::makeNice)
+        .def("makeNice", makeNice_void)
         .def("reroot", reroot_bag)
         .def("writeDot", writeDot_stdio)
         .def("dot", &TreeDecomposition::dot)

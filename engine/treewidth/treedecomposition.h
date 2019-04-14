@@ -937,6 +937,15 @@ class REGINA_API TreeDecomposition :
          * If the underlying graph is empty, then this routine will
          * produce a tree decomposition with no bags at all.
          *
+         * You may optionally pass an argument \a heightHint, which is
+         * an array indicating how close to the root of the tree you
+         * would like each node to be.  At present, this only affects
+         * continuous chains of forget bags - if \a heightHint is
+         * passed, then such chains will be ordered so that nodes with a
+         * larger \a heightHint will be forgotten closer to the root bag.
+         * These should be considered hints only, in that their effect on the
+         * final tree decomposition might change in future versions of Regina.
+         *
          * \warning Note that TreeBag::subtype() is \e not the number of
          * the new or missing node, but instead gives the \e index of the
          * new or missing node within the relevant bag.
@@ -944,8 +953,16 @@ class REGINA_API TreeDecomposition :
          * \note This routine calls compress() automatically, and so
          * there is no need to explicitly call compress() before calling
          * makeNice().
+         *
+         * \ifacespython The \e heightHint argument is not present.
+         *
+         * @param heightHint an optional array where, for each node \a i,
+         * a higher value of <tt>heightHint[i]</tt> indicates that the node
+         * should be forgotten closer to the root bag.  If this is non-null,
+         * then the size of this array should be the number of nodes in
+         * the underlying graph.
          */
-        void makeNice();
+        void makeNice(int* heightHint = nullptr);
 
         /**
          * Reverses child-parent relationships so that the given bag

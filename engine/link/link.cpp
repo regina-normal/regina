@@ -883,5 +883,39 @@ void Link::writePACE(std::ostream& out) const {
     }
 }
 
+void Link::prepareTreeDecomposition(TreeDecomposition& td) const {
+    optimiseForJones(td);
+
+    // For each crossing, we compute how many steps forward we take from
+    // its upper strand before we enter some crossing at the lower strand.
+    //
+    // For those crossings with more such steps, we will try to forget
+    // them closer to the root bag of our nice tree decomposition.
+    int* upperSteps = new int[size()];
+    StrandRef s;
+    int steps;
+    for (StrandRef start : components_) {
+        if (! start)
+            continue;
+
+        // Traverse each link component starting from a lower strand.
+        if (start.strand())
+            start.jump();
+
+        s = start;
+        do {
+            if (s.strand() == 0)
+                steps = 0;
+            else
+                upperSteps[s.crossing()->index()] = ++steps;
+            --s;
+        } while (s != start);
+    }
+
+    td.makeNice(upperSteps);
+
+    delete[] upperSteps;
+}
+
 } // namespace regina
 
