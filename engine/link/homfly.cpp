@@ -2904,11 +2904,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
 
             const Key *k1, *k2;
             const Value *v1, *v2;
-            // int count = 0;
             for (auto& soln1 : *(partial[child->index()])) {
                 k1 = soln1.first;
                 v1 = soln1.second;
-                // if ((++count) % 100 == 0) std::cerr << count << std::endl;
 
 #ifdef IDENTIFY_NONVIABLE_KEYS
                 vData.foundViable = false;
