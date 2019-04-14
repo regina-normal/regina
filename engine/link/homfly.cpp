@@ -424,17 +424,20 @@ namespace {
          * traversal of the link (allowing for potential switches and/or
          * splices where these are legal).
          *
-         * PRE: pos is even, and is between 0 and key.size() inclusive.
+         * PRE: pos is a iterator that points to an *even* position within
+         * the given key.  It must be either dereferenceable or equal to
+         * key.end().
          */
-        bool couldConnect(const LightweightSequence<int>& key, int pos) {
-            if (pos <= 0 || pos >= key.size())
+        bool couldConnect(const LightweightSequence<int>& key,
+                LightweightSequence<int>::const_iterator pos) {
+            if (pos <= key.begin() || pos >= key.end())
                 return false;
-            int enter = key[pos] / 2;
-            if (lastCrossing[key[pos - 1]] != enter)
+            int enter = *pos >> 1;
+            if (lastCrossing[*(pos - 1)] != enter)
                 return false;
             if ((mask[enter] != 6) &&
-                    link->strand(key[pos - 1]).next().strand() == 1 &&
-                    (! (key[pos] & 1))) {
+                    link->strand(*(pos - 1)).next().strand() == 1 &&
+                    (! (*pos & 1))) {
                 // We enter the crossing from the upper strand, but exit
                 // from the lower strand.  This can only happen if this
                 // is the second pass through the crossing, *and* the first
@@ -444,39 +447,41 @@ namespace {
                 // If mask[enter] == 6 then the only two strands in the
                 // key that touch this crossing are the two we're looking at
                 // now.  So we avoid the linear-time test in this case.
-                for (int i = pos + 1; i < key.size(); ++i)
-                    if (lastCrossing[key[i]] == enter)
+                for (auto i = pos + 1; i != key.end(); ++i)
+                    if (lastCrossing[*i] == enter)
                         return false;
             }
             return true;
         }
 
         /**
-         * Examines where key[pos] appears, if at all, amongst the initial
-         * steps of any link traversal that are forced (due to only using
+         * Examines where *pos appears, if at all, amongst the initial
+         * steps of each link traversal that are forced (due to only using
          * pass moves, and therefore not making any branching decisions).
          *
          * Returns \c true if everything looks okay, or \c false if an
          * inconsistency is found that makes the entire key non-viable.
+         *
+         * PRE: pos is a dereferenceable iterator into the given key.
          */
-        bool verifyPrefix(const LightweightSequence<int>& key, int pos) {
-            // If key[pos] is not forced, then key[pos+1] must not be
-            // forced either.
-            if (prefix[key[pos]] < 0)
-                return (pos == key.size() - 1 || prefix[key[pos + 1]] < 0);
+        bool verifyPrefix(const LightweightSequence<int>& key,
+                LightweightSequence<int>::const_iterator pos) {
+            // If *pos is not forced, then *(pos+1) cannot be forced either.
+            if (prefix[*pos] < 0)
+                return (pos + 1 == key.end() || prefix[*(pos + 1)] < 0);
 
-            // From here on, we know that key[pos] is forced.
+            // From here on, we know that *pos is forced.
 
-            // If key[pos] is forced, then we must be able to fill the
-            // remainder of the key before key[pos] with strands that
-            // we know are forced to appear before key[pos].
-            if (prefix[key[pos]] < pos)
+            // If *pos is forced, then we must be able to fill the
+            // remainder of the key before it using only strands that
+            // we know are forced to appear before it.
+            if (prefix[*pos] < (pos - key.begin()))
                 return false;
 
-            // If both key[pos] and key[pos+1] are forced, then key[pos]
-            // must be forced to appear *earlier* than key[pos+1].
-            return (pos == key.size() - 1 || prefix[key[pos + 1]] < 0 ||
-                prefix[key[pos + 1]] > prefix[key[pos]]);
+            // If both *pos and *(pos+1) are forced, then *pos
+            // must be forced to appear *earlier* than *(pos+1).
+            return (pos + 1 == key.end() || prefix[*(pos + 1)] < 0 ||
+                prefix[*(pos + 1)] > prefix[*pos]);
         }
 
         /**
@@ -484,8 +489,6 @@ namespace {
          * up to the root of the tree decomposition.
          */
         bool keyViable(const LightweightSequence<int>& key) {
-            int n = key.size();
-
             // Of all the strands passed so far that run between a crossing c
             // and the forgotten zone, what is the highest bag at which we
             // forget such a crossing c?
@@ -515,32 +518,45 @@ namespace {
             bool seenFirstChoice = false;
 
             int c;
-            for (int i = n - 2; i >= 0; i -= 2) {
-                if (! verifyPrefix(key, i + 1))
+            auto pos = key.end();
+            while (pos != key.begin()) {
+                // We decrement pos twice in each loop iteration.
+                // Now, at the beginning of the loop, pos points immediately
+                // *after* the two strands (bag -> forgotten zone -> bag)
+                // that we wish to check.
+
+                --pos;
+                // --------------------------------------------------------
+                // Now *pos runs from forgotten zone -> bag, and is the
+                // second of the two strands we check in this loop iteration.
+                // --------------------------------------------------------
+
+                if (! verifyPrefix(key, pos))
                     return false;
-                if (! verifyPrefix(key, i))
+                if (! verifyPrefix(key, pos - 1))
                     return false;
 
-                if (i < n - 2 && (key[i + 2] >> 1) == firstChoice) {
+                if (pos + 1 != key.end() && (*(pos + 1) >> 1) == firstChoice) {
                     if (seenFirstChoice) {
-                        // We have now seen both exits from the crossing where
-                        // the first switch/splice choice is made.  Therefore
-                        // key[0 .. 2*pos+1] must all be in the forced prefix.
-                        if (prefix[key[i + 1]] < 0)
+                        // We have now seen *both* exits from the crossing
+                        // where the first switch/splice choice is made.
+                        // Therefore all strands in positions <= pos must be
+                        // in the forced prefix.
+                        if (prefix[*pos] < 0)
                             return false;
                     } else
                         seenFirstChoice = true;
                 }
 
                 // Examine the connection between the strands at
-                // positions i+1 and i+2 in the key.
-                if (! couldConnect(key, i + 2)) {
-                    // The strand at key[i + 1] is the last that we see
+                // positions pos and pos+1 in the key.
+                if (! couldConnect(key, pos + 1)) {
+                    // The strand at pos is the last that we see
                     // from some closed loop in the link traversal, and
-                    // the strand at key[i + 2] is the first that we see
+                    // the strand at pos+1 is the first that we see
                     // from some later closed loop in the link traversal.
-                    if (i < n - 2) {
-                        c = lastCrossing[key[i + 2]];
+                    if (pos + 1 != key.end()) {
+                        c = lastCrossing[*(pos + 1)];
                         if ((mask[c] & 3) == 3) {
                             // We enter the forgotten zone from crossing c, and
                             // both incoming strands at c come back from the
@@ -552,12 +568,12 @@ namespace {
                                 if (needStartLoop >= 0) {
                                     // We are still looking for the beginning
                                     // of a different loop (which ends
-                                    // at key[i+3] or beyond, and starts
-                                    // at key[i] or before).  Since loops
+                                    // at position >= pos+2, and starts
+                                    // at position <= pos-1.  Since loops
                                     // cannot overlap, this key is non-viable.
                                     return false;
                                 }
-                                if ((couldEndLoop & 1) && ! (key[i + 2] & 1))
+                                if ((couldEndLoop & 1) && ! (*(pos + 1) & 1))
                                     return false;
 
                                 couldEndLoop = -1;
@@ -566,7 +582,7 @@ namespace {
                         }
                     }
 
-                    c = lastCrossing[key[i + 1]];
+                    c = lastCrossing[*pos];
                     if ((mask[c] & 12) == 12) {
                         // We exit the forgotten zone back into crossing c,
                         // and both outgoing strands at c lead back into the
@@ -589,31 +605,31 @@ namespace {
                             // The start and of this loop will be our
                             // first traversal through c, which means it
                             // must be a pass from upper to upper.
-                            if (link->strand(key[i + 1]).next().strand() == 0)
+                            if (link->strand(*pos).next().strand() == 0)
                                 return false;
                             needStartLoop = (c << 1) | 1;
                         } else
                             needStartLoop = c << 1;
 
                         // Now we are looking for a loop beginning, which
-                        // means we are in a new loop that must end at key[i+1].
+                        // means we are in a new loop that must end at pos.
                         // Any previous couldEndLoop (which would have ended
-                        // at key[i+3] or later) is therefore unusable.
+                        // at pos+2 or later) is therefore unusable.
                         couldEndLoop = -1;
                     }
                 }
 
-                if (maxForget < forgetStrand[key[i + 1]]) {
-                    maxForget = forgetStrand[key[i + 1]];
-                    couldEndLoop = lastCrossing[key[i + 1]] << 1;
-                } else if (maxForget == forgetStrand[key[i + 1]]) {
+                if (maxForget < forgetStrand[*pos]) {
+                    maxForget = forgetStrand[*pos];
+                    couldEndLoop = lastCrossing[*pos] << 1;
+                } else if (maxForget == forgetStrand[*pos]) {
                     // If this ends a loop, then the matching loop start will
                     // be the first time we see this crossing.  Therefore
                     // it must happen at a pass over the upper strand,
                     // and the loop must finish here again on the upper strand.
-                    if (link->strand(key[i + 1]).next().strand() == 1)
-                        couldEndLoop = (lastCrossing[key[i + 1]] << 1) | 1;
-                    else if (couldEndLoop == (lastCrossing[key[i + 1]] << 1)) {
+                    if (link->strand(*pos).next().strand() == 1)
+                        couldEndLoop = (lastCrossing[*pos] << 1) | 1;
+                    else if (couldEndLoop == (lastCrossing[*pos] << 1)) {
                         // We cannot offer ourselves as a loop end here, but
                         // the same crossing is still offering itself as a loop
                         // end later on.  However, we can now certify that the
@@ -623,8 +639,15 @@ namespace {
                         couldEndLoop ^= 1;
                     }
                 }
-                if (maxForget < forgetStrand[key[i]]) {
-                    maxForget = forgetStrand[key[i]];
+
+                --pos;
+                // --------------------------------------------------------
+                // Now *pos runs from bag -> forgotten zone, and is the
+                // first of the two strands we check in this loop iteration.
+                // --------------------------------------------------------
+
+                if (maxForget < forgetStrand[*pos]) {
+                    maxForget = forgetStrand[*pos];
                     couldEndLoop = -1;
                 }
 
@@ -634,7 +657,7 @@ namespace {
                 if (needStartLoop >= 0) {
                     if (maxForget > forgetCrossing[needStartLoop >> 1])
                         return false;
-                    if ((needStartLoop >> 1) == lastCrossing[key[i]]) {
+                    if ((needStartLoop >> 1) == lastCrossing[*pos]) {
                         // We found the crossing we were after.
                         if (needStartLoop & 1) {
                             // We are specifically seeking the upper strand.
@@ -645,13 +668,17 @@ namespace {
                             //
                             // TODO: Test this earlier, when needStartLoop is
                             // set.
-                            if (! (key[i] & 1))
+                            if (! (*pos & 1))
                                 return false;
                         }
                         needStartLoop = -1;
                     }
                 }
             }
+
+            // --------------------------------------------------------
+            // Now pos == key.begin().
+            // --------------------------------------------------------
 
             // Are we still waiting on the start of a loop that we never found?
             if (needStartLoop >= 0)
@@ -660,11 +687,11 @@ namespace {
             if (key.size() > 0) {
                 // Check if the very first crossing must start a closed-off loop
                 // whose end should have been seen later in the key.
-                c = lastCrossing[key[0]];
+                c = lastCrossing[*pos];
                 if ((mask[c] & 3) == 3) {
                     if (couldEndLoop >> 1 != c)
                         return false;
-                    if ((couldEndLoop & 1) && ! (key[0] & 1))
+                    if ((couldEndLoop & 1) && ! (*pos & 1))
                         return false;
                 }
 
@@ -675,7 +702,7 @@ namespace {
                 // (b) crossing c is the beginning of a closed loop in the
                 // entire traversal, then (c) we *must* be making a
                 // pass operation on c's upper strand.
-                if (! (key[0] & 1)) {
+                if (! (*pos & 1)) {
                     // We are exiting from c's lower strand, which
                     // contradicts (c) above.  If both (a) and (b) above are
                     // true then we have a contradiction.
@@ -715,25 +742,30 @@ namespace {
          * recursively constructing different keys.
          *
          * To test whether a key is viable, you must call
-         * partialKeyViable(p-1), partialKeyViable(p-2), ...,
-         * partialKeyViable(0), partialKeyViable(-1), in that order,
-         * where p is the number of pairs in the key (i.e., half the key
-         * length).  For each i >= 0, when calling partialKeyViable(i) you
-         * must have filled in the key elements key[2*i, ..., 2*p-1].
-         * When calling partialKeyViable(-1) the key must be complete.
+         * partialKeyViable(end-2), partialKeyViable(end-4), ...,
+         * partialKeyViable(begin), partialKeyViable(begin-2),
+         * in that order, where end == key.end() and begin == key.begin().
+         * For each position p >= key.begin(), when calling partialKeyViable(p)
+         * you must have filled in the key elements at all positions >= p.
+         * When calling partialKeyViable(begin-2) the key must be complete.
          *
-         * Calling partialKeyViable(i) does not overwrite any internal
-         * data used to compute partialKeyViable(i+1, i+2, ...), which
-         * essentially means that you can backtrack without needing to restore
-         * internal variables.
+         * Calling partialKeyViable(p) does not overwrite any internal data
+         * used to compute partialKeyViable(p+2, p+4, ...).  This essentially
+         * means you can backtrack without having to restore internal variables.
          *
-         * PRE: The key cannot have zero length (i.e., p > 0).
+         * PRE: The key cannot have zero length.
          */
-        bool partialKeyViable(const LightweightSequence<int>& key, int pos) {
+        bool partialKeyViable(const LightweightSequence<int>& key,
+                LightweightSequence<int>::const_iterator pos) {
             // This code mirrors keyViable(); see that routine for
             // further documentation.
 
-            if (pos < 0) {
+            // Identify which pair of strands we are looking at.
+            // This runs through pairs-1, pairs-2, ..., 0, -1
+            // on successive calls to partialKeyViable().
+            int idx = (pos - key.begin()) >> 1;
+
+            if (pos < key.begin()) {
                 // Finish the analysis of a fully-completed key.
                 // This code mirrors what happens after the main loop in
                 // keyViable().
@@ -761,88 +793,88 @@ namespace {
             // Continue the analysis of an only partially-completed key.
             // This code mirrors what happens in a single iteration of the
             // main loop in keyViable().
-            if (! verifyPrefix(key, 2 * pos + 1))
+            if (! verifyPrefix(key, pos + 1))
                 return false;
-            if (! verifyPrefix(key, 2 * pos))
+            if (! verifyPrefix(key, pos))
                 return false;
 
             // Here we reorganise the test from keyViable() that uses
             // seenFirstChoice, to take into account the fact that we do
             // not actually have a seenFirstChoice variable available.
-            if (pos < pairs - 1 && (key[2 * pos + 2] >> 1) == firstChoice &&
-                    prefix[key[2 * pos + 1]] < 0 &&
+            if (idx < pairs - 1 && (*(pos + 2) >> 1) == firstChoice &&
+                    prefix[*(pos + 1)] < 0 &&
                     (mask[firstChoice] & 12) == 12) {
                 // There is another exit from firstChoice somewhere, and
                 // for this key to be viable it must *not* have been seen.
-                for (int i = 2 * pos + 4; i < key.size(); i += 2)
-                    if ((key[i] >> 1) == firstChoice)
+                for (auto i = pos + 4; i != key.end(); i += 2)
+                    if ((*i >> 1) == firstChoice)
                         return false;
             }
 
-            couldEndLoop[pos] = couldEndLoop[pos + 1];
-            needStartLoop[pos] = needStartLoop[pos + 1];
+            couldEndLoop[idx] = couldEndLoop[idx + 1];
+            needStartLoop[idx] = needStartLoop[idx + 1];
 
             int c;
-            if (! couldConnect(key, 2 * pos + 2)) {
-                if (pos < pairs - 1) {
-                    c = lastCrossing[key[2 * pos + 2]];
+            if (! couldConnect(key, pos + 2)) {
+                if (idx < pairs - 1) {
+                    c = lastCrossing[*(pos + 2)];
                     if ((mask[c] & 3) == 3) {
-                        if (couldEndLoop[pos + 1] >> 1 == c) {
-                            if (needStartLoop[pos + 1] >= 0)
+                        if (couldEndLoop[idx + 1] >> 1 == c) {
+                            if (needStartLoop[idx + 1] >= 0)
                                 return false;
-                            if ((couldEndLoop[pos + 1] & 1) &&
-                                    ! (key[2 * pos + 2] & 1))
+                            if ((couldEndLoop[idx + 1] & 1) &&
+                                    ! (*(pos + 2) & 1))
                                 return false;
-                            couldEndLoop[pos] = -1;
+                            couldEndLoop[idx] = -1;
                         } else
                             return false;
                     }
                 }
 
-                c = lastCrossing[key[2 * pos + 1]];
+                c = lastCrossing[*(pos + 1)];
                 if ((mask[c] & 12) == 12) {
-                    if (needStartLoop[pos + 1] >= 0)
+                    if (needStartLoop[idx + 1] >= 0)
                         return false;
-                    if (maxForget[pos + 1] > forgetCrossing[c])
+                    if (maxForget[idx + 1] > forgetCrossing[c])
                         return false;
-                    if (maxForget[pos + 1] == forgetCrossing[c]) {
-                        if (link->strand(key[2 * pos + 1]).next().strand() == 0)
+                    if (maxForget[idx + 1] == forgetCrossing[c]) {
+                        if (link->strand(*(pos + 1)).next().strand() == 0)
                             return false;
-                        needStartLoop[pos] = (c << 1) | 1;
+                        needStartLoop[idx] = (c << 1) | 1;
                     } else
-                        needStartLoop[pos] = c << 1;
+                        needStartLoop[idx] = c << 1;
 
-                    couldEndLoop[pos] = -1;
+                    couldEndLoop[idx] = -1;
                 }
             }
 
-            if (maxForget[pos + 1] < forgetStrand[key[2 * pos + 1]]) {
-                maxForget[pos] = forgetStrand[key[2 * pos + 1]];
-                couldEndLoop[pos] = lastCrossing[key[2 * pos + 1]] << 1;
-            } else if (maxForget[pos + 1] == forgetStrand[key[2 * pos + 1]]) {
-                maxForget[pos] = forgetStrand[key[2 * pos + 1]];
-                if (link->strand(key[2 * pos + 1]).next().strand() == 1)
-                    couldEndLoop[pos] =
-                        (lastCrossing[key[2 * pos + 1]] << 1) | 1;
-                else if (couldEndLoop[pos] ==
-                        (lastCrossing[key[2 * pos + 1]] << 1))
-                    couldEndLoop[pos] ^= 1;
+            if (maxForget[idx + 1] < forgetStrand[*(pos + 1)]) {
+                maxForget[idx] = forgetStrand[*(pos + 1)];
+                couldEndLoop[idx] = lastCrossing[*(pos + 1)] << 1;
+            } else if (maxForget[idx + 1] == forgetStrand[*(pos + 1)]) {
+                maxForget[idx] = forgetStrand[*(pos + 1)];
+                if (link->strand(*(pos + 1)).next().strand() == 1)
+                    couldEndLoop[idx] =
+                        (lastCrossing[*(pos + 1)] << 1) | 1;
+                else if (couldEndLoop[idx] ==
+                        (lastCrossing[*(pos + 1)] << 1))
+                    couldEndLoop[idx] ^= 1;
             } else
-                maxForget[pos] = maxForget[pos + 1];
+                maxForget[idx] = maxForget[idx + 1];
 
-            if (maxForget[pos] < forgetStrand[key[2 * pos]]) {
-                maxForget[pos] = forgetStrand[key[2 * pos]];
-                couldEndLoop[pos] = -1;
+            if (maxForget[idx] < forgetStrand[*pos]) {
+                maxForget[idx] = forgetStrand[*pos];
+                couldEndLoop[idx] = -1;
             }
 
-            if (needStartLoop[pos] >= 0) {
-                if (maxForget[pos] > forgetCrossing[needStartLoop[pos] >> 1])
+            if (needStartLoop[idx] >= 0) {
+                if (maxForget[idx] > forgetCrossing[needStartLoop[idx] >> 1])
                     return false;
-                if ((needStartLoop[pos] >> 1) == lastCrossing[key[2 * pos]]) {
-                    if (needStartLoop[pos] & 1)
-                        if (! (key[2 * pos] & 1))
+                if ((needStartLoop[idx] >> 1) == lastCrossing[*pos]) {
+                    if (needStartLoop[idx] & 1)
+                        if (! (*pos & 1))
                             return false;
-                    needStartLoop[pos] = -1;
+                    needStartLoop[idx] = -1;
                 }
             }
 
@@ -2866,7 +2898,9 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             // means we take a pair from k2.
             Bitmask choice(pairs);
 
-            int pos1, pos2, pos;
+            Key::iterator pos;
+            Key::const_iterator pos1, pos2;
+            int idx;
 
             const Key *k1, *k2;
             const Value *v1, *v2;
@@ -2891,15 +2925,16 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                     // Fill the final key from the end to the beginning, so
                     // that we can more aggressively test for non-viable keys.
                     choice.reset();
-                    pos = pairs - 1;
-                    pos1 = pairs1 - 1;
-                    pos2 = pairs2 - 1;
+                    pos = kNew.end() - 2;
+                    pos1 = k1->end() - 2;
+                    pos2 = k2->end() - 2;
+                    idx = pairs - 1;
 
-                    while (pos < pairs) {
-                        // We are about to try the current option for
-                        // position pos in the final key.
-                        if (pos < 0) {
-                            // Try the key.
+                    while (pos != kNew.end()) {
+                        // We are about to try the current option for the pair
+                        // at positions (pos, pos+1) in the final key.
+                        if (pos < kNew.begin()) {
+                            // The key is completely filled in - try it!
                             if (vData.partialKeyViable(kNew, pos)) {
                                 if (! partial[index]->emplace(
                                         new Key(kNew), new Value(val)).second)
@@ -2907,54 +2942,58 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                         "bag are not unique" << std::endl;
                             }
                             // Fall through to the backtrack step.
-                        } else if (! choice.get(pos)) {
+                        } else if (! choice.get(idx)) {
                             // Try key 1, if we can.
-                            if (pos1 >= 0) {
-                                kNew[2 * pos] = (*k1)[2 * pos1];
-                                kNew[2 * pos + 1] = (*k1)[2 * pos1 + 1];
+                            if (pos1 >= k1->begin()) {
+                                *pos = *pos1;
+                                *(pos + 1) = *(pos1 + 1);
 
                                 if (vData.partialKeyViable(kNew, pos)) {
-                                    --pos1;
-                                    --pos;
+                                    pos1 -= 2;
+                                    pos -= 2;
+                                    --idx;
                                     continue;
                                 }
                             }
                             // We cannot use key 1.
                             // Try key 2 instead.
-                            choice.set(pos, true);
+                            choice.set(idx, true);
                             continue;
                         } else {
                             // Try key 2, if we can.
-                            if (pos2 >= 0) {
-                                kNew[2 * pos] = (*k2)[2 * pos2];
-                                kNew[2 * pos + 1] = (*k2)[2 * pos2 + 1];
+                            if (pos2 >= k2->begin()) {
+                                *pos = *pos2;
+                                *(pos + 1) = *(pos2 + 1);
 
                                 if (vData.partialKeyViable(kNew, pos)) {
-                                    --pos2;
-                                    --pos;
+                                    pos2 -= 2;
+                                    pos -= 2;
+                                    --idx;
                                     continue;
                                 }
                             }
                             // We cannot use key 2.
                             // Reset this bit, and fall through to the
                             // backtrack step.
-                            choice.set(pos, false);
+                            choice.set(idx, false);
                         }
 
                         // Backtrack!
-                        ++pos;
-                        while (pos < pairs) {
+                        pos += 2;
+                        ++idx;
+                        while (pos != kNew.end()) {
                             // Try the next option at this position.
-                            if (! choice.get(pos)) {
-                                ++pos1;
-                                choice.set(pos, true);
+                            if (! choice.get(idx)) {
+                                pos1 += 2;
+                                choice.set(idx, true);
                                 break;
                             } else {
-                                ++pos2;
+                                pos2 += 2;
                                 // We are out of options for this bit.
                                 // Reset the bit and move further up.
-                                choice.set(pos, false);
-                                ++pos;
+                                choice.set(idx, false);
+                                pos += 2;
+                                ++idx;
                             }
                         }
                     }
