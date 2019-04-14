@@ -943,7 +943,7 @@ Laurent2<Integer>* Link::homflyKauffman() const {
     StrandRef* first = new StrandRef[n + components_.size()];
     std::fill(first, first + n + components_.size(), StrandRef());
 
-    bool* seen = new bool[2 * n]; // index = 2 * crossing_index + strand
+    bool* seen = new bool[2 * n]; // index = strand ID
     std::fill(seen, seen + 2 * n, false);
 
     Laurent2<Integer> term;
@@ -969,7 +969,7 @@ Laurent2<Integer>* Link::homflyKauffman() const {
         std::cerr << std::endl;
 #endif
 
-        if (seen[2 * s.crossing()->index() + s.strand()]) {
+        if (seen[s.id()]) {
             // We have closed off a component of the (possibly spliced) link.
             first[comp] = s;
             ++comp;
@@ -1016,7 +1016,7 @@ Laurent2<Integer>* Link::homflyKauffman() const {
                             state[s.crossing()->index()] == CROSSING_SPLICE_2)
                         s.jump();
 
-                    if (! seen[2 * s.crossing()->index() + s.strand()]) {
+                    if (! seen[s.id()]) {
                         --comp;
                         s = first[comp];
 
@@ -1024,7 +1024,7 @@ Laurent2<Integer>* Link::homflyKauffman() const {
                         ++pos;
                         continue;
                     } else
-                        seen[2 * s.crossing()->index() + s.strand()] = false;
+                        seen[s.id()] = false;
 
                     switch (state[s.crossing()->index()]) {
                         case CROSSING_KEEP_1:
@@ -1074,13 +1074,13 @@ Laurent2<Integer>* Link::homflyKauffman() const {
                 for (size_t i = 2 * s.crossing()->index() + s.strand() + 1;
                         i < 2 * n; ++i)
                     if (! seen[i]) {
-                        s = StrandRef(crossings_[i / 2], i % 2);
+                        s = strand(i);
                         break;
                     }
             }
         }
 
-        seen[2 * s.crossing()->index() + s.strand()] = true;
+        seen[s.id()] = true;
 
         switch (state[s.crossing()->index()]) {
             case CROSSING_UNSEEN:
