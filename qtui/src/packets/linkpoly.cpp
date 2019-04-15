@@ -286,7 +286,7 @@ void LinkPolynomialUI::refresh() {
 void LinkPolynomialUI::calculateJones() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Jones polynomial"), ui);
-    link->jones(regina::ALG_NAIVE, &tracker);
+    link->jones(regina::ALG_DEFAULT, &tracker);
     if (! dlg.run())
         return;
     dlg.hide();
@@ -311,7 +311,7 @@ void LinkPolynomialUI::calculateHomfly() {
 void LinkPolynomialUI::calculateBracket() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing Kauffman bracket"), ui);
-    link->jones(regina::ALG_NAIVE, &tracker);
+    link->jones(regina::ALG_DEFAULT, &tracker);
     if (! dlg.run())
         return;
     dlg.hide();
