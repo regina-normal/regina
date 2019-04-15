@@ -1230,8 +1230,26 @@ class LinkTest : public CppUnit::TestFixture {
             verifyCountR2Up(trefoilRight, 18);
             verifyCountR2Down(trefoilRight, 0);
 
+            verifyCountR2Up(trefoil_r1x2, 58);
+            verifyCountR2Down(trefoil_r1x2, 0);
+
+            verifyCountR2Up(trefoil_r1x6, 160);
+            verifyCountR2Down(trefoil_r1x6, 0);
+
             verifyCountR2Up(figureEight, 28);
             verifyCountR2Down(figureEight, 0);
+
+            verifyCountR2Up(figureEight_r1x2, 66);
+            verifyCountR2Down(figureEight_r1x2, 0);
+
+            verifyCountR2Up(conway, 120);
+            verifyCountR2Down(conway, 0);
+
+            verifyCountR2Up(kinoshitaTerasaka, 118);
+            verifyCountR2Down(kinoshitaTerasaka, 0);
+
+            verifyCountR2Up(gst, 612);
+            verifyCountR2Down(gst, 0);
 
             verifyCountR2Up(unlink2_0, 4);
             verifyCountR2Down(unlink2_0, 0);
@@ -1274,7 +1292,13 @@ class LinkTest : public CppUnit::TestFixture {
             verifyCountR3(unknot3, 2);
             verifyCountR3(trefoilLeft, 0);
             verifyCountR3(trefoilRight, 0);
+            verifyCountR3(trefoil_r1x2, 0);
+            verifyCountR3(trefoil_r1x6, 0);
             verifyCountR3(figureEight, 0);
+            verifyCountR3(figureEight_r1x2, 0);
+            verifyCountR3(conway, 0);
+            verifyCountR3(kinoshitaTerasaka, 0);
+            verifyCountR3(gst, 10);
             verifyCountR3(unlink2_0, 0);
             verifyCountR3(unlink3_0, 0);
             verifyCountR3(unlink2_r2, 0);
