@@ -89,6 +89,8 @@ class LinkTest : public CppUnit::TestFixture {
          */
         Link *unknot0, *unknot1, *unknot3, *unknotMonster, *unknotGordian;
         Link *trefoilLeft, *trefoilRight, *figureEight;
+        Link *trefoil_r1x2, *trefoil_r1x6, *figureEight_r1x2;
+        Link *conway, *kinoshitaTerasaka, *gst;
 
         /**
          * Links:
@@ -127,6 +129,43 @@ class LinkTest : public CppUnit::TestFixture {
             trefoilRight = ExampleLink::trefoilRight();
 
             figureEight = ExampleLink::figureEight();
+
+            trefoil_r1x2 = ExampleLink::trefoilRight();
+            {
+                Crossing* c = trefoil_r1x2->crossing(0);
+                trefoil_r1x2->r1(c->upper(), 0, -1, false, true);
+                trefoil_r1x2->r1(c->lower(), 1, +1, false, true);
+            }
+            trefoil_r1x2->setLabel("Trefoil with 2 R1s");
+
+            trefoil_r1x6 = ExampleLink::trefoilRight();
+            {
+                Crossing* c[3];
+                c[0] = trefoil_r1x6->crossing(0);
+                c[1] = trefoil_r1x6->crossing(1);
+                c[2] = trefoil_r1x6->crossing(2);
+                trefoil_r1x6->r1(c[0]->upper(), 0, -1, false, true);
+                trefoil_r1x6->r1(c[0]->lower(), 1, -1, false, true);
+                trefoil_r1x6->r1(c[1]->upper(), 1, +1, false, true);
+                trefoil_r1x6->r1(c[1]->lower(), 0, +1, false, true);
+                trefoil_r1x6->r1(c[2]->upper(), 0, +1, false, true);
+                trefoil_r1x6->r1(c[2]->lower(), 0, -1, false, true);
+            }
+            trefoil_r1x6->setLabel("Trefoil with 6 R1s");
+
+            figureEight_r1x2 = ExampleLink::figureEight();
+            {
+                Crossing* c = figureEight_r1x2->crossing(3);
+                figureEight_r1x2->r1(c->upper(), 0, -1, false, true);
+                figureEight_r1x2->r1(c->lower(), 1, +1, false, true);
+            }
+            figureEight_r1x2->setLabel("Figure eight with 2 R1s");
+
+            conway = ExampleLink::conway();
+
+            kinoshitaTerasaka = ExampleLink::kinoshitaTerasaka();
+
+            gst = ExampleLink::gst();
 
             unlink2_0 = new Link(2);
             unlink2_0->setLabel("Unlink (2 components)");
@@ -182,6 +221,12 @@ class LinkTest : public CppUnit::TestFixture {
             delete trefoilLeft;
             delete trefoilRight;
             delete figureEight;
+            delete trefoil_r1x2;
+            delete trefoil_r1x6;
+            delete figureEight_r1x2;
+            delete conway;
+            delete kinoshitaTerasaka;
+            delete gst;
             delete unlink2_0;
             delete unlink3_0;
             delete unlink2_r2;
@@ -231,7 +276,13 @@ class LinkTest : public CppUnit::TestFixture {
             testComponents(unknotGordian, 1);
             testComponents(trefoilLeft, 1);
             testComponents(trefoilRight, 1);
+            testComponents(trefoil_r1x2, 1);
+            testComponents(trefoil_r1x6, 1);
             testComponents(figureEight, 1);
+            testComponents(figureEight_r1x2, 1);
+            testComponents(conway, 1);
+            testComponents(kinoshitaTerasaka, 1);
+            testComponents(gst, 1);
             testComponents(unlink2_0, 2);
             testComponents(unlink3_0, 3);
             testComponents(unlink2_r2, 2);
@@ -265,7 +316,13 @@ class LinkTest : public CppUnit::TestFixture {
             testLinking(unknotGordian, 0);
             testLinking(trefoilLeft, 0);
             testLinking(trefoilRight, 0);
+            testLinking(trefoil_r1x2, 0);
+            testLinking(trefoil_r1x6, 0);
             testLinking(figureEight, 0);
+            testLinking(figureEight_r1x2, 0);
+            testLinking(conway, 0);
+            testLinking(kinoshitaTerasaka, 0);
+            testLinking(gst, 0);
             testLinking(unlink2_0, 0);
             testLinking(unlink3_0, 0);
             testLinking(unlink2_r2, 0);
@@ -379,7 +436,13 @@ class LinkTest : public CppUnit::TestFixture {
             testParallel(unknotGordian);
             testParallel(trefoilLeft);
             testParallel(trefoilRight);
+            testParallel(trefoil_r1x2);
+            testParallel(trefoil_r1x6);
             testParallel(figureEight);
+            testParallel(figureEight_r1x2);
+            testParallel(conway);
+            testParallel(kinoshitaTerasaka);
+            testParallel(gst);
             testParallel(unlink2_0);
             testParallel(unlink3_0);
             testParallel(unlink2_r2);
@@ -429,7 +492,10 @@ class LinkTest : public CppUnit::TestFixture {
             // The Gordian unknot is too large to compute V(link).
             testJones(trefoilLeft, "x^-2 + x^-6 - x^-8");
             testJones(trefoilRight, "-x^8 + x^6 + x^2");
+            testJones(trefoil_r1x2, "-x^8 + x^6 + x^2");
+            testJones(trefoil_r1x6, "-x^8 + x^6 + x^2");
             testJones(figureEight, "x^4 - x^2 + 1 - x^-2 + x^-4");
+            testJones(figureEight_r1x2, "x^4 - x^2 + 1 - x^-2 + x^-4");
             testJones(unlink2_0, "-x - x^-1");
             testJones(unlink3_0, "x^2 + 2 + x^-2");
             testJones(unlink2_r2, "-x - x^-1");
@@ -443,30 +509,111 @@ class LinkTest : public CppUnit::TestFixture {
             testJones(trefoil_unknot_overlap, "x^9 - x^5 - x^3 - x");
             testJones(rht_rht, "x^16 - 2 x^14 + x^12 - 2 x^10 + 2 x^8 + x^4");
             testJones(rht_lht, "-x^6 + x^4 - x^2 + 3 - x^-2 + x^-4 - x^-6");
+
+            // The following polynomials were computed using Regina,
+            // using the naive algorithm (ALG_NAIVE).
+            // This means that they have not been verified independently;
+            // here they are simply being used to ensure that different
+            // algorithms give the same results, and also that nothing breaks
+            // in a subsequent release.
+            testJones(conway, "-x^8 + 2 x^6 - 2 x^4 + 2 x^2 + x^-4 - 2 x^-6 + 2 x^-8 - 2 x^-10 + x^-12");
+            testJones(kinoshitaTerasaka, "-x^8 + 2 x^6 - 2 x^4 + 2 x^2 + x^-4 - 2 x^-6 + 2 x^-8 - 2 x^-10 + x^-12");
+
+            // The following polynomials were computed using Regina,
+            // via the treewidth-based algorithm (ALG_TREEWIDTH).
+            // This is because they are too large for the naive
+            // algorithm to handle.
+            testJones(gst, "-x^32 + 3 x^30 - 4 x^28 + 3 x^26 - x^24 + x^22 - x^20 + x^18 - x^16 + 2 x^14 - 4 x^12 + 3 x^10 - x^8 - 3 x^6 + 5 x^4 - 5 x^2 + 5 - 3 x^-2 + 3 x^-4 - x^-6 + x^-12 - x^-14");
+        }
+
+        void testHomflyAZ(Link* l, bool reverse, const char* expected) {
+            // Since we are computing the HOMFLY polynomial multiple times
+            // (using different algorithms), we work with clones of l
+            // that do not clone any already-computed properties.
+
+            std::ostringstream s1;
+            {
+                Link use(*l, false);
+                if (reverse)
+                    use.reverse();
+                s1 << use.homflyAZ(regina::ALG_BACKTRACK);
+            }
+
+            if (s1.str() != expected) {
+                std::ostringstream msg;
+                msg << l->label() << ": expected homflyAZ(link) = " << expected
+                    << ", found " << s1.str() << " using backtrack algorithm";
+                if (reverse)
+                    msg << " with reversed link";
+                msg << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            std::ostringstream s2;
+            {
+                Link use(*l, false);
+                if (reverse)
+                    use.reverse();
+                s2 << use.homflyAZ(regina::ALG_TREEWIDTH);
+            }
+
+            if (s2.str() != expected) {
+                std::ostringstream msg;
+                msg << l->label() << ": expected homflyAZ(link) = " << expected
+                    << ", found " << s2.str() << " using treewidth algorithm";
+                if (reverse)
+                    msg << " with reversed link";
+                msg << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
         }
 
         void testHomflyAZ(Link* l, const char* expected) {
-            std::ostringstream s;
-            s << l->homflyAZ();
+            testHomflyAZ(l, false, expected);
+            testHomflyAZ(l, true, expected);
+        }
 
-            if (s.str() != expected) {
+        void testHomflyLM(Link* l, bool reverse, const char* expected) {
+            std::ostringstream s1;
+            {
+                Link use(*l, false);
+                if (reverse)
+                    use.reverse();
+                s1 << use.homflyLM(regina::ALG_BACKTRACK);
+            }
+
+            if (s1.str() != expected) {
                 std::ostringstream msg;
-                msg << l->label() << ": expected homflyAZ(link) = " << expected
-                    << ", found " << s.str() << ".";
+                msg << l->label() << ": expected homflyLM(link) = " << expected
+                    << ", found " << s1.str() << " using backtrack algorithm";
+                if (reverse)
+                    msg << " with reversed link";
+                msg << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            std::ostringstream s2;
+            {
+                Link use(*l, false);
+                if (reverse)
+                    use.reverse();
+                s2 << use.homflyLM(regina::ALG_TREEWIDTH);
+            }
+
+            if (s2.str() != expected) {
+                std::ostringstream msg;
+                msg << l->label() << ": expected homflyLM(link) = " << expected
+                    << ", found " << s2.str() << " using treewidth algorithm";
+                if (reverse)
+                    msg << " with reversed link";
+                msg << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
         void testHomflyLM(Link* l, const char* expected) {
-            std::ostringstream s;
-            s << l->homflyLM();
-
-            if (s.str() != expected) {
-                std::ostringstream msg;
-                msg << l->label() << ": expected homflyLM(link) = " << expected
-                    << ", found " << s.str() << ".";
-                CPPUNIT_FAIL(msg.str());
-            }
+            testHomflyLM(l, false, expected);
+            testHomflyLM(l, true, expected);
         }
 
         void homfly() {
@@ -491,8 +638,12 @@ class LinkTest : public CppUnit::TestFixture {
             testHomflyLM(trefoilLeft, "-x^4 + x^2 y^2 - 2 x^2");
             testHomflyLM(trefoilRight, "x^-2 y^2 - 2 x^-2 - x^-4");
             testHomflyAZ(trefoilRight, "x^-2 y^2 + 2 x^-2 - x^-4");
+            testHomflyLM(trefoil_r1x2, "x^-2 y^2 - 2 x^-2 - x^-4");
+            testHomflyLM(trefoil_r1x6, "x^-2 y^2 - 2 x^-2 - x^-4");
 
             testHomflyLM(figureEight, "-x^2 + y^2 - 1 - x^-2");
+            testHomflyLM(figureEight_r1x2, "-x^2 + y^2 - 1 - x^-2");
+
             testHomflyLM(hopf, "-x^-1 y + x^-1 y^-1 + x^-3 y^-1");
 
             testHomflyLM(trefoil_unknot0,
@@ -514,7 +665,26 @@ class LinkTest : public CppUnit::TestFixture {
             testHomflyLM(rht_lht,
                 "-x^2 y^2 + 2 x^2 + y^4 - 4 y^2 + 5 - x^-2 y^2 + 2 x^-2");
 
-            // TODO: whitehead, borromean
+            // The following polynomials were computed using Regina,
+            // using Kauffman's skein template algorithm (ALG_BACKTRACK).
+            // This means that they have not been verified independently;
+            // here they are simply being used to ensure that different
+            // algorithms give the same results, and also that nothing breaks
+            // in a subsequent release.
+            testHomflyLM(whitehead,
+                "x^3 y - x y^3 + 2 x y - x y^-1 + x^-1 y - x^-1 y^-1");
+            testHomflyLM(borromean,
+                "-x^2 y^2 + x^2 y^-2 + y^4 - 2 y^2 + 2 y^-2 - x^-2 y^2 + x^-2 y^-2");
+            testHomflyLM(conway,
+                "x^4 y^4 - 3 x^4 y^2 + 2 x^4 - x^2 y^6 + 6 x^2 y^4 - 11 x^2 y^2 + 6 x^2 - y^6 + 6 y^4 - 11 y^2 + 7 + x^-2 y^4 - 3 x^-2 y^2 + 2 x^-2");
+            testHomflyLM(kinoshitaTerasaka,
+                "x^4 y^4 - 3 x^4 y^2 + 2 x^4 - x^2 y^6 + 6 x^2 y^4 - 11 x^2 y^2 + 6 x^2 - y^6 + 6 y^4 - 11 y^2 + 7 + x^-2 y^4 - 3 x^-2 y^2 + 2 x^-2");
+
+            // On my machine, GST takes around 25 seconds for ALG_TREEWIDTH,
+            // and 88 seconds for ALG_NAIVE.  This is probably still a
+            // touch too slow to put in the test suite.
+            // testHomflyLM(gst,
+            //     "-x^4 y^8 + 6 x^4 y^6 - 11 x^4 y^4 + 8 x^4 y^2 - 2 x^4 - x^2 y^12 + 10 x^2 y^10 - 35 x^2 y^8 + 49 x^2 y^6 - 21 x^2 y^4 - 7 x^2 y^2 + 5 x^2 + y^14 - 12 y^12 + 53 y^10 - 102 y^8 + 67 y^6 + 36 y^4 - 63 y^2 + 21 - x^-2 y^16 + 16 x^-2 y^14 - 104 x^-2 y^12 + 355 x^-2 y^10 - 685 x^-2 y^8 + 744 x^-2 y^6 - 422 x^-2 y^4 + 100 x^-2 y^2 - 3 x^-2 + x^-4 y^18 - 18 x^-4 y^16 + 137 x^-4 y^14 - 575 x^-4 y^12 + 1457 x^-4 y^10 - 2296 x^-4 y^8 + 2233 x^-4 y^6 - 1279 x^-4 y^4 + 385 x^-4 y^2 - 45 x^-4 + x^-6 y^18 - 17 x^-6 y^16 + 122 x^-6 y^14 - 484 x^-6 y^12 + 1168 x^-6 y^10 - 1776 x^-6 y^8 + 1698 x^-6 y^6 - 978 x^-6 y^4 + 304 x^-6 y^2 - 38 x^-6 - x^-8 y^16 + 14 x^-8 y^14 - 79 x^-8 y^12 + 233 x^-8 y^10 - 393 x^-8 y^8 + 392 x^-8 y^6 - 228 x^-8 y^4 + 71 x^-8 y^2 - 9 x^-8");
 
             // TODO: Verify that L # M means * for HOMFLY/Jones
 
@@ -733,7 +903,13 @@ class LinkTest : public CppUnit::TestFixture {
             testComplementBasic(unknotGordian);
             testComplementBasic(trefoilLeft);
             testComplementBasic(trefoilRight);
+            testComplementBasic(trefoil_r1x2);
+            testComplementBasic(trefoil_r1x6);
             testComplementBasic(figureEight);
+            testComplementBasic(figureEight_r1x2);
+            testComplementBasic(conway);
+            testComplementBasic(kinoshitaTerasaka);
+            testComplementBasic(gst);
             testComplementBasic(unlink2_0);
             testComplementBasic(unlink3_0);
             testComplementBasic(unlink2_r2);
@@ -762,7 +938,10 @@ class LinkTest : public CppUnit::TestFixture {
             // cPcbbbadh 
             testComplementSig(trefoilLeft, TREFOIL_SIGS);
             testComplementSig(trefoilRight, TREFOIL_SIGS);
+            testComplementSig(trefoil_r1x2, TREFOIL_SIGS);
+            testComplementSig(trefoil_r1x6, TREFOIL_SIGS);
             testComplementSig(figureEight, FIG8_SIGS);
+            testComplementSig(figureEight_r1x2, FIG8_SIGS);
             testComplementCensus(whitehead, "m129 :");
             testComplementCensus(borromean, "t12067 :");
 
@@ -973,8 +1152,26 @@ class LinkTest : public CppUnit::TestFixture {
             verifyCountR1Up(trefoilRight, 24);
             verifyCountR1Down(trefoilRight, 0);
 
+            verifyCountR1Up(trefoil_r1x2, 40);
+            verifyCountR1Down(trefoil_r1x2, 2);
+
+            verifyCountR1Up(trefoil_r1x6, 72);
+            verifyCountR1Down(trefoil_r1x6, 6);
+
             verifyCountR1Up(figureEight, 32);
             verifyCountR1Down(figureEight, 0);
+
+            verifyCountR1Up(figureEight_r1x2, 48);
+            verifyCountR1Down(figureEight_r1x2, 2);
+
+            verifyCountR1Up(conway, 88);
+            verifyCountR1Down(conway, 0);
+
+            verifyCountR1Up(kinoshitaTerasaka, 88);
+            verifyCountR1Down(kinoshitaTerasaka, 0);
+
+            verifyCountR1Up(gst, 384);
+            verifyCountR1Down(gst, 0);
 
             verifyCountR1Up(unlink2_0, 4);
             verifyCountR1Down(unlink2_0, 0);
@@ -1981,7 +2178,13 @@ class LinkTest : public CppUnit::TestFixture {
             verifyKnotSig(unknotGordian);
             verifyKnotSig(trefoilLeft);
             verifyKnotSig(trefoilRight);
+            verifyKnotSig(trefoil_r1x2);
+            verifyKnotSig(trefoil_r1x6);
             verifyKnotSig(figureEight);
+            verifyKnotSig(figureEight_r1x2);
+            verifyKnotSig(conway);
+            verifyKnotSig(kinoshitaTerasaka);
+            verifyKnotSig(gst);
             verifyKnotSig(rht_rht);
             verifyKnotSig(rht_lht);
 
@@ -2059,9 +2262,15 @@ class LinkTest : public CppUnit::TestFixture {
             verifyDT(trefoilLeft);
             verifyDT(trefoilRight);
             verifyDT(figureEight);
+            verifyDT(conway);
+            verifyDT(kinoshitaTerasaka);
+            verifyDT(gst);
             // Luckily works despite ambiguity with composite knots:
             verifyDT(rht_lht);
             // Broken by ambiguity with composite knots:
+            // verifyDT(trefoil_r1x2);
+            // verifyDT(trefoil_r1x6);
+            // verifyDT(figureEight_r1x2);
             // verifyDT(rht_rht);
         }
 
@@ -2117,9 +2326,15 @@ class LinkTest : public CppUnit::TestFixture {
             verifyGauss(trefoilLeft);
             verifyGauss(trefoilRight);
             verifyGauss(figureEight);
+            verifyGauss(conway);
+            verifyGauss(kinoshitaTerasaka);
+            verifyGauss(gst);
             // Luckily works despite ambiguity with composite knots:
+            verifyGauss(trefoil_r1x2);
+            verifyGauss(figureEight_r1x2);
             verifyGauss(rht_rht);
             // Broken by ambiguity with composite knots:
+            // verifyGauss(trefoil_r1x6);
             // verifyGauss(rht_lht);
         }
 
@@ -2169,7 +2384,13 @@ class LinkTest : public CppUnit::TestFixture {
             verifyOrientedGauss(unknotGordian);
             verifyOrientedGauss(trefoilLeft);
             verifyOrientedGauss(trefoilRight);
+            verifyOrientedGauss(trefoil_r1x2);
+            verifyOrientedGauss(trefoil_r1x6);
             verifyOrientedGauss(figureEight);
+            verifyOrientedGauss(figureEight_r1x2);
+            verifyOrientedGauss(conway);
+            verifyOrientedGauss(kinoshitaTerasaka);
+            verifyOrientedGauss(gst);
             verifyOrientedGauss(rht_rht);
             verifyOrientedGauss(rht_lht);
         }
