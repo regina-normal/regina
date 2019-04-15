@@ -462,14 +462,18 @@ class LinkTest : public CppUnit::TestFixture {
             // (using different algorithms), we work with clones of l
             // that do not clone any already-computed properties.
 
-            std::ostringstream s1;
-            s1 << Link(*l, false).jones(regina::ALG_NAIVE);
+            if (l->size() <= 40) {
+                // The naive algorithm iterates through 2^n states.
+                // If n > 40 then we don't have a chance.
+                std::ostringstream s1;
+                s1 << Link(*l, false).jones(regina::ALG_NAIVE);
 
-            if (s1.str() != expected) {
-                std::ostringstream msg;
-                msg << l->label() << ": expected V(link) = " << expected
-                    << ", found " << s1.str() << " using naive algorithm.";
-                CPPUNIT_FAIL(msg.str());
+                if (s1.str() != expected) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": expected V(link) = " << expected
+                        << ", found " << s1.str() << " using naive algorithm.";
+                    CPPUNIT_FAIL(msg.str());
+                }
             }
 
             std::ostringstream s2;
@@ -2139,7 +2143,7 @@ class LinkTest : public CppUnit::TestFixture {
                     "different knotSig.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (l->size() <= 12 && ! reflect) {
+            if (l->size() <= 20 && ! reflect) {
                 if (recon->jones() != l->jones()) {
                     std::ostringstream msg;
                     msg << l->label() << ": knotSig reconstruction has "
@@ -2236,7 +2240,7 @@ class LinkTest : public CppUnit::TestFixture {
                     "different knot signature.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (l->size() <= 12) {
+            if (l->size() <= 20) {
                 if (recon->homfly() != l->homfly()) {
                     std::ostringstream msg;
                     msg << l->label() << ": reconstruction has "
@@ -2306,7 +2310,7 @@ class LinkTest : public CppUnit::TestFixture {
                     "different knot signature.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (l->size() <= 12) {
+            if (l->size() <= 20) {
                 if (recon->homfly() != l->homfly()) {
                     std::ostringstream msg;
                     msg << l->label() << ": reconstruction has "
@@ -2365,7 +2369,7 @@ class LinkTest : public CppUnit::TestFixture {
                     "different code.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (l->size() <= 12) {
+            if (l->size() <= 20) {
                 if (recon->homfly() != l->homfly()) {
                     std::ostringstream msg;
                     msg << l->label() << ": reconstruction has "
