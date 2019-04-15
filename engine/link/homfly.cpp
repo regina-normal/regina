@@ -1412,7 +1412,6 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         case 1:
                             // One strand is from a forgotten crossing.
                             // Merge it with the other.
-                            std::cerr << "loop1a 1 merge" << std::endl;
                             kNew = *kChild;
                             kNew[pos[0][0]] = id[1][1];
 
@@ -1436,7 +1435,6 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                             if (pos[1][1] + 1 == pos[0][0]) {
                                 // We are closing off a loop.
                                 if (pos[1][1] == kChild->size() - 2) {
-                                    std::cerr << "loop1a 9 pass" << std::endl;
                                     std::copy(kChild->begin(),
                                         kChild->end() - 2, kNew.begin());
 
@@ -1499,7 +1497,6 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         case 2:
                             // One strand is from a forgotten crossing.
                             // Merge it with the other.
-                            std::cerr << "loop1b 2 merge" << std::endl;
                             kNew = *kChild;
                             kNew[pos[0][1]] = id[1][0];
 
@@ -1510,7 +1507,6 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                         case 4:
                             // One strand is from a forgotten crossing.
                             // Merge it with the other.
-                            std::cerr << "loop1b 4 merge" << std::endl;
                             kNew = *kChild;
                             kNew[pos[1][0]] = id[0][1];
 
@@ -1773,7 +1769,6 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                                 }
                             } else if (pos[0][0] < pos[0][1]) {
                                 // Splice:
-                                std::cerr << "3b splice" << std::endl;
                                 kNew = *kChild;
                                 kNew[pos[0][0]] = id[1][1];
                                 kNew[pos[0][1]] = id[1][0];
@@ -1784,7 +1779,6 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
 
                                 if (pos[0][0] + 1 == pos[0][1]) {
                                     // Pass and switch:
-                                    std::cerr << "3b pass/switch" << std::endl;
                                     for (i = 0; i < pos[0][0]; i += 2) {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + i,
