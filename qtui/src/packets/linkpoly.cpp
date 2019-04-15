@@ -296,13 +296,15 @@ void LinkPolynomialUI::calculateJones() {
 }
 
 void LinkPolynomialUI::calculateHomfly() {
-    PatienceDialog* dlg = PatienceDialog::warn(tr(
-        "Computing HOMFLY-PT polynomials can be slow\n"
-        "for larger knots and links.\n\n"
-        "Please be patient."), ui);
-    link->homfly();
-    delete dlg;
+    regina::ProgressTracker tracker;
+    ProgressDialogNumeric dlg(&tracker, tr("Computing HOMFLY-PT polynomial"),
+        ui);
+    link->homfly(regina::ALG_TREEWIDTH, &tracker);
+    if (! dlg.run())
+        return;
+    dlg.hide();
 
+    // Now calling homfly() should be instantaneous.
     refresh();
 }
 

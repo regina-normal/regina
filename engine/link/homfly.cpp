@@ -35,9 +35,16 @@
 #include "utilities/bitmask.h"
 #include "utilities/bitmanip.h"
 #include "utilities/sequence.h"
+#include <thread>
 
 // #define DUMP_STATES
 // #define IDENTIFY_NONVIABLE_KEYS
+
+// When tracking progress, try to give much more weight to larger bags.
+// (Of course, this should *really* be exponential, but it's nice to see
+// some visual progress for smaller bags, so we try not to completely
+// dwarf them in the weightings.)
+#define HARD_BAG_WEIGHT(bag) (double(bag->size())*(bag->size())*(bag->size()))
 
 namespace regina {
 
@@ -900,7 +907,7 @@ namespace {
     }
 }
 
-Laurent2<Integer>* Link::homflyKauffman() const {
+Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
     // Throughout this code, delta = (alpha - alpha^-1) / z.
 
     // We know from the preconditions that there is at least one crossing.
@@ -950,6 +957,9 @@ Laurent2<Integer>* Link::homflyKauffman() const {
     // - ...
     // followed by all zero-crossing unknot components (which we never
     // need to process explicitly).
+
+    if (tracker)
+        tracker->newStage("Enumerating resolutions");
 
     long comp = 0;
     long splices = 0;
@@ -1178,6 +1188,11 @@ Laurent2<Integer>* Link::homflyKauffman() const {
     delete[] first;
     delete[] state;
 
+    if (tracker && tracker->isCancelled()) {
+        delete[] coeff;
+        return nullptr;
+    }
+
     // Piece together the final polynomial.
 
     Laurent2<Integer>* ans = new Laurent2<Integer>;
@@ -1200,18 +1215,39 @@ Laurent2<Integer>* Link::homflyKauffman() const {
     return ans;
 }
 
-Laurent2<Integer>* Link::homflyTreewidth() const {
+Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
     // We know from the precondition that there is at least one crossing.
 
     Laurent2<Integer> delta(1, -1);
     delta.set(-1, -1, -1);
 
     // Build a nice tree decomposition.
+    if (tracker)
+        tracker->newStage("Building tree decomposition", 0.05);
+
     const TreeDecomposition& d = niceTreeDecomposition();
     size_t nBags = d.size();
 
     const TreeBag *bag, *child, *sibling;
     int index;
+
+    size_t nEasyBags = 0;
+    double hardBagWeightSum = 0;
+    double increment, percent;
+    if (tracker) {
+        // Estimate processing stages.
+        for (bag = d.first(); bag; bag = bag->next()) {
+            switch (bag->type()) {
+                case NICE_FORGET:
+                case NICE_JOIN:
+                    hardBagWeightSum += HARD_BAG_WEIGHT(bag);
+                    break;
+                default:
+                    ++nEasyBags;
+                    break;
+            }
+        }
+    }
 
     // Each partial solution is a key-value map.
     //
@@ -1256,12 +1292,30 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             // Leaf bag.
             // std::cerr << "LEAF" << std::endl;
 
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing leaf bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.05 / nEasyBags);
+            }
+
             partial[index] = new SolnSet;
             partial[index]->emplace(new Key(), new Laurent2<Integer>(0, 0));
         } else if (bag->type() == NICE_INTRODUCE) {
             // Introduce bag.
             child = bag->children();
             // std::cerr << "INTRODUCE" << std::endl;
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing introduce bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.05 / nEasyBags);
+            }
 
             // When introducing a new crossing, all of its arcs must
             // lead to unseen crossings or crossings already in the bag.
@@ -1274,6 +1328,21 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             child = bag->children();
             // std::cerr << "FORGET -> " <<
             //    partial[child->index()]->size() << std::endl;
+
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing forget bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+
+                percent = 0;
+                if (partial[child->index()]->empty())
+                    increment = 0;
+                else
+                    increment = 100.0 / partial[child->index()]->size();
+            }
 
             Crossing* c = crossings_[child->element(bag->subtype())];
 
@@ -1360,6 +1429,20 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
                 2 * BitManipulator<char>::bits(mask));
 
             for (auto& soln : *(partial[child->index()])) {
+                if (tracker) {
+                    percent += increment;
+                    if (! tracker->setPercent(percent)) {
+                        // In normal processing, the loop through solutions
+                        // deletes the child keys and values as it goes.
+                        // Therefore we need to finish the loop to ensure that
+                        // all remaining child keys and values are deleted,
+                        // even if we do not want to process them.
+                        delete soln.first;
+                        delete soln.second;
+                        continue;
+                    }
+                }
+
                 kChild = soln.first;
                 vChild = soln.second;
 
@@ -2850,6 +2933,21 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             child = bag->children();
             sibling = child->sibling();
 
+            if (tracker) {
+                if (tracker->isCancelled())
+                    break;
+                tracker->newStage(
+                    "Processing join bag (" + std::to_string(index) +
+                        '/' + std::to_string(nBags) + ')',
+                    0.9 * HARD_BAG_WEIGHT(bag) / hardBagWeightSum);
+
+                percent = 0;
+                if (partial[child->index()]->empty())
+                    increment = 0;
+                else
+                    increment = 100.0 / partial[child->index()]->size();
+            }
+
             // Extract the sizes of each bag's keys.
             // The key size depends only on the bag, not the particular
             // key-value solution at that bag, and so we get this data
@@ -2921,6 +3019,12 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             const Key *k1, *k2;
             const Value *v1, *v2;
             for (auto& soln1 : *(partial[child->index()])) {
+                if (tracker) {
+                    percent += increment;
+                    if (! tracker->setPercent(percent))
+                        break;
+                }
+
                 k1 = soln1.first;
                 v1 = soln1.second;
 
@@ -3042,6 +3146,21 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
         */
     }
 
+    if (tracker && tracker->isCancelled()) {
+        // We don't know which elements of partial[] have been
+        // deallocated, so check them all.
+        for (size_t i = 0; i < nBags; ++i)
+            if (partial[i]) {
+                for (auto& soln : *(partial[i])) {
+                    delete soln.first;
+                    delete soln.second;
+                }
+                delete partial[i];
+            }
+        delete[] partial;
+        return nullptr;
+    }
+
     // Collect the final answer from partial[nBags - 1].
     // std::cerr << "FINISH" << std::endl;
     Value* ans = partial[nBags - 1]->begin()->second;
@@ -3063,13 +3182,21 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
     return ans;
 }
 
-const Laurent2<Integer>& Link::homflyAZ(Algorithm alg) const {
-    if (homflyAZ_.known())
+const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
+        ProgressTracker* tracker) const {
+    if (homflyAZ_.known()) {
+        if (tracker)
+            tracker->setFinished();
         return *homflyAZ_.value();
+    }
 
     if (crossings_.empty()) {
-        if (components_.empty())
-            return *(homflyAZ_ = new Laurent2<Integer>());
+        if (components_.empty()) {
+            homflyAZ_ = new Laurent2<Integer>();
+            if (tracker)
+                tracker->setFinished();
+            return *homflyAZ_.value();
+        }
 
         // We have an unlink with no crossings.
         // The HOMFLY polynomial is delta^(#components - 1).
@@ -3081,34 +3208,86 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg) const {
         for (size_t i = 1; i < components_.size(); ++i)
             (*ans) *= delta;
 
-        return *(homflyAZ_ = ans);
+        homflyAZ_ = ans;
+        if (tracker)
+            tracker->setFinished();
+        return *ans;
     }
 
-    switch (alg) {
-        case ALG_TREEWIDTH:
-            homflyAZ_ = homflyTreewidth();
-            break;
-        default:
-            homflyAZ_ = homflyKauffman();
-            break;
+    if (tracker) {
+        std::thread([=]{
+            Laurent2<Integer>* ans;
+            switch (alg) {
+                case ALG_TREEWIDTH:
+                    ans = homflyTreewidth(tracker);
+                    break;
+                default:
+                    ans = homflyKauffman(tracker);
+                    break;
+            }
+
+            if (! tracker->isCancelled())
+                homflyAZ_ = ans;
+
+            tracker->setFinished();
+        }).detach();
+
+        // Return nothing for now.
+        // The user needs to poll the tracker to find out when the
+        // computation is complete.
+        return Laurent2<Integer>();
+    } else {
+        switch (alg) {
+            case ALG_TREEWIDTH:
+                homflyAZ_ = homflyTreewidth(nullptr);
+                break;
+            default:
+                homflyAZ_ = homflyKauffman(nullptr);
+                break;
+        }
+        return *homflyAZ_.value();
     }
-    return *homflyAZ_.value();
 }
 
-const Laurent2<Integer>& Link::homflyLM(Algorithm alg) const {
-    if (homflyLM_.known())
-        return *homflyLM_.value();
+const Laurent2<Integer>& Link::homflyLM(Algorithm alg,
+        ProgressTracker* tracker) const {
+    if (tracker) {
+        if (homflyLM_.known()) {
+            tracker->setFinished();
+            return *homflyLM_.value();
+        }
 
-    Laurent2<Integer>* ans = new Laurent2<Integer>(homflyAZ(alg));
+        if (homflyAZ_.known()) {
+            // Although we haven't computed HOMFLY(l,m) explicitly, it's a
+            // trivial conversion from HOMFLY(a,z).  Do it in this thread.
+            Laurent2<Integer>* ans = new Laurent2<Integer>(*homflyAZ_.value());
 
-    // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
-    // Note that i-j should always be 0 or 2 (mod 4), never odd.
-    for (auto& term : ans->coeff_) {
-        if ((term.first.first - term.first.second) % 4 != 0)
-            term.second.negate();
+            // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
+            // Note that i-j should always be 0 or 2 (mod 4), never odd.
+            for (auto& term : ans->coeff_)
+                if ((term.first.first - term.first.second) % 4 != 0)
+                    term.second.negate();
+
+            homflyLM_ = ans;
+            tracker->setFinished();
+            return *ans;
+        }
+
+        // Start the full HOMFLY computation in a new thread, and return
+        // nothing for now.
+        homflyAZ(alg, tracker);
+        return Laurent2<Integer>();
+    } else {
+        if (homflyLM_.known())
+            return *homflyLM_.value();
+
+        // Compute HOMFLY(a,z) and convert to HOMFLY(l,m) as above.
+        Laurent2<Integer>* ans = new Laurent2<Integer>(homflyAZ(alg));
+        for (auto& term : ans->coeff_)
+            if ((term.first.first - term.first.second) % 4 != 0)
+                term.second.negate();
+        return *(homflyLM_ = ans);
     }
-
-    return *(homflyLM_ = ans);
 }
 
 } // namespace regina

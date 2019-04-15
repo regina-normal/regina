@@ -39,6 +39,19 @@
 #define MAX_LINK_AUTO_POLYNOMIALS 6
 #define KEY_LINK_HOMFLY_TYPE @"LinkHomflyType"
 
+namespace {
+    // Ensure we can start polynomial computations with a consistent C++ function signature.
+    // This makes it easier to take function pointers to runJones() and runHomfly().
+    // The main difference between these functions and the corresponding Link member functions
+    // is that these functions ignore the return value.
+    void runJones(const regina::Link* link, regina::Algorithm algorithm, regina::ProgressTracker* tracker) {
+        link->jones(algorithm, tracker);
+    }
+    void runHomfly(const regina::Link* link, regina::Algorithm algorithm, regina::ProgressTracker* tracker) {
+        link->homfly(algorithm, tracker);
+    }
+}
+
 @interface LinkPolynomials () <UITextFieldDelegate> {
     UILabel* copyFrom;
     regina::ProgressTracker* tracker; // for cancellation
@@ -139,14 +152,24 @@
 }
 
 - (IBAction)computeBracket:(id)sender {
-    [self computeBracketJones:@"Computing Kauffman bracket…"];
+    [self computePolynomial:@"Computing Kauffman bracket…"
+                   function:runJones
+                  algorithm:regina::ALG_DEFAULT];
 }
 
 - (IBAction)computeJones:(id)sender {
-    [self computeBracketJones:@"Computing Jones polynomial…"];
+    [self computePolynomial:@"Computing Jones polynomial…"
+                   function:runJones
+                  algorithm:regina::ALG_DEFAULT];
 }
 
-- (void)computeBracketJones:(NSString*)message {
+- (IBAction)computeHomfly:(id)sender {
+    [self computePolynomial:@"Computing HOMFLY-PT polynomial…"
+                   function:runHomfly
+                  algorithm:regina::ALG_TREEWIDTH];
+}
+
+- (void)computePolynomial:(NSString*)message function:(void (*)(const regina::Link*, regina::Algorithm, regina::ProgressTracker*))function algorithm:(regina::Algorithm)algorithm {
     self.calculateJones.enabled = NO;
     self.calculateHomfly.enabled = NO;
     self.calculateBracket.enabled = NO;
@@ -175,7 +198,7 @@
         self->tracker = tracker;
         [self.trackerLock unlock];
         
-        self.packet->jones(regina::ALG_DEFAULT, tracker);
+        (*function)(self.packet, algorithm, tracker);
         
         NSString* desc;
         float progress;
@@ -211,21 +234,6 @@
             [self reloadPacket];
         });
     });
-
-}
-
-- (IBAction)computeHomfly:(id)sender {
-    self.calculateHomfly.enabled = NO;
-    self.calculateJones.enabled = NO;
-    self.calculateBracket.enabled = NO;
-    self.homflyType.enabled = NO;
-    [ReginaHelper runWithHUD:@"Calculating…"
-                        code:^{
-                            self.packet->homfly();
-                        }
-                     cleanup:^{
-                         [self reloadPacket];
-                     }];
 }
 
 - (IBAction)homflyTypeChanged:(id)sender {
