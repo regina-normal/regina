@@ -898,11 +898,18 @@ void Link::prepareTreeDecomposition(TreeDecomposition& td) const {
         if (! start)
             continue;
 
-        // Traverse each link component starting from a lower strand.
-        if (start.strand())
-            start.jump();
-
+        // Find a lower strand to traverse this component from.
+        // If the component has no lower strand at all, then we will
+        // just come back around to the original starting point.
         s = start;
+        do {
+            if (s.strand() == 0)
+                break;
+            ++s;
+        } while (s != start);
+
+        // We now traverse the component backwards from here.
+        start = s;
         do {
             if (s.strand() == 0)
                 steps = 0;

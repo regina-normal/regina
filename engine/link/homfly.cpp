@@ -906,6 +906,42 @@ Laurent2<Integer>* Link::homflyKauffman() const {
     // We know from the preconditions that there is at least one crossing.
     size_t n = crossings_.size();
 
+    // Decide which strand we will start our traversal from.
+    // It should be an upper strand with the longest possible sequence of
+    // upper strands immediately following it along the link.
+    StrandRef start, s;
+    long upperLen = -1;
+    long steps;
+    for (StrandRef c : components_) {
+        if (! c)
+            continue;
+
+        // Find a lower strand to start the component traversal from.
+        // If the component has no lower strand at all, then we will
+        // just come back around to c as a starting point.
+        s = c;
+        do {
+            if (s.strand() == 0)
+                break;
+            ++s;
+        } while (s != c);
+
+        // We will start a traversal backwards from here.
+        c = s;
+        do {
+            if (s.strand() == 0) {
+                steps = 0;
+            } else {
+                ++steps;
+                if (steps > upperLen) {
+                    start = s;
+                    upperLen = steps;
+                }
+            }
+            --s;
+        } while (s != c);
+    }
+
     // We order the arcs as follows:
     // - crossing 0, entering lower strand
     // - crossing 0, entering upper strand
@@ -947,7 +983,7 @@ Laurent2<Integer>* Link::homflyKauffman() const {
     std::fill(seen, seen + 2 * n, false);
 
     Laurent2<Integer> term;
-    StrandRef s = StrandRef(crossings_.front(), 0);
+    s = start;
     long pos = 0;
     bool backtrack;
     while (pos >= 0) {
@@ -1071,8 +1107,9 @@ Laurent2<Integer>* Link::homflyKauffman() const {
                 // Move to the next component.
                 // Note that s should at this point be equal to the starting
                 // strand of the component we just closed off.
-                for (size_t i = 2 * s.crossing()->index() + s.strand() + 1;
-                        i < 2 * n; ++i)
+                // With the exception of the initial start strand (which
+                // was chosen more carefully), we just order strands by ID.
+                for (size_t i = (s == start ? 0 : (s.id() + 1)); i < 2 * n; ++i)
                     if (! seen[i]) {
                         s = strand(i);
                         break;
