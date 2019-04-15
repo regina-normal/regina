@@ -1250,18 +1250,18 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
 
     for (bag = d.first(); bag; bag = bag->next()) {
         index = bag->index();
-        std::cerr << "Bag " << index << " [" << bag->size() << "] ";
+        // std::cerr << "Bag " << index << " [" << bag->size() << "] ";
 
         if (bag->isLeaf()) {
             // Leaf bag.
-            std::cerr << "LEAF" << std::endl;
+            // std::cerr << "LEAF" << std::endl;
 
             partial[index] = new SolnSet;
             partial[index]->emplace(new Key(), new Laurent2<Integer>(0, 0));
         } else if (bag->type() == NICE_INTRODUCE) {
             // Introduce bag.
             child = bag->children();
-            std::cerr << "INTRODUCE" << std::endl;
+            // std::cerr << "INTRODUCE" << std::endl;
 
             // When introducing a new crossing, all of its arcs must
             // lead to unseen crossings or crossings already in the bag.
@@ -1272,8 +1272,8 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
         } else if (bag->type() == NICE_FORGET) {
             // Forget bag.
             child = bag->children();
-            std::cerr << "FORGET -> " <<
-                partial[child->index()]->size() << std::endl;
+            // std::cerr << "FORGET -> " <<
+            //    partial[child->index()]->size() << std::endl;
 
             Crossing* c = crossings_[child->element(bag->subtype())];
 
@@ -2864,10 +2864,10 @@ Laurent2<Integer>* Link::homflyTreewidth() const {
             int pairs2 = partial[sibling->index()]->begin()->first->size()/2;
             int pairs = pairs1 + pairs2;
 
-            std::cerr << "JOIN -> " <<
-                partial[child->index()]->size() << " x " <<
-                partial[sibling->index()]->size() << " : #pairs = " <<
-                pairs1 << " / " << pairs2 << std::endl;
+            // std::cerr << "JOIN -> " <<
+            //     partial[child->index()]->size() << " x " <<
+            //     partial[sibling->index()]->size() << " : #pairs = " <<
+            //     pairs1 << " / " << pairs2 << std::endl;
 
             if (pairs1 == 0) {
                 // The keys are exactly the keys from the second child,
