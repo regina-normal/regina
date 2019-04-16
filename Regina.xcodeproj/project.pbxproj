@@ -8593,7 +8593,7 @@
 			};
 			buildConfigurationList = 0575E6541805F36D009E3FC4 /* Build configuration list for PBXProject "Regina" */;
 			compatibilityVersion = "Xcode 3.2";
-			developmentRegion = English;
+			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
