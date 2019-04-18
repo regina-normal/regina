@@ -35,12 +35,19 @@
 #include "utilities/bitmask.h"
 #include "utilities/bitmanip.h"
 #include "utilities/sequence.h"
+#include <algorithm>
 #include <thread>
 
 // #define DUMP_STATES
 // #define IDENTIFY_NONVIABLE_KEYS
 
-// When tracking progress, try to give much more weight to larger bags.
+// When tracking progress for Kauffman's algorithm, we update our
+// progress after exactly PROGRESS_POS steps in the link traversal.
+static constexpr int PROGRESS_POS = std::min(20, int(8 * sizeof(int) - 2));
+static constexpr int PROGRESS_TOT = (1 << PROGRESS_POS);
+
+// When tracking progress for the treewidth-based algorithm, try to
+// give much more weight to larger bags.
 // (Of course, this should *really* be exponential, but it's nice to see
 // some visual progress for smaller bags, so we try not to completely
 // dwarf them in the weightings.)
@@ -1001,6 +1008,9 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
     Laurent2<Integer> term;
     s = start;
     long pos = 0;
+    long branchDepth = 0;
+    int progress = 0;
+    bool progressAtLeaf = (2 * n <= PROGRESS_POS);
     bool backtrack;
     while (pos >= 0) {
         // We prepare to follow the (pos)th arc.
@@ -1028,6 +1038,14 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
 
             if (pos == 2 * n) {
                 // We have completely determined a state.
+                if (tracker && progressAtLeaf) {
+                    progress += (1 << (PROGRESS_POS - branchDepth));
+                    if (! tracker->setPercent(
+                            double(progress) / double(PROGRESS_TOT))) {
+                        break;
+                    }
+                }
+
                 // The contribution to the HOMFLY polynomial is:
                 //     (-1)^splicesNeg * z^splices * alpha^writheAdj *
                 //     delta^(#components-1).
@@ -1096,6 +1114,7 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
                             if (s.crossing()->sign() < 0)
                                 --splicesNeg;
                             writheAdj += s.crossing()->sign();
+                            --branchDepth;
 
                             state[s.crossing()->index()] = CROSSING_UNSEEN;
                             break;
@@ -1135,6 +1154,15 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
 
         seen[s.id()] = true;
 
+        if (tracker && pos == PROGRESS_POS &&
+                state[s.crossing()->index()] != CROSSING_TRIED) {
+            progress += (1 << (PROGRESS_POS - branchDepth));
+            if (! tracker->setPercent(
+                    double(progress) / double(PROGRESS_TOT))) {
+                break;
+            }
+        }
+
         switch (state[s.crossing()->index()]) {
             case CROSSING_UNSEEN:
                 if (s.strand() == 1) {
@@ -1149,6 +1177,7 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
                     state[s.crossing()->index()] = CROSSING_SWITCH_1;
 
                     writheAdj -= 2 * s.crossing()->sign();
+                    ++branchDepth;
                 }
                 break;
             case CROSSING_TRIED:
