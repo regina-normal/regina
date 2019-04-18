@@ -77,11 +77,11 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3b, Link::r3, 2, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Link::simplifyToLocalMinimum, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_jones, Link::jones, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homfly, Link::homfly, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homflyAZ, Link::homflyAZ, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homflyLM, Link::homflyLM, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_bracket, Link::bracket, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_jones, Link::jones, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homfly, Link::homfly, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homflyAZ, Link::homflyAZ, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homflyLM, Link::homflyLM, 0, 2);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_bracket, Link::bracket, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_knotSig, Link::knotSig, 0, 2);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
         Link::simplifyExhaustive, 0, 3);
