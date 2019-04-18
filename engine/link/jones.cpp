@@ -45,6 +45,14 @@
 
 namespace regina {
 
+namespace {
+    /**
+     * Used as a return value when the Jones/bracket calculation is running in
+     * a new thread and we need to return immediately without a result.
+     */
+    const regina::Laurent<regina::Integer> noResult;
+}
+
 const char* Link::jonesVar = "\u221At"; // \u221A = square root
 
 size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
@@ -649,7 +657,7 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
         // Return nothing (the zero polynomial) for now.
         // The user needs to poll the tracker to find out when the
         // computation is complete.
-        return Laurent<Integer>();
+        return noResult;
     } else {
         Laurent<Integer>* ans;
         switch (alg) {
@@ -679,7 +687,7 @@ const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker)
 
         // Return nothing for now; the user needs to poll the tracker to
         // find out when the computation is actually complete.
-        return Laurent<Integer>();
+        return noResult;
     } else {
         if (jones_.known()) {
             return *jones_.value();

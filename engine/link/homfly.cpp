@@ -59,6 +59,12 @@ const char* Link::homflyVarY = homflyAZVarY;
 
 namespace {
     /**
+     * Used as a return value when the HOMFLY calculation is running in
+     * a new thread and we need to return immediately without a result.
+     */
+    const regina::Laurent2<regina::Integer> noResult;
+
+    /**
      * Possible states of crossings.  Used by Kauffman's algorithm.
      */
     enum CrossingState {
@@ -3235,7 +3241,7 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
         // Return nothing for now.
         // The user needs to poll the tracker to find out when the
         // computation is complete.
-        return Laurent2<Integer>();
+        return noResult;
     } else {
         switch (alg) {
             case ALG_TREEWIDTH:
@@ -3276,7 +3282,7 @@ const Laurent2<Integer>& Link::homflyLM(Algorithm alg,
         // Start the full HOMFLY computation in a new thread, and return
         // nothing for now.
         homflyAZ(alg, tracker);
-        return Laurent2<Integer>();
+        return noResult;
     } else {
         if (homflyLM_.known())
             return *homflyLM_.value();
