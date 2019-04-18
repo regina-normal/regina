@@ -178,7 +178,7 @@ Laurent<Integer>* Link::bracketNaive(ProgressTracker* tracker) const {
     for (unsigned long mask = 0; mask != ((unsigned long)(1) << n); ++mask) {
         // std::cerr << "Mask: " << mask << std::endl;
 
-        // Check for cancellation every 1000(ish) steps.
+        // Check for cancellation every 1024 steps.
         if (tracker && ((mask & 1023) == 0)) {
             if (! tracker->setPercent(double(mask) * 100.0 / double(1 << n)))
                 break;

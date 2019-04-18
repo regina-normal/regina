@@ -972,7 +972,7 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
     // need to process explicitly).
 
     if (tracker)
-        tracker->newStage("Enumerating resolutions");
+        tracker->newStage("Enumerating traversals");
 
     long comp = 0;
     long splices = 0;
@@ -1011,9 +1011,15 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
     long branchDepth = 0;
     int progress = 0;
     bool progressAtLeaf = (2 * n <= PROGRESS_POS);
+    long posCancel = 2 * n - 10; /* Check after every 1024 solutions */
     bool backtrack;
     while (pos >= 0) {
         // We prepare to follow the (pos)th arc.
+
+        // For large knots, we need to check for cancellation more
+        // frequently than we update progress.
+        if (tracker && pos == posCancel && tracker->isCancelled())
+            break;
 
 #ifdef DUMP_STATES
         std::cerr << "=> " << pos << ", s" << s << ", c" << comp
