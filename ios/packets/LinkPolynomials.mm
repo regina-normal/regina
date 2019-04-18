@@ -166,7 +166,7 @@ namespace {
 - (IBAction)computeHomfly:(id)sender {
     [self computePolynomial:@"Computing HOMFLY-PT polynomial…"
                    function:runHomfly
-                  algorithm:regina::ALG_TREEWIDTH];
+                  algorithm:regina::ALG_DEFAULT];
 }
 
 - (void)computePolynomial:(NSString*)message function:(void (*)(const regina::Link*, regina::Algorithm, regina::ProgressTracker*))function algorithm:(regina::Algorithm)algorithm {

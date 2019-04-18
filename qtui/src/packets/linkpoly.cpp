@@ -299,7 +299,7 @@ void LinkPolynomialUI::calculateHomfly() {
     regina::ProgressTracker tracker;
     ProgressDialogNumeric dlg(&tracker, tr("Computing HOMFLY-PT polynomial"),
         ui);
-    link->homfly(regina::ALG_TREEWIDTH, &tracker);
+    link->homfly(regina::ALG_DEFAULT, &tracker);
     if (! dlg.run())
         return;
     dlg.hide();
