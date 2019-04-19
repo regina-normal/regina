@@ -1047,7 +1047,7 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
                 if (tracker && progressAtLeaf) {
                     progress += (1 << (PROGRESS_POS - branchDepth));
                     if (! tracker->setPercent(
-                            double(progress) / double(PROGRESS_TOT))) {
+                            100.0 * double(progress) / double(PROGRESS_TOT))) {
                         break;
                     }
                 }
@@ -1164,7 +1164,7 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
                 state[s.crossing()->index()] != CROSSING_TRIED) {
             progress += (1 << (PROGRESS_POS - branchDepth));
             if (! tracker->setPercent(
-                    double(progress) / double(PROGRESS_TOT))) {
+                    100.0 * double(progress) / double(PROGRESS_TOT))) {
                 break;
             }
         }
