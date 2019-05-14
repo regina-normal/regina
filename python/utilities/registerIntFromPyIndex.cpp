@@ -89,6 +89,7 @@ struct register_int_from_py_index {
     // the right type or the number is too big.
     static
     boost::optional<T> _convert_py_int(PyObject * obj) {
+        #if PY_MAJOR_VERSION < 3
         // Python 2 has two integer types, one holding a C long and
         // one holding arbitrary precision.
         if (PyInt_Check(obj)) {
@@ -97,6 +98,7 @@ struct register_int_from_py_index {
                 return value;
             }
         }
+        #endif
         
         if (PyLong_Check(obj)) {
             int overflow;
