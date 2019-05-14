@@ -26,6 +26,9 @@
 # MA 02110-1301, USA.
 #
 
+# Needs to be first
+from __future__ import print_function
+
 try:
     # SageRegina has some weirdness where "import engine" gives
     # an error if not preceeded by "import sage.all"
@@ -150,7 +153,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                     sys.path.append(snappyLib + '/lib-dynload')
 
     if banner:
-        print engine.welcome()
+        print(engine.welcome())
 
     if builtinOpen and namespace:
         namespace['open'] = __builtins__['open']
