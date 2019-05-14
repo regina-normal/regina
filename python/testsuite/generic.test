@@ -31,6 +31,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from __future__ import print_function
 
 def product1(triClass, dim, permClass):
     tri = triClass()
@@ -49,14 +50,14 @@ def product2(triClass, dim, permClass):
     return tri
 
 def dump(tri):
-    print 'Triangulation:', tri.label()
-    print
-    print 'Connected:', tri.isConnected()
-    print 'Orientable:', tri.isOrientable()
-    print 'Oriented:', tri.isOrientable()
-    print 'Boundary facets:', tri.countBoundaryFacets()
-    print
-    print tri.detail()
+    print('Triangulation:', tri.label())
+    print()
+    print('Connected:', tri.isConnected())
+    print('Orientable:', tri.isOrientable())
+    print('Oriented:', tri.isOrientable())
+    print('Boundary facets:', tri.countBoundaryFacets())
+    print()
+    print(tri.detail())
 
 def testDim(triClass, dim, permClass):
     dump(product1(triClass, dim, permClass))

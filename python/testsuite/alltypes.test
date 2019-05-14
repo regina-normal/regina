@@ -31,6 +31,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from __future__ import print_function
+
 import re
 
 regex = re.compile("^<class 'regina\\.engine\\.(.+)'>$")
@@ -38,18 +40,18 @@ regex = re.compile("^<class 'regina\\.engine\\.(.+)'>$")
 def classInfo(name, object):
     m = regex.match(str(object))
     if not m:
-        print name, ': ERROR - could not determine real class name.'
+        print(name, ': ERROR - could not determine real class name.')
     else:
         realName = m.group(1)
         if realName == name:
-            print name, ': class'
+            print(name, ': class')
             try:
-                print 'Equality type :', object.equalityType
+                print('Equality type :', object.equalityType)
             except:
-                print 'ERROR: No equality type'
+                print('ERROR: No equality type')
         else:
-            print name, ': typedef -> ', realName
-    print
+            print(name, ': typedef -> ', realName)
+    print()
 
 def enumInfo(name, object):
     # print name, ': enum'
