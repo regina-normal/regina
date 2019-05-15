@@ -31,14 +31,16 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from __future__ import print_function
+
 import string
 
 def dumpSurfaces(name, slist):
-	print "-------------------------------"
-	print slist.triangulation().label()
-	print name
-	print "-------------------------------"
-	print
+	print("-------------------------------")
+	print(slist.triangulation().label())
+	print(name)
+	print("-------------------------------")
+	print()
 
 	# Dump the hypersurfaces in sort order, since we don't really mind if the
 	# ordering changes between releases.
@@ -47,10 +49,10 @@ def dumpSurfaces(name, slist):
 	# Let the text headers appear up top.
 	surfaces.reverse()
 	for s in surfaces:
-		print s
+		print(s)
 
 	# Nothing else to say.
-	print
+	print()
 
 def surfaceStats(tri):
 	dumpSurfaces('Vertex hypersurfaces (std)',

@@ -31,69 +31,71 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from __future__ import print_function
+
 g = AbelianGroup()
 g.addRank(3)
-print g
-print g.str()
-print g.utf8()
-print g.detail()
+print(g)
+print(g.str())
+print(g.utf8())
+print(g.detail())
 g.addTorsionElement(17)
-print g
-print g.str()
-print g.utf8()
-print g.detail()
+print(g)
+print(g.str())
+print(g.utf8())
+print(g.detail())
 
 m = MatrixInt(2, 2)
 n = MatrixInt(2, 2)
 g = MarkedAbelianGroup(m, n)
-print g
-print g.str()
-print g.utf8()
-print g.detail()
+print(g)
+print(g.str())
+print(g.utf8())
+print(g.detail())
 n.set(0, 0, 23)
 g = MarkedAbelianGroup(m, n)
-print g
-print g.str()
-print g.utf8()
-print g.detail()
+print(g)
+print(g.str())
+print(g.utf8())
+print(g.detail())
 
 p = Polynomial()
 p[3] = -1
 p[1] = 4
 p[0] = -2
 p
-print p
-print p.str()
-print p.str('z')
-print p.utf8()
-print p.utf8('z')
+print(p)
+print(p.str())
+print(p.str('z'))
+print(p.utf8())
+print(p.utf8('z'))
 
 p = Cyclotomic(7)
 p[4] = 3
 p[1] = -1
 p
-print p
-print p.str()
-print p.str('z')
-print p.utf8()
-print p.utf8('z')
+print(p)
+print(p.str())
+print(p.str('z'))
+print(p.utf8())
+print(p.utf8('z'))
 
 p = Laurent(4)
 p[-3] = 2
 p
-print p
-print p.str()
-print p.str('z')
-print p.utf8()
-print p.utf8('z')
+print(p)
+print(p.str())
+print(p.str('z'))
+print(p.utf8())
+print(p.utf8('z'))
 
 p = Laurent2(-1, 2)
 p[0, -3] = 4
 p
-print p
-print p.str()
-print p.str('z')
-print p.str('z', 'w')
-print p.utf8()
-print p.utf8('z')
-print p.utf8('z', 'w')
+print(p)
+print(p.str())
+print(p.str('z'))
+print(p.str('z', 'w'))
+print(p.utf8())
+print(p.utf8('z'))
+print(p.utf8('z', 'w'))

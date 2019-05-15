@@ -31,24 +31,26 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from __future__ import print_function
+
 t = Example3.weberSeifert()
-print t.detail()
+print(t.detail())
 for v in t.vertices():
-	print 'Vertex', v.index()
-	print v.detail()
+	print('Vertex', v.index())
+	print(v.detail())
 for e in t.edges():
-	print 'Edge', e.index()
-	print e.detail()
+	print('Edge', e.index())
+	print(e.detail())
 for f in t.triangles():
-	print 'Triangle', f.index()
-	print f.detail()
+	print('Triangle', f.index())
+	print(f.detail())
 
 t = Example2.nonOrientable(3, 1)
-print t.detail()
+print(t.detail())
 for v in t.vertices():
-	print 'Vertex', v.index()
-	print v.detail()
+	print('Vertex', v.index())
+	print(v.detail())
 for e in t.edges():
-	print 'Edge', e.index()
-	print e.detail()
+	print('Edge', e.index())
+	print(e.detail())
 
