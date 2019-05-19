@@ -480,7 +480,7 @@ IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   # Find the site-packages location in which the XDG build needs to put
   # the python module.
   EXECUTE_PROCESS(COMMAND
-    "${PYTHON_EXECUTABLE}" -c "import distutils.sysconfig; print distutils.sysconfig.get_python_lib(True)"
+    "${PYTHON_EXECUTABLE}" -c "import distutils.sysconfig; print(distutils.sysconfig.get_python_lib(True))"
     OUTPUT_VARIABLE SITE_PACKAGES
     OUTPUT_STRIP_TRAILING_WHITESPACE
     RESULT_VARIABLE DISTUTILS_RESULT)
