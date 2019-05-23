@@ -1,0 +1,88 @@
+diff --git a/engine/libnormaliz/HilbertSeries.cpp b/engine/libnormaliz/HilbertSeries.cpp
+index 0e104d5f4..3db8dca44 100644
+--- a/engine/libnormaliz/HilbertSeries.cpp
++++ b/engine/libnormaliz/HilbertSeries.cpp
+@@ -1116,7 +1116,7 @@ vector<Integer> compute_e_vector(vector<Integer> Q, int dim){
+         }
+         E_Vector[i]/=permutations<Integer>(1,i);
+         for (j = 1; j <Q.size()-i; j++) {
+-            Q[j-1]=j*Q[j];
++            Q[j-1]=static_cast<unsigned long>(j)*Q[j];
+         }
+     }
+     return E_Vector;
+diff --git a/engine/libnormaliz/cone.cpp b/engine/libnormaliz/cone.cpp
+index 3145c2630..46b8c8e05 100644
+--- a/engine/libnormaliz/cone.cpp
++++ b/engine/libnormaliz/cone.cpp
+@@ -3954,7 +3954,7 @@ void Cone<Integer>::extract_data(Full_Cone<IntegerFC>& FC, ConeProperties& ToCom
+             multiplicity = FC.getMultiplicity();
+             is_Computed.set(ConeProperty::Multiplicity);
+         } else if (FC.isComputed(ConeProperty::ModuleRank)) {
+-            multiplicity = FC.getMultiplicity()*module_rank;
++            multiplicity = FC.getMultiplicity()*static_cast<unsigned long>(module_rank);
+             is_Computed.set(ConeProperty::Multiplicity);
+         }
+     }
+@@ -4675,7 +4675,7 @@ void Cone<Integer>::try_symmetrization(ConeProperties& ToCompute) {
+     mpz_class fact=1;
+     for(size_t i=0;i<multiplicities.size();++i){
+         for(size_t j=1;j<multiplicities[i];++j)
+-            fact*=j;        
++            fact*=static_cast<unsigned long>(j);        
+     }
+     polynomial+="/"+fact.get_str()+";";
+ 
+@@ -5199,7 +5199,7 @@ void Cone<Integer>::try_approximation_or_projection(ConeProperties& ToCompute){
+         }
+ 
+         if(isComputed(ConeProperty::Grading)){
+-            multiplicity=module_rank; // of the recession cone;
++            multiplicity=static_cast<unsigned long>(module_rank); // of the recession cone;
+             is_Computed.set(ConeProperty::Multiplicity);
+             if(ToCompute.test(ConeProperty::HilbertSeries) && ToCompute.test(ConeProperty::Approximate)){ // already done with project_and_lift
+                 try_Hilbert_Series_from_lattice_points(ToCompute);
+@@ -6088,7 +6088,7 @@ void Cone<Integer>::try_Hilbert_Series_from_lattice_points(const ConeProperties&
+             || !(isComputed(ConeProperty::RecessionRank) &&  recession_rank ==0) || !isComputed(ConeProperty::Grading) )
+         return;
+     
+-    multiplicity=ModuleGenerators.nr_of_rows();
++    multiplicity=static_cast<unsigned long>(ModuleGenerators.nr_of_rows());
+         is_Computed.set(ConeProperty::Multiplicity);
+     
+     if(!ToCompute.test(ConeProperty::HilbertSeries))
+diff --git a/engine/libnormaliz/full_cone.cpp b/engine/libnormaliz/full_cone.cpp
+index 9edb6ae64..fe8277a8b 100644
+--- a/engine/libnormaliz/full_cone.cpp
++++ b/engine/libnormaliz/full_cone.cpp
+@@ -2917,7 +2917,7 @@ void Full_Cone<Integer>::find_bottom_facets() {
+     INTERRUPT_COMPUTATION_BY_EXCEPTION
+  
+     Matrix<Integer> BottomFacets(0,dim);
+-    vector<Integer> BottomDegs(0,dim);
++    vector<Integer> BottomDegs(0,static_cast<unsigned long>(dim));
+     if (!isComputed(ConeProperty::SupportHyperplanes)) {
+         Support_Hyperplanes = Matrix<Integer>(0,dim);
+         nrSupport_Hyperplanes=0;
+@@ -5319,7 +5319,7 @@ void Full_Cone<Integer>::compute_class_group() { // from the support hyperplanes
+     Matrix<Integer> Trans=Support_Hyperplanes; // .transpose();
+     size_t rk;
+     Trans.SmithNormalForm(rk);
+-    ClassGroup.push_back(Support_Hyperplanes.nr_of_rows()-rk);
++    ClassGroup.push_back(static_cast<unsigned long>(Support_Hyperplanes.nr_of_rows()-rk));
+     for(size_t i=0;i<rk;++i)
+         if(Trans[i][i]!=1)
+             ClassGroup.push_back(Trans[i][i]);
+diff --git a/engine/libnormaliz/simplex.cpp b/engine/libnormaliz/simplex.cpp
+index d1a45b828..6067d694c 100644
+--- a/engine/libnormaliz/simplex.cpp
++++ b/engine/libnormaliz/simplex.cpp
+@@ -881,7 +881,7 @@ void SimplexEvaluator<Integer>::evaluate_block(long block_start, long block_end,
+     
+     if(one_back>0){                           // define the last point processed before if it isn't 0
+         for(size_t i=1;i<=dim;++i){               
+-            point[dim-i]=one_back % GDiag[dim-i];
++            point[dim-i]=static_cast<unsigned long>(one_back) % GDiag[dim-i];
+             one_back/= convertTo<long>(GDiag[dim-i]);
+         }
+         

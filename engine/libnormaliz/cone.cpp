@@ -3954,7 +3954,7 @@ void Cone<Integer>::extract_data(Full_Cone<IntegerFC>& FC, ConeProperties& ToCom
             multiplicity = FC.getMultiplicity();
             is_Computed.set(ConeProperty::Multiplicity);
         } else if (FC.isComputed(ConeProperty::ModuleRank)) {
-            multiplicity = FC.getMultiplicity()*module_rank;
+            multiplicity = FC.getMultiplicity()*static_cast<unsigned long>(module_rank);
             is_Computed.set(ConeProperty::Multiplicity);
         }
     }
@@ -4675,7 +4675,7 @@ void Cone<Integer>::try_symmetrization(ConeProperties& ToCompute) {
     mpz_class fact=1;
     for(size_t i=0;i<multiplicities.size();++i){
         for(size_t j=1;j<multiplicities[i];++j)
-            fact*=j;        
+            fact*=static_cast<unsigned long>(j);        
     }
     polynomial+="/"+fact.get_str()+";";
 
@@ -5199,7 +5199,7 @@ void Cone<Integer>::try_approximation_or_projection(ConeProperties& ToCompute){
         }
 
         if(isComputed(ConeProperty::Grading)){
-            multiplicity=module_rank; // of the recession cone;
+            multiplicity=static_cast<unsigned long>(module_rank); // of the recession cone;
             is_Computed.set(ConeProperty::Multiplicity);
             if(ToCompute.test(ConeProperty::HilbertSeries) && ToCompute.test(ConeProperty::Approximate)){ // already done with project_and_lift
                 try_Hilbert_Series_from_lattice_points(ToCompute);
@@ -6088,7 +6088,7 @@ void Cone<Integer>::try_Hilbert_Series_from_lattice_points(const ConeProperties&
             || !(isComputed(ConeProperty::RecessionRank) &&  recession_rank ==0) || !isComputed(ConeProperty::Grading) )
         return;
     
-    multiplicity=ModuleGenerators.nr_of_rows();
+    multiplicity=static_cast<unsigned long>(ModuleGenerators.nr_of_rows());
         is_Computed.set(ConeProperty::Multiplicity);
     
     if(!ToCompute.test(ConeProperty::HilbertSeries))

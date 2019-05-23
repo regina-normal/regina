@@ -2917,7 +2917,7 @@ void Full_Cone<Integer>::find_bottom_facets() {
     INTERRUPT_COMPUTATION_BY_EXCEPTION
  
     Matrix<Integer> BottomFacets(0,dim);
-    vector<Integer> BottomDegs(0,dim);
+    vector<Integer> BottomDegs(0,static_cast<unsigned long>(dim));
     if (!isComputed(ConeProperty::SupportHyperplanes)) {
         Support_Hyperplanes = Matrix<Integer>(0,dim);
         nrSupport_Hyperplanes=0;
@@ -5319,7 +5319,7 @@ void Full_Cone<Integer>::compute_class_group() { // from the support hyperplanes
     Matrix<Integer> Trans=Support_Hyperplanes; // .transpose();
     size_t rk;
     Trans.SmithNormalForm(rk);
-    ClassGroup.push_back(Support_Hyperplanes.nr_of_rows()-rk);
+    ClassGroup.push_back(static_cast<unsigned long>(Support_Hyperplanes.nr_of_rows()-rk));
     for(size_t i=0;i<rk;++i)
         if(Trans[i][i]!=1)
             ClassGroup.push_back(Trans[i][i]);
