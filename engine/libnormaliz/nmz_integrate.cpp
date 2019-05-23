@@ -1,6 +1,7 @@
+#ifdef NMZ_COCOA
 /*
- * Normaliz
- * Copyright (C) 2007-2014  Winfried Bruns, Bogdan Ichim, Christof Soeger
+ * nmzIntegrate
+ * Copyright (C) 2012-2014  Winfried Bruns, Christof Soeger
  * This program is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
@@ -21,42 +22,11 @@
  * terms of service.
  */
 
-#ifndef GENERAL_H_
-#define GENERAL_H_
 
+#include "libnormaliz/nmz_integrate.h"
+// #include "libnormaliz/cycl_rat_funct.cpp"
+#include "libnormaliz/nmz_polynomial.cpp"
+#include "libnormaliz/nmz_integral.cpp"
 
-#include <iostream>
-#include <assert.h>
-#include <cstddef>
+#endif //NMZ_COCOA
 
-/*
-// Regina will use GMP everywhere, even on Windows.
-#ifdef _WIN32 //for 32 and 64 bit windows
-    #define NMZ_MPIR //always use MPIR
-#endif
-*/
-
-#ifdef NMZ_MPIR // use MPIR
-    #include <mpirxx.h>
-#else         // otherwise use GMP
-    #include <gmpxx.h>
-#endif
-
-// in the serial version there is no need to catch-rethrow
-#ifndef _OPENMP
-    #define NCATCH
-#endif
-
-namespace libnormaliz {
-
-typedef long long MachineInteger;
-typedef double nmz_float;
-const nmz_float nmz_epsilon=1.0e-12;
-
-} /* end namespace libnormaliz */
-
-#include <libnormaliz/libnormaliz.h>
-#include <libnormaliz/normaliz_exception.h>
-#include <libnormaliz/cone_property.h>
-
-#endif /* GENERAL_H_ */

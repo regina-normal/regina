@@ -36,4 +36,6 @@
 #include "libnormaliz/HilbertSeries.cpp"
 
 #include "libnormaliz/bottom.cpp"
+#include "libnormaliz/project_andlift.cpp"
 #include "libnormaliz/offload_handler.cpp"
+#include "libnormaliz/nmz_integrate.cpp"

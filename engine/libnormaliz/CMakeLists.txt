@@ -1,12 +1,14 @@
 # normaliz
 
-# Files to compile
+# Files to compile (taken from libnormaliz' Makefile.classic)
 SET ( FILES
-  HilbertSeries
-  bottom
-  cone_property
-  libnormaliz-templated
   offload_handler
+  enumeration
+  other_algorithms
+  linear_algebra
+  cone_and_control
+  primal
+  output
   )
 
 # Prepend folder name

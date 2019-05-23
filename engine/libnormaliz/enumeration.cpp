@@ -21,42 +21,13 @@
  * terms of service.
  */
 
-#ifndef GENERAL_H_
-#define GENERAL_H_
-
-
-#include <iostream>
-#include <assert.h>
-#include <cstddef>
-
-/*
-// Regina will use GMP everywhere, even on Windows.
-#ifdef _WIN32 //for 32 and 64 bit windows
-    #define NMZ_MPIR //always use MPIR
-#endif
-*/
-
-#ifdef NMZ_MPIR // use MPIR
-    #include <mpirxx.h>
-#else         // otherwise use GMP
-    #include <gmpxx.h>
+#ifdef NMZ_MIC_OFFLOAD
+#pragma offload_attribute (push, target(mic))
 #endif
 
-// in the serial version there is no need to catch-rethrow
-#ifndef _OPENMP
-    #define NCATCH
+#include "libnormaliz/HilbertSeries.cpp"
+#include "libnormaliz/nmz_integrate.cpp"
+
+#ifdef NMZ_MIC_OFFLOAD
+#pragma offload_attribute (pop)
 #endif
-
-namespace libnormaliz {
-
-typedef long long MachineInteger;
-typedef double nmz_float;
-const nmz_float nmz_epsilon=1.0e-12;
-
-} /* end namespace libnormaliz */
-
-#include <libnormaliz/libnormaliz.h>
-#include <libnormaliz/normaliz_exception.h>
-#include <libnormaliz/cone_property.h>
-
-#endif /* GENERAL_H_ */

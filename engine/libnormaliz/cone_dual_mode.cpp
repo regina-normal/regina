@@ -34,6 +34,9 @@
 #include "libnormaliz/cone_dual_mode.h"
 #include "libnormaliz/vector_operations.h"
 #include "libnormaliz/list_operations.h"
+#include "libnormaliz/full_cone.h"
+// #include "libnormaliz/cone_helper.h"
+#include "libnormaliz/my_omp.h"
 
 //---------------------------------------------------------------------------
 
@@ -89,25 +92,39 @@ void Cone_Dual_Mode<Integer>::select_HB(CandidateList<Integer>& Cand, size_t gua
 //---------------------------------------------------------------------------
 
 template<typename Integer>
-Cone_Dual_Mode<Integer>::Cone_Dual_Mode(const Matrix<Integer>& M){
+Cone_Dual_Mode<Integer>::Cone_Dual_Mode(Matrix<Integer>& M, const vector<Integer>& Truncation, bool keep_order){
     dim=M.nr_of_columns();
-    if (dim!=M.rank()) {
-        errorOutput()<<"Cone_Dual_Mode error: constraints do not define pointed cone!"<<endl;
-        // M.pretty_print(errorOutput());
-        throw BadInputException();
+    M.remove_duplicate_and_zero_rows();
+    // now we sort by L_1-norm and then lex
+    if(!keep_order){
+        Matrix<Integer> Weights(0,dim);
+        vector<bool> absolute;
+        Weights.append(vector<Integer>(dim,1));
+        absolute.push_back(true);
+        vector<key_t> perm=M.perm_by_weights(Weights,absolute);
+        M.order_rows_by_perm(perm);
     }
-    SupportHyperplanes = M;
-    // support hyperplanes are already coprime (except for truncation/grading)
-    // so just remove 0 rows
-    SupportHyperplanes.remove_zero_rows();
+
+    SupportHyperplanes=Matrix<Integer>(0,dim);
+    BasisMaxSubspace=Matrix<Integer>(dim);      // dim x dim identity matrix
+    if(Truncation.size()!=0){
+        vector<Integer> help=Truncation;
+        v_make_prime(help); // truncation need not be coprime
+        M.remove_row(help); // remove truncation if it should be a support hyperplane
+        SupportHyperplanes.append(Truncation);  // now we insert it again as the first hyperplane  
+    }
+    SupportHyperplanes.append(M);
     nr_sh = SupportHyperplanes.nr_of_rows();
-    // hyp_size = dim + nr_sh;
-    first_pointed = true;
+
+    verbose = false;
+    inhomogeneous = false;
+    do_only_Deg1_Elements = false;
+    truncate = false;
+    
     Intermediate_HB.dual=true;
 
     if (nr_sh != static_cast<size_t>(static_cast<key_t>(nr_sh))) {
-        errorOutput()<<"Too many support hyperplanes to fit in range of key_t!"<<endl;
-        throw FatalException();
+        throw FatalException("Too many support hyperplanes to fit in range of key_t!");
     }
 }
 
@@ -127,19 +144,17 @@ Matrix<Integer> Cone_Dual_Mode<Integer>::get_generators()const{
 
 template<typename Integer>
 vector<bool> Cone_Dual_Mode<Integer>::get_extreme_rays() const{
-    return ExtremeRays;
+    return ExtremeRaysInd;
 
 }
 
 
-size_t counter=0,counter1=0, counter2=0;
-
-const size_t ReportBound=100000;
+// size_t counter=0,counter1=0, counter2=0;
 
 //---------------------------------------------------------------------------
 
 // In the inhomogeneous case or when only degree 1 elements are to be found,
-// we truncate the Hilbert basis at level 1. The level is the ordinaryl degree in
+// we truncate the Hilbert basis at level 1. The level is the ordinary degree
 // for degree 1 elements and the degree of the homogenizing variable 
 // in the inhomogeneous case.
 //
@@ -160,7 +175,7 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
         verboseOutput()<<"cut with halfspace "<<hyp_counter+1 <<" ..."<<endl;
     }
     
-    truncate=inhomogeneous || do_only_Deg1_Elements;
+    const size_t ReportBound=100000;
     
     size_t i;
     int sign;
@@ -205,9 +220,11 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
         (halfspace_gen_as_cand.values)[hyp_counter]=orientation; // value under the new linear form
         halfspace_gen_as_cand.sort_deg=convertTo<long>(orientation);
         assert(orientation!=0);
-        Positive_Irred.push_back(halfspace_gen_as_cand);
-        Pos_Gen0.push_back(&Positive_Irred.Candidates.front());
-        pos_gen0_size=1;
+        if(!truncate || halfspace_gen_as_cand.values[0] <=1){ // the only critical case is the positive halfspace gen in round 0
+            Positive_Irred.push_back(halfspace_gen_as_cand);  // it must have value <= 1 under the truncation. 
+            Pos_Gen0.push_back(&Positive_Irred.Candidates.front()); //  Later on all these elements have value 0 under it. 
+            pos_gen0_size=1;
+        }
         v_scalar_multiplication<Integer>(halfspace_gen_as_cand.cand,-1);    
         Negative_Irred.push_back(halfspace_gen_as_cand);
         Neg_Gen0.push_back(&Negative_Irred.Candidates.front());
@@ -291,32 +308,24 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
 
         #pragma omp single nowait
         {
-#ifndef NCATCH
         try {
-#endif
         check_range_list(Negative_Irred);
         Negative_Irred.sort_by_val();
         Negative_Irred.last_hyp=hyp_counter;
-#ifndef NCATCH
         } catch(const std::exception& ) {
             tmp_exception = std::current_exception();
         }
-#endif
         }
 
         #pragma omp single nowait
         {
-#ifndef NCATCH
         try {
-#endif
         check_range_list(Positive_Irred);
         Positive_Irred.sort_by_val();
         Positive_Irred.last_hyp=hyp_counter;
-#ifndef NCATCH
         } catch(const std::exception& ) {
             tmp_exception = std::current_exception();
         }
-#endif
         }
 
         #pragma omp single nowait
@@ -371,7 +380,12 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
     
     bool do_only_selection=truncate && all_positice_level;
     
-    size_t round=0;        
+    size_t round=0;
+
+    if(do_only_selection){
+            pos_gen0_size=pos_gen1_size; // otherwise wrong sizes in message at the end
+            neg_gen0_size=neg_gen1_size;
+    }
     
     while(not_done && !do_only_selection) {
 
@@ -415,10 +429,37 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
             neg_size=neg_gen1_size;      
         }
         
-        // cout << "Step " << step << " pos " << pos_size << " neg " << neg_size << endl;
-        
         if(pos_size==0 || neg_size==0)
             continue;
+        
+        vector<typename list<Candidate<Integer>* >::iterator > PosBlockStart, NegBlockStart;
+        
+        const size_t Blocksize=200;
+        
+        size_t nr_in_block=0, pos_block_nr=0;
+        for(p=pos_begin;p!=pos_end;++p){
+            if(nr_in_block%Blocksize==0){
+                PosBlockStart.push_back(p);
+                pos_block_nr++;
+                nr_in_block=0;
+            }
+            nr_in_block++;
+        }
+        PosBlockStart.push_back(p);
+        
+        nr_in_block=0; 
+        size_t neg_block_nr=0;
+        for(n=neg_begin;n!=neg_end;++n){
+            if(nr_in_block%Blocksize==0){
+                NegBlockStart.push_back(n);
+                neg_block_nr++;
+                nr_in_block=0;
+            }
+            nr_in_block++;
+        }
+        NegBlockStart.push_back(n);
+        
+        // cout << "Step " << step << " pos " << pos_size << " neg " << neg_size << endl;
 
         if (verbose) {
             // size_t neg_size=Negative_Irred.size();
@@ -434,39 +475,43 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
         bool skip_remaining = false;
 
         const long VERBOSE_STEPS = 50;
-        long step_x_size = pos_size-VERBOSE_STEPS;
+        long step_x_size = pos_block_nr*neg_block_nr-VERBOSE_STEPS;
         
         #pragma omp parallel private(p,n,diff,p_cand,n_cand)
         {
         Candidate<Integer> new_candidate(dim,nr_sh);
-                
-        size_t ppos=0;
-        p = pos_begin;
+        
+        size_t total=pos_block_nr*neg_block_nr;
+        
         #pragma omp for schedule(dynamic)
-        for(i = 0; i<pos_size; ++i){
-            for(;i > ppos; ++ppos, ++p) ;
-            for(;i < ppos; --ppos, --p) ;
-
-            if (skip_remaining) continue;
-
-#ifndef NCATCH
-            try {
-#endif
+        for(size_t bb=0;bb<total;++bb){  // main loop over the blocks
             
-            if(verbose && pos_size*neg_size>=ReportBound){
-                #pragma omp critical(VERBOSE)
-                while ((long)(i*VERBOSE_STEPS) >= step_x_size) {
-                    step_x_size += pos_size;
-                    verboseOutput() << "." <<flush;
-                }
-
+        if (skip_remaining) continue;
+        
+            try {
+            
+            INTERRUPT_COMPUTATION_BY_EXCEPTION
+                
+                if(verbose && pos_size*neg_size>=ReportBound){
+            #pragma omp critical(VERBOSE)
+            while ((long)(bb*VERBOSE_STEPS) >= step_x_size) {
+                step_x_size += total;
+                verboseOutput() << "." <<flush;
             }
+
+        }
+                
+        size_t nr_pos=bb/neg_block_nr;
+        size_t nr_neg=bb%neg_block_nr;
+            
+        for(p=PosBlockStart[nr_pos];p!=PosBlockStart[nr_pos+1];++p){
+
             
             p_cand=*p;
             
             Integer pos_val=p_cand->values[hyp_counter];
 
-            for (n= neg_begin; n!= neg_end; ++n){
+            for (n= NegBlockStart[nr_neg];n!=NegBlockStart[nr_neg+1]; ++n){
             
                 n_cand=*n;
             
@@ -550,15 +595,17 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
                     // new_candidate.mother=0; // irrelevant
                     New_Neutral_thread[omp_get_thread_num()].push_back(new_candidate);
                 }
-            }
-#ifndef NCATCH
+            } // neg
+
+        } // pos
+        
         } catch(const std::exception& ) {
             tmp_exception = std::current_exception();
             skip_remaining = true;
             #pragma omp flush(skip_remaining)
         }
-#endif
-        } //end generation of new elements
+        
+        } // bb, end generation of new elements
         
         #pragma omp single
         {
@@ -572,7 +619,7 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
 
         } // steps
 
-        Pos_Gen0.splice(Pos_Gen0.end(),Pos_Gen1); // the new generation has becomeold
+        Pos_Gen0.splice(Pos_Gen0.end(),Pos_Gen1); // the new generation has become old
         pos_gen0_size+=pos_gen1_size;
         pos_gen1_size=0;
         Neg_Gen0.splice(Neg_Gen0.end(),Neg_Gen1);
@@ -688,8 +735,6 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
     if (verbose) {
         verboseOutput()<<"Final sizes: Pos " << pos_gen0_size << " Neg " << neg_gen0_size  << " Neutral " << Neutral_Irred.size() <<endl;
     }
-    
-    
 
     Intermediate_HB.clear();
     Intermediate_HB.Candidates.splice(Intermediate_HB.Candidates.begin(),Positive_Irred.Candidates);
@@ -700,14 +745,16 @@ void Cone_Dual_Mode<Integer>::cut_with_halfspace_hilbert_basis(const size_t& hyp
 //---------------------------------------------------------------------------
 
 template<typename Integer>
-Matrix<Integer> Cone_Dual_Mode<Integer>::cut_with_halfspace(const size_t& hyp_counter, const Matrix<Integer>& Basis_Max_Subspace){
-    size_t i,rank_subspace=Basis_Max_Subspace.nr_of_rows();
+Matrix<Integer> Cone_Dual_Mode<Integer>::cut_with_halfspace(const size_t& hyp_counter, const Matrix<Integer>& BasisMaxSubspace){
+    INTERRUPT_COMPUTATION_BY_EXCEPTION
+
+    size_t i,rank_subspace=BasisMaxSubspace.nr_of_rows();
 
     vector <Integer> restriction,lin_form=SupportHyperplanes[hyp_counter],old_lin_subspace_half;
     bool lifting=false;
-    Matrix<Integer> New_Basis_Max_Subspace=Basis_Max_Subspace; // the new maximal subspace is the intersection of the old with the new haperplane
+    Matrix<Integer> New_BasisMaxSubspace=BasisMaxSubspace; // the new maximal subspace is the intersection of the old with the new haperplane
     if (rank_subspace!=0) {
-        restriction=Basis_Max_Subspace.MxV(lin_form);  // the restriction of the new linear form to Max_Subspace
+        restriction=BasisMaxSubspace.MxV(lin_form);  // the restriction of the new linear form to Max_Subspace
         for (i = 0; i <rank_subspace; i++)
             if (restriction[i]!=0)
                 break;
@@ -721,7 +768,7 @@ Matrix<Integer> Cone_Dual_Mode<Integer>::cut_with_halfspace(const size_t& hyp_co
             size_t dummy_rank;
             Matrix<Integer> NewBasisOldMaxSubspace=M.AlmostHermite(dummy_rank).transpose(); // compute kernel of restriction and complementary subspace            
             
-            Matrix<Integer> NewBasisOldMaxSubspaceAmbient=NewBasisOldMaxSubspace.multiplication(Basis_Max_Subspace); 
+            Matrix<Integer> NewBasisOldMaxSubspaceAmbient=NewBasisOldMaxSubspace.multiplication(BasisMaxSubspace); 
             // in coordinates of the ambient space
 
             old_lin_subspace_half=NewBasisOldMaxSubspaceAmbient[0];            
@@ -732,14 +779,14 @@ Matrix<Integer> Cone_Dual_Mode<Integer>::cut_with_halfspace(const size_t& hyp_co
             Matrix<Integer> temp(rank_subspace-1,dim);
             for(size_t k=1;k<rank_subspace;++k)            
                 temp[k-1]=NewBasisOldMaxSubspaceAmbient[k];
-            New_Basis_Max_Subspace=temp;
+            New_BasisMaxSubspace=temp;
         }
     }
-    bool pointed=(Basis_Max_Subspace.nr_of_rows()==0);
+    bool pointed=(BasisMaxSubspace.nr_of_rows()==0);
 
     cut_with_halfspace_hilbert_basis(hyp_counter, lifting,old_lin_subspace_half,pointed);
 
-    return New_Basis_Max_Subspace;
+    return New_BasisMaxSubspace;
 }
 
 //---------------------------------------------------------------------------
@@ -747,7 +794,11 @@ Matrix<Integer> Cone_Dual_Mode<Integer>::cut_with_halfspace(const size_t& hyp_co
 template<typename Integer>
 void Cone_Dual_Mode<Integer>::hilbert_basis_dual(){
 
-    assert(dim>0);         
+    truncate = inhomogeneous || do_only_Deg1_Elements;
+
+    if(dim==0)
+        return;
+
     if (verbose==true) {
         verboseOutput()<<"************************************************************\n";
         verboseOutput()<<"computing Hilbert basis";
@@ -756,30 +807,26 @@ void Cone_Dual_Mode<Integer>::hilbert_basis_dual(){
         verboseOutput() << " ..." << endl;
     }
     
-    if(Generators.nr_of_rows()!=ExtremeRays.size()){
-        errorOutput() << "Mismatch of extreme rays and generators in cone dual mode. THIS SHOULD NOT HAPPEN." << endl;
-        throw FatalException(); 
+    if(Generators.nr_of_rows()!=ExtremeRaysInd.size()){
+        throw FatalException("Mismatch of extreme rays and generators in cone dual mode. THIS SHOULD NOT HAPPEN."); 
     }
     
     size_t hyp_counter;      // current hyperplane
-    Matrix<Integer> Basis_Max_Subspace(dim);      //identity matrix
     for (hyp_counter = 0; hyp_counter < nr_sh; hyp_counter++) {
-        Basis_Max_Subspace=cut_with_halfspace(hyp_counter,Basis_Max_Subspace);
+        BasisMaxSubspace=cut_with_halfspace(hyp_counter,BasisMaxSubspace);
     }
-    
-    if(ExtremeRays.size()==0){  // no precomputed generators
-        extreme_rays_rank();
-        relevant_support_hyperplanes();
-        ExtremeRayList.clear();
-        
-    }
-    else{  // must produce the relevant support hyperplanes from the generators
-           // since the Hilbert basis may have been truncated
+
+    if (ExtremeRaysInd.size() > 0) { // implies that we have transformed everything to a pointed full-dimensional cone
+        // must produce the relevant support hyperplanes from the generators
+        // since the Hilbert basis may have been truncated
         vector<Integer> test(SupportHyperplanes.nr_of_rows());
         vector<key_t> key;
-        vector <key_t> relevant_sh;
+        vector<key_t> relevant_sh;
         size_t realdim=Generators.rank();
         for(key_t h=0;h<SupportHyperplanes.nr_of_rows();++h){
+            
+            INTERRUPT_COMPUTATION_BY_EXCEPTION
+            
             key.clear();
             vector<Integer> test=Generators.MxV(SupportHyperplanes[h]);
             for(key_t i=0;i<test.size();++i)
@@ -787,8 +834,13 @@ void Cone_Dual_Mode<Integer>::hilbert_basis_dual(){
                     key.push_back(i);
             if (key.size() >= realdim-1 && Generators.submatrix(key).rank() >= realdim-1)
                 relevant_sh.push_back(h);
-        }    
+        }
         SupportHyperplanes = SupportHyperplanes.submatrix(relevant_sh);
+    }
+    if (!truncate && ExtremeRaysInd.size()==0){  // no precomputed generators
+        extreme_rays_rank();
+        relevant_support_hyperplanes();
+        ExtremeRayList.clear();
     }
         
     /* if(verbose)
@@ -805,6 +857,8 @@ void Cone_Dual_Mode<Integer>::hilbert_basis_dual(){
             verboseOutput() << "(truncated) ";
         verboseOutput() << Hilbert_Basis.size() << endl;
     }
+    if(SupportHyperplanes.nr_of_rows()>0 && inhomogeneous)
+        v_make_prime(SupportHyperplanes[0]); // it could be that the truncation was not coprime
 }
 
 //---------------------------------------------------------------------------
@@ -814,11 +868,15 @@ void Cone_Dual_Mode<Integer>::extreme_rays_rank(){
     if (verbose) {
         verboseOutput() << "Find extreme rays" << endl;
     }
+    size_t quotient_dim=dim-BasisMaxSubspace.nr_of_rows();
     
     typename list < Candidate <Integer> >::iterator c;
     vector <key_t> zero_list;
     size_t i,k;
     for (c=Intermediate_HB.Candidates.begin(); c!=Intermediate_HB.Candidates.end(); ++c){
+        
+        INTERRUPT_COMPUTATION_BY_EXCEPTION
+        
         zero_list.clear();
         for (i = 0; i < nr_sh; i++) {
             if(c->values[i]==0) {
@@ -826,22 +884,23 @@ void Cone_Dual_Mode<Integer>::extreme_rays_rank(){
             }
         }
         k=zero_list.size();
-        if (k>=dim-1) {
+        if (k>=quotient_dim-1) {
 
             // Matrix<Integer> Test=SupportHyperplanes.submatrix(zero_list);
-            if (SupportHyperplanes.rank_submatrix(zero_list)>=dim-1) {
+            if (SupportHyperplanes.rank_submatrix(zero_list)>=quotient_dim-1) {
                 ExtremeRayList.push_back(&(*c));
             }
         }
     }
     size_t s = ExtremeRayList.size();
+    // cout << "nr extreme " << s << endl;
     Generators = Matrix<Integer>(s,dim);
    
     typename  list< Candidate<Integer>* >::const_iterator l;
     for (i=0, l=ExtremeRayList.begin(); l != ExtremeRayList.end(); ++l, ++i) {
         Generators[i]= (*l)->cand;
     }
-    ExtremeRays=vector<bool>(s,true);
+    ExtremeRaysInd=vector<bool>(s,true);
 }
 
 //---------------------------------------------------------------------------
@@ -851,28 +910,31 @@ void Cone_Dual_Mode<Integer>::relevant_support_hyperplanes(){
     if (verbose) {
         verboseOutput() << "Find relevant support hyperplanes" << endl;
     }
-    list <key_t> zero_list;
     typename list<Candidate<Integer>* >::iterator gen_it;
-    vector <key_t> relevant_sh;
-    relevant_sh.reserve(nr_sh);
-    size_t i,k;
+    size_t i,k,k1;
     
-    size_t realdim = Generators.rank();
+    // size_t realdim = Generators.rank();
+    
+    vector<vector<bool> > ind(nr_sh,vector<bool>(ExtremeRayList.size(),false));
+    vector<bool> relevant(nr_sh,true);      
 
     for (i = 0; i < nr_sh; ++i) {
-        Matrix<Integer> Test(0,dim);
-        k = 0;
-        for (gen_it = ExtremeRayList.begin(); gen_it != ExtremeRayList.end(); ++gen_it) {
+        
+        INTERRUPT_COMPUTATION_BY_EXCEPTION
+        
+        k = 0; k1=0;
+        for (gen_it = ExtremeRayList.begin(); gen_it != ExtremeRayList.end(); ++gen_it, ++k) {
             if ((*gen_it)->values[i]==0) {
-                Test.append((*gen_it)->cand);
-                k++;
+                ind[i][k]=true;
+                k1++;
             }
         }
-        if (k >= realdim-1 && Test.rank()>=realdim-1) {
-            relevant_sh.push_back(i);
+        if (/* k1<realdim-1 || */ k1==Generators.nr_of_rows()) { // discard everything that vanishes on the cone
+            relevant[i]=false;
         }
-    }
-    SupportHyperplanes = SupportHyperplanes.submatrix(relevant_sh);
+    }    
+    maximal_subsets(ind,relevant);
+    SupportHyperplanes = SupportHyperplanes.submatrix(relevant);
 }
 
 //---------------------------------------------------------------------------
@@ -880,14 +942,17 @@ void Cone_Dual_Mode<Integer>::relevant_support_hyperplanes(){
 template<typename Integer>
 void Cone_Dual_Mode<Integer>::to_sublattice(const Sublattice_Representation<Integer>& SR) {
     assert(SR.getDim() == dim);
+    
+    if(SR.IsIdentity())
+        return;
 
     dim = SR.getRank();
-    // hyp_size = dim+nr_sh;
     SupportHyperplanes = SR.to_sublattice_dual(SupportHyperplanes);
     typename list<vector<Integer> >::iterator it;
     vector<Integer> tmp;
     
     Generators = SR.to_sublattice(Generators);
+    BasisMaxSubspace=SR.to_sublattice(BasisMaxSubspace);
 
     for (it = Hilbert_Basis.begin(); it != Hilbert_Basis.end(); ) {
         tmp = SR.to_sublattice(*it);
@@ -895,5 +960,11 @@ void Cone_Dual_Mode<Integer>::to_sublattice(const Sublattice_Representation<Inte
         Hilbert_Basis.insert(it,tmp);
     }
 }
+
+#ifndef NMZ_MIC_OFFLOAD  //offload with long is not supported
+template class Cone_Dual_Mode<long>;
+#endif
+template class Cone_Dual_Mode<long long>;
+template class Cone_Dual_Mode<mpz_class>;
 
 } //end namespace libnormaliz

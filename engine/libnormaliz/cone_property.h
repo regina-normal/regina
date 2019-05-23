@@ -25,7 +25,7 @@
 #define CONE_PROPERTY_H_
 
 #include <bitset>
-#include <iostream>
+#include <ostream>
 
 namespace libnormaliz {
 
@@ -35,44 +35,161 @@ namespace libnormaliz {
  */
 namespace ConeProperty {
     enum Enum {
-        Generators,
+        FIRST_MATRIX,
+        Generators = ConeProperty::FIRST_MATRIX,
         ExtremeRays,
         VerticesOfPolyhedron,
         SupportHyperplanes,
-        TriangulationSize,
-        TriangulationDetSum,
-        Triangulation,
-        Multiplicity,
-        RecessionRank,
-        AffineDim,
-        ModuleRank,
         HilbertBasis,
         ModuleGenerators,
         Deg1Elements,
-        HilbertSeries,
-        Grading,
-        IsPointed,
+        LatticePoints,
+        ModuleGeneratorsOverOriginalMonoid,
+        ExcludedFaces,
+        OriginalMonoidGenerators,
+        MaximalSubspace,
+        Equations,
+        Congruences,
+        LAST_MATRIX = ConeProperty::Congruences,
+        FIRST_MATRIX_FLOAT,
+        SuppHypsFloat = ConeProperty::FIRST_MATRIX_FLOAT,
+        VerticesFloat,
+        LAST_MATRIX_FLOAT = ConeProperty::VerticesFloat,
+        // Vector values
+        FIRST_VECTOR,
+        Grading = ConeProperty::FIRST_VECTOR,
+        Dehomogenization,
+        WitnessNotIntegrallyClosed,
+        GeneratorOfInterior,
+        ClassGroup,
+        LAST_VECTOR = ConeProperty::ClassGroup,
+        // Integer valued,
+        FIRST_INTEGER,
+        TriangulationDetSum = ConeProperty::FIRST_INTEGER,
+        ReesPrimaryMultiplicity,
+        GradingDenom,
+        UnitGroupIndex,
+        InternalIndex,
+        LAST_INTEGER = ConeProperty::InternalIndex,
+        FIRST_GMP_INTEGER,
+        ExternalIndex = FIRST_GMP_INTEGER,
+        LAST_GMP_INTEGER = ConeProperty::ExternalIndex,
+        // rational valued
+        FIRST_RATIONAL,
+        Multiplicity = ConeProperty::FIRST_RATIONAL,
+        Volume,
+        Integral,
+        VirtualMultiplicity,
+        LAST_RATIONAL = ConeProperty::VirtualMultiplicity,
+        // field valued
+        FIRST_FIELD_ELEM,
+        RenfVolume=FIRST_FIELD_ELEM,
+        LAST_FIELD_ELEM=ConeProperty::RenfVolume,
+        // floating point valued
+        FIRST_FLOAT,
+        EuclideanVolume = ConeProperty::FIRST_FLOAT,
+        EuclideanIntegral,
+        LAST_FLOAT = ConeProperty::EuclideanIntegral,
+        // dimensions
+        FIRST_MACHINE_INTEGER,
+        TriangulationSize = ConeProperty::FIRST_MACHINE_INTEGER,
+        NumberLatticePoints,
+        RecessionRank,
+        AffineDim,
+        ModuleRank,
+        Rank,
+        EmbeddingDim,
+        LAST_MACHINE_INTEGER = ConeProperty::EmbeddingDim,
+        // boolean valued 
+        FIRST_BOOLEAN,
+        IsPointed = ConeProperty::FIRST_BOOLEAN,
         IsDeg1ExtremeRays,
         IsDeg1HilbertBasis,
         IsIntegrallyClosed,
-        OriginalMonoidGenerators,
         IsReesPrimary,
-        ReesPrimaryMultiplicity,
+        IsInhomogeneous,
+        IsGorenstein,
+        LAST_BOOLEAN = ConeProperty::IsGorenstein,
+        // complex structures
+        FIRST_COMPLEX_STRUCTURE,
+        Triangulation = ConeProperty::FIRST_COMPLEX_STRUCTURE,
         StanleyDec,
-        ExcludedFaces,
-        Dehomogenization,
         InclusionExclusionData,
+        IntegerHull,
+        ProjectCone,
+        ConeDecomposition,
+        HilbertSeries,
+        HilbertQuasiPolynomial,
+        EhrhartSeries,
+        EhrhartQuasiPolynomial,
+        WeightedEhrhartSeries,
+        WeightedEhrhartQuasiPolynomial,
+        FaceLattice,
+        FVector,
         Sublattice,
-        ClassGroup,
-        ModuleGeneratorsOverOriginalMonoid,
-        // the following are more compute options than real properties of the cone
+        LAST_COMPLEX_STRUCTURE = ConeProperty::Sublattice,
+        //
+        // integer type for computations
+        //
+        FIRST_PROPERTY,
+        BigInt = ConeProperty::FIRST_PROPERTY,
+        //
+        // algorithmic variants
+        //
+        DefaultMode,
         Approximate,
         BottomDecomposition,
-        DefaultMode,
+        NoBottomDec,       
         DualMode,
+        PrimalMode,
+        Projection,
+        ProjectionFloat,
+        NoProjection,
+        Symmetrize,
+        NoSymmetrization,
+        NoSubdivision,
+        NoNestedTri, // synonym for NoSubdivision
         KeepOrder,
-        EnumSize // this has to be the last entry, to get the number of entries in the enum
+        HSOP,
+        NoPeriodBound,
+        SCIP,
+        NoLLL,
+        NoRelax,
+        Descent,
+        NoDescent,
+        NoGradingDenom,
+        GradingIsPositive,
+        //
+        // checking properties of already computed data
+        // (cannot be used as a computation goal)
+        //
+        IsTriangulationNested,
+        IsTriangulationPartial,
+        //
+        // ONLY FOR INTERNAL CONTROL
+        //
+        ExplicitHilbertSeries,
+        NakedDual,
+        EnumSize,
+        LAST_PROPERTY = ConeProperty::EnumSize // this has to be the last entry, to get the number of entries in the enum
     }; // remember to change also the string conversion function if you change this enum
+}
+
+namespace OutputType{
+    enum Enum {
+        Matrix,
+        MatrixFloat,
+        Vector,
+        Integer,
+        GMPInteger,
+        Rational,
+        FieldElem,
+        Float,
+        MachineInteger,
+        Bool,
+        Complex,
+        Void
+    };
 }
 
 class ConeProperties {
@@ -102,10 +219,17 @@ public:
     bool none() const;
     size_t count () const;
 
+    /* return the restriction of this to the goals / options */
+    ConeProperties goals();
+    ConeProperties options();
+
     /* the following methods are used internally */
-    void set_preconditions();    // activate properties which are needed implicitly
-    void prepare_compute_options();
+    void set_preconditions(bool inhomogeneous, bool numberfield);    // activate properties which are needed implicitly
+    // void prepare_compute_options(bool inhomogeneous, bool numberfield);
     void check_sanity(bool inhomogeneous);
+    void check_conflicting_variants();
+    void check_Q_permissible(bool after_implications);
+    // void set_default_goals(bool inhomogeneous, bool numberfield);
 
     /* print it in a nice way */
     friend std::ostream& operator<<(std::ostream&, const ConeProperties&);
@@ -121,6 +245,7 @@ bool isConeProperty(ConeProperty::Enum& cp, const std::string& s);
 ConeProperty::Enum toConeProperty(const std::string&);
 const std::string& toString(ConeProperty::Enum);
 std::ostream& operator<<(std::ostream&, const ConeProperties&);
+OutputType::Enum output_type(ConeProperty::Enum);
 
 }
 

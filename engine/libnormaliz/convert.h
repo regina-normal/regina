@@ -33,25 +33,25 @@
 #include <libnormaliz/integer.h>
 
 namespace libnormaliz {
-//using std::ostream;
 
 // conversion for integers, throws ArithmeticException if conversion fails
-template<typename ToType, typename FromType>
-void convert(ToType& ret, const FromType& val) {
+template<typename ToType,typename FromType>
+inline void convert(ToType& ret, const FromType& val) {
     if (!try_convert(ret,val)) {
-        errorOutput() << "Cannot convert " << val << endl;
-        throw ArithmeticException();
+        throw ArithmeticException(val);
     }
 }
 
+
 // conversion of vectors
 template<typename ToType, typename FromType>
-void convert(vector<ToType>& ret_vect, const vector<FromType>& from_vect){
+inline void convert(vector<ToType>& ret_vect, const vector<FromType>& from_vect){
     size_t s = from_vect.size();
     ret_vect.resize(s);
     for (size_t i=0; i<s; ++i)
         convert(ret_vect[i], from_vect[i]);
 }
+
 
 // general conversion with return, throws ArithmeticException if conversion fails
 template<typename ToType, typename FromType>
