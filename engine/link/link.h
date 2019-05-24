@@ -3780,6 +3780,35 @@ class REGINA_API ArcIterator {
 
 /*@}*/
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline void Link::clearAllProperties() {
+    jones_.clear();
+    homflyAZ_.clear();
+    homflyLM_.clear();
+    bracket_.clear();
+    niceTreeDecomposition_.clear();
+}
+
+inline Link::~Link() {
+    clearAllProperties();
+    for (Crossing* c : crossings_)
+        delete c;
+}
+
+inline int Crossing::index() const {
+    return markedIndex();
+}
+
+inline StrandRef Crossing::next(int strand) const {
+    return next_[strand];
+}
+
+inline StrandRef Crossing::prev(int strand) const {
+    return prev_[strand];
+}
+
 // Inline functions for StrandRef
 
 inline StrandRef::StrandRef() : crossing_(nullptr), strand_(0) {
@@ -3854,10 +3883,6 @@ inline std::ostream& operator << (std::ostream& out, const StrandRef& s) {
 
 // Inline functions for Crossing
 
-inline int Crossing::index() const {
-    return markedIndex();
-}
-
 inline int Crossing::sign() const {
     return sign_;
 }
@@ -3880,14 +3905,6 @@ inline StrandRef Crossing::under() {
 
 inline StrandRef Crossing::strand(int which) {
     return StrandRef(this, which);
-}
-
-inline StrandRef Crossing::next(int strand) const {
-    return next_[strand];
-}
-
-inline StrandRef Crossing::prev(int strand) const {
-    return prev_[strand];
 }
 
 inline void Crossing::writeTextShort(std::ostream& out) const {
@@ -3939,12 +3956,6 @@ inline Link::Link(size_t unknots) {
 }
 
 inline Link::Link(const Link& cloneMe) : Link(cloneMe, true) {
-}
-
-inline Link::~Link() {
-    clearAllProperties();
-    for (Crossing* c : crossings_)
-        delete c;
 }
 
 inline size_t Link::size() const {
@@ -4033,14 +4044,6 @@ inline bool Link::dependsOnParent() const {
 
 inline Packet* Link::internalClonePacket(Packet*) const {
     return new Link(*this);
-}
-
-inline void Link::clearAllProperties() {
-    jones_.clear();
-    homflyAZ_.clear();
-    homflyLM_.clear();
-    bracket_.clear();
-    niceTreeDecomposition_.clear();
 }
 
 inline StrandRef Link::translate(const StrandRef& other) const {

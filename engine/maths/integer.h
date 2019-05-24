@@ -1506,7 +1506,7 @@ extern template REGINA_API const IntegerBase<true> IntegerBase<true>::one;
 extern template REGINA_API const IntegerBase<false> IntegerBase<false>::one;
 
 // This class constant is specialised, even though the class itself is not.
-template <> const IntegerBase<true> IntegerBase<true>::infinity;
+template <> REGINA_API const IntegerBase<true> IntegerBase<true>::infinity;
 extern template REGINA_API const IntegerBase<true> IntegerBase<true>::infinity;
 #endif // __DOXYGEN
 
