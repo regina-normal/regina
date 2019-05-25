@@ -32,13 +32,14 @@
 
 #include <cstdlib>
 #include <iostream>
-#if defined(REGINA_INSTALL_BUNDLE) || defined(REGINA_INSTALL_WINDOWS)
-#include <libgen.h> // for dirname()
-#endif
 #include "regina-config.h"
 #include "census/census.h"
 #include "file/globaldirs.h"
 #include "triangulation/dim3.h"
+
+#if defined(REGINA_INSTALL_BUNDLE) || defined(REGINA_INSTALL_WINDOWS)
+#include <libgen.h> // for dirname()
+#endif
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
@@ -70,7 +71,8 @@ int main(int argc, char* argv[]) {
     regina::GlobalDirs::setDirs("", "", appDir + "/../Resources/data/census");
 #else
     // The MS Windows build tries to follow the XDG build as far as possible.
-    regina::GlobalDirs::setDirs("", "", appDir + "/../share/data/census");
+    regina::GlobalDirs::setDirs("", "",
+        appDir + "\\..\\share\\regina\\data\\census");
 #endif
 #endif
 
