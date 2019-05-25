@@ -63,19 +63,26 @@ if (NOT REGINA_INSTALL_TYPE)
 ENDIF (NOT REGINA_INSTALL_TYPE)
 MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
 
-# Sanity check the installation type:
+# Sanity check the installation type, and set the boolean install type flags
+# that will appear in regina-config.h:
+SET(REGINA_INSTALL_XDG FALSE)
+SET(REGINA_INSTALL_BUNDLE FALSE)
+SET(REGINA_INSTALL_WINDOWS FALSE)
 IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # No sanity checking needed here (yet).
+  SET(REGINA_INSTALL_XDG TRUE)
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   IF (NOT APPLE)
     MESSAGE(FATAL_ERROR
       "REGINA_INSTALL_TYPE=Bundle is only supported on MacOSX.")
   ENDIF (NOT APPLE)
+  SET(REGINA_INSTALL_BUNDLE TRUE)
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   IF (NOT WIN32)
     MESSAGE(FATAL_ERROR
       "REGINA_INSTALL_TYPE=Windows is only supported on MS Windows.")
   ENDIF (NOT WIN32)
+  SET(REGINA_INSTALL_WINDOWS TRUE)
 ELSE()
   MESSAGE(FATAL_ERROR
     "REGINA_INSTALL_TYPE must be one of: XDG Bundle Windows.")
