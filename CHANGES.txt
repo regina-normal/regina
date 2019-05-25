@@ -13,7 +13,7 @@ Version 5.2  [ 29 September, 2017 ]
         - Now requires C++14 (not C++11).  However, the only feature of C++14
           that is currently used is the [[deprecated]] attribute, which means
           that partially compliant compilers (such as gcc4.9) should be fine.
-        - Now builds under gcc7.
+        - Now builds under gcc7 and gcc8.
         - Updated the bundled copy of Normaliz to version 3.7.2 (17 Apr 2019).
     ENGINE:
         Class BitManipulator, GenericBitManipulator:
