@@ -32,7 +32,7 @@
 
 #include <cstdlib>
 #include <iostream>
-#ifdef REGINA_INSTALL_BUNDLE
+#if defined(REGINA_INSTALL_BUNDLE) || defined(REGINA_INSTALL_WINDOWS)
 #include <libgen.h> // for dirname()
 #endif
 #include "regina-config.h"
@@ -54,24 +54,25 @@ int main(int argc, char* argv[]) {
     if (argc < 2)
         usage(argv[0], "Please specify one or more isomorphism signatures.");
 
-#ifdef REGINA_INSTALL_BUNDLE
-    // The census databases are installed in the bundle, and we cannot
+#if defined(REGINA_INSTALL_BUNDLE) || defined(REGINA_INSTALL_WINDOWS)
+    // The census databases are installed with the app, and we cannot
     // know the path to that in advance.  Set it dynamically now.
-    //
-    // The cmake-built bundle puts the databases in a sensible location:
-    // Regina.app/Contents/Resources/data/census.
-    // The xcode-built bundle puts them in the root resources directory:
-    // Regina.app/Contents/Resources.
+    std::string appDir = dirname(argv[0]);
+#if defined(REGINA_XCODE_BUNDLE)
+    // The xcode-built MacOS bundle puts the databases in the
+    // root resources directory: Regina.app/Contents/Resources.
     // This is because the databases are "derived sources" and so need to be
     // installed through a "copy bundle resources" phase (not "copy files").
-    std::string appDir = dirname(argv[0]);
-#ifdef REGINA_XCODE_BUNDLE
     regina::GlobalDirs::setDirs("", "", appDir + "/../Resources");
-#else
+#elif defined(REGINA_INSTALL_BUNDLE)
+    // The cmake-built MacOS bundle puts the databases in a sensible location:
+    // Regina.app/Contents/Resources/data/census.
     regina::GlobalDirs::setDirs("", "", appDir + "/../Resources/data/census");
+#else
+    // The MS Windows build tries to follow the XDG build as far as possible.
+    regina::GlobalDirs::setDirs("", "", appDir + "/../share/data/census");
 #endif
 #endif
-
 
     const regina::CensusHit* hit;
     for (int i = 1; i < argc; ++i) {
