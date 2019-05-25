@@ -71,7 +71,8 @@ int main(int argc, char* argv[]) {
     regina::GlobalDirs::setDirs("", "", appDir + "/../Resources/data/census");
 #else
     // The MS Windows build tries to follow the XDG build as far as possible.
-    regina::GlobalDirs::setDirs("", "", appDir + "/../share/data/census");
+    regina::GlobalDirs::setDirs("", "",
+        appDir + "\\..\\share\\regina\\data\\census");
 #endif
 #endif
 
