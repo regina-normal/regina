@@ -60,6 +60,7 @@ class SimplexEvaluator {
     Integer volume;
     mpz_class mpz_volume;
     size_t Deg0_offset; // the degree of 0+offset
+    long level_offset; // the same for the inhomogeneous case
     // Integer det_sum; // sum of the determinants of all evaluated simplices --> Collector
     // mpq_class mult_sum; // sum of the multiplicities of all evaluated simplices --> Collector
     vector<key_t> key; 
@@ -76,9 +77,11 @@ class SimplexEvaluator {
     vector< Integer > TDiag; // diagonal of transpose of generaor matrix after trigonalization
     vector< bool > Excluded;
     vector< Integer > Indicator; 
-    vector< long > gen_degrees;
+    vector<Integer> gen_degrees;
+    vector<long> gen_degrees_long;
     vector< long > level0_gen_degrees; // degrees of the generaors in level 0
-    vector< long > gen_levels;
+    vector< Integer > gen_levels;
+    vector< long > gen_levels_long;
     // vector< num_t > hvector;  //h-vector of the current evaluation
     // vector< num_t > inhom_hvector; // separate vector in the inhomogeneous case in case we want to compute two h-vectors
     // HilbertSeries Hilbert_Series; //this is the summed Hilbert Series
@@ -90,13 +93,13 @@ class SimplexEvaluator {
     Matrix<Integer> RS; // right hand side to hold order vector
     // Matrix<Integer> RSmult; // for multiple right hand sides
     
-    Matrix<Integer>* StanleyMat;
+    Matrix<long>* StanleyMat;
     size_t StanIndex;
     size_t nr_level0_gens; // counts the number of level 0 vectors among the generators
     
     bool sequential_evaluation; // indicates whether the simplex is evaluated by a single thread
     
-    bool GMP_transition; 
+    bool GMP_transition;
     
     struct SIMPLINEXDATA{                    // local data of excluded faces
         boost::dynamic_bitset<> GenInFace;   // indicator for generators of simplex in face 
@@ -133,6 +136,7 @@ class SimplexEvaluator {
     void update_mult_inhom(Integer& multiplicity);
     
     Integer start_evaluation(SHORTSIMPLEX<Integer>& s, Collector<Integer>& Coll);
+    void find_excluded_facets();
     void take_care_of_0vector(Collector<Integer>& Coll);
     // void evaluation_loop_sequential(Collector<Integer>& Coll);
     void evaluate_element(const vector<Integer>& element, Collector<Integer>& Coll);
@@ -140,6 +144,8 @@ class SimplexEvaluator {
     void evaluation_loop_parallel();
     void evaluate_block(long block_start, long block_end, Collector<Integer>& Coll);
     void collect_vectors();
+    void add_hvect_to_HS(Collector<Integer>& Coll);
+    void reduce_against_global(Collector<Integer>& Coll);
     
     // void insert_gens();
     // void insert_gens_transpose();
@@ -163,7 +169,8 @@ public:
     // evaluation in parallel threads
     void Simplex_parallel_evaluation();  
 
-        vector<key_t> get_key();
+    vector<key_t> get_key();
+    Integer get_volume();
 
     
     void print_all();

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -233,6 +233,9 @@ class IsomorphismBase :
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
          *
+         * \todo Lock the topological properties of the underlying manifold,
+         * to avoid recomputing them after the isomorphism is applied.
+         *
          * @param original the triangulation to which this isomorphism
          * should be applied.
          * @return the new isomorphic triangulation, or 0 if a problem
@@ -262,6 +265,9 @@ class IsomorphismBase :
          * \pre The simplex images are precisely 0,1,...,size()-1 in some
          * order (i.e., this isomorphism does not represent a mapping from a
          * smaller triangulation into a larger triangulation).
+         *
+         * \todo Lock the topological properties of the underlying manifold,
+         * to avoid recomputing them after the isomorphism is applied.
          *
          * @param tri the triangulation to which this isomorphism
          * should be applied.
@@ -317,9 +323,13 @@ class IsomorphismBase :
          *
          * @param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
+         * @param even if \c true, then every simplex will have its
+         * vertices permuted with an even permutation.  This means that,
+         * if the random isomorphism is applied to an oriented triangulation,
+         * it will preserve the orientation.
          * @return the newly constructed random isomorphism.
          */
-        static Isomorphism<dim>* random(unsigned nSimplices);
+        static Isomorphism<dim>* random(unsigned nSimplices, bool even = false);
 };
 
 /*@}*/
@@ -471,7 +481,7 @@ inline Isomorphism<dim>* IsomorphismBase<dim>::identity(unsigned nSimplices) {
 }
 
 template <int dim>
-Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices) {
+Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices, bool even) {
     Isomorphism<dim>* ans = new Isomorphism<dim>(nSimplices);
 
     // Randomly choose the destination simplices.
@@ -482,7 +492,7 @@ Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices) {
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nSimplices; i++)
-        ans->facetPerm_[i] = Perm<dim+1>::rand();
+        ans->facetPerm_[i] = Perm<dim+1>::rand(even);
 
     return ans;
 }

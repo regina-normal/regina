@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -314,7 +314,8 @@ struct NormalInfo;
  * <b>When deriving classes from NormalSurfaceVector:</b>
  * <ul>
  *   <li>A new value must must be added to the NormalCoords enum in
- *   normalcoords.h to represent the new coordinate system.</li>
+ *   normalcoords.h to represent the new coordinate system (do not
+ *   forget to add this constant to the python bindings also).</li>
  *   <li>The file coordregistry-impl.h must be updated to reflect the new
  *   coordinate system (the file itself contains instructions
  *   on how to do this).</li>
@@ -1204,6 +1205,7 @@ class REGINA_API NormalSurface :
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
+         * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
          *
          * \warning This routine explicitly builds the normal discs,
@@ -1221,6 +1223,7 @@ class REGINA_API NormalSurface :
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
+         * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
          *
          * \warning This routine explicitly builds the normal discs,
@@ -1238,6 +1241,7 @@ class REGINA_API NormalSurface :
          * been called for a particular surface, subsequent calls return
          * the answer immediately.
          *
+         * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
          *
          * \warning This routine explicitly builds the normal discs,
@@ -1725,6 +1729,7 @@ class REGINA_API NormalSurface :
          * Calculates whether this surface is orientable and/or
          * two-sided and stores the results as properties.
          *
+         * \pre This normal surface is embedded (not singular or immersed).
          * \pre This normal surface is compact (has finitely many discs).
          */
         void calculateOrientable() const;

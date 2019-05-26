@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -427,9 +427,12 @@ class Perm {
          * The implementation uses the C standard ::rand() function for its
          * random number generation.
          *
+         * @param even if \c true, then the resulting permutation is
+         * guaranteed to be even (and again all even permutations are
+         * returned with equal probability).
          * @return a random permutation.
          */
-        static Perm rand();
+        static Perm rand(bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -755,7 +758,7 @@ typename Perm<n>::Index Perm<n>::index() const {
 }
 
 template <int n>
-Perm<n> Perm<n>::rand() {
+Perm<n> Perm<n>::rand(bool even) {
     // We can't just call atIndex(rand() % nPerms), since nPerms might
     // be too large to fit into an int (which is what rand() returns).
     int image[n];
@@ -766,7 +769,14 @@ Perm<n> Perm<n>::rand() {
         for (q = p + 1; q < n; ++q)
             if (image[q] >= image[p])
                 ++image[q];
-    return Perm<n>(image);
+    if (even) {
+        Perm<n> result(image);
+        if (result.sign() > 0)
+            return result;
+        std::swap(image[0], image[1]);
+        return Perm<n>(image);
+    } else
+        return Perm<n>(image);
 }
 
 template <int n>

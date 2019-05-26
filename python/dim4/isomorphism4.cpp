@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,6 +44,8 @@ namespace {
         &Isomorphism<4>::simpImage;
     regina::Perm<5> (Isomorphism<4>::*facetPerm_const)(unsigned) const =
         &Isomorphism<4>::facetPerm;
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_random, Isomorphism<4>::random, 1, 2);
 }
 
 void addIsomorphism4() {
@@ -59,7 +61,7 @@ void addIsomorphism4() {
             return_value_policy<to_held_type<>>())
         .def("applyInPlace", &Isomorphism<4>::applyInPlace)
         .def("random", &Isomorphism<4>::random,
-            return_value_policy<manage_new_object>())
+            OL_random()[return_value_policy<manage_new_object>()])
         .def("identity", &Isomorphism<4>::identity,
             return_value_policy<manage_new_object>())
         .def(regina::python::add_output())

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -52,6 +52,8 @@
     id page;
     self.pages = [NSMutableArray array];
     for (id i in storyboardIDs) {
+        // Here we require that each tab lives on the same storyboard as the
+        // enclosing packet creator.
         page = [self.storyboard instantiateViewControllerWithIdentifier:i];
         if (! page)
             NSLog(@"No view controller for storyboard ID: %@", i);

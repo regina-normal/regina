@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -43,7 +43,6 @@
 class QToolBar;
 class Tri2GluingsUI;
 class Tri2SkeletonUI;
-class PacketEditIface;
 class QLabel;
 
 /**
@@ -59,20 +58,16 @@ class Tri2UI : public PacketTabbedUI {
         Tri2GluingsUI* gluings;
         Tri2SkeletonUI* skeleton;
 
-        PacketEditIface* editIface;
-
     public:
         /**
          * Constructor and destructor.
          */
         Tri2UI(regina::Triangulation<2>* packet,
             PacketPane* newEnclosingPane);
-        ~Tri2UI();
 
         /**
          * PacketUI overrides.
          */
-        PacketEditIface* getEditIface();
         const QLinkedList<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 };
@@ -118,10 +113,6 @@ class Tri2HeaderUI : public PacketViewerTab {
          */
         static QString summaryInfo(regina::Triangulation<2>* tri);
 };
-
-inline PacketEditIface* Tri2UI::getEditIface() {
-    return editIface;
-}
 
 inline QToolBar* Tri2HeaderUI::getToolBar() {
     return bar;

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,9 +62,15 @@
 #ifdef LIBGVC_FOUND
 #include "gvc.h"
 
-extern gvplugin_library_t gvplugin_neato_layout_LTX_library;
-extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
-extern gvplugin_library_t gvplugin_core_LTX_library;
+// Define LIBGVC_DYNAMIC_PLUGINS if you wish to load plugins dynamically.
+// This requires (amongst other things) the presence of the file config6,
+// which list all available plugins.
+// #define LIBGVC_DYNAMIC_PLUGINS 1
+
+#ifndef LIBGVC_DYNAMIC_PLUGINS
+extern REGINA_HELPER_DLL_IMPORT gvplugin_library_t gvplugin_neato_layout_LTX_library;
+extern REGINA_HELPER_DLL_IMPORT gvplugin_library_t gvplugin_dot_layout_LTX_library;
+extern REGINA_HELPER_DLL_IMPORT gvplugin_library_t gvplugin_core_LTX_library;
 
 lt_symlist_t lt_preloaded_symbols[] = {
     { "gvplugin_neato_layout_LTX_library", &gvplugin_neato_layout_LTX_library },
@@ -72,6 +78,7 @@ lt_symlist_t lt_preloaded_symbols[] = {
     { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
     { 0, 0 }
 };
+#endif
 #endif
 
 FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
@@ -283,6 +290,9 @@ void FacetGraphTab::refresh() {
     char* svg;
     unsigned svgLen;
 
+#ifdef LIBGVC_DYNAMIC_PLUGINS
+    GVC_t* gvc = gvContext();
+#else
     // Manually specify our plugins to avoid on-demand loading.
     GVC_t* gvc = gvContextPlugins(lt_preloaded_symbols, 0);
 
@@ -291,6 +301,8 @@ void FacetGraphTab::refresh() {
         gvAddLibrary(gvc, &gvplugin_neato_layout_LTX_library);
     else
         gvAddLibrary(gvc, &gvplugin_dot_layout_LTX_library);
+#endif
+
     Agraph_t* g = agmemread(dot.c_str());
     if (chooseType->currentIndex() == 0)
         gvLayout(gvc, g, "neato");

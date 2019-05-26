@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -349,7 +349,7 @@ regina::syntax::Repository* repository;
     CGFloat gap = self.script.superview.frame.size.height - self.script.frame.origin.y - self.script.frame.size.height;
 
     // On iOS 8 (but not all orientations for iOS 7), what we need is kbSize.height.
-    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
 
     self.script.contentInset = UIEdgeInsetsMake(0, 0, kbSize.height - gap, 0);
     self.script.scrollIndicatorInsets = UIEdgeInsetsMake(0, 0, kbSize.height - gap, 0);

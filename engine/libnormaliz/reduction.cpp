@@ -22,8 +22,10 @@
  */
 
 //---------------------------------------------------------------------------
+#include<vector>
 
 #include "libnormaliz/reduction.h"
+#include "libnormaliz/vector_operations.h"
 
 namespace libnormaliz {
 using namespace std;
@@ -46,6 +48,7 @@ Candidate<Integer>::Candidate(const vector<Integer>& v, const Full_Cone<Integer>
 : cand(v)
 {
     compute_values_deg(C);
+    reducible=true;
     original_generator=false;
 }
 
@@ -75,11 +78,37 @@ Candidate<Integer>::Candidate(size_t cand_size, size_t val_size){
 //---------------------------------------------------------------------------
 
 template<typename Integer>
+Candidate<Integer> sum(const Candidate<Integer>& C,const Candidate<Integer>& D){
+    
+    Candidate<Integer> the_sum=C;
+    the_sum.cand=v_add(the_sum.cand,D.cand);
+    the_sum.values=v_add(the_sum.values,D.values);
+    the_sum.sort_deg+=D.sort_deg;
+    the_sum.original_generator=false;
+    the_sum.reducible=true;
+    return the_sum;
+}
+
+template Candidate<long> sum(const Candidate<long>& ,const Candidate<long>& );
+template Candidate<long long> sum(const Candidate<long long>& ,const Candidate<long long>& );
+template Candidate<mpz_class> sum(const Candidate<mpz_class>& ,const Candidate<mpz_class>& );
+#ifdef ENFNORMALIZ
+template Candidate<renf_elem_class> sum(const Candidate<renf_elem_class>& ,const Candidate<renf_elem_class>& );
+#endif
+
+//---------------------------------------------------------------------------
+
+template<typename Integer>
 void Candidate<Integer>::compute_values_deg(const Full_Cone<Integer>& C) {
     C.Support_Hyperplanes.MxV(values, cand);
     convert(sort_deg, v_scalar_product(cand,C.Sorting));
-    if(C.do_module_gens_intcl)  // necessary to make all monoid generators subtractible
+    if(C.do_module_gens_intcl || C.hilbert_basis_rec_cone_known)  // necessary to make all monoid generators subtractible
         sort_deg*=2;
+}
+
+template<>
+void Candidate<renf_elem_class>::compute_values_deg(const Full_Cone<renf_elem_class>& C) {
+    assert(false);
 }
 
 
@@ -89,6 +118,7 @@ template<typename Integer>
 CandidateList<Integer>::CandidateList()
 : tmp_candidate(0,0)
 {
+    verbose = false;
     dual = false;
     last_hyp = 0;
 }
@@ -100,6 +130,7 @@ template<typename Integer>
 CandidateList<Integer>::CandidateList(bool dual_algorithm)
 : tmp_candidate(0,0)
 {
+    verbose = false;
     dual = dual_algorithm;  
     last_hyp = 0;
 }
@@ -189,6 +220,9 @@ void CandidateList<Integer>::reduce_by(CandidateList<Integer>& Reducers){
         
         CandidateTable<Integer> ReducerTable(Reducers);
         
+        bool skip_remaining=false;;
+    std::exception_ptr tmp_exception;
+        
         // This parallel region cannot throw a NormalizException
         #pragma omp parallel private(c,cpos) firstprivate(ReducerTable)
         {
@@ -200,11 +234,25 @@ void CandidateList<Integer>::reduce_by(CandidateList<Integer>& Reducers){
         for (size_t k=0; k<csize; ++k) {
             for(;k > cpos; ++cpos, ++c) ;
             for(;k < cpos; --cpos, --c) ;
+            
+            if(skip_remaining)
+                continue;
+        try {
+            
+            INTERRUPT_COMPUTATION_BY_EXCEPTION
         
             ReducerTable.is_reducible(*c);
+            
+            } catch(const std::exception& ) {
+                tmp_exception = std::current_exception();
+                skip_remaining = true;
+                #pragma omp flush(skip_remaining)
+            }
         }
         
         }// end parallel
+        
+        if (!(tmp_exception == 0)) std::rethrow_exception(tmp_exception);
         
         // erase reducibles
         for(c=Candidates.begin();c!=Candidates.end();){
@@ -236,7 +284,7 @@ void CandidateList<Integer>::auto_reduce_sorted(){
         return;
 
     CandidateList<Integer> Irreducibles(dual), CurrentReducers(dual);
-    long irred_degree;
+    Integer irred_degree;
     size_t cs=Candidates.size();
     if(verbose && cs > 1000){
             verboseOutput() << "auto-reduce " << cs << " candidates, degrees <= "; 
@@ -259,6 +307,12 @@ void CandidateList<Integer>::auto_reduce_sorted(){
     Candidates.splice(Candidates.begin(),Irreducibles.Candidates);
 }
 
+#ifdef ENFNORMALIZ
+template<>
+void CandidateList<renf_elem_class>::auto_reduce_sorted(){
+    assert(false);
+}
+#endif
 //---------------------------------------------------------------------------
 
 template<typename Integer>
@@ -364,6 +418,28 @@ bool CandidateList<Integer>::empty(){
     return Candidates.empty();
 }
 
+/* 
+template<typename Integer>
+void CandidateList<Integer>::search(){
+    
+    vector<Integer> TESTV(6);
+    TESTV[0]=2;
+    TESTV[1]=6;
+    TESTV[2]=0;
+    TESTV[3]=15;
+    TESTV[4]=18;
+    TESTV[5]=2;
+    
+    typename list<Candidate<Integer> >::iterator h;
+    for(h=Candidates.begin();h!=Candidates.end();++h){
+        if(h->cand==TESTV){
+            assert(h->cand!=TESTV);
+        }
+        
+    }
+
+}
+// */
 
 //---------------------------------------------------------------------------
 
@@ -471,8 +547,8 @@ CandidateTable<Integer>::CandidateTable(CandidateList<Integer>& CandList){
     typename list<Candidate<Integer> >::iterator c;
     for(c=CandList.Candidates.begin();c!=CandList.Candidates.end();++c)
         ValPointers.push_back(pair< size_t, vector<Integer>* >(c->sort_deg,&(c->values)) );
-        dual=CandList.dual;
-        last_hyp=CandList.last_hyp;
+    dual=CandList.dual;
+    last_hyp=CandList.last_hyp;
 }
 
 //---------------------------------------------------------------------------
@@ -576,6 +652,26 @@ bool CandidateTable<Integer>::is_reducible_unordered(const vector<Integer>& valu
    }   
    return(false);       
 }
+
+#ifndef NMZ_MIC_OFFLOAD  //offload with long is not supported
+template class CandidateList<long>;
+template class CandidateTable<long>;
+template class Candidate<long>;
+#endif
+
+template class CandidateList<long long>;
+template class CandidateTable<long long>;
+template class Candidate<long long>;
+
+template class CandidateList<mpz_class>;
+template class CandidateTable<mpz_class>;
+template class Candidate<mpz_class>;
+
+#ifdef ENFNORMALIZ
+template class CandidateList<renf_elem_class>;
+template class CandidateTable<renf_elem_class>;
+template class Candidate<renf_elem_class>;
+#endif
 
 size_t redcounter=0;
  

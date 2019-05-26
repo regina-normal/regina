@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -195,6 +195,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
          * Triangulation actions.
          */
         void orient();
+        void reflect();
         void barycentricSubdivide();
         void doubleCover();
         void splitIntoComponents();

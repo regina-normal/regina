@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
+#include "engine.h"
 #include "packet/container.h"
 #include "packet/text.h"
 #include "progress/progresstracker.h"
@@ -404,16 +405,16 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     triActionList.append(actSimplify);
 
     QAction* actEltMove = new QAction(this);
-    actEltMove->setText(tr("&Elementary Move..."));
+    actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
-        "Select an elementary move with which to modify the triangulation"));
+        "Modify the triangulation using elementary moves"));
     actEltMove->setEnabled(readWrite);
-    actEltMove->setWhatsThis(tr("<qt>Perform an elementary move upon this "
+    actEltMove->setWhatsThis(tr("<qt>Perform elementary moves upon this "
         "triangulation.  <i>Elementary moves</i> are modifications local to "
         "a small number of tetrahedra that do not change the underlying "
         "3-manifold.<p>"
-        "A dialog will be presented in which you can select the precise "
-        "elementary move to apply.</qt>"));
+        "A dialog will be presented for you to select which "
+        "elementary moves to apply.</qt>"));
     enableWhenWritable.append(actEltMove);
     triActionList.append(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
@@ -436,6 +437,20 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     enableWhenWritable.append(actOrient);
     triActionList.append(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
+
+    QAction* actReflect = new QAction(this);
+    actReflect->setText(tr("Re&flect"));
+    actReflect->setIcon(ReginaSupport::regIcon("reflect"));
+    actReflect->setToolTip(tr(
+        "Reverse the orientation of each tetrahedron"));
+    actReflect->setEnabled(readWrite);
+    actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each tetrahedron "
+        "so that the orientations of all tetrahedra are reversed.<p>"
+        "If this triangulation is oriented, then the overall effect will be "
+        "to convert this into an isomorphic triangulation with the "
+        "opposite orientation.</qt>"));
+    triActionList.append(actReflect);
+    connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
     QAction* actBarycentricSubdivide = new QAction(this);
     actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
@@ -788,7 +803,7 @@ void Tri3GluingsUI::simplifyExhaustive(int height) {
     ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
         tr("Tried %1 triangulations"), ui);
 
-    tri->simplifyExhaustive(height, 1 /* threads */, &tracker);
+    tri->simplifyExhaustive(height, regina::politeThreads(), &tracker);
 
     if (dlg.run() && tri->size() == initSize) {
         dlg.hide();
@@ -833,6 +848,12 @@ void Tri3GluingsUI::orient() {
     }
 
     tri->orient();
+}
+
+void Tri3GluingsUI::reflect() {
+    endEdit();
+
+    tri->reflect();
 }
 
 void Tri3GluingsUI::barycentricSubdivide() {
@@ -925,13 +946,6 @@ void Tri3GluingsUI::drillEdge() {
 
 void Tri3GluingsUI::connectedSumWith() {
     endEdit();
-
-    if (tri->isEmpty() || ! tri->isConnected()) {
-        ReginaSupport::info(ui,
-            tr("I can only make connected sums with "
-                "non-empty, connected triangulations."));
-        return;
-    }
 
     regina::Triangulation<3>* other = static_cast<regina::Triangulation<3>*>(
         PacketDialog::choose(ui,

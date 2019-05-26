@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -63,23 +63,27 @@ Triangulation<3>::Triangulation(const std::string& description) {
 void Triangulation<3>::clearAllProperties() {
     clearBaseProperties();
 
-    H1Rel_.clear();
-    H1Bdry_.clear();
-    H2_.clear();
+    // Properties of the triangulation:
     zeroEfficient_.clear();
     splittingSurface_.clear();
-    twoSphereBoundaryComponents_.clear();
-    negativeIdealBoundaryComponents_.clear();
-    threeSphere_.clear();
-    threeBall_.clear();
-    solidTorus_.clear();
-    irreducible_.clear();
-    compressingDisc_.clear();
-    haken_.clear();
     strictAngleStructure_.clear();
-
     niceTreeDecomposition_.clear();
-    turaevViroCache_.clear();
+
+    // Properties of the manifold:
+    if (! topologyLock_) {
+        H1Rel_.clear();
+        H1Bdry_.clear();
+        H2_.clear();
+        twoSphereBoundaryComponents_.clear();
+        negativeIdealBoundaryComponents_.clear();
+        threeSphere_.clear();
+        threeBall_.clear();
+        solidTorus_.clear();
+        irreducible_.clear();
+        compressingDisc_.clear();
+        haken_.clear();
+        turaevViroCache_.clear();
+    }
 }
 
 void Triangulation<3>::swapAllProperties(Triangulation<3>& other) {

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -321,6 +321,15 @@
     self.packet->barycentricSubdivision();
 }
 
+- (IBAction)reflect:(id)sender
+{
+    [self endEditing];
+    if (! [self checkEditable])
+    return;
+
+    self.packet->reflect();
+}
+
 - (IBAction)doubleCover:(id)sender
 {
     [self endEditing];
@@ -337,6 +346,7 @@
                                          destructiveButtonTitle:nil
                                               otherButtonTitles:@"Extract components",
                                                                 @"Barycentric subdivision",
+                                                                @"Reflect",
                                                                 @"Double cover",
                                                                 nil];
     [sheet showFromRect:self.actionsButton.frame inView:self.view animated:YES];
@@ -346,7 +356,7 @@
 
 - (void)keyboardDidShow:(NSNotification*)notification
 {
-    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
 
     CGRect tableInDetail = [self.parentViewController.view convertRect:self.triangles.frame fromView:self.view];
     CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;
@@ -574,6 +584,8 @@ cleanUpGluing:
         case 1:
             [self barycentricSubdivision:nil]; break;
         case 2:
+            [self reflect:nil]; break;
+        case 3:
             [self doubleCover:nil]; break;
     }
 }

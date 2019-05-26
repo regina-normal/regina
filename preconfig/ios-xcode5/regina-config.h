@@ -34,6 +34,21 @@
 /* Define if we are replacing Tokyo Cabinet with the older QDBM. */
 /* #undef QDBM_AS_TOKYOCABINET */
 
+/* Define if we are building a standard freedesktop.org installation in
+   a fixed location on the filesystem.
+   Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
+#define REGINA_INSTALL_XDG
+
+/* Define if we are building a self-contained MacOS app bundle that users can
+   drag and drop.
+   Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
+/* #undef REGINA_INSTALL_BUNDLE */
+
+/* Define if we are building a self-contained movable install directory
+   for MS Windows.
+   Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
+/* #undef REGINA_INSTALL_WINDOWS */
+
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST 
 
@@ -51,16 +66,16 @@
 #define REGINA_DB_EXT "tdb"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Regina 5.1"
+#define PACKAGE_STRING "Regina 5.2"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "5.1"
+#define PACKAGE_VERSION "5.2"
 
 /* Major version number of the package. */
 #define PACKAGE_VERSION_MAJOR 5
 
 /* Minor version number of the package. */
-#define PACKAGE_VERSION_MINOR 0
+#define PACKAGE_VERSION_MINOR 2
 
 /* Define to the version of SnapPy that is bundled with Regina. */
 #define SNAPPY_VERSION "2.4"

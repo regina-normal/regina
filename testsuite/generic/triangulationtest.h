@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,6 +38,54 @@
 using regina::Isomorphism;
 using regina::Perm;
 using regina::Triangulation;
+
+/**
+ * Clear all computed properties of the given triangulation.
+ */
+template <int dim>
+void clearProperties(Triangulation<dim>& tri) {
+    // Make and undo a trivial modification that will cause all
+    // computed properties to be flushed.
+    tri.newSimplex();
+    tri.removeSimplexAt(tri.size() - 1);
+}
+
+/**
+ * Used to extract information about faces of a triangulation, including
+ * the case subdim == dim.
+ */
+template <int dim, int subdim>
+struct FaceHelper {
+    static size_t count(Triangulation<dim>& tri) {
+        return tri.template countFaces<subdim>();
+    }
+
+    static regina::Face<dim, subdim>* face(
+            Triangulation<dim>& tri, size_t index) {
+        return tri.template face<subdim>(index);
+    }
+
+    static regina::Face<dim, subdim>* face(
+            regina::Simplex<dim>* s, Perm<dim + 1> vertices) {
+        return s->template face<subdim>(
+            regina::Face<dim, subdim>::faceNumber(vertices));
+    }
+};
+
+template <int dim>
+struct FaceHelper<dim, dim> {
+    static size_t count(Triangulation<dim>& tri) {
+        return tri.size();
+    }
+
+    static regina::Simplex<dim>* face(Triangulation<dim>& tri, size_t index) {
+        return tri.simplex(index);
+    }
+
+    static regina::Simplex<dim>* face(regina::Simplex<dim>* s, Perm<dim + 1>) {
+        return s;
+    }
+};
 
 /**
  * Used to perform barycentric subdivisions in those dimensions that
@@ -296,6 +344,108 @@ struct DoubleCoverHelper<dim, 0, true> {
 };
 
 /**
+ * Performs additional tests related to Pachner moves that are only
+ * supported in some dimensions.
+ */
+template <int dim, int codim>
+struct PachnerHelperMoveLegal {
+    static bool legal(regina::Face<dim, dim - codim>* f) {
+        // This function should never be called, but we do need it
+        // to compile.
+        return true;
+    }
+};
+
+template <int dim>
+struct PachnerHelperMoveLegal<dim, 1> {
+    static bool legal(regina::Face<dim, dim - 1>* f) {
+        // For codimension 1 faces, the legality conditions are easy to test.
+        return ! (f->isBoundary() ||
+            f->embedding(0).simplex() ==
+            f->embedding(1).simplex());
+    }
+};
+
+template <int dim, bool supportsClosed = regina::standardDim(dim)>
+struct PachnerHelperClosed {
+    static_assert(! regina::standardDim(dim),
+        "The no-op PachnerHelperClosed should not be used for "
+        "standard dimensions.");
+    static bool testClosed(const Triangulation<dim>& /* orig */,
+            const Triangulation<dim>& /* altered */) {
+        return true;
+    };
+};
+
+template <int dim>
+struct PachnerHelperClosed<dim, true> {
+    static bool testClosed(const Triangulation<dim>& orig,
+            const Triangulation<dim>& altered) {
+        return (altered.isClosed() == orig.isClosed());
+    };
+};
+
+template <int dim, bool supportsH2 = (dim == 3 || dim == 4)>
+struct PachnerHelperH2 {
+    static_assert(dim < 3 || dim > 4,
+        "The no-op PachnerHelperH2 should not be used for dimensions 3 or 4.");
+    static bool testH2(const Triangulation<dim>& /* orig */,
+            const Triangulation<dim>& /* altered */) {
+        return true;
+    };
+};
+
+template <int dim>
+struct PachnerHelperH2<dim, true> {
+    static bool testH2(const Triangulation<dim>& orig,
+            const Triangulation<dim>& altered) {
+        return (altered.homologyH2() == orig.homologyH2());
+    };
+};
+
+template <int dim, bool supportsCollapseEdge = (dim == 3 || dim == 4)>
+struct PachnerHelperCollapseEdge {
+    static_assert(dim < 3 || dim > 4,
+        "The no-op PachnerHelperCollapseEdge should not be used for "
+        "dimensions 3 or 4.");
+    static void verifyCollapseEdge(const Triangulation<dim>& /* orig */,
+            const Triangulation<dim>& /* altered */,
+            const Isomorphism<dim>* /* iso */, int /* simplex */) {
+    }
+};
+
+template <int dim>
+struct PachnerHelperCollapseEdge<dim, true> {
+    static void verifyCollapseEdge(const Triangulation<dim>& orig,
+            const Triangulation<dim>& altered,
+            const Isomorphism<dim>* iso, int simplex) {
+        regina::Triangulation<dim> copy(altered);
+
+        bool res = copy.collapseEdge(
+            copy.simplex(iso->simpImage(orig.size() + dim - 1))->edge(
+                regina::Edge<dim>::edgeNumber
+                    [iso->facetPerm(orig.size() + dim - 1)[0]]
+                    [iso->facetPerm(orig.size() + dim - 1)[dim]]),
+            true, true);
+        clearProperties(copy);
+
+        if (! res) {
+            std::ostringstream msg;
+            msg << orig.label() << ", simplex " << simplex << ": "
+                << "1-5 move: could not recollapse edge.";
+            CPPUNIT_FAIL(msg.str());
+        }
+
+        if (! copy.isIsomorphicTo(orig).get()) {
+            std::ostringstream msg;
+            msg << orig.label() << ", simplex " << simplex << ": "
+                << "1-5 move: recollapse is not isomorphic.";
+            CPPUNIT_FAIL(msg.str());
+        }
+    }
+};
+
+/**
  * Inherited by the test classes for all dimensions.
  */
 template <int dim>
@@ -310,8 +460,8 @@ class TriangulationTest : public CppUnit::TestFixture {
             /**< The dim-sphere, with two simplices whose boundaries
                  are identified according to the identity map. */
         Triangulation<dim> simplicialSphere;
-            /**< The dim-sphere, with two simplices whose boundaries
-                 are identified according to the identity map. */
+            /**< The dim-sphere, with (dim + 2) simplices glued together
+                 to form the boundary of a (dim + 1)-simplex. */
         Triangulation<dim> sphereBundle;
             /**< The product S^(dim-1) x S^1. */
 
@@ -440,6 +590,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             Triangulation<dim>* oriented = new Triangulation<dim>(*tri, false);
             oriented->orient();
+            clearProperties(*oriented);
             verifyOrient(tri, oriented);
             delete oriented;
 
@@ -449,6 +600,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete iso;
 
                 t->orient();
+                clearProperties(*t);
                 verifyOrient(tri, t);
                 delete t;
             }
@@ -464,6 +616,7 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             Triangulation<dim> canonical(*tri);
             canonical.makeCanonical();
+            clearProperties(canonical);
 
             for (int i = 0; i < trials; ++i) {
                 Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
@@ -471,6 +624,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete iso;
 
                 t->makeCanonical();
+                clearProperties(*t);
 
                 if (! t->isIsomorphicTo(*tri).get()) {
                     std::ostringstream msg;
@@ -884,6 +1038,251 @@ class TriangulationTest : public CppUnit::TestFixture {
                     << " instead of the expected " << h1 << ".";
                 CPPUNIT_FAIL(msg.str());
             }
+        }
+
+        void edgeAccess() {
+            for (int i = 0; i <= dim; ++i)
+                for (int j = 0; j <= dim; ++j) {
+                    if (i == j)
+                        continue;
+                    // Build a permutation that maps (0,1) -> (i,j).
+                    Perm<dim+1> p;
+                    if (i == 0 && j == 0)
+                        p = Perm<dim+1>();
+                    else if (i == 0)
+                        p = Perm<dim+1>(1, j);
+                    else if (j == 0)
+                        p = Perm<dim+1>(1, i);
+                    else
+                        p = Perm<dim+1>(0, i) * Perm<dim+1>(1,j);
+                    if (ball.simplex(0)->edge(i, j) !=
+                            ball.simplex(0)->edge(
+                            regina::Edge<dim>::faceNumber(p))) {
+                        std::ostringstream msg;
+                        msg << "Simplex<dim>::edge(" << i << ", " << j
+                            << ") returns the wrong edge.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+        }
+
+        template <int k>
+        static void verifyPachnerDetail(Triangulation<dim>* tri,
+                bool standardSimplex) {
+            // Tests Pachner moves on k-faces, and their inverses.
+            for (size_t i = 0; i < FaceHelper<dim, k>::count(*tri); ++i) {
+                Triangulation<dim> large(*tri);
+                if (large.isOrientable())
+                    large.orient();
+
+                // Test whether *we* think the move should be allowed.
+                // This is only computed for the case k == dim - 1;
+                // for all other k it simply returns true.
+                bool expected = PachnerHelperMoveLegal<dim, dim - k>::
+                    legal(FaceHelper<dim, k>::face(large, i));
+
+                // Perform the move (if we can).
+                bool res = large.pachner(FaceHelper<dim, k>::face(large, i));
+                clearProperties(large);
+
+                if (standardSimplex || k == dim) {
+                    // The move should always be allowed.
+                    if (! res) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            "not allowed.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else if (k == dim - 1) {
+                    // It is easy to tell when the move should be allowed,
+                    // and we just tested this ourselves above.
+                    if (res && ! expected) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            "was incorrectly allowed.";
+                        CPPUNIT_FAIL(msg.str());
+                    } else if (expected && ! res) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            "was incorrectly disallowed.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                if (! res) {
+                    if (large.size() != tri->size()) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            "disallowed "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            "changed # simplices.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    Triangulation<dim> oriented(*tri);
+                    if (tri->isOrientable())
+                        oriented.orient();
+                    if (! large.isIdenticalTo(oriented)) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            "disallowed "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            "is not identical.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    continue;
+                }
+
+                // The move was performed.
+
+                if (large.size() != tri->size() + 2 * k - dim) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", face " << i << ": "
+                        << (dim + 1 - k) << '-' << (k + 1) << " move "
+                        "gives wrong triangulation size.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isValid() != tri->isValid()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", face " << i << ": "
+                        << (dim + 1 - k) << '-' << (k + 1) << " move "
+                        "changes validity.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.isOrientable() != tri->isOrientable()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", face " << i << ": "
+                        << (dim + 1 - k) << '-' << (k + 1) << " move "
+                        "changes orientability.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isOrientable() && ! large.isOriented()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", face " << i << ": "
+                        << (dim + 1 - k) << '-' << (k + 1) << " move "
+                        "loses orientation.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! PachnerHelperClosed<dim>::testClosed(*tri, large)) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", face " << i << ": "
+                        << (dim + 1 - k) << '-' << (k + 1) << " move "
+                        "loses closedness.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.countBoundaryComponents() !=
+                        tri->countBoundaryComponents()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", face " << i << ": "
+                        << (dim + 1 - k) << '-' << (k + 1) << " move "
+                        "changes # boundary components.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (large.eulerCharTri() != tri->eulerCharTri()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", face " << i << ": "
+                        << (dim + 1 - k) << '-' << (k + 1) << " move "
+                        "changes Euler characteristic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (tri->isValid()) {
+                    if (! (large.homologyH1() == tri->homologyH1())) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            "changes H1.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! PachnerHelperH2<dim>::testH2(*tri, large)) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            "changes H2.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                if (dim != 2 && large.isIsomorphicTo(*tri).get()) {
+                    std::ostringstream msg;
+                    msg << tri->label() << ", face " << i << ": "
+                        << (dim + 1 - k) << '-' << (k + 1) << " move "
+                        "result is isomorphic.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                // Randomly relabel the simplices, but preserve orientation.
+                Isomorphism<dim>* iso = Isomorphism<dim>::random(large.size(),
+                    true);
+                iso->applyInPlace(&large);
+                clearProperties(large);
+
+                if (k == dim) {
+                    // Shrink by edge collapse.
+                    PachnerHelperCollapseEdge<dim>::verifyCollapseEdge(
+                        *tri, large, iso, i);
+                }
+
+                // Shrink by the inverse Pachner move.
+                {
+                    regina::Triangulation<dim> copy(large);
+
+                    res = copy.pachner(
+                        FaceHelper<dim, dim - k>::face(
+                            copy.simplex(iso->simpImage(large.size() - 1)),
+                            iso->facetPerm(large.size() - 1)),
+                        true, true);
+                    clearProperties(copy);
+
+                    if (! res) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            << "could not undo "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            "with inverse move.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (! copy.isIsomorphicTo(*tri).get()) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            << "followed by inverse move "
+                            "is not isomorphic.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
+                    if (tri->isOrientable() && ! copy.isOriented()) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ", face " << i << ": "
+                            << (dim + 1 - k) << '-' << (k + 1) << " move "
+                            << "followed by inverse move "
+                            "loses orientation.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+
+                delete iso;
+            }
+        }
+
+        template <int k>
+        static void verifyPachner(Triangulation<dim>* tri) {
+            verifyPachnerDetail<k>(tri, false);
+        }
+
+        template <int k>
+        void verifyPachnerSimplicial() {
+            verifyPachnerDetail<k>(&simplicialSphere, true);
         }
 };
 

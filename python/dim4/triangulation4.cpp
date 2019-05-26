@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "algebra/grouppresentation.h"
+#include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include "../safeheldtype.h"
 #include "../generic/facehelper.h"
@@ -54,19 +55,29 @@ namespace {
         bool, bool) = &Triangulation<4>::twoZeroMove;
     bool (Triangulation<4>::*twoZeroMove_edge)(regina::Edge<4>*,
         bool, bool) = &Triangulation<4>::twoZeroMove;
+    bool (Triangulation<4>::*twoZeroMove_vertex)(regina::Vertex<4>*,
+        bool, bool) = &Triangulation<4>::twoZeroMove;
     size_t(Triangulation<4>::*splitIntoComponents)(regina::Packet*, bool) =
         &Triangulation<4>::splitIntoComponents;
+    bool (Triangulation<4>::*pachner_15)(regina::Simplex<4>*, bool, bool) =
+        &Triangulation<4>::pachner;
+    bool (Triangulation<4>::*pachner_24)(regina::Tetrahedron<4>*, bool, bool) =
+        &Triangulation<4>::pachner;
+    bool (Triangulation<4>::*pachner_33)(regina::Triangle<4>*, bool, bool) =
+        &Triangulation<4>::pachner;
+    bool (Triangulation<4>::*pachner_42)(regina::Edge<4>*, bool, bool) =
+        &Triangulation<4>::pachner;
+    bool (Triangulation<4>::*pachner_51)(regina::Vertex<4>*, bool, bool) =
+        &Triangulation<4>::pachner;
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
-        Triangulation<4>::simplifyToLocalMinimum, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fourTwoMove,
-        Triangulation<4>::fourTwoMove, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_threeThreeMove,
-        Triangulation<4>::threeThreeMove, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoFourMove,
-        Triangulation<4>::twoFourMove, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
+        Triangulation<4>::pachner, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFiveMove,
         Triangulation<4>::oneFiveMove, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
+        Triangulation<4>::simplifyToLocalMinimum, 0, 1);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
+        Triangulation<4>::simplifyExhaustive, 0, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoZeroMove,
         Triangulation<4>::twoZeroMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_openBook,
@@ -252,19 +263,29 @@ void addTriangulation4() {
             .def("homologyH2", &Triangulation<4>::homologyH2,
                 return_internal_reference<>())
             .def("orient", &Triangulation<4>::orient)
+            .def("reflect", &Triangulation<4>::reflect)
             .def("splitIntoComponents", splitIntoComponents,
                 OL_splitIntoComponents())
             .def("intelligentSimplify", &Triangulation<4>::intelligentSimplify)
             .def("simplifyToLocalMinimum",
                 &Triangulation<4>::simplifyToLocalMinimum,
                 OL_simplifyToLocalMinimum())
-            .def("fourTwoMove", &Triangulation<4>::fourTwoMove, OL_fourTwoMove())
-            .def("threeThreeMove", &Triangulation<4>::threeThreeMove,
-                OL_threeThreeMove())
-            .def("twoFourMove", &Triangulation<4>::twoFourMove, OL_twoFourMove())
-            .def("oneFiveMove", &Triangulation<4>::oneFiveMove, OL_oneFiveMove())
+            .def("simplifyExhaustive", &Triangulation<4>::simplifyExhaustive,
+                OL_simplifyExhaustive())
+            .def("pachner", pachner_15, OL_pachner())
+            .def("pachner", pachner_24, OL_pachner())
+            .def("pachner", pachner_33, OL_pachner())
+            .def("pachner", pachner_42, OL_pachner())
+            .def("pachner", pachner_51, OL_pachner())
+            .def("oneFiveMove", &Triangulation<4>::oneFiveMove,
+                OL_oneFiveMove())
+            .def("twoFourMove", pachner_24, OL_pachner())
+            .def("threeThreeMove", pachner_33, OL_pachner())
+            .def("fourTwoMove", pachner_42, OL_pachner())
+            .def("fiveOneMove", pachner_51, OL_pachner())
             .def("twoZeroMove", twoZeroMove_triangle, OL_twoZeroMove())
             .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
+            .def("twoZeroMove", twoZeroMove_vertex, OL_twoZeroMove())
             .def("openBook", &Triangulation<4>::openBook, OL_openBook())
             .def("shellBoundary", &Triangulation<4>::shellBoundary,
                 OL_shellBoundary())

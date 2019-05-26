@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -67,21 +67,25 @@ class EltMoveDialog4 : public QDialog, public regina::PacketListener {
         QLabel* name;
         QLabel* overview;
 
+        FaceChooser<4, 0>* box51;
         FaceChooser<4, 1>* box42;
         FaceChooser<4, 2>* box33;
         FaceChooser<4, 3>* box24;
         SimplexChooser<4>* box15;
         FaceChooser<4, 2>* box20t;
         FaceChooser<4, 1>* box20e;
+        FaceChooser<4, 0>* box20v;
         FaceChooser<4, 3>* boxOpenBook;
         SimplexChooser<4>* boxShellBdry;
         FaceChooser<4, 1>* boxCollapseEdge;
+        QRadioButton* use51;
         QRadioButton* use42;
         QRadioButton* use33;
         QRadioButton* use24;
         QRadioButton* use15;
         QRadioButton* use20t;
         QRadioButton* use20e;
+        QRadioButton* use20v;
         QRadioButton* useOpenBook;
         QRadioButton* useShellBdry;
         QRadioButton* useCollapseEdge;

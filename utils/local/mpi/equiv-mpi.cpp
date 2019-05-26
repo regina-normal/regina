@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Attempt to find triangulations related by few elementary moves        *
  *                                                                        *
- *  Copyright (c) 2005-2017, Ben Burton                                   *
+ *  Copyright (c) 2005-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -768,9 +768,9 @@ void slaveTryMovesDown(Triangulation<3>* t, int maxLevels) {
     // Only try 3-2 moves if nothing better has worked so far.
     if (! found)
         for (i = 0; i < t->countEdges(); i++)
-            if (t->threeTwoMove(t->edge(i), true, false)) {
+            if (t->pachner(t->edge(i), true, false)) {
                 alt = new Triangulation<3>(*t);
-                alt->threeTwoMove(alt->edge(i));
+                alt->pachner(alt->edge(i));
                 slaveTryMovesDown(alt, maxLevels - 1);
                 found = true;
                 delete alt;
@@ -851,7 +851,7 @@ void slaveTryMovesUp(Triangulation<3>* t, int levelsRemaining) {
     } else {
         for (unsigned i = 0; i < t->countTriangles(); i++) {
             alt = new Triangulation<3>(*t);
-            if (alt->twoThreeMove(alt->triangle(i))) {
+            if (alt->pachner(alt->triangle(i))) {
                 if (levelsRemaining > 1)
                     slaveTryMovesUp(alt, levelsRemaining - 1);
                 else

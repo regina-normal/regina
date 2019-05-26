@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "triangulation/detail/isosig-impl.h"
+#include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
 #include "triangulation/generic.h"
 
@@ -49,5 +50,22 @@ template REGINA_API void TriangulationBase<7>::calculateSkeleton();
 template REGINA_API void TriangulationBase<7>::clearBaseProperties();
 template REGINA_API void TriangulationBase<7>::swapBaseProperties(
     TriangulationBase<7>&);
+
+template REGINA_API bool PachnerHelper<7, 0>::pachner(
+    Triangulation<7>*, Face<7, 0>*, bool, bool);
+template REGINA_API bool PachnerHelper<7, 1>::pachner(
+    Triangulation<7>*, Face<7, 1>*, bool, bool);
+template REGINA_API bool PachnerHelper<7, 2>::pachner(
+    Triangulation<7>*, Face<7, 2>*, bool, bool);
+template REGINA_API bool PachnerHelper<7, 3>::pachner(
+    Triangulation<7>*, Face<7, 3>*, bool, bool);
+template REGINA_API bool PachnerHelper<7, 4>::pachner(
+    Triangulation<7>*, Face<7, 4>*, bool, bool);
+template REGINA_API bool PachnerHelper<7, 5>::pachner(
+    Triangulation<7>*, Face<7, 5>*, bool, bool);
+template REGINA_API bool PachnerHelper<7, 6>::pachner(
+    Triangulation<7>*, Face<7, 6>*, bool, bool);
+template REGINA_API bool PachnerHelper<7, 7>::pachner(
+    Triangulation<7>*, Face<7, 7>*, bool, bool);
 
 } }

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -95,6 +95,9 @@ static NSArray* _allRows;
                     [NewPacketRow rowWithType:regina::PACKET_SNAPPEATRIANGULATION
                                         label:@"SnapPea triangulation"
                                          icon:@"SnapPea"],
+                    [NewPacketRow rowWithType:regina::PACKET_LINK
+                                        label:@"Knot or link"
+                                         icon:@"Link"],
                     [NewPacketRow rowWithType:regina::PACKET_SURFACEFILTER
                                         label:@"Surface filter"
                                          icon:@"Filter"],

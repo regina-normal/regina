@@ -2,6 +2,7 @@
 SET ( FILES
   edge4
   homology
+  retriangulate
   simplify
   simplifyglobal
   skeleton

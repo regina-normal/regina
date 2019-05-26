@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,7 +54,7 @@
 #include <QUrl>
 
 namespace {
-    QString INACTIVE("## INACTIVE ##");
+    const QString INACTIVE("## INACTIVE ##");
 }
 
 ReginaPrefSet ReginaPrefSet::instance_;
@@ -74,6 +74,10 @@ ReginaPrefSet::ReginaPrefSet() :
         helpIntroOnStartup(true),
         hypersurfacesCreationCoords(regina::HS_STANDARD),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
+        linkCodeType(Gauss),
+        linkCrossingsStyle(PictorialCrossings),
+        linkHomflyType(HomflyAZ),
+        linkInitialGraphType(TreeDecomposition),
         pythonAutoIndent(true),
         pythonSpacesPerTab(4),
         pythonWordWrap(false),
@@ -92,6 +96,7 @@ ReginaPrefSet::ReginaPrefSet() :
         tabDim4TriAlgebra(0),
         tabDim4TriSkeleton(0),
         tabHypersurfaceList(0),
+        tabLink(0),
         tabSnapPeaTri(0),
         tabSnapPeaTriAlgebra(0),
         tabSurfaceList(0),
@@ -232,6 +237,33 @@ void ReginaPrefSet::readInternal() {
     hypersurfacesCreationList = regina::HyperList::fromInt(settings.value(
         "CreationList", regina::HS_LIST_DEFAULT).toInt());
 
+    settings.beginGroup("Link");
+    QString str = settings.value("CodeType").toString();
+    if (str == "DowkerThistlethwaite")
+        linkCodeType = ReginaPrefSet::DowkerThistlethwaite;
+    else if (str == "KnotSig")
+        linkCodeType = ReginaPrefSet::KnotSig;
+    else if (str == "Jenkins")
+        linkCodeType = ReginaPrefSet::Jenkins;
+    else
+        linkCodeType = ReginaPrefSet::Gauss; /* default */
+    str = settings.value("CrossingsStyle").toString();
+    if (str == "Text")
+        linkCrossingsStyle = ReginaPrefSet::TextCrossings;
+    else
+        linkCrossingsStyle = ReginaPrefSet::PictorialCrossings; /* default */
+    str = settings.value("HomflyType").toString();
+    if (str == "LM")
+        linkHomflyType = ReginaPrefSet::HomflyLM;
+    else
+        linkHomflyType = ReginaPrefSet::HomflyAZ; /* default */
+    str = settings.value("InitialGraphType").toString();
+    if (str == "NiceTree")
+        linkInitialGraphType = ReginaPrefSet::NiceTreeDecomposition;
+    else
+        linkInitialGraphType = ReginaPrefSet::TreeDecomposition; /* default */
+    settings.endGroup();
+
     settings.beginGroup("Python");
     pythonAutoIndent = settings.value("AutoIndent", true).toBool();
     pythonSpacesPerTab = settings.value("SpacesPerTab", 4).toInt();
@@ -251,7 +283,7 @@ void ReginaPrefSet::readInternal() {
     surfacesCreationList = regina::NormalList::fromInt(settings.value(
         "CreationList", regina::NS_LIST_DEFAULT).toInt());
 
-    QString str = settings.value("InitialCompat").toString();
+    str = settings.value("InitialCompat").toString();
     if (str == "Global")
         surfacesInitialCompat = ReginaPrefSet::GlobalCompat;
     else
@@ -275,6 +307,7 @@ void ReginaPrefSet::readInternal() {
     tabDim4TriAlgebra = settings.value("Tri4Algebra", 0).toUInt();
     tabDim4TriSkeleton = settings.value("Tri4Skeleton", 0).toUInt();
     tabHypersurfaceList = settings.value("HypersurfaceList", 0).toUInt();
+    tabLink = settings.value("Link", 0).toUInt();
     tabSnapPeaTri = settings.value("SnapPeaTri", 0).toUInt();
     tabSnapPeaTriAlgebra = settings.value("SnapPeaTriAlgebra", 0).toUInt();
     tabSurfaceList = settings.value("SurfaceList", 0).toUInt();
@@ -301,7 +334,7 @@ void ReginaPrefSet::readInternal() {
     settings.endGroup();
 
     settings.beginGroup("Window");
-    windowMainSize = settings.value("MainSizeV3", QSize()).toSize();
+    windowMainSize = settings.value("MainSizeV4", QSize()).toSize();
     windowPythonSize = settings.value("PythonSize", QSize()).toSize();
     settings.endGroup();
 
@@ -346,6 +379,37 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("CreationCoordinates", hypersurfacesCreationCoords);
     settings.setValue("CreationList", hypersurfacesCreationList.intValue());
 
+    settings.beginGroup("Link");
+    switch (linkCodeType) {
+        case ReginaPrefSet::DowkerThistlethwaite:
+            settings.setValue("CodeType", "DowkerThistlethwaite"); break;
+        case ReginaPrefSet::KnotSig:
+            settings.setValue("CodeType", "KnotSig"); break;
+        case ReginaPrefSet::Jenkins:
+            settings.setValue("CodeType", "Jenkins"); break;
+        default:
+            settings.setValue("CodeType", "Gauss"); break;
+    }
+    switch (linkCrossingsStyle) {
+        case ReginaPrefSet::TextCrossings:
+            settings.setValue("CrossingsStyle", "Text"); break;
+        default:
+            settings.setValue("CrossingsStyle", "Pictorial"); break;
+    }
+    switch (linkHomflyType) {
+        case ReginaPrefSet::HomflyLM:
+            settings.setValue("HomflyType", "LM"); break;
+        default:
+            settings.setValue("HomflyType", "AZ"); break;
+    }
+    switch (linkInitialGraphType) {
+        case ReginaPrefSet::NiceTreeDecomposition:
+            settings.setValue("InitialGraphType", "NiceTree"); break;
+        default:
+            settings.setValue("InitialGraphType", "Tree"); break;
+    }
+    settings.endGroup();
+
     settings.beginGroup("Python");
     settings.setValue("AutoIndent", pythonAutoIndent);
     settings.setValue("SpacesPerTab", pythonSpacesPerTab);
@@ -380,6 +444,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.setValue("Dim3TriAlgebra", tabDim3TriAlgebra);
     settings.setValue("Dim3TriSkeleton", tabDim3TriSkeleton);
     settings.setValue("Dim4Tri", tabDim4Tri);
+    settings.setValue("Link", tabLink);
     settings.setValue("Tri4Algebra", tabDim4TriAlgebra);
     settings.setValue("Tri4Skeleton", tabDim4TriSkeleton);
     settings.setValue("HypersurfaceList", tabHypersurfaceList);
@@ -413,7 +478,7 @@ void ReginaPrefSet::saveInternal() const {
     settings.endGroup();
 
     settings.beginGroup("Window");
-    settings.setValue("MainSizeV3", windowMainSize);
+    settings.setValue("MainSizeV4", windowMainSize);
     settings.setValue("PythonSize", windowPythonSize);
     settings.endGroup();
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -86,6 +86,12 @@ class ReginaPrefSet : public QObject {
 
         // The preferences themselves:
 
+        enum LinkCodeType { Gauss, DowkerThistlethwaite, KnotSig, Jenkins };
+            /**< Possible export codes that can be displayed for links. */
+        enum LinkCrossingsStyle { PictorialCrossings, TextCrossings };
+            /**< Possible styles for displaying crossings for links. */
+        enum LinkHomflyType { HomflyAZ, HomflyLM };
+            /**< Possible flavours of the HOMFLY-PT polynomial to display. */
         enum SurfacesCompatMatrix { LocalCompat, GlobalCompat };
             /**< Possible compatibility matrices that can be displayed for a
                  normal surface list. */
@@ -111,6 +117,16 @@ class ReginaPrefSet : public QObject {
         regina::HyperList hypersurfacesCreationList;
             /**< The default options for which normal hypersurfaces to
                  enumerate in a 4-manifold triangulation. */
+        LinkCodeType linkCodeType;
+            /**< The export code to display for knots and links. */
+        LinkCrossingsStyle linkCrossingsStyle;
+            /**< The style for displaying crossings for knots and links. */
+        LinkHomflyType linkHomflyType;
+            /**< The flavour of HOMFLY-PT polynomial to display for
+                 knots and links. */
+        TriGraphType linkInitialGraphType;
+            /**< Indicates which graph to initially display in a
+                 link viewer.  Must not be DualGraph. */
         QString pdfExternalViewer;
             /**< The external program used to view PDFs.
                  This string may contain
@@ -168,6 +184,9 @@ class ReginaPrefSet : public QObject {
         unsigned tabHypersurfaceList;
             /**< The index of the initial sub-tab to open in a normal
                  hypersurface list viewer. */
+        unsigned tabLink;
+            /**< The index of the initial sub-tab to open in a knot/link
+                 viewer. */
         unsigned tabSnapPeaTri;
             /**< The index of the initial tab to open in a SnapPea
                  triangulation viewer. */
@@ -201,9 +220,9 @@ class ReginaPrefSet : public QObject {
 
         QSize windowMainSize;
             /**< The initial size of a new main topology data window.
-                 Note: as of Regina 5.0, the key for this option in the
-                 configuration file has changed from \c MainSizeV2 to
-                 \c MainSizeV3 (since another packet type was added, and
+                 Note: as of Regina 5.2, the key for this option in the
+                 configuration file has changed from \c MainSizeV3 to
+                 \c MainSizeV4 (since another packet type was added, and
                  so again the window needs to be a little wider). */
         QSize windowPythonSize;
             /**< The initial size of a new python console. */

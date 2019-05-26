@@ -124,6 +124,9 @@ Equality type : BY_REFERENCE
 Container : class
 Equality type : BY_REFERENCE
 
+Crossing : class
+Equality type : BY_REFERENCE
+
 Cusp : class
 Equality type : BY_REFERENCE
 
@@ -297,6 +300,9 @@ Example8 : class
 Equality type : NEVER_INSTANTIATED
 
 Example9 : class
+Equality type : NEVER_INSTANTIATED
+
+ExampleLink : class
 Equality type : NEVER_INSTANTIATED
 
 ExampleSnapPea : class
@@ -1263,6 +1269,12 @@ Equality type : BY_REFERENCE
 LargeInteger : class
 Equality type : BY_VALUE
 
+Laurent : class
+Equality type : BY_VALUE
+
+Laurent2 : class
+Equality type : BY_VALUE
+
 LayeredChain : class
 Equality type : BY_REFERENCE
 
@@ -1287,6 +1299,9 @@ Equality type : BY_REFERENCE
 LensSpace : class
 Equality type : BY_VALUE
 
+Link : class
+Equality type : BY_REFERENCE
+
 Locale : class
 Equality type : NEVER_INSTANTIATED
 
@@ -1304,6 +1319,18 @@ Equality type : BY_VALUE
 
 MatrixInt : class
 Equality type : BY_VALUE
+
+ModelLinkGraph : class
+Equality type : BY_REFERENCE
+
+ModelLinkGraphArc : class
+Equality type : BY_VALUE
+
+ModelLinkGraphCells : class
+Equality type : BY_REFERENCE
+
+ModelLinkGraphNode : class
+Equality type : BY_REFERENCE
 
 NAbelianGroup : typedef ->  AbelianGroup
 
@@ -1815,6 +1842,9 @@ Equality type : BY_REFERENCE
 StandardTriangulation : class
 Equality type : BY_REFERENCE
 
+StrandRef : class
+Equality type : BY_VALUE
+
 SurfaceFilter : class
 Equality type : BY_REFERENCE
 
@@ -1822,6 +1852,9 @@ SurfaceFilterCombination : class
 Equality type : BY_REFERENCE
 
 SurfaceFilterProperties : class
+Equality type : BY_REFERENCE
+
+Tangle : class
 Equality type : BY_REFERENCE
 
 Tetrahedron10 : typedef ->  Face10_3

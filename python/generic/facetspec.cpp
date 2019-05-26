@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -65,6 +65,7 @@ void addFacetSpec() {
     addFacetSpec<2>("FacetSpec2");
     addFacetSpec<3>("FacetSpec3");
     addFacetSpec<4>("FacetSpec4");
+#ifndef REGINA_LOWDIMONLY
     addFacetSpec<5>("FacetSpec5");
     addFacetSpec<6>("FacetSpec6");
     addFacetSpec<7>("FacetSpec7");
@@ -76,6 +77,7 @@ void addFacetSpec() {
     addFacetSpec<13>("FacetSpec13");
     addFacetSpec<14>("FacetSpec14");
     addFacetSpec<15>("FacetSpec15");
+#endif
 
     scope().attr("Dim2TriangleEdge") = scope().attr("FacetSpec2");
     scope().attr("NTetFace") = scope().attr("FacetSpec3");

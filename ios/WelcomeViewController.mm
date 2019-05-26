@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -211,6 +211,7 @@ public:
 
 - (IBAction)runTestSuite:(id)sender
 {
+    // Note: TestSuiteController lives on the same storyboard as WelcomeViewController.
     UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"testSuite"];
     [self presentViewController:sheet animated:YES completion:^{
         [static_cast<TestSuiteController*>(sheet) runTests];

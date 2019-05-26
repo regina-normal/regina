@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,6 +68,12 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
+    CPPUNIT_TEST(pachner<0>);
+    CPPUNIT_TEST(pachner<1>);
+    CPPUNIT_TEST(pachner<2>);
+    CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(pachner<4>);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
@@ -81,7 +87,6 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(barycentricSubdivision);
-    CPPUNIT_TEST(eltMove15);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
     CPPUNIT_TEST(idealToFinite);
@@ -334,6 +339,14 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void boundaryBuild() {
             testManualAll(verifyBoundaryBuild);
+        }
+
+        template <int k>
+        void pachner() {
+            testManualAll(verifyPachner<k>);
+            runCensusAllBounded(verifyPachner<k>);
+            runCensusAllNoBdry(verifyPachner<k>);
+            verifyPachnerSimplicial<k>();
         }
 
         void verifyInvalid(const Triangulation<4>& tri,
@@ -987,6 +1000,7 @@ class Triangulation4Test : public TriangulationTest<4> {
         static void verifyBary(Triangulation<4>* tri) {
             Triangulation<4> b(*tri);
             b.barycentricSubdivision();
+            clearProperties(b);
 
             // Note that subdivisions can turn invalid into valid, but
             // they can never turn valid into invalid.
@@ -1094,107 +1108,37 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
         }
 
-        void barycentricSubdivision() {
-            testManualTiny(verifyBary);
-        }
+        void verifyBarycentricInvalidToValid(const Triangulation<4>& tri) {
+            Triangulation<4> use(tri);
 
-        static void verifyEltMove15(Triangulation<4>* tri) {
-            unsigned long n = tri->size();
-            for (unsigned long i = 0; i < n; ++i) {
-                Triangulation<4> large(*tri);
-                large.oneFiveMove(large.pentachoron(i));
+            if (use.isValid()) {
+                std::ostringstream msg;
+                msg << tri.label() << ": Incorrectly marked as valid.";
+                CPPUNIT_FAIL(msg.str());
+            }
 
-                if (large.size() != n + 4) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", pent " << i << ": "
-                        << "1-5 move gives wrong # pentachora.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+            use.barycentricSubdivision();
 
-                if (large.isValid() != tri->isValid()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", pent " << i << ": "
-                        << "1-5 move changes validity.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+            if (! use.isValid()) {
+                std::ostringstream msg;
+                msg << tri.label() << ": Barycentric subdivision is invalid.";
+                CPPUNIT_FAIL(msg.str());
+            }
 
-                if (large.isOrientable() != tri->isOrientable()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", pent " << i << ": "
-                        << "1-5 move changes orientability.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+            clearProperties(use);
 
-                if (large.isClosed() != tri->isClosed()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", pent " << i << ": "
-                        << "1-5 move changes closedness.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.countBoundaryComponents() !=
-                        tri->countBoundaryComponents()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", pent " << i << ": "
-                        << "1-5 move changes # boundary components.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.eulerCharTri() != tri->eulerCharTri()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", pent " << i << ": "
-                        << "1-5 move changes Euler characteristic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (tri->isValid()) {
-                    if (! (large.homologyH1() == tri->homologyH1())) {
-                        std::ostringstream msg;
-                        msg << tri->label() << ", pent " << i << ": "
-                            << "1-5 move changes H1.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-
-                    if (! (large.homologyH2() == tri->homologyH2())) {
-                        std::ostringstream msg;
-                        msg << tri->label() << ", pent " << i << ": "
-                            << "1-5 move changes H2.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-                }
-
-                // Shrink.
-                if (large.isIsomorphicTo(*tri).get()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", pent " << i << ": "
-                        << "1-5 move: result is isomorphic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                bool res =
-                    large.collapseEdge(large.pentachoron(n + 3)->edge(
-                    regina::Edge<4>::edgeNumber[0][4]), true, true);
-
-                if (! res) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", pent " << i << ": "
-                        << "1-5 move: could not recollapse edge.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (! large.isIsomorphicTo(*tri).get()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", pent " << i << ": "
-                        << "1-5 move: recollapse is not isomorphic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+            if (! use.isValid()) {
+                std::ostringstream msg;
+                msg << tri.label() << ": Barycentric subdivision is invalid.";
+                CPPUNIT_FAIL(msg.str());
             }
         }
 
-        void eltMove15() {
-            testManualAll(verifyEltMove15);
-            runCensusAllBounded(verifyEltMove15);
-            runCensusAllNoBdry(verifyEltMove15);
+        void barycentricSubdivision() {
+            testManualTiny(verifyBary);
+
+            verifyBarycentricInvalidToValid(pillow_threeCycle);
+            verifyBarycentricInvalidToValid(pillow_fourCycle);
         }
 
         static void verifyVertexLinks(Triangulation<4>* tri) {
@@ -1632,6 +1576,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 }
 
                 other.idealToFinite();
+                clearProperties(other);
 
                 if (other.isIdenticalTo(*tri)) {
                     std::ostringstream msg;

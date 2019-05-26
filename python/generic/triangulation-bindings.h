@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -136,6 +136,36 @@ namespace {
 
         BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_splitIntoComponents,
             Triangulation<dim>::splitIntoComponents, 0, 2);
+        BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
+            Triangulation<dim>::pachner, 1, 3);
+    };
+
+    template <int dim, int k = dim>
+    struct add_pachner : boost::python::def_visitor<add_pachner<dim, k>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("pachner",
+                static_cast<bool (Triangulation<dim>::*)(regina::Face<dim, k>*,
+                    bool, bool)>(&Triangulation<dim>::pachner),
+                typename PyTriHelper<dim>::OL_pachner());
+            c.def(add_pachner<dim, k - 1>());
+        }
+    };
+
+    template <int dim>
+    struct add_pachner<dim, 0> :
+            boost::python::def_visitor<add_pachner<dim, 0>> {
+        friend class boost::python::def_visitor_access;
+
+        template <typename Class>
+        void visit(Class& c) const {
+            c.def("pachner",
+                static_cast<bool (Triangulation<dim>::*)(regina::Face<dim, 0>*,
+                    bool, bool)>(&Triangulation<dim>::pachner),
+                typename PyTriHelper<dim>::OL_pachner());
+        }
     };
 }
 
@@ -206,6 +236,7 @@ void addTriangulation(const char* name) {
             .def("isOriented", &Triangulation<dim>::isOriented)
             .def("isConnected", &Triangulation<dim>::isConnected)
             .def("orient", &Triangulation<dim>::orient)
+            .def("reflect", &Triangulation<dim>::reflect)
             .def("splitIntoComponents",
                 typename PyTriHelper<dim>::splitIntoComponents_type(
                     &Triangulation<dim>::splitIntoComponents),
@@ -220,6 +251,7 @@ void addTriangulation(const char* name) {
             .def("homologyH1", &Triangulation<dim>::homologyH1,
                 return_internal_reference<>())
             .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
+            .def(add_pachner<dim>())
             .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
             .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
             .def("isIsomorphicTo",

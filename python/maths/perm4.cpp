@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -73,6 +73,8 @@ namespace {
             c.def("contract", &Perm<4>::contract<16>);
         }
     };
+
+    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_rand, Perm<4>::rand, 0, 1);
 }
 
 void addPerm4() {
@@ -100,7 +102,7 @@ void addPerm4() {
             .def("isIdentity", &Perm<4>::isIdentity)
             .def("atIndex", &Perm<4>::atIndex)
             .def("index", &Perm<4>::index)
-            .def("rand", &Perm<4>::rand)
+            .def("rand", &Perm<4>::rand, OL_rand())
             .def("trunc", &Perm<4>::trunc)
             .def("trunc2", &Perm<4>::trunc2)
             .def("trunc3", &Perm<4>::trunc3)

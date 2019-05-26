@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -48,29 +48,6 @@ namespace regina {
  * \weakgroup triangulation
  * @{
  */
-
-/**
- * Returns the binomial coefficient \n choose \a k for small arguments
- * \a n and \a k.
- *
- * This routine is very fast, since it uses a constant-time lookup.
- * The trade-off is that it can only be used for \a n &le; 16.
- *
- * If you need a compile-time constant, you should use the constant
- * FaceNumbering<n-1, k-1>::nFaces instead.  This function is provided for
- * situations where \a n and/or \a k are not known until runtime.
- *
- * \note The constraint \a n &le; 16 is large enough for working with
- * triangulations in Regina, since Regina restricts its triangulations to
- * dimension &le; 15 (where each simplex has 16 vertices).
- *
- * @param n the parameter \a n in (\a n choose \a k); this must be
- * between 0 and 16 inclusive.
- * @param k the parameter \a k in (\a n choose \a k); this must be
- * between 0 and \a n inclusive.
- * @return the binomial coefficient \a n choose \a k.
- */
-int binomSmall(int n, int k);
 
 /**
  * Specifies how <i>subdim</i>-faces are numbered within a
@@ -140,10 +117,6 @@ template <int dim>
 inline int faceOppositeEdge(int i, int j);
 
 // Inline functions
-
-inline int binomSmall(int n, int k) {
-    return detail::binomSmall_[n][k];
-}
 
 template <int dim>
 int faceOppositeEdge(int i, int j) {

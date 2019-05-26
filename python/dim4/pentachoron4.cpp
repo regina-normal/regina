@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -65,7 +65,11 @@ void addPentachoron4() {
         .def("face", &regina::python::face<Pentachoron<4>, 4, int>)
         .def("vertex", &Pentachoron<4>::vertex,
             return_value_policy<reference_existing_object>())
-        .def("edge", &Pentachoron<4>::edge,
+        .def("edge", (regina::Edge<4>* (Pentachoron<4>::*)(int) const)(
+                &Pentachoron<4>::edge),
+            return_value_policy<reference_existing_object>())
+        .def("edge", (regina::Edge<4>* (Pentachoron<4>::*)(int, int) const)(
+                &Pentachoron<4>::edge),
             return_value_policy<reference_existing_object>())
         .def("triangle", &Pentachoron<4>::triangle,
             return_value_policy<reference_existing_object>())

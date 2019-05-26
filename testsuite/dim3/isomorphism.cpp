@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -195,6 +195,10 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                 return;
 
             Triangulation<3>* image = iso.apply(&rp2xs1);
+
+            // Clear all computed topological properties of image.
+            image->newSimplex();
+            image->removeSimplexAt(image->size() - 1);
 
             std::ostringstream msg;
             msg << "Isomorphism #" << which << " created a copy of RP2xS1 ";

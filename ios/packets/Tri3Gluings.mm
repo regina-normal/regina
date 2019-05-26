@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -35,6 +35,7 @@
 #import "ReginaHelper.h"
 #import "Tri3ViewController.h"
 #import "Tri3Gluings.h"
+#import "engine.h"
 #import "packet/container.h"
 #import "progress/progresstracker.h"
 #import "triangulation/dim3.h"
@@ -283,7 +284,7 @@
         self->simplifyTracker = tracker;
         [self.simplifyLock unlock];
 
-        self.packet->simplifyExhaustive(height, 1 /* threads */, tracker);
+        self.packet->simplifyExhaustive(height, regina::politeThreads(), tracker);
 
         unsigned long steps;
         while (! tracker->isFinished()) {
@@ -484,6 +485,15 @@
     self.packet->intelligentSimplify();
 }
 
+- (IBAction)reflect:(id)sender
+{
+    [self endEditing];
+    if (! [self checkEditable])
+        return;
+
+    self.packet->reflect();
+}
+
 - (IBAction)doubleCover:(id)sender
 {
     [self endEditing];
@@ -520,6 +530,7 @@
     if (! [self checkEditable])
         return;
 
+    // Note: EltMoves3 lives on the same storyboard as Tri3Gluings.
     UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"eltMoves3"];
     static_cast<EltMoves3*>(sheet).packet = self.packet;
     [self presentViewController:sheet animated:YES completion:nil];
@@ -534,6 +545,7 @@
                                                                 @"Barycentric subdivision",
                                                                 @"Truncate ideal vertices",
                                                                 @"Make ideal",
+                                                                @"Reflect",
                                                                 @"Double cover",
                                                                 @"Puncture",
                                                                 @"Elementary moves",
@@ -545,7 +557,7 @@
 
 - (void)keyboardDidShow:(NSNotification*)notification
 {
-    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameBeginUserInfoKey] CGRectValue].size;
+    CGSize kbSize = [[[notification userInfo] objectForKey:UIKeyboardFrameEndUserInfoKey] CGRectValue].size;
 
     CGRect tableInDetail = [self.parentViewController.view convertRect:self.tetrahedra.frame fromView:self.view];
     CGFloat unused = self.parentViewController.view.bounds.size.height - tableInDetail.origin.y - tableInDetail.size.height;
@@ -789,10 +801,12 @@ cleanUpGluing:
         case 3:
             [self makeIdeal:nil]; break;
         case 4:
-            [self doubleCover:nil]; break;
+            [self reflect:nil]; break;
         case 5:
-            [self puncture:nil]; break;
+            [self doubleCover:nil]; break;
         case 6:
+            [self puncture:nil]; break;
+        case 7:
             [self elementaryMoves:nil]; break;
     }
 }

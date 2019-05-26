@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This file is modified from the KDE syntax-highlighting framework,     *
@@ -56,7 +56,7 @@
 namespace regina {
 namespace syntax {
 
-KeywordList nullList;
+const KeywordList nullList;
 
 DefinitionData::DefinitionData() :
     repo(nullptr),

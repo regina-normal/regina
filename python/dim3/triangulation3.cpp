@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -65,17 +65,25 @@ namespace {
         &Triangulation<3>::recognizer;
     size_t (Triangulation<3>::*splitIntoComponents)(regina::Packet*, bool) =
         &Triangulation<3>::splitIntoComponents;
+    bool (Triangulation<3>::*pachner_14)(regina::Simplex<3>*, bool, bool) =
+        &Triangulation<3>::pachner;
+    bool (Triangulation<3>::*pachner_23)(regina::Triangle<3>*, bool, bool) =
+        &Triangulation<3>::pachner;
+    bool (Triangulation<3>::*pachner_32)(regina::Edge<3>*, bool, bool) =
+        &Triangulation<3>::pachner;
+    bool (Triangulation<3>::*pachner_41)(regina::Vertex<3>*, bool, bool) =
+        &Triangulation<3>::pachner;
 
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fillTorus_bc,
+        Triangulation<3>::fillTorus, 3, 4);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_pachner,
+        Triangulation<3>::pachner, 1, 3);
+    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFourMove,
+        Triangulation<3>::oneFourMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
         Triangulation<3>::simplifyToLocalMinimum, 0, 1);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
         Triangulation<3>::simplifyExhaustive, 0, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_threeTwoMove,
-        Triangulation<3>::threeTwoMove, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoThreeMove,
-        Triangulation<3>::twoThreeMove, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_oneFourMove,
-        Triangulation<3>::oneFourMove, 1, 3);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fourFourMove,
         Triangulation<3>::fourFourMove, 2, 4);
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_twoZeroMove,
@@ -187,6 +195,13 @@ namespace {
                 boost::python::manage_new_object::
                 apply<regina::Isomorphism<3>*>::type()(iso))));
     }
+
+    boost::python::tuple meridianLongitude_tuple(Triangulation<3>& t) {
+        std::pair<const regina::Edge<3>*, const regina::Edge<3>*> ans =
+            t.meridianLongitude();
+        return boost::python::make_tuple(boost::python::ptr(ans.first),
+            boost::python::ptr(ans.second));
+    }
 }
 
 void addTriangulation3() {
@@ -293,6 +308,9 @@ void addTriangulation3() {
             .def("turaevViro", &Triangulation<3>::turaevViro, OL_turaevViro())
             .def("turaevViroApprox", &Triangulation<3>::turaevViroApprox,
                 OL_turaevViroApprox())
+            .def("longitude", &Triangulation<3>::longitude,
+                return_internal_reference<>())
+            .def("meridianLongitude", meridianLongitude_tuple)
             .def("isZeroEfficient", &Triangulation<3>::isZeroEfficient)
             .def("knowsZeroEfficient", &Triangulation<3>::knowsZeroEfficient)
             .def("hasSplittingSurface", &Triangulation<3>::hasSplittingSurface)
@@ -315,9 +333,15 @@ void addTriangulation3() {
                 OL_simplifyToLocalMinimum())
             .def("simplifyExhaustive", &Triangulation<3>::simplifyExhaustive,
                 OL_simplifyExhaustive())
-            .def("threeTwoMove", &Triangulation<3>::threeTwoMove, OL_threeTwoMove())
-            .def("twoThreeMove", &Triangulation<3>::twoThreeMove, OL_twoThreeMove())
-            .def("oneFourMove", &Triangulation<3>::oneFourMove, OL_oneFourMove())
+            .def("pachner", pachner_14, OL_pachner())
+            .def("pachner", pachner_23, OL_pachner())
+            .def("pachner", pachner_32, OL_pachner())
+            .def("pachner", pachner_41, OL_pachner())
+            .def("oneFourMove", &Triangulation<3>::oneFourMove,
+                OL_oneFourMove())
+            .def("twoThreeMove", pachner_23, OL_pachner())
+            .def("threeTwoMove", pachner_32, OL_pachner())
+            .def("fourOneMove", pachner_41, OL_pachner())
             .def("fourFourMove", &Triangulation<3>::fourFourMove, OL_fourFourMove())
             .def("twoZeroMove", twoZeroMove_vertex, OL_twoZeroMove())
             .def("twoZeroMove", twoZeroMove_edge, OL_twoZeroMove())
@@ -332,6 +356,7 @@ void addTriangulation3() {
             .def("reorderTetrahedraBFS", &Triangulation<3>::reorderTetrahedraBFS,
                 OL_reorderTetrahedraBFS())
             .def("orient", &Triangulation<3>::orient)
+            .def("reflect", &Triangulation<3>::reflect)
             .def("order", &Triangulation<3>::order, OL_order(args("force_oriented")))
             .def("splitIntoComponents", splitIntoComponents,
                 OL_splitIntoComponents())
@@ -362,6 +387,15 @@ void addTriangulation3() {
             .def("puncture", &Triangulation<3>::puncture, OL_puncture())
             .def("layerOn", &Triangulation<3>::layerOn,
                 return_value_policy<reference_existing_object>())
+            .def("fillTorus", (bool (Triangulation<3>::*)(
+                    unsigned long, unsigned long, unsigned long,
+                    regina::BoundaryComponent<3>*))(
+                    &Triangulation<3>::fillTorus),
+                OL_fillTorus_bc())
+            .def("fillTorus", (bool (Triangulation<3>::*)(
+                    regina::Edge<3>*, regina::Edge<3>*, regina::Edge<3>*,
+                    unsigned long, unsigned long, unsigned long))(
+                    &Triangulation<3>::fillTorus))
             .def("insertLayeredSolidTorus",
                 &Triangulation<3>::insertLayeredSolidTorus,
                 return_value_policy<reference_existing_object>())

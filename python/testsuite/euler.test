@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Test Suite Component
 #
-# Copyright (c) 2007-2017, Ben Burton
+# Copyright (c) 2007-2018, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Tests different Euler characteristic calculations.

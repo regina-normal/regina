@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,71 +36,6 @@
 namespace regina {
 
 namespace {
-    // A helper routine that describes the mapping between subcomplexes
-    // in a 2-4 / 4-2 move.
-    //
-    // For the two-pentachoron subcomplex S2, the common facet is 0123.
-    // The pentachora are joined as follows:
-    //   P0 : 0123 <-> P1 : 0123 (identity)
-    //
-    // For the four-pentachoron subcomplex S4, the common edge is 01.
-    // The pentachora are joined as follows:
-    //   P0 : 0134 <-> P1 : 0143
-    //   P0 : 0124 <-> P2 : 0142
-    //   P0 : 0123 <-> P3 : 0132
-    //   P1 : 0123 <-> P2 : 0132
-    //   P1 : 0124 <-> P3 : 0142
-    //   P2 : 0134 <-> P3 : 0143
-    //
-    // For i in 0,1 and j in 0,1,2,3:
-    // S2 pentachoron i, facet j <-> S4 pentachoron j, facet i.
-    // The gluing permutation is as follows:
-    //   S4,i   <-> S2,j
-    //   S4,1-i <-> S2,4
-    //   S4,2   <-> S2,(1-j) % 4
-    //   S4,3   <-> S2,(2+j) % 4
-    //   S4,4   <-> S2,(3-j)
-    //
-    // This routine merely constructs this gluing permutation.
-    // The permutation returned runs from S4 to S2 (so i -> j).
-    Perm<5> fourTwoPerm(int i /* 0 or 1 */, int j /* 0, 1, 2 or 3 */) {
-        // Use & 3 instead of % 4 for non-negative integers.
-        if (i == 0)
-            return Perm<5>(j, 4, (5 - j) & 3, (2 + j) & 3, (3 - j) & 3);
-        else
-            return Perm<5>(4, j, (5 - j) & 3, (2 + j) & 3, (3 - j) & 3);
-    }
-
-    // A helper routine that describes the mapping between subcomplexes
-    // in a 3-3 move.
-    //
-    // For each three-pentachoron subcomplex, the common triangle is 012.
-    // The pentachora are joined as follows:
-    //   P0 : 0124 <-> P1 : 0123
-    //   P1 : 0124 <-> P2 : 0123
-    //   P2 : 0124 <-> P0 : 0123
-    //
-    // For i in 0,1,2 and j in 0,1,2:
-    // S3a pentachoron i, facet j <-> S3b pentachoron j, facet i.
-    // The gluing permutation is as follows:
-    //   S3a,j         <-> S3b,i
-    //   S3a,(j+1) % 3 <-> S3b,3
-    //   S3a,(j+2) % 3 <-> S3b,4
-    //   S3a,3         <-> S3b,(i+1) % 3
-    //   S3a,4         <-> S3b,(i+2) % 3
-    //
-    // This routine merely constructs this gluing permutation.
-    // The permutation returned runs from S3b to S3a (so i -> j).
-    // Note that threeThreePerm(i,j).inverse() == threeThreePerm(j,i).
-    Perm<5> threeThreePerm(int i /* 0, 1 or 2 */, int j /* 0, 1 or 2 */) {
-        if (i == 0)
-            return Perm<5>(j, 3, 4, (j + 1) % 3, (j + 2) % 3);
-        else if (i == 1)
-            return Perm<5>(4, j, 3, (j + 1) % 3, (j + 2) % 3);
-        else
-            return Perm<5>(3, 4, j, (j + 1) % 3, (j + 2) % 3);
-    }
-
     // A helper routine that uses union-find to test whether a graph
     // contains cycles.  This is used by Triangulation<4>::collapseEdge().
     //
@@ -135,392 +70,6 @@ namespace {
         }
         return true;
     }
-}
-
-bool Triangulation<4>::fourTwoMove(Edge<4>* e, bool check, bool perform) {
-    if (check) {
-        // e must be valid and non-boundary.
-        if (e->isBoundary() || ! e->isValid())
-            return false;
-        // e must have degree four.
-        if (e->degree() != 4)
-            return false;
-    }
-
-    // e must meet four distinct pentachora, which must be glued around
-    // the edge in a way that gives a 3-simplex link.  Find these pentachora.
-    Pentachoron<4>* oldPent[4];
-    Perm<5> oldVertices[4]; // 01 -> edge, 234 -> link
-
-    // We will permute oldVertices so that:
-    // oldPent[0] / 34 -> oldPent[1] / 43
-    // oldPent[0] / 24 -> oldPent[2] / 42
-    // oldPent[0] / 23 -> oldPent[3] / 32
-    // oldPent[1] / 23 -> oldPent[2] / 32
-    // oldPent[1] / 24 -> oldPent[3] / 42
-    // oldPent[2] / 34 -> oldPent[3] / 43
-    // This is possible iff we have a 3-simplex link.
-
-    oldPent[0] = e->front().pentachoron();
-    oldVertices[0] = e->front().vertices();
-
-    int i,j;
-    for (i = 1; i < 4; ++i) {
-        oldPent[i] = oldPent[0]->adjacentPentachoron(oldVertices[0][i + 1]);
-        if (check)
-            for (j = 0; j < i; ++j)
-                if (oldPent[i] == oldPent[j])
-                    return false;
-        oldVertices[i] = oldPent[0]->adjacentGluing(oldVertices[0][i + 1]) *
-            oldVertices[0] * Perm<5>((i % 3) + 2, ((i + 1) % 3) + 2);
-    }
-
-    if (check) {
-        if (oldPent[2] != oldPent[1]->adjacentPentachoron(oldVertices[1][4]))
-            return false;
-        if (oldPent[3] != oldPent[1]->adjacentPentachoron(oldVertices[1][3]))
-            return false;
-        if (oldPent[3] != oldPent[2]->adjacentPentachoron(oldVertices[2][2]))
-            return false;
-
-        if (oldVertices[2] != oldPent[1]->adjacentGluing(oldVertices[1][4])
-                * oldVertices[1] * Perm<5>(2, 3))
-            return false;
-        if (oldVertices[3] != oldPent[1]->adjacentGluing(oldVertices[1][3])
-                * oldVertices[1] * Perm<5>(2, 4))
-            return false;
-        if (oldVertices[3] != oldPent[2]->adjacentGluing(oldVertices[2][2])
-                * oldVertices[2] * Perm<5>(3, 4))
-            return false;
-    }
-
-    if (! perform)
-        return true;
-
-    // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
-    ChangeEventSpan span(this);
-
-    // Create two new pentachora.
-    Pentachoron<4>* newPent[2];
-    for (i = 0; i < 2; ++i)
-        newPent[i] = newPentachoron();
-
-    // Find where their facets need to be glued.
-    // Old pentachoron j, facet i <-> New pentachoron i, facet j.
-    Pentachoron<4>* adjPent[2][4];
-    Perm<5> adjGluing[2][4];
-    int k,l;
-    for (i = 0; i < 2; ++i) { // new pentachora ; old facets
-        for (j = 0; j < 4; ++j) { // new facets ; old pentachora
-            adjPent[i][j] = oldPent[j]->adjacentPentachoron(oldVertices[j][i]);
-            adjGluing[i][j] = oldPent[j]->adjacentGluing(oldVertices[j][i]) *
-                oldVertices[j] * fourTwoPerm(i, j).inverse();
-
-            // Are we are gluing a new pentachoron to itself?
-            for (k = 0; k < 4; ++k) {
-                if (adjPent[i][j] == oldPent[k]) {
-                    for (l = 0; l < 2; ++l) {
-                        if (adjGluing[i][j][j] == oldVertices[k][l]) {
-                            // This glues to old pentachoron k,
-                            // facet oldVertices[k][l].
-                            // This means we glue new(i:j) to new(l:k).
-                            if (i > l || (i == l && j > k)) {
-                                // Ensure we make the gluing in just one
-                                // direction, not both directions.
-                                adjPent[i][j] = 0;
-                            } else {
-                                // Adjust the gluing to point to the new
-                                // pentachoron.
-                                adjPent[i][j] = newPent[l];
-                                adjGluing[i][j] =
-                                    fourTwoPerm(l, k) *
-                                    oldVertices[k].inverse() *
-                                    adjGluing[i][j];
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    // Now go ahead and make the gluings.
-    for (j = 0; j < 4; ++j)
-        oldPent[j]->isolate();
-    for (i = 0; i < 2; ++i)
-        for (j = 0; j < 4; ++j)
-            if (adjPent[i][j])
-                newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
-    newPent[0]->join(4, newPent[1], Perm<5>());
-
-    // Delete the old pentachora and insert the new.
-    for (i = 0; i < 4; ++i)
-        removePentachoron(oldPent[i]);
-
-    // All done!
-    knownSimpleLinks_ = rememberSimpleLinks;
-    return true;
-}
-
-bool Triangulation<4>::threeThreeMove(Triangle<4>* f, bool check,
-        bool perform) {
-    if (check) {
-        // f must be valid and non-boundary.
-        if (f->isBoundary() || ! f->isValid())
-            return false;
-        // f must have degree three.
-        if (f->degree() != 3)
-            return false;
-    }
-
-    // f must meet three distinct pentachora.  Find these pentachora.
-    Pentachoron<4>* oldPent[3];
-    Perm<5> oldVertices[3]; // 012 -> triangle, 34 -> link
-    int i,j;
-    for (i = 0; i < 3; ++i) {
-        oldPent[i] = f->embedding(i).pentachoron();
-        if (check)
-            for (j = 0; j < i; ++j)
-                if (oldPent[i] == oldPent[j])
-                    return false;
-        oldVertices[i] = f->embedding(i).vertices();
-    }
-
-    if (! perform)
-        return true;
-
-    // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
-    ChangeEventSpan span(this);
-
-    // Create three new pentachora.
-    Pentachoron<4>* newPent[3];
-    for (i = 0; i < 3; ++i)
-        newPent[i] = newPentachoron();
-
-    // Find where their facets need to be glued.
-    // Old pentachoron j, facet i <-> New pentachoron i, facet j.
-    Pentachoron<4>* adjPent[3][3];
-    Perm<5> adjGluing[3][3];
-    int k,l;
-    for (i = 0; i < 3; ++i) { // new pentachora ; old facets
-        for (j = 0; j < 3; ++j) { // new facets ; old pentachora
-            adjPent[i][j] = oldPent[j]->adjacentPentachoron(oldVertices[j][i]);
-            adjGluing[i][j] = oldPent[j]->adjacentGluing(oldVertices[j][i]) *
-                oldVertices[j] * threeThreePerm(j, i);
-
-            // Are we are gluing a new pentachoron to itself?
-            for (k = 0; k < 3; ++k) {
-                if (adjPent[i][j] == oldPent[k]) {
-                    for (l = 0; l < 3; ++l) {
-                        if (adjGluing[i][j][j] == oldVertices[k][l]) {
-                            // This glues to old pentachoron k,
-                            // facet oldVertices[k][l].
-                            // This means we glue new(i:j) to new(l:k).
-                            if (i > l || (i == l && j > k)) {
-                                // Ensure we make the gluing in just one
-                                // direction, not both directions.
-                                adjPent[i][j] = 0;
-                            } else {
-                                // Adjust the gluing to point to the new
-                                // pentachoron.
-                                adjPent[i][j] = newPent[l];
-                                adjGluing[i][j] =
-                                    threeThreePerm(l, k) *
-                                    oldVertices[k].inverse() *
-                                    adjGluing[i][j];
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    // Now go ahead and make the gluings.
-    for (j = 0; j < 3; ++j)
-        oldPent[j]->isolate();
-    for (i = 0; i < 3; ++i)
-        for (j = 0; j < 3; ++j)
-            if (adjPent[i][j])
-                newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
-    newPent[0]->join(3, newPent[1], Perm<5>(3, 4));
-    newPent[1]->join(3, newPent[2], Perm<5>(3, 4));
-    newPent[2]->join(3, newPent[0], Perm<5>(3, 4));
-
-    // Delete the old pentachora and insert the new.
-    for (i = 0; i < 3; ++i)
-        removePentachoron(oldPent[i]);
-
-    // All done!
-    knownSimpleLinks_ = rememberSimpleLinks;
-    return true;
-}
-
-bool Triangulation<4>::twoFourMove(Tetrahedron<4>* f, bool check,
-        bool perform) {
-    if (check) {
-        if (f->degree() != 2)
-            return false;
-        // We now know that the given facet is not on the boundary.
-    }
-
-    // f must meet two distinct pentachora.  Find these pentachora.
-    Pentachoron<4>* oldPent[2];
-    Perm<5> oldVertices[2]; // 0123 -> facet.
-    int i;
-    for (i = 0; i < 2; ++i) {
-        oldPent[i] = f->embedding(i).pentachoron();
-        oldVertices[i] = f->embedding(i).vertices();
-    }
-
-    if (check)
-        if (oldPent[0] == oldPent[1])
-            return false;
-
-    if (! perform)
-        return true;
-
-    // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
-    ChangeEventSpan span(this);
-
-    // Create four new pentachora.
-    Pentachoron<4>* newPent[4];
-    for (i = 0; i < 4; ++i)
-        newPent[i] = newPentachoron();
-
-    // Find where their facets need to be glued.
-    // Old pentachoron j, facet i <-> New pentachoron i, facet j.
-    Pentachoron<4>* adjPent[4][2];
-    Perm<5> adjGluing[4][2];
-    int j,k,l;
-    for (i = 0; i < 4; ++i) { // new pentachora ; old facets
-        for (j = 0; j < 2; ++j) { // new facets ; old pentachora
-            adjPent[i][j] = oldPent[j]->adjacentPentachoron(oldVertices[j][i]);
-            adjGluing[i][j] = oldPent[j]->adjacentGluing(oldVertices[j][i]) *
-                oldVertices[j] * fourTwoPerm(j, i);
-
-            // Are we are gluing a new pentachoron to itself?
-            for (k = 0; k < 2; ++k) {
-                if (adjPent[i][j] == oldPent[k]) {
-                    for (l = 0; l < 4; ++l) {
-                        if (adjGluing[i][j][j] == oldVertices[k][l]) {
-                            // This glues to old pentachoron k,
-                            // facet oldVertices[k][l].
-                            // This means we glue new(i:j) to new(l:k).
-                            if (i > l || (i == l && j > k)) {
-                                // Ensure we make the gluing in just one
-                                // direction, not both directions.
-                                adjPent[i][j] = 0;
-                            } else {
-                                // Adjust the gluing to point to the new
-                                // pentachoron.
-                                adjPent[i][j] = newPent[l];
-                                adjGluing[i][j] =
-                                    fourTwoPerm(k, l).inverse() *
-                                    oldVertices[k].inverse() *
-                                    adjGluing[i][j];
-                            }
-                            break;
-                        }
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
-    // Now go ahead and make the gluings.
-    for (j = 0; j < 2; ++j)
-        oldPent[j]->isolate();
-    for (i = 0; i < 4; ++i)
-        for (j = 0; j < 2; ++j)
-            if (adjPent[i][j])
-                newPent[i]->join(j, adjPent[i][j], adjGluing[i][j]);
-    newPent[0]->join(2, newPent[1], Perm<5>(3, 4));
-    newPent[0]->join(3, newPent[2], Perm<5>(2, 4));
-    newPent[0]->join(4, newPent[3], Perm<5>(2, 3));
-    newPent[1]->join(4, newPent[2], Perm<5>(2, 3));
-    newPent[1]->join(3, newPent[3], Perm<5>(2, 4));
-    newPent[2]->join(2, newPent[3], Perm<5>(3, 4));
-
-    // Delete the old pentachora and insert the new.
-    for (i = 0; i < 2; ++i)
-        removePentachoron(oldPent[i]);
-
-    // All done!
-    knownSimpleLinks_ = rememberSimpleLinks;
-    return true;
-}
-
-bool Triangulation<4>::oneFiveMove(Pentachoron<4>* pen, bool /* check */,
-        bool perform) {
-    if ( !perform )
-        return true; // You can always do this move.
-
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
-    ChangeEventSpan span(this);
-
-    // Before we unglue, record how the adjacent pentachora are glued to pen.
-    Pentachoron<4>* adjPen[5];
-    Perm<5> adjGlue[5];
-    unsigned i, j;
-    for (i=0; i<5; i++) {
-        adjPen[i] = pen->adjacentPentachoron(i);
-        if (adjPen[i])
-            adjGlue[i] = pen->adjacentGluing(i);
-    }
-
-    // Unglue the old pentachoron.
-    pen->isolate();
-
-    // The new pentachora.
-    // Facet i of the old pentachoron will become a facet of newPen[i].
-    // Vertex i of newPen[i] will become the new internal vertex, and
-    // the other four vertices of newPen[i] will keep the same vertex numbers
-    // that they had in the old pentachoron.
-    Pentachoron<4>* newPen[5];
-    for (i = 0; i < 5; ++i)
-        newPen[i] = newPentachoron();
-
-    // Glue the new pentachora to each other internally.
-    for (i = 0; i < 5; ++i)
-        for (j = i + 1; j < 5; ++j)
-            newPen[i]->join(j, newPen[j], Perm<5>(i, j));
-
-    // Attach the new pentachora to the old triangulation.
-    for (i = 0; i < 5; ++i) {
-        if (adjPen[i] == pen) {
-            // The old pentachoron was glued to itself.
-
-            // We might have already made this gluing from the other side:
-            if (newPen[i]->adjacentPentachoron(i))
-                continue;
-
-            // Nope, do it now.
-            newPen[i]->join(i, newPen[adjGlue[i][i]], adjGlue[i]);
-        } else if (adjPen[i]) {
-            // The old pentachoron was glued elsewhere.
-            newPen[i]->join(i, adjPen[i], adjGlue[i]);
-        }
-    }
-
-    // Delete the old pentachoron.
-    removePentachoron(pen);
-
-    // All done!
-    knownSimpleLinks_ = rememberSimpleLinks;
-    return true;
 }
 
 bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
@@ -658,8 +207,7 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -692,7 +240,6 @@ bool Triangulation<4>::twoZeroMove(Triangle<4>* t, bool check, bool perform) {
     removePentachoron(pent[0]);
     removePentachoron(pent[1]);
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -759,8 +306,7 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Unglue facets from the doomed pentachora and glue them to each other.
@@ -793,10 +339,88 @@ bool Triangulation<4>::twoZeroMove(Edge<4>* e, bool check, bool perform) {
     removePentachoron(pent[0]);
     removePentachoron(pent[1]);
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
+bool Triangulation<4>::twoZeroMove(Vertex<4>* v, bool check, bool perform) {
+    if (check) {
+        // For a valid vertex, the link must be a 3-ball or a closed 3-manifold.
+        // Moreover: *both* ideal and invalid vertices are considered to
+        // be on the boundary.
+        // Therefore, if a vertex is non-boundary, its link must be a 3-sphere.
+        if (v->isBoundary())
+            return false;
+        if (v->degree() != 2)
+            return false;
+    }
+
+    // Note: there is only one 2-tetrahedron 3-sphere triangulation
+    // where each tetrahedron is glued to the other along all four faces
+    // (and this is the vertex link we are looking for).
+
+    Simplex<4>* pent[2];
+    int vertex[2];
+
+    int i = 0;
+    for (auto& emb : *v) {
+        pent[i] = emb.pentachoron();
+        vertex[i] = emb.vertex();
+        i++;
+    }
+
+    if (check) {
+        if (pent[0] == pent[1])
+            return false;
+
+        Tetrahedron<4>* tetrahedron[2];
+        for (i = 0; i < 2; i++)
+            tetrahedron[i] = pent[i]->tetrahedron(vertex[i]);
+        if (tetrahedron[0] == tetrahedron[1])
+            return false;
+        if (tetrahedron[0]->isBoundary() && tetrahedron[1]->isBoundary())
+            return false;
+
+        // Check that the pentachora are joined along all four tetrahedra.
+        for (i = 0; i < 5; ++i) {
+            if (i == vertex[0])
+                continue;
+            if (pent[0]->adjacentSimplex(i) != pent[1])
+                return false;
+        }
+    }
+
+    if (! perform)
+        return true;
+
+    // Actually perform the move.
+    TopologyLock lock(this);
+    ChangeEventSpan span(this);
+
+    // Unglue faces from the doomed pentachora and glue them to each other.
+    Pentachoron<4>* top = pent[0]->adjacentPentachoron(vertex[0]);
+    Pentachoron<4>* bottom = pent[1]->adjacentPentachoron(vertex[1]);
+
+    if (! top) {
+        pent[1]->unjoin(vertex[1]);
+    } else if (! bottom) {
+        pent[0]->unjoin(vertex[0]);
+    } else {
+        Perm<5> crossover;
+        crossover = pent[0]->adjacentGluing(vertex[0] == 0 ? 1 : 0);
+        int topFacet = pent[0]->adjacentFacet(vertex[0]);
+        Perm<5> gluing = pent[1]->adjacentGluing(vertex[1]) *
+            crossover * top->adjacentGluing(topFacet);
+        pent[0]->unjoin(vertex[0]);
+        pent[1]->unjoin(vertex[1]);
+        top->join(topFacet, bottom, gluing);
+    }
+
+    // Finally remove and dispose of the pentachora.
+    removeSimplex(pent[0]);
+    removeSimplex(pent[1]);
+
+    return true;
+}
 bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
     const TetrahedronEmbedding<4>& emb = t->front();
     Pentachoron<4>* pent = emb.pentachoron();
@@ -859,12 +483,10 @@ bool Triangulation<4>::openBook(Tetrahedron<4>* t, bool check, bool perform) {
         return true;
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    // Don't bother with a change event block since this is so simple.
+    TopologyLock lock(this);
     pent->unjoin(emb.tetrahedron());
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -942,12 +564,10 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
         return true;
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    // Don't bother with a change event block since this is so simple.
+    TopologyLock lock(this);
     removePentachoron(p);
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 
@@ -1295,8 +915,7 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
         return true;
 
     // Perform the move.
-    bool rememberSimpleLinks = knownSimpleLinks_;
-
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
     Perm<5> topPerm, botPerm;
     Pentachoron<4> *top, *bot;
@@ -1332,7 +951,6 @@ bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     delete[] embPent;
     delete[] embVert;
 
-    knownSimpleLinks_ = rememberSimpleLinks;
     return true;
 }
 

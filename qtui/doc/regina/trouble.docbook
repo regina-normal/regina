@@ -284,8 +284,9 @@
     </para></question>
     <answer>
      <para>
-      If you have a second, hand-built version of &regina; installed on your
-      system, then this can conflict with the standalone app that you
+      In older versions of &regina; (version&nbsp;5.0 or earlier),
+      if you have a second, hand-built version of &regina; installed on your
+      system then this can conflict with the standalone app that you
       download from &regina;'s website.
      </para>
      <para>
@@ -298,8 +299,9 @@
       <filename>/Library/Python/2.7/site-packages/regina</filename>.
      </para>
      <para>
-      The next release of &regina; (version&nbsp;5.1) will allow two
-      such installations to work happily side-by-side.  In the meantime,
+      &regina; version&nbsp;5.1 or later should allow two
+      such installations to work happily side-by-side.  If you are
+      running &regina;&nbsp;5.0 or earlier,
       you can fix the problem by manually removing the hand-built &python;
       module that you found.
      </para>

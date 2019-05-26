@@ -2620,9 +2620,9 @@
     there is no guarantee of reaching a global minimum.
    </para>
    <sect3 id="tri-simplify-exhaustive">
-    <title>Exhaustive Simplification (3-D)</title>
+    <title>Exhaustive Simplification</title>
     <para>
-     For 3-manifolds, if &regina; cannot
+     If &regina; cannot
      simplify the triangulation immediately using its fast heuristics,
      then it will offer to perform a slower, more exhaustive search.  Press
      the <guilabel>Try harder</guilabel> button, as shown below:
@@ -2638,7 +2638,7 @@
      At this point, &regina; will begin an exhaustive search through the
      Pachner graph (this is essentially the graph that relates all
      triangulations of the underlying manifold through
-     2-3 and 3-2 Pachner moves):
+     Pachner moves):
     </para>
     <para>
      <inlinemediaobject>
@@ -2652,10 +2652,12 @@
      <guilabel>Cancel</guilabel> button.
     </para>
     <para>
-     Since the Pachner graph is infinite, &regina; will only search up to
-     a certain number of tetrahedra.  If this still fails, it will offer
+     Since the Pachner graph is infinite, &regina; will only search
+     through intermediate triangulations of a certain maximum size.
+     If this still fails, it will offer
      to search further, and you can press <guilabel>Keep trying</guilabel>
-     to continue the search using more tetrahedra than before.
+     to continue the search using larger intermediate triangulations
+     than before.
      This cycle of ever-expanding searches will continue for as long as
      you like: &regina; will only stop if you decline to keep searching,
      or you cancel a search while it is running, or it finds a smaller
@@ -2667,6 +2669,12 @@
        <imagedata fileref="tri-simplify-keeptrying.png"/>
       </imageobject>
      </inlinemediaobject>
+    </para>
+    <para>
+     For 3-manifolds, &regina; will only try 2-3 and 3-2 Pachner moves
+     in this exhaustive search.
+     For 4-manifolds, &regina; will try all possible Pachner moves
+     (1-5, 2-4, 3-3, 4-2, and 5-1).
     </para>
     <warning><para>
      When searching the Pachner graph, both the time and memory
@@ -2733,6 +2741,13 @@
    <para>
     The available moves for 3-manifolds (as illustrated above) are:
     <glosslist>
+     <glossentry>
+      <glossterm><guilabel>4-1 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces four tetrahedra meeting at a degree&nbsp;4 vertex
+       with a single tetrahedron.
+      </para></glossdef>
+     </glossentry>
      <glossentry>
       <glossterm><guilabel>3-2 Move</guilabel></glossterm>
       <glossdef><para>
@@ -2830,6 +2845,13 @@
     In brief, these 4-manifold moves are:
     <glosslist>
      <glossentry>
+      <glossterm><guilabel>5-1 Move</guilabel></glossterm>
+      <glossdef><para>
+       Replaces five pentachora meeting at a degree&nbsp;5 vertex
+       with a single pentachoron.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
       <glossterm><guilabel>4-2 Move</guilabel></glossterm>
       <glossdef><para>
        Replaces four pentachora joined along a degree&nbsp;4 edge
@@ -2868,7 +2890,14 @@
      <glossentry>
       <glossterm><guilabel>2-0 Move (Edge)</guilabel></glossterm>
       <glossdef><para>
-       Takes two pentachora that meet at a degree&nbsp;2 edge and
+       Takes two pentachora joined along a degree&nbsp;2 edge and
+       squashes them flat.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>2-0 Move (Vertex)</guilabel></glossterm>
+      <glossdef><para>
+       Takes two pentachora that meet at a degree&nbsp;2 vertex and
        squashes them flat.
       </para></glossdef>
      </glossentry>

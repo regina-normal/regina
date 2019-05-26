@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -78,7 +78,7 @@ bool Triangulation<4>::intelligentSimplify() {
                 for (fit = use->triangles().begin();
                         fit != use->triangles().end(); ++fit) {
                     triangle = *fit;
-                    if (use->threeThreeMove(triangle, true, false))
+                    if (use->pachner(triangle, true, false))
                         threeThreeAvailable.push_back(triangle);
                 }
 
@@ -93,7 +93,7 @@ bool Triangulation<4>::intelligentSimplify() {
                 // Perform a random 3-3 move on the clone.
                 threeThreeChoice = threeThreeAvailable[
                     static_cast<unsigned>(rand()) % threeThreeAvailable.size()];
-                use->threeThreeMove(threeThreeChoice, false, true);
+                use->pachner(threeThreeChoice, false, true);
 
                 // See if we can simplify now.
                 if (use->simplifyToLocalMinimum(true)) {
@@ -231,8 +231,21 @@ bool Triangulation<4>::simplifyToLocalMinimum(bool perform) {
                     return true;
             }
 
+            for (Vertex<4>* v : vertices()) {
+                if (twoZeroMove(v, true, perform)) {
+                    changedNow = changed = true;
+                    break;
+                }
+            }
+            if (changedNow) {
+                if (perform)
+                    continue;
+                else
+                    return true;
+            }
+
             for (Edge<4>* e : edges()) {
-                if (fourTwoMove(e, true, perform)) {
+                if (pachner(e, true, perform)) {
                     changedNow = changed = true;
                     break;
                 }

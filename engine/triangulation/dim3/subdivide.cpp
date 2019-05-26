@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -270,9 +270,15 @@ void Triangulation<3>::puncture(Tetrahedron<3>* tet) {
 }
 
 void Triangulation<3>::connectedSumWith(const Triangulation<3>& other) {
-    // Precondition check.
-    if (simplices_.empty() || ! isConnected())
+    if (other.simplices_.empty())
         return;
+    if (simplices_.empty()) {
+        insertTriangulation(other);
+        return;
+    }
+
+    // From here we can assume that each triangulation contains at least
+    // one tetrahedron.
 
     ChangeEventSpan span(this);
 

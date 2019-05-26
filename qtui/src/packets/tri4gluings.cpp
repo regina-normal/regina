@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,7 +31,9 @@
  **************************************************************************/
 
 // Regina core includes:
+#include "engine.h"
 #include "packet/container.h"
+#include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
@@ -39,6 +41,7 @@
 #include "eltmovedialog4.h"
 #include "tri4gluings.h"
 #include "edittableview.h"
+#include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "choosers/boundary4chooser.h"
@@ -49,6 +52,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QMessageBox>
+#include <QPushButton>
 #include <QRegExp>
 #include <QToolBar>
 
@@ -393,16 +397,16 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     triActionList.append(actSimplify);
 
     QAction* actEltMove = new QAction(this);
-    actEltMove->setText(tr("&Elementary Move..."));
+    actEltMove->setText(tr("&Elementary Moves..."));
     actEltMove->setToolTip(tr(
-        "Select an elementary move with which to modify the triangulation"));
+        "Modify the triangulation using elementary moves"));
     actEltMove->setEnabled(readWrite);
-    actEltMove->setWhatsThis(tr("<qt>Perform an elementary move upon this "
+    actEltMove->setWhatsThis(tr("<qt>Perform elementary moves upon this "
         "triangulation.  <i>Elementary moves</i> are modifications local to "
         "a small number of pentachora that do not change the underlying "
         "4-manifold.<p>"
-        "A dialog will be presented in which you can select the precise "
-        "elementary move to apply.</qt>"));
+        "A dialog will be presented for you to select which "
+        "elementary moves to apply.</qt>"));
     enableWhenWritable.append(actEltMove);
     triActionList.append(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
@@ -424,6 +428,20 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "components, only the orientable components will be relabelled.</qt>"));
     triActionList.append(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
+
+    QAction* actReflect = new QAction(this);
+    actReflect->setText(tr("Re&flect"));
+    actReflect->setIcon(ReginaSupport::regIcon("reflect"));
+    actReflect->setToolTip(tr(
+        "Reverse the orientation of each pentachoron"));
+    actReflect->setEnabled(readWrite);
+    actReflect->setWhatsThis(tr("<qt>Relabel the vertices of each pentachoron "
+        "so that the orientations of all pentachora are reversed.<p>"
+        "If this triangulation is oriented, then the overall effect will be "
+        "to convert this into an isomorphic triangulation with the "
+        "opposite orientation.</qt>"));
+    triActionList.append(actReflect);
+    connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
     QAction* actBarycentricSubdivide = new QAction(this);
     actBarycentricSubdivide->setText(tr("&Barycentric Subdivision"));
@@ -660,11 +678,51 @@ void Tri4GluingsUI::removeSelectedPents() {
 void Tri4GluingsUI::simplify() {
     endEdit();
 
-    if (! tri->intelligentSimplify())
-        ReginaSupport::info(ui,
-            tr("I could not simplify the triangulation further."),
-            tr("This does not mean that the triangulation is minimal; it "
-            "simply means that I could not find a way of reducing it."));
+    if (! tri->intelligentSimplify()) {
+        QMessageBox msgBox(ui);
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("I could not simplify the triangulation."));
+        msgBox.setInformativeText(tr("I have only tried fast heuristics "
+            "so far."));
+        msgBox.setStandardButtons(QMessageBox::Close);
+        QAbstractButton* work = msgBox.addButton(
+            tr("Try harder"), QMessageBox::ActionRole);
+        msgBox.setDefaultButton(QMessageBox::Close);
+        msgBox.exec();
+        if (msgBox.clickedButton() == work)
+            simplifyExhaustive(2);
+    }
+}
+
+void Tri4GluingsUI::simplifyExhaustive(int height) {
+    size_t initSize = tri->size();
+
+    regina::ProgressTrackerOpen tracker;
+    ProgressDialogOpen dlg(&tracker, tr("Searching Pachner graph..."),
+        tr("Tried %1 triangulations"), ui);
+
+    tri->simplifyExhaustive(height, regina::politeThreads(), &tracker);
+
+    if (dlg.run() && tri->size() == initSize) {
+        dlg.hide();
+
+        QMessageBox msgBox(ui);
+        msgBox.setWindowTitle(tr("Information"));
+        msgBox.setIcon(QMessageBox::Information);
+        msgBox.setText(tr("I still could not simplify the triangulation."));
+        msgBox.setInformativeText(tr("<qt>I have exhaustively searched "
+            "the Pachner graph up to %1 pentachora.<p>"
+            "I can look further, but be warned: the time and memory "
+            "required could grow <i>very</i> rapidly.").arg(initSize + height));
+        msgBox.setStandardButtons(QMessageBox::Close);
+        QAbstractButton* work = msgBox.addButton(
+            tr("Keep trying"), QMessageBox::ActionRole);
+        msgBox.setDefaultButton(QMessageBox::Close);
+        msgBox.exec();
+        if (msgBox.clickedButton() == work)
+            simplifyExhaustive(height + 2);
+    }
 }
 
 void Tri4GluingsUI::orient() {
@@ -689,6 +747,12 @@ void Tri4GluingsUI::orient() {
     }
 
     tri->orient();
+}
+
+void Tri4GluingsUI::reflect() {
+    endEdit();
+
+    tri->reflect();
 }
 
 void Tri4GluingsUI::barycentricSubdivide() {

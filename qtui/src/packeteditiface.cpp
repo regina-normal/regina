@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -115,22 +115,6 @@ void PacketEditPlainTextEditor::copy() {
 
 void PacketEditPlainTextEditor::paste() {
     emit sendPasteToEditor();
-}
-
-PacketEditTreeWidgetSingleLine::PacketEditTreeWidgetSingleLine(
-        QTreeWidget* tree) : tree_(tree) {
-    connect(tree_, SIGNAL(itemSelectionChanged()), this,
-        SLOT(fireStatesChanged()));
-}
-
-bool PacketEditTreeWidgetSingleLine::copyEnabled() const {
-    return (! tree_->selectedItems().empty());
-}
-
-void PacketEditTreeWidgetSingleLine::copy() {
-    if (! tree_->selectedItems().empty())
-        QApplication::clipboard()->setText(
-            tree_->selectedItems().front()->text(0), QClipboard::Clipboard);
 }
 
 PacketEditTabbedUI::PacketEditTabbedUI(PacketTabbedUI* tabs) :

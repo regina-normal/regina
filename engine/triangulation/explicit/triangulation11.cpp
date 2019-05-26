@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "triangulation/detail/isosig-impl.h"
+#include "triangulation/detail/pachner-impl.h"
 #include "triangulation/detail/skeleton-impl.h"
 #include "triangulation/generic.h"
 
@@ -49,5 +50,30 @@ template REGINA_API void TriangulationBase<11>::calculateSkeleton();
 template REGINA_API void TriangulationBase<11>::clearBaseProperties();
 template REGINA_API void TriangulationBase<11>::swapBaseProperties(
     TriangulationBase<11>&);
+
+template REGINA_API bool PachnerHelper<11, 0>::pachner(
+    Triangulation<11>*, Face<11, 0>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 1>::pachner(
+    Triangulation<11>*, Face<11, 1>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 2>::pachner(
+    Triangulation<11>*, Face<11, 2>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 3>::pachner(
+    Triangulation<11>*, Face<11, 3>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 4>::pachner(
+    Triangulation<11>*, Face<11, 4>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 5>::pachner(
+    Triangulation<11>*, Face<11, 5>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 6>::pachner(
+    Triangulation<11>*, Face<11, 6>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 7>::pachner(
+    Triangulation<11>*, Face<11, 7>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 8>::pachner(
+    Triangulation<11>*, Face<11, 8>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 9>::pachner(
+    Triangulation<11>*, Face<11, 9>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 10>::pachner(
+    Triangulation<11>*, Face<11, 10>*, bool, bool);
+template REGINA_API bool PachnerHelper<11, 11>::pachner(
+    Triangulation<11>*, Face<11, 11>*, bool, bool);
 
 } }

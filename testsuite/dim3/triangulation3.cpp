@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,6 +37,7 @@
 #include <sstream>
 #include <vector>
 #include <cppunit/extensions/HelperMacros.h>
+#include "link/link.h"
 #include "maths/matrix.h"
 #include "maths/numbertheory.h"
 #include "split/signature.h"
@@ -56,6 +57,7 @@ using regina::Component;
 using regina::Example;
 using regina::GroupPresentation;
 using regina::Isomorphism;
+using regina::Link;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::Perm;
@@ -76,6 +78,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryTriangles);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
 
     // Dimension-specific tests:
     CPPUNIT_TEST(validity);
@@ -108,7 +111,12 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(retriangulation);
     CPPUNIT_TEST(reordering);
     CPPUNIT_TEST(propertyUpdates);
-    CPPUNIT_TEST(eltMove14);
+    CPPUNIT_TEST(pachner<0>);
+    CPPUNIT_TEST(pachner<1>);
+    CPPUNIT_TEST(pachner<2>);
+    CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(fillTorus);
+    CPPUNIT_TEST(meridianLongitude);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -151,6 +159,10 @@ class Triangulation3Test : public TriangulationTest<3> {
         // Ideal orientable:
         Triangulation<3> figure8;
             /**< The figure eight knot complement. */
+        Triangulation<3> trefoil;
+            /**< The trefoil knot complement. */
+        Triangulation<3> knot18;
+            /**< An 18-crossing knot complement from the census. */
 
         // Closed non-orientable:
         Triangulation<3> rp2xs1;
@@ -289,12 +301,22 @@ class Triangulation3Test : public TriangulationTest<3> {
             copyAndDelete(weberSeifert, Example<3>::weberSeifert());
             weberSeifert.setLabel("Weber-Seifert");
 
-            copyAndDelete(figure8,
-                Example<3>::figureEight());
+            copyAndDelete(figure8, Example<3>::figureEight());
             figure8.setLabel("Figure 8 knot complement");
+
+            copyAndDelete(trefoil, Example<3>::trefoil());
+            trefoil.setLabel("Trefoil knot complement");
 
             copyAndDelete(rp2xs1, Example<3>::rp2xs1());
             rp2xs1.setLabel("RP^2 x S^1");
+
+            {
+                Link* k = Link::fromKnotSig(
+                    "sabcdeafghidejklmnopqgcbfqhinmjrpolkrlLvnvvNdM9aE");
+                copyAndDelete(knot18, k->complement());
+                knot18.setLabel("18-crossing knot complement");
+                delete k;
+            }
 
             copyAndDelete(gieseking, Example<3>::gieseking());
             gieseking.setLabel("Gieseking manifold");
@@ -435,6 +457,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             f(&weberSeifert);
             f(&lst3_4_7);
             f(&figure8);
+            f(&trefoil);
             f(&rp2xs1);
             f(&ballBundle);
             f(&twistedBallBundle);
@@ -515,6 +538,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyValid(ball_large_snapped);
             verifyValid(lst3_4_7);
             verifyValid(figure8);
+            verifyValid(trefoil);
+            verifyValid(knot18);
             verifyValid(rp2xs1);
             verifyValid(gieseking);
             verifyValid(invalidEdges, false);
@@ -558,6 +583,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyConnected(ball_large_snapped);
             verifyConnected(lst3_4_7);
             verifyConnected(figure8);
+            verifyConnected(trefoil);
+            verifyConnected(knot18);
             verifyConnected(rp2xs1);
             verifyConnected(gieseking);
             verifyConnected(invalidEdges);
@@ -601,6 +628,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyOrientable(ball_large_snapped);
             verifyOrientable(lst3_4_7);
             verifyOrientable(figure8);
+            verifyOrientable(trefoil);
+            verifyOrientable(knot18);
             verifyOrientable(rp2xs1, false);
             verifyOrientable(gieseking, false);
             verifyOrientable(invalidEdges, false);
@@ -669,6 +698,12 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
                 "is not standard.",
                 figure8.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The trefoil knot complement "
+                "is not standard.",
+                trefoil.isStandard());
+            CPPUNIT_ASSERT_MESSAGE("The 18-crossing knot complement "
+                "is not standard.",
+                knot18.isStandard());
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is not standard.",
                 rp2xs1.isStandard());
             CPPUNIT_ASSERT_MESSAGE("The solid torus is not standard.",
@@ -727,6 +762,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyBoundaryCount(singleTet_bary, 1);
 
             verifyBoundaryCount(figure8, 0, 1);
+            verifyBoundaryCount(trefoil, 0, 1);
+            verifyBoundaryCount(knot18, 0, 1);
             verifyBoundaryCount(gieseking, 0, 1);
             verifyBoundaryCount(twoProjPlaneCusps, 0, 2);
             verifyBoundaryCount(cuspedGenusTwoTorus, 0, 1);
@@ -1308,6 +1345,10 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             verifyVertexCount(figure8, 1, "Figure eight knot complement");
             verifyVertexTorus(figure8, 0, "Figure eight knot complement");
+            verifyVertexCount(trefoil, 1, "Trefoil knot complement");
+            verifyVertexTorus(trefoil, 0, "Trefoil knot complement");
+            verifyVertexCount(knot18, 1, "18-crossing knot complement");
+            verifyVertexTorus(knot18, 0, "18-crossing knot complement");
 
             verifyVertexCount(rp2xs1, 1, "RP^2 x S^1");
             verifyVertexSphere(rp2xs1, 0, "RP^2 x S^1");
@@ -1571,6 +1612,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyEuler(lens100_1, 0, 0, "L(100,1)");
             verifyEuler(lst3_4_7, 0, 0, "LST(3,4,7)");
             verifyEuler(figure8, 0, 1, "Figure eight knot complement");
+            verifyEuler(trefoil, 0, 1, "Trefoil knot complement");
+            verifyEuler(knot18, 0, 1, "18-crossing knot complement");
             verifyEuler(rp2xs1, 0, 0, "RP^2 x S^1");
             verifyEuler(ballBundle, 0, 0, "Solid torus");
             verifyEuler(twistedBallBundle, 0, 0, "Solid Klein bottle");
@@ -1755,6 +1798,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "H1(LST(3,4,7))", 1);
             verifyGroup(figure8.homology(),
                 "H1(figure eight knot complement)", 1);
+            verifyGroup(trefoil.homology(),
+                "H1(trefoil knot complement)", 1);
+            verifyGroup(knot18.homology(),
+                "H1(18-crossing knot complement)", 1);
             verifyGroup(rp2xs1.homology(),
                 "H1(RP^2 x S^1)", 1, 2);
             verifyGroup(ballBundle.homology(),
@@ -1822,6 +1869,10 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "Boundary H1(LST(3,4,7))", 2);
             verifyGroup(figure8.homologyBdry(),
                 "Boundary H1(figure eight knot complement)", 2);
+            verifyGroup(trefoil.homologyBdry(),
+                "Boundary H1(trefoil knot complement)", 2);
+            verifyGroup(knot18.homologyBdry(),
+                "Boundary H1(18-crossing knot complement)", 2);
             verifyGroup(rp2xs1.homologyBdry(),
                 "Boundary H1(RP^2 x S^1)", 0);
             verifyGroup(ballBundle.homologyBdry(),
@@ -1892,6 +1943,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFundGroupVsH1(&ball_large_snapped);
             verifyFundGroupVsH1(&lst3_4_7);
             verifyFundGroupVsH1(&figure8);
+            verifyFundGroupVsH1(&trefoil);
+            verifyFundGroupVsH1(&knot18);
             verifyFundGroupVsH1(&rp2xs1);
             verifyFundGroupVsH1(&ballBundle);
             verifyFundGroupVsH1(&twistedBallBundle);
@@ -1925,6 +1978,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyFundGroup(lst3_4_7, "Z");
             verifyFundGroup(figure8,
                 "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1 b^2");
+                // Note: \u21A6 is the unicode mapsto symbol.
+            verifyFundGroup(trefoil,
+                "Z~Free(2) w/monodromy a \u21A6 b, b \u21A6 b a^-1");
                 // Note: \u21A6 is the unicode mapsto symbol.
             verifyFundGroup(rp2xs1, "Z + Z_2");
             verifyFundGroup(ballBundle, "Z");
@@ -2054,6 +2110,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             CPPUNIT_ASSERT_MESSAGE("The figure eight knot complement "
                 "is not 0-efficient.",
                 figure8.isZeroEfficient());
+            CPPUNIT_ASSERT_MESSAGE("The trefoil knot complement "
+                "is not 0-efficient.",
+                trefoil.isZeroEfficient());
             CPPUNIT_ASSERT_MESSAGE("RP^2 x S^1 is not 0-efficient.",
                 rp2xs1.isZeroEfficient());
                 // Contains a two-sided projective plane.
@@ -2115,6 +2174,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (name)
                 tri->setLabel(name);
 
+            clearProperties(*tri);
             if (! tri->isThreeSphere()) {
                 CPPUNIT_FAIL(("The 3-sphere " + tri->label() +
                     " is not recognised as such.").c_str());
@@ -2123,6 +2183,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Try again with a barycentric subdivision.
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
+            clearProperties(big);
             if (! big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-sphere "
                     + tri->label() + " is not recognised as such.").c_str());
@@ -2131,6 +2192,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
                 regina::Container parent;
+                clearProperties(*tri);
                 long comps = tri->connectedSumDecomposition(&parent);
                 if (comps != 0) {
                     std::ostringstream msg;
@@ -2149,6 +2211,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (name)
                 tri->setLabel(name);
 
+            clearProperties(*tri);
             if (tri->isThreeSphere()) {
                 CPPUNIT_FAIL(("The non-3-sphere " + tri->label() +
                     " is recognised as a 3-sphere.").c_str());
@@ -2157,6 +2220,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Try again with a barycentric subdivision.
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
+            clearProperties(big);
             if (big.isThreeSphere()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-sphere "
                     + tri->label()
@@ -2166,6 +2230,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
                 regina::Container parent;
+                clearProperties(*tri);
                 long comps = tri->connectedSumDecomposition(&parent);
                 if (comps == 0) {
                     std::ostringstream msg;
@@ -2210,8 +2275,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             // the Poincare homology sphere it is 0.947214.
 
             // What did 3-sphere recognition say?
+            clearProperties(*tri);
             bool found = tri->isThreeSphere();
 
+            clearProperties(*tri);
             bool expected = (tri->isValid() &&
                          tri->isClosed() &&
                          tri->isOrientable() &&
@@ -2234,6 +2301,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri->isValid() && tri->isClosed() && tri->isOrientable() &&
                     tri->isConnected()) {
                 regina::Container parent;
+                clearProperties(*tri);
                 long comps = tri->connectedSumDecomposition(&parent);
                 if (expected && comps != 0) {
                     std::ostringstream msg;
@@ -2459,6 +2527,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         Triangulation<3>* verifyThreeBall(Triangulation<3>* tri,
                 const std::string& triName) {
+            clearProperties(*tri);
             if (! tri->isBall()) {
                 CPPUNIT_FAIL(("The 3-ball " + triName +
                     " is not recognised as such.").c_str());
@@ -2467,6 +2536,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Try again with a barycentric subdivision.
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
+            clearProperties(big);
             if (! big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the 3-ball "
                     + triName + " is not recognised as such.").c_str());
@@ -2477,6 +2547,7 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         Triangulation<3>* verifyNotThreeBall(Triangulation<3>* tri,
                 const std::string& triName) {
+            clearProperties(*tri);
             if (tri->isBall()) {
                 CPPUNIT_FAIL(("The non-3-ball" + triName +
                     " is recognised as a 3-ball.").c_str());
@@ -2485,6 +2556,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             // Try again with a barycentric subdivision.
             Triangulation<3> big(*tri);
             big.barycentricSubdivision();
+            clearProperties(big);
             if (big.isBall()) {
                 CPPUNIT_FAIL(("The barycentric subdivision of the non-3-ball "
                     + triName + " is recognised as a 3-ball.").c_str());
@@ -2581,8 +2653,10 @@ class Triangulation3Test : public TriangulationTest<3> {
             // eHLObcdddwuj, both representing SFS [D: (2,1) (3,-2)].
 
             // What did solid torus recognition say?
+            clearProperties(*tri);
             bool found = tri->isSolidTorus();
 
+            clearProperties(*tri);
             bool expected = (tri->isValid() &&
                          (! tri->isIdeal()) &&
                          tri->isOrientable() &&
@@ -2616,16 +2690,20 @@ class Triangulation3Test : public TriangulationTest<3> {
             Triangulation<3> bounded(*tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
+            clearProperties(bounded);
 
             Triangulation<3> ideal(*tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
+            clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
             boundedBig.barycentricSubdivision();
+            clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
             idealBig.barycentricSubdivision();
+            clearProperties(idealBig);
 
             if (! bounded.isSolidTorus()) {
                 CPPUNIT_FAIL(("The real solid torus " +
@@ -2655,16 +2733,20 @@ class Triangulation3Test : public TriangulationTest<3> {
             Triangulation<3> bounded(*tri);
             if (bounded.isIdeal())
                 bounded.idealToFinite();
+            clearProperties(bounded);
 
             Triangulation<3> ideal(*tri);
             if (ideal.hasBoundaryTriangles())
                 ideal.finiteToIdeal();
+            clearProperties(ideal);
 
             Triangulation<3> boundedBig(bounded);
             boundedBig.barycentricSubdivision();
+            clearProperties(boundedBig);
 
             Triangulation<3> idealBig(ideal);
             idealBig.barycentricSubdivision();
+            clearProperties(idealBig);
 
             if (bounded.isSolidTorus()) {
                 CPPUNIT_FAIL(("The real non-solid-torus " +
@@ -2966,6 +3048,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void verifyBary(Triangulation<3>* tri) {
             Triangulation<3> b(*tri);
             b.barycentricSubdivision();
+            clearProperties(b);
 
             // Note that subdivisions can turn invalid into valid, but
             // they can never turn valid into invalid.
@@ -3078,6 +3161,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void verifyIdealToFinite(Triangulation<3>* tri) {
             Triangulation<3> finite(*tri);
             finite.idealToFinite();
+            clearProperties(finite);
 
             // Are there any ideal vertices remaining?
             if (finite.isIdeal()) {
@@ -3165,6 +3249,7 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void verifyFiniteToIdeal(Triangulation<3>* tri) {
             Triangulation<3> ideal(*tri);
             ideal.finiteToIdeal();
+            clearProperties(ideal);
 
             // Are there any boundary triangles remaining?
             if (ideal.hasBoundaryTriangles()) {
@@ -3632,6 +3717,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyNoDehydration(fig8_bary);
             verifyNoDehydration(lst3_4_7);
             verifyDehydration(figure8);
+            verifyDehydration(trefoil);
+            verifyNoDehydration(knot18);
             verifyDehydration(rp2xs1);
             verifyNoDehydration(ballBundle);
             verifyNoDehydration(twistedBallBundle);
@@ -3649,6 +3736,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 unsigned simpleSize, const char* simpleName) {
             Triangulation<3> t(tri);
             t.intelligentSimplify();
+            clearProperties(t);
 
             if (t.size() != simpleSize) {
                 std::ostringstream msg;
@@ -3745,6 +3833,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     "properly.");
 
             tri->intelligentSimplify();
+            clearProperties(*tri);
             if (tri->size() != 1)
                 CPPUNIT_FAIL("Custom invalid triangulation did not simplify "
                     "to 1 tetrahedron.");
@@ -3767,6 +3856,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             if (tri->homology().str() != "Z")
                 CPPUNIT_FAIL("Custom solid torus has incorrect H1.");
             tri->intelligentSimplify();
+            clearProperties(*tri);
             if (tri->homology().str() != "Z")
                 CPPUNIT_FAIL("Custom solid torus simplifies to "
                     "something different.");
@@ -3820,19 +3910,24 @@ class Triangulation3Test : public TriangulationTest<3> {
         static void testReordering(Triangulation<3>* t) {
             Triangulation<3> a(*t);
             a.reorderTetrahedraBFS();
+            clearProperties(a);
 
             Triangulation<3> b(*t);
             b.reorderTetrahedraBFS(true);
+            clearProperties(b);
 
             Isomorphism<3>* iso = Isomorphism<3>::random(t->size());
             Triangulation<3>* c = iso->apply(t);
             delete iso;
+            clearProperties(*c);
 
             Triangulation<3> d(*c);
             d.reorderTetrahedraBFS();
+            clearProperties(d);
 
             Triangulation<3> e(*c);
             e.reorderTetrahedraBFS(true);
+            clearProperties(e);
 
             if (! t->isIsomorphicTo(a).get()) {
                 std::ostringstream msg;
@@ -3930,104 +4025,323 @@ class Triangulation3Test : public TriangulationTest<3> {
                 "is orientable.", ! t.isOrientable());
         }
 
-        static void verifyEltMove14(Triangulation<3>* tri) {
-            unsigned long n = tri->size();
-            for (unsigned long i = 0; i < n; ++i) {
-                Triangulation<3> large(*tri);
-                large.oneFourMove(large.tetrahedron(i));
+        template <int k>
+        void pachner() {
+            testManualSmall(verifyPachner<k>);
+            runCensusAllClosed(verifyPachner<k>, true);
+            runCensusAllBounded(verifyPachner<k>, true);
+            runCensusAllIdeal(verifyPachner<k>, true);
+            verifyPachnerSimplicial<k>();
+        }
 
-                if (large.size() != n + 3) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move gives wrong # tetrahedra.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+        void verifyFillTorus(unsigned long p1, unsigned long q1,
+                unsigned long r1, unsigned long p2, unsigned long q2,
+                unsigned long r2, unsigned long lensP, unsigned long lensQ) {
+            // Fills LST(p1, q1, r1) with the curve (p2, q2, r2) and
+            // verifies that we obtain the lens space L(lensP, lensQ).
+            if (p1 > q1) {
+                std::swap(p1, q1);
+                std::swap(p2, q2);
+            }
+            if (p1 > r1) {
+                std::swap(p1, r1);
+                std::swap(p2, r2);
+            }
+            if (q1 > r1) {
+                std::swap(q1, r1);
+                std::swap(q2, r2);
+            }
 
-                if (large.isValid() != tri->isValid()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes validity.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+            // Run the same test five times: once normally, and the
+            // others with a random isomorphism.  The purpose of the
+            // random isomorphisms is to mix up the order in which
+            // the boundary edges are indexed within the boundary component.
+            for (int i = 0; i < 5; ++i) {
+                Triangulation<3> t;
+                Tetrahedron<3>* bdry = t.insertLayeredSolidTorus(p1, q1);
+                regina::Edge<3> *e1, *e2, *e3;
 
-                if (large.isOrientable() != tri->isOrientable()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes orientability.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+                if (i == 0) {
+                    if (r1 <= 2) {
+                        e2 = bdry->edge(1, 2);
+                        e3 = bdry->edge(0, 2);
+                        e1 = bdry->edge(0, 1);
+                    } else {
+                        e1 = bdry->edge(1, 2);
+                        e2 = bdry->edge(0, 2);
+                        e3 = bdry->edge(0, 1);
+                    }
+                } else {
+                    // Apply a random isomorphism.
+                    unsigned idx = bdry->index();
 
-                if (large.isClosed() != tri->isClosed()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes closedness.";
-                    CPPUNIT_FAIL(msg.str());
-                }
+                    Isomorphism<3>* iso = Isomorphism<3>::random(t.size());
+                    iso->applyInPlace(&t);
 
-                if (large.countBoundaryComponents() !=
-                        tri->countBoundaryComponents()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes # boundary components.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (large.eulerCharTri() != tri->eulerCharTri()) {
-                    std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move changes Euler characteristic.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-
-                if (tri->isValid()) {
-                    if (! (large.homology() == tri->homology())) {
-                        std::ostringstream msg;
-                        msg << tri->label() << ", tet " << i << ": "
-                            << "1-4 move changes H1.";
-                        CPPUNIT_FAIL(msg.str());
+                    Perm<4> p = iso->facetPerm(idx);
+                    if (r1 <= 2) {
+                        e2 = t.simplex(iso->simpImage(idx))->edge(p[1], p[2]);
+                        e3 = t.simplex(iso->simpImage(idx))->edge(p[0], p[2]);
+                        e1 = t.simplex(iso->simpImage(idx))->edge(p[0], p[1]);
+                    } else {
+                        e1 = t.simplex(iso->simpImage(idx))->edge(p[1], p[2]);
+                        e2 = t.simplex(iso->simpImage(idx))->edge(p[0], p[2]);
+                        e3 = t.simplex(iso->simpImage(idx))->edge(p[0], p[1]);
                     }
 
-                    if (! (large.homologyH2() == tri->homologyH2())) {
+                    delete iso;
+                }
+
+                if (! (e1->isBoundary() && e2->isBoundary() &&
+                        e3->isBoundary())) {
+                    std::ostringstream msg;
+                    msg << "Filling (" << p1 << "," << q1 << "," << r1
+                        << ") <-> (" << p2 << "," << q2 << "," << r2
+                        << ") gives boundary edges that are not "
+                        "marked as boundary.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                t.fillTorus(e1, e2, e3, p2, q2, r2);
+                t.intelligentSimplify();
+
+                if (lensP <= 4) {
+                    // If we have a closed orientable manifold with
+                    // at most 2 tetrahedra and the right homology,
+                    // then we have the right lens space.
+                    if (t.size() > 2) {
                         std::ostringstream msg;
-                        msg << tri->label() << ", tet " << i << ": "
-                            << "1-4 move changes H2.";
+                        msg << "Filling (" << p1 << "," << q1 << "," << r1
+                            << ") <-> (" << p2 << "," << q2 << "," << r2
+                            << ") does not reduce to <= 2 tetrahedra.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    if (! (t.isValid() && t.isClosed() && t.isOrientable())) {
+                        std::ostringstream msg;
+                        msg << "Filling (" << p1 << "," << q1 << "," << r1
+                            << ") <-> (" << p2 << "," << q2 << "," << r2
+                            << ") does not give a valid closed orientable "
+                            "triangulation.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                    const AbelianGroup& h1 = t.homology();
+                    if (! t.homology().isZn(lensP)) {
+                        std::ostringstream msg;
+                        msg << "Filling (" << p1 << "," << q1 << "," << r1
+                            << ") <-> (" << p2 << "," << q2 << "," << r2
+                            << ") does not give the right homology for L("
+                            << lensP << "," << lensQ << ").";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                } else {
+                    Triangulation<3> compare;
+                    compare.insertLayeredLensSpace(lensP, lensQ);
+                    compare.intelligentSimplify();
+
+                    if (! t.isIsomorphicTo(compare).get()) {
+                        std::ostringstream msg;
+                        msg << "Filling (" << p1 << "," << q1 << "," << r1
+                            << ") <-> (" << p2 << "," << q2 << "," << r2
+                            << ") does not reduce to the minimal "
+                            "triangulation of L(" << lensP << "," << lensQ
+                            << ").";
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
+            }
+        }
 
-                // Shrink.
-                if (large.isIsomorphicTo(*tri).get()) {
+        void fillTorus() {
+            // Examples from Jaco-Rubinstein "Layered-triangulations of
+            // 3-manifolds":
+
+            // LST(0,1,1) <-> LST(2,1,1) = L(2,1)
+            // LST(0,1,1) <-> LST(1,2,1) = L(1,0) = S^3
+            // LST(1,1,2) <-> LST(2,1,1) = L(3,1)
+            // LST(1,1,2) <-> LST(1,1,2) = L(0,1) = S^2 x S^1
+            // LST(1,3,4) <-> LST(2,1,1) = L(7,3)
+            // LST(1,3,4) <-> LST(1,2,1) = L(5,1)
+            // LST(1,3,4) <-> LST(1,1,2) = L(2,1)
+            // LST(2,3,5) <-> LST(2,1,1) = L(8,3)
+            // LST(2,3,5) <-> LST(1,2,1) = L(7,2)
+            // LST(2,3,5) <-> LST(1,1,2) = L(1,0) = S^3
+            // LST(9,7,2) <-> LST(5,3,8) = L(62,27)
+            verifyFillTorus(0,1,1, 2,1,1, 2,1);
+            verifyFillTorus(0,1,1, 1,2,1, 1,0);
+            verifyFillTorus(1,1,2, 2,1,1, 3,1);
+            verifyFillTorus(1,1,2, 1,1,2, 0,1);
+            verifyFillTorus(1,3,4, 2,1,1, 7,3);
+            verifyFillTorus(1,3,4, 1,2,1, 5,1);
+            verifyFillTorus(1,3,4, 1,1,2, 2,1);
+            verifyFillTorus(2,3,5, 2,1,1, 8,3);
+            verifyFillTorus(2,3,5, 1,2,1, 7,2);
+            verifyFillTorus(2,3,5, 1,1,2, 1,0);
+            verifyFillTorus(9,7,2, 5,3,8, 62,27);
+
+            // We should obtain L(13,8) = L(13,5) from LST gluings:
+            // (1,0,1) <-> (5,13,8)
+            // (1,2,1) <-> (5,3,8)
+            // (1,2,3) <-> (5,3,2)
+            verifyFillTorus(1,0,1, 5,13,8, 13,5);
+            verifyFillTorus(1,2,1, 5,3,8, 13,5);
+            verifyFillTorus(1,2,3, 5,3,2, 13,5);
+
+            // We should obtain L(25,11) = L(25,9) from LST gluings:
+            // (1,0,1) <-> (14,25,11)
+            // (1,2,1) <-> (14,3,11)
+            // (3,2,1) <-> (8,3,11)
+            // (3,2,5) <-> (8,3,5)
+            // (7,2,5) <-> (2,3,5)
+            // (7,2,9) <-> (2,3,1)
+            // (7,16,9) <-> (2,1,1)
+            // (25,16,9) <-> (0,1,1)
+            verifyFillTorus(1,0,1, 14,25,11, 25,9);
+            verifyFillTorus(1,2,1, 14,3,11, 25,9);
+            verifyFillTorus(3,2,1, 8,3,11, 25,9);
+            verifyFillTorus(3,2,5, 8,3,5, 25,9);
+            verifyFillTorus(7,2,5, 2,3,5, 25,9);
+            verifyFillTorus(7,2,9, 2,3,1, 25,9);
+            verifyFillTorus(7,16,9, 2,1,1, 25,9);
+            verifyFillTorus(25,16,9, 0,1,1, 25,9);
+
+            // We should obtain L(42,11) = L(42,19) from LST gluings:
+            // (31,11,42) <-> (1,1,0)
+            // (31,11,20) <-> (1,1,2)
+            // (9,11,20) <-> (3,1,2)
+            // (9,11,2) <-> (3,1,4)
+            // (9,7,2) <-> (3,7,4)
+            // (5,7,2) <-> (11,7,4)
+            // (5,3,2) <-> (11,15,4)
+            // (1,3,2) <-> (19,15,4)
+            // (1,1,2) <-> (19,23,4)
+            // (1,1,0) <-> (19,23,42)
+            verifyFillTorus(31,11,42, 1,1,0, 42,11);
+            verifyFillTorus(31,11,20, 1,1,2, 42,11);
+            verifyFillTorus(9,11,20, 3,1,2, 42,11);
+            verifyFillTorus(9,11,2, 3,1,4, 42,11);
+            verifyFillTorus(9,7,2, 3,7,4, 42,11);
+            verifyFillTorus(5,7,2, 11,7,4, 42,11);
+            verifyFillTorus(5,3,2, 11,15,4, 42,11);
+            verifyFillTorus(1,3,2, 19,15,4, 42,11);
+            verifyFillTorus(1,1,2, 19,23,4, 42,11);
+            verifyFillTorus(1,1,0, 19,23,42, 42,11);
+        }
+
+        void verifyMeridianLongitude(const Triangulation<3>& orig) {
+            Triangulation<3> t(orig); // something we can modify
+
+            if (t.isIdeal()) {
+                t.idealToFinite();
+                t.intelligentSimplify();
+            }
+
+            if (t.countVertices() != 1) {
+                std::ostringstream msg;
+                msg << orig.label() << ": cannot build a "
+                    "one-vertex triangulation.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            auto curves = t.meridianLongitude();
+            regina::Edge<3>* m = curves.first;
+            regina::Edge<3>* l = curves.second;
+            regina::Edge<3>* other = nullptr;
+            for (auto e : t.boundaryComponent(0)->edges()) {
+                if (e != m && e != l) {
+                    other = e;
+                    break;
+                }
+            }
+
+            if ((! m) || (! l) || (! other)) {
+                std::ostringstream msg;
+                msg << orig.label() << ": boundary curves not identified.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (! (m->isBoundary() && l->isBoundary() && other->isBoundary())) {
+                std::ostringstream msg;
+                msg << orig.label()
+                    << ": boundary curves not marked as boundary.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            const auto& mEmb = m->front();
+            const auto& lEmb = l->front();
+            const auto& oEmb = other->front();
+
+            // If we fill along the curve p*meridian + q*longitude,
+            // we should be left with homology Z_p.
+            //
+            // In particular, the longitude is the only curve that we can
+            // fill along to obtain Z.
+            {
+                Triangulation<3> tmp(t);
+                tmp.fillTorus(
+                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
+                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
+                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    1, 0, 1);
+                if (! tmp.homology().isZ()) {
                     std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move: result is isomorphic.";
+                    msg << orig.label() << ": filling along longitude "
+                        "does not give Z homology.";
                     CPPUNIT_FAIL(msg.str());
                 }
-
-                bool res =
-                    large.collapseEdge(large.tetrahedron(n + 2)->edge(
-                    regina::Edge<3>::edgeNumber[0][3]), true, true);
-
-                if (! res) {
+            }
+            {
+                Triangulation<3> tmp(t);
+                tmp.fillTorus(
+                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
+                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
+                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    2, 3, 5);
+                if (! tmp.homology().isZn(3)) {
                     std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move: could not recollapse edge.";
+                    msg << orig.label() << ": filling along "
+                        "(3 * meridian +/- 2 * longitude) "
+                        "does not give Z_3 homology.";
                     CPPUNIT_FAIL(msg.str());
                 }
-
-                if (! large.isIsomorphicTo(*tri).get()) {
+            }
+            {
+                Triangulation<3> tmp(t);
+                tmp.fillTorus(
+                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
+                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
+                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    2, 3, 1);
+                if (! tmp.homology().isZn(3)) {
                     std::ostringstream msg;
-                    msg << tri->label() << ", tet " << i << ": "
-                        << "1-4 move: recollapse is not isomorphic.";
+                    msg << orig.label() << ": filling along "
+                        "(3 * meridian -/+ 2 * longitude) "
+                        "does not give Z_3 homology.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
+            // To test the meridian, we use the fact that filling along
+            // the meridian produces the 3-sphere.
+            {
+                Triangulation<3> tmp(t);
+                tmp.fillTorus(
+                    tmp.simplex(mEmb.simplex()->index())->edge(mEmb.edge()),
+                    tmp.simplex(lEmb.simplex()->index())->edge(lEmb.edge()),
+                    tmp.simplex(oEmb.simplex()->index())->edge(oEmb.edge()),
+                    0, 1, 1);
+                if (! tmp.isThreeSphere()) {
+                    std::ostringstream msg;
+                    msg << orig.label() << ": filling along meridian "
+                        "does not give the 3-sphere.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
         }
 
-        void eltMove14() {
-            testManualSmall(verifyEltMove14);
-            runCensusAllClosed(verifyEltMove14, true);
-            runCensusAllBounded(verifyEltMove14, true);
-            runCensusAllIdeal(verifyEltMove14, true);
+        void meridianLongitude() {
+            verifyMeridianLongitude(lst3_4_7);
+            verifyMeridianLongitude(figure8);
+            verifyMeridianLongitude(trefoil);
+            verifyMeridianLongitude(knot18);
         }
 };
 

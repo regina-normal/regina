@@ -1,0 +1,132 @@
+
+<!-- Regina data file format documentation.
+     See ../regina.sgml for further details. -->
+
+<refentry id="data-components">
+ <refmeta>
+  <refentrytitle>components</refentrytitle>
+  <manvolnum>5reg</manvolnum>
+ </refmeta>
+
+ <refnamediv>
+  <refname>components</refname>
+  <refpurpose>The components of a knot/link diagram</refpurpose>
+ </refnamediv>
+
+ <refsynopsisdiv>
+  <informaltable frame="all">
+   <tgroup cols="2">
+    <colspec colname="c1"/>
+    <colspec colname="c2"/>
+    <tbody>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Content Model</emphasis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+<synopsis>
+components ::= (#PCDATA)</synopsis>
+     </entry></row>
+     <row><entry namest="c1" nameend="c2">
+      <emphasis role="bold">Attributes</emphasis>
+     </entry></row>
+     <row>
+      <entry><emphasis role="bold">Name</emphasis></entry>
+      <entry><emphasis role="bold">Type</emphasis></entry>
+     </row>
+     <row>
+      <entry><sgmltag>size</sgmltag></entry>
+      <entry><type>NUMBER</type> (required)</entry>
+     </row>
+    </tbody>
+   </tgroup>
+  </informaltable>
+ </refsynopsisdiv>
+
+ <refsect1>
+  <title>Description</title>
+  <para>
+   A &xml-components; element encodes a starting point for each link
+   component in a knot/link diagram.
+   Recall that, in &regina;, all knot/link diagrams are oriented.
+  </para>
+  <para>
+   The total number of components must be specified by the
+   <sgmltag>size</sgmltag> attribute.  The individual components are
+   numbered 0, 1, 2, and so on.
+  </para>
+  <para>
+   The character data of this &xml; element should be a
+   whitespace-separated list of tokens, each representing a starting
+   point for traversing an individual component of the link diagram.
+   There should be <replaceable>size</replaceable> tokens in total,
+   representing starting points for components 0, 1, 2, ... in order.
+  </para>
+  <para>
+   If a component has no crossings (i.e., it is a zero-crossing unknot
+   component), then the corresponding token should be the six-character
+   literal string <literal>(null)</literal>.
+   Otherwise the token should be in one of the two forms
+   <literal>^</literal><replaceable>k</replaceable>, representing the
+   upper strand of crossing number <replaceable>k</replaceable>,
+   or <literal>_</literal><replaceable>k</replaceable>, representing the
+   lower strand of crossing number <replaceable>k</replaceable>.
+   Here the symbols <literal>^</literal> and <literal>_</literal> are
+   literal characters, whereas <replaceable>k</replaceable> should be
+   replaced by a crossing number. Recall that &regina; numbers crossings
+   beginning at 0.
+  </para>
+
+  <refsect2>
+   <title>Parents</title>
+   <para>
+    The following elements contain <sgmltag>components</sgmltag>:
+    <simplelist type="inline">
+     <member>&xml-packet-link;</member>
+    </simplelist>.
+   </para>
+  </refsect2>
+
+  <refsect2>
+   <title>Children</title>
+   <para>
+    Element <sgmltag>components</sgmltag> has no children.
+   </para>
+  </refsect2>
+ </refsect1>
+
+ <refsect1>
+  <title>Attributes</title>
+  <variablelist>
+   <varlistentry>
+    <term><sgmltag>size</sgmltag></term>
+    <listitem>
+     <para>
+      The total number of components in the link diagram.
+     </para>
+    </listitem>
+   </varlistentry>
+  </variablelist>
+ </refsect1>
+
+ <refsect1>
+  <title>Example</title>
+  <para>
+   The following &xml; snippet represents the Whitehead link.
+  </para>
+  <programlisting>
+&lt;crossings size=&quot;5&quot;&gt;
+- - + + -
+&lt;/crossings&gt;
+&lt;connections&gt;
+_1 ^1
+_2 ^4
+_4 ^3
+_0 ^2
+_3 ^0
+&lt;/connections&gt;
+&lt;components size=&quot;2&quot;&gt;
+^0 _0
+&lt;/components&gt;
+  </programlisting>
+ </refsect1>
+</refentry>

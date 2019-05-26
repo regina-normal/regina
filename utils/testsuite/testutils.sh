@@ -3,7 +3,7 @@
 # Regina - Software for low-dimensional topology
 # Command-Line Utilities Test Suite
 #
-# Copyright (c) 2016-2017, Ben Burton
+# Copyright (c) 2016-2018, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Ad-hoc usage only (for now)
@@ -87,7 +87,7 @@ if [ ! -e "$badfile" ]; then
 fi
 
 # The utilities being tested:
-utils="censuslookup regconcat regconvert regfiledump regfiletype trisetcmp"
+utils="censuslookup regconcat regconvert regfiledump regfiletype retriangulate trisetcmp"
 for i in $utils; do
     if [ ! -x $i ]; then
         echo "ERROR: Could not find the utility $i in the current directory."
@@ -226,6 +226,24 @@ testutil regfiletype "$invalidfile"
 testutil regfiletype "$badfile"
 testutil regfiletype "$testdir"/test.rga "$testdir"/b5.rga
 testutil regfiletype "$testdir"/test.rga "$invalidfile" "$badfile" "$testdir"/b5.rga "$testdir"/8-or.rga
+
+# --- retriangulate with errors:
+testutil retriangulate
+testutil retriangulate foo
+testutil retriangulate cPcbbbadu hLLMAkacdefeggjkaknkxn
+testutil retriangulate -h -1 cPcbbbadu
+testutil retriangulate -t 0 cPcbbbadu
+testutil retriangulate -4 -h 3 eLMQcbcddcddaaaa8a8a8a8a8a
+# --- retriangulate when successful:
+testutil retriangulate fLAMcbcbdeehhjqqs
+testutil retriangulate cPcbbbadu
+testutil retriangulate -h 2 cPcbbbadu
+testutil retriangulate -h 3 cPcbbbadu
+testutil retriangulate -h 3 -t 2 cPcbbbadu
+testutil retriangulate hLLMAkacdefeggjkaknkxn
+testutil retriangulate -h 2 -t 2 hLLAAkbdceefggdonxdjxn
+testutil retriangulate -h 3 -t 2 hLLAAkbdceefggdonxdjxn
+testutil retriangulate -4 eLMQcbcddcddaaaa8a8a8a8a8a
 
 # --- trisetcmp with errors:
 testutil trisetcmp

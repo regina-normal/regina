@@ -7,9 +7,9 @@
   highly optimised toolkit with a focus on normal surface theory,
   angle structures, and the combinatorial structures of triangulations,
   and it now performs many high-level topological algorithms for 3-manifolds.
-  Since version&nbsp;5.0, &regina; also offers a rich toolkit for
-  triangulated 4-manifolds, plus basic combinatorial support for
-  manifolds of dimension 5&ndash;15.
+  &regina; also offers rich toolkits for knots and links and
+  triangulated 4-manifolds, and offers more basic combinatorial support
+  for manifolds of dimension 5&ndash;15.
   For more on these and its many other features, see the
   <link linkend="featureset">full feature set</link>
   later in this introduction.
@@ -122,7 +122,7 @@
    Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
    <emphasis>Regina: Software for low-dimensional topology,</emphasis>
    <literal>http://regina-normal.github.io/</literal>,
-   1999&ndash;2017.
+   1999&ndash;2018.
   </para></blockquote>
   <para>
    A &bibtex; entry for this reference is included below.
@@ -133,7 +133,7 @@
     title = {Regina: Software for low-dimensional topology},
     howpublished = {{\tt http://\allowbreak regina-normal.\allowbreak
         github.\allowbreak io/}},
-    year = {1999--2017}
+    year = {1999--2018}
 }
 </programlisting>
  </sect1>

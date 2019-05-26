@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -302,6 +302,13 @@ class REGINA_API MarkedAbelianGroup :
          * @return \c true if and only if this is the trivial group.
          */
         bool isTrivial() const;
+
+        /**
+         * Determines whether this is the infinite cyclic group (Z).
+         *
+         * @return \c true if and only if this is the infinite cyclic group.
+         */
+        bool isZ() const;
 
         /**
          * Determines whether this and the given abelian group are
@@ -1132,6 +1139,10 @@ inline unsigned long MarkedAbelianGroup::minNumberCycleGens() const {
 
 inline bool MarkedAbelianGroup::isTrivial() const {
     return ( (snfrank==0) && (InvFacList.size()==0) );
+}
+
+inline bool MarkedAbelianGroup::isZ() const {
+    return ( (snfrank==1) && (InvFacList.size()==0) );
 }
 
 inline bool MarkedAbelianGroup::equalTo(const MarkedAbelianGroup& other)

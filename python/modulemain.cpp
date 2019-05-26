@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,8 +45,11 @@ void addDim2Classes();
 void addDim4Classes();
 void addFileClasses();
 void addForeignClasses();
+#ifndef REGINA_LOWDIMONLY
 void addGenericClasses();
+#endif
 void addHypersurfaceClasses();
+void addLinkClasses();
 void addManifoldClasses();
 void addMathsClasses();
 void addPacketClasses();
@@ -65,7 +68,7 @@ namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nSoftware for low-dimensional topology" +
-            "\nCopyright (c) 1999-2017, The Regina development team";
+            "\nCopyright (c) 1999-2018, The Regina development team";
     }
 }
 
@@ -105,6 +108,7 @@ BOOST_PYTHON_MODULE(regina) {
     boost::python::def("versionSnapPy", regina::versionSnapPy);
     boost::python::def("versionSnapPea", regina::versionSnapPea);
     boost::python::def("hasInt128", regina::hasInt128);
+    boost::python::def("politeThreads", regina::politeThreads);
     boost::python::def("testEngine", regina::testEngine);
 
     boost::python::enum_<regina::Algorithm>("Algorithm")
@@ -147,7 +151,10 @@ BOOST_PYTHON_MODULE(regina) {
     addSurfacesClasses();
     addHypersurfaceClasses();
     addDim2Classes();
+#ifndef REGINA_LOWDIMONLY
     addGenericClasses();
+#endif
     addTreewidthClasses();
+    addLinkClasses();
 }
 

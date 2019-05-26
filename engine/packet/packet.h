@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1740,6 +1740,23 @@ namespace std {
 
 namespace regina {
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline SubtreeIterator::SubtreeIterator() : subtree_(0), current_(0) {
+}
+
+inline SubtreeIterator::SubtreeIterator(Packet* subtree) :
+        subtree_(subtree), current_(subtree) {
+}
+
+inline SubtreeIterator::SubtreeIterator(Packet* subtree, Packet* current) :
+        subtree_(subtree), current_(current) {
+}
+
+inline PacketChildren::PacketChildren(const Packet* parent) : parent_(parent) {
+}
+
 // Inline functions for Packet
 
 inline Packet::Packet(Packet* parent) :
@@ -1881,17 +1898,6 @@ inline Packet* const& ChildIterator::operator * () const {
     return current_;
 }
 
-inline SubtreeIterator::SubtreeIterator() : subtree_(0), current_(0) {
-}
-
-inline SubtreeIterator::SubtreeIterator(Packet* subtree) :
-        subtree_(subtree), current_(subtree) {
-}
-
-inline SubtreeIterator::SubtreeIterator(Packet* subtree, Packet* current) :
-        subtree_(subtree), current_(current) {
-}
-
 inline bool SubtreeIterator::operator == (const SubtreeIterator& rhs) const {
     return current_ == rhs.current_;
 }
@@ -1922,9 +1928,6 @@ inline SubtreeIterator SubtreeIterator::operator ++ (int) {
 
 inline Packet* const& SubtreeIterator::operator * () const {
     return current_;
-}
-
-inline PacketChildren::PacketChildren(const Packet* parent) : parent_(parent) {
 }
 
 inline ChildIterator PacketChildren::begin() const {

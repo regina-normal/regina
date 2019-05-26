@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -118,6 +118,11 @@ namespace {
             // Only called for Perm16, which has no contract() methods at all.
         }
     };
+
+    template <int n>
+    struct PermHelper {
+        BOOST_PYTHON_FUNCTION_OVERLOADS(OL_rand, Perm<n>::rand, 0, 1);
+    };
 }
 
 template <int n>
@@ -140,7 +145,7 @@ void addPerm(const char* name) {
         .def("isIdentity", &Perm<n>::isIdentity)
         .def("atIndex", &Perm<n>::atIndex)
         .def("index", &Perm<n>::index)
-        .def("rand", &Perm<n>::rand)
+        .def("rand", &Perm<n>::rand, typename PermHelper<n>::OL_rand())
         .def("trunc", &Perm<n>::trunc)
         .def("clear", &Perm<n>::clear)
         .def("__repr__", &Perm<n>::str)

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -376,6 +376,84 @@ struct EulerCalculator<dim, dim> {
 #endif // __DOXYGEN
 
 /**
+ * Internal class used to perform Pachner moves on a triangulation.
+ *
+ * Specifically, this class performs (\a dim - \a k + 1)-(\a k + 1) moves
+ * about <i>k</i>-faces of <i>dim</i>-dimensional triangulations.
+ *
+ * Pachner moves are implemented in a separate class (i.e., this class)
+ * instead of TriangulationBase because we wish to offer specialised
+ * implementations for certain facial dimensions \a k, and C++ does not
+ * allow partial specialisation of functions.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * \tparam k the dimension of the faces about which to perform Pachner moves.
+ */
+template <int dim, int k>
+struct PachnerHelper {
+    static_assert(0 < k && k < dim,
+        "The generic PachnerHelper template cannot be used "
+        "for 0-faces or dim-faces.");
+    /**
+     * Performs a (\a dim - \a k + 1)-(\a k + 1) move about the given face.
+     *
+     * This routine contains the real implementation of
+     * TriangulationBase::pachner<k>(); see that routine for further details.
+     *
+     * \pre If the move is being performed and no check is being run,
+     * it must be known in advance that the move is legal.
+     * \pre The given <i>k</i>-face is a <i>k</i>-face of the given
+     * triangulation.
+     *
+     * @param tri the triangulation upon which to perform the Pachner move.
+     * @param f the specific <i>k</i>-face about which to perform the move.
+     * @param check \c true if the move should be tested for eligibility.
+     * @param perform \c true if the move should actually be performed.
+     * @return If \a check is \c true, this function returns \c true
+     * if and only if the requested move may be performed
+     * without changing the topology of the manifold.  If \a check
+     * is \c false, this function simply returns \c true.
+     */
+    static bool pachner(Triangulation<dim>* tri, Face<dim, k>* f,
+        bool check, bool perform);
+};
+
+#ifndef __DOXYGEN
+
+template <int dim>
+struct PachnerHelper<dim, 0> {
+    static bool pachner(Triangulation<dim>* tri, Vertex<dim>* v,
+        bool check, bool perform);
+};
+
+template <int dim>
+struct PachnerHelper<dim, dim> {
+    static bool pachner(Triangulation<dim>* tri, Simplex<dim>* s,
+        bool check, bool perform);
+
+    /**
+     * An alternate implementation to use for the deprecated routines
+     * Triangulation<2>::oneThreeMove(), Triangulation<3>::oneFourMove()
+     * and Triangulation<4>::oneFiveMove().
+     *
+     * This differs from pachner() in the labelling of the new simplices:
+     *
+     * - pachner() creates the new vertex as
+     *   <tt>simplices().back()->vertex(0)</tt>;
+     *
+     * - pachnerOld() creates the new vertex as
+     *   <tt>simplices().back()->vertex(dim)</tt>.
+     *
+     * \pre This may only be used in dimensions 2, 3 and 4 (which is
+     * where backward compatibility needs to be maintained).
+     */
+    static bool pachnerOld(Triangulation<dim>* tri, Simplex<dim>* s,
+        bool check, bool perform);
+};
+
+#endif // __DOXYGEN
+
+/**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
  *
  * Such a triangulation is represented by the class Triangulation<dim>,
@@ -431,6 +509,19 @@ class TriangulationBase :
         bool valid_;
             /**< Is this triangulation valid?  See isValid() for details
                  on what this means. */
+
+        int topologyLock_;
+            /**< If non-zero, this will cause
+                 Triangulation<dim>::clearAllProperties() to preserve any
+                 computed properties that related to the manifold (as
+                 opposed to the specific triangulation).  This allows
+                 you to avoid recomputing expensive invariants when the
+                 underlying manifold is retriangulated.
+
+                 This property should be managed by creating and
+                 destroying TopologyLock objects.  The precise value of
+                 topologyLock_ indicates the number of TopologyLock
+                 objects that currently exist for this triangulation. */
 
     private:
         bool calculatedSkeleton_;
@@ -1089,6 +1180,84 @@ class TriangulationBase :
          */
         void orient();
 
+        /**
+         * Relabels the vertices of top-dimensional simplices in this
+         * triangulation so that all simplices reflect their orientation.
+         * In particular, if this triangulation is oriented,
+         * then it will be converted into an isomorphic triangulation
+         * with the opposite orientation.
+         *
+         * This routine works by flipping vertices (\a dim - 1) and \a dim
+         * of every top-dimensional simplex.
+         */
+        void reflect();
+
+        /**
+         * Checks the eligibility of and/or performs a
+         * (\a dim + 1 - \a k)-(\a k + 1) Pachner move about the given
+         * <i>k</i>-face.  This involves replacing the (\a dim + 1 - \a k)
+         * top-dimensional simplices meeting that <i>k</i>-face with
+         * (\a k + 1) new top-dimensional simplices joined along a new
+         * internal (\a dim - \a k)-face.
+         * This can be done iff (i) the given <i>k</i>-face is valid and
+         * non-boundary; (ii) the (\a dim + 1 - \a k) top-dimensional simplices
+         * that contain it are distinct; and (iii) these simplices are joined
+         * in such a way that the link of the given <i>k</i>-face is the
+         * standard triangulation of the (\a dim - 1 - \a k)-sphere as
+         * the boundary of a (\a dim - \k)-simplex.
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.  In
+         * In the special case \a k = \a dim, the move is always legal
+         * and so the \a check argument will simply be ignored.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (facets, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a v)
+         * can no longer be used.
+         *
+         * If this triangulation is currently oriented, then this Pachner move
+         * will label the new top-dimensional simplices in a way that
+         * preserves the orientation.
+         *
+         * See the page on \ref pachner for definitions and terminology
+         * relating to Pachner moves.  After the move, the new belt face
+         * will be formed from vertices 0,1,...,(\a dim - \a k) of
+         * <tt>simplices().back()</tt>.
+         *
+         * \warning For the case \a k = \a dim in Regina's
+         * \ref stddim "standard dimensions", the labelling of the belt face
+         * has changed as of Regina 5.2.  In versions 5.1 and earlier, the
+         * belt face was <tt>simplices().back()->vertex(dim)</tt>, and
+         * as of version 5.2 it is now <tt>simplices().back()->vertex(0)</tt>.
+         * The deprecated routines Triangulation<2>::oneThreeMove(),
+         * Triangulation<3>::oneFourMove() and Triangulation<4>::oneFiveMove()
+         * maintain the old behaviour if you need it.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given <i>k</i>-face is a <i>k</i>-face of this
+         * triangulation.
+         *
+         * @param f the <i>k</i>-face about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         *
+         * \tparam k the dimension of the given face.  This must be
+         * between 0 and (\a dim) inclusive.  You can still perform
+         * a Pachner move about a 0-face <i>dim</i>-face, but these moves
+         * use specialised implementations (as opposed to this generic
+         * template implementation).
+         */
+        template <int k>
+        bool pachner(Face<dim, k>* f, bool check = true, bool perform = true);
+
         /*@}*/
         /**
          * \name Subdivisions, Extensions and Covers
@@ -1147,6 +1316,13 @@ class TriangulationBase :
          * sub-simplices in the subdivided triangulation has changed as of
          * Regina 5.1.  (Earlier versions of Regina made no guarantee about the
          * labelling and ordering; these guarantees are also new to Regina 5.1).
+         *
+         * \todo Lock the topological properties of the underlying manifold,
+         * to avoid recomputing them after the subdivision.  However, only
+         * do this for \e valid triangulations (since we can have scenarios
+         * where invalid triangulations becoming valid and ideal after
+         * subdivision, which may change properties such as
+         * Triangulation<4>::knownSimpleLinks).
          */
         void barycentricSubdivision();
 
@@ -1194,8 +1370,8 @@ class TriangulationBase :
          * inserted as children of the given parent packet.  The original
          * triangulation (i.e., this triangulation) will be left unchanged.
          *
-         * If the given parent packet is 0, the new component triangulations
-         * will be inserted as children of this triangulation.
+         * If the given parent packet is \c null, the new component
+         * triangulations will be inserted as children of this triangulation.
          *
          * By default, this routine will assign sensible packet labels to each
          * of the new component triangulations.  If these component
@@ -1205,14 +1381,14 @@ class TriangulationBase :
          * that these packet labels incur.
          *
          * @param componentParent the packet beneath which the new
-         * component triangulations will be inserted, or 0 if they
+         * component triangulations will be inserted, or \c null if they
          * should be inserted directly beneath this triangulation.
          * @param setLabels \c true if the new component triangulations
          * should be assigned sensible packet labels, or \c false if
          * they should be left without labels at all.
          * @return the number of new component triangulations constructed.
          */
-        size_t splitIntoComponents(Packet* componentParent = 0,
+        size_t splitIntoComponents(Packet* componentParent = nullptr,
             bool setLabels = true);
 
         /*@}*/
@@ -1668,7 +1844,7 @@ class TriangulationBase :
          * for different dimensions \a p and \a q.
          *
          * @param sig the isomorphism signature of the triangulation to
-         * construct.  Note that isomorphism signature are case-sensitive
+         * construct.  Note that isomorphism signatures are case-sensitive
          * (unlike, for example, dehydration strings for 3-manifolds).
          * @return a newly allocated triangulation if the reconstruction was
          * successful, or \c null if the given string was not a valid
@@ -1978,8 +2154,56 @@ class TriangulationBase :
         template <int subdim>
         void relabelFace(Face<dim, subdim>* f, const Perm<dim + 1>& adjust);
 
+    protected:
+        /**
+         * Creates a temporary lock on the topological properties of
+         * the given triangulation.  While this object exists, any
+         * computed properties of the underlying \e manifold will be
+         * preserved even when the triangulation changes.  This allows
+         * you to avoid recomputing expensive invariants when the
+         * underlying manifold is retriangulated.
+         *
+         * The lock will be created by the class constructor and removed
+         * by the class destructor.  That is, the lock will remain in
+         * effect until the TopologyLock object goes out of scope (or is
+         * otherwise destroyed).
+         *
+         * Multiple locks are allowed.  If multiple locks are created, then
+         * computed properties of the manifold will be preserved as
+         * long as any one of these locks still exists.  Multiple locks
+         * do not necessarily need to be nested (i.e., the order of
+         * destruction does not need to be the reverse order of construction).
+         *
+         * \note If you are creating a ChangeEventSpan before retriangulating
+         * the manifold and you wish to use a TopologyLock, then you should
+         * create the TopologyLock \e before the ChangeEventSpan (since the
+         * ChangeEventSpan calls clearAllProperties() in its destructor,
+         * and you need your topology lock to still exist at that point).
+         */
+        class TopologyLock {
+            private:
+                TriangulationBase<dim>* tri_;
+                    /**< The triangulation whose topological properties
+                         are locked. */
+
+            public:
+                /**
+                 * Creates a new lock on the given triangulation.
+                 *
+                 * @param tri the triangulation whose topological
+                 * properties are to be locked.  This may be \c null
+                 * (in which case the lock has no effect).
+                 */
+                TopologyLock(TriangulationBase<dim>* tri);
+                /**
+                 * Removes this lock on the associated triangulation.
+                 */
+                ~TopologyLock();
+        };
+
     template <int, int, int> friend struct FaceCalculator;
     template <int, int> friend struct BoundaryComponentCalculator;
+    template <int, int> friend struct PachnerHelper;
     template <int, int> friend class WeakFaceList;
     friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
@@ -2054,7 +2278,7 @@ inline bool FaceListSuite<dim, 0>::sameDegrees(
 
 template <int dim>
 inline TriangulationBase<dim>::TriangulationBase() :
-        calculatedSkeleton_(false) {
+        topologyLock_(0), calculatedSkeleton_(false) {
 }
 
 template <int dim>
@@ -2065,7 +2289,7 @@ inline TriangulationBase<dim>::TriangulationBase(
 template <int dim>
 TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
         bool cloneProps) :
-        calculatedSkeleton_(false) {
+        topologyLock_(0), calculatedSkeleton_(false) {
     // We don't fire a change event here since this is a constructor.
     // There should be nobody listening on events yet.
     // Likewise, we don't clearAllProperties() since no properties
@@ -2612,9 +2836,18 @@ inline long TriangulationBase<dim>::eulerCharTri() const {
 }
 
 template <int dim>
+template <int k>
+inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
+        bool perform) {
+    return PachnerHelper<dim, k>::pachner(
+        static_cast<Triangulation<dim>*>(this), f, check, perform);
+}
+
+template <int dim>
 void TriangulationBase<dim>::orient() {
     ensureSkeleton();
 
+    TopologyLock lock(this);
     typename Triangulation<dim>::ChangeEventSpan span(
         static_cast<Triangulation<dim>*>(this));
 
@@ -2643,6 +2876,34 @@ void TriangulationBase<dim>::orient() {
                     }
                 }
         }
+
+    // Don't forget to call clearAllProperties(), since we are manipulating
+    // the gluing-related data members of Simplex<dim> directly.
+    static_cast<Triangulation<dim>*>(this)->clearAllProperties();
+}
+
+template <int dim>
+void TriangulationBase<dim>::reflect() {
+    ensureSkeleton();
+
+    TopologyLock lock(this);
+    typename Triangulation<dim>::ChangeEventSpan span(
+        static_cast<Triangulation<dim>*>(this));
+
+    int f;
+    for (auto s : simplices_) {
+        // Flip vertices (dim - 1) and dim of s.
+        std::swap(s->adj_[dim - 1], s->adj_[dim]);
+        std::swap(s->gluing_[dim - 1], s->gluing_[dim]);
+
+        for (f = 0; f <= dim; ++f)
+            if (s->adj_[f]) {
+                // Fix the gluing from this side now, and fix it from
+                // the other side when we process the other simplex.
+                s->gluing_[f] = Perm<dim + 1>(dim - 1, dim) *
+                    s->gluing_[f] * Perm<dim + 1>(dim - 1, dim);
+            }
+    }
 
     // Don't forget to call clearAllProperties(), since we are manipulating
     // the gluing-related data members of Simplex<dim> directly.
@@ -3117,6 +3378,21 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
         H1_.value()->writeXMLData(out);
         out << "</H1>\n";
     }
+}
+
+// Inline functions for TriangulationBase::TopologyLock
+
+template <int dim>
+TriangulationBase<dim>::TopologyLock::TopologyLock(
+        TriangulationBase<dim>* tri) : tri_(tri) {
+    if (tri_)
+        ++tri_->topologyLock_;
+}
+
+template <int dim>
+TriangulationBase<dim>::TopologyLock::~TopologyLock() {
+    if (tri_)
+        --tri_->topologyLock_;
 }
 
 } } // namespace regina::detail

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -453,6 +453,7 @@
 
         [detail addAttributes:@{NSFontAttributeName: cell.detailTextLabel.font} range:NSMakeRange(0, detail.length)];
 
+        // All triangulation storyboards contain a reference to the TextPopover controller.
         TextPopover* c = [self.storyboard instantiateViewControllerWithIdentifier:@"textPopover"];
         c.text = detail;
         UIPopoverController* detailPopover = [[UIPopoverController alloc] initWithContentViewController:c];

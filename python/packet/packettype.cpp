@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -54,9 +54,11 @@ void addPacketType() {
         .value("PACKET_NORMALHYPERSURFACES", regina::PACKET_NORMALHYPERSURFACES)
         .value("PACKET_NORMALHYPERSURFACELIST", regina::PACKET_NORMALHYPERSURFACES)
         .value("PACKET_SNAPPEATRIANGULATION", regina::PACKET_SNAPPEATRIANGULATION)
+        .value("PACKET_LINK", regina::PACKET_LINK)
         .value("PACKET_TRIANGULATION2", regina::PACKET_TRIANGULATION2)
         .value("PACKET_TRIANGULATION3", regina::PACKET_TRIANGULATION3)
         .value("PACKET_TRIANGULATION4", regina::PACKET_TRIANGULATION4)
+#ifndef REGINA_LOWDIMONLY
         .value("PACKET_TRIANGULATION5", regina::PACKET_TRIANGULATION5)
         .value("PACKET_TRIANGULATION6", regina::PACKET_TRIANGULATION6)
         .value("PACKET_TRIANGULATION7", regina::PACKET_TRIANGULATION7)
@@ -68,6 +70,7 @@ void addPacketType() {
         .value("PACKET_TRIANGULATION13", regina::PACKET_TRIANGULATION13)
         .value("PACKET_TRIANGULATION14", regina::PACKET_TRIANGULATION14)
         .value("PACKET_TRIANGULATION15", regina::PACKET_TRIANGULATION15)
+#endif
         ;
 
     global.attr("PACKET_CONTAINER") = regina::PACKET_CONTAINER;
@@ -85,9 +88,11 @@ void addPacketType() {
     global.attr("PACKET_NORMALHYPERSURFACES") = regina::PACKET_NORMALHYPERSURFACES;
     global.attr("PACKET_NORMALHYPERSURFACELIST") = regina::PACKET_NORMALHYPERSURFACES;
     global.attr("PACKET_SNAPPEATRIANGULATION") = regina::PACKET_SNAPPEATRIANGULATION;
+    global.attr("PACKET_LINK") = regina::PACKET_LINK;
     global.attr("PACKET_TRIANGULATION2") = regina::PACKET_TRIANGULATION2;
     global.attr("PACKET_TRIANGULATION3") = regina::PACKET_TRIANGULATION3;
     global.attr("PACKET_TRIANGULATION4") = regina::PACKET_TRIANGULATION4;
+#ifndef REGINA_LOWDIMONLY
     global.attr("PACKET_TRIANGULATION5") = regina::PACKET_TRIANGULATION5;
     global.attr("PACKET_TRIANGULATION6") = regina::PACKET_TRIANGULATION6;
     global.attr("PACKET_TRIANGULATION7") = regina::PACKET_TRIANGULATION7;
@@ -99,5 +104,6 @@ void addPacketType() {
     global.attr("PACKET_TRIANGULATION13") = regina::PACKET_TRIANGULATION13;
     global.attr("PACKET_TRIANGULATION14") = regina::PACKET_TRIANGULATION14;
     global.attr("PACKET_TRIANGULATION15") = regina::PACKET_TRIANGULATION15;
+#endif
 }
 

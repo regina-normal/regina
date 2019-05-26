@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,6 +53,7 @@
 @end
 
 @interface EltMoves3 () {
+    NSMutableArray* options41;
     NSMutableArray* options32;
     NSMutableArray* options23;
     NSMutableArray* options14;
@@ -68,6 +69,7 @@
     NSAttributedString* unavailable;
 }
 
+@property (weak, nonatomic) IBOutlet UIButton *button41;
 @property (weak, nonatomic) IBOutlet UIButton *button32;
 @property (weak, nonatomic) IBOutlet UIButton *button23;
 @property (weak, nonatomic) IBOutlet UIButton *button14;
@@ -80,6 +82,7 @@
 @property (weak, nonatomic) IBOutlet UIButton *buttonShell;
 @property (weak, nonatomic) IBOutlet UIButton *buttonCollapseEdge;
 
+@property (weak, nonatomic) IBOutlet UIStepper *stepper41;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper32;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper23;
 @property (weak, nonatomic) IBOutlet UIStepper *stepper14;
@@ -92,6 +95,7 @@
 @property (weak, nonatomic) IBOutlet UIStepper *stepperShell;
 @property (weak, nonatomic) IBOutlet UIStepper *stepperCollapseEdge;
 
+@property (weak, nonatomic) IBOutlet UILabel *detail41;
 @property (weak, nonatomic) IBOutlet UILabel *detail32;
 @property (weak, nonatomic) IBOutlet UILabel *detail23;
 @property (weak, nonatomic) IBOutlet UILabel *detail14;
@@ -127,9 +131,25 @@
     unsigned long i;
     int arg;
 
+    options41 = [[NSMutableArray alloc] init];
+    for (i = 0; i < self.packet->countVertices(); ++i)
+        if (self.packet->pachner(self.packet->vertex(i), true, false))
+            [options41 addObject:@(i)];
+    if (options41.count > 0) {
+        self.button41.enabled = self.stepper41.enabled = YES;
+        self.stepper41.maximumValue = options41.count - 1;
+        if (self.stepper41.value >= options41.count)
+            self.stepper41.value = options41.count - 1;
+        else
+            [self changed41:nil];
+    } else {
+        self.button41.enabled = self.stepper41.enabled = NO;
+        self.detail41.attributedText = unavailable;
+    }
+
     options32 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countEdges(); ++i)
-        if (self.packet->threeTwoMove(self.packet->edge(i), true, false))
+        if (self.packet->pachner(self.packet->edge(i), true, false))
             [options32 addObject:@(i)];
     if (options32.count > 0) {
         self.button32.enabled = self.stepper32.enabled = YES;
@@ -145,7 +165,7 @@
 
     options23 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->countTriangles(); ++i)
-        if (self.packet->twoThreeMove(self.packet->triangle(i), true, false))
+        if (self.packet->pachner(self.packet->triangle(i), true, false))
             [options23 addObject:@(i)];
     if (options23.count > 0) {
         self.button23.enabled = self.stepper23.enabled = YES;
@@ -161,7 +181,7 @@
 
     options14 = [[NSMutableArray alloc] init];
     for (i = 0; i < self.packet->size(); ++i)
-        if (self.packet->oneFourMove(self.packet->tetrahedron(i), true, false))
+        if (self.packet->pachner(self.packet->tetrahedron(i), true, false))
             [options14 addObject:@(i)];
     if (options14.count > 0) {
         self.button14.enabled = self.stepper14.enabled = YES;
@@ -466,13 +486,23 @@
     return [[NSAttributedString alloc] initWithString:text];
 }
 
+- (IBAction)do41:(id)sender
+{
+    regina::Vertex<3>* use = [self vertexFor:self.stepper41 options:options41];
+    if (! use)
+        return;
+
+    self.packet->pachner(use, true, true);
+    [self reloadMoves];
+}
+
 - (IBAction)do32:(id)sender
 {
     regina::Edge<3>* use = [self edgeFor:self.stepper32 options:options32];
     if (! use)
         return;
 
-    self.packet->threeTwoMove(use, true, true);
+    self.packet->pachner(use, true, true);
     [self reloadMoves];
 }
 
@@ -482,7 +512,7 @@
     if (! use)
         return;
 
-    self.packet->twoThreeMove(use, true, true);
+    self.packet->pachner(use, true, true);
     [self reloadMoves];
 }
 
@@ -492,7 +522,7 @@
     if (! use)
         return;
 
-    self.packet->oneFourMove(use, true, true);
+    self.packet->pachner(use, true, true);
     [self reloadMoves];
 }
 
@@ -574,6 +604,11 @@
 
     self.packet->collapseEdge(use, true, true);
     [self reloadMoves];
+}
+
+- (IBAction)changed41:(id)sender
+{
+    self.detail41.attributedText = [self vertexDesc:[self vertexFor:self.stepper41 options:options41]];
 }
 
 - (IBAction)changed32:(id)sender

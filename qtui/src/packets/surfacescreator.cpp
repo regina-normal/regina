@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -136,16 +136,19 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
 
     regina::NormalCoords coordSystem = coords->getCurrentSystem();
 
-    if (coordSystem == regina::NS_QUAD_CLOSED && ! (
+    if ((coordSystem == regina::NS_QUAD_CLOSED ||
+                coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) && ! (
             tri->countVertices() == 1 &&
             tri->vertex(0)->link() == regina::Vertex<3>::TORUS &&
             tri->isOriented())) {
+        QString name = Coordinates::adjective(coordSystem, false);
         ReginaSupport::sorry(ui,
-            ui->tr("I cannot use quad closed coordinates with this triangulation."),
-            ui->tr("At the present time, quad closed coordinates are "
+            ui->tr("I cannot use %1 coordinates with this "
+                "triangulation.").arg(name),
+            ui->tr("At the present time, %1 coordinates are "
                 "only available for oriented ideal triangulations with "
                 "one torus cusp and no other boundary components or "
-                "internal vertices."));
+                "internal vertices.").arg(name));
         return 0;
     }
 
@@ -207,14 +210,16 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             regina::NS_ALG_DEFAULT, &tracker);
 
         if (! ans) {
-            if (coordSystem == regina::NS_QUAD_CLOSED) {
+            if (coordSystem == regina::NS_QUAD_CLOSED ||
+                    coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
                 ReginaSupport::info(parentWidget,
                     ui->tr("<qt>I could not enumerate vertex normal "
-                    "surfaces in quad closed coordinates.  This could be "
+                    "surfaces in %1 coordinates.  This could be "
                     "because SnapPea was unable to construct the slope "
                     "equations, or because it tried to retriangulate when "
                     "doing so.<p>"
-                    "Please report this to the Regina developers.</qt>"));
+                    "Please report this to the Regina developers.</qt>")
+                    .arg(Coordinates::adjective(coordSystem, false)));
             } else {
                 ReginaSupport::failure(parentWidget,
                     ui->tr("<qt>I could not enumerate vertex normal "
@@ -248,13 +253,15 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             regina::NS_ALG_DEFAULT, &tracker);
 
         if (! ans) {
-            if (coordSystem == regina::NS_QUAD_CLOSED) {
+            if (coordSystem == regina::NS_QUAD_CLOSED ||
+                    coordSystem == regina::NS_AN_QUAD_OCT_CLOSED) {
                 ReginaSupport::info(parentWidget,
                     ui->tr("<qt>I could not enumerate fundamental normal "
-                    "surfaces in quad closed coordinates.  This could be "
+                    "surfaces in %1 coordinates.  This could be "
                     "because SnapPea was unable to construct the slope "
                     "equations, or it tried to retriangulate when doing so.<p>"
-                    "Please report this to the Regina developers.</qt>"));
+                    "Please report this to the Regina developers.</qt>")
+                    .arg(Coordinates::adjective(coordSystem, false)));
             } else {
                 ReginaSupport::failure(parentWidget,
                     ui->tr("<qt>I could not enumerate fundamental normal "

@@ -32,8 +32,11 @@
  &data-angleparams;
  &data-compact-filter;
  &data-compact-surface;
+ &data-components;
  &data-compressingdisc;
  &data-connected;
+ &data-connections;
+ &data-crossings;
  &data-euler-filter;
  &data-euler-surface;
  &data-filter;
@@ -60,6 +63,7 @@
  &data-packet-triangulation;
  &data-packet-anglestructurelist;
  &data-packet-container;
+ &data-packet-link;
  &data-packet-normalsurfacelist;
  &data-packet-normalhypersurfacelist;
  &data-packet-pdf;

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,6 +42,7 @@
 #define __TRIANGULATION4_H
 #endif
 
+#include <functional>
 #include <list>
 #include <memory>
 #include <vector>
@@ -54,6 +55,8 @@
 
 namespace regina {
 
+class ProgressTracker;
+class ProgressTrackerOpen;
 class XMLPacketReader;
 
 template <int> class XMLTriangulationReader;
@@ -378,29 +381,222 @@ class REGINA_API Triangulation<4> :
         bool simplifyToLocalMinimum(bool perform = true);
 
         /**
-         * Checks the eligibility of and/or performs a 4-2 move
-         * about the given edge.  This involves replacing the four pentachora
-         * joined at that edge with two pentachora joined along a single facet.
-         * This can be done iff (i) the edge is valid and non-boundary,
-         * (ii) the four pentachora are distinct, and (iii) the pentachora
-         * are joined in such a way that the link of the edge is the
-         * standard 3-simplex triangulation of the 2-sphere.
+         * Attempts to simplify this triangulation using a slow but
+         * exhaustive search through the Pachner graph.  This routine is
+         * more powerful but much slower than intelligentSimplify().
          *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * Specifically, this routine will iterate through all
+         * triangulations that can be reached from this triangulation via
+         * 1-5, 2-4, 3-3 and 4-2 Pachner moves, without ever exceeding
+         * \a height additional pentachora beyond the original number.
+         * Note that 5-1 moves are currently not supported, though this
+         * may be added in a future verson of Regina.
          *
-         * Note that after performing this move, all skeletal objects
-         * (facets, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
-         * can no longer be used.
+         * If at any stage it finds a triangulation with \e fewer
+         * pentachora than the original, then this routine will call
+         * intelligentSimplify() to shrink the triangulation further if
+         * possible and will then return \c true.  If it cannot find a
+         * triangulation with fewer pentachora then it will leave this
+         * triangulation unchanged and return \c false.
          *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new belt
-         * face will be <tt>pentachora().back()->tetrahedron(4)</tt>.
+         * This routine can be very slow and very memory-intensive: the
+         * number of triangulations it visits may be superexponential in
+         * the number of pentachora, and it records every triangulation
+         * that it visits (so as to avoid revisiting the same triangulation
+         * again).  It is highly recommended that you begin with \a height = 1,
+         * and if this fails then try increasing \a height one at a time until
+         * either you find a simplification or the routine becomes
+         * too expensive to run.
+         *
+         * If you want a \e fast simplification routine, you should call
+         * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
+         * is that, for very stubborn triangulations where intelligentSimplify()
+         * finds itself stuck at a local minimum, simplifyExhaustive() is able
+         * to "climb out" of such wells.
+         *
+         * If a progress tracker is passed, then the exhaustive simplification
+         * will take place in a new thread and this routine will return
+         * immediately.  In this case, you will need to use some other
+         * means to determine whether the triangulation was eventually
+         * simplified (e.g., by examining size() after the tracker
+         * indicates that the operation has finished).
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
+         * processing has finished (i.e., either the triangulation was
+         * simplified or the search was exhausted).
+         *
+         * If this routine is unable to simplify the triangulation, then
+         * the triangulation will not be changed.
+         *
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
+         *
+         * \pre This triangulation is connected.
+         *
+         * @param height the maximum number of \e additional pentachora to
+         * allow, beyond the number of pentachora originally present in the
+         * triangulation.
+         * @param nThreads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if and only if the triangulation was successfully simplified to
+         * fewer pentachora.
+         */
+        bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
+            ProgressTrackerOpen* tracker = 0);
+
+        /**
+         * Explores all triangulations that can be reached from this via
+         * Pachner moves, without exceeding a given number of additional
+         * pentachora.
+         *
+         * Specifically, this routine will iterate through all
+         * triangulations that can be reached from this triangulation via
+         * 1-5, 2-4, 3-3 and 4-2 Pachner moves, without ever exceeding
+         * \a height additional pentachora beyond the original number.
+         * Note that 5-1 moves are currently not supported, though this
+         * may be added in a future verson of Regina.
+         *
+         * For every such triangulation (including this starting
+         * triangulation), this routine will call \a action (which must
+         * be a function or some other callable object).
+         *
+         * - \a action must take at least one argument.  The first argument
+         *   will be of type Triangulation<4>&, and will reference the
+         *   triangulation that has been found.  If there are any
+         *   additional arguments supplied in the list \a args, then
+         *   these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return a boolean.  If \a action ever returns
+         *   \c true, then this indicates that processing should stop
+         *   immediately (i.e., no more triangulations will be processed).
+         *
+         * - \a action may, if it chooses, make changes to this triangulation
+         *   (i.e., the original triangulation upon which retriangulate()
+         *   was called).  This will not affect the search: all triangulations
+         *   that this routine visits will be obtained via Pachner moves
+         *   from the original form of this triangulation, before any
+         *   subsequent changes (if any) were made.
+         *
+         * - \a action may, if it chooses, make changes to the triangulation
+         *   that is passed in its argument (though it must not delete it).
+         *   This will likewise not affect the search, since the triangulation
+         *   that is passed to \a action will be destroyed immediately after
+         *   \a action is called.
+         *
+         * - \a action will only be called once for each triangulation
+         *   (including this starting triangulation).  In other words, no
+         *   triangulation will be revisited a second time in a single call
+         *   to retriangulate().
+         *
+         * This routine can be very slow and very memory-intensive, since the
+         * number of triangulations it visits may be superexponential in
+         * the number of tetrahedra, and it records every triangulation
+         * that it visits (so as to avoid revisiting the same triangulation
+         * again).  It is highly recommended that you begin with \a height = 1,
+         * and if necessary try increasing \a height one at a time until
+         * this routine becomes too expensive to run.
+         *
+         * If a progress tracker is passed, then the exploration of
+         * triangulations will take place in a new thread and this
+         * routine will return immediately.
+         *
+         * To assist with performance, this routine can run in parallel
+         * (multithreaded) mode; simply pass the number of parallel threads
+         * in the argument \a nThreads.  Even in multithreaded mode, if no
+         * progress tracker is passed then this routine will not return until
+         * processing has finished (i.e., either \a action returned \c true,
+         * or the search was exhausted).  All calls to \a action will be
+         * protected by a mutex (i.e., different threads will never be
+         * calling \a action at the same time).
+         *
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap them in std::ref or
+         * std::cref.
+         *
+         * \pre This triangulation is connected.
+         *
+         * \apinotfinal
+         *
+         * \ifacespython Not present.
+         *
+         * @param height the maximum number of \e additional pentachora to
+         * allow, beyond the number of pentachora originally present in the
+         * triangulation.
+         * @param nThreads the number of threads to use.  If this is
+         * 1 or smaller then the routine will run single-threaded.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or 0 if no progress reporting is required.
+         * @param action a function (or other callable object) to call
+         * upon each triangulation that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial triangulation argument.
+         * @return If a progress tracker is passed, then this routine
+         * will return \c true or \c false immediately according to
+         * whether a new thread could or could not be started.  If no
+         * progress tracker is passed, then this routine will return \c true
+         * if some call to \a action returned \c true (thereby terminating
+         * the search early), or \c false if the search ran to completion.
+         */
+        template <typename Action, typename... Args>
+        bool retriangulate(int height, unsigned nThreads,
+            ProgressTrackerOpen* tracker,
+            Action&& action, Args&&... args) const;
+
+        /**
+         * Deprecated function that checks the eligibility of and/or
+         * performs a 5-1 Pachner move upon the given vertex.
+         *
+         * This is an alias for pachner(Vertex<4>*, bool, bool);
+         * see that routine for further details.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * \deprecated You should use the identical routine pachner() instead.
+         *
+         * @param v the vertex about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        [[deprecated]] bool fiveOneMove(Vertex<4>* v, bool check = true,
+            bool perform = true);
+
+        /**
+         * Deprecated function that checks the eligibility of and/or performs
+         * a 4-2 move about the given edge.
+         *
+         * This is an alias for pachner(Vertex<4>*, bool, bool);
+         * see that routine for further details.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given edge is an edge of this triangulation.
+         *
+         * \deprecated You should use the identical routine pachner() instead.
          *
          * @param e the edge about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -412,30 +608,20 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool fourTwoMove(Edge<4>* e, bool check = true, bool perform = true);
+        [[deprecated]] bool fourTwoMove(Edge<4>* e, bool check = true,
+            bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 3-3 move
-         * about the given triangle.
-         * This involves replacing the three pentachora joined along that
-         * triangle with three pentachora joined along a transverse triangle.
-         * This can be done iff (i) the triangle is valid and non-boundary,
-         * and (ii) the three pentachora are distinct.
+         * Deprecated function that checks the eligibility of and/or performs
+         * a 3-3 move about the given triangle.
          *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (facets, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
-         * can no longer be used.
-         *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>pentachora().back()->triangle(Triangle<4>::triangleNumber[0][1][2])</tt>.
+         * This is an alias for pachner(Vertex<4>*, bool, bool);
+         * see that routine for further details.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given triangle is a triangle of this triangulation.
+         *
+         * \deprecated You should use the identical routine pachner() instead.
          *
          * @param t the triangle about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -447,30 +633,20 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool threeThreeMove(Triangle<4>* t, bool check = true,
+        [[deprecated]] bool threeThreeMove(Triangle<4>* t, bool check = true,
             bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 2-4 move
-         * about the given facet.
-         * This involves replacing the two pentachora joined along that
-         * facet with four pentachora joined along a transverse edge.
-         * This can be done iff the two pentachora are distinct.
+         * Deprecated function that checks the eligibility of and/or performs
+         * a 2-4 move about the given facet.
          *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (facets, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
-         * can no longer be used.
-         *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>pentachora().back()->edge(Edge<4>::edgeNumber[0][1])</tt>.
+         * This is an alias for pachner(Vertex<4>*, bool, bool);
+         * see that routine for further details.
          *
          * \pre If the move is being performed and no check is being run,
          * it must be known in advance that the move is legal.
          * \pre The given facet is a facet of this triangulation.
+         *
+         * \deprecated You should use the identical routine pachner() instead.
          *
          * @param f the facet about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -482,42 +658,37 @@ class REGINA_API Triangulation<4> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoFourMove(Tetrahedron<4>* f, bool check = true,
+        [[deprecated]] bool twoFourMove(Tetrahedron<4>* f, bool check = true,
             bool perform = true);
 
         /**
-         * Checks the eligibility of and/or performs a 1-5 move
-         * upon the given pentachoron.
-         * This involves replacing one pentachoron with five pentachora:
-         * each new pentachoron runs from one facet of
-         * the original pentachoron to a new common internal degree five vertex.
+         * Deprecated function that checks the eligibility of and/or
+         * performs a 1-5 Pachner move upon the given pentachoron.
          *
-         * This move can always be performed.  The \a check argument is
-         * present (as for other moves), but is simply ignored (since
-         * the move is always legal).  The \a perform argument is also
-         * present for consistency with other moves, but if it is set to
-         * \c false then this routine does nothing and returns no useful
-         * information.
+         * This differs from pachner(Simplex<4>*, bool, bool) in
+         * the labelling of the new pentachora:
          *
-         * Note that after performing this move, all skeletal objects
-         * (facets, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a p)
-         * can no longer be used.
+         * - pachner() will create the new vertex as
+         *   <tt>simplices().back()->vertex(0)</tt>, for consistency
+         *   with Pachner moves on faces of other dimensions;
          *
-         * See the page on \ref pachner for definitions and terminology
-         * relating to Pachner moves.  After the move, the new belt face will be
-         * <tt>pentachora().back()->vertex(4)</tt>.
+         * - oneFiveMove() will create the new vertex as
+         *   <tt>simplices().back()->vertex(4)</tt>, for consistency
+         *   with earlier versions of Regina.
          *
          * \pre The given pentachoron is a pentachoron of this triangulation.
          *
+         * \deprecated You should use the new routine pachner() instead
+         * (though note that this changes the labelling of the new pentachora).
+         *
          * @param p the pentachoron about which to perform the move.
          * @param check this argument is ignored, since this move is
-         * always legal (see the notes above).
+         * always legal.
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return \c true always.
          */
-        bool oneFiveMove(Pentachoron<4>* p, bool check = true,
+        [[deprecated]] bool oneFiveMove(Pentachoron<4>* p, bool check = true,
             bool perform = true);
 
         /**
@@ -605,6 +776,47 @@ class REGINA_API Triangulation<4> :
          * is \c false, the function simply returns \c true.
          */
         bool twoZeroMove(Edge<4>* e, bool check = true, bool perform = true);
+        /**
+         * Checks the eligibility of and/or performs a 2-0 move
+         * about the given vertex of degree 2.
+         * This involves taking the two pentachora joined at that vertex
+         * and squashing them flat.
+         * This can be done if:
+         *
+         * - the vertex is non-boundary and has a 3-sphere vertex link;
+         *
+         * - the two pentachora are distinct;
+         *
+         * - the tetrahedra opposite \c v in each pentachoron are distinct and
+         *   not both boundary;
+         *
+         * - the two pentachora meet each other on all four facets touching
+         *   the vertex (as opposed to meeting each other on two facets and
+         *   being glued to themselves along the other two).
+         *
+         * If the routine is asked to both check and perform, the move
+         * will only be performed if the check shows it is legal.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (tetrahedra, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a v)
+         * can no longer be used.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given vertex is a vertex of this triangulation.
+         *
+         * @param v the vertex about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        bool twoZeroMove(Vertex<4>* v, bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a book opening move
          * about the given tetrahedron.
@@ -798,6 +1010,21 @@ class REGINA_API Triangulation<4> :
          */
         void calculateEdgeLinks();
 
+        /**
+         * A non-templated version of retriangulate().
+         *
+         * This is identical to retriangulate(), except that the action
+         * function is given in the form of a std::function.
+         * This routine contains the bulk of the implementation of
+         * retriangulate().
+         *
+         * Because this routine is not templated, its implementation
+         * can be kept out of the main headers.
+         */
+        bool retriangulateInternal(int height, unsigned nThreads,
+            ProgressTrackerOpen* tracker,
+            const std::function<bool(Triangulation<4>&)>& action) const;
+
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
     friend class regina::detail::TriangulationBase<4>;
@@ -911,6 +1138,38 @@ inline bool Triangulation<4>::isIdeal() const {
 inline bool Triangulation<4>::isClosed() const {
     ensureSkeleton();
     return boundaryComponents().empty();
+}
+
+template <typename Action, typename... Args>
+inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
+        ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
+    return retriangulateInternal(height, nThreads, tracker,
+        std::bind(action, std::placeholders::_1, args...));
+}
+
+inline bool Triangulation<4>::oneFiveMove(
+        Pentachoron<4>* pen, bool check, bool perform) {
+    return detail::PachnerHelper<4, 4>::pachnerOld(this, pen, check, perform);
+}
+
+inline bool Triangulation<4>::twoFourMove(
+        Tetrahedron<4>* f, bool check, bool perform) {
+    return pachner(f, check, perform);
+}
+
+inline bool Triangulation<4>::threeThreeMove(
+        Triangle<4>* t, bool check, bool perform) {
+    return pachner(t, check, perform);
+}
+
+inline bool Triangulation<4>::fourTwoMove(
+        Edge<4>* e, bool check, bool perform) {
+    return pachner(e, check, perform);
+}
+
+inline bool Triangulation<4>::fiveOneMove(
+        Vertex<4>* v, bool check, bool perform) {
+    return pachner(v, check, perform);
 }
 
 inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {

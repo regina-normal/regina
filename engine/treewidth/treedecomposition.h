@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -53,6 +53,7 @@ namespace regina {
  * @{
  */
 
+class Link;
 class TreeBag;
 
 /**
@@ -220,8 +221,8 @@ class REGINA_API TreeBag :
                  in the tree decomposition.  See subtype() for details. */
         int index_;
             /**< Indicates the index of this bag within the underlying
-                 tree decomposition, following a leaves-to-root ordering
-                 of the bags.  See index() for details. */
+                 tree decomposition, following a leaves-to-root, left-to-right
+                 ordering of the bags.  See index() for details. */
 
     public:
         /**
@@ -275,9 +276,14 @@ class REGINA_API TreeBag :
          * Then these bags are automatically numbered 0,1,...,<i>n</i>-1.
          * This member function returns the number of this particular bag.
          *
-         * The numbering of bags follows a leaves-to-root scheme.  In other
-         * words, for any non-root bag \a b we have
-         * <tt>b.index() &lt; b.parent()->index()</tt>.
+         * The numbering of bags follows a leaves-to-root, left-to-right
+         * scheme:
+         *
+         * - for any non-root bag \a b, we have
+         *   <tt>b.index() &lt; b.parent()->index()</tt>;
+         *
+         * - for any bag \a b with a next sibling, we have
+         *   <tt>b.index() &lt; b.sibling()->index()</tt>;
          *
          * @return the index of this bag within the full tree decomposition
          * \a d; this will be between 0 and <tt>d.size()-1</tt> inclusive.
@@ -483,8 +489,9 @@ class REGINA_API TreeBag :
          * Creates a new bag containing the same graph nodes as the given bag.
          *
          * Specifically, only the list of nodes stored in the given bag will
-         * be cloned.  This new bag will not be inserted into the tree, and
-         * will not be assigned any other information (such as index,
+         * be cloned.  This new bag will not be inserted into the tree
+         * (instead all parent, child and sibling pointers will be \c null),
+         * and it will not be assigned any other information (such as index,
          * type or subtype).
          *
          * @param cloneMe the bag whose contents should be cloned.
@@ -511,6 +518,23 @@ class REGINA_API TreeBag :
          * @param other the bag to swap contents with this.
          */
         void swapContents(TreeBag& other);
+
+        /**
+         * Adjusts the links between bags to make this bag the root of
+         * the tree decomposition.  If the tree decomposition is still
+         * being constructed and therefore consists of several disjoint trees,
+         * this routine will only affect the tree containing this bag.
+         *
+         * This routine adjusts the \a parent_, \a children_ and \a sibling_
+         * links of various bags, but nothing else.  The caller of this
+         * routine must (if appropriate) separately set
+         * TreeDecomposition::root_ to this bag, and must (eventually) call
+         * TreeDecomposition::reindex() to update the bag indices to
+         * follow a leaves-to-root, left-to-right ordering as expected.
+         *
+         * This routine runs in linear time.
+         */
+        void makeRoot();
 
     friend class TreeDecomposition;
 };
@@ -562,14 +586,20 @@ class REGINA_API TreeBag :
  * nodes of \a G are numbered 0,1,2,..., and so the bags simply store the
  * numbers of the nodes that they contain.
  *
- * This class also numbers its bags 0,1,...,size()-1 in a leaves-to-root
- * manner; that is, for each non-root bag \a b, the parent of \a b will
- * have a higher index than \a b itself.  This may be useful if you wish
- * to store auxiliary information alongside each bag in a separate array.
- * You can access this numbering through the function TreeBag::index().
- * (Note that TreeDecomposition does not store its bags in an array, and so
- * does not offer a "random access" function to access the bag at an
- * arbitrary index.)
+ * This class also numbers its bags 0,1,...,size()-1 in a leaves-to-root,
+ * left-to-right manner:
+ *
+ * - for each non-root bag \a b, the parent of \a b will have a higher index
+ *   than \a b;
+ *
+ * - for each bag \a b with a next sibling, the next sibling of \a b will
+ *   have a higher index than \a b.
+ *
+ * This bag numbering may be useful if you wish to store auxiliary information
+ * alongside each bag in a separate array.  You can access this numbering
+ * through the function TreeBag::index().  However, note that
+ * TreeDecomposition does \e not store its bags in an array, and so
+ * the "random access" function bag() is slow, with worst-case linear time.
  *
  * There are two broad classes of algorithms for building tree
  * decompositions: (i) \e exact algorithms, which are slow but guarantee to
@@ -639,6 +669,16 @@ class REGINA_API TreeDecomposition :
 
     public:
         /**
+         * Builds a new copy of the given tree decomposition.
+         *
+         * This will be a deep copy, in the sense that all of the bags
+         * of \a cloneMe will be cloned also.
+         *
+         * @param cloneMe the tree decomposition to clone.
+         */
+        TreeDecomposition(const TreeDecomposition& cloneMe);
+
+        /**
          * Builds a tree decomposition of the facet pairing graph of the
          * given triangulation.
          *
@@ -688,6 +728,21 @@ class REGINA_API TreeDecomposition :
         template <int dim>
         TreeDecomposition(
             const FacetPairing<dim>& pairing,
+            TreeDecompositionAlg alg = TD_UPPER);
+
+        /**
+         * Builds a tree decomposition of the planar multigraph
+         * corresponding to the given knot or link diagram.
+         *
+         * The nodes of the graph will be numbered in the same way as
+         * the crossings of the given knot / link.
+         *
+         * @param link the knot or link that we are working with.
+         * @param alg the algorithm that should be used to compute the
+         * tree decomposition; in particular, this specifies whether to
+         * use a slow exact algorithm or a fast greedy algorithm.
+         */
+        TreeDecomposition(const Link& link,
             TreeDecompositionAlg alg = TD_UPPER);
 
         /**
@@ -801,6 +856,29 @@ class REGINA_API TreeDecomposition :
         const TreeBag* firstPrefix() const;
 
         /**
+         * A slow (linear-time) routine that returns the bag at the
+         * given index.
+         *
+         * Recall that the bags in a tree decomposition are numbered
+         * 0,1,...,size()-1.  This routine returns the bag with the
+         * given number.
+         *
+         * This routine is linear-time, and so you should \e not use it
+         * to iterate through all bags.  Instead, to iterate through all
+         * bags, use TreeDecomposition::first() and TreeBag::next().
+         *
+         * \warning This routine is \e slow, with a worst-case linear time.
+         * This is because the bags are not stored internally in an
+         * array, and so this routine must search the tree from the root
+         * downwards to find the bag that is being requested.
+         *
+         * @param index the number of a bag; this must be between 0 and
+         * size()-1 inclusive.
+         * @return the bag with the given number.
+         */
+        const TreeBag* bag(int index) const;
+
+        /**
          * Removes redundant bags from this tree decomposition.
          *
          * Specifically, this routine "compresses" the tree decomposition
@@ -859,6 +937,15 @@ class REGINA_API TreeDecomposition :
          * If the underlying graph is empty, then this routine will
          * produce a tree decomposition with no bags at all.
          *
+         * You may optionally pass an argument \a heightHint, which is an array
+         * indicating how close to the root of the tree you would like each
+         * node to be.  At present, this only affects the final chain of
+         * forget bags leading up to the root bag - if \a heightHint is
+         * passed, then this chain will be ordered so that nodes with a
+         * larger \a heightHint will be forgotten closer to the root bag.
+         * These should be considered hints only, in that their effect on the
+         * final tree decomposition might change in future versions of Regina.
+         *
          * \warning Note that TreeBag::subtype() is \e not the number of
          * the new or missing node, but instead gives the \e index of the
          * new or missing node within the relevant bag.
@@ -866,8 +953,137 @@ class REGINA_API TreeDecomposition :
          * \note This routine calls compress() automatically, and so
          * there is no need to explicitly call compress() before calling
          * makeNice().
+         *
+         * \ifacespython The \e heightHint argument is not present.
+         *
+         * @param heightHint an optional array where, for each node \a i,
+         * a higher value of <tt>heightHint[i]</tt> indicates that the node
+         * should be forgotten closer to the root bag.  If this is non-null,
+         * then the size of this array should be the number of nodes in
+         * the underlying graph.
          */
-        void makeNice();
+        void makeNice(int* heightHint = nullptr);
+
+        /**
+         * Reverses child-parent relationships so that the given bag
+         * becomes the root of the tree decomposition.
+         *
+         * All pointers to bags will remain valid, and the contents of
+         * the bags will not change.  However:
+         *
+         * - the bags will be reindexed, to reflect the changes in the
+         *   leaves-to-root, left-to-right ordering;
+         *
+         * - all bag types will be reset to 0, since in general rerooting may
+         *   break whatever properties the bag types and subtypes represent.
+         *
+         * If the given bag is already the root bag, then this routine
+         * does nothing (and in particular, types and subtypes are preserved).
+         *
+         * @param newRoot the bag that should become the root of this
+         * tree decomposition.  This must already be a bag of this tree
+         * decomposition.
+         */
+        void reroot(TreeBag* newRoot);
+
+        /**
+         * Reroots the tree by reversing child-parent relationships, in a way
+         * that minimises a maximum estimated processing cost amongst all bags.
+         *
+         * The user needs to supply three arrays, which are used to
+         * estimate the cost of hanging the tree from any possible root.
+         * This routine then identifies which root minimises this cost, and
+         * reroots the underlying tree from that bag.
+         *
+         * The three arrays play the following roles.  Let \a b be some bag
+         * at index \a i in the original tree decomposition, and let \a p be
+         * its parent bag.
+         *
+         * - <tt>costSame[i]</tt> indicates the cost of \e preserving the
+         *   parent-child relationship between \a b and \a p (i.e.,
+         *   after rerooting, \a p is still the parent bag of \a b).
+         *   If \e b is the root bag of the original tree decomposition
+         *   then <tt>costSame[i]</tt> is ignored.
+         *
+         * - <tt>costReverse[i]</tt> indicates the cost of \e reversing the
+         *   parent-child relationship between \a b and \a p (i.e.,
+         *   after rerooting, \a b is now the parent bag of \a p).
+         *   Again, if \e b is the root bag of the original tree decomposition
+         *   then <tt>costReverse[i]</tt> is ignored.
+         *
+         * - <tt>costRoot[i]</tt> is an additional cost that is incurred
+         *   if and only if \a b becomes the new root bag.  The argument
+         *   \a costRoot may be \c null, in which case these additional
+         *   costs are all assumed to be zero.
+         *
+         * It follows that, for each potential new root, there are size()
+         * costs to aggregate: this comes from size()-1 costs from the arrays
+         * \a costSame and/or \a costReverse (one for each connection
+         * between bags in the underlying tree), and one cost from \a costRoot.
+         * These costs will be aggregated by taking the \e maximum over
+         * all individual costs.  This means that you do not need to
+         * estimate running times and/or memory consumption accurately;
+         * instead you only need to find some heuristic that aims to be
+         * \e monotonic in time and/or memory.
+         *
+         * So: in essence then, this routine minimises the maximum cost.
+         * In the case of a tie, it then minimises multiplicity; that is,
+         * it minimises the \e number of times that this maximum cost occurs
+         * over the individual size() costs that are being aggregated.
+         *
+         * Note that the \a costSame and \a costReverse arrays are
+         * technically defined as a cost per arc, not a cost per bag.
+         * If you wish to estimate a cost per bag, the typical way of
+         * doing this would be:
+         *
+         * - <tt>costSame[i]</tt> estimates the processing cost at bag \a i
+         *   if its relationship with its parent is preserved;
+         *
+         * - <tt>costReverse[i]</tt> estimates the processing cost at the
+         *   original \e parent of bag \a i if its relationship with bag \a i
+         *   is reversed (i.e., it becomes a child of bag \a i);
+         *
+         * - <tt>costRoot[i]</tt> estimates the processing cost at bag \a i
+         *   if bag \a i becomes the root.
+         *
+         * This scheme ensures that, for any possible rerooting, each
+         * bag is costed exactly once amongst the three arrays.
+         *
+         * After rerooting, all pointers to bags will remain valid, and the
+         * contents of the bags will not change.  However:
+         *
+         * - the bags will be reindexed, to reflect the changes in the
+         *   leaves-to-root, left-to-right ordering;
+         *
+         * - all bag types will be reset to 0, since in general rerooting may
+         *   break whatever properties the bag types and subtypes represent.
+         *
+         * If the given bag is already the root bag, then this routine
+         * does nothing (and in particular, types and subtypes are preserved).
+         *
+         * \headers This routine is implemented in a separate header
+         * (treedecomposition-impl.h), which is not included automatically
+         * by this file.  However, typical end users should never need this
+         * extra header, since Regina's calculation engine already includes
+         * explicit instantiations for common types.
+         *
+         * \ifacespython Not present.
+         *
+         * \tparam T the type being used to estimate costs.
+         * It must be possible to assign 0 to a variable of type \a T
+         * using both constructors and the assignment operator.
+         *
+         * @param costSame An array of size() elements giving an
+         * estimated cost of preserving each child-parent connection;
+         * @param costReverse An array of size() elements giving an
+         * estimated cost of reversing each child-parent connection;
+         * @param costRoot An array of size() elements giving an
+         * additional estimated cost for each bag being the new root.
+         * This array may be \c null.
+         */
+        template <typename T>
+        void reroot(const T* costSame, const T* costReverse,
+            const T* costRoot = nullptr);
 
         /**
          * Outputs this tree decomposition in the Graphviz DOT language.
@@ -902,6 +1118,46 @@ class REGINA_API TreeDecomposition :
         std::string dot() const;
 
         /**
+         * Outputs this tree decomposition using the PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ ,
+         * and is documented in detail by the routine
+         * fromPACE(const std::string&).
+         *
+         * If you write a tree decomposition using pace() or writePACE()
+         * and then read it again using fromPACE(), you are \e not guaranteed
+         * to obtain an identical tree decomposition.  This is because
+         * the PACE text format stores the connections between bags as an
+         * undirected, unrooted tree.
+         *
+         * \ifacespython The \a out argument is not present; instead
+         * standard output is assumed.
+         *
+         * @param out the output stream to which to write.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        void writePACE(std::ostream& out) const;
+        /**
+         * Returns a text representation of this tree decomposition
+         * using the PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ ,
+         * and is documented in detail by the routine
+         * fromPACE(const std::string&).
+         *
+         * This routine simply returns the output of writePACE() as a
+         * string, instead of writing it to an output stream.
+         *
+         * See the writePACE() notes for further details.
+         *
+         * @return the output of writePACE(), as outlined above.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        std::string pace() const;
+
+        /**
          * Writes a short text representation of this object to the
          * given output stream.
          *
@@ -921,7 +1177,102 @@ class REGINA_API TreeDecomposition :
          */
         void writeTextLong(std::ostream& out) const;
 
+        /**
+         * Builds a tree decomposition from a string using the PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ .
+         *
+         * In short, the format contains a number of lines of text:
+         *
+         * - Any line beginning with \c c is considered a comment, and
+         *   will be ignored.
+         *
+         * - The first non-comment line should be of the form
+         *   <tt>s&nbsp;td&nbsp;<i>num_bags</i>&nbsp;<i>max_bag_size</i>&nbsp;<i>num_vertices</i></tt>.
+         *
+         * - The next \e num_bags non-comment lines should describe the
+         *   contents of the bags.  Each such line should be of the form
+         *   <tt>b&nbsp;<i>bag_number</i>&nbsp;<i>element</i>&nbsp;<i>element</i>&nbsp;...</tt>.
+         *   The bags are numbered 1,2,...,\e num_bags, and may appear in any
+         *   order.  Likewise, the vertices of the graph are numbered
+         *   1,2,...,\e num_vertices, and within each bag they may again
+         *   appear in any order.
+         *
+         * - The remaining \e num_bags - 1 non-comment lines should
+         *   indicate the connections between the bags in the tree
+         *   decomposition.  Each such line should be of the form
+         *   <tt><i>first_bag_index</i>&nbsp;<i>second_bag_index</i></tt>,
+         *   where \e first_bag_index is smaller than \e second_bag_index.
+         *
+         * Bags may be empty, but there must be at least one bag, and the
+         * connections between the bags must form a tree.  This routine will
+         * choose the root of the tree arbitrarily.
+         *
+         * An example of this text format is as follows:
+         *
+           \verbatim
+           c A tree decomposition with 4 bags and width 2
+           s td 4 3 5
+           b 1 1 2 3
+           b 2 2 3 4
+           b 3 3 4 5
+           b 4
+           1 2
+           2 3
+           2 4
+           \endverbatim
+         *
+         * This routine does some basic error checking as it reads the input,
+         * but this checking is not exhaustive; in particular, it does
+         * not verify that the connections between bags actually form a tree.
+         *
+         * There are two variants of this routine.  This variant
+         * contains a single string containing the entire text representation.
+         * The other variant takes an input stream, from which the text
+         * representation will be read.
+         *
+         * @param str a text representation of the tree
+         * decomposition using the PACE text format.
+         * @return a newly constructed tree decomposition, or \c null if
+         * the input was found to be invalid.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        static TreeDecomposition* fromPACE(const std::string& str);
+        /**
+         * Builds a tree decomposition from an input stream using the PACE
+         * text format.  The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ .
+         *
+         * See the constructor TreeDecomposition(const std::string&) for
+         * a description of this text format.
+         *
+         * There are two variants of this routine.  The other variant
+         * contains a single string containing the entire text representation.
+         * This variant takes an input stream, from which the text
+         * representation will be read.
+         *
+         * This routine assumes that it should exhaust the input stream
+         * (i.e., it should contain no additional text after this text
+         * representation).
+         *
+         * \ifacespython Not present.
+         *
+         * @param paceFormat an input stream that provides a text
+         * representation of the tree decomposition using the PACE text format.
+         * @return a newly constructed tree decomposition, or \c null if
+         * the input was found to be invalid.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        static TreeDecomposition* fromPACE(std::istream& in);
+
     private:
+        /**
+         * A constructor that initialises all data members to zero
+         * and/or \c null.
+         */
+        TreeDecomposition();
         /**
          * Called by the various constructors to build this tree
          * decomposition from the given graph, using the given algorithm.
@@ -944,6 +1295,8 @@ class REGINA_API TreeDecomposition :
          *
          * The postfix iteration is the same iteration defined by
          * TreeDecomposition::first() and TreeBag::next().
+         *
+         * This routine also recomputes the data member \a size_.
          */
         void reindex();
 };
@@ -997,9 +1350,9 @@ extern template REGINA_API TreeDecomposition::TreeDecomposition(
 inline TreeBag::TreeBag(int size) :
         size_(size),
         elements_(new int[size_]),
-        parent_(0),
-        sibling_(0),
-        children_(0),
+        parent_(nullptr),
+        sibling_(nullptr),
+        children_(nullptr),
         type_(0),
         subtype_(0) {
 }
@@ -1007,9 +1360,9 @@ inline TreeBag::TreeBag(int size) :
 inline TreeBag::TreeBag(const TreeBag& cloneMe) :
         size_(cloneMe.size_),
         elements_(new int[cloneMe.size_]),
-        parent_(0),
-        sibling_(0),
-        children_(0),
+        parent_(nullptr),
+        sibling_(nullptr),
+        children_(nullptr),
         type_(0),
         subtype_(0) {
     for (int i = 0; i < size_; ++i)
@@ -1074,6 +1427,10 @@ inline void TreeBag::swapContents(TreeBag& other) {
 }
 
 // Inline functions for TreeDecomposition
+
+inline TreeDecomposition::TreeDecomposition() :
+        width_(0), size_(0), root_(nullptr) {
+}
 
 inline TreeDecomposition::~TreeDecomposition() {
     delete root_;

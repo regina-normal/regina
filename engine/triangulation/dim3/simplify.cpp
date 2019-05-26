@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,26 +37,6 @@
 namespace regina {
 
 namespace {
-    // Mapping from vertices (0,1,2) of each external triangular face of a new
-    //     tetrahedron to the vertices of this new tetrahedron in a 3-2 move.
-    // Each new tetrahedron has its vertices numbered so that the corresponding
-    //     embedding permutation for the internal triangle is the identity.
-    // Also, threeTwoVertices[i] refers to face i of the new tetrahedron for
-    //     each i.
-    const Perm<4> threeTwoVertices[3] = {
-        Perm<4>(3,1,2,0), Perm<4>(3,2,0,1), Perm<4>(3,0,1,2)
-    };
-
-    // Mapping from vertices (0,1,2) of each external triangular face of a new
-    //     tetrahedron to the vertices of this new tetrahedron in a 2-3 move.
-    // Each new tetrahedron has its vertices numbered so that the corresponding
-    //     embedding permutation for the internal edge is the identity.
-    // Also, twoThreeVertices[i] refers to face i of the new tetrahedron for
-    //     each i.
-    const Perm<4> twoThreeVertices[2] = {
-        Perm<4>(1,2,3,0), Perm<4>(0,2,3,1)
-    };
-
     // A helper routine that uses union-find to test whether a graph
     // contains cycles.  This is used by collapseEdge().
     //
@@ -89,305 +69,6 @@ namespace {
     }
 }
 
-bool Triangulation<3>::threeTwoMove(Edge<3>* e, bool check, bool perform) {
-    if (check) {
-        if (e->isBoundary() || ! e->isValid())
-            return false;
-        if (e->degree() != 3)
-            return false;
-    }
-
-    // Find the unwanted tetrahedra.
-    Tetrahedron<3>* oldTet[3];
-    Perm<4> oldVertexPerm[3];
-    std::set<Tetrahedron<3>*> oldTets;
-    int oldPos = 0;
-    for (auto& emb : *e) {
-        oldTet[oldPos] = emb.tetrahedron();
-        if (check)
-            if (! oldTets.insert(oldTet[oldPos]).second)
-                return false;
-        oldVertexPerm[oldPos] = emb.vertices();
-        oldPos++;
-    }
-
-    if (! perform)
-        return true;
-
-    #ifdef DEBUG
-    std::cerr << "Performing 3-2 move\n";
-    #endif
-
-    // Perform the move.
-    ChangeEventSpan span(this);
-    int oldPos2, newPos, newPos2;
-
-    // Create the new tetrahedra.
-    Tetrahedron<3>* newTet[2];
-    for (newPos = 0; newPos < 2; newPos++)
-        newTet[newPos] = newTetrahedron();
-
-    // Find the gluings from (0,1,2) of the new tetrahedron faces
-    // to the vertices of the old tetrahedra.
-    Perm<4> gluings[2][3];
-    for (oldPos = 0; oldPos < 3; oldPos++)
-        for (newPos = 0; newPos < 2; newPos++)
-            gluings[newPos][oldPos] = oldVertexPerm[oldPos] *
-                twoThreeVertices[newPos];
-
-    // Find the tetrahedra to which the old tetrahedron faces are glued,
-    // store the gluings from (0,1,2) of the new tetrahedron faces to the
-    // vertices of these adjacent tetrahedra, and unjoin the tetrahedra.
-    Tetrahedron<3>* adjTet[2][3];
-    int adjFace;
-    int oldFace;
-
-    for (oldPos = 0; oldPos < 3; oldPos++)
-        for (newPos = 0; newPos < 2; newPos++) {
-            // Note that gluings[n][o][3] == oldVertexPerm[o][n], since
-            // twoThreeVertices[i][3] == i.
-            // oldFace = gluings[newPos][oldPos][3];
-            oldFace = oldVertexPerm[oldPos][newPos];
-            adjTet[newPos][oldPos] =
-                oldTet[oldPos]->adjacentTetrahedron(oldFace);
-            if (adjTet[newPos][oldPos]) {
-                for (oldPos2 = 0; oldPos2 < 3; oldPos2++) {
-                    if (adjTet[newPos][oldPos] == oldTet[oldPos2]) {
-                        adjFace = oldTet[oldPos]->adjacentFace(oldFace);
-                        for (newPos2 = 0; newPos2 < 2; newPos2++)
-                            // if (gluings[newPos2][oldPos2][3] == adjFace) {
-                            if (oldVertexPerm[oldPos2][newPos2] == adjFace) {
-                                // Face oldFace of oldTet[oldPos] is glued to
-                                // face adjFace of oldTet[oldPos2] and should be
-                                // glued to face oldPos2 of newTet[newPos2].
-                                if ((oldPos2 < oldPos) ||
-                                        (oldPos2 == oldPos &&
-                                        newPos2 < newPos)) {
-                                    // We've already seen this gluing from
-                                    // the other direction and
-                                    // gluings[newPos2][oldPos2] has already
-                                    // been modified.  We'll have to leave
-                                    // this gluing to be made from the
-                                    // other direction.
-                                    adjTet[newPos][oldPos] = 0;
-                                } else {
-                                    adjTet[newPos][oldPos] = newTet[newPos2];
-                                    gluings[newPos][oldPos] =
-                                        threeTwoVertices[oldPos2]
-                                        * gluings[newPos2][oldPos2].inverse()
-                                        * oldTet[oldPos]->
-                                            adjacentGluing(oldFace)
-                                        * gluings[newPos][oldPos];
-                                }
-                                break;
-                            }
-                        break;
-                    }
-                }
-                if (oldPos2 >= 3)
-                    gluings[newPos][oldPos] =
-                        oldTet[oldPos]->adjacentGluing(oldFace)
-                        * gluings[newPos][oldPos];
-                oldTet[oldPos]->unjoin(oldFace);
-            }
-        }
-
-    // Remove the old tetrahedra from the triangulation.
-    for (oldPos = 0; oldPos < 3; oldPos++)
-        removeTetrahedron(oldTet[oldPos]);
-
-    // Glue the faces of the new tetrahedra.
-    for (oldPos = 0; oldPos < 3; oldPos++)
-        for (newPos = 0; newPos < 2; newPos++)
-            if (adjTet[newPos][oldPos])
-                newTet[newPos]->join(oldPos, adjTet[newPos][oldPos],
-                    gluings[newPos][oldPos] *
-                    threeTwoVertices[oldPos].inverse());
-    newTet[0]->join(3, newTet[1], Perm<4>());
-
-    // Done!.
-    return true;
-}
-
-bool Triangulation<3>::twoThreeMove(Triangle<3>* f, bool check, bool perform) {
-    if (check) {
-        if (f->degree() != 2)
-            return false;
-        // We now know that the given triangle is not on the boundary.
-    }
-
-    // Find the unwanted tetrahedra.
-    Tetrahedron<3>* oldTet[2];
-    Perm<4> oldVertexPerm[2];
-    int oldPos;
-    for (oldPos = 0; oldPos < 2; oldPos++) {
-        oldTet[oldPos] = f->embedding(oldPos).tetrahedron();
-        oldVertexPerm[oldPos] = f->embedding(oldPos).vertices();
-    }
-
-    if (check)
-        if (oldTet[0] == oldTet[1])
-            return false;
-
-    if (! perform)
-        return true;
-
-    #ifdef DEBUG
-    std::cerr << "Performing 2-3 move\n";
-    #endif
-
-    // Actually perform the move.
-    ChangeEventSpan span(this);
-    int oldPos2, newPos, newPos2;
-
-    // Allocate the new tetrahedra.
-    Tetrahedron<3>* newTet[3];
-    for (newPos = 0; newPos < 3; newPos++)
-        newTet[newPos] = newTetrahedron();
-
-    // Find the gluings from (0,1,2) of the new tetrahedron faces
-    // to the vertices of the old tetrahedra.
-    Perm<4> gluings[3][2];
-    for (oldPos = 0; oldPos < 2; oldPos++)
-        for (newPos = 0; newPos < 3; newPos++)
-            gluings[newPos][oldPos] = oldVertexPerm[oldPos] *
-                threeTwoVertices[newPos];
-
-    // Find the tetrahedra to which the old tetrahedron faces are glued,
-    // store the gluings from (0,1,2) of the new tetrahedron faces to the
-    // vertices of these adjacent tetrahedra, and unjoin the tetrahedra.
-    Tetrahedron<3>* adjTet[3][2];
-    int adjFace;
-    int oldFace;
-
-    for (oldPos = 0; oldPos < 2; oldPos++)
-        for (newPos = 0; newPos < 3; newPos++) {
-            // Note that gluings[n][o][3] == oldVertexPerm[o][n], since
-            // threeTwoVertices[i][3] == i.
-            // oldFace = gluings[newPos][oldPos][3];
-            oldFace = oldVertexPerm[oldPos][newPos];
-            adjTet[newPos][oldPos] =
-                oldTet[oldPos]->adjacentTetrahedron(oldFace);
-            if (adjTet[newPos][oldPos]) {
-                for (oldPos2 = 0; oldPos2 < 2; oldPos2++) {
-                    if (adjTet[newPos][oldPos] == oldTet[oldPos2]) {
-                        adjFace = oldTet[oldPos]->adjacentFace(oldFace);
-                        for (newPos2 = 0; newPos2 < 3; newPos2++)
-                            // if (gluings[newPos2][oldPos2][3] == adjFace) {
-                            if (oldVertexPerm[oldPos2][newPos2] == adjFace) {
-                                // Face oldFace of oldTet[oldPos] is glued to
-                                // face adjFace of oldTet[oldPos2] and should be
-                                // glued to face oldPos2 of newTet[newPos2].
-                                if ((oldPos2 < oldPos) ||
-                                        (oldPos2 == oldPos &&
-                                        newPos2 < newPos)) {
-                                    // We've already seen this gluing from
-                                    // the other direction and
-                                    // gluings[newPos2][oldPos2] has already
-                                    // been modified.  We'll have to leave
-                                    // this gluing to be made from the
-                                    // other direction.
-                                    adjTet[newPos][oldPos] = 0;
-                                } else {
-                                    adjTet[newPos][oldPos] = newTet[newPos2];
-                                    gluings[newPos][oldPos] =
-                                        twoThreeVertices[oldPos2]
-                                        * gluings[newPos2][oldPos2].inverse()
-                                        * oldTet[oldPos]->
-                                            adjacentGluing(oldFace)
-                                        * gluings[newPos][oldPos];
-                                }
-                                break;
-                            }
-                        break;
-                    }
-                }
-                if (oldPos2 >= 2)
-                    gluings[newPos][oldPos] =
-                        oldTet[oldPos]->adjacentGluing(oldFace)
-                        * gluings[newPos][oldPos];
-                oldTet[oldPos]->unjoin(oldFace);
-            }
-        }
-
-    // Remove the old tetrahedra from the triangulation.
-    for (oldPos = 0; oldPos < 2; oldPos++)
-        removeTetrahedron(oldTet[oldPos]);
-
-    // Glue the faces of the new tetrahedra.
-    for (oldPos = 0; oldPos < 2; oldPos++)
-        for (newPos = 0; newPos < 3; newPos++)
-            if (adjTet[newPos][oldPos])
-                newTet[newPos]->join(oldPos, adjTet[newPos][oldPos],
-                    gluings[newPos][oldPos] *
-                    twoThreeVertices[oldPos].inverse());
-    Perm<4> internalPerm = Perm<4>(0,1,3,2);
-    newTet[0]->join(2, newTet[1], internalPerm);
-    newTet[1]->join(2, newTet[2], internalPerm);
-    newTet[2]->join(2, newTet[0], internalPerm);
-
-    // Done!
-    return true;
-}
-
-bool Triangulation<3>::oneFourMove(Tetrahedron<3>* tet, bool /* check */,
-        bool perform) {
-    if ( !perform )
-        return true; // You can always do this move.
-
-    ChangeEventSpan span(this);
-
-    // Before we unglue, record how the adjacent tetrahedra are glued to tet.
-    Tetrahedron<3>* adjTet[4];
-    Perm<4> adjGlue[4];
-    unsigned i, j;
-    for (i=0; i<4; i++) {
-        adjTet[i] = tet->adjacentTetrahedron(i);
-        if (adjTet[i])
-            adjGlue[i] = tet->adjacentGluing(i);
-    }
-
-    // Unglue the old tetrahedron.
-    tet->isolate();
-
-    // The new tetrahedra.
-    // Face i of the old tetrahedron will become a facet of newTet[i].
-    // Vertex i of newTet[i] will become the new internal vertex, and
-    // the other three vertices of newTet[i] will keep the same vertex numbers
-    // that they had in the old tetrahedron.
-    Tetrahedron<3>* newTet[4];
-    for (i = 0; i < 4; ++i)
-        newTet[i] = newTetrahedron();
-
-    // Glue the new tetrahedra to each other internally.
-    for (i = 0; i < 4; ++i)
-        for (j = i + 1; j < 4; ++j)
-            newTet[i]->join(j, newTet[j], Perm<4>(i, j));
-
-    // Attach the new tetrahedra to the old triangulation.
-    for (i = 0; i < 4; ++i) {
-        if (adjTet[i] == tet) {
-            // The old tetrahedron was glued to itself.
-
-            // We might have already made this gluing from the other side:
-            if (newTet[i]->adjacentTetrahedron(i))
-                continue;
-
-            // Nope, do it now.
-            newTet[i]->join(i, newTet[adjGlue[i][i]], adjGlue[i]);
-        } else if (adjTet[i]) {
-            // The old tetrahedron was glued elsewhere.
-            newTet[i]->join(i, adjTet[i], adjGlue[i]);
-        }
-    }
-
-    // Delete the old tetrahedron.
-    removeTetrahedron(tet);
-
-    // All done!
-    return true;
-}
-
 bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
         bool perform) {
     if (check) {
@@ -417,14 +98,15 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     #endif
 
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
     Triangle<3>* tri23 = (newAxis == 0 ?
         oldTet[0]->triangle(e->embedding(0).vertices()[2]) :
         oldTet[1]->triangle(e->embedding(1).vertices()[2]));
     int edge32 = e->embedding(3).edge();
 
-    twoThreeMove(tri23, false, true);
-    threeTwoMove(oldTet[3]->edge(edge32), false, true);
+    pachner(tri23, false, true);
+    pachner(oldTet[3]->edge(edge32), false, true);
 
     // Done!
     return true;
@@ -487,6 +169,7 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
@@ -573,6 +256,7 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Unglue faces from the doomed tetrahedra and glue them to each
@@ -662,6 +346,7 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
     #endif
 
     // Go ahead and perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // First glue together the two faces that will be flattened.
@@ -775,7 +460,8 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
+    // Don't bother with a change event block since this is so simple.
+    TopologyLock lock(this);
     tet->unjoin(emb.triangle());
     return true;
 }
@@ -821,8 +507,9 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     #endif
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
+    // Don't bother with a change event block since this is so simple.
 
+    TopologyLock lock(this);
     t0->join(p0[3], t1, p1 * Perm<4>(2, 3) * p0.inverse());
     return true;
 }
@@ -879,7 +566,8 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
     #endif
 
     // Actually perform the move.
-    // Don't bother with a block since this is so simple.
+    // Don't bother with a change event block since this is so simple.
+    TopologyLock lock(this);
     removeTetrahedron(t);
     return true;
 }
@@ -1105,6 +793,7 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     #endif
 
     // Perform the move.
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
     Perm<4> topPerm, botPerm;
     Tetrahedron<3> *top, *bot;
@@ -1178,6 +867,7 @@ void Triangulation<3>::reorderTetrahedraBFS(bool reverse) {
     if (n == 0)
         return;
 
+    TopologyLock lock(this);
     ChangeEventSpan span(this);
 
     // Run a breadth-first search over all tetrahedra.

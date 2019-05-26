@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -525,9 +525,12 @@ class REGINA_API Perm<5> {
          * The implementation uses the C standard ::rand() function for its
          * random number generation.
          *
+         * @param even if \c true, then the resulting permutation is
+         * guaranteed to be even (and again all even permutations are
+         * returned with equal probability).
          * @return a random permutation.
          */
-        static Perm rand();
+        static Perm rand(bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -821,8 +824,11 @@ inline Perm<5>::Index Perm<5>::index() const {
     return orderedS5Index();
 }
 
-inline Perm<5> Perm<5>::rand() {
-    return S5[::rand() % 120];
+inline Perm<5> Perm<5>::rand(bool even) {
+    if (even)
+        return S5[2 * (::rand() % 60)];
+    else
+        return S5[::rand() % 120];
 }
 
 inline int Perm<5>::imageOf(int source) const {

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,6 +50,11 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
         Integer::stringValue, 0, 1);
 
+    Integer* fromPyLong(boost::python::long_ l) {
+        return new Integer(boost::python::extract<std::string>(
+            boost::python::str(l)));
+    }
+
     boost::python::tuple divisionAlg(const Integer& n,
             const Integer& divisor) {
         Integer remainder;
@@ -66,6 +71,7 @@ void addInteger() {
             .def(init<const regina::LargeInteger&>())
             .def(init<double>())
             .def(init<const char*, optional<int> >())
+            .def("__init__", make_constructor(fromPyLong))
             .def("isNative", &Integer::isNative)
             .def("isZero", &Integer::isZero)
             .def("sign", &Integer::sign)

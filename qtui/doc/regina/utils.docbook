@@ -514,6 +514,263 @@
   </refsect1>
  </refentry>
 
+ <!-- Retriangulation -->
+
+ <refentry id="man-retriangulate">
+  <refmeta>
+   <refentrytitle>retriangulate</refentrytitle>
+   <manvolnum>1</manvolnum>
+  </refmeta>
+
+  <refnamediv>
+   <refname>retriangulate</refname>
+   <refpurpose>Exhaustively retriangulate a given manifold</refpurpose>
+  </refnamediv>
+
+  <refsynopsisdiv>
+   <cmdsynopsis>
+    <command>retriangulate</command>
+    <arg><option>-h, --height=</option><replaceable>height</replaceable></arg>
+    <arg><option>-t, --threads=</option><replaceable>threads</replaceable></arg>
+    <arg><option>-4, --dim4</option></arg>
+    <arg choice="req"><replaceable>isosig</replaceable></arg>
+   </cmdsynopsis>
+   <cmdsynopsis>
+    <command>retriangulate</command>
+    <arg choice="req"><option>--help</option></arg>
+   </cmdsynopsis>
+  </refsynopsisdiv>
+
+  <refsect1>
+   <title>Description</title>
+   <para>
+    Given a 3-manifold or 4-manifold triangulation,
+    this utility uses Pachner moves to exhaustively search
+    for other triangulations of the same manifold that are the
+    same size or smaller.
+   </para>
+   <para>
+    Specifically, suppose the input triangulation contains
+    <replaceable>n</replaceable> tetrahedra (for a 3-manifold)
+    or pentachora (for a 4-manifold).  Then this utility will
+    exhaustively retriangulate the manifold using repeated Pachner moves,
+    without ever exceeding
+    <replaceable>n</replaceable>&nbsp;+&nbsp;<replaceable>height</replaceable>
+    tetrahedra/pentachora in total.
+    Moreover, all such retriangulations are guaranteed to be found, each
+    once and only once.
+   </para>
+   <para>
+    For 3-manifold triangulations, this utility will only attempt 2-3
+    and 2-3 Pachner moves, never 1-4 or 4-1 moves.
+    For 4-manifold triangulations, all types of Pachner moves are used
+    (1-5, 2-4, 3-3, 4-2, and 5-1).
+   </para>
+   <para>
+    The program will output each triangulation that it finds of the same
+    size <replaceable>n</replaceable> (including the original input
+    triangulation).  If it ever finds a
+    <emphasis>smaller</emphasis> triangulation (thereby proving the
+    original to be non-minimal), it will output that smaller
+    triangulation and then stop immediately.  Otherwise it will continue
+    outputting triangulations of size <replaceable>n</replaceable> until
+    no more can be found.  Although the program also finds larger
+    triangulations as part of its exhaustive search using Pachner moves,
+    these larger triangulations (of which there are typically many) will
+    not be output at all.
+   </para>
+   <para>
+    All triangulations, both input and output, are described using
+    <firstterm>isomorphism signatures</firstterm>.  These are short text
+    strings that identify a triangulation uniquely up to combinatorial
+    isomorphism (i.e., up to relabellings of the tetrahedra/pentachora
+    and their vertices).
+    The input triangulation will be interpreted as the isomorphism
+    signature of a 3-manifold unless you pass the option
+    <option>--dim4</option> (in which case it will be treated as a
+    4-manifold instead).
+   </para>
+   <para>
+    From &regina;'s graphical user interface,
+    you can view the isomorphism signature
+    of a triangulation by switching to the <guilabel>Composition</guilabel>
+    tab in the triangulation viewer.  From &python; you can fetch the
+    isomorphism signature of the triangulation <userinput>x</userinput>
+    by calling <userinput>x.isoSig()</userinput>.
+    For a full and precise specification of isomorphism signatures for
+    3-manifolds, see
+    <emphasis>Simplification paths in the Pachner graphs of closed
+    orientable 3-manifold triangulations</emphasis>, Burton, 2011,
+    arXiv:1110.6080.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Options</title>
+   <variablelist>
+    <varlistentry>
+     <term><option>-h,
+      --height=</option><replaceable>height</replaceable></term>
+     <listitem>
+      <para>
+       Specifies the number of additional tetrahedra (for a 3-manifold)
+       or pentachora (for a 4-manifold) that we allow during intermediate
+       stages of retriangulation.  That is, if the input triangulation
+       has <replaceable>n</replaceable> tetrahedra (or pentachora), then
+       this utility will exhaustively search through all triangulations
+       that it can reach via Pachner moves that do not exceed
+       <replaceable>n</replaceable>&nbsp;+&nbsp;<replaceable>height</replaceable>
+       tetrahedra (or pentachora) in total.
+      </para>
+      <para>
+       Note that these larger intermediate triangulations will not be
+       written to output; however, a larger height may allow the program
+       to access additional <emphasis>smaller</emphasis> triangulations
+       that were otherwise inaccessible.
+      </para>
+      <para>
+       The given height must be positive, and for 4-manifolds it must
+       also be even.
+       If not specified, this option defaults to 1 for 3-manifolds
+       (if <option>--dim4</option> is not passed), or 2 for 4-manifolds
+       (if <option>--dim4</option> is passed).
+      </para>
+      <warning>
+       <para>
+        In general, the running time can grow
+        <emphasis>superexponentially</emphasis> with
+        <replaceable>height</replaceable>.  It is strongly suggested
+        that you begin with <literal>--height=1</literal> (or 2 for
+        4-manifolds) and increase it one step at a time until the
+        performance becomes unacceptable.
+       </para>
+      </warning>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-t,
+      --threads=</option><replaceable>threads</replaceable></term>
+     <listitem>
+      <para>
+       Specifies the degree to which this utility uses parallel processing.
+       Specifically, this program will use
+       <replaceable>threads</replaceable> simultaneous threads of execution
+       as it works its way through the different retriangulations of the
+       input manifold.
+      </para>
+      <para>
+       This program is typically able to use parallelism effectively,
+       and so running with <replaceable>k</replaceable> threads should
+       approximately divide the running time by <replaceable>k</replaceable>.
+      </para>
+      <para>
+       If not specified, this option defaults to 1
+       (i.e., single-threaded processing, with no parallelism).
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><option>-4, --dim4</option></term>
+     <listitem>
+      <para>
+       Indicates that the given isomorphism signature describes a
+       4-manifold triangulation.  If this argument is not given, then by
+       default the argument is assumed to describe a 3-manifold triangulation.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
+   <title>Examples</title>
+
+   <para>
+    The 3-manifold triangulation is non-minimal, but it requires a bit
+    of work to see this:
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>retriangulate -h2 hLLAAkbdceefggdonxdjxn</userinput>
+    hLLAAkbdceefggdonxdjxn
+    hLALPkbcbefgfghxwnxark
+    Found 2 triangulation(s).
+    <prompt>example$</prompt> <userinput>retriangulate -h3 hLLAAkbdceefggdonxdjxn</userinput>
+    hLLAAkbdceefggdonxdjxn
+    hLALPkbcbefgfghxwnxark
+    hLLMMkbcdfefgglcghtchj
+    gLLPQcdcefffqsjpunw
+    Triangulation is non-minimal!
+    Smaller triangulation: gLLPQcdcefffqsjpunw
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    Although the program stopped as soon as it found a smaller
+    triangulation, this can be simplified even further:
+   </para>
+
+<screen>
+    <prompt>example$</prompt> <userinput>retriangulate gLLPQcdcefffqsjpunw</userinput>
+    gLLPQcdcefffqsjpunw
+    fLAMcbbcdeedhwhxn
+    Triangulation is non-minimal!
+    Smaller triangulation: fLAMcbbcdeedhwhxn
+    <prompt>example$</prompt>
+</screen>
+
+   <para>
+    A little more probing shows this to be the cusped hyperbolic
+    manifold <literal>m112</literal>:
+   </para>
+<screen>
+    <prompt>example$</prompt> <userinput>censuslookup fLAMcbbcdeedhwhxn</userinput>
+    fLAMcbbcdeedhwhxn: 1 hit
+        m112 : #2 -- Cusped hyperbolic census (orientable)
+    
+    <prompt>example$</prompt>
+</screen>
+  </refsect1>
+
+  <refsect1>
+   <title>&macosx; Users</title>
+   <para>
+    If you downloaded a drag-and-drop app bundle, this utility is
+    shipped inside it.  If you dragged &regina; to the main
+    <guilabel>Applications</guilabel> folder, you can run it as
+    <literal>/Applications/Regina.app/Contents/MacOS/retriangulate</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>&windows; Users</title>
+   <para>
+    The command-line utilities are installed beneath the
+    <filename>Program&nbsp;Files</filename> directory; on some
+    machines this directory is called
+    <filename>Program&nbsp;Files&nbsp;(x86)</filename>.
+    You can start this utility by running
+    <literal>c:\Program&nbsp;Files\Regina\Regina&nbsp;&regversion;\bin\retriangulate.exe</literal>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>See Also</title>
+   <para>
+    <link linkend="man-regina-gui">regina-gui</link>.
+   </para>
+  </refsect1>
+
+  <refsect1>
+   <title>Author</title>
+   <para>
+    This utility was written by Benjamin Burton
+    <email>bab@maths.uq.edu.au</email>.
+    &manpageack;
+   </para>
+  </refsect1>
+ </refentry>
+
  <!-- Signature Census -->
 
  <refentry id="man-sigcensus">

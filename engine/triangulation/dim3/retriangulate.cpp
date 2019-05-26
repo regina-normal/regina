@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,17 +62,32 @@ namespace {
         private:
             typedef std::set<std::string> SigSet;
 
+            static bool lowerPriority(SigSet::iterator a, SigSet::iterator b) {
+                // The function should compute whether a.size > b.size,
+                // where "size" measures number of top-dimensional simplices.
+                //
+                // Here we use the string length, which is fast to compute,
+                // and which should have the same effect for triangulations
+                // with the same number of boundary facets (which is
+                // preserved under Pachner moves).
+                return a->length() > b->length();
+            }
+
             const size_t maxTet_;
             std::function<bool(Triangulation<3>&)> action_;
             bool done_;
 
             SigSet sigs_;
-            std::queue<SigSet::iterator> process_;
+            std::priority_queue<SigSet::iterator,
+                std::vector<SigSet::iterator>,
+                std::function<bool(SigSet::iterator, SigSet::iterator)>>
+                process_;
 
         public:
             TriBFS(size_t maxTet,
                 const std::function<bool(Triangulation<3>&)>& action) :
-                maxTet_(maxTet), action_(action), done_(false) {
+                maxTet_(maxTet), action_(action), done_(false),
+                process_(lowerPriority) {
             }
 
             bool seed(const Triangulation<3>& tri);
@@ -114,9 +129,9 @@ namespace {
         Triangulation<3>* t = Triangulation<3>::fromIsoSig(*it);
         size_t i;
         for (i = 0; i < t->countEdges(); ++i)
-            if (t->threeTwoMove(t->edge(i), true, false)) {
+            if (t->pachner(t->edge(i), true, false)) {
                 Triangulation<3> alt(*t, false);
-                alt.threeTwoMove(alt.edge(i), false, true);
+                alt.pachner(alt.edge(i), false, true);
                 if (candidate(alt)) {
                     delete t;
                     return;
@@ -127,9 +142,9 @@ namespace {
 
         if (t->size() < maxTet_)
             for (i = 0; i < t->countTriangles(); ++i)
-                if (t->twoThreeMove(t->triangle(i), true, false)) {
+                if (t->pachner(t->triangle(i), true, false)) {
                     Triangulation<3> alt(*t, false);
-                    alt.twoThreeMove(alt.triangle(i), false, true);
+                    alt.pachner(alt.triangle(i), false, true);
                     if (candidate(alt)) {
                         delete t;
                         return;
@@ -149,7 +164,7 @@ namespace {
             if (tracker && tracker->isCancelled())
                 break;
 
-            next = process_.front();
+            next = process_.top();
             process_.pop();
 
             propagateFrom(next);
@@ -172,7 +187,7 @@ namespace {
                 if (tracker && tracker->isCancelled())
                     break;
 
-                next = process_.front();
+                next = process_.top();
                 process_.pop();
 
                 lock.unlock();

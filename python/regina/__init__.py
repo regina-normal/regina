@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Module Initialisation
 #
-# Copyright (c) 2003-2017, Ben Burton
+# Copyright (c) 2003-2018, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This program is free software; you can redistribute it and/or
@@ -118,7 +118,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                     sys.path.append(snappyLib + '/lib-dynload')
 
     if banner:
-        print engine.welcome()
+        print(engine.welcome())
 
     if builtinOpen and namespace:
         namespace['open'] = __builtins__['open']

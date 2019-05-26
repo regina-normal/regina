@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2011-2017, Ben Burton                                   *
+ *  Copyright (c) 2011-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -983,7 +983,7 @@ inline bool LPConstraintNonSpun::verify(const AngleStructure*) {
 }
 
 inline bool LPConstraintNonSpun::supported(NormalCoords coords) {
-    return (coords == NS_QUAD);
+    return (coords == NS_QUAD || coords == NS_AN_QUAD_OCT);
 }
 
 inline BanConstraintBase::~BanConstraintBase() {

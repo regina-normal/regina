@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,8 +40,8 @@
 #include <QPainter>
 
 namespace {
-    int iconSizes[] = { 16, 22, 32, 48, 64, 128, 0 /* terminator */ };
-    int iconSizesRaw[] = { 16, 22, 32, 44, 48, 64, 96, 128, 256, 0 };
+    const int iconSizes[] = { 16, 22, 32, 48, 64, 128, 0 /* terminator */ };
+    const int iconSizesRaw[] = { 16, 22, 32, 44, 48, 64, 96, 128, 256, 0 };
         /**< The union of (iconSizes) and (2 * iconSizes). */
 }
 

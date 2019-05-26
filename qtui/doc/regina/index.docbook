@@ -3,18 +3,19 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "5.1">
+  <!ENTITY regversion "5.2">
   <!ENTITY regdate "2016-12-19">
-  <!ENTITY copyrightyears "1999&ndash;2017">
+  <!ENTITY copyrightyears "1999&ndash;2018">
   <!ENTITY copyrightholder "The Regina development team">
   <!ENTITY copyrightnotice
    "Copyright &copy; &copyrightyears;, &copyrightholder;">
   <!ENTITY regabstract
    "<para>
      &regina; is a software package for 3-manifold and 4-manifold topologists,
-     with a focus on triangulations, normal surfaces and angle structures.
+     with a focus on triangulations, knots and links,
+     normal surfaces, and angle structures.
      For 3-manifolds, it includes high-level tasks such as 3-sphere
-     recognition, connected sum decomposition and Hakenness testing,
+     and unknot recognition, connected sum decomposition and Hakenness testing,
      comes with a rich database of census manifolds, and incorporates
      the &snappea; kernel for working with hyperbolic manifolds.
      For 4-manifolds, it offers a range of combinatorial and algebraic tools,
@@ -164,6 +165,7 @@
   <!ENTITY reginasnappea SYSTEM "snappea.docbook">
   <!ENTITY reginasurfaces SYSTEM "surfaces.docbook">
   <!ENTITY reginaangles SYSTEM "angles.docbook">
+  <!ENTITY reginalinks SYSTEM "links.docbook">
   <!ENTITY reginaforeign SYSTEM "foreign.docbook">
   <!ENTITY reginapython SYSTEM "python.docbook">
   <!ENTITY reginaoptions SYSTEM "options.docbook">
@@ -230,6 +232,8 @@
    <keyword>topology</keyword>
    <keyword>3-manifolds</keyword>
    <keyword>4-manifolds</keyword>
+   <keyword>knots</keyword>
+   <keyword>links</keyword>
    <keyword>triangulations</keyword>
    <keyword>normal surfaces</keyword>
    <keyword>angle structures</keyword>
@@ -243,6 +247,7 @@
  &reginasnappea;
  &reginasurfaces;
  &reginaangles;
+ &reginalinks;
  &reginaforeign;
  &reginapython;
  &reginaoptions;

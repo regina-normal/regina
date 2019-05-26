@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -58,6 +58,7 @@
 #include "packet/pdf.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "snappea/snappeatriangulation.h"
+#include "link/link.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
@@ -80,6 +81,7 @@ namespace regina {
 // possible packet types.
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
+#ifndef REGINA_LOWDIMONLY
 template <>
 struct PacketInfo<PACKET_TRIANGULATION5> {
     typedef Triangulation<5> Class;
@@ -157,6 +159,7 @@ struct PacketInfo<PACKET_TRIANGULATION15> {
         return "15-Manifold Triangulation";
     }
 };
+#endif /* ! REGINA_LOWDIMONLY */
 #endif
 
 // ----------------------------------------------------------------------
@@ -205,6 +208,10 @@ forPacket(PacketType packetType, FunctionObject&& func,
         case PACKET_SNAPPEATRIANGULATION : return
             func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
             std::forward<Args>(args)...);
+        case PACKET_LINK : return
+            func.template operator()<PacketInfo<PACKET_LINK>>(
+            std::forward<Args>(args)...);
+#ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5 : return
             func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(
             std::forward<Args>(args)...);
@@ -238,6 +245,7 @@ forPacket(PacketType packetType, FunctionObject&& func,
         case PACKET_TRIANGULATION15 : return
             func.template operator()<PacketInfo<PACKET_TRIANGULATION15>>(
             std::forward<Args>(args)...);
+#endif /* ! REGINA_LOWDIMONLY */
         default: return defaultReturn;
     }
 }
@@ -282,6 +290,10 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
         case PACKET_SNAPPEATRIANGULATION :
             func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
             std::forward<Args>(args)...); break;
+        case PACKET_LINK :
+            func.template operator()<PacketInfo<PACKET_LINK>>(
+            std::forward<Args>(args)...); break;
+#ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5 :
             func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(
             std::forward<Args>(args)...); break;
@@ -315,6 +327,7 @@ forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
         case PACKET_TRIANGULATION15 :
             func.template operator()<PacketInfo<PACKET_TRIANGULATION15>>(
             std::forward<Args>(args)...); break;
+#endif /* ! REGINA_LOWDIMONLY */
         default: break;
     }
 }

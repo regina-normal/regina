@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,6 +38,7 @@
 #ifndef __PROGRESSDIALOGS_H
 #define __PROGRESSDIALOGS_H
 
+#include <QFontMetrics>
 #include <QProgressDialog>
 
 namespace regina {
@@ -65,6 +66,8 @@ class ProgressDialogNumeric : public QProgressDialog {
         regina::ProgressTracker* tracker_;
             /**< The progress tracker handling the inter-thread
                  communication. */
+        QFontMetrics metrics_;
+            /**< Used to estimate the size of text. */
 
     public:
         /**

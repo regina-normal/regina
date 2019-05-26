@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,10 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
+void addBinom();
 void addMatrixOps();
 void addCyclotomic();
 void addInteger();
 void addLargeInteger();
+void addLaurent();
+void addLaurent2();
 void addMatrix2();
 void addMatrixInt();
 void addPerm2();
@@ -47,10 +50,13 @@ void addRational();
 void addNumberTheory();
 
 void addMathsClasses() {
+    addBinom();
     addMatrixOps();
     addCyclotomic();
     addInteger();
     addLargeInteger();
+    addLaurent();
+    addLaurent2();
     addMatrix2();
     addMatrixInt();
     addPerm2();

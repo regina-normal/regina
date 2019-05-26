@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -117,6 +117,7 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
         case regina::NS_QUAD:
         case regina::NS_QUAD_CLOSED:
         case regina::NS_AN_QUAD_OCT:
+        case regina::NS_AN_QUAD_OCT_CLOSED:
         case regina::NS_ORIENTED_QUAD:
             self.selectCoords.selectedSegmentIndex = 1;
             break;

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -692,6 +692,117 @@ class REGINA_API Triangulation<3> :
          */
         const TuraevViroSet& allCalculatedTuraevViro() const;
 
+        /**
+         * Modifies a triangulated knot complement so that the algebraic
+         * longitude follows a single boundary edge, and returns this edge.
+         *
+         * Assuming that this triangulation represents the complement of
+         * a knot in the 3-sphere, this routine:
+         *
+         * - identifies the algebraic longitude of the knot complement;
+         *   that is, identifies the non-trivial simple closed curve on
+         *   the boundary whose homology in the 3-manifold is trivial;
+         *
+         * - layers additional tetrahedra on the boundary if necessary
+         *   so that this curve is represented by a single boundary edge;
+         *
+         * - returns that (possibly new) boundary edge.
+         *
+         * Whilst this routine returns less information than
+         * meridianLongitude(), it (1) runs much faster since it is based
+         * on fast algebraic calculations, and (2) guarantees to terminate.
+         * In contrast, meridianLongitude() must repeatedly try to test for
+         * 3-spheres, and (as a result of only using fast 3-sphere
+         * recognition heuristics) does not guarantee to terminate.
+         *
+         * At present this routine is fairly restrictive in what triangulations
+         * it can work with: it requires the triangulation to be one-vertex
+         * and have real (not ideal) boundary.
+         * These restrictions may be eased in future versions of Regina.
+         *
+         * If the algebraic longitude is already represented by a single
+         * boundary edge, then it is guaranteed that this routine will
+         * \e not modify the triangulation, and will simply return this
+         * boundary edge.
+         *
+         * \pre The underlying 3-manifold is known to be the complement
+         * of a knot in the 3-sphere.
+         * \pre This triangulation has precisely one vertex, and its
+         * (unique) boundary component is formed from two triangles.
+         *
+         * \warning This routine may modify the triangluation, as
+         * explained above, which will have the side-effect of
+         * invalidating any existing Vertex, Edge or Triangle references.
+         *
+         * \warning If you have an \e ideal triangulation of a knot
+         * complement, you \e must first run idealToFinite() and then simplify
+         * the resulting triangulation to have two boundary triangles.
+         *
+         * @return the boundary edge representing the algebraic
+         * longitude of the knot (after this triangulation has
+         * been modified if necessary), or \c null if an error (such as
+         * an integer overflow) occurred during the computation.
+         */
+        Edge<3>* longitude();
+
+        /**
+         * Modifies a triangulated knot complement so that the meridian and
+         * algebraic longitude each follow a single boundary edge, and returns
+         * these two edges.
+         *
+         * Assuming that this triangulation represents the complement of
+         * a knot in the 3-sphere, this routine:
+         *
+         * - identifies the meridian of the knot complement, and also the
+         *   algebraic longitude (i.e., the non-trivial simple closed curve on
+         *   the boundary whose homology in the 3-manifold is trivial);
+         *
+         * - layers additional tetrahedra on the boundary if necessary so that
+         *   each of these curves is represented by a single boundary edge;
+         *
+         * - returns these two (possibly new) boundary edges.
+         *
+         * This routine uses fast heuristics to locate the meridian; as a
+         * result, <b>it does not guarantee to terminate</b> (but if you find
+         * a case where it does not, please let the Regina developers know!).
+         * If it does return then it guarantees that the result is correct.
+         *
+         * Whilst this routine returns more information than longitude(),
+         * note that longitude() (1) runs much faster since it is based
+         * on fast algebraic calculations, and (2) guarantees to terminate.
+         *
+         * At present this routine is fairly restrictive in what triangulations
+         * it can work with: it requires the triangulation to be one-vertex
+         * and have real (not ideal) boundary.
+         * These restrictions may be eased in future versions of Regina.
+         *
+         * If the meridian and algebraic longitude are already both represented
+         * by single boundary edges, then it is guaranteed that this routine
+         * will \e not modify the triangulation, and will simply return
+         * these two boundary edges.
+         *
+         * \pre The underlying 3-manifold is known to be the complement
+         * of a knot in the 3-sphere.
+         * \pre This triangulation has precisely one vertex, and its
+         * (unique) boundary component is formed from two triangles.
+         *
+         * \warning This routine may modify the triangluation, as
+         * explained above, which will have the side-effect of
+         * invalidating any existing Vertex, Edge or Triangle references.
+         *
+         * \warning If you have an \e ideal triangulation of a knot
+         * complement, you \e must first run idealToFinite() and then simplify
+         * the resulting triangulation to have two boundary triangles.
+         *
+         * @return a pair (\a m, \a l), where \a m is the boundary edge
+         * representing the meridian and \a l is the boundary edge representing
+         * the algebraic longitude of the knot complement (after this
+         * triangulation has been modified if necessary).  If an error (such as
+         * an integer overflow) occurs during the computation, then this
+         * routine will return (\c null, \c null).
+         */
+        std::pair<Edge<3>*, Edge<3>*> meridianLongitude();
+
         /*@}*/
         /**
          * \name Normal Surfaces and Angle Structures
@@ -920,8 +1031,11 @@ class REGINA_API Triangulation<3> :
          * it can occasionally get stuck; in such cases you may wish to try
          * the more powerful but (much) slower simplifyExhaustive() instead.
          *
-         * \warning The specific behaviour of this routine may well
-         * change between releases.
+         * \warning Running this routine multiple times upon the same
+         * triangulation may return different results, since the implementation
+         * makes random decisions.  More broadly, the implementation of this
+         * routine (and therefore its results) may change between different
+         * releases of Regina.
          *
          * \todo \opt Include random 2-3 moves to get out of wells.
          *
@@ -946,8 +1060,8 @@ class REGINA_API Triangulation<3> :
          * (such as 4-4 moves or book opening moves) are not used in this
          * routine.  Such moves do however feature in intelligentSimplify().
          *
-         * \warning The specific behaviour of this routine is
-         * very likely to change between releases.
+         * \warning The implementation of this routine (and therefore
+         * its results) may change between different releases of Regina.
          *
          * @param perform \c true if we are to perform the
          * simplifications, or \c false if we are only to investigate
@@ -1008,6 +1122,11 @@ class REGINA_API Triangulation<3> :
          *
          * If this routine is unable to simplify the triangulation, then
          * the triangulation will not be changed.
+         *
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
          *
          * \pre This triangulation is connected.
          *
@@ -1091,9 +1210,10 @@ class REGINA_API Triangulation<3> :
          * protected by a mutex (i.e., different threads will never be
          * calling \a action at the same time).
          *
-         * If \a height is negative, then this routine will do nothing
-         * and immediately return \c false, and any progress tracker
-         * that was passed will immediately be marked as finished.
+         * If \a height is negative, then this routine will do nothing.
+         * If no progress tracker was passed then it will immediately return
+         * \c false; otherwise the progress tracker will immediately be
+         * marked as finished.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
@@ -1130,25 +1250,42 @@ class REGINA_API Triangulation<3> :
             Action&& action, Args&&... args) const;
 
         /**
-         * Checks the eligibility of and/or performs a 3-2 move
-         * about the given edge.
-         * This involves replacing the three tetrahedra joined at that
-         * edge with two tetrahedra joined by a triangle.
-         * This can be done iff (i) the edge is valid and non-boundary,
-         * and (ii) the three tetrahedra are distinct.
+         * Deprecated function that checks the eligibility of and/or
+         * performs a 4-1 Pachner move upon the given vertex.
          *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * This is an alias for pachner(Vertex<3>*, bool, bool);
+         * see that routine for further details.
          *
-         * Note that after performing this move, all skeletal objects
-         * (triangles, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
-         * can no longer be used.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
+         * \pre The given vertex is a vertex of this triangulation.
          *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \deprecated You should use the identical routine pachner() instead.
+         *
+         * @param v the vertex about which to perform the move.
+         * @param check \c true if we are to check whether the move is
+         * allowed (defaults to \c true).
+         * @param perform \c true if we are to perform the move
+         * (defaults to \c true).
+         * @return If \a check is \c true, the function returns \c true
+         * if and only if the requested move may be performed
+         * without changing the topology of the manifold.  If \a check
+         * is \c false, the function simply returns \c true.
+         */
+        [[deprecated]] bool fourOneMove(Vertex<3>* v, bool check = true,
+            bool perform = true);
+        /**
+         * Deprecated function that checks the eligibility of and/or performs
+         * a 3-2 move about the given edge.
+         *
+         * This is an alias for pachner(Edge<3>*, bool, bool);
+         * see that routine for further details.
+         *
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
          * \pre The given edge is an edge of this triangulation.
+         *
+         * \deprecated You should use the identical routine pachner() instead.
          *
          * @param e the edge about which to perform the move.
          * @param check \c true if we are to check whether the move is
@@ -1160,25 +1297,17 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool threeTwoMove(Edge<3>* e, bool check = true, bool perform = true);
+        [[deprecated]] bool threeTwoMove(Edge<3>* e, bool check = true,
+            bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 2-3 move
-         * about the given triangle.
-         * This involves replacing the two tetrahedra joined at that
-         * triangle with three tetrahedra joined by an edge.
-         * This can be done iff the two tetrahedra are distinct.
+         * Deprecated function that checks the eligibility of and/or performs
+         * a 2-3 move about the given triangle.
          *
-         * If the routine is asked to both check and perform, the move
-         * will only be performed if the check shows it is legal.
+         * This is an alias for pachner(Triangle<3>*, bool, bool);
+         * see that routine for further details.
          *
-         * Note that after performing this move, all skeletal objects
-         * (triangles, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a f)
-         * can no longer be used.
-         *
-         * \pre If the move is being performed and no
-         * check is being run, it must be known in advance that the move
-         * is legal.
+         * \pre If the move is being performed and no check is being run,
+         * it must be known in advance that the move is legal.
          * \pre The given triangle is a triangle of this triangulation.
          *
          * @param t the triangle about which to perform the move.
@@ -1191,37 +1320,38 @@ class REGINA_API Triangulation<3> :
          * without changing the topology of the manifold.  If \a check
          * is \c false, the function simply returns \c true.
          */
-        bool twoThreeMove(Triangle<3>* t, bool check = true, bool perform = true);
+        [[deprecated]] bool twoThreeMove(Triangle<3>* t, bool check = true,
+            bool perform = true);
         /**
-         * Checks the eligibility of and/or performs a 1-4 move
-         * upon the given tetrahedron.
-         * This involves replacing one tetrahedron with four tetrahedra:
-         * each new tetrahedron runs from one face of
-         * the original tetrahedron to a new common internal degree four vertex.
+         * Deprecated function that checks the eligibility of and/or
+         * performs a 1-4 Pachner move upon the given tetrahedron.
          *
-         * This move can always be performed.  The \a check argument is
-         * present (as for other moves), but is simply ignored (since
-         * the move is always legal).  The \a perform argument is also
-         * present for consistency with other moves, but if it is set to
-         * \c false then this routine does nothing and returns no useful
-         * information.
+         * This differs from pachner(Simplex<3>*, bool, bool) in
+         * the labelling of the new tetrahedra:
          *
-         * Note that after performing this move, all skeletal objects
-         * (edges, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a t)
-         * can no longer be used.
+         * - pachner() will create the new vertex as
+         *   <tt>simplices().back()->vertex(0)</tt>, for consistency
+         *   with Pachner moves on faces of other dimensions;
+         *
+         * - oneFourMove() will create the new vertex as
+         *   <tt>simplices().back()->vertex(3)</tt>, for consistency
+         *   with earlier versions of Regina.
          *
          * \pre The given tetrahedron is a tetrahedron of this triangulation.
          *
+         * \deprecated You should use the new routine pachner() instead
+         * (though note that this changes the labelling of the new tetrahedra).
+         *
          * @param t the tetrahedron about which to perform the move.
          * @param check this argument is ignored, since this move is
-         * always legal (see the notes above).
+         * always legal.
          * @param perform \c true if we are to perform the move
          * (defaults to \c true).
          * @return \c true always.
          */
-        bool oneFourMove(Tetrahedron<3>* t, bool check = true,
+        [[deprecated]] bool oneFourMove(Tetrahedron<3>* t, bool check = true,
             bool perform = true);
+
         /**
          * Checks the eligibility of and/or performs a 4-4 move
          * about the given edge.
@@ -1874,6 +2004,8 @@ class REGINA_API Triangulation<3> :
          * \pre This triangulation is valid, closed, orientable and
          * connected.
          *
+         * \todo Preserve computed properties of the underlying manifold.
+         *
          * @return 0 if the underlying 3-manifold is prime (in which
          * case the original triangulation was modified directly), or
          * a newly allocated connected sum decomposition if the
@@ -2262,6 +2394,10 @@ class REGINA_API Triangulation<3> :
          * triangulation.  See the Layering class notes for further
          * details on what a layering entails.
          *
+         * The new tetrahedron will be returned, and the new boundary
+         * edge that it creates will be edge 5 (i.e., the edge joining
+         * vertices 2 and 3) of this tetrahedron.
+         *
          * \pre The given edge is a boundary edge of this triangulation,
          * and the two boundary triangles on either side of it are distinct.
          *
@@ -2269,6 +2405,96 @@ class REGINA_API Triangulation<3> :
          * @return the new tetrahedron provided by the layering.
          */
         Tetrahedron<3>* layerOn(Edge<3>* edge);
+
+        /**
+         * Fills a two-triangle torus boundary component by attaching a
+         * solid torus along a given curve.
+         *
+         * The boundary component to be filled should be passed as the
+         * argument \a bc; if the triangulation has exactly one
+         * boundary component then you may omit \a bc (i.e., pass \c null),
+         * and the (unique) boundary component will be inferred.
+         *
+         * If the boundary component cannot be inferred, and/or if the
+         * selected boundary component is not a two-triangle torus, then
+         * this routine will do nothing and return \c false.
+         *
+         * Otherwise the given boundary component will be filled with a
+         * solid torus whose meridional curve cuts the edges
+         * <tt>bc->edge(0)</tt>, <tt>bc->edge(1)</tt> and <tt>bc->edge(2)</tt>
+         * a total of \a cuts0, \a cuts1 and \a cuts2 times respectively.
+         *
+         * For the filling to be performed successfully, the integers
+         * \a cuts0, \a cuts1 and \a cuts2 must be coprime, and two of
+         * them must add to give the third.  Otherwise, as above, this
+         * routine will do nothing and return \c false.
+         *
+         * The triangulation will be simplified before returning.
+         *
+         * There are two versions of fillTorus(); the other takes three
+         * explicit edges instead of a boundary component.  You should
+         * use the other version if you know how the filling curve cuts
+         * each boundary edge but you do not know how these edges are
+         * indexed in the boundary component.
+         *
+         * @param cuts0 the number of times that the meridional curve of
+         * the new solid torus should cut the edge <tt>bc->edge(0)</tt>.
+         * @param cuts1 the number of times that the meridional curve of
+         * the new solid torus should cut the edge <tt>bc->edge(1)</tt>.
+         * @param cuts2 the number of times that the meridional curve of
+         * the new solid torus should cut the edge <tt>bc->edge(2)</tt>.
+         * @param bc the boundary component to fill.  If the triangulation
+         * has precisely one boundary component then this may be \c null.
+         * @return \c true if the boundary component was filled successfully,
+         * or \c false if one of the required conditions as described
+         * above is not satisfied.
+         */
+        bool fillTorus(unsigned long cuts0, unsigned long cuts1,
+            unsigned long cuts2, BoundaryComponent<3>* bc = nullptr);
+
+        /**
+         * Fills a two-triangle torus boundary component by attaching a
+         * solid torus along a given curve.
+         *
+         * The three edges of the boundary component should be passed as
+         * the arguments \a e0, \a e1 and \a e2.
+         * The boundary component will then be filled with a
+         * solid torus whose meridional curve cuts these three edges
+         * \a cuts0, \a cuts1 and \a cuts2 times respectively.
+         *
+         * For the filling to be performed successfully, the three given
+         * edges must belong to the same boundary component, and this boundary
+         * component must be a two-triangle torus.  Moreover, the integers
+         * \a cuts0, \a cuts1 and \a cuts2 must be coprime, and two of
+         * them must add to give the third.  If any of these conditions
+         * are not met, then this routine will do nothing and return \c false.
+         *
+         * The triangulation will be simplified before returning.
+         *
+         * There are two versions of fillTorus(); the other takes a boundary
+         * component, and sets \a e0, \a e1 and \a e2 to its three edges
+         * according to Regina's own edge numbering.
+         * This version of fillTorus() should be used when you know how the
+         * filling curve cuts each boundary edge but you do not know how these
+         * edges are indexed in the corresponding boundary component.
+         *
+         * @param e0 one of the three edges of the boundary component to fill.
+         * @param e1 the second of the three edges of the boundary component
+         * to fill.
+         * @param e2 the second of the three edges of the boundary component
+         * to fill.
+         * @param cuts0 the number of times that the meridional curve of
+         * the new solid torus should cut the edge \a e0.
+         * @param cuts1 the number of times that the meridional curve of
+         * the new solid torus should cut the edge \a e1.
+         * @param cuts2 the number of times that the meridional curve of
+         * the new solid torus should cut the edge \a e2.
+         * @return \c true if the boundary component was filled successfully,
+         * or \c false if one of the required conditions as described
+         * above is not satisfied.
+         */
+        bool fillTorus(Edge<3>* e0, Edge<3>* e1, Edge<3>* e2,
+            unsigned long cuts0, unsigned long cuts1, unsigned long cuts2);
 
         /**
          * Inserts a new layered solid torus into the triangulation.
@@ -2288,7 +2514,6 @@ class REGINA_API Triangulation<3> :
          * tetrahedra in the triangulation.
          *
          * \pre 0 \<= \a cuts0 \<= \a cuts1;
-         * \pre \a cuts1 is non-zero;
          * \pre gcd(\a cuts0, \a cuts1) = 1.
          *
          * @param cuts0 the smallest of the three desired intersection numbers.
@@ -2422,13 +2647,21 @@ class REGINA_API Triangulation<3> :
          * the result will be oriented also, and the connected sum will
          * respect these orientations.
          *
+         * If one or both triangulations contains multiple connected components,
+         * this routine will connect the components containing tetrahedron 0
+         * of each triangulation, and will copy any additional
+         * components across with no modification.
+         *
+         * If either triangulation is empty, then the result will simply be a
+         * clone of the other triangulation.
+         *
          * This and/or the given triangulation may be bounded or ideal, or
          * even invalid; in all cases the connected sum will be formed
          * correctly.  Note, however, that the result might possibly
          * contain internal vertices (even if the original triangulations
          * do not).
          *
-         * \pre This triangulation is connected and non-empty.
+         * It is allowed to pass this triangulation as \a other.
          *
          * @param other the triangulation to sum with this.
          */
@@ -3034,6 +3267,26 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return retriangulateInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
+}
+
+inline bool Triangulation<3>::oneFourMove(
+        Tetrahedron<3>* tet, bool check, bool perform) {
+    return detail::PachnerHelper<3, 3>::pachnerOld(this, tet, check, perform);
+}
+
+inline bool Triangulation<3>::twoThreeMove(
+        Triangle<3>* t, bool check, bool perform) {
+    return pachner(t, check, perform);
+}
+
+inline bool Triangulation<3>::threeTwoMove(
+        Edge<3>* e, bool check, bool perform) {
+    return pachner(e, check, perform);
+}
+
+inline bool Triangulation<3>::fourOneMove(
+        Vertex<3>* v, bool check, bool perform) {
+    return pachner(v, check, perform);
 }
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()

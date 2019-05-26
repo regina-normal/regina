@@ -21,12 +21,23 @@
  * terms of service.
  */
 
+#include <cstdlib>
+#include <signal.h>
+
 #include "libnormaliz/libnormaliz.h"
 #include "libnormaliz/general.h"
+#include "libnormaliz/my_omp.h"
 
 namespace libnormaliz {
 
 bool verbose = false;
+
+bool nmz_scip=false;
+
+volatile sig_atomic_t nmz_interrupted = 0;
+long default_thread_limit=8;
+long thread_limit=default_thread_limit;
+bool parallelization_set=false;
 
 // bool test_arithmetic_overflow = false;
 // long overflow_test_modulus = 15401;
@@ -36,6 +47,9 @@ size_t GMP_hyp=0;
 size_t GMP_scal_prod=0;
 size_t TotDet=0;
 
+void interrupt_signal_handler( int signal ){
+    nmz_interrupted = 1;
+}
 
 namespace {
     std::ostream* verbose_ostream_ptr = &std::cout;
@@ -46,6 +60,13 @@ bool setVerboseDefault(bool v) {
     //we want to return the old value
     bool old = verbose;
     verbose = v;
+    return old;
+}
+
+long set_thread_limit(long t){
+    long old=thread_limit;
+    parallelization_set=true;
+    thread_limit=t;
     return old;
 }
 
@@ -71,8 +92,8 @@ InputType to_type(const std::string& type_string) {
       || type_string=="4" || type_string=="5" || type_string=="6"
       || type_string=="hyperplanes"
       || type_string=="10") {
-        errorOutput() << "Error: deprecated type \"" << type_string<<"\", please use new type string!" << std::endl;
-        throw BadInputException();
+        throw BadInputException("Error: deprecated type \"" + type_string
+                + "\", please use new type string!");
     }
 
     if (type_string=="0"||type_string=="integral_closure") {
@@ -150,9 +171,31 @@ InputType to_type(const std::string& type_string) {
     if (type_string=="cone_and_lattice") {
         return Type::cone_and_lattice;
     }
+    if (type_string=="subspace") {
+        return Type::subspace;
+    }
+    
+    if (type_string=="open_facets") {
+        return Type::open_facets;
+    }
+    
+    if (type_string=="projection_coordinates") {
+        return Type::projection_coordinates;
+    }
+    
+    if (type_string=="hilbert_basis_rec_cone") {
+        return Type::hilbert_basis_rec_cone;
+    }
+    
+    if (type_string=="extreme_rays") {
+        return Type::extreme_rays;
+    }
+    
+    if (type_string=="scale") {
+        return Type::scale;
+    }
 
-    errorOutput() << "ERROR: Unknown type \"" << type_string<<"\"!" << std::endl;
-    throw BadInputException();
+    throw BadInputException("Unknown type \"" + type_string + "\"!");
     return Type::integral_closure;
 }
 
@@ -160,7 +203,7 @@ long type_nr_columns_correction(InputType t) {
     if (t == Type::polytope || t == Type::rees_algebra)
         return -1;
     if (t == Type::congruences || t == Type::vertices || t == Type::polyhedron
-     || t == Type::inhom_inequalities || t == Type::inhom_equations)
+     || t == Type::inhom_inequalities || t == Type::inhom_equations || t == Type::hilbert_basis_rec_cone)
         return 1;
     if (t == Type::inhom_congruences)
         return 2;
@@ -170,7 +213,8 @@ long type_nr_columns_correction(InputType t) {
 /* returns true if the input of this type is a vector */
 bool type_is_vector(InputType type){
     if (type == Type::grading || type == Type::signs || type == Type::strict_signs
-            || type == Type::dehomogenization || type == Type::offset) {
+            || type == Type::dehomogenization || type == Type::offset || type==Type::open_facets  
+            || type==Type::projection_coordinates || type==Type::scale) {
         return true;
     }
     return false;

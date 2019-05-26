@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -439,6 +439,16 @@ void ReginaMain::setupActions() {
     treeGeneralEditActions.append(actSnapPeaTriangulation);
     treeMenu->addAction(actSnapPeaTriangulation);
 
+    QAction* actLink = new QAction(this);
+    actLink->setText(tr("New &Knot or Link"));
+    actLink->setIcon(IconCache::icon(IconCache::packet_link));
+    actLink->setShortcut(tr("Alt+k"));
+    actLink->setToolTip(tr("New knot or link"));
+    actLink->setWhatsThis(tr("Create a new knot or link."));
+    connect(actLink, SIGNAL(triggered()), this, SLOT(newLink()));
+    treeGeneralEditActions.append(actLink);
+    treeMenu->addAction(actLink);
+    
     QAction* actFilter = new QAction(this);
     actFilter->setText(tr("New &Filter"));
     actFilter->setIcon(IconCache::icon(IconCache::packet_filter));
@@ -790,6 +800,7 @@ void ReginaMain::setupActions() {
     toolBarPacket->addAction(actTriangulation3);
     toolBarPacket->addAction(actTriangulation4);
     toolBarPacket->addAction(actSnapPeaTriangulation);
+    toolBarPacket->addAction(actLink);
     toolBarPacket->addSeparator();
     toolBarPacket->addAction(actSurfaces);
     toolBarPacket->addAction(actHypersurfaces);

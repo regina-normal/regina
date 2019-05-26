@@ -8,6 +8,10 @@ set (IMGS
   cone
   connectedsum
   connectedsumwith
+  crossing-l
+  crossing-u
+  crossing+l
+  crossing+u
   csvexport
   dehydrated
   delete
@@ -26,6 +30,7 @@ set (IMGS
   packet_container
   packet_filter
   packet_hypersurfaces
+  packet_link
   packet_pdf
   packet_script
   packet_snappea
@@ -48,12 +53,16 @@ set (IMGS
   packet_view
   puncture
   randomise
+  reflect
   regina
+  reverse
+  rotate
   run
   signature-2d
   signature-3d
   signature-4d
   simplify
+  simplify-link
   snappea
   vtxlinks
   )

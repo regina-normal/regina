@@ -39,6 +39,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 Empty triangulation
 Fundamental surfaces (std)
 -------------------------------
@@ -77,6 +87,16 @@ Number of surfaces is 0
 Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
 
+
+-------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
 
 -------------------------------
 3-sphere
@@ -127,6 +147,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 3-sphere
 Fundamental surfaces (std)
 -------------------------------
@@ -173,6 +203,16 @@ Coordinates: Quad-oct almost normal
 1 1 0 0 ; 0 0 0 ; 1 0 0
 0 0 1 1 ; 1 0 0 ; 0 0 0
 
+
+-------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
 
 -------------------------------
 S2 x S1
@@ -229,6 +269,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 S2 x S1
 Fundamental surfaces (std)
 -------------------------------
@@ -281,6 +331,16 @@ Coordinates: Quad-oct almost normal
 0 1 1 0 ; 0 0 1 ; 0 0 0 || 0 1 1 0 ; 0 0 1 ; 0 0 0
 0 0 0 0 ; 0 1 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0
 
+
+-------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
 
 -------------------------------
 RP2 x S1
@@ -351,6 +411,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 RP2 x S1
 Fundamental surfaces (std)
 -------------------------------
@@ -417,6 +487,16 @@ Coordinates: Quad-oct almost normal
 0 1 0 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 1 0 0 ; 0 0 0 || 0 0 0 1 ; 0 0 0 ; 0 0 0
 0 0 0 1 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 0 1 ; 0 0 0 || 0 1 0 0 ; 0 0 0 ; 0 0 0
 
+
+-------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
 
 -------------------------------
 RP3 # RP3
@@ -495,6 +575,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 RP3 # RP3
 Fundamental surfaces (std)
 -------------------------------
@@ -571,6 +661,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 L(8,3)
 Vertex surfaces (std)
 -------------------------------
@@ -621,6 +721,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 L(8,3)
 Fundamental surfaces (std)
 -------------------------------
@@ -669,6 +779,16 @@ Coordinates: Quad-oct almost normal
 0 0 1 1 ; 0 1 0 ; 0 0 0 || 0 0 1 1 ; 0 0 0 ; 0 0 1
 0 0 0 0 ; 0 0 1 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0
 
+
+-------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
 
 -------------------------------
 Poincaré homology sphere
@@ -767,6 +887,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 Poincaré homology sphere
 Fundamental surfaces (std)
 -------------------------------
@@ -861,6 +991,16 @@ Coordinates: Quad-oct almost normal
 0 0 0 0 ; 0 0 0 ; 0 2 0 || 1 2 0 1 ; 0 0 1 ; 0 0 0 || 1 2 0 1 ; 0 0 1 ; 0 0 0 || 1 1 2 0 ; 1 0 0 ; 0 0 0 || 1 0 1 2 ; 0 1 0 ; 0 0 0
 0 0 0 0 ; 0 0 0 ; 0 0 2 || 1 0 1 2 ; 0 1 0 ; 0 0 0 || 1 0 1 2 ; 0 1 0 ; 0 0 0 || 1 2 0 1 ; 0 0 1 ; 0 0 0 || 1 1 2 0 ; 1 0 0 ; 0 0 0
 
+
+-------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
 
 -------------------------------
 LST(3,4,7)
@@ -955,6 +1095,16 @@ Coordinates: Quad-oct almost normal
 0 0 0 0 ; 0 0 2 ; 0 0 0 || 0 0 0 0 ; 0 2 0 ; 0 0 0 || 0 0 1 1 ; 1 0 0 ; 0 0 0
 0 0 0 0 ; 0 0 0 ; 0 1 0 || 1 1 0 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0
 
+
+-------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
 
 -------------------------------
 LST(3,4,7)
@@ -1055,6 +1205,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 Solid Klein bottle
 Vertex surfaces (std)
 -------------------------------
@@ -1141,6 +1301,16 @@ Coordinates: Quad-oct almost normal
 0 0 1 0 ; 0 0 0 ; 0 0 0 || 0 0 0 0 ; 0 1 0 ; 0 0 0
 0 0 0 1 ; 1 0 0 ; 0 0 0 || 1 0 1 0 ; 0 0 0 ; 0 0 0
 
+
+-------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
 
 -------------------------------
 Solid Klein bottle
@@ -1231,6 +1401,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 Figure eight knot complement
 Vertex surfaces (std)
 -------------------------------
@@ -1292,6 +1472,26 @@ Coordinates: Quad-oct almost normal
 
 -------------------------------
 Figure eight knot complement
+Vertex surfaces (closed quad)
+-------------------------------
+
+Number of surfaces is 0
+Embedded, vertex surfaces
+Coordinates: Closed quad
+
+
+-------------------------------
+Figure eight knot complement
+Vertex surfaces (closed quad-oct)
+-------------------------------
+
+Number of surfaces is 0
+Embedded, vertex surfaces
+Coordinates: Closed quad-oct almost normal
+
+
+-------------------------------
+Figure eight knot complement
 Fundamental surfaces (std)
 -------------------------------
 
@@ -1348,6 +1548,26 @@ inf inf inf inf ; 0 0 0 ; 0 0 1 || inf inf inf inf ; 0 0 1 ; 0 0 0
 Number of surfaces is 14
 Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
+
+
+-------------------------------
+Figure eight knot complement
+Fundamental surfaces (closed quad)
+-------------------------------
+
+Number of surfaces is 0
+Embedded, fundamental surfaces
+Coordinates: Closed quad
+
+
+-------------------------------
+Figure eight knot complement
+Fundamental surfaces (closed quad-oct)
+-------------------------------
+
+Number of surfaces is 0
+Embedded, fundamental surfaces
+Coordinates: Closed quad-oct almost normal
 
 
 -------------------------------
@@ -1479,6 +1699,16 @@ Coordinates: Quad-oct almost normal
 0 0 inf inf ; 0 0 0 ; 1 0 0 || 1 1 inf inf ; 0 0 0 ; 0 0 0 || inf inf 1 0 ; 0 0 1 ; 0 0 0 || inf inf 1 0 ; 0 1 0 ; 0 0 0
 0 0 inf inf ; 0 0 0 ; 0 1 0 || 0 0 inf inf ; 0 1 0 ; 0 0 0 || inf inf 0 1 ; 0 0 0 ; 0 0 0 || inf inf 0 1 ; 0 0 0 ; 0 0 0
 
+
+-------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
 
 -------------------------------
 Whitehead link complement
@@ -1619,6 +1849,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 Gieseking manifold
 Vertex surfaces (std)
 -------------------------------
@@ -1661,6 +1901,16 @@ Coordinates: Quad-oct almost normal
 
 
 -------------------------------
+Vertex surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Vertex surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
 Gieseking manifold
 Fundamental surfaces (std)
 -------------------------------
@@ -1700,5 +1950,175 @@ Fundamental surfaces (quad-oct almost normal)
 Number of surfaces is 0
 Embedded, fundamental surfaces
 Coordinates: Quad-oct almost normal
+
+
+-------------------------------
+Fundamental surfaces (closed quad)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Fundamental surfaces (closed quad-oct)
+ENUMERATION FAILED
+-------------------------------
+
+-------------------------------
+Trefoil knot complement
+Vertex surfaces (std)
+-------------------------------
+
+Number of surfaces is 2
+Embedded, vertex surfaces
+Coordinates: Standard normal (tri-quad)
+1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
+1 1 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0
+
+
+-------------------------------
+Trefoil knot complement
+Vertex surfaces (quad)
+-------------------------------
+
+inf inf inf inf ; 1 0 0 || inf inf inf inf ; 0 0 0
+inf inf inf inf ; 0 1 0 || inf inf inf inf ; 0 0 1
+inf inf inf inf ; 0 0 1 || inf inf inf inf ; 0 1 0
+inf inf inf inf ; 0 0 0 || inf inf inf inf ; 1 0 0
+Number of surfaces is 4
+Embedded, vertex surfaces
+Coordinates: Quad normal
+
+
+-------------------------------
+Trefoil knot complement
+Vertex surfaces (std almost normal)
+-------------------------------
+
+Number of surfaces is 2
+Embedded, vertex surfaces
+Coordinates: Standard almost normal (tri-quad-oct)
+1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
+1 1 0 0 ; 1 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0
+
+
+-------------------------------
+Trefoil knot complement
+Vertex surfaces (quad-oct almost normal)
+-------------------------------
+
+inf inf inf inf ; 1 0 0 ; 0 0 0 || inf inf inf inf ; 0 0 0 ; 0 0 0
+inf inf inf inf ; 0 1 0 ; 0 0 0 || inf inf inf inf ; 0 0 1 ; 0 0 0
+inf inf inf inf ; 0 1 0 ; 0 0 0 || inf inf inf inf ; 0 0 0 ; 0 1 0
+inf inf inf inf ; 0 0 1 ; 0 0 0 || inf inf inf inf ; 0 1 0 ; 0 0 0
+inf inf inf inf ; 0 0 1 ; 0 0 0 || inf inf inf inf ; 0 0 0 ; 0 0 1
+inf inf inf inf ; 0 0 0 ; 1 0 0 || inf inf inf inf ; 0 0 0 ; 0 0 0
+inf inf inf inf ; 0 0 0 ; 0 1 0 || inf inf inf inf ; 0 1 0 ; 0 0 0
+inf inf inf inf ; 0 0 0 ; 0 0 1 || inf inf inf inf ; 0 0 1 ; 0 0 0
+inf inf inf inf ; 0 0 0 ; 0 0 0 || inf inf inf inf ; 1 0 0 ; 0 0 0
+inf inf inf inf ; 0 0 0 ; 0 0 0 || inf inf inf inf ; 0 0 0 ; 1 0 0
+Number of surfaces is 10
+Embedded, vertex surfaces
+Coordinates: Quad-oct almost normal
+
+
+-------------------------------
+Trefoil knot complement
+Vertex surfaces (closed quad)
+-------------------------------
+
+Number of surfaces is 1
+Embedded, vertex surfaces
+Coordinates: Closed quad
+1 1 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0
+
+
+-------------------------------
+Trefoil knot complement
+Vertex surfaces (closed quad-oct)
+-------------------------------
+
+Number of surfaces is 1
+Embedded, vertex surfaces
+Coordinates: Closed quad-oct almost normal
+1 1 0 0 ; 1 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0
+
+
+-------------------------------
+Trefoil knot complement
+Fundamental surfaces (std)
+-------------------------------
+
+Number of surfaces is 2
+Embedded, fundamental surfaces
+Coordinates: Standard normal (tri-quad)
+1 1 1 1 ; 0 0 0 || 1 1 1 1 ; 0 0 0
+1 1 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0
+
+
+-------------------------------
+Trefoil knot complement
+Fundamental surfaces (quad)
+-------------------------------
+
+inf inf inf inf ; 1 0 0 || inf inf inf inf ; 0 0 0
+inf inf inf inf ; 0 1 0 || inf inf inf inf ; 0 0 1
+inf inf inf inf ; 0 0 1 || inf inf inf inf ; 0 1 0
+inf inf inf inf ; 0 0 0 || inf inf inf inf ; 1 0 0
+Number of surfaces is 4
+Embedded, fundamental surfaces
+Coordinates: Quad normal
+
+
+-------------------------------
+Trefoil knot complement
+Fundamental surfaces (std almost normal)
+-------------------------------
+
+Number of surfaces is 2
+Embedded, fundamental surfaces
+Coordinates: Standard almost normal (tri-quad-oct)
+1 1 1 1 ; 0 0 0 ; 0 0 0 || 1 1 1 1 ; 0 0 0 ; 0 0 0
+1 1 0 0 ; 1 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0
+
+
+-------------------------------
+Trefoil knot complement
+Fundamental surfaces (quad-oct almost normal)
+-------------------------------
+
+inf inf inf inf ; 1 0 0 ; 0 0 0 || inf inf inf inf ; 0 0 0 ; 0 0 0
+inf inf inf inf ; 0 1 0 ; 0 0 0 || inf inf inf inf ; 0 0 1 ; 0 0 0
+inf inf inf inf ; 0 1 0 ; 0 0 0 || inf inf inf inf ; 0 0 0 ; 0 1 0
+inf inf inf inf ; 0 0 1 ; 0 0 0 || inf inf inf inf ; 0 1 0 ; 0 0 0
+inf inf inf inf ; 0 0 1 ; 0 0 0 || inf inf inf inf ; 0 0 0 ; 0 0 1
+inf inf inf inf ; 0 0 0 ; 1 0 0 || inf inf inf inf ; 0 0 0 ; 0 0 0
+inf inf inf inf ; 0 0 0 ; 0 1 0 || inf inf inf inf ; 0 1 0 ; 0 0 0
+inf inf inf inf ; 0 0 0 ; 0 0 1 || inf inf inf inf ; 0 0 1 ; 0 0 0
+inf inf inf inf ; 0 0 0 ; 0 0 0 || inf inf inf inf ; 1 0 0 ; 0 0 0
+inf inf inf inf ; 0 0 0 ; 0 0 0 || inf inf inf inf ; 0 0 0 ; 1 0 0
+Number of surfaces is 10
+Embedded, fundamental surfaces
+Coordinates: Quad-oct almost normal
+
+
+-------------------------------
+Trefoil knot complement
+Fundamental surfaces (closed quad)
+-------------------------------
+
+Number of surfaces is 1
+Embedded, fundamental surfaces
+Coordinates: Closed quad
+1 1 0 0 ; 1 0 0 || 1 1 0 0 ; 1 0 0
+
+
+-------------------------------
+Trefoil knot complement
+Fundamental surfaces (closed quad-oct)
+-------------------------------
+
+Number of surfaces is 1
+Embedded, fundamental surfaces
+Coordinates: Closed quad-oct almost normal
+1 1 0 0 ; 1 0 0 ; 0 0 0 || 1 1 0 0 ; 1 0 0 ; 0 0 0
 
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,6 +59,8 @@
             return [UIImage imageNamed:@"Triangulation3"];
         case regina::PACKET_TRIANGULATION4:
             return [UIImage imageNamed:@"Triangulation4"];
+        case regina::PACKET_LINK:
+            return [UIImage imageNamed:@"Link"];
         case regina::PACKET_NORMALSURFACES:
             return [UIImage imageNamed:@"Surfaces"];
         case regina::PACKET_NORMALHYPERSURFACES:
@@ -103,6 +105,7 @@
 + (NSString *)viewerFor:(regina::Packet *)p {
     switch (p->type()) {
         case regina::PACKET_ANGLESTRUCTURES: return @"viewAngles";
+        case regina::PACKET_LINK: return @"viewLink";
         case regina::PACKET_NORMALSURFACES: return @"viewSurfaces";
         case regina::PACKET_NORMALHYPERSURFACES: return @"viewHypersurfaces";
         case regina::PACKET_SCRIPT: return @"viewScript";
@@ -182,6 +185,9 @@
         case regina::PACKET_SNAPPEATRIANGULATION:
             [PacketManagerIOS newPacket:spec formSheet:@"newSnapPea"];
             break;
+        case regina::PACKET_LINK:
+            [PacketManagerIOS newPacket:spec formSheet:@"newLink"];
+            break;
         case regina::PACKET_SURFACEFILTER:
             [PacketManagerIOS newPacket:spec formSheet:@"newFilter"];
             break;
@@ -206,6 +212,7 @@
     // Present the form sheet from the master view controller.
     // Otherwise the form sheet may appear *beneath* master (iOS 8, portrait mode).
     UIViewController* from = [ReginaHelper master];
+    // Note: all relevant sheetIDs either live on, or have references on, the main storyboard.
     UIViewController* sheet = [from.storyboard instantiateViewControllerWithIdentifier:sheetID];
     static_cast<NewPacketController*>(sheet).spec = spec;
     [from presentViewController:sheet animated:YES completion:nil];

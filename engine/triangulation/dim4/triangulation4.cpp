@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -226,8 +226,10 @@ Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
 void Triangulation<4>::clearAllProperties() {
     clearBaseProperties();
 
-    knownSimpleLinks_ = false;
-    H2_.clear();
+    if (! topologyLock_) {
+        knownSimpleLinks_ = false;
+        H2_.clear();
+    }
 }
 
 void Triangulation<4>::swapAllProperties(Triangulation<4>& other) {

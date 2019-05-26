@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Attempt to find triangulations related by few elementary moves        *
  *                                                                        *
- *  Copyright (c) 2005-2017, Ben Burton                                   *
+ *  Copyright (c) 2005-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -183,9 +183,9 @@ void tryMovesDown(Triangulation<4>* t, int maxLevels) {
     // Only try 4-2 moves if nothing better has worked so far.
     if (! found)
         for (i = 0; i < t->countEdges(); i++)
-            if (t->fourTwoMove(t->edge(i), true, false)) {
+            if (t->pachner(t->edge(i), true, false)) {
                 alt = new Triangulation<4>(*t);
-                alt->fourTwoMove(alt->edge(i));
+                alt->pachner(alt->edge(i));
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
                 delete alt;
@@ -197,9 +197,9 @@ void tryMovesDown(Triangulation<4>* t, int maxLevels) {
     // Only try 3-3 moves if nothing else has worked.
     if (! found)
         for (i = 0; i < t->countTriangles(); i++)
-            if (t->threeThreeMove(t->triangle(i), true, false)) {
+            if (t->pachner(t->triangle(i), true, false)) {
                 alt = new Triangulation<4>(*t);
-                alt->threeThreeMove(alt->triangle(i));
+                alt->pachner(alt->triangle(i));
                 tryMovesDown(alt, maxLevels - 1);
                 found = true;
                 delete alt;
@@ -225,9 +225,9 @@ void tryMovesAcross(Triangulation<4>* t, int maxLevels,
 
     if (maxLevels > 0)
         for (i = 0; i < t->countTriangles(); i++)
-            if (t->threeThreeMove(t->triangle(i), true, false)) {
+            if (t->pachner(t->triangle(i), true, false)) {
                 alt = new Triangulation<4>(*t);
-                alt->threeThreeMove(alt->triangle(i));
+                alt->pachner(alt->triangle(i));
                 if (prev && alt->isIsomorphicTo(*prev).get()) {
                     // Ignore, reversion.
                 } else if (prev2 && alt->isIsomorphicTo(*prev2).get()) {
@@ -260,7 +260,7 @@ void tryMovesUp(Triangulation<4>* t, int levelsRemaining) {
     } else {
         for (unsigned i = 0; i < t->countTetrahedra(); i++) {
             alt = new Triangulation<4>(*t);
-            if (alt->twoFourMove(alt->tetrahedron(i))) {
+            if (alt->pachner(alt->tetrahedron(i))) {
                 if (levelsRemaining > 1)
                     tryMovesUp(alt, levelsRemaining - 1);
                 else

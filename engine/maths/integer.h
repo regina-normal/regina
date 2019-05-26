@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -255,6 +255,21 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          */
         template <int bytes>
         explicit IntegerBase(const NativeInteger<bytes>& value);
+        /**
+         * Initialises this to the given Python arbitrary-precision integer.
+         *
+         * The argument is of the Python type \c long, which Python uses
+         * to store integers of arbitrary magnitude (much like Regina does
+         * with its Integer and LargeInteger classes).
+         *
+         * \ifacescpp Not available: this constructor is for Python only.
+         *
+         * @param value the new value of this integer.
+         */
+        #ifdef __DOXYGEN
+        IntegerBase(Long value);
+        #endif
+
         /**
          * Initialises this integer to the truncation of the given
          * real number.
@@ -1506,7 +1521,7 @@ extern template REGINA_API const IntegerBase<true> IntegerBase<true>::one;
 extern template REGINA_API const IntegerBase<false> IntegerBase<false>::one;
 
 // This class constant is specialised, even though the class itself is not.
-template <> const IntegerBase<true> IntegerBase<true>::infinity;
+template <> REGINA_API const IntegerBase<true> IntegerBase<true>::infinity;
 extern template REGINA_API const IntegerBase<true> IntegerBase<true>::infinity;
 #endif // __DOXYGEN
 

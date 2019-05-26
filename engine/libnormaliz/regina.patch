@@ -1,8 +1,27 @@
---- general.h
-+++ general.h
-@@ -28,9 +28,12 @@
- #include <iostream>
+diff --git a/engine/libnormaliz/cone.cpp b/engine/libnormaliz/cone.cpp
+index c09f3af9a..3145c2630 100644
+--- a/engine/libnormaliz/cone.cpp
++++ b/engine/libnormaliz/cone.cpp
+@@ -6270,8 +6270,10 @@ void Cone<Integer>::make_face_lattice(const ConeProperties& ToCompute){
+             if(skip_remaining)
+                 continue;
+             
+-           for(; kkk > Fpos; ++Fpos, ++F);
+-           for(; kkk < Fpos; --Fpos, --F) ;
++           for(; kkk > Fpos; ++Fpos, ++F)
++               ;
++           for(; kkk < Fpos; --Fpos, --F)
++               ;
+         
+             if(verbose && nr_faces>=RepBound){
+                 #pragma omp critical(VERBOSE)
+diff --git a/engine/libnormaliz/general.h b/engine/libnormaliz/general.h
+index c17ee6aa2..263a7ff6b 100644
+--- a/engine/libnormaliz/general.h
++++ b/engine/libnormaliz/general.h
+@@ -29,9 +29,12 @@
  #include <assert.h>
+ #include <cstddef>
  
 +/*
 +// Regina will use GMP everywhere, even on Windows.
@@ -13,53 +32,3 @@
  
  #ifdef NMZ_MPIR // use MPIR
      #include <mpirxx.h>
---- list_operations.h
-+++ list_operations.h
-@@ -46,7 +46,7 @@ ostream& operator<< (ostream& out, const list<T>& l) {
-     for (i =l.begin(); i != l.end(); i++) {
-         out << *i << " ";
-     }
--    out << endl;
-+    out << std::endl;
-     return out;
- }
- 
---- offload_handler.cpp
-+++ offload_handler.cpp
-@@ -9,6 +9,7 @@
- #include "libnormaliz/vector_operations.h"
- #include "libnormaliz/my_omp.h"
- #include "libnormaliz/HilbertSeries.h"
-+#include <cstring>
- #include <iostream>
- #include <fstream>
- 
---- full_cone.cpp
-+++ full_cone.cpp
-@@ -1512,8 +1512,10 @@ void Full_Cone<Integer>::evaluate_large_rec_pyramids(size_t new_generator){
-     
-     #pragma omp for schedule(dynamic) 
-     for(size_t i=0; i<nrLargeRecPyrs; i++){
--        for(; i > ppos; ++ppos, ++p) ;
--        for(; i < ppos; --ppos, --p) ;
-+        for(; i > ppos; ++ppos, ++p)
-+            ;
-+        for(; i < ppos; --ppos, --p)
-+            ;
- #ifndef NCATCH
-         try {
- #endif
---- general.h
-+++ general.h
-@@ -25,6 +25,11 @@
- #define GENERAL_H_
- 
- 
-+/* We need to include cstddef before gmpxx.h to avoid a compile error with
-+   older versions of GMP.  See https://gcc.gnu.org/gcc-4.9/porting_to.html ,
-+   in the section about cstddef. */
-+#include <cstddef>
-+
- #include <iostream>
- #include <assert.h>
- 

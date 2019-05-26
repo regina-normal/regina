@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 #include "face-bindings.h"
 
 void addFace() {
-    def("binomSmall", regina::binomSmall);
+    // Nothing here for now.
 
     // The bindings for dim >= 5 are in separate files, one per dimension.
     // This is to help avoid excessive memory consumption by the compiler.

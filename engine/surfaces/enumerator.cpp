@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -50,7 +50,7 @@ namespace regina {
 /**
  * The largest possible signed 128-bit integer,
  */
-Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
+const Integer maxSigned128(NativeInteger<16>(~(IntOfSize<16>::type(1) << 127)));
 #endif
 
 namespace {
@@ -74,6 +74,13 @@ namespace {
         // assured that LPConstraintNonSpun can be used without problems.
         typedef LPConstraintNonSpun Constraint;
         static const NormalCoords coords_ = NS_QUAD;
+    };
+
+    template <>
+    struct LPArgs<NormalInfo<NS_AN_QUAD_OCT_CLOSED>> {
+        // See comment for LPArgs<NormalInfo<NS_QUAD_CLOSED>>
+        typedef LPConstraintNonSpun Constraint;
+        static const NormalCoords coords_ = NS_AN_QUAD_OCT;
     };
 }
 
@@ -276,7 +283,8 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     // Here we use the fact that the coordinate system is known to be
     // supported by the tree traversal algorithm, and therefore is one
-    // of NS_STANDARD, NS_QUAD, NS_QUAD_CLOSED, NS_AN_STANDARD or NS_AN_QUAD.
+    // of NS_STANDARD, NS_QUAD, NS_QUAD_CLOSED, NS_AN_STANDARD,
+    // NS_AN_QUAD_OCT, or NS_AN_QUAD_OCT_CLOSED.
 
     // The matching equation matrix that will be used by the tree traversal
     // tableaux, which is always based on NS_STANDARD or NSQUAD (even
@@ -305,9 +313,9 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
             eqns = makeMatchingEquations(triang_, NS_QUAD);
             maxColsRHS = triang_->size() + 1;
             break;
-        // TODO: Support NS_QUAD_CLOSED here.
+        // TODO: Support NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED here.
         default:
-            // Note that NS_QUAD_CLOSED falls through to here.
+            // NS_QUAD_CLOSED / NS_AN_QUAD_OCT_CLOSED fall through to here.
             // Just use arbitrary precision arithmetic.
             fillVertexTreeWith<Coords, Integer>();
             return;

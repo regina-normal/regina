@@ -81,6 +81,7 @@ packet ::= (<replaceable>type-specific content</replaceable>,
     <listitem><para>&xml-packet-dim3triangulation;</para></listitem>
     <listitem><para>&xml-packet-dim4triangulation;</para></listitem>
     <listitem><para>&xml-packet-triangulation;</para></listitem>
+    <listitem><para>&xml-packet-link;</para></listitem>
     <listitem><para>&xml-packet-anglestructurelist;</para></listitem>
     <listitem><para>&xml-packet-container;</para></listitem>
     <listitem><para>&xml-packet-normalsurfacelist;</para></listitem>

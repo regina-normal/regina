@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -113,6 +113,21 @@ enum NormalCoords {
      * for octagonal almost normal surfaces.
      */
     NS_AN_STANDARD = 102,
+    /**
+     * Represents quadrilateral-octagon coordinates in ideal triangulations for
+     * enumerating closed surfaces only (thus excluding spun-almost normal surfaces).
+     * The coordinates themselves are identical to quadrilateral-octagon
+     * coordinates, as described by NS_AN_QUAD_OCT; however, the enumeration
+     * procedure introduces additional constraints.
+     *
+     * \pre Regina can only create matching equations in this coordinate system
+     * for a limited class of triangulations.  Currently, such triangulations
+     * \e must be oriented and ideal, with precisely one torus cusp and no
+     * other boundary components or internal vertices.  Moreover, SnapPea must
+     * be able to work with them without retriangulating (though this should
+     * follow from the other constraints).
+     */
+    NS_AN_QUAD_OCT_CLOSED = 110,
     /**
      * Represents edge weight coordinates for normal surfaces.
      * This coordinate system is for display only; surface

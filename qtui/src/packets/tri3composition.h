@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,14 +38,14 @@
 #define __TRI3COMPOSITION_H
 
 #include "packet/packetlistener.h"
-#include "triangulation/forward.h"
+#include "subcomplex/standardtri.h"
+#include "triangulation/dim3.h"
 
 #include "../packettabui.h"
 
 #include <memory>
 
 class PacketChooser;
-class PacketEditIface;
 class QMenu;
 class QPushButton;
 class QTreeWidget;
@@ -53,10 +53,7 @@ class QTreeWidgetItem;
 
 namespace regina {
     class Matrix2;
-    class Packet;
     class SatRegion;
-    class StandardTriangulation;
-    template <int> class Perm;
 };
 
 /**
@@ -79,6 +76,7 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
          */
         regina::Triangulation<3>* tri;
         regina::Triangulation<3>* comparingTri;
+        std::unique_ptr<regina::StandardTriangulation> standard;
         std::unique_ptr<regina::Isomorphism<3>> isomorphism;
         IsomorphismType isoType;
 
@@ -93,7 +91,6 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         QLabel* isoSig;
         QTreeWidget* details;
         QTreeWidgetItem* lastComponent;
-        PacketEditIface* editIface;
 
     public:
         /**
@@ -101,14 +98,12 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
          */
         Tri3CompositionUI(regina::Triangulation<3>* packet,
                 PacketTabbedUI* useParentUI);
-        ~Tri3CompositionUI();
 
         /**
          * PacketViewerTab overrides.
          */
         regina::Packet* getPacket();
         QWidget* getInterface();
-        PacketEditIface* getEditIface();
         void refresh();
 
         /**
@@ -126,6 +121,16 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
          * View the isomorphism details.
          */
         void viewIsomorphism();
+            
+        /**
+         * Support clipboard actions.
+         */
+        void contextStandardTri(const QPoint& pos);
+        void contextIsoSig(const QPoint& pos);
+        void contextComposition(const QPoint& pos);
+        void copyStandardTri();
+        void copyIsoSig();
+        void copyCompositionLine();
 
     private:
         /**
@@ -160,9 +165,5 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
             const regina::Perm<4>& roles, int startPreimage, int endPreimage);
         static QString matrixString(const regina::Matrix2& matrix);
 };
-
-inline PacketEditIface* Tri3CompositionUI::getEditIface() {
-    return editIface;
-}
 
 #endif

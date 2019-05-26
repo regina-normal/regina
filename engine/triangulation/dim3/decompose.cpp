@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,6 +46,10 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
         bool setLabels) {
     // Precondition checks.
     if (! (isValid() && isClosed() && isConnected()))
+        return 0;
+
+    // Do we already know the answer?
+    if (threeSphere_.known() && threeSphere_.value())
         return 0;
 
     if (! primeParent)

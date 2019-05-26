@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -231,6 +231,7 @@
 - (void)embedViewer:(NSString*)viewerID
 {
     UIViewController* from = self.contents;
+    // Note: all relevant viewerIDs either live on, or have references on, the main storyboard.
     UIViewController* to = [self.storyboard instantiateViewControllerWithIdentifier:viewerID];
     self.contents = to;
 

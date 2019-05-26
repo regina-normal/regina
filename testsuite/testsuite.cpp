@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,7 +45,10 @@
 #include "testsuite/dim2/testdim2.h"
 #include "testsuite/dim3/testtriangulation.h"
 #include "testsuite/dim4/testdim4.h"
+#ifndef REGINA_LOWDIMONLY
 #include "testsuite/generic/testgeneric.h"
+#endif
+#include "testsuite/link/testlink.h"
 #include "testsuite/maths/testmaths.h"
 #include "testsuite/snappea/testsnappea.h"
 #include "testsuite/subcomplex/testsubcomplex.h"
@@ -142,10 +145,12 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // 4-manifold triangulations:
     sets.insert(std::make_pair("triangulation4", &addTriangulation4));
 
-    // Generic triangulations:
+#ifndef REGINA_LOWDIMONLY
+    // Higher-dimensional triangulations:
     sets.insert(std::make_pair("facenumbering", &addFaceNumbering));
     sets.insert(std::make_pair("generictriangulation",
         &addGenericTriangulation));
+#endif
 
     // Subcomplexes:
     sets.insert(std::make_pair("standardtriangulation",
@@ -169,6 +174,10 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // SnapPea:
     sets.insert(std::make_pair("snappeatriangulation",
         &addSnapPeaTriangulation));
+
+    // Knots and links:
+    sets.insert(std::make_pair("link", &addLink));
+    sets.insert(std::make_pair("linkgraph", &addLinkGraph));
 
     if (argc <= 1)
         for (const auto& i : sets)

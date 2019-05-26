@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -105,6 +105,13 @@ class GenericTriangulationTest : public TriangulationTest<dim> {
             testManualAll(TriangulationTest<dim>::verifyBoundaryBuild);
         }
 
+        template <int k>
+        void pachner() {
+            testManualAll(
+                TriangulationTest<dim>::template verifyPachner<k>);
+            TriangulationTest<dim>::template verifyPachnerSimplicial<k>();
+        }
+
         void validity() {
             verifyValid(empty);
             verifyValid(sphere);
@@ -198,6 +205,13 @@ class Triangulation5Test : public GenericTriangulationTest<5> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
+    CPPUNIT_TEST(pachner<0>);
+    CPPUNIT_TEST(pachner<1>);
+    CPPUNIT_TEST(pachner<2>);
+    CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(pachner<4>);
+    CPPUNIT_TEST(pachner<5>);
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -220,6 +234,14 @@ class Triangulation6Test : public GenericTriangulationTest<6> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
+    CPPUNIT_TEST(pachner<0>);
+    CPPUNIT_TEST(pachner<1>);
+    CPPUNIT_TEST(pachner<2>);
+    CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(pachner<4>);
+    CPPUNIT_TEST(pachner<5>);
+    CPPUNIT_TEST(pachner<6>);
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);
@@ -238,7 +260,7 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
 
     /**
      * Isomorphism-related routines have running times that include
-     * a factor of (dim+1)!, which makes them Too slow in higher dimensions.
+     * a factor of (dim+1)!, which makes them too slow in higher dimensions.
     CPPUNIT_TEST(makeCanonical);
     CPPUNIT_TEST(isomorphismSignature);
      */
@@ -246,6 +268,21 @@ class Triangulation8Test : public GenericTriangulationTest<8> {
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryFacets);
     CPPUNIT_TEST(boundaryBuild);
+    CPPUNIT_TEST(edgeAccess);
+    /**
+     * Pachner moves are also taking a long time to test thoroughly
+     * in higher dimensions.  Since we already have non-standard even
+     * dimensions in our test suite (dim = 6), we leave these out for now.
+    CPPUNIT_TEST(pachner<0>);
+    CPPUNIT_TEST(pachner<1>);
+    CPPUNIT_TEST(pachner<2>);
+    CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(pachner<4>);
+    CPPUNIT_TEST(pachner<5>);
+    CPPUNIT_TEST(pachner<6>);
+    CPPUNIT_TEST(pachner<7>);
+    CPPUNIT_TEST(pachner<8>);
+     */
 
     CPPUNIT_TEST(validity);
     CPPUNIT_TEST(connectedness);

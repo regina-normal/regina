@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,6 +39,9 @@ namespace regina {
 
 @interface PythonConsoleController : UIViewController
 
+/**
+ * PRE: The given view controller \a c lives on the main storyboard.
+ */
 + (void)openConsoleFromViewController:(UIViewController*)c root:(regina::Packet*)root item:(regina::Packet*)item script:(regina::Script*)script;
 
 @end

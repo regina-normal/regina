@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,6 +45,7 @@
 #include "packets/tri4creator.h"
 #include "packets/anglescreator.h"
 #include "packets/filtercreator.h"
+#include "packets/linkcreator.h"
 #include "packets/hypercreator.h"
 #include "packets/tri3creator.h"
 #include "packets/snappeacreator.h"
@@ -91,6 +92,10 @@ void ReginaMain::newScript() {
 void ReginaMain::newSnapPeaTriangulation() {
     newPacket(new SnapPeaTriangulationCreator(this), 0,
         tr("New SnapPea Triangulation"));
+}
+
+void ReginaMain::newLink() {
+    newPacket(new LinkCreator(this), 0, tr("New Knot or Link"));
 }
 
 void ReginaMain::newText() {

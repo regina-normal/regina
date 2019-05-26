@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  KDE User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,6 +47,7 @@
 #include "packets/generictriui.h"
 #include "packets/containerui.h"
 #include "packets/hyperui.h"
+#include "packets/linkui.h"
 #include "packets/pdfui.h"
 #include "packets/scriptui.h"
 #include "packets/snappeaui.h"
@@ -68,6 +69,9 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
         case PACKET_CONTAINER :
             id = (packet->parent() ? IconCache::packet_container :
                 IconCache::regina);
+            break;
+        case PACKET_LINK:
+            id = IconCache::packet_link;
             break;
         case PACKET_PDF :
             id = IconCache::packet_pdf;
@@ -109,6 +113,7 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
         case PACKET_TRIANGULATION4 :
             id = IconCache::packet_triangulation4;
             break;
+#ifndef REGINA_LOWDIMONLY
         // For generic dimensions, we don't cache the icons.
         case PACKET_TRIANGULATION5 :
             return ReginaSupport::regIcon("packet_triangulation5");
@@ -132,6 +137,7 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
             return ReginaSupport::regIcon("packet_triangulation14");
         case PACKET_TRIANGULATION15 :
             return ReginaSupport::regIcon("packet_triangulation15");
+#endif /* ! REGINA_LOWDIMONLY */
         default:
             // Unknown packet type.
             return QIcon();
@@ -152,6 +158,9 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_CONTAINER:
             return new ContainerUI(
                 dynamic_cast<Container*>(packet), enclosingPane);
+        case PACKET_LINK:
+            return new LinkUI(
+                dynamic_cast<Link*>(packet), enclosingPane);
         case PACKET_NORMALSURFACES:
             return new SurfacesUI(
                 dynamic_cast<NormalSurfaces*>(packet), enclosingPane);
@@ -189,6 +198,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_TRIANGULATION4:
             return new Tri4UI(
                 dynamic_cast<Triangulation<4>*>(packet), enclosingPane);
+#ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5:
             return new GenericTriangulationUI<5>(
                 dynamic_cast<Triangulation<5>*>(packet), enclosingPane);
@@ -222,6 +232,7 @@ PacketUI* PacketManager::createUI(regina::Packet* packet,
         case PACKET_TRIANGULATION15:
             return new GenericTriangulationUI<15>(
                 dynamic_cast<Triangulation<15>*>(packet), enclosingPane);
+#endif /* ! REGINA_LOWDIMONLY */
         default:
             return new DefaultPacketUI(packet, enclosingPane);
     }

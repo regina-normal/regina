@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -244,7 +244,7 @@ class REGINA_API Cusp :
  *   SnapPea to Regina, but not in the other direction).
  *
  * - Any attempt to edit this triangulation via the inherited Triangulation<3>
- *   interface (for instance, by calling Triangulation<3>::twoThreeMove()) will
+ *   interface (for instance, by calling Triangulation<3>::pachner()) will
  *   automatically cause this to become a <b>null triangulation</b>,
  *   with no tetrahedra and no SnapPea data at all.
  *

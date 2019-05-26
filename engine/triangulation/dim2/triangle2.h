@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2017, Ben Burton                                   *
+ *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,7 +55,7 @@ namespace regina {
  */
 
 /**
- * Represents a tetrahedron within a 2-manifold triangulation.
+ * Represents a triangle within a 2-manifold triangulation.
  *
  * This class is typically referred to by the aliases Simplex<2> or
  * Triangle<2> (or, for Python users, \c Simplex2 and \c Triangle2).
@@ -116,6 +116,13 @@ class REGINA_API Face<2, 2> : public detail::SimplexBase<2> {
  * the new alias Simplex<2> (or, if you prefer, the full class name Face<2, 2>).
  */
 [[deprecated]] typedef Simplex<2> Dim2Triangle;
+
+// Specialisations to improve upon generic implementations from SimplexBase:
+
+template <>
+inline Edge<2>* detail::SimplexBase<2>::edge(int i, int j) const {
+    return (i == j ? nullptr : edge(3 - i - j));
+}
 
 /*@}*/
 

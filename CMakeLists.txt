@@ -13,7 +13,7 @@ SET (PACKAGE_PRETTY_NAME Regina)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Version
-SET (PACKAGE_VERSION 5.1)
+SET (PACKAGE_VERSION 5.2)
 SET (SNAPPY_VERSION 2.4)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
@@ -30,6 +30,11 @@ IF(NOT CMAKE_BUILD_TYPE)
     "Choose the type of build.  Options are: Debug Release RelWithDebInfo MinSizeRel."
   FORCE)
 ENDIF(NOT CMAKE_BUILD_TYPE)
+
+SET(LOWDIMONLY "OFF" CACHE BOOL INTERNAL)
+IF(LOWDIMONLY)
+  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DREGINA_LOWDIMONLY")
+ENDIF(LOWDIMONLY)
 
 # Every year I swear I will drop windows support, and this year is no different.
 # The windows build (as of November 2015) crashes in the test suite with -O3.
@@ -58,19 +63,26 @@ if (NOT REGINA_INSTALL_TYPE)
 ENDIF (NOT REGINA_INSTALL_TYPE)
 MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
 
-# Sanity check the installation type:
+# Sanity check the installation type, and set the boolean install type flags
+# that will appear in regina-config.h:
+SET(REGINA_INSTALL_XDG FALSE)
+SET(REGINA_INSTALL_BUNDLE FALSE)
+SET(REGINA_INSTALL_WINDOWS FALSE)
 IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # No sanity checking needed here (yet).
+  SET(REGINA_INSTALL_XDG TRUE)
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   IF (NOT APPLE)
     MESSAGE(FATAL_ERROR
       "REGINA_INSTALL_TYPE=Bundle is only supported on MacOSX.")
   ENDIF (NOT APPLE)
+  SET(REGINA_INSTALL_BUNDLE TRUE)
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   IF (NOT WIN32)
     MESSAGE(FATAL_ERROR
       "REGINA_INSTALL_TYPE=Windows is only supported on MS Windows.")
   ENDIF (NOT WIN32)
+  SET(REGINA_INSTALL_WINDOWS TRUE)
 ELSE()
   MESSAGE(FATAL_ERROR
     "REGINA_INSTALL_TYPE must be one of: XDG Bundle Windows.")
@@ -309,7 +321,20 @@ MACRO_LOG_FEATURE(JANSSON_FOUND
   "http://www.digip.org/jansson/"
   TRUE)
 
-FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python)
+IF (DISABLE_PYTHON)
+  MESSAGE (STATUS "Searching for Boost with no python component")
+  FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams)
+ELSE (DISABLE_PYTHON)
+  MESSAGE (STATUS "Searching for Boost using python27 component")
+  FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python27)
+  IF (Boost_FOUND)
+    SET (Boost_PYTHON_LIBRARY ${Boost_PYTHON27_LIBRARY})
+  ELSE (Boost_FOUND)
+    MESSAGE (STATUS "Searching for Boost using python component")
+    FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python)
+  ENDIF (Boost_FOUND)
+ENDIF (DISABLE_PYTHON)
+
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
   "Boost (>= 1.55)"
@@ -462,7 +487,7 @@ IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   # Find the site-packages location in which the XDG build needs to put
   # the python module.
   EXECUTE_PROCESS(COMMAND
-    "${PYTHON_EXECUTABLE}" -c "import distutils.sysconfig; print distutils.sysconfig.get_python_lib(True)"
+    "${PYTHON_EXECUTABLE}" -c "import distutils.sysconfig; print(distutils.sysconfig.get_python_lib(True))"
     OUTPUT_VARIABLE SITE_PACKAGES
     OUTPUT_STRIP_TRAILING_WHITESPACE
     RESULT_VARIABLE DISTUTILS_RESULT)
