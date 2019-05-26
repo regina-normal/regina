@@ -118,7 +118,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                     sys.path.append(snappyLib + '/lib-dynload')
 
     if banner:
-        print engine.welcome()
+        print(engine.welcome())
 
     if builtinOpen and namespace:
         namespace['open'] = __builtins__['open']
