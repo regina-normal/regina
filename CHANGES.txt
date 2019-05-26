@@ -146,6 +146,11 @@ Version 5.2  [ 29 September, 2017 ]
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.
+        - Now constructs regina's arbitrary-precision Integer and LargeInteger
+          objects correctly when given a python arbitrary-precision long as an
+          argument.  Previously, when the argument was outside the usual
+          32/64-bit native C++ long integer range, the automatic conversion
+          went via floating-point arithmetic, resulting in a loss of precision.
     UTILITIES:
         retriangulate:
             - New utility that exhaustively retriangulates a given manifold.
