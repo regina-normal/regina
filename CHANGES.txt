@@ -95,8 +95,6 @@ Version 5.2  [ 29 September, 2017 ]
               graph of a triangulation can be accessed seamlessly through the
               BGL by using the triangulation itself as the graph data structure.
             - New routine reflect().
-            - New Python constructor that accepts a snappy.Manifold or a
-              SnapPy.Triangulation (thanks to Matthias Goerner).
             - New pachner() routines to support Pachner moves of all types
               in all dimensions.  In dimensions 2-4, the old names
               (e.g., oneFourMove(), threeThreeMove(), etc.) are deprecated,
@@ -115,6 +113,8 @@ Version 5.2  [ 29 September, 2017 ]
         Class Triangulation<3>:
             - New routine fillTorus() to fill 2-triangle torus boundary
               components.
+            - New Python constructor that accepts a snappy.Manifold or a
+              SnapPy.Triangulation (thanks to Matthias Goerner).
             - New routines longitude() and meridianLongitude() to deduce
               boundary curves for knot complements.
             - New deprecated routine fourOneMove(), added for completeness.
