@@ -54,7 +54,7 @@ ProgressDialogNumeric::ProgressDialogNumeric(
         const QString& displayText, QWidget* parent) :
         QProgressDialog(parent),
         /* Don't use Qt::Popup because the layout breaks under fink. */
-        tracker_(tracker) {
+        tracker_(tracker), metrics_(font()) {
     setLabelText(displayText);
     setWindowTitle(tr("Working"));
     setMinimumDuration(500);
@@ -78,8 +78,15 @@ bool ProgressDialogNumeric::run() {
             } else {
                 if (tracker_->percentChanged())
                     setValue(tracker_->percent() * (SLICES / 100));
-                if (tracker_->descriptionChanged())
-                    setLabelText(tracker_->description().c_str());
+                if (tracker_->descriptionChanged()) {
+                    QString text = tracker_->description().c_str();
+
+                    int w = metrics_.width(text) + 100;
+                    if (width() < w)
+                        resize(w, height());
+
+                    setLabelText(text);
+                }
             }
             QCoreApplication::instance()->processEvents();
         }

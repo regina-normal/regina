@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13196" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14109" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
     <device id="ipad9_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13174"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14088"/>
         <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -19,11 +19,11 @@
                         <viewControllerLayoutGuide type="bottom" id="RXH-Be-O9l"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="iLw-7d-cG6">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="1tm-vd-1LA">
-                                <rect key="frame" x="0.0" y="724" width="1024" height="44"/>
+                                <rect key="frame" x="0.0" y="576" width="540" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="QAY-Bk-vaZ"/>
                                     <barButtonItem title="Create" id="i29-FK-fwy">
@@ -35,7 +35,7 @@
                                 </items>
                             </toolbar>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="rZy-op-jkW">
-                                <rect key="frame" x="0.0" y="20" width="1024" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
                                 <items>
                                     <navigationItem title="New knot or link" id="2A2-ym-xYA">
                                         <barButtonItem key="rightBarButtonItem" systemItem="cancel" id="mXx-dL-ycs">
@@ -47,14 +47,14 @@
                                 </items>
                             </navigationBar>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="Zt0-YP-V48">
-                                <rect key="frame" x="370" y="104" width="285" height="29"/>
+                                <rect key="frame" x="196" y="84" width="149" height="29"/>
                                 <segments>
                                     <segment title="Example"/>
-                                    <segment title="Oriented Gauss code"/>
+                                    <segment title="Text code"/>
                                 </segments>
                             </segmentedControl>
                             <containerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pfY-Hj-fGt">
-                                <rect key="frame" x="0.0" y="152" width="1024" height="564"/>
+                                <rect key="frame" x="0.0" y="132" width="540" height="436"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <connections>
                                     <segue destination="aEX-kp-fAr" kind="embed" id="q3o-jk-McM"/>
@@ -130,10 +130,10 @@
             </objects>
             <point key="canvasLocation" x="6103" y="-1785"/>
         </scene>
-        <!--New Link Gauss Page-->
+        <!--New Link Text Code Page-->
         <scene sceneID="Vlg-jT-PNb">
             <objects>
-                <viewController storyboardIdentifier="newLinkGauss" id="BSE-QJ-HVP" customClass="NewLinkGaussPage" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="newLinkTextCode" id="BSE-QJ-HVP" customClass="NewLinkTextCodePage" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Hbs-cA-YnQ"/>
                         <viewControllerLayoutGuide type="bottom" id="wPT-15-29x"/>
@@ -142,8 +142,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="448"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Oriented Gauss code:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DXF-mu-FvL">
-                                <rect key="frame" x="20" y="40" width="166" height="21"/>
+                            <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Text code:" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="DXF-mu-FvL">
+                                <rect key="frame" x="20" y="40" width="80" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
@@ -153,13 +153,13 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocorrectionType="no" returnKeyType="go" enablesReturnKeyAutomatically="YES"/>
                                 <connections>
-                                    <action selector="editingEnded:" destination="BSE-QJ-HVP" eventType="editingDidEndOnExit" id="yem-Vw-mOv"/>
+                                    <action selector="editingEnded:" destination="BSE-QJ-HVP" eventType="editingDidEndOnExit" id="akg-Gg-Zy6"/>
                                 </connections>
                             </textField>
                             <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsHorizontalScrollIndicator="NO" editable="NO" translatesAutoresizingMaskIntoConstraints="NO" id="cvs-6R-t1H">
                                 <rect key="frame" x="20" y="138.5" width="500" height="289.5"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-                                <string key="text">Oriented Gauss codes are extensions of the classical Gauss code for knots, with extra symbols to encode the direction in which the other strand passes by at each crossing.  An example, representing the left-hand trefoil, is:  +&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3  At present, oriented Gauss codes in Regina can only represent knots, not multiple-component links.  To learn more about oriented Gauss codes, see the online Regina Handbook.</string>
+                                <mutableString key="text">Here you can enter:  – a knot signature; – an oriented or classical Gauss code;  – numerical or alphabetical Dowker-Thistlethwaite notation.  Examples for the trefoil are:  dabcabcv- +&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3 1 -2 3 -1 2 -3 4 6 2 bca  At present, these codes can only represent knots in Regina, not multiple-component links. To learn more, see the online Regina Handbook.</mutableString>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                             </textView>
@@ -181,7 +181,7 @@
                     <freeformSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <size key="freeformSize" width="540" height="448"/>
                     <connections>
-                        <outlet property="gauss" destination="4de-B3-iJp" id="HtC-2W-Bfn"/>
+                        <outlet property="code" destination="4de-B3-iJp" id="zZU-V9-giZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="3Ml-DW-k2f" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -368,7 +368,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="35"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kUh-Xg-AIZ">
-                                                    <rect key="frame" x="26" y="0.0" width="24" height="21"/>
+                                                    <rect key="frame" x="18" y="0.0" width="32" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -400,7 +400,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="35"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="omj-rz-93T">
-                                                    <rect key="frame" x="26" y="0.0" width="24" height="21"/>
+                                                    <rect key="frame" x="18" y="0.0" width="32" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -432,7 +432,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="35"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="p7L-gm-82h">
-                                                    <rect key="frame" x="26" y="0.0" width="24" height="21"/>
+                                                    <rect key="frame" x="18" y="0.0" width="32" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -464,7 +464,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="50" height="35"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" 0" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Fmx-pe-e2n">
-                                                    <rect key="frame" x="26" y="0.0" width="24" height="21"/>
+                                                    <rect key="frame" x="18" y="0.0" width="32" height="21"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
@@ -756,17 +756,17 @@
                         <viewControllerLayoutGuide type="bottom" id="5zg-aX-7eY"/>
                     </layoutGuides>
                     <view key="view" contentMode="scaleToFill" id="WYt-7v-7Fb">
-                        <rect key="frame" x="0.0" y="0.0" width="1024" height="768"/>
+                        <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <navigationBar contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="c7q-TB-gNm">
-                                <rect key="frame" x="0.0" y="20" width="1024" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="540" height="44"/>
                                 <items>
                                     <navigationItem title="Reidemeister Moves" id="6v8-je-oS6"/>
                                 </items>
                             </navigationBar>
                             <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="pHZ-aI-iKO">
-                                <rect key="frame" x="0.0" y="724" width="1024" height="44"/>
+                                <rect key="frame" x="0.0" y="576" width="540" height="44"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="LKP-pn-2SC"/>
                                     <barButtonItem title="Close" id="6Ly-hP-SFg">
@@ -778,13 +778,13 @@
                                 </items>
                             </toolbar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="crossings" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="xNY-AK-Ka8">
-                                <rect key="frame" x="475" y="84" width="74" height="21"/>
+                                <rect key="frame" x="233" y="64" width="74" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TCZ-2r-CFJ">
-                                <rect key="frame" x="20" y="182" width="71" height="30"/>
+                                <rect key="frame" x="20" y="162" width="71" height="30"/>
                                 <state key="normal" title="R1 untwist">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -793,7 +793,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="lWB-CA-2B8">
-                                <rect key="frame" x="20" y="324.5" width="83" height="30"/>
+                                <rect key="frame" x="20" y="304.5" width="83" height="30"/>
                                 <state key="normal" title="R2 separate">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -802,7 +802,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ayb-Eh-gg7">
-                                <rect key="frame" x="20" y="251" width="73" height="30"/>
+                                <rect key="frame" x="20" y="231" width="73" height="30"/>
                                 <state key="normal" title="R2 overlap">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -811,7 +811,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CZf-FV-Mvo">
-                                <rect key="frame" x="20" y="145" width="54" height="30"/>
+                                <rect key="frame" x="20" y="125" width="54" height="30"/>
                                 <state key="normal" title="R1 twist">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -820,79 +820,79 @@
                                 </connections>
                             </button>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="kwr-Si-LuD">
-                                <rect key="frame" x="123" y="145" width="94" height="29"/>
+                                <rect key="frame" x="123" y="125" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR1Up:" destination="fbl-T9-hmG" eventType="valueChanged" id="dlL-n3-ACC"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="QOA-37-4Ob">
-                                <rect key="frame" x="123" y="182" width="94" height="29"/>
+                                <rect key="frame" x="123" y="162" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR1Down:" destination="fbl-T9-hmG" eventType="valueChanged" id="f6c-Vr-lan"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="Gsk-7N-sbW">
-                                <rect key="frame" x="123" y="251" width="94" height="29"/>
+                                <rect key="frame" x="123" y="231" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR2UpOver:" destination="fbl-T9-hmG" eventType="valueChanged" id="TLo-gy-pWH"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="crA-N5-irk">
-                                <rect key="frame" x="123" y="325" width="94" height="29"/>
+                                <rect key="frame" x="123" y="305" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR2Down:" destination="fbl-T9-hmG" eventType="valueChanged" id="NdU-eQ-t3j"/>
                                 </connections>
                             </stepper>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="clV-0L-SY9">
-                                <rect key="frame" x="123" y="394" width="94" height="29"/>
+                                <rect key="frame" x="123" y="374" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR3:" destination="fbl-T9-hmG" eventType="valueChanged" id="opI-Ld-Mty"/>
                                 </connections>
                             </stepper>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zNS-vP-JIv">
-                                <rect key="frame" x="237" y="186" width="767" height="21"/>
+                                <rect key="frame" x="237" y="166" width="283" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="x0U-q8-zoC">
-                                <rect key="frame" x="237" y="255" width="767" height="21"/>
+                                <rect key="frame" x="237" y="235" width="283" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="PPd-qn-1zw">
-                                <rect key="frame" x="237" y="328.5" width="767" height="21"/>
+                                <rect key="frame" x="237" y="308.5" width="283" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="zM8-Pw-osD">
-                                <rect key="frame" x="237" y="397.5" width="767" height="21"/>
+                                <rect key="frame" x="237" y="377.5" width="283" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="4jZ-1d-CEw">
-                                <rect key="frame" x="237" y="149" width="767" height="21"/>
+                                <rect key="frame" x="237" y="129" width="283" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <stepper opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" contentHorizontalAlignment="center" contentVerticalAlignment="center" maximumValue="100" translatesAutoresizingMaskIntoConstraints="NO" id="uN6-gT-gdd">
-                                <rect key="frame" x="123" y="288" width="94" height="29"/>
+                                <rect key="frame" x="123" y="268" width="94" height="29"/>
                                 <connections>
                                     <action selector="changedR2UpUnder:" destination="fbl-T9-hmG" eventType="valueChanged" id="ZDE-21-Nqs"/>
                                 </connections>
                             </stepper>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="fa1-c1-QFo">
-                                <rect key="frame" x="237" y="292" width="767" height="21"/>
+                                <rect key="frame" x="237" y="272" width="283" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="1000" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="bnr-lw-0lP">
-                                <rect key="frame" x="20" y="393.5" width="31" height="30"/>
+                                <rect key="frame" x="20" y="373.5" width="31" height="30"/>
                                 <state key="normal" title="R3   ">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -999,9 +999,11 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="2za-Sx-Q4h">
-                                <rect key="frame" x="244" y="61" width="217" height="29"/>
+                                <rect key="frame" x="145" y="61" width="415" height="29"/>
                                 <segments>
-                                    <segment title="Oriented Gauss"/>
+                                    <segment title="Gauss"/>
+                                    <segment title="D-T"/>
+                                    <segment title="Knot signature"/>
                                     <segment title="Jenkins"/>
                                 </segments>
                                 <connections>

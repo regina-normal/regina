@@ -73,7 +73,6 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
     size_t nextUnused;
     int reflectSign; /* + becomes - */
     int reflectStrands; /* upper becomes lower */
-    int reverse; /* forwards becomes backwards */
     bool begin = true;
     for (reflectSign = 0; reflectSign < 2; ++reflectSign) {
         for (reflectStrands = 0; reflectStrands < 2; ++reflectStrands) {

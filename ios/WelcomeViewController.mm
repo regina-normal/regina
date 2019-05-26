@@ -211,6 +211,7 @@ public:
 
 - (IBAction)runTestSuite:(id)sender
 {
+    // Note: TestSuiteController lives on the same storyboard as WelcomeViewController.
     UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"testSuite"];
     [self presentViewController:sheet animated:YES completion:^{
         [static_cast<TestSuiteController*>(sheet) runTests];

@@ -50,7 +50,7 @@
 #include <ostream>
 #include <string>
 
-#include <libnormaliz/general.h>
+#include <libnormaliz/general.h> 
 
 //---------------------------------------------------------------------------
 
@@ -59,6 +59,7 @@ using std::vector;
 using std::map;
 using std::ostream;
 using std::string;
+using std::pair;
 
 class HilbertSeries;
 
@@ -105,15 +106,24 @@ public:
     const vector<mpz_class>& getCyclotomicNum() const;
     // returns the denominator, repr. as a map of the exponents of the cyclotomic polynomials
     const map<long, denom_t>& getCyclotomicDenom() const;
+    
+    void setHSOPDenom(vector<denom_t> new_denom);
+    void setHSOPDenom(map<long,denom_t> new_denom);
+    
+    // returns the numerator, repr. as vector of coefficients
+    const vector<mpz_class>& getHSOPNum() const;
+    // returns the denominator, repr. as a map of the exponents of (1-t^i)^e
+    const map<long, denom_t>& getHSOPDenom() const;
 
     long getDegreeAsRationalFunction() const;
 
     long getPeriod() const;
 
     void computeHilbertQuasiPolynomial() const;
-    long isHilbertQuasiPolynomialComputed() const;
-    vector< vector<mpz_class> > getHilbertQuasiPolynomial() const;
+    bool isHilbertQuasiPolynomialComputed() const;
+    const vector< vector<mpz_class> >& getHilbertQuasiPolynomial() const;
     mpz_class getHilbertQuasiPolynomialDenom() const;
+    void resetHilbertQuasiPolynomial();
 
     // setting the shift will not change the numerator directly, only its interpretation
     // the shift will be considered in the computation of the (quasi) polynomial
@@ -129,12 +139,32 @@ public:
     void from_string_rep(const string&);
 
     void setVerbose(bool v) { verbose = v; }
+    
+    // compute the new numerator by multiplying the HS with a denominator
+    // of the form (1-t^i)
+    void compute_hsop_num() const;
+    
+    void set_nr_coeff_quasipol(long nr_coeff);
+    long get_nr_coeff_quasipol() const;
+    
+    void set_period_bounded(bool on_off) const;
+    bool get_period_bounded() const;
+    
+    vector<mpz_class> getExpansion() const;
+    long get_expansion_degree() const;
+    void set_expansion_degree(long degree);
+
 
 private:
+    
+    void initialize();
+    
     // collected data in denominator classes
     mutable map< vector<denom_t>, vector<num_t> > denom_classes;
     // add the classes if they get too many
     static const size_t DENOM_CLASSES_BOUND = 50000;
+    static const long PERIOD_BOUND = 1000000;
+    mutable bool period_bounded;
 
     // the numerator, repr. as vector of coefficients, the h-vector
     mutable vector<mpz_class> num;
@@ -145,16 +175,28 @@ private:
     mutable vector<mpz_class> cyclo_num;
     // the denominator, repr. as a map of the exponents of the cyclotomic polynomials
     mutable map<long, denom_t> cyclo_denom;
+    
+    // the numerator, repr. as vector of coefficients
+    mutable vector<mpz_class> hsop_num;
+    // the denominator, repr. as a map of the exponents of the cyclotomic polynomials
+    mutable map<long, denom_t> hsop_denom;
+
+    // contains the expansion up to the given degree
+    mutable vector<mpz_class> expansion;
+    long expansion_degree;
 
     mutable bool is_simplified;
     mutable long dim;
     mutable long period;
     mutable long degree; // as rational function
     long shift;
+    
     // the quasi polynomial, can have big coefficients
     mutable vector< vector<mpz_class> > quasi_poly;
     mutable mpz_class quasi_denom;
-
+    mutable long nr_coeff_quasipol; // limits the computation of coefficients of the computeHilbertQuasiPolynomial
+                            // <0: all coeff, =0: no coeff
+    
     bool verbose;
 
     // these are only const when used properly!!
@@ -162,6 +204,10 @@ private:
     void performAdd(vector<mpz_class>& num, const map<long, denom_t>& denom) const;
 
     void computeDegreeAsRationalFunction() const;
+    
+    void compute_expansion() const;
+    vector<mpz_class> expand_denom() const;
+
 
     friend ostream& operator<< (ostream& out, const HilbertSeries& HS);
 
@@ -177,6 +223,10 @@ private:
 template<typename Integer>
 void poly_add_to (vector<Integer>& a, const vector<Integer>& b);
 
+// a += b*t^m
+template<typename Integer>
+void poly_add_to_tm (vector<Integer>& a, const vector<Integer>& b,long m);
+
 // a -= b
 template<typename Integer>
 void poly_sub_to (vector<Integer>& a, const vector<Integer>& b);
@@ -186,9 +236,17 @@ void poly_sub_to (vector<Integer>& a, const vector<Integer>& b);
 template<typename Integer>
 vector<Integer> poly_mult(const vector<Integer>& a, const vector<Integer>& b);
 
+// a*b via Karatsuba
+template<typename Integer>
+vector<Integer> karatsubamult(const vector<Integer>& a, const vector<Integer>& b);
+
 // a *= (1-t^d)^e
 template<typename Integer>
 void poly_mult_to(vector<Integer>& a, long d, long e = 1);
+
+// a *= t^m
+template<typename Integer>
+void poly_mult_by_tm(vector<Integer>& a, long m);
 
 
 // division with remainder, a = q * b + r
@@ -216,6 +274,13 @@ template<typename Integer>
 void linear_substitution(vector<Integer>& poly, const Integer& a);
 
 //---------------------------------------------------------------------------
+// series expansion
+//---------------------------------------------------------------------------
+
+// computes the series expansion of 1/(1-t^e)
+vector<mpz_class> expand_inverse(size_t exponent, long to_degree);
+
+//---------------------------------------------------------------------------
 // computing the Hilbert polynomial from h-vector
 //---------------------------------------------------------------------------
 
@@ -224,6 +289,60 @@ vector<Integer> compute_e_vector(vector<Integer> h_vector, int dim);
 
 template<typename Integer>
 vector<Integer> compute_polynomial(vector<Integer> h_vector, int dim);
+
+//---------------------------------------------------------------------------
+// A class collecting integrals and weighted Ehrhart series
+//---------------------------------------------------------------------------
+
+class IntegrationData{
+
+    string polynomial;
+    long degree_of_polynomial;
+    bool polynomial_is_homogeneous;
+    mpq_class integral, virtual_multiplicity;
+    nmz_float euclidean_integral;
+    mutable pair<HilbertSeries, mpz_class> weighted_Ehrhart_series; // the second component holds the common
+                                                            // denominator of the coefficients in the numerator    
+public:
+    
+    void setIntegral(const mpq_class I);
+    void setEuclideanIntegral(const nmz_float I);
+    void setVirtualMultiplicity(const mpq_class I);
+    void setWeightedEhrhartSeries(const pair<HilbertSeries, mpz_class>& E);
+    void setHomogeneity(const bool hom);
+    // void setCommonDenom(const mpq_class D);
+    void setDegreeOfPolynomial(const long d);
+    void set_nr_coeff_quasipol(long nr_coeff);
+    void set_expansion_degree(long degree);
+    
+    string getPolynomial() const;
+    long getDegreeOfPolynomial() const;
+    mpq_class getIntegral() const;
+    nmz_float getEuclideanIntegral() const;
+    mpq_class getVirtualMultiplicity() const;
+    const pair<HilbertSeries, mpz_class>& getWeightedEhrhartSeries() const;
+    bool isPolynomialHomogeneous() const;
+    mpz_class getNumeratorCommonDenom() const;
+    
+    const vector<mpz_class>& getNum_ZZ() const;
+    // returns the denominator, repr. as a map of the exponents of (1-t^i)^e
+    const map<long, denom_t>& getDenom() const;
+
+    const vector<mpz_class>& getCyclotomicNum_ZZ() const;
+    // returns the denominator, repr. as a map of the exponents of the cyclotomic polynomials
+    const map<long, denom_t>& getCyclotomicDenom() const;
+    
+    void computeWeightedEhrhartQuasiPolynomial() const;
+    bool isWeightedEhrhartQuasiPolynomialComputed() const;
+    const vector< vector<mpz_class> >& getWeightedEhrhartQuasiPolynomial() const;
+    void computeWeightedEhrhartQuasiPolynomial();
+    mpz_class getWeightedEhrhartQuasiPolynomialDenom() const;
+    void resetHilbertQuasiPolynomial();
+    vector<mpz_class> getExpansion() const;
+    
+    IntegrationData(const string& poly);
+    IntegrationData();
+}; // class end
 
 } //end namespace libnormaliz
 

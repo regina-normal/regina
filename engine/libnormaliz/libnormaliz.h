@@ -26,38 +26,70 @@
 
 #include <iostream>
 #include <string>
+#include <signal.h>
 
-#include <libnormaliz/version.h>
+#include <libnormaliz/nmz_config.h>
+#include "libnormaliz/version.h"
 
 namespace libnormaliz {
 
 namespace Type {
 enum InputType {
-    integral_closure,
-    polyhedron,
-    normalization,
+    //
+    // homogeneous generators
+    //
     polytope,
     rees_algebra,
-    inequalities,
-    strict_inequalities,
-    signs,
-    strict_signs,
-    equations,
-    congruences,
-    inhom_inequalities,
-    dehomogenization,
-    inhom_equations,
-    inhom_congruences,
-    lattice_ideal,
-    grading,
-    excluded_faces,
+    subspace,
+    cone,
+    cone_and_lattice,
     lattice,
     saturation,
-    cone,
-    offset,
+    //
+    // inhomogeneous generators
+    //
     vertices,
+    offset,
+    //
+    // homogeneous constraints
+    //
+    inequalities,
+    signs,
+    equations,
+    congruences,
+    //
+    // inhomogeneous constraints
+    //
+    inhom_equations,
+    inhom_inequalities,
+    strict_inequalities,
+    strict_signs,
+    inhom_congruences,
+    //
+    // linearforms
+    //
+    grading,
+    dehomogenization,
+    //
+    // special
+    open_facets,
+    projection_coordinates,
+    excluded_faces,
+    lattice_ideal, 
+    //
+    // prwecomputed data
+    //
     support_hyperplanes,
-    cone_and_lattice
+    extreme_rays,
+    hilbert_basis_rec_cone,
+    //
+    // deprecated
+    //
+    integral_closure,
+    normalization,
+    polyhedron,
+    // internal
+    scale
 };
 } //end namespace Type
 
@@ -80,11 +112,28 @@ typedef unsigned int key_t;
 extern bool verbose;
 extern size_t GMP_mat, GMP_hyp, GMP_scal_prod;
 extern size_t TotDet;
+/*
+ * If this variable is set to true, the current computation is interrupted and
+ * an InterruptException is raised.
+ */
+extern volatile sig_atomic_t nmz_interrupted;
+
+extern bool nmz_scip; // controls the use of Scip
+
+#define INTERRUPT_COMPUTATION_BY_EXCEPTION \
+if(nmz_interrupted){ \
+    throw InterruptException( "external interrupt" ); \
+}
 
 /* if test_arithmetic_overflow is true, many operations are also done
  * modulo overflow_test_modulus to ensure the correctness of the calculations */
 // extern bool test_arithmetic_overflow;
 // extern long overflow_test_modulus;
+
+extern long default_thread_limit;
+extern long thread_limit;
+extern bool parallelization_set;
+long set_thread_limit(long t);
 
 /* set the verbose default value */
 bool setVerboseDefault(bool v);
@@ -94,6 +143,8 @@ void setErrorOutput(std::ostream&);
 
 std::ostream& verboseOutput();
 std::ostream& errorOutput();
+
+void interrupt_signal_handler( int signal );
 
 } /* end namespace libnormaliz */
 

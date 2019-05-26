@@ -51,5 +51,7 @@
 	<string>Copyright © 1999-2018, The Regina development team</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
+	<key>NSRequiresAquaSystemAppearance</key>
+	<true/>
 </dict>
 </plist>

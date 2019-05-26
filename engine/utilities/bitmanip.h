@@ -51,25 +51,309 @@ namespace regina {
  */
 
 /**
- * A generic class for bitwise analysis and manipulation of native data types.
+ * Contains implementation details for BitManipulator where we optimise
+ * according to the underlying data type.
  *
- * This class is not optimised for common data types; its
- * sole functionality is to provide default implementations for some
- * operations that are not yet optimised (or do not need to be).
+ * End users should use the BitManipulator class, not this class.
  *
- * End users should use BitManipulator<T, size> instead, which is better
- * optimised and which has all the functionality of this class.
+ * \pre Type \a T is an unsigned integral numeric type.
  *
- * See BitManipulator for further information.
+ * @tparam T an unsigned integral numeric type, which we treat as a
+ * sequence of \c true and/or \c false bits.
+ */
+template <typename T>
+class BitManipulatorByType {
+    public:
+        enum {
+            /**
+             * Indicates whether this class is a template specialisation
+             * of BitManipulatorByType with extra optimisations.
+             *
+             * This compile-time constant is set to 0 for the generic
+             * implementation of BitManipulatorByType, and 1 for all
+             * specialisations.
+             */
+            specialised = 0
+        };
+
+        /**
+         * Returns the next largest integer with the same number of \c
+         * true bits as \a x.
+         *
+         * If \a x is the largest such integer (i.e., \a x is of the
+         * form 111...1000...0), then this routine returns 0.
+         *
+         * @param x the integer of type \a T to examine.
+         * @return the next largrst integer with the same number of \c true
+         * bits, or 0 if this is the largest such integer.
+         */
+        inline static T nextPermutation(T x) {
+            // Based upon http://graphics.stanford.edu/~seander/bithacks.html
+            // (which is in the public domain):
+            T t = (x | (x - 1)) + 1;
+            if (t == 0)
+                return 0;
+            return t | ((((t & -t) / (x & -x)) >> 1) - 1);
+        }
+};
+
+// Specialisations for individual types.
+// Hide these from doxygen.
+
+#ifndef __DOXYGEN
+#ifdef __GNUC__
+template <>
+class BitManipulatorByType<unsigned char> {
+    public:
+        enum {
+            specialised = 1
+        };
+
+        inline static unsigned char nextPermutation(unsigned char x) {
+            // Based upon http://graphics.stanford.edu/~seander/bithacks.html
+            // (which is in the public domain):
+            unsigned char t = x | (x - 1);
+            if (t == (unsigned char)(-1))
+                return 0;
+            return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(x) + 1));
+        }
+};
+
+template <>
+class BitManipulatorByType<unsigned int> {
+    public:
+        enum {
+            specialised = 1
+        };
+
+        inline static unsigned int nextPermutation(unsigned int x) {
+            // Based upon http://graphics.stanford.edu/~seander/bithacks.html
+            // (which is in the public domain):
+            unsigned int t = x | (x - 1);
+            if (t == (unsigned int)(-1))
+                return 0;
+            return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctz(x) + 1));
+        }
+};
+
+template <>
+class BitManipulatorByType<unsigned long> {
+    public:
+        enum {
+            specialised = 1
+        };
+
+        inline static unsigned long nextPermutation(unsigned long x) {
+            // Based upon http://graphics.stanford.edu/~seander/bithacks.html
+            // (which is in the public domain):
+            unsigned long t = x | (x - 1);
+            if (t == (unsigned long)(-1))
+                return 0;
+            return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctzl(x) + 1));
+        }
+};
+
+#ifdef INT128_AVAILABLE
+template <>
+class BitManipulatorByType<unsigned long long> {
+    public:
+        enum {
+            specialised = 1
+        };
+
+        inline static unsigned long long nextPermutation(unsigned long long x) {
+            // Based upon http://graphics.stanford.edu/~seander/bithacks.html
+            // (which is in the public domain):
+            unsigned long long t = x | (x - 1);
+            if (t == (unsigned long long)(-1))
+                return 0;
+            return (t + 1) | (((~t & -~t) - 1) >> (__builtin_ctzll(x) + 1));
+        }
+};
+#endif // INT128_AVAILABLE
+#endif // __GNUC__
+#endif // __DOXYGEN__
+
+/**
+ * Contains implementation details for BitManipulator where we optimise
+ * according to the size of the underlying data type.
+ *
+ * End users should use the BitManipulator class, not this class.
  *
  * \pre Type \a T is an unsigned integral numeric type.
  * \pre The argument \a size is a power of two, and is at most sizeof(\a T).
  *
- * \ifacespython Not present.
+ * @tparam T an unsigned integral numeric type, which we treat as a
+ * sequence of \c true and/or \c false bits.
+ * @tparam size the number of \e bytes of \a T to examine.  Any higher-order
+ * bits will be ignored by the implementations in this class.
  */
 template <typename T, unsigned size = sizeof(T)>
-class GenericBitManipulator {
+class BitManipulatorBySize {
     public:
+        enum {
+            /**
+             * Indicates whether this class is a template specialisation
+             * of BitManipulatorBySize with extra optimisations.
+             *
+             * This compile-time constant is set to 0 for the generic
+             * implementation of BitManipulatorBySize, and 1 for all
+             * specialisations.
+             */
+            specialised = 0
+        };
+
+        /**
+         * Returns the number of bits that are set to 1 in the given integer.
+         *
+         * @param x the integer of type \a T to examine.
+         * @return the number of bits that are set.
+         */
+        inline static int bits(T x) {
+            return BitManipulatorBySize<T, (size >> 1)>::bits(x) +
+                BitManipulatorBySize<T, (size >> 1)>::bits(x >> (4 * size));
+        }
+};
+
+// Specialisations for individual type sizes.
+// Hide these from doxygen.
+
+#ifndef __DOXYGEN
+
+template <typename T>
+class BitManipulatorBySize<T, 1> {
+    public:
+        enum {
+            specialised = 1
+        };
+
+        inline static int bits(T x) {
+            x = (x & T(0x55)) + ((x & T(0xAA)) >> 1);
+            x = (x & T(0x33)) + ((x & T(0xCC)) >> 2);
+            return (x & T(0x0F)) + ((x & T(0xF0)) >> 4);
+        }
+};
+
+template <typename T>
+class BitManipulatorBySize<T, 2> {
+    public:
+        enum {
+            specialised = 1
+        };
+
+        inline static int bits(T x) {
+            x = (x & T(0x5555)) + ((x & T(0xAAAA)) >> 1);
+            x = (x & T(0x3333)) + ((x & T(0xCCCC)) >> 2);
+            x = (x & T(0x0F0F)) + ((x & T(0xF0F0)) >> 4);
+            return (x & T(0x00FF)) + ((x & T(0xFF00)) >> 8);
+        }
+};
+
+template <typename T>
+class BitManipulatorBySize<T, 4> {
+    public:
+        enum {
+            specialised = 1
+        };
+
+        inline static int bits(T x) {
+            x = (x & T(0x55555555)) + ((x & T(0xAAAAAAAA)) >> 1);
+            x = (x & T(0x33333333)) + ((x & T(0xCCCCCCCC)) >> 2);
+            x = (x & T(0x0F0F0F0F)) + ((x & T(0xF0F0F0F0)) >> 4);
+            x = (x & T(0x00FF00FF)) + ((x & T(0xFF00FF00)) >> 8);
+            return (x & T(0x0000FFFF)) + ((x & T(0xFFFF0000)) >> 16);
+        }
+};
+
+// Support 64-bit processing natively if we can; otherwise we will fall
+// back to the generic two-lots-of-32-bit implementation.
+#if defined(NUMERIC_64_FOUND)
+template <typename T>
+class BitManipulatorBySize<T, 8> {
+    public:
+        enum {
+            specialised = 1
+        };
+
+        inline static int bits(T x) {
+            x = (x & T(0x5555555555555555)) +
+                ((x & T(0xAAAAAAAAAAAAAAAA)) >> 1);
+            x = (x & T(0x3333333333333333)) +
+                ((x & T(0xCCCCCCCCCCCCCCCC)) >> 2);
+            x = (x & T(0x0F0F0F0F0F0F0F0F)) +
+                ((x & T(0xF0F0F0F0F0F0F0F0)) >> 4);
+            x = (x & T(0x00FF00FF00FF00FF)) +
+                ((x & T(0xFF00FF00FF00FF00)) >> 8);
+            x = (x & T(0x0000FFFF0000FFFF)) +
+                ((x & T(0xFFFF0000FFFF0000)) >> 16);
+            return (x & T(0x00000000FFFFFFFF)) +
+                ((x & T(0xFFFFFFFF00000000)) >> 32);
+        }
+};
+#elif defined(NUMERIC_64_LL_FOUND)
+template <typename T>
+class BitManipulatorBySize<T, 8> {
+    public:
+        enum {
+            specialised = 1
+        };
+
+        inline static int bits(T x) {
+            x = (x & T(0x5555555555555555LL)) +
+                ((x & T(0xAAAAAAAAAAAAAAAALL)) >> 1);
+            x = (x & T(0x3333333333333333LL)) +
+                ((x & T(0xCCCCCCCCCCCCCCCCLL)) >> 2);
+            x = (x & T(0x0F0F0F0F0F0F0F0FLL)) +
+                ((x & T(0xF0F0F0F0F0F0F0F0LL)) >> 4);
+            x = (x & T(0x00FF00FF00FF00FFLL)) +
+                ((x & T(0xFF00FF00FF00FF00LL)) >> 8);
+            x = (x & T(0x0000FFFF0000FFFFLL)) +
+                ((x & T(0xFFFF0000FFFF0000LL)) >> 16);
+            return (x & T(0x00000000FFFFFFFFLL)) +
+                ((x & T(0xFFFFFFFF00000000LL)) >> 32);
+        }
+};
+#endif // NUMERIC_64_LL_FOUND
+#endif // __DOXYGEN__
+
+/**
+ * An optimised class for bitwise analysis and manipulation of native
+ * data types.
+ *
+ * The class BitManipulator<T> is used to manipulate an integer of type \a T
+ * as a sequence of bits.  Here \a T must be an unsigned native integer
+ * type such as unsigned char, unsigned int, or unsigned long long.
+ *
+ * Whilst BitManipulator has a generic implementation, all or most native types
+ * \a T have template specialisations that are carefully optimised (precisely
+ * what gets specialised depends upon properties of the compiler).
+ *
+ * \pre Type \a T is an unsigned integral numeric type whose size in
+ * bits is a power of two.
+ *
+ * \ifacespython Not present.
+ */
+template <typename T>
+class BitManipulator :
+        public BitManipulatorByType<T>, public BitManipulatorBySize<T> {
+    static_assert(sizeof(T) == 1 || sizeof(T) == 2 || sizeof(T) == 4 ||
+        sizeof(T) == 8 || sizeof(T) == 16 || sizeof(T) == 32 ||
+        sizeof(T) == 64 || sizeof(T) == 128,
+        "BitManipulator can only work with data types whose size is a "
+        "power of two.");
+    public:
+        enum {
+            /**
+             * Indicates whether this class is a template specialisation
+             * of BitManipulator with extra optimisations.
+             *
+             * This compile-time constant is set to 0 for the generic
+             * implementation of BitManipulator, and 1 for all specialisations.
+             */
+            specialised = (BitManipulatorByType<T>::specialised |
+                BitManipulatorBySize<T>::specialised)
+        };
+
         /**
          * Returns the index of the first \c true bit in the given
          * integer, or -1 if the given integer is zero.
@@ -85,7 +369,7 @@ class GenericBitManipulator {
                 return -1;
 
             // This binary search will break if size is not a power of two.
-            unsigned chunkSize = size << 3; // 8 * size
+            unsigned chunkSize = sizeof(T) << 3; // 8 * sizeof(T)
             unsigned chunkStart = 0;
 
             while (chunkSize > 1) {
@@ -110,8 +394,8 @@ class GenericBitManipulator {
             if (! x)
                 return -1;
 
-            // This binary search will break if size is not a power of two.
-            unsigned chunkSize = size << 3; // 8 * size
+            // This binary search will break if sizeof(T) is not a power of two.
+            unsigned chunkSize = sizeof(T) << 3; // 8 * sizeof(T)
             unsigned chunkStart = 0;
 
             while (chunkSize > 1) {
@@ -123,159 +407,6 @@ class GenericBitManipulator {
             return chunkStart;
         }
 };
-
-/**
- * An optimised class for bitwise analysis and manipulation of native
- * data types.
- *
- * The class BitManipulator<T, size> is used to manipulate the lowest
- * \a size bytes of type \a T, which must be an unsigned native integer
- * type such as unsigned char, unsigned int, or unsigned long long.
- *
- * The generic implementation of BitManipulator is here for completeness.
- * All or most native types \a T have template specialisations
- * that are carefully optimised (precisely what gets specialised depends
- * upon properties of the compiler).
- *
- * Like this class, all specialisations either inherit or override the
- * default implementations from the base class GenericBitManipulator.
- *
- * \pre Type \a T is an unsigned integral numeric type.
- * \pre The argument \a size is a power of two, and is at most sizeof(\a T).
- *
- * \ifacespython Not present.
- */
-template <typename T, unsigned size = sizeof(T)>
-class BitManipulator : public GenericBitManipulator<T, size> {
-    public:
-        enum {
-            /**
-             * Indicates whether this class is a template specialisation
-             * of BitManipulator with extra optimisations.
-             *
-             * This compile-time constant is set to 0 for the generic
-             * implementation of BitManipulator, and 1 for all specialisations.
-             */
-            specialised = 0
-        };
-
-        /**
-         * Returns the number of bits that are set in the given integer.
-         *
-         * Specifically, this routine returns the number of bits set to 1
-         * from amongst the lowest \a size bytes of \a x.
-         *
-         * @param x the integer of type \a T to examine.
-         * @return the number of bits that are set.
-         */
-        inline static int bits(T x) {
-            return BitManipulator<T, (size >> 1)>::bits(x) +
-                BitManipulator<T, (size >> 1)>::bits(x >> (4 * size));
-        }
-};
-
-// Specialisations for individual type sizes.
-// Hide these from doxygen.
-
-#ifndef __DOXYGEN
-
-template <typename T>
-class BitManipulator<T, 1> : public GenericBitManipulator<T, 1> {
-    public:
-        enum {
-            specialised = 1
-        };
-
-        inline static int bits(T x) {
-            x = (x & T(0x55)) + ((x & T(0xAA)) >> 1);
-            x = (x & T(0x33)) + ((x & T(0xCC)) >> 2);
-            return (x & T(0x0F)) + ((x & T(0xF0)) >> 4);
-        }
-};
-
-template <typename T>
-class BitManipulator<T, 2> : public GenericBitManipulator<T, 2> {
-    public:
-        enum {
-            specialised = 1
-        };
-
-        inline static int bits(T x) {
-            x = (x & T(0x5555)) + ((x & T(0xAAAA)) >> 1);
-            x = (x & T(0x3333)) + ((x & T(0xCCCC)) >> 2);
-            x = (x & T(0x0F0F)) + ((x & T(0xF0F0)) >> 4);
-            return (x & T(0x00FF)) + ((x & T(0xFF00)) >> 8);
-        }
-};
-
-template <typename T>
-class BitManipulator<T, 4> : public GenericBitManipulator<T, 4> {
-    public:
-        enum {
-            specialised = 1
-        };
-
-        inline static int bits(T x) {
-            x = (x & T(0x55555555)) + ((x & T(0xAAAAAAAA)) >> 1);
-            x = (x & T(0x33333333)) + ((x & T(0xCCCCCCCC)) >> 2);
-            x = (x & T(0x0F0F0F0F)) + ((x & T(0xF0F0F0F0)) >> 4);
-            x = (x & T(0x00FF00FF)) + ((x & T(0xFF00FF00)) >> 8);
-            return (x & T(0x0000FFFF)) + ((x & T(0xFFFF0000)) >> 16);
-        }
-};
-
-// Support 64-bit processing natively if we can; otherwise we will fall
-// back to the generic two-lots-of-32-bit implementation.
-#if defined(NUMERIC_64_FOUND)
-template <typename T>
-class BitManipulator<T, 8> : public GenericBitManipulator<T, 8> {
-    public:
-        enum {
-            specialised = 1
-        };
-
-        inline static int bits(T x) {
-            x = (x & T(0x5555555555555555)) +
-                ((x & T(0xAAAAAAAAAAAAAAAA)) >> 1);
-            x = (x & T(0x3333333333333333)) +
-                ((x & T(0xCCCCCCCCCCCCCCCC)) >> 2);
-            x = (x & T(0x0F0F0F0F0F0F0F0F)) +
-                ((x & T(0xF0F0F0F0F0F0F0F0)) >> 4);
-            x = (x & T(0x00FF00FF00FF00FF)) +
-                ((x & T(0xFF00FF00FF00FF00)) >> 8);
-            x = (x & T(0x0000FFFF0000FFFF)) +
-                ((x & T(0xFFFF0000FFFF0000)) >> 16);
-            return (x & T(0x00000000FFFFFFFF)) +
-                ((x & T(0xFFFFFFFF00000000)) >> 32);
-        }
-};
-#elif defined(NUMERIC_64_LL_FOUND)
-template <typename T>
-class BitManipulator<T, 8> : public GenericBitManipulator<T, 8> {
-    public:
-        enum {
-            specialised = 1
-        };
-
-        inline static int bits(T x) {
-            x = (x & T(0x5555555555555555LL)) +
-                ((x & T(0xAAAAAAAAAAAAAAAALL)) >> 1);
-            x = (x & T(0x3333333333333333LL)) +
-                ((x & T(0xCCCCCCCCCCCCCCCCLL)) >> 2);
-            x = (x & T(0x0F0F0F0F0F0F0F0FLL)) +
-                ((x & T(0xF0F0F0F0F0F0F0F0LL)) >> 4);
-            x = (x & T(0x00FF00FF00FF00FFLL)) +
-                ((x & T(0xFF00FF00FF00FF00LL)) >> 8);
-            x = (x & T(0x0000FFFF0000FFFFLL)) +
-                ((x & T(0xFFFF0000FFFF0000LL)) >> 16);
-            return (x & T(0x00000000FFFFFFFFLL)) +
-                ((x & T(0xFFFFFFFF00000000LL)) >> 32);
-        }
-};
-#endif
-
-// End the hide-from-doxygen block.
-#endif
 
 /*@}*/
 

@@ -522,6 +522,7 @@
     if (! [self checkEditable])
         return;
 
+    // Note: EltMoves4 lives on the same storyboard as Tri4Gluings.
     UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"eltMoves4"];
     static_cast<EltMoves4*>(sheet).packet = self.packet;
     [self presentViewController:sheet animated:YES completion:nil];

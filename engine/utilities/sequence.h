@@ -97,7 +97,16 @@ class REGINA_API LightweightSequence {
          *
          * @param size the number of elements in the new sequence.
          */
-        LightweightSequence(size_t size);
+        explicit LightweightSequence(size_t size);
+        /**
+         * Create a copy of the given sequence.
+         *
+         * This is a deep copy, in that all of the elements of \a cloneMe
+         * will be copied into the new sequence.
+         *
+         * @param cloneMe the sequence to copy.
+         */
+        LightweightSequence(const LightweightSequence& cloneMe);
         /**
          * Destroys this sequence and all of its elements.
          *
@@ -194,6 +203,18 @@ class REGINA_API LightweightSequence {
          * @return a read-only past-the-end iterator.
          */
         const_iterator end() const;
+
+        /**
+         * Converts this into a copy of the given sequence.
+         * Any existing elements of this sequence will be deleted.
+         *
+         * This is a deep copy, in that all of the elements of \a cloneMe
+         * will be copied into this sequence.
+         *
+         * @param cloneMe the sequence to copy.
+         * @return a reference to this sequence.
+         */
+        LightweightSequence<T>& operator = (const LightweightSequence& cloneMe);
 
         /**
          * Tests whether this and the given sequence are identical.
@@ -398,6 +419,13 @@ inline LightweightSequence<T>::LightweightSequence(size_t size) :
 }
 
 template <typename T>
+inline LightweightSequence<T>::LightweightSequence(
+        const LightweightSequence& cloneMe) :
+        data_(new T[cloneMe.size_]), size_(cloneMe.size_) {
+    std::copy(cloneMe.data_, cloneMe.data_ + size_, data_);
+}
+
+template <typename T>
 inline LightweightSequence<T>::~LightweightSequence() {
     delete[] data_;
 }
@@ -446,6 +474,18 @@ template <typename T>
 inline typename LightweightSequence<T>::const_iterator
         LightweightSequence<T>::end() const {
     return data_ + size_;
+}
+
+template <typename T>
+inline LightweightSequence<T>& LightweightSequence<T>::operator = (
+        const LightweightSequence& cloneMe) {
+    size_ = cloneMe.size_;
+
+    delete[] data_;
+    data_ = new T[size_];
+    std::copy(cloneMe.data_, cloneMe.data_ + size_, data_);
+
+    return *this;
 }
 
 template <typename T>

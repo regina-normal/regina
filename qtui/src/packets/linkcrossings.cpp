@@ -39,6 +39,8 @@
 // UI includes:
 #include "linkcrossings.h"
 #include "linkmovedialog.h"
+#include "packetchooser.h"
+#include "packetfilter.h"
 #include "progressdialogs.h"
 #include "reginamain.h"
 #include "reginasupport.h"
@@ -381,6 +383,19 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     enableWhenWritable.append(actReverse);
     connect(actReverse, SIGNAL(triggered()), this, SLOT(reverse()));
 
+    QAction* actComposeWith = new QAction(this);
+    actComposeWith->setText(tr("Com&pose With..."));
+    actComposeWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
+    actComposeWith->setToolTip(
+        tr("Make this into a composition with another link"));
+    actComposeWith->setEnabled(readWrite);
+    actComposeWith->setWhatsThis(tr("Forms the composition of "
+        "this link with some other link.  "
+        "This link will be modified directly."));
+    actionList.append(actComposeWith);
+    enableWhenWritable.append(actComposeWith);
+    connect(actComposeWith, SIGNAL(triggered()), this, SLOT(composeWith()));
+
     sep = new QAction(this);
     sep->setSeparator(true);
     actionList.append(sep);
@@ -651,6 +666,21 @@ void LinkCrossingsUI::rotate() {
 
 void LinkCrossingsUI::reverse() {
     link->reverse();
+}
+
+void LinkCrossingsUI::composeWith() {
+    regina::Link* other = static_cast<regina::Link*>(
+        PacketDialog::choose(ui,
+            link->root(),
+            new SingleTypeFilter<regina::Link>(),
+            tr("Compose With"),
+            tr("Compose this with which other link?"),
+            tr("Regina will form the composition of this link "
+                "with whatever link you choose here.  "
+                "The current link will be modified directly.")));
+
+    if (other)
+        link->composeWith(*other);
 }
 
 void LinkCrossingsUI::moves() {

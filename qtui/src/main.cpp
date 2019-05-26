@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "regina-config.h"
 #include "file/globaldirs.h"
 #include "packet/packet.h"
 

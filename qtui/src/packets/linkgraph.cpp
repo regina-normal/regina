@@ -58,14 +58,21 @@
 #ifdef LIBGVC_FOUND
 #include "gvc.h"
 
-extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
-extern gvplugin_library_t gvplugin_core_LTX_library;
+// Define LIBGVC_DYNAMIC_PLUGINS if you wish to load plugins dynamically.
+// This requires (amongst other things) the presence of the file config6,
+// which list all available plugins.
+// #define LIBGVC_DYNAMIC_PLUGINS 1
+
+#ifndef LIBGVC_DYNAMIC_PLUGINS
+extern REGINA_HELPER_DLL_IMPORT gvplugin_library_t gvplugin_dot_layout_LTX_library;
+extern REGINA_HELPER_DLL_IMPORT gvplugin_library_t gvplugin_core_LTX_library;
 
 lt_symlist_t link_lt_preloaded_symbols[] = {
     { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },
     { "gvplugin_core_LTX_library", &gvplugin_core_LTX_library },
     { 0, 0 }
 };
+#endif
 #endif
 
 LinkGraphUI::LinkGraphUI(regina::Link* useLink,
@@ -213,11 +220,16 @@ void LinkGraphUI::refresh() {
     char* svg;
     unsigned svgLen;
 
+#ifdef LIBGVC_DYNAMIC_PLUGINS
+    GVC_t* gvc = gvContext();
+#else
     // Manually specify our plugins to avoid on-demand loading.
     GVC_t* gvc = gvContextPlugins(link_lt_preloaded_symbols, 0);
 
     gvAddLibrary(gvc, &gvplugin_core_LTX_library);
     gvAddLibrary(gvc, &gvplugin_dot_layout_LTX_library);
+#endif
+
     Agraph_t* g = agmemread(dot.c_str());
     gvLayout(gvc, g, "dot");
     gvRenderData(gvc, g, "svg", &svg, &svgLen);

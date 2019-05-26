@@ -13,15 +13,28 @@ Version 5.2  [ 29 September, 2017 ]
         - Now requires C++14 (not C++11).  However, the only feature of C++14
           that is currently used is the [[deprecated]] attribute, which means
           that partially compliant compilers (such as gcc4.9) should be fine.
-        - Now builds under gcc7.
+        - Now builds under gcc7 and gcc8.
+        - Updated the bundled copy of Normaliz to version 3.7.2 (17 Apr 2019).
     ENGINE:
+        Class BitManipulator, GenericBitManipulator:
+            - BitManipulator has a new routine nextPermutation() to
+              iterate through bitmasks with a fixed number of true bits.
+            - BitManipulator no longer takes a size template parameter;
+              instead size is always taken to be sizeof(T).
+            - The internal structure of BitManipulator has changed; in
+              particular, the old GenericBitManipulator no longer exists.
         Class GroupPresentation:
             - New Python-only sage() routine that converts a Regina
               group presentation to a mathematical object native to Sage.
         Class Isomorphism<dim>:
             - The random() function now takes an optional argument to enforce
               orientation-preserving isomorphisms only.
-        Class Link, Crossing, StrandRef:
+        Class Laurent2:
+            - New constuctor that shifts a given polynomial by x^e y^e.
+        Class LightweightSequence:
+            - New copy constructor and assignment operator for deep copies.
+            - Constructor by size is now marked as explicit.
+        Class Link, Crossing, StrandRef, Tangle:
             - New classes to support knots and links, plus other additional
               classes and methods to interface with the Boost Graph Library.
         Class MarkedAbelianGroup:
@@ -69,20 +82,26 @@ Version 5.2  [ 29 September, 2017 ]
               would sometimes retriangulate unexpectedly during the
               SnapPeaTriangulation(const Triangulation<3>&) constructor.
         Class TreeDecomposition:
+            - New copy constructor.
             - New constructor that takes a Link.
+            - New routines writePACE(), pace() and fromPACE() to work with
+              the PACE text format.
+            - New reroot() routines to hang the tree from different roots.
+            - New linear-time routine bag() for slow random access to bags.
+            - Routine makeNice() now takes optional hints on the preferred
+              nice tree structure.
         Class Triangulation<dim>:
             - Now implements the Boost Graph Library (BGL) interface.  The dual
               graph of a triangulation can be accessed seamlessly through the
               BGL by using the triangulation itself as the graph data structure.
             - New routine reflect().
-            - New Python constructor that accepts a snappy.Manifold or a
-              SnapPy.Triangulation (thanks to Matthias Goerner).
             - New pachner() routines to support Pachner moves of all types
               in all dimensions.  In dimensions 2-4, the old names
               (e.g., oneFourMove(), threeThreeMove(), etc.) are deprecated,
               and simply call these new routines.
             - For oriented triangulations, all Pachner moves now preserve the
               orientation.
+            - Relaxed the preconditions for connectedSumWith().
             - Now preserves computed properties of the underlying manifold
               when the manifold is retriangulated.
         Class Triangulation<4>:
@@ -94,6 +113,8 @@ Version 5.2  [ 29 September, 2017 ]
         Class Triangulation<3>:
             - New routine fillTorus() to fill 2-triangle torus boundary
               components.
+            - New Python constructor that accepts a snappy.Manifold or a
+              SnapPy.Triangulation (thanks to Matthias Goerner).
             - New routines longitude() and meridianLongitude() to deduce
               boundary curves for knot complements.
             - New deprecated routine fourOneMove(), added for completeness.
@@ -115,12 +136,21 @@ Version 5.2  [ 29 September, 2017 ]
             - The deprecated values (PACKET_TRIANGULATION, etc.) have been
               removed from the enumeration type, and are now declared as
               standalone compile-time constants of type PacketType.
+        Routine binomSmall():
+            - Moved to maths/binom.h.
+        Routine binomMedium():
+            - New linear-time routine to compute (n choose k) for n <= 29.
         Routine politeThreads():
             - New routine to help user interfaces choose an appropriate
               level of parallelisation.
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.
+        - Now constructs regina's arbitrary-precision Integer and LargeInteger
+          objects correctly when given a python arbitrary-precision long as an
+          argument.  Previously, when the argument was outside the usual
+          32/64-bit native C++ long integer range, the automatic conversion
+          went via floating-point arithmetic, resulting in a loss of precision.
     UTILITIES:
         retriangulate:
             - New utility that exhaustively retriangulates a given manifold.

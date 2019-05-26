@@ -66,7 +66,8 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
     std::copy(begin, end, S);
 
     int pos1, pos2;
-    for (int i=1; i <= n; ++i) {
+    int i, j;
+    for (i=1; i <= n; ++i) {
         // Find the two instances of crossing i,
         // and reverse the subsequence between them.
         //
@@ -113,7 +114,91 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
         std::reverse(S+pos1+1, S+pos2);
     }
 
-    // At this point, we know that the input sequence contained each of
+    // Find the first and second position of each crossing number in the
+    // permuted array S[].
+    int* indx0 = new int[n];
+    int* indx1 = new int[n];
+    std::fill(indx0, indx0 + n, -1);
+    std::fill(indx1, indx1 + n, -1);
+
+    for (pos1 = 0; pos1 < 2*n; ++pos1) {
+        i = S[pos1] - 1;
+        if (indx0[i] < 0)
+            indx0[i] = pos1;
+        else if (indx1[i] < 0)
+            indx1[i] = pos1;
+        else {
+            std::cerr << "fromGauss(): crossing occurs more than twice"
+                << std::endl;
+            delete[] indx1;
+            delete[] indx0;
+            delete[] S;
+            return nullptr;
+        }
+    }
+
+    // Identify interleaved pairs of crossings.
+    bool* graph = new bool[n*n];
+    std::fill(graph, graph + n*n, false);
+
+    for (i = 1; i < n + 1; i++){
+        for (j = 1; j < n + 1; j++){
+            if ( ((indx0[i-1] < indx0[j-1]) && (indx1[i-1] > indx0[j-1]) && (indx1[i-1] < indx1[j-1])) ||
+                 ((indx0[i-1] < indx1[j-1]) && (indx0[i-1] > indx0[j-1]) && (indx1[i-1] > indx1[j-1])) ) {
+                graph[n * (i-1) + (j-1)] = true;
+            }
+        }
+    }
+
+    delete[] indx1;
+    delete[] indx0;
+
+    // Pull apart the nodes of the graph into opposite sides of a
+    // bipartite graph.
+    int* side = new int[n];
+    int* stack = new int[n];
+    int top = 0;
+    int pop = 0;
+    std::fill(side, side + n, 0);
+    std::fill(stack, stack + n, 0);
+
+    for (i = 0; i < n; i++){
+        if (side[i] == 0){
+            // Make an arbitrary decision for this node, and propagate
+            // it through its connected component.
+            side[i] = 1;
+            top = 0;
+            stack[top] = i;
+
+            while (top >= 0) {
+                pop = stack[top];
+                top--;
+
+                for (j = 0; j < n; j++){
+                    if (graph[n * pop + j]) {
+                        if (side[j] == 0) {
+                            side[j] = - side[pop];
+                            top++;
+                            stack[top] = j;
+                        } else if (side[j] != - side[pop]) {
+                            std::cerr << "fromGauss(): non-bipartite graph"
+                                << std::endl;
+                            delete[] stack;
+                            delete[] side;
+                            delete[] graph;
+                            delete[] S;
+                            return nullptr;
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    delete[] stack;
+    delete[] graph;
+
+    // From the work above, we know that the input sequence contained each of
     // the integers +/-1, +/-2, ..., +/-n exactly once each.
 
     // The sequence J encodes which elements of S[..] are first vs second
@@ -125,7 +210,7 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
     bool* seen = new bool[n];
     std::fill(seen, seen + n, false);
 
-    for (int i=0; i < 2*n; ++i) {
+    for (i=0; i < 2*n; ++i) {
         J[i] = seen[S[i]-1];
         seen[S[i]-1] = true;
     }
@@ -137,7 +222,7 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
 
     Q0[0]=S[0];
     Q1[0]=false;
-    for (int i=1; i < 2*n; ++i) {
+    for (i=1; i < 2*n; ++i) {
         // Find the *other* occurrence of the crossing used at Q[i-1].
         for (int j=0; j < 2*n; ++j) {
             if (Q0[i-1] == S[j] && Q1[i-1] == ! J[j]) {
@@ -154,6 +239,7 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
         // Q0 should match the original input sequence.
         if (Q0[i] != *(begin + i) && -Q0[i] != *(begin + i)) {
             std::cerr << "fromGauss(): Q0 != abs(input sequence)" << std::endl;
+            delete[] side;
             delete[] J;
             delete[] Q0;
             delete[] Q1;
@@ -166,12 +252,16 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
     delete[] S;
 
     // At this point we can work out the sign of each crossing.
-    // The integer crossHand[i] relates to the crossing at S[i] and Q0[i],
-    // and takes the value (-1 vs 1) if the other strand runs
-    // (left-to-right vs right-to-left).
-    int* crossHand = new int[2*n];
+    // The integer crossHand takes the value (-1 vs 1) if, when examining the
+    // strand at index1, the other strand runs (left-to-right vs right-to-left).
 
-    for (int i = 1; i <= n; ++i) {
+    Link* ans = new Link;
+
+    for (i = 0; i < n; ++i)
+        ans->crossings_.push_back(new Crossing);
+
+    int crossHand;
+    for (i = 1; i <= n; ++i) {
         int index1 = -1;
         int index2 = -1;
         int temp1, temp2;
@@ -191,127 +281,56 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
             std::cerr << "fromGauss(): crossing " << i
                 << " does not appear with alternate parities in Q0"
                 << std::endl;
+            delete ans;
             delete[] Q0;
             delete[] Q1;
-            delete[] crossHand;
             return nullptr;
         }
-        crossHand[index1] = temp1 * temp2;
-        crossHand[index2] = - crossHand[index1];
+
+        crossHand = temp1 * temp2 * side[i-1];
+
+        if (*(begin + index1) > 0) {
+            // The occurrence at index1 is an over-crossing.
+            // A positive crossing corresponds to crossHand == 1.
+            ans->crossings_[i - 1]->sign_ = crossHand;
+        } else {
+            // The occurrence at index1 is an under-crossing.
+            // A positive crossing corresponds to crossHand == -1.
+            ans->crossings_[i - 1]->sign_ = - crossHand;
+        }
     }
 
     delete[] Q0;
     delete[] Q1;
 
-    // Output
-
-    for (int i=0; i < 2*n; i++){
-        if (*(begin + i) < 0) {
-            std::cerr<<"-";
-        }
-        if (crossHand[i] == 1) {
-            std::cerr<<"<";
-        } else {
-            std::cerr<<">";
-        }
-        std::cerr << *(begin + i) << ' ';
-    }
-    std::cerr << std::endl;
-    return nullptr;
-
-/*
-    Link* ans = new Link;
-
-    size_t i;
-    for (i = 0; i < n; ++i)
-        ans->crossings_.push_back(new Crossing);
+    // Now that we have the crossing signs, just hook the crossings together
+    // following the input sequence.
 
     StrandRef prev, curr;
     Iterator it = begin;
 
-    size_t tmpCross;
-    int tmpStrand, tmpSign;
-    if (! parseOrientedGaussTerm(*it, n, tmpCross, tmpStrand, tmpSign)) {
-        std::cerr << "fromOrientedGauss(): could not parse " << *it
-            << std::endl;
-        delete ans;
-        return nullptr;
-    }
-
-    Crossing* cr = ans->crossings_[tmpCross - 1];
-    cr->sign_ = tmpSign;
-    curr = cr->strand(tmpStrand);
+    Crossing* cr = ans->crossings_[::abs(*it) - 1];
+    curr = cr->strand(*it > 0 ? 1 : 0);
     ans->components_.push_back(curr);
 
     for (++it; it != end; ++it) {
         prev = curr;
 
-        if (! parseOrientedGaussTerm(*it, n, tmpCross, tmpStrand, tmpSign)) {
-            std::cerr << "fromOrientedGauss(): could not parse " << *it
-                << std::endl;
-            delete ans;
-            return nullptr;
-        }
+        cr = ans->crossings_[::abs(*it) - 1];
+        curr = cr->strand(*it > 0 ? 1 : 0);
 
-        cr = ans->crossings_[tmpCross - 1];
-        if (cr->sign_ == 0)
-            cr->sign_ = tmpSign;
-        else if (cr->sign_ != tmpSign) {
-            std::cerr << "fromOrientedGauss(): inconsistent signs "
-                "for crossing " << tmpCross << std::endl;
-            delete ans;
-            return nullptr;
-        }
-
-        curr = cr->strand(tmpStrand);
-
-        if (prev.crossing()->next_[prev.strand()]) {
-            std::cerr << "fromOrientedGauss(): multiple passes out of "
-                << (prev.strand() == 0 ? "lower" : "upper")
-                << " strand of crossing " << (prev.crossing()->index() + 1)
-                << std::endl;
-            delete ans;
-            return nullptr;
-        }
         prev.crossing()->next_[prev.strand()] = curr;
-
-        if (curr.crossing()->prev_[curr.strand()]) {
-            std::cerr << "fromOrientedGauss(): multiple passes into "
-                << (curr.strand() == 0 ? "lower" : "upper")
-                << " strand of crossing " << (curr.crossing()->index() + 1)
-                << std::endl;
-            delete ans;
-            return nullptr;
-        }
         curr.crossing()->prev_[curr.strand()] = prev;
     }
 
     prev = curr;
     curr = ans->components_.back();
 
-    if (prev.crossing()->next_[prev.strand()]) {
-        std::cerr << "fromOrientedGauss(): multiple passes out of "
-            << (prev.strand() == 0 ? "lower" : "upper")
-            << " strand of crossing " << (prev.crossing()->index() + 1)
-            << std::endl;
-        delete ans;
-        return nullptr;
-    }
     prev.crossing()->next_[prev.strand()] = curr;
-
-    if (curr.crossing()->prev_[curr.strand()]) {
-        std::cerr << "fromOrientedGauss(): multiple passes into "
-            << (curr.strand() == 0 ? "lower" : "upper")
-            << " strand of crossing " << (curr.crossing()->index() + 1)
-            << std::endl;
-        delete ans;
-        return nullptr;
-    }
     curr.crossing()->prev_[curr.strand()] = prev;
 
     // All done!
     return ans;
-*/
 }
 
 template <typename Iterator>

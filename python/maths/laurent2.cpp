@@ -86,6 +86,7 @@ void addLaurent2() {
             boost::noncopyable>("Laurent2")
         .def(init<long, long>())
         .def(init<const Laurent2<regina::Integer>&>())
+        .def(init<const Laurent2<regina::Integer>&, long, long>())
         .def("init", init_void)
         .def("init", init_degrees)
         .def("isZero", &Laurent2<regina::Integer>::isZero)

@@ -33,10 +33,12 @@
 void addExampleLink();
 void addLink();
 void addModelLinkGraph();
+void addTangle();
 
 void addLinkClasses() {
     addExampleLink();
     addLink();
     addModelLinkGraph();
+    addTangle();
 }
 

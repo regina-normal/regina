@@ -62,7 +62,7 @@ class LinkCreator : public PacketCreator {
         /**
          * Details for specific link types
          */
-        QLineEdit* gauss;
+        QLineEdit* code;
         QComboBox* exampleWhich;
 
     public:

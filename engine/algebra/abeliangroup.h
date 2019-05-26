@@ -220,7 +220,15 @@ class REGINA_API AbelianGroup :
          * Returns the rank of the group.
          * This is the number of included copies of <i>Z</i>.
          *
-         * @return the rank of the group.
+         * Equivalently, the rank is the maximum number of linearly independent
+         * elements, and it indicates the size of the largest free abelian
+         * subgroup.  The rank effectively ignores all torsion elements.
+         *
+         * \warning SnapPy users should be aware that SnapPy defines
+         * rank differently. Specifically, SnapPy's AbelianGroup.rank()
+         * computation includes torsion factors also.
+         *
+         * @return the number of included copies of \e Z.
          */
         unsigned rank() const;
         /**

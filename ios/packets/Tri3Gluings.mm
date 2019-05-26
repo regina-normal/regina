@@ -530,6 +530,7 @@
     if (! [self checkEditable])
         return;
 
+    // Note: EltMoves3 lives on the same storyboard as Tri3Gluings.
     UIViewController* sheet = [self.storyboard instantiateViewControllerWithIdentifier:@"eltMoves3"];
     static_cast<EltMoves3*>(sheet).packet = self.packet;
     [self presentViewController:sheet animated:YES completion:nil];

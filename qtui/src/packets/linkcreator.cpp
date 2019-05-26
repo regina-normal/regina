@@ -58,7 +58,7 @@ namespace {
      * triangulation type combo box.
      */
     enum {
-        LINK_GAUSS,
+        LINK_CODE,
         LINK_EXAMPLE
     };
 
@@ -79,12 +79,6 @@ namespace {
         EXAMPLE_GORDIAN,
         EXAMPLE_WHITEHEAD
     };
-
-    /**
-     * Regular expressions describing different sets of parameters.
-     */
-    QRegExp reGauss(
-        "^\\s*([-+])([<>])(\\d+)(?:\\s+([-+])([<>])(\\d+))*\\s*$");
 }
 
 LinkCreator::LinkCreator(ReginaMain* mainWindow) {
@@ -114,14 +108,21 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     QWidget* area;
     QBoxLayout* subLayout;
 
-    type->insertItem(LINK_GAUSS, QObject::tr("From oriented Gauss code"));
+    type->insertItem(LINK_CODE, QObject::tr("From text code"));
     area = new QWidget();
-    subLayout = new QHBoxLayout();
+    subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
     area->setLayout(subLayout);
-    expln = QObject::trUtf8("<qt>An oriented Gauss code describing a knot. "
-        "Note that oriented Gauss codes <i>cannot</i> currently be used "
-        "for multiple-component links.<p>"
+    QBoxLayout* subSubLayout = new QHBoxLayout();
+    subSubLayout->setContentsMargins(0, 0, 0, 0);
+    expln = QObject::trUtf8("<qt>A knot signature, "
+        "oriented Gauss code, classical Gauss code, "
+        "or Dowker-Thistlethwaite notation representing a knot.<p>"
+        "At present, these codes can only be used for knots, not "
+        "multiple-component links.<p>"
+        "See the Regina Handbook for more information on each of these "
+        "types of codes.</qt>");
+        /*
         "To build an oriented Gauss code, number the crossings of the knot "
         "arbitrarily with consecutive integers 1,2,3,…, and then follow "
         "the knot along its orientation. Each time you reach a crossing, "
@@ -139,14 +140,31 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
         "As an example, the left-hand trefoil can be described using "
         "the oriented Gauss code:<p>"
         "<tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></qt>");
-    label = new QLabel(QObject::tr("Oriented Gauss code:"));
+        */
+    label = new QLabel(QObject::tr("Text code:"));
     label->setWhatsThis(expln);
-    subLayout->addWidget(label);
-    gauss = new QLineEdit(area);
-    gauss->setValidator(new QRegExpValidator(reGauss, area));
-    gauss->setWhatsThis(expln);
-    subLayout->addWidget(gauss, 1);
-    details->addWidget(area);//, LINK_GAUSS);
+    subSubLayout->addWidget(label);
+    code = new QLineEdit(area);
+    code->setWhatsThis(expln);
+    subSubLayout->addWidget(code, 1);
+    label = new QLabel("<qt>Here you can enter:<p>"
+        "<ul><li>a knot signature;</li>"
+        "<li>an oriented or classical Gauss code;</li>"
+        "<li>numerical or alphabetical Dowker-Thistlethwaite "
+        "notation.</li></ul><p>"
+        "At present, these codes can only represent knots in Regina, "
+        "not multiple-component links.<p>"
+        "Examples for the trefoil include:<p>"
+        "<ul><li><tt>dabcabcv-</tt></li>"
+        "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
+        "<li><tt>1 -2 3 -1 2 -3</tt></li>"
+        "<li><tt>4 6 2</tt></li>"
+        "<li><tt>bca</tt></li></qt>");
+    label->setWordWrap(true);
+    label->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    subLayout->addLayout(subSubLayout);
+    subLayout->addWidget(label, 1);
+    details->addWidget(area);//, LINK_CODE);
 
 
     type->insertItem(type->count(),QObject::tr("Example knot/link"));
@@ -194,31 +212,34 @@ QWidget* LinkCreator::getInterface() {
 regina::Packet* LinkCreator::createPacket(regina::Packet*,
         QWidget* parentWidget) {
     int typeId = type->currentIndex();
-    if (typeId == LINK_GAUSS) {
-        if (! reGauss.exactMatch(gauss->text())) {
+    if (typeId == LINK_CODE) {
+        std::string use = regina::stripWhitespace(
+            code->text().toUtf8().constData());
+        if (use.empty()) {
             ReginaSupport::sorry(parentWidget,
-                QObject::tr("The oriented Gauss code is not valid."),
-                QObject::tr("<qt>See the Regina Handbook for an explanation "
-                "of how oriented Gauss codes work. An example oriented "
-                "Gauss code for the left hand trefoil is:<p>"
-                "<tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></qt>"));
-            return 0;
+                QObject::tr("Please type a text code into the box provided."));
+            return nullptr;
         }
-
-        std::string code = gauss->text().toUtf8().constData();
-        Link* ans = Link::fromOrientedGauss(code);
-        if (ans) {
-            ans->setLabel(regina::stripWhitespace(code));
+        Link* ans = new Link(use);
+        if (! ans->isEmpty()) {
+            ans->setLabel(use);
             return ans;
         }
+        delete ans;
         ReginaSupport::sorry(parentWidget,
-            QObject::tr("I could not interpret the given "
-            "oriented Gauss code."),
-            QObject::tr("<qt>See the Regina Handbook for an explanation "
-            "of how oriented Gauss codes work. An example oriented "
-            "Gauss code for the left hand trefoil is:<p>"
-            "<tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></qt>"));
-        return 0;
+            QObject::tr("I could not interpret the given text code."),
+            QObject::tr("<qt>Here you can enter a knot signature, "
+                "an oriented or classical Gauss code, or numerical or "
+                "alphabetical Dowker-Thistlethwaite notation.<p>"
+                "Examples for the trefoil include:<p>"
+                "<ul><li><tt>dabcabcv-</tt></li>"
+                "<li><tt>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</tt></li>"
+                "<li><tt>1 -2 3 -1 2 -3</tt></li>"
+                "<li><tt>4 6 2</tt></li>"
+                "<li><tt>bca</tt></li></ul><p>"
+                "For more information on what each type of code means, "
+                "see the Regina Handbook.</qt>"));
+        return nullptr;
     } else if (typeId == LINK_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_BORROMEAN:

@@ -225,6 +225,8 @@ Link* Link::fromDT(Iterator begin, Iterator end) {
             cr->prev_[0] = StrandRef(adj, 1);
 
             // Set the sign of the crossing here also.
+            // Note that the original SnapPea/SnapPy code only queries
+            // theRealization[i] for even indices i.
             cr->sign_ = (theRealization[i] ? 1 : -1);
         } else {
             // Pass over.
@@ -235,8 +237,6 @@ Link* Link::fromDT(Iterator begin, Iterator end) {
             adj = ans->crossings_[crossingForPos[
                 i > 0 ? i - 1 : 2 * aNumCrossings - 1]];
             cr->prev_[1] = StrandRef(adj, 0);
-
-            assert(cr->sign_ == (theRealization[i] ? 1 : -1));
         }
     }
 

@@ -62,9 +62,43 @@ namespace regina {
 
 class Crossing;
 class Link;
+class ProgressTracker;
+class Tangle;
 template <typename T> class Laurent;
 template <typename T> class Laurent2;
 template <int> class Triangulation;
+
+/**
+ * Indicates one of the standard framing of a knot or link.
+ * Here a \e framing refers to a choice of normal vector field along the
+ * knot or link.  Equivalently, a framing refers to a choice of longitude
+ * on the torus bounding each component of the link.
+ */
+enum Framing {
+    /**
+     * Indicates the <i>Seifert framing</i>, which is defined
+     * algebraically and is independent of the knot/link projection.
+     *
+     * For each component of the link, draw a Seifert surface (i.e., an
+     * orientable surface embedded in the 3-sphere that is bounded by the
+     * corresponding knot).  The Seifert framing is the vector field
+     * that points into the corresponding surface.
+     *
+     * Equivalently, for each component of the link, the Seifert framing
+     * chooses the unique longitude for the corresponding knot that is
+     * trivial in the homology of the knot complement.
+     */
+    FRAMING_SEIFERT = 1,
+    /**
+     * Indicates the <i>blackboard framing</i>, which is specific to the
+     * knot/link projection.
+     *
+     * For the blackboard framing, the normal vector field stays within
+     * the projection plane.  Equivalently, the blackboard framing chooses
+     * longitudes whose projections do not intersect the original link diagram.
+     */
+    FRAMING_BLACKBOARD = 2
+};
 
 /**
  * A reference to one of the two strands of a link that pass each other
@@ -158,6 +192,21 @@ class REGINA_API StrandRef {
          * @return either 0 or 1 to indicate the strand.
          */
         int strand() const;
+
+        /**
+         * An integer that uniquely identifies this strand within the link.
+         *
+         * This integer will be 2<i>c</i>+<i>s</i>, where \e c is the
+         * index of the crossing, and \e s is 0 or 1 for the lower or
+         * upper strand respectively.
+         *
+         * If this is a null reference, then id() will return -1.
+         *
+         * A strand can be restored from its ID by calling Link::strand().
+         *
+         * @return the unique ID of this strand within the link.
+         */
+        int id() const;
 
         /**
          * Tests whether this and the given reference are identical.
@@ -319,6 +368,7 @@ class REGINA_API StrandRef {
 
     friend class Link;
     friend class ModelLinkGraph;
+    friend class Tangle;
 };
 
 /**
@@ -524,6 +574,7 @@ class REGINA_API Crossing : public MarkedElement,
 
     friend class Link;
     friend class ModelLinkGraph;
+    friend class Tangle;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkConnectionsReader;
 };
@@ -712,6 +763,7 @@ class REGINA_API Link : public Packet {
          *
          * - knot signatures, as used by fromKnotSig();
          * - oriented Gauss codes, as used by fromOrientedGauss();
+         * - classical Gauss codes, as used by fromGauss();
          * - numeric or alphabetical Dowker-Thistlethwaite strings, as
          *   used by fromDT().
          *
@@ -804,6 +856,21 @@ class REGINA_API Link : public Packet {
         StrandRef component(size_t index) const;
 
         /**
+         * Returns the strand in the link with the given integer ID.
+         *
+         * Each strand ID is of the form 2<i>c</i>+<i>s</i>, where \e c is the
+         * index of the crossing, and \e s is 0 or 1 for the lower or
+         * upper strand respectively.  A null strand reference (as used to
+         * indicate 0-crossing unknot components) has an ID of -1.
+         *
+         * @param id an integer between -1 and 2*size()-1 inclusive.
+         * @return the strand of this link with the corresponding ID.
+         *
+         * @see StrandRef::id()
+         */
+        StrandRef strand(int id) const;
+
+        /**
          * Translates a strand reference for some other link into the
          * corresponding strand reference for this link.
          *
@@ -875,6 +942,15 @@ class REGINA_API Link : public Packet {
          * @param c the crossing to change.
          */
         void change(Crossing* c);
+
+        /**
+         * Switches the upper and lower strands of every crossing in the
+         * diagram.
+         *
+         * This operation corresponds to reflecting the link diagram
+         * through the plane on which it is drawn.
+         */
+        void changeAll();
 
         /**
          * Resolves the given crossing.  The two incoming strands will
@@ -1403,6 +1479,33 @@ class REGINA_API Link : public Packet {
             bool perform = true);
 
         /**
+         * Tests whether this knot has a pass move that will reduce the
+         * number of crossings.
+         *
+         * Currently this routine is only available for knots, not
+         * multiple-component links.
+         *
+         * A \e pass move involves taking a section of the knot that
+         * involves only over-crossings (or only under-crossings), and
+         * then lifting that section above (or beneath respectively) the
+         * diagram and placing it back again in a different location.
+         * In particular, this routine searches for a different location
+         * that will involve fewer crossings than the original location.
+         *
+         * This routine does not actually \e perform the pass move; it
+         * simply determines whether one exists.
+         *
+         * The running time is cubic in the number of crossings.
+         *
+         * \pre This link is actually a knot (i.e., it contains exactly
+         * one component).
+         *
+         * @return \c true if and only if there is a pass move that
+         * reduces the number of crossings.
+         */
+        bool hasReducingPass() const;
+
+        /**
          * Attempts to simplify the link diagram using fast and greedy
          * heuristics.  Specifically, this routine tries combinations of
          * Reidemeister moves with the aim of reducing the number of
@@ -1516,7 +1619,7 @@ class REGINA_API Link : public Packet {
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * @return If a progress tracker is passed, then this routine
          * will return \c true or \c false immediately according to
          * whether a new thread could or could not be started.  If no
@@ -1525,7 +1628,7 @@ class REGINA_API Link : public Packet {
          * fewer crossings.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
-            ProgressTrackerOpen* tracker = 0);
+            ProgressTrackerOpen* tracker = nullptr);
 
         /**
          * Explores all knot diagrams that can be reached from this via
@@ -1631,6 +1734,31 @@ class REGINA_API Link : public Packet {
             ProgressTrackerOpen* tracker,
             Action&& action, Args&&... args) const;
 
+        /**
+         * Forms the composition of this with the given link.
+         * This link will be altered directly.
+         *
+         * Specifically, the first component of the given link will be
+         * grafted into the first component of this link, in a way that
+         * preserves orientations and crossing signs.  If the given link
+         * has any additional components, then they will be copied into
+         * this link directly with no modification.
+         *
+         * This routine may be expanded in future versions of Regina to
+         * allow more flexibility (in particular, to allow you to choose
+         * which components of the two links to graft together, and/or
+         * at which strands to graft them).
+         *
+         * If either link is empty (i.e., contains no components at all),
+         * then the result will simply be a clone of the other link
+         * (with no composition operation performed).
+         *
+         * It is allowed to pass this link as \a other.
+         *
+         * @param other the link with which this should be composed.
+         */
+        void composeWith(const Link& other);
+
         /*@}*/
         /**
          * \name Invariants and Related Properties
@@ -1654,10 +1782,24 @@ class REGINA_API Link : public Packet {
         bool isAlternating() const;
 
         /**
+         * Returns the linking number of this link.
+         *
+         * This is an invariant of the link, computed as half the sum of the
+         * signs of all crossings that involve different link components.
+         *
+         * The algorithm to compute linking number is linear time.
+         *
+         * @return the linking number.
+         */
+        long linking() const;
+
+        /**
          * Returns the writhe of this link diagram.
          *
-         * The \e writhe sums the signs of all crossings.  It is
-         * preserved under Reidemeister moves II and III, but not I.
+         * This is \e not an invariant of the link; instead it depends
+         * on the particular link diagram.  It is computed as the sum
+         * of the signs of all crossings.  It is preserved under
+         * Reidemeister moves II and III, but not I.
          *
          * @return the writhe.
          */
@@ -1700,6 +1842,29 @@ class REGINA_API Link : public Packet {
         Triangulation<3>* complement(bool simplify = true) const;
 
         /**
+         * Returns \a k cables of this link, all parallel to each
+         * other using the given framing.
+         *
+         * This routine creates a new link by:
+         *
+         * - treating each component of this link as a ribbon, using the
+         *   given framing;
+         *
+         * - creating \a k parallel copies of the original link,
+         *   following each other side-by-side along these ribbons.
+         *
+         * This link will not be modified.
+         *
+         * The result will returned as a new link, and it is the
+         * responsibility of the caller of this routine to destroy it.
+         *
+         * @param k the number of parallel copies to create.
+         * This must be non-negative.
+         * @return \a k parallel copies of this link, as a newly-created object.
+         */
+        Link* parallel(int k, Framing framing = FRAMING_SEIFERT) const;
+
+        /**
          * Returns the Kauffman bracket polynomial of this link diagram.
          *
          * Note that the bracket polynomial is not an invariant - it is
@@ -1708,32 +1873,56 @@ class REGINA_API Link : public Packet {
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
-         *
          * Bear in mind that each time the link changes, all of its
          * polynomials will be deleted.  Thus the reference that is
          * returned from this routine should not be kept for later use.
          * Instead, bracket() should be called again; this will be
          * instantaneous if the bracket polynomial has already been calculated.
          *
-         * \warning If there are too many crossings for the algorithm to
-         * handle, then this routine will return \c null.  Currently this
-         * happens when the link contains at least 2^<i>b</i> crossings,
-         * where \a b is the number of bits in a long integer (typically 64
-         * on a modern machine).  The intention is for this constraint to be
-         * removed when Regina switches to a more sophisticated algorithm.
+         * If this polynomial has already been computed, then the result will
+         * be cached and so this routine will be very fast (since it just
+         * returns the previously computed result).  Otherwise the computation
+         * could be quite slow, particularly for larger numbers of crossings.
+         * This (potentially) long computation can be managed by passing
+         * a progress tracker:
          *
-         * \warning The current implementation is naive, with a running
-         * time of O(<i>n</i> 2^<i>n</i>) where \a n is the number of
-         * crossings.  This will eventually be replaced with a more
-         * efficient implementation.
+         * - If a progress tracker is passed and the polynomial has not yet
+         *   been computed, then the calculation will take place in a
+         *   new thread and this routine will return immediately.  Once the
+         *   progress tracker indicates that the calculation has finished,
+         *   you can call bracket() again to retrieve the polynomial.
          *
-         * @return alg the algorithm with which to compute the polynomial.
+         * - If no progress tracker is passed and the polynomial has
+         *   not yet been computed, the calculation will run in the current
+         *   thread and this routine will not return until it is complete.
+         *
+         * - If the requested invariant has already been computed, then this
+         *   routine will return immediately with the pre-computed value.  If
+         *   a progress tracker is passed then it will be marked as finished.
+         *
+         * \warning The naive algorithm can only handle a limited number
+         * of crossings (currently less than the number of bits in a long,
+         * which on a typical machine is 64).  If you pass ALG_NAIVE and
+         * you have too many crossings (which is not advised, since the
+         * naive algorithm requires 2^<i>n</i> time), then this routine
+         * will ignore your choice of algorithm and use the treewidth-based
+         * algorithm regardless.
+         *
+         * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * @return the bracket polynomial, as a newly-created object.
+         * If you wish to specify a particular algorithm, there are
+         * currently two choices: ALG_NAIVE is a slow algorithm that computes
+         * the Kauffman bracket by resolving all crossings in all possible
+         * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
+         * treewidth-based algorithm.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * @return the bracket polynomial.  If a progress tracker was passed
+         * then this return value must be ignored, and you should call
+         * bracket() again once the tracker is marked as finished.
          */
-        const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT) const;
+        const Laurent<Integer>& bracket(Algorithm alg = ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Kauffman bracket polynomial of this link diagram
          * already known?  See bracket() for further details.
@@ -1764,8 +1953,15 @@ class REGINA_API Link : public Packet {
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
+         * Regina follows the conventions described in C. C. Adams,
+         * "The knot book", W. H. Freeman & Co., 1994.  If you wish to
+         * convert to the conventions used by Khovanov as described in
+         * Dror Bar-Natan, "On Khovanov's categorifiction of the Jones
+         * polynomial", Algebraic & Geometric Topology 2 (2002), 337-370, you
+         * can simply take the polynomial returned by this routine and replace
+         * the variable <i>x</i> (which represents the square root of \a t)
+         * with the expression -</i>q</i>.
+         *
          * To pretty-print this polynomial for human consumption, you can
          * call <tt>Laurent::str(Link::jonesVar)</tt>.
          *
@@ -1775,26 +1971,50 @@ class REGINA_API Link : public Packet {
          * Instead, jones() should be called again; this will be
          * instantaneous if the Jones polynomial has already been calculated.
          *
-         * \warning If there are too many crossings for the algorithm to
-         * handle, then this routine will return \c null.  Currently this
-         * happens when the link contains at least 2^<i>b</i> crossings,
-         * where \a b is the number of bits in a long integer (typically 64
-         * on a modern machine).  The intention is for this constraint to be
-         * removed when Regina switches to a more sophisticated algorithm.
+         * If this polynomial has already been computed, then the result will
+         * be cached and so this routine will be very fast (since it just
+         * returns the previously computed result).  Otherwise the computation
+         * could be quite slow, particularly for larger numbers of crossings.
+         * This (potentially) long computation can be managed by passing
+         * a progress tracker:
          *
-         * \warning The current implementation is naive, with a running
-         * time of O(<i>n</i> 2^<i>n</i>) where \a n is the number of
-         * crossings.  This will eventually be replaced with a more
-         * efficient implementation.
+         * - If a progress tracker is passed and the polynomial has not yet
+         *   been computed, then the calculation will take place in a
+         *   new thread and this routine will return immediately.  Once the
+         *   progress tracker indicates that the calculation has finished,
+         *   you can call bracket() again to retrieve the polynomial.
          *
-         * @return alg the algorithm with which to compute the polynomial.
+         * - If no progress tracker is passed and the polynomial has
+         *   not yet been computed, the calculation will run in the current
+         *   thread and this routine will not return until it is complete.
+         *
+         * - If the requested invariant has already been computed, then this
+         *   routine will return immediately with the pre-computed value.  If
+         *   a progress tracker is passed then it will be marked as finished.
+         *
+         * \warning The naive algorithm can only handle a limited number
+         * of crossings (currently less than the number of bits in a long,
+         * which on a typical machine is 64).  If you pass ALG_NAIVE and
+         * you have too many crossings (which is not advised, since the
+         * naive algorithm requires 2^<i>n</i> time), then this routine
+         * will ignore your choice of algorithm and use the treewidth-based
+         * algorithm regardless.
+         *
+         * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
-         * Currently there is only one implementation (and so this argument
-         * will be ignored), but this is expected to change in future
-         * versions of Regina..
-         * @return the Jones polynomial, as a newly-created object.
+         * If you wish to specify a particular algorithm, there are
+         * currently two choices: ALG_NAIVE is a slow algorithm that computes
+         * the Kauffman bracket by resolving all crossings in all possible
+         * ways, and ALG_TREEWIDTH uses a fixed-parameter tractable
+         * treewidth-based algorithm.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * @return the Jones polynomial.  If a progress tracker was passed
+         * then this return value must be ignored, and you should call
+         * jones() again once the tracker is marked as finished.
          */
-        const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT) const;
+        const Laurent<Integer>& jones(Algorithm alg = ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr) const;
         /**
          * Is the Jones polynomial of this link diagram already known?
          * See jones() for further details.
@@ -1827,8 +2047,6 @@ class REGINA_API Link : public Packet {
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
          * To pretty-print this polynomial for human consumption, you can call
          * <tt>Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
          *
@@ -1845,15 +2063,42 @@ class REGINA_API Link : public Packet {
          * Instead, homflyAZ() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
-         * @return alg the algorithm with which to compute the polynomial.
+         * If the HOMFLY polynomial has already been computed, then the result
+         * will be cached and so this routine will be very fast (since it just
+         * returns the previously computed result).  Otherwise the computation
+         * could be quite slow, particularly for larger numbers of crossings.
+         * This (potentially) long computation can be managed by passing
+         * a progress tracker:
+         *
+         * - If a progress tracker is passed and the polynomial has not yet
+         *   been computed, then the calculation will take place in a
+         *   new thread and this routine will return immediately.  Once the
+         *   progress tracker indicates that the calculation has finished,
+         *   you can call homflyAZ() again to retrieve the polynomial.
+         *
+         * - If no progress tracker is passed and the polynomial has
+         *   not yet been computed, the calculation will run in the current
+         *   thread and this routine will not return until it is complete.
+         *
+         * - If the HOMFLY polynomial has already been computed (either in
+         *   terms of \a alpha and \a z or in terms of \a l and \a m), then
+         *   this routine will return immediately with the pre-computed value.
+         *   If a progress tracker is passed then it will be marked as finished.
+         *
+         * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
          * currently two choices: ALG_BACKTRACK will use Kauffman's
          * skein-template algorithm, and ALG_TREEWIDTH will use a
          * fixed-parameter tractable treewidth-based algorithm.
-         * @return the HOMFLY polynomial, as a newly-created object.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * @return the HOMFLY polynomial.  If a progress tracker was passed
+         * then this return value must be ignored, and you should call
+         * homflyAZ() again once the tracker is marked as finished.
          */
-        const Laurent2<Integer>& homflyAZ(Algorithm alg = ALG_DEFAULT) const;
+        const Laurent2<Integer>& homflyAZ(Algorithm alg = ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr) const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
          * in \a l and \a m.
@@ -1873,8 +2118,6 @@ class REGINA_API Link : public Packet {
          * If this is the empty link, then this routine will return the zero
          * polynomial.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
          * To pretty-print this polynomial for human consumption, you can call
          * <tt>Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
          *
@@ -1891,15 +2134,42 @@ class REGINA_API Link : public Packet {
          * Instead, homflyLM() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
-         * @return alg the algorithm with which to compute the polynomial.
+         * If the HOMFLY polynomial has already been computed, then the result
+         * will be cached and so this routine will be very fast (since it just
+         * returns the previously computed result).  Otherwise the computation
+         * could be quite slow, particularly for larger numbers of crossings.
+         * This (potentially) long computation can be managed by passing
+         * a progress tracker:
+         *
+         * - If a progress tracker is passed and the polynomial has not yet
+         *   been computed, then the calculation will take place in a
+         *   new thread and this routine will return immediately.  Once the
+         *   progress tracker indicates that the calculation has finished,
+         *   you can call homflyLM() again to retrieve the polynomial.
+         *
+         * - If no progress tracker is passed and the polynomial has
+         *   not yet been computed, the calculation will run in the current
+         *   thread and this routine will not return until it is complete.
+         *
+         * - If the HOMFLY polynomial has already been computed (either in
+         *   terms of \a alpha and \a z or in terms of \a l and \a m), then
+         *   this routine will return immediately with the pre-computed value.
+         *   If a progress tracker is passed then it will be marked as finished.
+         *
+         * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
          * currently two choices: ALG_BACKTRACK will use Kauffman's
          * skein-template algorithm, and ALG_TREEWIDTH will use a
          * fixed-parameter tractable treewidth-based algorithm.
-         * @return the HOMFLY polynomial, as a newly-created object.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * @return the HOMFLY polynomial.  If a progress tracker was passed
+         * then this return value must be ignored, and you should call
+         * homflyLM() again once the tracker is marked as finished.
          */
-        const Laurent2<Integer>& homflyLM(Algorithm alg = ALG_DEFAULT) const;
+        const Laurent2<Integer>& homflyLM(Algorithm alg = ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr) const;
         /**
          * Returns the HOMFLY polynomial of this link, as a polynomial
          * in \a alpha and \a z.
@@ -1907,8 +2177,6 @@ class REGINA_API Link : public Packet {
          * This routine is simply an alias for homflyAZ().  See the
          * documentation for homflyAZ() for further details.
          *
-         * The polynomial that is returned will be newly created, and it
-         * is the responsibility of the caller of this routine to destroy it.
          * To pretty-print this polynomial for human consumption, you can call
          * <tt>Laurent2::str(Link::homflyVarX, Link::homflyVarY)</tt>.
          *
@@ -1918,15 +2186,20 @@ class REGINA_API Link : public Packet {
          * Instead, homfly() should be called again; this will be
          * instantaneous if the HOMFLY polynomial has already been calculated.
          *
-         * @return alg the algorithm with which to compute the polynomial.
+         * @param alg the algorithm with which to compute the polynomial.
          * If you are not sure, the default (ALG_DEFAULT) is a safe choice.
          * If you wish to specify a particular algorithm, there are
          * currently two choices: ALG_BACKTRACK will use Kauffman's
          * skein-template algorithm, and ALG_TREEWIDTH will use a
          * fixed-parameter tractable treewidth-based algorithm.
-         * @return the HOMFLY polynomial, as a newly-created object.
+         * @param tracker a progress tracker through which progress will
+         * be reported, or \c null if no progress reporting is required.
+         * @return the HOMFLY polynomial.  If a progress tracker was passed
+         * then this return value must be ignored, and you should call
+         * homfly() again once the tracker is marked as finished.
          */
-        const Laurent2<Integer>& homfly(Algorithm alg = ALG_DEFAULT) const;
+        const Laurent2<Integer>& homfly(Algorithm alg = ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr) const;
         /**
          * Is the HOMFLY polynomial of this link diagram already known?
          * See homflyAZ() and homflyLM() for further details.
@@ -1959,9 +2232,47 @@ class REGINA_API Link : public Packet {
          * not been changed) then the same tree decomposition will be
          * returned immediately.
          *
+         * If you wish to supply your own tree decomposition (as opposed
+         * to relying on the greedy heuristics that Regina implements),
+         * then you can supply it by calling useTreeDecomposition().
+         *
          * @return a nice tree decomposition of this link diagram.
          */
         const TreeDecomposition& niceTreeDecomposition() const;
+
+        /**
+         * Instructs Regina to use the given tree decomposition as the
+         * starting point whenever it needs a tree decomposition for this link.
+         *
+         * For some link routines, including niceTreeDecomposition() as
+         * well as computations such as jones() that support the option
+         * ALG_TREEWIDTH, Regina needs a tree decomposition of the
+         * planar 4-valent multigraph formed by this link diagram.
+         *
+         * By default, Regina will compute (and then cache) such a tree
+         * decomposition itself, using in-built greedy heuristics.  This
+         * routine allows you to supply your \e own tree decomposition
+         * (which, for example, might be a smaller-width tree decomposition
+         * that you found using third-party software).  By supplying
+         * your own tree decomposition \e td through this routine,
+         * Regina will throw away any pre-computed tree decomposition
+         * that it has cached, and will instead cache \e td for future
+         * use instead.
+         *
+         * Regina will not claim ownership of \e td, and will not edit
+         * it in any way.  Instead, it will make a deep copy of \e td
+         * and then modify this copy for its purposes.
+         *
+         * In particular, \e td does not need to be a \e nice tree
+         * decomposition (indeed, it does not need to have any special
+         * properties beyond the definition of a tree decomposition).
+         * Regina will automatically create a nice tree decomposition
+         * from it if \e td is not nice already.
+         *
+         * @param td a tree decomposition of the planar 4-valent
+         * multigraph formed by this link diagram.
+         */
+        void useTreeDecomposition(const TreeDecomposition& td);
 
         /*@}*/
         /**
@@ -2279,6 +2590,69 @@ class REGINA_API Link : public Packet {
          * (the default) to use numerical notation.
          */
         void dt(std::ostream& out, bool alpha = false) const;
+
+        /**
+         * Outputs the underlying planar 4-valent multigraph using the
+         * PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ .
+         *
+         * In summary, the output will consist of several lines of text:
+         *
+         * - If this link has a packet label, then the output will begin with
+         *   a descriptive comment line of the form <tt>c <i>label</i></tt>.
+         *   Otherwise this initial comment line will be omitted.
+         *
+         * - Next will be a line of the form
+         *   <tt>p&nbsp;tw&nbsp;<i>num_vertices</i>&nbsp;<i>num_edges</i></tt>.
+         *   Note that, since the underlying graph comes from a link diagram,
+         *   we will always have \e num_edges equal to twice \e num_vertices.
+         *
+         * - Following this will be \e num_edges lines, one for each
+         *   edge, each of the form <tt><i>u&nbsp;v</i></tt>, indicating
+         *   an edge from vertex number \e u to vertex number \e v.
+         *   In this format, vertices are numbered 1,2,...,\e num_vertices.
+         *
+         * An example of this text format is as follows:
+         *
+           \verbatim
+           c Figure eight knot
+           p tw 4 8
+           1 2
+           1 4
+           1 2
+           2 3
+           3 4
+           1 3
+           3 4
+           2 4
+           \endverbatim
+         *
+         * \ifacespython The \a out argument is not present; instead
+         * standard output is assumed.
+         *
+         * @param out the output stream to which to write.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        void writePACE(std::ostream& out) const;
+        /**
+         * Returns a text representation of the underlying planar
+         * 4-valent multigraph, using the PACE text format.
+         * The text format is described in detail at
+         * https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/ ,
+         * and is documented in detail by the routine writePACE().
+         *
+         * This routine simply returns the output of writePACE() as a
+         * string, instead of writing it to an output stream.
+         *
+         * See the writePACE() notes for further details.
+         *
+         * @return the output of writePACE(), as outlined above.
+         *
+         * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
+         */
+        std::string pace() const;
 
         /**
          * Returns C++ code that can be used to reconstruct this link.
@@ -2940,6 +3314,18 @@ class REGINA_API Link : public Packet {
         void clearAllProperties();
 
         /**
+         * Indicates that strand \a s is followed immediately by strand \a t
+         * when traversing a link.  The relevant \a next_ and \a prev_ arrays
+         * of the two crossings will be adjusted accordingly.
+         *
+         * There is no sanity checking to ensure that these two
+         * crossings do not already have conflicting connections in place.
+         *
+         * \pre Neither \a s nor \a t is a null strand reference.
+         */
+        static void join(const StrandRef& s, const StrandRef& t);
+
+        /**
          * Internal to fromOrientedGauss().
          *
          * This routine parses a single token in an "oriented" Gauss code.
@@ -3039,25 +3425,71 @@ class REGINA_API Link : public Packet {
         bool addComponents(size_t strandsRemaining);
 
         /**
+         * Internal to bracketNaive().
+         *
+         * Returns the number of loops in the link produced by resolving
+         * each crossing according to the given bitmask:
+         *
+         * - If the <i>i</i>th bit in \a mask is 0, this indicates that
+         *   crossing \a i should be resolved by turning \e left when
+         *   entering along the upper strand.
+         *
+         * - If the <i>i</i>th bit in \a mask is 1, this indicates that
+         *   crossing \a i should be resolved by turning \e right when
+         *   entering along the upper strand.
+         *
+         * If the array \a loopIDs is non-null, then it will be filled
+         * with an identifier for each loop.  Each identifier will be
+         * the minimum of the following values that are computed as you
+         * follow the loop: when passing through crossing \a i, if we
+         * encounter the half of the upper strand that \e exits the crossing
+         * then we take the value \a i, and if we encounter the half of
+         * the upper strand that \e enters the crossing then we take the
+         * value (\a i + \a n).  These identifiers will be returned in the
+         * array \a loopIDs in sorted order.
+         *
+         * If the array \a loopLengths is non-null, then it will be
+         * filled with the number of strands in each loop (so these
+         * should sum to twice the number of crossings).  These loop
+         * lengths will be placed in the array in the same order as the
+         * loop IDs as described above.
+         *
+         * \pre The number of crossings is at most the number of bits in
+         * an unsigned long.
+         *
+         * \pre If either or both the arrays \a loopIDs and \a loopLengths
+         * are not null, then they are arrays whose size is at least the
+         * return value (i.e., the number of loops).  This typically means
+         * that the caller must put an upper bound on the number of loops
+         * in advance, before calling this routine.
+         *
+         * @return the resulting number of loops after all crossings are
+         * resolved.
+         */
+        size_t resolutionLoops(unsigned long mask, size_t* loopIDs = nullptr,
+            size_t* loopLengths = nullptr) const;
+
+        /**
          * Compute the Kauffman bracket polynomial using a naive
          * algorithm that sums over all resolutions of all crossings.
          *
+         * The given progress tracker may be \c null.
+         * This routine does \e not mark the tracker as finished.
+         *
          * See bracket() for further details.
          */
-        Laurent<Integer>* bracketNaive() const;
+        Laurent<Integer>* bracketNaive(ProgressTracker* tracker) const;
 
         /**
          * Compute the Kauffman bracket polynomial using a fixed-parameter
          * tractable algorithm based on a tree decomposition.
          *
-         * See bracket() for further details.
+         * The given progress tracker may be \c null.
+         * This routine does \e not mark the tracker as finished.
          *
-         * \warning This routine is not yet implemented!  Currently it
-         * just a placeholder (not accessible to external code) that
-         * falls back to bracketNaive().  This algorithm is expected to be
-         * implemented in a future version of Regina.
+         * See bracket() for further details.
          */
-        Laurent<Integer>* bracketTreewidth() const;
+        Laurent<Integer>* bracketTreewidth(ProgressTracker* tracker) const;
 
         /**
          * Compute the HOMFLY polynomial of this link, as a polynomial
@@ -3067,7 +3499,7 @@ class REGINA_API Link : public Packet {
          *
          * \pre This link contains at least one crossing.
          */
-        Laurent2<Integer>* homflyKauffman() const;
+        Laurent2<Integer>* homflyKauffman(ProgressTracker* tracker) const;
 
         /**
          * Compute the HOMFLY polynomial of this link, as a polynomial
@@ -3078,7 +3510,45 @@ class REGINA_API Link : public Packet {
          *
          * \pre This link contains at least one crossing.
          */
-        Laurent2<Integer>* homflyTreewidth() const;
+        Laurent2<Integer>* homflyTreewidth(ProgressTracker* tracker) const;
+
+        /**
+         * Optimises the given tree decomposition for computing the
+         * Jones polynomial.
+         *
+         * This optimisation may involve compressing and/or rerooting the
+         * given tree decomposition.  The aim is to minimise the estimated
+         * processing time and memory consumption of calling
+         * <tt>jones(ALG_TREEWIDTH)</tt> and/or <tt>bracket(ALG_TREEWIDTH)</tt>.
+         *
+         * The rerooting procedure essentially estimates the number of
+         * partial solutions that are expected at each bag in the
+         * treewidth-based dynamic programming algorithm, and chooses a
+         * root that minimises the maximum such estimate over all bags.
+         *
+         * @param td the tree decomposition to optimise.
+         */
+        void optimiseForJones(TreeDecomposition& td) const;
+
+        /**
+         * Takes an arbitrary tree decomposition for this link, and
+         * modifies and optimises it so that it is ready for use as a
+         * nice tree decomposition for the internal treewidth-based
+         * algorithms in the Link class.
+         */
+        void prepareTreeDecomposition(TreeDecomposition& td) const;
+
+        /**
+         * Sets the cached Kauffman bracket polynomial and Jones polynomial.
+         *
+         * The Kauffman bracket polynomial will be set to the argument
+         * \a bracket, and the Jones polynomial will be derived from it.
+         *
+         * This link will claim ownership of the given polynomial.
+         *
+         * @param bracket the Kauffman bracket polynomial of this link.
+         */
+        void setPropertiesFromBracket(Laurent<Integer>* bracket) const;
 
         /**
          * A non-templated version of rewrite().
@@ -3096,6 +3566,7 @@ class REGINA_API Link : public Packet {
             const std::function<bool(Link&)>& action) const;
 
     friend class ModelLinkGraph;
+    friend class Tangle;
     friend class XMLLinkCrossingsReader;
     friend class XMLLinkComponentsReader;
 };
@@ -3309,6 +3780,35 @@ class REGINA_API ArcIterator {
 
 /*@}*/
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline void Link::clearAllProperties() {
+    jones_.clear();
+    homflyAZ_.clear();
+    homflyLM_.clear();
+    bracket_.clear();
+    niceTreeDecomposition_.clear();
+}
+
+inline Link::~Link() {
+    clearAllProperties();
+    for (Crossing* c : crossings_)
+        delete c;
+}
+
+inline int Crossing::index() const {
+    return markedIndex();
+}
+
+inline StrandRef Crossing::next(int strand) const {
+    return next_[strand];
+}
+
+inline StrandRef Crossing::prev(int strand) const {
+    return prev_[strand];
+}
+
 // Inline functions for StrandRef
 
 inline StrandRef::StrandRef() : crossing_(nullptr), strand_(0) {
@@ -3324,6 +3824,10 @@ inline Crossing* StrandRef::crossing() const {
 
 inline int StrandRef::strand() const {
     return strand_;
+}
+
+inline int StrandRef::id() const {
+    return (crossing_ ? ((crossing()->index() << 1) | strand_) : -1);
 }
 
 inline bool StrandRef::operator == (const StrandRef& rhs) const {
@@ -3367,7 +3871,7 @@ inline void StrandRef::jump() {
 }
 
 inline StrandRef::operator bool() const {
-    return (crossing_ != 0);
+    return (crossing_ != nullptr);
 }
 
 inline std::ostream& operator << (std::ostream& out, const StrandRef& s) {
@@ -3378,10 +3882,6 @@ inline std::ostream& operator << (std::ostream& out, const StrandRef& s) {
 }
 
 // Inline functions for Crossing
-
-inline int Crossing::index() const {
-    return markedIndex();
-}
 
 inline int Crossing::sign() const {
     return sign_;
@@ -3405,14 +3905,6 @@ inline StrandRef Crossing::under() {
 
 inline StrandRef Crossing::strand(int which) {
     return StrandRef(this, which);
-}
-
-inline StrandRef Crossing::next(int strand) const {
-    return next_[strand];
-}
-
-inline StrandRef Crossing::prev(int strand) const {
-    return prev_[strand];
 }
 
 inline void Crossing::writeTextShort(std::ostream& out) const {
@@ -3466,12 +3958,6 @@ inline Link::Link(size_t unknots) {
 inline Link::Link(const Link& cloneMe) : Link(cloneMe, true) {
 }
 
-inline Link::~Link() {
-    clearAllProperties();
-    for (Crossing* c : crossings_)
-        delete c;
-}
-
 inline size_t Link::size() const {
     return crossings_.size();
 }
@@ -3492,6 +3978,11 @@ inline StrandRef Link::component(size_t index) const {
     return components_[index];
 }
 
+inline StrandRef Link::strand(int id) const {
+    return (id >= 0 ? StrandRef(crossings_[id >> 1]->strand(id & 1)) :
+        StrandRef());
+}
+
 inline long Link::writhe() const {
     long ans = 0;
     for (const Crossing* c : crossings_)
@@ -3499,8 +3990,9 @@ inline long Link::writhe() const {
     return ans;
 }
 
-inline const Laurent2<Integer>& Link::homfly(Algorithm alg) const {
-    return homflyAZ(alg);
+inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
+        ProgressTracker* tracker) const {
+    return homflyAZ(alg, tracker);
 }
 
 inline bool Link::knowsBracket() const {
@@ -3513,7 +4005,6 @@ inline bool Link::knowsHomfly() const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
     return homflyAZ_.known();
 }
-
 inline bool Link::r2(Crossing* crossing, bool check, bool perform) {
     return r2(StrandRef(crossing, 1), check, perform);
 }
@@ -3537,8 +4028,14 @@ inline const TreeDecomposition& Link::niceTreeDecomposition() const {
         return *niceTreeDecomposition_.value();
 
     TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
-    ans->makeNice();
+    prepareTreeDecomposition(*ans);
     return *(niceTreeDecomposition_ = ans);
+}
+
+inline void Link::useTreeDecomposition(const TreeDecomposition& td) {
+    TreeDecomposition* use = new TreeDecomposition(td);
+    prepareTreeDecomposition(*use);
+    niceTreeDecomposition_ = use;
 }
 
 inline bool Link::dependsOnParent() const {
@@ -3549,18 +4046,10 @@ inline Packet* Link::internalClonePacket(Packet*) const {
     return new Link(*this);
 }
 
-inline void Link::clearAllProperties() {
-    jones_.clear();
-    homflyAZ_.clear();
-    homflyLM_.clear();
-    bracket_.clear();
-    niceTreeDecomposition_.clear();
-}
-
 inline StrandRef Link::translate(const StrandRef& other) const {
     return (other.crossing() ?
         crossings_[other.crossing()->index()]->strand(other.strand()) :
-        StrandRef(0, other.strand()));
+        StrandRef(nullptr, other.strand()));
 }
 
 template <typename Action, typename... Args>
@@ -3568,6 +4057,11 @@ inline bool Link::rewrite(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return rewriteInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
+}
+
+inline void Link::join(const StrandRef& s, const StrandRef& t) {
+    s.crossing_->next_[s.strand_] = t;
+    t.crossing_->prev_[t.strand_] = s;
 }
 
 // Inline functions for CrossingIterator

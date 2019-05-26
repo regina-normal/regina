@@ -260,6 +260,8 @@ class REGINA_API CensusHits : public boost::noncopyable {
          * Appends a new hit to the end of this list.  This list will
          * take ownership of the given object.
          *
+         * \ifacespython Not present.
+         *
          * @param hit the hit to append to this list.
          */
         void append(CensusHit* hit);

@@ -50,6 +50,11 @@ namespace {
     BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
         LargeInteger::stringValue, 0, 1);
 
+    LargeInteger* fromPyLong(boost::python::long_ l) {
+        return new LargeInteger(boost::python::extract<std::string>(
+            boost::python::str(l)));
+    }
+
     boost::python::tuple divisionAlg(const LargeInteger& n,
             const LargeInteger& divisor) {
         LargeInteger remainder;
@@ -66,6 +71,7 @@ void addLargeInteger() {
             .def(init<const regina::Integer&>())
             .def(init<double>())
             .def(init<const char*, optional<int> >())
+            .def("__init__", make_constructor(fromPyLong))
             .def("isNative", &LargeInteger::isNative)
             .def("isZero", &LargeInteger::isZero)
             .def("sign", &LargeInteger::sign)

@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+void addBinom();
 void addMatrixOps();
 void addCyclotomic();
 void addInteger();
@@ -49,6 +50,7 @@ void addRational();
 void addNumberTheory();
 
 void addMathsClasses() {
+    addBinom();
     addMatrixOps();
     addCyclotomic();
     addInteger();

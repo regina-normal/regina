@@ -75,6 +75,9 @@ Link::Link(const std::string& description) {
     } else if ((attempt = fromOrientedGauss(description))) {
         swapContents(*attempt);
         setLabel(description);
+    } else if ((attempt = fromGauss(description))) {
+        swapContents(*attempt);
+        setLabel(description);
     } else if ((attempt = fromDT(description))) {
         swapContents(*attempt);
         setLabel(description);
@@ -146,6 +149,48 @@ bool Link::isAlternating() const {
     }
 
     return true;
+}
+
+long Link::linking() const {
+    if (crossings_.empty())
+        return 0;
+
+    // This algorithm is linear time.
+
+    // Firat sum the signs of all crossings.
+    long ans = 0;
+    for (const Crossing* c : crossings_)
+        ans += c->sign();
+
+    // Now work through each component, and subtract off crossings that
+    // involve that component twice.
+    bool* seen = new bool[crossings_.size()];
+    std::fill(seen, seen + crossings_.size(), false);
+
+    StrandRef s;
+    for (StrandRef start : components_) {
+        if (! start)
+            continue;
+
+        s = start;
+
+        do {
+            if (seen[s.crossing()->index()])
+                ans -= s.crossing()->sign();
+            else
+                seen[s.crossing()->index()] = true;
+            ++s;
+        } while (s != start);
+
+        // Reset the seen[] array to all false.
+        do {
+            seen[s.crossing()->index()] = false;
+            ++s;
+        } while (s != start);
+    }
+    delete[] seen;
+
+    return ans / 2;
 }
 
 void Link::writeTextShort(std::ostream& out) const {
@@ -283,6 +328,26 @@ void Link::change(Crossing* c) {
 
     // Finally: the crossing sign will change.
     c->sign_ = -c->sign_;
+
+    clearAllProperties();
+}
+
+void Link::changeAll() {
+    ChangeEventSpan span(this);
+
+    for (StrandRef& s : components_)
+        s.strand_ ^= 1;
+
+    int i;
+    for (Crossing* c : crossings_) {
+        std::swap(c->next_[0], c->next_[1]);
+        std::swap(c->prev_[0], c->prev_[1]);
+        for (i = 0; i < 2; ++i) {
+            c->next_[i].strand_ ^= 1;
+            c->prev_[i].strand_ ^= 1;
+        }
+        c->sign_ = - c->sign_;
+    }
 
     clearAllProperties();
 }
@@ -438,6 +503,289 @@ std::string Link::brief() const {
     return out.str();
 }
 
+void Link::composeWith(const Link& other) {
+    if (other.isEmpty())
+        return;
+
+    ChangeEventSpan span(this);
+
+    // From here we can assume other is non-empty.
+    // Clone its crossings, and transfer them directly into this link.
+    // This abuses the MarkedVector API slightly (since an object must
+    // not belong to more than one MarkedVector at a time), but the
+    // implementation of MarkedVector does make it correct.
+    Link clone(other);
+    for (Crossing* c : clone.crossings_)
+        crossings_.push_back(c);
+    clone.crossings_.clear();
+
+    if (isEmpty()) {
+        // This link simply acquires all of clone's components.
+        clone.components_.swap(components_);
+
+        clearAllProperties();
+        return;
+    }
+
+    // From here we assume that *both* links are non-empty.
+    // We copy all compoments of clone except for the first.
+    auto it = clone.components_.begin();
+    for (++it; it != clone.components_.end(); ++it)
+        components_.push_back(*it);
+
+    // All that is left is to graft the first components of the two links.
+    StrandRef graft = clone.components_.front();
+    StrandRef src = components_.front();
+
+    if (! graft) {
+        // We are grafting in a 0-crossing unknot component: nothing to do.
+    } else if (! src) {
+        // We are grafting the other component into a 0-crossing unknot
+        // component of *this* link.  Just replace the component entirely.
+        *components_.begin() = graft;
+    } else {
+        // We are grafting two non-trivial components together.
+        StrandRef graftEnd = graft.prev();
+        join(src.prev(), graft); // changes graft.prev()
+        join(graftEnd, src);
+    }
+
+    // All done!
+    clearAllProperties();
+}
+
+Link* Link::parallel(int k, Framing framing) const {
+    // Get the special cases out of the way.
+    if (k == 0 || components_.empty())
+        return new Link;
+    if (k == 1)
+        return new Link(*this);
+    if (crossings_.empty())
+        return new Link(components_.size() * k);
+
+    Link* ans = new Link;
+    Crossing** tmp = new Crossing*[k*k]; // Used to build grids of crossings
+
+    // Crossing i of knot:
+    //
+    // +ve:    |                 -ve:    ^
+    //     --- | --->                --- | --->
+    //         v                         |
+    //
+    // Crossings (k^2 i, ..., k^2 (i+1) - 1) of this tangle:
+    //
+    //  k^2 i       | ... | k^2 (i+1) - k     k^2 i + k-1 ^ ... ^ k^2 (i+1) - 1
+    //          --- | --- | --->                      --- | --- | --->
+    //          ... | ... | ...                       ... | ... | ...
+    //          --- | --- | --->                      --- | --- | --->
+    //  k^2 i + k-1 v ... v k^2 (i+1) - 1     k^2 i       | ... | k^2 (i+1) - k
+
+    // Create the k^2 crossings for each original, and join them
+    // together internally.
+    int i, j;
+    for (Crossing* c : crossings_) {
+        for (i = 0; i < k * k; ++i)
+            ans->crossings_.push_back(tmp[i] = new Crossing(c->sign()));
+
+        for (i = 0; i < k; ++i)
+            for (j = 0; j < k - 1; ++j)
+                Link::join(tmp[k*i + j]->upper(), tmp[k*i + j+1]->upper());
+        for (i = 0; i < k - 1; ++i)
+            for (j = 0; j < k; ++j)
+                Link::join(tmp[k*i + j]->lower(), tmp[k*(i+1) + j]->lower());
+    }
+
+    // Walk around the original knot, and keep track of the left-hand
+    // and right-hand crossings of the new tangle where we (i) enter the
+    // grid configuration, and (ii) leave this configuration.
+
+    StrandRef s;
+    int idx;
+    int enterL, exitL;
+    int enterStrand, exitStrand;
+    int enterDelta, exitDelta;
+    int startL;
+    int startStrand;
+    int startDelta;
+
+    int writhe;
+    bool* seen = new bool[crossings_.size()];
+    std::fill(seen, seen + crossings_.size(), false);
+
+    for (const StrandRef& start : components_) {
+        if (! start) {
+            // This component is a 0-crossing unknot.
+            for (i = 0; i < k; ++i)
+                ans->components_.push_back(StrandRef());
+            continue;
+        }
+
+        writhe = 0;
+        s = start;
+        exitL = -1;
+        do {
+            idx = s.crossing()->index();
+            if (s.crossing()->sign() > 0) {
+                if (s.strand() == 1) {
+                    enterL = k*k * (idx+1) - k;
+                    enterDelta = -k;
+                } else {
+                    enterL = k*k * idx;
+                    enterDelta = 1;
+                }
+            } else {
+                if (s.strand() == 1) {
+                    enterL = k*k * idx;
+                    enterDelta = k;
+                } else {
+                    enterL = k*k * idx + k-1;
+                    enterDelta = -1;
+                }
+            }
+            enterStrand = s.strand();
+
+            // Connect the previous grid to this.
+            if (exitL >= 0) {
+                for (i = 0; i < k; ++i)
+                    Link::join(
+                        ans->crossings_[exitL + i * exitDelta]->
+                            strand(exitStrand),
+                        ans->crossings_[enterL + i * enterDelta]->
+                            strand(enterStrand));
+            } else {
+                startL = enterL;
+                startDelta = enterDelta;
+                startStrand = enterStrand;
+            }
+
+            exitL = enterL + (k-1) * (s.strand() == 1 ? 1 : k);
+            exitDelta = enterDelta;
+            exitStrand = enterStrand;
+
+            if (seen[s.crossing()->index()])
+                writhe += s.crossing()->sign();
+            else
+                seen[s.crossing()->index()] = true;
+
+            ++s;
+        } while (s != start);
+
+        // Reset the seen[] array to all false.
+        do {
+            seen[s.crossing()->index()] = false;
+            ++s;
+        } while (s != start);
+
+        if (writhe == 0 || framing == FRAMING_BLACKBOARD) {
+            // Close up the k new parallel link components.
+            for (i = 0; i < k; ++i)
+                Link::join(
+                    ans->crossings_[exitL + i * exitDelta]->
+                        strand(exitStrand),
+                    ans->crossings_[startL + i * startDelta]->
+                        strand(startStrand));
+        } else if (writhe > 0) {
+            // We want the Seifert framing, and the writhe is positive.
+            // Insert the requisite number of negative twists
+            // before closing off the k parallel link components.
+            for (i = 0; i < writhe * k; ++i) {
+                for (j = 0; j < k - 1; ++j)
+                    ans->crossings_.push_back(tmp[j] = new Crossing(-1));
+
+                for (j = 0; j < k - 2; ++j)
+                    Link::join(tmp[j]->lower(), tmp[j + 1]->lower());
+
+                if (i == 0) {
+                    Link::join(
+                        ans->crossings_[exitL]->strand(exitStrand),
+                        tmp[0]->lower());
+                    for (j = 1; j < k; ++j)
+                        Link::join(
+                            ans->crossings_[exitL + j * exitDelta]->
+                                strand(exitStrand),
+                            tmp[j - 1]->upper());
+                } else {
+                    Link::join(
+                        ans->crossings_[exitL]->upper(), tmp[0]->lower());
+                    for (j = 1; j < k - 1; ++j)
+                        Link::join(
+                            ans->crossings_[exitL + j]->upper(),
+                            tmp[j - 1]->upper());
+                    Link::join(
+                        ans->crossings_[exitL + (k - 2)]->lower(),
+                        tmp[k - 2]->upper());
+                }
+
+                exitL = tmp[0]->index();
+            }
+
+            for (j = 0; j < k - 1; ++j)
+                Link::join(
+                    ans->crossings_[exitL + j]->upper(),
+                    ans->crossings_[startL + j * startDelta]->
+                        strand(startStrand));
+            Link::join(
+                ans->crossings_[exitL + (k - 2)]->lower(),
+                ans->crossings_[startL + (k - 1) * startDelta]->
+                    strand(startStrand));
+        } else {
+            // We want the Seifert framing, and the writhe is negative.
+            // Insert the requisite number of positive twists
+            // before closing off the k parallel link components.
+            for (i = 0; i < (-writhe) * k; ++i) {
+                for (j = 0; j < k - 1; ++j)
+                    ans->crossings_.push_back(tmp[j] = new Crossing(1));
+
+                for (j = 0; j < k - 2; ++j)
+                    Link::join(tmp[j]->upper(), tmp[j + 1]->upper());
+
+                if (i == 0) {
+                    Link::join(
+                        ans->crossings_[exitL]->strand(exitStrand),
+                        tmp[0]->upper());
+                    for (j = 1; j < k; ++j)
+                        Link::join(
+                            ans->crossings_[exitL + j * exitDelta]->
+                                strand(exitStrand),
+                            tmp[j - 1]->lower());
+                } else {
+                    Link::join(
+                        ans->crossings_[exitL]->lower(), tmp[0]->upper());
+                    for (j = 1; j < k - 1; ++j)
+                        Link::join(
+                            ans->crossings_[exitL + j]->lower(),
+                            tmp[j - 1]->lower());
+                    Link::join(
+                        ans->crossings_[exitL + (k - 2)]->upper(),
+                        tmp[k - 2]->lower());
+                }
+
+                exitL = tmp[0]->index();
+            }
+
+            for (j = 0; j < k - 1; ++j)
+                Link::join(
+                    ans->crossings_[exitL + j]->lower(),
+                    ans->crossings_[startL + j * startDelta]->
+                        strand(startStrand));
+            Link::join(
+                ans->crossings_[exitL + (k - 2)]->upper(),
+                ans->crossings_[startL + (k - 1) * startDelta]->
+                    strand(startStrand));
+        }
+
+        // Take note of the k new link components.
+        for (i = 0; i < k; ++i)
+            ans->components_.push_back(
+                ans->crossings_[startL + i * startDelta]->
+                    strand(startStrand));
+    }
+
+    delete[] seen;
+    delete[] tmp;
+    return ans;
+}
+
 std::string Link::dumpConstruction() const {
     std::ostringstream out;
 
@@ -508,6 +856,72 @@ void Link::writeXMLPacketData(std::ostream& out) const {
     for (const StrandRef& s : components_)
         out << ' ' << s;
     out << "\n  </components>\n";
+}
+
+std::string Link::pace() const {
+    std::ostringstream out;
+    writePACE(out);
+    return out.str();
+}
+
+void Link::writePACE(std::ostream& out) const {
+    if (! label().empty())
+        out << "c " << label() << std::endl;
+    out << "p tw " << size() << ' ' << (size() * 2) << std::endl;
+
+    int i;
+    const Crossing* adj;
+    for (const Crossing* c : crossings_) {
+        for (i = 0; i < 2; ++i) {
+            adj = c->next(i).crossing();
+            if (adj->index() >= c->index())
+                out << (c->index() + 1) << ' ' << (adj->index() + 1);
+            else
+                out << (adj->index() + 1) << ' ' << (c->index() + 1);
+            out << std::endl;
+        }
+    }
+}
+
+void Link::prepareTreeDecomposition(TreeDecomposition& td) const {
+    optimiseForJones(td);
+
+    // For each crossing, we compute how many steps forward we take from
+    // its upper strand before we enter some crossing at the lower strand.
+    //
+    // For those crossings with more such steps, we will try to forget
+    // them closer to the root bag of our nice tree decomposition.
+    int* upperSteps = new int[size()];
+    StrandRef s;
+    int steps;
+    for (StrandRef start : components_) {
+        if (! start)
+            continue;
+
+        // Find a lower strand to traverse this component from.
+        // If the component has no lower strand at all, then we will
+        // just come back around to the original starting point.
+        s = start;
+        do {
+            if (s.strand() == 0)
+                break;
+            ++s;
+        } while (s != start);
+
+        // We now traverse the component backwards from here.
+        start = s;
+        do {
+            if (s.strand() == 0)
+                steps = 0;
+            else
+                upperSteps[s.crossing()->index()] = ++steps;
+            --s;
+        } while (s != start);
+    }
+
+    td.makeNice(upperSteps);
+
+    delete[] upperSteps;
 }
 
 } // namespace regina

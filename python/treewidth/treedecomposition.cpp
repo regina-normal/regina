@@ -45,6 +45,11 @@ using regina::TreeBag;
 using regina::TreeDecomposition;
 
 namespace {
+    TreeDecomposition* (*fromPACE_str)(const std::string&) =
+        &TreeDecomposition::fromPACE;
+    void (TreeDecomposition::*reroot_bag)(TreeBag*) =
+        &TreeDecomposition::reroot;
+
     TreeDecomposition* fromListAlg(boost::python::list graph,
             regina::TreeDecompositionAlg alg = regina::TD_UPPER) {
         long len = boost::python::len(graph);
@@ -106,8 +111,16 @@ namespace {
         return fromListAlg(graph);
     }
 
-    void writeDot_stdio(const TreeDecomposition& t) {
+    inline void makeNice_void(TreeDecomposition& t) {
+        t.makeNice();
+    }
+
+    inline void writeDot_stdio(const TreeDecomposition& t) {
         t.writeDot(std::cout);
+    }
+
+    inline void writePACE_stdio(const TreeDecomposition& t) {
+        t.writePACE(std::cout);
     }
 }
 
@@ -191,6 +204,7 @@ void addTreeDecomposition() {
         .def(init<const regina::Link&>())
         .def(init<const regina::Link&,
             regina::TreeDecompositionAlg>())
+        .def(init<const regina::TreeDecomposition&>())
         .def("__init__", make_constructor(fromListAlg))
         .def("__init__", make_constructor(fromList))
         .def("width", &TreeDecomposition::width)
@@ -201,12 +215,20 @@ void addTreeDecomposition() {
             return_value_policy<reference_existing_object>())
         .def("firstPrefix", &TreeDecomposition::firstPrefix,
             return_value_policy<reference_existing_object>())
+        .def("bag", &TreeDecomposition::bag,
+            return_value_policy<reference_existing_object>())
         .def("compress", &TreeDecomposition::compress)
-        .def("makeNice", &TreeDecomposition::makeNice)
+        .def("makeNice", makeNice_void)
+        .def("reroot", reroot_bag)
         .def("writeDot", writeDot_stdio)
         .def("dot", &TreeDecomposition::dot)
+        .def("writePACE", writePACE_stdio)
+        .def("pace", &TreeDecomposition::pace)
+        .def("fromPACE", fromPACE_str,
+            return_value_policy<manage_new_object>())
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
+        .staticmethod("fromPACE")
     ;
 
     scope().attr("NTreeBag") = scope().attr("TreeBag");

@@ -71,14 +71,43 @@
     switch (self.codeType.selectedSegmentIndex) {
         case 0:
             if (self.packet->countComponents() != 1) {
-                self.code.text = @"Oriented Gauss codes are currently only available for knots.";
+                self.code.text = @"Gauss codes are currently only available for knots.";
                 return;
             }
 
-            ans = @(self.packet->orientedGauss().c_str());
+            ans = [NSString stringWithFormat:@"Oriented:\n%s\n\nClassical:\n%s\n",
+                   self.packet->orientedGauss().c_str(),
+                   self.packet->gauss().c_str()];
             break;
 
         case 1:
+            if (self.packet->countComponents() != 1) {
+                self.code.text = @"Dowker-Thistlethwaite notation is currently only available for knots.";
+                return;
+            }
+
+            {
+                // Restrict scope of local variables.
+                std::string alpha = self.packet->dt(true);
+                std::string numer = self.packet->dt(false);
+                if (alpha.empty())
+                    ans = @(numer.c_str());
+                else
+                    ans = [NSString stringWithFormat:
+                           @"%s\n\n%s\n", alpha.c_str(), numer.c_str()];
+            }
+            break;
+
+        case 2:
+            if (self.packet->countComponents() != 1) {
+                self.code.text = @"Knot signatures are currently only available for knots.";
+                return;
+            }
+
+            ans = @(self.packet->knotSig().c_str());
+            break;
+
+        case 3:
             ans = @(self.packet->jenkins().c_str());
             break;
     }
@@ -120,7 +149,7 @@
 {
     if (action == @selector(copy:)) {
         // Don't allow us to copy a Gauss code that is not being displayed.
-        return ! (self.codeType.selectedSegmentIndex == 0 && self.packet->countComponents() != 1);
+        return ! (self.codeType.selectedSegmentIndex != 3 && self.packet->countComponents() != 1);
     } else
         return [super canPerformAction:action withSender:sender];
 }
@@ -130,9 +159,31 @@
     switch (self.codeType.selectedSegmentIndex) {
         case 0:
             if (self.packet->countComponents() == 1)
-                [[UIPasteboard generalPasteboard] setString:@(self.packet->orientedGauss().c_str())];
+                [[UIPasteboard generalPasteboard] setString:[NSString stringWithFormat:
+                                                             @"Oriented:\n%s\n\nClassical:\n%s\n",
+                                                             self.packet->orientedGauss().c_str(),
+                                                             self.packet->gauss().c_str()]];
             return;
         case 1:
+            if (self.packet->countComponents() == 1) {
+                NSString* ans = nil;
+
+                std::string alpha = self.packet->dt(true);
+                std::string numer = self.packet->dt(false);
+                if (alpha.empty())
+                    ans = @(numer.c_str());
+                else
+                    ans = [NSString stringWithFormat:
+                           @"%s\n\n%s\n", alpha.c_str(), numer.c_str()];
+
+                [[UIPasteboard generalPasteboard] setString:ans];
+            }
+            return;
+        case 2:
+            if (self.packet->countComponents() == 1)
+                [[UIPasteboard generalPasteboard] setString:@(self.packet->knotSig().c_str())];
+            return;
+        case 3:
             [[UIPasteboard generalPasteboard] setString:@(self.packet->jenkins().c_str())];
             return;
     }

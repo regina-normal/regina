@@ -212,6 +212,7 @@
     // Present the form sheet from the master view controller.
     // Otherwise the form sheet may appear *beneath* master (iOS 8, portrait mode).
     UIViewController* from = [ReginaHelper master];
+    // Note: all relevant sheetIDs either live on, or have references on, the main storyboard.
     UIViewController* sheet = [from.storyboard instantiateViewControllerWithIdentifier:sheetID];
     static_cast<NewPacketController*>(sheet).spec = spec;
     [from presentViewController:sheet animated:YES completion:nil];

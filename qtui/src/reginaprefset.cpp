@@ -74,7 +74,7 @@ ReginaPrefSet::ReginaPrefSet() :
         helpIntroOnStartup(true),
         hypersurfacesCreationCoords(regina::HS_STANDARD),
         hypersurfacesCreationList(regina::HS_LIST_DEFAULT),
-        linkCodeType(OrientedGauss),
+        linkCodeType(Gauss),
         linkCrossingsStyle(PictorialCrossings),
         linkHomflyType(HomflyAZ),
         linkInitialGraphType(TreeDecomposition),
@@ -239,10 +239,14 @@ void ReginaPrefSet::readInternal() {
 
     settings.beginGroup("Link");
     QString str = settings.value("CodeType").toString();
-    if (str == "Jenkins")
+    if (str == "DowkerThistlethwaite")
+        linkCodeType = ReginaPrefSet::DowkerThistlethwaite;
+    else if (str == "KnotSig")
+        linkCodeType = ReginaPrefSet::KnotSig;
+    else if (str == "Jenkins")
         linkCodeType = ReginaPrefSet::Jenkins;
     else
-        linkCodeType = ReginaPrefSet::OrientedGauss; /* default */
+        linkCodeType = ReginaPrefSet::Gauss; /* default */
     str = settings.value("CrossingsStyle").toString();
     if (str == "Text")
         linkCrossingsStyle = ReginaPrefSet::TextCrossings;
@@ -377,10 +381,14 @@ void ReginaPrefSet::saveInternal() const {
 
     settings.beginGroup("Link");
     switch (linkCodeType) {
+        case ReginaPrefSet::DowkerThistlethwaite:
+            settings.setValue("CodeType", "DowkerThistlethwaite"); break;
+        case ReginaPrefSet::KnotSig:
+            settings.setValue("CodeType", "KnotSig"); break;
         case ReginaPrefSet::Jenkins:
             settings.setValue("CodeType", "Jenkins"); break;
         default:
-            settings.setValue("CodeType", "OrientedGauss"); break;
+            settings.setValue("CodeType", "Gauss"); break;
     }
     switch (linkCrossingsStyle) {
         case ReginaPrefSet::TextCrossings:

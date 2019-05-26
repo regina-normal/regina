@@ -6,6 +6,7 @@ SET ( FILES
   link
   modellinkgraph
   pylink
+  tangle
   )
 
 # Prepend folder name

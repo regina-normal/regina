@@ -39,6 +39,7 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
+#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -62,6 +63,9 @@ template REGINA_API TreeDecomposition::TreeDecomposition(
     unsigned, bool const** const, TreeDecompositionAlg);
 template REGINA_API TreeDecomposition::TreeDecomposition(
     unsigned, int const** const, TreeDecompositionAlg);
+
+template REGINA_API void TreeDecomposition::reroot(
+    const int*, const int*, const int*);
 
 bool TreeBag::contains(int element) const {
     return std::binary_search(elements_, elements_ + size_, element);
@@ -105,7 +109,7 @@ const TreeBag* TreeBag::nextPrefix() const {
     const TreeBag* b = this;
     while (b && ! b->sibling_)
         b = b->parent_;
-    return (b ? b->sibling_ : 0);
+    return (b ? b->sibling_ : nullptr);
 }
 
 const TreeBag* TreeBag::next() const {
@@ -137,9 +141,58 @@ void TreeDecomposition::Graph::dump(std::ostream& out) const {
     }
 }
 
+TreeDecomposition::TreeDecomposition(const TreeDecomposition& cloneMe) :
+        width_(cloneMe.width_), size_(cloneMe.size_) {
+    TreeBag *me, *myPrev;
+    const TreeBag *you, *yourPrev;
+
+    // Clone the bags from root to leaves.
+    you = cloneMe.root_;
+    yourPrev = nullptr;
+    while (true) {
+        me = new TreeBag(*you);
+        me->type_ = you->type_;
+        me->subtype_ = you->subtype_;
+        me->index_ = you->index_;
+
+        // myPrev / yourPrev either points to the previous sibling or,
+        // if there is none, the parent.
+        if (yourPrev) {
+            // This is not the root bag.  Hook it into the tree.
+            if (yourPrev->children_ == you) {
+                myPrev->children_ = me;
+                me->parent_ = myPrev;
+            } else {
+                myPrev->sibling_ = me;
+                me->parent_ = myPrev->parent_;
+            }
+        } else {
+            // This is the root bag.
+            root_ = me;
+        }
+
+        if (you->children_) {
+            yourPrev = you;
+            myPrev = me;
+            you = you->children_;
+        } else {
+            while (you && ! you->sibling_) {
+                you = you->parent_;
+                me = me->parent_;
+            }
+            if (you) {
+                yourPrev = you;
+                myPrev = me;
+                you = you->sibling_;
+            } else
+                break;
+        }
+    }
+}
+
 TreeDecomposition::TreeDecomposition(const Link& link,
         TreeDecompositionAlg alg) :
-        width_(0), root_(0) {
+        width_(0), root_(nullptr) {
     Graph g(link.size());
 
     int i, j;
@@ -153,6 +206,154 @@ TreeDecomposition::TreeDecomposition(const Link& link,
     }
 
     construct(g, alg);
+}
+
+TreeDecomposition* TreeDecomposition::fromPACE(const std::string& str) {
+    std::istringstream s(str);
+    return fromPACE(s);
+}
+
+TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
+    TreeBag** bags = nullptr; // non-null after reading the header line
+    size_t nVert, nBags, maxBagSize; // set after reading the header line
+    size_t readBags = 0, readJoins = 0, readMaxBagSize = 0;
+
+    std::string line;
+    char c;
+    int idx, i, j;
+    std::string tmp;
+    while (std::getline(in, line)) {
+        if (line.empty())
+            continue;
+        if (line[0] == 'c')
+            continue;
+
+        std::istringstream s(line);
+        if (! bags) {
+            // We are expecting the header line.
+            if (! ((s >> c >> tmp >> nBags >> maxBagSize >> nVert) &&
+                    (c == 's') && (tmp == "td") && (nBags > 0) &&
+                    ! (s >> tmp))) {
+                std::cerr << "ERROR: Invalid header line" << std::endl;
+                return nullptr;
+            }
+
+            bags = new TreeBag*[nBags];
+            std::fill(bags, bags + nBags, nullptr);
+        } else if (readBags < nBags) {
+            // We are expecting a bag.
+            if (! ((s >> c >> idx) && (c == 'b') && (idx > 0) &&
+                    (idx <= nBags) && (! bags[idx - 1]))) {
+                std::cerr << "ERROR: Invalid bag line" << std::endl;
+                std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+                delete[] bags;
+                return nullptr;
+            }
+            --idx;
+
+            bags[idx] = new TreeBag(maxBagSize + 1);
+            bags[idx]->size_ = 0;
+            while (bags[idx]->size_ <= maxBagSize) {
+                if (s >> bags[idx]->elements_[bags[idx]->size_]) {
+                    if (bags[idx]->size_ == maxBagSize ||
+                            bags[idx]->elements_[bags[idx]->size_] <= 0 ||
+                            bags[idx]->elements_[bags[idx]->size_] > nVert) {
+                        std::cerr << "ERROR: Invalid bag contents" << std::endl;
+                        std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+                        delete[] bags;
+                        return nullptr;
+                    } else {
+                        --bags[idx]->elements_[bags[idx]->size_];
+                        ++bags[idx]->size_;
+                    }
+                } else
+                    break;
+            }
+            // We don't set bags[idx]->index_, since we will reindex later.
+            bags[idx]->parent_ = bags[idx]->sibling_ = bags[idx]->children_ =
+                nullptr;
+            bags[idx]->type_ = 0;
+
+            std::sort(bags[idx]->elements_,
+                bags[idx]->elements_ + bags[idx]->size_);
+
+            // Make sure there are no duplicate vertices in the bag.
+            for (i = 0; i + 1 < bags[idx]->size_; ++i)
+                if (bags[idx]->elements_[i] == bags[idx]->elements_[i + 1]) {
+                    std::cerr << "ERROR: Duplicate bag element" << std::endl;
+                    std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+                    delete[] bags;
+                    return nullptr;
+                }
+
+            // TODO: Reallocate bags[idx]->elements_ to be just the right size.
+
+            if (bags[idx]->size_ > readMaxBagSize)
+                readMaxBagSize = bags[idx]->size_;
+
+            ++readBags;
+        } else if (readJoins + 1 < nBags) {
+            // We are expecting a connection between two bags.
+            if (! ((s >> i >> j) && (i != j) && (i > 0) && (j > 0) &&
+                    (i <= nBags) && (j <= nBags) && ! (s >> tmp))) {
+                std::cerr << "ERROR: Invalid connection line" << std::endl;
+                std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+                delete[] bags;
+                return nullptr;
+            }
+            --i;
+            --j;
+
+            // Connect bags i and j.
+            if (! bags[i]->parent_) {
+                // We can hook bag i beneath bag j.
+                bags[i]->parent_ = bags[j];
+                bags[i]->sibling_ = bags[j]->children_;
+                bags[j]->children_ = bags[i];
+            } else if (! bags[j]->parent_) {
+                // We can hook bag j beneath bag i.
+                bags[j]->parent_ = bags[i];
+                bags[j]->sibling_ = bags[i]->children_;
+                bags[i]->children_ = bags[j];
+            } else {
+                // Both bags already have parents.
+                // We need to do some more serious rearrangement of the tree.
+                bags[i]->makeRoot();
+
+                bags[i]->parent_ = bags[j];
+                bags[i]->sibling_ = bags[j]->children_;
+                bags[j]->children_ = bags[i];
+            }
+
+            ++readJoins;
+        } else {
+            // We are not expecting any more data.
+            std::cerr << "ERROR: Unexpected additional data" << std::endl;
+            std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+            delete[] bags;
+            return nullptr;
+        }
+    }
+
+    if (! (bags && readBags == nBags && readJoins + 1 == nBags &&
+            readMaxBagSize == maxBagSize)) {
+        std::cerr << "ERROR: Mismatched max bag size" << std::endl;
+        std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+        delete[] bags;
+        return nullptr;
+    }
+
+    TreeDecomposition* ans = new TreeDecomposition();
+    ans->width_ = maxBagSize - 1;
+
+    for (ans->root_ = bags[nBags - 1]; ans->root_->parent_;
+            ans->root_ = ans->root_->parent_)
+        ;
+
+    delete[] bags;
+
+    ans->reindex();
+    return ans;
 }
 
 void TreeDecomposition::construct(Graph& graph, TreeDecompositionAlg alg) {
@@ -289,11 +490,59 @@ void TreeDecomposition::greedyFillIn(Graph& graph) {
 
 const TreeBag* TreeDecomposition::first() const {
     if (! root_)
-        return 0;
+        return nullptr;
 
     TreeBag* b = root_;
     while (b->children_)
         b = b->children_;
+    return b;
+}
+
+void TreeBag::makeRoot() {
+    TreeBag* child = this;
+    TreeBag* newParent = nullptr;
+    TreeBag* oldParent;
+    TreeBag* b;
+
+    while (child) {
+        oldParent = child->parent_;
+
+        // We need to convert child into the first child of newParent.
+        // INV: There is currently no link between child and newParent.
+
+        // We remove the link between child and oldParent,
+        // hook child beneath newParent instead, and remember that
+        // we need to hook oldParent *beneath* child.
+        if (oldParent) {
+            if (child == oldParent->children_)
+                oldParent->children_ = child->sibling_;
+            else {
+                b = oldParent->children_;
+                while (b->sibling_ != child)
+                    b = b->sibling_;
+                b->sibling_ = child->sibling_;
+            }
+        }
+
+        child->parent_ = newParent;
+        if (newParent) {
+            child->sibling_ = newParent->children_;
+            newParent->children_ = child;
+        } else
+            child->sibling_ = nullptr;
+
+        newParent = child;
+        child = oldParent;
+    }
+}
+
+const TreeBag* TreeDecomposition::bag(int index) const {
+    const TreeBag* b = root_;
+    while (b->index() != index) {
+        b = b->children();
+        while (b->index() < index)
+            b = b->sibling();
+    }
     return b;
 }
 
@@ -307,7 +556,7 @@ bool TreeDecomposition::compress() {
 
     bool changed = false;
     TreeBag* b = root_->children_;
-    TreeBag* siblingOf = 0;
+    TreeBag* siblingOf = nullptr;
     TreeBag* next;
     TreeBag* nextIsSiblingOf;
     TreeBag* child;
@@ -324,7 +573,7 @@ bool TreeDecomposition::compress() {
         // traversal runs as expected even if we merge b into its parent.
         if (b->children_) {
             next = b->children_;
-            nextIsSiblingOf = 0;
+            nextIsSiblingOf = nullptr;
         } else {
             next = b;
             while (next && ! next->sibling_)
@@ -383,7 +632,7 @@ bool TreeDecomposition::compress() {
             }
 
             // Ensure that deleting b does not cascade to its children.
-            b->children_ = 0;
+            b->children_ = nullptr;
 
             delete b;
 
@@ -400,7 +649,7 @@ bool TreeDecomposition::compress() {
     return changed;
 }
 
-void TreeDecomposition::makeNice() {
+void TreeDecomposition::makeNice(int* heightHint) {
     if (! root_)
         return;
 
@@ -408,7 +657,7 @@ void TreeDecomposition::makeNice() {
 
     if (root_ && (! root_->children()) && root_->size_ == 0) {
         delete root_;
-        root_ = 0;
+        root_ = nullptr;
         size_ = 0;
         // width_ is unchanged (it must have been -1 already).
         return;
@@ -418,16 +667,37 @@ void TreeDecomposition::makeNice() {
     // new empty bag.
     TreeBag* b = root_;
     TreeBag *tmp, *tmp2, *tmp3;
-    int i;
-    for (i = b->size_ - 1; i >= 0; --i) {
-        tmp = new TreeBag(i);
-        std::copy(b->elements_, b->elements_ + i, tmp->elements_);
+    int* pos;
+    int forget;
+    while (root_->size_ > 0) {
+        // Work out which node of root_ we wish to forget.
+        if (heightHint) {
+            // This makes building the forget chain quadratic time.
+            // We could always sort the elements at the beginning of the
+            // chain and then make this faster, but the copy operation
+            // still gives us quadratic time overall so we don't stress
+            // too hard about this.
+            forget = std::min_element(root_->elements_,
+                root_->elements_ + root_->size_,
+                [heightHint](int a, int b) {
+                    return heightHint[a] < heightHint[b];
+                }) - root_->elements_;
+        } else
+            forget = root_->size_ - 1;
+
+        tmp = new TreeBag(root_->size_ - 1);
+        std::copy(root_->elements_,
+            root_->elements_ + forget,
+            tmp->elements_);
+        std::copy(root_->elements_ + forget + 1,
+            root_->elements_ + root_->size_,
+            tmp->elements_ + forget);
         tmp->children_ = root_;
         root_->parent_ = tmp;
         root_ = tmp;
 
         tmp->type_ = NICE_FORGET;
-        tmp->subtype_ = i;
+        tmp->subtype_ = forget;
     }
 
     TreeBag* next;
@@ -449,7 +719,7 @@ void TreeDecomposition::makeNice() {
 
             tmp->children_ = b->children_;
             tmp->children_->parent_ = tmp;
-            tmp->children_->sibling_ = 0;
+            tmp->children_->sibling_ = nullptr;
 
             b->children_ = tmp;
             tmp->sibling_ = tmp2;
@@ -521,7 +791,7 @@ void TreeDecomposition::makeNice() {
             // between b and next.
             tmp->parent_->children_ = tmp->children_;
             tmp->children_->parent_ = tmp->parent_;
-            tmp->children_ = 0;
+            tmp->children_ = nullptr;
             delete tmp;
 
             // Done!  Jump to the bottom of the sequence and continue.
@@ -535,7 +805,7 @@ void TreeDecomposition::makeNice() {
             b->subtype_ = b->size_ - 1;
 
             tmp = b;
-            for (i = b->size_ - 1; i > 0; --i) {
+            for (int i = b->size_ - 1; i > 0; --i) {
                 tmp2 = new TreeBag(i);
                 std::copy(b->elements_, b->elements_ + i, tmp2->elements_);
                 tmp->children_ = tmp2;
@@ -549,6 +819,19 @@ void TreeDecomposition::makeNice() {
             b = next;
         }
     }
+
+    reindex();
+}
+
+void TreeDecomposition::reroot(TreeBag* newRoot) {
+    if (root_ == newRoot)
+        return;
+
+    newRoot->makeRoot();
+    root_ = newRoot;
+
+    for (const TreeBag* b = first(); b; b = b->next())
+        const_cast<TreeBag*>(b)->type_ = 0;
 
     reindex();
 }
@@ -589,6 +872,40 @@ void TreeDecomposition::writeDot(std::ostream& out) const {
 std::string TreeDecomposition::dot() const {
     std::ostringstream out;
     writeDot(out);
+    return out.str();
+}
+
+void TreeDecomposition::writePACE(std::ostream& out) const {
+    out << "c Output from Regina using TreeDecomposition::writePACE()"
+        << std::endl;
+
+    const TreeBag* b;
+    int i;
+
+    int nVert = 0;
+    for (b = first(); b; b = b->next()) {
+        if (b->size() && nVert <= b->elements_[b->size_ - 1])
+            nVert = b->elements_[b->size_ - 1] + 1;
+    }
+
+    out << "s td " << size_ << ' ' << (width_ + 1) << ' ' << nVert << std::endl;
+
+    for (b = first(); b; b = b->next()) {
+        out << "b " << (b->index() + 1);
+        for (i = 0; i < b->size_; ++i)
+            out << ' ' << (b->elements_[i] + 1);
+        out << std::endl;
+    }
+    for (b = first(); b; b = b->next()) {
+        if (b->parent())
+            out << (b->index() + 1) << ' '
+                << (b->parent()->index() + 1) << std::endl;
+    }
+}
+
+std::string TreeDecomposition::pace() const {
+    std::ostringstream out;
+    writePACE(out);
     return out.str();
 }
 

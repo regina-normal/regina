@@ -5,6 +5,7 @@ ADD_SUBDIRECTORY("spec")
 # Files to compile
 SET ( FILES
   approx
+  binom
   cyclotomic
   integer
   matrix2
@@ -25,6 +26,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL( FILES
     approx.h
+    binom.h
     cyclotomic.h
     integer.h
     laurent.h
