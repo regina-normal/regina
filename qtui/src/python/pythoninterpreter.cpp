@@ -191,8 +191,12 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         cmdBuffer, "<console>", Py_single_input, &pyCompFlags);
     if (code) {
         // Run the code!
+#if PY_VERSION_HEX >= 0x03020000
+        PyObject* ans = PyEval_EvalCode(code, mainNamespace, mainNamespace);
+#else
         PyObject* ans = PyEval_EvalCode((PyCodeObject*)code,
             mainNamespace, mainNamespace);
+#endif
         if (ans)
             Py_DECREF(ans);
         else {
