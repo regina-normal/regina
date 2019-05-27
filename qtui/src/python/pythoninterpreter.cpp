@@ -402,32 +402,6 @@ bool PythonInterpreter::runScript(const char* code) {
     }
 }
 
-bool PythonInterpreter::runScript(const char* filename, const char* shortName) {
-    PyEval_RestoreThread(state);
-
-    PyObject* script = PyFile_FromString(const_cast<char*>(filename),
-        const_cast<char*>("r"));
-    if (script) {
-        PyObject* ans = PyRun_File(PyFile_AsFile(script),
-            const_cast<char*>(shortName),
-            Py_file_input, mainNamespace, mainNamespace);
-        Py_DECREF(script);
-
-        if (ans) {
-            Py_DECREF(ans);
-            state = PyEval_SaveThread();
-            return true;
-        } else {
-            PyErr_Print();
-            state = PyEval_SaveThread();
-            return false;
-        }
-    } else {
-        state = PyEval_SaveThread();
-        return false;
-    }
-}
-
 bool PythonInterpreter::isEmptyCommand(const std::string& command) {
     for (std::string::const_iterator it = command.begin();
             it != command.end(); it++) {

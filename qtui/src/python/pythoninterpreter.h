@@ -102,7 +102,6 @@ class PythonInterpreter {
         bool setVar(const char* name, regina::Packet* value);
         bool compileScript(const char* code);
         bool runScript(const char* code);
-        bool runScript(const char* filename, const char* shortName);
 
     private:
         /**
