@@ -325,7 +325,7 @@ bool PythonInterpreter::importRegina() {
 
             // Since this is a filesystem path, we assume it comes direct from
             // the filesystem, and is not necessary encoded using UTF-8.
-#elif PY_MAJOR_VERSION >= 3
+#if PY_MAJOR_VERSION >= 3
             PyObject* regModuleDirPy =
                 PyUnicode_DecodeFSDefault(regModuleDir.c_str());
 #else
