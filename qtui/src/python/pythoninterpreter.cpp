@@ -265,7 +265,9 @@ bool PythonInterpreter::executeLine(const std::string& command) {
 
     // Compare the two compile errors.
     if (errStr1 && errStr2) {
-        if (PyObject_Compare(errStr1, errStr2)) {
+        // Note: rich comparison returns -1 on error, or 0/1 for false/true.
+        // Since we are passing two python strings, we assume no error here.
+        if (PyObject_RichCompareBool(errStr1, errStr2, Py_NE) == 1) {
             // Errors are different.  We must be waiting on more code.
             Py_XDECREF(errType);
             Py_XDECREF(errValue);
