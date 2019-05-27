@@ -31,6 +31,8 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from __future__ import print_function
+
 # For checksums, use the hashlib module if possible (this is new as of
 # python 2.5).  Otherwise fall back to the deprecated md5 module.
 # Thanks to Andreas Wenning for alerting me to this issue.
@@ -44,7 +46,7 @@ except:
 def checksum(str):
 	if has_hashlib:
 		h = hashlib.md5()
-		h.update(str)
+		h.update(str.encode('utf-8'))
 		return h.hexdigest()
 	else:
 		return md5.new(str).hexdigest()
@@ -53,40 +55,40 @@ def vitalStats(tri):
 	# To guard against accidental changes.
 	old = tri.detail()
 
-	print "-------------------------------"
-	print tri.label()
-	print "-------------------------------"
-	print
-	print tri.detail()
-	print tri.countComponents(), "components"
-	print tri.countBoundaryComponents(), "boundary components"
-	print tri.countTetrahedra(), "tetrahedra"
-	print tri.countTriangles(), "triangles"
-	print tri.countEdges(), "edges"
-	print tri.countVertices(), "vertices"
-	print "2-sphere boundaries:", tri.hasTwoSphereBoundaryComponents()
-	print "Negative ideal boundaries:", tri.hasNegativeIdealBoundaryComponents()
-	print "EC:", tri.eulerCharTri()
-	print "Valid:", tri.isValid()
-	print "Ideal:", tri.isIdeal()
-	print "Standard:", tri.isStandard()
-	print "Boundary Triangles:", tri.hasBoundaryTriangles()
-	print "Closed:", tri.isClosed()
-	print "Orientable:", tri.isOrientable()
-	print "Connected:", tri.isConnected()
-	print
-	print "Fundamental group:", tri.fundamentalGroup().recogniseGroup()
+	print("-------------------------------")
+	print(tri.label())
+	print("-------------------------------")
+	print()
+	print(tri.detail())
+	print(tri.countComponents(), "components")
+	print(tri.countBoundaryComponents(), "boundary components")
+	print(tri.countTetrahedra(), "tetrahedra")
+	print(tri.countTriangles(), "triangles")
+	print(tri.countEdges(), "edges")
+	print(tri.countVertices(), "vertices")
+	print("2-sphere boundaries:", tri.hasTwoSphereBoundaryComponents())
+	print("Negative ideal boundaries:", tri.hasNegativeIdealBoundaryComponents())
+	print("EC:", tri.eulerCharTri())
+	print("Valid:", tri.isValid())
+	print("Ideal:", tri.isIdeal())
+	print("Standard:", tri.isStandard())
+	print("Boundary Triangles:", tri.hasBoundaryTriangles())
+	print("Closed:", tri.isClosed())
+	print("Orientable:", tri.isOrientable())
+	print("Connected:", tri.isConnected())
+	print()
+	print("Fundamental group:", tri.fundamentalGroup().recogniseGroup())
 	# Don't print the full generators and relations for now, since this
 	# is not unique and can therefore lead to spurious test failures.
 	# print tri.fundamentalGroup().detail()
-	print "H1:", tri.homology()
+	print("H1:", tri.homology())
 	if tri.isValid():
-		print "H1Bdry:", tri.homologyBdry()
-		print "H1Rel:", tri.homologyRel()
-		print "H2:", tri.homologyH2()
-		print "H2Z2:", tri.homologyH2Z2(), "Z_2"
+		print("H1Bdry:", tri.homologyBdry())
+		print("H1Rel:", tri.homologyRel())
+		print("H2:", tri.homologyH2())
+		print("H2Z2:", tri.homologyH2Z2(), "Z_2")
 	if tri.isValid() and tri.isClosed() and tri.countTetrahedra() > 0:
-		print "TV(5, 3) =", tri.turaevViro(5, 3)
+		print("TV(5, 3) =", tri.turaevViro(5, 3))
 
 		tv = tri.turaevViroApprox(5, 3)
 
@@ -98,51 +100,51 @@ def vitalStats(tri):
 
 		if tv < 0.00001 and tv > -0.00001:
 			tv = 0
-		print "TV(5, 3) ~ %.5f" % tv
+		print("TV(5, 3) ~ %.5f" % tv)
 
 	# Normal surface computations should only be run on sufficiently
 	# small triangulations, so as to keep the tests relatively fast.
 	if tri.countTetrahedra() < 7:
-		print "0-efficient:", tri.isZeroEfficient()
+		print("0-efficient:", tri.isZeroEfficient())
 		if tri.isConnected():
-			print "Splitting surface:", tri.hasSplittingSurface()
+			print("Splitting surface:", tri.hasSplittingSurface())
 
 	# Though this can use normal surfaces, its prechecks and
 	# optimisations should make it fast enough for our examples.
-	print "3-sphere:", tri.isThreeSphere()
+	print("3-sphere:", tri.isThreeSphere())
 
 	# Some of the following operations can create large triangulations,
 	# which give *lots* of output when we try to dump their face gluings
 	# and skeletal details.  We'd like to keep the output files small,
 	# so dump checksums of the details instead of the details themselves.
-	print "Double cover:"
+	print("Double cover:")
 	t = regina.Triangulation3(tri)
 	t.makeDoubleCover()
-	print "Checksum =", checksum(t.detail())
+	print("Checksum =", checksum(t.detail()))
 
-	print "Ideal to finite:"
+	print("Ideal to finite:")
 	t = regina.Triangulation3(tri)
-	print "Result =", t.idealToFinite()
-	print "Checksum =", checksum(t.detail())
+	print("Result =", t.idealToFinite())
+	print("Checksum =", checksum(t.detail()))
 
-	print "Finite to ideal:"
+	print("Finite to ideal:")
 	t = regina.Triangulation3(tri)
-	print "Result =", t.finiteToIdeal()
-	print "Checksum =", checksum(t.detail())
+	print("Result =", t.finiteToIdeal())
+	print("Checksum =", checksum(t.detail()))
 
-	print "Barycentric subdivision:"
+	print("Barycentric subdivision:")
 	t = regina.Triangulation3(tri)
 	t.barycentricSubdivision()
-	print "Checksum =", checksum(t.detail())
+	print("Checksum =", checksum(t.detail()))
 
-	print "Dehydration:", tri.dehydrate()
-	print "Isomorphism signature:", tri.isoSig()
-	print "Result of splitIntoComponents:", tri.splitIntoComponents()
+	print("Dehydration:", tri.dehydrate())
+	print("Isomorphism signature:", tri.isoSig())
+	print("Result of splitIntoComponents:", tri.splitIntoComponents())
 
 	if tri.detail() != old:
-		print "ERROR: Original triangulation has changed!"
+		print("ERROR: Original triangulation has changed!")
 
-	print
+	print()
 
 t = regina.Triangulation3()
 t.setLabel("Empty triangulation")

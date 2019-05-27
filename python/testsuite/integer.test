@@ -36,9 +36,9 @@ from __future__ import print_function
 for IntegerType in [Integer, LargeInteger]:
 
     for i in range(0,30,2):
-        print IntegerType(10**i)
-        print IntegerType(-(10**i))
+        print(IntegerType(10**i))
+        print(IntegerType(-(10**i)))
 
-    print IntegerType('3141592')
-    print IntegerType(1234567.89)
+    print(IntegerType('3141592'))
+    print(IntegerType(1234567.89))
 
