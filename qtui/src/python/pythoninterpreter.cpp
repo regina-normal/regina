@@ -53,17 +53,6 @@
 // For regina's to_held_type:
 #include "../python/safeheldtype.h"
 
-// Cater for the fact that Py_CompileString has changed behaviour
-// between Python 2.2 and Python 2.3.
-#if PY_VERSION_HEX >= 0x02030000
-    static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
-    #define PY_COMPILE_SINGLE(cmd) \
-        (Py_CompileStringFlags(cmd, "<console>", Py_single_input, &pyCompFlags))
-#else
-    #define PY_COMPILE_SINGLE(cmd) \
-        (Py_CompileString(cmd, "<console>", Py_single_input))
-#endif
-
 /**
  * WARNING: We never call Py_Finalize().
  *
@@ -79,6 +68,8 @@
  * no external resource usage and since memory leaks are reclaimed by the
  * operating system, we simply choose to ignore the problem.
  */
+
+static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
@@ -196,7 +187,8 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     PyEval_RestoreThread(state);
 
     // Attempt to compile the command with no additional newlines.
-    PyObject* code = PY_COMPILE_SINGLE(cmdBuffer);
+    PyObject* code = Py_CompileStringFlags(
+        cmdBuffer, "<console>", Py_single_input, &pyCompFlags);
     if (code) {
         // Run the code!
         PyObject* ans = PyEval_EvalCode((PyCodeObject*)code,
@@ -226,7 +218,8 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     cmdBuffer[fullCommand.length()] = '\n';
     cmdBuffer[fullCommand.length() + 1] = 0;
 
-    code = PY_COMPILE_SINGLE(cmdBuffer);
+    code = Py_CompileStringFlags(
+        cmdBuffer, "<console>", Py_single_input, &pyCompFlags);
     if (code) {
         // We're waiting on more code.
         Py_DECREF(code);
@@ -248,7 +241,8 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     cmdBuffer[fullCommand.length() + 1] = '\n';
     cmdBuffer[fullCommand.length() + 2] = 0;
 
-    code = PY_COMPILE_SINGLE(cmdBuffer);
+    code = Py_CompileStringFlags(
+        cmdBuffer, "<console>", Py_single_input, &pyCompFlags);
     if (code) {
         // We're waiting on more code.
         Py_DECREF(code);
