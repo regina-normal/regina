@@ -322,8 +322,16 @@ bool PythonInterpreter::importRegina() {
             // Ensure that regina's path gets pushed to the beginning
             // of sys.path, not the end - this ensures that different
             // installations can live happily side-by-side.
+
+            // Since this is a filesystem path, we assume it comes direct from
+            // the filesystem, and is not necessary encoded using UTF-8.
+#elif PY_MAJOR_VERSION >= 3
+            PyObject* regModuleDirPy =
+                PyUnicode_DecodeFSDefault(regModuleDir.c_str());
+#else
             PyObject* regModuleDirPy =
                 PyString_FromString(regModuleDir.c_str());
+#endif
             PyList_Insert(path, 0, regModuleDirPy);
             Py_DECREF(regModuleDirPy);
         }
@@ -359,7 +367,12 @@ bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
         PyObject* pyValue = conv(value);
 
         if (pyValue) {
+#if PY_MAJOR_VERSION >= 3
+            // PyUnicode_FromString assumes UTF-8 encoding.
+            PyObject* nameStr = PyUnicode_FromString(name); // New ref.
+#else
             PyObject* nameStr = PyString_FromString(name); // New ref.
+#endif
             PyDict_SetItem(mainNamespace, nameStr, pyValue);
             Py_DECREF(nameStr);
             Py_DECREF(pyValue);
