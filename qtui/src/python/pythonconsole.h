@@ -144,7 +144,6 @@ class PythonConsole : public QMainWindow {
         /**
          * Compile or run user scripts.
          */
-        bool compileScript(const QString& script);
         void executeScript(const QString& script,
         const QString& scriptName = QString::null);
 

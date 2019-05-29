@@ -387,23 +387,6 @@ bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
     return ok;
 }
 
-bool PythonInterpreter::compileScript(const char* code) {
-    PyEval_RestoreThread(state);
-
-    PyObject* ans = Py_CompileString(const_cast<char*>(code), "<script>",
-        Py_file_input);
-    if (ans) {
-        Py_DECREF(ans);
-        state = PyEval_SaveThread();
-        return true;
-    } else {
-        PyErr_Print();
-        PyErr_Clear();
-        state = PyEval_SaveThread();
-        return false;
-    }
-}
-
 bool PythonInterpreter::runScript(const char* code) {
     PyEval_RestoreThread(state);
 

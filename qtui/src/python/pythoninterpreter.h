@@ -100,7 +100,6 @@ class PythonInterpreter {
          */
         bool importRegina();
         bool setVar(const char* name, regina::Packet* value);
-        bool compileScript(const char* code);
         bool runScript(const char* code);
 
     private:

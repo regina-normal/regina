@@ -397,10 +397,6 @@ void PythonConsole::executeLine(const char* line) {
     interpreter->executeLine(line);
 }
 
-bool PythonConsole::compileScript(const QString& script) {
-    return interpreter->compileScript(script.toUtf8());
-}
-
 void PythonConsole::executeScript(const QString& script,
         const QString& scriptName) {
     addInfo(scriptName.isEmpty() ? tr("Running %1...").arg(scriptName) :
