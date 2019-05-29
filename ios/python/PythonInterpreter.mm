@@ -163,6 +163,34 @@ class PythonOutputStreamObjC {
     std::string _currentCode;
 }
 
+/**
+ * Attempt to import regina into the given namespace.  Typically
+ * \a useNamespace would be the main namespace for either the
+ * main interpreter or a subinterpreter.
+ *
+ * This routine assumes that the global interpreter lock is already
+ * held by the current thread.  It acts on the (sub-)interpreter
+ * that is referenced by the current python thread state, to which
+ * the given namespace must belong.
+ *
+ * Returns \c true on success or \c false on failure.
+ */
++ (bool)importReginaIntoNamespace:(PyObject*)useNamespace
+{
+    try {
+        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+        if (regModule) {
+            PyDict_SetItemString(_mainNamespace, "regina", regModule);
+            Py_DECREF(regModule);
+            return true;
+        } else {
+            return false;
+        }
+    } catch (const boost::python::error_already_set&) {
+        return false;
+    }
+}
+
 - (id)initWithOut:(id<PythonOutputStream>)out err:(id<PythonOutputStream>)err
 {
     self = [super init];
@@ -200,6 +228,19 @@ class PythonOutputStreamObjC {
             Py_Initialize();
             PyEval_InitThreads();
             mainState = PyThreadState_Get();
+
+#if PY_MAJOR_VERSION >= 3
+            // Subinterpreters are supposed to share extension modules
+            // without repeatedly calling the modules' init functions.
+            // In python 3, this seems to fail if all subinterpreters are
+            // destroyed, unless we keep the extension module loaded here in
+            // the main interpreter also.
+            //
+            // If this fails, do so silently; we'll see the same error again
+            // immediately in the first subinterpreter.
+            [PythonInterpreter importReginaIntoNamespace:PyModule_GetDict(PyImport_AddModule("__main__"))];
+#endif
+
             pythonInitialised = true;
         }
 
@@ -402,18 +443,8 @@ class PythonOutputStreamObjC {
 {
     PyEval_RestoreThread(_state);
 
-    bool ok = false;
-    try {
-        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
-        if (regModule) {
-            PyDict_SetItemString(_mainNamespace, "regina", regModule);
-            Py_DECREF(regModule);
-            ok = true;
-        } else {
-            PyErr_Print();
-            PyErr_Clear();
-        }
-    } catch (const boost::python::error_already_set&) {
+    bool ok = [PythonInterpreter importReginaIntoNamespace:_mainNamespace];
+    if (! ok) {
         PyErr_Print();
         PyErr_Clear();
     }

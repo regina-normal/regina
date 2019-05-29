@@ -154,7 +154,7 @@ enum HistoryStyle {
 
     python = [[PythonInterpreter alloc] initWithOut:outputStream err:errorStream];
     [python importRegina];
-    [python runCode:"from regina import *; print regina.welcome()\n"];
+    [python runCode:"from regina import *; print(regina.welcome())\n"];
     [self processOutput:"\n"];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
