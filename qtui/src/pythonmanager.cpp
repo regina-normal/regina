@@ -120,7 +120,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
     // Initialise the python interpreter.
     if (ans->importRegina())
-        ans->executeLine("print");
+        ans->addOutput(parent->QObject::tr("\n"));
     for (PythonVariableList::const_iterator it = initialVars.begin();
             it != initialVars.end(); it++)
         ans->setVar((*it).name, (*it).value);
