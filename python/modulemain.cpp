@@ -72,19 +72,75 @@ namespace {
     }
 }
 
+void init_module_regina();
+
+// --------------------------------------------------------------------
+// Determine the module name:
+// --------------------------------------------------------------------
+
 #ifndef REGINA_LINK_MODULE_INTO_EXECUTABLE
-// This is the normal situation: the C++ module is built as the extension
-// regina/engine.so, which is loaded at runtime from regina/__init__.py.
-// All of regina's classes live in the module regina.engine, and are
-// automatically imported into the module regina by regina/__init__.py.
-BOOST_PYTHON_MODULE(engine) {
+    // This is the normal situation: the C++ module is built as the extension
+    // regina/engine.so, which is loaded at runtime from regina/__init__.py.
+    // All of regina's classes live in the module regina.engine, and are
+    // automatically imported into the module regina by regina/__init__.py.
+    #if PY_MAJOR_VERSION >= 3
+        #define REGINA_MODULE_INIT PyInit_engine
+    #else
+        #define REGINA_MODULE_INIT initengine
+    #endif
+    #define REGINA_MODULE_NAME "engine"
 #else
-// This is a special case where the C++ module is linked into Regina's main
-// executable at compile time (specifically, this happens on iOS).
-// Nothing is loaded at runtime from the filesystem; there is no __init__.py,
-// and all of Regina's classes live directly in the module regina.
-BOOST_PYTHON_MODULE(regina) {
+    // This is a special case where the C++ module is linked into Regina's
+    // main executable at compile time (specifically, this happens on iOS).
+    // Nothing is loaded at runtime from the filesystem; there's no __init__.py,
+    // and all of Regina's classes live directly in the module regina.
+    #if PY_MAJOR_VERSION >= 3
+        #define REGINA_MODULE_INIT PyInit_regina
+    #else
+        #define REGINA_MODULE_INIT initregina
+    #endif
+    #define REGINA_MODULE_NAME "regina"
 #endif
+
+// --------------------------------------------------------------------
+// Main Python entry point:
+// --------------------------------------------------------------------
+
+#if PY_MAJOR_VERSION >= 3
+extern "C" BOOST_SYMBOL_EXPORT PyObject* REGINA_MODULE_INIT() {
+    static PyModuleDef_Base initial_m_base = {
+        PyObject_HEAD_INIT(NULL)
+        0, /* m_init */
+        0, /* m_index */
+        0 /* m_copy */ };
+    static PyMethodDef initial_methods[] = { { 0, 0, 0, 0 } };
+
+    static struct PyModuleDef moduledef = {
+        initial_m_base,
+        REGINA_MODULE_NAME,
+        0, /* m_doc */
+        -1, /* m_size */
+        initial_methods,
+        0,  /* m_reload */
+        0, /* m_traverse */
+        0, /* m_clear */
+        0,  /* m_free */
+    };
+
+    return boost::python::detail::init_module(moduledef, init_module_regina);
+}
+#else
+extern "C" BOOST_SYMBOL_EXPORT void REGINA_MODULE_INIT() {
+    boost::python::detail::init_module(
+        REGINA_MODULE_NAME, &init_module_regina);
+}
+#endif
+
+// --------------------------------------------------------------------
+// Regina's module initialisation:
+// --------------------------------------------------------------------
+
+void init_module_regina() {
     // Welcome string:
 
     boost::python::def("welcome", welcome);
