@@ -53,9 +53,8 @@ namespace regina {
  * and may exist simultaneously.
  *
  * Each new subinterpreter corresponds to a new call to
- * Py_NewInterpreter().  The global routines Py_Initialize() and
- * Py_Finalize() are called when the first interpreter is created and
- * the last interpreter is destroyed respectively.
+ * Py_NewInterpreter().  The global routine Py_Initialize() is called when
+ * the first interpreter is created, and Py_Finalize() is never called.
  */
 class PythonInterpreter {
     private:
