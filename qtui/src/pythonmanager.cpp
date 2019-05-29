@@ -93,7 +93,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
     // Initialise the python interpreter.
     if (ans->importRegina()) {
-        ans->executeLine("print");
+        ans->addOutput(parent->QObject::tr("\n"));
         ans->setRootPacket(tree);
         ans->setSelectedPacket(selectedPacket);
     }
