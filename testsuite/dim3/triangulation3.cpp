@@ -4125,7 +4125,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                         CPPUNIT_FAIL(msg.str());
                     }
                     const AbelianGroup& h1 = t.homology();
-                    if (! t.homology().isZn(lensP)) {
+                    if (! h1.isZn(lensP)) {
                         std::ostringstream msg;
                         msg << "Filling (" << p1 << "," << q1 << "," << r1
                             << ") <-> (" << p2 << "," << q2 << "," << r2

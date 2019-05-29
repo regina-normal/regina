@@ -667,7 +667,6 @@ void TreeDecomposition::makeNice(int* heightHint) {
     // new empty bag.
     TreeBag* b = root_;
     TreeBag *tmp, *tmp2, *tmp3;
-    int* pos;
     int forget;
     while (root_->size_ > 0) {
         // Work out which node of root_ we wish to forget.
