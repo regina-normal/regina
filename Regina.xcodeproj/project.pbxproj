@@ -186,7 +186,6 @@
 		050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */; };
 		050F5E7F1B9BD6F400C1F681 /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E781B9BD6F400C1F681 /* pythoninterpreter.cpp */; };
 		050F5E801B9BD6F400C1F681 /* pythonoutputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E7A1B9BD6F400C1F681 /* pythonoutputstream.cpp */; };
-		050F5E871B9BD7EF00C1F681 /* libpython2.7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */; };
 		050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E751B9BD6F400C1F681 /* commandedit.h */; };
 		050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E771B9BD6F400C1F681 /* pythonconsole.h */; };
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
@@ -207,11 +206,8 @@
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
 		051CEA941F98995D00971F25 /* Link.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA961F98995D00971F25 /* Link.storyboard */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
-		05249E961DBAE7E9001FE29E /* Python.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E951DBAE7E8001FE29E /* Python.framework */; };
-		05249E981DBAEB82001FE29E /* boost-python27-static.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E971DBAEB80001FE29E /* boost-python27-static.framework */; };
 		05249E9E1DBB50B7001FE29E /* PythonInterpreter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */; };
 		05249EA01DBB8D89001FE29E /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */; };
-		05249EA41DBB8FE4001FE29E /* python27.zip in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05249EA31DBB8FC9001FE29E /* python27.zip */; };
 		05249EA51DBC169D001FE29E /* globalarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */; };
 		05249EA61DBC16A1001FE29E /* safeheldtype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052942D51C5CDCBF0011C1E6 /* safeheldtype.cpp */; };
 		05249EA81DBC16A6001FE29E /* modulemain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D3D1B9BAB9C00C1F681 /* modulemain.cpp */; };
@@ -1195,7 +1191,6 @@
 		055115021DCDF63000EC753C /* triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114FB1DCDF63000EC753C /* triangulation.h */; };
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
-		055722D31D9BC9D3005789B4 /* boost-python27.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python27.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
 		055B7318181D7F2500449D14 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		055B731A181D7F2C00449D14 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
@@ -1350,8 +1345,6 @@
 		0568743020C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0568743120C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
-		056AA9941C41C10100FA81D3 /* boost-python27.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python27.framework */; };
-		056AA9951C41C11C00FA81D3 /* boost-python27.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9931C41C10100FA81D3 /* boost-python27.framework */; };
 		056AA9981C41DA4800FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
 		056AA99A1C41DA6A00FA81D3 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9991C41DA6900FA81D3 /* cppunit.framework */; };
 		056AA99B1C41DAA300FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
@@ -2192,7 +2185,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
 			);
-			script = "cat ${INPUT_FILE_PATH} | sed \\\n  -e \"s#@PYTHON_EXECUTABLE@#/usr/bin/python2.7#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@OSX_PYTHON_32@#0#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\n";
+			script = "case ${CONFIGURATION} in\n  Python 3*)\n    pyexec=/sw/bin/python3.7\n    ;;\n  *)\n    pyexec=/usr/bin/python2.7\n    ;;\nesac\n\ncat ${INPUT_FILE_PATH} | sed \\\n  -e \"s#@PYTHON_EXECUTABLE@#$pyexec#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@OSX_PYTHON_32@#0#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\n";
 		};
 /* End PBXBuildRule section */
 
@@ -2301,16 +2294,6 @@
 			name = "Copy Engine and Utilities";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		05249EA11DBB8F16001FE29E /* CopyFiles */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = python;
-			dstSubfolderSpec = 7;
-			files = (
-				05249EA41DBB8FE4001FE29E /* python27.zip in CopyFiles */,
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-		};
 		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
@@ -2395,7 +2378,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				055722D31D9BC9D3005789B4 /* boost-python27.framework in Copy Frameworks */,
 				05AB5F081B9429BB007034C8 /* QtDBus.framework in Copy Frameworks */,
 				05AB5F091B9429BB007034C8 /* QtNetwork.framework in Copy Frameworks */,
 				05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in Copy Frameworks */,
@@ -2694,7 +2676,6 @@
 		050F5E791B9BD6F400C1F681 /* pythoninterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythoninterpreter.h; sourceTree = "<group>"; };
 		050F5E7A1B9BD6F400C1F681 /* pythonoutputstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonoutputstream.cpp; sourceTree = "<group>"; };
 		050F5E7B1B9BD6F400C1F681 /* pythonoutputstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonoutputstream.h; sourceTree = "<group>"; };
-		050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libpython2.7.dylib; path = usr/lib/libpython2.7.dylib; sourceTree = SDKROOT; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
 		0514CAE71D9CD4B500EDB2E6 /* index.docbook */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = index.docbook; sourceTree = "<group>"; };
@@ -2716,12 +2697,9 @@
 		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
-		05249E951DBAE7E8001FE29E /* Python.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python.framework; path = ../../Library/Frameworks/ios/Python.framework; sourceTree = "<group>"; };
-		05249E971DBAEB80001FE29E /* boost-python27-static.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python27-static.framework"; path = "../../Library/Frameworks/ios/boost-python27-static.framework"; sourceTree = "<group>"; };
 		05249E9A1DBB50AD001FE29E /* PythonInterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonInterpreter.h; sourceTree = "<group>"; };
 		05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonInterpreter.mm; sourceTree = "<group>"; };
 		05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
-		05249EA31DBB8FC9001FE29E /* python27.zip */ = {isa = PBXFileReference; lastKnownFileType = archive.zip; name = python27.zip; path = ../../../../Library/Frameworks/ios/Python.framework/Resources/lib/python27.zip; sourceTree = "<group>"; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
 		052774111C55743E00140918 /* hypercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercreator.h; sourceTree = "<group>"; };
 		052774151C55760B00140918 /* NewHypersurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHypersurfacesController.h; sourceTree = "<group>"; };
@@ -3795,7 +3773,6 @@
 		0568742420C5D86B001C435B /* pass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pass.cpp; sourceTree = "<group>"; };
 		0568742F20C5D8D3001C435B /* tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tangle.cpp; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
-		056AA9931C41C10100FA81D3 /* boost-python27.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = "boost-python27.framework"; path = "../../Library/Frameworks/osx/boost-python27.framework"; sourceTree = "<group>"; };
 		056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/osx/libtokyocabinet.framework; sourceTree = "<group>"; };
 		056AA9991C41DA6900FA81D3 /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/osx/cppunit.framework; sourceTree = "<group>"; };
 		056AA99C1C41DAC100FA81D3 /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/ios/cppunit.framework; sourceTree = "<group>"; };
@@ -4559,7 +4536,6 @@
 				050F5E621B9BAC5200C1F681 /* libregina-engine.dylib in Frameworks */,
 				056AA9A61C41DE9100FA81D3 /* libgmp.framework in Frameworks */,
 				056AA9A71C41DE9100FA81D3 /* libgmpxx.framework in Frameworks */,
-				056AA9951C41C11C00FA81D3 /* boost-python27.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4593,8 +4569,6 @@
 				057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */,
 				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
 				05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */,
-				05249E961DBAE7E9001FE29E /* Python.framework in Frameworks */,
-				05249E981DBAEB82001FE29E /* boost-python27-static.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4698,8 +4672,6 @@
 				05CAFB561C4D904A0001C253 /* libz.dylib in Frameworks */,
 				0591E8591C4F832B00793A9C /* libxml2.dylib in Frameworks */,
 				05CAFB551C4D8FCF0001C253 /* graphviz.framework in Frameworks */,
-				050F5E871B9BD7EF00C1F681 /* libpython2.7.dylib in Frameworks */,
-				056AA9941C41C10100FA81D3 /* boost-python27.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -5395,7 +5367,6 @@
 				0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */,
 				05249E9A1DBB50AD001FE29E /* PythonInterpreter.h */,
 				05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */,
-				05249EA31DBB8FC9001FE29E /* python27.zip */,
 				05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */,
 				05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */,
 			);
@@ -7612,14 +7583,12 @@
 			isa = PBXGroup;
 			children = (
 				05DC051E1C41B87200C76D71 /* boost.framework */,
-				05249E971DBAEB80001FE29E /* boost-python27-static.framework */,
 				056AA99C1C41DAC100FA81D3 /* cppunit.framework */,
 				056AA9A01C41DDF400FA81D3 /* graphviz.framework */,
 				054208E81DF0D6860018AB24 /* jansson.framework */,
 				056AA9A81C41DE9D00FA81D3 /* libgmp.framework */,
 				056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */,
 				056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */,
-				05249E951DBAE7E8001FE29E /* Python.framework */,
 				05F4947B19BDDD5D00CD887C /* DBChooser.framework */,
 				0569F93119B3658200051091 /* libbz2.dylib */,
 				057FA74F180615F5008E25F6 /* libiconv.dylib */,
@@ -7637,7 +7606,6 @@
 			isa = PBXGroup;
 			children = (
 				05DC051C1C41B85100C76D71 /* boost.framework */,
-				056AA9931C41C10100FA81D3 /* boost-python27.framework */,
 				056AA9991C41DA6900FA81D3 /* cppunit.framework */,
 				05CAFB541C4D8FCE0001C253 /* graphviz.framework */,
 				054208E61DF0D6590018AB24 /* jansson.framework */,
@@ -7656,7 +7624,6 @@
 				055B7317181D7F2400449D14 /* libiconv.dylib */,
 				055B7319181D7F2B00449D14 /* libxml2.dylib */,
 				052FA0A51806047E00FAE4DF /* libz.dylib */,
-				050F5E851B9BD7EF00C1F681 /* libpython2.7.dylib */,
 			);
 			name = OSX;
 			sourceTree = "<group>";
@@ -8285,7 +8252,7 @@
 				05DADB1521927AEE00DC80E1 /* Copy Databases */,
 				057118CF19B30BAF009FEDC5 /* CopyFiles */,
 				05F9560919B5296D00377BEC /* CopyFiles */,
-				05249EA11DBB8F16001FE29E /* CopyFiles */,
+				05B4D2A5229F31F100B7B11C /* Copy Python core */,
 				054209181DF17EB70018AB24 /* CopyFiles */,
 			);
 			buildRules = (
@@ -8708,7 +8675,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "module=${BUILT_PRODUCTS_DIR}/engine.so\n\ninstall_name_tool -change @rpath/boost-python27.framework/Versions/A/boost-python27 @loader_path/../../../Frameworks/boost-python27.framework/Versions/A/boost-python27 ${module}\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib ${module}\n";
+			shellScript = "module=${BUILT_PRODUCTS_DIR}/engine.so\n\ncase ${CONFIGURATION} in\n  Python 3*)\n    boostframework=boost-python37\n    ;;\n  *)\n    boostframework=boost-python27\n    ;;\nesac\n\ninstall_name_tool -change @rpath/\"$boostframework\".framework/Versions/A/\"$boostframework\" @loader_path/../../../Frameworks/\"$boostframework\".framework/Versions/A/\"$boostframework\" ${module}\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib ${module}\n";
 		};
 		052DB59E1D9E587C00EDEA68 /* Sign Utilities */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8737,6 +8704,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# These will break codesign.\nrm -f ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/python/regina/*.pyc";
+		};
+		05B4D2A5229F31F100B7B11C /* Copy Python core */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Python core";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Resources\"\n\ncase ${CONFIGURATION} in\n  Python 3*)\n    pyframework=Python3.7\n    pyzip=python37.zip\n    ;;\n  *)\n    pyframework=Python2.7\n    pyzip=python27.zip\n    ;;\nesac\n\ncp ~/Library/Frameworks/ios/\"$pyframework\".framework/Resources/lib/\"$pyzip\" $resdir/python\n";
 		};
 		05DADB022192543B00DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10743,10 +10728,14 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmpxx.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/libtokyocabinet.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/graphviz.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python2.7.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					"boost-python27-static",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
@@ -10786,10 +10775,14 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmpxx.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/libtokyocabinet.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/graphviz.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python2.7.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					"boost-python27-static",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
@@ -11855,6 +11848,650 @@
 			};
 			name = Release;
 		};
+		05B4D293229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				COPY_PHASE_STRIP = YES;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/engine\"",
+					"\"$(SRCROOT)\"",
+					/usr/include/libxml2,
+				);
+				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				SDKROOT = macosx;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D294229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				COMBINE_HIDPI_IMAGES = YES;
+				DYLIB_INSTALL_NAME_BASE = "@loader_path";
+				EXECUTABLE_PREFIX = lib;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					"\"$(SRCROOT)\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/jansson.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = "regina-engine";
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D295229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				COMBINE_HIDPI_IMAGES = YES;
+				COPY_PHASE_STRIP = NO;
+				DYLIB_COMPATIBILITY_VERSION = "";
+				DYLIB_CURRENT_VERSION = "";
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				EXECUTABLE_EXTENSION = so;
+				EXECUTABLE_PREFIX = "";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_ENABLE_CPP_EXCEPTIONS = YES;
+				GCC_ENABLE_CPP_RTTI = YES;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					"\"$(SRCROOT)\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/jansson.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
+					/sw/include/python3.7,
+				);
+				MACH_O_TYPE = mh_bundle;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-undefined",
+					dynamic_lookup,
+				);
+				PRODUCT_NAME = engine;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D296229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_PREPROCESSOR_DEFINITIONS = "TESTSUITE_CENSUS_DIR='\"${CONFIGURATION_TEMP_DIR}/Engine.build/DerivedSources\"'";
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"\"$(SRCROOT)\"",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_NAME = regtestsuite;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D297229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Python 3 Release";
+		};
+		05B4D298229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = "Python 3 Release";
+		};
+		05B4D299229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(LOCAL_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_C_LANGUAGE_STANDARD = "compiler-default";
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"NO_SRCHILITE=1",
+					"REGINA_XCODE_BUNDLE=1",
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"\"$(SRCROOT)/qtui/src\"",
+					"$(HOME)/Library/Frameworks/osx/QtCore.framework/Headers",
+					"$(HOME)/Library/Frameworks/osx/QtGui.framework/Headers",
+					"$(HOME)/Library/Frameworks/osx/QtSvg.framework/Headers",
+					"$(HOME)/Library/Frameworks/osx/QtWidgets.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/graphviz.framework/Headers",
+					/sw/include/python3.7,
+				);
+				INFOPLIST_FILE = qtui/src/regina.plist;
+				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
+				INFOPLIST_PREPROCESS = YES;
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
+				PRODUCT_NAME = Regina;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D29A229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ARCHS = arm64;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				ENABLE_BITCODE = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(DEVELOPER_FRAMEWORKS_DIR)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios",
+				);
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_LINK_MODULE_INTO_EXECUTABLE=1";
+				HEADER_SEARCH_PATHS = (
+					"\"$(SRCROOT)/preconfig/ios-xcode5\"",
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/jansson.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/libtokyocabinet.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/graphviz.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python3.7.framework/Headers",
+				);
+				INFOPLIST_FILE = "ios/Regina-Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				OTHER_LDFLAGS = (
+					"-framework",
+					"boost-python37-static",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
+				PRODUCT_NAME = Regina;
+				PROVISIONING_PROFILE = "";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+				WRAPPER_EXTENSION = app;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D29B229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_CXX_LIBRARY = "compiler-default";
+				CLANG_ENABLE_MODULES = YES;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					"\"$(SRCROOT)\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
+				);
+				MACOSX_DEPLOYMENT_TARGET = "";
+				PRODUCT_NAME = mkcensusdb;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D29C229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/censuslookup.plist",
+				);
+				PRODUCT_NAME = censuslookup;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D29D229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/regconcat.plist",
+				);
+				PRODUCT_NAME = regconcat;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D29E229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/regconvert.plist",
+				);
+				PRODUCT_NAME = regconvert;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D29F229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/regfiledump.plist",
+				);
+				PRODUCT_NAME = regfiledump;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D2A0229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/regfiletype.plist",
+				);
+				PRODUCT_NAME = regfiletype;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D2A1229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				DEVELOPMENT_TEAM = 67JTSH67LZ;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/retriangulate.plist",
+				);
+				PRODUCT_NAME = retriangulate;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D2A2229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/sigcensus.plist",
+				);
+				PRODUCT_NAME = sigcensus;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D2A3229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/tricensus.plist",
+				);
+				PRODUCT_NAME = tricensus;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
+		05B4D2A4229F2BE000B7B11C /* Python 3 Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+				);
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/trisetcmp.plist",
+				);
+				PRODUCT_NAME = trisetcmp;
+				SKIP_INSTALL = YES;
+			};
+			name = "Python 3 Release";
+		};
 		05DADB002192535F00DC80E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11899,6 +12536,7 @@
 			buildConfigurations = (
 				050F5CE51B9BAAAB00C1F681 /* Debug */,
 				050F5CE61B9BAAAB00C1F681 /* Release */,
+				05B4D295229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11908,6 +12546,7 @@
 			buildConfigurations = (
 				052FA0C71806072900FAE4DF /* Debug */,
 				052FA0C81806072900FAE4DF /* Release */,
+				05B4D296229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11917,6 +12556,7 @@
 			buildConfigurations = (
 				052FA1591806103000FAE4DF /* Debug */,
 				052FA15A1806103000FAE4DF /* Release */,
+				05B4D29A229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11926,6 +12566,7 @@
 			buildConfigurations = (
 				05617AE21D9DBFBF00B1E33B /* Debug */,
 				05617AE31D9DBFBF00B1E33B /* Release */,
+				05B4D2A3229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11935,6 +12576,7 @@
 			buildConfigurations = (
 				05617B061D9DC51700B1E33B /* Debug */,
 				05617B071D9DC51700B1E33B /* Release */,
+				05B4D29C229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11944,6 +12586,7 @@
 			buildConfigurations = (
 				05617B111D9DC52300B1E33B /* Debug */,
 				05617B121D9DC52300B1E33B /* Release */,
+				05B4D29D229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11953,6 +12596,7 @@
 			buildConfigurations = (
 				05617B1C1D9DC52B00B1E33B /* Debug */,
 				05617B1D1D9DC52B00B1E33B /* Release */,
+				05B4D29E229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11962,6 +12606,7 @@
 			buildConfigurations = (
 				05617B271D9DC53500B1E33B /* Debug */,
 				05617B281D9DC53500B1E33B /* Release */,
+				05B4D29F229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11971,6 +12616,7 @@
 			buildConfigurations = (
 				05617B321D9DC54600B1E33B /* Debug */,
 				05617B331D9DC54600B1E33B /* Release */,
+				05B4D2A0229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11980,6 +12626,7 @@
 			buildConfigurations = (
 				05617B3D1D9DC55100B1E33B /* Debug */,
 				05617B3E1D9DC55100B1E33B /* Release */,
+				05B4D2A2229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11989,6 +12636,7 @@
 			buildConfigurations = (
 				05617B481D9DC55C00B1E33B /* Debug */,
 				05617B491D9DC55C00B1E33B /* Release */,
+				05B4D2A4229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -11998,6 +12646,7 @@
 			buildConfigurations = (
 				0564A20F1811D6FA002CC2AE /* Debug */,
 				0564A2101811D6FA002CC2AE /* Release */,
+				05B4D299229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12007,6 +12656,7 @@
 			buildConfigurations = (
 				0575E65B1805F36D009E3FC4 /* Debug */,
 				0575E65C1805F36D009E3FC4 /* Release */,
+				05B4D293229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12016,6 +12666,7 @@
 			buildConfigurations = (
 				0575E65E1805F36D009E3FC4 /* Debug */,
 				0575E65F1805F36D009E3FC4 /* Release */,
+				05B4D294229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12025,6 +12676,7 @@
 			buildConfigurations = (
 				058FC8701FE188A0006D04B4 /* Debug */,
 				058FC8711FE188A0006D04B4 /* Release */,
+				05B4D2A1229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12034,6 +12686,7 @@
 			buildConfigurations = (
 				05B14EA919B423A0002138C0 /* Debug */,
 				05B14EAA19B423A0002138C0 /* Release */,
+				05B4D29B229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12043,6 +12696,7 @@
 			buildConfigurations = (
 				05DADB002192535F00DC80E1 /* Debug */,
 				05DADB012192535F00DC80E1 /* Release */,
+				05B4D298229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12052,6 +12706,7 @@
 			buildConfigurations = (
 				05DADB06219256ED00DC80E1 /* Debug */,
 				05DADB07219256ED00DC80E1 /* Release */,
+				05B4D297229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
