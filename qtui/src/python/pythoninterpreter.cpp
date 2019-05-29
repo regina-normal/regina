@@ -113,6 +113,20 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         Py_Initialize();
         PyEval_InitThreads();
         mainState = PyThreadState_Get();
+
+#if PY_MAJOR_VERSION >= 3
+        // Subinterpreters are supposed to share extension modules
+        // without repeatedly calling the modules' init functions.
+        // In python 3, this seems to fail if all subinterpreters are
+        // destroyed, unless we keep the extension module loaded here in
+        // the main interpreter also.
+        //
+        // If this fails, do so silently; we'll see the same error again
+        // immediately in the first subinterpreter.
+        importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
+            "__main__")));
+#endif
+
         pythonInitialised = true;
     }
 
@@ -312,10 +326,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     }
 }
 
-bool PythonInterpreter::importRegina() {
-    PyEval_RestoreThread(state);
-
-    // Adjust the python path if we need to.
+void PythonInterpreter::prependReginaToSysPath() {
     std::string regModuleDir = regina::GlobalDirs::pythonModule();
     if (! regModuleDir.empty()) {
         PyObject* path = PySys_GetObject(
@@ -338,26 +349,38 @@ bool PythonInterpreter::importRegina() {
             Py_DECREF(regModuleDirPy);
         }
     }
+}
 
-    // Import the module.
-    bool ok = false;
-    try {
-        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
-        if (regModule) {
-            PyDict_SetItemString(mainNamespace, "regina", regModule);
-            Py_DECREF(regModule);
-            ok = true;
-        } else {
-            PyErr_Print();
-            PyErr_Clear();
-        }
-    } catch (const boost::python::error_already_set&) {
+bool PythonInterpreter::importRegina() {
+    PyEval_RestoreThread(state);
+
+    bool ok = importReginaIntoNamespace(mainNamespace);
+    if (! ok) {
         PyErr_Print();
         PyErr_Clear();
     }
 
     state = PyEval_SaveThread();
     return ok;
+}
+
+bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace) {
+    // Adjust the python path if we need to.
+    prependReginaToSysPath();
+
+    // Import the module.
+    try {
+        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+        if (regModule) {
+            PyDict_SetItemString(useNamespace, "regina", regModule);
+            Py_DECREF(regModule);
+            return true;
+        } else {
+            return false;
+        }
+    } catch (const boost::python::error_already_set&) {
+        return false;
+    }
 }
 
 bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
