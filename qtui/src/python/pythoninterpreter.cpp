@@ -73,6 +73,7 @@ static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
+PyThreadState* mainState;
 
 PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         PythonOutputStream* pyStdErr) {
@@ -80,7 +81,7 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
 
     // Acquire the global interpreter lock.
     if (pythonInitialised)
-        PyEval_AcquireLock();
+        PyEval_AcquireThread(mainState);
     else {
 #if defined(REGINA_INSTALL_WINDOWS) && defined(__MINGW32__)
         // Assume this is the MS Windows + MinGW + WiX package build,
@@ -109,8 +110,9 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         putenv(strdup(newPath.c_str()));
 #endif
 
-        PyEval_InitThreads();
         Py_Initialize();
+        PyEval_InitThreads();
+        mainState = PyThreadState_Get();
         pythonInitialised = true;
     }
 
