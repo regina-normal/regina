@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/eutput.h"
 #include "subcomplex/satannulus.h"
 #include <set>
 #include <boost/noncopyable.hpp>

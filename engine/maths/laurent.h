@@ -40,7 +40,7 @@
  */
 
 #include "utilities/stringutils.h"
-#include "output.h"
+#include "core/output.h"
 #include <iostream>
 #include <sstream>
 

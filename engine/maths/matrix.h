@@ -43,7 +43,7 @@
 #include <memory>
 #include <boost/noncopyable.hpp>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "maths/integer.h"
 
 namespace regina {

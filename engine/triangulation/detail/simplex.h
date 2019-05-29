@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/facenumbering.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/forward.h"

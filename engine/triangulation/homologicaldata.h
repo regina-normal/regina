@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "algebra/markedabeliangroup.h"
 #include "maths/rational.h"
 #include "triangulation/dim3.h"

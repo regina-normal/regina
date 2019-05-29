@@ -42,7 +42,7 @@
 
 #include <utility>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "maths/perm.h"
 #include "maths/ray.h"
 #include "surfaces/disctype.h"

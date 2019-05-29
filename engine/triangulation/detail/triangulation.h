@@ -46,7 +46,7 @@
 #include <string>
 #include <vector>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
 #include "maths/matrix.h"

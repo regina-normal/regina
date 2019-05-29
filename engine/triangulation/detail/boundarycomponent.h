@@ -41,7 +41,7 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"

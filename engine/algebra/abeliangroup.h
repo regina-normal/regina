@@ -42,7 +42,7 @@
 #include <set>
 #include "regina-core.h"
 #include "maths/integer.h"
-#include "output.h"
+#include "core/output.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {

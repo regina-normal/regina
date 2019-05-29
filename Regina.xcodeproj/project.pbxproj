@@ -422,7 +422,6 @@
 		052F9EB7180600FB00FAE4DF /* dim2triangulation.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C46180600FA00FAE4DF /* dim2triangulation.h */; };
 		052F9EB8180600FB00FAE4DF /* dim2vertex.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C47180600FA00FAE4DF /* dim2vertex.h */; };
 		052F9EBD180600FB00FAE4DF /* docs.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C4C180600FA00FAE4DF /* docs.h */; };
-		052F9EBE180600FB00FAE4DF /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C51180600FA00FAE4DF /* engine.cpp */; };
 		052F9EBF180600FB00FAE4DF /* engine.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C52180600FA00FAE4DF /* engine.h */; };
 		052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C55180600FA00FAE4DF /* doubledescription-impl.h */; };
 		052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9C56180600FA00FAE4DF /* doubledescription.h */; };
@@ -737,7 +736,6 @@
 		052FA16C1806129B00FAE4DF /* gluingpermsearcher2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1C180600FA00FAE4DF /* gluingpermsearcher2.cpp */; };
 		052FA16D1806129B00FAE4DF /* census.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C1E180600FA00FAE4DF /* census.cpp */; };
 		052FA1701806129B00FAE4DF /* gluingpermsearcher3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C2A180600FA00FAE4DF /* gluingpermsearcher3.cpp */; };
-		052FA17A1806129B00FAE4DF /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C51180600FA00FAE4DF /* engine.cpp */; };
 		052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C8E180600FA00FAE4DF /* treeconstraint.cpp */; };
 		052FA17F1806129B00FAE4DF /* treelp.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C91180600FA00FAE4DF /* treelp.cpp */; };
 		052FA1801806129B00FAE4DF /* treetraversal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9C95180600FA00FAE4DF /* treetraversal.cpp */; };
@@ -1899,6 +1897,10 @@
 		05B4D2CE229F376B00B7B11C /* descent.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2B4229F376B00B7B11C /* descent.h */; };
 		05B4D2CF229F376B00B7B11C /* primal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2B5229F376B00B7B11C /* primal.cpp */; };
 		05B4D2D0229F376B00B7B11C /* primal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2B5229F376B00B7B11C /* primal.cpp */; };
+		05B4D2D6229F42D700B7B11C /* engine.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2D2229F42D600B7B11C /* engine.h */; };
+		05B4D2D7229F42D700B7B11C /* output.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2D3229F42D600B7B11C /* output.h */; };
+		05B4D2D8229F42D700B7B11C /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2D4229F42D600B7B11C /* engine.cpp */; };
+		05B4D2D9229F42D700B7B11C /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2D4229F42D600B7B11C /* engine.cpp */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708319C92A5000E2E558 /* ScriptViewController.mm */; };
 		05B7708719CA4FF100E2E558 /* FilterViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708619CA4FF100E2E558 /* FilterViewController.mm */; };
@@ -2771,7 +2773,6 @@
 		052F9C4E180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C4F180600FA00FAE4DF /* doc-footer.html */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.html; path = "doc-footer.html"; sourceTree = "<group>"; };
 		052F9C50180600FA00FAE4DF /* docs.conf.in */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = docs.conf.in; sourceTree = "<group>"; };
-		052F9C51180600FA00FAE4DF /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
 		052F9C52180600FA00FAE4DF /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
 		052F9C54180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9C55180600FA00FAE4DF /* doubledescription-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "doubledescription-impl.h"; sourceTree = "<group>"; };
@@ -4347,6 +4348,10 @@
 		05B4D2B3229F376A00B7B11C /* other_algorithms.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = other_algorithms.cpp; sourceTree = "<group>"; };
 		05B4D2B4229F376B00B7B11C /* descent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = descent.h; sourceTree = "<group>"; };
 		05B4D2B5229F376B00B7B11C /* primal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = primal.cpp; sourceTree = "<group>"; };
+		05B4D2D2229F42D600B7B11C /* engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = engine.h; sourceTree = "<group>"; };
+		05B4D2D3229F42D600B7B11C /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
+		05B4D2D4229F42D600B7B11C /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
+		05B4D2D5229F42D700B7B11C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B7708219C92A5000E2E558 /* ScriptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptViewController.h; sourceTree = "<group>"; };
 		05B7708319C92A5000E2E558 /* ScriptViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScriptViewController.mm; sourceTree = "<group>"; };
@@ -5429,11 +5434,11 @@
 				052F9C12180600FA00FAE4DF /* census */,
 				052F9C2C180600FA00FAE4DF /* checkdocs */,
 				052F9C2D180600FA00FAE4DF /* CMakeLists.txt */,
+				05B4D2DB229F42E000B7B11C /* core */,
 				052F9C38180600FA00FAE4DF /* dim2 */,
 				0591E7821C4F748D00793A9C /* dim4 */,
 				052F9C4C180600FA00FAE4DF /* docs.h */,
 				052F9C4D180600FA00FAE4DF /* doxygen */,
-				052F9C51180600FA00FAE4DF /* engine.cpp */,
 				052F9C52180600FA00FAE4DF /* engine.h */,
 				052F9C53180600FA00FAE4DF /* enumerate */,
 				052F9C9B180600FA00FAE4DF /* file */,
@@ -7589,6 +7594,17 @@
 			path = census;
 			sourceTree = "<group>";
 		};
+		05B4D2DB229F42E000B7B11C /* core */ = {
+			isa = PBXGroup;
+			children = (
+				05B4D2D5229F42D700B7B11C /* CMakeLists.txt */,
+				05B4D2D4229F42D600B7B11C /* engine.cpp */,
+				05B4D2D2229F42D600B7B11C /* engine.h */,
+				05B4D2D3229F42D600B7B11C /* output.h */,
+			);
+			path = core;
+			sourceTree = "<group>";
+		};
 		05BEB0C219CCE0BB006AB2C8 /* Toast */ = {
 			isa = PBXGroup;
 			children = (
@@ -7870,6 +7886,7 @@
 				052F9F24180600FB00FAE4DF /* ngraphtriple.h in Headers */,
 				05431F6A1C40F3C9009BC072 /* cone.h in Headers */,
 				052F9EBD180600FB00FAE4DF /* docs.h in Headers */,
+				05B4D2D7229F42D700B7B11C /* output.h in Headers */,
 				052FA038180600FB00FAE4DF /* nsvectoranstandard.h in Headers */,
 				05B4D2CE229F376B00B7B11C /* descent.h in Headers */,
 				052FA013180600FB00FAE4DF /* nsnappedball.h in Headers */,
@@ -7952,6 +7969,7 @@
 				0583656518DB8876008B08D9 /* real_type.h in Headers */,
 				055114FF1DCDF63000EC753C /* facetpairing.h in Headers */,
 				052F9F31180600FB00FAE4DF /* nsimplesurfacebundle.h in Headers */,
+				05B4D2D6229F42D700B7B11C /* engine.h in Headers */,
 				05F09FBF1DBEF01800117BFC /* dim2.h in Headers */,
 				05431F2F1C40F2DB009BC072 /* nperm2.h in Headers */,
 				052F9F3C180600FB00FAE4DF /* integer.h in Headers */,
@@ -9554,7 +9572,6 @@
 				052FA221180612DD00FAE4DF /* edge_classes.c in Sources */,
 				05F23E1919C1418A005B53B5 /* NewSnapPeaController.mm in Sources */,
 				05F0A0181DBF079600117BFC /* vertex4.cpp in Sources */,
-				052FA17A1806129B00FAE4DF /* engine.cpp in Sources */,
 				052FA22F180612DD00FAE4DF /* peripheral_curves.c in Sources */,
 				05249F3A1DBC1718001FE29E /* pdf.cpp in Sources */,
 				05D1174619EE01A1003BEC55 /* facetpairing3.cpp in Sources */,
@@ -9577,6 +9594,7 @@
 				05249F621DBC1737001FE29E /* disc.cpp in Sources */,
 				05D1173419EE0185003BEC55 /* exhaustive.cpp in Sources */,
 				05F09FE21DBF01D100117BFC /* triangulation2.cpp in Sources */,
+				05B4D2D9229F42D700B7B11C /* engine.cpp in Sources */,
 				052FA224180612DD00FAE4DF /* finite_vertices.c in Sources */,
 				05249F661DBC1737001FE29E /* normalsurface.cpp in Sources */,
 				05A73CA119B2EF5A0099C617 /* matrix_conversion.c in Sources */,
@@ -10183,7 +10201,6 @@
 				052FA044180600FB00FAE4DF /* surfacefilter.cpp in Sources */,
 				0588C2A91FD8D1750093C2C9 /* representations.c in Sources */,
 				05721EEF1F97153E00A83FFC /* xmllinkreader.cpp in Sources */,
-				052F9EBE180600FB00FAE4DF /* engine.cpp in Sources */,
 				052F9FD8180600FB00FAE4DF /* update_shapes.c in Sources */,
 				05C1BED71DCA89DA007C946B /* triangulation5.cpp in Sources */,
 				054208BF1DF0D2740018AB24 /* sfsaltset.cpp in Sources */,
@@ -10232,6 +10249,7 @@
 				054208B91DF0D2740018AB24 /* lensspace.cpp in Sources */,
 				052F9F7C180600FB00FAE4DF /* cusps.c in Sources */,
 				05C1BEAE1DCA7CA9007C946B /* boundary6.cpp in Sources */,
+				05B4D2D8229F42D700B7B11C /* engine.cpp in Sources */,
 				05DC13851FEB942B00171D66 /* nsvectorquadoctclosed.cpp in Sources */,
 				052F9E9D180600FB00FAE4DF /* census.cpp in Sources */,
 				05A73C9C19B2EF5A0099C617 /* fundamental_group.c in Sources */,

@@ -33,7 +33,7 @@
 #include <boost/python.hpp>
 
 #include "regina-config.h"
-#include "engine.h"
+#include "core/engine.h"
 #include "helpers.h"
 
 void addGlobalArray();
