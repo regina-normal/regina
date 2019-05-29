@@ -64,8 +64,9 @@ PyMODINIT_FUNC initregina();
  * operating system, we simply choose to ignore the problem.
  */
 
-static bool pythonInitialised = false;
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
+static bool pythonInitialised = false;
+PyThreadState* mainState;
 
 #pragma mark Helper functions
 
@@ -180,7 +181,7 @@ class PythonOutputStreamObjC {
         _errCpp = new PythonOutputStreamObjC((__bridge void*)_err);
 
         if (pythonInitialised)
-            PyEval_AcquireLock();
+            PyEval_AcquireThread(mainState);
         else {
             // Make sure Python can find its own modules.
             std::string pyZipDir = regina::GlobalDirs::home() + "/python";
@@ -196,8 +197,9 @@ class PythonOutputStreamObjC {
                 NSLog(@"ERROR: PyImport_AppendInittab(\"regina\", ...) failed.");
 
             // Go ahead and initialise Python.
-            PyEval_InitThreads();
             Py_Initialize();
+            PyEval_InitThreads();
+            mainState = PyThreadState_Get();
             pythonInitialised = true;
         }
 
@@ -280,7 +282,11 @@ class PythonOutputStreamObjC {
     PyObject* code = Py_CompileStringFlags(cmdBuffer, "<console>", Py_single_input, &pyCompFlags);
     if (code) {
         // Run the code!
+#if PY_VERSION_HEX >= 0x03020000
+        PyObject* ans = PyEval_EvalCode(code, _mainNamespace, _mainNamespace);
+#else
         PyObject* ans = PyEval_EvalCode((PyCodeObject*)code, _mainNamespace, _mainNamespace);
+#endif
         if (ans)
             Py_DECREF(ans);
         else {
@@ -347,7 +353,9 @@ class PythonOutputStreamObjC {
 
     // Compare the two compile errors.
     if (errStr1 && errStr2) {
-        if (PyObject_Compare(errStr1, errStr2)) {
+        // Note: rich comparison returns -1 on error, or 0/1 for false/true.
+        // Since we are passing two python strings, we assume no error here.
+        if (PyObject_RichCompareBool(errStr1, errStr2, Py_NE) == 1) {
             // Errors are different.  We must be waiting on more code.
             Py_XDECREF(errType);
             Py_XDECREF(errValue);
@@ -424,7 +432,12 @@ class PythonOutputStreamObjC {
         PyObject* pyValue = conv(value);
 
         if (pyValue) {
+#if PY_MAJOR_VERSION >= 3
+            // PyUnicode_FromString assumes UTF-8 encoding.
+            PyObject* nameStr = PyUnicode_FromString(name); // New ref.
+#else
             PyObject* nameStr = PyString_FromString(name); // New ref.
+#endif
             PyDict_SetItem(_mainNamespace, nameStr, pyValue);
             Py_DECREF(nameStr);
             Py_DECREF(pyValue);
