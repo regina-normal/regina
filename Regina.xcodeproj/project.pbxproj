@@ -2174,7 +2174,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/engine-docs",
 			);
-			script = "conf=${DERIVED_FILE_DIR}/docs.conf\nsource=${INPUT_FILE_DIR}/../..\noutput=${DERIVED_FILE_DIR}/engine-docs\n\ncat ${INPUT_FILE_PATH} | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" > ${conf}\n\n/sw/bin/doxygen ${conf} 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` ${output}\n";
+			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/../..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" > \"${conf}\"\n\n/sw/bin/doxygen \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
 		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2185,7 +2185,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
-			script = "~/Qt5.12.1/5.12.1/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx ${INPUT_FILE_PATH}\n";
+			script = "~/Qt5.12.1/5.12.1/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
 		};
 		05617AD71D9D3CBD00B1E33B /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2196,7 +2196,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
 			);
-			script = "case ${CONFIGURATION} in\n  Python 3*)\n    pyexec=/sw/bin/python3.7\n    ;;\n  *)\n    pyexec=/usr/bin/python2.7\n    ;;\nesac\n\ncat ${INPUT_FILE_PATH} | sed \\\n  -e \"s#@PYTHON_EXECUTABLE@#$pyexec#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@OSX_PYTHON_32@#0#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> ${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\n";
+			script = "case \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyexec=/sw/bin/python3.7\n    ;;\n  *)\n    pyexec=/usr/bin/python2.7\n    ;;\nesac\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#@PYTHON_EXECUTABLE@#$pyexec#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@OSX_PYTHON_32@#0#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
 		};
 /* End PBXBuildRule section */
 
@@ -8709,7 +8709,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python ${macosdir}/regina-python\nln -f -s ../../../Resources/python/__init__.py ${macosdir}/python/regina/__init__.py\nln -f -s ../../../Resources/python/purePyMethods.py ${macosdir}/python/regina/purePyMethods.py\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype trisetcmp; do\n    ln -f -s ../Resources/python/regutils ${macosdir}/$i\ndone\n\nchmod a+x ${macosdir}/../Resources/regina-python\n";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\nln -f -s ../../../Resources/python/__init__.py \"${macosdir}\"/python/regina/__init__.py\nln -f -s ../../../Resources/python/purePyMethods.py \"${macosdir}\"/python/regina/purePyMethods.py\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype trisetcmp; do\n    ln -f -s ../Resources/python/regutils \"${macosdir}\"/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
 		};
 		0514CAE31D9C9A5800EDB2E6 /* Sign Qt Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8723,7 +8723,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
+			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8737,7 +8737,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "module=${BUILT_PRODUCTS_DIR}/engine.so\n\ncase ${CONFIGURATION} in\n  Python 3*)\n    boostframework=boost-python37\n    ;;\n  *)\n    boostframework=boost-python27\n    ;;\nesac\n\ninstall_name_tool -change @rpath/\"$boostframework\".framework/Versions/A/\"$boostframework\" @loader_path/../../../Frameworks/\"$boostframework\".framework/Versions/A/\"$boostframework\" ${module}\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib ${module}\n";
+			shellScript = "module=\"${BUILT_PRODUCTS_DIR}\"/engine.so\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    boostframework=boost-python37\n    ;;\n  *)\n    boostframework=boost-python27\n    ;;\nesac\n\ninstall_name_tool -change @rpath/\"$boostframework\".framework/Versions/A/\"$boostframework\" @loader_path/../../../Frameworks/\"$boostframework\".framework/Versions/A/\"$boostframework\" \"${module}\"\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib \"${module}\"\n";
 		};
 		052DB59E1D9E587C00EDEA68 /* Sign Utilities */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8751,7 +8751,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in retriangulate sigcensus tricensus; do\n/usr/bin/codesign --force --sign 'Mac Developer:' --entitlements ${SRCROOT}/utils/bundle/Utils.entitlements --timestamp=none ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in retriangulate sigcensus tricensus; do\n/usr/bin/codesign --force --sign 'Mac Developer:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
