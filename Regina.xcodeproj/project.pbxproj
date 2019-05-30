@@ -8783,7 +8783,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/Resources\"\n\ncase ${CONFIGURATION} in\n  Python 3*)\n    pyframework=Python3.7\n    pyzip=python37.zip\n    ;;\n  *)\n    pyframework=Python2.7\n    pyzip=python27.zip\n    ;;\nesac\n\ncp ~/Library/Frameworks/ios/\"$pyframework\".framework/Resources/lib/\"$pyzip\" $resdir/python\n";
+			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyframework=Python3.7\n    pyzip=python37.zip\n    ;;\n  *)\n    pyframework=Python2.7\n    pyzip=python27.zip\n    ;;\nesac\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/ios/\"$pyframework\".framework/Resources/lib/\"$pyzip\" \"$resdir\"/python\n";
 		};
 		05DADB022192543B00DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
