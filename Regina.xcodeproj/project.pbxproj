@@ -1609,7 +1609,6 @@
 		05998ED519F9362D00855238 /* cusped-hyp-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */; };
 		05998ED619F9362D00855238 /* cusped-hyp-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */; };
 		05998ED719F9362D00855238 /* hyp-knot-link-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ED019F9360200855238 /* hyp-knot-link-census.rga */; };
-		05998ED819F9362D00855238 /* sample.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ED119F9360200855238 /* sample.rga */; };
 		059BC6661DC7F76E00AB4206 /* boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 059BC6651DC7F76E00AB4206 /* boundarycomponent.h */; };
 		059BC6681DC7F77F00AB4206 /* boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 059BC6671DC7F77F00AB4206 /* boundarycomponent.h */; };
 		059BC6811DC7F7A200AB4206 /* boundarycomponent5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059BC66A1DC7F79600AB4206 /* boundarycomponent5.cpp */; };
@@ -2467,7 +2466,6 @@
 				05998ED519F9362D00855238 /* cusped-hyp-nor-census.rga in CopyFiles */,
 				05998ED619F9362D00855238 /* cusped-hyp-or-census.rga in CopyFiles */,
 				05998ED719F9362D00855238 /* hyp-knot-link-census.rga in CopyFiles */,
-				05998ED819F9362D00855238 /* sample.rga in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4120,7 +4118,6 @@
 		05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
 		05998ED019F9360200855238 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
-		05998ED119F9360200855238 /* sample.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = sample.rga; sourceTree = "<group>"; };
 		059AF9881C53BE4000FB1A14 /* facechooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facechooser.h; sourceTree = "<group>"; };
 		059AF9891C53BE4000FB1A14 /* facename.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facename.h; sourceTree = "<group>"; };
 		059BC6651DC7F76E00AB4206 /* boundarycomponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundarycomponent.h; sourceTree = "<group>"; };
@@ -4336,6 +4333,8 @@
 		05B4D2D3229F42D600B7B11C /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05B4D2D4229F42D600B7B11C /* engine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = engine.cpp; sourceTree = "<group>"; };
 		05B4D2D5229F42D700B7B11C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		05B4D2E322A02B0A00B7B11C /* sample-py2.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py2.rga"; sourceTree = "<group>"; };
+		05B4D2E422A02B0A00B7B11C /* sample-py3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py3.rga"; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B7708219C92A5000E2E558 /* ScriptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptViewController.h; sourceTree = "<group>"; };
 		05B7708319C92A5000E2E558 /* ScriptViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScriptViewController.mm; sourceTree = "<group>"; };
@@ -7488,7 +7487,8 @@
 				05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */,
 				05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */,
 				05998ED019F9360200855238 /* hyp-knot-link-census.rga */,
-				05998ED119F9360200855238 /* sample.rga */,
+				05B4D2E322A02B0A00B7B11C /* sample-py2.rga */,
+				05B4D2E422A02B0A00B7B11C /* sample-py3.rga */,
 			);
 			path = ios;
 			sourceTree = "<group>";
@@ -8314,6 +8314,7 @@
 				05DADB1521927AEE00DC80E1 /* Copy Databases */,
 				057118CF19B30BAF009FEDC5 /* CopyFiles */,
 				05F9560919B5296D00377BEC /* CopyFiles */,
+				05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */,
 				05B4D2A5229F31F100B7B11C /* Copy Python core */,
 				054209181DF17EB70018AB24 /* CopyFiles */,
 			);
@@ -8784,6 +8785,24 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyframework=Python3.7\n    pyzip=python37.zip\n    ;;\n  *)\n    pyframework=Python2.7\n    pyzip=python27.zip\n    ;;\nesac\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/ios/\"$pyframework\".framework/Resources/lib/\"$pyzip\" \"$resdir\"/python\n";
+		};
+		05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Python 2/3 examples";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "src=\"${PROJECT_DIR}/examples/ios\"\ndest=\"${CONFIGURATION_BUILD_DIR}/Regina.app/examples\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    suffix=\"-py3.rga\"\n    ;;\n  *)\n    suffix=\"-py2.rga\"\n    ;;\nesac\n\nfor i in sample; do\ncp \"$src/$i$suffix\" \"$dest/${i}.rga\"\ndone\n";
 		};
 		05DADB022192543B00DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
