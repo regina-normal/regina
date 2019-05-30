@@ -221,8 +221,11 @@ class PythonOutputStreamObjC {
 
             std::string newPath("PYTHONPATH=");
             newPath += pyZipDir;
+#if PY_MAJOR_VERSION >= 3
+            newPath += "/python37.zip";
+#else
             newPath += "/python27.zip";
-
+#endif
             putenv(strdup(newPath.c_str()));
 
             // Make sure Python can find Regina's module also.

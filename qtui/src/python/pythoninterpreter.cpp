@@ -92,7 +92,7 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         // manually include the python zip and the path to zlib.pyd on the
         // python path, *before* the interpreter is initialised.
         //
-        // Here we assume that python27.zip is installed in the same
+        // Here we assume that pythonXY.zip is installed in the same
         // directory as the executable, and that zlib.pyd is installed
         // in the same directory as the regina python module.
 
@@ -103,7 +103,11 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         newPath += regModuleDir;
         newPath += ';';
         newPath += regModuleDir;
+#if PY_MAJOR_VERSION >= 3
+        newPath += "/python37.zip;";
+#else
         newPath += "/python27.zip;";
+#endif
         if (oldPath)
             newPath += oldPath;
 
