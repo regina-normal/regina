@@ -12182,6 +12182,8 @@
 					"-framework",
 					Python3.7,
 					"-framework",
+					XZ,
+					"-framework",
 					"boost-python37-static",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
