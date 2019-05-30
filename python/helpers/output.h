@@ -37,7 +37,7 @@
 #include <type_traits>
 #include <boost/python/def_visitor.hpp>
 #include <boost/python/operators.hpp>
-#include "../engine/output.h"
+#include "core/output.h"
 
 namespace regina {
 namespace python {
