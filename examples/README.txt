@@ -9,7 +9,7 @@ through Regina's main menu:
   File -> Open Example -> ... (choose which census you want)
 
 There are also example files here that illustrate how you can use Regina.
-For beginners: try sample-misc.rga, or from Regina's main menu select:
+For beginners: try sample.rga, or from Regina's main menu select:
 
   File -> Open Example -> Introductory Examples
 
