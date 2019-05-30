@@ -103,11 +103,8 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         newPath += regModuleDir;
         newPath += ';';
         newPath += regModuleDir;
-#if PY_MAJOR_VERSION >= 3
-        newPath += "/python37.zip;";
-#else
-        newPath += "/python27.zip;";
-#endif
+        newPath += "/python" BOOST_PP_STRINGIZE(BOOST_PP_CAT(PY_MAJOR_VERSION, PY_MINOR_VERSION)) ".zip;";
+
         if (oldPath)
             newPath += oldPath;
 
