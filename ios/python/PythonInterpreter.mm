@@ -46,7 +46,12 @@
 #import "../python/safeheldtype.h"
 
 // Declare the entry point for Regina's python module:
-PyMODINIT_FUNC initregina();
+#if PY_MAJOR_VERSION >= 3
+    #define REGINA_PYTHON_INIT PyInit_regina
+#else
+    #define REGINA_PYTHON_INIT initregina
+#endif
+PyMODINIT_FUNC REGINA_PYTHON_INIT();
 
 /**
  * WARNING: We never call Py_Finalize().
@@ -180,7 +185,7 @@ class PythonOutputStreamObjC {
     try {
         PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
         if (regModule) {
-            PyDict_SetItemString(_mainNamespace, "regina", regModule);
+            PyDict_SetItemString(useNamespace, "regina", regModule);
             Py_DECREF(regModule);
             return true;
         } else {
@@ -221,7 +226,7 @@ class PythonOutputStreamObjC {
             putenv(strdup(newPath.c_str()));
 
             // Make sure Python can find Regina's module also.
-            if (PyImport_AppendInittab("regina", &initregina) == -1)
+            if (PyImport_AppendInittab("regina", &REGINA_PYTHON_INIT) == -1)
                 NSLog(@"ERROR: PyImport_AppendInittab(\"regina\", ...) failed.");
 
             // Go ahead and initialise Python.
