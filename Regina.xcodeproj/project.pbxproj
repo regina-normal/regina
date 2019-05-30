@@ -10832,6 +10832,8 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = (
 					"-framework",
+					Python2.7,
+					"-framework",
 					"boost-python27-static",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
@@ -10878,6 +10880,8 @@
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = (
+					"-framework",
+					Python2.7,
 					"-framework",
 					"boost-python27-static",
 				);
@@ -12207,6 +12211,8 @@
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = (
+					"-framework",
+					Python3.7,
 					"-framework",
 					"boost-python37-static",
 				);
