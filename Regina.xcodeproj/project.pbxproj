@@ -202,7 +202,6 @@
 		051691BF1C5AD60D00DC69EC /* hypersummaryui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AA1C5AD59000DC69EC /* hypersummaryui.h */; };
 		051691C01C5AD61200DC69EC /* hyperui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AC1C5AD59000DC69EC /* hyperui.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
-		051806D6181202E0008EBB01 /* examples in Resources */ = {isa = PBXBuildFile; fileRef = 051806D5181202E0008EBB01 /* examples */; };
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
 		051CEA941F98995D00971F25 /* Link.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA961F98995D00971F25 /* Link.storyboard */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
@@ -1884,6 +1883,14 @@
 		05B4D2D7229F42D700B7B11C /* output.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2D3229F42D600B7B11C /* output.h */; };
 		05B4D2D8229F42D700B7B11C /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2D4229F42D600B7B11C /* engine.cpp */; };
 		05B4D2D9229F42D700B7B11C /* engine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B4D2D4229F42D600B7B11C /* engine.cpp */; };
+		05B4D2E822A092F700B7B11C /* closed-hyp-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A47F971809CB7600F86BFD /* closed-hyp-census.rga */; };
+		05B4D2E922A092FA00B7B11C /* closed-nor-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A47F981809CB7600F86BFD /* closed-nor-census.rga */; };
+		05B4D2EA22A092FC00B7B11C /* closed-or-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A47F9A1809CB7600F86BFD /* closed-or-census.rga */; };
+		05B4D2EB22A092FE00B7B11C /* cusped-hyp-nor-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */; };
+		05B4D2EC22A0930300B7B11C /* cusped-hyp-or-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */; };
+		05B4D2ED22A0930E00B7B11C /* hyp-knot-link-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */; };
+		05B4D2EE22A0931400B7B11C /* gap-tests.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A47F9C1809CB7600F86BFD /* gap-tests.rga */; };
+		05B4D2EF22A0931D00B7B11C /* README.txt in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A47FA01809CB7600F86BFD /* README.txt */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
 		05B7708419C92A5000E2E558 /* ScriptViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708319C92A5000E2E558 /* ScriptViewController.mm */; };
 		05B7708719CA4FF100E2E558 /* FilterViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05B7708619CA4FF100E2E558 /* FilterViewController.mm */; };
@@ -2184,7 +2191,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
-			script = "~/Qt5.12.1/5.12.1/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
+			script = "~/Qt5.12.3/5.12.3/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
 		};
 		05617AD71D9D3CBD00B1E33B /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2452,6 +2459,24 @@
 				05AB5F031B9428FE007034C8 /* libqtuiotouchplugin.dylib in Copy Qt Plugins (generic) */,
 			);
 			name = "Copy Qt Plugins (generic)";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		05B4D2E722A092EA00B7B11C /* Copy Examples */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = examples;
+			dstSubfolderSpec = 7;
+			files = (
+				05B4D2E822A092F700B7B11C /* closed-hyp-census.rga in Copy Examples */,
+				05B4D2E922A092FA00B7B11C /* closed-nor-census.rga in Copy Examples */,
+				05B4D2EA22A092FC00B7B11C /* closed-or-census.rga in Copy Examples */,
+				05B4D2EB22A092FE00B7B11C /* cusped-hyp-nor-census.rga in Copy Examples */,
+				05B4D2EC22A0930300B7B11C /* cusped-hyp-or-census.rga in Copy Examples */,
+				05B4D2EE22A0931400B7B11C /* gap-tests.rga in Copy Examples */,
+				05B4D2ED22A0930E00B7B11C /* hyp-knot-link-census.rga in Copy Examples */,
+				05B4D2EF22A0931D00B7B11C /* README.txt in Copy Examples */,
+			);
+			name = "Copy Examples";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		05F9560919B5296D00377BEC /* CopyFiles */ = {
@@ -4224,14 +4249,7 @@
 		05A47F9A1809CB7600F86BFD /* closed-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census.rga"; sourceTree = "<group>"; };
 		05A47F9B1809CB7600F86BFD /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05A47F9C1809CB7600F86BFD /* gap-tests.rga */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "gap-tests.rga"; sourceTree = "<group>"; };
-		05A47F9E1809CB7600F86BFD /* progress.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = progress.py; sourceTree = "<group>"; };
-		05A47F9F1809CB7600F86BFD /* progress.session */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = progress.session; sourceTree = "<group>"; };
 		05A47FA01809CB7600F86BFD /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
-		05A47FA11809CB7600F86BFD /* sample-misc.rga */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "sample-misc.rga"; sourceTree = "<group>"; };
-		05A47FA51809CB7600F86BFD /* tree.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = tree.py; sourceTree = "<group>"; };
-		05A47FA61809CB7600F86BFD /* tree.session */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tree.session; sourceTree = "<group>"; };
-		05A47FA71809CB7600F86BFD /* triangulation.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = triangulation.py; sourceTree = "<group>"; };
-		05A47FA81809CB7600F86BFD /* triangulation.session */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = triangulation.session; sourceTree = "<group>"; };
 		05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hyperbolic.cpp; path = engine/census/hyperbolic.cpp; sourceTree = SOURCE_ROOT; };
 		05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlcallback.cpp; sourceTree = "<group>"; };
 		05A73C7819B2EDFC0099C617 /* xmlcallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlcallback.h; sourceTree = "<group>"; };
@@ -4335,6 +4353,20 @@
 		05B4D2D5229F42D700B7B11C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05B4D2E322A02B0A00B7B11C /* sample-py2.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py2.rga"; sourceTree = "<group>"; };
 		05B4D2E422A02B0A00B7B11C /* sample-py3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py3.rga"; sourceTree = "<group>"; };
+		05B4D2F022A095D900B7B11C /* triangulation-py3.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "triangulation-py3.py"; sourceTree = "<group>"; };
+		05B4D2F122A095DA00B7B11C /* progress-py3.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "progress-py3.py"; sourceTree = "<group>"; };
+		05B4D2F222A095DB00B7B11C /* tree-py2.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tree-py2.session"; sourceTree = "<group>"; };
+		05B4D2F322A095DB00B7B11C /* tree-py3.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "tree-py3.session"; sourceTree = "<group>"; };
+		05B4D2F422A095DC00B7B11C /* triangulation-py2.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "triangulation-py2.session"; sourceTree = "<group>"; };
+		05B4D2F522A095DC00B7B11C /* triangulation-py2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "triangulation-py2.py"; sourceTree = "<group>"; };
+		05B4D2F622A095DD00B7B11C /* tree-py3.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "tree-py3.py"; sourceTree = "<group>"; };
+		05B4D2F722A095DD00B7B11C /* tree-py2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "tree-py2.py"; sourceTree = "<group>"; };
+		05B4D2F822A095DE00B7B11C /* progress-py2.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "progress-py2.session"; sourceTree = "<group>"; };
+		05B4D2F922A095DF00B7B11C /* progress-py3.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "progress-py3.session"; sourceTree = "<group>"; };
+		05B4D2FA22A095E000B7B11C /* triangulation-py3.session */ = {isa = PBXFileReference; lastKnownFileType = text; path = "triangulation-py3.session"; sourceTree = "<group>"; };
+		05B4D2FB22A095E000B7B11C /* sample-py2.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py2.rga"; sourceTree = "<group>"; };
+		05B4D2FC22A095E100B7B11C /* sample-py3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = "sample-py3.rga"; sourceTree = "<group>"; };
+		05B4D2FD22A095E100B7B11C /* progress-py2.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; path = "progress-py2.py"; sourceTree = "<group>"; };
 		05B62165180B9D7300CCB90B /* title.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = title.png; sourceTree = "<group>"; };
 		05B7708219C92A5000E2E558 /* ScriptViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScriptViewController.h; sourceTree = "<group>"; };
 		05B7708319C92A5000E2E558 /* ScriptViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ScriptViewController.mm; sourceTree = "<group>"; };
@@ -7504,14 +7536,21 @@
 				05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */,
 				05A47F9C1809CB7600F86BFD /* gap-tests.rga */,
 				05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */,
-				05A47F9E1809CB7600F86BFD /* progress.py */,
-				05A47F9F1809CB7600F86BFD /* progress.session */,
+				05B4D2FD22A095E100B7B11C /* progress-py2.py */,
+				05B4D2F122A095DA00B7B11C /* progress-py3.py */,
+				05B4D2F822A095DE00B7B11C /* progress-py2.session */,
+				05B4D2F922A095DF00B7B11C /* progress-py3.session */,
 				05A47FA01809CB7600F86BFD /* README.txt */,
-				05A47FA11809CB7600F86BFD /* sample-misc.rga */,
-				05A47FA51809CB7600F86BFD /* tree.py */,
-				05A47FA61809CB7600F86BFD /* tree.session */,
-				05A47FA71809CB7600F86BFD /* triangulation.py */,
-				05A47FA81809CB7600F86BFD /* triangulation.session */,
+				05B4D2FB22A095E000B7B11C /* sample-py2.rga */,
+				05B4D2FC22A095E100B7B11C /* sample-py3.rga */,
+				05B4D2F722A095DD00B7B11C /* tree-py2.py */,
+				05B4D2F622A095DD00B7B11C /* tree-py3.py */,
+				05B4D2F222A095DB00B7B11C /* tree-py2.session */,
+				05B4D2F322A095DB00B7B11C /* tree-py3.session */,
+				05B4D2F522A095DC00B7B11C /* triangulation-py2.py */,
+				05B4D2F022A095D900B7B11C /* triangulation-py3.py */,
+				05B4D2F422A095DC00B7B11C /* triangulation-py2.session */,
+				05B4D2FA22A095E000B7B11C /* triangulation-py3.session */,
 				05998ECA19F9360200855238 /* ios */,
 			);
 			path = examples;
@@ -8465,10 +8504,13 @@
 				0564A1DC1811D6F8002CC2AE /* Frameworks */,
 				0564A1DD1811D6F8002CC2AE /* Resources */,
 				05DADB1021926A2300DC80E1 /* Copy Databases and Handbook */,
+				05B4D2E722A092EA00B7B11C /* Copy Examples */,
+				05B4D2E622A08FDD00B7B11C /* Copy Python 2/3 Examples */,
 				057118C919B30A13009FEDC5 /* Copy SnapPea Census Data */,
 				054208951DF0D1460018AB24 /* Copy Syntax Highlighting */,
 				05AB5ED81B942354007034C8 /* Copy Frameworks */,
-				0514CAE31D9C9A5800EDB2E6 /* Sign Qt Frameworks */,
+				05B4D2FE22A0CF3400B7B11C /* Copy Boost.Python */,
+				0514CAE31D9C9A5800EDB2E6 /* Sign Frameworks */,
 				05AB5EDE1B942813007034C8 /* Copy Qt Plugins (platforms) */,
 				05AB5EE51B942884007034C8 /* Copy Qt Plugins (imageformats) */,
 				05AB5EFE1B9428BD007034C8 /* Copy Qt Plugins (iconengines) */,
@@ -8689,7 +8731,6 @@
 				0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */,
 				051806D4181202BD008EBB01 /* icons in Resources */,
 				05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */,
-				051806D6181202E0008EBB01 /* examples in Resources */,
 				05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */,
 				05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */,
 			);
@@ -8712,19 +8753,19 @@
 			shellPath = /bin/sh;
 			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\nln -f -s ../../../Resources/python/__init__.py \"${macosdir}\"/python/regina/__init__.py\nln -f -s ../../../Resources/python/purePyMethods.py \"${macosdir}\"/python/regina/purePyMethods.py\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype trisetcmp; do\n    ln -f -s ../Resources/python/regutils \"${macosdir}\"/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
 		};
-		0514CAE31D9C9A5800EDB2E6 /* Sign Qt Frameworks */ = {
+		0514CAE31D9C9A5800EDB2E6 /* Sign Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
 			);
 			inputPaths = (
 			);
-			name = "Sign Qt Frameworks";
+			name = "Sign Frameworks";
 			outputPaths = (
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Xcode code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
+			shellScript = "# Boost.Python was copied manually, and so must be signed manually.\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/boost-python*.framework\n\n# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8802,7 +8843,64 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "src=\"${PROJECT_DIR}/examples/ios\"\ndest=\"${CONFIGURATION_BUILD_DIR}/Regina.app/examples\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    suffix=\"-py3.rga\"\n    ;;\n  *)\n    suffix=\"-py2.rga\"\n    ;;\nesac\n\nfor i in sample; do\ncp \"$src/$i$suffix\" \"$dest/${i}.rga\"\ndone\n";
+			shellScript = "src=\"${PROJECT_DIR}/examples/ios\"\ndest=\"${CONFIGURATION_BUILD_DIR}/Regina.app/examples\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    suffix=\"-py3.rga\"\n    ;;\n  *)\n    suffix=\"-py2.rga\"\n    ;;\nesac\n\nfor i in sample; do\n  cp \"$src/$i$suffix\" \"$dest/${i}.rga\"\ndone\n";
+		};
+		05B4D2E622A08FDD00B7B11C /* Copy Python 2/3 Examples */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/examples/sample-py2.rga",
+				"$(SRCROOT)/examples/sample-py3.rga",
+				"$(SRCROOT)/examples/progress-py2.py",
+				"$(SRCROOT)/examples/progress-py3.py",
+				"$(SRCROOT)/examples/progress-py2.session",
+				"$(SRCROOT)/examples/progress-py3.session",
+				"$(SRCROOT)/examples/tree-py2.py",
+				"$(SRCROOT)/examples/tree-py3.py",
+				"$(SRCROOT)/examples/tree-py2.session",
+				"$(SRCROOT)/examples/tree-py3.session",
+				"$(SRCROOT)/examples/triangulation-py2.py",
+				"$(SRCROOT)/examples/triangulation-py3.py",
+				"$(SRCROOT)/examples/triangulation-py2.session",
+				"$(SRCROOT)/examples/triangulation-py3.session",
+			);
+			name = "Copy Python 2/3 Examples";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/sample.rga",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/progress.py",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/progress.session",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/tree.py",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/tree.session",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/triangulation.py",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/triangulation.session",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyx=\"-py3\"\n    ;;\n  *)\n    pyx=\"-py2\"\n    ;;\nesac\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.{py,session}; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
+		};
+		05B4D2FE22A0CF3400B7B11C /* Copy Boost.Python */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Copy Boost.Python";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "src=\"${HOME}/Library/Frameworks/osx\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Frameworks\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyver=37\n    ;;\n  *)\n    pyver=27\n    ;;\nesac\n\nrm -rf \"$dest/boost-python$pyver.framework\"\ncp -R \"$src/boost-python$pyver.framework\" \"$dest\"\n";
 		};
 		05DADB022192543B00DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -11568,6 +11666,11 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					"boost-python27",
+					"-lpython2.7",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
@@ -11618,6 +11721,11 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					"boost-python27",
+					"-lpython2.7",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
@@ -12156,6 +12264,11 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
+				OTHER_LDFLAGS = (
+					"-framework",
+					"boost-python37",
+					"-lpython3.7",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
