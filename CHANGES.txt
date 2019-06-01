@@ -66,12 +66,13 @@ Version 5.2  [ 29 September, 2017 ]
             - Supports iterating through packets using range-based for loops:
                 + Packet has new routines begin() and end() for iterating
                   through the entire subtree rooted at a given packet.
+                  In Python, Packet is now an iterable object.
                 + Packet has a new routine children() for iterating through
                   immediate children of a given packet.
                 + New lightweight classes PacketChildren, ChildIterator and
                   SubtreeIterator to support this functionality.
-                + In Python, Packet has new generators children(), subtree()
-                  and descendants() (thanks to Matthias Goerner).
+                + For Python only, Packet has additional new member functions
+                  subtree() and descendants() that also return iterable objects.
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.

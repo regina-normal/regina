@@ -39,7 +39,10 @@
 
 using namespace boost::python;
 using namespace regina::python;
+using regina::ChildIterator;
 using regina::Packet;
+using regina::PacketChildren;
+using regina::SubtreeIterator;
 
 namespace {
     Packet* (Packet::*firstTreePacket_non_const)(const std::string&) =
@@ -85,9 +88,54 @@ namespace {
             ans.append(t);
         return ans;
     }
+
+    // Support for iterables and iterators:
+    boost::python::object returnSelf(boost::python::object const& o) {
+        return o;
+    }
+    regina::ChildIterator iter_PacketChildren(regina::PacketChildren pc) {
+        return pc.begin();
+    }
+    Packet* next_ChildIterator(regina::ChildIterator& it) {
+        if (*it) {
+            return *it++;
+        } else {
+            PyErr_SetString(PyExc_StopIteration, "No more children.");
+            boost::python::throw_error_already_set();
+        }
+    }
+    Packet* next_SubtreeIterator(regina::SubtreeIterator& it) {
+        if (*it) {
+            return *it++;
+        } else {
+            PyErr_SetString(PyExc_StopIteration, "No more descendants.");
+            boost::python::throw_error_already_set();
+        }
+    }
+    regina::SubtreeIterator descendants(Packet& p) {
+        return ++p.begin();
+    }
 }
 
 void addPacket() {
+    class_<regina::PacketChildren>("PacketChildren", no_init)
+        .def("__iter__", iter_PacketChildren)
+        .def(regina::python::add_eq_operators())
+        ;
+
+    class_<regina::ChildIterator>("ChildIterator", no_init)
+        .def("next", next_ChildIterator,
+            return_value_policy<to_held_type<> >())
+        .def(regina::python::add_eq_operators())
+        ;
+
+    class_<regina::SubtreeIterator>("SubtreeIterator", no_init)
+        .def("__iter__", returnSelf)
+        .def("next", next_SubtreeIterator,
+            return_value_policy<to_held_type<> >())
+        .def(regina::python::add_eq_operators())
+        ;
+
     class_<Packet, boost::noncopyable,
             SafeHeldType<Packet> >("Packet", no_init)
         .def("type", &Packet::type)
@@ -135,6 +183,10 @@ void addPacket() {
         .def("moveToFirst", &Packet::moveToFirst)
         .def("moveToLast", &Packet::moveToLast)
         .def("sortChildren", &Packet::sortChildren)
+        .def("__iter__", &Packet::begin)
+        .def("children", &Packet::children)
+        .def("subtree", &Packet::begin)
+        .def("descendants", descendants)
         .def("nextTreePacket", nextTreePacket_non_const, OL_nextTreePacket()
             [return_value_policy<to_held_type<> >()])
         .def("firstTreePacket", firstTreePacket_non_const,

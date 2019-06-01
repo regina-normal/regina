@@ -79,6 +79,9 @@ Equality type : BY_REFERENCE
 CensusHits : class
 Equality type : BY_REFERENCE
 
+ChildIterator : class
+Equality type : BY_VALUE
+
 Component10 : class
 Equality type : BY_REFERENCE
 
@@ -1616,6 +1619,9 @@ Equality type : BY_REFERENCE
 Packet : class
 Equality type : BY_REFERENCE
 
+PacketChildren : class
+Equality type : BY_REFERENCE
+
 Pentachoron10 : typedef ->  Face10_4
 
 Pentachoron11 : typedef ->  Face11_4
@@ -1843,6 +1849,9 @@ StandardTriangulation : class
 Equality type : BY_REFERENCE
 
 StrandRef : class
+Equality type : BY_VALUE
+
+SubtreeIterator : class
 Equality type : BY_VALUE
 
 SurfaceFilter : class

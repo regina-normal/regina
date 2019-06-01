@@ -1,0 +1,26 @@
+a.children():
+aa
+ab
+a.subtree():
+a
+aa
+aaa
+aab
+ab
+aba
+abb
+a.descendants():
+aa
+aaa
+aab
+ab
+aba
+abb
+a as iterable:
+a
+aa
+aaa
+aab
+ab
+aba
+abb

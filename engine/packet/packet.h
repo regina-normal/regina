@@ -845,14 +845,30 @@ class REGINA_API Packet :
          * for (Packet* p : *subtree) { ... }
          * \endcode
          *
+         * In Python, each packet can be treated as an iterable object, again
+         * iterating through the corresponding subtree:
+         *
+         * \code{.cpp}
+         * subtree = ...
+         * for p in subtree:
+         *     ...
+         * \endcode
+         *
+         * See also children() for iterating just through the immediate
+         * children of this packet, as opposed to the entire subtree.
+         *
          * \note This routine is non-const because \e dereferencing
          * a SubtreeIterator returns a non-const packet pointer.
          *
-         * \ifacespython Not present.  However, Regina does supply two
-         * Python generators for iterating over subtrees:
-         * <tt>Packet.subtree()</tt> which (just like these iterators)
-         * includes the root of the subtree itself, and
-         * <tt>Packet.descendants()</tt> which does not.
+         * \ifacespython As well as treating each packet as an iterable
+         * object, Regina supplies two additional member functions that
+         * return iterable objects for iterating over subtrees:
+         * <tt>Packet.subtree()</tt>, which includes the root of the subtree
+         * (so iterating over <tt>p.subtree()</tt> is identical to
+         * iterating over <tt>p</tt>); and
+         * <tt>Packet.descendants()</tt>, which does not include the root of
+         * the subtree (so iterating over <tt>p.descendants()</tt> is
+         * like iterating over <tt>p</tt> but skipping the first item).
          *
          * @return an iterator at the beginning of this subtree.
          */
@@ -862,25 +878,14 @@ class REGINA_API Packet :
          * Returns an iterator beyond the end of the range of packets
          * in the subtree rooted at this packet.
          *
-         * The begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops:
+         * In C++, the begin() and end() routines allow you to iterate through
+         * an entire packet subtree using C++11 range-based \c for loops.
+         * In Python, each packet can be treated as an iterable object.
          *
-         * \code{.cpp}
-         * Packet* subtree = ...;
-         * for (Packet* p : *subtree) { ... }
-         * \endcode
+         * See the begin() documentation for further details.
          *
-         * See also children() for iterating just through the immediate
-         * children of this packet, as opposed to the entire subtree.
-         *
-         * \note This routine is non-const because \e dereferencing
-         * a SubtreeIterator returns a non-const packet pointer.
-         *
-         * \ifacespython Not present.  However, Regina does supply two
-         * Python generators for iterating over subtrees:
-         * <tt>Packet.subtree()</tt> which (just like these iterators)
-         * includes the root of the subtree itself, and
-         * <tt>Packet.descendants()</tt> which does not.
+         * \ifacespython Again, see the begin() documentation for the iterable
+         * objects that Regina provides for Python users.
          *
          * @return an iterator beyond the end of this subtree.
          */
@@ -898,16 +903,21 @@ class REGINA_API Packet :
          * for (Packet* child : parent->children()) { ... }
          * \endcode
          *
-         * This function returns a lightweight object in the sense that
-         * it does not generate a full list of children, but instead
-         * just works with iterators.  In particular, this routine has
-         * small constant time and memory.
+         * In Python, this routine returns an iterable object:
+         *
+         * \code{.cpp}
+         * parent = ...
+         * for child in parent.children():
+         *     ...
+         * \endcode
+         *
+         * This function returns a lightweight object in the sense that it
+         * does not generate a full list of children in advance, but instead
+         * just returns a small iterator that visits each child as required.
+         * In particular, this routine has small constant time and memory.
          *
          * See also begin() and end() for iterating through the entire
          * subtree rooted at this packet, not just the immediate children.
-         *
-         * \ifacespython This function does not return an object of
-         * class PacketChildren; instead it acts as a Python generator.
          *
          * @return an object for iterating through the children of this packet.
          */
@@ -1503,6 +1513,14 @@ REGINA_API Packet* open(std::istream& in);
  * given packet.
  *
  * This header also specialises std::iterator_traits for this iterator class.
+ *
+ * \ifacespython Instead of the C++ interface described here, in Python
+ * the classes PacketChildren and ChildIterator together implement the
+ * Python iterable/iterator interface.  The class PacketChildren has just
+ * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
+ * then ChildIterator implements <tt>next()</tt>, which either returns
+ * the next child packet in the iteration or else throws a
+ * <tt>StopException</tt> if there are no more children to return.
  */
 class REGINA_API ChildIterator {
     private:
@@ -1513,14 +1531,23 @@ class REGINA_API ChildIterator {
     public:
         /**
          * Creates a past-the-end iterator.
+         *
+         * \ifacespython Not present.  The only way to create a ChildIterator
+         * is via Packet::children().
          */
         ChildIterator();
         /**
          * Default copy constructor.
+         *
+         * \ifacespython Not present.  The only way to create a ChildIterator
+         * is via Packet::children().
          */
         ChildIterator(const ChildIterator&) = default;
         /**
          * Creates a new iterator pointing to the given child packet.
+         *
+         * \ifacespython Not present.  The only way to create a ChildIterator
+         * is via Packet::children().
          *
          * @param current the child packet that the new iterator should
          * point to, or 0 if the new iterator should be past-the-end.
@@ -1548,11 +1575,21 @@ class REGINA_API ChildIterator {
         /**
          * Preincrement operator.
          *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current child packet and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is past-the-end.
+         *
          * @return a reference to this iterator.
          */
         ChildIterator& operator ++ ();
         /**
          * Postincrement operator.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current child packet and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is past-the-end.
          *
          * @return a a copy of this iterator before it was incremented.
          */
@@ -1560,6 +1597,11 @@ class REGINA_API ChildIterator {
 
         /**
          * Returns the packet that this operator is currently pointing to.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current child packet and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is past-the-end.
          *
          * @return the current packet.
          */
@@ -1574,6 +1616,13 @@ class REGINA_API ChildIterator {
  * processed before its descendants.
  *
  * This header also specialises std::iterator_traits for this iterator class.
+ *
+ * \ifacespython Instead of the C++ interface described here, in Python
+ * this class implements the Python iterable/iterator interface.  It implements
+ * the function <tt>__iter__()</tt>, which returns the iterator object itself;
+ * it also implements <tt>next()</tt>, which either returns the next packet
+ * in the subtree iteration or else throws a <tt>StopException</tt> if there
+ * are no more packets to return.
  */
 class REGINA_API SubtreeIterator {
     private:
@@ -1586,16 +1635,28 @@ class REGINA_API SubtreeIterator {
     public:
         /**
          * Creates a past-the-end iterator.
+         *
+         * \ifacespython Not present.  The only way to create a SubtreeIterator
+         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * over a Packet itself.
          */
         SubtreeIterator();
         /**
          * Default copy constructor.
+         *
+         * \ifacespython Not present.  The only way to create a SubtreeIterator
+         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * over a Packet itself.
          */
         SubtreeIterator(const SubtreeIterator&) = default;
         /**
          * Creates a new iterator pointing to the first packet within
          * the given subtree.  Dereferencing this iterator will return
          * \a subtree itself.
+         *
+         * \ifacespython Not present.  The only way to create a SubtreeIterator
+         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * over a Packet itself.
          *
          * @param subtree the packet subtree that we are iterating through.
          * This does not need to be the root of the overall packet tree
@@ -1605,6 +1666,10 @@ class REGINA_API SubtreeIterator {
         /**
          * Creates a new iterator pointing to the given packet within
          * the given subtree.
+         *
+         * \ifacespython Not present.  The only way to create a SubtreeIterator
+         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * over a Packet itself.
          *
          * @param subtree the packet subtree that we are iterating through.
          * This does not need to be the root of the overall packet tree
@@ -1645,11 +1710,21 @@ class REGINA_API SubtreeIterator {
         /**
          * Preincrement operator.
          *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current packet in the
+         * subtree and increments the iterator, or else throws a
+         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         *
          * @return a reference to this iterator.
          */
         SubtreeIterator& operator ++ ();
         /**
          * Postincrement operator.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current packet in the
+         * subtree and increments the iterator, or else throws a
+         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
          *
          * @return a a copy of this iterator before it was incremented.
          */
@@ -1657,6 +1732,11 @@ class REGINA_API SubtreeIterator {
 
         /**
          * Returns the packet that this operator is currently pointing to.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current packet in the
+         * subtree and increments the iterator, or else throws a
+         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
          *
          * @return the current packet.
          */
@@ -1675,7 +1755,21 @@ class REGINA_API SubtreeIterator {
  * for (Packet* child : parent->children()) { ... }
  * \endcode
  *
- * \ifacespython Not present.
+ * In Python, PacketChildren is an iterable object:
+ *
+ * \code{.cpp}
+ * parent = ...
+ * for child in parent.children():
+ *     ...
+ * \endcode
+ *
+ * \ifacespython Instead of the C++ interface described here, in Python
+ * the classes PacketChildren and ChildIterator together implement the
+ * Python iterable/iterator interface.  The class PacketChildren has just
+ * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
+ * then ChildIterator implements <tt>next()</tt>, which either returns
+ * the next child packet in the iteration or else throws a
+ * <tt>StopException</tt> if there are no more children to return.
  */
 class REGINA_API PacketChildren {
     private:
@@ -1685,11 +1779,15 @@ class REGINA_API PacketChildren {
     public:
         /**
          * Default copy constructor.
+         *
+         * \ifacespython Not present.
          */
         PacketChildren(const PacketChildren&) = default;
         /**
          * Creates a new object for iterating through the immediate
          * children of the given packet.
+         *
+         * \ifacespython Not present.
          *
          * @param parent the packet whose children we will iterate through.
          */
@@ -1697,17 +1795,25 @@ class REGINA_API PacketChildren {
 
         /**
          * Default copy assignment operator.
+         *
+         * \ifacespython Not present.
          */
         PacketChildren& operator = (const PacketChildren&) = default;
 
         /**
          * Returns an iterator at the beginning of the range of children.
          *
+         * \ifacespython Not present; instead this class implements
+         * <tt>__iter__()</tt>, as described in the class notes.
+         *
          * @return the beginning iterator.
          */
         ChildIterator begin() const;
         /**
          * Returns an iterator at the end of the range of children.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>__iter__()</tt>, as described in the class notes.
          *
          * @return the past-the-end iterator.
          */
