@@ -53,9 +53,8 @@ namespace regina {
  * and may exist simultaneously.
  *
  * Each new subinterpreter corresponds to a new call to
- * Py_NewInterpreter().  The global routines Py_Initialize() and
- * Py_Finalize() are called when the first interpreter is created and
- * the last interpreter is destroyed respectively.
+ * Py_NewInterpreter().  The global routine Py_Initialize() is called when
+ * the first interpreter is created, and Py_Finalize() is never called.
  */
 class PythonInterpreter {
     private:
@@ -100,9 +99,7 @@ class PythonInterpreter {
          */
         bool importRegina();
         bool setVar(const char* name, regina::Packet* value);
-        bool compileScript(const char* code);
         bool runScript(const char* code);
-        bool runScript(const char* filename, const char* shortName);
 
     private:
         /**
@@ -121,6 +118,29 @@ class PythonInterpreter {
          * returned.
          */
         static PyObject* extractErrMsg();
+
+        /**
+         * Push regina's python path onto the beginning of python's sys.path.
+         *
+         * This routine assumes that the global interpreter lock is already
+         * held by the current thread, and it acts on the (sub-)interpreter
+         * that is referenced by the current python thread state.
+         */
+        static void prependReginaToSysPath();
+
+        /**
+         * Attempt to import regina into the given namespace.  Typically
+         * \a useNamespace would be the main namespace for either the
+         * main interpreter or a subinterpreter.
+         *
+         * This routine assumes that the global interpreter lock is already
+         * held by the current thread.  It acts on the (sub-)interpreter
+         * that is referenced by the current python thread state, to which
+         * the given namespace must belong.
+         *
+         * Returns \c true on success or \c false on failure.
+         */
+        static bool importReginaIntoNamespace(PyObject* useNamespace);
 };
 
 #endif

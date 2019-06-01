@@ -46,7 +46,12 @@
 #import "../python/safeheldtype.h"
 
 // Declare the entry point for Regina's python module:
-PyMODINIT_FUNC initregina();
+#if PY_MAJOR_VERSION >= 3
+    #define REGINA_PYTHON_INIT PyInit_regina
+#else
+    #define REGINA_PYTHON_INIT initregina
+#endif
+PyMODINIT_FUNC REGINA_PYTHON_INIT();
 
 /**
  * WARNING: We never call Py_Finalize().
@@ -64,8 +69,9 @@ PyMODINIT_FUNC initregina();
  * operating system, we simply choose to ignore the problem.
  */
 
-static bool pythonInitialised = false;
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
+static bool pythonInitialised = false;
+PyThreadState* mainState;
 
 #pragma mark Helper functions
 
@@ -162,6 +168,34 @@ class PythonOutputStreamObjC {
     std::string _currentCode;
 }
 
+/**
+ * Attempt to import regina into the given namespace.  Typically
+ * \a useNamespace would be the main namespace for either the
+ * main interpreter or a subinterpreter.
+ *
+ * This routine assumes that the global interpreter lock is already
+ * held by the current thread.  It acts on the (sub-)interpreter
+ * that is referenced by the current python thread state, to which
+ * the given namespace must belong.
+ *
+ * Returns \c true on success or \c false on failure.
+ */
++ (bool)importReginaIntoNamespace:(PyObject*)useNamespace
+{
+    try {
+        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+        if (regModule) {
+            PyDict_SetItemString(useNamespace, "regina", regModule);
+            Py_DECREF(regModule);
+            return true;
+        } else {
+            return false;
+        }
+    } catch (const boost::python::error_already_set&) {
+        return false;
+    }
+}
+
 - (id)initWithOut:(id<PythonOutputStream>)out err:(id<PythonOutputStream>)err
 {
     self = [super init];
@@ -180,24 +214,37 @@ class PythonOutputStreamObjC {
         _errCpp = new PythonOutputStreamObjC((__bridge void*)_err);
 
         if (pythonInitialised)
-            PyEval_AcquireLock();
+            PyEval_AcquireThread(mainState);
         else {
             // Make sure Python can find its own modules.
             std::string pyZipDir = regina::GlobalDirs::home() + "/python";
 
             std::string newPath("PYTHONPATH=");
             newPath += pyZipDir;
-            newPath += "/python27.zip";
-
+            newPath += "/python" BOOST_PP_STRINGIZE(BOOST_PP_CAT(PY_MAJOR_VERSION, PY_MINOR_VERSION)) ".zip";
             putenv(strdup(newPath.c_str()));
 
             // Make sure Python can find Regina's module also.
-            if (PyImport_AppendInittab("regina", &initregina) == -1)
+            if (PyImport_AppendInittab("regina", &REGINA_PYTHON_INIT) == -1)
                 NSLog(@"ERROR: PyImport_AppendInittab(\"regina\", ...) failed.");
 
             // Go ahead and initialise Python.
-            PyEval_InitThreads();
             Py_Initialize();
+            PyEval_InitThreads();
+            mainState = PyThreadState_Get();
+
+#if PY_MAJOR_VERSION >= 3
+            // Subinterpreters are supposed to share extension modules
+            // without repeatedly calling the modules' init functions.
+            // In python 3, this seems to fail if all subinterpreters are
+            // destroyed, unless we keep the extension module loaded here in
+            // the main interpreter also.
+            //
+            // If this fails, do so silently; we'll see the same error again
+            // immediately in the first subinterpreter.
+            [PythonInterpreter importReginaIntoNamespace:PyModule_GetDict(PyImport_AddModule("__main__"))];
+#endif
+
             pythonInitialised = true;
         }
 
@@ -280,7 +327,11 @@ class PythonOutputStreamObjC {
     PyObject* code = Py_CompileStringFlags(cmdBuffer, "<console>", Py_single_input, &pyCompFlags);
     if (code) {
         // Run the code!
+#if PY_VERSION_HEX >= 0x03020000
+        PyObject* ans = PyEval_EvalCode(code, _mainNamespace, _mainNamespace);
+#else
         PyObject* ans = PyEval_EvalCode((PyCodeObject*)code, _mainNamespace, _mainNamespace);
+#endif
         if (ans)
             Py_DECREF(ans);
         else {
@@ -347,7 +398,9 @@ class PythonOutputStreamObjC {
 
     // Compare the two compile errors.
     if (errStr1 && errStr2) {
-        if (PyObject_Compare(errStr1, errStr2)) {
+        // Note: rich comparison returns -1 on error, or 0/1 for false/true.
+        // Since we are passing two python strings, we assume no error here.
+        if (PyObject_RichCompareBool(errStr1, errStr2, Py_NE) == 1) {
             // Errors are different.  We must be waiting on more code.
             Py_XDECREF(errType);
             Py_XDECREF(errValue);
@@ -394,18 +447,8 @@ class PythonOutputStreamObjC {
 {
     PyEval_RestoreThread(_state);
 
-    bool ok = false;
-    try {
-        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
-        if (regModule) {
-            PyDict_SetItemString(_mainNamespace, "regina", regModule);
-            Py_DECREF(regModule);
-            ok = true;
-        } else {
-            PyErr_Print();
-            PyErr_Clear();
-        }
-    } catch (const boost::python::error_already_set&) {
+    bool ok = [PythonInterpreter importReginaIntoNamespace:_mainNamespace];
+    if (! ok) {
         PyErr_Print();
         PyErr_Clear();
     }
@@ -424,7 +467,12 @@ class PythonOutputStreamObjC {
         PyObject* pyValue = conv(value);
 
         if (pyValue) {
+#if PY_MAJOR_VERSION >= 3
+            // PyUnicode_FromString assumes UTF-8 encoding.
+            PyObject* nameStr = PyUnicode_FromString(name); // New ref.
+#else
             PyObject* nameStr = PyString_FromString(name); // New ref.
+#endif
             PyDict_SetItem(_mainNamespace, nameStr, pyValue);
             Py_DECREF(nameStr);
             Py_DECREF(pyValue);

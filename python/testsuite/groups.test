@@ -33,8 +33,6 @@
 
 from __future__ import print_function
 
-import string
-
 def vecToString(v):
 	if len(v) == 0:
 		return '[ ]'

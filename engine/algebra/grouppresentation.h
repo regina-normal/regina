@@ -46,7 +46,7 @@
 #include <map>
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "utilities/memutils.h"
 #include "utilities/ptrutils.h"
 #include "algebra/markedabeliangroup.h"

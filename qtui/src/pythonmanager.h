@@ -117,20 +117,6 @@ class PythonManager {
                 const PythonVariableList& initialVariables);
 
         /**
-         * Attempts to compile the given python script.  If the compile
-         * succeeds, 0 is returned.  If the compile fails, a new python
-         * console is opened displaying the appropriate error and this new
-         * console is returned.
-         *
-         * If a new console is opened, it is automatically registered with
-         * this python manager.
-         *
-         * If python scripting is not built in, a notice is displayed
-         * to the user and 0 is returned.
-         */
-        PythonConsole* compileScript(QWidget* parent, const QString& script);
-
-        /**
          * Destroys any consoles still in existence that were either
          * launched through this python manager or externally registered
          * with this python manager.

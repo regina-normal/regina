@@ -37,7 +37,7 @@ def product1(triClass, dim, permClass):
     tri = triClass()
     tri.setLabel(str(dim) + '-D product #1')
     s = tri.newSimplex()
-    s.join(dim, s, permClass(range(1, dim+1) + [0]))
+    s.join(dim, s, permClass(list(range(1, dim+1)) + [0]))
     return tri
 
 def product2(triClass, dim, permClass):
@@ -45,8 +45,8 @@ def product2(triClass, dim, permClass):
     tri.setLabel(str(dim) + '-D product #2')
     s = tri.newSimplex()
     t = tri.newSimplex()
-    s.join(dim, t, permClass(range(1, dim+1) + [0]))
-    t.join(dim, s, permClass(range(1, dim+1) + [0]))
+    s.join(dim, t, permClass(list(range(1, dim+1)) + [0]))
+    t.join(dim, s, permClass(list(range(1, dim+1)) + [0]))
     return tri
 
 def dump(tri):

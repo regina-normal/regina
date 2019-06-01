@@ -42,7 +42,7 @@
 #include <vector>
 #include <memory>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "maths/matrix.h"
 #include "utilities/ptrutils.h"
 #include <boost/noncopyable.hpp>

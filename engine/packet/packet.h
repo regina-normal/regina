@@ -46,7 +46,7 @@
 #include <set>
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "packet/packetlistener.h"
 #include "packet/packettype.h"
 #include "utilities/safepointeebase.h"

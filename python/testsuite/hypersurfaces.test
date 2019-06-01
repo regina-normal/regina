@@ -33,8 +33,6 @@
 
 from __future__ import print_function
 
-import string
-
 def dumpSurfaces(name, slist):
 	print("-------------------------------")
 	print(slist.triangulation().label())
@@ -44,7 +42,7 @@ def dumpSurfaces(name, slist):
 
 	# Dump the hypersurfaces in sort order, since we don't really mind if the
 	# ordering changes between releases.
-	surfaces = string.split(slist.detail(), '\n')
+	surfaces = slist.detail().split('\n')
 	surfaces.sort()
 	# Let the text headers appear up top.
 	surfaces.reverse()

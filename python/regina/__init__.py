@@ -191,10 +191,10 @@ def __execScript(namespace = None):
     except:
         pass
 
-    script = sys.argv[1]
+    script = __builtins__['open'](sys.argv[1]).read()
     sys.argv = sys.argv[1:]
     if namespace:
-        execfile(script, namespace)
+        exec(script, namespace)
     else:
-        execfile(script)
+        exec(script)
 

@@ -13,6 +13,7 @@ Version 5.2  [ 29 September, 2017 ]
         - Now requires C++14 (not C++11).  However, the only feature of C++14
           that is currently used is the [[deprecated]] attribute, which means
           that partially compliant compilers (such as gcc4.9) should be fine.
+        - Now requires Python >= 2.6, and can build for either Python 2 or 3.
         - Now builds under gcc7 and gcc8.
         - Updated the bundled copy of Normaliz to version 3.7.2 (17 Apr 2019).
     ENGINE:
@@ -143,6 +144,10 @@ Version 5.2  [ 29 September, 2017 ]
         Routine politeThreads():
             - New routine to help user interfaces choose an appropriate
               level of parallelisation.
+        Headers engine.h, output.h:
+            - Moved into the core/ subdirectory, to help avoid naming conflicts
+              with other software packages.  The original headers have
+              been kept but are now deprecated.
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.

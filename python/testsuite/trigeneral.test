@@ -33,23 +33,12 @@
 
 from __future__ import print_function
 
-# For checksums, use the hashlib module if possible (this is new as of
-# python 2.5).  Otherwise fall back to the deprecated md5 module.
-# Thanks to Andreas Wenning for alerting me to this issue.
-has_hashlib = 1
-try:
-	import hashlib
-except:
-	has_hashlib = 0
-	import md5
+import hashlib
 
 def checksum(str):
-	if has_hashlib:
-		h = hashlib.md5()
-		h.update(str)
-		return h.hexdigest()
-	else:
-		return md5.new(str).hexdigest()
+	h = hashlib.md5()
+	h.update(str.encode('utf-8'))
+	return h.hexdigest()
 
 def vitalStats(tri):
 	# To guard against accidental changes.

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 // Regina core includes:
-#include "engine.h"
+#include "core/engine.h"
 #include "packet/container.h"
 #include "packet/text.h"
 #include "progress/progresstracker.h"

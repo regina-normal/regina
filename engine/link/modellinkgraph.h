@@ -41,7 +41,7 @@
 
 #include <vector>
 #include <boost/noncopyable.hpp>
-#include "output.h"
+#include "core/output.h"
 #include "utilities/markedvector.h"
 
 namespace regina {

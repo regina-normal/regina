@@ -35,7 +35,7 @@
 #include <boost/iostreams/device/file.hpp>
 #include <boost/iostreams/filtering_stream.hpp>
 #include <boost/iostreams/filter/gzip.hpp>
-#include "engine.h"
+#include "core/engine.h"
 #include "packet/container.h"
 #include "packet/xmlpacketreader.h"
 #include "packet/xmltreeresolver.h"

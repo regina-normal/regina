@@ -44,7 +44,7 @@
 #include <iostream>
 #include <list>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/facetspec.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"

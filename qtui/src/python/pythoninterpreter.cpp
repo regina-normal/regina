@@ -53,17 +53,6 @@
 // For regina's to_held_type:
 #include "../python/safeheldtype.h"
 
-// Cater for the fact that Py_CompileString has changed behaviour
-// between Python 2.2 and Python 2.3.
-#if PY_VERSION_HEX >= 0x02030000
-    static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
-    #define PY_COMPILE_SINGLE(cmd) \
-        (Py_CompileStringFlags(cmd, "<console>", Py_single_input, &pyCompFlags))
-#else
-    #define PY_COMPILE_SINGLE(cmd) \
-        (Py_CompileString(cmd, "<console>", Py_single_input))
-#endif
-
 /**
  * WARNING: We never call Py_Finalize().
  *
@@ -80,8 +69,11 @@
  * operating system, we simply choose to ignore the problem.
  */
 
+static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
+
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
+PyThreadState* mainState;
 
 PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         PythonOutputStream* pyStdErr) {
@@ -89,7 +81,7 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
 
     // Acquire the global interpreter lock.
     if (pythonInitialised)
-        PyEval_AcquireLock();
+        PyEval_AcquireThread(mainState);
     else {
 #if defined(REGINA_INSTALL_WINDOWS) && defined(__MINGW32__)
         // Assume this is the MS Windows + MinGW + WiX package build,
@@ -100,7 +92,7 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         // manually include the python zip and the path to zlib.pyd on the
         // python path, *before* the interpreter is initialised.
         //
-        // Here we assume that python27.zip is installed in the same
+        // Here we assume that pythonXY.zip is installed in the same
         // directory as the executable, and that zlib.pyd is installed
         // in the same directory as the regina python module.
 
@@ -111,15 +103,31 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         newPath += regModuleDir;
         newPath += ';';
         newPath += regModuleDir;
-        newPath += "/python27.zip;";
+        newPath += "/python" BOOST_PP_STRINGIZE(BOOST_PP_CAT(PY_MAJOR_VERSION, PY_MINOR_VERSION)) ".zip;";
+
         if (oldPath)
             newPath += oldPath;
 
         putenv(strdup(newPath.c_str()));
 #endif
 
-        PyEval_InitThreads();
         Py_Initialize();
+        PyEval_InitThreads();
+        mainState = PyThreadState_Get();
+
+#if PY_MAJOR_VERSION >= 3
+        // Subinterpreters are supposed to share extension modules
+        // without repeatedly calling the modules' init functions.
+        // In python 3, this seems to fail if all subinterpreters are
+        // destroyed, unless we keep the extension module loaded here in
+        // the main interpreter also.
+        //
+        // If this fails, do so silently; we'll see the same error again
+        // immediately in the first subinterpreter.
+        importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
+            "__main__")));
+#endif
+
         pythonInitialised = true;
     }
 
@@ -196,11 +204,16 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     PyEval_RestoreThread(state);
 
     // Attempt to compile the command with no additional newlines.
-    PyObject* code = PY_COMPILE_SINGLE(cmdBuffer);
+    PyObject* code = Py_CompileStringFlags(
+        cmdBuffer, "<console>", Py_single_input, &pyCompFlags);
     if (code) {
         // Run the code!
+#if PY_VERSION_HEX >= 0x03020000
+        PyObject* ans = PyEval_EvalCode(code, mainNamespace, mainNamespace);
+#else
         PyObject* ans = PyEval_EvalCode((PyCodeObject*)code,
             mainNamespace, mainNamespace);
+#endif
         if (ans)
             Py_DECREF(ans);
         else {
@@ -226,7 +239,8 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     cmdBuffer[fullCommand.length()] = '\n';
     cmdBuffer[fullCommand.length() + 1] = 0;
 
-    code = PY_COMPILE_SINGLE(cmdBuffer);
+    code = Py_CompileStringFlags(
+        cmdBuffer, "<console>", Py_single_input, &pyCompFlags);
     if (code) {
         // We're waiting on more code.
         Py_DECREF(code);
@@ -248,7 +262,8 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     cmdBuffer[fullCommand.length() + 1] = '\n';
     cmdBuffer[fullCommand.length() + 2] = 0;
 
-    code = PY_COMPILE_SINGLE(cmdBuffer);
+    code = Py_CompileStringFlags(
+        cmdBuffer, "<console>", Py_single_input, &pyCompFlags);
     if (code) {
         // We're waiting on more code.
         Py_DECREF(code);
@@ -267,7 +282,9 @@ bool PythonInterpreter::executeLine(const std::string& command) {
 
     // Compare the two compile errors.
     if (errStr1 && errStr2) {
-        if (PyObject_Compare(errStr1, errStr2)) {
+        // Note: rich comparison returns -1 on error, or 0/1 for false/true.
+        // Since we are passing two python strings, we assume no error here.
+        if (PyObject_RichCompareBool(errStr1, errStr2, Py_NE) == 1) {
             // Errors are different.  We must be waiting on more code.
             Py_XDECREF(errType);
             Py_XDECREF(errValue);
@@ -310,10 +327,7 @@ bool PythonInterpreter::executeLine(const std::string& command) {
     }
 }
 
-bool PythonInterpreter::importRegina() {
-    PyEval_RestoreThread(state);
-
-    // Adjust the python path if we need to.
+void PythonInterpreter::prependReginaToSysPath() {
     std::string regModuleDir = regina::GlobalDirs::pythonModule();
     if (! regModuleDir.empty()) {
         PyObject* path = PySys_GetObject(
@@ -322,32 +336,52 @@ bool PythonInterpreter::importRegina() {
             // Ensure that regina's path gets pushed to the beginning
             // of sys.path, not the end - this ensures that different
             // installations can live happily side-by-side.
+
+            // Since this is a filesystem path, we assume it comes direct from
+            // the filesystem, and is not necessary encoded using UTF-8.
+#if PY_MAJOR_VERSION >= 3
+            PyObject* regModuleDirPy =
+                PyUnicode_DecodeFSDefault(regModuleDir.c_str());
+#else
             PyObject* regModuleDirPy =
                 PyString_FromString(regModuleDir.c_str());
+#endif
             PyList_Insert(path, 0, regModuleDirPy);
             Py_DECREF(regModuleDirPy);
         }
     }
+}
 
-    // Import the module.
-    bool ok = false;
-    try {
-        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
-        if (regModule) {
-            PyDict_SetItemString(mainNamespace, "regina", regModule);
-            Py_DECREF(regModule);
-            ok = true;
-        } else {
-            PyErr_Print();
-            PyErr_Clear();
-        }
-    } catch (const boost::python::error_already_set&) {
+bool PythonInterpreter::importRegina() {
+    PyEval_RestoreThread(state);
+
+    bool ok = importReginaIntoNamespace(mainNamespace);
+    if (! ok) {
         PyErr_Print();
         PyErr_Clear();
     }
 
     state = PyEval_SaveThread();
     return ok;
+}
+
+bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace) {
+    // Adjust the python path if we need to.
+    prependReginaToSysPath();
+
+    // Import the module.
+    try {
+        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+        if (regModule) {
+            PyDict_SetItemString(useNamespace, "regina", regModule);
+            Py_DECREF(regModule);
+            return true;
+        } else {
+            return false;
+        }
+    } catch (const boost::python::error_already_set&) {
+        return false;
+    }
 }
 
 bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
@@ -359,7 +393,12 @@ bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
         PyObject* pyValue = conv(value);
 
         if (pyValue) {
+#if PY_MAJOR_VERSION >= 3
+            // PyUnicode_FromString assumes UTF-8 encoding.
+            PyObject* nameStr = PyUnicode_FromString(name); // New ref.
+#else
             PyObject* nameStr = PyString_FromString(name); // New ref.
+#endif
             PyDict_SetItem(mainNamespace, nameStr, pyValue);
             Py_DECREF(nameStr);
             Py_DECREF(pyValue);
@@ -374,23 +413,6 @@ bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
     return ok;
 }
 
-bool PythonInterpreter::compileScript(const char* code) {
-    PyEval_RestoreThread(state);
-
-    PyObject* ans = Py_CompileString(const_cast<char*>(code), "<script>",
-        Py_file_input);
-    if (ans) {
-        Py_DECREF(ans);
-        state = PyEval_SaveThread();
-        return true;
-    } else {
-        PyErr_Print();
-        PyErr_Clear();
-        state = PyEval_SaveThread();
-        return false;
-    }
-}
-
 bool PythonInterpreter::runScript(const char* code) {
     PyEval_RestoreThread(state);
 
@@ -403,32 +425,6 @@ bool PythonInterpreter::runScript(const char* code) {
     } else {
         PyErr_Print();
         PyErr_Clear();
-        state = PyEval_SaveThread();
-        return false;
-    }
-}
-
-bool PythonInterpreter::runScript(const char* filename, const char* shortName) {
-    PyEval_RestoreThread(state);
-
-    PyObject* script = PyFile_FromString(const_cast<char*>(filename),
-        const_cast<char*>("r"));
-    if (script) {
-        PyObject* ans = PyRun_File(PyFile_AsFile(script),
-            const_cast<char*>(shortName),
-            Py_file_input, mainNamespace, mainNamespace);
-        Py_DECREF(script);
-
-        if (ans) {
-            Py_DECREF(ans);
-            state = PyEval_SaveThread();
-            return true;
-        } else {
-            PyErr_Print();
-            state = PyEval_SaveThread();
-            return false;
-        }
-    } else {
         state = PyEval_SaveThread();
         return false;
     }

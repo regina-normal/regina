@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/facetspec.h"
 #include "triangulation/alias/isomorphism.h"
 #include "triangulation/forward.h"

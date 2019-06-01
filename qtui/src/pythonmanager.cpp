@@ -93,7 +93,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
     // Initialise the python interpreter.
     if (ans->importRegina()) {
-        ans->executeLine("print");
+        ans->addOutput(parent->QObject::tr("\n"));
         ans->setRootPacket(tree);
         ans->setSelectedPacket(selectedPacket);
     }
@@ -120,7 +120,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
     // Initialise the python interpreter.
     if (ans->importRegina())
-        ans->executeLine("print");
+        ans->addOutput(parent->QObject::tr("\n"));
     for (PythonVariableList::const_iterator it = initialVars.begin();
             it != initialVars.end(); it++)
         ans->setVar((*it).name, (*it).value);
@@ -130,25 +130,6 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->addInfo(parent->QObject::tr("\nReady."));
     ans->allowInput();
     return ans;
-}
-
-PythonConsole* PythonManager::compileScript(QWidget* parent,
-        const QString& script) {
-    PythonConsole* ans = new PythonConsole(parent, this);
-
-    ans->blockInput(parent->QObject::tr("Initialising..."));
-
-    // Try to compile the script.
-    if (ans->compileScript(script)) {
-        delete ans;
-        return 0;
-    } else {
-        // The compile failed; show the details to the user.
-        ans->show();
-        ans->addOutput(parent->QObject::tr("Compile failed."));
-        ans->allowInput();
-        return ans;
-    }
 }
 
 void PythonManager::closeAllConsoles() {
@@ -196,10 +177,6 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
         const QString&, const PythonVariableList&) {
-    return scriptingDisabled(parent);
-}
-
-PythonConsole* PythonManager::compileScript(QWidget* parent, const QString&) {
     return scriptingDisabled(parent);
 }
 

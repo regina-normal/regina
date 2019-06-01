@@ -41,7 +41,7 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/forward.h"
 #include <boost/noncopyable.hpp>
 

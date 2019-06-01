@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include <boost/noncopyable.hpp>
 
 namespace regina {

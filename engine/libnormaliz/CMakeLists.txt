@@ -2,13 +2,13 @@
 
 # Files to compile (taken from libnormaliz' Makefile.classic)
 SET ( FILES
-  offload_handler
-  enumeration
-  other_algorithms
-  linear_algebra
   cone_and_control
-  primal
+  enumeration
+  linear_algebra
+  offload_handler
+  other_algorithms
   output
+  primal
   )
 
 # Prepend folder name

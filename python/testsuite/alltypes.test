@@ -65,8 +65,7 @@ def objectInfo(name, object):
     # print name, ': object'
     pass
 
-keys = regina.__dict__.keys()
-keys.sort()
+keys = sorted(regina.__dict__)
 
 for i in keys:
     object = regina.__dict__[i]

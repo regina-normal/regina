@@ -32,3 +32,35 @@ index c17ee6aa2..263a7ff6b 100644
  
  #ifdef NMZ_MPIR // use MPIR
      #include <mpirxx.h>
+diff --git a/engine/libnormaliz/cone.cpp b/engine/libnormaliz/cone.cpp
+index 46b8c8e05..120408b22 100644
+--- a/engine/libnormaliz/cone.cpp
++++ b/engine/libnormaliz/cone.cpp
+@@ -4478,6 +4478,7 @@ void Cone<Integer>::setFaceCodimBound(long bound){
+     f_vector.clear();
+ }
+ 
++#if 0
+ bool executable(string command){
+ //n check whether "command --version" cam be executed
+ 
+@@ -4525,6 +4526,7 @@ string command(const string& original_call, const string& to_replace, const stri
+         return test_path;
+     return ""; // no executable found
+ }
++#endif
+ 
+ //---------------------------------------------------------------------------
+ template<typename Integer>
+diff --git a/engine/libnormaliz/descent.h b/engine/libnormaliz/descent.h
+index 64940f119..61bc5ed83 100644
+--- a/engine/libnormaliz/descent.h
++++ b/engine/libnormaliz/descent.h
+@@ -29,6 +29,7 @@
+ #include <list>
+ #include <map>
+ #include <boost/dynamic_bitset.hpp>
++#include "libnormaliz/matrix.h"
+ 
+ namespace libnormaliz {
+ using std::vector;
