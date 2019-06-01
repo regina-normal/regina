@@ -1,7 +1,7 @@
-Regina KDE User Interface Directory
------------------------------------
+Regina Qt User Interface Directory
+----------------------------------
 
-This directory tree contains the C++ sources for the KDE user interface.
+This directory tree contains the C++ sources for the Qt user interface.
 
-This user interface is based on KDE 4.
+This user interface is based on Qt 5.
 
