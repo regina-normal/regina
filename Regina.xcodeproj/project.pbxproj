@@ -8825,7 +8825,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyframework=Python3.7\n    pyzip=python37.zip\n    ;;\n  *)\n    pyframework=Python2.7\n    pyzip=python27.zip\n    ;;\nesac\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/ios/\"$pyframework\".framework/Resources/lib/\"$pyzip\" \"$resdir\"/python\n";
+			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyframework=Python3.6\n    pyzip=python36.zip\n    ;;\n  *)\n    pyframework=Python2.7\n    pyzip=python27.zip\n    ;;\nesac\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/ios/\"$pyframework\".framework/Resources/lib/\"$pyzip\" \"$resdir\"/python\n";
 		};
 		05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -12278,7 +12278,6 @@
 		05B4D29A229F2BE000B7B11C /* Python 3 Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ARCHS = arm64;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
@@ -12306,17 +12305,17 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmpxx.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/libtokyocabinet.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/ios/graphviz.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python3.7.framework/Headers",
+					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python3.6.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				OTHER_LDFLAGS = (
 					"-framework",
-					Python3.7,
+					Python3.6,
 					"-framework",
 					XZ,
 					"-framework",
-					"boost-python37-static",
+					"boost-python36-static",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
