@@ -9,44 +9,6 @@ try:
 except:
     _within_sage = False
 
-# Additional methods for Packet
-
-def _children(self):
-    """
-    Iterate through all immediate children of this Packet.
-    """
-    child = self.firstChild()
-    while child:
-        yield child
-        child = child.nextSibling()
-
-Packet.children = _children
-
-def _descendants(self):
-    """
-    Iterate through all descendants of this Packet, excluding the packet itself.
-    """
-
-    for child in self.children():
-        yield child
-        for desc in child.descendants():
-            yield desc
-
-Packet.descendants = _descendants
-
-def _subtree(self):
-    """
-    Iterate through the entire subtree rooted at this Packet, including
-    the packet itself.
-    """
-
-    yield self
-    for child in self.children():
-        for desc in child.subtree():
-            yield desc
-
-Packet.subtree = _subtree
-
 # C'tor for Triangulation3 to take a SnapPy Triangulation or Manifold
 
 _original_trig_ctor = Triangulation3.__init__

@@ -1,0 +1,79 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2019, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests iterators over packet children and subtrees.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+root = Container(); root.setLabel('root')
+a = Container(); a.setLabel('a')
+aa = Container(); aa.setLabel('aa')
+aaa = Container(); aaa.setLabel('aaa')
+aab = Container(); aab.setLabel('aab')
+ab = Container(); ab.setLabel('ab')
+aba = Container(); aba.setLabel('aba')
+abb = Container(); abb.setLabel('abb')
+b = Container(); b.setLabel('b')
+ba = Container(); ba.setLabel('ba')
+baa = Container(); baa.setLabel('baa')
+bab = Container(); bab.setLabel('bab')
+bb = Container(); bb.setLabel('bb')
+bba = Container(); bba.setLabel('bba')
+bbb = Container(); bbb.setLabel('bbb')
+
+root.insertChildLast(a)
+root.insertChildLast(b)
+a.insertChildLast(aa)
+a.insertChildLast(ab)
+b.insertChildLast(ba)
+b.insertChildLast(bb)
+aa.insertChildLast(aaa)
+aa.insertChildLast(aab)
+ab.insertChildLast(aba)
+ab.insertChildLast(abb)
+ba.insertChildLast(baa)
+ba.insertChildLast(bab)
+bb.insertChildLast(bba)
+bb.insertChildLast(bbb)
+
+print('a.children():')
+for i in a.children():
+    print(i.label())
+
+print('a.subtree():')
+for i in a.subtree():
+    print(i.label())
+
+print('a.descendants():')
+for i in a.descendants():
+    print(i.label())
+
+print('a as iterable:')
+for i in a:
+    print(i.label())

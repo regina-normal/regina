@@ -13,7 +13,8 @@ Version 5.2  [ 29 September, 2017 ]
         - Now requires C++14 (not C++11).  However, the only feature of C++14
           that is currently used is the [[deprecated]] attribute, which means
           that partially compliant compilers (such as gcc4.9) should be fine.
-        - Now requires Python >= 2.6, and can build for either Python 2 or 3.
+        - Now supports Python 3 (and continues support for Python 2).
+        - For Python 2, there is now a minimum requirement of Python >= 2.6.
         - Now builds under gcc7 and gcc8.
         - Updated the bundled copy of Normaliz to version 3.7.2 (17 Apr 2019).
     ENGINE:
@@ -63,15 +64,17 @@ Version 5.2  [ 29 September, 2017 ]
             - New normal surface coordinate class to implement
               NS_AN_QUAD_OCT_CLOSED (thanks to Nathan Dunfield).
         Class Packet, PacketChildren, ChildIterator, SubtreeIterator:
-            - Supports iterating through packets using range-based for loops:
+            - Supports iterating over packets using range-based for loops:
                 + Packet has new routines begin() and end() for iterating
                   through the entire subtree rooted at a given packet.
-                + Packet has a new routine children() for iterating through
-                  immediate children of a given packet.
-                + New lightweight classes PacketChildren, ChildIterator and
-                  SubtreeIterator to support this functionality.
-                + In Python, Packet has new generators children(), subtree()
-                  and descendants() (thanks to Matthias Goerner).
+                  In Python, Packet is now an iterable object.
+                + Packet has new routines children() and descendants() for
+                  iterating through immediate children and strict
+                  descendants respectively of a given packet.
+                + New lightweight classes PacketChildren, PacketDescendants,
+                  ChildIterator and SubtreeIterator to support this iteration.
+                + For Python only, Packet has an additional new member function
+                  subtree() that also returns an iterable object.
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.
