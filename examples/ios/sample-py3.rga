@@ -2585,8 +2585,7 @@ CS_unknown
 #
 # See the Regina handbook for more elaborate sample Python sessions.
 
-t = tri.firstChild()
-while t != None:
+for t in tri.children():
 	print(t.label() + &quot;: &quot;, end='')
 
 	if t.type() == PACKET_TRIANGULATION3:
@@ -2597,8 +2596,6 @@ while t != None:
 		print(t.homfly())
 	else:
 		print('Unknown packet type')
-
-	t = t.nextSibling()
 </text>
 </packet> <!-- Python Script (Script) -->
 </packet> <!-- Sample Data File (Container) -->
