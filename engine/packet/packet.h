@@ -55,6 +55,7 @@
 namespace regina {
 
 class PacketChildren;
+class PacketDescendants;
 class PacketListener;
 class SubtreeIterator;
 class XMLPacketReader;
@@ -612,11 +613,11 @@ class REGINA_API Packet :
          */
         size_t countChildren() const;
         /**
-         * Returns the total number of descendants of this packet.  This
-         * includes children, grandchildren and so on.  This packet is not
-         * included in the count.
+         * Returns the total number of strict descendants of this packet.
+         * This includes children, grandchildren and so on.  This packet is
+         * not included in the count.
          *
-         * @return the total number of descendants.
+         * @return the total number of strict descendants.
          */
         size_t countDescendants() const;
         /**
@@ -854,21 +855,19 @@ class REGINA_API Packet :
          *     ...
          * \endcode
          *
-         * See also children() for iterating just through the immediate
-         * children of this packet, as opposed to the entire subtree.
+         * See also descendants() for iterating through just the strict
+         * descendants in the subtree (i.e., excluding this packet itself),
+         * and children() for iterating just through the immediate children
+         * of this packet (not the full subtree).
          *
          * \note This routine is non-const because \e dereferencing
          * a SubtreeIterator returns a non-const packet pointer.
          *
          * \ifacespython As well as treating each packet as an iterable
-         * object, Regina supplies two additional member functions that
-         * return iterable objects for iterating over subtrees:
-         * <tt>Packet.subtree()</tt>, which includes the root of the subtree
-         * (so iterating over <tt>p.subtree()</tt> is identical to
-         * iterating over <tt>p</tt>); and
-         * <tt>Packet.descendants()</tt>, which does not include the root of
-         * the subtree (so iterating over <tt>p.descendants()</tt> is
-         * like iterating over <tt>p</tt> but skipping the first item).
+         * object, Regina supplies a member function <tt>Packet.subtree()</tt>
+         * which returns an iterable object.  Iterating over a packet directly
+         * is exactly the same as iterating over <tt>Packet.subtree()</tt>;
+         * the latter is offered because it may be clearer for readers.
          *
          * @return an iterator at the beginning of this subtree.
          */
@@ -890,6 +889,47 @@ class REGINA_API Packet :
          * @return an iterator beyond the end of this subtree.
          */
         SubtreeIterator end();
+
+        /**
+         * Returns a lightweight object for iterating through all
+         * strict descendants of this packet in the packet tree.
+         *
+         * The order of iteration is exactly the same as when iterating
+         * over the full subtree rooted at this packet (as offered by
+         * Packet::begin() and Packet::end()), except that the iteration
+         * \e excludes this packet itself.  In particular, the iteration is
+         * depth-first, and each packet in the subtree is processed
+         * before its own descendants.
+         *
+         * This routine allows you to iterate through all strict descendants
+         * of a given packet using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * Packet* parent = ...;
+         * for (Packet* desc : parent->descendants()) { ... }
+         * \endcode
+         *
+         * In Python, this routine returns an iterable object:
+         *
+         * \code{.cpp}
+         * parent = ...
+         * for desc in parent.descendants():
+         *     ...
+         * \endcode
+         *
+         * This function returns a lightweight object in the sense that it does
+         * not generate a full list of descendants in advance, but instead just
+         * returns a small iterator that visits each descendant as required.
+         * In particular, this routine has small constant time and memory.
+         *
+         * See also begin() and end() for iterating through the entire
+         * subtree \e including this packet, and children() for iterating
+         * over just this packet's immediate children.
+         *
+         * @return an object for iterating through the strict descendants
+         * of this packet.
+         */
+        PacketDescendants descendants() const;
 
         /**
          * Returns a lightweight object for iterating through the
@@ -916,8 +956,9 @@ class REGINA_API Packet :
          * just returns a small iterator that visits each child as required.
          * In particular, this routine has small constant time and memory.
          *
-         * See also begin() and end() for iterating through the entire
-         * subtree rooted at this packet, not just the immediate children.
+         * See begin() and end(), as well as descendants(), for iterating
+         * through the subtree rooted at this packet (not just the immediate
+         * children).
          *
          * @return an object for iterating through the children of this packet.
          */
@@ -1626,7 +1667,7 @@ class REGINA_API ChildIterator {
  */
 class REGINA_API SubtreeIterator {
     private:
-        Packet* subtree_;
+        const Packet* subtree_;
             /**< The root of the packet subtree that we are iterating over. */
         Packet* current_;
             /**< The packet that this iterator is pointing to, or
@@ -1679,7 +1720,7 @@ class REGINA_API SubtreeIterator {
          * If \a current is not null, then it must be equal to or a
          * descendant of \a subtree.
          */
-        SubtreeIterator(Packet* subtree, Packet* current);
+        SubtreeIterator(const Packet* subtree, Packet* current);
 
         /**
          * Default copy assignment operator.
@@ -1820,6 +1861,86 @@ class REGINA_API PacketChildren {
         ChildIterator end() const;
 };
 
+/**
+ * A lightweight object that gives access to all strict descendants of a
+ * given packet.
+ *
+ * The purpose of this class is to support iteration through all strict
+ * descendants of a packet \a p using C++11 range-based \c for loops:
+ *
+ * \code{.cpp}
+ * Packet* parent = ...;
+ * for (Packet* desc : parent->descendants()) { ... }
+ * \endcode
+ *
+ * In Python, PacketDescendants is an iterable object:
+ *
+ * \code{.cpp}
+ * parent = ...
+ * for desc in parent.descendants():
+ *     ...
+ * \endcode
+ *
+ * \ifacespython Instead of the C++ interface described here, in Python
+ * the classes PacketDescendants and SubtreeIterator together implement the
+ * Python iterable/iterator interface.  The class PacketDescendants has just
+ * the single function <tt>__iter__()</tt>, which returns a SubtreeIterator;
+ * then SubtreeIterator implements <tt>next()</tt>, which either returns
+ * the next descendant packet in the iteration or else throws a
+ * <tt>StopException</tt> if there are no more children to return.
+ */
+class REGINA_API PacketDescendants {
+    private:
+        const Packet* subtree_;
+            /**< The packet whose strict descendants we are iterating over. */
+
+    public:
+        /**
+         * Default copy constructor.
+         *
+         * \ifacespython Not present.
+         */
+        PacketDescendants(const PacketDescendants&) = default;
+        /**
+         * Creates a new object for iterating through the strict descendants
+         * of the given packet.
+         *
+         * \ifacespython Not present.
+         *
+         * @param subtree the packet whose strict descendants we will iterate
+         * through.
+         */
+        PacketDescendants(const Packet* subtree);
+
+        /**
+         * Default copy assignment operator.
+         *
+         * \ifacespython Not present.
+         */
+        PacketDescendants& operator = (const PacketDescendants&) = default;
+
+        /**
+         * Returns an iterator at the beginning of the range of strict
+         * descendants.  This will point to the first child packet (if
+         * one exists) of the packet whose descendants we are iterating over.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>__iter__()</tt>, as described in the class notes.
+         *
+         * @return the beginning iterator.
+         */
+        SubtreeIterator begin() const;
+        /**
+         * Returns an iterator at the end of the range of strict descendants.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>__iter__()</tt>, as described in the class notes.
+         *
+         * @return the past-the-end iterator.
+         */
+        SubtreeIterator end() const;
+};
+
 } // namespace regina
 
 /*@}*/
@@ -1856,11 +1977,15 @@ inline SubtreeIterator::SubtreeIterator(Packet* subtree) :
         subtree_(subtree), current_(subtree) {
 }
 
-inline SubtreeIterator::SubtreeIterator(Packet* subtree, Packet* current) :
-        subtree_(subtree), current_(current) {
+inline SubtreeIterator::SubtreeIterator(const Packet* subtree,
+        Packet* current) : subtree_(subtree), current_(current) {
 }
 
 inline PacketChildren::PacketChildren(const Packet* parent) : parent_(parent) {
+}
+
+inline PacketDescendants::PacketDescendants(const Packet* subtree) :
+        subtree_(subtree) {
 }
 
 // Inline functions for Packet
@@ -1954,6 +2079,10 @@ inline SubtreeIterator Packet::end() {
     return SubtreeIterator(this, nullptr);
 }
 
+inline PacketDescendants Packet::descendants() const {
+    return PacketDescendants(this);
+}
+
 inline PacketChildren Packet::children() const {
     return PacketChildren(this);
 }
@@ -2042,6 +2171,14 @@ inline ChildIterator PacketChildren::begin() const {
 
 inline ChildIterator PacketChildren::end() const {
     return ChildIterator(nullptr);
+}
+
+inline SubtreeIterator PacketDescendants::begin() const {
+    return SubtreeIterator(subtree_, subtree_->firstChild());
+}
+
+inline SubtreeIterator PacketDescendants::end() const {
+    return SubtreeIterator(subtree_, nullptr);
 }
 
 } // namespace regina

@@ -63,16 +63,17 @@ Version 5.2  [ 29 September, 2017 ]
             - New normal surface coordinate class to implement
               NS_AN_QUAD_OCT_CLOSED (thanks to Nathan Dunfield).
         Class Packet, PacketChildren, ChildIterator, SubtreeIterator:
-            - Supports iterating through packets using range-based for loops:
+            - Supports iterating over packets using range-based for loops:
                 + Packet has new routines begin() and end() for iterating
                   through the entire subtree rooted at a given packet.
                   In Python, Packet is now an iterable object.
-                + Packet has a new routine children() for iterating through
-                  immediate children of a given packet.
-                + New lightweight classes PacketChildren, ChildIterator and
-                  SubtreeIterator to support this functionality.
-                + For Python only, Packet has additional new member functions
-                  subtree() and descendants() that also return iterable objects.
+                + Packet has new routines children() and descendants() for
+                  iterating through immediate children and strict
+                  descendants respectively of a given packet.
+                + New lightweight classes PacketChildren, PacketDescendants,
+                  ChildIterator and SubtreeIterator to support this iteration.
+                + For Python only, Packet has an additional new member function
+                  subtree() that also returns an iterable object.
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.

@@ -1622,6 +1622,9 @@ Equality type : BY_REFERENCE
 PacketChildren : class
 Equality type : BY_REFERENCE
 
+PacketDescendants : class
+Equality type : BY_REFERENCE
+
 Pentachoron10 : typedef ->  Face10_4
 
 Pentachoron11 : typedef ->  Face11_4
