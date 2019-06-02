@@ -161,6 +161,6 @@ BOOST_PYTHON_MODULE(regina) {
 
     // This routine allows the user to import sage-related hacks, which
     // are not included by default in regina's python module.
-    def("_addSageHacks", &addSageHacks);
+    boost::python::def("_addSageHacks", &addSageHacks);
 }
 
