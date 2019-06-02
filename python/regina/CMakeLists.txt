@@ -2,7 +2,7 @@
 # importable python module even when the user runs directly out of the
 # source tree.
 
-FILE(COPY __init__.py purePyMethods.py DESTINATION .)
+FILE(COPY __init__.py purePyMethods.py sageSetup.py DESTINATION .)
 
 # Rewrite the source list to be relative to this directory.
 FOREACH (SOURCE_FILE ${SOURCES})
@@ -48,5 +48,5 @@ ELSE (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   SET(MODULEDIR ${PYLIBDIR}/regina)
 ENDIF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
-INSTALL(FILES __init__.py purePyMethods.py DESTINATION ${MODULEDIR} COMPONENT Runtime)
+INSTALL(FILES __init__.py purePyMethods.py sageSetup.py DESTINATION ${MODULEDIR} COMPONENT Runtime)
 INSTALL(TARGETS engine LIBRARY DESTINATION ${MODULEDIR} COMPONENT Runtime)

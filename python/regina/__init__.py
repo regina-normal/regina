@@ -39,20 +39,7 @@ import sys, os
 from . import engine
 from .engine import *
 
-if not _within_sage:
-    # Ordinary setup
-    # --------------
-
-    # Typing "from regina import *" is not supposed to import "open".
-    # To achieve this, we skip it in __all__.
-    __all__ = (
-        [ name for name in engine.__dict__.keys()
-          if name != 'open' and not name.startswith('_') ] +
-        [ 'reginaSetup' ])
-else:
-    # Setup for regina-within-sage
-    # ----------------------------
-
+if _within_sage:
     # Typing "from regina import *" should not override certain
     # names. This always applies to the built-in "open".
     #
@@ -67,20 +54,16 @@ else:
           if not name in names_to_avoid and not name.startswith('_') ] +
         [ 'reginaSetup' ])
 
-    # Add any necessary sage-related hacks at the C++ level.
-    # This includes making boost::python work with Sage's Integer type.
-    engine._addSageHacks()
-
-    try:
-        # In sageRegina, the census files are supplied differently,
-        # set the location here.
-        from .pyCensus import __path__ as _pyCensusPath
-        GlobalDirs.setDirs(
-            GlobalDirs.home(),
-            GlobalDirs.pythonModule(),
-            _pyCensusPath[0])
-    except ImportError:
-        pass
+    # All additional sage-related setup should be placed within sageSetup.py.
+    from . import sageSetup
+    del sageSetup
+else:
+    # Typing "from regina import *" is not supposed to override the
+    # built-in "open".  To achieve this, we skip it in __all__.
+    __all__ = (
+        [ name for name in engine.__dict__.keys()
+          if name != 'open' and not name.startswith('_') ] +
+        [ 'reginaSetup' ])
 
 # Adds some additional pure Python methods to some of Regina's classes.
 from . import purePyMethods
