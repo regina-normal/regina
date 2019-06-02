@@ -30,17 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-void addIntUtils();
-void addLocale();
-void addBoolSet();
-void addOSUtils();
-void addStringUtils();
+void addRegisterIntFromPyIndex();
 
-void addUtilitiesClasses() {
-    addIntUtils();
-    addLocale();
-    addBoolSet();
-    addOSUtils();
-    addStringUtils();
+void addSageHacks() {
+    addRegisterIntFromPyIndex();
 }
 

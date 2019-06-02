@@ -59,7 +59,7 @@ __all__ = (
 
 # Make boost::python work with Sage Integer's.
 if _within_sage:
-    engine._registerIntFromPyIndex()
+    engine._addSageHacks()
 
 try:
     # In sageRegina, the census files are supplied differently,

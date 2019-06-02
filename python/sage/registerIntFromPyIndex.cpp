@@ -204,13 +204,8 @@ struct register_int_from_py_index {
 
 } } // namespace regina::python
 
-static
-void _registerIntFromPyIndex()
-{
+void addRegisterIntFromPyIndex() {
     regina::python::register_int_from_py_index<size_t>();
     regina::python::register_int_from_py_index<int>();
 }
 
-void addRegisterIntFromPyIndex() {
-    def("_registerIntFromPyIndex", &_registerIntFromPyIndex);
-}
