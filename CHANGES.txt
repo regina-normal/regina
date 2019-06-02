@@ -13,7 +13,8 @@ Version 5.2  [ 29 September, 2017 ]
         - Now requires C++14 (not C++11).  However, the only feature of C++14
           that is currently used is the [[deprecated]] attribute, which means
           that partially compliant compilers (such as gcc4.9) should be fine.
-        - Now requires Python >= 2.6, and can build for either Python 2 or 3.
+        - Now supports Python 3 (and continues support for Python 2).
+        - For Python 2, there is now a minimum requirement of Python >= 2.6.
         - Now builds under gcc7 and gcc8.
         - Updated the bundled copy of Normaliz to version 3.7.2 (17 Apr 2019).
     ENGINE:
