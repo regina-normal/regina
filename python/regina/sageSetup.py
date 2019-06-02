@@ -1,6 +1,9 @@
 # Additional initialisation that takes place only when running Regina
 # from within Sage:
 
+from . import engine
+import sage.all
+
 # -------------------------------------------------------------------------
 # Sage-related hacks implemented at the C++ level in Regina
 # -------------------------------------------------------------------------
