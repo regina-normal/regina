@@ -341,7 +341,7 @@ sub setReginaHome() {
     $regina_home = $_[0];
 
     # Sanity test.
-    if (! -e "$regina_home/examples/sample.rga") {
+    if (! (-e "$regina_home/examples/sample.rga" or -e "$regina_home/examples/sample-py3.rga")) {
         &err("E: \$REGINA_HOME should be set to the Regina base directory.\n");
         &err("   This is the directory containing the 'icons' subdirectory,\n");
         &err("   the 'examples' subdirectory, and so on.\n");
