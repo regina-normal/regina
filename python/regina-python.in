@@ -385,9 +385,9 @@ sub usage {
     my $msg = shift;
     defined($msg) and print STDERR "$msg\n\n";
     print STDERR "Usage: 1. $prog_name\n";
-    print STDERR "               [ -q, --quiet | -v, --verbose ] [ -a, --noautoimport]\n";
+    print STDERR "               [ -q, --quiet | -v, --verbose ] [ -a, --noautoimport ]\n";
     print STDERR "       2. $prog_name\n";
-    print STDERR "               [ -q, --quiet | -v, --verbose ] [ -a, --noautoimport]\n";
+    print STDERR "               [ -q, --quiet | -v, --verbose ] [ -a, --noautoimport ]\n";
     print STDERR "               [ -i, --interactive ] script [ script_args ... ]\n";
     exit 1;
 }
