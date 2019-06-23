@@ -27,15 +27,15 @@ IF (APPLE)
   # On MacOS this requires the "-undefined dynamic_lookup" linker flag.
   SET_TARGET_PROPERTIES(engine PROPERTIES LINK_FLAGS
     "-undefined dynamic_lookup")
-  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY} ${Boost_PYTHON_LIBRARY})
+  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY})
 ELSEIF (WIN32)
-  # On Windows, just link everything in; the boost.python build scripts
-  # do this also.
-  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY} ${Boost_PYTHON_LIBRARY} ${PYTHON_LIBRARIES})
+  # On Windows, just link everything in; Windows is hard enough to
+  # support as it is. :/
+  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY} ${PYTHON_LIBRARIES})
 ELSE ()
   # On Linux and relations, again do not link with ${PYTHON_LIBRARIES}.
   # This should not require any special linker flags.
-  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY} ${Boost_PYTHON_LIBRARY})
+  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY})
 ENDIF ()
 
 IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)

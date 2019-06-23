@@ -72,7 +72,7 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     }
 }
 
-#ifdef BOOST_PYTHON_FOUND
+#ifdef BUILD_PYTHON_BINDINGS
 
 #include "python/pythonconsole.h"
 

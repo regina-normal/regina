@@ -20,8 +20,8 @@
 /* Define if 64-bit integer literals are available using the LL suffix */
 #define NUMERIC_64_LL_FOUND
 
-/* Define if Boost.Python is available. */
-#define BOOST_PYTHON_FOUND
+/* Define if we are building the Python bindings. */
+#define BUILD_PYTHON_BINDINGS
 
 /* Define if the Graphviz libraries are available. */
 #define LIBGVC_FOUND

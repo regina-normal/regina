@@ -321,60 +321,11 @@ MACRO_LOG_FEATURE(JANSSON_FOUND
   "http://www.digip.org/jansson/"
   TRUE)
 
-IF (DISABLE_PYTHON)
-  MESSAGE (STATUS "Searching for Boost with no python component")
-  FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams)
-ELSE (DISABLE_PYTHON)
-  MESSAGE (STATUS "Searching for a Python installation")
-  FIND_PACKAGE(PythonInterp)
-  IF (PYTHONINTERP_FOUND)
-    SET (USE_BOOST_PYSUFFIX ${PYTHON_VERSION_MAJOR}${PYTHON_VERSION_MINOR})
-  ELSE (PYTHONINTERP_FOUND)
-    UNSET (USE_BOOST_PYSUFFIX)
-  ENDIF (PYTHONINTERP_FOUND)
-
-  FIND_PACKAGE(PythonLibs)
-
-  IF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
-    # Check the python versions.
-    MESSAGE (STATUS "Python interpreter: ${PYTHON_VERSION_STRING}")
-    MESSAGE (STATUS "Python libraries: ${PYTHONLIBS_VERSION_STRING}")
-    IF (NOT ${PYTHONLIBS_VERSION_STRING} STREQUAL ${PYTHON_VERSION_STRING})
-      MESSAGE(FATAL_ERROR "Python version mismatch.")
-    ENDIF ()
-
-    IF (${PYTHON_VERSION_MAJOR} EQUAL 2)
-      IF (${PYTHON_VERSION_MINOR} LESS 6)
-        MESSAGE(FATAL_ERROR "For Python 2.x, Regina needs Python >= 2.6.")
-      ENDIF ()
-    ELSEIF (${PYTHON_VERSION_MAJOR} EQUAL 3)
-      IF (${PYTHON_VERSION_MINOR} LESS 1)
-        MESSAGE(FATAL_ERROR "For Python 3.x, Regina needs Python >= 3.1.")
-      ENDIF ()
-    ELSE ()
-      MESSAGE(FATAL_ERROR "Unknown Python major version: ${PYTHON_VERSION_MAJOR}")
-    ENDIF ()
-
-    # Look for boost.python.
-    MESSAGE (STATUS "Searching for Boost using python${USE_BOOST_PYSUFFIX} component")
-    FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python${USE_BOOST_PYSUFFIX})
-    IF (Boost_FOUND)
-      SET (Boost_PYTHON_LIBRARY ${Boost_PYTHON${USE_BOOST_PYSUFFIX}_LIBRARY})
-    ELSE (Boost_FOUND)
-      MESSAGE (STATUS "Searching for Boost using python component")
-      FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python)
-    ENDIF (Boost_FOUND)
-  ELSE (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
-    # Don't try for boost.python.
-    MESSAGE (STATUS "Searching for Boost with no python component, since python was not found")
-    FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams)
-  ENDIF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
-ENDIF (DISABLE_PYTHON)
-
+FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
   "Boost (>= 1.55)"
-  "Essential: C++ components (iostreams, python)"
+  "Essential: C++ components (iostreams)"
   "http://www.boost.org/"
   TRUE)
 
@@ -405,6 +356,33 @@ IF (Boost_FOUND)
       FORCE)
   ENDIF(NOT REGINA_BOOST_DO_NOT_FIX_CONVERTERS)
 ENDIF (Boost_FOUND)
+
+IF (NOT DISABLE_PYTHON)
+  MESSAGE (STATUS "Searching for a Python installation")
+  FIND_PACKAGE(PythonInterp)
+  FIND_PACKAGE(PythonLibs)
+
+  IF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+    # Check the python versions.
+    MESSAGE (STATUS "Python interpreter: ${PYTHON_VERSION_STRING}")
+    MESSAGE (STATUS "Python libraries: ${PYTHONLIBS_VERSION_STRING}")
+    IF (NOT ${PYTHONLIBS_VERSION_STRING} STREQUAL ${PYTHON_VERSION_STRING})
+      MESSAGE(FATAL_ERROR "Python version mismatch.")
+    ENDIF ()
+
+    IF (${PYTHON_VERSION_MAJOR} EQUAL 2)
+      IF (${PYTHON_VERSION_MINOR} LESS 6)
+        MESSAGE(FATAL_ERROR "For Python 2.x, Regina needs Python >= 2.6.")
+      ENDIF ()
+    ELSEIF (${PYTHON_VERSION_MAJOR} EQUAL 3)
+      IF (${PYTHON_VERSION_MINOR} LESS 1)
+        MESSAGE(FATAL_ERROR "For Python 3.x, Regina needs Python >= 3.1.")
+      ENDIF ()
+    ELSE ()
+      MESSAGE(FATAL_ERROR "Unknown Python major version: ${PYTHON_VERSION_MAJOR}")
+    ENDIF ()
+  ENDIF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+ENDIF (NOT DISABLE_PYTHON)
 
 FIND_PACKAGE(PkgConfig)
 IF(NOT PKG_CONFIG_FOUND)
@@ -512,7 +490,7 @@ else ()
   SET (REGINA_PYTHON_EXTENSION_NONSTANDARD FALSE)
 endif ()
 
-IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+IF(PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   # We can support python.
 
   # Find the site-packages location in which the XDG build needs to put
@@ -529,12 +507,10 @@ IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   ENDIF ()
 
   ADD_SUBDIRECTORY(python)
-  SET(BOOST_PYTHON_FOUND TRUE)
+  SET(BUILD_PYTHON_BINDINGS TRUE)
 
   MESSAGE(STATUS "Python bindings enabled")
-ELSEIF(Boost_FOUND)
-  # Boost itself is mandatory - if it was not found then we have
-  # bigger problems.
+ELSEIF(PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   MESSAGE(WARNING "Could not find Python interpreter and/or development files: Python bindings disabled.")
 ENDIF()
 MACRO_LOG_FEATURE(PYTHONINTERP_FOUND

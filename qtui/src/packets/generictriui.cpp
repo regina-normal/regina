@@ -50,7 +50,7 @@ using regina::Triangulation;
 GenericTriangulationBase::GenericTriangulationBase(regina::Packet* p,
         PacketPane* enclosingPane) :
         PacketReadOnlyUI(enclosingPane), packet(p) {
-#ifdef BOOST_PYTHON_FOUND
+#ifdef BUILD_PYTHON_BINDINGS
     python = new QPushButton(ReginaSupport::themeIcon("utilities-terminal"),
         tr("Python Console"));
     python->setToolTip("Open a new Python console");
@@ -117,7 +117,7 @@ GenericTriangulationUI<dim>::GenericTriangulationUI(Triangulation<dim>* packet,
     label->setWordWrap(true);
     layout->addWidget(label);
 
-#ifdef BOOST_PYTHON_FOUND
+#ifdef BUILD_PYTHON_BINDINGS
     QBoxLayout* buttonBox = new QHBoxLayout();
     buttonBox->addWidget(new QWidget(), 1);
     buttonBox->addWidget(python);
