@@ -161,6 +161,17 @@
      (at your option) any later version.
     </para>
    </sect3>
+
+   <sect3 id="license-pybind11">
+    <title>&pybind11; Library</title>
+    <para>
+     &regina; includes a copy of &pybind11;, which it uses to generate &python;
+     bindings for &Regina;'s native &cpp; code.  The &pybind11; library was
+     written by Wenzel Jakob, and is distributed under a &BSD;-style license
+     that is shipped with &Regina;'s source code in the file
+     <filename>python/pybind11/LICENSE</filename>.
+    </para>
+   </sect3>
  
    <sect3 id="license-orb">
     <title>Orb Kernel</title>

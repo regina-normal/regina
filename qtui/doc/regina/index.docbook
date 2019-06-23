@@ -63,6 +63,7 @@
   <!ENTITY bn "<replaceable>b<subscript><replaceable>n</replaceable></subscript></replaceable>">
   <!ENTITY bibtex "<application>BibTeX</application>">
   <!ENTITY boost-python "<application>boost.python</application>">
+  <!ENTITY bsd "<acronym>BSD</acronym>">
   <!ENTITY bzip2 "<application>bzip2</application>">
   <!ENTITY casson "<application>Casson</application>">
   <!ENTITY c "<application>C</application>">
@@ -114,6 +115,7 @@
   <!ENTITY ppirr
    "<replaceable>P</replaceable><superscript>2</superscript>-irreducible">
   <!ENTITY previewapp "<application>Preview</application>">
+  <!ENTITY pybind11 "<application>pybind11</application>">
   <!ENTITY python "<application>Python</application>">
   <!ENTITY q0 "<replaceable>q</replaceable><subscript>0</subscript>">
   <!ENTITY qt "<application>Qt</application>">

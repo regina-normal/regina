@@ -136,6 +136,13 @@
  *  Free Software Foundation, either version 3 of the License, or (at your
  *  option) any later version.
  *
+ *  <h3>pybind11</h3>
+ *
+ *  Regina includes a copy of pybind11, which it uses to generate python
+ *  bindings for Regina's native C++ code.  The pybind11 library was written by
+ *  Wenzel Jakob, and is distributed under a BSD-style license that is shipped
+ *  with Regina's source code in the file python/pybind11/LICENSE.
+ *
  *  <h3>Orb Kernel</h3>
  *
  *  Regina includes snippets of code from Orb, for use in importing and
