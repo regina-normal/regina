@@ -30,18 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "utilities/osutils.h"
 
-using namespace boost::python;
-
-namespace {
-    void writeResUsage_void() {
+void addOSUtils(pybind11::module& m) {
+    m.def("writeResUsage", []{
         regina::writeResUsage(std::cout);
-    }
-}
-
-void addOSUtils() {
-    boost::python::def("writeResUsage", writeResUsage_void);
+    });
 }
 

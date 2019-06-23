@@ -30,35 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "utilities/stringutils.h"
 
-using namespace boost::python;
-
-namespace {
-    std::string (*stringToToken_chars)(const char*) = &regina::stringToToken;
-    std::string (*stringToToken_string)(const std::string&) =
-        &regina::stringToToken;
-    std::string (*subscript_long)(long) = &regina::subscript;
-    std::string (*subscript_largeF)(const regina::Integer&) =
-        &regina::subscript;
-    std::string (*subscript_largeT)(const regina::LargeInteger&) =
-        &regina::subscript;
-    std::string (*superscript_long)(long) = &regina::superscript;
-    std::string (*superscript_largeF)(const regina::Integer&) =
-        &regina::superscript;
-    std::string (*superscript_largeT)(const regina::LargeInteger&) =
-        &regina::superscript;
-}
-
-void addStringUtils() {
-    def("stringToToken", stringToToken_chars);
-    def("stringToToken", stringToToken_string);
-    def("subscript", subscript_long);
-    def("subscript", subscript_largeF);
-    def("subscript", subscript_largeT);
-    def("superscript", superscript_long);
-    def("superscript", superscript_largeF);
-    def("superscript", superscript_largeT);
+void addStringUtils(pybind11::module& m) {
+    m.def("stringToToken", (std::string (*)(const char*))
+        &regina::stringToToken);
+    m.def("stringToToken", (std::string (*)(const std::string&))
+        &regina::stringToToken);
+    m.def("subscript", (std::string (*)(long)) &regina::subscript);
+    m.def("subscript", (std::string (*)(const regina::Integer&))
+        &regina::subscript);
+    m.def("subscript", (std::string (*)(const regina::LargeInteger&))
+        &regina::subscript);
+    m.def("superscript", (std::string (*)(long)) &regina::superscript);
+    m.def("superscript", (std::string (*)(const regina::Integer&))
+        &regina::superscript);
+    m.def("superscript", (std::string (*)(const regina::LargeInteger&))
+        &regina::superscript);
 }
 

@@ -30,55 +30,53 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "utilities/boolset.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::BoolSet;
 
-void addBoolSet() {
-    {
-        scope s = class_<BoolSet>("BoolSet")
-            .def(init<bool>())
-            .def(init<const BoolSet&>())
-            .def(init<bool, bool>())
-            .def("hasTrue", &BoolSet::hasTrue)
-            .def("hasFalse", &BoolSet::hasFalse)
-            .def("contains", &BoolSet::contains)
-            .def("insertTrue", &BoolSet::insertTrue)
-            .def("insertFalse", &BoolSet::insertFalse)
-            .def("removeTrue", &BoolSet::removeTrue)
-            .def("removeFalse", &BoolSet::removeFalse)
-            .def("empty", &BoolSet::empty)
-            .def("fill", &BoolSet::fill)
-            .def(self < self)
-            .def(self > self)
-            .def(self <= self)
-            .def(self >= self)
-            .def(self |= self)
-            .def(self &= self)
-            .def(self ^= self)
-            .def(self | self)
-            .def(self & self)
-            .def(self ^ self)
-            .def(~ self)
-            .def("byteCode", &BoolSet::byteCode)
-            .def("setByteCode", &BoolSet::setByteCode)
-            .def("fromByteCode", &BoolSet::fromByteCode)
-            .staticmethod("fromByteCode")
-            .def(self_ns::str(self))
-            .def(regina::python::add_eq_operators())
-        ;
+void addBoolSet(pybind11::module& m) {
+    auto c = pybind11::class_<BoolSet>(m, "BoolSet")
+        .def(pybind11::init<>())
+        .def(pybind11::init<bool>())
+        .def(pybind11::init<const BoolSet&>())
+        .def(pybind11::init<bool, bool>())
+        .def("hasTrue", &BoolSet::hasTrue)
+        .def("hasFalse", &BoolSet::hasFalse)
+        .def("contains", &BoolSet::contains)
+        .def("insertTrue", &BoolSet::insertTrue)
+        .def("insertFalse", &BoolSet::insertFalse)
+        .def("removeTrue", &BoolSet::removeTrue)
+        .def("removeFalse", &BoolSet::removeFalse)
+        .def("empty", &BoolSet::empty)
+        .def("fill", &BoolSet::fill)
+        .def(pybind11::self < pybind11::self)
+        .def(pybind11::self > pybind11::self)
+        .def(pybind11::self <= pybind11::self)
+        .def(pybind11::self >= pybind11::self)
+        .def(pybind11::self |= pybind11::self)
+        .def(pybind11::self &= pybind11::self)
+        .def(pybind11::self ^= pybind11::self)
+        .def(pybind11::self | pybind11::self)
+        .def(pybind11::self & pybind11::self)
+        .def(pybind11::self ^ pybind11::self)
+        .def(~ pybind11::self)
+        .def("byteCode", &BoolSet::byteCode)
+        .def("setByteCode", &BoolSet::setByteCode)
+        .def_static("fromByteCode", &BoolSet::fromByteCode)
+    ;
+    regina::python::add_output_ostream(c);
+    regina::python::add_eq_operators(c);
 
-        // Apparently there is no way in python to make a module attribute
-        // read-only.
-        s.attr("sNone") = BoolSet::sNone;
-        s.attr("sTrue") = BoolSet::sTrue;
-        s.attr("sFalse") = BoolSet::sFalse;
-        s.attr("sBoth") = BoolSet::sBoth;
-    }
+    // Apparently there is no way in python to make a module attribute
+    // read-only.
+    c.attr("sNone") = BoolSet::sNone;
+    c.attr("sTrue") = BoolSet::sTrue;
+    c.attr("sFalse") = BoolSet::sFalse;
+    c.attr("sBoth") = BoolSet::sBoth;
 
-    scope().attr("NBoolSet") = scope().attr("BoolSet");
+    m.attr("NBoolSet") = m.attr("BoolSet");
 }
 

@@ -30,13 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "utilities/intutils.h"
 
-using namespace boost::python;
-
-void addIntUtils() {
-    boost::python::def("bitsRequired", regina::bitsRequired<long>);
-    boost::python::def("nextPowerOfTwo", regina::nextPowerOfTwo<long>);
+void addIntUtils(pybind11::module& m) {
+    m.def("bitsRequired", regina::bitsRequired<long>);
+    m.def("nextPowerOfTwo", regina::nextPowerOfTwo<long>);
 }
 
