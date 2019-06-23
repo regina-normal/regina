@@ -66,16 +66,13 @@ void addBoolSet(pybind11::module& m) {
         .def("byteCode", &BoolSet::byteCode)
         .def("setByteCode", &BoolSet::setByteCode)
         .def_static("fromByteCode", &BoolSet::fromByteCode)
+        .def_readonly_static("sNone", &BoolSet::sNone)
+        .def_readonly_static("sTrue", &BoolSet::sTrue)
+        .def_readonly_static("sFalse", &BoolSet::sFalse)
+        .def_readonly_static("sBoth", &BoolSet::sBoth)
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);
-
-    // Apparently there is no way in python to make a module attribute
-    // read-only.
-    c.attr("sNone") = BoolSet::sNone;
-    c.attr("sTrue") = BoolSet::sTrue;
-    c.attr("sFalse") = BoolSet::sFalse;
-    c.attr("sBoth") = BoolSet::sBoth;
 
     m.attr("NBoolSet") = m.attr("BoolSet");
 }
