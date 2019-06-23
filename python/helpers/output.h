@@ -35,8 +35,7 @@
  */
 
 #include <type_traits>
-#include <boost/python/def_visitor.hpp>
-#include <boost/python/operators.hpp>
+#include <sstream>
 #include "core/output.h"
 
 namespace regina {
@@ -45,61 +44,82 @@ namespace python {
 /**
  * Adds rich string output functions to the python bindings for a C++ class.
  *
- * This will add str(), utf8() and detail(), as provided by the regina::Output
- * (templated) base class.  It will also add \a __str__ to provide "native"
- * Python string output, using the C++ ostream output operator.
+ * This will add str(), utf8() and detail() to the python class, as provided by
+ * the regina::Output (templated) C++ base class.  It will also add \a __str__
+ * to provide "native" Python string output, using the C++ ostream output
+ * operator.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>c.def(regina::python::add_output())</t>, where \a c is the
- * boost::python::class_ object that wraps \a T.
+ * <t>regina::python::add_output(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.
  *
  * The wrapped class \a T should either derive from regina::Output, or
  * should provide str(), utf8() and detail() functions and an ostream output
  * operator in a way that is consistent with the regina::Output interface.
  */
-struct add_output : boost::python::def_visitor<add_output> {
-    friend class boost::python::def_visitor_access;
+template <class C, typename... options>
+void add_output(pybind11::class_<C, options...>& c) {
+    typedef typename regina::OutputBase<C>::type BaseType;
+    typedef std::string (BaseType::*OutputFunctionType)() const;
 
-    template <typename Class>
-    void visit(Class& c) const {
-        typedef typename Class::wrapped_type Type;
-        typedef typename regina::OutputBase<Type>::type BaseType;
-        typedef std::string (BaseType::*OutputFunctionType)() const;
-
-        c.def("str", OutputFunctionType(&BaseType::str));
-        c.def("utf8", OutputFunctionType(&BaseType::utf8));
-        c.def("detail", OutputFunctionType(&BaseType::detail));
-        c.def(boost::python::self_ns::str(boost::python::self));
-    }
-};
+    c.def("str", OutputFunctionType(&BaseType::str));
+    c.def("utf8", OutputFunctionType(&BaseType::utf8));
+    c.def("detail", OutputFunctionType(&BaseType::detail));
+    c.def("__str__", [](const C& x) {
+        std::ostringstream s;
+        s << x;
+        return s.str();
+    });
+}
 
 /**
  * Adds basic string output functions to the python bindings for a C++ class.
  *
- * This will add a str() function, and will also add \a __str__ as an alias for
- * this function to provide "native" Python string output.
+ * This will add a str() function to the python class, and will also add
+ * \a __str__ as an alias for this function to provide "native" Python string
+ * output.
  *
  * To use this for some C++ class \a T in Regina, simply call
- * <t>c.def(regina::python::add_output_basic())</t>, where \a c is the
- * boost::python::class_ object that wraps \a T.
+ * <t>regina::python::add_output_basic(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.
  *
  * It is assumed that the wrapped class \a T does not derive from
  * regina::Output (otherwise you should use add_output, not add_output_basic).
  * Instead we simply assume that \a T provides a function of the form
  * <tt>std::string T::str() const</tt>.
  */
-struct add_output_basic : boost::python::def_visitor<add_output_basic> {
-    friend class boost::python::def_visitor_access;
+template <class C, typename... options>
+void add_output_basic(pybind11::class_<C, options...>& c) {
+    typedef typename regina::OutputBase<C>::type BaseType;
+    typedef std::string (BaseType::*OutputFunctionType)() const;
 
-    template <typename Class>
-    void visit(Class& c) const {
-        typedef typename Class::wrapped_type Type;
-        typedef typename regina::OutputBase<Type>::type BaseType;
-        typedef std::string (BaseType::*OutputFunctionType)() const;
+    c.def("str", OutputFunctionType(&BaseType::str));
+    c.def("__str__", OutputFunctionType(&BaseType::str));
+}
 
-        c.def("str", OutputFunctionType(&BaseType::str));
-        c.def("__str__", OutputFunctionType(&BaseType::str));
-    }
-};
+/**
+ * Adds output stream functionality to the python bindings for a C++ class.
+ *
+ * This will add a function \a __str__ to the python class to provide "native"
+ * Python string output.  The implementation just writes the underlying C++
+ * object to an output stream and collects the result.
+ *
+ * To use this for some C++ class \a T in Regina, simply call
+ * <t>regina::python::add_output_basic(c)</t>, where \a c is the
+ * pybind11::class_ object that wraps \a T.
+ *
+ * It is assumed that the wrapped class \a T does not derive from regina::Output
+ * and does not provide a str() function (otherwise you should use add_output
+ * or add_output_basic respectively).  Instead we simply assume that there is
+ * a C++ operator for writing an object of type \a T to a C++ output stream.
+ */
+template <class C, typename... options>
+void add_output_ostream(pybind11::class_<C, options...>& c) {
+    c.def("__str__", [](const C& x) {
+        std::ostringstream s;
+        s << x;
+        return s.str();
+    });
+}
 
 } } // namespace regina::python
