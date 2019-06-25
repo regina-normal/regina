@@ -144,6 +144,8 @@ Version 5.2  [ 29 September, 2017 ]
             - Moved to maths/binom.h.
         Routine binomMedium():
             - New linear-time routine to compute (n choose k) for n <= 29.
+        Routine gcdWithCoeffs():
+            - The python version now takes (a, b) and returns (gcd, u, v).
         Routine politeThreads():
             - New routine to help user interfaces choose an appropriate
               level of parallelisation.

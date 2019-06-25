@@ -36,7 +36,11 @@
 void addNumberTheory(pybind11::module& m) {
     m.def("reducedMod", regina::reducedMod);
     m.def("gcd", regina::gcd);
-    m.def("gcdWithCoeffs", regina::gcdWithCoeffs);
+    m.def("gcdWithCoeffs", [](long a, long b){
+        long u, v;
+        long ans = regina::gcdWithCoeffs(a, b, u, v);
+        return pybind11::make_tuple(ans, u, v);
+    });
     m.def("lcm", regina::lcm);
     m.def("modularInverse", regina::modularInverse);
 }
