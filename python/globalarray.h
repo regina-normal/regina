@@ -133,17 +133,6 @@ class GlobalArray {
         }
 
         /**
-         * Returns the array element at the given index.
-         * If the index is out of range, a Python error will be thrown.
-         *
-         * @param index the given array index.
-         * @return the element at the given index.
-         */
-        const T& operator [] (size_t index) const {
-            return getItem(index);
-        }
-
-        /**
          * Writes a string representation of this array, including all
          * of its elements, to the given output stream.
          *
@@ -352,17 +341,6 @@ class GlobalArray2D {
             if (index >= nRows_)
                 throw pybind11::index_error("Global array index out of range");
             return data_[index];
-        }
-
-        /**
-         * Returns the requested row of the array.
-         * If the row index is out of range, a Python error will be thrown.
-         *
-         * @param index the index of the requested row.
-         * @return the row at the given index.
-         */
-        const Row& operator [] (size_t index) const {
-            return getItem(index);
         }
 
         /**
@@ -587,18 +565,6 @@ class GlobalArray3D {
             if (index >= nSubarrays_)
                 throw pybind11::index_error("Global array index out of range");
             return data_[index];
-        }
-
-        /**
-         * Returns the requested top-dimensional subarray of the array.
-         * If the subarray index is out of range, a Python error will
-         * be thrown.
-         *
-         * @param index the index of the requested subarray.
-         * @return the top-dimensional subarray at the given index.
-         */
-        const Subarray& operator [] (size_t index) const {
-            return getItem(index);
         }
 
         /**
