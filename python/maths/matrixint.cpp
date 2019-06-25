@@ -30,115 +30,83 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "maths/matrix.h"
-#include <boost/python/detail/api_placeholder.hpp> // For len().
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::MatrixInt;
 
-namespace {
-    regina::Integer& (MatrixInt::*entry_non_const)(unsigned long,
-        unsigned long) = &MatrixInt::entry;
-    void (MatrixInt::*addRow_triple)(unsigned long, unsigned long,
-        regina::Integer) = &MatrixInt::addRow;
-    void (MatrixInt::*addCol_triple)(unsigned long, unsigned long,
-        regina::Integer) = &MatrixInt::addCol;
-
-    std::unique_ptr<MatrixInt> multiply(const MatrixInt& m1,
-            const MatrixInt& m2) {
-        return m1.multiplyAs<MatrixInt>(m2);
-    }
-
-    void setEntry(MatrixInt& matrix, unsigned long row, unsigned long column,
-            const regina::Integer& value) {
-        matrix.entry(row, column) = value;
-    }
-
-    void initialise_list(MatrixInt& matrix, boost::python::list values) {
-        if (boost::python::len(values) != matrix.rows() * matrix.columns()) {
-            PyErr_SetString(PyExc_IndexError,
-                "Initialisation list does not contain the "
-                "expected number of elements.");
-            boost::python::throw_error_already_set();
-        } else {
+void addMatrixInt(pybind11::module& m) {
+    auto c = pybind11::class_<MatrixInt>(m, "MatrixInt")
+        .def(pybind11::init<unsigned long, unsigned long>())
+        .def(pybind11::init<const MatrixInt&>())
+        .def("initialise", &MatrixInt::initialise)
+        .def("initialise", [](MatrixInt& matrix, pybind11::list values) {
+            if (values.size() != matrix.rows() * matrix.columns())
+                throw pybind11::index_error(
+                    "Initialisation list has the wrong length");
             unsigned long r, c;
             unsigned i = 0;
             for (r = 0; r < matrix.rows(); ++r)
                 for (c = 0; c < matrix.columns(); ++c) {
-                    // Accept any type that we know how to convert to a
-                    // large integer.
-                    extract<regina::Integer&> x_large(values[i]);
-                    if (x_large.check()) {
-                        matrix.entry(r, c) = x_large();
+                    // Accept any type that we know how to convert to a large
+                    // integer.  This includes (at least) regina::Integer,
+                    // python integers (both int and long), and strings.
+                    try {
+                        matrix.entry(r, c) = values[i].cast<regina::Integer>();
                         ++i;
                         continue;
+                    } catch (pybind11::cast_error const &) {
+                        throw std::invalid_argument(
+                            "List element not convertible to Integer");
                     }
-
-                    extract<long> x_long(values[i]);
-                    if (x_long.check()) {
-                        matrix.entry(r, c) = x_long();
-                        ++i;
-                        continue;
-                    }
-
-                    extract<const char*> x_str(values[i]);
-                    if (x_str.check()) {
-                        matrix.entry(r, c) = x_str();
-                        ++i;
-                        continue;
-                    }
-
-                    // Throw an exception.
-                    x_large();
                 }
-        }
-    }
+        })
+        .def("rows", &MatrixInt::rows)
+        .def("columns", &MatrixInt::columns)
+        .def("entry",
+            (regina::Integer& (MatrixInt::*)(unsigned long, unsigned long))
+            &MatrixInt::entry,
+            pybind11::return_value_policy::reference_internal)
+        .def("set", [](MatrixInt& m, unsigned long row, unsigned long col,
+                const regina::Integer& value){
+            m.entry(row, col) = value;
+        })
+        .def("isIdentity", &MatrixInt::isIdentity)
+        .def("isZero", &MatrixInt::isZero)
+        .def("swapRows", &MatrixInt::swapRows)
+        .def("swapColumns", &MatrixInt::swapColumns)
+        .def("makeIdentity", &MatrixInt::makeIdentity)
+        .def("addRow",
+            (void (MatrixInt::*)(unsigned long, unsigned long))
+            &MatrixInt::addRow)
+        .def("addRow",
+            (void (MatrixInt::*)(unsigned long, unsigned long, regina::Integer))
+            &MatrixInt::addRow)
+        .def("addCol",
+            (void (MatrixInt::*)(unsigned long, unsigned long))
+            &MatrixInt::addCol)
+        .def("addCol",
+            (void (MatrixInt::*)(unsigned long, unsigned long, regina::Integer))
+            &MatrixInt::addCol)
+        .def("multRow", &MatrixInt::multRow)
+        .def("multCol", &MatrixInt::multCol)
+        .def("det", &MatrixInt::det)
+        .def("divRowExact", &MatrixInt::divRowExact)
+        .def("divColExact", &MatrixInt::divColExact)
+        .def("gcdRow", &MatrixInt::gcdRow)
+        .def("gcdCol", &MatrixInt::gcdCol)
+        .def("reduceRow", &MatrixInt::reduceRow)
+        .def("reduceCol", &MatrixInt::reduceCol)
+        .def("__mul__", [](const MatrixInt& m1, const MatrixInt& m2){
+            return m1.multiplyAs<MatrixInt>(m2);
+        })
+        .def_readonly_static("zero", &MatrixInt::zero)
+        .def_readonly_static("one", &MatrixInt::one)
+    ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRow,
-        MatrixInt::addRow, 2, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addCol,
-        MatrixInt::addCol, 2, 3);
-}
-
-void addMatrixInt() {
-    {
-        scope s = class_<MatrixInt,
-                std::auto_ptr<MatrixInt>, boost::noncopyable>("MatrixInt",
-                init<unsigned long, unsigned long>())
-            .def(init<const MatrixInt&>())
-            .def("initialise", &MatrixInt::initialise)
-            .def("initialise", initialise_list)
-            .def("rows", &MatrixInt::rows)
-            .def("columns", &MatrixInt::columns)
-            .def("entry", entry_non_const, return_internal_reference<>())
-            .def("set", setEntry)
-            .def("isIdentity", &MatrixInt::isIdentity)
-            .def("isZero", &MatrixInt::isZero)
-            .def("swapRows", &MatrixInt::swapRows)
-            .def("swapColumns", &MatrixInt::swapColumns)
-            .def("makeIdentity", &MatrixInt::makeIdentity)
-            .def("addRow", addRow_triple, OL_addRow())
-            .def("addCol", addCol_triple, OL_addCol())
-            .def("multRow", &MatrixInt::multRow)
-            .def("multCol", &MatrixInt::multCol)
-            .def("det", &MatrixInt::det)
-            .def("divRowExact", &MatrixInt::divRowExact)
-            .def("divColExact", &MatrixInt::divColExact)
-            .def("gcdRow", &MatrixInt::gcdRow)
-            .def("gcdCol", &MatrixInt::gcdCol)
-            .def("reduceRow", &MatrixInt::reduceRow)
-            .def("reduceCol", &MatrixInt::reduceCol)
-            .def("__mul__", multiply)
-            .def(regina::python::add_output())
-            .def(regina::python::add_eq_operators())
-        ;
-
-        s.attr("zero") = MatrixInt::zero;
-        s.attr("one") = MatrixInt::one;
-    }
-
-    scope().attr("NMatrixInt") = scope().attr("MatrixInt");
+    m.attr("NMatrixInt") = m.attr("MatrixInt");
 }
 

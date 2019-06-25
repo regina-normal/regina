@@ -30,82 +30,70 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "maths/rational.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::Integer;
 using regina::LargeInteger;
 using regina::Rational;
 
-namespace {
-    double doubleApprox_void(const Rational& r) {
-        return r.doubleApprox();
-    }
+void addRational(pybind11::module& m) {
+    // TODO: Should we use a by-value holder type?
+    auto c = pybind11::class_<Rational>(m, "Rational")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const Rational&>())
+        .def(pybind11::init<const Integer&>())
+        .def(pybind11::init<const LargeInteger&>())
+        .def(pybind11::init<long>())
+        .def(pybind11::init<const Integer&, const Integer&>())
+        .def(pybind11::init<const LargeInteger&, const LargeInteger&>())
+        .def(pybind11::init<long, unsigned long>())
+        .def("swap", &Rational::swap)
+        .def("numerator", &Rational::numerator)
+        .def("denominator", &Rational::denominator)
+        .def(pybind11::self * pybind11::self)
+        .def(pybind11::self / pybind11::self)
+        .def(pybind11::self + pybind11::self)
+        .def(pybind11::self - pybind11::self)
+        .def(- pybind11::self)
+        .def("inverse", &Rational::inverse)
+        .def("abs", &Rational::abs)
+        .def(pybind11::self += pybind11::self)
+        .def(pybind11::self -= pybind11::self)
+        .def(pybind11::self *= pybind11::self)
+        .def(pybind11::self /= pybind11::self)
+        .def("negate", &Rational::negate)
+        .def("invert", &Rational::invert)
+        .def(pybind11::self < pybind11::self)
+        .def(pybind11::self > pybind11::self)
+        .def(pybind11::self <= pybind11::self)
+        .def(pybind11::self >= pybind11::self)
+        .def("doubleApprox", [](const Rational& r) {
+            return r.doubleApprox();
+        })
+        .def("doubleApproxCheck", [](const Rational& r) {
+            bool inRange;
+            double ans = r.doubleApprox(&inRange);
+            return pybind11::make_tuple(ans, inRange);
+        })
+        .def("TeX", &Rational::TeX)
+        .def("writeTeX", [](const Rational& r) {
+            r.writeTeX(std::cout);
+        })
+        .def_readonly_static("zero", &Rational::zero)
+        .def_readonly_static("one", &Rational::one)
+        .def_readonly_static("infinity", &Rational::infinity)
+        .def_readonly_static("undefined", &Rational::undefined)
+    ;
+    regina::python::add_eq_operators(c);
+    regina::python::add_output_ostream(c, true /* __repr__ */);
 
-    boost::python::tuple doubleApprox_bool(const Rational& r) {
-        bool inRange;
-        double ans = r.doubleApprox(&inRange);
-        return boost::python::make_tuple(ans, inRange);
-    }
+    pybind11::implicitly_convertible<Integer, Rational>();
+    pybind11::implicitly_convertible<LargeInteger, Rational>();
+    pybind11::implicitly_convertible<long, Rational>();
 
-    void writeTeX_stdio(const Rational& r) {
-        r.writeTeX(std::cout);
-    }
-}
-
-void addRational() {
-    {
-        scope s = class_<Rational>("Rational")
-            .def(init<const Rational&>())
-            .def(init<const Integer&>())
-            .def(init<const LargeInteger&>())
-            .def(init<long>())
-            .def(init<const Integer&, const Integer&>())
-            .def(init<const LargeInteger&, const LargeInteger&>())
-            .def(init<long, unsigned long>())
-            .def("swap", &Rational::swap)
-            .def("numerator", &Rational::numerator)
-            .def("denominator", &Rational::denominator)
-            .def(self * self)
-            .def(self / self)
-            .def(self + self)
-            .def(self - self)
-            .def(- self)
-            .def("inverse", &Rational::inverse)
-            .def("abs", &Rational::abs)
-            .def(self += self)
-            .def(self -= self)
-            .def(self *= self)
-            .def(self /= self)
-            .def("negate", &Rational::negate)
-            .def("invert", &Rational::invert)
-            .def(self < self)
-            .def(self > self)
-            .def(self <= self)
-            .def(self >= self)
-            .def("doubleApprox", doubleApprox_void)
-            .def("doubleApproxCheck", doubleApprox_bool)
-            .def("TeX", &Rational::TeX)
-            .def("writeTeX", writeTeX_stdio)
-            .def(self_ns::str(self))
-            .def(self_ns::repr(self))
-            .def(regina::python::add_eq_operators())
-        ;
-
-        // Apparently there is no way in python to make a module attribute
-        // read-only.
-        s.attr("zero") = Rational::zero;
-        s.attr("one") = Rational::one;
-        s.attr("infinity") = Rational::infinity;
-        s.attr("undefined") = Rational::undefined;
-    }
-
-    boost::python::implicitly_convertible<Integer, Rational>();
-    boost::python::implicitly_convertible<LargeInteger, Rational>();
-    boost::python::implicitly_convertible<long, Rational>();
-
-    scope().attr("NRational") = scope().attr("Rational");
+    m.attr("NRational") = m.attr("Rational");
 }
 

@@ -30,25 +30,21 @@
  *                                                                        *
  **************************************************************************/
 
-// We need to see Python.h first to avoid a "portability fix" in pyport.h
-// that breaks boost.python on MacOSX.
-#include "Python.h"
-
 #include "maths/perm.h"
 #include "globalarray.h"
 
-void addGlobalArray() {
-    regina::python::GlobalArray<int>::wrapClass("GlobalArray_int");
-    regina::python::GlobalArray2D<int>::wrapClass("GlobalArray2D_int");
-    regina::python::GlobalArray3D<int>::wrapClass("GlobalArray3D_int");
-    regina::python::GlobalArray<unsigned>::wrapClass("GlobalArray_unsigned");
-    regina::python::GlobalArray<const char*>::wrapClass("GlobalArray_char_string");
-    regina::python::GlobalArray<regina::Perm<2>>::wrapClass("GlobalArray_Perm2");
-    regina::python::GlobalArray<regina::Perm<3>>::wrapClass("GlobalArray_Perm3");
-    regina::python::GlobalArray<regina::Perm<4>>::wrapClass("GlobalArray_Perm4");
-    regina::python::GlobalArray2D<regina::Perm<4>>::wrapClass("GlobalArray2D_Perm4");
-    regina::python::GlobalArray<regina::Perm<5>>::wrapClass("GlobalArray_Perm5");
-    regina::python::GlobalArray2D<regina::Perm<5>>::wrapClass("GlobalArray2D_Perm5");
-    regina::python::GlobalArray3D<regina::Perm<5>>::wrapClass("GlobalArray3D_Perm5");
+void addGlobalArray(pybind11::module& m) {
+    regina::python::GlobalArray<int>::wrapClass(m, "GlobalArray_int");
+    regina::python::GlobalArray2D<int>::wrapClass(m, "GlobalArray2D_int");
+    regina::python::GlobalArray3D<int>::wrapClass(m, "GlobalArray3D_int");
+    regina::python::GlobalArray<unsigned>::wrapClass(m, "GlobalArray_unsigned");
+    regina::python::GlobalArray<const char*>::wrapClass(m, "GlobalArray_char_string");
+    regina::python::GlobalArray<regina::Perm<2>>::wrapClass(m, "GlobalArray_Perm2");
+    regina::python::GlobalArray<regina::Perm<3>>::wrapClass(m, "GlobalArray_Perm3");
+    regina::python::GlobalArray<regina::Perm<4>>::wrapClass(m, "GlobalArray_Perm4");
+    regina::python::GlobalArray2D<regina::Perm<4>>::wrapClass(m, "GlobalArray2D_Perm4");
+    regina::python::GlobalArray<regina::Perm<5>>::wrapClass(m, "GlobalArray_Perm5");
+    regina::python::GlobalArray2D<regina::Perm<5>>::wrapClass(m, "GlobalArray2D_Perm5");
+    regina::python::GlobalArray3D<regina::Perm<5>>::wrapClass(m, "GlobalArray3D_Perm5");
 }
 

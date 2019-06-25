@@ -30,15 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-// We need to see Python.h first to avoid a "portability fix" in pyport.h
-// that breaks boost.python on MacOSX.
-#include "Python.h"
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "maths/perm.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::Perm;
 using regina::python::GlobalArray;
 
@@ -48,79 +45,65 @@ namespace {
     GlobalArray<Perm<2>> Perm2_S1_arr(Perm<2>::S1, 1);
 
     template <int k>
-    struct Perm2_contract : boost::python::def_visitor<Perm2_contract<k>> {
-        friend class boost::python::def_visitor_access;
-
-        template <typename Class>
-        void visit(Class& c) const {
-            c.def("contract", &Perm<2>::contract<k>);
-            c.def(Perm2_contract<k+1>());
+    struct Perm2_contract {
+        template <class C, typename... options>
+        static void add_bindings(pybind11::class_<C, options...>& c) {
+            c.def_static("contract", &Perm<2>::contract<k>);
+            Perm2_contract<k+1>::add_bindings(c);
         }
     };
 
     template <>
-    struct Perm2_contract<16> :
-            boost::python::def_visitor<Perm2_contract<16>> {
-        friend class boost::python::def_visitor_access;
-
-        template <typename Class>
-        void visit(Class& c) const {
-            c.def("contract", &Perm<2>::contract<16>);
+    struct Perm2_contract<16> {
+        template <class C, typename... options>
+        static void add_bindings(pybind11::class_<C, options...>& c) {
+            c.def_static("contract", &Perm<2>::contract<16>);
         }
     };
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_rand, Perm<2>::rand, 0, 1);
 }
 
-void addPerm2() {
-    {
-        scope s = class_<Perm<2>>("Perm2")
-            .def(init<int, int>())
-            .def(init<const Perm<2>&>())
-            .def("permCode", &Perm<2>::permCode)
-            .def("setPermCode", &Perm<2>::setPermCode)
-            .def("fromPermCode", &Perm<2>::fromPermCode)
-            .def("isPermCode", &Perm<2>::isPermCode)
-            .def(self * self)
-            .def("inverse", &Perm<2>::inverse)
-            .def("reverse", &Perm<2>::reverse)
-            .def("sign", &Perm<2>::sign)
-            .def("__getitem__", &Perm<2>::operator[])
-            .def("preImageOf", &Perm<2>::preImageOf)
-            .def("compareWith", &Perm<2>::compareWith)
-            .def("isIdentity", &Perm<2>::isIdentity)
-            .def("atIndex", &Perm<2>::atIndex)
-            .def("index", &Perm<2>::index)
-            .def("rand", &Perm<2>::rand, OL_rand())
-            .def("trunc", &Perm<2>::trunc)
-            .def("clear", &Perm<2>::clear)
-            .def("S2Index", &Perm<2>::S2Index)
-            .def("orderedS2Index", &Perm<2>::orderedS2Index)
-            .def("orderedSnIndex", &Perm<2>::orderedS2Index)
-            .def(Perm2_contract<3>())
-            .def("__repr__", &Perm<2>::str)
-            .def(regina::python::add_output_basic())
-            .def(regina::python::add_eq_operators())
-            .staticmethod("fromPermCode")
-            .staticmethod("isPermCode")
-            .staticmethod("atIndex")
-            .staticmethod("rand")
-            .staticmethod("contract")
-        ;
+void addPerm2(pybind11::module& m) {
+    // TODO: Should we use a by-value holder type?
+    auto c = pybind11::class_<Perm<2>>(m, "Perm2")
+        .def(pybind11::init<>())
+        .def(pybind11::init<int, int>())
+        .def(pybind11::init<const Perm<2>&>())
+        .def("permCode", &Perm<2>::permCode)
+        .def("setPermCode", &Perm<2>::setPermCode)
+        .def_static("fromPermCode", &Perm<2>::fromPermCode)
+        .def_static("isPermCode", &Perm<2>::isPermCode)
+        .def(pybind11::self * pybind11::self)
+        .def("inverse", &Perm<2>::inverse)
+        .def("reverse", &Perm<2>::reverse)
+        .def("sign", &Perm<2>::sign)
+        .def("__getitem__", &Perm<2>::operator[])
+        .def("preImageOf", &Perm<2>::preImageOf)
+        .def("compareWith", &Perm<2>::compareWith)
+        .def("isIdentity", &Perm<2>::isIdentity)
+        .def_static("atIndex", &Perm<2>::atIndex)
+        .def("index", &Perm<2>::index)
+        .def_static("rand", &Perm<2>::rand,
+            pybind11::arg("even") = false)
+        .def("trunc", &Perm<2>::trunc)
+        .def("clear", &Perm<2>::clear)
+        .def("S2Index", &Perm<2>::S2Index)
+        .def("orderedS2Index", &Perm<2>::orderedS2Index)
+        .def("orderedSnIndex", &Perm<2>::orderedS2Index)
+        .def_readonly_static("nPerms", &Perm<2>::nPerms)
+        .def_readonly_static("nPerms_1", &Perm<2>::nPerms_1)
+        .def_readonly_static("S2", &Perm2_S2_arr)
+        .def_readonly_static("Sn", &Perm2_S2_arr)
+        .def_readonly_static("orderedS2", &Perm2_S2_arr)
+        .def_readonly_static("orderedSn", &Perm2_S2_arr)
+        .def_readonly_static("invS2", &Perm2_invS2_arr)
+        .def_readonly_static("invSn", &Perm2_invS2_arr)
+        .def_readonly_static("S1", &Perm2_S1_arr)
+        .def_readonly_static("Sn_1", &Perm2_S1_arr)
+    ;
+    Perm2_contract<3>::add_bindings(c);
+    regina::python::add_output_basic(c, true /* __repr__ */);
+    regina::python::add_eq_operators(c);
 
-        s.attr("nPerms") = Perm<2>::nPerms;
-        s.attr("nPerms_1") = Perm<2>::nPerms_1;
-
-        s.attr("S2") = &Perm2_S2_arr;
-        s.attr("Sn") = &Perm2_S2_arr;
-        s.attr("orderedS2") = &Perm2_S2_arr;
-        s.attr("orderedSn") = &Perm2_S2_arr;
-        s.attr("invS2") = &Perm2_invS2_arr;
-        s.attr("invSn") = &Perm2_invS2_arr;
-        s.attr("S1") = &Perm2_S1_arr;
-        s.attr("Sn_1") = &Perm2_S1_arr;
-    }
-
-    scope().attr("NPerm2") = scope().attr("Perm2");
+    m.attr("NPerm2") = m.attr("Perm2");
 }
 

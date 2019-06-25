@@ -30,16 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "maths/numbertheory.h"
 
-using namespace boost::python;
-
-void addNumberTheory() {
-    def("reducedMod", regina::reducedMod);
-    def("gcd", regina::gcd);
-    def("gcdWithCoeffs", regina::gcdWithCoeffs);
-    def("lcm", regina::lcm);
-    def("modularInverse", regina::modularInverse);
+void addNumberTheory(pybind11::module& m) {
+    m.def("reducedMod", regina::reducedMod);
+    m.def("gcd", regina::gcd);
+    m.def("gcdWithCoeffs", regina::gcdWithCoeffs);
+    m.def("lcm", regina::lcm);
+    m.def("modularInverse", regina::modularInverse);
 }
 

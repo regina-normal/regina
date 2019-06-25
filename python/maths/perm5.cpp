@@ -30,15 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-// We need to see Python.h first to avoid a "portability fix" in pyport.h
-// that breaks boost.python on MacOSX.
-#include "Python.h"
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "maths/perm.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::Perm;
 using regina::python::GlobalArray;
 
@@ -53,93 +50,78 @@ namespace {
     GlobalArray<Perm<5>> Perm5_S2_arr(Perm<5>::S2, 2);
 
     template <int k>
-    struct Perm5_contract : boost::python::def_visitor<Perm5_contract<k>> {
-        friend class boost::python::def_visitor_access;
-
-        template <typename Class>
-        void visit(Class& c) const {
-            c.def("contract", &Perm<5>::contract<k>);
-            c.def(Perm5_contract<k+1>());
+    struct Perm5_contract {
+        template <class C, typename... options>
+        static void add_bindings(pybind11::class_<C, options...>& c) {
+            c.def_static("contract", &Perm<5>::contract<k>);
+            Perm5_contract<k+1>::add_bindings(c);
         }
     };
 
     template <>
-    struct Perm5_contract<16> :
-            boost::python::def_visitor<Perm5_contract<16>> {
-        friend class boost::python::def_visitor_access;
-
-        template <typename Class>
-        void visit(Class& c) const {
-            c.def("contract", &Perm<5>::contract<16>);
+    struct Perm5_contract<16> {
+        template <class C, typename... options>
+        static void add_bindings(pybind11::class_<C, options...>& c) {
+            c.def_static("contract", &Perm<5>::contract<16>);
         }
     };
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_rand, Perm<5>::rand, 0, 1);
 }
 
-void addPerm5() {
-    {
-        scope s = class_<Perm<5>>("Perm5")
-            .def(init<int, int>())
-            .def(init<int, int, int, int, int>())
-            .def(init<int, int, int, int, int, int, int, int, int, int>())
-            .def(init<const Perm<5>&>())
-            .def("permCode", &Perm<5>::permCode)
-            .def("setPermCode", &Perm<5>::setPermCode)
-            .def("fromPermCode", &Perm<5>::fromPermCode)
-            .def("isPermCode", &Perm<5>::isPermCode)
-            .def(self * self)
-            .def("inverse", &Perm<5>::inverse)
-            .def("reverse", &Perm<5>::reverse)
-            .def("sign", &Perm<5>::sign)
-            .def("__getitem__", &Perm<5>::operator[])
-            .def("preImageOf", &Perm<5>::preImageOf)
-            .def("compareWith", &Perm<5>::compareWith)
-            .def("isIdentity", &Perm<5>::isIdentity)
-            .def("atIndex", &Perm<5>::atIndex)
-            .def("index", &Perm<5>::index)
-            .def("rand", &Perm<5>::rand, OL_rand())
-            .def("trunc", &Perm<5>::trunc)
-            .def("trunc2", &Perm<5>::trunc2)
-            .def("trunc3", &Perm<5>::trunc3)
-            .def("trunc4", &Perm<5>::trunc4)
-            .def("clear", &Perm<5>::clear)
-            .def("S5Index", &Perm<5>::S5Index)
-            .def("orderedS5Index", &Perm<5>::orderedS5Index)
-            .def("orderedSnIndex", &Perm<5>::orderedS5Index)
-            .def("extend", &Perm<5>::extend<2>)
-            .def("extend", &Perm<5>::extend<3>)
-            .def("extend", &Perm<5>::extend<4>)
-            .def(Perm5_contract<6>())
-            .def("__repr__", &Perm<5>::str)
-            .def(regina::python::add_output_basic())
-            .def(regina::python::add_eq_operators())
-            .staticmethod("fromPermCode")
-            .staticmethod("isPermCode")
-            .staticmethod("atIndex")
-            .staticmethod("rand")
-            .staticmethod("extend")
-            .staticmethod("contract")
-        ;
+void addPerm5(pybind11::module& m) {
+    // TODO: Should we use a by-value holder type?
+    auto c = pybind11::class_<Perm<5>>(m, "Perm5")
+        .def(pybind11::init<>())
+        .def(pybind11::init<int, int>())
+        .def(pybind11::init<int, int, int, int, int>())
+        .def(pybind11::init<int, int, int, int, int, int, int, int, int, int>())
+        .def(pybind11::init<const Perm<5>&>())
+        .def("permCode", &Perm<5>::permCode)
+        .def("setPermCode", &Perm<5>::setPermCode)
+        .def_static("fromPermCode", &Perm<5>::fromPermCode)
+        .def_static("isPermCode", &Perm<5>::isPermCode)
+        .def(pybind11::self * pybind11::self)
+        .def("inverse", &Perm<5>::inverse)
+        .def("reverse", &Perm<5>::reverse)
+        .def("sign", &Perm<5>::sign)
+        .def("__getitem__", &Perm<5>::operator[])
+        .def("preImageOf", &Perm<5>::preImageOf)
+        .def("compareWith", &Perm<5>::compareWith)
+        .def("isIdentity", &Perm<5>::isIdentity)
+        .def_static("atIndex", &Perm<5>::atIndex)
+        .def("index", &Perm<5>::index)
+        .def_static("rand", &Perm<5>::rand,
+            pybind11::arg("even") = false)
+        .def("trunc", &Perm<5>::trunc)
+        .def("trunc2", &Perm<5>::trunc2)
+        .def("trunc3", &Perm<5>::trunc3)
+        .def("trunc4", &Perm<5>::trunc4)
+        .def("clear", &Perm<5>::clear)
+        .def("S5Index", &Perm<5>::S5Index)
+        .def("orderedS5Index", &Perm<5>::orderedS5Index)
+        .def("orderedSnIndex", &Perm<5>::orderedS5Index)
+        .def_static("extend", &Perm<5>::extend<2>)
+        .def_static("extend", &Perm<5>::extend<3>)
+        .def_static("extend", &Perm<5>::extend<4>)
+        .def_readonly_static("imageBits", &Perm<5>::imageBits)
+        .def_readonly_static("nPerms", &Perm<5>::nPerms)
+        .def_readonly_static("nPerms_1", &Perm<5>::nPerms_1)
+        .def_readonly_static("S5", &Perm5_S5_arr)
+        .def_readonly_static("Sn", &Perm5_S5_arr)
+        .def_readonly_static("orderedS5", &Perm5_orderedS5_arr)
+        .def_readonly_static("orderedSn", &Perm5_orderedS5_arr)
+        .def_readonly_static("invS5", &Perm5_invS5_arr)
+        .def_readonly_static("invSn", &Perm5_invS5_arr)
+        .def_readonly_static("S4", &Perm5_S4_arr)
+        .def_readonly_static("Sn_1", &Perm5_S4_arr)
+        .def_readonly_static("orderedS4", &Perm5_orderedS4_arr)
+        .def_readonly_static("S3", &Perm5_S3_arr)
+        .def_readonly_static("orderedS3", &Perm5_orderedS3_arr)
+        .def_readonly_static("S2", &Perm5_S2_arr)
+    ;
+    Perm5_contract<6>::add_bindings(c);
+    regina::python::add_output_basic(c, true /* __repr__ */);
+    regina::python::add_eq_operators(c);
 
-        s.attr("imageBits") = Perm<5>::imageBits;
-        s.attr("nPerms") = Perm<5>::nPerms;
-        s.attr("nPerms_1") = Perm<5>::nPerms_1;
-
-        s.attr("S5") = &Perm5_S5_arr;
-        s.attr("Sn") = &Perm5_S5_arr;
-        s.attr("orderedS5") = &Perm5_orderedS5_arr;
-        s.attr("orderedSn") = &Perm5_orderedS5_arr;
-        s.attr("invS5") = &Perm5_invS5_arr;
-        s.attr("invSn") = &Perm5_invS5_arr;
-        s.attr("S4") = &Perm5_S4_arr;
-        s.attr("Sn_1") = &Perm5_S4_arr;
-        s.attr("orderedS4") = &Perm5_orderedS4_arr;
-        s.attr("S3") = &Perm5_S3_arr;
-        s.attr("orderedS3") = &Perm5_orderedS3_arr;
-        s.attr("S2") = &Perm5_S2_arr;
-    }
-
-    scope().attr("NPerm5") = scope().attr("Perm5");
+    m.attr("NPerm5") = m.attr("Perm5");
 }
 
