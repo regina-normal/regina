@@ -30,128 +30,39 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
+#include "../pybind11/stl.h"
 #include "algebra/markedabeliangroup.h"
 #include "maths/matrix.h"
-#include <boost/python/detail/api_placeholder.hpp> // For len().
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::HomMarkedAbelianGroup;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::Integer;
 
-namespace {
-    unsigned long (MarkedAbelianGroup::*torsionRank_large)(
-        const regina::Integer&) const =
-        &MarkedAbelianGroup::torsionRank;
-    unsigned long (MarkedAbelianGroup::*torsionRank_long)(unsigned long)
-        const = &MarkedAbelianGroup::torsionRank;
-
-    boost::python::list freeRep_list(
-            const MarkedAbelianGroup& g, unsigned long index) {
-        boost::python::list ans;
-
-        std::vector<regina::Integer> rep = g.freeRep(index);
-        for (std::vector<regina::Integer>::const_iterator
-                it = rep.begin(); it != rep.end(); ++it) {
-            ans.append(*it);
-        }
-
-        return ans;
-    }
-
-    boost::python::list torsionRep_list(
-            const MarkedAbelianGroup& g, unsigned long index) {
-        boost::python::list ans;
-
-        std::vector<regina::Integer> rep = g.torsionRep(index);
-        for (std::vector<regina::Integer>::const_iterator
-                it = rep.begin(); it != rep.end(); ++it) {
-            ans.append(*it);
-        }
-
-        return ans;
-    }
-
-    boost::python::list snfRep_list_list(
-            const MarkedAbelianGroup& g, boost::python::list element) {
-        unsigned long needLen = g.M().columns();
-
-        if (boost::python::len(element) != needLen) {
-            PyErr_SetString(PyExc_IndexError,
-                "The element vector does not contain the expected "
-                "number of elements.");
-            boost::python::throw_error_already_set();
-        }
-
-        std::vector<regina::Integer> eltVector;
-
-        for (unsigned long i = 0; i < needLen; ++i) {
-            // Accept any type that we know how to convert to a large
-            // integer.
-            extract<regina::Integer&> x_large(element[i]);
-            if (x_large.check()) {
-                eltVector.push_back(x_large());
-                continue;
-            }
-
-            extract<long> x_long(element[i]);
-            if (x_long.check()) {
-                eltVector.push_back(x_long());
-                continue;
-            }
-
-            extract<const char*> x_str(element[i]);
-            if (x_str.check()) {
-                eltVector.push_back(x_str());
-                continue;
-            }
-
-            // Throw an exception.
-            x_large();
-        }
-
-        std::vector<regina::Integer> rep = g.snfRep(eltVector);
-
-        boost::python::list ans;
-        for (std::vector<regina::Integer>::const_iterator
-                it = rep.begin(); it != rep.end(); ++it) {
-            ans.append(*it);
-        }
-
-        return ans;
-    }
-
-    void writeReducedMatrix_stdout(const HomMarkedAbelianGroup& h) {
-        h.writeReducedMatrix(std::cout);
-    }
-
-    std::unique_ptr<HomMarkedAbelianGroup> multiplyHom(
-            const HomMarkedAbelianGroup& h1,
-            const HomMarkedAbelianGroup& h2) {
-        return h1 * h2;
-    }
-}
-
-void addMarkedAbelianGroup() {
-    class_<MarkedAbelianGroup, std::auto_ptr<MarkedAbelianGroup>,
-            boost::noncopyable> ( "MarkedAbelianGroup",
-            init<const MatrixInt&, const MatrixInt&>())
-        .def(init<const MarkedAbelianGroup&>())
-        .def(init<const MatrixInt&, const MatrixInt&, const Integer&>())
-        .def(init<unsigned long, const Integer&>())
+void addMarkedAbelianGroup(pybind11::module& m) {
+    auto c1 = pybind11::class_<MarkedAbelianGroup>(m, "MarkedAbelianGroup")
+        .def(pybind11::init<const MatrixInt&, const MatrixInt&>())
+        .def(pybind11::init<const MarkedAbelianGroup&>())
+        .def(pybind11::init<const MatrixInt&, const MatrixInt&,
+            const Integer&>())
+        .def(pybind11::init<unsigned long, const Integer&>())
         .def("isChainComplex", &MarkedAbelianGroup::isChainComplex)
         .def("rank", &MarkedAbelianGroup::rank)
-        .def("torsionRank", torsionRank_large)
-        .def("torsionRank", torsionRank_long)
+        .def("torsionRank",
+            (unsigned long (MarkedAbelianGroup::*)(const regina::Integer&)
+                const)
+            &MarkedAbelianGroup::torsionRank)
+        .def("torsionRank",
+            (unsigned long (MarkedAbelianGroup::*)(unsigned long) const)
+            &MarkedAbelianGroup::torsionRank)
         .def("minNumberOfGenerators",
             &MarkedAbelianGroup::minNumberOfGenerators)
         .def("countInvariantFactors",
             &MarkedAbelianGroup::countInvariantFactors)
-        .def("invariantFactor", &MarkedAbelianGroup::invariantFactor,
-            return_value_policy<return_by_value>())
+        .def("invariantFactor", &MarkedAbelianGroup::invariantFactor)
         .def("isTrivial", &MarkedAbelianGroup::isTrivial)
         .def("isZ", &MarkedAbelianGroup::isZ)
         .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo)
@@ -159,30 +70,29 @@ void addMarkedAbelianGroup() {
         // TODO: ccRep, ccRep, cycleProjection, cycleProjection
         // TODO: isCycle, boundaryMap, isBoundary, writeAsBoundary
         // TODO: cycleGen
-        .def("freeRep", freeRep_list)
-        .def("torsionRep", torsionRep_list)
-        .def("snfRep", snfRep_list_list)
+        .def("freeRep", &MarkedAbelianGroup::freeRep)
+        .def("torsionRep", &MarkedAbelianGroup::torsionRep)
+        .def("snfRep", &MarkedAbelianGroup::snfRep)
         .def("rankCC", &MarkedAbelianGroup::rankCC)
         .def("minNumberCycleGens", &MarkedAbelianGroup::minNumberCycleGens)
         .def("M", &MarkedAbelianGroup::M,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("N", &MarkedAbelianGroup::N,
-            return_internal_reference<>())
-        .def("coefficients", &MarkedAbelianGroup::coefficients,
-            return_value_policy<return_by_value>())
+            pybind11::return_value_policy::reference_internal)
+        .def("coefficients", &MarkedAbelianGroup::coefficients)
         .def("torsionSubgroup", &MarkedAbelianGroup::torsionSubgroup)
         .def("torsionInclusion", &MarkedAbelianGroup::torsionInclusion)
         .def("utf8", &MarkedAbelianGroup::utf8)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
-    scope().attr("NMarkedAbelianGroup") = scope().attr("MarkedAbelianGroup");
+    regina::python::add_output(c1);
+    regina::python::add_eq_operators(c1);
+    m.attr("NMarkedAbelianGroup") = m.attr("MarkedAbelianGroup");
 
-    class_<HomMarkedAbelianGroup, std::auto_ptr<HomMarkedAbelianGroup>,
-            boost::noncopyable>( "HomMarkedAbelianGroup",
-            init<const MarkedAbelianGroup&, const MarkedAbelianGroup&,
-                const MatrixInt&>())
-        .def(init<const HomMarkedAbelianGroup&>())
+    auto c2 = pybind11::class_<HomMarkedAbelianGroup>(m,
+            "HomMarkedAbelianGroup")
+        .def(pybind11::init<const MarkedAbelianGroup&,
+                const MarkedAbelianGroup&, const MatrixInt&>())
+        .def(pybind11::init<const HomMarkedAbelianGroup&>())
         .def("isChainMap", &HomMarkedAbelianGroup::isChainMap)
         .def("isCycleMap", &HomMarkedAbelianGroup::isCycleMap)
         .def("isEpic", &HomMarkedAbelianGroup::isEpic)
@@ -191,27 +101,29 @@ void addMarkedAbelianGroup() {
         .def("isIdentity", &HomMarkedAbelianGroup::isIdentity)
         .def("isZero", &HomMarkedAbelianGroup::isZero)
         .def("kernel", &HomMarkedAbelianGroup::kernel,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("cokernel", &HomMarkedAbelianGroup::cokernel,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("image", &HomMarkedAbelianGroup::image,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("domain", &HomMarkedAbelianGroup::domain,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("range", &HomMarkedAbelianGroup::range,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("definingMatrix", &HomMarkedAbelianGroup::definingMatrix,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("reducedMatrix", &HomMarkedAbelianGroup::reducedMatrix,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("torsionSubgroup", &HomMarkedAbelianGroup::torsionSubgroup)
-        .def("writeReducedMatrix", writeReducedMatrix_stdout)
+        .def("writeReducedMatrix", [](const HomMarkedAbelianGroup& h) {
+            h.writeReducedMatrix(std::cout);
+        })
         // TODO: evalCC, evalSNF
         .def("inverseHom", &HomMarkedAbelianGroup::inverseHom)
-        .def("__mul__", multiplyHom)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
+        .def(pybind11::self * pybind11::self) /* returns std::unique_ptr */
     ;
-    scope().attr("NHomMarkedAbelianGroup") = scope().attr("HomMarkedAbelianGroup");
+    regina::python::add_output(c2);
+    regina::python::add_eq_operators(c2);
+    m.attr("NHomMarkedAbelianGroup") = m.attr("HomMarkedAbelianGroup");
 }
 

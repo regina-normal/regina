@@ -39,6 +39,7 @@
 #define __HELPERS_H
 #endif
 
+#include "pybind11/pybind11.h"
 #include "helpers/equality.h"
 #include "helpers/output.h"
 

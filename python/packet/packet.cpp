@@ -30,14 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "packet/packet.h"
-#include "../safeheldtype.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
 using namespace regina::python;
 using regina::ChildIterator;
 using regina::Packet;
@@ -46,115 +44,50 @@ using regina::PacketDescendants;
 using regina::SubtreeIterator;
 
 namespace {
-    Packet* (Packet::*firstTreePacket_non_const)(const std::string&) =
-        &Packet::firstTreePacket;
-    Packet* (Packet::*nextTreePacket_non_const)(const std::string&) =
-        &Packet::nextTreePacket;
-    Packet* (Packet::*findPacketLabel_non_const)(const std::string&) =
-        &Packet::findPacketLabel;
-    bool (Packet::*save_filename)(const char*, bool) const = &Packet::save;
-    Packet* (*open_filename)(const char*) = &regina::open;
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_moveUp,
-        Packet::moveUp, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_moveDown,
-        Packet::moveDown, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_nextTreePacket,
-        Packet::nextTreePacket, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_clone,
-        Packet::clone, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_save,
-        Packet::save, 1, 2);
-
-    void reparent_check(Packet& child, Packet* newParent,
-            bool first = false) {
-        if (child.parent())
-            child.reparent(newParent, first);
-        else {
-            PyErr_SetString(PyExc_AssertionError,
-                "reparent() cannot be used on packets with no parent");
-            ::boost::python::throw_error_already_set();
-        }
-    }
-
-    void writeXMLFile_stdout(const Packet& p) {
-        p.writeXMLFile(std::cout);
-    }
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_reparent, reparent_check, 2, 3);
-
-    boost::python::list tags_list(const Packet* p) {
-        boost::python::list ans;
-        for (auto& t : p->tags())
-            ans.append(t);
-        return ans;
-    }
-
     // Support for iterables and iterators:
-    boost::python::object returnSelf(boost::python::object const& o) {
-        return o;
-    }
-    regina::ChildIterator iter_PacketChildren(regina::PacketChildren c) {
-        return c.begin();
-    }
-    regina::SubtreeIterator iter_PacketDescendants(
-            regina::PacketDescendants d) {
-        return d.begin();
-    }
-    Packet* next_ChildIterator(regina::ChildIterator& it) {
-        if (*it) {
+    template <typename Iterator>
+    Packet* next(Iterator& it) {
+        if (*it)
             return *it++;
-        } else {
-            PyErr_SetString(PyExc_StopIteration, "No more children.");
-            boost::python::throw_error_already_set();
-            return nullptr; // Silence no-return-value compiler warning.
-        }
-    }
-    Packet* next_SubtreeIterator(regina::SubtreeIterator& it) {
-        if (*it) {
-            return *it++;
-        } else {
-            PyErr_SetString(PyExc_StopIteration, "No more descendants.");
-            boost::python::throw_error_already_set();
-            return nullptr; // Silence no-return-value compiler warning.
-        }
+        else
+            throw pybind11::stop_iteration();
     }
 }
 
-void addPacket() {
-    class_<regina::PacketChildren>("PacketChildren", no_init)
-        .def("__iter__", iter_PacketChildren)
-        .def(regina::python::add_eq_operators())
+void addPacket(pybind11::module& m) {
+    auto c1 = pybind11::class_<regina::PacketChildren>(m, "PacketChildren")
+        .def("__iter__", [](regina::PacketChildren c) {
+            return c.begin();
+        })
         ;
+    regina::python::add_eq_operators(c1);
 
-    class_<regina::PacketDescendants>("PacketDescendants", no_init)
-        .def("__iter__", iter_PacketDescendants)
-        .def(regina::python::add_eq_operators())
+    auto c2 = pybind11::class_<regina::PacketDescendants>(m, "PacketDescendants")
+        .def("__iter__", [](regina::PacketDescendants d) {
+            return d.begin();
+        })
         ;
+    regina::python::add_eq_operators(c2);
 
-    class_<regina::ChildIterator>("ChildIterator", no_init)
-        .def("next", next_ChildIterator,
-            return_value_policy<to_held_type<> >()) // for python 2
-        .def("__next__", next_ChildIterator,
-            return_value_policy<to_held_type<> >()) // for python 3
-        .def(regina::python::add_eq_operators())
+    auto c3 = pybind11::class_<regina::ChildIterator>(m, "ChildIterator")
+        .def("next", next<ChildIterator>) // for python 2
+        .def("__next__", next<ChildIterator>) // for python 3
         ;
+    regina::python::add_eq_operators(c3);
 
-    class_<regina::SubtreeIterator>("SubtreeIterator", no_init)
-        .def("__iter__", returnSelf)
-        .def("next", next_SubtreeIterator,
-            return_value_policy<to_held_type<> >()) // for python 2
-        .def("__next__", next_SubtreeIterator,
-            return_value_policy<to_held_type<> >()) // for python 3
-        .def(regina::python::add_eq_operators())
+    auto c4 = pybind11::class_<regina::SubtreeIterator>(m, "SubtreeIterator")
+        .def("__iter__", [](pybind11::object const& it) {
+            return it;
+        })
+        .def("next", next<SubtreeIterator>) // for python 2
+        .def("__next__", next<SubtreeIterator>) // for python 3
         ;
+    regina::python::add_eq_operators(c4);
 
-    class_<Packet, boost::noncopyable,
-            SafeHeldType<Packet> >("Packet", no_init)
+    auto c = pybind11::class_<Packet, SafeHeldType<Packet>>(m, "Packet")
         .def("type", &Packet::type)
         .def("typeName", &Packet::typeName)
-        .def("label", &Packet::label,
-            return_value_policy<return_by_value>())
+        .def("label", &Packet::label)
         .def("humanLabel", &Packet::humanLabel)
         .def("adornedLabel", &Packet::adornedLabel)
         .def("setLabel", &Packet::setLabel)
@@ -164,19 +97,13 @@ void addPacket() {
         .def("addTag", &Packet::addTag)
         .def("removeTag", &Packet::removeTag)
         .def("removeAllTags", &Packet::removeAllTags)
-        .def("tags", tags_list)
-        .def("parent", &Packet::parent,
-            return_value_policy<to_held_type<> >())
-        .def("firstChild", &Packet::firstChild,
-            return_value_policy<to_held_type<> >())
-        .def("lastChild", &Packet::lastChild,
-            return_value_policy<to_held_type<> >())
-        .def("nextSibling", &Packet::nextSibling,
-            return_value_policy<to_held_type<> >())
-        .def("prevSibling", &Packet::prevSibling,
-            return_value_policy<to_held_type<> >())
-        .def("root", &Packet::root,
-            return_value_policy<to_held_type<> >())
+        .def("tags", &Packet::tags) /* returns python set */
+        .def("parent", &Packet::parent)
+        .def("firstChild", &Packet::firstChild)
+        .def("lastChild", &Packet::lastChild)
+        .def("nextSibling", &Packet::nextSibling)
+        .def("prevSibling", &Packet::prevSibling)
+        .def("root", &Packet::root)
         .def("hasOwner", &Packet::hasOwner)
         .def("levelsDownTo", &Packet::levelsDownTo)
         .def("levelsUpTo", &Packet::levelsUpTo)
@@ -188,11 +115,19 @@ void addPacket() {
         .def("insertChildLast", &Packet::insertChildLast)
         .def("insertChildAfter", &Packet::insertChildAfter)
         .def("makeOrphan", &Packet::makeOrphan)
-        .def("reparent", reparent_check, OL_reparent())
+        .def("reparent", [](Packet& child, Packet* newParent, bool first) {
+            if (child.parent())
+                child.reparent(newParent, first);
+            else
+                throw std::invalid_argument(
+                    "reparent() cannot be used on packets with no parent");
+        }, pybind11::arg(), pybind11::arg("first") = false)
         .def("transferChildren", &Packet::transferChildren)
         .def("swapWithNextSibling", &Packet::swapWithNextSibling)
-        .def("moveUp", &Packet::moveUp, OL_moveUp())
-        .def("moveDown", &Packet::moveDown, OL_moveDown())
+        .def("moveUp", &Packet::moveUp,
+            pybind11::arg("steps") = 1)
+        .def("moveDown", &Packet::moveDown,
+            pybind11::arg("steps") = 1)
         .def("moveToFirst", &Packet::moveToFirst)
         .def("moveToLast", &Packet::moveToLast)
         .def("sortChildren", &Packet::sortChildren)
@@ -200,27 +135,31 @@ void addPacket() {
         .def("children", &Packet::children)
         .def("descendants", &Packet::descendants)
         .def("subtree", &Packet::begin)
-        .def("nextTreePacket", nextTreePacket_non_const, OL_nextTreePacket()
-            [return_value_policy<to_held_type<> >()])
-        .def("firstTreePacket", firstTreePacket_non_const,
-            return_value_policy<to_held_type<> >())
-        .def("findPacketLabel", findPacketLabel_non_const,
-            return_value_policy<to_held_type<> >())
+        .def("nextTreePacket", (Packet* (Packet::*)())
+            &Packet::nextTreePacket)
+        .def("nextTreePacket", (Packet* (Packet::*)(const std::string&))
+            &Packet::nextTreePacket)
+        .def("firstTreePacket", (Packet* (Packet::*)(const std::string&))
+            &Packet::firstTreePacket)
+        .def("findPacketLabel", (Packet* (Packet::*)(const std::string&))
+            &Packet::findPacketLabel)
         .def("dependsOnParent", &Packet::dependsOnParent)
         .def("isPacketEditable", &Packet::isPacketEditable)
         .def("clone", &Packet::clone,
-            OL_clone()[return_value_policy<to_held_type<> >()])
-        .def("save", save_filename, OL_save())
-        .def("writeXMLFile", writeXMLFile_stdout)
+            pybind11::arg("cloneDescendants") = false,
+            pybind11::arg("end") = true)
+        .def("save", (bool (Packet::*)(const char*, bool) const) &Packet::save,
+            pybind11::arg(), pybind11::arg("compressed") = true)
+        .def("writeXMLFile", [](const Packet& p) {
+            p.writeXMLFile(std::cout);
+        })
         .def("internalID", &Packet::internalID)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    def("open", open_filename, return_value_policy<to_held_type<> >());
+    m.def("open", (Packet* (*)(const char*)) &regina::open);
 
-    FIX_REGINA_BOOST_CONVERTERS(Packet);
-
-    scope().attr("NPacket") = scope().attr("Packet");
+    m.attr("NPacket") = m.attr("Packet");
 }
 

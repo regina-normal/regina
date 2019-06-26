@@ -30,15 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "packet/packettype.h"
 
-using namespace boost::python;
-
-void addPacketType() {
-    scope global;
-
-    enum_<regina::PacketType>("PacketType")
+void addPacketType(pybind11::module& m) {
+    pybind11::enum_<regina::PacketType>(m, "PacketType")
         .value("PACKET_CONTAINER", regina::PACKET_CONTAINER)
         .value("PACKET_TEXT", regina::PACKET_TEXT)
         .value("PACKET_SCRIPT", regina::PACKET_SCRIPT)
@@ -71,39 +67,6 @@ void addPacketType() {
         .value("PACKET_TRIANGULATION14", regina::PACKET_TRIANGULATION14)
         .value("PACKET_TRIANGULATION15", regina::PACKET_TRIANGULATION15)
 #endif
-        ;
-
-    global.attr("PACKET_CONTAINER") = regina::PACKET_CONTAINER;
-    global.attr("PACKET_TEXT") = regina::PACKET_TEXT;
-    global.attr("PACKET_SCRIPT") = regina::PACKET_SCRIPT;
-    global.attr("PACKET_PDF") = regina::PACKET_PDF;
-    global.attr("PACKET_TRIANGULATION") = regina::PACKET_TRIANGULATION3;
-    global.attr("PACKET_ANGLESTRUCTURES") = regina::PACKET_ANGLESTRUCTURES;
-    global.attr("PACKET_ANGLESTRUCTURELIST") = regina::PACKET_ANGLESTRUCTURES;
-    global.attr("PACKET_NORMALSURFACES") = regina::PACKET_NORMALSURFACES;
-    global.attr("PACKET_NORMALSURFACELIST") = regina::PACKET_NORMALSURFACES;
-    global.attr("PACKET_DIM2TRIANGULATION") = regina::PACKET_TRIANGULATION2;
-    global.attr("PACKET_SURFACEFILTER") = regina::PACKET_SURFACEFILTER;
-    global.attr("PACKET_DIM4TRIANGULATION") = regina::PACKET_TRIANGULATION4;
-    global.attr("PACKET_NORMALHYPERSURFACES") = regina::PACKET_NORMALHYPERSURFACES;
-    global.attr("PACKET_NORMALHYPERSURFACELIST") = regina::PACKET_NORMALHYPERSURFACES;
-    global.attr("PACKET_SNAPPEATRIANGULATION") = regina::PACKET_SNAPPEATRIANGULATION;
-    global.attr("PACKET_LINK") = regina::PACKET_LINK;
-    global.attr("PACKET_TRIANGULATION2") = regina::PACKET_TRIANGULATION2;
-    global.attr("PACKET_TRIANGULATION3") = regina::PACKET_TRIANGULATION3;
-    global.attr("PACKET_TRIANGULATION4") = regina::PACKET_TRIANGULATION4;
-#ifndef REGINA_LOWDIMONLY
-    global.attr("PACKET_TRIANGULATION5") = regina::PACKET_TRIANGULATION5;
-    global.attr("PACKET_TRIANGULATION6") = regina::PACKET_TRIANGULATION6;
-    global.attr("PACKET_TRIANGULATION7") = regina::PACKET_TRIANGULATION7;
-    global.attr("PACKET_TRIANGULATION8") = regina::PACKET_TRIANGULATION8;
-    global.attr("PACKET_TRIANGULATION9") = regina::PACKET_TRIANGULATION9;
-    global.attr("PACKET_TRIANGULATION10") = regina::PACKET_TRIANGULATION10;
-    global.attr("PACKET_TRIANGULATION11") = regina::PACKET_TRIANGULATION11;
-    global.attr("PACKET_TRIANGULATION12") = regina::PACKET_TRIANGULATION12;
-    global.attr("PACKET_TRIANGULATION13") = regina::PACKET_TRIANGULATION13;
-    global.attr("PACKET_TRIANGULATION14") = regina::PACKET_TRIANGULATION14;
-    global.attr("PACKET_TRIANGULATION15") = regina::PACKET_TRIANGULATION15;
-#endif
+        .export_values();
 }
 

@@ -30,59 +30,43 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "packet/script.h"
-#include "../safeheldtype.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
 using namespace regina::python;
 using regina::Script;
 
-namespace {
-    regina::Packet* (Script::*variableValue_long)(size_t) const =
-        &Script::variableValue;
-    regina::Packet* (Script::*variableValue_string)(const std::string&)
-        const = &Script::variableValue;
-
-    void (Script::*removeVariable_long)(size_t) = &Script::removeVariable;
-    void (Script::*removeVariable_string)(const std::string&) =
-        &Script::removeVariable;
-}
-
-void addScript() {
-    class_<Script, bases<regina::Packet>,
-            SafeHeldType<Script>, boost::noncopyable>("Script", init<>())
-        .def("text", &Script::text,
-            return_value_policy<return_by_value>())
+void addScript(pybind11::module& m) {
+    pybind11::class_<Script, regina::Packet, SafeHeldType<Script>>(m, "Script")
+        .def(pybind11::init<>())
+        .def("text", &Script::text)
         .def("setText", &Script::setText)
         .def("append", &Script::append)
         .def("countVariables", &Script::countVariables)
-        .def("variableName", &Script::variableName,
-            return_value_policy<return_by_value>())
-        .def("variableValue", variableValue_long,
-            return_value_policy<to_held_type<>>())
-        .def("variableValue", variableValue_string,
-            return_value_policy<to_held_type<>>())
+        .def("variableName", &Script::variableName)
+        .def("variableValue", (regina::Packet* (Script::*)(size_t) const)
+            &Script::variableValue)
+        .def("variableValue",
+            (regina::Packet* (Script::*)(const std::string&) const)
+            &Script::variableValue)
         .def("variableIndex", &Script::variableIndex)
         .def("setVariableName", &Script::setVariableName)
         .def("setVariableValue", &Script::setVariableValue)
         .def("addVariable", &Script::addVariable)
-        .def("addVariableName", &Script::addVariableName,
-            return_value_policy<return_by_value>())
-        .def("removeVariable", removeVariable_long)
-        .def("removeVariable", removeVariable_string)
+        .def("addVariableName", &Script::addVariableName)
+        .def("removeVariable", (void (Script::*)(size_t))
+            &Script::removeVariable)
+        .def("removeVariable", (void (Script::*)(const std::string&))
+            &Script::removeVariable)
         .def("removeAllVariables", &Script::removeAllVariables)
-        .attr("typeID") = regina::PACKET_SCRIPT
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return Script::typeID;
+        })
     ;
 
-    implicitly_convertible<SafeHeldType<Script>,
-        SafeHeldType<regina::Packet> >();
-
-    FIX_REGINA_BOOST_CONVERTERS(Script);
-
-    scope().attr("NScript") = scope().attr("Script");
+    m.attr("NScript") = m.attr("Script");
 }
 

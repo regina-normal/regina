@@ -30,39 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "packet/text.h"
-#include "../safeheldtype.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
+using regina::python::SafeHeldType;
 using regina::Text;
 
-namespace {
-    void (Text::*setText_string)(const std::string&) = &Text::setText;
-    void (Text::*setText_chars)(const char*) = &Text::setText;
-}
-
-void addText() {
-    class_<Text, bases<regina::Packet>,
-            SafeHeldType<Text>, boost::noncopyable>("Text", init<>())
-        .def(init<const std::string&>())
-        .def(init<const char*>())
-        .def("text", &Text::text,
-            return_value_policy<return_by_value>())
-        .def("setText", setText_string)
-        .def("setText", setText_chars)
-        .attr("typeID") = regina::PACKET_TEXT
+void addText(pybind11::module& m) {
+    pybind11::class_<Text, regina::Packet, SafeHeldType<Text>>(m, "Text")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const std::string&>())
+        .def(pybind11::init<const char*>())
+        .def("text", &Text::text)
+        .def("setText", (void (Text::*)(const std::string&)) &Text::setText)
+        .def("setText", (void (Text::*)(const char*)) &Text::setText)
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return Text::typeID;
+        })
     ;
 
-    implicitly_convertible<SafeHeldType<Text>,
-        SafeHeldType<regina::Packet> >();
-
-    FIX_REGINA_BOOST_CONVERTERS(Text);
-
-    scope().attr("NText") = scope().attr("Text");
+    m.attr("NText") = m.attr("Text");
 }
 

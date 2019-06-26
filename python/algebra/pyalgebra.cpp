@@ -30,15 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-void addAbelianGroup();
-void addGroupPresentation();
-void addHomGroupPresentation();
-void addMarkedAbelianGroup();
+namespace pybind11 { class module; }
 
-void addAlgebraClasses() {
-    addAbelianGroup();
-    addGroupPresentation();
-    addHomGroupPresentation();
-    addMarkedAbelianGroup();
+void addAbelianGroup(pybind11::module& m);
+void addGroupPresentation(pybind11::module& m);
+void addHomGroupPresentation(pybind11::module& m);
+void addMarkedAbelianGroup(pybind11::module& m);
+
+void addAlgebraClasses(pybind11::module& m) {
+    addAbelianGroup(m);
+    addGroupPresentation(m);
+    addHomGroupPresentation(m);
+    addMarkedAbelianGroup(m);
 }
 

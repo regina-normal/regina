@@ -30,13 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-// Explicitly making Python.h the first included file here to make it work
-// with old versions of Mac OS X (see https://bugs.python.org/issue10910)
-#include "Python.h"
-
 #include "safeheldtype.h"
-
-#include <boost/python/object.hpp>
 
 #include <boost/version.hpp>
 #if BOOST_VERSION >= 105600
@@ -45,8 +39,6 @@
 #ifdef USE_BOOST_DEMANGLE
 #include <boost/core/demangle.hpp>
 #endif
-
-
 
 namespace regina {
 namespace python {
@@ -61,8 +53,8 @@ void raiseExpiredException(const std::type_info& info)
 
     const std::string msg =
         "Python reference to object of type " + typeName + " expired.";
-    
-    PyErr_SetString(PyExc_RuntimeError, msg.c_str());
+
+    throw std::runtime_error(msg);
 }
 
 } } // regina::python

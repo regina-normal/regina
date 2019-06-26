@@ -447,7 +447,7 @@ class REGINA_API Packet :
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * \ifacespython This routine returns a python list of strings.
+         * \ifacespython This routine returns a python set.
          *
          * @return the set of all tags associated with this packet.
          */

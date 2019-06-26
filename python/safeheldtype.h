@@ -39,27 +39,10 @@
 #define __SAFEHELDTYPE_H
 #endif
 
+#include "pybind11/pybind11.h"
 #include "utilities/safeptr.h"
-#include "Python.h"
 
 #include <typeinfo>
-#include <type_traits>
-
-// We also need to include boost/python/object.hpp, but this must come *after*
-// the declaration of SafeHeldType and friends.  Otherwise boost::get_pointer()
-// falls back to the implementation for SafePtr<T>, not the override for
-// SafeHeldType<T>.
-//
-// The extra include appears a little further down in this file.
-
-namespace boost {
-namespace python {
-
-template<class T> struct pointee;
-
-struct default_call_policies;
-
-} } // namespace boost::python
 
 namespace regina {
 namespace python {
@@ -78,6 +61,10 @@ public:
     T* get() const;
 };
 
+// A helper to raise a python exception indicating what type of object we tried
+// to dereference.
+void raiseExpiredException(const std::type_info&);
+
 } } // namespace regina::python
 
 namespace boost {
@@ -92,89 +79,13 @@ T* get_pointer(regina::python::SafeHeldType<T> const &ptr) {
     return ptr.get();
 }
 
-namespace python {
+} // namespace boost
 
-/**
- * Let boost::python infrastructure know.
- */
-template<class T> struct pointee<regina::python::SafeHeldType<T> > {
-    typedef T type;
-};
+// Inform pybind11 that this can be used as a holder type, and that it
+// is safe to construct multiple holders from the same T*.
+PYBIND11_DECLARE_HOLDER_TYPE(T, regina::python::SafeHeldType<T>, true);
 
-} } // namespace boost::python
-
-// All includes that use boost.python must appear *after* the declaration
-// of get_pointer(SafeHeldType const&).  See the discussion at the top of
-// this header.
-
-#include <boost/python/object.hpp>
-
-namespace regina {
-namespace python {
-
-/**
- * An implementation of boost::python's ResultConverter concept that takes a
- * raw pointer of an object derived from \c SafePointeeBase and casts it to the
- * HeldType before converting it to a PyObject using the Base result converter.
- *
- * \tparam HeldType e.g., a smart pointer to the class we try to wrap
- * \tparam T a raw pointer to the class we try to wrap
- * \tparam Base an existing result converter taking the HeldType
- */
-template<class HeldType, typename T, class Base>
-struct to_held_type_result_converter : Base {
-    PyObject* operator()(const T* t) const {
-        if (t == 0) {
-            // If we get a null-pointer, return None
-            ::boost::python::object pyNone;
-            return ::boost::python::incref(pyNone.ptr());
-        }
-        return Base()(HeldType(const_cast<T*>(t)));
-    }
-};
-
-/**
- * An implementation of boost::python's ResultConverterGenerator that uses the
- * \c to_held_type_result_converter.
- *
- * \tparam U the class we try to wrap
- * \tparam HeldType e.g., a smart pointer to that class
- * \tparam Base a call policy. This used to get a result converter which is
- * used by to_held_type_result_converter:
- * to_held_type_result_converter first converts a raw pointer to the
- * HeldType and then applies the Base's result converter to obtain a
- * PyObject.
- */
-template<template<class U> class HeldType = regina::python::SafeHeldType,
-         class Base = boost::python::default_call_policies>
-struct to_held_type {
-    // Result converter generator from Base
-    typedef typename Base::result_converter base_generator;
-    template<class T> struct apply {
-        // - T is a raw pointer to the class we try to wrap.
-
-        // The potentially const type of the class we try to wrap.
-        typedef typename boost::python::pointee<T>::type pointee_type;
-        // The non-const type of the class we trt to wrap.
-        typedef typename std::remove_const<pointee_type>::type
-            non_const_pointee_type;
-        // The type for holding that class
-        typedef HeldType<non_const_pointee_type> HeldTypeT;
-        // The result converter from the Base call policy.
-        typedef typename base_generator::template apply<HeldTypeT>::type
-            base_converter;
-        // And finally, our result converter.
-        typedef to_held_type_result_converter<
-                              HeldTypeT, non_const_pointee_type, base_converter>
-            type;
-    };
-};
-
-// A helper to raise a python exception indicating what type of object we tried
-// to dereference.
-void raiseExpiredException(const std::type_info&);
-
-} } // namespace regina::python
+// Inline implementations:
 
 namespace regina {
 namespace python {
@@ -192,7 +103,7 @@ inline SafeHeldType<T>::SafeHeldType(const SafeHeldType<Y> &other)
 template<class T>
 inline T* SafeHeldType<T>::get() const {
     T* t = regina::SafePtr<T>::get();
-    if (t == 0) {
+    if (t == nullptr) {
         raiseExpiredException(typeid(T));
     }
     return t;

@@ -75,6 +75,7 @@ Version 5.2  [ 29 September, 2017 ]
                   ChildIterator and SubtreeIterator to support this iteration.
                 + For Python only, Packet has an additional new member function
                   subtree() that also returns an iterable object.
+            - In python, tags() now returns a python set (not a python list).
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.
