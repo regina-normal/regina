@@ -34,7 +34,7 @@
 #include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
-// #include "../generic/facehelper.h"
+#include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
 using regina::Tetrahedron;
@@ -59,7 +59,7 @@ void addTetrahedron3(pybind11::module& m) {
         .def("triangulation", &Tetrahedron<3>::triangulation)
         .def("component", &Tetrahedron<3>::component,
             pybind11::return_value_policy::reference)
-        // .def("face", &regina::python::face<Tetrahedron<3>, 3, int>)
+        .def("face", &regina::python::face<Tetrahedron<3>, 3, int>)
         .def("vertex", &Tetrahedron<3>::vertex,
             pybind11::return_value_policy::reference)
         .def("edge",
@@ -70,7 +70,7 @@ void addTetrahedron3(pybind11::module& m) {
             pybind11::return_value_policy::reference)
         .def("triangle", &Tetrahedron<3>::triangle,
             pybind11::return_value_policy::reference)
-        // .def("faceMapping", &regina::python::faceMapping<Tetrahedron<3>, 3>)
+        .def("faceMapping", &regina::python::faceMapping<Tetrahedron<3>, 3>)
         .def("vertexMapping", &Tetrahedron<3>::vertexMapping)
         .def("edgeMapping", &Tetrahedron<3>::edgeMapping)
         .def("triangleMapping", &Tetrahedron<3>::triangleMapping)

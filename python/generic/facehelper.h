@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
 
@@ -45,10 +45,10 @@ namespace python {
  * for several types T.
  */
 template <class T, int dim, int subdim>
-boost::python::list faces_list(const T& t) {
-    boost::python::list ans;
+pybind11::object faces_list(const T& t) {
+    pybind11::list ans;
     for (auto f : t.template faces<subdim>())
-        ans.append(boost::python::ptr(f));
+        ans.append(pybind11::cast(f)); // Uses reference return value policy
     return ans;
 }
 
@@ -63,7 +63,10 @@ boost::python::list faces_list(const T& t) {
  *
  * Note that some of these C++ functions return different types depending on
  * the argument \a subdim; we resolve this by converting return values
- * to \a PyObject pointers here, instead of letting Boost.Python do it later.
+ * to python objects here, instead of letting pybind11 do it later.
+ *
+ * Recall that, when given a pointer, pybind11::cast() defaults to a return
+ * value policy of reference (which is what we want here).
  */
 template <class T, int dim, int subdim>
 struct FaceHelper {
@@ -76,23 +79,20 @@ struct FaceHelper {
     }
 
     template <typename Index>
-    static PyObject* faceFrom(const T& t, int subdimArg, Index f) {
+    static pybind11::object faceFrom(const T& t, int subdimArg, Index f) {
         // TODO: Make this work with return_internal_reference.
         // That is, ensure a lifespan dependency between t and the result.
-        if (subdimArg == subdim) {
-            boost::python::to_python_indirect<regina::Face<dim, subdim>&,
-                boost::python::detail::make_reference_holder> convert;
-            return convert(t.template face<subdim>(f));
-        }
+        if (subdimArg == subdim)
+            return pybind11::cast(t.template face<subdim>(f));
         return FaceHelper<T, dim, subdim - 1>::template faceFrom<Index>(
             t, subdimArg, f);
     }
 
-    static boost::python::list facesFrom(const T& t, int subdimArg) {
+    static pybind11::object facesFrom(const T& t, int subdimArg) {
         if (subdimArg == subdim) {
-            boost::python::list ans;
+            pybind11::list ans;
             for (auto f : t.template faces<subdim>())
-                ans.append(boost::python::ptr(f));
+                ans.append(pybind11::cast(f));
             return ans;
         }
         return FaceHelper<T, dim, subdim - 1>::facesFrom(t, subdimArg);
@@ -121,18 +121,16 @@ struct FaceHelper<T, dim, 0> {
     }
 
     template <typename Index>
-    static PyObject* faceFrom(const T& t, int, Index f) {
+    static pybind11::object faceFrom(const T& t, int, Index f) {
         // TODO: Make this work with return_internal_reference.
         // That is, ensure a lifespan dependency between t and the result.
-        boost::python::to_python_indirect<regina::Face<dim, 0>&,
-            boost::python::detail::make_reference_holder> convert;
-        return convert(t.template face<0>(f));
+        return pybind11::cast(t.template face<0>(f));
     }
 
-    static boost::python::list facesFrom(const T& t, int) {
-        boost::python::list ans;
+    static pybind11::object facesFrom(const T& t, int) {
+        pybind11::list ans;
         for (auto f : t.template faces<0>())
-            ans.append(boost::python::ptr(f));
+            ans.append(pybind11::cast(f));
         return ans;
     }
 
@@ -157,11 +155,11 @@ struct FaceHelper<T, dim, -1> {
     }
 
     template <typename Index>
-    static PyObject* faceFrom(const T&, int, Index) {
+    static pybind11::object faceFrom(const T&, int, Index) {
         throw -1;
     }
 
-    static boost::python::list facesFrom(const T&, int) {
+    static pybind11::object facesFrom(const T&, int) {
         throw -1;
     }
 
@@ -197,7 +195,7 @@ size_t countFaces(const T& t, int subdimArg) {
  * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
  */
 template <class T, int dim, typename Index>
-PyObject* face(const T& t, int subdimArg, Index f) {
+pybind11::object face(const T& t, int subdimArg, Index f) {
     if (subdimArg < 0 || subdimArg >= dim)
         invalidFaceDimension("face", dim);
     return FaceHelper<T, dim, dim - 1>::template faceFrom<Index>(
@@ -210,7 +208,7 @@ PyObject* face(const T& t, int subdimArg, Index f) {
  * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
  */
 template <class T, int dim>
-boost::python::list faces(const T& t, int subdimArg) {
+pybind11::object faces(const T& t, int subdimArg) {
     if (subdimArg < 0 || subdimArg >= dim)
         invalidFaceDimension("faces", dim);
     return FaceHelper<T, dim, dim - 1>::facesFrom(t, subdimArg);

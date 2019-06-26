@@ -11,7 +11,7 @@ SET ( FILES
   # TODO homologicaldata
   isomorphism3
   tetrahedron3
-  # TODO triangle3
+  triangle3
   triangulation3
   # TODO vertex3
   pytriangulation

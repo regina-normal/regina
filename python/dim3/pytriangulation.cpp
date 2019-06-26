@@ -55,7 +55,7 @@ void addTriangulationClasses(pybind11::module& m) {
     // TODO addHomologicalData(m);
     addIsomorphism3(m);
     addTetrahedron3(m);
-    // TODO addTriangle3(m);
+    addTriangle3(m);
     addTriangulation3(m);
     // TODO addVertex3(m);
 }

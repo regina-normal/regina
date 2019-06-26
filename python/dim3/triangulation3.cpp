@@ -38,7 +38,7 @@
 #include "surfaces/normalsurface.h"
 #include "triangulation/dim3.h"
 #include "../safeheldtype.h"
-// #include "../generic/facehelper.h"
+#include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
 using regina::Triangulation;
@@ -50,8 +50,6 @@ namespace {
         &Triangulation<3>::newTetrahedron;
     regina::Tetrahedron<3>* (Triangulation<3>::*newTetrahedron_string)(
         const std::string&) = &Triangulation<3>::newTetrahedron;
-    regina::Tetrahedron<3>* (Triangulation<3>::*tetrahedron_non_const)(
-        size_t) = &Triangulation<3>::tetrahedron;
     bool (Triangulation<3>::*twoZeroMove_vertex)(regina::Vertex<3>*, bool, bool) =
         &Triangulation<3>::twoZeroMove;
     bool (Triangulation<3>::*twoZeroMove_edge)(regina::Edge<3>*, bool, bool) =
@@ -152,10 +150,12 @@ void addTriangulation3(pybind11::module& m) {
             pybind11::return_value_policy::reference_internal)
         .def("simplices", &Triangulation<3>::simplices,
             pybind11::return_value_policy::reference_internal)
-        // .def("tetrahedron", tetrahedron_non_const,
-            // pybind11::return_value_policy::reference_internal)
-        // .def("simplex", tetrahedron_non_const,
-            // pybind11::return_value_policy::reference_internal)
+        .def("tetrahedron",
+            overload_cast<size_t>(&Triangulation<3>::tetrahedron),
+            pybind11::return_value_policy::reference_internal)
+        .def("simplex",
+            overload_cast<size_t>(&Triangulation<3>::simplex),
+            pybind11::return_value_policy::reference_internal)
         // .def("newTetrahedron", newTetrahedron_void,
             // pybind11::return_value_policy::reference_internal)
         // .def("newSimplex", newTetrahedron_void,
@@ -175,22 +175,22 @@ void addTriangulation3(pybind11::module& m) {
         .def("countComponents", &Triangulation<3>::countComponents)
         .def("countBoundaryComponents",
             &Triangulation<3>::countBoundaryComponents)
-        // .def("countFaces", &regina::python::countFaces<Triangulation<3>, 3>)
+        .def("countFaces", &regina::python::countFaces<Triangulation<3>, 3>)
         .def("countVertices", &Triangulation<3>::countVertices)
         .def("countEdges", &Triangulation<3>::countEdges)
         .def("countTriangles", &Triangulation<3>::countTriangles)
         .def("fVector", &Triangulation<3>::fVector)
         // .def("components", components_list)
         // .def("boundaryComponents", boundaryComponents_list)
-        // .def("faces", &regina::python::faces<Triangulation<3>, 3>)
+        .def("faces", &regina::python::faces<Triangulation<3>, 3>)
         // .def("vertices", regina::python::faces_list<Triangulation<3>, 3, 0>)
         // .def("edges", regina::python::faces_list<Triangulation<3>, 3, 1>)
-        // .def("triangles", regina::python::faces_list<Triangulation<3>, 3, 2>)
+        .def("triangles", regina::python::faces_list<Triangulation<3>, 3, 2>)
         .def("component", &Triangulation<3>::component,
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<3>::boundaryComponent,
             pybind11::return_value_policy::reference_internal)
-        // .def("face", &regina::python::face<Triangulation<3>, 3, size_t>)
+        .def("face", &regina::python::face<Triangulation<3>, 3, size_t>)
         .def("vertex", &Triangulation<3>::vertex,
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<3>::edge,

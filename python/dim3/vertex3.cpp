@@ -76,6 +76,7 @@ namespace {
 }
 
 void addVertex3() {
+    // TODO: Should we use a by-value holder type?
     class_<FaceEmbedding<3, 0>>("FaceEmbedding3_0",
             init<regina::Tetrahedron<3>*, int>())
         .def(init<const VertexEmbedding<3>&>())
