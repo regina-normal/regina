@@ -34,12 +34,11 @@
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
-using regina::python::SafeHeldType;
 using regina::Container;
 
 void addContainer(pybind11::module& m) {
-    pybind11::class_<Container, regina::Packet, SafeHeldType<Container>>(
-            m, "Container")
+    pybind11::class_<Container, regina::Packet,
+            regina::python::SafeHeldType<Container>>(m, "Container")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())
         .def_property_readonly_static("typeID", [](pybind11::object) {

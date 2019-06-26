@@ -34,15 +34,15 @@
 #include "../pybind11/stl.h"
 #include "maths/matrixops.h"
 
+using pybind11::overload_cast;
 using regina::MatrixInt;
 
 void addMatrixOps(pybind11::module& m) {
-    m.def("smithNormalForm",
-        (void (*)(MatrixInt&))
-        &regina::smithNormalForm);
-    m.def("smithNormalForm",
-        (void (*)(MatrixInt&, MatrixInt&, MatrixInt&, MatrixInt&, MatrixInt&))
-        &regina::smithNormalForm);
+    m.def("smithNormalForm", overload_cast<MatrixInt&>(
+        &regina::smithNormalForm));
+    m.def("smithNormalForm", overload_cast<MatrixInt&, MatrixInt&,
+            MatrixInt&, MatrixInt&, MatrixInt&>(
+        &regina::smithNormalForm));
     m.def("metricalSmithNormalForm", &regina::metricalSmithNormalForm);
     m.def("rowBasis", &regina::rowBasis);
     m.def("rowBasisAndOrthComp", &regina::rowBasisAndOrthComp);

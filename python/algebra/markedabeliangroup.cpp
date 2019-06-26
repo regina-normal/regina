@@ -37,6 +37,7 @@
 #include "maths/matrix.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::HomMarkedAbelianGroup;
 using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
@@ -51,13 +52,10 @@ void addMarkedAbelianGroup(pybind11::module& m) {
         .def(pybind11::init<unsigned long, const Integer&>())
         .def("isChainComplex", &MarkedAbelianGroup::isChainComplex)
         .def("rank", &MarkedAbelianGroup::rank)
-        .def("torsionRank",
-            (unsigned long (MarkedAbelianGroup::*)(const regina::Integer&)
-                const)
-            &MarkedAbelianGroup::torsionRank)
-        .def("torsionRank",
-            (unsigned long (MarkedAbelianGroup::*)(unsigned long) const)
-            &MarkedAbelianGroup::torsionRank)
+        .def("torsionRank", overload_cast<const regina::Integer&>(
+            &MarkedAbelianGroup::torsionRank, pybind11::const_))
+        .def("torsionRank", overload_cast<unsigned long>(
+            &MarkedAbelianGroup::torsionRank, pybind11::const_))
         .def("minNumberOfGenerators",
             &MarkedAbelianGroup::minNumberOfGenerators)
         .def("countInvariantFactors",

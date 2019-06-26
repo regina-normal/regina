@@ -35,6 +35,7 @@
 #include "maths/integer.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::LargeInteger;
 
 void addLargeInteger(pybind11::module& m) {
@@ -80,12 +81,10 @@ void addLargeInteger(pybind11::module& m) {
         .def(pybind11::self * long())
         .def(pybind11::self / pybind11::self)
         .def(pybind11::self / long())
-        .def("divExact",
-            (LargeInteger (LargeInteger::*)(const LargeInteger&) const)
-            &LargeInteger::divExact)
-        .def("divExact",
-            (LargeInteger (LargeInteger::*)(long) const)
-            &LargeInteger::divExact)
+        .def("divExact", overload_cast<const LargeInteger&>(
+            &LargeInteger::divExact, pybind11::const_))
+        .def("divExact", overload_cast<long>(
+            &LargeInteger::divExact, pybind11::const_))
         .def(pybind11::self % pybind11::self)
         .def(pybind11::self % long())
         .def("divisionAlg", [](const LargeInteger& n,
@@ -103,13 +102,11 @@ void addLargeInteger(pybind11::module& m) {
         .def(pybind11::self *= long())
         .def(pybind11::self /= pybind11::self)
         .def(pybind11::self /= long())
-        .def("divByExact",
-            (LargeInteger& (LargeInteger::*)(const LargeInteger&))
-            &LargeInteger::divByExact,
+        .def("divByExact", overload_cast<const LargeInteger&>(
+            &LargeInteger::divByExact),
             pybind11::return_value_policy::reference_internal)
-        .def("divByExact",
-            (LargeInteger& (LargeInteger::*)(long))
-            &LargeInteger::divByExact,
+        .def("divByExact", overload_cast<long>(
+            &LargeInteger::divByExact),
             pybind11::return_value_policy::reference_internal)
         .def(pybind11::self %= pybind11::self)
         .def(pybind11::self %= long())

@@ -34,6 +34,7 @@
 #include "maths/matrix.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::MatrixInt;
 
 void addMatrixInt(pybind11::module& m) {
@@ -65,8 +66,7 @@ void addMatrixInt(pybind11::module& m) {
         .def("rows", &MatrixInt::rows)
         .def("columns", &MatrixInt::columns)
         .def("entry",
-            (regina::Integer& (MatrixInt::*)(unsigned long, unsigned long))
-            &MatrixInt::entry,
+            overload_cast<unsigned long, unsigned long>(&MatrixInt::entry),
             pybind11::return_value_policy::reference_internal)
         .def("set", [](MatrixInt& m, unsigned long row, unsigned long col,
                 const regina::Integer& value){
@@ -78,17 +78,17 @@ void addMatrixInt(pybind11::module& m) {
         .def("swapColumns", &MatrixInt::swapColumns)
         .def("makeIdentity", &MatrixInt::makeIdentity)
         .def("addRow",
-            (void (MatrixInt::*)(unsigned long, unsigned long))
-            &MatrixInt::addRow)
+            overload_cast<unsigned long, unsigned long>(
+            &MatrixInt::addRow))
         .def("addRow",
-            (void (MatrixInt::*)(unsigned long, unsigned long, regina::Integer))
-            &MatrixInt::addRow)
+            overload_cast<unsigned long, unsigned long, regina::Integer>(
+            &MatrixInt::addRow))
         .def("addCol",
-            (void (MatrixInt::*)(unsigned long, unsigned long))
-            &MatrixInt::addCol)
+            overload_cast<unsigned long, unsigned long>(
+            &MatrixInt::addCol))
         .def("addCol",
-            (void (MatrixInt::*)(unsigned long, unsigned long, regina::Integer))
-            &MatrixInt::addCol)
+            overload_cast<unsigned long, unsigned long, regina::Integer>(
+            &MatrixInt::addCol))
         .def("multRow", &MatrixInt::multRow)
         .def("multCol", &MatrixInt::multCol)
         .def("det", &MatrixInt::det)

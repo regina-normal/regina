@@ -37,6 +37,7 @@
 #include "algebra/markedabeliangroup.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::GroupExpression;
 using regina::GroupPresentation;
 using regina::HomGroupPresentation;
@@ -50,20 +51,14 @@ void addHomGroupPresentation(pybind11::module& m) {
         .def("range", &HomGroupPresentation::range,
             pybind11::return_value_policy::reference_internal)
         .def("knowsInverse", &HomGroupPresentation::knowsInverse)
-        .def("evaluate",
-            (GroupExpression (HomGroupPresentation::*)(unsigned long) const)
-            &HomGroupPresentation::evaluate)
-        .def("evaluate",
-            (GroupExpression (HomGroupPresentation::*)(const GroupExpression&)
-                const)
-            &HomGroupPresentation::evaluate)
-        .def("invEvaluate",
-            (GroupExpression (HomGroupPresentation::*)(unsigned long) const)
-            &HomGroupPresentation::invEvaluate)
-        .def("invEvaluate",
-            (GroupExpression (HomGroupPresentation::*)(const GroupExpression&)
-                const)
-            &HomGroupPresentation::invEvaluate)
+        .def("evaluate", overload_cast<unsigned long>(
+            &HomGroupPresentation::evaluate, pybind11::const_))
+        .def("evaluate", overload_cast<const GroupExpression&>(
+            &HomGroupPresentation::evaluate, pybind11::const_))
+        .def("invEvaluate", overload_cast<unsigned long>(
+            &HomGroupPresentation::invEvaluate, pybind11::const_))
+        .def("invEvaluate", overload_cast<const GroupExpression&>(
+            &HomGroupPresentation::invEvaluate, pybind11::const_))
         .def("intelligentSimplify",
             &HomGroupPresentation::intelligentSimplify)
         .def("intelligentNielsen",

@@ -35,16 +35,17 @@
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
-using regina::python::SafeHeldType;
+using pybind11::overload_cast;
 using regina::PDF;
 
 void addPDF(pybind11::module& m) {
-    pybind11::class_<PDF, regina::Packet, SafeHeldType<PDF>>(m, "PDF")
+    pybind11::class_<PDF, regina::Packet,
+            regina::python::SafeHeldType<PDF>>(m, "PDF")
         .def(pybind11::init<>())
         .def(pybind11::init<const char*>())
         .def("isNull", &PDF::isNull)
         .def("size", &PDF::size)
-        .def("reset", (void (PDF::*)()) &PDF::reset)
+        .def("reset", overload_cast<>(&PDF::reset))
         .def("savePDF", &PDF::savePDF)
         .def_property_readonly_static("typeID", [](pybind11::object) {
             // We cannot take the address of typeID, so use a getter function.

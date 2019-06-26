@@ -36,6 +36,7 @@
 #include "maths/rational.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::Polynomial;
 using regina::Rational;
 
@@ -75,6 +76,8 @@ void addPolynomial(pybind11::module& m) {
             delete[] coeffs;
             return ans;
         }))
+        // overload_cast has trouble with templated vs non-templated overloads.
+        // Just cast directly.
         .def("init", (void (Polynomial<Rational>::*)())
             &Polynomial<Rational>::init)
         .def("init", (void (Polynomial<Rational>::*)(size_t))
@@ -98,10 +101,10 @@ void addPolynomial(pybind11::module& m) {
         })
         .def("set", &Polynomial<Rational>::set)
         .def("swap", &Polynomial<Rational>::swap)
-        .def("str", (std::string (Polynomial<Rational>::*)(const char*) const)
-            &Polynomial<Rational>::str)
-        .def("utf8", (std::string (Polynomial<Rational>::*)(const char*) const)
-            &Polynomial<Rational>::utf8)
+        .def("str", overload_cast<const char*>(
+            &Polynomial<Rational>::str, pybind11::const_))
+        .def("utf8", overload_cast<const char*>(
+            &Polynomial<Rational>::utf8, pybind11::const_))
         .def(pybind11::self *= Rational())
         .def(pybind11::self /= Rational())
         .def(pybind11::self += pybind11::self)

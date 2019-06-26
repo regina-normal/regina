@@ -39,6 +39,7 @@
 #include "algebra/markedabeliangroup.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::GroupExpressionTerm;
 using regina::GroupExpression;
 using regina::GroupPresentation;
@@ -65,30 +66,24 @@ void addGroupPresentation(pybind11::module& m) {
         .def(pybind11::init([](const std::string& str) {
             return new GroupExpression(str, nullptr);
         }))
-        .def("terms",
-            (const std::list<GroupExpressionTerm>& (GroupExpression::*)() const)
-            &GroupExpression::terms)
+        .def("terms", overload_cast<>(
+            &GroupExpression::terms, pybind11::const_))
         .def("countTerms", &GroupExpression::countTerms)
         .def("wordLength", &GroupExpression::wordLength)
         .def("isTrivial", &GroupExpression::isTrivial)
         .def("erase", &GroupExpression::erase)
-        .def("term", (GroupExpressionTerm& (GroupExpression::*)(size_t))
-            &GroupExpression::term,
+        .def("term", overload_cast<size_t>(&GroupExpression::term),
             pybind11::return_value_policy::reference_internal)
         .def("generator", &GroupExpression::generator)
         .def("exponent", &GroupExpression::exponent)
-        .def("addTermFirst",
-            (void (GroupExpression::*)(const GroupExpressionTerm&))
-            &GroupExpression::addTermFirst)
-        .def("addTermFirst",
-            (void (GroupExpression::*)(unsigned long, long))
-            &GroupExpression::addTermFirst)
-        .def("addTermLast",
-            (void (GroupExpression::*)(const GroupExpressionTerm&))
-            &GroupExpression::addTermLast)
-        .def("addTermLast",
-            (void (GroupExpression::*)(unsigned long, long))
-            &GroupExpression::addTermLast)
+        .def("addTermFirst", overload_cast<const GroupExpressionTerm&>(
+            &GroupExpression::addTermFirst))
+        .def("addTermFirst", overload_cast<unsigned long, long>(
+            &GroupExpression::addTermFirst))
+        .def("addTermLast", overload_cast<const GroupExpressionTerm&>(
+            &GroupExpression::addTermLast))
+        .def("addTermLast", overload_cast<unsigned long, long>(
+            &GroupExpression::addTermLast))
         .def("addTermsFirst", &GroupExpression::addTermsFirst)
         .def("addTermsLast", &GroupExpression::addTermsLast)
         .def("addStringFirst", &GroupExpression::addStringFirst)

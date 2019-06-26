@@ -35,6 +35,7 @@
 #include "maths/cyclotomic.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::Cyclotomic;
 
 void addCyclotomic(pybind11::module& m) {
@@ -69,10 +70,10 @@ void addCyclotomic(pybind11::module& m) {
             return new regina::Polynomial<regina::Rational>(
                 Cyclotomic::cyclotomic(n));
         })
-        .def("str", (std::string (Cyclotomic::*)(const char*) const)
-            &Cyclotomic::str)
-        .def("utf8", (std::string (Cyclotomic::*)(const char*) const)
-            &Cyclotomic::utf8)
+        .def("str", overload_cast<const char*>(
+            &Cyclotomic::str, pybind11::const_))
+        .def("utf8", overload_cast<const char*>(
+            &Cyclotomic::utf8, pybind11::const_))
     ;
     regina::python::add_output(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);

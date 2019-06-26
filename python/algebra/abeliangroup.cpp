@@ -35,6 +35,7 @@
 #include "maths/matrix.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::AbelianGroup;
 using regina::Integer;
 using regina::MatrixInt;
@@ -65,29 +66,27 @@ void addAbelianGroup(pybind11::module& m) {
         .def(pybind11::init<>())
         .def(pybind11::init<const AbelianGroup&>())
         .def(pybind11::init<const MatrixInt&, const MatrixInt&>())
-        .def(pybind11::init<const MatrixInt&, const MatrixInt&, const Integer&>())
+        .def(pybind11::init<const MatrixInt&, const MatrixInt&,
+            const Integer&>())
         .def("addRank", &AbelianGroup::addRank,
             pybind11::arg("extraRank") = 1)
         .def("addTorsionElement",
-            (void (AbelianGroup::*)(const regina::Integer&, unsigned))
-            &AbelianGroup::addTorsionElement,
+            overload_cast<const regina::Integer&, unsigned>(
+            &AbelianGroup::addTorsionElement),
             pybind11::arg(), pybind11::arg("mult") = 1)
-        .def("addTorsionElement",
-            (void (AbelianGroup::*)(unsigned long, unsigned))
-            &AbelianGroup::addTorsionElement,
+        .def("addTorsionElement", overload_cast<unsigned long, unsigned>(
+            &AbelianGroup::addTorsionElement),
             pybind11::arg(), pybind11::arg("mult") = 1)
         .def("addTorsionElements", addTorsionElements)
-        .def("addGroup", (void (AbelianGroup::*)(const MatrixInt&))
-            &AbelianGroup::addGroup)
-        .def("addGroup", (void (AbelianGroup::*)(const AbelianGroup&))
-            &AbelianGroup::addGroup)
+        .def("addGroup", overload_cast<const MatrixInt&>(
+            &AbelianGroup::addGroup))
+        .def("addGroup", overload_cast<const AbelianGroup&>(
+            &AbelianGroup::addGroup))
         .def("rank", &AbelianGroup::rank)
-        .def("torsionRank",
-            (unsigned (AbelianGroup::*)(const regina::Integer&) const)
-            &AbelianGroup::torsionRank)
-        .def("torsionRank",
-            (unsigned (AbelianGroup::*)(unsigned long) const)
-            &AbelianGroup::torsionRank)
+        .def("torsionRank", overload_cast<const regina::Integer&>(
+            &AbelianGroup::torsionRank, pybind11::const_))
+        .def("torsionRank", overload_cast<unsigned long>(
+            &AbelianGroup::torsionRank, pybind11::const_))
         .def("countInvariantFactors", &AbelianGroup::countInvariantFactors)
         .def("invariantFactor", &AbelianGroup::invariantFactor)
         .def("isTrivial", &AbelianGroup::isTrivial)

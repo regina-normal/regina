@@ -35,6 +35,8 @@
 #include "maths/matrix2.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
+
 namespace regina {
     /**
      * A utility class that provides access to a single row of a 2-by-2
@@ -122,13 +124,11 @@ void addMatrix2(pybind11::module& m) {
     regina::python::add_eq_operators(c2);
     regina::python::add_output_ostream(c2);
 
-    m.def("simpler",
-        (bool (*)(const Matrix2&, const Matrix2&))
-        &regina::simpler);
-    m.def("simpler",
-        (bool (*)(const Matrix2&, const Matrix2&, const Matrix2&,
-            const Matrix2&))
-        &regina::simpler);
+    m.def("simpler", overload_cast<const Matrix2&, const Matrix2&>(
+        &regina::simpler));
+    m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,
+            const Matrix2&, const Matrix2&>(
+        &regina::simpler));
 
     m.attr("NMatrix2Row") = m.attr("Matrix2Row");
     m.attr("NMatrix2") = m.attr("Matrix2");

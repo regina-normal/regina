@@ -35,17 +35,18 @@
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
-using regina::python::SafeHeldType;
+using pybind11::overload_cast;
 using regina::Text;
 
 void addText(pybind11::module& m) {
-    pybind11::class_<Text, regina::Packet, SafeHeldType<Text>>(m, "Text")
+    pybind11::class_<Text, regina::Packet,
+            regina::python::SafeHeldType<Text>>(m, "Text")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init<const char*>())
         .def("text", &Text::text)
-        .def("setText", (void (Text::*)(const std::string&)) &Text::setText)
-        .def("setText", (void (Text::*)(const char*)) &Text::setText)
+        .def("setText", overload_cast<const std::string&>(&Text::setText))
+        .def("setText", overload_cast<const char*>(&Text::setText))
         .def_property_readonly_static("typeID", [](pybind11::object) {
             // We cannot take the address of typeID, so use a getter function.
             return Text::typeID;

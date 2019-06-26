@@ -36,6 +36,7 @@
 #include "maths/laurent.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::Laurent;
 
 namespace {
@@ -74,6 +75,8 @@ void addLaurent(pybind11::module& m) {
             delete[] coeffs;
             return ans;
         }))
+        // overload_cast has trouble with templated vs non-templated overloads.
+        // Just cast directly.
         .def("init", (void (Laurent<regina::Integer>::*)())
             &Laurent<regina::Integer>::init)
         .def("init", (void (Laurent<regina::Integer>::*)(long))
@@ -100,12 +103,10 @@ void addLaurent(pybind11::module& m) {
         .def("scaleUp", &Laurent<regina::Integer>::scaleUp)
         .def("scaleDown", &Laurent<regina::Integer>::scaleDown)
         .def("negate", &Laurent<regina::Integer>::negate)
-        .def("str",
-            (std::string (Laurent<regina::Integer>::*)(const char*) const)
-            &Laurent<regina::Integer>::str)
-        .def("utf8",
-            (std::string (Laurent<regina::Integer>::*)(const char*) const)
-            &Laurent<regina::Integer>::utf8)
+        .def("str", overload_cast<const char*>(
+            &Laurent<regina::Integer>::str, pybind11::const_))
+        .def("utf8", overload_cast<const char*>(
+            &Laurent<regina::Integer>::utf8, pybind11::const_))
         .def(pybind11::self *= regina::Integer())
         .def(pybind11::self /= regina::Integer())
         .def(pybind11::self += pybind11::self)

@@ -36,6 +36,7 @@
 #include "maths/laurent2.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::Laurent2;
 
 void addLaurent2(pybind11::module& m) {
@@ -44,21 +45,19 @@ void addLaurent2(pybind11::module& m) {
         .def(pybind11::init<long, long>())
         .def(pybind11::init<const Laurent2<regina::Integer>&>())
         .def(pybind11::init<const Laurent2<regina::Integer>&, long, long>())
-        .def("init", (void (Laurent2<regina::Integer>::*)())
-            &Laurent2<regina::Integer>::init)
-        .def("init", (void (Laurent2<regina::Integer>::*)(long, long))
-            &Laurent2<regina::Integer>::init)
+        .def("init", overload_cast<>(
+            &Laurent2<regina::Integer>::init))
+        .def("init", overload_cast<long, long>(
+            &Laurent2<regina::Integer>::init))
         .def("isZero", &Laurent2<regina::Integer>::isZero)
         .def("set", &Laurent2<regina::Integer>::set)
         .def("swap", &Laurent2<regina::Integer>::swap)
         .def("negate", &Laurent2<regina::Integer>::negate)
-        .def("str", (std::string (Laurent2<regina::Integer>::*)(
-                const char*, const char*) const)
-            &Laurent2<regina::Integer>::str,
+        .def("str", overload_cast<const char*, const char*>(
+            &Laurent2<regina::Integer>::str, pybind11::const_),
             pybind11::arg(), pybind11::arg("varY") = nullptr)
-        .def("utf8", (std::string (Laurent2<regina::Integer>::*)(
-                const char*, const char*) const)
-            &Laurent2<regina::Integer>::utf8,
+        .def("utf8", overload_cast<const char*, const char*>(
+            &Laurent2<regina::Integer>::utf8, pybind11::const_),
             pybind11::arg(), pybind11::arg("varY") = nullptr)
         .def("__getitem__", [](const Laurent2<regina::Integer>& p,
                 std::pair<long, long> exponents) {

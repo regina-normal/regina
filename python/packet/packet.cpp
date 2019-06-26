@@ -36,7 +36,7 @@
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::ChildIterator;
 using regina::Packet;
 using regina::PacketChildren;
@@ -84,7 +84,8 @@ void addPacket(pybind11::module& m) {
         ;
     regina::python::add_eq_operators(c4);
 
-    auto c = pybind11::class_<Packet, SafeHeldType<Packet>>(m, "Packet")
+    auto c = pybind11::class_<Packet, regina::python::SafeHeldType<Packet>>(
+            m, "Packet")
         .def("type", &Packet::type)
         .def("typeName", &Packet::typeName)
         .def("label", &Packet::label)
@@ -135,20 +136,21 @@ void addPacket(pybind11::module& m) {
         .def("children", &Packet::children)
         .def("descendants", &Packet::descendants)
         .def("subtree", &Packet::begin)
-        .def("nextTreePacket", (Packet* (Packet::*)())
-            &Packet::nextTreePacket)
-        .def("nextTreePacket", (Packet* (Packet::*)(const std::string&))
-            &Packet::nextTreePacket)
-        .def("firstTreePacket", (Packet* (Packet::*)(const std::string&))
-            &Packet::firstTreePacket)
-        .def("findPacketLabel", (Packet* (Packet::*)(const std::string&))
-            &Packet::findPacketLabel)
+        .def("nextTreePacket",
+            overload_cast<>(&Packet::nextTreePacket))
+        .def("nextTreePacket",
+            overload_cast<const std::string&>(&Packet::nextTreePacket))
+        .def("firstTreePacket",
+            overload_cast<const std::string&>(&Packet::firstTreePacket))
+        .def("findPacketLabel",
+            overload_cast<const std::string&>(&Packet::findPacketLabel))
         .def("dependsOnParent", &Packet::dependsOnParent)
         .def("isPacketEditable", &Packet::isPacketEditable)
         .def("clone", &Packet::clone,
             pybind11::arg("cloneDescendants") = false,
             pybind11::arg("end") = true)
-        .def("save", (bool (Packet::*)(const char*, bool) const) &Packet::save,
+        .def("save",
+            overload_cast<const char*, bool>(&Packet::save, pybind11::const_),
             pybind11::arg(), pybind11::arg("compressed") = true)
         .def("writeXMLFile", [](const Packet& p) {
             p.writeXMLFile(std::cout);

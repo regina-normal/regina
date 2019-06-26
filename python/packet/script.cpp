@@ -35,31 +35,31 @@
 #include "../helpers.h"
 #include "../safeheldtype.h"
 
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::Script;
 
 void addScript(pybind11::module& m) {
-    pybind11::class_<Script, regina::Packet, SafeHeldType<Script>>(m, "Script")
+    pybind11::class_<Script, regina::Packet,
+            regina::python::SafeHeldType<Script>>(m, "Script")
         .def(pybind11::init<>())
         .def("text", &Script::text)
         .def("setText", &Script::setText)
         .def("append", &Script::append)
         .def("countVariables", &Script::countVariables)
         .def("variableName", &Script::variableName)
-        .def("variableValue", (regina::Packet* (Script::*)(size_t) const)
-            &Script::variableValue)
-        .def("variableValue",
-            (regina::Packet* (Script::*)(const std::string&) const)
-            &Script::variableValue)
+        .def("variableValue", overload_cast<size_t>(
+            &Script::variableValue, pybind11::const_))
+        .def("variableValue", overload_cast<const std::string&>(
+            &Script::variableValue, pybind11::const_))
         .def("variableIndex", &Script::variableIndex)
         .def("setVariableName", &Script::setVariableName)
         .def("setVariableValue", &Script::setVariableValue)
         .def("addVariable", &Script::addVariable)
         .def("addVariableName", &Script::addVariableName)
-        .def("removeVariable", (void (Script::*)(size_t))
-            &Script::removeVariable)
-        .def("removeVariable", (void (Script::*)(const std::string&))
-            &Script::removeVariable)
+        .def("removeVariable",
+            overload_cast<size_t>(&Script::removeVariable))
+        .def("removeVariable",
+            overload_cast<const std::string&>(&Script::removeVariable))
         .def("removeAllVariables", &Script::removeAllVariables)
         .def_property_readonly_static("typeID", [](pybind11::object) {
             // We cannot take the address of typeID, so use a getter function.

@@ -33,20 +33,25 @@
 #include "../pybind11/pybind11.h"
 #include "utilities/stringutils.h"
 
+using pybind11::overload_cast;
+
 void addStringUtils(pybind11::module& m) {
-    m.def("stringToToken", (std::string (*)(const char*))
-        &regina::stringToToken);
-    m.def("stringToToken", (std::string (*)(const std::string&))
-        &regina::stringToToken);
-    m.def("subscript", (std::string (*)(long)) &regina::subscript);
-    m.def("subscript", (std::string (*)(const regina::Integer&))
-        &regina::subscript);
-    m.def("subscript", (std::string (*)(const regina::LargeInteger&))
-        &regina::subscript);
-    m.def("superscript", (std::string (*)(long)) &regina::superscript);
-    m.def("superscript", (std::string (*)(const regina::Integer&))
-        &regina::superscript);
-    m.def("superscript", (std::string (*)(const regina::LargeInteger&))
-        &regina::superscript);
+    m.def("stringToToken", overload_cast<const char*>(
+        &regina::stringToToken));
+    m.def("stringToToken", overload_cast<const std::string&>(
+        &regina::stringToToken));
+
+    m.def("subscript",
+        &regina::subscript<long>);
+    m.def("subscript", overload_cast<const regina::Integer&>(
+        &regina::subscript<false>));
+    m.def("subscript", overload_cast<const regina::LargeInteger&>(
+        &regina::subscript<true>));
+    m.def("superscript",
+        &regina::superscript<long>);
+    m.def("superscript", overload_cast<const regina::Integer&>(
+        &regina::superscript<false>));
+    m.def("superscript", overload_cast<const regina::LargeInteger&>(
+        &regina::superscript<true>));
 }
 

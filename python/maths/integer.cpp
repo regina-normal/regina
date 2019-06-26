@@ -35,6 +35,7 @@
 #include "maths/integer.h"
 #include "../helpers.h"
 
+using pybind11::overload_cast;
 using regina::Integer;
 
 void addInteger(pybind11::module& m) {
@@ -79,10 +80,10 @@ void addInteger(pybind11::module& m) {
         .def(pybind11::self * long())
         .def(pybind11::self / pybind11::self)
         .def(pybind11::self / long())
-        .def("divExact", (Integer (Integer::*)(const Integer&) const)
-            &Integer::divExact)
-        .def("divExact", (Integer (Integer::*)(long) const)
-            &Integer::divExact)
+        .def("divExact", overload_cast<const Integer&>(
+            &Integer::divExact, pybind11::const_))
+        .def("divExact", overload_cast<long>(
+            &Integer::divExact, pybind11::const_))
         .def(pybind11::self % pybind11::self)
         .def(pybind11::self % long())
         .def("divisionAlg", [](const Integer& n, const Integer& divisor) {
@@ -99,11 +100,9 @@ void addInteger(pybind11::module& m) {
         .def(pybind11::self *= long())
         .def(pybind11::self /= pybind11::self)
         .def(pybind11::self /= long())
-        .def("divByExact", (Integer& (Integer::*)(const Integer&))
-            &Integer::divByExact,
+        .def("divByExact", overload_cast<const Integer&>(&Integer::divByExact),
             pybind11::return_value_policy::reference_internal)
-        .def("divByExact", (Integer& (Integer::*)(long))
-            &Integer::divByExact,
+        .def("divByExact", overload_cast<long>(&Integer::divByExact),
             pybind11::return_value_policy::reference_internal)
         .def(pybind11::self %= pybind11::self)
         .def(pybind11::self %= long())
