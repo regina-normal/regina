@@ -30,69 +30,57 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "progress/progresstracker.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::ProgressTracker;
 using regina::ProgressTrackerOpen;
 
-namespace {
-    void (ProgressTracker::*newStage_char)(const char*, double) =
-        &ProgressTracker::newStage;
-    void (ProgressTracker::*newStage_str)(const std::string&, double) =
-        &ProgressTracker::newStage;
-
-    void (ProgressTrackerOpen::*newStage_open_char)(const char*) =
-        &ProgressTrackerOpen::newStage;
-    void (ProgressTrackerOpen::*newStage_open_str)(const std::string&) =
-        &ProgressTrackerOpen::newStage;
-
-    bool (ProgressTrackerOpen::*incSteps_void)() =
-        &ProgressTrackerOpen::incSteps;
-    bool (ProgressTrackerOpen::*incSteps_arg)(unsigned long) =
-        &ProgressTrackerOpen::incSteps;
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_newStage,
-        ProgressTracker::newStage, 1, 2);
-}
-
-void addProgressTracker() {
-    class_<ProgressTracker, std::auto_ptr<ProgressTracker>,
-            boost::noncopyable>("ProgressTracker", init<>())
+void addProgressTracker(pybind11::module& m) {
+    auto c1 = pybind11::class_<ProgressTracker>(m, "ProgressTracker")
+        .def(pybind11::init<>())
         .def("isFinished", &ProgressTracker::isFinished)
         .def("percentChanged", &ProgressTracker::percentChanged)
         .def("descriptionChanged", &ProgressTracker::descriptionChanged)
         .def("percent", &ProgressTracker::percent)
         .def("description", &ProgressTracker::description)
         .def("cancel", &ProgressTracker::cancel)
-        .def("newStage", newStage_char, OL_newStage())
-        .def("newStage", newStage_str, OL_newStage())
+        .def("newStage", overload_cast<const char*, double>(
+            &ProgressTracker::newStage),
+            pybind11::arg(), pybind11::arg("weight") = 1)
+        .def("newStage", overload_cast<const std::string&, double>(
+            &ProgressTracker::newStage),
+            pybind11::arg(), pybind11::arg("weight") = 1)
         .def("isCancelled", &ProgressTracker::isCancelled)
         .def("setPercent", &ProgressTracker::setPercent)
         .def("setFinished", &ProgressTracker::setFinished)
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_eq_operators(c1);
 
-    class_<ProgressTrackerOpen, std::auto_ptr<ProgressTrackerOpen>,
-            boost::noncopyable>("ProgressTrackerOpen", init<>())
+    auto c2 = pybind11::class_<ProgressTrackerOpen>(m, "ProgressTrackerOpen")
+        .def(pybind11::init<>())
         .def("isFinished", &ProgressTrackerOpen::isFinished)
         .def("stepsChanged", &ProgressTrackerOpen::stepsChanged)
         .def("descriptionChanged", &ProgressTrackerOpen::descriptionChanged)
         .def("steps", &ProgressTrackerOpen::steps)
         .def("description", &ProgressTrackerOpen::description)
         .def("cancel", &ProgressTrackerOpen::cancel)
-        .def("newStage", newStage_open_char)
-        .def("newStage", newStage_open_str)
+        .def("newStage", overload_cast<const char*>(
+            &ProgressTrackerOpen::newStage))
+        .def("newStage", overload_cast<const std::string&>(
+            &ProgressTrackerOpen::newStage))
         .def("isCancelled", &ProgressTrackerOpen::isCancelled)
-        .def("incSteps", incSteps_void)
-        .def("incSteps", incSteps_arg)
+        .def("incSteps", overload_cast<>(
+            &ProgressTrackerOpen::incSteps))
+        .def("incSteps", overload_cast<unsigned long>(
+            &ProgressTrackerOpen::incSteps))
         .def("setFinished", &ProgressTrackerOpen::setFinished)
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_eq_operators(c2);
 
-    scope().attr("NProgressTracker") = scope().attr("ProgressTracker");
-    scope().attr("NProgressTrackerOpen") = scope().attr("ProgressTrackerOpen");
+    m.attr("NProgressTracker") = m.attr("ProgressTracker");
+    m.attr("NProgressTrackerOpen") = m.attr("ProgressTrackerOpen");
 }
 

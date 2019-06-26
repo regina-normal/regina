@@ -126,7 +126,7 @@ PYBIND11_MODULE(regina, m) {
     // Components from subdirectories (in approximate dependency order):
 
     addUtilitiesClasses(m);
-    // TODO addProgressClasses(m);
+    addProgressClasses(m);
     addMathsClasses(m);
     addAlgebraClasses(m);
     addPacketClasses(m);
