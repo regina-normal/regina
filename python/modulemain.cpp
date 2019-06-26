@@ -120,16 +120,8 @@ PYBIND11_MODULE(regina, m) {
         .value("TV_BACKTRACK", regina::ALG_BACKTRACK)
         .value("TV_TREEWIDTH", regina::ALG_TREEWIDTH)
         .value("TV_NAIVE", regina::ALG_NAIVE)
+        .export_values();
         ;
-
-    m.attr("ALG_DEFAULT") = regina::ALG_DEFAULT;
-    m.attr("ALG_BACKTRACK") = regina::ALG_BACKTRACK;
-    m.attr("ALG_TREEWIDTH") = regina::ALG_TREEWIDTH;
-    m.attr("ALG_NAIVE") = regina::ALG_NAIVE;
-    m.attr("TV_DEFAULT") = regina::ALG_DEFAULT;
-    m.attr("TV_BACKTRACK") = regina::ALG_BACKTRACK;
-    m.attr("TV_TREEWIDTH") = regina::ALG_TREEWIDTH;
-    m.attr("TV_NAIVE") = regina::ALG_NAIVE;
 
     // Components from subdirectories (in approximate dependency order):
 
