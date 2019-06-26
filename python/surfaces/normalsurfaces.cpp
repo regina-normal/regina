@@ -149,8 +149,6 @@ void addNormalSurfaces() {
     implicitly_convertible<SafeHeldType<NormalSurfaces>,
         SafeHeldType<regina::Packet> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(NormalSurfaces);
-
     scope().attr("NNormalSurfaceList") = scope().attr("NormalSurfaces");
 }
 

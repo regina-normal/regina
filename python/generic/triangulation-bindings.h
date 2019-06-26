@@ -286,7 +286,5 @@ void addTriangulation(const char* name) {
 
     implicitly_convertible<SafeHeldType<Triangulation<dim>>,
         SafeHeldType<regina::Packet>>();
-
-    FIX_REGINA_BOOST_CONVERTERS(Triangulation<dim>);
 }
 

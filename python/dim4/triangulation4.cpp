@@ -314,8 +314,6 @@ void addTriangulation4() {
     implicitly_convertible<SafeHeldType<Triangulation<4>>,
         SafeHeldType<regina::Packet> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(Triangulation<4>);
-
     scope().attr("Dim4Triangulation") = scope().attr("Triangulation4");
 }
 

@@ -436,8 +436,6 @@ void addTriangulation3() {
     implicitly_convertible<SafeHeldType<Triangulation<3>>,
         SafeHeldType<regina::Packet> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(Triangulation<3>);
-
     scope().attr("NTriangulation") = scope().attr("Triangulation3");
     scope().attr("TuraevViroAlg") = scope().attr("Algorithm");
 }

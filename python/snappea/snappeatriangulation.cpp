@@ -166,8 +166,6 @@ void addSnapPeaTriangulation() {
     implicitly_convertible<SafeHeldType<SnapPeaTriangulation>,
         SafeHeldType<regina::Triangulation<3>> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(SnapPeaTriangulation);
-
     scope().attr("NCusp") = scope().attr("Cusp");
     scope().attr("NSnapPeaTriangulation") =
         scope().attr("SnapPeaTriangulation");

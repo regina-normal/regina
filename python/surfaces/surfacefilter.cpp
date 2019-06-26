@@ -106,10 +106,6 @@ void addSurfaceFilter() {
     implicitly_convertible<SafeHeldType<SurfaceFilterProperties>,
         SafeHeldType<regina::SurfaceFilter> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(SurfaceFilter);
-    FIX_REGINA_BOOST_CONVERTERS(SurfaceFilterCombination);
-    FIX_REGINA_BOOST_CONVERTERS(SurfaceFilterProperties);
-
     scope().attr("NSurfaceFilter") = scope().attr("SurfaceFilter");
     scope().attr("NSurfaceFilterCombination") =
         scope().attr("SurfaceFilterCombination");

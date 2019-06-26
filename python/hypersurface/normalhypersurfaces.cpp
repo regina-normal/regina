@@ -104,8 +104,6 @@ void addNormalHypersurfaces() {
     implicitly_convertible<SafeHeldType<NormalHypersurfaces>,
         SafeHeldType<regina::Packet> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(NormalHypersurfaces);
-
     scope().attr("NNormalHypersurfaceList") =
         scope().attr("NormalHypersurfaces");
 }

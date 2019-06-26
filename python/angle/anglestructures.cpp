@@ -89,8 +89,6 @@ void addAngleStructures() {
     implicitly_convertible<SafeHeldType<AngleStructures>,
         SafeHeldType<regina::Packet> >();
 
-    FIX_REGINA_BOOST_CONVERTERS(AngleStructures);
-
     scope().attr("NAngleStructureList") = scope().attr("AngleStructures");
 }
 
