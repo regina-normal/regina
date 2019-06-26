@@ -30,27 +30,29 @@
  *                                                                        *
  **************************************************************************/
 
-void addBoundaryComponent4();
-void addComponent4();
-void addEdge4();
-void addExample4();
-void addIsomorphism4();
-void addPentachoron4();
-void addTetrahedron4();
-void addTriangle4();
-void addTriangulation4();
-void addVertex4();
+namespace pybind11 { class module; }
 
-void addDim4Classes() {
-    addBoundaryComponent4();
-    addComponent4();
-    addEdge4();
-    addExample4();
-    addIsomorphism4();
-    addPentachoron4();
-    addTetrahedron4();
-    addTriangle4();
-    addTriangulation4();
-    addVertex4();
+void addBoundaryComponent4(pybind11::module& m);
+void addComponent4(pybind11::module& m);
+void addEdge4(pybind11::module& m);
+void addExample4(pybind11::module& m);
+void addIsomorphism4(pybind11::module& m);
+void addPentachoron4(pybind11::module& m);
+void addTetrahedron4(pybind11::module& m);
+void addTriangle4(pybind11::module& m);
+void addTriangulation4(pybind11::module& m);
+void addVertex4(pybind11::module& m);
+
+void addDim4Classes(pybind11::module& m) {
+    addBoundaryComponent4(m);
+    addComponent4(m);
+    addEdge4(m);
+    addExample4(m);
+    addIsomorphism4(m);
+    addPentachoron4(m);
+    addTetrahedron4(m);
+    addTriangle4(m);
+    addTriangulation4(m);
+    addVertex4(m);
 }
 

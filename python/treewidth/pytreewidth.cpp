@@ -30,9 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-void addTreeDecomposition();
+namespace pybind11 { class module; }
 
-void addTreewidthClasses() {
-    addTreeDecomposition();
+void addTreeDecomposition(pybind11::module& m);
+
+void addTreewidthClasses(pybind11::module& m) {
+    addTreeDecomposition(m);
 }
 

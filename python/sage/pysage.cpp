@@ -30,9 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-void addRegisterIntFromPyIndex();
+namespace pybind11 { class module; }
 
-void addSageHacks() {
-    addRegisterIntFromPyIndex();
+void addRegisterIntFromPyIndex(pybind11::module& m);
+
+void addSageHacks(pybind11::module& m) {
+    addRegisterIntFromPyIndex(m);
 }
 
