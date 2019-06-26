@@ -382,7 +382,7 @@ REGINA_API std::string stringToToken(const char* str);
 REGINA_API std::string stringToToken(const std::string& str);
 
 /**
- * Converts the given native C++ integer into a unicode superscript string.
+ * Converts the given C++ integer into a unicode superscript string.
  *
  * The resulting string will be encoded using UTF-8.
  *
@@ -397,7 +397,7 @@ template <typename T>
 std::string superscript(T value);
 
 /**
- * Converts the given native C++ integer into a unicode subscript string.
+ * Converts the given C++ integer into a unicode subscript string.
  *
  * The resulting string will be encoded using UTF-8.
  *
