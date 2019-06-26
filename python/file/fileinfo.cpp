@@ -30,34 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "file/fileinfo.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::FileInfo;
 
-void addFileInfo() {
-    class_<FileInfo, std::auto_ptr<FileInfo>, boost::noncopyable>
-            ("FileInfo", no_init)
-        .def("pathname", &FileInfo::pathname,
-            return_value_policy<return_by_value>())
+void addFileInfo(pybind11::module& m) {
+    auto c = pybind11::class_<FileInfo>(m, "FileInfo")
+        .def("pathname", &FileInfo::pathname)
         .def("type", &FileInfo::type)
-        .def("typeDescription", &FileInfo::typeDescription,
-            return_value_policy<return_by_value>())
-        .def("engine", &FileInfo::engine,
-            return_value_policy<return_by_value>())
+        .def("typeDescription", &FileInfo::typeDescription)
+        .def("engine", &FileInfo::engine)
         .def("isCompressed", &FileInfo::isCompressed)
         .def("isInvalid", &FileInfo::isInvalid)
-        .def("identify", &FileInfo::identify,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("identify")
-        // Apparently there is no way in python to make attributes read-only.
-        .attr("TYPE_XML") = FileInfo::TYPE_XML
+        .def_static("identify", &FileInfo::identify)
+        .def_readonly_static("TYPE_XML", &FileInfo::TYPE_XML)
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NFileInfo") = scope().attr("FileInfo");
+    m.attr("NFileInfo") = m.attr("FileInfo");
 }
 
