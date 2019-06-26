@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/homologicaldata.h"
 #include "../helpers.h"
 

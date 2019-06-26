@@ -30,110 +30,51 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::Example;
 
-void addExample3() {
-    class_<Example<3>>("Example3", no_init)
-        .def("sphere", &Example<3>::sphere,
-            return_value_policy<to_held_type<> >())
-        .def("simplicialSphere", &Example<3>::simplicialSphere,
-            return_value_policy<to_held_type<> >())
-        .def("sphereBundle", &Example<3>::sphereBundle,
-            return_value_policy<to_held_type<> >())
-        .def("twistedSphereBundle", &Example<3>::twistedSphereBundle,
-            return_value_policy<to_held_type<> >())
-        .def("ball", &Example<3>::ball,
-            return_value_policy<to_held_type<> >())
-        .def("ballBundle", &Example<3>::ballBundle,
-            return_value_policy<to_held_type<> >())
-        .def("twistedBallBundle", &Example<3>::twistedBallBundle,
-            return_value_policy<to_held_type<> >())
-        .def("doubleCone", &Example<3>::doubleCone,
-            return_value_policy<to_held_type<>>())
-        .def("singleCone", &Example<3>::singleCone,
-            return_value_policy<to_held_type<>>())
-        .def("threeSphere", &Example<3>::threeSphere,
-            return_value_policy<to_held_type<> >())
-        .def("bingsHouse", &Example<3>::bingsHouse,
-            return_value_policy<to_held_type<> >())
-        .def("s2xs1", &Example<3>::s2xs1,
-            return_value_policy<to_held_type<> >())
-        .def("rp2xs1", &Example<3>::rp2xs1,
-            return_value_policy<to_held_type<> >())
-        .def("rp3rp3", &Example<3>::rp3rp3,
-            return_value_policy<to_held_type<> >())
-        .def("lens", &Example<3>::lens,
-            return_value_policy<to_held_type<> >())
-        .def("poincareHomologySphere",
-            &Example<3>::poincareHomologySphere,
-            return_value_policy<to_held_type<> >())
-        .def("weeks", &Example<3>::weeks,
-            return_value_policy<to_held_type<> >())
-        .def("weberSeifert", &Example<3>::weberSeifert,
-            return_value_policy<to_held_type<> >())
-        .def("smallClosedOrblHyperbolic",
-            &Example<3>::smallClosedOrblHyperbolic,
-            return_value_policy<to_held_type<> >())
-        .def("smallClosedNonOrblHyperbolic",
-            &Example<3>::smallClosedNonOrblHyperbolic,
-            return_value_policy<to_held_type<> >())
-        .def("sphere600", &Example<3>::sphere600,
-            return_value_policy<to_held_type<> >())
-        .def("lst", &Example<3>::lst,
-            return_value_policy<to_held_type<> >())
-        .def("solidKleinBottle", &Example<3>::solidKleinBottle,
-            return_value_policy<to_held_type<> >())
-        .def("figureEight", &Example<3>::figureEight,
-            return_value_policy<to_held_type<> >())
-        .def("trefoil", &Example<3>::trefoil,
-            return_value_policy<to_held_type<> >())
-        .def("whiteheadLink", &Example<3>::whiteheadLink,
-            return_value_policy<to_held_type<> >())
-        .def("gieseking", &Example<3>::gieseking,
-            return_value_policy<to_held_type<> >())
-        .def("cuspedGenusTwoTorus",
-            &Example<3>::cuspedGenusTwoTorus,
-            return_value_policy<to_held_type<> >())
-        .def(regina::python::no_eq_operators())
-        .staticmethod("sphere")
-        .staticmethod("simplicialSphere")
-        .staticmethod("sphereBundle")
-        .staticmethod("twistedSphereBundle")
-        .staticmethod("ball")
-        .staticmethod("ballBundle")
-        .staticmethod("twistedBallBundle")
-        .staticmethod("doubleCone")
-        .staticmethod("singleCone")
-        .staticmethod("threeSphere")
-        .staticmethod("bingsHouse")
-        .staticmethod("s2xs1")
-        .staticmethod("rp2xs1")
-        .staticmethod("rp3rp3")
-        .staticmethod("lens")
-        .staticmethod("poincareHomologySphere")
-        .staticmethod("weeks")
-        .staticmethod("weberSeifert")
-        .staticmethod("smallClosedOrblHyperbolic")
-        .staticmethod("smallClosedNonOrblHyperbolic")
-        .staticmethod("sphere600")
-        .staticmethod("lst")
-        .staticmethod("solidKleinBottle")
-        .staticmethod("figureEight")
-        .staticmethod("trefoil")
-        .staticmethod("whiteheadLink")
-        .staticmethod("gieseking")
-        .staticmethod("cuspedGenusTwoTorus")
+void addExample3(pybind11::module& m) {
+    auto c = pybind11::class_<Example<3>>(m, "Example3")
+        .def_static("sphere", &Example<3>::sphere)
+        .def_static("simplicialSphere", &Example<3>::simplicialSphere)
+        .def_static("sphereBundle", &Example<3>::sphereBundle)
+        .def_static("twistedSphereBundle", &Example<3>::twistedSphereBundle)
+        .def_static("ball", &Example<3>::ball)
+        .def_static("ballBundle", &Example<3>::ballBundle)
+        .def_static("twistedBallBundle", &Example<3>::twistedBallBundle)
+        .def_static("doubleCone", &Example<3>::doubleCone)
+        .def_static("singleCone", &Example<3>::singleCone)
+        .def_static("threeSphere", &Example<3>::threeSphere)
+        .def_static("bingsHouse", &Example<3>::bingsHouse)
+        .def_static("s2xs1", &Example<3>::s2xs1)
+        .def_static("rp2xs1", &Example<3>::rp2xs1)
+        .def_static("rp3rp3", &Example<3>::rp3rp3)
+        .def_static("lens", &Example<3>::lens)
+        .def_static("poincareHomologySphere",
+            &Example<3>::poincareHomologySphere)
+        .def_static("weeks", &Example<3>::weeks)
+        .def_static("weberSeifert", &Example<3>::weberSeifert)
+        .def_static("smallClosedOrblHyperbolic",
+            &Example<3>::smallClosedOrblHyperbolic)
+        .def_static("smallClosedNonOrblHyperbolic",
+            &Example<3>::smallClosedNonOrblHyperbolic)
+        .def_static("sphere600", &Example<3>::sphere600)
+        .def_static("lst", &Example<3>::lst)
+        .def_static("solidKleinBottle", &Example<3>::solidKleinBottle)
+        .def_static("figureEight", &Example<3>::figureEight)
+        .def_static("trefoil", &Example<3>::trefoil)
+        .def_static("whiteheadLink", &Example<3>::whiteheadLink)
+        .def_static("gieseking", &Example<3>::gieseking)
+        .def_static("cuspedGenusTwoTorus",
+            &Example<3>::cuspedGenusTwoTorus)
     ;
+    regina::python::no_eq_operators(c);
 
-    scope().attr("NExampleTriangulation") = scope().attr("Example3");
+    m.attr("NExampleTriangulation") = m.attr("Example3");
 }
 

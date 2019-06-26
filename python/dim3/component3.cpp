@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"

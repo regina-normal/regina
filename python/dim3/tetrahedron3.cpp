@@ -30,63 +30,58 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
-#include "../generic/facehelper.h"
+// #include "../generic/facehelper.h"
 
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::Tetrahedron;
 
-void addTetrahedron3() {
-    class_<regina::Simplex<3>, std::auto_ptr<regina::Simplex<3>>,
-            boost::noncopyable>("Simplex3", no_init)
-        .def("description", &Tetrahedron<3>::description,
-            return_value_policy<return_by_value>())
+void addTetrahedron3(pybind11::module& m) {
+    auto c = pybind11::class_<regina::Simplex<3>>(m, "Simplex3")
+        .def("description", &Tetrahedron<3>::description)
         .def("setDescription", &Tetrahedron<3>::setDescription)
         .def("index", &Tetrahedron<3>::index)
         .def("adjacentTetrahedron", &Tetrahedron<3>::adjacentTetrahedron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("adjacentSimplex", &Tetrahedron<3>::adjacentSimplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("adjacentGluing", &Tetrahedron<3>::adjacentGluing)
         .def("adjacentFace", &Tetrahedron<3>::adjacentFace)
         .def("adjacentFacet", &Tetrahedron<3>::adjacentFacet)
         .def("hasBoundary", &Tetrahedron<3>::hasBoundary)
         .def("join", &Tetrahedron<3>::join)
         .def("unjoin", &Tetrahedron<3>::unjoin,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isolate", &Tetrahedron<3>::isolate)
-        .def("triangulation", &Tetrahedron<3>::triangulation,
-            return_value_policy<to_held_type<> >())
+        .def("triangulation", &Tetrahedron<3>::triangulation)
         .def("component", &Tetrahedron<3>::component,
-            return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Tetrahedron<3>, 3, int>)
+            pybind11::return_value_policy::reference)
+        // .def("face", &regina::python::face<Tetrahedron<3>, 3, int>)
         .def("vertex", &Tetrahedron<3>::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("edge", (regina::Edge<3>* (Tetrahedron<3>::*)(int) const)(
-                &Tetrahedron<3>::edge),
-            return_value_policy<reference_existing_object>())
-        .def("edge", (regina::Edge<3>* (Tetrahedron<3>::*)(int, int) const)(
-                &Tetrahedron<3>::edge),
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
+        .def("edge",
+            overload_cast<int>(&Tetrahedron<3>::edge, pybind11::const_),
+            pybind11::return_value_policy::reference)
+        .def("edge",
+            overload_cast<int, int>(&Tetrahedron<3>::edge, pybind11::const_),
+            pybind11::return_value_policy::reference)
         .def("triangle", &Tetrahedron<3>::triangle,
-            return_value_policy<reference_existing_object>())
-        .def("faceMapping", &regina::python::faceMapping<Tetrahedron<3>, 3>)
+            pybind11::return_value_policy::reference)
+        // .def("faceMapping", &regina::python::faceMapping<Tetrahedron<3>, 3>)
         .def("vertexMapping", &Tetrahedron<3>::vertexMapping)
         .def("edgeMapping", &Tetrahedron<3>::edgeMapping)
         .def("triangleMapping", &Tetrahedron<3>::triangleMapping)
         .def("orientation", &Tetrahedron<3>::orientation)
         .def("facetInMaximalForest", &Tetrahedron<3>::facetInMaximalForest)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NTetrahedron") = scope().attr("Simplex3");
-    scope().attr("Tetrahedron3") = scope().attr("Simplex3");
-    scope().attr("Face3_3") = scope().attr("Simplex3");
+    m.attr("NTetrahedron") = m.attr("Simplex3");
+    m.attr("Tetrahedron3") = m.attr("Simplex3");
+    m.attr("Face3_3") = m.attr("Simplex3");
 }
 

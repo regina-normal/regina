@@ -46,17 +46,17 @@ void addTriangulation3(pybind11::module& m);
 void addVertex3(pybind11::module& m);
 
 void addTriangulationClasses(pybind11::module& m) {
-    addBoundaryComponent3(m);
-    addComponent3(m);
-    addEdge3(m);
+    // TODO addBoundaryComponent3(m);
+    // TODO addComponent3(m);
+    // TODO addEdge3(m);
     addExample3(m);
-    addFacePair(m);
-    addFacetPairing3(m);
-    addHomologicalData(m);
+    // TODO addFacePair(m);
+    // TODO addFacetPairing3(m);
+    // TODO addHomologicalData(m);
     addIsomorphism3(m);
     addTetrahedron3(m);
-    addTriangle3(m);
+    // TODO addTriangle3(m);
     addTriangulation3(m);
-    addVertex3(m);
+    // TODO addVertex3(m);
 }
 
