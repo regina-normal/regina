@@ -31,40 +31,36 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "triangulation/facepair.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::FacePair;
 
-namespace {
-    void facepair_inc_operator(FacePair& p) {
-        p++;
-    }
-
-    void facepair_dec_operator(FacePair& p) {
-        p--;
-    }
-}
-
-void addFacePair() {
-    class_<FacePair>("FacePair")
-        .def(init<int, int>())
-        .def(init<const FacePair&>())
+void addFacePair(pybind11::module& m) {
+    // TODO: Should we use a by-value holder type?
+    auto c = pybind11::class_<FacePair>(m, "FacePair")
+        .def(pybind11::init<>())
+        .def(pybind11::init<int, int>())
+        .def(pybind11::init<const FacePair&>())
         .def("lower", &FacePair::lower)
         .def("upper", &FacePair::upper)
         .def("isBeforeStart", &FacePair::isBeforeStart)
         .def("isPastEnd", &FacePair::isPastEnd)
         .def("complement", &FacePair::complement)
-        .def(self < self)
-        .def(self > self)
-        .def(self <= self)
-        .def(self >= self)
-        .def("inc", facepair_inc_operator)
-        .def("dec", facepair_dec_operator)
-        .def(regina::python::add_eq_operators())
+        .def(pybind11::self < pybind11::self)
+        .def(pybind11::self > pybind11::self)
+        .def(pybind11::self <= pybind11::self)
+        .def(pybind11::self >= pybind11::self)
+        .def("inc", [](FacePair& p) {
+            p++;
+        })
+        .def("dec", [](FacePair& p) {
+            p--;
+        })
     ;
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NFacePair") = scope().attr("FacePair");
+    m.attr("NFacePair") = m.attr("FacePair");
 }
 

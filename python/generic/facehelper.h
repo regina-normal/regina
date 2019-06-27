@@ -48,7 +48,7 @@ template <class T, int dim, int subdim>
 pybind11::object faces_list(const T& t) {
     pybind11::list ans;
     for (auto f : t.template faces<subdim>())
-        ans.append(pybind11::cast(f)); // Uses reference return value policy
+        ans.append(f); // Uses reference return value policy
     return ans;
 }
 
@@ -65,8 +65,8 @@ pybind11::object faces_list(const T& t) {
  * the argument \a subdim; we resolve this by converting return values
  * to python objects here, instead of letting pybind11 do it later.
  *
- * Recall that, when given a pointer, pybind11::cast() defaults to a return
- * value policy of reference (which is what we want here).
+ * Note: when given a pointer, pybind11::cast() and pybind11::list::append()
+ * both default to a return value policy of reference, not take_ownership.
  */
 template <class T, int dim, int subdim>
 struct FaceHelper {
@@ -92,7 +92,7 @@ struct FaceHelper {
         if (subdimArg == subdim) {
             pybind11::list ans;
             for (auto f : t.template faces<subdim>())
-                ans.append(pybind11::cast(f));
+                ans.append(f);
             return ans;
         }
         return FaceHelper<T, dim, subdim - 1>::facesFrom(t, subdimArg);
@@ -130,7 +130,7 @@ struct FaceHelper<T, dim, 0> {
     static pybind11::object facesFrom(const T& t, int) {
         pybind11::list ans;
         for (auto f : t.template faces<0>())
-            ans.append(pybind11::cast(f));
+            ans.append(f);
         return ans;
     }
 

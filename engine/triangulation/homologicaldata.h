@@ -623,9 +623,6 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * \ifacespython Not available, though the string routine
-     * torsionRankVectorString() can still be used.
-     *
      * @return the torsion form rank vector.
      */
     const std::vector< std::pair< Integer,
@@ -649,9 +646,6 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * \ifacespython Not available, though the string routine
-     * torsionSigmaVectorString() can still be used.
-     *
      * @return the Kawauchi-Kojima sigma-vector.
      */
     const std::vector<LargeInteger>& torsionSigmaVector();
@@ -674,9 +668,6 @@ public:
      * Math. Ann. 253 (1980), 29--42.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
-     *
-     * \ifacespython Not available, though the string routine
-     * torsionLegendreSymbolVectorString() can still be used.
      *
      * @return the Legendre symbol vector associated to the torsion
      * linking form.

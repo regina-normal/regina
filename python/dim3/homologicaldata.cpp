@@ -31,51 +31,50 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "triangulation/homologicaldata.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::HomologicalData;
 using regina::Triangulation;
 
-void addHomologicalData() {
-    class_<HomologicalData, std::auto_ptr<HomologicalData>,
-            boost::noncopyable>
-            ("HomologicalData", init<const Triangulation<3>&>())
-        .def(init<const HomologicalData&>())
+void addHomologicalData(pybind11::module& m) {
+    auto c = pybind11::class_<HomologicalData>(m, "HomologicalData")
+        .def(pybind11::init<const Triangulation<3>&>())
+        .def(pybind11::init<const HomologicalData&>())
         .def("homology", &HomologicalData::homology,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("bdryHomology", &HomologicalData::bdryHomology,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("bdryHomologyMap", &HomologicalData::bdryHomologyMap,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("dualHomology", &HomologicalData::dualHomology,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("h1CellAp", &HomologicalData::h1CellAp,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("countStandardCells", &HomologicalData::countStandardCells)
         .def("countDualCells", &HomologicalData::countDualCells)
         .def("countBdryCells", &HomologicalData::countBdryCells)
         .def("eulerChar", &HomologicalData::eulerChar)
+        .def("torsionRankVector", &HomologicalData::torsionRankVector)
         .def("torsionRankVectorString",
-            &HomologicalData::torsionRankVectorString,
-            return_value_policy<copy_const_reference>())
+            &HomologicalData::torsionRankVectorString)
+        .def("torsionSigmaVector", &HomologicalData::torsionSigmaVector)
         .def("torsionSigmaVectorString",
-            &HomologicalData::torsionSigmaVectorString,
-            return_value_policy<copy_const_reference>())
+            &HomologicalData::torsionSigmaVectorString)
+        .def("torsionLegendreSymbolVector",
+            &HomologicalData::torsionLegendreSymbolVector)
         .def("torsionLegendreSymbolVectorString",
-            &HomologicalData::torsionLegendreSymbolVectorString,
-            return_value_policy<copy_const_reference>())
+            &HomologicalData::torsionLegendreSymbolVectorString)
         .def("formIsHyperbolic", &HomologicalData::formIsHyperbolic)
         .def("formIsSplit", &HomologicalData::formIsSplit)
         .def("formSatKK", &HomologicalData::formSatKK)
         .def("embeddabilityComment",
-            &HomologicalData::embeddabilityComment,
-            return_value_policy<copy_const_reference>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
+            &HomologicalData::embeddabilityComment)
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NHomologicalData") = scope().attr("HomologicalData");
+    m.attr("NHomologicalData") = m.attr("HomologicalData");
 }
 

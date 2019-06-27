@@ -31,128 +31,95 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::Face;
 using regina::FaceEmbedding;
 using regina::Vertex;
 using regina::VertexEmbedding;
 
-namespace {
-    boost::python::list vertex_embeddings_list(const Vertex<3>* v) {
-        boost::python::list ans;
-        for (auto& emb: *v)
-            ans.append(emb);
-        return ans;
-    }
-
-    regina::Triangulation<2>* vertex_buildLink(const Vertex<3>* v) {
-        return new regina::Triangulation<2>(*(v->buildLink()));
-    }
-
-    boost::python::tuple vertex_buildLinkDetail_bool(const Vertex<3>* v,
-            bool labels = true) {
-        regina::Isomorphism<3>* iso;
-        regina::Triangulation<2>* link = new regina::Triangulation<2>(
-            *(v->buildLinkDetail(labels, &iso)));
-        return boost::python::make_tuple(
-            boost::python::object(boost::python::handle<>(
-                regina::python::to_held_type<>::
-                apply<regina::Triangulation<2>*>::type()(link))),
-            boost::python::object(boost::python::handle<>(
-                boost::python::manage_new_object::
-                apply<regina::Isomorphism<3>*>::type()(iso))));
-    }
-
-    boost::python::tuple vertex_buildLinkDetail_void(const Vertex<3>* v) {
-        return vertex_buildLinkDetail_bool(v);
-    }
-}
-
-void addVertex3() {
+void addVertex3(pybind11::module& m) {
     // TODO: Should we use a by-value holder type?
-    class_<FaceEmbedding<3, 0>>("FaceEmbedding3_0",
-            init<regina::Tetrahedron<3>*, int>())
-        .def(init<const VertexEmbedding<3>&>())
+    auto e = pybind11::class_<FaceEmbedding<3, 0>>(m, "FaceEmbedding3_0")
+        .def(pybind11::init<regina::Tetrahedron<3>* ,int>())
+        .def(pybind11::init<const VertexEmbedding<3>&>())
         .def("simplex", &VertexEmbedding<3>::simplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("tetrahedron", &VertexEmbedding<3>::tetrahedron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("face", &VertexEmbedding<3>::face)
         .def("vertex", &VertexEmbedding<3>::vertex)
         .def("vertices", &VertexEmbedding<3>::vertices)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(e);
+    regina::python::add_eq_operators(e);
 
-    {
-        scope s = class_<Face<3, 0>, std::auto_ptr<Face<3, 0>>,
-                boost::noncopyable>("Face3_0", no_init)
-            .def("index", &Vertex<3>::index)
-            .def("embeddings", vertex_embeddings_list)
-            .def("embedding", &Vertex<3>::embedding,
-                return_internal_reference<>())
-            .def("front", &Vertex<3>::front,
-                return_internal_reference<>())
-            .def("back", &Vertex<3>::back,
-                return_internal_reference<>())
-            .def("triangulation", &Vertex<3>::triangulation,
-                return_value_policy<to_held_type<> >())
-            .def("component", &Vertex<3>::component,
-                return_value_policy<reference_existing_object>())
-            .def("boundaryComponent", &Vertex<3>::boundaryComponent,
-                return_value_policy<reference_existing_object>())
-            .def("degree", &Vertex<3>::degree)
-            .def("link", &Vertex<3>::link)
-            .def("buildLink", &vertex_buildLink,
-                return_value_policy<to_held_type<>>())
-            .def("buildLinkDetail", vertex_buildLinkDetail_void)
-            .def("buildLinkDetail", vertex_buildLinkDetail_bool)
-            .def("isLinkClosed", &Vertex<3>::isLinkClosed)
-            .def("isIdeal", &Vertex<3>::isIdeal)
-            .def("isBoundary", &Vertex<3>::isBoundary)
-            .def("isStandard", &Vertex<3>::isStandard)
-            .def("isValid", &Vertex<3>::isValid)
-            .def("hasBadIdentification", &Vertex<3>::hasBadIdentification)
-            .def("hasBadLink", &Vertex<3>::hasBadLink)
-            .def("isLinkOrientable", &Vertex<3>::isLinkOrientable)
-            .def("linkEulerChar", &Vertex<3>::linkEulerChar)
-            .def("ordering", &Vertex<3>::ordering)
-            .def("faceNumber", &Vertex<3>::faceNumber)
-            .def("containsVertex", &Vertex<3>::containsVertex)
-            .def(regina::python::add_output())
-            .def(regina::python::add_eq_operators())
-            .staticmethod("ordering")
-            .staticmethod("faceNumber")
-            .staticmethod("containsVertex")
-        ;
+    auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0")
+        .def("index", &Vertex<3>::index)
+        .def("embeddings", [](const Vertex<3>& v) {
+            pybind11::list ans;
+            for (const auto& emb : v)
+                ans.append(emb);
+            return ans;
+        })
+        .def("embedding", &Vertex<3>::embedding,
+            pybind11::return_value_policy::reference_internal)
+        .def("front", &Vertex<3>::front,
+            pybind11::return_value_policy::reference_internal)
+        .def("back", &Vertex<3>::back,
+            pybind11::return_value_policy::reference_internal)
+        .def("triangulation", &Vertex<3>::triangulation)
+        .def("component", &Vertex<3>::component,
+            pybind11::return_value_policy::reference)
+        .def("boundaryComponent", &Vertex<3>::boundaryComponent,
+            pybind11::return_value_policy::reference)
+        .def("degree", &Vertex<3>::degree)
+        .def("link", &Vertex<3>::link)
+        .def("buildLink", [](const Vertex<3>* v) {
+            // Return a clone of the link, since python cannot enforce
+            // constness of the triangulation that is returned.
+            return new regina::Triangulation<2>(*(v->buildLink()));
+        })
+        .def("buildLinkDetail", [](const Vertex<3>* v, bool labels) {
+            // Return a clone of the link (as above); also, we always
+            // build the isomorphism.
+            regina::Isomorphism<3>* iso;
+            regina::Triangulation<2>* link = new regina::Triangulation<2>(
+                *(v->buildLinkDetail(labels, &iso)));
+            return pybind11::make_tuple(link, iso);
+        }, pybind11::arg("labels") = true)
+        .def("isLinkClosed", &Vertex<3>::isLinkClosed)
+        .def("isIdeal", &Vertex<3>::isIdeal)
+        .def("isBoundary", &Vertex<3>::isBoundary)
+        .def("isStandard", &Vertex<3>::isStandard)
+        .def("isValid", &Vertex<3>::isValid)
+        .def("hasBadIdentification", &Vertex<3>::hasBadIdentification)
+        .def("hasBadLink", &Vertex<3>::hasBadLink)
+        .def("isLinkOrientable", &Vertex<3>::isLinkOrientable)
+        .def("linkEulerChar", &Vertex<3>::linkEulerChar)
+        .def_static("ordering", &Vertex<3>::ordering)
+        .def_static("faceNumber", &Vertex<3>::faceNumber)
+        .def_static("containsVertex", &Vertex<3>::containsVertex)
+    ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-        enum_<regina::Vertex<3>::LinkType>("LinkType")
-            .value("SPHERE", regina::Vertex<3>::SPHERE)
-            .value("DISC", regina::Vertex<3>::DISC)
-            .value("TORUS", regina::Vertex<3>::TORUS)
-            .value("KLEIN_BOTTLE", regina::Vertex<3>::KLEIN_BOTTLE)
-            .value("NON_STANDARD_CUSP", regina::Vertex<3>::NON_STANDARD_CUSP)
-            .value("INVALID", regina::Vertex<3>::INVALID)
-            ;
+    pybind11::enum_<regina::Vertex<3>::LinkType>(c, "LinkType")
+        .value("SPHERE", regina::Vertex<3>::SPHERE)
+        .value("DISC", regina::Vertex<3>::DISC)
+        .value("TORUS", regina::Vertex<3>::TORUS)
+        .value("KLEIN_BOTTLE", regina::Vertex<3>::KLEIN_BOTTLE)
+        .value("NON_STANDARD_CUSP", regina::Vertex<3>::NON_STANDARD_CUSP)
+        .value("INVALID", regina::Vertex<3>::INVALID)
+        .export_values();
 
-        s.attr("SPHERE") = Vertex<3>::SPHERE;
-        s.attr("DISC") = Vertex<3>::DISC;
-        s.attr("TORUS") = Vertex<3>::TORUS;
-        s.attr("KLEIN_BOTTLE") = Vertex<3>::KLEIN_BOTTLE;
-        s.attr("NON_STANDARD_CUSP") = Vertex<3>::NON_STANDARD_CUSP;
-        s.attr("INVALID") = Vertex<3>::INVALID;
-    }
-
-    scope().attr("NVertexEmbedding") = scope().attr("FaceEmbedding3_0");
-    scope().attr("VertexEmbedding3") = scope().attr("FaceEmbedding3_0");
-    scope().attr("NVertex") = scope().attr("Face3_0");
-    scope().attr("Vertex3") = scope().attr("Face3_0");
+    m.attr("NVertexEmbedding") = m.attr("FaceEmbedding3_0");
+    m.attr("VertexEmbedding3") = m.attr("FaceEmbedding3_0");
+    m.attr("NVertex") = m.attr("Face3_0");
+    m.attr("Vertex3") = m.attr("Face3_0");
 }
 

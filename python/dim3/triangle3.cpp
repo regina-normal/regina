@@ -41,7 +41,6 @@ using regina::Face;
 using regina::FaceEmbedding;
 using regina::Triangle;
 using regina::TriangleEmbedding;
-using regina::python::GlobalArray;
 
 void addTriangle3(pybind11::module& m) {
     // TODO: Should we use a by-value holder type?

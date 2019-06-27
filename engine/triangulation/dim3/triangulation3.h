@@ -611,7 +611,8 @@ class REGINA_API Triangulation<3> :
          * @see allCalculatedTuraevViro
          */
         Cyclotomic turaevViro(unsigned long r, bool parity = true,
-            Algorithm alg = ALG_DEFAULT, ProgressTracker* tracker = 0) const;
+            Algorithm alg = ALG_DEFAULT,
+            ProgressTracker* tracker = nullptr) const;
         /**
          * Computes the given Turaev-Viro state sum invariant of this
          * 3-manifold using a fast but inexact floating-point approximation.
@@ -1145,7 +1146,7 @@ class REGINA_API Triangulation<3> :
          * fewer tetrahedra.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
-            ProgressTrackerOpen* tracker = 0);
+            ProgressTrackerOpen* tracker = nullptr);
 
         /**
          * Explores all triangulations that can be reached from this via
@@ -1834,7 +1835,7 @@ class REGINA_API Triangulation<3> :
          * because this is a non-orientable triangulation with embedded
          * two-sided projective planes.
          */
-        long connectedSumDecomposition(Packet* primeParent = 0,
+        long connectedSumDecomposition(Packet* primeParent = nullptr,
             bool setLabels = true);
         /**
          * Determines whether this is a triangulation of a 3-sphere.
@@ -2327,7 +2328,7 @@ class REGINA_API Triangulation<3> :
          * taken.  This may be \c null (the default), in which case the
          * first tetrahedron will be used.
          */
-        void puncture(Tetrahedron<3>* tet = 0);
+        void puncture(Tetrahedron<3>* tet = nullptr);
 
         /*@}*/
         /**

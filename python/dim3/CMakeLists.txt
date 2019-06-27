@@ -2,18 +2,18 @@
 
 # Files to compile
 SET ( FILES
-  # TODO boundarycomponent3
-  # TODO component3
-  # TODO edge3
+  boundarycomponent3
+  component3
+  edge3
   example3
-  # TODO facetpairing3
-  # TODO facepair
-  # TODO homologicaldata
+  facetpairing3
+  facepair
+  homologicaldata
   isomorphism3
   tetrahedron3
   triangle3
   triangulation3
-  # TODO vertex3
+  vertex3
   pytriangulation
   )
 

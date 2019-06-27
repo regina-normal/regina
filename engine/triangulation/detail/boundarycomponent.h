@@ -374,8 +374,6 @@ class BoundaryComponentFaceStorage :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool allFaces = true;
 
@@ -607,8 +605,6 @@ class BoundaryComponentFaceStorage<dim, false> {
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool allFaces = false;
 
@@ -791,8 +787,6 @@ class BoundaryComponentFaceInterface :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool allowVertex = true;
 
@@ -958,8 +952,6 @@ class BoundaryComponentFaceInterface<dim, allFaces, false> :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool allowVertex = false;
 
@@ -1055,8 +1047,6 @@ class BoundaryComponentStorage :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool canBuild = true;
 
@@ -1172,8 +1162,6 @@ class BoundaryComponentStorage<dim, allFaces, allowVertex, false> :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool canBuild = false;
 };

@@ -34,67 +34,61 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim2.h" // for build()
 #include "../helpers.h"
-#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::BoundaryComponent;
 
-void addBoundaryComponent3() {
-    {
-        scope s = class_<BoundaryComponent<3>,
-                std::auto_ptr<BoundaryComponent<3>>,
-                boost::noncopyable> ("BoundaryComponent3", no_init)
-            .def("index", &BoundaryComponent<3>::index)
-            .def("size", &BoundaryComponent<3>::size)
-            .def("countFaces", &regina::python::countFaces<BoundaryComponent<3>, 3>)
-            .def("countTriangles", &BoundaryComponent<3>::countTriangles)
-            .def("countEdges", &BoundaryComponent<3>::countEdges)
-            .def("countVertices", &BoundaryComponent<3>::countVertices)
-            .def("facets",
-                regina::python::faces_list<BoundaryComponent<3>, 3, 2>)
-            .def("faces", regina::python::faces<BoundaryComponent<3>, 3>)
-            .def("triangles",
-                regina::python::faces_list<BoundaryComponent<3>, 3, 2>)
-            .def("edges",
-                regina::python::faces_list<BoundaryComponent<3>, 3, 1>)
-            .def("vertices",
-                regina::python::faces_list<BoundaryComponent<3>, 3, 0>)
-            .def("facet", &BoundaryComponent<3>::facet,
-                return_value_policy<reference_existing_object>())
-            .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>)
-            .def("triangle", &BoundaryComponent<3>::triangle,
-                return_value_policy<reference_existing_object>())
-            .def("edge", &BoundaryComponent<3>::edge,
-                return_value_policy<reference_existing_object>())
-            .def("vertex", &BoundaryComponent<3>::vertex,
-                return_value_policy<reference_existing_object>())
-            .def("component", &BoundaryComponent<3>::component,
-                return_value_policy<reference_existing_object>())
-            .def("triangulation", &BoundaryComponent<3>::triangulation,
-                return_value_policy<to_held_type<>>())
-            .def("build", &BoundaryComponent<3>::build,
-                return_internal_reference<>())
-            .def("eulerChar", &BoundaryComponent<3>::eulerChar)
-            .def("isReal", &BoundaryComponent<3>::isReal)
-            .def("isIdeal", &BoundaryComponent<3>::isIdeal)
-            .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)
-            .def("isOrientable", &BoundaryComponent<3>::isOrientable)
-            .def(regina::python::add_output())
-            .def(regina::python::add_eq_operators())
-        ;
-        /*
-         * If these bindings are enabled, we must use bool(...) on the RHS
-         * to ensure that the values are not treated as references (since
-         * these static class members are really just compile-time constants,
-         * and are not defined in a way that gives them linkage).
-        s.attr("allFaces") = bool(BoundaryComponent<3>::allFaces);
-        s.attr("allowVertex") = bool(BoundaryComponent<3>::allowVertex);
-        s.attr("canBuild") = bool(BoundaryComponent<3>::canBuild);
-        */
-    }
+void addBoundaryComponent3(pybind11::module& m) {
+    auto c = pybind11::class_<BoundaryComponent<3>>(m, "BoundaryComponent3")
+        .def("index", &BoundaryComponent<3>::index)
+        .def("size", &BoundaryComponent<3>::size)
+        .def("countFaces", &regina::python::countFaces<BoundaryComponent<3>, 3>)
+        .def("countTriangles", &BoundaryComponent<3>::countTriangles)
+        .def("countEdges", &BoundaryComponent<3>::countEdges)
+        .def("countVertices", &BoundaryComponent<3>::countVertices)
+        .def("facets",
+            regina::python::faces_list<BoundaryComponent<3>, 3, 2>)
+        .def("faces", regina::python::faces<BoundaryComponent<3>, 3>)
+        .def("triangles",
+            regina::python::faces_list<BoundaryComponent<3>, 3, 2>)
+        .def("edges",
+            regina::python::faces_list<BoundaryComponent<3>, 3, 1>)
+        .def("vertices",
+            regina::python::faces_list<BoundaryComponent<3>, 3, 0>)
+        .def("facet", &BoundaryComponent<3>::facet,
+            pybind11::return_value_policy::reference)
+        .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>)
+        .def("triangle", &BoundaryComponent<3>::triangle,
+            pybind11::return_value_policy::reference)
+        .def("edge", &BoundaryComponent<3>::edge,
+            pybind11::return_value_policy::reference)
+        .def("vertex", &BoundaryComponent<3>::vertex,
+            pybind11::return_value_policy::reference)
+        .def("component", &BoundaryComponent<3>::component,
+            pybind11::return_value_policy::reference)
+        .def("triangulation", &BoundaryComponent<3>::triangulation)
+        .def("build", &BoundaryComponent<3>::build,
+            pybind11::return_value_policy::reference_internal)
+        .def("eulerChar", &BoundaryComponent<3>::eulerChar)
+        .def("isReal", &BoundaryComponent<3>::isReal)
+        .def("isIdeal", &BoundaryComponent<3>::isIdeal)
+        .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)
+        .def("isOrientable", &BoundaryComponent<3>::isOrientable)
+        // We cannot take the addresses of the following header-only properties,
+        // so we define getter functions instead.
+        .def_property_readonly_static("allFaces", [](pybind11::object) {
+            return BoundaryComponent<3>::allFaces;
+        })
+        .def_property_readonly_static("allowVertex", [](pybind11::object) {
+            return BoundaryComponent<3>::allowVertex;
+        })
+        .def_property_readonly_static("canBuild", [](pybind11::object) {
+            return BoundaryComponent<3>::canBuild;
+        })
+    ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NBoundaryComponent") = scope().attr("BoundaryComponent3");
+    m.attr("NBoundaryComponent") = m.attr("BoundaryComponent3");
 }
 

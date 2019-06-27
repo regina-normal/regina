@@ -36,108 +36,69 @@
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::FacetPairing;
 using regina::FacetSpec;
 using regina::Triangulation;
 
-namespace {
-    const FacetSpec<3>& (FacetPairing<3>::*dest_face)(const FacetSpec<3>&) const =
-        &FacetPairing<3>::dest;
-    const FacetSpec<3>& (FacetPairing<3>::*dest_unsigned)(size_t, unsigned) const =
-        &FacetPairing<3>::dest;
-    bool (FacetPairing<3>::*isUnmatched_face)(const FacetSpec<3>&) const =
-        &FacetPairing<3>::isUnmatched;
-    bool (FacetPairing<3>::*isUnmatched_unsigned)(size_t, unsigned) const =
-        &FacetPairing<3>::isUnmatched;
-
-    bool (FacetPairing<3>::*query_bdec)() const =
-        &FacetPairing<3>::hasBrokenDoubleEndedChain;
-    bool (FacetPairing<3>::*query_oecwdh)() const =
-        &FacetPairing<3>::hasOneEndedChainWithDoubleHandle;
-    bool (FacetPairing<3>::*query_wdec)() const =
-        &FacetPairing<3>::hasWedgedDoubleEndedChain;
-    bool (FacetPairing<3>::*query_oecwsb)() const =
-        &FacetPairing<3>::hasOneEndedChainWithStrayBigon;
-    bool (FacetPairing<3>::*query_toec)() const =
-        &FacetPairing<3>::hasTripleOneEndedChain;
-
-    void writeDot_stdout(const FacetPairing<3>& p, const char* prefix = 0,
-            bool subgraph = false, bool labels = false) {
-        p.writeDot(std::cout, prefix, subgraph, labels);
-    }
-
-    void writeDotHeader_stdout(const char* graphName = 0) {
-        FacetPairing<3>::writeDotHeader(std::cout, graphName);
-    }
-
-    // Write dot() and dotHeader() as standalone functions: it seems
-    // difficult using boost overloads in a way that keeps both gcc and
-    // LLVM happy. :/
-    std::string dot_standalone(const FacetPairing<3>& p,
-            const char* prefix = 0, bool subgraph = false,
-            bool labels = false) {
-        return p.dot(prefix, subgraph, labels);
-    }
-
-    std::string dotHeader_standalone(const char* graphName = 0) {
-        return FacetPairing<3>::dotHeader(graphName);
-    }
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDot, writeDot_stdout, 1, 4);
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeDotHeader, writeDotHeader_stdout,
-        0, 1);
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dot, dot_standalone, 1, 4);
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_dotHeader, dotHeader_standalone, 0, 1);
-}
-
-void addFacetPairing3() {
-    class_<FacetPairing<3>, std::auto_ptr<FacetPairing<3>>, boost::noncopyable>
-            ("FacetPairing3", init<const FacetPairing<3>&>())
-        .def(init<const Triangulation<3>&>())
+void addFacetPairing3(pybind11::module& m) {
+    auto c = pybind11::class_<FacetPairing<3>>(m, "FacetPairing3")
+        .def(pybind11::init<const FacetPairing<3>&>())
+        .def(pybind11::init<const Triangulation<3>&>())
         .def("size", &FacetPairing<3>::size)
-        .def("dest", dest_face,
-            return_value_policy<reference_existing_object>())
-        .def("dest", dest_unsigned,
-            return_value_policy<reference_existing_object>())
+        .def("dest", overload_cast<const FacetSpec<3>&>(
+            &FacetPairing<3>::dest, pybind11::const_),
+            pybind11::return_value_policy::reference)
+        .def("dest", overload_cast<size_t, unsigned>(
+            &FacetPairing<3>::dest, pybind11::const_),
+            pybind11::return_value_policy::reference)
         .def("__getitem__",
             static_cast<const FacetSpec<3>& (FacetPairing<3>::*)(
                 const FacetSpec<3>&) const>(&FacetPairing<3>::operator[]),
-            return_value_policy<reference_existing_object>())
-        .def("isUnmatched", isUnmatched_face)
-        .def("isUnmatched", isUnmatched_unsigned)
+            pybind11::return_value_policy::reference)
+        .def("isUnmatched", overload_cast<const FacetSpec<3>&>(
+            &FacetPairing<3>::isUnmatched, pybind11::const_))
+        .def("isUnmatched", overload_cast<size_t, unsigned>(
+            &FacetPairing<3>::isUnmatched, pybind11::const_))
         .def("isCanonical", &FacetPairing<3>::isCanonical)
         .def("toTextRep", &FacetPairing<3>::toTextRep)
-        .def("fromTextRep", &FacetPairing<3>::fromTextRep,
-            return_value_policy<manage_new_object>())
-        .def("writeDot", writeDot_stdout, OL_writeDot())
-        .def("dot", dot_standalone, OL_dot())
-        .def("writeDotHeader", writeDotHeader_stdout, OL_writeDotHeader())
-        .def("dotHeader", dotHeader_standalone, OL_dotHeader())
+        .def_static("fromTextRep", &FacetPairing<3>::fromTextRep)
+        .def("writeDot", [](const FacetPairing<3>& p, const char* prefix,
+                bool subgraph, bool labels) {
+            p.writeDot(std::cout, prefix, subgraph, labels);
+        }, pybind11::arg("prefix") = nullptr,
+            pybind11::arg("subgraph") = false,
+            pybind11::arg("labels") = false)
+        .def("dot", &FacetPairing<3>::dot,
+            pybind11::arg("prefix") = nullptr,
+            pybind11::arg("subgraph") = false,
+            pybind11::arg("labels") = false)
+        .def_static("writeDotHeader", [](const char* graphName) {
+            FacetPairing<3>::writeDotHeader(std::cout, graphName);
+        }, pybind11::arg("graphName") = nullptr)
+        .def_static("dotHeader", &FacetPairing<3>::dotHeader,
+            pybind11::arg("graphName") = nullptr)
         .def("isClosed", &FacetPairing<3>::isClosed)
         .def("hasTripleEdge", &FacetPairing<3>::hasTripleEdge)
         .def("followChain", &FacetPairing<3>::followChain)
-
-        // For reasons I do not understand, it seems I have to declare
-        // these routines separately to avoid a compile error with
-        // g++ 3.3.  *shrug*
-        .def("hasBrokenDoubleEndedChain", query_bdec)
-        .def("hasOneEndedChainWithDoubleHandle", query_oecwdh)
-        .def("hasWedgedDoubleEndedChain", query_wdec)
-        .def("hasOneEndedChainWithStrayBigon", query_oecwsb)
-        .def("hasTripleOneEndedChain", query_toec)
-
+        .def("hasBrokenDoubleEndedChain", overload_cast<>(
+            &FacetPairing<3>::hasBrokenDoubleEndedChain, pybind11::const_))
+        .def("hasOneEndedChainWithDoubleHandle", overload_cast<>(
+            &FacetPairing<3>::hasOneEndedChainWithDoubleHandle,
+            pybind11::const_))
+        .def("hasWedgedDoubleEndedChain", overload_cast<>(
+            &FacetPairing<3>::hasWedgedDoubleEndedChain, pybind11::const_))
+        .def("hasOneEndedChainWithStrayBigon", overload_cast<>(
+            &FacetPairing<3>::hasOneEndedChainWithStrayBigon, pybind11::const_))
+        .def("hasTripleOneEndedChain", overload_cast<>(
+            &FacetPairing<3>::hasTripleOneEndedChain, pybind11::const_))
         .def("hasSingleStar", &FacetPairing<3>::hasSingleStar)
         .def("hasDoubleStar", &FacetPairing<3>::hasDoubleStar)
         .def("hasDoubleSquare", &FacetPairing<3>::hasDoubleSquare)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromTextRep")
-        .staticmethod("writeDotHeader")
-        .staticmethod("dotHeader")
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NFacePairing") = scope().attr("FacetPairing3");
+    m.attr("NFacePairing") = m.attr("FacetPairing3");
 }
 
