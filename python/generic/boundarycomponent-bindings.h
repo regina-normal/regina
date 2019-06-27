@@ -75,6 +75,15 @@ void addBoundaryComponent(const char* name) {
         .def("isOrientable", &BoundaryComponent<dim>::isOrientable)
         .def(regina::python::add_output())
         .def(regina::python::add_eq_operators())
+        /*
+         * If these bindings are enabled, we must use bool(...) on the RHS
+         * to ensure that the values are not treated as references (since
+         * these static class members are really just compile-time constants,
+         * and are not defined in a way that gives them linkage).
+        s.attr("allFaces") = bool(BoundaryComponent<dim>::allFaces);
+        s.attr("allowVertex") = bool(BoundaryComponent<dim>::allowVertex);
+        s.attr("canBuild") = bool(BoundaryComponent<dim>::canBuild);
+        */
     ;
 }
 
