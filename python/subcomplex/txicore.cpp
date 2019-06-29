@@ -52,7 +52,7 @@ void addTxICore() {
     class_<TxICore, std::auto_ptr<TxICore>, boost::noncopyable>
             ("TxICore", no_init)
         .def("core", &TxICore::core,
-            return_internal_reference<>())
+            return_internal_reference<>()) // TODO: Clone due to holder type
         .def("bdryTet", &TxICore::bdryTet)
         .def("bdryRoles", &TxICore::bdryRoles)
         .def("bdryReln", &TxICore::bdryReln,

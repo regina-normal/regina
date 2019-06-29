@@ -80,8 +80,9 @@ void addVertex3(pybind11::module& m) {
         .def("degree", &Vertex<3>::degree)
         .def("link", &Vertex<3>::link)
         .def("buildLink", [](const Vertex<3>* v) {
-            // Return a clone of the link, since python cannot enforce
-            // constness of the triangulation that is returned.
+            // Return a clone of the link.  This is because triangulations
+            // have a custom holder type, and so pybind11 ignores any attempt
+            // to pass return_value_policy::reference_internal.
             return new regina::Triangulation<2>(*(v->buildLink()));
         })
         .def("buildLinkDetail", [](const Vertex<3>* v, bool labels) {
