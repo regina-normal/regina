@@ -30,85 +30,71 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim2.h"
 #include "../globalarray.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
 using regina::Edge;
 using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
-using regina::python::GlobalArray;
 
-namespace {
-    boost::python::list Edge2_embeddings_list(const Edge<2>* e) {
-        boost::python::list ans;
-        for (auto& emb: *e)
-            ans.append(emb);
-        return ans;
-    }
-}
-
-void addEdge2() {
-    class_<FaceEmbedding<2, 1>>("FaceEmbedding2_1",
-            init<regina::Triangle<2>*, int>())
-        .def(init<const EdgeEmbedding<2>&>())
+void addEdge2(pybind11::module& m) {
+    auto e = pybind11::class_<FaceEmbedding<2, 1>>(m, "FaceEmbedding2_1")
+        .def(pybind11::init<regina::Triangle<2>*, int>())
+        .def(pybind11::init<const EdgeEmbedding<2>&>())
         .def("simplex", &EdgeEmbedding<2>::simplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("triangle", &EdgeEmbedding<2>::triangle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("face", &EdgeEmbedding<2>::face)
         .def("edge", &EdgeEmbedding<2>::edge)
         .def("vertices", &EdgeEmbedding<2>::vertices)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(e);
+    regina::python::add_eq_operators(e);
 
-    class_<Face<2, 1>, std::auto_ptr<Face<2, 1>>, boost::noncopyable>
-            ("Face2_1", no_init)
+    auto c = pybind11::class_<Face<2, 1>>(m, "Face2_1")
         .def("index", &Edge<2>::index)
         .def("isValid", &Edge<2>::isValid)
         .def("isLinkOrientable", &Edge<2>::isLinkOrientable)
-        .def("embeddings", Edge2_embeddings_list)
+        .def("embeddings", [](const Edge<2>& e) {
+            pybind11::list ans;
+            for (const auto& emb : e)
+                ans.append(emb);
+            return ans;
+        })
         .def("degree", &Edge<2>::degree)
         .def("embedding", &Edge<2>::embedding,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("front", &Edge<2>::front,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("back", &Edge<2>::back,
-            return_internal_reference<>())
-        .def("triangulation", &Edge<2>::triangulation,
-            return_value_policy<to_held_type<> >())
+            pybind11::return_value_policy::reference_internal)
+        .def("triangulation", &Edge<2>::triangulation)
         .def("component", &Edge<2>::component,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Edge<2>::boundaryComponent,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("face", &regina::python::face<Edge<2>, 1, int>)
         .def("vertex", &Edge<2>::vertex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Edge<2>, 1, 3>)
         .def("vertexMapping", &Edge<2>::vertexMapping)
         .def("isBoundary", &Edge<2>::isBoundary)
         .def("inMaximalForest", &Edge<2>::inMaximalForest)
-        .def("ordering", &Edge<2>::ordering)
-        .def("faceNumber", &Edge<2>::faceNumber)
-        .def("containsVertex", &Edge<2>::containsVertex)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("ordering")
-        .staticmethod("faceNumber")
-        .staticmethod("containsVertex")
+        .def_static("ordering", &Edge<2>::ordering)
+        .def_static("faceNumber", &Edge<2>::faceNumber)
+        .def_static("containsVertex", &Edge<2>::containsVertex)
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("Dim2EdgeEmbedding") = scope().attr("FaceEmbedding2_1");
-    scope().attr("EdgeEmbedding2") = scope().attr("FaceEmbedding2_1");
-    scope().attr("Dim2Edge") = scope().attr("Face2_1");
-    scope().attr("Edge2") = scope().attr("Face2_1");
+    m.attr("Dim2EdgeEmbedding") = m.attr("FaceEmbedding2_1");
+    m.attr("EdgeEmbedding2") = m.attr("FaceEmbedding2_1");
+    m.attr("Dim2Edge") = m.attr("Face2_1");
+    m.attr("Edge2") = m.attr("Face2_1");
 }
 

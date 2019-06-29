@@ -30,76 +30,64 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim2.h"
 #include "../globalarray.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
-#include <boost/python.hpp>
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::Vertex;
 using regina::VertexEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
-namespace {
-    boost::python::list Vertex2_embeddings_list(const Vertex<2>* v) {
-        boost::python::list ans;
-        for (auto& emb: *v)
-            ans.append(emb);
-        return ans;
-    }
-}
-
-void addVertex2() {
-    class_<FaceEmbedding<2, 0>>("FaceEmbedding2_0",
-            init<regina::Triangle<2>*, int>())
-        .def(init<const VertexEmbedding<2>&>())
+void addVertex2(pybind11::module& m) {
+    auto e = pybind11::class_<FaceEmbedding<2, 0>>(m, "FaceEmbedding2_0")
+        .def(pybind11::init<regina::Triangle<2>*, int>())
+        .def(pybind11::init<const VertexEmbedding<2>&>())
         .def("simplex", &VertexEmbedding<2>::simplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("triangle", &VertexEmbedding<2>::triangle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("face", &VertexEmbedding<2>::face)
         .def("vertex", &VertexEmbedding<2>::vertex)
         .def("vertices", &VertexEmbedding<2>::vertices)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(e);
+    regina::python::add_eq_operators(e);
 
-    class_<Face<2, 0>, std::auto_ptr<Face<2, 0>>, boost::noncopyable>
-            ("Face2_0", no_init)
+    auto c = pybind11::class_<Face<2, 0>>(m, "Face2_0")
         .def("index", &Vertex<2>::index)
         .def("isValid", &Vertex<2>::isValid)
         .def("isLinkOrientable", &Vertex<2>::isLinkOrientable)
-        .def("embeddings", Vertex2_embeddings_list)
+        .def("embeddings", [](const Vertex<2>& v) {
+            pybind11::list ans;
+            for (const auto& emb : v)
+                ans.append(emb);
+            return ans;
+        })
         .def("embedding", &Vertex<2>::embedding,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("front", &Vertex<2>::front,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("back", &Vertex<2>::back,
-            return_internal_reference<>())
-        .def("triangulation", &Vertex<2>::triangulation,
-            return_value_policy<to_held_type<> >())
+            pybind11::return_value_policy::reference_internal)
+        .def("triangulation", &Vertex<2>::triangulation)
         .def("component", &Vertex<2>::component,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Vertex<2>::boundaryComponent,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("degree", &Vertex<2>::degree)
         .def("isBoundary", &Vertex<2>::isBoundary)
-        .def("ordering", &Vertex<2>::ordering)
-        .def("faceNumber", &Vertex<2>::faceNumber)
-        .def("containsVertex", &Vertex<2>::containsVertex)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("ordering")
-        .staticmethod("faceNumber")
-        .staticmethod("containsVertex")
+        .def_static("ordering", &Vertex<2>::ordering)
+        .def_static("faceNumber", &Vertex<2>::faceNumber)
+        .def_static("containsVertex", &Vertex<2>::containsVertex)
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("Dim2VertexEmbedding") = scope().attr("FaceEmbedding2_0");
-    scope().attr("VertexEmbedding2") = scope().attr("FaceEmbedding2_0");
-    scope().attr("Dim2Vertex") = scope().attr("Face2_0");
-    scope().attr("Vertex2") = scope().attr("Face2_0");
+    m.attr("Dim2VertexEmbedding") = m.attr("FaceEmbedding2_0");
+    m.attr("VertexEmbedding2") = m.attr("FaceEmbedding2_0");
+    m.attr("Dim2Vertex") = m.attr("Face2_0");
+    m.attr("Vertex2") = m.attr("Face2_0");
 }
 

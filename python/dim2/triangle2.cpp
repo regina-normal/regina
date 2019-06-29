@@ -30,60 +30,54 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim2.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::Triangle;
 
-void addTriangle2() {
-    class_<regina::Simplex<2>, std::auto_ptr<regina::Simplex<2>>,
-            boost::noncopyable>("Simplex2", no_init)
-        .def("description", &Triangle<2>::description,
-            return_value_policy<return_by_value>())
+void addTriangle2(pybind11::module& m) {
+    auto c = pybind11::class_<regina::Simplex<2>>(m, "Simplex2")
+        .def("description", &Triangle<2>::description)
         .def("setDescription", &Triangle<2>::setDescription)
         .def("index", &Triangle<2>::index)
         .def("adjacentTriangle", &Triangle<2>::adjacentTriangle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("adjacentSimplex", &Triangle<2>::adjacentSimplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("adjacentGluing", &Triangle<2>::adjacentGluing)
         .def("adjacentEdge", &Triangle<2>::adjacentEdge)
         .def("adjacentFacet", &Triangle<2>::adjacentFacet)
         .def("hasBoundary", &Triangle<2>::hasBoundary)
         .def("join", &Triangle<2>::join)
         .def("unjoin", &Triangle<2>::unjoin,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isolate", &Triangle<2>::isolate)
-        .def("triangulation", &Triangle<2>::triangulation,
-            return_value_policy<to_held_type<> >())
+        .def("triangulation", &Triangle<2>::triangulation)
         .def("component", &Triangle<2>::component,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("face", &regina::python::face<Triangle<2>, 2, int>)
         .def("vertex", &Triangle<2>::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("edge", (regina::Edge<2>* (Triangle<2>::*)(int) const)(
-                &Triangle<2>::edge),
-            return_value_policy<reference_existing_object>())
-        .def("edge", (regina::Edge<2>* (Triangle<2>::*)(int, int) const)(
-                &Triangle<2>::edge),
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
+        .def("edge",
+            overload_cast<int>(&Triangle<2>::edge, pybind11::const_),
+            pybind11::return_value_policy::reference)
+        .def("edge",
+            overload_cast<int, int>(&Triangle<2>::edge, pybind11::const_),
+            pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Triangle<2>, 2>)
         .def("vertexMapping", &Triangle<2>::vertexMapping)
         .def("edgeMapping", &Triangle<2>::edgeMapping)
         .def("orientation", &Triangle<2>::orientation)
         .def("facetInMaximalForest", &Triangle<2>::facetInMaximalForest)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("Dim2Triangle") = scope().attr("Simplex2");
-    scope().attr("Triangle2") = scope().attr("Simplex2");
-    scope().attr("Face2_2") = scope().attr("Simplex2");
+    m.attr("Dim2Triangle") = m.attr("Simplex2");
+    m.attr("Triangle2") = m.attr("Simplex2");
+    m.attr("Face2_2") = m.attr("Simplex2");
 }
 

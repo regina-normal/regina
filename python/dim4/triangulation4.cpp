@@ -311,9 +311,6 @@ void addTriangulation4() {
         s.attr("dimension") = 4;
     }
 
-    implicitly_convertible<SafeHeldType<Triangulation<4>>,
-        SafeHeldType<regina::Packet> >();
-
     scope().attr("Dim4Triangulation") = scope().attr("Triangulation4");
 }
 

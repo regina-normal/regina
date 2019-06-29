@@ -30,60 +30,54 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim2.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::BoundaryComponent;
 
-void addBoundaryComponent2() {
-    {
-        scope s = class_<BoundaryComponent<2>,
-                std::auto_ptr<BoundaryComponent<2>>,
-                boost::noncopyable> ("BoundaryComponent2", no_init)
-            .def("index", &BoundaryComponent<2>::index)
-            .def("size", &BoundaryComponent<2>::size)
-            .def("countFaces",
-                &regina::python::countFaces<BoundaryComponent<2>, 2>)
-            .def("countEdges", &BoundaryComponent<2>::countEdges)
-            .def("countVertices", &BoundaryComponent<2>::countVertices)
-            .def("facets",
-                regina::python::faces_list<BoundaryComponent<2>, 2, 1>)
-            .def("faces", &regina::python::faces<BoundaryComponent<2>, 2>)
-            .def("edges",
-                regina::python::faces_list<BoundaryComponent<2>, 2, 1>)
-            .def("vertices",
-                regina::python::faces_list<BoundaryComponent<2>, 2, 0>)
-            .def("facet", &BoundaryComponent<2>::facet,
-                return_value_policy<reference_existing_object>())
-            .def("face", &regina::python::face<BoundaryComponent<2>, 2, size_t>)
-            .def("edge", &BoundaryComponent<2>::edge,
-                return_value_policy<reference_existing_object>())
-            .def("vertex", &BoundaryComponent<2>::vertex,
-                return_value_policy<reference_existing_object>())
-            .def("component", &BoundaryComponent<2>::component,
-                return_value_policy<reference_existing_object>())
-            .def("triangulation", &BoundaryComponent<2>::triangulation,
-                return_value_policy<to_held_type<>>())
-            .def("isOrientable", &BoundaryComponent<2>::isOrientable)
-            .def(regina::python::add_output())
-            .def(regina::python::add_eq_operators())
-        ;
-        /*
-         * If these bindings are enabled, we must use bool(...) on the RHS
-         * to ensure that the values are not treated as references (since
-         * these static class members are really just compile-time constants,
-         * and are not defined in a way that gives them linkage).
-        s.attr("allFaces") = bool(BoundaryComponent<2>::allFaces);
-        s.attr("allowVertex") = bool(BoundaryComponent<2>::allowVertex);
-        s.attr("canBuild") = bool(BoundaryComponent<2>::canBuild);
-        */
-    }
+void addBoundaryComponent2(pybind11::module& m) {
+    auto c = pybind11::class_<BoundaryComponent<2>>(m, "BoundaryComponent2")
+        .def("index", &BoundaryComponent<2>::index)
+        .def("size", &BoundaryComponent<2>::size)
+        .def("countFaces",
+            &regina::python::countFaces<BoundaryComponent<2>, 2>)
+        .def("countEdges", &BoundaryComponent<2>::countEdges)
+        .def("countVertices", &BoundaryComponent<2>::countVertices)
+        .def("facets",
+            regina::python::faces_list<BoundaryComponent<2>, 2, 1>)
+        .def("faces", &regina::python::faces<BoundaryComponent<2>, 2>)
+        .def("edges",
+            regina::python::faces_list<BoundaryComponent<2>, 2, 1>)
+        .def("vertices",
+            regina::python::faces_list<BoundaryComponent<2>, 2, 0>)
+        .def("facet", &BoundaryComponent<2>::facet,
+            pybind11::return_value_policy::reference)
+        .def("face", &regina::python::face<BoundaryComponent<2>, 2, size_t>)
+        .def("edge", &BoundaryComponent<2>::edge,
+            pybind11::return_value_policy::reference)
+        .def("vertex", &BoundaryComponent<2>::vertex,
+            pybind11::return_value_policy::reference)
+        .def("component", &BoundaryComponent<2>::component,
+            pybind11::return_value_policy::reference)
+        .def("triangulation", &BoundaryComponent<2>::triangulation)
+        .def("isOrientable", &BoundaryComponent<2>::isOrientable)
+        // We cannot take the addresses of the following header-only properties,
+        // so we define getter functions instead.
+        .def_property_readonly_static("allFaces", [](pybind11::object) {
+            return BoundaryComponent<2>::allFaces;
+        })
+        .def_property_readonly_static("allowVertex", [](pybind11::object) {
+            return BoundaryComponent<2>::allowVertex;
+        })
+        .def_property_readonly_static("canBuild", [](pybind11::object) {
+            return BoundaryComponent<2>::canBuild;
+        })
+    ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("Dim2BoundaryComponent") = scope().attr("BoundaryComponent2");
+    m.attr("Dim2BoundaryComponent") = m.attr("BoundaryComponent2");
 }
 
