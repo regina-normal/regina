@@ -30,15 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "foreign/orb.h"
 #include "triangulation/dim3.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
-
-void addForeignOrb() {
-    def("readOrb", regina::readOrb, return_value_policy<to_held_type<> >());
+void addForeignOrb(pybind11::module& m) {
+    m.def("readOrb", regina::readOrb);
 }
 

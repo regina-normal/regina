@@ -30,21 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "foreign/dehydration.h"
 #include "packet/container.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 
-namespace {
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_readDehydrationList,
-        regina::readDehydrationList, 1, 4);
-}
-
-void addForeignDehydration() {
-    def("readDehydrationList", regina::readDehydrationList,
-        OL_readDehydrationList()[return_value_policy<to_held_type<> >()]);
+void addForeignDehydration(pybind11::module& m) {
+    m.def("readDehydrationList", regina::readDehydrationList,
+        pybind11::arg(),
+        pybind11::arg("colDehydrations") = 0,
+        pybind11::arg("colLabels") = -1,
+        pybind11::arg("ignoreLines") = 0);
 }
 
