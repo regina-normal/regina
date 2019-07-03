@@ -10,13 +10,12 @@ Regina - A Normal Surface Theory Calculator
 Version 5.2  [ 29 September, 2017 ]
 
     GENERAL:
-        - Now requires C++14 (not C++11).  However, the only feature of C++14
-          that is currently used is the [[deprecated]] attribute, which means
-          that partially compliant compilers (such as gcc4.9) should be fine.
+        - Now requires C++14 (not C++11).
         - Now supports Python 3 (and continues support for Python 2).
         - For Python 2, there is now a minimum requirement of Python >= 2.6.
         - Now builds under gcc7 and gcc8.
         - Updated the bundled copy of Normaliz to version 3.7.2 (17 Apr 2019).
+        - Now uses pybind11 instead of boost.python to create python bindings.
     ENGINE:
         Class BitManipulator, GenericBitManipulator:
             - BitManipulator has a new routine nextPermutation() to
@@ -25,6 +24,15 @@ Version 5.2  [ 29 September, 2017 ]
               instead size is always taken to be sizeof(T).
             - The internal structure of BitManipulator has changed; in
               particular, the old GenericBitManipulator no longer exists.
+        Class DiscSetSurface:
+            - Now supports C++11 range-based for loops to iterate over all
+              normal discs.  In particular, there are new begin() and end()
+              functions.
+            - In Python, DiscSetSurface is now an iterable object.
+        Class DiscSpecIterator:
+            - Updated to fit the standard C++ forward iterator concept.
+              In particular, increment operators now have return values.
+            - Now specialises std::iterator_traits for this iterator type.
         Class GroupPresentation:
             - New Python-only sage() routine that converts a Regina
               group presentation to a mathematical object native to Sage.
@@ -86,6 +94,9 @@ Version 5.2  [ 29 September, 2017 ]
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the
               SnapPeaTriangulation(const Triangulation<3>&) constructor.
+        Class SurfaceFilterProperties:
+            - In python, eulerChars() now returns a python set (not a python
+              list).
         Class TreeDecomposition:
             - New copy constructor.
             - New constructor that takes a Link.

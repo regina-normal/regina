@@ -30,13 +30,16 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "surfaces/normalflags.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::NormalAlg;
+using regina::NormalAlgFlags;
 using regina::NormalList;
+using regina::NormalListFlags;
 
 namespace {
     bool (NormalList::*has_list)(const NormalList&) const = &NormalList::has;
@@ -45,61 +48,89 @@ namespace {
     void (NormalAlg::*clear_alg)(const NormalAlg&) = &NormalAlg::clear;
 }
 
-void addNormalFlags() {
-    scope global;
+void addNormalFlags(pybind11::module& m) {
+    pybind11::enum_<NormalListFlags>(m, "NormalListFlags")
+        .value("NS_EMBEDDED_ONLY", regina::NS_EMBEDDED_ONLY)
+        .value("NS_IMMERSED_SINGULAR", regina::NS_IMMERSED_SINGULAR)
+        .value("NS_VERTEX", regina::NS_VERTEX)
+        .value("NS_FUNDAMENTAL", regina::NS_FUNDAMENTAL)
+        .value("NS_LEGACY", regina::NS_LEGACY)
+        .value("NS_CUSTOM", regina::NS_CUSTOM)
+        .export_values();
 
-    class_<NormalList>("NormalList")
-        .def(init<const NormalList&>())
-        .def("has", has_list)
+    // TODO: Should we use a by-value holder type?
+    auto l = pybind11::class_<NormalList>(m, "NormalList")
+        .def(pybind11::init<>())
+        .def(pybind11::init<NormalListFlags>())
+        .def(pybind11::init<const NormalList&>())
+        .def("has", overload_cast<const NormalList&>(
+            &NormalList::has, pybind11::const_))
         .def("intValue", &NormalList::intValue)
-        .def("fromInt", &NormalList::fromInt)
-        .def(self |= self)
-        .def(self &= self)
-        .def(self ^= self)
-        .def(self | self)
-        .def(self & self)
-        .def(self ^ self)
-        .def("clear", clear_list)
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromInt")
+        .def_static("fromInt", &NormalList::fromInt)
+        .def(pybind11::self |= pybind11::self)
+        .def(pybind11::self &= pybind11::self)
+        .def(pybind11::self ^= pybind11::self)
+        .def(pybind11::self | pybind11::self)
+        .def(pybind11::self & pybind11::self)
+        .def(pybind11::self ^ pybind11::self)
+        .def("clear", overload_cast<const NormalList&>(&NormalList::clear))
+        .def("ensureOne",
+            overload_cast<NormalListFlags, NormalListFlags>(
+            &NormalList::ensureOne))
+        .def("ensureOne",
+            overload_cast<NormalListFlags, NormalListFlags, NormalListFlags>(
+            &NormalList::ensureOne))
+        .def("ensureOne",
+            overload_cast<NormalListFlags, NormalListFlags, NormalListFlags,
+                NormalListFlags>(
+            &NormalList::ensureOne))
         ;
+    regina::python::add_eq_operators(l);
 
-    global.attr("NS_EMBEDDED_ONLY") = NormalList(regina::NS_EMBEDDED_ONLY);
-    global.attr("NS_IMMERSED_SINGULAR") =
-        NormalList(regina::NS_IMMERSED_SINGULAR);
-    global.attr("NS_VERTEX") = NormalList(regina::NS_VERTEX);
-    global.attr("NS_FUNDAMENTAL") = NormalList(regina::NS_FUNDAMENTAL);
-    global.attr("NS_LEGACY") = NormalList(regina::NS_LEGACY);
-    global.attr("NS_CUSTOM") = NormalList(regina::NS_CUSTOM);
+    pybind11::implicitly_convertible<NormalListFlags, NormalList>();
 
-    class_<NormalAlg>("NormalAlg")
-        .def(init<const NormalAlg&>())
-        .def("has", has_alg)
+    pybind11::enum_<NormalAlgFlags>(m, "NormalAlgFlags")
+        .value("NS_ALG_DEFAULT", regina::NS_ALG_DEFAULT)
+        .value("NS_VERTEX_VIA_REDUCED", regina::NS_VERTEX_VIA_REDUCED)
+        .value("NS_VERTEX_STD_DIRECT", regina::NS_VERTEX_STD_DIRECT)
+        .value("NS_VERTEX_TREE", regina::NS_VERTEX_TREE)
+        .value("NS_VERTEX_DD", regina::NS_VERTEX_DD)
+        .value("NS_HILBERT_PRIMAL", regina::NS_HILBERT_PRIMAL)
+        .value("NS_HILBERT_DUAL", regina::NS_HILBERT_DUAL)
+        .value("NS_HILBERT_CD", regina::NS_HILBERT_CD)
+        .value("NS_HILBERT_FULLCONE", regina::NS_HILBERT_FULLCONE)
+        .value("NS_ALG_LEGACY", regina::NS_ALG_LEGACY)
+        .value("NS_ALG_CUSTOM", regina::NS_ALG_CUSTOM)
+        .export_values();
+
+    // TODO: Should we use a by-value holder type?
+    auto a = pybind11::class_<NormalAlg>(m, "NormalAlg")
+        .def(pybind11::init<>())
+        .def(pybind11::init<NormalAlgFlags>())
+        .def(pybind11::init<const NormalAlg&>())
+        .def("has", overload_cast<const NormalAlg&>(
+            &NormalAlg::has, pybind11::const_))
         .def("intValue", &NormalAlg::intValue)
-        .def("fromInt", &NormalAlg::fromInt)
-        .def(self |= self)
-        .def(self &= self)
-        .def(self ^= self)
-        .def(self | self)
-        .def(self & self)
-        .def(self ^ self)
-        .def("clear", clear_alg)
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromInt")
+        .def_static("fromInt", &NormalAlg::fromInt)
+        .def(pybind11::self |= pybind11::self)
+        .def(pybind11::self &= pybind11::self)
+        .def(pybind11::self ^= pybind11::self)
+        .def(pybind11::self | pybind11::self)
+        .def(pybind11::self & pybind11::self)
+        .def(pybind11::self ^ pybind11::self)
+        .def("clear", overload_cast<const NormalAlg&>(&NormalAlg::clear))
+        .def("ensureOne",
+            overload_cast<NormalAlgFlags, NormalAlgFlags>(
+            &NormalAlg::ensureOne))
+        .def("ensureOne",
+            overload_cast<NormalAlgFlags, NormalAlgFlags, NormalAlgFlags>(
+            &NormalAlg::ensureOne))
+        .def("ensureOne",
+            overload_cast<NormalAlgFlags, NormalAlgFlags, NormalAlgFlags,
+                NormalAlgFlags>(
+            &NormalAlg::ensureOne))
         ;
+    regina::python::add_eq_operators(a);
 
-    global.attr("NS_ALG_DEFAULT") = NormalAlg(regina::NS_ALG_DEFAULT);
-    global.attr("NS_VERTEX_VIA_REDUCED") =
-        NormalAlg(regina::NS_VERTEX_VIA_REDUCED);
-    global.attr("NS_VERTEX_STD_DIRECT") =
-        NormalAlg(regina::NS_VERTEX_STD_DIRECT);
-    global.attr("NS_VERTEX_TREE") = NormalAlg(regina::NS_VERTEX_TREE);
-    global.attr("NS_VERTEX_DD") = NormalAlg(regina::NS_VERTEX_DD);
-    global.attr("NS_HILBERT_PRIMAL") = NormalAlg(regina::NS_HILBERT_PRIMAL);
-    global.attr("NS_HILBERT_DUAL") = NormalAlg(regina::NS_HILBERT_DUAL);
-    global.attr("NS_HILBERT_CD") = NormalAlg(regina::NS_HILBERT_CD);
-    global.attr("NS_HILBERT_FULLCONE") = NormalAlg(regina::NS_HILBERT_FULLCONE);
-    global.attr("NS_ALG_LEGACY") = NormalAlg(regina::NS_ALG_LEGACY);
-    global.attr("NS_ALG_CUSTOM") = NormalAlg(regina::NS_ALG_CUSTOM);
-
+    pybind11::implicitly_convertible<NormalAlgFlags, NormalAlg>();
 }

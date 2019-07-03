@@ -377,8 +377,6 @@ class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
          * If this set is empty, all Euler characteristics will be
          * accepted.
          *
-         * \ifacespython This routine returns a python sequence.
-         *
          * @return the set of allowable Euler characteristics.
          */
         const std::set<LargeInteger>& eulerChars() const;

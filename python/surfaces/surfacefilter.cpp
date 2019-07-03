@@ -30,58 +30,54 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/surfacefilter.h"
-#include "../safeheldtype.h"
 #include "../helpers.h"
+#include "../safeheldtype.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
+using regina::python::SafeHeldType;
 using regina::SurfaceFilter;
 using regina::SurfaceFilterCombination;
 using regina::SurfaceFilterProperties;
 
-namespace {
-    boost::python::list eulerChars_list(const SurfaceFilterProperties& f) {
-        boost::python::list ans;
-        for (auto& e : f.eulerChars())
-            ans.append(e);
-        return ans;
-    }
-}
-
-void addSurfaceFilter() {
-    {
-        scope s = class_<SurfaceFilter, bases<regina::Packet>,
-                SafeHeldType<SurfaceFilter>, boost::noncopyable>
-                ("SurfaceFilter")
-            .def(init<const SurfaceFilter&>())
-            .def("accept", &SurfaceFilter::accept)
-            .def("filterType", &SurfaceFilter::filterType)
-            .def("filterTypeName", &SurfaceFilter::filterTypeName)
-        ;
-
-        s.attr("typeID") = regina::PACKET_SURFACEFILTER;
-        s.attr("filterTypeID") = regina::NS_FILTER_DEFAULT;
-    }
-
-    class_<SurfaceFilterCombination, bases<regina::SurfaceFilter>,
-            SafeHeldType<SurfaceFilterCombination>, boost::noncopyable>
-            ("SurfaceFilterCombination")
-        .def(init<const SurfaceFilterCombination&>())
-        .def("usesAnd", &SurfaceFilterCombination::usesAnd)
-        .def("setUsesAnd", &SurfaceFilterCombination::setUsesAnd)
-        .attr("filterTypeID") = regina::NS_FILTER_COMBINATION;
+void addSurfaceFilter(pybind11::module& m) {
+    pybind11::class_<SurfaceFilter, regina::Packet, SafeHeldType<SurfaceFilter>>
+            (m, "SurfaceFilter")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const SurfaceFilter&>())
+        .def("accept", &SurfaceFilter::accept)
+        .def("filterType", &SurfaceFilter::filterType)
+        .def("filterTypeName", &SurfaceFilter::filterTypeName)
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return SurfaceFilter::typeID;
+        })
+        .def_property_readonly_static("filterTypeID", [](pybind11::object) {
+            // Likewise for filterTypeID.
+            return SurfaceFilter::filterTypeID;
+        })
     ;
 
-    class_<SurfaceFilterProperties, bases<regina::SurfaceFilter>,
-            SafeHeldType<SurfaceFilterProperties>, boost::noncopyable>
-            ("SurfaceFilterProperties")
-        .def(init<const SurfaceFilterProperties&>())
-        .def("eulerChars", eulerChars_list)
+    pybind11::class_<SurfaceFilterCombination, regina::SurfaceFilter,
+            SafeHeldType<SurfaceFilterCombination>>
+            (m, "SurfaceFilterCombination")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const SurfaceFilterCombination&>())
+        .def("usesAnd", &SurfaceFilterCombination::usesAnd)
+        .def("setUsesAnd", &SurfaceFilterCombination::setUsesAnd)
+        .def_property_readonly_static("filterTypeID", [](pybind11::object) {
+            return SurfaceFilterCombination::filterTypeID;
+        })
+    ;
+
+    pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
+            SafeHeldType<SurfaceFilterProperties>>
+            (m, "SurfaceFilterProperties")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const SurfaceFilterProperties&>())
+        .def("eulerChars", &SurfaceFilterProperties::eulerChars)
         .def("countEulerChars", &SurfaceFilterProperties::countEulerChars)
         .def("eulerChar", &SurfaceFilterProperties::eulerChar)
         .def("orientability", &SurfaceFilterProperties::orientability)
@@ -94,22 +90,13 @@ void addSurfaceFilter() {
         .def("setOrientability", &SurfaceFilterProperties::setOrientability)
         .def("setCompactness", &SurfaceFilterProperties::setCompactness)
         .def("setRealBoundary", &SurfaceFilterProperties::setRealBoundary)
-        .attr("filterTypeID") = regina::NS_FILTER_PROPERTIES;
+        .def_property_readonly_static("filterTypeID", [](pybind11::object) {
+            return SurfaceFilterProperties::filterTypeID;
+        })
     ;
 
-    implicitly_convertible<SafeHeldType<SurfaceFilter>,
-        SafeHeldType<regina::Packet> >();
-
-    implicitly_convertible<SafeHeldType<SurfaceFilterCombination>,
-        SafeHeldType<regina::SurfaceFilter> >();
-
-    implicitly_convertible<SafeHeldType<SurfaceFilterProperties>,
-        SafeHeldType<regina::SurfaceFilter> >();
-
-    scope().attr("NSurfaceFilter") = scope().attr("SurfaceFilter");
-    scope().attr("NSurfaceFilterCombination") =
-        scope().attr("SurfaceFilterCombination");
-    scope().attr("NSurfaceFilterProperties") =
-        scope().attr("SurfaceFilterProperties");
+    m.attr("NSurfaceFilter") = m.attr("SurfaceFilter");
+    m.attr("NSurfaceFilterCombination") = m.attr("SurfaceFilterCombination");
+    m.attr("NSurfaceFilterProperties") = m.attr("SurfaceFilterProperties");
 }
 

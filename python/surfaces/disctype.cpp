@@ -30,25 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "surfaces/disctype.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::DiscType;
 
-void addDiscType() {
-    class_<DiscType>("DiscType")
-        .def(init<unsigned long, int>())
-        .def(init<const DiscType&>())
+void addDiscType(pybind11::module& m) {
+    // TODO: Should we use a by-value holder type?
+    auto c = pybind11::class_<DiscType>(m, "DiscType")
+        .def(pybind11::init<>())
+        .def(pybind11::init<unsigned long, int>())
+        .def(pybind11::init<const DiscType&>())
+        .def(pybind11::self < pybind11::self)
         .def_readwrite("tetIndex", &DiscType::tetIndex)
         .def_readwrite("type", &DiscType::type)
-        .def(self < self)
-        .def(self_ns::str(self))
-        .def(regina::python::add_eq_operators())
-        .attr("NONE") = &DiscType::NONE;
+        .def_readonly_static("NONE", &DiscType::NONE)
     ;
+    regina::python::add_output_ostream(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NDiscType") = scope().attr("DiscType");
+    m.attr("NDiscType") = m.attr("DiscType");
 }
 

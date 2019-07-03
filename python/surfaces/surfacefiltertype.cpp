@@ -30,23 +30,15 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "surfaces/surfacefiltertype.h"
 #include "../helpers.h"
 
-using namespace boost::python;
-
-void addSurfaceFilterType() {
-    scope global;
-
-    enum_<regina::SurfaceFilterType>("SurfaceFilterType")
+void addSurfaceFilterType(pybind11::module& m) {
+    pybind11::enum_<regina::SurfaceFilterType>(m, "SurfaceFilterType")
         .value("NS_FILTER_DEFAULT", regina::NS_FILTER_DEFAULT)
         .value("NS_FILTER_PROPERTIES", regina::NS_FILTER_PROPERTIES)
         .value("NS_FILTER_COMBINATION", regina::NS_FILTER_COMBINATION)
-        ;
-
-    global.attr("NS_FILTER_DEFAULT") = regina::NS_FILTER_DEFAULT;
-    global.attr("NS_FILTER_PROPERTIES") = regina::NS_FILTER_PROPERTIES;
-    global.attr("NS_FILTER_COMBINATION") = regina::NS_FILTER_COMBINATION;
+        .export_values();
 }
 

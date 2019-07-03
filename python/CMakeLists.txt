@@ -18,7 +18,7 @@ ADD_SUBDIRECTORY("progress")
 # TODO ADD_SUBDIRECTORY("split")
 ADD_SUBDIRECTORY("srcutils")
 # TODO ADD_SUBDIRECTORY("subcomplex")
-# TODO ADD_SUBDIRECTORY("surfaces")
+ADD_SUBDIRECTORY("surfaces")
 # TODO ADD_SUBDIRECTORY("treewidth")
 ADD_SUBDIRECTORY("utilities")
 
