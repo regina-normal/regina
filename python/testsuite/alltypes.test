@@ -71,7 +71,7 @@ for i in keys:
     object = regina.__dict__[i]
     if isinstance(object, type):
         try:
-            if 'Boost.Python.enum' in str(object.name):
+            if object.__dict__.has_key('__members__'):
                 enumInfo(i, object)
             else:
                 classInfo(i, object)
