@@ -231,8 +231,10 @@ template <class C, typename... options>
 inline void add_eq_operators(pybind11::class_<C, options...>& c) {
     c.def("__eq__",
         &add_eq_operators_detail::EqualityOperators<C>::are_equal);
+    c.def("__eq__", [](const C&, nullptr_t) { return false; });
     c.def("__ne__",
         &add_eq_operators_detail::EqualityOperators<C>::are_not_equal);
+    c.def("__ne__", [](const C&, nullptr_t) { return true; });
     c.attr("equalityType") =
         add_eq_operators_detail::EqualityOperators<C>::equalityType();
 }
