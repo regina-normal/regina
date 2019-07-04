@@ -116,6 +116,7 @@ void addSnapPeaTriangulation(pybind11::module& m) {
         .def_static("disableKernelMessages",
             &SnapPeaTriangulation::disableKernelMessages)
         .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
             return SnapPeaTriangulation::typeID;
         })
     ;

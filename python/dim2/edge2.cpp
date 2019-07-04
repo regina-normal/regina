@@ -32,7 +32,6 @@
 
 #include "../pybind11/pybind11.h"
 #include "triangulation/dim2.h"
-#include "../globalarray.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 

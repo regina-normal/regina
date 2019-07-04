@@ -34,7 +34,6 @@
 #include "../pybind11/stl.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
-#include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::Face;
