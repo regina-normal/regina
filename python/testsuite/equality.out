@@ -1,6 +1,6 @@
-BY_VALUE
-BY_VALUE
-BY_REFERENCE
+EqualityType.BY_VALUE
+EqualityType.BY_VALUE
+EqualityType.BY_REFERENCE
 Integer:
 True False
 AbelianGroup:
