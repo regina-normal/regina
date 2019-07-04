@@ -139,7 +139,7 @@ PYBIND11_MODULE(regina, m) {
     // TODO addSnapPeaClasses(m);
     // TODO addSubcomplexClasses(m);
     // TODO addManifoldClasses(m);
-    // TODO addAngleClasses(m);
+    addAngleClasses(m);
     addSurfacesClasses(m);
     // TODO addHypersurfaceClasses(m);
     addDim2Classes(m);

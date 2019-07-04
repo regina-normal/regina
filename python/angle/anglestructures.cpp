@@ -30,65 +30,38 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "angle/anglestructures.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
 using namespace regina::python;
 using regina::AngleStructures;
 
-namespace {
-    // Write manual overload wrappers since this is a static member function.
-    AngleStructures* enumerate_1(regina::Triangulation<3>* owner) {
-        return AngleStructures::enumerate(owner);
-    }
-    AngleStructures* enumerate_2(regina::Triangulation<3>* owner,
-            bool tautOnly) {
-        return AngleStructures::enumerate(owner, tautOnly);
-    }
-    AngleStructures* enumerate_3(regina::Triangulation<3>* owner,
-            bool tautOnly, regina::ProgressTracker* tracker) {
-        return AngleStructures::enumerate(owner, tautOnly, tracker);
-    }
-}
+void addAngleStructures(pybind11::module& m) {
+    m.def("makeAngleEquations", regina::makeAngleEquations);
 
-void addAngleStructures() {
-    def("makeAngleEquations", regina::makeAngleEquations,
-        return_value_policy<manage_new_object>());
-
-    class_<AngleStructures, bases<regina::Packet>,
-            SafeHeldType<AngleStructures>, boost::noncopyable>
-            ("AngleStructures", no_init)
-        .def("triangulation", &AngleStructures::triangulation,
-            return_value_policy<to_held_type<> >())
+    pybind11::class_<AngleStructures, regina::Packet,
+            regina::python::SafeHeldType<AngleStructures>>(m, "AngleStructures")
+        .def("triangulation", &AngleStructures::triangulation)
         .def("isTautOnly", &AngleStructures::isTautOnly)
         .def("size", &AngleStructures::size)
         .def("structure", &AngleStructures::structure,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("spansStrict", &AngleStructures::spansStrict)
         .def("spansTaut", &AngleStructures::spansTaut)
-        .def("enumerate", enumerate_1,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", enumerate_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", enumerate_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerateTautDD", &AngleStructures::enumerateTautDD,
-            return_value_policy<to_held_type<> >())
-        .staticmethod("enumerate")
-        .staticmethod("enumerateTautDD")
-        .attr("typeID") = regina::PACKET_ANGLESTRUCTURES
+        .def_static("enumerate", &AngleStructures::enumerate,
+            pybind11::arg(),
+            pybind11::arg("tautOnly") = false,
+            pybind11::arg("tracker") = nullptr)
+        .def_static("enumerateTautDD", &AngleStructures::enumerateTautDD)
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            return AngleStructures::typeID;
+        })
     ;
 
-    implicitly_convertible<SafeHeldType<AngleStructures>,
-        SafeHeldType<regina::Packet> >();
-
-    scope().attr("NAngleStructureList") = scope().attr("AngleStructures");
+    m.attr("NAngleStructureList") = m.attr("AngleStructures");
 }
 
