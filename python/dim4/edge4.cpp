@@ -30,121 +30,97 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim2.h"
 #include "triangulation/dim4.h"
 #include "../globalarray.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::Edge;
 using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
-using regina::python::GlobalArray;
-using regina::python::GlobalArray2D;
 
 namespace {
-    GlobalArray2D<int> Edge4_edgeNumber(Edge<4>::edgeNumber, 5);
-    GlobalArray2D<int> Edge4_edgeVertex(Edge<4>::edgeVertex, 10);
-
-    boost::python::list Edge4_embeddings_list(const Edge<4>* e) {
-        boost::python::list ans;
-        for (auto& emb : *e)
-            ans.append(emb);
-        return ans;
-    }
-
-    regina::Triangulation<2>* edge_buildLink(const Edge<4>* e) {
-        return new regina::Triangulation<2>(*(e->buildLink()));
-    }
-
-    boost::python::tuple edge_buildLinkDetail_bool(const Edge<4>* e,
-            bool labels = true) {
-        regina::Isomorphism<4>* iso;
-        regina::Triangulation<2>* link = new regina::Triangulation<2>(
-            *(e->buildLinkDetail(labels, &iso)));
-        return boost::python::make_tuple(
-            boost::python::object(boost::python::handle<>(
-                regina::python::to_held_type<>::
-                apply<regina::Triangulation<2>*>::type()(link))),
-            boost::python::object(boost::python::handle<>(
-                boost::python::manage_new_object::
-                apply<regina::Isomorphism<4>*>::type()(iso))));
-    }
-
-    boost::python::tuple edge_buildLinkDetail_void(const Edge<4>* e) {
-        return edge_buildLinkDetail_bool(e);
-    }
+    regina::python::GlobalArray2D<int> Edge4_edgeNumber(
+        Edge<4>::edgeNumber, 5);
+    regina::python::GlobalArray2D<int> Edge4_edgeVertex(
+        Edge<4>::edgeVertex, 10);
 }
 
-void addEdge4() {
-    class_<FaceEmbedding<4, 1>>("FaceEmbedding4_1",
-            init<regina::Pentachoron<4>*, int>())
-        .def(init<const EdgeEmbedding<4>&>())
+void addEdge4(pybind11::module& m) {
+    // TODO: Should we use a by-value holder type?
+    auto e = pybind11::class_<FaceEmbedding<4, 1>>(m, "FaceEmbedding4_1")
+        .def(pybind11::init<regina::Pentachoron<4>*, int>())
+        .def(pybind11::init<const EdgeEmbedding<4>&>())
         .def("simplex", &EdgeEmbedding<4>::simplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("pentachoron", &EdgeEmbedding<4>::pentachoron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("face", &EdgeEmbedding<4>::face)
         .def("edge", &EdgeEmbedding<4>::edge)
         .def("vertices", &EdgeEmbedding<4>::vertices)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(e);
+    regina::python::add_eq_operators(e);
 
-    {
-        scope s = class_<Face<4, 1>, std::auto_ptr<Face<4, 1>>,
-                boost::noncopyable>("Face4_1", no_init)
-            .def("index", &Edge<4>::index)
-            .def("embeddings", Edge4_embeddings_list)
-            .def("embedding", &Edge<4>::embedding,
-                return_internal_reference<>())
-            .def("front", &Edge<4>::front,
-                return_internal_reference<>())
-            .def("back", &Edge<4>::back,
-                return_internal_reference<>())
-            .def("triangulation", &Edge<4>::triangulation,
-                return_value_policy<to_held_type<>>())
-            .def("component", &Edge<4>::component,
-                return_value_policy<reference_existing_object>())
-            .def("boundaryComponent", &Edge<4>::boundaryComponent,
-                return_value_policy<reference_existing_object>())
-            .def("face", &regina::python::face<Edge<4>, 1, int>)
-            .def("vertex", &Edge<4>::vertex,
-                return_value_policy<reference_existing_object>())
-            .def("faceMapping", &regina::python::faceMapping<Edge<4>, 1, 5>)
-            .def("vertexMapping", &Edge<4>::vertexMapping)
-            .def("degree", &Edge<4>::degree)
-            .def("isBoundary", &Edge<4>::isBoundary)
-            .def("isLinkOrientable", &Edge<4>::isLinkOrientable)
-            .def("isValid", &Edge<4>::isValid)
-            .def("hasBadIdentification", &Edge<4>::hasBadIdentification)
-            .def("hasBadLink", &Edge<4>::hasBadLink)
-            .def("buildLink", &edge_buildLink,
-                return_value_policy<to_held_type<>>())
-            .def("buildLinkDetail", edge_buildLinkDetail_void)
-            .def("buildLinkDetail", edge_buildLinkDetail_bool)
-            .def("ordering", &Edge<4>::ordering)
-            .def("faceNumber", &Edge<4>::faceNumber)
-            .def("containsVertex", &Edge<4>::containsVertex)
-            .def(regina::python::add_output())
-            .def(regina::python::add_eq_operators())
-            .staticmethod("ordering")
-            .staticmethod("faceNumber")
-            .staticmethod("containsVertex")
-        ;
+    auto c = pybind11::class_<Face<4, 1>>(m, "Face4_1")
+        .def("index", &Edge<4>::index)
+        .def("embeddings", [](const Edge<4>& e) {
+            pybind11::list ans;
+            for (const auto& emb : e)
+                ans.append(emb);
+            return ans;
+        })
+        .def("embedding", &Edge<4>::embedding,
+            pybind11::return_value_policy::reference_internal)
+        .def("front", &Edge<4>::front,
+            pybind11::return_value_policy::reference_internal)
+        .def("back", &Edge<4>::back,
+            pybind11::return_value_policy::reference_internal)
+        .def("triangulation", &Edge<4>::triangulation)
+        .def("component", &Edge<4>::component,
+            pybind11::return_value_policy::reference)
+        .def("boundaryComponent", &Edge<4>::boundaryComponent,
+            pybind11::return_value_policy::reference)
+        .def("face", &regina::python::face<Edge<4>, 1, int>)
+        .def("vertex", &Edge<4>::vertex,
+            pybind11::return_value_policy::reference)
+        .def("faceMapping", &regina::python::faceMapping<Edge<4>, 1, 5>)
+        .def("vertexMapping", &Edge<4>::vertexMapping)
+        .def("degree", &Edge<4>::degree)
+        .def("isBoundary", &Edge<4>::isBoundary)
+        .def("isLinkOrientable", &Edge<4>::isLinkOrientable)
+        .def("isValid", &Edge<4>::isValid)
+        .def("hasBadIdentification", &Edge<4>::hasBadIdentification)
+        .def("hasBadLink", &Edge<4>::hasBadLink)
+        .def("buildLink", [](const Edge<4>* e) {
+            // Return a clone of the link.  This is because triangulations
+            // have a custom holder type, and so pybind11 ignores any attempt
+            // to pass return_value_policy::reference_internal.
+            return new regina::Triangulation<2>(*(e->buildLink()));
+        })
+        .def("buildLinkDetail", [](const Edge<4>* e, bool labels) {
+            // Return a clone of the link (as above); also, we always
+            // build the isomorphism.
+            regina::Isomorphism<4>* iso;
+            regina::Triangulation<2>* link = new regina::Triangulation<2>(
+                *(e->buildLinkDetail(labels, &iso)));
+            return pybind11::make_tuple(link, iso);
+        }, pybind11::arg("labels") = true)
+        .def_static("ordering", &Edge<4>::ordering)
+        .def_static("faceNumber", &Edge<4>::faceNumber)
+        .def_static("containsVertex", &Edge<4>::containsVertex)
+        .def_readonly_static("edgeNumber", &Edge4_edgeNumber)
+        .def_readonly_static("edgeVertex", &Edge4_edgeVertex)
+    ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-        s.attr("edgeNumber") = &Edge4_edgeNumber;
-        s.attr("edgeVertex") = &Edge4_edgeVertex;
-    }
-
-    scope().attr("Dim4EdgeEmbedding") = scope().attr("FaceEmbedding4_1");
-    scope().attr("EdgeEmbedding4") = scope().attr("FaceEmbedding4_1");
-    scope().attr("Dim4Edge") = scope().attr("Face4_1");
-    scope().attr("Edge4") = scope().attr("Face4_1");
+    m.attr("Dim4EdgeEmbedding") = m.attr("FaceEmbedding4_1");
+    m.attr("EdgeEmbedding4") = m.attr("FaceEmbedding4_1");
+    m.attr("Dim4Edge") = m.attr("Face4_1");
+    m.attr("Edge4") = m.attr("Face4_1");
 }
 

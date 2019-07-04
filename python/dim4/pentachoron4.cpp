@@ -30,51 +30,46 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::Pentachoron;
 
-void addPentachoron4() {
-    class_<regina::Simplex<4>, std::auto_ptr<regina::Simplex<4>>,
-            boost::noncopyable>("Simplex4", no_init)
-        .def("description", &Pentachoron<4>::description,
-            return_value_policy<return_by_value>())
+void addPentachoron4(pybind11::module& m) {
+    auto c = pybind11::class_<regina::Simplex<4>>(m, "Simplex4")
+        .def("description", &Pentachoron<4>::description)
         .def("setDescription", &Pentachoron<4>::setDescription)
         .def("index", &Pentachoron<4>::index)
         .def("adjacentPentachoron", &Pentachoron<4>::adjacentPentachoron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("adjacentSimplex", &Pentachoron<4>::adjacentSimplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("adjacentGluing", &Pentachoron<4>::adjacentGluing)
         .def("adjacentFacet", &Pentachoron<4>::adjacentFacet)
         .def("hasBoundary", &Pentachoron<4>::hasBoundary)
         .def("join", &Pentachoron<4>::join)
         .def("unjoin", &Pentachoron<4>::unjoin,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isolate", &Pentachoron<4>::isolate)
-        .def("triangulation", &Pentachoron<4>::triangulation,
-            return_value_policy<to_held_type<>>())
+        .def("triangulation", &Pentachoron<4>::triangulation)
         .def("component", &Pentachoron<4>::component,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("face", &regina::python::face<Pentachoron<4>, 4, int>)
         .def("vertex", &Pentachoron<4>::vertex,
-            return_value_policy<reference_existing_object>())
-        .def("edge", (regina::Edge<4>* (Pentachoron<4>::*)(int) const)(
-                &Pentachoron<4>::edge),
-            return_value_policy<reference_existing_object>())
-        .def("edge", (regina::Edge<4>* (Pentachoron<4>::*)(int, int) const)(
-                &Pentachoron<4>::edge),
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
+        .def("edge",
+            overload_cast<int>(&Pentachoron<4>::edge, pybind11::const_),
+            pybind11::return_value_policy::reference)
+        .def("edge",
+            overload_cast<int, int>(&Pentachoron<4>::edge, pybind11::const_),
+            pybind11::return_value_policy::reference)
         .def("triangle", &Pentachoron<4>::triangle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("tetrahedron", &Pentachoron<4>::tetrahedron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Pentachoron<4>, 4>)
         .def("vertexMapping", &Pentachoron<4>::vertexMapping)
         .def("edgeMapping", &Pentachoron<4>::edgeMapping)
@@ -82,12 +77,12 @@ void addPentachoron4() {
         .def("tetrahedronMapping", &Pentachoron<4>::tetrahedronMapping)
         .def("orientation", &Pentachoron<4>::orientation)
         .def("facetInMaximalForest", &Pentachoron<4>::facetInMaximalForest)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("Dim4Pentachoron") = scope().attr("Simplex4");
-    scope().attr("Pentachoron4") = scope().attr("Simplex4");
-    scope().attr("Face4_4") = scope().attr("Simplex4");
+    m.attr("Dim4Pentachoron") = m.attr("Simplex4");
+    m.attr("Pentachoron4") = m.attr("Simplex4");
+    m.attr("Face4_4") = m.attr("Simplex4");
 }
 

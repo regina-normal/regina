@@ -132,7 +132,7 @@ PYBIND11_MODULE(regina, m) {
     addPacketClasses(m);
     addTriangulationClasses(m);
     // TODO addCensusClasses(m);
-    // TODO addDim4Classes(m);
+    addDim4Classes(m);
     addFileClasses(m);
     addForeignClasses(m);
     // TODO addSplitClasses(m);
