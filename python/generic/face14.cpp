@@ -32,32 +32,32 @@
 
 #include "face-bindings.h"
 
-void addFace14() {
-    addFace<14, 0>("Face14_0", "FaceEmbedding14_0");
-    addFace<14, 1>("Face14_1", "FaceEmbedding14_1");
-    addFace<14, 2>("Face14_2", "FaceEmbedding14_2");
-    addFace<14, 3>("Face14_3", "FaceEmbedding14_3");
-    addFace<14, 4>("Face14_4", "FaceEmbedding14_4");
-    addFace<14, 5>("Face14_5", "FaceEmbedding14_5");
-    addFace<14, 6>("Face14_6", "FaceEmbedding14_6");
-    addFace<14, 7>("Face14_7", "FaceEmbedding14_7");
-    addFace<14, 8>("Face14_8", "FaceEmbedding14_8");
-    addFace<14, 9>("Face14_9", "FaceEmbedding14_9");
-    addFace<14, 10>("Face14_10", "FaceEmbedding14_10");
-    addFace<14, 11>("Face14_11", "FaceEmbedding14_11");
-    addFace<14, 12>("Face14_12", "FaceEmbedding14_12");
-    addFace<14, 13>("Face14_13", "FaceEmbedding14_13");
+void addFace14(pybind11::module& m) {
+    addFace<14, 0>(m, "Face14_0", "FaceEmbedding14_0");
+    addFace<14, 1>(m, "Face14_1", "FaceEmbedding14_1");
+    addFace<14, 2>(m, "Face14_2", "FaceEmbedding14_2");
+    addFace<14, 3>(m, "Face14_3", "FaceEmbedding14_3");
+    addFace<14, 4>(m, "Face14_4", "FaceEmbedding14_4");
+    addFace<14, 5>(m, "Face14_5", "FaceEmbedding14_5");
+    addFace<14, 6>(m, "Face14_6", "FaceEmbedding14_6");
+    addFace<14, 7>(m, "Face14_7", "FaceEmbedding14_7");
+    addFace<14, 8>(m, "Face14_8", "FaceEmbedding14_8");
+    addFace<14, 9>(m, "Face14_9", "FaceEmbedding14_9");
+    addFace<14, 10>(m, "Face14_10", "FaceEmbedding14_10");
+    addFace<14, 11>(m, "Face14_11", "FaceEmbedding14_11");
+    addFace<14, 12>(m, "Face14_12", "FaceEmbedding14_12");
+    addFace<14, 13>(m, "Face14_13", "FaceEmbedding14_13");
 
-    scope().attr("VertexEmbedding14") = scope().attr("FaceEmbedding14_0");
-    scope().attr("EdgeEmbedding14") = scope().attr("FaceEmbedding14_1");
-    scope().attr("TriangleEmbedding14") = scope().attr("FaceEmbedding14_2");
-    scope().attr("TetrahedronEmbedding14") = scope().attr("FaceEmbedding14_3");
-    scope().attr("PentachoronEmbedding14") = scope().attr("FaceEmbedding14_4");
+    m.attr("VertexEmbedding14") = m.attr("FaceEmbedding14_0");
+    m.attr("EdgeEmbedding14") = m.attr("FaceEmbedding14_1");
+    m.attr("TriangleEmbedding14") = m.attr("FaceEmbedding14_2");
+    m.attr("TetrahedronEmbedding14") = m.attr("FaceEmbedding14_3");
+    m.attr("PentachoronEmbedding14") = m.attr("FaceEmbedding14_4");
 
-    scope().attr("Vertex14") = scope().attr("Face14_0");
-    scope().attr("Edge14") = scope().attr("Face14_1");
-    scope().attr("Triangle14") = scope().attr("Face14_2");
-    scope().attr("Tetrahedron14") = scope().attr("Face14_3");
-    scope().attr("Pentachoron14") = scope().attr("Face14_4");
+    m.attr("Vertex14") = m.attr("Face14_0");
+    m.attr("Edge14") = m.attr("Face14_1");
+    m.attr("Triangle14") = m.attr("Face14_2");
+    m.attr("Tetrahedron14") = m.attr("Face14_3");
+    m.attr("Pentachoron14") = m.attr("Face14_4");
 }
 

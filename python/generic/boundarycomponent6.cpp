@@ -32,6 +32,6 @@
 
 #include "boundarycomponent-bindings.h"
 
-void addBoundaryComponent6() {
-    addBoundaryComponent<6>("BoundaryComponent6");
+void addBoundaryComponent6(pybind11::module& m) {
+    addBoundaryComponent<6>(m, "BoundaryComponent6");
 }

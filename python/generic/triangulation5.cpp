@@ -32,7 +32,7 @@
 
 #include "triangulation-bindings.h"
 
-void addTriangulations5() {
-    addTriangulation<5>("Triangulation5");
+void addTriangulations5(pybind11::module& m) {
+    addTriangulation<5>(m, "Triangulation5");
 }
 

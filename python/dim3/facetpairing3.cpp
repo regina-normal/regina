@@ -52,9 +52,8 @@ void addFacetPairing3(pybind11::module& m) {
         .def("dest", overload_cast<size_t, unsigned>(
             &FacetPairing<3>::dest, pybind11::const_),
             pybind11::return_value_policy::reference)
-        .def("__getitem__",
-            static_cast<const FacetSpec<3>& (FacetPairing<3>::*)(
-                const FacetSpec<3>&) const>(&FacetPairing<3>::operator[]),
+        .def("__getitem__", overload_cast<const FacetSpec<3>&>(
+            &FacetPairing<3>::operator[], pybind11::const_),
             pybind11::return_value_policy::reference)
         .def("isUnmatched", overload_cast<const FacetSpec<3>&>(
             &FacetPairing<3>::isUnmatched, pybind11::const_))

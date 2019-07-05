@@ -90,7 +90,6 @@ void addIsomorphism12(pybind11::module& m);
 void addIsomorphism13(pybind11::module& m);
 void addIsomorphism14(pybind11::module& m);
 void addIsomorphism15(pybind11::module& m);
-void addFace(pybind11::module& m);
 void addFace5(pybind11::module& m);
 void addFace6(pybind11::module& m);
 void addFace7(pybind11::module& m);
@@ -129,7 +128,6 @@ void addGenericClasses(pybind11::module& m) {
     addFacetSpec(m);
     addFacetPairing2(m);
     addFacetPairing4(m);
-    addFace(m);
 #ifndef REGINA_LOWDIMONLY
     addComponent5(m);
     addComponent6(m);

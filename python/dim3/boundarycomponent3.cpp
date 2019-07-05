@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim2.h" // for build()
 #include "../helpers.h"
@@ -46,15 +47,15 @@ void addBoundaryComponent3(pybind11::module& m) {
         .def("countTriangles", &BoundaryComponent<3>::countTriangles)
         .def("countEdges", &BoundaryComponent<3>::countEdges)
         .def("countVertices", &BoundaryComponent<3>::countVertices)
-        .def("facets",
-            regina::python::faces_list<BoundaryComponent<3>, 3, 2>)
+        .def("facets", &BoundaryComponent<3>::facets,
+            pybind11::return_value_policy::reference)
         .def("faces", regina::python::faces<BoundaryComponent<3>, 3>)
-        .def("triangles",
-            regina::python::faces_list<BoundaryComponent<3>, 3, 2>)
-        .def("edges",
-            regina::python::faces_list<BoundaryComponent<3>, 3, 1>)
-        .def("vertices",
-            regina::python::faces_list<BoundaryComponent<3>, 3, 0>)
+        .def("triangles", &BoundaryComponent<3>::triangles,
+            pybind11::return_value_policy::reference)
+        .def("edges", &BoundaryComponent<3>::edges,
+            pybind11::return_value_policy::reference)
+        .def("vertices", &BoundaryComponent<3>::vertices,
+            pybind11::return_value_policy::reference)
         .def("facet", &BoundaryComponent<3>::facet,
             pybind11::return_value_policy::reference)
         .def("face", &regina::python::face<BoundaryComponent<3>, 3, size_t>)

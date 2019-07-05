@@ -30,60 +30,54 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::BoundaryComponent;
 
-namespace {
-    template <int dim>
-    struct PyBoundaryComponentHelper {
-        boost::python::list facets_list(BoundaryComponent<dim>& t) {
-            boost::python::list ans;
-            for (auto it = t.facets().begin();
-                    it != t.facets().end(); ++it)
-                ans.append(boost::python::ptr(*it));
-            return ans;
-        }
-    };
-}
-
 template <int dim>
-void addBoundaryComponent(const char* name) {
+void addBoundaryComponent(pybind11::module& m, const char* name) {
     // In higher dimensions:
     // - we do not store lower-dimensional faces;
     // - we do not recognise ideal or invalid vertices;
     // - we can still triangulate a real boundary component.
 
-    class_<BoundaryComponent<dim>, std::auto_ptr<BoundaryComponent<dim>>,
-            boost::noncopyable>(name, no_init)
+    auto c = pybind11::class_<BoundaryComponent<dim>>(m, name)
         .def("index", &BoundaryComponent<dim>::index)
         .def("size", &BoundaryComponent<dim>::size)
-        .def("facets", &PyBoundaryComponentHelper<dim>::facets_list)
+        .def("facets", [](const BoundaryComponent<dim>& b) {
+            pybind11::list ans;
+            for (auto f : b.facets())
+                ans.append(f); // Uses reference return value policy
+            return ans;
+        })
         .def("facet", &BoundaryComponent<dim>::facet,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("component", &BoundaryComponent<dim>::component,
-            return_value_policy<reference_existing_object>())
-        .def("triangulation", &BoundaryComponent<dim>::triangulation,
-            return_value_policy<to_held_type<>>())
-        .def("build", &BoundaryComponent<dim>::build,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference)
+        .def("triangulation", &BoundaryComponent<dim>::triangulation)
+        .def("build", [](const BoundaryComponent<dim>* b) {
+            // Return a clone of the resulting triangulation.  This is because
+            // triangulations have a custom holder type, and so pybind11 ignores
+            // any attempt to pass return_value_policy::reference_internal.
+            return new regina::Triangulation<dim-1>(*(b->build()));
+        })
         .def("isOrientable", &BoundaryComponent<dim>::isOrientable)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        /*
-         * If these bindings are enabled, we must use bool(...) on the RHS
-         * to ensure that the values are not treated as references (since
-         * these static class members are really just compile-time constants,
-         * and are not defined in a way that gives them linkage).
-        s.attr("allFaces") = bool(BoundaryComponent<dim>::allFaces);
-        s.attr("allowVertex") = bool(BoundaryComponent<dim>::allowVertex);
-        s.attr("canBuild") = bool(BoundaryComponent<dim>::canBuild);
-        */
+        // We cannot take the addresses of the following header-only properties,
+        // so we define getter functions instead.
+        .def_property_readonly_static("allFaces", [](pybind11::object) {
+            return BoundaryComponent<dim>::allFaces;
+        })
+        .def_property_readonly_static("allowVertex", [](pybind11::object) {
+            return BoundaryComponent<dim>::allowVertex;
+        })
+        .def_property_readonly_static("canBuild", [](pybind11::object) {
+            return BoundaryComponent<dim>::canBuild;
+        })
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 }
 

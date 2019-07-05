@@ -30,51 +30,31 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::Isomorphism;
 
-namespace {
-    template <int dim>
-    struct PyIsoHelper {
-        typedef int (Isomorphism<dim>::*simpImage_const_type)(unsigned) const;
-
-        typedef regina::Perm<dim+1> (Isomorphism<dim>::*facetPerm_const_type)(
-            unsigned) const;
-
-        BOOST_PYTHON_FUNCTION_OVERLOADS(OL_random, Isomorphism<dim>::random,
-            1, 2);
-    };
-}
-
 template <int dim>
-void addIsomorphism(const char* name) {
-    class_<Isomorphism<dim>, std::auto_ptr<Isomorphism<dim>>,
-            boost::noncopyable>(name, init<const Isomorphism<dim>&>())
+void addIsomorphism(pybind11::module& m, const char* name) {
+    auto c = pybind11::class_<Isomorphism<dim>>(m, name)
+        .def(pybind11::init<const Isomorphism<dim>&>())
         .def("size", &Isomorphism<dim>::size)
-        .def("simpImage", typename PyIsoHelper<dim>::simpImage_const_type(
-            &Isomorphism<dim>::simpImage))
-        .def("facetPerm", typename PyIsoHelper<dim>::facetPerm_const_type(
-            &Isomorphism<dim>::facetPerm))
+        .def("simpImage", overload_cast<unsigned>(
+            &Isomorphism<dim>::simpImage, pybind11::const_))
+        .def("facetPerm", overload_cast<unsigned>(
+            &Isomorphism<dim>::facetPerm, pybind11::const_))
         .def("__getitem__", &Isomorphism<dim>::operator[])
         .def("isIdentity", &Isomorphism<dim>::isIdentity)
-        .def("apply", &Isomorphism<dim>::apply,
-            return_value_policy<to_held_type<>>())
+        .def("apply", &Isomorphism<dim>::apply)
         .def("applyInPlace", &Isomorphism<dim>::applyInPlace)
-        .def("random", &Isomorphism<dim>::random,
-            typename PyIsoHelper<dim>::OL_random()[
-            return_value_policy<manage_new_object>()])
-        .def("identity", &Isomorphism<dim>::identity,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("random")
-        .staticmethod("identity")
+        .def_static("random", &Isomorphism<dim>::random,
+            pybind11::arg(), pybind11::arg("even") = false)
+        .def_static("identity", &Isomorphism<dim>::identity)
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 }
 

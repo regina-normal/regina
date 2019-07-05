@@ -32,25 +32,25 @@
 
 #include "face-bindings.h"
 
-void addFace7() {
-    addFace<7, 0>("Face7_0", "FaceEmbedding7_0");
-    addFace<7, 1>("Face7_1", "FaceEmbedding7_1");
-    addFace<7, 2>("Face7_2", "FaceEmbedding7_2");
-    addFace<7, 3>("Face7_3", "FaceEmbedding7_3");
-    addFace<7, 4>("Face7_4", "FaceEmbedding7_4");
-    addFace<7, 5>("Face7_5", "FaceEmbedding7_5");
-    addFace<7, 6>("Face7_6", "FaceEmbedding7_6");
+void addFace7(pybind11::module& m) {
+    addFace<7, 0>(m, "Face7_0", "FaceEmbedding7_0");
+    addFace<7, 1>(m, "Face7_1", "FaceEmbedding7_1");
+    addFace<7, 2>(m, "Face7_2", "FaceEmbedding7_2");
+    addFace<7, 3>(m, "Face7_3", "FaceEmbedding7_3");
+    addFace<7, 4>(m, "Face7_4", "FaceEmbedding7_4");
+    addFace<7, 5>(m, "Face7_5", "FaceEmbedding7_5");
+    addFace<7, 6>(m, "Face7_6", "FaceEmbedding7_6");
 
-    scope().attr("VertexEmbedding7") = scope().attr("FaceEmbedding7_0");
-    scope().attr("EdgeEmbedding7") = scope().attr("FaceEmbedding7_1");
-    scope().attr("TriangleEmbedding7") = scope().attr("FaceEmbedding7_2");
-    scope().attr("TetrahedronEmbedding7") = scope().attr("FaceEmbedding7_3");
-    scope().attr("PentachoronEmbedding7") = scope().attr("FaceEmbedding7_4");
+    m.attr("VertexEmbedding7") = m.attr("FaceEmbedding7_0");
+    m.attr("EdgeEmbedding7") = m.attr("FaceEmbedding7_1");
+    m.attr("TriangleEmbedding7") = m.attr("FaceEmbedding7_2");
+    m.attr("TetrahedronEmbedding7") = m.attr("FaceEmbedding7_3");
+    m.attr("PentachoronEmbedding7") = m.attr("FaceEmbedding7_4");
 
-    scope().attr("Vertex7") = scope().attr("Face7_0");
-    scope().attr("Edge7") = scope().attr("Face7_1");
-    scope().attr("Triangle7") = scope().attr("Face7_2");
-    scope().attr("Tetrahedron7") = scope().attr("Face7_3");
-    scope().attr("Pentachoron7") = scope().attr("Face7_4");
+    m.attr("Vertex7") = m.attr("Face7_0");
+    m.attr("Edge7") = m.attr("Face7_1");
+    m.attr("Triangle7") = m.attr("Face7_2");
+    m.attr("Tetrahedron7") = m.attr("Face7_3");
+    m.attr("Pentachoron7") = m.attr("Face7_4");
 }
 

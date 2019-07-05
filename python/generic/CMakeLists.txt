@@ -1,11 +1,10 @@
 # Files to compile
 SET ( FILES
-  # TODO face
   facehelper
-  # TODO facetpairing2
-  # TODO facetpairing4
-  # TODO facetspec
-  # TODO pygeneric
+  facetpairing2
+  facetpairing4
+  facetspec
+  pygeneric
   )
 
 # Prepend folder name
@@ -107,7 +106,7 @@ SET ( FILES
 IF(NOT LOWDIMONLY)
   # Prepend folder name
   FOREACH ( SOURCE_FILE ${FILES} )
-    # TODO SET ( SOURCES ${SOURCES} generic/${SOURCE_FILE})
+    SET ( SOURCES ${SOURCES} generic/${SOURCE_FILE})
   ENDFOREACH(SOURCE_FILE)
 ENDIF(NOT LOWDIMONLY)
 

@@ -32,8 +32,8 @@
 
 #include "simplex-bindings.h"
 
-void addSimplex15() {
-    addSimplex<15>("Simplex15");
-    scope().attr("Face15_15") = scope().attr("Simplex15");
+void addSimplex15(pybind11::module& m) {
+    addSimplex<15>(m, "Simplex15");
+    m.attr("Face15_15") = m.attr("Simplex15");
 }
 

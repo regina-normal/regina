@@ -32,8 +32,8 @@
 
 #include "facetpairing-bindings.h"
 
-void addFacetPairing4() {
-    addFacetPairing<4>("FacetPairing4");
-    scope().attr("Dim4FacetPairing") = scope().attr("FacetPairing4");
+void addFacetPairing4(pybind11::module& m) {
+    addFacetPairing<4>(m, "FacetPairing4");
+    m.attr("Dim4FacetPairing") = m.attr("FacetPairing4");
 }
 
