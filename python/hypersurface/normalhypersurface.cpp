@@ -30,87 +30,51 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "hypersurface/normalhypersurface.h"
 #include "hypersurface/normalhypersurfaces.h" // for makeZeroVector()
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::NormalHypersurface;
 using regina::Triangulation;
 
-namespace {
-    void writeRawVector_stdio(const NormalHypersurface& s) {
-        s.writeRawVector(std::cout);
-    }
-
-    /**
-     * A python-only constructor that lets users build a normal hypersurface
-     * from a hand-crafted list of integers.
-     */
-    NormalHypersurface* fromCoordinates(Triangulation<4>* t,
-            regina::HyperCoords coords, boost::python::list values) {
-        regina::NormalHypersurfaceVector* v =
-            regina::makeZeroVector(t, coords);
-
-        long len = boost::python::len(values);
-        if (len != v->size()) {
-            delete v;
-
-            PyErr_SetString(PyExc_ValueError,
-                "Incorrect number of normal coordinates");
-            ::boost::python::throw_error_already_set();
-        }
-
-        for (long i = 0; i < len; i++) {
-            // Accept any type that we know how to convert to a large
-            // integer.
-            extract<regina::LargeInteger&> x_large(values[i]);
-            if (x_large.check()) {
-                v->setElement(i, x_large());
-                continue;
+void addNormalHypersurface(pybind11::module& m) {
+    auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface")
+        .def(pybind11::init([](Triangulation<4>* t, regina::HyperCoords coords,
+                pybind11::list values) {
+            regina::NormalHypersurfaceVector* v =
+                regina::makeZeroVector(t, coords);
+            if (values.size() != v->size()) {
+                delete v;
+                throw pybind11::index_error(
+                    "Incorrect number of normal coordinates");
             }
-            extract<long> x_long(values[i]);
-            if (x_long.check()) {
-                v->setElement(i, x_long());
-                continue;
+            try {
+                // Accept any type that we know how to convert to a large
+                // integer.
+                for (size_t i = 0; i < v->size(); ++i)
+                    v->setElement(i, values[i].cast<regina::LargeInteger>());
+            } catch (pybind11::cast_error const &) {
+                delete v;
+                throw std::invalid_argument(
+                    "List element not convertible to LargeInteger");
             }
-            extract<const char*> x_str(values[i]);
-            if (x_str.check()) {
-                v->setElement(i, x_str());
-                continue;
-            }
-
-            // Throw an exception.
-            x_large();
-        }
-
-        return new NormalHypersurface(t, v);
-    }
-}
-
-void addNormalHypersurface() {
-    class_<NormalHypersurface, std::auto_ptr<NormalHypersurface>,
-            boost::noncopyable>("NormalHypersurface", no_init)
-        .def("__init__", make_constructor(fromCoordinates))
-        .def("clone", &NormalHypersurface::clone,
-            return_value_policy<manage_new_object>())
-        .def("doubleHypersurface", &NormalHypersurface::doubleHypersurface,
-            return_value_policy<manage_new_object>())
+            return new NormalHypersurface(t, v);
+        }))
+        .def("clone", &NormalHypersurface::clone)
+        .def("doubleHypersurface", &NormalHypersurface::doubleHypersurface)
         .def("tetrahedra", &NormalHypersurface::tetrahedra)
         .def("prisms", &NormalHypersurface::prisms)
         .def("edgeWeight", &NormalHypersurface::edgeWeight)
         .def("countCoords", &NormalHypersurface::countCoords)
-        .def("triangulation", &NormalHypersurface::triangulation,
-            return_value_policy<to_held_type<>>())
-        .def("name", &NormalHypersurface::name,
-            return_value_policy<return_by_value>())
+        .def("triangulation", &NormalHypersurface::triangulation)
+        .def("name", &NormalHypersurface::name)
         .def("setName", &NormalHypersurface::setName)
-        .def("writeRawVector", writeRawVector_stdio)
+        .def("writeRawVector", [](const NormalHypersurface& s) {
+            s.writeRawVector(std::cout);
+        })
         .def("isEmpty", &NormalHypersurface::isEmpty)
         .def("isCompact", &NormalHypersurface::isCompact)
         .def("isOrientable", &NormalHypersurface::isOrientable)
@@ -119,20 +83,19 @@ void addNormalHypersurface() {
         .def("hasRealBoundary", &NormalHypersurface::hasRealBoundary)
         .def("isVertexLinking", &NormalHypersurface::isVertexLinking)
         .def("isVertexLink", &NormalHypersurface::isVertexLink,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isThinEdgeLink", &NormalHypersurface::isThinEdgeLink,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("homology", &NormalHypersurface::homology,
-            return_internal_reference<>())
-        .def("triangulate", &NormalHypersurface::triangulate,
-            return_value_policy<to_held_type<>>())
+            pybind11::return_value_policy::reference_internal)
+        .def("triangulate", &NormalHypersurface::triangulate)
         .def("sameSurface", &NormalHypersurface::sameSurface)
         .def("embedded", &NormalHypersurface::embedded)
         .def("locallyCompatible", &NormalHypersurface::locallyCompatible)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NNormalHypersurface") = scope().attr("NormalHypersurface");
+    m.attr("NNormalHypersurface") = m.attr("NormalHypersurface");
 }
 

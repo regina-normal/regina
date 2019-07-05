@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "hypersurface/normalhypersurfaces.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
@@ -37,74 +38,35 @@
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
 using regina::HyperCoords;
 using regina::NormalHypersurfaces;
 
-namespace {
-    // Write manual overload wrappers since these are static member functions.
-    NormalHypersurfaces* unified_2(regina::Triangulation<4>* owner,
-            regina::HyperCoords coords) {
-        return NormalHypersurfaces::enumerate(owner, coords);
-    }
-    NormalHypersurfaces* unified_3(regina::Triangulation<4>* owner,
-            regina::HyperCoords coords, regina::HyperList which) {
-        return NormalHypersurfaces::enumerate(owner, coords, which);
-    }
-    NormalHypersurfaces* unified_4(regina::Triangulation<4>* owner,
-            regina::HyperCoords coords, regina::HyperList which,
-            regina::HyperAlg algHints) {
-        return NormalHypersurfaces::enumerate(owner, coords, which,
-            algHints);
-    }
-    NormalHypersurfaces* unified_5(regina::Triangulation<4>* owner,
-            regina::HyperCoords coords, regina::HyperList which,
-            regina::HyperAlg algHints, regina::ProgressTracker* tracker) {
-        return NormalHypersurfaces::enumerate(owner, coords, which,
-            algHints, tracker);
-    }
-}
+void addNormalHypersurfaces(pybind11::module& m) {
+    m.def("makeMatchingEquations", regina::makeMatchingEquations);
 
-void addNormalHypersurfaces() {
-    def("makeMatchingEquations",
-        regina::makeMatchingEquations,
-        return_value_policy<manage_new_object>());
-
-    class_<NormalHypersurfaces, bases<regina::Packet>,
-            SafeHeldType<NormalHypersurfaces>, boost::noncopyable>
-            ("NormalHypersurfaces", no_init)
-        .def("enumerate", unified_2,
-            return_value_policy<to_held_type<>>())
-        .def("enumerate", unified_3,
-            return_value_policy<to_held_type<>>())
-        .def("enumerate", unified_4,
-            return_value_policy<to_held_type<>>())
-        .def("enumerate", unified_5,
-            return_value_policy<to_held_type<>>())
+    pybind11::class_<NormalHypersurfaces, regina::Packet,
+            regina::python::SafeHeldType<NormalHypersurfaces>>(
+            m, "NormalHypersurfaces")
+        .def_static("enumerate", &NormalHypersurfaces::enumerate,
+            pybind11::arg(), pybind11::arg(),
+            pybind11::arg("which") = regina::HS_LIST_DEFAULT,
+            pybind11::arg("algHints") = regina::HS_ALG_DEFAULT,
+            pybind11::arg("tracker") = nullptr)
         .def("recreateMatchingEquations",
-            &NormalHypersurfaces::recreateMatchingEquations,
-            return_value_policy<manage_new_object>())
+            &NormalHypersurfaces::recreateMatchingEquations)
         .def("coords", &NormalHypersurfaces::coords)
         .def("which", &NormalHypersurfaces::which)
         .def("algorithm", &NormalHypersurfaces::algorithm)
         .def("isEmbeddedOnly", &NormalHypersurfaces::isEmbeddedOnly)
-        .def("triangulation", &NormalHypersurfaces::triangulation,
-            return_value_policy<to_held_type<>>())
+        .def("triangulation", &NormalHypersurfaces::triangulation)
         .def("size", &NormalHypersurfaces::size)
         .def("hypersurface", &NormalHypersurfaces::hypersurface,
-            return_internal_reference<>())
-        .staticmethod("enumerate")
-        .attr("typeID") = regina::PACKET_NORMALHYPERSURFACES;
+            pybind11::return_value_policy::reference_internal)
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            return NormalHypersurfaces::typeID;
+        })
     ;
 
-    implicitly_convertible<SafeHeldType<NormalHypersurfaces>,
-        SafeHeldType<regina::Packet> >();
-
-    scope().attr("NNormalHypersurfaceList") =
-        scope().attr("NormalHypersurfaces");
+    m.attr("NNormalHypersurfaceList") = m.attr("NormalHypersurfaces");
 }
 

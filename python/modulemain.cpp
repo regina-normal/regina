@@ -141,7 +141,7 @@ PYBIND11_MODULE(regina, m) {
     // TODO addManifoldClasses(m);
     addAngleClasses(m);
     addSurfacesClasses(m);
-    // TODO addHypersurfaceClasses(m);
+    addHypersurfaceClasses(m);
     addDim2Classes(m);
     addGenericClasses(m);
     // TODO addTreewidthClasses(m);

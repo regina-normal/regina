@@ -30,20 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "hypersurface/hypercoords.h"
 
-using namespace boost::python;
-
-void addHyperCoords() {
-    scope global;
-
-    enum_<regina::HyperCoords>("HyperCoords")
+void addHyperCoords(pybind11::module& m) {
+    pybind11::enum_<regina::HyperCoords>(m, "HyperCoords")
         .value("HS_STANDARD", regina::HS_STANDARD)
         .value("HS_EDGE_WEIGHT", regina::HS_EDGE_WEIGHT)
+        .export_values()
         ;
-
-    global.attr("HS_STANDARD") = regina::HS_STANDARD;
-    global.attr("HS_EDGE_WEIGHT") = regina::HS_EDGE_WEIGHT;
 }
 
