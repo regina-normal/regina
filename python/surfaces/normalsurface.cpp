@@ -66,21 +66,23 @@ void addNormalSurface(pybind11::module& m) {
         .def(pybind11::init([](Triangulation<3>* t, regina::NormalCoords coords,
                 pybind11::list values) {
             regina::NormalSurfaceVector* v = regina::makeZeroVector(t, coords);
-            if (values.size() != v->size())
+            if (values.size() != v->size()) {
+                delete v;
                 throw pybind11::index_error(
                     "Incorrect number of normal coordinates");
+            }
             try {
                 // Accept any types that we know how to convert to a large
                 // integer.
                 for (size_t i = 0; i < v->size(); ++i)
                     v->setElement(i, values[i].cast<regina::LargeInteger>());
             } catch (pybind11::cast_error const &) {
+                delete v;
                 throw std::invalid_argument(
-                    "List element not convertible to Integer");
+                    "List element not convertible to LargeInteger");
             }
             return new NormalSurface(t, v);
-        }
-        ))
+        }))
         .def("clone", &NormalSurface::clone)
         .def("doubleSurface", &NormalSurface::doubleSurface)
         .def("triangles", &NormalSurface::triangles)

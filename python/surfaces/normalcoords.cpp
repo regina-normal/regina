@@ -32,7 +32,6 @@
 
 #include "../pybind11/pybind11.h"
 #include "surfaces/normalcoords.h"
-#include "../helpers.h"
 
 void addNormalCoords(pybind11::module& m) {
     pybind11::enum_<regina::NormalCoords>(m, "NormalCoords")

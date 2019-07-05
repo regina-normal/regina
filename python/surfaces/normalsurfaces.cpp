@@ -38,7 +38,6 @@
 #include "../safeheldtype.h"
 #include "../helpers.h"
 
-using pybind11::overload_cast;
 using regina::NormalSurfaces;
 
 void addNormalSurfaces(pybind11::module& m) {

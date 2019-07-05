@@ -41,13 +41,6 @@ using regina::NormalAlgFlags;
 using regina::NormalList;
 using regina::NormalListFlags;
 
-namespace {
-    bool (NormalList::*has_list)(const NormalList&) const = &NormalList::has;
-    bool (NormalAlg::*has_alg)(const NormalAlg&) const = &NormalAlg::has;
-    void (NormalList::*clear_list)(const NormalList&) = &NormalList::clear;
-    void (NormalAlg::*clear_alg)(const NormalAlg&) = &NormalAlg::clear;
-}
-
 void addNormalFlags(pybind11::module& m) {
     pybind11::enum_<NormalListFlags>(m, "NormalListFlags")
         .value("NS_EMBEDDED_ONLY", regina::NS_EMBEDDED_ONLY)
