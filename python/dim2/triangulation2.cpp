@@ -196,7 +196,6 @@ void addTriangulation2() {
                 +[](const Triangulation<2>& t, const Triangulation<2>& s) {
                     return t.isIsomorphicTo(s).release(); },
                 return_value_policy<manage_new_object>())
-            .def("findAllIsomorphisms", findAllIsomorphisms_list)
             .def("makeCanonical", &Triangulation<2>::makeCanonical)
             .def("isContainedIn",
                 +[](const Triangulation<2>& t, const Triangulation<2>& s) {
