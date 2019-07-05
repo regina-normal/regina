@@ -153,9 +153,7 @@ BOOST_PYTHON_MODULE(regina) {
     addSurfacesClasses();
     addHypersurfaceClasses();
     addDim2Classes();
-#ifndef REGINA_LOWDIMONLY
     addGenericClasses();
-#endif
     addTreewidthClasses();
     addLinkClasses();
 
