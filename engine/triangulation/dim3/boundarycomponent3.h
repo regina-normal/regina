@@ -77,6 +77,12 @@ class BoundaryComponent<3>: public detail::BoundaryComponentBase<3> {
          * If this boundary component is ideal, the Euler characteristic
          * of the link of the corresponding ideal vertex is returned.
          *
+         * \pre This boundary component does not contain any invalid vertices
+         * (i.e., vertices that belongs to one or more boundary triangles but
+         * also have positive genus links).  For such boundary components,
+         * eulerChar() does still return a well-defined result, but this
+         * result is not topologically meaningful.
+         *
          * @return the Euler characteristic.
          */
         long eulerChar() const;

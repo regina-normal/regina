@@ -143,9 +143,7 @@ PYBIND11_MODULE(regina, m) {
     addSurfacesClasses(m);
     // TODO addHypersurfaceClasses(m);
     addDim2Classes(m);
-#ifndef REGINA_LOWDIMONLY
     // TODO addGenericClasses(m);
-#endif
     // TODO addTreewidthClasses(m);
     // TODO addLinkClasses(m);
 

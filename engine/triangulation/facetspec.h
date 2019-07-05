@@ -42,6 +42,7 @@
 
 #include "regina-core.h"
 #include <cstddef>
+#include <iostream>
 
 namespace regina {
 
@@ -180,12 +181,12 @@ struct FacetSpec {
      *
      * \pre This specifier is not past-the-end.
      *
-     * \ifacespython Not present, although the preincrement operator is
+     * \ifacespython Not present, although the postincrement operator is
      * present in python as the member function inc().
      *
-     * @return A copy of this specifier after it has been incremented.
+     * @return A reference to this specifier.
      */
-    FacetSpec operator ++ ();
+    FacetSpec& operator ++ ();
     /**
      * Increments this specifier.  It will be changed to point to the
      * next simplex facet.
@@ -210,12 +211,12 @@ struct FacetSpec {
      *
      * \pre This specifier is not before-the-start.
      *
-     * \ifacespython Not present, although the predecrement operator is
+     * \ifacespython Not present, although the postdecrement operator is
      * present in python as the member function dec().
      *
-     * @return A copy of this specifier after it has been decremented.
+     * @return A reference to this specifier.
      */
-    FacetSpec operator -- ();
+    FacetSpec& operator -- ();
     /**
      * Decrements this specifier.  It will be changed to point to the
      * previous simplex facet.
@@ -265,6 +266,16 @@ struct FacetSpec {
      */
     bool operator <= (const FacetSpec<dim>& other) const;
 };
+
+/**
+ * Writes the given facet specifier to the given output stream.
+ *
+ * @param out the output stream to which to write.
+ * @param spec the specifier to write.
+ * @return a reference to \a out.
+ */
+template <int dim>
+std::ostream& operator << (std::ostream& out, const FacetSpec<dim>& spec);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -360,7 +371,7 @@ inline FacetSpec<dim>& FacetSpec<dim>::operator = (
 }
 
 template <int dim>
-inline FacetSpec<dim> FacetSpec<dim>::operator ++ () {
+inline FacetSpec<dim>& FacetSpec<dim>::operator ++ () {
     if (++facet > dim) {
         facet = 0;
         ++simp;
@@ -379,7 +390,7 @@ inline FacetSpec<dim> FacetSpec<dim>::operator ++ (int) {
 }
 
 template <int dim>
-inline FacetSpec<dim> FacetSpec<dim>::operator -- () {
+inline FacetSpec<dim>& FacetSpec<dim>::operator -- () {
     if (--facet < 0) {
         facet = dim;
         --simp;
@@ -415,6 +426,12 @@ inline bool FacetSpec<dim>::operator < (const FacetSpec<dim>& other) const {
 template <int dim>
 inline bool FacetSpec<dim>::operator <= (const FacetSpec<dim>& other) const {
     return (simp < other.simp || (simp == other.simp && facet <= other.facet));
+}
+
+template <int dim>
+inline std::ostream& operator << (std::ostream& out,
+        const FacetSpec<dim>& spec) {
+    return out << spec.simp << ':' << spec.facet;
 }
 
 } // namespace regina
