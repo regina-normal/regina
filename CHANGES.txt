@@ -30,6 +30,10 @@ Version 5.2  [ 29 September, 2017 ]
               boundary component as a precondition.  This is to avoid having
               to define what Regina actually computes in such a scenario,
               which is well-defined but not topologically meaningful.
+        Class FacetSpec:
+            - Added output stream operators.
+            - Preincrement and predecrement operators now return a reference
+              instead of a clone, to match usual iterator behaviour.
         Class GroupPresentation:
             - New Python-only sage() routine that converts a Regina
               group presentation to a mathematical object native to Sage.
