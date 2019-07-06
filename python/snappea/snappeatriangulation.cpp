@@ -53,7 +53,7 @@ void addSnapPeaTriangulation(pybind11::module& m) {
     regina::python::add_output(c1);
     regina::python::add_eq_operators(c1);
 
-    pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
+    auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
             regina::python::SafeHeldType<SnapPeaTriangulation>>
             (m, "SnapPeaTriangulation")
         .def(pybind11::init<>())
@@ -121,7 +121,8 @@ void addSnapPeaTriangulation(pybind11::module& m) {
         })
     ;
 
-    pybind11::enum_<SnapPeaTriangulation::SolutionType>(m, "SolutionType")
+    auto st = pybind11::enum_<SnapPeaTriangulation::SolutionType>(
+            c2, "SolutionType")
         .value("not_attempted", SnapPeaTriangulation::not_attempted)
         .value("geometric_solution",
             SnapPeaTriangulation::geometric_solution)
@@ -139,5 +140,8 @@ void addSnapPeaTriangulation(pybind11::module& m) {
 
     m.attr("NCusp") = m.attr("Cusp");
     m.attr("NSnapPeaTriangulation") = m.attr("SnapPeaTriangulation");
+
+    // For backward compatibility with the old boost.python bindings:
+    m.attr("SolutionType") = st;
 }
 
