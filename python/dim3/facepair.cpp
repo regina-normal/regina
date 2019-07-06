@@ -53,10 +53,10 @@ void addFacePair(pybind11::module& m) {
         .def(pybind11::self <= pybind11::self)
         .def(pybind11::self >= pybind11::self)
         .def("inc", [](FacePair& p) {
-            p++;
+            return p++;
         })
         .def("dec", [](FacePair& p) {
-            p--;
+            return p--;
         })
     ;
     regina::python::add_eq_operators(c);

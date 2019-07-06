@@ -38,10 +38,13 @@ Version 5.2  [ 29 September, 2017 ]
             - Updated to fit the standard C++ forward iterator concept.
               In particular, increment operators now have return values.
             - Now specialises std::iterator_traits for this iterator type.
+        Class FacePair:
+            - Replaced naive ++/-- operators with pairs of proper pre/post
+              increment/decrement operators, to match usual ++/-- behaviour.
         Class FacetSpec:
             - Added output stream operators.
             - Preincrement and predecrement operators now return a reference
-              instead of a clone, to match usual iterator behaviour.
+              instead of a clone, to match usual ++/-- behaviour.
         Class GroupPresentation:
             - New Python-only sage() routine that converts a Regina
               group presentation to a mathematical object native to Sage.

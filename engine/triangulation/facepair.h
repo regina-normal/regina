@@ -200,19 +200,55 @@ class REGINA_API FacePair {
          * face pair in the lexicographical ordering, or to a
          * past-the-end value if there are no more face pairs.
          *
-         * \ifacespython This routine is called inc(), since Python does
-         * not support the increment operator.
+         * This is a preincrement operator: the object will be changed,
+         * and then a reference to it will be returned.
+         *
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name inc().
+         *
+         * @return a reference to this object.
          */
-        void operator ++ (int);
+        FacePair& operator ++ ();
+        /**
+         * Increments this face pair.  It will be set to the following
+         * face pair in the lexicographical ordering, or to a
+         * past-the-end value if there are no more face pairs.
+         *
+         * This is a postincrement operator: the object will be changed,
+         * but a copy of the original reference will be returned.
+         *
+         * \ifacespython This routine is available under the name inc().
+         *
+         * @return a copy of this object before the change took place.
+         */
+        FacePair operator ++ (int);
         /**
          * Decrements this face pair.  It will be set to the previous
          * face pair in the lexicographical ordering, or to a
          * before-the-start value if there are no previous face pairs.
          *
-         * \ifacespython This routine is called dec(), since Python does
-         * not support the decrement operator.
+         * This is a predecrement operator: the object will be changed,
+         * and then a reference to it will be returned.
+         *
+         * \ifacespython This routine is not available; however, the
+         * postdecrement operator is available under the name dec().
+         *
+         * @return a reference to this object.
          */
-        void operator -- (int);
+        FacePair& operator -- ();
+        /**
+         * Decrements this face pair.  It will be set to the previous
+         * face pair in the lexicographical ordering, or to a
+         * before-the-start value if there are no previous face pairs.
+         *
+         * This is a postdecrement operator: the object will be changed,
+         * but a copy of the original reference will be returned.
+         *
+         * \ifacespython This routine is available under the name dec().
+         *
+         * @return a copy of this object before the change took place.
+         */
+        FacePair operator -- (int);
 };
 
 /**
@@ -286,6 +322,18 @@ inline bool FacePair::operator <= (const FacePair& other) const {
 
 inline bool FacePair::operator >= (const FacePair& other) const {
     return (other <= *this);
+}
+
+inline FacePair FacePair::operator ++ (int) {
+    FacePair ans = *this;
+    ++(*this);
+    return ans;
+}
+
+inline FacePair FacePair::operator -- (int) {
+    FacePair ans = *this;
+    --(*this);
+    return ans;
 }
 
 } // namespace regina

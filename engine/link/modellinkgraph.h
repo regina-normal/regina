@@ -289,14 +289,14 @@ class REGINA_API ModelLinkGraphArc {
          * around the node.  In particular, it decrements the value
          * returned by arc(), modulo 4.
          *
-         * This is a preincrement operator: the object will be changed,
+         * This is a predecrement operator: the object will be changed,
          * and then a reference to it will be returned.
          *
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
          * \ifacespython This routine is not available; however, the
-         * postincrement operator is available under the name inc().
+         * postdecrement operator is available under the name dec().
          *
          * @return a reference to this object.
          */
@@ -308,13 +308,13 @@ class REGINA_API ModelLinkGraphArc {
          * around the node.  In particular, it decrements the value
          * returned by arc(), modulo 4.
          *
-         * This is a postincrement operator: the object will be changed,
+         * This is a postdecrement operator: the object will be changed,
          * but a copy of the original arc will be returned.
          *
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \ifacespython This routine is available under the name dec().
          *
          * @return a copy of this object before the change took place.
          */
