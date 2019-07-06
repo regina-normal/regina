@@ -30,64 +30,32 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "link/examplelink.h"
 #include "link/link.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::ExampleLink;
-using regina::Link;
 
-void addExampleLink() {
-    class_<ExampleLink>("ExampleLink", no_init)
-        .def("unknot", &ExampleLink::unknot,
-            return_value_policy<to_held_type<> >())
-        .def("gordian", &ExampleLink::gordian,
-            return_value_policy<to_held_type<> >())
-        .def("trefoilLeft", &ExampleLink::trefoilLeft,
-            return_value_policy<to_held_type<> >())
-        .def("trefoilRight", &ExampleLink::trefoilRight,
-            return_value_policy<to_held_type<> >())
-        .def("trefoil", &ExampleLink::trefoil,
-            return_value_policy<to_held_type<> >())
-        .def("figureEight", &ExampleLink::figureEight,
-            return_value_policy<to_held_type<> >())
-        .def("hopf", &ExampleLink::hopf,
-            return_value_policy<to_held_type<> >())
-        .def("whitehead", &ExampleLink::whitehead,
-            return_value_policy<to_held_type<> >())
-        .def("borromean", &ExampleLink::borromean,
-            return_value_policy<to_held_type<> >())
-        .def("monster", &ExampleLink::monster,
-            return_value_policy<to_held_type<> >())
-        .def("conway", &ExampleLink::conway,
-            return_value_policy<to_held_type<> >())
-        .def("kinoshitaTerasaka", &ExampleLink::kinoshitaTerasaka,
-            return_value_policy<to_held_type<> >())
+void addExampleLink(pybind11::module& m) {
+    auto c = pybind11::class_<ExampleLink>(m, "ExampleLink")
+        .def_static("unknot", &ExampleLink::unknot)
+        .def_static("gordian", &ExampleLink::gordian)
+        .def_static("trefoilLeft", &ExampleLink::trefoilLeft)
+        .def_static("trefoilRight", &ExampleLink::trefoilRight)
+        .def_static("trefoil", &ExampleLink::trefoil)
+        .def_static("figureEight", &ExampleLink::figureEight)
+        .def_static("hopf", &ExampleLink::hopf)
+        .def_static("whitehead", &ExampleLink::whitehead)
+        .def_static("borromean", &ExampleLink::borromean)
+        .def_static("monster", &ExampleLink::monster)
+        .def_static("conway", &ExampleLink::conway)
+        .def_static("kinoshitaTerasaka", &ExampleLink::kinoshitaTerasaka)
         /*
-        .def("torus", &ExampleLink::torus,
-            return_value_policy<to_held_type<> >())
+        .def_static("torus", &ExampleLink::torus)
         */
-        .def("gst", &ExampleLink::gst,
-            return_value_policy<to_held_type<> >())
-        .def(regina::python::no_eq_operators())
-        .staticmethod("unknot")
-        .staticmethod("gordian")
-        .staticmethod("trefoilLeft")
-        .staticmethod("trefoilRight")
-        .staticmethod("trefoil")
-        .staticmethod("figureEight")
-        .staticmethod("hopf")
-        .staticmethod("whitehead")
-        .staticmethod("borromean")
-        .staticmethod("monster")
-        .staticmethod("conway")
-        .staticmethod("kinoshitaTerasaka")
-        // .staticmethod("torus")
-        .staticmethod("gst")
+        .def_static("gst", &ExampleLink::gst)
     ;
+    regina::python::no_eq_operators(c);
 }
 

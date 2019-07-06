@@ -30,163 +30,50 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "link/link.h"
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "triangulation/dim3.h"
 #include "../safeheldtype.h"
-
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
 #include "../helpers.h"
 
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::Crossing;
 using regina::StrandRef;
 using regina::Link;
 
-namespace {
-    std::string (Link::*gauss_str)() const = &Link::gauss;
-    std::string (Link::*orientedGauss_str)() const = &Link::orientedGauss;
-    std::string (Link::*jenkins_str)() const = &Link::jenkins;
-    std::string (Link::*dt_str)(bool) const = &Link::dt;
-    Link* (*fromGauss_str)(const std::string&) = &Link::fromGauss;
-    Link* (*fromOrientedGauss_str)(const std::string&) =
-        &Link::fromOrientedGauss;
-    Link* (*fromJenkins_str)(const std::string&) = &Link::fromJenkins;
-    Link* (*fromDT_str)(const std::string&) = &Link::fromDT;
-
-    bool (Link::*r1a)(Crossing*, bool, bool) = &Link::r1;
-    bool (Link::*r1b)(StrandRef, int, int, bool, bool) = &Link::r1;
-    bool (Link::*r2a)(Crossing*, bool, bool) = &Link::r2;
-    bool (Link::*r2b)(StrandRef, bool, bool) = &Link::r2;
-    bool (Link::*r2c)(StrandRef, int, StrandRef, int, bool, bool) = &Link::r2;
-    bool (Link::*r3a)(Crossing*, int, bool, bool) = &Link::r3;
-    bool (Link::*r3b)(StrandRef, int, bool, bool) = &Link::r3;
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_complement, Link::complement,
-        0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_parallel, Link::parallel, 1, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r1a, Link::r1, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r1b, Link::r1, 3, 5);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2a, Link::r2, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2b, Link::r2, 1, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r2c, Link::r2, 4, 6);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3a, Link::r3, 2, 4);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_r3b, Link::r3, 2, 4);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyToLocalMinimum,
-        Link::simplifyToLocalMinimum, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_jones, Link::jones, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homfly, Link::homfly, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homflyAZ, Link::homflyAZ, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_homflyLM, Link::homflyLM, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_bracket, Link::bracket, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_knotSig, Link::knotSig, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_simplifyExhaustive,
-        Link::simplifyExhaustive, 0, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_dt, Link::dt, 0, 1);
-
-    Link* fromGauss_list(boost::python::list terms) {
-        long len = boost::python::len(terms);
-
-        int* s = new int[len];
-        for (long i = 0; i < len; ++i) {
-            extract<int> val(terms[i]);
-            if (! val.check()) {
-                // Throw an exception.
-                delete[] s;
-                val();
-            }
-            s[i] = val();
-        }
-
-        Link* ans = Link::fromGauss(s, s + len);
-        delete[] s;
-        return ans;
-    }
-
-    Link* fromOrientedGauss_list(boost::python::list terms) {
-        long len = boost::python::len(terms);
-
-        std::string* s = new std::string[len];
-        for (long i = 0; i < len; ++i) {
-            extract<std::string> val(terms[i]);
-            if (! val.check()) {
-                // Throw an exception.
-                delete[] s;
-                val();
-            }
-            s[i] = val();
-        }
-
-        Link* ans = Link::fromOrientedGauss(s, s + len);
-        delete[] s;
-        return ans;
-    }
-
-    Link* fromDT_list(boost::python::list terms) {
-        long len = boost::python::len(terms);
-
-        int* s = new int[len];
-        for (long i = 0; i < len; ++i) {
-            extract<int> val(terms[i]);
-            if (! val.check()) {
-                // Throw an exception.
-                delete[] s;
-                val();
-            }
-            s[i] = val();
-        }
-
-        Link* ans = Link::fromDT(s, s + len);
-        delete[] s;
-        return ans;
-    }
-
-    void strand_inc_operator(StrandRef& s) {
-       ++s;
-    }
-
-    void strand_dec_operator(StrandRef& s) {
-       --s;
-    }
-
-    void writePACE_stdio(const Link& l) {
-        l.writePACE(std::cout);
-    }
-}
-
-void addLink() {
-    scope global;
-
-    enum_<regina::Framing>("Framing")
+void addLink(pybind11::module& m) {
+    pybind11::enum_<regina::Framing>(m, "Framing")
         .value("FRAMING_SEIFERT", regina::FRAMING_SEIFERT)
         .value("FRAMING_BLACKBOARD", regina::FRAMING_BLACKBOARD)
+        .export_values()
         ;
 
-    global.attr("FRAMING_SEIFERT") = regina::FRAMING_SEIFERT;
-    global.attr("FRAMING_BLACKBOARD") = regina::FRAMING_BLACKBOARD;
-
-    class_<StrandRef>("StrandRef", init<>())
-        .def(init<Crossing*, int>())
-        .def(init<const StrandRef&>())
+    // TODO: Should we use a by-value holder type?
+    auto s = pybind11::class_<StrandRef>(m, "StrandRef")
+        .def(pybind11::init<>())
+        .def(pybind11::init<Crossing*, int>())
+        .def(pybind11::init<const StrandRef&>())
         .def("crossing", &StrandRef::crossing,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("strand", &StrandRef::strand)
         .def("id", &StrandRef::id)
-        .def("inc", strand_inc_operator)
-        .def("dec", strand_dec_operator)
+        .def("inc", [](StrandRef& s) {
+           return s++;
+        })
+        .def("dec", [](StrandRef& s) {
+           return s--;
+        })
         .def("next", &StrandRef::next)
         .def("prev", &StrandRef::prev)
         .def("jump", &StrandRef::jump)
-        .def(self_ns::str(self))
-        .def(self_ns::repr(self))
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output_ostream(s, true /* __repr__ */);
+    regina::python::add_eq_operators(s);
 
-    class_<Crossing, std::auto_ptr<Crossing>, boost::noncopyable>
-            ("Crossing", no_init)
+    auto c = pybind11::class_<Crossing>(m, "Crossing")
         .def("index", &Crossing::index)
         .def("sign", &Crossing::sign)
         .def("upper", &Crossing::upper)
@@ -196,39 +83,49 @@ void addLink() {
         .def("strand", &Crossing::strand)
         .def("next", &Crossing::next)
         .def("prev", &Crossing::prev)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope s = class_<Link, bases<regina::Packet>, SafeHeldType<Link>,
-            boost::noncopyable>("Link", init<>())
-        .def(init<size_t>())
-        .def(init<const Link&>())
-        .def(init<const Link&, bool>())
-        .def(init<const std::string&>())
+    pybind11::class_<Link, regina::Packet,
+            regina::python::SafeHeldType<Link>>(m, "Link")
+        .def(pybind11::init<>())
+        .def(pybind11::init<size_t>())
+        .def(pybind11::init<const Link&>())
+        .def(pybind11::init<const Link&, bool>())
+        .def(pybind11::init<const std::string&>())
         .def("isEmpty", &Link::isEmpty)
         .def("size", &Link::size)
         .def("countComponents", &Link::countComponents)
-        .def("crossing", &Link::crossing, return_internal_reference<>())
+        .def("crossing", &Link::crossing,
+            pybind11::return_value_policy::reference_internal)
         .def("component", &Link::component)
         .def("strand", &Link::strand)
         .def("translate", &Link::translate)
-        .def("fromGauss", fromGauss_list,
-            return_value_policy<to_held_type<>>())
-        .def("fromGauss", fromGauss_str,
-            return_value_policy<to_held_type<>>())
-        .def("fromOrientedGauss", fromOrientedGauss_list,
-            return_value_policy<to_held_type<>>())
-        .def("fromOrientedGauss", fromOrientedGauss_str,
-            return_value_policy<to_held_type<>>())
-        .def("fromJenkins", fromJenkins_str,
-            return_value_policy<to_held_type<>>())
-        .def("fromDT", fromDT_list,
-            return_value_policy<to_held_type<>>())
-        .def("fromDT", fromDT_str,
-            return_value_policy<to_held_type<>>())
-        .def("fromKnotSig", &Link::fromKnotSig,
-            return_value_policy<to_held_type<>>())
+        .def_static("fromGauss", [](const std::vector<int>& v) {
+            return Link::fromGauss(v.begin(), v.end());
+        })
+        .def_static("fromGauss", [](const std::string& s) {
+            // overload_cast confused with templated vs non-templated versions.
+            return Link::fromGauss(s);
+        })
+        .def_static("fromOrientedGauss", [](const std::vector<std::string>& v) {
+            return Link::fromOrientedGauss(v.begin(), v.end());
+        })
+        .def_static("fromOrientedGauss", [](const std::string& s) {
+            // overload_cast confused with templated vs non-templated versions.
+            return Link::fromOrientedGauss(s);
+        })
+        .def_static("fromJenkins",
+            overload_cast<const std::string&>(&Link::fromJenkins))
+        .def_static("fromDT", [](const std::vector<int>& v) {
+            return Link::fromDT(v.begin(), v.end());
+        })
+        .def_static("fromDT", [](const std::string& s) {
+            // overload_cast confused with templated vs non-templated versions.
+            return Link::fromDT(s);
+        })
+        .def_static("fromKnotSig", &Link::fromKnotSig)
         .def("swapContents", &Link::swapContents)
         .def("reflect", &Link::reflect)
         .def("rotate", &Link::rotate)
@@ -241,63 +138,109 @@ void addLink() {
         .def("linking", &Link::linking)
         .def("writhe", &Link::writhe)
         .def("complement", &Link::complement,
-            OL_complement()[return_value_policy<to_held_type<>>()])
+            pybind11::arg("simplify") = true)
         .def("parallel", &Link::parallel,
-            OL_parallel()[return_value_policy<to_held_type<>>()])
+            pybind11::arg(), pybind11::arg("framing") = regina::FRAMING_SEIFERT)
         .def("connected", &Link::connected)
         .def("bracket", &Link::bracket,
-            OL_bracket()[return_internal_reference<>()])
+            pybind11::return_value_policy::reference_internal,
+            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("tracker") = nullptr)
         .def("jones", &Link::jones,
-            OL_jones()[return_internal_reference<>()])
+            pybind11::return_value_policy::reference_internal,
+            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("tracker") = nullptr)
         .def("homfly", &Link::homfly,
-            OL_homfly()[return_internal_reference<>()])
+            pybind11::return_value_policy::reference_internal,
+            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("tracker") = nullptr)
         .def("homflyAZ", &Link::homflyAZ,
-            OL_homflyAZ()[return_internal_reference<>()])
+            pybind11::return_value_policy::reference_internal,
+            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("tracker") = nullptr)
         .def("homflyLM", &Link::homflyLM,
-            OL_homflyLM()[return_internal_reference<>()])
+            pybind11::return_value_policy::reference_internal,
+            pybind11::arg("alg") = regina::ALG_DEFAULT,
+            pybind11::arg("tracker") = nullptr)
         .def("knowsBracket", &Link::knowsBracket)
         .def("knowsJones", &Link::knowsJones)
         .def("knowsHomfly", &Link::knowsHomfly)
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("useTreeDecomposition", &Link::useTreeDecomposition)
         .def("brief", &Link::brief)
-        .def("gauss", gauss_str)
-        .def("orientedGauss", orientedGauss_str)
-        .def("jenkins", jenkins_str)
-        .def("dt", dt_str, OL_dt())
-        .def("writePACE", writePACE_stdio)
+        .def("gauss",
+            overload_cast<>(&Link::gauss, pybind11::const_))
+        .def("orientedGauss",
+            overload_cast<>(&Link::orientedGauss, pybind11::const_))
+        .def("jenkins",
+            overload_cast<>(&Link::jenkins, pybind11::const_))
+        .def("dt",
+            overload_cast<bool>(&Link::dt, pybind11::const_),
+            pybind11::arg("alpha") = false)
+        .def("writePACE", [](const Link& l) {
+            l.writePACE(std::cout);
+        })
         .def("pace", &Link::pace)
-        .def("knotSig", &Link::knotSig, OL_knotSig())
+        .def("knotSig", &Link::knotSig,
+            pybind11::arg("useReflection") = true,
+            pybind11::arg("useReversal") = true)
         .def("dumpConstruction", &Link::dumpConstruction)
-        .def("r1", r1a, OL_r1a())
-        .def("r1", r1b, OL_r1b())
-        .def("r2", r2a, OL_r2a())
-        .def("r2", r2b, OL_r2b())
-        .def("r2", r2c, OL_r2c())
-        .def("r3", r3a, OL_r3a())
-        .def("r3", r3b, OL_r3b())
+        .def("r1", overload_cast<Crossing*, bool, bool>(&Link::r1),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true)
+        .def("r1", overload_cast<StrandRef, int, int, bool, bool>(&Link::r1),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true)
+        .def("r2", overload_cast<Crossing*, bool, bool>(&Link::r2),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true)
+        .def("r2", overload_cast<StrandRef, bool, bool>(&Link::r2),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true)
+        .def("r2", overload_cast<StrandRef, int, StrandRef, int, bool, bool>(
+                &Link::r2),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true)
+        .def("r3", overload_cast<Crossing*, int, bool, bool>(&Link::r3),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true)
+        .def("r3", overload_cast<StrandRef, int, bool, bool>(&Link::r3),
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("check") = true,
+            pybind11::arg("perform") = true)
         .def("hasReducingPass", &Link::hasReducingPass)
         .def("intelligentSimplify", &Link::intelligentSimplify)
         .def("simplifyToLocalMinimum", &Link::simplifyToLocalMinimum,
-             OL_simplifyToLocalMinimum())
+             pybind11::arg("perform") = true)
         .def("simplifyExhaustive", &Link::simplifyExhaustive,
-             OL_simplifyExhaustive())
-        .staticmethod("fromGauss")
-        .staticmethod("fromOrientedGauss")
-        .staticmethod("fromJenkins")
-        .staticmethod("fromDT")
-        .staticmethod("fromKnotSig")
+             pybind11::arg("height") = 1,
+             pybind11::arg("nThreads") = 1,
+             pybind11::arg("tracker") = nullptr)
+        .def_readonly_static("jonesVar", Link::jonesVar)
+        .def_readonly_static("homflyVarX", Link::homflyVarX)
+        .def_readonly_static("homflyVarY", Link::homflyVarY)
+        .def_readonly_static("homflyAZVarX", Link::homflyAZVarX)
+        .def_readonly_static("homflyAZVarY", Link::homflyAZVarY)
+        .def_readonly_static("homflyLMVarX", Link::homflyLMVarX)
+        .def_readonly_static("homflyLMVarY", Link::homflyLMVarY)
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return Link::typeID;
+        })
     ;
 
-    s.attr("typeID") = regina::PACKET_LINK;
-    s.attr("jonesVar") = Link::jonesVar;
-    s.attr("homflyVarX") = Link::homflyVarX;
-    s.attr("homflyVarY") = Link::homflyVarY;
-    s.attr("homflyAZVarX") = Link::homflyAZVarX;
-    s.attr("homflyAZVarY") = Link::homflyAZVarY;
-    s.attr("homflyLMVarX") = Link::homflyLMVarX;
-    s.attr("homflyLMVarY") = Link::homflyLMVarY;
-
-    implicitly_convertible<SafeHeldType<Link>, SafeHeldType<regina::Packet>>();
 }
