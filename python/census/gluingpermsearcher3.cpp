@@ -30,66 +30,47 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "census/gluingpermsearcher3.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::GluingPermSearcher;
 
-void addGluingPermSearcher3() {
-    {
-        scope s = class_<GluingPermSearcher<3>,
-                std::auto_ptr<GluingPermSearcher<3>>,
-                boost::noncopyable>("GluingPermSearcher3", no_init)
-            .def(regina::python::add_eq_operators())
+void addGluingPermSearcher3(pybind11::module& m) {
+    auto c = pybind11::class_<GluingPermSearcher<3>>(m, "GluingPermSearcher3")
         ;
+    regina::python::add_eq_operators(c);
 
-        enum_<regina::GluingPermSearcher<3>::PurgeFlags>("PurgeFlags")
-            .value("PURGE_NONE",
-                regina::GluingPermSearcher<3>::PURGE_NONE)
-            .value("PURGE_NON_MINIMAL",
-                regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL)
-            .value("PURGE_NON_PRIME",
-                regina::GluingPermSearcher<3>::PURGE_NON_PRIME)
-            .value("PURGE_NON_MINIMAL_PRIME",
-                regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME)
-            .value("PURGE_NON_MINIMAL_HYP",
-                regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP)
-            .value("PURGE_P2_REDUCIBLE",
-                regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE)
-            ;
+    pybind11::enum_<regina::GluingPermSearcher<3>::PurgeFlags>(c, "PurgeFlags")
+        .value("PURGE_NONE",
+            regina::GluingPermSearcher<3>::PURGE_NONE)
+        .value("PURGE_NON_MINIMAL",
+            regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL)
+        .value("PURGE_NON_PRIME",
+            regina::GluingPermSearcher<3>::PURGE_NON_PRIME)
+        .value("PURGE_NON_MINIMAL_PRIME",
+            regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME)
+        .value("PURGE_NON_MINIMAL_HYP",
+            regina::GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP)
+        .value("PURGE_P2_REDUCIBLE",
+            regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE)
+        .export_values();
 
-        s.attr("PURGE_NONE") =
-            GluingPermSearcher<3>::PURGE_NONE;
-        s.attr("PURGE_NON_MINIMAL") =
-            GluingPermSearcher<3>::PURGE_NON_MINIMAL;
-        s.attr("PURGE_NON_PRIME") =
-            GluingPermSearcher<3>::PURGE_NON_PRIME;
-        s.attr("PURGE_NON_MINIMAL_PRIME") =
-            GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
-        s.attr("PURGE_NON_MINIMAL_HYP") =
-            GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP;
-        s.attr("PURGE_P2_REDUCIBLE") =
-            GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
-    }
+    m.attr("NGluingPermSearcher") = m.attr("GluingPermSearcher3");
 
-    scope global;
-
-    global.attr("PURGE_NONE") =
+    // For backward compatibility with the old boost.python bindings:
+    m.attr("PURGE_NONE") =
         GluingPermSearcher<3>::PURGE_NONE;
-    global.attr("PURGE_NON_MINIMAL") =
+    m.attr("PURGE_NON_MINIMAL") =
         GluingPermSearcher<3>::PURGE_NON_MINIMAL;
-    global.attr("PURGE_NON_PRIME") =
+    m.attr("PURGE_NON_PRIME") =
         GluingPermSearcher<3>::PURGE_NON_PRIME;
-    global.attr("PURGE_NON_MINIMAL_PRIME") =
+    m.attr("PURGE_NON_MINIMAL_PRIME") =
         GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME;
-    global.attr("PURGE_NON_MINIMAL_HYP") =
+    m.attr("PURGE_NON_MINIMAL_HYP") =
         GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP;
-    global.attr("PURGE_P2_REDUCIBLE") =
+    m.attr("PURGE_P2_REDUCIBLE") =
         GluingPermSearcher<3>::PURGE_P2_REDUCIBLE;
-
-    global.attr("NGluingPermSearcher") = scope().attr("GluingPermSearcher3");
 }
 

@@ -1,7 +1,7 @@
 SET ( SOURCES globalarray safeheldtype modulemain )
 ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
-# TODO ADD_SUBDIRECTORY("census")
+ADD_SUBDIRECTORY("census")
 ADD_SUBDIRECTORY("dim2")
 ADD_SUBDIRECTORY("dim3")
 ADD_SUBDIRECTORY("dim4")
