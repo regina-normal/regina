@@ -19,7 +19,7 @@ ADD_SUBDIRECTORY("split")
 ADD_SUBDIRECTORY("srcutils")
 # TODO ADD_SUBDIRECTORY("subcomplex")
 ADD_SUBDIRECTORY("surfaces")
-# TODO ADD_SUBDIRECTORY("treewidth")
+ADD_SUBDIRECTORY("treewidth")
 ADD_SUBDIRECTORY("utilities")
 
 ADD_SUBDIRECTORY("testsuite")

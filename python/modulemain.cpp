@@ -144,7 +144,7 @@ PYBIND11_MODULE(regina, m) {
     addHypersurfaceClasses(m);
     addDim2Classes(m);
     addGenericClasses(m);
-    // TODO addTreewidthClasses(m);
+    addTreewidthClasses(m);
     // TODO addLinkClasses(m);
 
     // This routine allows the user to import sage-related hacks, which

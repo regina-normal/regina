@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "link/link.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/facetpairing.h"
@@ -40,125 +40,33 @@
 #include "triangulation/dim4.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::TreeBag;
 using regina::TreeDecomposition;
 
-namespace {
-    TreeDecomposition* (*fromPACE_str)(const std::string&) =
-        &TreeDecomposition::fromPACE;
-    void (TreeDecomposition::*reroot_bag)(TreeBag*) =
-        &TreeDecomposition::reroot;
-
-    TreeDecomposition* fromListAlg(boost::python::list graph,
-            regina::TreeDecompositionAlg alg = regina::TD_UPPER) {
-        long len = boost::python::len(graph);
-
-        long i, j, k;
-        bool** g = new bool*[len];
-        boost::python::list row;
-
-        for (i = 0; i < len; ++i) {
-            g[i] = new bool[len];
-
-            extract<boost::python::list> x_list(graph[i]);
-            if (! x_list.check()) {
-                // Throw an exception.
-                for (k = 0; k <= i; ++k)
-                    delete[] g[k];
-                delete[] g;
-                x_list();
-            }
-
-            row = x_list();
-            if (boost::python::len(row) != len) {
-                // Throw an exception.
-                for (k = 0; k <= i; ++k)
-                    delete[] g[k];
-                delete[] g;
-
-                PyErr_SetString(PyExc_ValueError,
-                    "Initialisation list does not describe a square matrix.");
-                boost::python::throw_error_already_set();
-            }
-
-            for (j = 0; j < len; ++j) {
-                extract<bool> val(row[j]);
-                if (val.check()) {
-                    g[i][j] = val();
-                    continue;
-                }
-
-                // Throw an exception.
-                for (k = 0; k <= i; ++k)
-                    delete[] g[k];
-                delete[] g;
-                val();
-            }
-        }
-
-        TreeDecomposition* ans = new TreeDecomposition(
-            len, const_cast<bool const**>(g), alg);
-
-        for (i = 0; i < len; ++i)
-            delete[] g[i];
-        delete[] g;
-
-        return ans;
-    }
-
-    inline TreeDecomposition* fromList(boost::python::list graph) {
-        return fromListAlg(graph);
-    }
-
-    inline void makeNice_void(TreeDecomposition& t) {
-        t.makeNice();
-    }
-
-    inline void writeDot_stdio(const TreeDecomposition& t) {
-        t.writeDot(std::cout);
-    }
-
-    inline void writePACE_stdio(const TreeDecomposition& t) {
-        t.writePACE(std::cout);
-    }
-}
-
-void addTreeDecomposition() {
-    scope global;
-
-    enum_<regina::TreeDecompositionAlg>("TreeDecompositionAlg")
+void addTreeDecomposition(pybind11::module& m) {
+    pybind11::enum_<regina::TreeDecompositionAlg>(m, "TreeDecompositionAlg")
         .value("TD_UPPER", regina::TD_UPPER)
         .value("TD_UPPER_GREEDY_FILL_IN", regina::TD_UPPER_GREEDY_FILL_IN)
+        .export_values()
         ;
 
-    global.attr("TD_UPPER") = regina::TD_UPPER;
-    global.attr("TD_UPPER_GREEDY_FILL_IN") = regina::TD_UPPER_GREEDY_FILL_IN;
-
-    enum_<regina::BagComparison>("BagComparison")
+    pybind11::enum_<regina::BagComparison>(m, "BagComparison")
         .value("BAG_EQUAL", regina::BAG_EQUAL)
         .value("BAG_SUBSET", regina::BAG_SUBSET)
         .value("BAG_SUPERSET", regina::BAG_SUPERSET)
         .value("BAG_UNRELATED", regina::BAG_UNRELATED)
+        .export_values()
         ;
 
-    global.attr("BAG_EQUAL") = regina::BAG_EQUAL;
-    global.attr("BAG_SUBSET") = regina::BAG_SUBSET;
-    global.attr("BAG_SUPERSET") = regina::BAG_SUPERSET;
-    global.attr("BAG_UNRELATED") = regina::BAG_UNRELATED;
-
-    enum_<regina::NiceType>("NiceType")
+    pybind11::enum_<regina::NiceType>(m, "NiceType")
         .value("NICE_INTRODUCE", regina::NICE_INTRODUCE)
         .value("NICE_FORGET", regina::NICE_FORGET)
         .value("NICE_JOIN", regina::NICE_JOIN)
+        .export_values()
         ;
 
-    global.attr("NICE_INTRODUCE") = regina::NICE_INTRODUCE;
-    global.attr("NICE_FORGET") = regina::NICE_FORGET;
-    global.attr("NICE_JOIN") = regina::NICE_JOIN;
-
-    class_<TreeBag, std::auto_ptr<TreeBag>,
-            boost::noncopyable>("TreeBag", no_init)
+    auto tb = pybind11::class_<TreeBag>(m, "TreeBag")
         .def("size", &TreeBag::size)
         .def("element", &TreeBag::element)
         .def("contains", &TreeBag::contains)
@@ -167,71 +75,123 @@ void addTreeDecomposition() {
         .def("subtype", &TreeBag::subtype)
         .def("compare", &TreeBag::compare)
         .def("next", &TreeBag::next,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("nextPrefix", &TreeBag::nextPrefix,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("parent", &TreeBag::parent,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("children", &TreeBag::children,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("sibling", &TreeBag::sibling,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isLeaf", &TreeBag::isLeaf)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(tb);
+    regina::python::add_eq_operators(tb);
 
-    class_<TreeDecomposition, std::auto_ptr<TreeDecomposition>,
-            boost::noncopyable>("TreeDecomposition", no_init)
-        .def(init<const regina::Triangulation<2>&>())
-        .def(init<const regina::Triangulation<2>&,
+    auto td = pybind11::class_<TreeDecomposition>(m, "TreeDecomposition")
+        .def(pybind11::init<const regina::Triangulation<2>&>())
+        .def(pybind11::init<const regina::Triangulation<2>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::Triangulation<3>&>())
-        .def(init<const regina::Triangulation<3>&,
+        .def(pybind11::init<const regina::Triangulation<3>&>())
+        .def(pybind11::init<const regina::Triangulation<3>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::Triangulation<4>&>())
-        .def(init<const regina::Triangulation<4>&,
+        .def(pybind11::init<const regina::Triangulation<4>&>())
+        .def(pybind11::init<const regina::Triangulation<4>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::FacetPairing<3>&>())
-        .def(init<const regina::FacetPairing<3>&,
+        .def(pybind11::init<const regina::FacetPairing<3>&>())
+        .def(pybind11::init<const regina::FacetPairing<3>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::FacetPairing<2>&>())
-        .def(init<const regina::FacetPairing<2>&,
+        .def(pybind11::init<const regina::FacetPairing<2>&>())
+        .def(pybind11::init<const regina::FacetPairing<2>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::FacetPairing<4>&>())
-        .def(init<const regina::FacetPairing<4>&,
+        .def(pybind11::init<const regina::FacetPairing<4>&>())
+        .def(pybind11::init<const regina::FacetPairing<4>&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::Link&>())
-        .def(init<const regina::Link&,
+        .def(pybind11::init<const regina::Link&>())
+        .def(pybind11::init<const regina::Link&,
             regina::TreeDecompositionAlg>())
-        .def(init<const regina::TreeDecomposition&>())
-        .def("__init__", make_constructor(fromListAlg))
-        .def("__init__", make_constructor(fromList))
+        .def(pybind11::init<const regina::TreeDecomposition&>())
+        .def(pybind11::init([](pybind11::list graph,
+                regina::TreeDecompositionAlg alg) {
+            size_t len = graph.size();
+            bool** g = new bool*[len];
+
+            long i, j, k;
+            pybind11::list row;
+            for (i = 0; i < len; ++i) {
+                try {
+                    row = graph[i].cast<pybind11::list>();
+                } catch (pybind11::cast_error const &) {
+                    // Clean up and throw an exception.
+                    for (k = 0; k < i; ++k) delete[] g[k];
+                    delete[] g;
+                    throw std::invalid_argument(
+                        "Graph must be presented as a list of lists");
+                }
+                if (row.size() != len) {
+                    // Clean up and throw an exception.
+                    for (k = 0; k < i; ++k) delete[] g[k];
+                    delete[] g;
+                    throw pybind11::index_error("Initialisation list "
+                        "does not describe a square matrix");
+                }
+
+                g[i] = new bool[len];
+                try {
+                    for (j = 0; j < len; ++j)
+                        g[i][j] = row[j].cast<bool>();
+                } catch (pybind11::cast_error const &) {
+                    // Clean up and throw an exception.
+                    for (k = 0; k <= i; ++k) delete[] g[k];
+                    delete[] g;
+                    throw std::invalid_argument(
+                        "Matrix element not convertible to a boolean");
+                }
+            }
+            TreeDecomposition* ans = new TreeDecomposition(
+                len, const_cast<bool const**>(g), alg);
+
+            // Clean up and return.
+            for (i = 0; i < len; ++i) delete[] g[i];
+            delete[] g;
+            return ans;
+        }), pybind11::arg(), pybind11::arg("alg") = regina::TD_UPPER)
         .def("width", &TreeDecomposition::width)
         .def("size", &TreeDecomposition::size)
         .def("root", &TreeDecomposition::root,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference_internal)
         .def("first", &TreeDecomposition::first,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference_internal)
         .def("firstPrefix", &TreeDecomposition::firstPrefix,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference_internal)
         .def("bag", &TreeDecomposition::bag,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference_internal)
         .def("compress", &TreeDecomposition::compress)
-        .def("makeNice", makeNice_void)
-        .def("reroot", reroot_bag)
-        .def("writeDot", writeDot_stdio)
+        .def("makeNice", [](TreeDecomposition& t) {
+            // In python we don't allow passing the heightHint array.
+            t.makeNice();
+        })
+        .def("reroot", [](TreeDecomposition& t, TreeBag* b) {
+            // overload_cast breaks since reroot is overloaded with a
+            // templated and non-templated version.
+            t.reroot(b);
+        })
+        .def("writeDot", [](const TreeDecomposition& t) {
+            t.writeDot(std::cout);
+        })
         .def("dot", &TreeDecomposition::dot)
-        .def("writePACE", writePACE_stdio)
+        .def("writePACE", [](const TreeDecomposition& t) {
+            t.writePACE(std::cout);
+        })
         .def("pace", &TreeDecomposition::pace)
-        .def("fromPACE", fromPACE_str,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromPACE")
+        .def_static("fromPACE",
+            overload_cast<const std::string&>(&TreeDecomposition::fromPACE))
     ;
+    regina::python::add_output(td);
+    regina::python::add_eq_operators(td);
 
-    scope().attr("NTreeBag") = scope().attr("TreeBag");
-    scope().attr("NTreeDecomposition") = scope().attr("TreeDecomposition");
+    m.attr("NTreeBag") = m.attr("TreeBag");
+    m.attr("NTreeDecomposition") = m.attr("TreeDecomposition");
 }
 
