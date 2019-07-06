@@ -63,6 +63,7 @@ void addNormalHypersurfaces(pybind11::module& m) {
         .def("hypersurface", &NormalHypersurfaces::hypersurface,
             pybind11::return_value_policy::reference_internal)
         .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
             return NormalHypersurfaces::typeID;
         })
     ;

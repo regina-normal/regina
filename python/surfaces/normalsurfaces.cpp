@@ -97,6 +97,7 @@ void addNormalSurfaces(pybind11::module& m) {
             pybind11::arg(),
             pybind11::arg("additionalFields") = regina::surfaceExportAll)
         .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
             return NormalSurfaces::typeID;
         })
     ;
