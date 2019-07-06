@@ -255,7 +255,8 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name inc().
          *
          * @return a reference to this object.
          */
@@ -272,8 +273,7 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * preincrement operator is available under the name inc().
+         * \ifacespython This routine is available under the name inc().
          *
          * @return a copy of this object before the change took place.
          */
@@ -290,7 +290,8 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name dec().
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name dec().
          *
          * @return a reference to this object.
          */
@@ -307,8 +308,7 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * preincrement operator is available under the name dec().
+         * \ifacespython This routine is available under the name dec().
          *
          * @return a copy of this object before the change took place.
          */
@@ -2908,7 +2908,7 @@ class REGINA_API Link : public Packet {
          * allowed, and it is currently up to the user to enforce this.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
-         * iterators, this routine takes a Python list of tokens.
+         * iterators, this routine takes a Python list of integers.
          *
          * @author Adam Gowty
          *
@@ -3040,7 +3040,7 @@ class REGINA_API Link : public Packet {
          * allowed, and it is currently up to the user to enforce this.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
-         * iterators, this routine takes a Python list of tokens.
+         * iterators, this routine takes a Python list of strings.
          *
          * @param begin an iterator that points to the beginning of the
          * sequence of tokens for an "oriented" Gauss code.
@@ -3277,7 +3277,7 @@ class REGINA_API Link : public Packet {
          * allowed, and it is currently up to the user to enforce this.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
-         * iterators, this routine takes a Python list of tokens.
+         * iterators, this routine takes a Python list of integers.
          *
          * @author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
