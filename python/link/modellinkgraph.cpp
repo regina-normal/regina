@@ -122,7 +122,7 @@ void addModelLinkGraph() {
         .def("isValid", &ModelLinkGraphCells::isValid)
         .def("countCells", &ModelLinkGraphCells::countCells)
         .def("size", &ModelLinkGraphCells::size)
-        .def("arc", &ModelLinkGraphNode::arc,
+        .def("arc", &ModelLinkGraphCells::arc,
             return_value_policy<return_by_value>())
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
