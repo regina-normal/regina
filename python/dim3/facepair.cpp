@@ -38,12 +38,12 @@ using namespace boost::python;
 using regina::FacePair;
 
 namespace {
-    void facepair_inc_operator(FacePair& p) {
-        p++;
+    FacePair facepair_inc_operator(FacePair& p) {
+        return p++;
     }
 
-    void facepair_dec_operator(FacePair& p) {
-        p--;
+    FacePair facepair_dec_operator(FacePair& p) {
+        return p--;
     }
 }
 
