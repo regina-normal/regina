@@ -135,7 +135,7 @@ PYBIND11_MODULE(regina, m) {
     addDim4Classes(m);
     addFileClasses(m);
     addForeignClasses(m);
-    // TODO addSplitClasses(m);
+    addSplitClasses(m);
     addSnapPeaClasses(m);
     // TODO addSubcomplexClasses(m);
     // TODO addManifoldClasses(m);
