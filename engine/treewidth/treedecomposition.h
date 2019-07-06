@@ -762,9 +762,10 @@ class REGINA_API TreeDecomposition :
          * other types you will need to include treedecomposition-impl.h
          * along with this header.
          *
-         * \ifacespython The adjacency matrix should be given as a
-         * list of lists.  There is no need to use the same data type \a T
-         * throughout: each element of the matrix will be individually
+         * \ifacespython The argument \a order is not present (it will be
+         * deduced automatically from \a graph).  The adjacency matrix should
+         * be given as a list of lists.  There is no need to use the same data
+         * type \a T throughout: each element of the matrix will be individually
          * interpreted as a boolean as described above.
          *
          * @param order the number of nodes in the graph.
