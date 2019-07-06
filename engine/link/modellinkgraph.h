@@ -258,7 +258,8 @@ class REGINA_API ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name inc().
          *
          * @return a reference to this object.
          */
@@ -276,8 +277,7 @@ class REGINA_API ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * preincrement operator is available under the name inc().
+         * \ifacespython This routine is available under the name inc().
          *
          * @return a copy of this object before the change took place.
          */
@@ -295,7 +295,8 @@ class REGINA_API ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name inc().
          *
          * @return a reference to this object.
          */
@@ -313,8 +314,7 @@ class REGINA_API ModelLinkGraphArc {
          * \pre This is not a null arc, i.e., node() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * preincrement operator is available under the name inc().
+         * \ifacespython This routine is available under the name inc().
          *
          * @return a copy of this object before the change took place.
          */

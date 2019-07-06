@@ -144,12 +144,12 @@ namespace {
         return ans;
     }
 
-    void strand_inc_operator(StrandRef& s) {
-       ++s;
+    StrandRef strand_inc_operator(StrandRef& s) {
+       return s++;
     }
 
-    void strand_dec_operator(StrandRef& s) {
-       --s;
+    StrandRef strand_dec_operator(StrandRef& s) {
+       return s--;
     }
 
     void writePACE_stdio(const Link& l) {

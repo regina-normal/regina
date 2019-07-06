@@ -255,7 +255,8 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name inc().
          *
          * @return a reference to this object.
          */
@@ -272,8 +273,7 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * preincrement operator is available under the name inc().
+         * \ifacespython This routine is available under the name inc().
          *
          * @return a copy of this object before the change took place.
          */
@@ -290,7 +290,8 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name dec().
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name dec().
          *
          * @return a reference to this object.
          */
@@ -307,8 +308,7 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * preincrement operator is available under the name dec().
+         * \ifacespython This routine is available under the name dec().
          *
          * @return a copy of this object before the change took place.
          */

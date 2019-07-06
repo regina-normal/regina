@@ -51,12 +51,12 @@ namespace {
         const ModelLinkGraphArc&, const ModelLinkGraphArc&) const =
         &ModelLinkGraph::flype;
 
-    void arc_inc_operator(ModelLinkGraphArc& a) {
-       ++a;
+    ModelLinkGraphArc arc_inc_operator(ModelLinkGraphArc& a) {
+       return a++;
     }
 
-    void arc_dec_operator(ModelLinkGraphArc& a) {
-       --a;
+    ModelLinkGraphArc arc_dec_operator(ModelLinkGraphArc& a) {
+       return a--;
     }
 
     boost::python::tuple findFlype_tuple(const ModelLinkGraph& g,
