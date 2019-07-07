@@ -39,12 +39,24 @@ using namespace boost::python;
 using regina::Census;
 using regina::CensusDB;
 using regina::CensusHit;
+using regina::CensusHitIterator;
 using regina::CensusHits;
 using regina::Triangulation;
 
 namespace {
     CensusHits* (*lookup_tri)(const Triangulation<3>&) = &Census::lookup;
     CensusHits* (*lookup_sig)(const std::string&) = &Census::lookup;
+
+    // Support for iterables and iterators:
+    const CensusHit* nextHit(CensusHitIterator& it) {
+        if (*it)
+            return *it++;
+        else {
+            PyErr_SetString(PyExc_StopIteration, "No more hits.");
+            boost::python::throw_error_already_set();
+            return nullptr; // Silence no-return-value compiler warning.
+        }
+    }
 }
 
 void addCensus() {
@@ -75,6 +87,19 @@ void addCensus() {
             return_internal_reference<>())
         .def("count", &CensusHits::count)
         .def("empty", &CensusHits::empty)
+        .def("begin", &CensusHits::begin)
+        .def("end", &CensusHits::end)
+        .def("__iter__", &CensusHits::begin)
+        .def(regina::python::add_eq_operators())
+    ;
+
+    class_<CensusHitIterator>("CensusHitIterator", init<>())
+        .def(init<const CensusHitIterator&>())
+        .def(init<const CensusHit*>())
+        .def("next", nextHit, // for python 2
+            return_value_policy<reference_existing_object>())
+        .def("__next__", nextHit, // for python 3
+            return_value_policy<reference_existing_object>())
         .def(regina::python::add_eq_operators())
     ;
 

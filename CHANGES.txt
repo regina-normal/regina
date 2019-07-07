@@ -30,6 +30,11 @@ Version 5.2  [ 29 September, 2017 ]
               boundary component as a precondition.  This is to avoid having
               to define what Regina actually computes in such a scenario,
               which is well-defined but not topologically meaningful.
+        Class CensusHits, CensusHitIterator:
+            - Routine CensusHits::first() now returns a const pointer.
+            - You can now iterate over a CensusHits object using C++11
+              range-based for loops, thanks to the new CensusHitIterator
+              class.  In Python, CensusHits is now an iterable object.
         Class DiscSetSurface:
             - Now supports C++11 range-based for loops to iterate over all
               normal discs.  In particular, there are new begin() and end()
