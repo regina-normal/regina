@@ -196,7 +196,7 @@ struct register_int_from_py_index {
     }
 
     // Registers the from_python conversion
-    register_int_from_py_index(pybind11::module& m) {
+    register_int_from_py_index() {
         boost::python::converter::registry::push_back(
             convertible,
             construct,
@@ -206,7 +206,7 @@ struct register_int_from_py_index {
 
 } } // namespace regina::python
 
-void addRegisterIntFromPyIndex(pybind11::module& m) {
+void addRegisterIntFromPyIndex() {
     regina::python::register_int_from_py_index<size_t>(m);
     regina::python::register_int_from_py_index<int>(m);
 }
