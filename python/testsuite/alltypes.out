@@ -76,6 +76,9 @@ Equality type : BY_REFERENCE
 CensusHit : class
 Equality type : BY_REFERENCE
 
+CensusHitIterator : class
+Equality type : EqualityType.BY_VALUE
+
 CensusHits : class
 Equality type : BY_REFERENCE
 
