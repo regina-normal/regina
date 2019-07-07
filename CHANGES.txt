@@ -30,7 +30,16 @@ Version 5.2  [ 29 September, 2017 ]
               boundary component as a precondition.  This is to avoid having
               to define what Regina actually computes in such a scenario,
               which is well-defined but not topologically meaningful.
+        Class DiscSetSurface:
+            - Now supports C++11 range-based for loops to iterate over all
+              normal discs.  In particular, there are new begin() and end()
+              functions.
+        Class DiscSpecIterator:
+            - Updated to fit the standard C++ forward iterator concept.
+              In particular, increment operators now have return values.
+            - Now specialises std::iterator_traits for this iterator type.
         Class FacePair:
+            - Added an output stream operator.
             - Replaced naive ++/-- operators with pairs of proper pre/post
               increment/decrement operators, to match usual ++/-- behaviour.
         Class FacetSpec:

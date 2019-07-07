@@ -41,11 +41,14 @@
 #endif
 
 #include <cassert>
+#include <iterator>
 #include "regina-core.h"
 #include "surfaces/normalsurface.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
+
+class DiscSpecIterator;
 
 /**
  * \weakgroup surfaces
@@ -109,7 +112,7 @@ struct REGINA_API DiscSpec {
      *
      * @param cloneMe the disc specifier to clone.
      */
-    DiscSpec(const DiscSpec& cloneMe);
+    DiscSpec(const DiscSpec& cloneMe) = default;
 
     /**
      * Copies the values from the given disc specifier into this specifier.
@@ -117,7 +120,7 @@ struct REGINA_API DiscSpec {
      * @param cloneMe the disc specifier whose values should be copied.
      * @return a reference to this disc specifier.
      */
-    DiscSpec& operator = (const DiscSpec& cloneMe);
+    DiscSpec& operator = (const DiscSpec& cloneMe) = default;
     /**
      * Determines if this and the given disc specifier contain identical
      * information.
@@ -571,6 +574,39 @@ class REGINA_API DiscSetSurface {
          */
         DiscSpec* adjacentDisc(const DiscSpec& disc, Perm<4> arc,
                 Perm<4>& adjArc) const;
+
+        /**
+         * Returns an iterator at the beginning of the range of all
+         * normal discs in the underlying normal surface.
+         *
+         * These begin() and end() routines allow you to iterate through
+         * all normal discs using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * DiscSetSurface* discs = ...;
+         * for (const DiscSpec& s : *discs) { ... }
+         * \endcode
+         *
+         * \ifacespython Not present.
+         *
+         * @return an iterator at the beginning of the range of all
+         * normal discs.
+         */
+        DiscSpecIterator begin() const;
+        /**
+         * Returns an iterator at the end of the range of all
+         * normal discs in the underlying normal surface.
+         *
+         * In C++, the begin() and end() routines allow you to iterate through
+         * all normal discs using C++11 range-based \c for loops.
+         *
+         * See the begin() documentation for further details.
+         *
+         * \ifacespython Not present.
+         *
+         * @return an iterator at the end of the range of all normal discs.
+         */
+        DiscSpecIterator end() const;
 };
 
 /**
@@ -646,8 +682,10 @@ class DiscSetSurfaceData : public DiscSetSurface {
 };
 
 /**
- * An iterator used for running through all normal discs in a normal
+ * A forward iterator used for running through all normal discs in a normal
  * surface.
+ *
+ * This header also specialises std::iterator_traits for this iterator class.
  *
  * \warning This class converts the indices of normal discs of a
  * given type from LargeInteger to <tt>unsigned long</tt>.  See the
@@ -666,7 +704,8 @@ class REGINA_API DiscSpecIterator {
     public:
         /**
          * Creates a new uninitialised iterator.
-         * This iterator cannot be used or queried until init() is called.
+         * This iterator cannot be used or queried until either init() or the
+         * assignmemnt operator is called.
          */
         DiscSpecIterator();
         /**
@@ -677,6 +716,10 @@ class REGINA_API DiscSpecIterator {
          */
         DiscSpecIterator(const DiscSetSurface& discSet);
         /**
+         * Default copy constructor.
+         */
+        DiscSpecIterator(const DiscSpecIterator&) = default;
+        /**
          * Points this iterator to the first disc in the given disc set.
          *
          * @param discSet the disc set used to reinitialise this iterator.
@@ -684,35 +727,31 @@ class REGINA_API DiscSpecIterator {
         void init(const DiscSetSurface& discSet);
 
         /**
-         * Points this iterator to the next disc, or makes it
-         * past-the-end if there is no next disc.
-         *
-         * Unlike most standard increment operators, this operator returns
-         * \c void.  One consequence of this is that the preincrement
-         * and postincrement operators for this class are identical.  This
-         * interface will need to be made more standard some day.
-         *
-         * \pre This iterator is not past-the-end.
-         *
-         * \ifacespython This routine is called inc(), since Python does
-         * not support the increment operator.
+         * Default copy assignment operator.
          */
-        void operator++();
+        DiscSpecIterator& operator = (const DiscSpecIterator&) = default;
+
         /**
-         * Points this iterator to the next disc, or makes it
-         * past-the-end if there is no next disc.
-         *
-         * Unlike most standard increment operators, this operator returns
-         * \c void.  One consequence of this is that the preincrement
-         * and postincrement operators for this class are identical.  This
-         * interface will need to be made more standard some day.
+         * Preincrement operator.
          *
          * \pre This iterator is not past-the-end.
          *
-         * \ifacespython This routine is called inc(), since Python does
-         * not support the increment operator.
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name inc().
+         *
+         * @return a reference to this iterator.
          */
-        void operator++(int);
+        DiscSpecIterator& operator++();
+        /**
+         * Postincrement operator.
+         *
+         * \pre This iterator is not past-the-end.
+         *
+         * \ifacespython This routine is available under the name inc().
+         *
+         * @return a copy of this iterator before it was incremented.
+         */
+        DiscSpecIterator operator++(int);
         /**
          * Returns a reference to the disc pointed to by this iterator.
          *
@@ -768,6 +807,8 @@ class REGINA_API DiscSpecIterator {
          * that will put it past-the-end).
          */
         void makeValid();
+
+    friend class DiscSetSurface;
 };
 
 /**
@@ -813,7 +854,22 @@ using NDiscSetTetData [[deprecated]] = DiscSetTetData<T>;
 template <class T>
 using NDiscSetSurfaceData [[deprecated]] = DiscSetSurfaceData<T>;
 
+} // namespace regina
+
 /*@}*/
+
+namespace std {
+    template <>
+    struct iterator_traits<regina::DiscSpecIterator> {
+        typedef long difference_type;
+        typedef const regina::DiscSpec& value_type;
+        typedef const regina::DiscSpec* pointer;
+        typedef const regina::DiscSpec& reference;
+        typedef std::forward_iterator_tag iterator_category;
+    };
+} // namespace std
+
+namespace regina {
 
 // Inline functions for DiscSpec
 
@@ -823,17 +879,7 @@ inline DiscSpec::DiscSpec(size_t newTetIndex, int newType,
         unsigned long newNumber) : tetIndex(newTetIndex), type(newType),
         number(newNumber) {
 }
-inline DiscSpec::DiscSpec(const DiscSpec& cloneMe) :
-        tetIndex(cloneMe.tetIndex), type(cloneMe.type),
-        number(cloneMe.number) {
-}
 
-inline DiscSpec& DiscSpec::operator = (const DiscSpec& cloneMe) {
-    tetIndex = cloneMe.tetIndex;
-    type = cloneMe.type;
-    number = cloneMe.number;
-    return *this;
-}
 inline bool DiscSpec::operator == (const DiscSpec& other) const {
     return (tetIndex == other.tetIndex && type == other.type &&
         number == other.number);
@@ -866,6 +912,18 @@ inline DiscSetTet& DiscSetSurface::tetDiscs(size_t tetIndex) const {
     return *(discSets[tetIndex]);
 }
 
+inline DiscSpecIterator DiscSetSurface::begin() const {
+    return DiscSpecIterator(*this);
+}
+
+inline DiscSpecIterator DiscSetSurface::end() const {
+    DiscSpecIterator ans(*this);
+    ans.current.tetIndex = triangulation->size();
+    ans.current.type = 0;
+    ans.current.number = 0;
+    return ans;
+}
+
 // Inline functions for DiscSpecIterator
 
 inline DiscSpecIterator::DiscSpecIterator() {
@@ -882,13 +940,16 @@ inline void DiscSpecIterator::init(const DiscSetSurface& discSet) {
     makeValid();
 }
 
-inline void DiscSpecIterator::operator++() {
-    current.number++;
+inline DiscSpecIterator& DiscSpecIterator::operator++() {
+    ++current.number;
     makeValid();
+    return *this;
 }
-inline void DiscSpecIterator::operator++(int) {
-    current.number++;
+inline DiscSpecIterator DiscSpecIterator::operator++(int) {
+    DiscSpecIterator ans = *this;
+    ++current.number;
     makeValid();
+    return ans;
 }
 inline const DiscSpec& DiscSpecIterator::operator *() const {
     return current;

@@ -62,6 +62,8 @@ void addFacePair() {
         .def(self >= self)
         .def("inc", facepair_inc_operator)
         .def("dec", facepair_dec_operator)
+        .def(self_ns::str(self))
+        .def(self_ns::repr(self))
         .def(regina::python::add_eq_operators())
     ;
 

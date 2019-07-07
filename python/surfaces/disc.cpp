@@ -42,8 +42,8 @@ using regina::DiscSetSurface;
 using regina::DiscSpecIterator;
 
 namespace {
-    void inc_operator(DiscSpecIterator& s) {
-        s++;
+    DiscSpecIterator inc_operator(DiscSpecIterator& s) {
+        return s++;
     }
     const DiscSpec& deref_operator(DiscSpecIterator& s) {
         return *s;

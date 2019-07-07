@@ -232,7 +232,7 @@ class REGINA_API GroupExpression :
          * @param valid used for error reporting as described above, or
          * \c null if no error reporting is required.
          */
-        GroupExpression(const std::string &input, bool* valid=NULL);
+        GroupExpression(const std::string &input, bool* valid=nullptr);
 
         /**
          * Makes this expression a clone of the given expression.

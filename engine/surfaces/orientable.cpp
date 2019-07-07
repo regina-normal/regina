@@ -114,7 +114,7 @@ void NormalSurface::calculateOrientable() const {
                 else
                     connected = false;
             }
-            it++;
+            ++it;
         }
         if (discQueue.empty())
             break;
