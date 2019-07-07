@@ -71,11 +71,9 @@ for i in keys:
     object = regina.__dict__[i]
     if isinstance(object, type):
         try:
-            if object.__dict__.has_key('__members__'):
-                enumInfo(i, object)
-            else:
-                classInfo(i, object)
-        except:
+            tmp = object.__members__ # Exists for enums, not classes
+            enumInfo(i, object)
+        except AttributeError:
             classInfo(i, object)
     elif 'builtin_function_or_method' in str(object.__class__):
         functionInfo(i, object)
