@@ -39,8 +39,19 @@ using pybind11::overload_cast;
 using regina::Census;
 using regina::CensusDB;
 using regina::CensusHit;
+using regina::CensusHitIterator;
 using regina::CensusHits;
 using regina::Triangulation;
+
+namespace {
+    // Support for iterables and iterators:
+    const CensusHit* nextHit(CensusHitIterator& it) {
+        if (*it)
+            return *it++;
+        else
+            throw pybind11::stop_iteration();
+    }
+}
 
 void addCensus(pybind11::module& m) {
     // TODO: Should we use a by-value holder type?
@@ -67,8 +78,23 @@ void addCensus(pybind11::module& m) {
             pybind11::return_value_policy::reference_internal)
         .def("count", &CensusHits::count)
         .def("empty", &CensusHits::empty)
+        .def("begin", &CensusHits::begin)
+        .def("end", &CensusHits::end)
+        .def("__iter__", &CensusHits::begin)
     ;
     regina::python::add_eq_operators(hs);
+
+    // TODO: Should we use a by-value holder type?
+    auto it = pybind11::class_<CensusHitIterator>(m, "CensusHitIterator")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const CensusHitIterator&>())
+        .def(pybind11::init<const CensusHit*>())
+        .def("next", nextHit, // for python 2
+            pybind11::return_value_policy::reference)
+        .def("__next__", nextHit, // for python 3
+            pybind11::return_value_policy::reference)
+    ;
+    regina::python::add_eq_operators(it);
 
     auto c = pybind11::class_<Census>(m, "Census")
         .def_static("lookup",

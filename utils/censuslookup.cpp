@@ -84,7 +84,7 @@ int main(int argc, char* argv[]) {
         std::cout << argv[i] << ": " << n
             << (n == 1 ? " hit" : " hits") << std::endl;
 
-        for (hit = hits->first(); hit; hit = hit->next())
+        for (auto hit : *hits)
             std::cout << "    " << hit->name() << " -- "
                 << hit->db()->desc() << std::endl;
 

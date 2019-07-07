@@ -688,8 +688,7 @@ void Tri3SurfacesUI::refresh() {
         } else {
             QString ans = tr("<qt><b>Census:</b>&nbsp;&nbsp;%1 matches")
                 .arg(hits->count());
-            const regina::CensusHit* hit = hits->first();
-            for ( ; hit; hit = hit->next()) {
+            for (auto hit : *hits) {
                 ans += "<br>";
                 ans += QString(hit->name().c_str()).toHtmlEscaped();
             }

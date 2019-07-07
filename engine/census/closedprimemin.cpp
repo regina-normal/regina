@@ -114,7 +114,7 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
     // since we are guaranteed that the face pairing is connected with
     // order >= 3.
 
-    for (face.setFirst(); ! face.isPastEnd(nTets, true); face++) {
+    for (face.setFirst(); ! face.isPastEnd(nTets, true); ++face) {
         if (orderAssigned[face.simp * 4 + face.facet])
             continue;
 
@@ -189,7 +189,7 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
     nChainEdges = orderDone;
 
     // Run through the remaining faces.
-    for (face.setFirst(); ! face.isPastEnd(nTets, true); face++)
+    for (face.setFirst(); ! face.isPastEnd(nTets, true); ++face)
         if (! orderAssigned[face.simp * 4 + face.facet]) {
             order[orderDone] = face;
             if (face.facet < 3 && pairing->dest(boost::next(face)).simp ==

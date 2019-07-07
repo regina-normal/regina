@@ -192,10 +192,9 @@
             self.census.attributedText = [TextHelper dimString:@"Not found"];
         } else {
             NSMutableString* msg = [[NSMutableString alloc] init];
-            const regina::CensusHit* hit;
             int nHits = 0;
-            for (hit = hits->first(); hit; hit = hit->next()) {
-                if (hit != hits->first())
+            for (auto hit : *hits) {
+                if (nHits > 0)
                     [msg appendString:@"\n"];
                 [msg appendString:@(hit->name().c_str())];
                 ++nHits;

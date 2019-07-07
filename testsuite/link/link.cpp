@@ -792,13 +792,11 @@ class LinkTest : public CppUnit::TestFixture {
             delete c;
 
             regina::CensusHits* hits = regina::Census::lookup(sig);
-            const regina::CensusHit* hit = hits->first();
-            while (hit) {
+            for (auto hit : *hits) {
                 if (hit->name().substr(0, prefix.size()) == prefix) {
                     delete hits;
                     return;
                 }
-                hit = hit->next();
             }
 
             delete hits;

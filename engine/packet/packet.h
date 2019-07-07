@@ -1637,7 +1637,7 @@ class REGINA_API ChildIterator {
         ChildIterator operator ++ (int);
 
         /**
-         * Returns the packet that this operator is currently pointing to.
+         * Returns the packet that this iterator is currently pointing to.
          *
          * \ifacespython Not present; instead this class implements
          * <tt>next()</tt>, which either returns the current child packet and
@@ -1772,7 +1772,7 @@ class REGINA_API SubtreeIterator {
         SubtreeIterator operator ++ (int);
 
         /**
-         * Returns the packet that this operator is currently pointing to.
+         * Returns the packet that this iterator is currently pointing to.
          *
          * \ifacespython Not present; instead this class implements
          * <tt>next()</tt>, which either returns the current packet in the
