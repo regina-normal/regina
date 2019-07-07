@@ -64,7 +64,7 @@ namespace detail {
  *    case it will be destroyed when the last smart pointer to it is destroyed.
  * 2. Alternatively, the pointee may be owned by some other C++ object not
  *    using this smart pointer class.  In this case, even when the last smart
- *    point to it is destroyed, the pointee itself will not be destroyed.
+ *    pointer to it is destroyed, the pointee itself will not be destroyed.
  *
  * The pointee can indicate at runtime which model of ownership is in effect,
  * through the return value of the function T::hasOwner().

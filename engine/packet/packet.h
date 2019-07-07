@@ -849,7 +849,7 @@ class REGINA_API Packet :
          * In Python, each packet can be treated as an iterable object, again
          * iterating through the corresponding subtree:
          *
-         * \code{.cpp}
+         * \code{.py}
          * subtree = ...
          * for p in subtree:
          *     ...
@@ -911,7 +911,7 @@ class REGINA_API Packet :
          *
          * In Python, this routine returns an iterable object:
          *
-         * \code{.cpp}
+         * \code{.py}
          * parent = ...
          * for desc in parent.descendants():
          *     ...
@@ -945,7 +945,7 @@ class REGINA_API Packet :
          *
          * In Python, this routine returns an iterable object:
          *
-         * \code{.cpp}
+         * \code{.py}
          * parent = ...
          * for child in parent.children():
          *     ...
@@ -1767,7 +1767,7 @@ class REGINA_API SubtreeIterator {
          * subtree and increments the iterator, or else throws a
          * <tt>StopIteration</tt> exception if the iterator is past-the-end.
          *
-         * @return a a copy of this iterator before it was incremented.
+         * @return a copy of this iterator before it was incremented.
          */
         SubtreeIterator operator ++ (int);
 
@@ -1798,7 +1798,7 @@ class REGINA_API SubtreeIterator {
  *
  * In Python, PacketChildren is an iterable object:
  *
- * \code{.cpp}
+ * \code{.py}
  * parent = ...
  * for child in parent.children():
  *     ...
@@ -1875,7 +1875,7 @@ class REGINA_API PacketChildren {
  *
  * In Python, PacketDescendants is an iterable object:
  *
- * \code{.cpp}
+ * \code{.py}
  * parent = ...
  * for desc in parent.descendants():
  *     ...
