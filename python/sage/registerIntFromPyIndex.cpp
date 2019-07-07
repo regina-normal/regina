@@ -44,6 +44,8 @@
 // explicitly with engine._registerIntFromPyIndex() in __init__.py when
 // we detect regina is run from sage.
 
+#include "../pybind11/pybind11.h"
+#if 0
 #include <boost/python.hpp>
 #include <boost/optional.hpp>
 
@@ -194,7 +196,7 @@ struct register_int_from_py_index {
     }
 
     // Registers the from_python conversion
-    register_int_from_py_index() {
+    register_int_from_py_index(pybind11::module& m) {
         boost::python::converter::registry::push_back(
             convertible,
             construct,
@@ -204,8 +206,9 @@ struct register_int_from_py_index {
 
 } } // namespace regina::python
 
-void addRegisterIntFromPyIndex() {
-    regina::python::register_int_from_py_index<size_t>();
-    regina::python::register_int_from_py_index<int>();
+void addRegisterIntFromPyIndex(pybind11::module& m) {
+    regina::python::register_int_from_py_index<size_t>(m);
+    regina::python::register_int_from_py_index<int>(m);
 }
+#endif
 

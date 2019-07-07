@@ -149,6 +149,6 @@ PYBIND11_MODULE(regina, m) {
 
     // This routine allows the user to import sage-related hacks, which
     // are not included by default in regina's python module.
-    // TODO m.def("_addSageHacks", &addSageHacks);
+    m.def("_addSageHacks", &addSageHacks);
 }
 
