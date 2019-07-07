@@ -39,6 +39,7 @@ Version 5.2  [ 29 September, 2017 ]
               In particular, increment operators now have return values.
             - Now specialises std::iterator_traits for this iterator type.
         Class FacePair:
+            - Added an output stream operator.
             - Replaced naive ++/-- operators with pairs of proper pre/post
               increment/decrement operators, to match usual ++/-- behaviour.
         Class FacetSpec:

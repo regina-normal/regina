@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include <iostream>
 
 namespace regina {
 
@@ -252,6 +253,15 @@ class REGINA_API FacePair {
 };
 
 /**
+ * Writes the given face pair to the given output stream.
+ *
+ * @param out the output stream to which to write.
+ * @param pair the face pair to write.
+ * @return a reference to \a out.
+ */
+std::ostream& operator << (std::ostream& out, const FacePair& pair);
+
+/**
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
  *
@@ -334,6 +344,10 @@ inline FacePair FacePair::operator -- (int) {
     FacePair ans = *this;
     --(*this);
     return ans;
+}
+
+inline std::ostream& operator << (std::ostream& out, const FacePair& pair) {
+    return out << '(' << pair.lower() << ',' << pair.upper() << ')';
 }
 
 } // namespace regina
