@@ -38,7 +38,7 @@
 using regina::SnapPeaCensusTri;
 
 void addSnapPeaCensusTri(pybind11::module& m) {
-    pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
+    auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
             (m, "SnapPeaCensusTri")
         .def("clone", &SnapPeaCensusTri::clone)
         .def("section", &SnapPeaCensusTri::section)
@@ -51,6 +51,10 @@ void addSnapPeaCensusTri(pybind11::module& m) {
         .def_readonly_static("SEC_7_OR", &SnapPeaCensusTri::SEC_7_OR)
         .def_readonly_static("SEC_7_NOR", &SnapPeaCensusTri::SEC_7_NOR)
     ;
+    // The SnapPeaCensusTri subclass defines its own equality tests, so
+    // we should override the compare-by-pointer test that we inherit from
+    // StandardTriangulation.
+    regina::python::add_eq_operators(c);
 
     m.attr("NSnapPeaCensusTri") = m.attr("SnapPeaCensusTri");
 }

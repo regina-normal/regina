@@ -37,7 +37,7 @@
 using regina::SimpleSurfaceBundle;
 
 void addSimpleSurfaceBundle(pybind11::module& m) {
-    pybind11::class_<SimpleSurfaceBundle, regina::Manifold>
+    auto c = pybind11::class_<SimpleSurfaceBundle, regina::Manifold>
             (m, "SimpleSurfaceBundle")
         .def(pybind11::init<int>())
         .def(pybind11::init<const SimpleSurfaceBundle&>())
@@ -47,6 +47,9 @@ void addSimpleSurfaceBundle(pybind11::module& m) {
             &SimpleSurfaceBundle::S2xS1_TWISTED)
         .def_readonly_static("RP2xS1", &SimpleSurfaceBundle::RP2xS1)
     ;
+    // The SimpleSurfaceBundle subclass defines its own equality tests, so we
+    // should not just inherit the compare-by-pointer test from Manifold.
+    regina::python::add_eq_operators(c);
 
     m.attr("NSimpleSurfaceBundle") = m.attr("SimpleSurfaceBundle");
 }

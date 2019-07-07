@@ -37,12 +37,15 @@
 using regina::Handlebody;
 
 void addHandlebody(pybind11::module& m) {
-    pybind11::class_<Handlebody, regina::Manifold>(m, "Handlebody")
+    auto c = pybind11::class_<Handlebody, regina::Manifold>(m, "Handlebody")
         .def(pybind11::init<unsigned long, bool>())
         .def(pybind11::init<const Handlebody&>())
         .def("handles", &Handlebody::handles)
         .def("isOrientable", &Handlebody::isOrientable)
     ;
+    // The Handlebody subclass defines its own equality tests, so we
+    // should not just inherit the compare-by-pointer test from Manifold.
+    regina::python::add_eq_operators(c);
 
     m.attr("NHandlebody") = m.attr("Handlebody");
 }

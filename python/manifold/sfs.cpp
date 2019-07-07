@@ -101,6 +101,9 @@ void addSFSpace(pybind11::module& m) {
             pybind11::arg("mayReflect") = true)
         .def("isLensSpace", &SFSpace::isLensSpace)
     ;
+    // The SFSpace subclass defines its own equality tests, so we
+    // should not just inherit the compare-by-pointer test from Manifold.
+    regina::python::add_eq_operators(s);
 
     pybind11::enum_<SFSpace::classType>(s, "classType")
         .value("o1", SFSpace::o1)
