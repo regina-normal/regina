@@ -30,52 +30,39 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
 #include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::StandardTriangulation;
 
-namespace {
-    void writeName_stdio(const StandardTriangulation& t) {
-        t.writeName(std::cout);
-    }
-    void writeTeXName_stdio(const StandardTriangulation& t) {
-        t.writeTeXName(std::cout);
-    }
-    StandardTriangulation* (*isStandardTri_comp)(regina::Component<3>*) =
-        &StandardTriangulation::isStandardTriangulation;
-    StandardTriangulation* (*isStandardTri_tri)(regina::Triangulation<3>*) =
-        &StandardTriangulation::isStandardTriangulation;
-}
-
-void addStandardTriangulation() {
-    class_<StandardTriangulation, boost::noncopyable,
-            std::auto_ptr<StandardTriangulation> >
-            ("StandardTriangulation", no_init)
+void addStandardTriangulation(pybind11::module& m) {
+    auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation")
         .def("name", &StandardTriangulation::name)
         .def("TeXName", &StandardTriangulation::TeXName)
-        .def("manifold", &StandardTriangulation::manifold,
-            return_value_policy<manage_new_object>())
-        .def("homology", &StandardTriangulation::homology,
-            return_value_policy<manage_new_object>())
-        .def("homologyH1", &StandardTriangulation::homologyH1,
-            return_value_policy<manage_new_object>())
-        .def("writeName", writeName_stdio)
-        .def("writeTeXName", writeTeXName_stdio)
-        .def("isStandardTriangulation", isStandardTri_comp,
-            return_value_policy<manage_new_object>())
-        .def("isStandardTriangulation", isStandardTri_tri,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isStandardTriangulation")
+        .def("manifold", &StandardTriangulation::manifold)
+        .def("homology", &StandardTriangulation::homology)
+        .def("homologyH1", &StandardTriangulation::homologyH1)
+        .def("writeName", [](const StandardTriangulation& t) {
+            t.writeName(std::cout);
+        })
+        .def("writeTeXName", [](const StandardTriangulation& t) {
+            t.writeTeXName(std::cout);
+        })
+        .def_static("isStandardTriangulation",
+            overload_cast<regina::Component<3>*>(
+            &StandardTriangulation::isStandardTriangulation))
+        .def_static("isStandardTriangulation",
+            overload_cast<regina::Triangulation<3>*>(
+            &StandardTriangulation::isStandardTriangulation))
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NStandardTriangulation") = scope().attr("StandardTriangulation");
+    m.attr("NStandardTriangulation") = m.attr("StandardTriangulation");
 }
 

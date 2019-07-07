@@ -30,40 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/snappeacensustri.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::SnapPeaCensusTri;
 
-void addSnapPeaCensusTri() {
-    {
-        scope s = class_<SnapPeaCensusTri, bases<regina::StandardTriangulation>,
-                std::auto_ptr<SnapPeaCensusTri>, boost::noncopyable>
-                ("SnapPeaCensusTri", no_init)
-            .def("clone", &SnapPeaCensusTri::clone,
-                return_value_policy<manage_new_object>())
-            .def("section", &SnapPeaCensusTri::section)
-            .def("index", &SnapPeaCensusTri::index)
-            .def("isSmallSnapPeaCensusTri",
-                &SnapPeaCensusTri::isSmallSnapPeaCensusTri,
-                return_value_policy<manage_new_object>())
-            .def(regina::python::add_eq_operators())
-            .staticmethod("isSmallSnapPeaCensusTri")
-        ;
+void addSnapPeaCensusTri(pybind11::module& m) {
+    pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
+            (m, "SnapPeaCensusTri")
+        .def("clone", &SnapPeaCensusTri::clone)
+        .def("section", &SnapPeaCensusTri::section)
+        .def("index", &SnapPeaCensusTri::index)
+        .def_static("isSmallSnapPeaCensusTri",
+            &SnapPeaCensusTri::isSmallSnapPeaCensusTri)
+        .def_readonly_static("SEC_5", &SnapPeaCensusTri::SEC_5)
+        .def_readonly_static("SEC_6_OR", &SnapPeaCensusTri::SEC_6_OR)
+        .def_readonly_static("SEC_6_NOR", &SnapPeaCensusTri::SEC_6_NOR)
+        .def_readonly_static("SEC_7_OR", &SnapPeaCensusTri::SEC_7_OR)
+        .def_readonly_static("SEC_7_NOR", &SnapPeaCensusTri::SEC_7_NOR)
+    ;
 
-        s.attr("SEC_5") = SnapPeaCensusTri::SEC_5;
-        s.attr("SEC_6_OR") = SnapPeaCensusTri::SEC_6_OR;
-        s.attr("SEC_6_NOR") = SnapPeaCensusTri::SEC_6_NOR;
-        s.attr("SEC_7_OR") = SnapPeaCensusTri::SEC_7_OR;
-        s.attr("SEC_7_NOR") = SnapPeaCensusTri::SEC_7_NOR;
-
-        implicitly_convertible<std::auto_ptr<SnapPeaCensusTri>,
-            std::auto_ptr<regina::StandardTriangulation> >();
-    }
-
-    scope().attr("NSnapPeaCensusTri") = scope().attr("SnapPeaCensusTri");
+    m.attr("NSnapPeaCensusTri") = m.attr("SnapPeaCensusTri");
 }
 

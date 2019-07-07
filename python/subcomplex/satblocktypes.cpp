@@ -30,13 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/layeredsolidtorus.h"
 #include "subcomplex/satblocktypes.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::SatAnnulus;
 using regina::SatBlock;
 using regina::SatCube;
@@ -46,141 +45,80 @@ using regina::SatMobius;
 using regina::SatReflectorStrip;
 using regina::SatTriPrism;
 
-namespace {
-    SatMobius* isBlockMobius_nolist(const SatAnnulus& a) {
-        SatBlock::TetList avoidTets;
-        return SatMobius::isBlockMobius(a, avoidTets);
-    }
-
-    SatLST* isBlockLST_nolist(const SatAnnulus& a) {
-        SatBlock::TetList avoidTets;
-        return SatLST::isBlockLST(a, avoidTets);
-    }
-
-    SatTriPrism* isBlockTriPrism_nolist(const SatAnnulus& a) {
-        SatBlock::TetList avoidTets;
-        return SatTriPrism::isBlockTriPrism(a, avoidTets);
-    }
-
-    SatCube* isBlockCube_nolist(const SatAnnulus& a) {
-        SatBlock::TetList avoidTets;
-        return SatCube::isBlockCube(a, avoidTets);
-    }
-
-    SatReflectorStrip* isBlockReflectorStrip_nolist(const SatAnnulus& a) {
-        SatBlock::TetList avoidTets;
-        return SatReflectorStrip::isBlockReflectorStrip(a, avoidTets);
-    }
-
-    SatLayering* isBlockLayering_nolist(const SatAnnulus& a) {
-        SatBlock::TetList avoidTets;
-        return SatLayering::isBlockLayering(a, avoidTets);
-    }
-}
-
-void addSatBlockTypes() {
-    class_<SatMobius, bases<regina::SatBlock>,
-            std::auto_ptr<SatMobius>, boost::noncopyable>
-            ("SatMobius", init<const SatMobius&>())
+void addSatBlockTypes(pybind11::module& m) {
+    pybind11::class_<SatMobius, regina::SatBlock>(m, "SatMobius")
+        .def(pybind11::init<const SatMobius&>())
         .def("position", &SatMobius::position)
-        .def("isBlockMobius", isBlockMobius_nolist,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlockMobius")
+        .def_static("isBlockMobius", [](const SatAnnulus& a) {
+            SatBlock::TetList avoidTets;
+            return SatMobius::isBlockMobius(a, avoidTets);
+        })
     ;
 
-    implicitly_convertible<std::auto_ptr<SatMobius>,
-        std::auto_ptr<regina::SatBlock> >();
-
-    scope().attr("NSatMobius") = scope().attr("SatMobius");
+    m.attr("NSatMobius") = m.attr("SatMobius");
 
 
-    class_<SatLST, bases<regina::SatBlock>,
-            std::auto_ptr<SatLST>, boost::noncopyable>
-            ("SatLST", init<const SatLST&>())
+    pybind11::class_<SatLST, regina::SatBlock>(m, "SatLST")
+        .def(pybind11::init<const SatLST&>())
         .def("lst", &SatLST::lst,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("roles", &SatLST::roles)
-        .def("isBlockLST", isBlockLST_nolist,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlockLST")
+        .def_static("isBlockLST", [](const SatAnnulus& a) {
+            SatBlock::TetList avoidTets;
+            return SatLST::isBlockLST(a, avoidTets);
+        })
     ;
 
-    implicitly_convertible<std::auto_ptr<SatLST>,
-        std::auto_ptr<regina::SatBlock> >();
-
-    scope().attr("NSatLST") = scope().attr("SatLST");
+    m.attr("NSatLST") = m.attr("SatLST");
 
 
-    class_<SatTriPrism, bases<regina::SatBlock>,
-            std::auto_ptr<SatTriPrism>, boost::noncopyable>
-            ("SatTriPrism", init<const SatTriPrism&>())
+    pybind11::class_<SatTriPrism, regina::SatBlock>(m, "SatTriPrism")
+        .def(pybind11::init<const SatTriPrism&>())
         .def("isMajor", &SatTriPrism::isMajor)
-        .def("isBlockTriPrism", isBlockTriPrism_nolist,
-            return_value_policy<manage_new_object>())
-        .def("insertBlock", &SatTriPrism::insertBlock,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlockTriPrism")
-        .staticmethod("insertBlock")
+        .def_static("isBlockTriPrism", [](const SatAnnulus& a) {
+            SatBlock::TetList avoidTets;
+            return SatTriPrism::isBlockTriPrism(a, avoidTets);
+        })
+        .def_static("insertBlock", &SatTriPrism::insertBlock)
     ;
 
-    implicitly_convertible<std::auto_ptr<SatTriPrism>,
-        std::auto_ptr<regina::SatBlock> >();
-
-    scope().attr("NSatTriPrism") = scope().attr("SatTriPrism");
+    m.attr("NSatTriPrism") = m.attr("SatTriPrism");
 
 
-    class_<SatCube, bases<regina::SatBlock>,
-            std::auto_ptr<SatCube>, boost::noncopyable>
-            ("SatCube", init<const SatCube&>())
-        .def("isBlockCube", isBlockCube_nolist,
-            return_value_policy<manage_new_object>())
-        .def("insertBlock", &SatCube::insertBlock,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlockCube")
-        .staticmethod("insertBlock")
+    pybind11::class_<SatCube, regina::SatBlock>(m, "SatCube")
+        .def(pybind11::init<const SatCube&>())
+        .def_static("isBlockCube", [](const SatAnnulus& a) {
+            SatBlock::TetList avoidTets;
+            return SatCube::isBlockCube(a, avoidTets);
+        })
+        .def_static("insertBlock", &SatCube::insertBlock)
     ;
 
-    implicitly_convertible<std::auto_ptr<SatCube>,
-        std::auto_ptr<regina::SatBlock> >();
-
-    scope().attr("NSatCube") = scope().attr("SatCube");
+    m.attr("NSatCube") = m.attr("SatCube");
 
 
-    class_<SatReflectorStrip, bases<regina::SatBlock>,
-            std::auto_ptr<SatReflectorStrip>, boost::noncopyable>
-            ("SatReflectorStrip", init<const SatReflectorStrip&>())
-        .def("isBlockReflectorStrip", isBlockReflectorStrip_nolist,
-            return_value_policy<manage_new_object>())
-        .def("insertBlock", &SatReflectorStrip::insertBlock,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlockReflectorStrip")
-        .staticmethod("insertBlock")
+    pybind11::class_<SatReflectorStrip, regina::SatBlock>(
+            m, "SatReflectorStrip")
+        .def(pybind11::init<const SatReflectorStrip&>())
+        .def_static("isBlockReflectorStrip", [](const SatAnnulus& a) {
+            SatBlock::TetList avoidTets;
+            return SatReflectorStrip::isBlockReflectorStrip(a, avoidTets);
+        })
+        .def_static("insertBlock", &SatReflectorStrip::insertBlock)
     ;
 
-    implicitly_convertible<std::auto_ptr<SatReflectorStrip>,
-        std::auto_ptr<regina::SatBlock> >();
-
-    scope().attr("NSatReflectorStrip") = scope().attr("SatReflectorStrip");
+    m.attr("NSatReflectorStrip") = m.attr("SatReflectorStrip");
 
 
-    class_<SatLayering, bases<regina::SatBlock>,
-            std::auto_ptr<SatLayering>, boost::noncopyable>
-            ("SatLayering", init<const SatLayering&>())
+    pybind11::class_<SatLayering, regina::SatBlock>(m, "SatLayering")
+        .def(pybind11::init<const SatLayering&>())
         .def("overHorizontal", &SatLayering::overHorizontal)
-        .def("isBlockLayering", isBlockLayering_nolist,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlockLayering")
+        .def_static("isBlockLayering", [](const SatAnnulus& a) {
+            SatBlock::TetList avoidTets;
+            return SatLayering::isBlockLayering(a, avoidTets);
+        })
     ;
 
-    implicitly_convertible<std::auto_ptr<SatLayering>,
-        std::auto_ptr<regina::SatBlock> >();
-
-    scope().attr("NSatLayering") = scope().attr("SatLayering");
+    m.attr("NSatLayering") = m.attr("SatLayering");
 }
 

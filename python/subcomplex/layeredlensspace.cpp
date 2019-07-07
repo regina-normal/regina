@@ -30,36 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/layeredlensspace.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::LayeredLensSpace;
 
-void addLayeredLensSpace() {
-    class_<LayeredLensSpace, bases<regina::StandardTriangulation>,
-            std::auto_ptr<LayeredLensSpace>, boost::noncopyable>
-            ("LayeredLensSpace", no_init)
-        .def("clone", &LayeredLensSpace::clone,
-            return_value_policy<manage_new_object>())
+void addLayeredLensSpace(pybind11::module& m) {
+    pybind11::class_<LayeredLensSpace, regina::StandardTriangulation>
+            (m, "LayeredLensSpace")
+        .def("clone", &LayeredLensSpace::clone)
         .def("p", &LayeredLensSpace::p)
         .def("q", &LayeredLensSpace::q)
         .def("torus", &LayeredLensSpace::torus,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("mobiusBoundaryGroup", &LayeredLensSpace::mobiusBoundaryGroup)
         .def("isSnapped", &LayeredLensSpace::isSnapped)
         .def("isTwisted", &LayeredLensSpace::isTwisted)
-        .def("isLayeredLensSpace", &LayeredLensSpace::isLayeredLensSpace,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isLayeredLensSpace")
+        .def_static("isLayeredLensSpace", &LayeredLensSpace::isLayeredLensSpace)
     ;
 
-    implicitly_convertible<std::auto_ptr<LayeredLensSpace>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NLayeredLensSpace") = scope().attr("LayeredLensSpace");
+    m.attr("NLayeredLensSpace") = m.attr("LayeredLensSpace");
 }
 

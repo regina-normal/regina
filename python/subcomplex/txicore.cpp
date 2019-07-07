@@ -30,66 +30,54 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/txicore.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::TxICore;
 using regina::TxIDiagonalCore;
 using regina::TxIParallelCore;
 
-namespace {
-    void writeName_stdio(const TxICore& c) {
-        c.writeName(std::cout);
-    }
-    void writeTeXName_stdio(const TxICore& c) {
-        c.writeTeXName(std::cout);
-    }
-}
-
-void addTxICore() {
-    class_<TxICore, std::auto_ptr<TxICore>, boost::noncopyable>
-            ("TxICore", no_init)
-        .def("core", &TxICore::core,
-            return_internal_reference<>()) // TODO: Clone due to holder type
+void addTxICore(pybind11::module& m) {
+    auto c = pybind11::class_<TxICore>(m, "TxICore")
+        .def("core", [](const TxICore& c) {
+            // Return a fresh clone.  This is because we are using a custom
+            // holder type, and so Python will ignore any return value policy
+            // and always claim ownership over the returned triangulation.
+            return new regina::Triangulation<3>(c.core());
+        })
         .def("bdryTet", &TxICore::bdryTet)
         .def("bdryRoles", &TxICore::bdryRoles)
         .def("bdryReln", &TxICore::bdryReln,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("parallelReln", &TxICore::parallelReln,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("name", &TxICore::name)
         .def("TeXName", &TxICore::TeXName)
-        .def("writeName", writeName_stdio)
-        .def("writeTeXName", writeTeXName_stdio)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
+        .def("writeName", [](const TxICore& c) {
+            c.writeName(std::cout);
+        })
+        .def("writeTeXName", [](const TxICore& c) {
+            c.writeTeXName(std::cout);
+        })
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NTxICore") = scope().attr("TxICore");
+    m.attr("NTxICore") = m.attr("TxICore");
 
-    class_<TxIDiagonalCore, bases<regina::TxICore>,
-            std::auto_ptr<TxIDiagonalCore>, boost::noncopyable>
-            ("TxIDiagonalCore", init<unsigned long, unsigned long>())
+    pybind11::class_<TxIDiagonalCore, regina::TxICore>(m, "TxIDiagonalCore")
+        .def(pybind11::init<unsigned long, unsigned long>())
         .def("size", &TxIDiagonalCore::size)
         .def("k", &TxIDiagonalCore::k)
-        .def(regina::python::add_eq_operators())
     ;
 
-    scope().attr("NTxIDiagonalCore") = scope().attr("TxIDiagonalCore");
+    m.attr("NTxIDiagonalCore") = m.attr("TxIDiagonalCore");
 
-    class_<TxIParallelCore, bases<regina::TxICore>,
-            std::auto_ptr<TxIParallelCore>, boost::noncopyable>
-            ("TxIParallelCore", init<>())
-        .def(regina::python::add_eq_operators())
+    pybind11::class_<TxIParallelCore, regina::TxICore>(m, "TxIParallelCore")
+        .def(pybind11::init<>())
     ;
 
-    scope().attr("NTxIParallelCore") = scope().attr("TxIParallelCore");
-
-    implicitly_convertible<std::auto_ptr<TxIDiagonalCore>,
-        std::auto_ptr<regina::TxICore> >();
-    implicitly_convertible<std::auto_ptr<TxIParallelCore>,
-        std::auto_ptr<regina::TxICore> >();
+    m.attr("NTxIParallelCore") = m.attr("TxIParallelCore");
 }
 

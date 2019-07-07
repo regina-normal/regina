@@ -30,77 +30,65 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "manifold/sfs.h"
 #include "subcomplex/satregion.h"
 #include <iostream>
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::SatBlock;
 using regina::SatBlockSpec;
 using regina::SatRegion;
 
 namespace {
-    boost::python::tuple boundaryAnnulus_tuple(const SatRegion& r,
-            unsigned which) {
-        SatBlock* block;
-        unsigned annulus;
-        bool blockRefVert, blockRefHoriz;
-
-        r.boundaryAnnulus(which, block, annulus, blockRefVert, blockRefHoriz);
-
-        return boost::python::make_tuple(
-            ptr(block), annulus, blockRefVert, blockRefHoriz);
-    }
-
-    bool expand_nolist(SatRegion& r, bool stopIfIncomplete = false) {
-        SatBlock::TetList avoidTets;
-        return r.expand(avoidTets, stopIfIncomplete);
-    }
-
-    void writeBlockAbbrs_stdio(const SatRegion& r, bool tex = false) {
-        r.writeBlockAbbrs(std::cout, tex);
-    }
-
-    void writeDetail_stdio(const SatRegion& r, const std::string& title) {
-        r.writeDetail(std::cout, title);
-    }
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_expand, expand_nolist, 1, 2);
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeBlockAbbrs,
-        writeBlockAbbrs_stdio, 1, 2);
 }
 
-void addSatRegion() {
-    class_<SatBlockSpec>("SatBlockSpec")
-        .def(init<SatBlock*, bool, bool>())
+void addSatRegion(pybind11::module& m) {
+    // TODO: Should we use a by-value holder type?
+    auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec")
+        .def(pybind11::init<>())
+        .def(pybind11::init<SatBlock*, bool, bool>())
         .def_readonly("block", &SatBlockSpec::block)
         .def_readonly("refVert", &SatBlockSpec::refVert)
         .def_readonly("refHoriz", &SatBlockSpec::refHoriz)
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_eq_operators(s);
 
-    scope().attr("NSatBlockSpec") = scope().attr("SatBlockSpec");
+    m.attr("NSatBlockSpec") = m.attr("SatBlockSpec");
 
-    class_<SatRegion, boost::noncopyable,
-            std::auto_ptr<SatRegion> >("SatRegion", init<SatBlock*>())
+    auto r = pybind11::class_<SatRegion>(m, "SatRegion")
+        .def(pybind11::init<SatBlock*>())
         .def("numberOfBlocks", &SatRegion::numberOfBlocks)
-        .def("block", &SatRegion::block, return_internal_reference<>())
+        .def("block", &SatRegion::block,
+            pybind11::return_value_policy::reference_internal)
         .def("blockIndex", &SatRegion::blockIndex)
         .def("numberOfBoundaryAnnuli", &SatRegion::numberOfBoundaryAnnuli)
-        .def("boundaryAnnulus", boundaryAnnulus_tuple)
-        .def("createSFS", &SatRegion::createSFS,
-            return_value_policy<manage_new_object>())
-        .def("expand", expand_nolist, OL_expand())
-        .def("writeBlockAbbrs", writeBlockAbbrs_stdio, OL_writeBlockAbbrs())
-        .def("writeDetail", writeDetail_stdio)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-    ;
+        .def("boundaryAnnulus", [](const SatRegion& r, unsigned which) {
+            SatBlock* block;
+            unsigned annulus;
+            bool blockRefVert, blockRefHoriz;
 
-    scope().attr("NSatRegion") = scope().attr("SatRegion");
+            r.boundaryAnnulus(which, block, annulus,
+                blockRefVert, blockRefHoriz);
+            return pybind11::make_tuple(
+                block, annulus, blockRefVert, blockRefHoriz);
+        }, pybind11::return_value_policy::reference_internal)
+        .def("createSFS", &SatRegion::createSFS)
+        .def("expand", [](SatRegion& r, bool stopIfIncomplete) {
+            SatBlock::TetList avoidTets;
+            return r.expand(avoidTets, stopIfIncomplete);
+        }, pybind11::arg("stopIfIncomplete") = false)
+        .def("writeBlockAbbrs", [](const SatRegion& r, bool tex) {
+            r.writeBlockAbbrs(std::cout, tex);
+        }, pybind11::arg("tex") = false)
+        .def("writeDetail", [](const SatRegion& r, const std::string& title) {
+            r.writeDetail(std::cout, title);
+        })
+    ;
+    regina::python::add_output(r);
+    regina::python::add_eq_operators(r);
+
+    m.attr("NSatRegion") = m.attr("SatRegion");
 
 }
 

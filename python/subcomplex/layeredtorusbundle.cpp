@@ -30,33 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/layeredtorusbundle.h"
 #include "subcomplex/txicore.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::LayeredTorusBundle;
 
-void addLayeredTorusBundle() {
-    class_<LayeredTorusBundle, bases<regina::StandardTriangulation>,
-            std::auto_ptr<LayeredTorusBundle>, boost::noncopyable>
-            ("LayeredTorusBundle", no_init)
+void addLayeredTorusBundle(pybind11::module& m) {
+    pybind11::class_<LayeredTorusBundle, regina::StandardTriangulation>
+            (m, "LayeredTorusBundle")
         .def("core", &LayeredTorusBundle::core,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("coreIso", &LayeredTorusBundle::coreIso,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference_internal)
         .def("layeringReln", &LayeredTorusBundle::layeringReln,
-            return_value_policy<reference_existing_object>())
-        .def("isLayeredTorusBundle", &LayeredTorusBundle::isLayeredTorusBundle,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isLayeredTorusBundle")
+            pybind11::return_value_policy::reference_internal)
+        .def_static("isLayeredTorusBundle",
+            &LayeredTorusBundle::isLayeredTorusBundle)
     ;
 
-    implicitly_convertible<std::auto_ptr<LayeredTorusBundle>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NLayeredTorusBundle") = scope().attr("LayeredTorusBundle");
+    m.attr("NLayeredTorusBundle") = m.attr("LayeredTorusBundle");
 }
 

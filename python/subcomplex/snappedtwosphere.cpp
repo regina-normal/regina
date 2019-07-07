@@ -30,40 +30,30 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/snappedball.h"
 #include "subcomplex/snappedtwosphere.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::SnappedTwoSphere;
 
-namespace {
-    SnappedTwoSphere* (*formsStructure_tets)
-        (regina::Tetrahedron<3>*, regina::Tetrahedron<3>*) =
-        &SnappedTwoSphere::formsSnappedTwoSphere;
-    SnappedTwoSphere* (*formsStructure_balls)
-        (regina::SnappedBall*, regina::SnappedBall*) =
-        &SnappedTwoSphere::formsSnappedTwoSphere;
-}
-
-void addSnappedTwoSphere() {
-    class_<SnappedTwoSphere, std::auto_ptr<SnappedTwoSphere>,
-            boost::noncopyable> ("SnappedTwoSphere", no_init)
-        .def("clone", &SnappedTwoSphere::clone,
-            return_value_policy<manage_new_object>())
+void addSnappedTwoSphere(pybind11::module& m) {
+    auto c = pybind11::class_<SnappedTwoSphere>(m, "SnappedTwoSphere")
+        .def("clone", &SnappedTwoSphere::clone)
         .def("snappedBall", &SnappedTwoSphere::snappedBall,
-            return_internal_reference<>())
-        .def("formsSnappedTwoSphere", formsStructure_tets,
-            return_value_policy<manage_new_object>())
-        .def("formsSnappedTwoSphere", formsStructure_balls,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("formsSnappedTwoSphere")
+            pybind11::return_value_policy::reference_internal)
+        .def_static("formsSnappedTwoSphere",
+            overload_cast<regina::SnappedBall*, regina::SnappedBall*>(
+            &SnappedTwoSphere::formsSnappedTwoSphere))
+        .def_static("formsSnappedTwoSphere",
+            overload_cast<regina::Tetrahedron<3>*, regina::Tetrahedron<3>*>(
+            &SnappedTwoSphere::formsSnappedTwoSphere))
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NSnappedTwoSphere") = scope().attr("SnappedTwoSphere");
+    m.attr("NSnappedTwoSphere") = m.attr("SnappedTwoSphere");
 }
 

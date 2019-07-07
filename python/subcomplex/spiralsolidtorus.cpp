@@ -30,37 +30,29 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/spiralsolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::SpiralSolidTorus;
 
-void addSpiralSolidTorus() {
-    class_<SpiralSolidTorus, bases<regina::StandardTriangulation>,
-            std::auto_ptr<SpiralSolidTorus>, boost::noncopyable>
-            ("SpiralSolidTorus", no_init)
-        .def("clone", &SpiralSolidTorus::clone,
-            return_value_policy<manage_new_object>())
+void addSpiralSolidTorus(pybind11::module& m) {
+    pybind11::class_<SpiralSolidTorus, regina::StandardTriangulation>
+            (m, "SpiralSolidTorus")
+        .def("clone", &SpiralSolidTorus::clone)
         .def("size", &SpiralSolidTorus::size)
         .def("tetrahedron", &SpiralSolidTorus::tetrahedron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("vertexRoles", &SpiralSolidTorus::vertexRoles)
         .def("reverse", &SpiralSolidTorus::reverse)
         .def("cycle", &SpiralSolidTorus::cycle)
         .def("makeCanonical", &SpiralSolidTorus::makeCanonical)
         .def("isCanonical", &SpiralSolidTorus::isCanonical)
-        .def("formsSpiralSolidTorus", &SpiralSolidTorus::formsSpiralSolidTorus,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("formsSpiralSolidTorus")
+        .def_static("formsSpiralSolidTorus",
+            &SpiralSolidTorus::formsSpiralSolidTorus)
     ;
 
-    implicitly_convertible<std::auto_ptr<SpiralSolidTorus>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NSpiralSolidTorus") = scope().attr("SpiralSolidTorus");
+    m.attr("NSpiralSolidTorus") = m.attr("SpiralSolidTorus");
 }
 

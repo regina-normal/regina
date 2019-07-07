@@ -30,32 +30,24 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/blockedsfspair.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::BlockedSFSPair;
 
-void addBlockedSFSPair() {
-    class_<BlockedSFSPair, bases<regina::StandardTriangulation>,
-            std::auto_ptr<BlockedSFSPair>, boost::noncopyable>
-            ("BlockedSFSPair", no_init)
+void addBlockedSFSPair(pybind11::module& m) {
+    pybind11::class_<BlockedSFSPair, regina::StandardTriangulation>
+            (m, "BlockedSFSPair")
         .def("region", &BlockedSFSPair::region,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &BlockedSFSPair::matchingReln,
-            return_internal_reference<>())
-        .def("isBlockedSFSPair", &BlockedSFSPair::isBlockedSFSPair,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlockedSFSPair")
+            pybind11::return_value_policy::reference_internal)
+        .def_static("isBlockedSFSPair", &BlockedSFSPair::isBlockedSFSPair)
     ;
 
-    implicitly_convertible<std::auto_ptr<BlockedSFSPair>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NBlockedSFSPair") = scope().attr("BlockedSFSPair");
+    m.attr("NBlockedSFSPair") = m.attr("BlockedSFSPair");
 }
 

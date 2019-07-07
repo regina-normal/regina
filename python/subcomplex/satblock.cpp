@@ -30,74 +30,56 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "manifold/sfs.h"
 #include "subcomplex/satblock.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::SatAnnulus;
 using regina::SatBlock;
 
-namespace {
-    boost::python::tuple nextBoundaryAnnulus_tuple(SatBlock& b, unsigned a,
-            bool fromPrev) {
-        SatBlock* nextBlock;
-        unsigned nextAnnulus;
-        bool refVert, refHoriz;
-
-        b.nextBoundaryAnnulus(a, nextBlock, nextAnnulus, refVert, refHoriz,
-            fromPrev);
-
-        return boost::python::make_tuple(
-            ptr(nextBlock), nextAnnulus, refVert, refHoriz);
-    }
-    void writeAbbr_stdio(const SatBlock& b, bool tex = false) {
-        b.writeAbbr(std::cout, tex);
-    }
-
-    SatBlock* isBlock_nolist(const SatAnnulus& a) {
-        SatBlock::TetList avoidTets;
-        return SatBlock::isBlock(a, avoidTets);
-    }
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_abbr,
-        SatBlock::abbr, 0, 1);
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_writeAbbr,
-        writeAbbr_stdio, 1, 2);
-}
-
-void addSatBlock() {
-    class_<SatBlock, boost::noncopyable,
-            std::auto_ptr<SatBlock> >("SatBlock", no_init)
-        .def("clone", &SatBlock::clone,
-            return_value_policy<manage_new_object>())
+void addSatBlock(pybind11::module& m) {
+    auto c = pybind11::class_<SatBlock>(m, "SatBlock")
+        .def("clone", &SatBlock::clone)
         .def("nAnnuli", &SatBlock::nAnnuli)
         .def("annulus", &SatBlock::annulus,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("twistedBoundary", &SatBlock::twistedBoundary)
         .def("hasAdjacentBlock", &SatBlock::hasAdjacentBlock)
         .def("adjacentBlock", &SatBlock::adjacentBlock,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("adjacentAnnulus", &SatBlock::adjacentAnnulus)
         .def("adjacentReflected", &SatBlock::adjacentReflected)
         .def("adjacentBackwards", &SatBlock::adjacentBackwards)
         .def("setAdjacent", &SatBlock::setAdjacent)
         .def("adjustSFS", &SatBlock::adjustSFS)
         .def("transform", &SatBlock::transform)
-        .def("nextBoundaryAnnulus", nextBoundaryAnnulus_tuple)
-        .def("abbr", &SatBlock::abbr, OL_abbr())
-        .def("writeAbbr", writeAbbr_stdio, OL_writeAbbr())
-        .def(self < self)
-        .def("isBlock", isBlock_nolist,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlock")
-    ;
-    scope().attr("NSatBlock") = scope().attr("SatBlock");
+        .def("nextBoundaryAnnulus", [](SatBlock& b, unsigned a, bool fromPrev) {
+            SatBlock* nextBlock;
+            unsigned nextAnnulus;
+            bool refVert, refHoriz;
 
+            b.nextBoundaryAnnulus(a, nextBlock, nextAnnulus, refVert, refHoriz,
+                fromPrev);
+            return pybind11::make_tuple(nextBlock, nextAnnulus, refVert,
+                refHoriz);
+        }, pybind11::return_value_policy::reference)
+        .def("abbr", &SatBlock::abbr,
+            pybind11::arg("tex") = false)
+        .def("writeAbbr", [](const SatBlock& b, bool tex) {
+            b.writeAbbr(std::cout, tex);
+        }, pybind11::arg("tex") = false)
+        .def(pybind11::self < pybind11::self)
+        .def_static("isBlock", [](const SatAnnulus& a) {
+            SatBlock::TetList avoidTets;
+            return SatBlock::isBlock(a, avoidTets);
+        })
+    ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
+
+    m.attr("NSatBlock") = m.attr("SatBlock");
 }
 

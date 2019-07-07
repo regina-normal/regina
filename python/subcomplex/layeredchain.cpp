@@ -30,23 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/layeredchain.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::LayeredChain;
 
-void addLayeredChain() {
-    class_<LayeredChain, bases<regina::StandardTriangulation>,
-            std::auto_ptr<LayeredChain>, boost::noncopyable>
-            ("LayeredChain", init<regina::Tetrahedron<3>*, regina::Perm<4>>())
-        .def(init<const LayeredChain&>())
+void addLayeredChain(pybind11::module& m) {
+    pybind11::class_<LayeredChain, regina::StandardTriangulation>
+            (m, "LayeredChain")
+        .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())
+        .def(pybind11::init<const LayeredChain&>())
         .def("bottom", &LayeredChain::bottom,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("top", &LayeredChain::top,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("index", &LayeredChain::index)
         .def("bottomVertexRoles", &LayeredChain::bottomVertexRoles)
         .def("topVertexRoles", &LayeredChain::topVertexRoles)
@@ -55,12 +54,8 @@ void addLayeredChain() {
         .def("extendMaximal", &LayeredChain::extendMaximal)
         .def("reverse", &LayeredChain::reverse)
         .def("invert", &LayeredChain::invert)
-        .def(regina::python::add_eq_operators())
     ;
 
-    implicitly_convertible<std::auto_ptr<LayeredChain>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NLayeredChain") = scope().attr("LayeredChain");
+    m.attr("NLayeredChain") = m.attr("LayeredChain");
 }
 

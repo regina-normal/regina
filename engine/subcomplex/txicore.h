@@ -118,6 +118,10 @@ class REGINA_API TxICore :
          * triangulation (i.e., it is not recreated each time).  The
          * triangulation that is returned may not be modified or destroyed.
          *
+         * \ifacespython This routine returns a new clone of the triangulation
+         * each time it is called, since Python will claim ownership of the
+         * triangulation that is returned.
+         *
          * @return the full triangulation.
          */
         const Triangulation<3>& core() const;

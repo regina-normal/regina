@@ -30,34 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/blockedsfstriple.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::BlockedSFSTriple;
 
-void addBlockedSFSTriple() {
-    class_<BlockedSFSTriple, bases<regina::StandardTriangulation>,
-            std::auto_ptr<BlockedSFSTriple>, boost::noncopyable>
-            ("BlockedSFSTriple", no_init)
+void addBlockedSFSTriple(pybind11::module& m) {
+    pybind11::class_<BlockedSFSTriple, regina::StandardTriangulation>
+            (m, "BlockedSFSTriple")
         .def("end", &BlockedSFSTriple::end,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("centre", &BlockedSFSTriple::centre,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &BlockedSFSTriple::matchingReln,
-            return_internal_reference<>())
-        .def("isBlockedSFSTriple", &BlockedSFSTriple::isBlockedSFSTriple,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlockedSFSTriple")
+            pybind11::return_value_policy::reference_internal)
+        .def_static("isBlockedSFSTriple", &BlockedSFSTriple::isBlockedSFSTriple)
     ;
 
-    implicitly_convertible<std::auto_ptr<BlockedSFSTriple>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NBlockedSFSTriple") = scope().attr("BlockedSFSTriple");
+    m.attr("NBlockedSFSTriple") = m.attr("BlockedSFSTriple");
 }
 

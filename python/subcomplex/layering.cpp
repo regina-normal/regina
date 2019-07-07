@@ -30,34 +30,34 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/layering.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::Layering;
 using regina::Perm;
 using regina::Tetrahedron;
 
-void addLayering() {
-    class_<Layering, boost::noncopyable, std::auto_ptr<Layering> >
-            ("Layering", init<Tetrahedron<3>*, Perm<4>, Tetrahedron<3>*, Perm<4>>())
+void addLayering(pybind11::module& m) {
+    auto c = pybind11::class_<Layering>(m, "Layering")
+        .def(pybind11::init<Tetrahedron<3>*, Perm<4>,
+            Tetrahedron<3>*, Perm<4>>())
         .def("size", &Layering::size)
         .def("oldBoundaryTet", &Layering::oldBoundaryTet,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("oldBoundaryRoles", &Layering::oldBoundaryRoles)
         .def("newBoundaryTet", &Layering::newBoundaryTet,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("newBoundaryRoles", &Layering::newBoundaryRoles)
         .def("boundaryReln", &Layering::boundaryReln,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("extendOne", &Layering::extendOne)
         .def("extend", &Layering::extend)
         .def("matchesTop", &Layering::matchesTop)
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NLayering") = scope().attr("Layering");
+    m.attr("NLayering") = m.attr("Layering");
 }
 

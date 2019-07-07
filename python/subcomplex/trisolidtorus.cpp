@@ -30,36 +30,27 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/trisolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::TriSolidTorus;
 
-void addTriSolidTorus() {
-    class_<TriSolidTorus, bases<regina::StandardTriangulation>,
-            std::auto_ptr<TriSolidTorus>, boost::noncopyable>
-            ("TriSolidTorus", no_init)
-        .def("clone", &TriSolidTorus::clone,
-            return_value_policy<manage_new_object>())
+void addTriSolidTorus(pybind11::module& m) {
+    pybind11::class_<TriSolidTorus, regina::StandardTriangulation>
+            (m, "TriSolidTorus")
+        .def("clone", &TriSolidTorus::clone)
         .def("tetrahedron", &TriSolidTorus::tetrahedron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("vertexRoles", &TriSolidTorus::vertexRoles)
         .def("isAnnulusSelfIdentified",
             &TriSolidTorus::isAnnulusSelfIdentified)
         .def("areAnnuliLinkedMajor", &TriSolidTorus::areAnnuliLinkedMajor)
         .def("areAnnuliLinkedAxis", &TriSolidTorus::areAnnuliLinkedAxis)
-        .def("formsTriSolidTorus", &TriSolidTorus::formsTriSolidTorus,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("formsTriSolidTorus")
+        .def_static("formsTriSolidTorus", &TriSolidTorus::formsTriSolidTorus)
     ;
 
-    implicitly_convertible<std::auto_ptr<TriSolidTorus>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NTriSolidTorus") = scope().attr("TriSolidTorus");
+    m.attr("NTriSolidTorus") = m.attr("TriSolidTorus");
 }
 

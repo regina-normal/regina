@@ -30,32 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/l31pillow.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::L31Pillow;
 
-void addL31Pillow() {
-    class_<L31Pillow, bases<regina::StandardTriangulation>,
-            std::auto_ptr<L31Pillow>, boost::noncopyable>
-            ("L31Pillow", no_init)
-        .def("clone", &L31Pillow::clone,
-            return_value_policy<manage_new_object>())
+void addL31Pillow(pybind11::module& m) {
+    pybind11::class_<L31Pillow, regina::StandardTriangulation>(m, "L31Pillow")
+        .def("clone", &L31Pillow::clone)
         .def("tetrahedron", &L31Pillow::tetrahedron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("interiorVertex", &L31Pillow::interiorVertex)
-        .def("isL31Pillow", &L31Pillow::isL31Pillow,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isL31Pillow")
+        .def_static("isL31Pillow", &L31Pillow::isL31Pillow)
     ;
 
-    implicitly_convertible<std::auto_ptr<L31Pillow>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NL31Pillow") = scope().attr("L31Pillow");
+    m.attr("NL31Pillow") = m.attr("L31Pillow");
 }
 
