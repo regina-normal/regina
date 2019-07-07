@@ -112,7 +112,7 @@ struct REGINA_API DiscSpec {
      *
      * @param cloneMe the disc specifier to clone.
      */
-    DiscSpec(const DiscSpec& cloneMe);
+    DiscSpec(const DiscSpec& cloneMe) = default;
 
     /**
      * Copies the values from the given disc specifier into this specifier.
@@ -120,7 +120,7 @@ struct REGINA_API DiscSpec {
      * @param cloneMe the disc specifier whose values should be copied.
      * @return a reference to this disc specifier.
      */
-    DiscSpec& operator = (const DiscSpec& cloneMe);
+    DiscSpec& operator = (const DiscSpec& cloneMe) = default;
     /**
      * Determines if this and the given disc specifier contain identical
      * information.
@@ -879,17 +879,7 @@ inline DiscSpec::DiscSpec(size_t newTetIndex, int newType,
         unsigned long newNumber) : tetIndex(newTetIndex), type(newType),
         number(newNumber) {
 }
-inline DiscSpec::DiscSpec(const DiscSpec& cloneMe) :
-        tetIndex(cloneMe.tetIndex), type(cloneMe.type),
-        number(cloneMe.number) {
-}
 
-inline DiscSpec& DiscSpec::operator = (const DiscSpec& cloneMe) {
-    tetIndex = cloneMe.tetIndex;
-    type = cloneMe.type;
-    number = cloneMe.number;
-    return *this;
-}
 inline bool DiscSpec::operator == (const DiscSpec& other) const {
     return (tetIndex == other.tetIndex && type == other.type &&
         number == other.number);
