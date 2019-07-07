@@ -30,43 +30,32 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "manifold/graphtriple.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::GraphTriple;
 using regina::Matrix2;
 using regina::SFSpace;
 
-namespace {
-    GraphTriple* createGraphTriple(const SFSpace& s1,
-            const SFSpace& s2, const SFSpace& s3,
-            const Matrix2& m1, const Matrix2& m2) {
-        return new GraphTriple(
-            new SFSpace(s1), new SFSpace(s2), new SFSpace(s3), m1, m2);
-    }
-}
-
-void addGraphTriple() {
-    class_<GraphTriple, bases<regina::Manifold>,
-            std::auto_ptr<GraphTriple>, boost::noncopyable>
-            ("GraphTriple", no_init)
-        .def("__init__", make_constructor(createGraphTriple))
+void addGraphTriple(pybind11::module& m) {
+    pybind11::class_<GraphTriple, regina::Manifold>(m, "GraphTriple")
+        .def(pybind11::init([](const SFSpace& s1,
+                const SFSpace& s2, const SFSpace& s3,
+                const Matrix2& m1, const Matrix2& m2) {
+            // Clone the given SFSs to avoid claiming ownership of them.
+            return new GraphTriple(
+                new SFSpace(s1), new SFSpace(s2), new SFSpace(s3), m1, m2);
+        }))
         .def("end", &GraphTriple::end,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("centre", &GraphTriple::centre,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &GraphTriple::matchingReln,
-            return_internal_reference<>())
-        .def(self < self)
-        .def(regina::python::add_eq_operators())
+            pybind11::return_value_policy::reference_internal)
     ;
 
-    scope().attr("NGraphTriple") = scope().attr("GraphTriple");
-
-    implicitly_convertible<std::auto_ptr<GraphTriple>,
-        std::auto_ptr<regina::Manifold> >();
+    m.attr("NGraphTriple") = m.attr("GraphTriple");
 }
 

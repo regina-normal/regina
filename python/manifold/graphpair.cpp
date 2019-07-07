@@ -30,45 +30,33 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "manifold/graphpair.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::GraphPair;
 using regina::Matrix2;
 using regina::SFSpace;
 
-namespace {
-    GraphPair* createGraphPair_longs(const SFSpace& s1, const SFSpace& s2,
-            long a, long b, long c, long d) {
-        return new GraphPair(new SFSpace(s1), new SFSpace(s2), a, b, c, d);
-    }
-
-    GraphPair* createGraphPair_matrix(const SFSpace& s1, const SFSpace& s2,
-            const Matrix2& m) {
-        return new GraphPair(new SFSpace(s1), new SFSpace(s2), m);
-    }
-}
-
-void addGraphPair() {
-    class_<GraphPair, bases<regina::Manifold>,
-            std::auto_ptr<GraphPair>, boost::noncopyable>
-            ("GraphPair", no_init)
-        .def("__init__", make_constructor(createGraphPair_longs))
-        .def("__init__", make_constructor(createGraphPair_matrix))
+void addGraphPair(pybind11::module& m) {
+    pybind11::class_<GraphPair, regina::Manifold>(m, "GraphPair")
+        .def(pybind11::init([](const SFSpace& s1, const SFSpace& s2,
+                long a, long b, long c, long d) {
+            // Clone the given SFSs to avoid claiming ownership of them.
+            return new GraphPair(new SFSpace(s1), new SFSpace(s2), a, b, c, d);
+        }))
+        .def(pybind11::init([](const SFSpace& s1, const SFSpace& s2,
+                const Matrix2& m) {
+            // Clone the given SFSs to avoid claiming ownership of them.
+            return new GraphPair(new SFSpace(s1), new SFSpace(s2), m);
+        }))
         .def("sfs", &GraphPair::sfs,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &GraphPair::matchingReln,
-            return_internal_reference<>())
-        .def(self < self)
-        .def(regina::python::add_eq_operators())
+            pybind11::return_value_policy::reference_internal)
     ;
 
-    scope().attr("NGraphPair") = scope().attr("GraphPair");
-
-    implicitly_convertible<std::auto_ptr<GraphPair>,
-        std::auto_ptr<regina::Manifold> >();
+    m.attr("NGraphPair") = m.attr("GraphPair");
 }
 

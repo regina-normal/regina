@@ -30,79 +30,79 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "algebra/abeliangroup.h"
 #include "manifold/lensspace.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::SFSFibre;
 using regina::SFSpace;
 
-namespace {
-    unsigned long (SFSpace::*punctures_void)() const = &SFSpace::punctures;
-    unsigned long (SFSpace::*punctures_bool)(bool) const =
-        &SFSpace::punctures;
-    unsigned long (SFSpace::*reflectors_void)() const = &SFSpace::reflectors;
-    unsigned long (SFSpace::*reflectors_bool)(bool) const =
-        &SFSpace::reflectors;
-    void (SFSpace::*insertFibre_fibre)(const SFSFibre&) =
-        &SFSpace::insertFibre;
-    void (SFSpace::*insertFibre_longs)(long, long) = &SFSpace::insertFibre;
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addHandle, addHandle, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addCrosscap, addCrosscap, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addPuncture, addPuncture, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addReflector, addReflector, 0, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_reduce, reduce, 0, 1);
-}
-
-void addSFSpace() {
-    class_<SFSFibre>("SFSFibre")
-        .def(init<long, long>())
-        .def(init<const SFSFibre&>())
+void addSFSpace(pybind11::module& m) {
+    // TODO: Should we use a by-value holder type?
+    auto f = pybind11::class_<SFSFibre>(m, "SFSFibre")
+        .def(pybind11::init<>())
+        .def(pybind11::init<long, long>())
+        .def(pybind11::init<const SFSFibre&>())
         .def_readwrite("alpha", &SFSFibre::alpha)
         .def_readwrite("beta", &SFSFibre::beta)
-        .def(self < self)
-        .def(self_ns::str(self))
-        .def(regina::python::add_eq_operators())
+        .def(pybind11::self < pybind11::self)
     ;
+    regina::python::add_output_ostream(f);
+    regina::python::add_eq_operators(f);
 
-    class_<SFSpace, bases<regina::Manifold>,
-            std::auto_ptr<SFSpace> >("SFSpace")
-        .def(init<SFSpace::classType, unsigned long,
-            optional<unsigned long, unsigned long,
-            unsigned long, unsigned long> >())
-        .def(init<const SFSpace&>())
+    auto s = pybind11::class_<SFSpace, regina::Manifold>(m, "SFSpace")
+        .def(pybind11::init<>())
+        .def(pybind11::init<SFSpace::classType, unsigned long,
+            unsigned long, unsigned long,
+            unsigned long, unsigned long>(),
+            pybind11::arg(), pybind11::arg(),
+            pybind11::arg("punctures") = 0,
+            pybind11::arg("puncturesTwisted") = 0,
+            pybind11::arg("reflectors") = 0,
+            pybind11::arg("reflectorsTwisted") = 0)
+        .def(pybind11::init<const SFSpace&>())
         .def("baseClass", &SFSpace::baseClass)
         .def("baseGenus", &SFSpace::baseGenus)
         .def("baseOrientable", &SFSpace::baseOrientable)
         .def("fibreReversing", &SFSpace::fibreReversing)
         .def("fibreNegating", &SFSpace::fibreNegating)
-        .def("punctures", punctures_void)
-        .def("punctures", punctures_bool)
-        .def("reflectors", reflectors_void)
-        .def("reflectors", reflectors_bool)
+        .def("punctures",
+            overload_cast<>(&SFSpace::punctures, pybind11::const_))
+        .def("punctures",
+            overload_cast<bool>(&SFSpace::punctures, pybind11::const_))
+        .def("reflectors",
+            overload_cast<>(&SFSpace::reflectors, pybind11::const_))
+        .def("reflectors",
+            overload_cast<bool>(&SFSpace::reflectors, pybind11::const_))
         .def("fibreCount", &SFSpace::fibreCount)
         .def("fibre", &SFSpace::fibre)
         .def("obstruction", &SFSpace::obstruction)
-        .def("addHandle", &SFSpace::addHandle, OL_addHandle())
-        .def("addCrosscap", &SFSpace::addCrosscap, OL_addCrosscap())
-        .def("addPuncture", &SFSpace::addPuncture, OL_addPuncture())
-        .def("addReflector", &SFSpace::addReflector, OL_addReflector())
-        .def("insertFibre", insertFibre_fibre)
-        .def("insertFibre", insertFibre_longs)
+        .def("addHandle", &SFSpace::addHandle,
+            pybind11::arg("fibreReversing") = false)
+        .def("addCrosscap", &SFSpace::addCrosscap,
+            pybind11::arg("fibreReversing") = false)
+        .def("addPuncture", &SFSpace::addPuncture,
+            pybind11::arg("twisted") = false,
+            pybind11::arg("nPunctures") = 1)
+        .def("addReflector", &SFSpace::addReflector,
+            pybind11::arg("twisted") = false,
+            pybind11::arg("nReflectors") = 1)
+        .def("insertFibre",
+            overload_cast<const SFSFibre&>(&SFSpace::insertFibre))
+        .def("insertFibre",
+            overload_cast<long, long>(&SFSpace::insertFibre))
         .def("reflect", &SFSpace::reflect)
         .def("complementAllFibres", &SFSpace::complementAllFibres)
-        .def("reduce", &SFSpace::reduce, OL_reduce())
-        .def("isLensSpace", &SFSpace::isLensSpace,
-            return_value_policy<manage_new_object>())
-        .def(self < self)
-        .def(regina::python::add_eq_operators())
+        .def("reduce", &SFSpace::reduce,
+            pybind11::arg("mayReflect") = true)
+        .def("isLensSpace", &SFSpace::isLensSpace)
     ;
 
-    enum_<SFSpace::classType>("classType")
+    pybind11::enum_<SFSpace::classType>(s, "classType")
         .value("o1", SFSpace::o1)
         .value("o2", SFSpace::o2)
         .value("n1", SFSpace::n1)
@@ -114,12 +114,10 @@ void addSFSpace() {
         .value("bn1", SFSpace::bn1)
         .value("bn2", SFSpace::bn2)
         .value("bn3", SFSpace::bn3)
+        .export_values()
         ;
 
-    implicitly_convertible<std::auto_ptr<SFSpace>,
-        std::auto_ptr<regina::Manifold> >();
-
-    scope().attr("NSFSFibre") = scope().attr("SFSFibre");
-    scope().attr("NSFSpace") = scope().attr("SFSpace");
+    m.attr("NSFSFibre") = m.attr("SFSFibre");
+    m.attr("NSFSpace") = m.attr("SFSpace");
 }
 

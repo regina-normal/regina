@@ -30,30 +30,24 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "manifold/simplesurfacebundle.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::SimpleSurfaceBundle;
 
-void addSimpleSurfaceBundle() {
-    {
-        scope s = class_<SimpleSurfaceBundle, bases<regina::Manifold>,
-                std::auto_ptr<SimpleSurfaceBundle>, boost::noncopyable>
-                ("SimpleSurfaceBundle", init<int>())
-            .def(init<const SimpleSurfaceBundle&>())
-            .def("type", &SimpleSurfaceBundle::type)
-            .def(regina::python::add_eq_operators())
-        ;
+void addSimpleSurfaceBundle(pybind11::module& m) {
+    pybind11::class_<SimpleSurfaceBundle, regina::Manifold>
+            (m, "SimpleSurfaceBundle")
+        .def(pybind11::init<int>())
+        .def(pybind11::init<const SimpleSurfaceBundle&>())
+        .def("type", &SimpleSurfaceBundle::type)
+        .def_readonly_static("S2xS1", &SimpleSurfaceBundle::S2xS1)
+        .def_readonly_static("S2xS1_TWISTED",
+            &SimpleSurfaceBundle::S2xS1_TWISTED)
+        .def_readonly_static("RP2xS1", &SimpleSurfaceBundle::RP2xS1)
+    ;
 
-        s.attr("S2xS1") = SimpleSurfaceBundle::S2xS1;
-        s.attr("S2xS1_TWISTED") = SimpleSurfaceBundle::S2xS1_TWISTED;
-        s.attr("RP2xS1") = SimpleSurfaceBundle::RP2xS1;
-
-        implicitly_convertible<std::auto_ptr<SimpleSurfaceBundle>,
-            std::auto_ptr<regina::Manifold> >();
-    }
-    scope().attr("NSimpleSurfaceBundle") = scope().attr("SimpleSurfaceBundle");
+    m.attr("NSimpleSurfaceBundle") = m.attr("SimpleSurfaceBundle");
 }
 
