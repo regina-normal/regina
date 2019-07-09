@@ -121,6 +121,19 @@ ELSE(PACKAGING_MODE)
   SET(REGINA_MANDATORY_MPI FALSE)
 ENDIF(PACKAGING_MODE)
 
+# Options that indicate how python is shipped.
+IF(NOT PYTHON_CORE_IN_ZIP)
+  SET (PYTHON_CORE_IN_ZIP OFF CACHE STRING
+    "Indicates that Regina ships its own Python, with the core Python libraries in pythonXY.zip."
+    FORCE)
+ENDIF(NOT PYTHON_CORE_IN_ZIP)
+
+# The iOS build of Regina links the python module directly into the GUI,
+# and there is a flag in regina-config.h to indicate this.
+# Such a configuration is not, however, supported by regina's cmake build
+# system, and so we do not allow cmake users to enable it.
+SET (PYTHON_STATIC_LINK OFF)
+
 # For pretty logging of optional features at the end of the cmake run:
 INCLUDE(MacroLogFeature)
 

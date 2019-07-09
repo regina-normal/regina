@@ -47,6 +47,14 @@
    Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
 /* #undef REGINA_INSTALL_WINDOWS */
 
+/* Define if Regina ships its own python, with the core python libraries
+   in pythonXY.zip. */
+/* #undef PYTHON_CORE_IN_ZIP */
+
+/* Define if Regina's python module is statically linked into the user
+   interface. */
+/* #undef PYTHON_STATIC_LINK */
+
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST 
 

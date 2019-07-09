@@ -70,8 +70,11 @@ namespace regina {
  * The global routine Py_Initialize() is called when the first interpreter is
  * created.  The global routine Py_Finalize() is never called (which is
  * bad behaviour), since Regina has no idea which interpreter will be the last.
+ *
+ * This is a wrapper around the C++ class PythonInterpreter, which does
+ * most of the real work.
  */
-@interface PythonInterpreter : NSObject
+@interface PythonInterpreterObjC : NSObject
 
 /**
  * Initialises a new subinterpreter.

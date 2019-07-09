@@ -36,7 +36,7 @@
 #include "packet/packet.h"
 
 // Put this before any Qt/KDE stuff so Python 2.3 "slots" doesn't clash.
-#include "pythoninterpreter.h"
+#include "../python/gui/pythoninterpreter.h"
 
 #include "pythonmanager.h"
 #include "reginafilter.h"
@@ -244,7 +244,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
 
     output = new PythonConsole::OutputStream(this);
     error = new PythonConsole::ErrorStream(this);
-    interpreter = new PythonInterpreter(output, error);
+    interpreter = new regina::python::PythonInterpreter(*output, *error);
 
     blockInput();
 }
@@ -401,7 +401,7 @@ void PythonConsole::executeScript(const QString& script,
         const QString& scriptName) {
     addInfo(scriptName.isEmpty() ? tr("Running %1...").arg(scriptName) :
             tr("Running script..."));
-    interpreter->runScript(script.toUtf8());
+    interpreter->runCode(script.toUtf8());
 
     // Finish the output.
     output->flush();

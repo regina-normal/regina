@@ -33,6 +33,10 @@
 /*! \file pythoninterpreter.h
  *  \brief Provides an interface to the python interpreter and
  *  subinterpreters.
+ *
+ *  The accompanying source file (pythoninterpreter.cpp) should be built
+ *  directly into each user interface that requires it.
+ *  It is \e not built into Regina's python module.
  */
 
 #ifndef __PYTHONINTERPRETER_H
@@ -43,12 +47,12 @@
 #include <string>
 
 namespace regina {
-    class Packet;
+    
+class Packet;
 
-    namespace python {
-        class PythonOutputStream;
-    }
-}
+namespace python {
+
+class PythonOutputStream;
 
 /**
  * A single python subinterpreter.  Multiple subinterpreters are independent
@@ -79,19 +83,24 @@ class PythonInterpreter {
             /**< Any previous statements (such as loop openings) that are
                  waiting to be completed. */
 
+        PythonOutputStream& errors;
+            /**< The stream to which all error messages should be sent. */
+
     public:
         /**
          * Constructor and destructor.
          */
         PythonInterpreter(
-            regina::python::PythonOutputStream* pyStdOut = nullptr,
-            regina::python::PythonOutputStream* pyStdErr = nullptr);
+            regina::python::PythonOutputStream& pyStdOut,
+            regina::python::PythonOutputStream& pyStdErr);
         ~PythonInterpreter();
 
         /**
-         * Execute the given line in the subinterpreter.
+         * Execute a single line of code in the subinterpreter.
          * Returns \c true if no further input is required, or
          * \c false if the interpreter is waiting on further lines of code.
+         *
+         * This is intended for use in an interactive Python session.
          */
         bool executeLine(const std::string& command);
 
@@ -101,20 +110,23 @@ class PythonInterpreter {
          * \c false on failure.
          */
         bool importRegina();
+
+        /**
+         * Set the given variable in Python's main namespace to
+         * represent the given Regina packet.
+         */
         bool setVar(const char* name, regina::Packet* value);
-        bool runScript(const char* code);
+
+        /**
+         * Run the given Python code in Python's main namespace.
+         */
+        bool runCode(const char* code);
 
     private:
         /**
          * Is the given command comment or only whitespace?
          */
         static bool isEmptyCommand(const std::string& command);
-
-        /**
-         * Write the given error message to std::cerr along with a
-         * request to report the problem.
-         */
-        static void pleaseReport(const char* msg);
 
         /**
          * Extract the current error message.  A new python reference is
@@ -145,5 +157,7 @@ class PythonInterpreter {
          */
         static bool importReginaIntoNamespace(PyObject* useNamespace);
 };
+    
+} } // namespace regina::python
 
 #endif

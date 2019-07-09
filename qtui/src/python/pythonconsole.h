@@ -39,17 +39,20 @@
 #define __PYTHONCONSOLE_H
 
 #include "../reginaprefset.h"
-#include "../python/gui/embedding.h"
+#include "../python/gui/pythonoutputstream.h"
 
 #include <packet/packet.h>
 #include <QMainWindow>
 
 class CommandEdit;
-class PythonInterpreter;
 class PythonManager;
 class QCompleter;
 class QLabel;
 class QTextEdit;
+
+namespace regina { namespace python {
+    class PythonInterpreter;
+} }
 
 /**
  * A top-level window containing an embedded python interpreter.
@@ -88,7 +91,7 @@ class PythonConsole : public QMainWindow {
         /**
          * Python components
          */
-        PythonInterpreter* interpreter;
+        regina::python::PythonInterpreter* interpreter;
         PythonManager* manager;
 
         /**

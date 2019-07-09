@@ -184,7 +184,6 @@
 		050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		050F5E7D1B9BD6F400C1F681 /* commandedit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E741B9BD6F400C1F681 /* commandedit.cpp */; };
 		050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */; };
-		050F5E7F1B9BD6F400C1F681 /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E781B9BD6F400C1F681 /* pythoninterpreter.cpp */; };
 		050F5E801B9BD6F400C1F681 /* pythonoutputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E7A1B9BD6F400C1F681 /* pythonoutputstream.cpp */; };
 		050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E751B9BD6F400C1F681 /* commandedit.h */; };
 		050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E771B9BD6F400C1F681 /* pythonconsole.h */; };
@@ -205,7 +204,7 @@
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
 		051CEA941F98995D00971F25 /* Link.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA961F98995D00971F25 /* Link.storyboard */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
-		05249E9E1DBB50B7001FE29E /* PythonInterpreter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */; };
+		05249E9E1DBB50B7001FE29E /* PythonInterpreterObjC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05249E9B1DBB50AD001FE29E /* PythonInterpreterObjC.mm */; };
 		05249EA01DBB8D89001FE29E /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */; };
 		05249EA51DBC169D001FE29E /* globalarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */; };
 		05249EA61DBC16A1001FE29E /* safeheldtype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052942D51C5CDCBF0011C1E6 /* safeheldtype.cpp */; };
@@ -1854,12 +1853,14 @@
 		05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 053E5B5519B3D79100166778 /* libbz2.dylib */; };
 		05B1EF181C54299C008E7B49 /* boundary4chooser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B1EF141C542991008E7B49 /* boundary4chooser.cpp */; };
-		05B22D0D22D486040099008B /* embedding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0522D485ED0099008B /* embedding.cpp */; };
-		05B22D0E22D486080099008B /* embedding.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0522D485ED0099008B /* embedding.cpp */; };
 		05B22D0F22D486200099008B /* pysage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0A22D485ED0099008B /* pysage.cpp */; };
 		05B22D1022D486200099008B /* registerIntFromPyIndex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0B22D485ED0099008B /* registerIntFromPyIndex.cpp */; };
 		05B22D1122D486210099008B /* pysage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0A22D485ED0099008B /* pysage.cpp */; };
 		05B22D1222D486210099008B /* registerIntFromPyIndex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D0B22D485ED0099008B /* registerIntFromPyIndex.cpp */; };
+		05B22D1522D543E80099008B /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1322D543E70099008B /* pythoninterpreter.cpp */; };
+		05B22D1622D543E80099008B /* pythoninterpreter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1322D543E70099008B /* pythoninterpreter.cpp */; };
+		05B22D1922D54C980099008B /* pythonoutputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1722D54C970099008B /* pythonoutputstream.cpp */; };
+		05B22D1A22D54C980099008B /* pythonoutputstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B22D1722D54C970099008B /* pythonoutputstream.cpp */; };
 		05B27D521E96681D00E2B7C4 /* nsvectorquadclosed.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B27D501E96681D00E2B7C4 /* nsvectorquadclosed.h */; };
 		05B27D531E96681D00E2B7C4 /* nsvectorquadclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */; };
 		05B27D541E96682200E2B7C4 /* nsvectorquadclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */; };
@@ -2710,8 +2711,6 @@
 		050F5E751B9BD6F400C1F681 /* commandedit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commandedit.h; sourceTree = "<group>"; };
 		050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonconsole.cpp; sourceTree = "<group>"; };
 		050F5E771B9BD6F400C1F681 /* pythonconsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonconsole.h; sourceTree = "<group>"; };
-		050F5E781B9BD6F400C1F681 /* pythoninterpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythoninterpreter.cpp; sourceTree = "<group>"; };
-		050F5E791B9BD6F400C1F681 /* pythoninterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythoninterpreter.h; sourceTree = "<group>"; };
 		050F5E7A1B9BD6F400C1F681 /* pythonoutputstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonoutputstream.cpp; sourceTree = "<group>"; };
 		050F5E7B1B9BD6F400C1F681 /* pythonoutputstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonoutputstream.h; sourceTree = "<group>"; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
@@ -2735,8 +2734,8 @@
 		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
-		05249E9A1DBB50AD001FE29E /* PythonInterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonInterpreter.h; sourceTree = "<group>"; };
-		05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonInterpreter.mm; sourceTree = "<group>"; };
+		05249E9A1DBB50AD001FE29E /* PythonInterpreterObjC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonInterpreterObjC.h; sourceTree = "<group>"; };
+		05249E9B1DBB50AD001FE29E /* PythonInterpreterObjC.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonInterpreterObjC.mm; sourceTree = "<group>"; };
 		05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
 		052774111C55743E00140918 /* hypercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercreator.h; sourceTree = "<group>"; };
@@ -4330,12 +4329,14 @@
 		05B14EB419B4240D002138C0 /* mkcensusdb.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = mkcensusdb.cpp; sourceTree = "<group>"; };
 		05B1EF141C542991008E7B49 /* boundary4chooser.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundary4chooser.cpp; sourceTree = "<group>"; };
 		05B1EF151C542991008E7B49 /* boundary4chooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundary4chooser.h; sourceTree = "<group>"; };
-		05B22D0522D485ED0099008B /* embedding.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = embedding.cpp; sourceTree = "<group>"; };
-		05B22D0622D485ED0099008B /* embedding.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = embedding.h; sourceTree = "<group>"; };
 		05B22D0722D485ED0099008B /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05B22D0922D485ED0099008B /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05B22D0A22D485ED0099008B /* pysage.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = pysage.cpp; sourceTree = "<group>"; };
 		05B22D0B22D485ED0099008B /* registerIntFromPyIndex.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = registerIntFromPyIndex.cpp; sourceTree = "<group>"; };
+		05B22D1322D543E70099008B /* pythoninterpreter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythoninterpreter.cpp; sourceTree = "<group>"; };
+		05B22D1422D543E80099008B /* pythoninterpreter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythoninterpreter.h; sourceTree = "<group>"; };
+		05B22D1722D54C970099008B /* pythonoutputstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonoutputstream.cpp; sourceTree = "<group>"; };
+		05B22D1822D54C970099008B /* pythonoutputstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonoutputstream.h; sourceTree = "<group>"; };
 		05B27D501E96681D00E2B7C4 /* nsvectorquadclosed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorquadclosed.h; sourceTree = "<group>"; };
 		05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectorquadclosed.cpp; sourceTree = "<group>"; };
 		05B44D1321914FA200B1D343 /* binom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = binom.h; sourceTree = "<group>"; };
@@ -5294,8 +5295,6 @@
 				050F5E751B9BD6F400C1F681 /* commandedit.h */,
 				050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */,
 				050F5E771B9BD6F400C1F681 /* pythonconsole.h */,
-				050F5E781B9BD6F400C1F681 /* pythoninterpreter.cpp */,
-				050F5E791B9BD6F400C1F681 /* pythoninterpreter.h */,
 				050F5E7A1B9BD6F400C1F681 /* pythonoutputstream.cpp */,
 				050F5E7B1B9BD6F400C1F681 /* pythonoutputstream.h */,
 			);
@@ -5436,8 +5435,8 @@
 				054209151DF0E7E60018AB24 /* NSMatcher.mm */,
 				0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */,
 				0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */,
-				05249E9A1DBB50AD001FE29E /* PythonInterpreter.h */,
-				05249E9B1DBB50AD001FE29E /* PythonInterpreter.mm */,
+				05249E9A1DBB50AD001FE29E /* PythonInterpreterObjC.h */,
+				05249E9B1DBB50AD001FE29E /* PythonInterpreterObjC.mm */,
 				05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */,
 				05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */,
 			);
@@ -7630,8 +7629,10 @@
 		05B22D0422D485ED0099008B /* gui */ = {
 			isa = PBXGroup;
 			children = (
-				05B22D0522D485ED0099008B /* embedding.cpp */,
-				05B22D0622D485ED0099008B /* embedding.h */,
+				05B22D1322D543E70099008B /* pythoninterpreter.cpp */,
+				05B22D1422D543E80099008B /* pythoninterpreter.h */,
+				05B22D1722D54C970099008B /* pythonoutputstream.cpp */,
+				05B22D1822D54C970099008B /* pythonoutputstream.h */,
 				05B22D0722D485ED0099008B /* README.txt */,
 			);
 			path = gui;
@@ -9428,6 +9429,7 @@
 				05C1BEE51DCA89E3007C946B /* triangulation5.cpp in Sources */,
 				05249F6C1DBC1741001FE29E /* treedecomposition.cpp in Sources */,
 				05B4D2CB229F376B00B7B11C /* output.cpp in Sources */,
+				05B22D1A22D54C980099008B /* pythonoutputstream.cpp in Sources */,
 				05249F321DBC1711001FE29E /* perm5.cpp in Sources */,
 				05249EAE1DBC16BA001FE29E /* anglestructure.cpp in Sources */,
 				05A066B31DFA67D50047872E /* blockedsfs.cpp in Sources */,
@@ -9505,6 +9507,7 @@
 				052FA1811806129B00FAE4DF /* typetrie.cpp in Sources */,
 				05C1BEC11DCA7CB3007C946B /* boundary11.cpp in Sources */,
 				05249F421DBC1722001FE29E /* pysnappea.cpp in Sources */,
+				05B22D1622D543E80099008B /* pythoninterpreter.cpp in Sources */,
 				05A067481DFA68470047872E /* layeredchain.cpp in Sources */,
 				05A0674A1DFA68470047872E /* layeredlensspace.cpp in Sources */,
 				05C1BEEC1DCA89E3007C946B /* triangulation12.cpp in Sources */,
@@ -9532,7 +9535,7 @@
 				05F0A0551DBF0B7000117BFC /* decompose.cpp in Sources */,
 				05AA71EF1FB17E0600186E30 /* flype.cpp in Sources */,
 				0568742E20C5D86B001C435B /* pass.cpp in Sources */,
-				05249E9E1DBB50B7001FE29E /* PythonInterpreter.mm in Sources */,
+				05249E9E1DBB50B7001FE29E /* PythonInterpreterObjC.mm in Sources */,
 				05A067441DFA68470047872E /* blockedsfsloop.cpp in Sources */,
 				05C1BEBC1DCA7CB3007C946B /* boundary6.cpp in Sources */,
 				05249EB21DBC16BE001FE29E /* gluingpermsearcher3.cpp in Sources */,
@@ -9567,7 +9570,6 @@
 				05F0A05B1DBF0B7000117BFC /* reorder.cpp in Sources */,
 				05A067491DFA68470047872E /* layeredchainpair.cpp in Sources */,
 				052FA17F1806129B00FAE4DF /* treelp.cpp in Sources */,
-				05B22D0D22D486040099008B /* embedding.cpp in Sources */,
 				05B4D2BF229F376B00B7B11C /* enumeration.cpp in Sources */,
 				05937AD519CECF4300160F9A /* MDSpreadViewCellCornerHeaderBackground.m in Sources */,
 				05249F801DBC174E001FE29E /* stringutils.cpp in Sources */,
@@ -10209,6 +10211,7 @@
 				0591E8401C4F769100793A9C /* tri4creator.cpp in Sources */,
 				0564A96D1811D921002CC2AE /* snappeacomponents.cpp in Sources */,
 				0564A9661811D921002CC2AE /* tri3ui.cpp in Sources */,
+				05B22D1922D54C980099008B /* pythonoutputstream.cpp in Sources */,
 				0564A80B1811D921002CC2AE /* importdialog.cpp in Sources */,
 				0564A80E1811D921002CC2AE /* pdfhandler.cpp in Sources */,
 				0564A9781811D921002CC2AE /* recentfilesaction.cpp in Sources */,
@@ -10230,7 +10233,6 @@
 				0564A9801811D921002CC2AE /* reginamanager.cpp in Sources */,
 				0564A95E1811D921002CC2AE /* filtercomb.cpp in Sources */,
 				0564A95B1811D921002CC2AE /* scriptui.cpp in Sources */,
-				05B22D0E22D486080099008B /* embedding.cpp in Sources */,
 				05D322C91F9FED7F00E5F9B8 /* linkcrossings.cpp in Sources */,
 				05D322D61FA1415700E5F9B8 /* linkpoly.cpp in Sources */,
 				0564A96A1811D921002CC2AE /* tri3snappea.cpp in Sources */,
@@ -10267,6 +10269,7 @@
 				0564A94E1811D921002CC2AE /* tri2gluings.cpp in Sources */,
 				0564A9771811D921002CC2AE /* pythonmanager.cpp in Sources */,
 				05A73CCC19B2F1AB0099C617 /* snappeacreator.cpp in Sources */,
+				05B22D1522D543E80099008B /* pythoninterpreter.cpp in Sources */,
 				0564A80F1811D921002CC2AE /* pythonhandler.cpp in Sources */,
 				0564A9631811D921002CC2AE /* textui.cpp in Sources */,
 				0564A8051811D921002CC2AE /* examplesaction.cpp in Sources */,
@@ -10274,7 +10277,6 @@
 				0564A9411811D921002CC2AE /* main.cpp in Sources */,
 				0564A8031811D921002CC2AE /* coordinatechooser.cpp in Sources */,
 				05A73CD819B2F2180099C617 /* cuspchooser.cpp in Sources */,
-				050F5E7F1B9BD6F400C1F681 /* pythoninterpreter.cpp in Sources */,
 				05A73CCB19B2F1AB0099C617 /* snappeaalgebra.cpp in Sources */,
 				0564A9581811D921002CC2AE /* surfacescreator.cpp in Sources */,
 				0564A7F91811D921002CC2AE /* bigwidget.cpp in Sources */,

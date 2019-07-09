@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #import "PythonConsoleController.h"
-#import "PythonInterpreter.h"
+#import "PythonInterpreterObjC.h"
 #import "TextHelper.h"
 #import "packet/script.h"
 
@@ -61,7 +61,7 @@ enum HistoryStyle {
 @end
 
 @interface PythonConsoleController () <UITextFieldDelegate> {
-    PythonInterpreter* python;
+    PythonInterpreterObjC* python;
     PythonConsoleStdout* outputStream;
     PythonConsoleStderr* errorStream;
     UIFont* outputFont;
@@ -152,7 +152,7 @@ enum HistoryStyle {
     [nc addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-    python = [[PythonInterpreter alloc] initWithOut:outputStream err:errorStream];
+    python = [[PythonInterpreterObjC alloc] initWithOut:outputStream err:errorStream];
     [python importRegina];
     [python runCode:"from regina import *; print(regina.welcome())\n"];
     [self processOutput:"\n"];
