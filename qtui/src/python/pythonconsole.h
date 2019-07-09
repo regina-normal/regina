@@ -202,13 +202,13 @@ class PythonConsole : public QMainWindow {
          * Qt overrides.
          */
          virtual QSize sizeHint() const;
-        
+
         /**
-         * Track who is getting output from python. 
+         * Track who is getting output from python.
          */
         bool outputToTabCompletion;
         /**
-         * The list of possible completions. 
+         * The list of possible completions.
          */
         QStringList* completions;
         /**
@@ -229,7 +229,7 @@ class PythonConsole : public QMainWindow {
          * that the output stream can call, to emit a signal so
          * the request isn't blocking.
          */
-        void requestNextCompletion(); 
+        void requestNextCompletion();
 
     signals:
         /**
@@ -265,14 +265,13 @@ class PythonConsole : public QMainWindow {
         void clipboardChanged();
 
         /**
-         * Process tab completion on the partial line. 
+         * Process tab completion on the partial line.
          **/
         void processCompletion();
         /**
          * Request the next tab completion option from pythons readline
          */
-        void getNextCompletion(); 
-        
+        void getNextCompletion();
 
     private:
         /**
