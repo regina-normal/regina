@@ -50,9 +50,13 @@ class QCompleter;
 class QLabel;
 class QTextEdit;
 
-namespace regina { namespace python {
-    class PythonInterpreter;
-} }
+namespace regina {
+    class Script;
+
+    namespace python {
+        class PythonInterpreter;
+    }
+}
 
 /**
  * A top-level window containing an embedded python interpreter.
@@ -143,12 +147,7 @@ class PythonConsole : public QMainWindow {
         void executeLine(const QString& line);
         void executeLine(const std::string& line);
         void executeLine(const char* line);
-
-        /**
-         * Compile or run user scripts.
-         */
-        void executeScript(const QString& script,
-        const QString& scriptName = QString::null);
+        void runScript(regina::Script* script);
 
     public slots:
         /**

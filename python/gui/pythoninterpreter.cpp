@@ -33,6 +33,7 @@
 #include "regina-config.h"
 #include "file/globaldirs.h"
 #include "packet/container.h"
+#include "packet/script.h"
 
 #include "pythoninterpreter.h"
 #include "pythonoutputstream.h"
@@ -94,7 +95,8 @@ PyThreadState* mainState;
 
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
-        regina::python::PythonOutputStream& pyStdErr) : errors(pyStdErr) {
+        regina::python::PythonOutputStream& pyStdErr) :
+        output(pyStdOut), errors(pyStdErr) {
     std::lock_guard<std::mutex> lock(globalMutex);
 
     // Acquire the global interpreter lock.
@@ -461,6 +463,21 @@ bool PythonInterpreter::runCode(const char* code) {
         state = PyEval_SaveThread();
         return false;
     }
+}
+
+bool PythonInterpreter::runScript(const regina::Script* script) {
+    bool result = true;
+    for (size_t i = 0; i < script->countVariables(); ++i)
+        if (! setVar(script->variableName(i).c_str(), script->variableValue(i)))
+            result = false;
+
+    if (! runCode((script->text() + "\n\n").c_str()))
+        result = false;
+
+    output.flush();
+    errors.flush();
+
+    return result;
 }
 
 bool PythonInterpreter::isEmptyCommand(const std::string& command) {

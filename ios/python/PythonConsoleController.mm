@@ -161,7 +161,6 @@ enum HistoryStyle {
         if (self.script) {
             [self appendHistory:@"Running script...\n" style:HistoryInfo];
             [python runScript:self.script];
-            [python flush];
         }
 
         if (self.root) {

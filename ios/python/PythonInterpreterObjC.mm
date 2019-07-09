@@ -130,15 +130,7 @@ class PythonOutputStreamObjC : public regina::python::PythonOutputStream {
 
 - (bool)runScript:(regina::Script*)script
 {
-    bool result = true;
-    for (size_t i = 0; i < script->countVariables(); ++i)
-        if (! [self setVar:script->variableName(i).c_str() value:script->variableValue(i)])
-            result = false;
-
-    if (! [self runCode:(script->text() + "\n\n").c_str()])
-        result = false;
-
-    return result;
+    return _interpreter->runScript(script);
 }
 
 - (void)flush

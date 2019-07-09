@@ -47,8 +47,9 @@
 #include <string>
 
 namespace regina {
-    
+
 class Packet;
+class Script;
 
 namespace python {
 
@@ -83,8 +84,10 @@ class PythonInterpreter {
             /**< Any previous statements (such as loop openings) that are
                  waiting to be completed. */
 
+        PythonOutputStream& output;
+            /**< The stream that we are using for sys.stdout. */
         PythonOutputStream& errors;
-            /**< The stream to which all error messages should be sent. */
+            /**< The stream that we are using for sys.stderr. */
 
     public:
         /**
@@ -122,6 +125,13 @@ class PythonInterpreter {
          */
         bool runCode(const char* code);
 
+        /**
+         * Run the given script packet in Python's main namespace.
+         * This involves setting all of the script variables, running the
+         * script code itself, and then flushing standard output and error.
+         */
+        bool runScript(const regina::Script* script);
+
     private:
         /**
          * Is the given command comment or only whitespace?
@@ -157,7 +167,7 @@ class PythonInterpreter {
          */
         static bool importReginaIntoNamespace(PyObject* useNamespace);
 };
-    
+
 } } // namespace regina::python
 
 #endif

@@ -397,15 +397,8 @@ void PythonConsole::executeLine(const char* line) {
     interpreter->executeLine(line);
 }
 
-void PythonConsole::executeScript(const QString& script,
-        const QString& scriptName) {
-    addInfo(scriptName.isEmpty() ? tr("Running %1...").arg(scriptName) :
-            tr("Running script..."));
-    interpreter->runCode(script.toUtf8());
-
-    // Finish the output.
-    output->flush();
-    error->flush();
+void PythonConsole::runScript(regina::Script* script) {
+    interpreter->runScript(script);
 }
 
 void PythonConsole::saveLog() {
