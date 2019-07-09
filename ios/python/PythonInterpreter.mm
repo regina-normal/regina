@@ -32,18 +32,14 @@
 
 #import "PythonInterpreter.h"
 #import "file/globaldirs.h"
+#import "packet/container.h"
 #import "packet/script.h"
-
-// We need to include <ostream> before boost.python - otherwise we get a
-// compile error when boost.python includes <ostream> itself.. *shrug*
+#import "../python/gui/embedding.h"
 #import <ostream>
 
 // Python includes:
 #import <Python.h>
-#import <boost/python.hpp>
-
-// For regina's to_held_type:
-#import "../python/safeheldtype.h"
+#import "../python/pybind11/pybind11.h"
 
 // Declare the entry point for Regina's python module:
 #if PY_MAJOR_VERSION >= 3
@@ -57,8 +53,8 @@ PyMODINIT_FUNC REGINA_PYTHON_INIT();
  * WARNING: We never call Py_Finalize().
  *
  * It can't be called during the program since multiple
- * initialise/finalise sequences cause problems with boost.python
- * modules.
+ * initialise/finalise sequences have causes problems in the past
+ * with boost.python modules.
  *
  * It can't be called during global object destruction since this seems to
  * be too late and a crash results (PyThreadState_Get: no current thread).
@@ -114,41 +110,17 @@ PyObject* extractErrMsg() {
 
 #pragma mark C++ wrapper
 
-class PythonOutputStreamObjC {
+class PythonOutputStreamObjC : public regina::python::PythonOutputStream {
     private:
         void* _object;
             /**< The Objective-C delegate that implements processOutput:. */
-        std::string buffer;
-            /**< The output data that has yet to be processed. */
 
     public:
         PythonOutputStreamObjC(void* object) : _object(object) {
         }
 
-        /**
-         * Writes data to this output stream.  Note that this data will
-         * not be processed until a newline is written or flush() is
-         * called.
-         */
-        void write(const std::string& data) {
-            buffer.append(data);
-
-            std::string::size_type pos;
-            while ((pos = buffer.find('\n')) < buffer.length()) {
-                [(__bridge id)_object processOutput:buffer.substr(0, pos + 1).c_str()];
-                buffer.erase(0, pos + 1);
-            }
-        }
-
-        /**
-         * Forces any data that has not yet been processed to be
-         * sent to processOutput().
-         */
-        void flush() {
-            if (! buffer.empty()) {
-                [(__bridge id)_object processOutput:buffer.c_str()];
-                buffer.clear();
-            }
+        virtual void processOutput(const std::string& data) {
+            [(__bridge id)_object processOutput:data.c_str()];
         }
 };
 
@@ -182,16 +154,12 @@ class PythonOutputStreamObjC {
  */
 + (bool)importReginaIntoNamespace:(PyObject*)useNamespace
 {
-    try {
-        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
-        if (regModule) {
-            PyDict_SetItemString(useNamespace, "regina", regModule);
-            Py_DECREF(regModule);
-            return true;
-        } else {
-            return false;
-        }
-    } catch (const boost::python::error_already_set&) {
+    PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+    if (regModule) {
+        PyDict_SetItemString(useNamespace, "regina", regModule);
+        Py_DECREF(regModule);
+        return true;
+    } else {
         return false;
     }
 }
@@ -243,9 +211,15 @@ class PythonOutputStreamObjC {
             // If this fails, do so silently; we'll see the same error again
             // immediately in the first subinterpreter.
             [PythonInterpreter importReginaIntoNamespace:PyModule_GetDict(PyImport_AddModule("__main__"))];
-#endif
 
-            pythonInitialised = true;
+            // With pybind11, it seems that we need to *use* regina's bindings
+            // in the first interpreter that imports them; otherwise subsequent
+            // subinterpreters cannot see the pybind11 conversion table.
+            //
+            // Note: the temporary packet that we create here will be
+            // destroyed with the pybind11::object destructor.
+            pybind11::cast(new regina::Container());
+#endif
         }
 
         // Create the new interpreter.
@@ -257,19 +231,18 @@ class PythonOutputStreamObjC {
 
         // Redirect stdout and stderr if appropriate.
         try {
-            boost::python::class_<PythonOutputStreamObjC, boost::noncopyable>
-                ("PythonOutputStream", boost::python::no_init)
-                .def("write", &PythonOutputStreamObjC::write)
-                .def("flush", &PythonOutputStreamObjC::flush);
-
-            boost::python::reference_existing_object::apply<PythonOutputStreamObjC*>::type conv;
-
-            PySys_SetObject(const_cast<char*>("stdout"), conv(_outCpp));
-            PySys_SetObject(const_cast<char*>("stderr"), conv(_errCpp));
-        } catch (const boost::python::error_already_set&) {
-            PyErr_Print();
-            PyErr_Clear();
+            if (! pythonInitialised)
+                regina::python::PythonOutputStream::addBindings();
+            _outCpp->install("stdout");
+            _errCpp->install("stderr");
+        } catch (std::runtime_error& e) {
+            _errCpp->write("ERROR: Could not redirect output streams: ");
+            _errCpp->write(e.what());
+            _errCpp->write("\n");
+            _errCpp->flush();
         }
+
+        pythonInitialised = true;
 
         // Release the global interpreter lock.
         PyEval_SaveThread();
@@ -463,24 +436,29 @@ class PythonOutputStreamObjC {
 
     bool ok = false;
     try {
-        regina::python::to_held_type<>::apply<regina::Packet*>::type conv;
-        PyObject* pyValue = conv(value);
-
-        if (pyValue) {
+        pybind11::object obj = pybind11::cast(value);
+        if (obj.ptr()) {
 #if PY_MAJOR_VERSION >= 3
             // PyUnicode_FromString assumes UTF-8 encoding.
             PyObject* nameStr = PyUnicode_FromString(name); // New ref.
 #else
             PyObject* nameStr = PyString_FromString(name); // New ref.
 #endif
-            PyDict_SetItem(_mainNamespace, nameStr, pyValue);
+            if (PyDict_SetItem(_mainNamespace, nameStr, obj.ptr())) {
+                PyErr_Print();
+                PyErr_Clear();
+            } else
+                ok = true;
             Py_DECREF(nameStr);
-            Py_DECREF(pyValue);
-            ok = true;
+        } else {
+            _errCpp->write("ERROR: Null PyObject\n");
+            _errCpp->flush();
         }
-    } catch (const boost::python::error_already_set&) {
-        PyErr_Print();
-        PyErr_Clear();
+    } catch (std::runtime_error& e) {
+        _errCpp->write("ERROR: ");
+        _errCpp->write(e.what());
+        _errCpp->write("\n");
+        _errCpp->flush();
     }
 
     _state = PyEval_SaveThread();

@@ -42,10 +42,12 @@
 #include <mutex>
 #include <string>
 
-class PythonOutputStream;
-
 namespace regina {
     class Packet;
+
+    namespace python {
+        class PythonOutputStream;
+    }
 }
 
 /**
@@ -81,8 +83,9 @@ class PythonInterpreter {
         /**
          * Constructor and destructor.
          */
-        PythonInterpreter(PythonOutputStream* pyStdOut = 0,
-                PythonOutputStream* pyStdErr = 0);
+        PythonInterpreter(
+            regina::python::PythonOutputStream* pyStdOut = nullptr,
+            regina::python::PythonOutputStream* pyStdErr = nullptr);
         ~PythonInterpreter();
 
         /**

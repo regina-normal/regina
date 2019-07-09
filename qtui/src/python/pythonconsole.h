@@ -38,8 +38,8 @@
 #ifndef __PYTHONCONSOLE_H
 #define __PYTHONCONSOLE_H
 
-#include "pythonoutputstream.h"
 #include "../reginaprefset.h"
+#include "../python/gui/embedding.h"
 
 #include <packet/packet.h>
 #include <QMainWindow>
@@ -61,7 +61,7 @@ class QTextEdit;
 class PythonConsole : public QMainWindow {
     Q_OBJECT
 
-    friend class PythonOutputStream;
+    friend class regina::python::PythonOutputStream;
     friend class CommandEdit;
     private:
         /**
@@ -75,8 +75,8 @@ class PythonConsole : public QMainWindow {
         QTextEdit* session;
         QLabel* prompt;
         CommandEdit* input;
-        PythonOutputStream* output;
-        PythonOutputStream* error;
+        regina::python::PythonOutputStream* output;
+        regina::python::PythonOutputStream* error;
 
         /**
          * Actions
@@ -275,7 +275,7 @@ class PythonConsole : public QMainWindow {
         /**
          * An output stream that writes data using addOutput().
          */
-        class OutputStream : public PythonOutputStream {
+        class OutputStream : public regina::python::PythonOutputStream {
             private:
                 PythonConsole* console_;
 
@@ -289,7 +289,7 @@ class PythonConsole : public QMainWindow {
         /**
          * An output stream that writes data using addError().
          */
-        class ErrorStream : public PythonOutputStream {
+        class ErrorStream : public regina::python::PythonOutputStream {
             private:
                 PythonConsole* console_;
 

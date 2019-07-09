@@ -35,11 +35,11 @@
 
 #include "regina-config.h"
 #include "file/globaldirs.h"
-#include "packet/packet.h"
+#include "packet/container.h"
 
-#include "pythonoutputstream.h"
+#include "../python/gui/embedding.h"
 
-#include <boost/python.hpp>
+#include "../python/pybind11/pybind11.h"
 #include <cctype>
 #include <cstdlib>
 #include <cstring>
@@ -75,8 +75,9 @@ std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
 PyThreadState* mainState;
 
-PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
-        PythonOutputStream* pyStdErr) {
+PythonInterpreter::PythonInterpreter(
+        regina::python::PythonOutputStream* pyStdOut,
+        regina::python::PythonOutputStream* pyStdErr) {
     std::lock_guard<std::mutex> lock(globalMutex);
 
     // Acquire the global interpreter lock.
@@ -88,7 +89,7 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         // since nobody else in their right mind would be trying to build
         // this under windows.
         //
-        // When using MinGW's own python + boost packages, we need to
+        // When using MinGW's own python packages, we need to
         // manually include the python zip and the path to zlib.pyd on the
         // python path, *before* the interpreter is initialised.
         //
@@ -126,9 +127,15 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         // immediately in the first subinterpreter.
         importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
             "__main__")));
-#endif
 
-        pythonInitialised = true;
+        // With pybind11, it seems that we need to *use* regina's bindings in
+        // the first interpreter that imports them; otherwise subsequent
+        // subinterpreters cannot see the pybind11 conversion table.
+        //
+        // Note: the temporary packet that we create here will be
+        // destroyed with the pybind11::object destructor.
+        pybind11::cast(new regina::Container());
+#endif
     }
 
     // Create the new interpreter.
@@ -139,25 +146,25 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
     mainNamespace = PyModule_GetDict(mainModule); // Borrowed ref.
 
     // Redirect stdout and stderr if appropriate.
-    if (pyStdOut || pyStdErr) {
-        try {
-            boost::python::class_<PythonOutputStream, boost::noncopyable>
-                    ("PythonOutputStream", boost::python::no_init)
-                .def("write", &PythonOutputStream::write)
-                .def("flush", &PythonOutputStream::flush);
-
-            boost::python::reference_existing_object::
-                apply<PythonOutputStream*>::type conv;
-
-            if (pyStdOut)
-                PySys_SetObject(const_cast<char*>("stdout"), conv(pyStdOut));
-            if (pyStdErr)
-                PySys_SetObject(const_cast<char*>("stderr"), conv(pyStdErr));
-        } catch (const boost::python::error_already_set&) {
-            PyErr_Print();
-            PyErr_Clear();
-        }
+    try {
+        if (! pythonInitialised)
+            regina::python::PythonOutputStream::addBindings();
+        if (pyStdOut)
+            pyStdOut->install("stdout");
+        if (pyStdErr)
+            pyStdErr->install("stderr");
+    } catch (std::runtime_error& e) {
+        if (pyStdErr) {
+            pyStdErr->write("ERROR: Could not redirect output streams: ");
+            pyStdErr->write(e.what());
+            pyStdErr->write("\n");
+            pyStdErr->flush();
+        } else
+            std::cerr << "ERROR: Could not redirect output streams: "
+                << e.what() << std::endl;
     }
+
+    pythonInitialised = true;
 
     // Release the global interpreter lock.
     PyEval_SaveThread();
@@ -370,16 +377,12 @@ bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace) {
     prependReginaToSysPath();
 
     // Import the module.
-    try {
-        PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
-        if (regModule) {
-            PyDict_SetItemString(useNamespace, "regina", regModule);
-            Py_DECREF(regModule);
-            return true;
-        } else {
-            return false;
-        }
-    } catch (const boost::python::error_already_set&) {
+    PyObject* regModule = PyImport_ImportModule("regina"); // New ref.
+    if (regModule) {
+        PyDict_SetItemString(useNamespace, "regina", regModule);
+        Py_DECREF(regModule);
+        return true;
+    } else {
         return false;
     }
 }
@@ -389,24 +392,24 @@ bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
 
     bool ok = false;
     try {
-        regina::python::to_held_type<>::apply<regina::Packet*>::type conv;
-        PyObject* pyValue = conv(value);
-
-        if (pyValue) {
+        pybind11::object obj = pybind11::cast(value);
+        if (obj.ptr()) {
 #if PY_MAJOR_VERSION >= 3
             // PyUnicode_FromString assumes UTF-8 encoding.
             PyObject* nameStr = PyUnicode_FromString(name); // New ref.
 #else
             PyObject* nameStr = PyString_FromString(name); // New ref.
 #endif
-            PyDict_SetItem(mainNamespace, nameStr, pyValue);
+            if (PyDict_SetItem(mainNamespace, nameStr, obj.ptr())) {
+                PyErr_Print();
+                PyErr_Clear();
+            } else
+                ok = true;
             Py_DECREF(nameStr);
-            Py_DECREF(pyValue);
-            ok = true;
-        }
-    } catch (const boost::python::error_already_set&) {
-        PyErr_Print();
-        PyErr_Clear();
+        } else
+            std::cerr << "ERROR: Null PyObject" << std::endl;
+    } catch (std::runtime_error& e) {
+        std::cerr << "ERROR: " << e.what() << std::endl;
     }
 
     state = PyEval_SaveThread();
@@ -431,8 +434,7 @@ bool PythonInterpreter::runScript(const char* code) {
 }
 
 bool PythonInterpreter::isEmptyCommand(const std::string& command) {
-    for (std::string::const_iterator it = command.begin();
-            it != command.end(); it++) {
+    for (auto it = command.begin(); it != command.end(); it++) {
         if (isspace(*it))
             continue;
         else if (*it == '#')

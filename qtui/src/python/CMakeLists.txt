@@ -2,7 +2,7 @@ SET ( FILES
   commandedit
   pythonconsole
   pythoninterpreter
-  pythonoutputstream
+  ../../../python/gui/embedding
   )
 FOREACH( FILE ${FILES} )
   SET( SOURCES ${SOURCES} ${CMAKE_CURRENT_SOURCE_DIR}/${FILE})
