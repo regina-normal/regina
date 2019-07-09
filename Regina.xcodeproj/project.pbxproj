@@ -8509,7 +8509,6 @@
 				057118C919B30A13009FEDC5 /* Copy SnapPea Census Data */,
 				054208951DF0D1460018AB24 /* Copy Syntax Highlighting */,
 				05AB5ED81B942354007034C8 /* Copy Frameworks */,
-				05B4D2FE22A0CF3400B7B11C /* Copy Boost.Python */,
 				0514CAE31D9C9A5800EDB2E6 /* Sign Frameworks */,
 				05AB5EDE1B942813007034C8 /* Copy Qt Plugins (platforms) */,
 				05AB5EE51B942884007034C8 /* Copy Qt Plugins (imageformats) */,
@@ -8765,7 +8764,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Boost.Python was copied manually, and so must be signed manually.\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/boost-python*.framework\n\n# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
+			shellScript = "# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8779,7 +8778,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "module=\"${BUILT_PRODUCTS_DIR}\"/engine.so\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    boostframework=boost-python37\n    ;;\n  *)\n    boostframework=boost-python27\n    ;;\nesac\n\ninstall_name_tool -change @rpath/\"$boostframework\".framework/Versions/A/\"$boostframework\" @loader_path/../../../Frameworks/\"$boostframework\".framework/Versions/A/\"$boostframework\" \"${module}\"\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib \"${module}\"\n";
+			shellScript = "module=\"${BUILT_PRODUCTS_DIR}\"/engine.so\n\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib \"${module}\"\n";
 		};
 		052DB59E1D9E587C00EDEA68 /* Sign Utilities */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8883,24 +8882,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyx=\"-py3\"\n    ;;\n  *)\n    pyx=\"-py2\"\n    ;;\nesac\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.{py,session}; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
-		};
-		05B4D2FE22A0CF3400B7B11C /* Copy Boost.Python */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-			);
-			name = "Copy Boost.Python";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "src=\"${HOME}/Library/Frameworks/osx\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Frameworks\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyver=37\n    ;;\n  *)\n    pyver=27\n    ;;\nesac\n\nrm -rf \"$dest/boost-python$pyver.framework\"\ncp -R \"$src/boost-python$pyver.framework\" \"$dest\"\n";
 		};
 		05DADB022192543B00DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10918,8 +10899,6 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					Python2.7,
-					"-framework",
-					"boost-python27-static",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
@@ -10967,8 +10946,6 @@
 				OTHER_LDFLAGS = (
 					"-framework",
 					Python2.7,
-					"-framework",
-					"boost-python27-static",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
@@ -11666,11 +11643,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = (
-					"-framework",
-					"boost-python27",
-					"-lpython2.7",
-				);
+				OTHER_LDFLAGS = "-lpython2.7";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
@@ -11721,11 +11694,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = (
-					"-framework",
-					"boost-python27",
-					"-lpython2.7",
-				);
+				OTHER_LDFLAGS = "-lpython2.7";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
@@ -12264,11 +12233,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = (
-					"-framework",
-					"boost-python37",
-					"-lpython3.7",
-				);
+				OTHER_LDFLAGS = "-lpython3.7";
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				WRAPPER_EXTENSION = app;
@@ -12314,8 +12279,6 @@
 					Python3.6,
 					"-framework",
 					XZ,
-					"-framework",
-					"boost-python36-static",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
