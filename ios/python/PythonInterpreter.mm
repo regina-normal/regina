@@ -41,6 +41,11 @@
 #import <Python.h>
 #import "../python/pybind11/pybind11.h"
 
+// Convert the Python version x.y into the form "x" "y":
+#define REGINA_MAKE_STR(x) #x
+#define REGINA_STR(x) REGINA_MAKE_STR(x)
+#define REGINA_PY_VERSION REGINA_STR(PY_MAJOR_VERSION) REGINA_STR(PY_MINOR_VERSION)
+
 // Declare the entry point for Regina's python module:
 #if PY_MAJOR_VERSION >= 3
     #define REGINA_PYTHON_INIT PyInit_regina
@@ -189,7 +194,7 @@ class PythonOutputStreamObjC : public regina::python::PythonOutputStream {
 
             std::string newPath("PYTHONPATH=");
             newPath += pyZipDir;
-            newPath += "/python" BOOST_PP_STRINGIZE(BOOST_PP_CAT(PY_MAJOR_VERSION, PY_MINOR_VERSION)) ".zip";
+            newPath += "/python" REGINA_PY_VERSION ".zip";
             putenv(strdup(newPath.c_str()));
 
             // Make sure Python can find Regina's module also.

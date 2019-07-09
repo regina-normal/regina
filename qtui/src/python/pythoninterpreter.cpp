@@ -53,6 +53,11 @@
 // For regina's to_held_type:
 #include "../python/safeheldtype.h"
 
+// Convert the Python version x.y into the form "x" "y":
+#define REGINA_MAKE_STR(x) #x
+#define REGINA_STR(x) REGINA_MAKE_STR(x)
+#define REGINA_PY_VERSION REGINA_STR(PY_MAJOR_VERSION) REGINA_STR(PY_MINOR_VERSION)
+
 /**
  * WARNING: We never call Py_Finalize().
  *
@@ -104,7 +109,7 @@ PythonInterpreter::PythonInterpreter(
         newPath += regModuleDir;
         newPath += ';';
         newPath += regModuleDir;
-        newPath += "/python" BOOST_PP_STRINGIZE(BOOST_PP_CAT(PY_MAJOR_VERSION, PY_MINOR_VERSION)) ".zip;";
+        newPath += "/python" REGINA_PY_VERSION ".zip;";
 
         if (oldPath)
             newPath += oldPath;
