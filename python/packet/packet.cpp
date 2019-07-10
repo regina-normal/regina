@@ -41,6 +41,7 @@ using regina::ChildIterator;
 using regina::Packet;
 using regina::PacketChildren;
 using regina::PacketDescendants;
+using regina::PacketShell;
 using regina::SubtreeIterator;
 
 namespace {
@@ -159,6 +160,12 @@ void addPacket(pybind11::module& m) {
             p.writeXMLFile(std::cout);
         })
         .def("internalID", &Packet::internalID)
+        .def("__eq__", [](const Packet* p, PacketShell s) {
+            return (s == p);
+        }, pybind11::is_operator())
+        .def("__ne__", [](const Packet* p, PacketShell s) {
+            return (s != p);
+        }, pybind11::is_operator())
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

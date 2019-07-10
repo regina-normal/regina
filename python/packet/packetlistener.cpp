@@ -36,6 +36,7 @@
 
 using regina::Packet;
 using regina::PacketListener;
+using regina::PacketShell;
 
 class PyPacketListener : public PacketListener {
     public:
@@ -55,7 +56,7 @@ class PyPacketListener : public PacketListener {
             PYBIND11_OVERLOAD(void, PacketListener,
                 packetWasRenamed, packet);
         }
-        void packetToBeDestroyed(Packet* packet) override {
+        void packetToBeDestroyed(PacketShell packet) override {
             PYBIND11_OVERLOAD(void, PacketListener,
                 packetToBeDestroyed, packet);
         }
@@ -96,9 +97,27 @@ class PyPacketListener : public PacketListener {
 };
 
 void addPacketListener(pybind11::module& m) {
-    auto c = pybind11::class_<regina::PacketListener, PyPacketListener>(
+    auto s = pybind11::class_<PacketShell>(m, "PacketShell")
+        .def(pybind11::init<const Packet*>())
+        .def(pybind11::init<const PacketShell&>())
+        .def("label", &PacketShell::label)
+        .def("humanLabel", &PacketShell::humanLabel)
+        .def("hasTag", &PacketShell::hasTag)
+        .def("hasTags", &PacketShell::hasTags)
+        .def("tags", &PacketShell::tags) /* returns python set */
+        .def("internalID", &PacketShell::internalID)
+        .def("__eq__", [](const PacketShell& s, const Packet* p) {
+            return (s == p);
+        }, pybind11::is_operator())
+        .def("__ne__", [](const PacketShell& s, const Packet* p) {
+            return (s != p);
+        }, pybind11::is_operator())
+        ;
+    regina::python::add_eq_operators(s);
+
+    auto l = pybind11::class_<PacketListener, PyPacketListener>(
             m, "PacketListener")
-        .def(pybind11::init<>())
+        .def(pybind11::init<>()) // necessary for pure python subclasses
         .def("unregisterFromAllPackets",
             &PacketListener::unregisterFromAllPackets)
         .def("packetToBeChanged", &PacketListener::packetToBeChanged)
@@ -115,7 +134,7 @@ void addPacketListener(pybind11::module& m) {
         .def("childToBeRenamed", &PacketListener::childToBeRenamed)
         .def("childWasRenamed", &PacketListener::childWasRenamed)
         ;
-    regina::python::add_eq_operators(c);
+    regina::python::add_eq_operators(l);
 
     m.attr("NPacketListener") = m.attr("PacketListener");
 }
