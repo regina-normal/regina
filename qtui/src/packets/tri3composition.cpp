@@ -281,7 +281,7 @@ void Tri3CompositionUI::refresh() {
     details->setRootIsDecorated(foundInnerChildren);
 }
 
-void Tri3CompositionUI::packetToBeDestroyed(regina::Packet*) {
+void Tri3CompositionUI::packetToBeDestroyed(regina::PacketShell) {
     // Our current isomorphism test triangulation is about to be
     // destroyed.
     isoTest->setCurrentIndex(0); // (i.e., None)

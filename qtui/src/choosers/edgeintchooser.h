@@ -38,7 +38,7 @@
 #ifndef __EDGEINTCHOOSER_H
 #define __EDGEINTCHOOSER_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 #include "triangulation/forward.h"
 
 #include <QDialog>
@@ -135,9 +135,9 @@ class EdgeIntChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*);
-        void packetWasChanged(regina::Packet*);
-        void packetToBeDestroyed(regina::Packet*);
+        void packetToBeChanged(regina::Packet*) override;
+        void packetWasChanged(regina::Packet*) override;
+        void packetToBeDestroyed(regina::PacketShell) override;
 
     private:
         /**
@@ -204,7 +204,7 @@ inline void EdgeIntChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void EdgeIntChooser::packetToBeDestroyed(regina::Packet*) {
+inline void EdgeIntChooser::packetToBeDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
 }

@@ -37,7 +37,7 @@
 #ifndef __SNAPPEAUI_H
 #define __SNAPPEAUI_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 #include "../packettabui.h"
 
 class ClickableLabel;
@@ -122,16 +122,17 @@ class SnapPeaHeaderUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
         /**
          * PacketListener overrides.
          */
-        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+            override;
         void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor);
+            bool inParentDestructor) override;
 
         /**
          * Allow other UIs to access the summary information.
@@ -153,7 +154,7 @@ class SnapPeaHeaderUI : public QObject, public PacketViewerTab,
         /**
          * Allow GUI updates from a non-GUI thread.
          */
-        void customEvent(QEvent* event);
+        void customEvent(QEvent* event) override;
 };
 
 inline PacketEditIface* SnapPeaUI::getEditIface() {

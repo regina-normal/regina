@@ -39,7 +39,7 @@
 #define __SIMPLEXCHOOSER_H
 
 #include "choosers/facename.h"
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 #include "triangulation/forward.h"
 
 #include <QBoxLayout>
@@ -129,9 +129,9 @@ class SimplexChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*);
-        void packetWasChanged(regina::Packet*);
-        void packetToBeDestroyed(regina::Packet*);
+        void packetToBeChanged(regina::Packet*) override;
+        void packetWasChanged(regina::Packet*) override;
+        void packetToBeDestroyed(regina::PacketShell) override;
 
     private:
         /**
@@ -200,7 +200,7 @@ inline void SimplexChooser<dim>::packetWasChanged(regina::Packet*) {
 }
 
 template <int dim>
-inline void SimplexChooser<dim>::packetToBeDestroyed(regina::Packet*) {
+inline void SimplexChooser<dim>::packetToBeDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
 }

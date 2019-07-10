@@ -37,8 +37,6 @@
 #ifndef __SURFACESCOMPATUI_H
 #define __SURFACESCOMPATUI_H
 
-#include "packet/packetlistener.h"
-
 #include "../packettabui.h"
 
 class MessageLayer;
@@ -56,8 +54,7 @@ namespace regina {
 /**
  * A normal surface page for viewing surface coordinates.
  */
-class SurfacesCompatibilityUI : public QObject, public PacketViewerTab,
-        public regina::PacketListener {
+class SurfacesCompatibilityUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:

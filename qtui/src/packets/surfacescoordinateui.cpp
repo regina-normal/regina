@@ -631,7 +631,7 @@ void SurfacesCoordinateUI::setReadWrite(bool readWrite) {
     updateActionStates();
 }
 
-void SurfacesCoordinateUI::packetToBeDestroyed(Packet*) {
+void SurfacesCoordinateUI::packetToBeDestroyed(regina::PacketShell) {
     // Our currently applied filter is about to be destroyed.
     filter->setCurrentIndex(0); // (i.e., None)
     refresh();

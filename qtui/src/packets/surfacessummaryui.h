@@ -37,8 +37,6 @@
 #ifndef __SURFACESSUMMARYUI_H
 #define __SURFACESSUMMARYUI_H
 
-#include "packet/packetlistener.h"
-
 #include "../packettabui.h"
 
 namespace regina {
@@ -51,8 +49,7 @@ class QTreeWidget;
 /**
  * A normal surface page for viewing surface coordinates.
  */
-class SurfacesSummaryUI : public QObject, public PacketViewerTab,
-        public regina::PacketListener {
+class SurfacesSummaryUI : public QObject, public PacketViewerTab {
     Q_OBJECT
 
     private:

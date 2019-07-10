@@ -37,7 +37,7 @@
 #ifndef __SURFACESCOORDINATEUI_H
 #define __SURFACESCOORDINATEUI_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 #include "surfaces/normalsurfaces.h"
 
 #include "../packettabui.h"
@@ -174,21 +174,21 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
          * PacketEditorTab overrides.
          * Note that refresh() is a slot now.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
-        void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        const QLinkedList<QAction*>& getPacketTypeActions() override;
+        void setReadWrite(bool readWrite) override;
 
         /**
          * PacketListener overrides.
          */
-        void packetToBeDestroyed(regina::Packet* packet);
+        void packetToBeDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**
          * More PacketEditorTab overrides.
          */
-        void refresh();
+        void refresh() override;
 
         /**
          * Surface list actions.

@@ -38,7 +38,7 @@
 #ifndef __BOUNDARY3CHOOSER_H
 #define __BOUNDARY3CHOOSER_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 #include "triangulation/forward.h"
 
 #include <QDialog>
@@ -128,9 +128,9 @@ class BoundaryComponent3Chooser :
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*);
-        void packetWasChanged(regina::Packet*);
-        void packetToBeDestroyed(regina::Packet*);
+        void packetToBeChanged(regina::Packet*) override;
+        void packetWasChanged(regina::Packet*) override;
+        void packetToBeDestroyed(regina::PacketShell) override;
 
     private:
         /**
@@ -194,7 +194,8 @@ inline void BoundaryComponent3Chooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void BoundaryComponent3Chooser::packetToBeDestroyed(regina::Packet*) {
+inline void BoundaryComponent3Chooser::packetToBeDestroyed(
+        regina::PacketShell) {
     clear();
     options_.clear();
 }

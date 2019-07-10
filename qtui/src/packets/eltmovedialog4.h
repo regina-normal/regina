@@ -39,7 +39,7 @@
 #define __ELTMOVEDIALOG4_H
 
 #include "triangulation/forward.h"
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #include <QDialog>
 #include <vector>
@@ -107,9 +107,9 @@ class EltMoveDialog4 : public QDialog, public regina::PacketListener {
         /**
          * Update the overview information if the triangulation changes.
          */
-        void packetWasRenamed(regina::Packet*);
-        void packetWasChanged(regina::Packet*);
-        void packetToBeDestroyed(regina::Packet*);
+        void packetWasRenamed(regina::Packet*) override;
+        void packetWasChanged(regina::Packet*) override;
+        void packetToBeDestroyed(regina::PacketShell) override;
 
     protected slots:
         /**

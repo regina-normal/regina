@@ -269,7 +269,7 @@ void PacketPane::packetWasRenamed(regina::Packet*) {
         frame->renameWindow(packet->humanLabel().c_str());
 }
 
-void PacketPane::packetToBeDestroyed(regina::Packet*) {
+void PacketPane::packetToBeDestroyed(regina::PacketShell) {
     // Assume it's this packet.
     close();
 }
