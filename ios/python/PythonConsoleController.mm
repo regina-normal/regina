@@ -53,6 +53,8 @@ enum HistoryStyle {
     HistoryError
 };
 
+#pragma mark - Output streams
+
 /**
  * A protocol for objects that can act as Python output streams
  * sys.stdout and/or sys.stderr.
@@ -69,13 +71,38 @@ enum HistoryStyle {
 - (void)processOutput:(const char*)data;
 @end
 
+/**
+ * A C++ wrapper around an objective-C PythonOutputStream.
+ */
+class PythonOutputStreamObjC : public regina::python::PythonOutputStream {
+private:
+    void* _object;
+        /**< The Objective-C delegate that implements processOutput:. */
+    
+public:
+    PythonOutputStreamObjC(void* object) : _object(object) {
+    }
+    
+    virtual void processOutput(const std::string& data) {
+        [(__bridge id)_object processOutput:data.c_str()];
+    }
+};
+
+/**
+ * An output stream that writes data in a plain font to an iOS python console.
+ */
 @interface PythonConsoleStdout : NSObject<PythonOutputStream>
 @property (weak, nonatomic) PythonConsoleController* console;
 @end
 
+/**
+ * An output stream that writes data in an alert font to an iOS python console.
+ */
 @interface PythonConsoleStderr : NSObject<PythonOutputStream>
 @property (weak, nonatomic) PythonConsoleController* console;
 @end
+
+#pragma mark - Python Console
 
 @interface PythonConsoleController () <UITextFieldDelegate> {
     PythonConsoleStdout* outputStream;
@@ -103,19 +130,7 @@ enum HistoryStyle {
 
 @end
 
-class PythonOutputStreamObjC : public regina::python::PythonOutputStream {
-private:
-    void* _object;
-    /**< The Objective-C delegate that implements processOutput:. */
-    
-public:
-    PythonOutputStreamObjC(void* object) : _object(object) {
-    }
-    
-    virtual void processOutput(const std::string& data) {
-        [(__bridge id)_object processOutput:data.c_str()];
-    }
-};
+#pragma mark - Implementation Details
 
 @implementation PythonConsoleStdout
 - (void)processOutput:(const char *)data
