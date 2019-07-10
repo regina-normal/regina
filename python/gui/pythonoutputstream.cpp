@@ -36,6 +36,9 @@
 namespace regina {
 namespace python {
 
+namespace regina {
+namespace python {
+
 void PythonOutputStream::write(const std::string& data) {
     buffer.append(data);
 

@@ -68,6 +68,25 @@
 #define REGINA_STR(x) REGINA_MAKE_STR(x)
 #define REGINA_PY_VERSION REGINA_STR(PY_MAJOR_VERSION) REGINA_STR(PY_MINOR_VERSION)
 
+#ifdef PYTHON_STATIC_LINK
+    // Regina's python module is statically linked into the executable
+    // (as opposed to dynamically loaded in the usual way by the python
+    // import mechanism).
+
+    // Declare the entry point for Regina's python module:
+    #if PY_MAJOR_VERSION >= 3
+        #define REGINA_PYTHON_INIT PyInit_regina
+    #else
+        #define REGINA_PYTHON_INIT initregina
+    #endif
+    PyMODINIT_FUNC REGINA_PYTHON_INIT();
+#endif
+
+// Convert the Python version x.y into the form "x" "y":
+#define REGINA_MAKE_STR(x) #x
+#define REGINA_STR(x) REGINA_MAKE_STR(x)
+#define REGINA_PY_VERSION REGINA_STR(PY_MAJOR_VERSION) REGINA_STR(PY_MINOR_VERSION)
+
 /**
  * WARNING: We never call Py_Finalize().
  *
