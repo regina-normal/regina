@@ -185,7 +185,7 @@ void Script::packetWasRenamed(Packet*) {
     ChangeEventSpan span(this);
 }
 
-void Script::packetToBeDestroyed(Packet* packet) {
+void Script::packetToBeDestroyed(PacketShell packet) {
     // We know the script will change, because one of our variables is
     // listening on this packet.
     ChangeEventSpan span(this);

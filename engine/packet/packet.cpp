@@ -38,7 +38,6 @@
 #include <boost/iostreams/filter/gzip.hpp>
 #include "core/engine.h"
 #include "packet/packet.h"
-#include "packet/packetlistener.h"
 #include "packet/script.h"
 #include "utilities/base64.h"
 #include "utilities/stringutils.h"
@@ -765,6 +764,31 @@ std::string Packet::internalID() const {
     std::string ans = id;
     delete[] id;
     return ans;
+}
+
+PacketListener::~PacketListener() {
+    unregisterFromAllPackets();
+}
+
+void PacketListener::unregisterFromAllPackets() {
+    std::set<Packet*>::iterator it, next;
+
+    it = packets.begin();
+    next = it;
+    while (it != packets.end()) {
+        // INV: next == it.
+
+        // Step forwards before we actually deregister (*it), since
+        // the deregistration will remove (*it) from the set and
+        // invalidate the iterator.
+        next++;
+
+        // This deregistration removes (*it) from the set, but other
+        // iterators (i.e., next) are not invalidated.
+        (*it)->unlisten(this);
+
+        it = next;
+    }
 }
 
 } // namespace regina

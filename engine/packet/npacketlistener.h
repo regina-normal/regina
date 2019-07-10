@@ -39,9 +39,9 @@
 #define __NPACKETLISTENER_H
 #endif
 
-#warning This header is deprecated; please use packet/packetlistener.h instead.
+#warning This header is deprecated; please use packet/packet.h instead.
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #endif
 
