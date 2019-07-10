@@ -263,11 +263,11 @@ class REGINA_API NormalHypersurfaces : public Packet {
          */
         const NormalHypersurface* hypersurface(size_t index) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const;
+        virtual bool dependsOnParent() const override;
 
         /**
          * Sorts the hypersurfaces in this list according to the given
@@ -454,8 +454,8 @@ class REGINA_API NormalHypersurfaces : public Packet {
         NormalHypersurfaces(HyperCoords coords, HyperList which,
             HyperAlg algorithm);
 
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 
         /**
          * An output iterator used to insert hypersurfaces into an

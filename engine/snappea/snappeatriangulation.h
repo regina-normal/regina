@@ -1317,9 +1317,9 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          */
         /*@{*/
 
-        virtual std::string snapPea() const;
-        virtual void snapPea(std::ostream& out) const;
-        virtual bool saveSnapPea(const char* filename) const;
+        virtual std::string snapPea() const override;
+        virtual void snapPea(std::ostream& out) const override;
+        virtual bool saveSnapPea(const char* filename) const override;
 
         /*@}*/
         /**
@@ -1327,10 +1327,10 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          */
         /*@{*/
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
 
-        virtual bool dependsOnParent() const;
+        virtual bool dependsOnParent() const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
 
@@ -1340,13 +1340,13 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          */
         /*@{*/
 
-        virtual void packetWasChanged(Packet* packet);
+        virtual void packetWasChanged(Packet* packet) override;
 
         /*@}*/
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 
     private:
         /**
