@@ -504,4 +504,9 @@ PyObject* PythonInterpreter::extractErrMsg() {
     return ans;
 }
 
+void PythonInterpreter::flush() {
+    output.flush();
+    errors.flush();
+}
+
 } } // namespace regina::python

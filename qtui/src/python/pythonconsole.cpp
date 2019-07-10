@@ -490,8 +490,7 @@ void PythonConsole::processCommand() {
     bool done = interpreter->executeLine(cmd.toUtf8().constData());
 
     // Finish the output.
-    output->flush();
-    error->flush();
+    interpreter->flush();
 
     // Prepare for a new command.
     if (ReginaPrefSet::global().pythonAutoIndent) {

@@ -129,6 +129,11 @@ class PythonInterpreter {
          */
         bool runScript(const regina::Script* script);
 
+        /**
+         * Flushes the standard output and error streams.
+         */
+        void flush();
+
     private:
         /**
          * Run the given Python code in Python's main namespace.

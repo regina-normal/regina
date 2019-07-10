@@ -204,7 +204,6 @@
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
 		051CEA941F98995D00971F25 /* Link.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA961F98995D00971F25 /* Link.storyboard */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
-		05249E9E1DBB50B7001FE29E /* PythonInterpreterObjC.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05249E9B1DBB50AD001FE29E /* PythonInterpreterObjC.mm */; };
 		05249EA01DBB8D89001FE29E /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */; };
 		05249EA51DBC169D001FE29E /* globalarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */; };
 		05249EA61DBC16A1001FE29E /* safeheldtype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052942D51C5CDCBF0011C1E6 /* safeheldtype.cpp */; };
@@ -2734,8 +2733,6 @@
 		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
-		05249E9A1DBB50AD001FE29E /* PythonInterpreterObjC.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonInterpreterObjC.h; sourceTree = "<group>"; };
-		05249E9B1DBB50AD001FE29E /* PythonInterpreterObjC.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonInterpreterObjC.mm; sourceTree = "<group>"; };
 		05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
 		052774111C55743E00140918 /* hypercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercreator.h; sourceTree = "<group>"; };
@@ -5435,8 +5432,6 @@
 				054209151DF0E7E60018AB24 /* NSMatcher.mm */,
 				0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */,
 				0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */,
-				05249E9A1DBB50AD001FE29E /* PythonInterpreterObjC.h */,
-				05249E9B1DBB50AD001FE29E /* PythonInterpreterObjC.mm */,
 				05FF4D3A1DB6BC1E0056D1EA /* SyntaxHighlighter.h */,
 				05FF4D3B1DB6BC1E0056D1EA /* SyntaxHighlighter.mm */,
 			);
@@ -9535,7 +9530,6 @@
 				05F0A0551DBF0B7000117BFC /* decompose.cpp in Sources */,
 				05AA71EF1FB17E0600186E30 /* flype.cpp in Sources */,
 				0568742E20C5D86B001C435B /* pass.cpp in Sources */,
-				05249E9E1DBB50B7001FE29E /* PythonInterpreterObjC.mm in Sources */,
 				05A067441DFA68470047872E /* blockedsfsloop.cpp in Sources */,
 				05C1BEBC1DCA7CB3007C946B /* boundary6.cpp in Sources */,
 				05249EB21DBC16BE001FE29E /* gluingpermsearcher3.cpp in Sources */,
