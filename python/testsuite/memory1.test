@@ -31,99 +31,88 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-def watcher(p):
-    # Returns a packet that can be used as a proxy for testing
-    # whether or not p has been destroyed.
-    c = Container()
-    p.insertChildLast(c)
-    return c
-
-def ensureAlive(watcher):
-    try:
-        watcher.label()
-    except:
-        print('ERROR: ensureAlive failed')
-
-def ensureDestroyed(watcher):
-    try:
-        watcher.label()
-        print('ERROR: ensureDestroyed failed')
-    except:
-        pass
-
+class Watcher(PacketListener):
+    def __init__(self, packet):
+        PacketListener.__init__(self)
+        packet.listen(self)
+    def packetToBeDestroyed(self, packet):
+        print('Destroying: ' + packet.label())
 
 
 print('Insertion case')
-c = Container(); cw = watcher(c)
-t = Triangulation3(); t.newTetrahedron(); tw = watcher(t)
+print('Step 1')
+c = Container(); cw = Watcher(c); c.setLabel('c')
+print('Step 2')
+t = Triangulation3(); t.newTetrahedron(); tw = Watcher(t); t.setLabel('t')
+print('Step 3')
 c.insertChildLast(t)
-ensureAlive(cw); ensureAlive(tw)
+print('Step 4')
 t = None
-ensureAlive(cw); ensureAlive(tw)
-c = None
-ensureDestroyed(cw); ensureDestroyed(tw)
+print('Step 5')
+c = None # Should destroy both c and t
+print('Step 6')
 
 print('Root destruction case')
-a = Container(); aw = watcher(a)
-b = Triangulation3(); bw = watcher(b)
+print('Step 1')
+a = Container(); aw = Watcher(a); a.setLabel('a')
+print('Step 2')
+b = Triangulation3(); bw = Watcher(b); b.setLabel('b')
+print('Step 3')
 a.insertChildLast(b)
-ensureAlive(aw); ensureAlive(bw)
-a = None
-try:
-    print(b)
-except:
-    pass
-ensureDestroyed(aw); ensureDestroyed(bw)
+print('Step 4')
+a = None # Should destroy both a and b
+print('Step 5')
 
 print('Orphan case')
-p = Container(); pw = watcher(p)
-q = Triangulation3(); qw = watcher(q)
+print('Step 1')
+p = Container(); pw = Watcher(p); p.setLabel('p')
+print('Step 2')
+q = Triangulation3(); qw = Watcher(q); q.setLabel('q')
+print('Step 3')
 p.insertChildLast(q)
-ensureAlive(pw); ensureAlive(qw)
-
+print('Step 4')
 q.makeOrphan()
-ensureAlive(pw); ensureAlive(qw)
-
-p = None
-ensureDestroyed(pw); ensureAlive(qw)
-
-q = None
-ensureDestroyed(qw)
+print('Step 5')
+p = None # Should destroy p
+print('Step 6')
+q = None # Should destroy q
+print('Step 7')
 
 # An example of makeOrphan where we never held the reference to the
 # child in the first place.
 print('Multiple orphan case')
-x = Example3.lens(8,3); xw = watcher(x)
+print('Step 1')
+x = Example3.lens(8,3); xw = Watcher(x); x.setLabel('x')
+print('Step 2')
 x.connectedSumDecomposition()
-y = x.lastChild(); yw = watcher(y)
-ensureAlive(xw); ensureAlive(yw)
-
+print('Step 3')
+y = x.lastChild(); yw = Watcher(y); y.setLabel('y')
+print('Step 4')
 y.makeOrphan()
-ensureAlive(xw); ensureAlive(yw)
-
-x = None
-ensureDestroyed(xw); ensureAlive(yw)
-
-y = None
-ensureDestroyed(xw); ensureDestroyed(yw)
+print('Step 5')
+x = None # Should destroy x
+print('Step 6')
+y = None # Should destroy y
+print('Step 7')
 
 # An example like above, but where we hold many references to the same
 # child packet.
-f = Example3.lens(8,3); fw = watcher(f)
+print('Many references case')
+print('Step 1')
+f = Example3.lens(8,3); fw = Watcher(f); f.setLabel('f')
+print('Step 2')
 f.connectedSumDecomposition()
-g = f.lastChild(); gw = watcher(g)
-h = f.lastChild(); hw = watcher(h)
-ensureAlive(fw); ensureAlive(gw); ensureAlive(hw)
-
+print('Step 3')
+g = f.lastChild(); gw = Watcher(g); g.setLabel('g')
+print('Step 4')
+h = f.lastChild(); hw = Watcher(h) # h is the same packet as g
+print('Step 5')
 g.makeOrphan()
-ensureAlive(fw); ensureAlive(gw); ensureAlive(hw)
-
-f = None
-ensureDestroyed(fw); ensureAlive(gw); ensureAlive(hw)
-
+print('Step 6')
+f = None # Should destroy f
+print('Step 7')
 g = None
-ensureDestroyed(fw); ensureAlive(gw); ensureAlive(hw)
-
-h = None
-ensureDestroyed(fw); ensureDestroyed(gw); ensureDestroyed(hw)
+print('Step 8')
+h = None # Should destroy g (and there are two watchers now)
+print('Step 9')
 
