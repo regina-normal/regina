@@ -535,17 +535,9 @@ void ScriptUI::updateRemoveState() {
 void ScriptUI::execute() {
     endEdit();
 
-    // Set up the variable list.
-    PythonVariableList vars;
-
-    unsigned nVars = script->countVariables();
-    for (unsigned i = 0; i < nVars; i++)
-        vars.push_back(PythonVariable(script->variableName(i).c_str(),
-            script->variableValue(i)));
-
     // Run the script.
-    enclosingPane->getMainWindow()->getPythonManager().launchPythonConsole(ui,
-            editWidget->toPlainText() + "\n\n", vars);
+    enclosingPane->getMainWindow()->getPythonManager().launchPythonConsole(
+        ui, script);
 }
 
 void ScriptUI::updatePreferences() {

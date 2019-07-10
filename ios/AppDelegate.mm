@@ -51,8 +51,8 @@
 
     // Make sure that Regina knows where to find its internal data files.
     NSString* path = [[NSBundle mainBundle] resourcePath];
-    const char* home = [path UTF8String];
-    regina::GlobalDirs::setDirs(home, "", home);
+    std::string home = [path UTF8String];
+    regina::GlobalDirs::setDirs(home, home + "/python", home);
 
     // If an URL was passed (e.g., from an "Open with..." action), then ask the
     // system to go ahead and called application:openURL:sourceApplication:annotation.

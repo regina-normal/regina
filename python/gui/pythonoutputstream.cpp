@@ -32,6 +32,9 @@
 
 #include "pythonoutputstream.h"
 
+namespace regina {
+namespace python {
+
 void PythonOutputStream::write(const std::string& data) {
     buffer.append(data);
 
@@ -49,3 +52,24 @@ void PythonOutputStream::flush() {
     }
 }
 
+void PythonOutputStream::addBindings() {
+    boost::python::class_<PythonOutputStream, boost::noncopyable>
+            ("PythonOutputStream", boost::python::no_init)
+        .def("write", &PythonOutputStream::write)
+        .def("flush", &PythonOutputStream::flush);
+}
+
+void PythonOutputStream::install(const char* streamName) {
+    try {
+        boost::python::reference_existing_object::
+            apply<PythonOutputStream*>::type conv;
+
+        if (PySys_SetObject(const_cast<char*>(streamName), conv(this)))
+            throw boost::python::error_already_set();
+    } catch (const boost::python::error_already_set&) {
+        PyErr_Print();
+        PyErr_Clear();
+    }
+}
+
+} } // namespace regina::python

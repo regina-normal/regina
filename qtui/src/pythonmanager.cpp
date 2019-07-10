@@ -105,7 +105,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 }
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        const QString& script, const PythonVariableList& initialVars) {
+        regina::Script* script) {
     PythonConsole* ans = new PythonConsole(parent, this);
 
     ans->blockInput(parent->QObject::tr("Initialising..."));
@@ -114,17 +114,18 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->show();
     QCoreApplication::instance()->processEvents();
 
-    // First set up completion
+    // First set up completion.
     ans->executeLine("import rlcompleter");
     ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
 
     // Initialise the python interpreter.
     if (ans->importRegina())
         ans->addOutput(parent->QObject::tr("\n"));
-    for (PythonVariableList::const_iterator it = initialVars.begin();
-            it != initialVars.end(); it++)
-        ans->setVar((*it).name, (*it).value);
-    ans->executeScript(script, parent->QObject::tr("user script"));
+
+    // Run the given script.
+    ans->addInfo("Running script...");
+
+    ans->runScript(script);
 
     // All ready!
     ans->addInfo(parent->QObject::tr("\nReady."));

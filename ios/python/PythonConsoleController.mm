@@ -31,9 +31,10 @@
  **************************************************************************/
 
 #import "PythonConsoleController.h"
-#import "PythonInterpreter.h"
 #import "TextHelper.h"
 #import "packet/script.h"
+#import "../python/gui/pythoninterpreter.h"
+#import "../python/gui/pythonoutputstream.h"
 
 // Information is displayed in dark goldenrod:
 static UIColor* infoColour = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
@@ -52,16 +53,58 @@ enum HistoryStyle {
     HistoryError
 };
 
+#pragma mark - Output streams
+
+/**
+ * A protocol for objects that can act as Python output streams
+ * sys.stdout and/or sys.stderr.
+ */
+@protocol PythonOutputStream <NSObject>
+@required
+/**
+ * Process a chunk of data that was sent to this output stream.
+ * This routine might for instance display the data to the user
+ * or write it to a log file.
+ *
+ * You should assume that \a data is encoded in UTF-8.
+ */
+- (void)processOutput:(const char*)data;
+@end
+
+/**
+ * A C++ wrapper around an objective-C PythonOutputStream.
+ */
+class PythonOutputStreamObjC : public regina::python::PythonOutputStream {
+private:
+    void* _object;
+        /**< The Objective-C delegate that implements processOutput:. */
+    
+public:
+    PythonOutputStreamObjC(void* object) : _object(object) {
+    }
+    
+    virtual void processOutput(const std::string& data) {
+        [(__bridge id)_object processOutput:data.c_str()];
+    }
+};
+
+/**
+ * An output stream that writes data in a plain font to an iOS python console.
+ */
 @interface PythonConsoleStdout : NSObject<PythonOutputStream>
 @property (weak, nonatomic) PythonConsoleController* console;
 @end
 
+/**
+ * An output stream that writes data in an alert font to an iOS python console.
+ */
 @interface PythonConsoleStderr : NSObject<PythonOutputStream>
 @property (weak, nonatomic) PythonConsoleController* console;
 @end
 
+#pragma mark - Python Console
+
 @interface PythonConsoleController () <UITextFieldDelegate> {
-    PythonInterpreter* python;
     PythonConsoleStdout* outputStream;
     PythonConsoleStderr* errorStream;
     UIFont* outputFont;
@@ -87,6 +130,8 @@ enum HistoryStyle {
 
 @end
 
+#pragma mark - Implementation Details
+
 @implementation PythonConsoleStdout
 - (void)processOutput:(const char *)data
 {
@@ -101,7 +146,12 @@ enum HistoryStyle {
 }
 @end
 
-@implementation PythonConsoleController
+@implementation PythonConsoleController {
+    PythonOutputStreamObjC* _outCpp;
+    PythonOutputStreamObjC* _errCpp;
+    
+    regina::python::PythonInterpreter* _interpreter;
+}
 
 + (void)openConsoleFromViewController:(UIViewController *)c root:(regina::Packet *)root item:(regina::Packet *)item script:(regina::Script *)script
 {
@@ -152,20 +202,23 @@ enum HistoryStyle {
     [nc addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-    python = [[PythonInterpreter alloc] initWithOut:outputStream err:errorStream];
-    [python importRegina];
-    [python runCode:"from regina import *; print(regina.welcome())\n"];
+    _outCpp = new PythonOutputStreamObjC((__bridge void*)outputStream);
+    _errCpp = new PythonOutputStreamObjC((__bridge void*)errorStream);
+    
+    _interpreter = new regina::python::PythonInterpreter(*_outCpp, *_errCpp);
+
+    _interpreter->importRegina();
+    _interpreter->executeLine("from regina import *; print(regina.welcome())\n");
     [self processOutput:"\n"];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (self.script) {
             [self appendHistory:@"Running script...\n" style:HistoryInfo];
-            [python runScript:self.script];
-            [python flush];
+            _interpreter->runScript(self.script);
         }
 
         if (self.root) {
-            if ([python setVar:"root" value:self.root]) {
+            if (_interpreter->setVar("root", self.root)) {
                 if (self.root)
                     [self appendHistory:@"The (invisible) root of the packet tree is in the variable [root].\n" style:HistoryInfo];
             } else
@@ -173,7 +226,7 @@ enum HistoryStyle {
         }
 
         if (self.item) {
-            if ([python setVar:"item" value:self.item]) {
+            if (_interpreter->setVar("item", self.item)) {
                 if (self.item)
                     [self appendHistory:[NSString stringWithFormat:@"The selected packet (%@) is in the variable [item].\n",
                                          [NSString stringWithUTF8String:self.item->label().c_str()]] style:HistoryInfo];
@@ -196,6 +249,16 @@ enum HistoryStyle {
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)dealloc
+{
+    NSLog(@"Python interpreter being deallocated");
+    
+    // Delete C++ resources that are not managed by ARC.
+    delete _interpreter;
+    delete _outCpp;
+    delete _errCpp;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -237,8 +300,8 @@ enum HistoryStyle {
     [self appendHistory:toLog style:HistoryInput];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        bool done = [python executeLine:[toRun UTF8String]];
-        [python flush];
+        bool done = _interpreter->executeLine([toRun UTF8String]);
+        _interpreter->flush();
 
         dispatch_async(dispatch_get_main_queue(), ^{
             if (done) {

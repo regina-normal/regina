@@ -35,7 +35,7 @@
 
 #include "regina-config.h"
 #include "file/globaldirs.h"
-#include "packet/packet.h"
+#include "packet/script.h"
 
 #include "pythonoutputstream.h"
 
@@ -53,6 +53,25 @@
 // For regina's to_held_type:
 #include "../python/safeheldtype.h"
 
+#ifdef PYTHON_STATIC_LINK
+    // Regina's python module is statically linked into the executable
+    // (as opposed to dynamically loaded in the usual way by the python
+    // import mechanism).
+
+    // Declare the entry point for Regina's python module:
+    #if PY_MAJOR_VERSION >= 3
+        #define REGINA_PYTHON_INIT PyInit_regina
+    #else
+        #define REGINA_PYTHON_INIT initregina
+    #endif
+    PyMODINIT_FUNC REGINA_PYTHON_INIT();
+#endif
+
+// Convert the Python version x.y into the form "x" "y":
+#define REGINA_MAKE_STR(x) #x
+#define REGINA_STR(x) REGINA_MAKE_STR(x)
+#define REGINA_PY_VERSION REGINA_STR(PY_MAJOR_VERSION) REGINA_STR(PY_MINOR_VERSION)
+
 /**
  * WARNING: We never call Py_Finalize().
  *
@@ -69,46 +88,59 @@
  * operating system, we simply choose to ignore the problem.
  */
 
+namespace regina {
+namespace python {
+
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
 PyThreadState* mainState;
 
-PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
-        PythonOutputStream* pyStdErr) {
+PythonInterpreter::PythonInterpreter(
+        regina::python::PythonOutputStream& pyStdOut,
+        regina::python::PythonOutputStream& pyStdErr) :
+        output(pyStdOut), errors(pyStdErr) {
     std::lock_guard<std::mutex> lock(globalMutex);
 
     // Acquire the global interpreter lock.
     if (pythonInitialised)
         PyEval_AcquireThread(mainState);
     else {
-#if defined(REGINA_INSTALL_WINDOWS) && defined(__MINGW32__)
-        // Assume this is the MS Windows + MinGW + WiX package build,
-        // since nobody else in their right mind would be trying to build
-        // this under windows.
+#ifdef PYTHON_CORE_IN_ZIP
+        // Regina is shipping its own copy of python, which means the
+        // core python libraries are bundled as a zip file.
         //
-        // When using MinGW's own python + boost packages, we need to
-        // manually include the python zip and the path to zlib.pyd on the
-        // python path, *before* the interpreter is initialised.
+        // We need to manually include the python zip and the path to zlib.pyd
+        // on the python path, *before* the first interpreter is initialised.
         //
-        // Here we assume that pythonXY.zip is installed in the same
-        // directory as the executable, and that zlib.pyd is installed
+        // Here we assume that pythonXY.zip and zlib.pyd are installed
         // in the same directory as the regina python module.
-
-        std::string regModuleDir = regina::GlobalDirs::pythonModule();
 
         const char* oldPath = getenv("PYTHONPATH");
         std::string newPath("PYTHONPATH=");
-        newPath += regModuleDir;
-        newPath += ';';
-        newPath += regModuleDir;
-        newPath += "/python" BOOST_PP_STRINGIZE(BOOST_PP_CAT(PY_MAJOR_VERSION, PY_MINOR_VERSION)) ".zip;";
-
+        newPath += regina::GlobalDirs::pythonModule();
+        #if defined(REGINA_INSTALL_WINDOWS)
+            newPath += "/python" REGINA_PY_VERSION ".zip;";
+        #else
+            newPath += "/python" REGINA_PY_VERSION ".zip:";
+        #endif
+        
         if (oldPath)
             newPath += oldPath;
 
         putenv(strdup(newPath.c_str()));
+#endif
+
+#ifdef PYTHON_STATIC_LINK
+        // Regina's python module is statically linked into the GUI; it
+        // is not shipped as a separate module on the filesystem.
+        // Tell python how to find it.
+        if (PyImport_AppendInittab("regina", &REGINA_PYTHON_INIT) == -1) {
+            errors.write("ERROR: PyImport_AppendInittab(\"regina\", ...) "
+                "failed.\n");
+            errors.flush();
+        }
 #endif
 
         Py_Initialize();
@@ -127,8 +159,6 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
         importReginaIntoNamespace(PyModule_GetDict(PyImport_AddModule(
             "__main__")));
 #endif
-
-        pythonInitialised = true;
     }
 
     // Create the new interpreter.
@@ -139,25 +169,12 @@ PythonInterpreter::PythonInterpreter(PythonOutputStream* pyStdOut,
     mainNamespace = PyModule_GetDict(mainModule); // Borrowed ref.
 
     // Redirect stdout and stderr if appropriate.
-    if (pyStdOut || pyStdErr) {
-        try {
-            boost::python::class_<PythonOutputStream, boost::noncopyable>
-                    ("PythonOutputStream", boost::python::no_init)
-                .def("write", &PythonOutputStream::write)
-                .def("flush", &PythonOutputStream::flush);
+    if (! pythonInitialised)
+        regina::python::PythonOutputStream::addBindings();
+    pyStdOut.install("stdout");
+    pyStdErr.install("stderr");
 
-            boost::python::reference_existing_object::
-                apply<PythonOutputStream*>::type conv;
-
-            if (pyStdOut)
-                PySys_SetObject(const_cast<char*>("stdout"), conv(pyStdOut));
-            if (pyStdErr)
-                PySys_SetObject(const_cast<char*>("stderr"), conv(pyStdErr));
-        } catch (const boost::python::error_already_set&) {
-            PyErr_Print();
-            PyErr_Clear();
-        }
-    }
+    pythonInitialised = true;
 
     // Release the global interpreter lock.
     PyEval_SaveThread();
@@ -319,7 +336,11 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         Py_XDECREF(errStr2);
         state = PyEval_SaveThread();
 
-        pleaseReport("Compile error details are not available.");
+        errors.write("ERROR: Python compile error details "
+            "are not available.\n");
+        errors.write("Please report this to the authors, "
+            "since this should never occur.\n");
+        errors.flush();
 
         delete[] cmdBuffer;
         currentCode.clear();
@@ -366,8 +387,10 @@ bool PythonInterpreter::importRegina() {
 }
 
 bool PythonInterpreter::importReginaIntoNamespace(PyObject* useNamespace) {
+#ifndef PYTHON_STATIC_LINK
     // Adjust the python path if we need to.
     prependReginaToSysPath();
+#endif
 
     // Import the module.
     try {
@@ -399,10 +422,16 @@ bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
 #else
             PyObject* nameStr = PyString_FromString(name); // New ref.
 #endif
-            PyDict_SetItem(mainNamespace, nameStr, pyValue);
+            if (PyDict_SetItem(mainNamespace, nameStr, pyValue)) {
+                PyErr_Print();
+                PyErr_Clear();
+            } else
+                ok = true;
             Py_DECREF(nameStr);
             Py_DECREF(pyValue);
-            ok = true;
+        } else {
+            errors.write("ERROR: Null PyObject\n");
+            errors.flush();
         }
     } catch (const boost::python::error_already_set&) {
         PyErr_Print();
@@ -413,7 +442,7 @@ bool PythonInterpreter::setVar(const char* name, regina::Packet* value) {
     return ok;
 }
 
-bool PythonInterpreter::runScript(const char* code) {
+bool PythonInterpreter::runCode(const char* code) {
     PyEval_RestoreThread(state);
 
     PyObject* ans = PyRun_String(const_cast<char*>(code), Py_file_input,
@@ -430,9 +459,23 @@ bool PythonInterpreter::runScript(const char* code) {
     }
 }
 
+bool PythonInterpreter::runScript(const regina::Script* script) {
+    bool result = true;
+    for (size_t i = 0; i < script->countVariables(); ++i)
+        if (! setVar(script->variableName(i).c_str(), script->variableValue(i)))
+            result = false;
+
+    if (! runCode((script->text() + "\n\n").c_str()))
+        result = false;
+
+    output.flush();
+    errors.flush();
+
+    return result;
+}
+
 bool PythonInterpreter::isEmptyCommand(const std::string& command) {
-    for (std::string::const_iterator it = command.begin();
-            it != command.end(); it++) {
+    for (auto it = command.begin(); it != command.end(); it++) {
         if (isspace(*it))
             continue;
         else if (*it == '#')
@@ -441,12 +484,6 @@ bool PythonInterpreter::isEmptyCommand(const std::string& command) {
             return false;
     }
     return true;
-}
-
-void PythonInterpreter::pleaseReport(const char* msg) {
-    std::cerr << "ERROR: " << msg << std::endl;
-    std::cerr << "       Please report this anomaly to the authors," << std::endl;
-    std::cerr << "       since this should never occur.\n";
 }
 
 PyObject* PythonInterpreter::extractErrMsg() {
@@ -461,3 +498,9 @@ PyObject* PythonInterpreter::extractErrMsg() {
     return ans;
 }
 
+void PythonInterpreter::flush() {
+    output.flush();
+    errors.flush();
+}
+
+} } // namespace regina::python
