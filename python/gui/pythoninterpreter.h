@@ -121,18 +121,20 @@ class PythonInterpreter {
         bool setVar(const char* name, regina::Packet* value);
 
         /**
-         * Run the given Python code in Python's main namespace.
-         */
-        bool runCode(const char* code);
-
-        /**
          * Run the given script packet in Python's main namespace.
-         * This involves setting all of the script variables, running the
-         * script code itself, and then flushing standard output and error.
+         * This involves setting all of the script variables, and then running
+         * the script code itself.
+         *
+         * This routine flushes standard output and standard error.
          */
         bool runScript(const regina::Script* script);
 
     private:
+        /**
+         * Run the given Python code in Python's main namespace.
+         */
+        bool runCode(const char* code);
+
         /**
          * Is the given command comment or only whitespace?
          */

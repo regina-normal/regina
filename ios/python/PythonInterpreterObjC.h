@@ -105,14 +105,11 @@ namespace regina {
 - (bool)setVar:(const char*)name value:(regina::Packet*)value;
 
 /**
- * Run the given Python code in Python's main namespace.
- */
-- (bool)runCode:(const char*)code;
-
-/**
  * Run the given script packet in Python's main namespace.
  * This involves setting all of the script variables, and then running
  * the script code itself.
+ *
+ * This routine flushes standard output and standard error.
  */
 - (bool)runScript:(regina::Script*)script;
 

@@ -123,11 +123,6 @@ class PythonOutputStreamObjC : public regina::python::PythonOutputStream {
     return _interpreter->setVar(name, value);
 }
 
-- (bool)runCode:(const char*)code
-{
-    return _interpreter->runCode(code);
-}
-
 - (bool)runScript:(regina::Script*)script
 {
     return _interpreter->runScript(script);
