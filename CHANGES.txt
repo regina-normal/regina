@@ -102,14 +102,12 @@ Version 5.2  [ 29 September, 2017 ]
                 + For Python only, Packet has an additional new member function
                   subtree() that also returns an iterable object.
             - In python, tags() now returns a python set (not a python list).
-        Class PacketListener:
-            - Added detailed comments on potential pitfalls when reimplementing
-              packetToBeDestroyed().  Ideally the packet argument should just be
-              used to identify *which* packet is being destroyed - any attempt
-              to call its member functions should be done with great care.
-            - In particular, when reimplementing packetToBeDestroyed(p),
-              p.treeParent() is now guaranteed to return nonsense (in previous
-              verions of Regina it just returned null).
+        Class PacketListener, PacketShell:
+            - PacketListener::packetToBeDestroyed() now takes a PacketShell,
+              not a Packet*.  This is done to restrict access to just those
+              member functions of Packet that are still safe to call even
+              within the Packet destructor.  Note that this is a backward
+              incompatibility with previous versions of Regina.
             - This class is now available for overriding in python!
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
@@ -192,6 +190,8 @@ Version 5.2  [ 29 September, 2017 ]
             - Moved into the core/ subdirectory, to help avoid naming conflicts
               with other software packages.  The original headers have
               been kept but are now deprecated.
+        Header packetlistener.h:
+            - Deprecated; please include packet.h instead.
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.

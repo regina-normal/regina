@@ -38,7 +38,6 @@
 #include <boost/iostreams/filter/gzip.hpp>
 #include "core/engine.h"
 #include "packet/packet.h"
-#include "packet/packetlistener.h"
 #include "packet/script.h"
 #include "utilities/base64.h"
 #include "utilities/stringutils.h"
@@ -63,20 +62,6 @@ Packet::~Packet() {
         delete firstTreeChild_;
 
     // Fire a packet event and unregister all listeners.
-
-    // Since PacketListener::packetToBeDestroyed() receives this packet as an
-    // argument, there is a risk that some listener might create a temporary
-    // SafePtr to this packet (e.g., if the listener is a Python object), and
-    // that this new SafePtr's destructor might try to delete this packet
-    // *again*.  This could happen, for instance, if this destructor was
-    // originally triggered because some earlier SafePtr saw this packet's
-    // reference count drop to zero.
-    //
-    // Deleting the packet again from within its own destructor would be very
-    // bad.  We therefore artificially set this packet as its own parent, so
-    // that hasOwner() returns \c true and SafePtr will leave the packet alone.
-
-    treeParent_ = this;
     fireDestructionEvent();
 }
 
@@ -779,6 +764,31 @@ std::string Packet::internalID() const {
     std::string ans = id;
     delete[] id;
     return ans;
+}
+
+PacketListener::~PacketListener() {
+    unregisterFromAllPackets();
+}
+
+void PacketListener::unregisterFromAllPackets() {
+    std::set<Packet*>::iterator it, next;
+
+    it = packets.begin();
+    next = it;
+    while (it != packets.end()) {
+        // INV: next == it.
+
+        // Step forwards before we actually deregister (*it), since
+        // the deregistration will remove (*it) from the set and
+        // invalidate the iterator.
+        next++;
+
+        // This deregistration removes (*it) from the set, but other
+        // iterators (i.e., next) are not invalidated.
+        (*it)->unlisten(this);
+
+        it = next;
+    }
 }
 
 } // namespace regina
