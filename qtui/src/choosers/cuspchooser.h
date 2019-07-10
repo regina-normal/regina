@@ -38,7 +38,7 @@
 #ifndef __CUSPCHOOSER_H
 #define __CUSPCHOOSER_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #include <QDialog>
 #include <QComboBox>
@@ -135,9 +135,9 @@ class CuspChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*);
-        void packetWasChanged(regina::Packet*);
-        void packetToBeDestroyed(regina::Packet*);
+        void packetToBeChanged(regina::Packet*) override;
+        void packetWasChanged(regina::Packet*) override;
+        void packetToBeDestroyed(regina::PacketShell) override;
 
         /**
          * Some ready-made cusp filters.
@@ -207,7 +207,7 @@ inline void CuspChooser::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-inline void CuspChooser::packetToBeDestroyed(regina::Packet*) {
+inline void CuspChooser::packetToBeDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
 }

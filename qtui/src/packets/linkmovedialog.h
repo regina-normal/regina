@@ -39,7 +39,7 @@
 #define __LINKMOVEDIALOG_H
 
 #include "link/link.h"
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #include <QDialog>
 #include <vector>
@@ -168,9 +168,9 @@ class LinkMoveDialog : public QDialog, public regina::PacketListener {
         /**
          * Update the overview information if the link changes.
          */
-        void packetWasRenamed(regina::Packet*);
-        void packetWasChanged(regina::Packet*);
-        void packetToBeDestroyed(regina::Packet*);
+        void packetWasRenamed(regina::Packet*) override;
+        void packetWasChanged(regina::Packet*) override;
+        void packetToBeDestroyed(regina::PacketShell) override;
 
     protected slots:
         /**

@@ -37,7 +37,7 @@
 #ifndef __PACKETTREEVIEW_H
 #define __PACKETTREEVIEW_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #include <QTreeWidget>
 #include <QTreeWidgetItem>
@@ -122,13 +122,14 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasChanged(regina::Packet* packet);
-        void packetWasRenamed(regina::Packet* packet);
-        void packetToBeDestroyed(regina::Packet* packet);
-        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void packetWasChanged(regina::Packet* packet) override;
+        void packetWasRenamed(regina::Packet* packet) override;
+        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+            override;
         void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor);
-        void childrenWereReordered(regina::Packet* packet);
+            bool inParentDestructor) override;
+        void childrenWereReordered(regina::Packet* packet) override;
 
         /**
          * Manual management of expansion state.
@@ -248,10 +249,11 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+            override;
         void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor);
-        void childrenWereReordered(regina::Packet* packet);
+            bool inParentDestructor) override;
+        void childrenWereReordered(regina::Packet* packet) override;
 
     public slots:
         /**
@@ -263,14 +265,14 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
         /**
          * Allow GUI updates from within a non-GUI thread.
          */
-        void customEvent(QEvent* evt);
+        void customEvent(QEvent* evt) override;
 
     private:
         /**
          * Allow the user to deselect the current item by clicking on an
          * empty part of the tree.
          */
-        virtual void mousePressEvent(QMouseEvent* event);
+        virtual void mousePressEvent(QMouseEvent* event) override;
 
     private slots:
         /**

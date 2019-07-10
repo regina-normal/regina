@@ -38,7 +38,7 @@
 #define __FACECHOOSER_H
 
 #include "choosers/facename.h"
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 #include "triangulation/forward.h"
 
 #include <QBoxLayout>
@@ -129,9 +129,9 @@ class FaceChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetToBeChanged(regina::Packet*);
-        void packetWasChanged(regina::Packet*);
-        void packetToBeDestroyed(regina::Packet*);
+        void packetToBeChanged(regina::Packet*) override;
+        void packetWasChanged(regina::Packet*) override;
+        void packetToBeDestroyed(regina::PacketShell) override;
 
     private:
         /**
@@ -283,7 +283,7 @@ inline void FaceChooser<dim, subdim>::packetWasChanged(regina::Packet*) {
 }
 
 template <int dim, int subdim>
-inline void FaceChooser<dim, subdim>::packetToBeDestroyed(regina::Packet*) {
+inline void FaceChooser<dim, subdim>::packetToBeDestroyed(regina::PacketShell) {
     clear();
     options_.clear();
 }

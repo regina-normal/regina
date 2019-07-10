@@ -106,14 +106,14 @@ class SurfacesHeaderUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::Packet* packet);
+        void packetWasRenamed(regina::Packet* packet) override;
 
     private slots:
         /**

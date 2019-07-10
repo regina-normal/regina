@@ -37,7 +37,7 @@
 #ifndef __SCRIPTUI_H
 #define __SCRIPTUI_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #include "../packetui.h"
 

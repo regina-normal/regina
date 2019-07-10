@@ -114,7 +114,7 @@ void PacketTreeItem::packetWasRenamed(regina::Packet*) {
     getMainWindow()->setModified(true);
 }
 
-void PacketTreeItem::packetToBeDestroyed(regina::Packet*) {
+void PacketTreeItem::packetToBeDestroyed(regina::PacketShell) {
     packet = 0;
     refreshLabel();
     getMainWindow()->setModified(true);

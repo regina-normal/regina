@@ -37,7 +37,7 @@
 #ifndef __CONTAINERUI_H
 #define __CONTAINERUI_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #include "../packetui.h"
 
@@ -76,17 +76,18 @@ class ContainerUI : public PacketReadOnlyUI, public regina::PacketListener {
         /**
          * PacketUI overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        QString getPacketMenuText() const;
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
 
         /**
          * PacketListener overrides.
          */
-        void childWasAdded(regina::Packet* packet, regina::Packet* child);
+        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+            override;
         void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor);
+            bool inParentDestructor) override;
 };
 
 #endif
