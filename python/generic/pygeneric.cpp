@@ -88,7 +88,6 @@ void addIsomorphism12();
 void addIsomorphism13();
 void addIsomorphism14();
 void addIsomorphism15();
-void addFace();
 void addFace5();
 void addFace6();
 void addFace7();
@@ -127,7 +126,6 @@ void addGenericClasses() {
     addFacetSpec();
     addFacetPairing2();
     addFacetPairing4();
-    addFace();
 #ifndef REGINA_LOWDIMONLY
     addComponent5();
     addComponent6();
