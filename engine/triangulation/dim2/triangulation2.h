@@ -168,9 +168,9 @@ class REGINA_API Triangulation<2> :
          */
         /*@{*/
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
-        virtual bool dependsOnParent() const;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
+        virtual bool dependsOnParent() const override;
 
         /*@}*/
         /**
@@ -378,8 +378,8 @@ class REGINA_API Triangulation<2> :
             XMLTreeResolver& resolver);
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 
     private:
         /**

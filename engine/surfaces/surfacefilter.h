@@ -105,10 +105,10 @@ struct SurfaceFilterInfo;
 #define REGINA_SURFACE_FILTER(class_, id) \
     public: \
         static constexpr const SurfaceFilterType filterTypeID = id; \
-        inline virtual SurfaceFilterType filterType() const { \
+        inline virtual SurfaceFilterType filterType() const override { \
             return id; \
         } \
-        inline virtual std::string filterTypeName() const { \
+        inline virtual std::string filterTypeName() const override { \
             return SurfaceFilterInfo<id>::name(); \
         }
 
@@ -177,7 +177,13 @@ struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
  */
 class REGINA_API SurfaceFilter : public Packet {
     REGINA_PACKET(SurfaceFilter, PACKET_SURFACEFILTER)
-    REGINA_SURFACE_FILTER(SurfaceFilter, NS_FILTER_DEFAULT)
+
+    public:
+        /**
+         * A compile-time constant that identifies this type of surface filter.
+         */
+        static constexpr const SurfaceFilterType filterTypeID =
+            NS_FILTER_DEFAULT;
 
     public:
         /**
@@ -210,7 +216,6 @@ class REGINA_API SurfaceFilter : public Packet {
          */
         virtual bool accept(const NormalSurface& surface) const;
 
-#ifdef __DOXYGEN
         /**
          * Returns the unique integer ID corresponding to the filtering
          * method that is this particular subclass of SurfaceFilter.
@@ -225,7 +230,6 @@ class REGINA_API SurfaceFilter : public Packet {
          * @return a string description of this filtering method.
          */
         virtual std::string filterTypeName() const;
-#endif
 
         /**
          * Returns a newly created XML filter reader that will read the
@@ -251,10 +255,10 @@ class REGINA_API SurfaceFilter : public Packet {
          */
         static XMLFilterReader* xmlFilterReader(Packet* parent);
 
-        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const;
+        virtual bool dependsOnParent() const override;
 
     protected:
         /**
@@ -269,8 +273,8 @@ class REGINA_API SurfaceFilter : public Packet {
          * @param out the output stream to which the XML should be written.
          */
         virtual void writeXMLFilterData(std::ostream& out) const;
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 };
 
 /**
@@ -321,13 +325,13 @@ class REGINA_API SurfaceFilterCombination : public SurfaceFilter {
          */
         void setUsesAnd(bool value);
 
-        virtual bool accept(const NormalSurface& surface) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        virtual bool accept(const NormalSurface& surface) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
         static XMLFilterReader* xmlFilterReader(Packet* parent);
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLFilterData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLFilterData(std::ostream& out) const override;
 };
 
 /**
@@ -486,13 +490,13 @@ class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
          */
         void setRealBoundary(const BoolSet& value);
 
-        virtual bool accept(const NormalSurface& surface) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        virtual bool accept(const NormalSurface& surface) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
         static XMLFilterReader* xmlFilterReader(Packet* parent);
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLFilterData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLFilterData(std::ostream& out) const override;
 };
 
 /**
@@ -535,6 +539,14 @@ inline SurfaceFilter::~SurfaceFilter() {
 
 inline bool SurfaceFilter::accept(const NormalSurface&) const {
     return true;
+}
+
+inline SurfaceFilterType SurfaceFilter::filterType() const {
+    return NS_FILTER_DEFAULT;
+}
+
+inline std::string SurfaceFilter::filterTypeName() const {
+    return SurfaceFilterInfo<NS_FILTER_DEFAULT>::name();
 }
 
 inline void SurfaceFilter::writeXMLFilterData(std::ostream&) const {
