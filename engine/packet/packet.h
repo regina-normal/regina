@@ -464,8 +464,6 @@ class REGINA_API Packet :
          * this packet.  See the PacketListener class notes for
          * details.
          *
-         * \ifacespython Not present.
-         *
          * @param listener the listener to register.
          * @return \c true if the given listener was successfully registered,
          * or \c false if the given listener was already registered
@@ -477,8 +475,6 @@ class REGINA_API Packet :
          * listening for events on this packet.  See the PacketListener
          * class notes for details.
          *
-         * \ifacespython Not present.
-         *
          * @param listener the listener to search for.
          * @return \c true if the given listener is currently registered
          * with this packet, or \c false otherwise.
@@ -488,8 +484,6 @@ class REGINA_API Packet :
          * Unregisters the given packet listener so that it no longer
          * listens for events on this packet.  See the PacketListener
          * class notes for details.
-         *
-         * \ifacespython Not present.
          *
          * @param listener the listener to unregister.
          * @return \c true if the given listener was successfully unregistered,

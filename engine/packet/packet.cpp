@@ -63,6 +63,20 @@ Packet::~Packet() {
         delete firstTreeChild_;
 
     // Fire a packet event and unregister all listeners.
+
+    // Since PacketListener::packetToBeDestroyed() receives this packet as an
+    // argument, there is a risk that some listener might create a temporary
+    // SafePtr to this packet (e.g., if the listener is a Python object), and
+    // that this new SafePtr's destructor might try to delete this packet
+    // *again*.  This could happen, for instance, if this destructor was
+    // originally triggered because some earlier SafePtr saw this packet's
+    // reference count drop to zero.
+    //
+    // Deleting the packet again from within its own destructor would be very
+    // bad.  We therefore artificially set this packet as its own parent, so
+    // that hasOwner() returns \c true and SafePtr will leave the packet alone.
+
+    treeParent_ = this;
     fireDestructionEvent();
 }
 

@@ -102,6 +102,15 @@ Version 5.2  [ 29 September, 2017 ]
                 + For Python only, Packet has an additional new member function
                   subtree() that also returns an iterable object.
             - In python, tags() now returns a python set (not a python list).
+        Class PacketListener:
+            - Added detailed comments on potential pitfalls when reimplementing
+              packetToBeDestroyed().  Ideally the packet argument should just be
+              used to identify *which* packet is being destroyed - any attempt
+              to call its member functions should be done with great care.
+            - In particular, when reimplementing packetToBeDestroyed(p),
+              p.treeParent() is now guaranteed to return nonsense (in previous
+              verions of Regina it just returned null).
+            - This class is now available for overriding in python!
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.

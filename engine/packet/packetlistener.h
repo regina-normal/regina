@@ -92,8 +92,6 @@ class Packet;
  * Assuming these restrictions are respected, packet listeners may assume
  * that no routines other than childWasAdded() will be called from a non-main
  * thread.
- *
- * \ifacespython Not present.
  */
 class REGINA_API PacketListener {
     private:
@@ -186,6 +184,19 @@ class REGINA_API PacketListener {
          * will be harmless).
          *
          * The default implementation of this routine is to do nothing.
+         *
+         * \warning By the time this function is called, we are already inside
+         * the Packet destructor.  In particular: (i) any subclass-specific
+         * data (e.g., faces of a triangulation) will already be destroyed;
+         * (ii) any former children of \a packet will have already been
+         * destroyed; and (ii) \a packet will already be isolated from its
+         * former parent (if any).  Ideally the argument \a packet is only
+         * used to identify \e which packet is being destroyed; any attempt
+         * to call its member functions could lead to undefined behaviour,
+         * and should be done with great care.  In particular, treeParent()
+         * \e will return nonsense - in the current implementation, the
+         * Packet destructor sets the packet's parent to \e itself before
+         * firing this event (this is to avoid memory problems elsewhere).
          *
          * @param packet the packet being listened to.
          */

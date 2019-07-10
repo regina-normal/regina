@@ -99,6 +99,9 @@ void addPacket(pybind11::module& m) {
         .def("removeTag", &Packet::removeTag)
         .def("removeAllTags", &Packet::removeAllTags)
         .def("tags", &Packet::tags) /* returns python set */
+        .def("listen", &Packet::listen)
+        .def("isListening", &Packet::isListening)
+        .def("unlisten", &Packet::unlisten)
         .def("parent", &Packet::parent)
         .def("firstChild", &Packet::firstChild)
         .def("lastChild", &Packet::lastChild)
