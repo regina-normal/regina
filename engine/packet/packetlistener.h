@@ -92,6 +92,10 @@ class Packet;
  * Assuming these restrictions are respected, packet listeners may assume
  * that no routines other than childWasAdded() will be called from a non-main
  * thread.
+ *
+ * \ifacespython You can happily make a pure Python subclass of PacketListener,
+ * and packets will call whichever functions you override when events occur,
+ * just as they would for a native C++ subclass.
  */
 class REGINA_API PacketListener {
     private:
