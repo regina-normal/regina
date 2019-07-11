@@ -44,7 +44,6 @@ namespace {
 }
 
 void addSatRegion(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec")
         .def(pybind11::init<>())
         .def(pybind11::init<SatBlock*, bool, bool>())

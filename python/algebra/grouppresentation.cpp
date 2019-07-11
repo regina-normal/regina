@@ -45,7 +45,6 @@ using regina::GroupExpression;
 using regina::GroupPresentation;
 
 void addGroupPresentation(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto c1 = pybind11::class_<GroupExpressionTerm>(m, "GroupExpressionTerm")
         .def_readwrite("generator", &GroupExpressionTerm::generator)
         .def_readwrite("exponent", &GroupExpressionTerm::exponent)

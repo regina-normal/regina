@@ -51,7 +51,6 @@ void addLink(pybind11::module& m) {
         .export_values()
         ;
 
-    // TODO: Should we use a by-value holder type?
     auto s = pybind11::class_<StrandRef>(m, "StrandRef")
         .def(pybind11::init<>())
         .def(pybind11::init<Crossing*, int>())

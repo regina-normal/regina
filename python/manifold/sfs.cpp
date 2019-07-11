@@ -42,7 +42,6 @@ using regina::SFSFibre;
 using regina::SFSpace;
 
 void addSFSpace(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto f = pybind11::class_<SFSFibre>(m, "SFSFibre")
         .def(pybind11::init<>())
         .def(pybind11::init<long, long>())

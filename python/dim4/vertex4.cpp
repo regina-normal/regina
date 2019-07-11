@@ -41,7 +41,6 @@ using regina::Face;
 using regina::FaceEmbedding;
 
 void addVertex4(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto e = pybind11::class_<FaceEmbedding<4, 0>>(m, "FaceEmbedding4_0")
         .def(pybind11::init<regina::Pentachoron<4>*, int>())
         .def(pybind11::init<const VertexEmbedding<4>&>())

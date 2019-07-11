@@ -50,7 +50,6 @@ namespace {
     }
 }
 void addDisc(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto d = pybind11::class_<DiscSpec>(m, "DiscSpec")
         .def(pybind11::init<>())
         .def(pybind11::init<unsigned long, int, unsigned long>())

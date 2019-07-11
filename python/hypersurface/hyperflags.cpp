@@ -52,7 +52,6 @@ void addHyperFlags(pybind11::module& m) {
         .export_values()
         ;
 
-    // TODO: Should we use a by-value holder type?
     auto l = pybind11::class_<HyperList>(m, "HyperList")
         .def(pybind11::init<>())
         .def(pybind11::init<HyperListFlags>())
@@ -93,7 +92,6 @@ void addHyperFlags(pybind11::module& m) {
         .export_values()
         ;
 
-    // TODO: Should we use a by-value holder type?
     auto a = pybind11::class_<HyperAlg>(m, "HyperAlg")
         .def(pybind11::init<>())
         .def(pybind11::init<HyperAlgFlags>())

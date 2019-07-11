@@ -50,7 +50,6 @@ namespace {
 }
 
 void addEdge4(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto e = pybind11::class_<FaceEmbedding<4, 1>>(m, "FaceEmbedding4_1")
         .def(pybind11::init<regina::Pentachoron<4>*, int>())
         .def(pybind11::init<const EdgeEmbedding<4>&>())

@@ -41,7 +41,6 @@ using regina::ModelLinkGraph;
 using regina::ModelLinkGraphCells;
 
 void addModelLinkGraph(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto a = pybind11::class_<ModelLinkGraphArc>(m, "ModelLinkGraphArc")
         .def(pybind11::init<>())
         .def(pybind11::init<ModelLinkGraphNode*, int>())

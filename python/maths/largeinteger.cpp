@@ -39,7 +39,6 @@ using pybind11::overload_cast;
 using regina::LargeInteger;
 
 void addLargeInteger(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto c = pybind11::class_<LargeInteger>(m, "LargeInteger")
         .def(pybind11::init<>())
         .def(pybind11::init<long>())

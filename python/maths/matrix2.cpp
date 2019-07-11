@@ -80,7 +80,6 @@ using regina::Matrix2;
 using regina::Matrix2Row;
 
 void addMatrix2(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto c1 = pybind11::class_<Matrix2Row>(m, "Matrix2Row")
         .def("__getitem__", &Matrix2Row::getItem)
         .def("__setitem__", &Matrix2Row::setItem)
@@ -90,7 +89,6 @@ void addMatrix2(pybind11::module& m) {
         ;
     regina::python::add_eq_operators(c1);
 
-    // TODO: Should we use a by-value holder type?
     auto c2 = pybind11::class_<Matrix2>(m, "Matrix2")
         .def(pybind11::init<>())
         .def(pybind11::init<const Matrix2&>())

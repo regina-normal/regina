@@ -64,7 +64,6 @@ namespace {
 }
 
 void addPerm3(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto c = pybind11::class_<Perm<3>>(m, "Perm3")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

@@ -54,7 +54,6 @@ namespace {
 }
 
 void addCensus(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto db = pybind11::class_<CensusDB>(m, "CensusDB")
         .def(pybind11::init<const std::string&, const std::string&>())
         .def("filename", &CensusDB::filename)
@@ -84,7 +83,6 @@ void addCensus(pybind11::module& m) {
     ;
     regina::python::add_eq_operators(hs);
 
-    // TODO: Should we use a by-value holder type?
     auto it = pybind11::class_<CensusHitIterator>(m, "CensusHitIterator")
         .def(pybind11::init<>())
         .def(pybind11::init<const CensusHitIterator&>())

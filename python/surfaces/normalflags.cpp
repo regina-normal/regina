@@ -51,7 +51,6 @@ void addNormalFlags(pybind11::module& m) {
         .value("NS_CUSTOM", regina::NS_CUSTOM)
         .export_values();
 
-    // TODO: Should we use a by-value holder type?
     auto l = pybind11::class_<NormalList>(m, "NormalList")
         .def(pybind11::init<>())
         .def(pybind11::init<NormalListFlags>())
@@ -96,7 +95,6 @@ void addNormalFlags(pybind11::module& m) {
         .value("NS_ALG_CUSTOM", regina::NS_ALG_CUSTOM)
         .export_values();
 
-    // TODO: Should we use a by-value holder type?
     auto a = pybind11::class_<NormalAlg>(m, "NormalAlg")
         .def(pybind11::init<>())
         .def(pybind11::init<NormalAlgFlags>())

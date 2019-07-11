@@ -83,7 +83,6 @@ namespace {
 
 template <int n>
 void addPerm(pybind11::module& m, const char* name) {
-    // TODO: Should we use a by-value holder type?
     auto c = pybind11::class_<Perm<n>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

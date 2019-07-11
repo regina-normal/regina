@@ -190,7 +190,6 @@ namespace {
 
 template <int dim, int subdim>
 void addFace(pybind11::module& m, const char* name, const char* embName) {
-    // TODO: Should we use a by-value holder type?
     auto e = pybind11::class_<FaceEmbedding<dim, subdim>>(m, embName)
         .def(pybind11::init<regina::Simplex<dim>*, int>())
         .def(pybind11::init<const FaceEmbedding<dim, subdim>&>())

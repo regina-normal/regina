@@ -40,7 +40,6 @@ using regina::FacetSpec;
 
 template <int dim>
 void addFacetSpec(pybind11::module& m, const char* name) {
-    // TODO: Should we use a by-value holder type?
     auto c = pybind11::class_<FacetSpec<dim>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

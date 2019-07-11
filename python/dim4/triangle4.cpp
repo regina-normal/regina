@@ -49,7 +49,6 @@ namespace {
 }
 
 void addTriangle4(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto e = pybind11::class_<FaceEmbedding<4, 2>>(m, "FaceEmbedding4_2")
         .def(pybind11::init<regina::Pentachoron<4>*, int>())
         .def(pybind11::init<const TriangleEmbedding<4>&>())

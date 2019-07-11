@@ -40,7 +40,6 @@ using regina::LargeInteger;
 using regina::Rational;
 
 void addRational(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto c = pybind11::class_<Rational>(m, "Rational")
         .def(pybind11::init<>())
         .def(pybind11::init<const Rational&>())

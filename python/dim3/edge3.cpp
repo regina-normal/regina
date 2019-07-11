@@ -47,7 +47,6 @@ namespace {
 }
 
 void addEdge3(pybind11::module& m) {
-    // TODO: Should we use a by-value holder type?
     auto e = pybind11::class_<FaceEmbedding<3, 1>>(m, "FaceEmbedding3_1")
         .def(pybind11::init<regina::Tetrahedron<3>*, int>())
         .def(pybind11::init<const EdgeEmbedding<3>&>())
