@@ -404,7 +404,7 @@
     [[ReginaHelper document] setDirty];
 }
 
-- (void)packetToBeDestroyed:(regina::Packet *)packet {
+- (void)packetToBeDestroyed:(regina::PacketShell)packet {
     if (packet == _node) {
         _node = 0;
         _listener = nil;
