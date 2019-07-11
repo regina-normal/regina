@@ -193,6 +193,27 @@ struct PacketInfo;
  * when packets are changed or about to be destroyed.  See the
  * PacketListener class notes for details.
  *
+ * Packets are able to work with SafePtr smart pointers under fluid ownership
+ * rules: they may be owned either by this C++ engine or by external
+ * safe pointers at different times during the packet's lifespan.
+ * The general things to remember are:
+ *
+ * - The C++ engine itself does not use SafePtr at all, and it incurs
+ *   essentially no overhead from the safe pointer machinery.
+ *
+ * - If you are passing packets to an external interface that \e does use
+ *   SafePtr to store them, then you must be careful when deleting packets
+ *   from within C++ code.  If you are at risk of destroying a packet
+ *   that the external interface holds a safe pointer to, you should call
+ *   Packet::safeDelete() instead of just \c delete.  This will test for the
+ *   existence of safe pointers, and if there are any then it will preserve
+ *   the packet (but remove it from the packet tree), thereby leaving the
+ *   safe pointers in the external interface to manage its lifespan.
+ *   Examples of such situations are when the user manually deletes a packet
+ *   within a GUI, or where a child packet is deleted as a result of its parent
+ *   packet being destroyed.  (The Packet destructor calls safeDelete() instead
+ *   of \c delete on its child packets for exactly this reason.)
+ *
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
  */
@@ -252,6 +273,12 @@ class REGINA_API Packet :
         /**
          * Destructor that also orphans this packet and destroys
          * all of its descendants.
+         *
+         * This destructor calls safeDelete() on its descendants.
+         * Therefore, if any descendants have safe pointers that reference
+         * them, those descendants will remain orphaned but alive
+         * (and their lifespans will now be managed by SafePtr instead).
+         * See safeDelete() for details.
          */
         virtual ~Packet();
 
