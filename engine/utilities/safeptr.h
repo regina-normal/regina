@@ -144,7 +144,7 @@ public:
      *
      * @param object the new pointee.  This may be \c null.
      */
-    void reset(T* object = 0);
+    void reset(T* object = nullptr);
 
     /**
      * Disable the default assignment operator.
@@ -200,7 +200,7 @@ inline SafePtr<T>::SafePtr(const SafePtr<Y> &other) : SafePtr(other.get()) {
 template<class T>
 inline T* SafePtr<T>::get() const {
     if (not remnant_) {
-        return 0;
+        return nullptr;
     }
     return static_cast<T*>(remnant_->get());
 }
@@ -216,7 +216,7 @@ inline void SafePtr<T>::reset(T* object) {
         remnant_.reset(detail::SafeRemnant<typename T::SafePointeeType>::
             getOrCreate(object));
     } else
-        remnant_.reset(0);
+        remnant_.reset(nullptr);
 }
 
 } // namespace regina

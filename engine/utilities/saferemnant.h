@@ -109,13 +109,13 @@ public:
     /**
      * Dereference this remnant.
      *
-     * @return the pointee corresponding to this remnant, or 0 if the
+     * @return the pointee corresponding to this remnant, or \c null if the
      * original pointee has since been destroyed.
      */
     T* get() const;
     /**
      * Expire the remnant so that it can no longer be dereferenced.
-     * Any subsequent call to get() will return 0.
+     * Any subsequent call to get() will return \c null.
      *
      * This routine is called by the pointee's destructor.
      */
@@ -146,7 +146,7 @@ inline T* SafeRemnant<T>::get() const {
 
 template <class T>
 inline void SafeRemnant<T>::expire() {
-    object_ = 0;
+    object_ = nullptr;
 }
 
 template <class T>
@@ -171,7 +171,7 @@ SafeRemnant<T>::~SafeRemnant() {
     if (object_) {
         // Pointee's back-pointer to remnant will no longer be valid, reset
         // to zero so that pointee's destructor won't call it.
-        object_->remnant_ = 0;
+        object_->remnant_ = nullptr;
         // If no other C++ object claims ownership, delete the pointee.
         if (not object_->hasOwner()) {
             delete object_;

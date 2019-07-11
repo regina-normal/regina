@@ -117,7 +117,7 @@ private:
 // Inline functions for SafePointeeBase
 
 template <class T>
-inline SafePointeeBase<T>::SafePointeeBase() : remnant_(0) {
+inline SafePointeeBase<T>::SafePointeeBase() : remnant_(nullptr) {
 }
 
 template <class T>
