@@ -65,14 +65,24 @@ void addMarkedAbelianGroup(pybind11::module& m) {
         .def("isZ", &MarkedAbelianGroup::isZ)
         .def("isIsomorphicTo", &MarkedAbelianGroup::isIsomorphicTo)
         .def("equalTo", &MarkedAbelianGroup::equalTo)
-        // TODO: ccRep, ccRep, cycleProjection, cycleProjection
-        // TODO: isCycle, boundaryMap, isBoundary, writeAsBoundary
-        // TODO: cycleGen
         .def("freeRep", &MarkedAbelianGroup::freeRep)
         .def("torsionRep", &MarkedAbelianGroup::torsionRep)
+        .def("ccRep", overload_cast<const std::vector<Integer>&>(
+            &MarkedAbelianGroup::ccRep, pybind11::const_))
+        .def("ccRep", overload_cast<unsigned long>(
+            &MarkedAbelianGroup::ccRep, pybind11::const_))
+        .def("cycleProjection", overload_cast<const std::vector<Integer>&>(
+            &MarkedAbelianGroup::cycleProjection, pybind11::const_))
+        .def("cycleProjection", overload_cast<unsigned long>(
+            &MarkedAbelianGroup::cycleProjection, pybind11::const_))
+        .def("isCycle", &MarkedAbelianGroup::isCycle)
+        .def("boundaryMap", &MarkedAbelianGroup::boundaryMap)
+        .def("isBoundary", &MarkedAbelianGroup::isBoundary)
+        .def("writeAsBoundary", &MarkedAbelianGroup::writeAsBoundary)
         .def("snfRep", &MarkedAbelianGroup::snfRep)
         .def("rankCC", &MarkedAbelianGroup::rankCC)
         .def("minNumberCycleGens", &MarkedAbelianGroup::minNumberCycleGens)
+        .def("cycleGen", &MarkedAbelianGroup::cycleGen)
         .def("M", &MarkedAbelianGroup::M,
             pybind11::return_value_policy::reference_internal)
         .def("N", &MarkedAbelianGroup::N,
@@ -116,7 +126,8 @@ void addMarkedAbelianGroup(pybind11::module& m) {
         .def("writeReducedMatrix", [](const HomMarkedAbelianGroup& h) {
             h.writeReducedMatrix(std::cout);
         })
-        // TODO: evalCC, evalSNF
+        .def("evalCC", &HomMarkedAbelianGroup::evalCC)
+        .def("evalSNF", &HomMarkedAbelianGroup::evalSNF)
         .def("inverseHom", &HomMarkedAbelianGroup::inverseHom)
         .def(pybind11::self * pybind11::self) /* returns std::unique_ptr */
     ;
