@@ -73,7 +73,7 @@ namespace {
             }
 
             XMLElementReader* startSubElement(const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict& props) {
+                    const regina::xml::XMLPropertyDict& props) override {
                 if (! filter_)
                     if (subTagName == "op") {
                         std::string type = props.lookup("type");
@@ -105,7 +105,7 @@ namespace {
             }
 
             XMLElementReader* startSubElement(const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict& props) {
+                    const regina::xml::XMLPropertyDict& props) override {
                 if (subTagName == "euler") {
                     return new XMLCharsReader();
                 } else if (subTagName == "orbl") {
@@ -126,7 +126,7 @@ namespace {
 
             void endSubElement(
                     const std::string& subTagName,
-                    XMLElementReader* subReader) {
+                    XMLElementReader* subReader) override {
                 if (subTagName == "euler") {
                     std::list<std::string> tokens;
                     basicTokenise(back_inserter(tokens),
