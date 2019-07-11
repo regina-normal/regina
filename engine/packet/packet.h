@@ -301,6 +301,9 @@ class REGINA_API Packet :
          * external body (such as a python interpreter) still holds a
          * reference to \a p and might still try to access it.
          *
+         * \ifacespython Not present, since when called from python there will
+         * always be a safe pointer, and so this is equivalent to makeOrphan().
+         *
          * @param p the packet to delete or orphan.  It is safe to pass \c null
          * (in which case this routine does nothing).
          */
