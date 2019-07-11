@@ -31,6 +31,10 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# NOTE: Since the move to pybind11 and Packet::safeDelete(), python references
+# to packets never expire.  Therefore we should never raise any exceptions.
+# in this test.
+
 from __future__ import print_function
 
 print()

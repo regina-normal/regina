@@ -19,7 +19,7 @@ baabaa
 -----------------------------------------------------------
 Erasing container:
 
-Got exception
+baabaa
 
 -----------------------------------------------------------
 Nested tests:
@@ -41,8 +41,8 @@ Text packet
 Erase nested:
 -----------------------------------------------------------
 
-Got exception
-Got exception
+Text packet
+Triangulation with 2 tetrahedra
 
 Make orphan:
 -----------------------------------------------------------
@@ -55,4 +55,4 @@ Triangulation with 2 tetrahedra
 Triangulation with 3 tetrahedra
 Triangulation with 1 tetrahedron
 None
-Got exception
+Triangulation with 3 tetrahedra
