@@ -30,10 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-// The boost header has to come first, because otherwise there is a
-// clash with predefined macros.
-#include <boost/python.hpp>
-
 #include "pythonoutputstream.h"
 #include "../pybind11/pybind11.h"
 
