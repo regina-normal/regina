@@ -59,10 +59,21 @@ Packet::~Packet() {
     // Destroy all descendants.
     // Note that the Packet destructor now orphans the packet as well.
     while(firstTreeChild_)
-        delete firstTreeChild_;
+        safeDelete(firstTreeChild_);
 
     // Fire a packet event and unregister all listeners.
     fireDestructionEvent();
+}
+
+void Packet::safeDelete(Packet* p) {
+    if (! p)
+        return;
+    if (p->hasSafePtr()) {
+        // Leave it to the safe pointer(s) to delete p when they are
+        // finished with it.
+        p->makeOrphan();
+    } else
+        delete p;
 }
 
 std::string Packet::fullName() const {

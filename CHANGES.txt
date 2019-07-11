@@ -197,6 +197,9 @@ Version 5.2  [ 29 September, 2017 ]
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.
+        - Packets no longer "expire" when they are deleted by the calculation
+          engine.  They are merely orphaned in the packet tree, and will remain
+          in existence for as long as python holds a reference to them.
         - Now constructs regina's arbitrary-precision Integer and LargeInteger
           objects correctly when given a python arbitrary-precision long as an
           argument.  Previously, when the argument was outside the usual

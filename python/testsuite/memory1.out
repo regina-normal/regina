@@ -12,9 +12,10 @@ Step 1
 Step 2
 Step 3
 Step 4
-Destroying: b
 Destroying: a
 Step 5
+b
+None
 Orphan case
 Step 1
 Step 2
@@ -48,3 +49,5 @@ Step 8
 Destroying: g
 Destroying: g
 Step 9
+Triangulation with 0 tetrahedra
+b

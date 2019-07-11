@@ -255,6 +255,30 @@ class REGINA_API Packet :
          */
         virtual ~Packet();
 
+        /**
+         * Either destroys or orphans the given packet, according to
+         * whether it has safe pointers that currently reference it.
+         *
+         * In this context, a "safe pointer" is either SafePtr<Packet> or a
+         * subclass; such pointers are (for instance) used to hold packets
+         * in regina's python bindings.
+         *
+         * If there are no safe pointers currently pointing to \a p,
+         * then this routine simply deletes \a p.  If there are one or
+         * more safe pointers currently pointing to \a p, then this routine
+         * orphans \a p in the packet tree and does nothing more; the safe
+         * pointers are left to manage the lifespan of \a p from here onwards.
+         *
+         * C++ code should call safeDelete() instead of \c delete when it
+         * wishes to delete a packet, but there is a possibility that some
+         * external body (such as a python interpreter) still holds a
+         * reference to \a p and might still try to access it.
+         *
+         * @param p the packet to delete or orphan.  It is safe to pass \c null
+         * (in which case this routine does nothing).
+         */
+        static void safeDelete(Packet* p);
+
         /*@}*/
         /**
          * \name Packet Identification

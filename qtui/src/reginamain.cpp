@@ -481,7 +481,9 @@ void ReginaMain::packetDelete() {
     if (msgBox.clickedButton() != delBtn)
         return;
 
-    delete packet;
+    // Call safeDelete() instead of delete, since there might be a
+    // python window still holding a reference to the packet.
+    regina::Packet::safeDelete(packet);
 }
 
 void ReginaMain::treeRefresh() {

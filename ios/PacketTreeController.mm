@@ -495,7 +495,9 @@
                               withRowAnimation:UITableViewRowAnimationFade];
     }
 
-    delete packet;
+    // Call safeDelete() instead of delete, since there might be a
+    // python interpreter still holding a reference to the packet.
+    regina::Packet::safeDelete(packet);
 
     _changingChildren = false;
 }
