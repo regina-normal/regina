@@ -100,6 +100,11 @@ public:
      */
     typedef T SafePointeeType;
 
+    /**
+     * Is there one or more SafePtr currently pointing to this object?
+     */
+    bool hasSafePtr() const;
+
 protected:
     /**
      * Default constructor.
@@ -127,6 +132,13 @@ inline SafePointeeBase<T>::~SafePointeeBase() {
     if (remnant_) {
         remnant_->expire();
     }
+}
+
+template <class T>
+inline bool SafePointeeBase<T>::hasSafePtr() const {
+    // When the first SafePtr is created, it creates a new remnant;
+    // when the last SafePtr is destroyed, it resets remnant_ to null.
+    return remnant_;
 }
 
 } // namespace regina

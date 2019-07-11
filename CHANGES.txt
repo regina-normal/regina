@@ -110,6 +110,8 @@ Version 5.2  [ 29 September, 2017 ]
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.
+        Class SafePointeeBase:
+            - Added hasSafePtr() to test whether safe pointers are being used.
         Class Simplex<dim>:
             - New convenience routine edge(i,j) that returns the edge
               between two given vertices.
