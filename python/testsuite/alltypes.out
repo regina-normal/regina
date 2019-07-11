@@ -1468,6 +1468,8 @@ NPDF : typedef ->  PDF
 
 NPacket : typedef ->  Packet
 
+NPacketListener : typedef ->  PacketListener
+
 NPerm10 : typedef ->  Perm10
 
 NPerm11 : typedef ->  Perm11
@@ -1627,6 +1629,12 @@ Equality type : EqualityType.BY_REFERENCE
 
 PacketDescendants : class
 Equality type : EqualityType.BY_REFERENCE
+
+PacketListener : class
+Equality type : EqualityType.BY_REFERENCE
+
+PacketShell : class
+Equality type : EqualityType.BY_VALUE
 
 Pentachoron10 : typedef ->  Face10_4
 
