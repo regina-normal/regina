@@ -31,10 +31,7 @@
  **************************************************************************/
 
 #import <Foundation/Foundation.h>
-
-namespace regina {
-    class Packet;
-}
+#import "packet/packet.h"
 
 /**
  * A protocol that mirrors Regina's C++ PacketListener interface.
