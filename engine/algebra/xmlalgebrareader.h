@@ -79,8 +79,8 @@ class REGINA_API XMLAbelianGroupReader : public XMLElementReader {
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
-            XMLElementReader* parentReader);
-        virtual void initialChars(const std::string& chars);
+            XMLElementReader* parentReader) override;
+        virtual void initialChars(const std::string& chars) override;
 };
 
 /**
@@ -111,12 +111,12 @@ class REGINA_API XMLGroupPresentationReader : public XMLElementReader {
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
-            XMLElementReader* parentReader);
+            XMLElementReader* parentReader) override;
         virtual XMLElementReader* startSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endSubElement(const std::string& subTagName,
-            XMLElementReader* subReader);
+            XMLElementReader* subReader) override;
 };
 
 /*@}*/

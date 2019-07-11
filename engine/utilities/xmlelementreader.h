@@ -218,7 +218,7 @@ class REGINA_API XMLCharsReader : public XMLElementReader {
          */
         const std::string& chars();
 
-        virtual void initialChars(const std::string& chars);
+        virtual void initialChars(const std::string& chars) override;
 };
 
 /*@}*/

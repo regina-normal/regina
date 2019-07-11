@@ -68,7 +68,7 @@ struct BlockedSFSSearcher : public SatBlockStarterSearcher {
     }
 
     protected:
-        bool useStarterBlock(SatBlock* starter);
+        bool useStarterBlock(SatBlock* starter) override;
 };
 
 BlockedSFS::~BlockedSFS() {

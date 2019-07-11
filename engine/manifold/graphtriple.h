@@ -249,10 +249,10 @@ class REGINA_API GraphTriple : public Manifold {
          */
         bool operator < (const GraphTriple& compare) const;
 
-        AbelianGroup* homology() const;
-        bool isHyperbolic() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        AbelianGroup* homology() const override;
+        bool isHyperbolic() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 
     private:
         /**

@@ -128,15 +128,15 @@ class REGINA_API XMLCallback : public regina::xml::XMLParserCallback {
          */
         void abort();
 
-        virtual void start_document(regina::xml::XMLParser* parser);
-        virtual void end_document();
+        virtual void start_document(regina::xml::XMLParser* parser) override;
+        virtual void end_document() override;
         virtual void start_element(const std::string& n,
-            const regina::xml::XMLPropertyDict& p);
-        virtual void end_element(const std::string& n);
-        virtual void characters(const std::string& s);
-        virtual void warning(const std::string& s);
-        virtual void error(const std::string& s);
-        virtual void fatal_error(const std::string& s);
+            const regina::xml::XMLPropertyDict& p) override;
+        virtual void end_element(const std::string& n) override;
+        virtual void characters(const std::string& s) override;
+        virtual void warning(const std::string& s) override;
+        virtual void error(const std::string& s) override;
+        virtual void fatal_error(const std::string& s) override;
 
     private:
         /**

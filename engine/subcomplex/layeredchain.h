@@ -245,11 +245,11 @@ class REGINA_API LayeredChain : public StandardTriangulation {
          */
         void invert();
 
-        Manifold* manifold() const;
-        AbelianGroup* homology() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
+        Manifold* manifold() const override;
+        AbelianGroup* homology() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
+        void writeTextLong(std::ostream& out) const override;
 };
 
 /**

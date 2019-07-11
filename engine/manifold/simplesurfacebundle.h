@@ -118,11 +118,11 @@ class REGINA_API SimpleSurfaceBundle : public Manifold {
          */
         bool operator != (const SimpleSurfaceBundle& compare) const;
 
-        virtual Triangulation<3>* construct() const;
-        AbelianGroup* homology() const;
-        bool isHyperbolic() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        Triangulation<3>* construct() const override;
+        AbelianGroup* homology() const override;
+        bool isHyperbolic() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
 /**

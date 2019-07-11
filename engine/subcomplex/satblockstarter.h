@@ -185,7 +185,7 @@ class REGINA_API SatBlockStarterSet : private ListOnCall<SatBlockStarter> {
         static iterator end();
 
     protected:
-        void initialise();
+        void initialise() override;
 
     private:
         /**

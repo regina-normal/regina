@@ -89,11 +89,11 @@ class REGINA_API XMLNormalHypersurfaceReader : public XMLElementReader {
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
-            XMLElementReader* parentReader);
-        virtual void initialChars(const std::string& chars);
+            XMLElementReader* parentReader) override;
+        virtual void initialChars(const std::string& chars) override;
         virtual XMLElementReader* startSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
 };
 
 /**

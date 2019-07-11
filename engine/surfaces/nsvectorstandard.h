@@ -103,15 +103,15 @@ class REGINA_API NSVectorStandard : public NormalSurfaceVector {
         NSVectorStandard(const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const Triangulation<3>* triang) const;
+            int vertex, const Triangulation<3>* triang) const override;
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang) const;
+            int quadType, const Triangulation<3>* triang) const override;
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const Triangulation<3>* triang) const;
+            int octType, const Triangulation<3>* triang) const override;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Triangulation<3>* triang) const;
+            const Triangulation<3>* triang) const override;
         virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const Triangulation<3>* triang) const;
+            int triVertex, const Triangulation<3>* triang) const override;
 
         static NormalSurfaceVector* makeZeroVector(
             const Triangulation<3>* triangulation);

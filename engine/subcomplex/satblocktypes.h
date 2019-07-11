@@ -110,10 +110,11 @@ class REGINA_API SatMobius : public SatBlock {
          */
         int position() const;
 
-        virtual SatBlock* clone() const;
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
+        virtual SatBlock* clone() const override;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const
+            override;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -216,12 +217,13 @@ class REGINA_API SatLST : public SatBlock {
          */
         Perm<4> roles() const;
 
-        virtual SatBlock* clone() const;
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
+        virtual SatBlock* clone() const override;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
         virtual void transform(const Triangulation<3>* originalTri,
-            const Isomorphism<3>* iso, Triangulation<3>* newTri);
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
+            const Isomorphism<3>* iso, Triangulation<3>* newTri) override;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const
+            override;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -299,10 +301,11 @@ class REGINA_API SatTriPrism : public SatBlock {
          */
         bool isMajor() const;
 
-        virtual SatBlock* clone() const;
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
+        virtual SatBlock* clone() const override;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const
+            override;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -395,10 +398,11 @@ class REGINA_API SatCube : public SatBlock {
          */
         SatCube(const SatCube& cloneMe);
 
-        virtual SatBlock* clone() const;
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
+        virtual SatBlock* clone() const override;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const
+            override;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -480,10 +484,11 @@ class REGINA_API SatReflectorStrip : public SatBlock {
          */
         SatReflectorStrip(const SatReflectorStrip& cloneMe);
 
-        virtual SatBlock* clone() const;
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
+        virtual SatBlock* clone() const override;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const
+            override;
 
         /**
          * Determines whether the given annulus is a boundary annulus for
@@ -592,10 +597,11 @@ class REGINA_API SatLayering : public SatBlock {
          */
         bool overHorizontal() const;
 
-        virtual SatBlock* clone() const;
-        virtual void adjustSFS(SFSpace& sfs, bool reflect) const;
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeAbbr(std::ostream& out, bool tex = false) const;
+        virtual SatBlock* clone() const override;
+        virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeAbbr(std::ostream& out, bool tex = false) const
+            override;
 
         /**
          * Determines whether the given annulus is a boundary annulus for

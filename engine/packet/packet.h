@@ -148,10 +148,10 @@ struct PacketInfo;
 #define REGINA_PACKET_FROM(class_, helper) \
     public: \
         static constexpr const PacketType typeID = helper::typeID; \
-        inline virtual PacketType type() const { \
+        inline virtual PacketType type() const override { \
             return helper::typeID; \
         } \
-        inline virtual std::string typeName() const { \
+        inline virtual std::string typeName() const override { \
             return helper::name(); \
         }
 
