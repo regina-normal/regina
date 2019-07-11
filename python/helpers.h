@@ -43,4 +43,12 @@
 #include "helpers/equality.h"
 #include "helpers/output.h"
 
+// Inform pybind11 that SafePtr can be used as a holder type, and that it
+// is safe to construct multiple holders from the same T*.
+
+namespace regina {
+    template <typename T> class SafePtr;
+}
+PYBIND11_DECLARE_HOLDER_TYPE(T, regina::SafePtr<T>, true);
+
 #endif

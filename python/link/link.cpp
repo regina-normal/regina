@@ -36,7 +36,7 @@
 #include "maths/laurent.h"
 #include "maths/laurent2.h"
 #include "triangulation/dim3.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
@@ -87,8 +87,7 @@ void addLink(pybind11::module& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    pybind11::class_<Link, regina::Packet,
-            regina::python::SafeHeldType<Link>>(m, "Link")
+    pybind11::class_<Link, regina::Packet, regina::SafePtr<Link>>(m, "Link")
         .def(pybind11::init<>())
         .def(pybind11::init<size_t>())
         .def(pybind11::init<const Link&>())

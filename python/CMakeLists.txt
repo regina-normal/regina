@@ -1,4 +1,4 @@
-SET ( SOURCES globalarray safeheldtype modulemain )
+SET ( SOURCES globalarray modulemain )
 ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")

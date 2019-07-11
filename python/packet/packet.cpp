@@ -33,8 +33,8 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
 #include "packet/packet.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
 using pybind11::overload_cast;
 using regina::ChildIterator;
@@ -85,8 +85,7 @@ void addPacket(pybind11::module& m) {
         ;
     regina::python::add_eq_operators(c4);
 
-    auto c = pybind11::class_<Packet, regina::python::SafeHeldType<Packet>>(
-            m, "Packet")
+    auto c = pybind11::class_<Packet, regina::SafePtr<Packet>>(m, "Packet")
         .def("type", &Packet::type)
         .def("typeName", &Packet::typeName)
         .def("label", &Packet::label)

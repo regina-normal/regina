@@ -35,7 +35,7 @@
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using regina::HyperCoords;
@@ -45,8 +45,7 @@ void addNormalHypersurfaces(pybind11::module& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
 
     pybind11::class_<NormalHypersurfaces, regina::Packet,
-            regina::python::SafeHeldType<NormalHypersurfaces>>(
-            m, "NormalHypersurfaces")
+            regina::SafePtr<NormalHypersurfaces>>(m, "NormalHypersurfaces")
         .def_static("enumerate", &NormalHypersurfaces::enumerate,
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("which") = regina::HS_LIST_DEFAULT,

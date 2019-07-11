@@ -35,7 +35,7 @@
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using regina::NormalSurfaces;
@@ -58,7 +58,7 @@ void addNormalSurfaces(pybind11::module& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
 
     pybind11::class_<NormalSurfaces, regina::Packet,
-            regina::python::SafeHeldType<NormalSurfaces>>(m, "NormalSurfaces")
+            regina::SafePtr<NormalSurfaces>>(m, "NormalSurfaces")
         .def("coords", &NormalSurfaces::coords)
         .def("which", &NormalSurfaces::which)
         .def("algorithm", &NormalSurfaces::algorithm)

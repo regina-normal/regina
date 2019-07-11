@@ -33,8 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/stl.h"
 #include "triangulation/generic.h"
-#include "../safeheldtype.h"
-#include "../helpers.h"
+#include "utilities/safeptr.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
@@ -69,7 +68,7 @@ namespace {
 template <int dim>
 void addTriangulation(pybind11::module& m, const char* name) {
     auto c = pybind11::class_<Triangulation<dim>, regina::Packet,
-            regina::python::SafeHeldType<Triangulation<dim>>>(m, name)
+            regina::SafePtr<Triangulation<dim>>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<dim>&>())
         .def("size", &Triangulation<dim>::size)

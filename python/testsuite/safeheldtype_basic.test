@@ -4,7 +4,7 @@
 # Copyright (c) 2015-2018, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Provides basic tests of the SafeHeldType
+# Provides basic tests of the SafePtr
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source

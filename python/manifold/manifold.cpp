@@ -36,7 +36,6 @@
 #include "manifold/manifold.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
 using regina::Manifold;
 

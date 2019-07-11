@@ -34,7 +34,7 @@
 #include "../pybind11/complex.h"
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
@@ -54,8 +54,7 @@ void addSnapPeaTriangulation(pybind11::module& m) {
     regina::python::add_eq_operators(c1);
 
     auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
-            regina::python::SafeHeldType<SnapPeaTriangulation>>
-            (m, "SnapPeaTriangulation")
+            regina::SafePtr<SnapPeaTriangulation>>(m, "SnapPeaTriangulation")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init<const SnapPeaTriangulation&>())

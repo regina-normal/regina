@@ -34,7 +34,7 @@
 #include "angle/anglestructures.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
 
 using namespace regina::python;
@@ -44,7 +44,7 @@ void addAngleStructures(pybind11::module& m) {
     m.def("makeAngleEquations", regina::makeAngleEquations);
 
     pybind11::class_<AngleStructures, regina::Packet,
-            regina::python::SafeHeldType<AngleStructures>>(m, "AngleStructures")
+            regina::SafePtr<AngleStructures>>(m, "AngleStructures")
         .def("triangulation", &AngleStructures::triangulation)
         .def("isTautOnly", &AngleStructures::isTautOnly)
         .def("size", &AngleStructures::size)

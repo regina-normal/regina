@@ -35,7 +35,7 @@
 #include "algebra/grouppresentation.h"
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
@@ -44,7 +44,7 @@ using regina::detail::TriangulationBase;
 
 void addTriangulation4(pybind11::module& m) {
     auto c = pybind11::class_<Triangulation<4>, regina::Packet,
-            regina::python::SafeHeldType<Triangulation<4>>>(m, "Triangulation4")
+            regina::SafePtr<Triangulation<4>>>(m, "Triangulation4")
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<4>&>())
         .def(pybind11::init<const std::string&>())

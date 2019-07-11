@@ -4,7 +4,7 @@
 # Copyright (c) 2015-2018, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Provides tests for the wrapping of Packet subclasses through SafeHeldType
+# Provides tests for the wrapping of Packet subclasses through SafePtr
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source

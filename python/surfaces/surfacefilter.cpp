@@ -34,17 +34,16 @@
 #include "../pybind11/stl.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/surfacefilter.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using regina::python::SafeHeldType;
 using regina::SurfaceFilter;
 using regina::SurfaceFilterCombination;
 using regina::SurfaceFilterProperties;
 
 void addSurfaceFilter(pybind11::module& m) {
-    pybind11::class_<SurfaceFilter, regina::Packet, SafeHeldType<SurfaceFilter>>
-            (m, "SurfaceFilter")
+    pybind11::class_<SurfaceFilter, regina::Packet,
+            regina::SafePtr<SurfaceFilter>>(m, "SurfaceFilter")
         .def(pybind11::init<>())
         .def(pybind11::init<const SurfaceFilter&>())
         .def("accept", &SurfaceFilter::accept)
@@ -61,7 +60,7 @@ void addSurfaceFilter(pybind11::module& m) {
     ;
 
     pybind11::class_<SurfaceFilterCombination, regina::SurfaceFilter,
-            SafeHeldType<SurfaceFilterCombination>>
+            regina::SafePtr<SurfaceFilterCombination>>
             (m, "SurfaceFilterCombination")
         .def(pybind11::init<>())
         .def(pybind11::init<const SurfaceFilterCombination&>())
@@ -73,7 +72,7 @@ void addSurfaceFilter(pybind11::module& m) {
     ;
 
     pybind11::class_<SurfaceFilterProperties, regina::SurfaceFilter,
-            SafeHeldType<SurfaceFilterProperties>>
+            regina::SafePtr<SurfaceFilterProperties>>
             (m, "SurfaceFilterProperties")
         .def(pybind11::init<>())
         .def(pybind11::init<const SurfaceFilterProperties&>())

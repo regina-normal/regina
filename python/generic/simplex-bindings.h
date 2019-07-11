@@ -33,7 +33,6 @@
 #include "../pybind11/pybind11.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
 using pybind11::overload_cast;
