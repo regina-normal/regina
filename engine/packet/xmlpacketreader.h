@@ -170,10 +170,10 @@ class REGINA_API XMLPacketReader : public XMLElementReader {
 
         virtual XMLElementReader* startSubElement(
             const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps);
+            const regina::xml::XMLPropertyDict& subTagProps) override;
         virtual void endSubElement(const std::string& subTagName,
-            XMLElementReader* subReader);
-        virtual void abort(XMLElementReader *subReader);
+            XMLElementReader* subReader) override;
+        virtual void abort(XMLElementReader *subReader) override;
 };
 
 /*@}*/

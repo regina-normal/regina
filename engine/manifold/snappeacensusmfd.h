@@ -181,12 +181,12 @@ class REGINA_API SnapPeaCensusManifold : public Manifold {
          */
         bool operator != (const SnapPeaCensusManifold& compare) const;
 
-        Triangulation<3>* construct() const;
-        AbelianGroup* homology() const;
-        bool isHyperbolic() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
-        std::ostream& writeStructure(std::ostream& out) const;
+        Triangulation<3>* construct() const override;
+        AbelianGroup* homology() const override;
+        bool isHyperbolic() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
+        std::ostream& writeStructure(std::ostream& out) const override;
 };
 
 /**

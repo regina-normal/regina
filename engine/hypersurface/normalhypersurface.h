@@ -121,7 +121,7 @@ struct HyperInfo;
         static constexpr const HyperCoords coordsID = id; \
         inline class_(const class_& cloneMe) : \
                 superclass(cloneMe.coords()) {} \
-        inline virtual NormalHypersurfaceVector* clone() const { \
+        inline virtual NormalHypersurfaceVector* clone() const override { \
             return new class_(*this); \
         }
 

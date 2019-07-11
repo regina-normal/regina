@@ -676,7 +676,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
         void dumpTaggedData(std::ostream& out) const;
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const;
+        virtual void dumpData(std::ostream& out) const override;
 
         /**
          * The main entry routine for running a search for all gluing

@@ -104,12 +104,13 @@ class REGINA_API NSVectorQuad :
         static NormalSurfaceVector* makeMirror(const Ray& original,
             const Triangulation<3>* triang);
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>* triang)
-            const;
+            const override;
 
-        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang) const;
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang)
+            const override;
 
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const Triangulation<3>* triang) const;
+            int octType, const Triangulation<3>* triang) const override;
 
         static NormalSurfaceVector* makeZeroVector(
             const Triangulation<3>* triangulation);

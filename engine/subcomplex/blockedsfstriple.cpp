@@ -74,7 +74,7 @@ struct BlockedSFSTripleSearcher : public SatBlockStarterSearcher {
     }
 
     protected:
-        bool useStarterBlock(SatBlock* starter);
+        bool useStarterBlock(SatBlock* starter) override;
 };
 
 BlockedSFSTriple::~BlockedSFSTriple() {

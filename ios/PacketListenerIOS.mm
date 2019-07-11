@@ -44,7 +44,7 @@ public:
     inline PacketListenerObjC(void* object, regina::Packet* listenChildrenOf) : _object(object), _listenChildrenOf(listenChildrenOf) {
     }
     
-    inline void packetToBeChanged(regina::Packet* packet) {
+    inline void packetToBeChanged(regina::Packet* packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(packetToBeChanged:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object packetToBeChanged:packet];
@@ -55,7 +55,7 @@ public:
         }
     }
     
-    inline void packetWasChanged(regina::Packet* packet) {
+    inline void packetWasChanged(regina::Packet* packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(packetWasChanged:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object packetWasChanged:packet];
@@ -66,7 +66,7 @@ public:
         }
     }
     
-    inline void packetToBeRenamed(regina::Packet* packet) {
+    inline void packetToBeRenamed(regina::Packet* packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(packetToBeRenamed:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object packetToBeRenamed:packet];
@@ -77,7 +77,7 @@ public:
         }
     }
     
-    inline void packetWasRenamed(regina::Packet* packet) {
+    inline void packetWasRenamed(regina::Packet* packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(packetWasRenamed:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object packetWasRenamed:packet];
@@ -88,7 +88,7 @@ public:
         }
     }
     
-    inline void packetToBeDestroyed(regina::Packet* packet) {
+    inline void packetToBeDestroyed(regina::PacketShell packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(packetToBeDestroyed:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object packetToBeDestroyed:packet];
@@ -99,7 +99,7 @@ public:
         }
     }
     
-    inline void childToBeAdded(regina::Packet* packet, regina::Packet* child) {
+    inline void childToBeAdded(regina::Packet* packet, regina::Packet* child) override {
         if (packet == _listenChildrenOf)
             child->listen(this);
         if ([(__bridge id)_object respondsToSelector:@selector(childToBeAddedTo:child:)]) {
@@ -112,7 +112,7 @@ public:
         }
     }
     
-    inline void childWasAdded(regina::Packet* packet, regina::Packet* child) {
+    inline void childWasAdded(regina::Packet* packet, regina::Packet* child) override {
         if ([(__bridge id)_object respondsToSelector:@selector(childWasAddedTo:child:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object childWasAddedTo:packet child:child];
@@ -123,7 +123,7 @@ public:
         }
     }
     
-    inline void childToBeRemoved(regina::Packet* packet, regina::Packet* child, bool inParentDestructor) {
+    inline void childToBeRemoved(regina::Packet* packet, regina::Packet* child, bool inParentDestructor) override {
         if ([(__bridge id)_object respondsToSelector:@selector(childToBeRemovedFrom:child:inParentDestructor:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object childToBeRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
@@ -134,7 +134,7 @@ public:
         }
     }
     
-    inline void childWasRemoved(regina::Packet* packet, regina::Packet* child, bool inParentDestructor) {
+    inline void childWasRemoved(regina::Packet* packet, regina::Packet* child, bool inParentDestructor) override {
         if ([(__bridge id)_object respondsToSelector:@selector(childWasRemovedFrom:child:inParentDestructor:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object childWasRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
@@ -145,7 +145,7 @@ public:
         }
     }
     
-    inline void childrenToBeReordered(regina::Packet* packet) {
+    inline void childrenToBeReordered(regina::Packet* packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(childrenToBeReordered:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object childrenToBeReordered:packet];
@@ -156,7 +156,7 @@ public:
         }
     }
     
-    inline void childrenWereReordered(regina::Packet* packet) {
+    inline void childrenWereReordered(regina::Packet* packet) override {
         if ([(__bridge id)_object respondsToSelector:@selector(childrenWereReordered:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object childrenWereReordered:packet];
@@ -167,7 +167,7 @@ public:
         }
     }
 
-    inline void childToBeRenamed(regina::Packet* packet, regina::Packet* child) {
+    inline void childToBeRenamed(regina::Packet* packet, regina::Packet* child) override {
         if ([(__bridge id)_object respondsToSelector:@selector(childToBeRenamed:child:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object childToBeRenamed:packet child:child];
@@ -178,7 +178,7 @@ public:
         }
     }
     
-    inline void childWasRenamed(regina::Packet* packet, regina::Packet* child) {
+    inline void childWasRenamed(regina::Packet* packet, regina::Packet* child) override {
         if ([(__bridge id)_object respondsToSelector:@selector(childWasRenamed:child:)]) {
             if ([NSThread isMainThread])
                 [(__bridge id)_object childWasRenamed:packet child:child];

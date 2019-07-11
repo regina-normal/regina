@@ -52,7 +52,7 @@ namespace {
             PlainFilterReader() : filter_(new SurfaceFilter()) {
             }
 
-            virtual SurfaceFilter* filter() {
+            virtual SurfaceFilter* filter() override {
                 return filter_;
             }
     };
@@ -68,7 +68,7 @@ namespace {
             CombinationReader() : filter_(0) {
             }
 
-            virtual SurfaceFilter* filter() {
+            virtual SurfaceFilter* filter() override {
                 return filter_;
             }
 
@@ -100,7 +100,7 @@ namespace {
             PropertiesReader() : filter_(new SurfaceFilterProperties()) {
             }
 
-            virtual SurfaceFilter* filter() {
+            virtual SurfaceFilter* filter() override {
                 return filter_;
             }
 

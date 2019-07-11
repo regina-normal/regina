@@ -274,16 +274,16 @@ struct NormalInfo;
         static constexpr const NormalCoords coordsID = id; \
         inline class_(const class_& cloneMe) : \
                 superclass(cloneMe.coords()) {} \
-        inline virtual NormalSurfaceVector* clone() const { \
+        inline virtual NormalSurfaceVector* clone() const override { \
             return new class_(*this); \
         } \
-        inline virtual bool allowsAlmostNormal() const { \
+        inline virtual bool allowsAlmostNormal() const override { \
             return Info::almostNormal; \
         } \
-        inline virtual bool allowsSpun() const { \
+        inline virtual bool allowsSpun() const override { \
             return Info::spun; \
         } \
-        inline virtual bool allowsOriented() const { \
+        inline virtual bool allowsOriented() const override { \
             return Info::oriented; \
         }
 

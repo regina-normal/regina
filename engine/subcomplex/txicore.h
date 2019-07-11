@@ -423,8 +423,8 @@ class REGINA_API TxIDiagonalCore : public TxICore {
          */
         unsigned long k() const;
 
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
 /**
@@ -471,8 +471,8 @@ class REGINA_API TxIParallelCore : public TxICore {
          */
         TxIParallelCore();
 
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
 /**

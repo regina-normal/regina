@@ -39,8 +39,8 @@
  *  It is \e not built into Regina's python module.
  */
 
-#ifndef __REGINA_PYTHON_EMBEDDING_H
-#define __REGINA_PYTHON_EMBEDDING_H
+#ifndef __PYTHONOUTPUTSTREAM_H
+#define __PYTHONOUTPUTSTREAM_H
 
 #include <string>
 

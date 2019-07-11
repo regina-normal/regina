@@ -68,7 +68,7 @@ namespace {
                     isReginaData(false) {
             }
 
-            virtual Packet* packet() {
+            virtual Packet* packet() override {
                 if (isReginaData)
                     return &container;
                 else
@@ -81,7 +81,7 @@ namespace {
 
             virtual void startElement(const std::string& n,
                     const regina::xml::XMLPropertyDict& props,
-                    XMLElementReader*) {
+                    XMLElementReader*) override {
                 if (n == "reginadata") {
                     isReginaData = true;
 
@@ -92,7 +92,7 @@ namespace {
                 }
             }
 
-            virtual void abort(XMLElementReader*) {
+            virtual void abort(XMLElementReader*) override {
                 // Delete all children of the top-level container.
                 while (Packet* child = container.firstChild()) {
                     child->makeOrphan();

@@ -407,7 +407,7 @@ namespace {
             /**
              * See Bdry::join() for details.
              */
-            virtual void join(Bdry* other);
+            virtual void join(Bdry* other) override;
 
         private:
             /**
@@ -454,7 +454,7 @@ namespace {
             /**
              * See Bdry::join() for details.
              */
-            virtual void join(Bdry* other);
+            virtual void join(Bdry* other) override;
 
         private:
             /**

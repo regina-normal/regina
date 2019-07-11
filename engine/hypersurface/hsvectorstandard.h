@@ -98,11 +98,11 @@ class REGINA_API HSVectorStandard :
             const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger tetrahedra(size_t pentIndex,
-            int vertex, const Triangulation<4>* triang) const;
+            int vertex, const Triangulation<4>* triang) const override;
         virtual LargeInteger prisms(size_t pentIndex,
-            int prismType, const Triangulation<4>* triang) const;
+            int prismType, const Triangulation<4>* triang) const override;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Triangulation<4>* triang) const;
+            const Triangulation<4>* triang) const override;
 
         static NormalHypersurfaceVector* makeZeroVector(
             const Triangulation<4>* triangulation);

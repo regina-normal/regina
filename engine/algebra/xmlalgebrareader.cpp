@@ -56,7 +56,7 @@ namespace {
                 return exp;
             }
 
-            virtual void initialChars(const std::string& chars) {
+            virtual void initialChars(const std::string& chars) override {
                 std::list<std::string> tokens;
                 basicTokenise(back_inserter(tokens), chars);
 
