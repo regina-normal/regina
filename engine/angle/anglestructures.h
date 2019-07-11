@@ -46,7 +46,6 @@
 #include "regina-core.h"
 #include "angle/anglestructure.h"
 #include "packet/packet.h"
-#include "utilities/memutils.h"
 #include "utilities/property.h"
 
 namespace regina {
@@ -420,8 +419,8 @@ REGINA_API MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
 // Inline functions for AngleStructures
 
 inline AngleStructures::~AngleStructures() {
-    for_each(structures.begin(), structures.end(),
-        FuncDelete<AngleStructure>());
+    for (auto a : structures)
+        delete a;
 }
 
 inline bool AngleStructures::isTautOnly() const {

@@ -180,8 +180,8 @@ void AngleStructures::writeXMLPacketData(std::ostream& out) const {
 Packet* AngleStructures::internalClonePacket(Packet* /* parent */)
         const {
     AngleStructures* ans = new AngleStructures(tautOnly_);
-    transform(structures.begin(), structures.end(),
-        back_inserter(ans->structures), FuncNewClonePtr<AngleStructure>());
+    for (auto s : structures)
+        ans->structures.push_back(static_cast<AngleStructure*>(s->clone()));
 
     if (doesSpanStrict.known())
         ans->doesSpanStrict = doesSpanStrict;

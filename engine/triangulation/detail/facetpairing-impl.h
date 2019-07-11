@@ -49,7 +49,6 @@
 #include <vector>
 #include "triangulation/generic/facetpairing.h"
 #include "maths/perm.h"
-#include "utilities/memutils.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
@@ -332,7 +331,8 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
         // If firstFace doesn't glue to the same simplex but this
         // facet does, we're not in canonical form.
         if (firstFaceDest.simp != 0 && firstDestPre.simp == preImage[0].simp) {
-            for_each(list.begin(), list.end(), FuncDelete<Isomorphism<dim>>());
+            for (auto iso : list)
+                delete iso;
             list.clear();
             delete[] image;
             delete[] preImage;
@@ -407,8 +407,8 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                             continue;
                         if (isUnmatched(trying) && (! isUnmatched(pre))) {
                             // We're not in canonical form.
-                            for_each(list.begin(), list.end(),
-                                FuncDelete<Isomorphism<dim>>());
+                            for (auto iso : list)
+                                delete iso;
                             list.clear();
                             delete[] image;
                             delete[] preImage;
@@ -498,8 +498,8 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
                         stepDown = true;
                     } else if (fPre < fImg) {
                         // Whapow, we're not in canonical form.
-                        for_each(list.begin(), list.end(),
-                            FuncDelete<Isomorphism<dim>>());
+                        for (auto iso : list)
+                            delete iso;
                         list.clear();
                         delete[] image;
                         delete[] preImage;
@@ -741,8 +741,8 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
             if (isCanonicalInternal(allAutomorphisms)) {
                 use(static_cast<FacetPairing<dim>*>(this),
                     &allAutomorphisms, useArgs);
-                for_each(allAutomorphisms.begin(), allAutomorphisms.end(),
-                    FuncDelete<Isomorphism<dim>>());
+                for (auto a : allAutomorphisms)
+                    delete a;
                 allAutomorphisms.clear();
             }
 

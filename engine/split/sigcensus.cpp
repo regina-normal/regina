@@ -32,7 +32,6 @@
 
 #include <algorithm>
 #include "split/sigcensus.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -61,9 +60,8 @@ void* SigCensus::run(void*) {
 
 void SigCensus::clearTopAutomorphisms() {
     if (! automorph[sig.nCycleGroups].empty()) {
-        for_each(automorph[sig.nCycleGroups].begin(),
-            automorph[sig.nCycleGroups].end(),
-            FuncDelete<SigPartialIsomorphism>());
+        for (auto a : automorph[sig.nCycleGroups])
+            delete a;
         automorph[sig.nCycleGroups].clear();
     }
 }

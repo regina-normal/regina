@@ -48,7 +48,6 @@
 #include "hypersurface/hyperflags.h"
 #include "hypersurface/normalhypersurface.h"
 #include "packet/packet.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -786,8 +785,8 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
 // Inline functions for NormalHypersurfaces
 
 inline NormalHypersurfaces::~NormalHypersurfaces() {
-    for_each(surfaces_.begin(), surfaces_.end(),
-        FuncDelete<NormalHypersurface>());
+    for (auto s : surfaces_)
+        delete s;
 }
 
 inline HyperCoords NormalHypersurfaces::coords() const {

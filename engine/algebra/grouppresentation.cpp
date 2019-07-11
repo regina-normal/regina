@@ -207,8 +207,8 @@ bool GroupExpression::substitute(unsigned long generator,
 
 GroupPresentation::GroupPresentation(const GroupPresentation& cloneMe) :
         nGenerators(cloneMe.nGenerators) {
-    transform(cloneMe.relations.begin(), cloneMe.relations.end(),
-        back_inserter(relations), FuncNewCopyPtr<GroupExpression>());
+    for (auto r : cloneMe.relations)
+        relations.push_back(new GroupExpression(*r));
 }
 
 // TODO: To add: platonic groups, octahedral/cubical, dihedral,

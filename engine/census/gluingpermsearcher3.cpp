@@ -34,7 +34,6 @@
 #include <sstream>
 #include "census/gluingpermsearcher3.h"
 #include "triangulation/dim3.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -83,7 +82,8 @@ GluingPermSearcher<3>::~GluingPermSearcher() {
         // delete them.
         FacetPairing<3>::IsoList* autos =
             const_cast<FacetPairing<3>::IsoList*>(autos_);
-        std::for_each(autos->begin(), autos->end(), FuncDelete<Isomorphism<3>>());
+        for (auto a : *autos)
+            delete a;
         delete autos;
     }
 }

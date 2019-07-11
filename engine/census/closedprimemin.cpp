@@ -35,7 +35,6 @@
 #include "census/gluingpermsearcher3.h"
 #include "triangulation/dim3.h"
 #include "triangulation/facepair.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 

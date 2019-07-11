@@ -52,7 +52,6 @@
 #include "maths/matrixops.h"
 #include "maths/ray.h"
 #include "progress/progresstracker.h"
-#include "utilities/memutils.h"
 #include "utilities/bitmask.h"
 #include "utilities/trieset.h"
 

@@ -48,7 +48,6 @@
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -1478,7 +1477,8 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
 // Inline functions for NormalSurfaces
 
 inline NormalSurfaces::~NormalSurfaces() {
-    for_each(surfaces.begin(), surfaces.end(), FuncDelete<NormalSurface>());
+    for (auto s : surfaces)
+        delete s;
 }
 
 inline NormalCoords NormalSurfaces::coords() const {

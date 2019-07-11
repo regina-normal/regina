@@ -47,7 +47,6 @@
 
 #include "regina-core.h"
 #include "core/output.h"
-#include "utilities/memutils.h"
 #include "utilities/ptrutils.h"
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
@@ -1600,8 +1599,8 @@ inline GroupPresentation::GroupPresentation() : nGenerators(0) {
 }
 
 inline GroupPresentation::~GroupPresentation() {
-    for_each(relations.begin(), relations.end(),
-        FuncDelete<GroupExpression>());
+    for (auto r : relations)
+        delete r;
 }
 
 inline unsigned long GroupPresentation::addGenerator(unsigned long num) {
