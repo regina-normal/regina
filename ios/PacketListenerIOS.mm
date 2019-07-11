@@ -31,8 +31,6 @@
  **************************************************************************/
 
 #import "PacketListenerIOS.h"
-#import "packet/packet.h"
-#import "packet/packetlistener.h"
 
 #pragma mark C++ wrapper
 
