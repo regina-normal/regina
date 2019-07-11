@@ -75,7 +75,7 @@ class REGINA_API XMLAbelianGroupReader : public XMLElementReader {
          *
          * @return the group that has been read, or 0 if an error occurred.
          */
-        virtual AbelianGroup* group();
+        AbelianGroup* group();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
@@ -107,7 +107,7 @@ class REGINA_API XMLGroupPresentationReader : public XMLElementReader {
          *
          * @return the group that has been read, or 0 if an error occurred.
          */
-        virtual GroupPresentation* group();
+        GroupPresentation* group();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
