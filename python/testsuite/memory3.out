@@ -1,0 +1,48 @@
+Vertices of triangulation: vertices()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of triangulation: vertex()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of triangulation: faces<0>()
+Step 1
+Step 2
+Step 3
+Destroying: t
+Step 4
+Step 5
+Vertices of component: vertices()
+Step 1
+Step 2
+Step 3
+Step 4
+Step 5
+Destroying: t
+Step 6
+Step 7
+Vertices of component: vertex()
+Step 1
+Step 2
+Step 3
+Step 4
+Step 5
+Destroying: t
+Step 6
+Step 7
+Vertices of component: faces<0>()
+Step 1
+Step 2
+Step 3
+Step 4
+Step 5
+Destroying: t
+Step 6
+Step 7

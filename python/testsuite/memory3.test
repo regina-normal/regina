@@ -1,0 +1,121 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015-2019, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests the independence and lifespans of engine-generated packets.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+class Watcher(PacketListener):
+    def __init__(self, packet, label):
+        PacketListener.__init__(self)
+        packet.setLabel(label)
+        packet.listen(self)
+    def packetToBeDestroyed(self, packet):
+        print('Destroying: ' + packet.label())
+
+
+print('Vertices of triangulation: vertices()')
+print('Step 1')
+t = Example3.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+v = t.vertices() # v keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+v = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: vertex()')
+print('Step 1')
+t = Example4.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+v = t.vertex(0) # v keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+v = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: faces<0>()')
+print('Step 1')
+t = Example3.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+v = t.faces(0)
+# Because faces() does not currently support return value policies, we do not
+# get a lifespan relationship between v and t.
+print('Step 3')
+t = None # destroys t (see above)
+print('Step 4')
+v = None
+print('Step 5')
+
+print('Vertices of component: vertices()')
+print('Step 1')
+t = Example2.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+c = t.component(0) # c keeps t alive
+print('Step 3')
+v = c.vertices() # v does not keep c alive
+print('Step 4')
+t = None
+print('Step 5')
+c = None # destroys t
+print('Step 6')
+v = None
+print('Step 7')
+
+print('Vertices of component: vertex()')
+print('Step 1')
+t = Example3.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+c = t.component(0) # c keeps t alive
+print('Step 3')
+v = c.vertex(0) # v does not keep c alive
+print('Step 4')
+t = None
+print('Step 5')
+c = None # destroys t
+print('Step 6')
+v = None
+print('Step 7')
+
+print('Vertices of component: faces<0>()')
+print('Step 1')
+t = Example3.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+c = t.component(0) # c keeps t alive
+print('Step 3')
+v = c.faces(0) # v does not keep c alive
+print('Step 4')
+t = None
+print('Step 5')
+c = None # destroys t
+print('Step 6')
+v = None
+print('Step 7')
