@@ -52,8 +52,10 @@ void addComponent2(pybind11::module& m) {
         .def("triangles", &Component<2>::triangles,
             pybind11::return_value_policy::reference)
         .def("faces", &regina::python::faces<Component<2>, 2>)
-        .def("edges", regina::python::faces_list<Component<2>, 2, 1>)
-        .def("vertices", regina::python::faces_list<Component<2>, 2, 0>)
+        .def("vertices", &Component<2>::vertices,
+            pybind11::return_value_policy::reference)
+        .def("edges", &Component<2>::edges,
+            pybind11::return_value_policy::reference)
         .def("boundaryComponents", &Component<2>::boundaryComponents,
             pybind11::return_value_policy::reference)
         .def("triangle", &Component<2>::triangle,

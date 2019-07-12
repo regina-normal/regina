@@ -54,10 +54,14 @@ void addComponent4(pybind11::module& m) {
         .def("pentachora", &Component<4>::pentachora,
             pybind11::return_value_policy::reference)
         .def("faces", &regina::python::faces<Component<4>, 4>)
-        .def("vertices", regina::python::faces_list<Component<4>, 4, 0>)
-        .def("edges", regina::python::faces_list<Component<4>, 4, 1>)
-        .def("triangles", regina::python::faces_list<Component<4>, 4, 2>)
-        .def("tetrahedra", regina::python::faces_list<Component<4>, 4, 3>)
+        .def("vertices", &Component<4>::vertices,
+            pybind11::return_value_policy::reference)
+        .def("edges", &Component<4>::edges,
+            pybind11::return_value_policy::reference)
+        .def("triangles", &Component<4>::triangles,
+            pybind11::return_value_policy::reference)
+        .def("tetrahedra", &Component<4>::tetrahedra,
+            pybind11::return_value_policy::reference)
         .def("boundaryComponents", &Component<4>::boundaryComponents,
             pybind11::return_value_policy::reference)
         .def("simplex", &Component<4>::simplex,

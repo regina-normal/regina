@@ -34,23 +34,41 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 
-namespace regina {
-namespace python {
+namespace pybind11 { namespace detail {
 
 /**
- * A generic function that iterates through <tt>t.faces<subdim>()</tt>
- * and returns the corresponding faces as a Python list.
- *
- * This is used as the Python binding for T.vertices(), T.edges() and so on,
- * for several types T.
+ * Tell pybind11 how to convert a C++ list of triangulation faces into a
+ * Python list.  This allows pybind11 to automagically convert the return
+ * values for functions such as vertices(), edges(), faces(subdim), etc.,
+ * within the C++ classes Triangulation<dim> and Component<dim>.
  */
-template <class T, int dim, int subdim>
-pybind11::object faces_list(const T& t) {
-    pybind11::list ans;
-    for (auto f : t.template faces<subdim>())
-        ans.append(f); // Uses reference return value policy
-    return ans;
-}
+template <int dim, int subdim>
+struct type_caster<regina::FaceList<dim, subdim>> {
+    private:
+        typedef regina::FaceList<dim, subdim> FaceListType;
+
+    public:
+        PYBIND11_TYPE_CASTER(FaceListType, _("FaceList"));
+
+        bool load(handle, bool) {
+            // Never allow conversion from Python to a C++ FaceList.
+            return false;
+        }
+
+        static handle cast(const FaceListType& src, return_value_policy policy,
+                handle parent) {
+            // Conversion from C++ to Python:
+            pybind11::list ans;
+            for (auto f : src)
+                ans.append(pybind11::cast(f, policy, parent));
+            return ans.release();
+        }
+};
+
+} } // namespace pybind11::detail
+
+namespace regina {
+namespace python {
 
 /**
  * Implementation details for Python bindings of template member functions.
@@ -64,6 +82,11 @@ pybind11::object faces_list(const T& t) {
  * Note that some of these C++ functions return different types depending on
  * the argument \a subdim; we resolve this by converting return values
  * to python objects here, instead of letting pybind11 do it later.
+ * The cost of returning a pybind11::object is that we circumvent pybind11's
+ * normal casting mechanism, and so we do not get the lifespan relationships
+ * that we would normally get from return_value_policy::reference_internal
+ * (as we do get, for instance, through fixed-subdimension routines such
+ * as vertex() or vertices()).
  *
  * Note: when given a pointer, pybind11::cast() and pybind11::list::append()
  * both default to a return value policy of reference, not take_ownership.
@@ -80,8 +103,6 @@ struct FaceHelper {
 
     template <typename Index>
     static pybind11::object faceFrom(const T& t, int subdimArg, Index f) {
-        // TODO: Make this work with return_internal_reference.
-        // That is, ensure a lifespan dependency between t and the result.
         if (subdimArg == subdim)
             return pybind11::cast(t.template face<subdim>(f));
         return FaceHelper<T, dim, subdim - 1>::template faceFrom<Index>(
@@ -122,8 +143,6 @@ struct FaceHelper<T, dim, 0> {
 
     template <typename Index>
     static pybind11::object faceFrom(const T& t, int, Index f) {
-        // TODO: Make this work with return_internal_reference.
-        // That is, ensure a lifespan dependency between t and the result.
         return pybind11::cast(t.template face<0>(f));
     }
 

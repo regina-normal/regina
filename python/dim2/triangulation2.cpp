@@ -91,8 +91,10 @@ void addTriangulation2(pybind11::module& m) {
         .def("boundaryComponents", &Triangulation<2>::boundaryComponents,
             pybind11::return_value_policy::reference_internal)
         .def("faces", &regina::python::faces<Triangulation<2>, 2>)
-        .def("vertices", regina::python::faces_list<Triangulation<2>, 2, 0>)
-        .def("edges", regina::python::faces_list<Triangulation<2>, 2, 1>)
+        .def("vertices", &Triangulation<2>::vertices,
+            pybind11::return_value_policy::reference_internal)
+        .def("edges", &Triangulation<2>::edges,
+            pybind11::return_value_policy::reference_internal)
         .def("component", &Triangulation<2>::component,
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<2>::boundaryComponent,

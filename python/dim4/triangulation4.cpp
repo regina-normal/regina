@@ -94,10 +94,14 @@ void addTriangulation4(pybind11::module& m) {
         .def("boundaryComponents", &Triangulation<4>::boundaryComponents,
             pybind11::return_value_policy::reference_internal)
         .def("faces", &regina::python::faces<Triangulation<4>, 4>)
-        .def("vertices", regina::python::faces_list<Triangulation<4>, 4, 0>)
-        .def("edges", regina::python::faces_list<Triangulation<4>, 4, 1>)
-        .def("triangles", regina::python::faces_list<Triangulation<4>, 4, 2>)
-        .def("tetrahedra", regina::python::faces_list<Triangulation<4>, 4, 3>)
+        .def("vertices", &Triangulation<4>::vertices,
+            pybind11::return_value_policy::reference_internal)
+        .def("edges", &Triangulation<4>::edges,
+            pybind11::return_value_policy::reference_internal)
+        .def("triangles", &Triangulation<4>::triangles,
+            pybind11::return_value_policy::reference_internal)
+        .def("tetrahedra", &Triangulation<4>::tetrahedra,
+            pybind11::return_value_policy::reference_internal)
         .def("component", &Triangulation<4>::component,
             pybind11::return_value_policy::reference_internal)
         .def("boundaryComponent", &Triangulation<4>::boundaryComponent,

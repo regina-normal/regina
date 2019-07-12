@@ -107,14 +107,16 @@ void addTriangulation(pybind11::module& m, const char* name) {
         .def("countTriangles", &Triangulation<dim>::countTriangles)
         .def("countTetrahedra", &Triangulation<dim>::countTetrahedra)
         .def("countPentachora", &Triangulation<dim>::countPentachora)
-        .def("vertices", regina::python::faces_list<Triangulation<dim>, dim, 0>)
-        .def("edges", regina::python::faces_list<Triangulation<dim>, dim, 1>)
-        .def("triangles",
-            regina::python::faces_list<Triangulation<dim>, dim, 2>)
-        .def("tetrahedra",
-            regina::python::faces_list<Triangulation<dim>, dim, 3>)
-        .def("pentachora",
-            regina::python::faces_list<Triangulation<dim>, dim, 4>)
+        .def("vertices", &Triangulation<dim>::vertices,
+            pybind11::return_value_policy::reference_internal)
+        .def("edges", &Triangulation<dim>::edges,
+            pybind11::return_value_policy::reference_internal)
+        .def("triangles", &Triangulation<dim>::triangles,
+            pybind11::return_value_policy::reference_internal)
+        .def("tetrahedra", &Triangulation<dim>::tetrahedra,
+            pybind11::return_value_policy::reference_internal)
+        .def("pentachora", &Triangulation<dim>::pentachora,
+            pybind11::return_value_policy::reference_internal)
         .def("vertex", &Triangulation<dim>::vertex,
             pybind11::return_value_policy::reference_internal)
         .def("edge", &Triangulation<dim>::edge,
