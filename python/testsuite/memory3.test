@@ -42,13 +42,24 @@ class Watcher(PacketListener):
 
 print('Vertices of triangulation: vertices()')
 print('Step 1')
-t = Example3.sphere(); tw = Watcher(t, 't')
+t = Example2.sphere(); tw = Watcher(t, 't')
 print('Step 2')
 v = t.vertices() # v keeps t alive
 print('Step 3')
 t = None
 print('Step 4')
 v = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: edges()')
+print('Step 1')
+t = Example3.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+e = t.edges() # e keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+e = None # destroys t
 print('Step 5')
 
 print('Vertices of triangulation: vertex()')
@@ -62,60 +73,144 @@ print('Step 4')
 v = None # destroys t
 print('Step 5')
 
+print('Vertices of triangulation: edge()')
+print('Step 1')
+t = Example5.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+e = t.edge(0) # e keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+e = None # destroys t
+print('Step 5')
+
 print('Vertices of triangulation: faces<0>()')
+print('Step 1')
+t = Example5.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+v = t.faces(0) # v keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+v = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: faces<1>()')
+print('Step 1')
+t = Example4.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+e = t.faces(1) # e keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+e = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: face<0>()')
 print('Step 1')
 t = Example3.sphere(); tw = Watcher(t, 't')
 print('Step 2')
-v = t.faces(0)
-# Because faces() does not currently support return value policies, we do not
-# get a lifespan relationship between v and t.
+v = t.face(0, 0) # v keeps t alive
 print('Step 3')
-t = None # destroys t (see above)
+t = None
 print('Step 4')
-v = None
+v = None # destroys t
 print('Step 5')
 
-print('Vertices of component: vertices()')
+print('Vertices of triangulation: face<1>()')
+print('Step 1')
+t = Example2.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+e = t.face(1, 0) # e keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+e = None # destroys t
+print('Step 5')
+
+print('Vertices of simplex')
+print('Step 1')
+t = Example3.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+s = t.simplex(0) # s keeps t alive
+print('Step 3')
+# None of these keep t alive
+f1 = s.vertex(0)
+f2 = s.edge(0)
+f3 = s.face(0, 0)
+f4 = s.face(1, 0)
+print('Step 4')
+t = None
+print('Step 5')
+s = None # destroys t
+print('Step 6')
+f1 = None; f2 = None; f3 = None; f4 = None
+print('Step 7')
+
+print('Vertices of face')
+print('Step 1')
+t = Example4.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+f = t.triangle(0) # f keeps t alive
+print('Step 3')
+# None of these keep t alive
+f1 = f.vertex(0)
+f2 = f.edge(0)
+f3 = f.face(0, 0)
+f4 = f.face(1, 0)
+print('Step 4')
+t = None
+print('Step 5')
+f = None # destroys t
+print('Step 6')
+f1 = None; f2 = None; f3 = None; f4 = None
+print('Step 7')
+
+print('Vertices of component')
 print('Step 1')
 t = Example2.sphere(); tw = Watcher(t, 't')
 print('Step 2')
 c = t.component(0) # c keeps t alive
 print('Step 3')
-v = c.vertices() # v does not keep c alive
+# None of these keep t alive
+f1 = c.vertices()
+f2 = c.vertex(0)
+f3 = c.edges()
+f4 = c.edge(0)
+f5 = c.faces(0)
+f6 = c.face(0, 0)
+f7 = c.faces(1)
+f8 = c.face(1, 0)
 print('Step 4')
 t = None
 print('Step 5')
 c = None # destroys t
 print('Step 6')
-v = None
+f1 = None; f2 = None; f3 = None; f4 = None
+f5 = None; f6 = None; f7 = None; f8 = None
 print('Step 7')
 
-print('Vertices of component: vertex()')
+print('Vertices of boundary component')
 print('Step 1')
-t = Example3.sphere(); tw = Watcher(t, 't')
+t = Example4.ball(); tw = Watcher(t, 't')
 print('Step 2')
-c = t.component(0) # c keeps t alive
+b = t.boundaryComponent(0) # b keeps t alive
 print('Step 3')
-v = c.vertex(0) # v does not keep c alive
+# None of these keep t alive
+f1 = b.vertices()
+f2 = b.vertex(0)
+f3 = b.edges()
+f4 = b.edge(0)
+f5 = b.faces(0)
+f6 = b.face(0, 0)
+f7 = b.faces(1)
+f8 = b.face(1, 0)
 print('Step 4')
 t = None
 print('Step 5')
-c = None # destroys t
+b = None # destroys t
 print('Step 6')
-v = None
+f1 = None; f2 = None; f3 = None; f4 = None
+f5 = None; f6 = None; f7 = None; f8 = None
 print('Step 7')
 
-print('Vertices of component: faces<0>()')
-print('Step 1')
-t = Example3.sphere(); tw = Watcher(t, 't')
-print('Step 2')
-c = t.component(0) # c keeps t alive
-print('Step 3')
-v = c.faces(0) # v does not keep c alive
-print('Step 4')
-t = None
-print('Step 5')
-c = None # destroys t
-print('Step 6')
-v = None
-print('Step 7')

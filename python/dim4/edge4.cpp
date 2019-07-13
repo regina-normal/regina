@@ -83,7 +83,8 @@ void addEdge4(pybind11::module& m) {
             pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Edge<4>::boundaryComponent,
             pybind11::return_value_policy::reference)
-        .def("face", &regina::python::face<Edge<4>, 1, int>)
+        .def("face", &regina::python::face<Edge<4>, 1, int,
+            pybind11::return_value_policy::reference>)
         .def("vertex", &Edge<4>::vertex,
             pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Edge<4>, 1, 5>)
