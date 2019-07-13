@@ -377,8 +377,8 @@ class PacketPane : public QWidget, public regina::PacketListener {
         void packetToBeDestroyed(regina::PacketShell packet) override;
         void childWasAdded(regina::Packet* packet, regina::Packet* child)
             override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor) override;
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+            override;
 
     public slots:
         /**

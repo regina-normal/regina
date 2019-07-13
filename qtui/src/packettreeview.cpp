@@ -130,11 +130,10 @@ void PacketTreeItem::childWasAdded(regina::Packet*, regina::Packet*) {
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), this));
 }
 
-void PacketTreeItem::childWasRemoved(regina::Packet*, regina::Packet*,
-        bool inParentDestructor) {
+void PacketTreeItem::childWasRemoved(regina::Packet* p, regina::Packet*) {
     // If we're in the parent destructor, it's all going to be done in
     // this->packetToBeDestroyed() anyway.
-    if (! inParentDestructor) {
+    if (p) { // not in parent destructor
         refreshSubtree();
         getMainWindow()->setModified(true);
     }
@@ -391,7 +390,7 @@ void PacketTreeView::childWasAdded(regina::Packet*, regina::Packet*) {
         static_cast<QEvent::Type>(EVT_TREE_CHILD_ADDED), 0 /* root packet */));
 }
 
-void PacketTreeView::childWasRemoved(regina::Packet*, regina::Packet*, bool) {
+void PacketTreeView::childWasRemoved(regina::Packet*, regina::Packet*) {
     // We can't be in the parent destructor, since the tree itself only
     // listens on the root packet.
     refreshFullTree();

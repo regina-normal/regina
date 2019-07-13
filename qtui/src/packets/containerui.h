@@ -86,8 +86,8 @@ class ContainerUI : public PacketReadOnlyUI, public regina::PacketListener {
          */
         void childWasAdded(regina::Packet* packet, regina::Packet* child)
             override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor) override;
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+            override;
 };
 
 #endif

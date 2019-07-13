@@ -186,9 +186,8 @@ void FilterCombUI::childWasAdded(Packet* p, Packet*) {
         refreshChildList();
 }
 
-void FilterCombUI::childWasRemoved(Packet* p, Packet*,
-        bool inParentDestructor) {
-    if ((! inParentDestructor) && p == filter)
+void FilterCombUI::childWasRemoved(Packet* p, Packet*) {
+    if (p == filter)
         refreshChildList();
 }
 

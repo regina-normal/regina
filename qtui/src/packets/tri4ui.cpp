@@ -182,8 +182,8 @@ void Tri4HeaderUI::childWasAdded(regina::Packet* packet,
 }
 
 void Tri4HeaderUI::childWasRemoved(regina::Packet* packet,
-        regina::Packet* child, bool inParentDestructor) {
-    if (! inParentDestructor)
+        regina::Packet*) {
+    if (packet) // not in packet's destructor
         refreshLock();
 }
 

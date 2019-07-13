@@ -283,10 +283,10 @@ void PacketPane::childWasAdded(regina::Packet* packet, regina::Packet*) {
             readWrite ? (QEvent::Type)EVT_PANE_SET_READONLY : (QEvent::Type)EVT_PANE_SET_READWRITE));
 }
 
-void PacketPane::childWasRemoved(regina::Packet* packet, regina::Packet*,
-        bool inParentDestructor) {
-    // Assume it's this packet.
-    if (packet->isPacketEditable() != readWrite)
+void PacketPane::childWasRemoved(regina::Packet* packet, regina::Packet*) {
+    // Assume it's this packet, though be careful: we might already be inside
+    // packet's destructor (in which case packet will be passed as null).
+    if (packet && packet->isPacketEditable() != readWrite)
         setReadWrite(!readWrite);
 }
 

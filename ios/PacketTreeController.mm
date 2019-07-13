@@ -374,8 +374,8 @@
      */
 }
 
-- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child inParentDestructor:(bool)destructor {
-    if (destructor)
+- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child {
+    if (! packet) // are we in the parent's destructor?
         return;
 
     if (packet == self.node) {

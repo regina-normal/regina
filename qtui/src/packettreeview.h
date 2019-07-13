@@ -127,8 +127,8 @@ class PacketTreeItem : public QTreeWidgetItem, public regina::PacketListener {
         void packetToBeDestroyed(regina::PacketShell packet) override;
         void childWasAdded(regina::Packet* packet, regina::Packet* child)
             override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor) override;
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+            override;
         void childrenWereReordered(regina::Packet* packet) override;
 
         /**
@@ -251,8 +251,8 @@ class PacketTreeView : public QTreeWidget, public regina::PacketListener {
          */
         void childWasAdded(regina::Packet* packet, regina::Packet* child)
             override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor) override;
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+            override;
         void childrenWereReordered(regina::Packet* packet) override;
 
     public slots:

@@ -125,8 +125,8 @@ class Tri3HeaderUI : public QObject, public PacketViewerTab,
          */
         void childWasAdded(regina::Packet* packet, regina::Packet* child)
             override;
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor) override;
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+            override;
 
         /**
          * Allow other UIs to access the summary information.

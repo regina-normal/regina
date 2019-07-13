@@ -338,7 +338,7 @@
     }
 }
 
-- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child inParentDestructor:(bool)d
+- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child
 {
     if (packet == self.packet) {
         bool newEditability = packet->isPacketEditable();
