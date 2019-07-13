@@ -1,0 +1,98 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2019, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests the behaviour of packet listeners
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+class Watcher(PacketListener):
+    def packetToBeChanged(self, packet):
+        print('CHANGING: ' + packet.text())
+    def packetWasChanged(self, packet):
+        print('CHANGED: ' + packet.text())
+    def packetToBeRenamed(self, packet):
+        print('RENAMING: ' + packet.label())
+    def packetWasRenamed(self, packet):
+        print('RENAMED: ' + packet.label())
+    def packetToBeDestroyed(self, packet):
+        print('DESTROYING: ' + packet.label())
+    def childToBeAdded(self, packet, child):
+        print('ADDING CHILD: ' + packet.label() + ' -> ' + child.label())
+    def childWasAdded(self, packet, child):
+        print('ADDED CHILD: ' + packet.label() + ' -> ' + child.label())
+    def childToBeRemoved(self, packet, child):
+        if not packet:
+            print('REMOVING CHILD: from parent destructor -> ' + child.label())
+        elif not child:
+            # This case should be impossible to trigger from python.
+            print('REMOVING CHILD: from child destructor <- ' + packet.label())
+        else:
+            print('REMOVING CHILD: ' + packet.label() + ' -> ' + child.label())
+    def childWasRemoved(self, packet, child):
+        if not packet:
+            print('REMOVED CHILD: from parent destructor -> ' + child.label())
+        elif not child:
+            # This case should be impossible to trigger from python.
+            print('REMOVED CHILD: from child destructor <- ' + packet.label())
+        else:
+            print('REMOVED CHILD: ' + packet.label() + ' -> ' + child.label())
+    def childToBeRenamed(self, packet, child):
+        print('RENAMING CHILD: ' + packet.label() + ' -> ' + child.label())
+    def childWasRenamed(self, packet, child):
+        print('RENAMED CHILD: ' + packet.label() + ' -> ' + child.label())
+
+w = Watcher()
+
+print('Creating...')
+c = Container(); c.setLabel('c'); cw = Watcher(); c.listen(cw)
+t = Text('text'); t.setLabel('t'); tw = Watcher(); t.listen(tw)
+u = Text('essay'); u.setLabel('u'); uw = Watcher(); u.listen(uw)
+print('Inserting children t,u...')
+c.insertChildLast(t)
+c.insertChildLast(u)
+print('Renaming...')
+t.setLabel('t2')
+print('Editing...')
+t.setText('text2')
+print('Orphaning child t...')
+t.makeOrphan()
+print('Reparenting child t...')
+c.insertChildFirst(t)
+# The only way to destroy a child from python is to drop all references
+# to it and orphan it.
+print('Dropping reference to u...')
+u = None
+print('Destroying child u...')
+c.lastChild().makeOrphan() # u destroyed
+print('Destroying parent...')
+c = None # t lives, since it is managed by python
+print('Destroying child t...')
+t = None
+print('Finished.')
+

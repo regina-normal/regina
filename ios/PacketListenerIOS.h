@@ -48,8 +48,8 @@
 - (void)packetToBeDestroyed:(regina::PacketShell)packet;
 - (void)childToBeAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
 - (void)childWasAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childToBeRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child inParentDestructor:(bool)d;
-- (void)childWasRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child inParentDestructor:(bool)d;
+- (void)childToBeRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child;
+- (void)childWasRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child;
 - (void)childrenToBeReordered:(regina::Packet*)packet;
 - (void)childrenWereReordered:(regina::Packet*)packet;
 - (void)childToBeRenamed:(regina::Packet*)packet child:(regina::Packet*)child;

@@ -121,24 +121,24 @@ public:
         }
     }
     
-    inline void childToBeRemoved(regina::Packet* packet, regina::Packet* child, bool inParentDestructor) override {
-        if ([(__bridge id)_object respondsToSelector:@selector(childToBeRemovedFrom:child:inParentDestructor:)]) {
+    inline void childToBeRemoved(regina::Packet* packet, regina::Packet* child) override {
+        if ([(__bridge id)_object respondsToSelector:@selector(childToBeRemovedFrom:child:)]) {
             if ([NSThread isMainThread])
-                [(__bridge id)_object childToBeRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+                [(__bridge id)_object childToBeRemovedFrom:packet child:child];
             else
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [(__bridge id)_object childToBeRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+                    [(__bridge id)_object childToBeRemovedFrom:packet child:child];
                 });
         }
     }
     
-    inline void childWasRemoved(regina::Packet* packet, regina::Packet* child, bool inParentDestructor) override {
-        if ([(__bridge id)_object respondsToSelector:@selector(childWasRemovedFrom:child:inParentDestructor:)]) {
+    inline void childWasRemoved(regina::Packet* packet, regina::Packet* child) override {
+        if ([(__bridge id)_object respondsToSelector:@selector(childWasRemovedFrom:child:)]) {
             if ([NSThread isMainThread])
-                [(__bridge id)_object childWasRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+                [(__bridge id)_object childWasRemovedFrom:packet child:child];
             else
                 dispatch_async(dispatch_get_main_queue(), ^{
-                    [(__bridge id)_object childWasRemovedFrom:packet child:child inParentDestructor:inParentDestructor];
+                    [(__bridge id)_object childWasRemovedFrom:packet child:child];
                 });
         }
     }

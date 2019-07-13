@@ -1478,7 +1478,7 @@ class REGINA_API Packet :
         /**
          * Calls the given PacketListener event for all registered
          * packet listeners.  The first argument to the event function
-         * will be this packet
+         * will be this packet, unless \a makeMeNull is \c true.
          *
          * Calling this routine is better than iterating through listeners
          * manually, since it behaves correctly even if listeners unregister
@@ -1487,10 +1487,11 @@ class REGINA_API Packet :
          * @param event the member function of PacketListener to be called
          * for each listener.
          * @param arg2 the second argument to pass to the event function.
-         * @param arg3 the third argument to pass to the event function.
+         * @param makeMeNull if \c true, then the first argument to the
+         * event function will be \c null instead of \c this.
          */
-        void fireEvent(void (PacketListener::*event)(Packet*, Packet*, bool),
-            Packet* arg2, bool arg3);
+        void fireEvent(void (PacketListener::*event)(Packet*, Packet*),
+            Packet* arg2, bool makeMeNull);
 
         /**
          * Calls PacketListener::packetToBeDestroyed() for all registered
@@ -2321,7 +2322,7 @@ class REGINA_API PacketListener {
         /**
          * Called before a child packet is to be inserted directly beneath
          * the packet.
-         * Once the child is removed, childWasAdded() will be
+         * Once the child is inserted, childWasAdded() will be
          * called also.
          *
          * The default implementation of this routine is to do nothing.
@@ -2344,50 +2345,66 @@ class REGINA_API PacketListener {
         virtual void childWasAdded(Packet* packet, Packet* child);
         /**
          * Called before a child packet is to be removed from directly beneath
-         * the packet.  Note that the child packet may be about to be
-         * destroyed (although this destruction will not have happened yet).
-         * Once the child is removed, childWasRemoved() will be
-         * called also.
+         * the packet.
          *
-         * Note also that this packet (the parent) may have already
-         * entered its destructor (which removes and destroys all child
-         * packets as a matter of course).  In this situation it may be
-         * unsafe to query or update this packet, and so the third argument
-         * \a inParentDestructor is provided to indicate such a situation.
+         * Once the child is removed, childWasRemoved() will be called also.
+         *
+         * Be warned: we could already be inside either this packet's or
+         * the child packet's destructor:
+         *
+         * - If this packet is being destroyed, then it will orphan all of its
+         *   children, and then (unless they are being mananged by SafePtr
+         *   safe pointers) it will delete these children also.  In such a
+         *   situation, both listener functions childToBeRemoved() and
+         *   childWasRemoved() will be called \e before the child is destroyed.
+         *   For both functions, \a packet will be passed as \c null (since
+         *   the parent packet is already well into its destruction process).
+         *
+         * - If the child packet is being destroyed (but the parent is not),
+         *   then it will be orphaned as part of its destructor.  In such a
+         *   situation, both listener functions childToBeRemoved() and
+         *   childWasRemoved() will be called from within the child destructor,
+         *   and \a child will be passed as \c null to both functions.
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet to be removed.
-         * @param inParentDestructor set to \c true if the parent packet
-         * is in fact being destroyed, and the child was simply removed
-         * as part of the standard subtree destruction.
+         * @param packet the packet being listened to, or \c null if
+         * this routine is being called from within this packet's destructor.
+         * @param child the child packet to be removed, or \c null if
+         * this routine is being called from within the child's destructor.
          */
-        virtual void childToBeRemoved(Packet* packet, Packet* child,
-            bool inParentDestructor);
+        virtual void childToBeRemoved(Packet* packet, Packet* child);
         /**
          * Called after a child packet has been removed from directly beneath
-         * the packet.  Note that the child packet may be about to be
-         * destroyed (although this destruction will not have happened yet).
-         * Before this child is removed, childToBeRemoved() will be
-         * called also.
+         * the packet.
          *
-         * Note also that this packet (the parent) may have already
-         * entered its destructor (which removes and destroys all child
-         * packets as a matter of course).  In this situation it may be
-         * unsafe to query or update this packet, and so the third argument
-         * \a inParentDestructor is provided to indicate such a situation.
+         * Before the child is removed, childToBeRemoved() will be called also.
+         *
+         * Be warned: we could already be inside either this packet's or
+         * the child packet's destructor:
+         *
+         * - If this packet is being destroyed, then it will orphan all of its
+         *   children, and then (unless they are being mananged by SafePtr
+         *   safe pointers) it will delete these children also.  In such a
+         *   situation, both listener functions childToBeRemoved() and
+         *   childWasRemoved() will be called \e before the child is destroyed.
+         *   For both functions, \a packet will be passed as \c null (since
+         *   the parent packet is already well into its destruction process).
+         *
+         * - If the child packet is being destroyed (but the parent is not),
+         *   then it will be orphaned as part of its destructor.  In such a
+         *   situation, both listener functions childToBeRemoved() and
+         *   childWasRemoved() will be called from within the child destructor,
+         *   and \a child will be passed as \c null to both functions.
          *
          * The default implementation of this routine is to do nothing.
          *
-         * @param packet the packet being listened to.
-         * @param child the child packet that was removed.
-         * @param inParentDestructor set to \c true if the parent packet
-         * is in fact being destroyed, and the child was simply removed
-         * as part of the standard subtree destruction.
+         * @param packet the packet being listened to, or \c null if
+         * this routine is being called from within this packet's destructor.
+         * @param child the child packet that was removed, or \c null if
+         * this routine is being called from within the child's destructor.
          */
-        virtual void childWasRemoved(Packet* packet, Packet* child,
-            bool inParentDestructor);
+        virtual void childWasRemoved(Packet* packet, Packet* child);
         /**
          * Called before the child packets directly beneath the packet
          * are to be reordered.
@@ -2769,10 +2786,10 @@ inline void PacketListener::childToBeAdded(Packet*, Packet*) {
 inline void PacketListener::childWasAdded(Packet*, Packet*) {
 }
 
-inline void PacketListener::childToBeRemoved(Packet*, Packet*, bool) {
+inline void PacketListener::childToBeRemoved(Packet*, Packet*) {
 }
 
-inline void PacketListener::childWasRemoved(Packet*, Packet*, bool) {
+inline void PacketListener::childWasRemoved(Packet*, Packet*) {
 }
 
 inline void PacketListener::childrenToBeReordered(Packet*) {

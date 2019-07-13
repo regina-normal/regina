@@ -68,15 +68,13 @@ class PyPacketListener : public PacketListener {
             PYBIND11_OVERLOAD(void, PacketListener,
                 childWasAdded, packet, child);
         }
-        void childToBeRemoved(Packet* packet, Packet* child,
-                bool inParentDestructor) override {
+        void childToBeRemoved(Packet* packet, Packet* child) override {
             PYBIND11_OVERLOAD(void, PacketListener,
-                childToBeRemoved, packet, child, inParentDestructor);
+                childToBeRemoved, packet, child);
         }
-        void childWasRemoved(Packet* packet, Packet* child,
-                bool inParentDestructor) override {
+        void childWasRemoved(Packet* packet, Packet* child) override {
             PYBIND11_OVERLOAD(void, PacketListener,
-                childWasRemoved, packet, child, inParentDestructor);
+                childWasRemoved, packet, child);
         }
         void childrenToBeReordered(Packet* packet) override {
             PYBIND11_OVERLOAD(void, PacketListener,

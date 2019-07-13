@@ -103,11 +103,18 @@ Version 5.2  [ 29 September, 2017 ]
                   subtree() that also returns an iterable object.
             - In python, tags() now returns a python set (not a python list).
         Class PacketListener, PacketShell:
-            - PacketListener::packetToBeDestroyed() now takes a PacketShell,
-              not a Packet*.  This is done to restrict access to just those
-              member functions of Packet that are still safe to call even
-              within the Packet destructor.  Note that this is a backward
-              incompatibility with previous versions of Regina.
+            - Several backward incompatible changes to PacketListener, to make
+              it difficult for listeners to call unsafe functions on packets
+              that are already in the process of being destroyed:
+                + PacketListener::packetToBeDestroyed() now takes a PacketShell,
+                  not a full Packet*.  This severely limits the Packet member
+                  functions that can be called.
+                + PacketListener::childToBeRemoved() and childWasRemoved()
+                  no longer take a third boolean argument (inParentDestructor).
+                  Instead, when these are called from the parent destructor,
+                  the first argument (representing the parent) will be null.
+                  Likewise, when they are called from the child destructor,
+                  the second argument (representing the child) will be null.
             - This class is now available for overriding in python!
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce

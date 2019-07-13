@@ -53,13 +53,54 @@ Packet::~Packet() {
     // might in turn involve tree traversal.  It can't be good for
     // anyone to start querying packets whose destructors are already
     // being carried out.
-    if (treeParent_)
-        makeOrphan();
+    if (treeParent_) {
+        // Instead of calling makeOrphan(), we reimplement it here so that
+        // the PacketListener callbacks pass null instead of the child packet.
+        treeParent_->fireEvent(&PacketListener::childToBeRemoved,
+            nullptr /* child already being destroyed */, false);
+
+        if (treeParent_->firstTreeChild_ == this)
+            treeParent_->firstTreeChild_ = nextTreeSibling_;
+        else
+            prevTreeSibling_->nextTreeSibling_ = nextTreeSibling_;
+
+        if (treeParent_->lastTreeChild_ == this)
+            treeParent_->lastTreeChild_ = prevTreeSibling_;
+        else
+            nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_;
+
+        Packet* oldParent = treeParent_;
+        treeParent_ = nullptr;
+
+        oldParent->fireEvent(&PacketListener::childWasRemoved,
+            nullptr /* child already being destroyed */, false);
+    }
 
     // Destroy all descendants.
-    // Note that the Packet destructor now orphans the packet as well.
-    while(firstTreeChild_)
-        safeDelete(firstTreeChild_);
+    while(firstTreeChild_) {
+        Packet* tmp = firstTreeChild_;
+
+        // Cleanly orphan the packet and fire all remove-child events
+        // *before* we destroy the child.
+        fireEvent(&PacketListener::childToBeRemoved, tmp, true);
+
+        if (tmp->nextTreeSibling_) {
+            firstTreeChild_ = tmp->nextTreeSibling_;
+            firstTreeChild_->prevTreeSibling_ = nullptr;
+        } else {
+            firstTreeChild_ = lastTreeChild_ = nullptr;
+        }
+        tmp->treeParent_ = nullptr;
+
+        fireEvent(&PacketListener::childWasRemoved, tmp, true);
+
+        // Now we can destroy the child.
+        // We would normally call safeDelete(tmp) here, but since the
+        // old child packet is already known to be non-null and orphaned,
+        // we can reimplement a more streamlined version of safeDelete():
+        if (! tmp->hasSafePtr())
+            delete tmp;
+    }
 
     // Fire a packet event and unregister all listeners.
     fireDestructionEvent();
@@ -696,12 +737,12 @@ void Packet::fireEvent(void (PacketListener::*event)(Packet*, Packet*),
     }
 }
 
-void Packet::fireEvent(void (PacketListener::*event)(Packet*,
-        Packet*, bool), Packet* arg2, bool arg3) {
+void Packet::fireEvent(void (PacketListener::*event)(Packet*, Packet*),
+        Packet* arg2, bool makeMeNull) {
     if (listeners_.get()) {
         std::set<PacketListener*>::const_iterator it = listeners_->begin();
         while (it != listeners_->end())
-            ((*it++)->*event)(this, arg2, arg3);
+            ((*it++)->*event)((makeMeNull ? nullptr : this), arg2);
     }
 }
 
