@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="H1p-Uh-vWS">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES" initialViewController="H1p-Uh-vWS">
     <device id="ipad9_7" orientation="landscape">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -940,9 +940,8 @@
                         <rect key="frame" x="0.0" y="0.0" width="540" height="620"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                         <subviews>
-                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="q5A-AF-sFZ">
-                                <rect key="frame" x="0.0" y="0.0" width="0.0" height="44"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <toolbar opaque="NO" clearsContextBeforeDrawing="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q5A-AF-sFZ">
+                                <rect key="frame" x="0.0" y="570" width="540" height="50"/>
                                 <items>
                                     <barButtonItem style="plain" systemItem="flexibleSpace" id="Sfy-tt-Jhe"/>
                                     <barButtonItem title="Create" id="mhi-3l-5Bl">
@@ -966,7 +965,7 @@
                                 </items>
                             </navigationBar>
                             <segmentedControl opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="top" segmentControlStyle="plain" selectedSegmentIndex="0" translatesAutoresizingMaskIntoConstraints="NO" id="tsL-O6-5K1">
-                                <rect key="frame" x="20" y="90" width="285" height="29"/>
+                                <rect key="frame" x="127.5" y="90" width="285" height="29"/>
                                 <segments>
                                     <segment title="Filter by properties"/>
                                     <segment title="Combine other filters"/>
@@ -976,20 +975,23 @@
                                 </connections>
                             </segmentedControl>
                             <label opaque="NO" clipsSubviews="YES" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" preferredMaxLayoutWidth="500" translatesAutoresizingMaskIntoConstraints="NO" id="D8N-6Q-NoL">
-                                <rect key="frame" x="20" y="126" width="500" height="20.5"/>
+                                <rect key="frame" x="20" y="138" width="500" height="20.5"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="highlightedColor"/>
                             </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
-                            <constraint firstItem="D8N-6Q-NoL" firstAttribute="top" secondItem="tsL-O6-5K1" secondAttribute="bottom" constant="8" id="0Zf-Sg-894"/>
+                            <constraint firstItem="D8N-6Q-NoL" firstAttribute="top" secondItem="tsL-O6-5K1" secondAttribute="bottom" constant="20" id="0Zf-Sg-894"/>
                             <constraint firstItem="69N-Nf-ej7" firstAttribute="top" secondItem="ukn-NO-Rad" secondAttribute="bottom" id="Et3-AX-AUh"/>
                             <constraint firstItem="69N-Nf-ej7" firstAttribute="leading" secondItem="70T-rc-8CW" secondAttribute="leading" id="Vn7-62-p3q"/>
-                            <constraint firstItem="tsL-O6-5K1" firstAttribute="leading" secondItem="70T-rc-8CW" secondAttribute="leading" constant="20" id="Wmt-TX-rD9"/>
                             <constraint firstAttribute="trailing" secondItem="69N-Nf-ej7" secondAttribute="trailing" id="d8k-Lj-JFn"/>
+                            <constraint firstAttribute="bottom" secondItem="q5A-AF-sFZ" secondAttribute="bottom" id="dGQ-hl-cfB"/>
                             <constraint firstItem="D8N-6Q-NoL" firstAttribute="leading" secondItem="70T-rc-8CW" secondAttribute="leading" constant="20" id="eHH-gK-Zdi"/>
+                            <constraint firstItem="tsL-O6-5K1" firstAttribute="centerX" secondItem="70T-rc-8CW" secondAttribute="centerX" id="euT-BA-KY3"/>
+                            <constraint firstItem="q5A-AF-sFZ" firstAttribute="leading" secondItem="70T-rc-8CW" secondAttribute="leading" id="h2r-zM-5wG"/>
                             <constraint firstItem="tsL-O6-5K1" firstAttribute="top" secondItem="69N-Nf-ej7" secondAttribute="bottom" constant="40" id="oBU-im-LLl"/>
+                            <constraint firstAttribute="trailing" secondItem="q5A-AF-sFZ" secondAttribute="trailing" id="sxu-Kb-Otg"/>
                             <constraint firstAttribute="trailing" secondItem="D8N-6Q-NoL" secondAttribute="trailing" constant="20" id="vg8-wn-inI"/>
                         </constraints>
                     </view>
@@ -1733,7 +1735,7 @@
         <image name="Action-Run" width="32" height="32"/>
         <image name="Container" width="32" height="32"/>
         <image name="Filter" width="32" height="32"/>
-        <image name="ReginaLarge" width="513.10345458984375" height="513.10345458984375"/>
+        <image name="ReginaLarge" width="310" height="310"/>
         <image name="Subtree" width="32" height="32"/>
     </resources>
     <inferredMetricsTieBreakers>
