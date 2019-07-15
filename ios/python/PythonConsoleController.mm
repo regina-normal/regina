@@ -117,6 +117,7 @@ public:
 - (id)initWithLabel:(nonnull NSString*)label
             fgColor:(nonnull UIColor*)fgColor
           fgPressed:(nullable UIColor*)fgPressed
+         fgDisabled:(nullable UIColor *)fgDisabled
             bgColor:(nonnull UIColor*)bgColor
           bgPressed:(nonnull UIColor*)bgPressed;
 @end
@@ -176,6 +177,7 @@ public:
 - (id)initWithLabel:(NSString *)label
             fgColor:(UIColor *)fgColor
           fgPressed:(UIColor *)fgPressed
+         fgDisabled:(UIColor *)fgDisabled
             bgColor:(UIColor *)bgColor
           bgPressed:(UIColor *)bgPressed {
     self = [super initWithFrame:CGRectZero];
@@ -202,6 +204,12 @@ public:
                                       attributes:@{NSFontAttributeName: keyboardFont,
                                                    NSForegroundColorAttributeName: fgPressed}]
                             forState:UIControlStateHighlighted];
+        if (fgDisabled)
+            [self setAttributedTitle:[[NSAttributedString alloc]
+                                      initWithString:label
+                                      attributes:@{NSFontAttributeName: keyboardFont,
+                                                   NSForegroundColorAttributeName: fgDisabled}]
+                            forState:UIControlStateDisabled];
     }
     return self;
 }
@@ -220,6 +228,12 @@ public:
 @implementation PythonConsoleController {
     PythonOutputStreamObjC* _outCpp;
     PythonOutputStreamObjC* _errCpp;
+    
+    NSMutableArray<NSString*>* _cmdHistory;
+    NSUInteger _cmdHistoryPos;
+    NSString* _currentLine;
+    UIBarButtonItem* _pastButton;
+    UIBarButtonItem* _futureButton;
     
     regina::python::PythonInterpreter* _interpreter;
 }
@@ -262,7 +276,16 @@ public:
     if (! promptFont)
         [PythonConsoleController setupFonts];
     
+    _cmdHistory = [[NSMutableArray<NSString*> alloc] init];
+    _cmdHistoryPos = 0;
+    _currentLine = [NSString string];
+    
     // Give an extra row on the keyboard containing buttons useful for programmers.
+    _pastButton = [self historyButton:YES];
+    _futureButton = [self historyButton:NO];
+    _pastButton.enabled = NO;
+    _futureButton.enabled = NO;
+
     UIToolbar* bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
     bar.barStyle = UIBarStyleDefault;
     bar.translucent = YES;
@@ -289,8 +312,7 @@ public:
                   [self textButton:@"3"], [PythonConsoleController smallGap],
                   [self textButton:@"4"], [PythonConsoleController largeGap],
                   
-                  [self historyButton:YES], [PythonConsoleController smallGap],
-                  [self historyButton:NO]];
+                  _pastButton, [PythonConsoleController smallGap], _futureButton];
     
     [bar sizeToFit];
     self.input.inputAccessoryView = bar;
@@ -415,6 +437,11 @@ public:
 - (IBAction)execute:(id)sender
 {
     // Must be called from the main thread.
+    [_cmdHistory addObject:self.input.text];
+    _cmdHistoryPos = _cmdHistory.count;
+    _pastButton.enabled = YES;
+    _futureButton.enabled = NO;
+    
     NSString* toRun = [NSString stringWithString:self.input.text];
     NSString* toLog = [NSString stringWithFormat:@"%@ %@\n", self.prompt.title, self.input.text];
     self.working = true;
@@ -461,11 +488,34 @@ public:
 }
 
 - (IBAction)historyPast {
-    // TODO: Write
+    if (_cmdHistoryPos == _cmdHistory.count)
+        _currentLine = self.input.text;
+    if (_cmdHistoryPos == 0) {
+        // Do nothing.
+        // The enabled status of the button should stop us from ever reaching here.
+    } else {
+        --_cmdHistoryPos;
+        self.input.text = _cmdHistory[_cmdHistoryPos];
+        // Setting the text seems to move the cursor to the end-of-line automatically.
+        _futureButton.enabled = YES;
+        if (_cmdHistoryPos == 0)
+            _pastButton.enabled = NO;
+    }
 }
 
 - (IBAction)historyFuture {
-    // TODO: Write
+    if (_cmdHistoryPos == _cmdHistory.count) {
+        // Do nothing.
+        // The enabled status of the button should stop us from ever reaching here.
+    } else {
+        ++_cmdHistoryPos;
+        if (_cmdHistoryPos == _cmdHistory.count) {
+            self.input.text = _currentLine;
+            _futureButton.enabled = NO;
+        } else
+            self.input.text = _cmdHistory[_cmdHistoryPos];
+        _pastButton.enabled = YES;
+    }
 }
 
 - (IBAction)inputFromButton:(id)sender {
@@ -567,6 +617,7 @@ public:
     KeyboardButton *view = [[KeyboardButton alloc] initWithLabel:text
                                                          fgColor:[UIColor blackColor]
                                                        fgPressed:nil
+                                                      fgDisabled:nil
                                                          bgColor:[UIColor whiteColor]
                                                        bgPressed:[UIColor lightGrayColor]];
     view.toInsert = text;
@@ -579,6 +630,7 @@ public:
     KeyboardButton *view = [[KeyboardButton alloc] initWithLabel:@" Tab "
                                                          fgColor:[UIColor blackColor]
                                                        fgPressed:nil
+                                                      fgDisabled:nil
                                                          bgColor:[UIColor lightGrayColor]
                                                        bgPressed:[UIColor whiteColor]];
     [view addTarget:self action:@selector(tabPressed) forControlEvents:UIControlEventPrimaryActionTriggered];
@@ -592,6 +644,7 @@ public:
         view = [[KeyboardButton alloc] initWithLabel:@"⬆︎"
                                              fgColor:[UIColor blackColor]
                                            fgPressed:nil
+                                          fgDisabled:[UIColor grayColor]
                                              bgColor:[UIColor lightGrayColor]
                                            bgPressed:[UIColor whiteColor]];
         [view addTarget:self action:@selector(historyPast) forControlEvents:UIControlEventPrimaryActionTriggered];
@@ -599,6 +652,7 @@ public:
         view = [[KeyboardButton alloc] initWithLabel:@"⬇︎"
                                              fgColor:[UIColor blackColor]
                                            fgPressed:nil
+                                          fgDisabled:[UIColor grayColor]
                                              bgColor:[UIColor lightGrayColor]
                                            bgPressed:[UIColor whiteColor]];
         [view addTarget:self action:@selector(historyFuture) forControlEvents:UIControlEventPrimaryActionTriggered];
