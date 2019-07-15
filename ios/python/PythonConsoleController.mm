@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #import "PythonConsoleController.h"
+#import "ReginaHelper.h"
 #import "TextHelper.h"
 #import "packet/script.h"
 #import "../python/gui/pythoninterpreter.h"
@@ -39,6 +40,13 @@
 // Information is displayed in dark goldenrod:
 static UIColor* infoColour = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
+
+// Python console fonts are created on demand.
+static UIFont* promptFont = nil;
+static UIFont* inputFont = nil;
+static UIFont* outputFont = nil;
+static UIFont* entryFont = nil;
+static UIFont* keyboardFont = nil;
 
 #define KEY_PYTHON_ACCEPTED @"PythonAccepted"
 
@@ -102,14 +110,22 @@ public:
 @property (weak, nonatomic) PythonConsoleController* console;
 @end
 
+#pragma mark - Keyboard Buttons
+
+@interface KeyboardButton : UIButton
+@property (strong, nonatomic) NSString *toInsert;
+- (id)initWithLabel:(nonnull NSString*)label
+            fgColor:(nonnull UIColor*)fgColor
+          fgPressed:(nullable UIColor*)fgPressed
+            bgColor:(nonnull UIColor*)bgColor
+          bgPressed:(nonnull UIColor*)bgPressed;
+@end
+
 #pragma mark - Python Console
 
 @interface PythonConsoleController () <UITextFieldDelegate> {
     PythonConsoleStdout* outputStream;
     PythonConsoleStderr* errorStream;
-    UIFont* outputFont;
-    UIFont* inputFont;
-    UIFont* entryFont;
     bool primaryPrompt;
     NSString* lastIndent;
     CGFloat kbOffset;
@@ -128,6 +144,12 @@ public:
 
 - (void)appendHistory:(NSString*)text style:(HistoryStyle)style;
 
+- (UIBarButtonItem*)textButton:(NSString*)text;
+- (UIBarButtonItem*)tabButton;
+- (UIBarButtonItem*)historyButton:(BOOL)past;
++ (UIBarButtonItem*)smallGap;
++ (UIBarButtonItem*)largeGap;
+
 @end
 
 #pragma mark - Implementation Details
@@ -144,6 +166,55 @@ public:
 {
     [self.console appendHistory:[NSString stringWithUTF8String:data] style:HistoryError];
 }
+@end
+
+@implementation KeyboardButton {
+    UIColor* _background;
+    UIColor* _pressedBackground;
+}
+
+- (id)initWithLabel:(NSString *)label
+            fgColor:(UIColor *)fgColor
+          fgPressed:(UIColor *)fgPressed
+            bgColor:(UIColor *)bgColor
+          bgPressed:(UIColor *)bgPressed {
+    self = [super initWithFrame:CGRectZero];
+    if (self) {
+        _background = bgColor;
+        _pressedBackground = bgPressed;
+        self.backgroundColor = _background;
+        
+        self.layer.cornerRadius = 5.0;
+        self.layer.shadowOffset = CGSizeMake(0, 1.0);
+        self.layer.shadowRadius = 0.2;
+        self.layer.shadowOpacity = 0.5;
+        
+        // I don't think we need to set frame or masksToBounds.
+        
+        [self setAttributedTitle:[[NSAttributedString alloc]
+                                  initWithString:label
+                                  attributes:@{NSFontAttributeName: keyboardFont,
+                                               NSForegroundColorAttributeName: fgColor}]
+                        forState:UIControlStateNormal];
+        if (fgPressed)
+            [self setAttributedTitle:[[NSAttributedString alloc]
+                                      initWithString:label
+                                      attributes:@{NSFontAttributeName: keyboardFont,
+                                                   NSForegroundColorAttributeName: fgPressed}]
+                            forState:UIControlStateHighlighted];
+    }
+    return self;
+}
+
+- (void)setHighlighted:(BOOL)highlighted {
+    if (highlighted)
+        self.backgroundColor = _pressedBackground;
+    else
+        self.backgroundColor = _background;
+    
+    return [super setHighlighted:highlighted];
+}
+
 @end
 
 @implementation PythonConsoleController {
@@ -176,6 +247,55 @@ public:
     [c presentViewController:sheet animated:YES completion:nil];
 }
 
++ (void)setupFonts {
+    promptFont = [UIFont fontWithName:@"Menlo" size:14];
+    outputFont = [UIFont fontWithName:@"Menlo" size:12];
+    inputFont = [UIFont fontWithName:@"Menlo-Bold" size:12];
+    entryFont = outputFont;
+    keyboardFont = [UIFont fontWithName:@"Menlo" size:18];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    if (! promptFont)
+        [PythonConsoleController setupFonts];
+    
+    // Give an extra row on the keyboard containing buttons useful for programmers.
+    UIToolbar* bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
+    bar.barStyle = UIBarStyleDefault;
+    bar.translucent = YES;
+    bar.items = @[[self tabButton], [PythonConsoleController largeGap],
+
+                  [self textButton:@":"], [PythonConsoleController smallGap],
+                  [self textButton:@";"], [PythonConsoleController smallGap],
+                  [self textButton:@"\""], [PythonConsoleController largeGap],
+
+                  [self textButton:@"("], [PythonConsoleController smallGap],
+                  [self textButton:@")"], [PythonConsoleController smallGap],
+                  [self textButton:@"["], [PythonConsoleController smallGap],
+                  [self textButton:@"]"], [PythonConsoleController smallGap],
+                  [self textButton:@"<"], [PythonConsoleController smallGap],
+                  [self textButton:@">"], [PythonConsoleController largeGap],
+                  
+                  [self textButton:@"+"], [PythonConsoleController smallGap],
+                  [self textButton:@"-"], [PythonConsoleController smallGap],
+                  [self textButton:@"*"], [PythonConsoleController smallGap],
+                  [self textButton:@"/"], [PythonConsoleController smallGap],
+                  [self textButton:@"="], [PythonConsoleController largeGap],
+
+                  [self textButton:@"2"], [PythonConsoleController smallGap],
+                  [self textButton:@"3"], [PythonConsoleController smallGap],
+                  [self textButton:@"4"], [PythonConsoleController largeGap],
+                  
+                  [self historyButton:YES], [PythonConsoleController smallGap],
+                  [self historyButton:NO]];
+    
+    [bar sizeToFit];
+    self.input.inputAccessoryView = bar;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     primaryPrompt = true;
@@ -184,12 +304,15 @@ public:
 
     // Make the prompt use a fixed-width font, so that when the prompt
     // changes we do not have to worry about redoing the toolbar layout.
-    [self.prompt setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Menlo" size:14]} forState:UIControlStateNormal];
+    [self.prompt setTitleTextAttributes:@{NSFontAttributeName: promptFont} forState:UIControlStateNormal];
 
-    outputFont = [UIFont fontWithName:@"Menlo" size:12];
-    inputFont = [UIFont fontWithName:@"Menlo-Bold" size:12];
-    entryFont = [UIFont fontWithName:@"Menlo" size:12];
-
+    // Remove the suggestions bar above the keyboard, which will be empty anyway.
+    if ([ReginaHelper ios9]) {
+        UITextInputAssistantItem* item = [self inputAssistantItem];
+        item.leadingBarButtonGroups = @[];
+        item.trailingBarButtonGroups = @[];
+    }
+    
     outputStream = [[PythonConsoleStdout alloc] init];
     errorStream = [[PythonConsoleStderr alloc] init];
     outputStream.console = errorStream.console = self;
@@ -334,6 +457,23 @@ public:
         [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (IBAction)tabPressed {
+    // TODO: Implement completion
+    [self.input insertText:@"    "];
+}
+
+- (IBAction)historyPast {
+    // TODO: Write
+}
+
+- (IBAction)historyFuture {
+    // TODO: Write
+}
+
+- (IBAction)inputFromButton:(id)sender {
+    [self.input insertText:((KeyboardButton*)sender).toInsert];
+}
+
 - (void)appendHistory:(NSString*)text style:(HistoryStyle)style
 {
     // Can be called from any thread.
@@ -423,6 +563,60 @@ public:
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     return (! self.working);
+}
+
+- (UIBarButtonItem*)textButton:(NSString *)text {
+    KeyboardButton *view = [[KeyboardButton alloc] initWithLabel:text
+                                                         fgColor:[UIColor blackColor]
+                                                       fgPressed:nil
+                                                         bgColor:[UIColor whiteColor]
+                                                       bgPressed:[UIColor lightGrayColor]];
+    view.toInsert = text;
+    [view addTarget:self action:@selector(inputFromButton:) forControlEvents:UIControlEventPrimaryActionTriggered];
+    
+    return [[UIBarButtonItem alloc] initWithCustomView:view];
+}
+
+- (UIBarButtonItem*)tabButton {
+    KeyboardButton *view = [[KeyboardButton alloc] initWithLabel:@" Tab "
+                                                         fgColor:[UIColor blackColor]
+                                                       fgPressed:nil
+                                                         bgColor:[UIColor lightGrayColor]
+                                                       bgPressed:[UIColor whiteColor]];
+    [view addTarget:self action:@selector(tabPressed) forControlEvents:UIControlEventPrimaryActionTriggered];
+    
+    return [[UIBarButtonItem alloc] initWithCustomView:view];
+}
+
+- (UIBarButtonItem*)historyButton:(BOOL)past {
+    KeyboardButton* view;
+    if (past) {
+        view = [[KeyboardButton alloc] initWithLabel:@"⬆︎"
+                                             fgColor:[UIColor blackColor]
+                                           fgPressed:nil
+                                             bgColor:[UIColor lightGrayColor]
+                                           bgPressed:[UIColor whiteColor]];
+        [view addTarget:self action:@selector(historyPast) forControlEvents:UIControlEventPrimaryActionTriggered];
+    } else {
+        view = [[KeyboardButton alloc] initWithLabel:@"⬇︎"
+                                             fgColor:[UIColor blackColor]
+                                           fgPressed:nil
+                                             bgColor:[UIColor lightGrayColor]
+                                           bgPressed:[UIColor whiteColor]];
+        [view addTarget:self action:@selector(historyFuture) forControlEvents:UIControlEventPrimaryActionTriggered];
+    }
+    
+    return [[UIBarButtonItem alloc] initWithCustomView:view];
+}
+
++ (UIBarButtonItem *)smallGap {
+    UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    item.width = 5;
+    return item;
+}
+
++ (UIBarButtonItem *)largeGap {
+    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 }
 
 @end
