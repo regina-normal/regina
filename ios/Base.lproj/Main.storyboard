@@ -1241,7 +1241,7 @@
                                             <outlet property="variable" destination="qLe-z9-uka" id="FVV-14-e8r"/>
                                         </connections>
                                     </tableViewCell>
-                                    <tableViewCell contentMode="scaleToFill" misplaced="YES" selectionStyle="none" indentationWidth="10" reuseIdentifier="Variable" id="XR2-Cs-m5k" customClass="ScriptVariableCell">
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="none" indentationWidth="10" reuseIdentifier="Variable" id="XR2-Cs-m5k" customClass="ScriptVariableCell">
                                         <rect key="frame" x="0.0" y="52" width="663.5" height="44"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="XR2-Cs-m5k" id="rEu-v5-Syo">
@@ -1249,24 +1249,24 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Value" textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Jfk-P7-Hkc" customClass="ScriptVariableValueField">
-                                                    <rect key="frame" x="161.5" y="11.5" width="161.5" height="21"/>
+                                                    <rect key="frame" x="276" y="11.5" width="367.5" height="21"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                                    <textInputTraits key="textInputTraits"/>
+                                                    <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no"/>
                                                     <connections>
                                                         <action selector="beginEditValue:" destination="XR2-Cs-m5k" eventType="editingDidBegin" id="xTB-0h-d7u"/>
                                                         <action selector="endEditValue:" destination="XR2-Cs-m5k" eventType="editingDidEnd" id="Dst-xI-ajy"/>
                                                     </connections>
                                                 </textField>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="Container" translatesAutoresizingMaskIntoConstraints="NO" id="sQT-ub-xN0">
-                                                    <rect key="frame" x="117.5" y="6" width="32" height="32"/>
+                                                    <rect key="frame" x="232" y="6" width="32" height="32"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="32" id="iPR-aK-JcU"/>
                                                         <constraint firstAttribute="width" secondItem="sQT-ub-xN0" secondAttribute="height" multiplier="1:1" id="no5-CM-MYX"/>
                                                     </constraints>
                                                 </imageView>
                                                 <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Variable" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="3tI-32-tng">
-                                                    <rect key="frame" x="20" y="11.5" width="89.5" height="21"/>
+                                                    <rect key="frame" x="20" y="11.5" width="204" height="21"/>
                                                     <nil key="textColor"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <textInputTraits key="textInputTraits" autocorrectionType="no" spellCheckingType="no" returnKeyType="done"/>
