@@ -482,8 +482,49 @@ public:
         [self dismissViewControllerAnimated:YES completion:nil];
 }
 
+- (void)tabCompletion {
+    // We only send the last "word", where a word starts with a character or
+    // underscore, and only contains letters, numbers, underscores and the dot.
+    NSRegularExpression* re = [[NSRegularExpression alloc]
+                               initWithPattern:@"([A-Za-z_][A-Za-z0-9_.]*)$"
+                               options:0
+                               error:nil];
+    NSTextCheckingResult* match = [re firstMatchInString:self.input.text
+                                                 options:0
+                                                   range:NSMakeRange(0, self.input.text.length)];
+    
+    if (match.numberOfRanges == 0) {
+        // Nothing to complete.
+        NSLog(@"COMPLETION: Nothing to complete");
+        return;
+    }
+    
+    NSString* word = [self.input.text substringWithRange:match.range];
+
+    regina::python::PrefixCompleter comp;
+    int ans = _interpreter->complete(word.UTF8String, comp);
+    if (ans < 0)
+        NSLog(@"COMPLETION: error");
+    else if (ans == 0)
+        NSLog(@"COMPLETION: none");
+    else {
+        NSLog(@"COMPLETION: %s", comp.prefix().c_str());
+        self.input.text = [self.input.text stringByReplacingCharactersInRange:match.range withString:[NSString stringWithUTF8String:comp.prefix().c_str()]];
+    }
+}
+
 - (IBAction)tabPressed {
-    // TODO: Implement completion
+    // If the text ends in non-whitespace, attempt tab completion.
+    NSUInteger len = self.input.text.length;
+    if (len > 0) {
+        unichar last = [self.input.text characterAtIndex:(len - 1)];
+        if (! [[NSCharacterSet whitespaceCharacterSet] characterIsMember:last]) {
+            [self tabCompletion];
+            return;
+        }
+    }
+    
+    // Just insert an actual tab (but using spaces).
     [self.input insertText:@"    "];
 }
 

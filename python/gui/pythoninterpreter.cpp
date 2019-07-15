@@ -96,7 +96,8 @@ PyThreadState* mainState;
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
         regina::python::PythonOutputStream& pyStdErr) :
-        output(pyStdOut), errors(pyStdErr) {
+        output(pyStdOut), errors(pyStdErr),
+        completer(nullptr), completerFunc(nullptr) {
     std::lock_guard<std::mutex> lock(globalMutex);
 
     // Acquire the global interpreter lock.
@@ -121,7 +122,7 @@ PythonInterpreter::PythonInterpreter(
         #else
             newPath += "/python" REGINA_PY_VERSION ".zip:";
         #endif
-        
+
         if (oldPath)
             newPath += oldPath;
 
@@ -185,6 +186,20 @@ PythonInterpreter::PythonInterpreter(
         pyStdErr.flush();
     }
 
+    // Set up a completer if we can.
+    try {
+        pybind11::object c = pybind11::module::import("rlcompleter")
+            .attr("Completer")();
+        pybind11::object f = c.attr("complete");
+
+        if (c.ptr() && f.ptr()) {
+            // Keep references to both until we destroy the interpreter.
+            Py_INCREF(completer = c.ptr());
+            Py_INCREF(completerFunc = f.ptr());
+        }
+    } catch (std::runtime_error&) {
+    }
+
     pythonInitialised = true;
 
     // Release the global interpreter lock.
@@ -198,6 +213,8 @@ PythonInterpreter::~PythonInterpreter() {
     PyEval_RestoreThread(state);
 
     // Destroy the interpreter.
+    Py_XDECREF(completer);
+    Py_XDECREF(completerFunc);
     Py_EndInterpreter(state);
 
     // Release the global interpreter lock.
@@ -507,6 +524,56 @@ PyObject* PythonInterpreter::extractErrMsg() {
 void PythonInterpreter::flush() {
     output.flush();
     errors.flush();
+}
+
+int PythonInterpreter::complete(const std::string& text, PythonCompleter& c) {
+    if (! completerFunc)
+        return -1;
+
+    PyEval_RestoreThread(state);
+
+    try {
+        pybind11::handle func(completerFunc);
+        int which = 0;
+        while (true) {
+            pybind11::object ans = func(text, which);
+            if (ans.is_none()) {
+                // No more completions available.
+                state = PyEval_SaveThread();
+                return which;
+            }
+            ++which;
+            if (! c.addCompletion(pybind11::cast<std::string>(ans))) {
+                // The PythonCompleter object does not want more completions.
+                state = PyEval_SaveThread();
+                return which;
+            }
+        }
+    } catch (std::runtime_error& e) {
+        state = PyEval_SaveThread();
+        return -1;
+    }
+}
+
+bool PrefixCompleter::addCompletion(const std::string& s) {
+    if (! initialised_) {
+        initialised_ = true;
+        prefix_ = s;
+    } else {
+        // Find the longest common prefix between prefix_ and s.
+        auto pit = prefix_.begin();
+        auto sit = s.begin();
+
+        while (pit != prefix_.end() && sit != prefix_.end()) {
+            if (*pit != *sit)
+                break;
+            ++pit;
+            ++sit;
+        }
+
+        prefix_.erase(pit, prefix_.end());
+    }
+    return ! prefix_.empty();
 }
 
 } } // namespace regina::python

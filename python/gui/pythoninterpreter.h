@@ -56,6 +56,71 @@ namespace python {
 class PythonOutputStream;
 
 /**
+ * A callback object that the user can pass to PythonInterpreter::complete().
+ *
+ * Subclasses must override addCompletion(), which receives completions
+ * one at a time as PythonInterpreter::complete() finds them.
+ */
+class PythonCompleter {
+    public:
+        /**
+         * Called each time addCompletion() finds a new completion.
+         *
+         * Note that python's completion code has been known to return the
+         * same completion multiple times (in which case the same completion
+         * will be passed to this function multiple times in turn).
+         *
+         * @param s the new completion.  This string will begin with the
+         * original text that was passed to PythonCompleter::complete().
+         * @return \c true to indicate that PythonCompleter::complete()
+         * should continue searching for more completions, or \c false
+         * if PythonCompleter::complete() can finish now.
+         */
+        virtual bool addCompletion(const std::string& s) = 0;
+};
+
+/**
+ * A python completion callback that computes the longest common prefix
+ * for all of the completions that it receives.  This can (for example)
+ * be used to decide what text to immediately append to the current line
+ * when tab is pressed.
+ *
+ * \warning This class computes the longest common prefix using raw
+ * characters, with no understanding of unicode.  It is possible that
+ * the resulting prefix will be an invalid UTF-8 string.
+ */
+class PrefixCompleter : public PythonCompleter {
+    private:
+        bool initialised_;
+            /** Has this object received any completions at all yet? */
+        std::string prefix_;
+            /** The longest common prefix for all completions received. */
+
+    public:
+        /**
+         * Creates a new callback object.  You will need to create a new
+         * object each time you call PythonCompleter::complete(); that is,
+         * you cannot reuse the same callback object across multiple
+         * calls to PythonCompleter::complete().
+         */
+        PrefixCompleter();
+        /**
+         * Returns the longest common prefix for all completions received so
+         * far.  If no completions have been received at all, then this
+         * will be the empty string.
+         *
+         * \warning This might not be a valid UTF-8 string, since the
+         * longest common prefix computation works with raw characters
+         * and does not understand unicode.
+         *
+         * @return the longest common prefix for all completions.
+         */
+        const std::string& prefix() const;
+
+        bool addCompletion(const std::string& s) override;
+};
+
+/**
  * A single python subinterpreter.  Multiple subinterpreters are independent
  * and may exist simultaneously.
  *
@@ -79,6 +144,12 @@ class PythonInterpreter {
             /**< The __main__ module. */
         PyObject* mainNamespace;
             /**< The global namespace. */
+        PyObject* completer;
+            /**< The current rlcompleter::Completer object, or \c null
+                 if one could not be created. */
+        PyObject* completerFunc;
+            /**< The method completer.complete(), or \c null if this reference
+                 could not be acquired. */
 
         std::string currentCode;
             /**< Any previous statements (such as loop openings) that are
@@ -134,6 +205,29 @@ class PythonInterpreter {
          */
         void flush();
 
+        /**
+         * Attempts to complete the given Python string.
+         *
+         * The completion process uses the Python \c rlcompleter
+         * module; see the corresponding Python documentation for what
+         * text can be completed and how completion works.
+         *
+         * Each completion that is found will be passed to \a completer
+         * using PythonCompleter::addCompletion(), until either
+         * (i) \a completer returns \c false to signify that no more
+         * completions are required, or (ii) no more completions can be found.
+         *
+         * @param text the Python text to complete.
+         * @param completer the callback object that will receive the
+         * resulting completions (if any).
+         * @return the number of completions that were passed to \a completer,
+         * or -1 if the completion process failed (e.g., if the \c rlcompleter
+         * Python module could not be imported).  In particular, if the
+         * completion process ran succesfully and determined that the given
+         * text has no completions at all, this routine will return 0.
+         */
+        int complete(const std::string& text, PythonCompleter& completer);
+
     private:
         /**
          * Run the given Python code in Python's main namespace.
@@ -174,6 +268,13 @@ class PythonInterpreter {
          */
         static bool importReginaIntoNamespace(PyObject* useNamespace);
 };
+
+inline PrefixCompleter::PrefixCompleter() : initialised_(false) {
+}
+
+inline const std::string& PrefixCompleter::prefix() const {
+    return prefix_;
+}
 
 } } // namespace regina::python
 
