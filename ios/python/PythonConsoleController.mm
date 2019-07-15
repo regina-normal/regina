@@ -482,50 +482,67 @@ public:
         [self dismissViewControllerAnimated:YES completion:nil];
 }
 
-- (void)tabCompletion {
+- (NSString*)tabCompletion:(NSString*)textToComplete {
     // We only send the last "word", where a word starts with a character or
     // underscore, and only contains letters, numbers, underscores and the dot.
     NSRegularExpression* re = [[NSRegularExpression alloc]
                                initWithPattern:@"([A-Za-z_][A-Za-z0-9_.]*)$"
                                options:0
                                error:nil];
-    NSTextCheckingResult* match = [re firstMatchInString:self.input.text
+    NSTextCheckingResult* match = [re firstMatchInString:textToComplete
                                                  options:0
-                                                   range:NSMakeRange(0, self.input.text.length)];
+                                                   range:NSMakeRange(0, textToComplete.length)];
     
     if (match.numberOfRanges == 0) {
         // Nothing to complete.
-        NSLog(@"COMPLETION: Nothing to complete");
-        return;
+        return nil;
     }
     
-    NSString* word = [self.input.text substringWithRange:match.range];
+    NSString* word = [textToComplete substringWithRange:match.range];
 
     regina::python::PrefixCompleter comp;
     int ans = _interpreter->complete(word.UTF8String, comp);
-    if (ans < 0)
-        NSLog(@"COMPLETION: error");
-    else if (ans == 0)
-        NSLog(@"COMPLETION: none");
-    else {
-        NSLog(@"COMPLETION: %s", comp.prefix().c_str());
-        self.input.text = [self.input.text stringByReplacingCharactersInRange:match.range withString:[NSString stringWithUTF8String:comp.prefix().c_str()]];
+    if (ans < 0) {
+        NSLog(@"ERROR: Completion failed");
+        return nil;
+    } else if (ans == 0) {
+        // No completions for this word.
+        return nil;
+    } else {
+        NSString* replacement = [NSString stringWithUTF8String:comp.prefix().c_str()];
+        return [replacement substringFromIndex:word.length];
     }
 }
 
 - (IBAction)tabPressed {
-    // If the text ends in non-whitespace, attempt tab completion.
-    NSUInteger len = self.input.text.length;
+    // If the cursor is sitting immediately after non-whitespace, attempt tab completion.
+    // First fetch the substring up to and including the cursor.
+    UITextRange* selection = [self.input selectedTextRange];
+    if (! selection) {
+        NSLog(@"ERROR: Cannot fetch cursor position");
+        // Pretend the cursor is at the end of the input.
+        selection = [self.input textRangeFromPosition:self.input.endOfDocument toPosition:self.input.endOfDocument];
+    }
+
+    // Fetch everything *before* the cursor.
+    // We will try to tab complete at the end of this block.
+    UITextRange* prefixRange = [self.input textRangeFromPosition:self.input.beginningOfDocument toPosition:selection.start];
+    NSString* prefix = [self.input textInRange:prefixRange];
+    
+    NSUInteger len = prefix.length;
     if (len > 0) {
         unichar last = [self.input.text characterAtIndex:(len - 1)];
         if (! [[NSCharacterSet whitespaceCharacterSet] characterIsMember:last]) {
-            [self tabCompletion];
+            // Try to tab complete the prefix.
+            NSString* completion = [self tabCompletion:prefix];
+            if (completion)
+                [self.input replaceRange:selection withText:completion];
             return;
         }
     }
     
     // Just insert an actual tab (but using spaces).
-    [self.input insertText:@"    "];
+    [self.input replaceRange:selection withText:@"    "];
 }
 
 - (IBAction)historyPast {
