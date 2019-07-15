@@ -291,10 +291,10 @@ public:
     bar.translucent = YES;
     bar.items = @[[self tabButton], [PythonConsoleController largeGap],
 
-                  [self textButton:@":"], [PythonConsoleController smallGap],
-                  [self textButton:@";"], [PythonConsoleController smallGap],
-                  [self textButton:@"\""], [PythonConsoleController largeGap],
-
+                  [self textButton:@"2"], [PythonConsoleController smallGap],
+                  [self textButton:@"3"], [PythonConsoleController smallGap],
+                  [self textButton:@"4"], [PythonConsoleController largeGap],
+                  
                   [self textButton:@"("], [PythonConsoleController smallGap],
                   [self textButton:@")"], [PythonConsoleController smallGap],
                   [self textButton:@"["], [PythonConsoleController smallGap],
@@ -308,9 +308,9 @@ public:
                   [self textButton:@"/"], [PythonConsoleController smallGap],
                   [self textButton:@"="], [PythonConsoleController largeGap],
 
-                  [self textButton:@"2"], [PythonConsoleController smallGap],
-                  [self textButton:@"3"], [PythonConsoleController smallGap],
-                  [self textButton:@"4"], [PythonConsoleController largeGap],
+                  [self textButton:@":"], [PythonConsoleController smallGap],
+                  [self textButton:@";"], [PythonConsoleController smallGap],
+                  [self textButton:@"\""], [PythonConsoleController largeGap],
                   
                   _pastButton, [PythonConsoleController smallGap], _futureButton];
     
