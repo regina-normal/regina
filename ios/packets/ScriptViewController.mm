@@ -187,23 +187,15 @@ regina::syntax::Repository* repository;
     p.watcher = self;
     self.value.inputView = p;
 
+    // TODO: Fix the baseline movement on edit.
+    
+    // Put a [Done] button above the picker.
     UIBarButtonItem* done = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemDone
                                                                           target:self.value
                                                                           action:@selector(resignFirstResponder)];
-
-    // TODO: Fix the baseline movement on edit.
-    if ([ReginaHelper ios9]) {
-        UIBarButtonItemGroup* group = [[UIBarButtonItemGroup alloc] initWithBarButtonItems:@[done] representativeItem:nil];
-        self.value.inputAssistantItem.leadingBarButtonGroups = @[];
-        self.value.inputAssistantItem.trailingBarButtonGroups = @[group];
-    } else {
-        UIToolbar* bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.scriptView.view.frame.size.width, 50)];
-        bar.barStyle = UIBarStyleDefault;
-        UIBarButtonItem* gap = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
-        bar.items = @[gap, done];
-        [bar sizeToFit];
-        self.value.inputAccessoryView = bar;
-    }
+    self.value.inputAssistantItem.leadingBarButtonGroups = @[];
+    self.value.inputAssistantItem.trailingBarButtonGroups = @[[[UIBarButtonItemGroup alloc]
+                                                               initWithBarButtonItems:@[done] representativeItem:nil]];
 }
 
 - (IBAction)endEditValue:(id)sender {

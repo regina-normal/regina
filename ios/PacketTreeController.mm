@@ -160,11 +160,6 @@
             [_packets addPointer:p];
     }
 
-    // This messes things up a little in iOS8: for example, when a child packet
-    // is deleted through python, then the refreshed table view fails to display
-    // the detail (i.e., # subpackets) for some cells.
-    // This appears to work correctly in iOS9, and since iOS8 is getting quite
-    // old now (Apple is up to iOS10 at the time of writing), we will just leave this be.
     [self.tableView reloadData];
 }
 

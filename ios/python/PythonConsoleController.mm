@@ -307,11 +307,9 @@ public:
     [self.prompt setTitleTextAttributes:@{NSFontAttributeName: promptFont} forState:UIControlStateNormal];
 
     // Remove the suggestions bar above the keyboard, which will be empty anyway.
-    if ([ReginaHelper ios9]) {
-        UITextInputAssistantItem* item = [self inputAssistantItem];
-        item.leadingBarButtonGroups = @[];
-        item.trailingBarButtonGroups = @[];
-    }
+    UITextInputAssistantItem* item = [self inputAssistantItem];
+    item.leadingBarButtonGroups = @[];
+    item.trailingBarButtonGroups = @[];
     
     outputStream = [[PythonConsoleStdout alloc] init];
     errorStream = [[PythonConsoleStderr alloc] init];
