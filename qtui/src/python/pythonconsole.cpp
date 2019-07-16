@@ -123,7 +123,7 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     input->setWhatsThis(inputMsg);
     input->setFocus();
 
-    completer = NULL;
+    completer = nullptr;
     connect(input, SIGNAL(completionRequested()), this, SLOT(processCompletion()),Qt::QueuedConnection);
 
     inputAreaLayout->addWidget(input, 1);
@@ -278,6 +278,11 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
 }
 
 PythonConsole::~PythonConsole() {
+    if (completer) {
+        input->setCompleter(nullptr);
+        delete completer;
+    }
+
     ReginaPrefSet::global().windowPythonSize = size();
 
     delete interpreter;
@@ -578,19 +583,20 @@ void PythonConsole::processCompletion() {
 
         completer = new QCompleter(comp.completions(), this);
         completer->setCaseSensitivity(Qt::CaseInsensitive);
-        input->setCompleter(completer);
+        completer->setWidget(input);
         // Disconnect activated signal from completer
         
         // We call our own instead, since the default action is to completely
         // replace the text.
-        disconnect(input->completer(), SIGNAL(activated(QString)), input, 0);
-        disconnect(input->completer(), SIGNAL(highlighted(QString)), input, 0);
-        connect(input->completer(), SIGNAL(activated(QString)), input, SLOT(complete(QString)));
-        connect(input->completer(), SIGNAL(highlighted(QString)), input, SLOT(complete(QString)));
+        disconnect(completer, nullptr, input, nullptr);
+        connect(completer, SIGNAL(activated(const QString&)),
+            input, SLOT(complete(QString)));
+        connect(completer, SIGNAL(highlighted(const QString&)),
+            input, SLOT(complete(QString)));
         // Tell the completer to give suggestions "now", normal operation is to
         // wait until the user types something, but here the user has already
         // typed.
-        input->completer()->complete();
+        completer->complete();
     } else if (comp.count() == 1) {
         // Get everything except the last word, and then append the suggestion.
         lineStart += comp.completions().at(0);
