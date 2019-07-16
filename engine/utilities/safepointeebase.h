@@ -39,7 +39,7 @@
 #define __SAFEPOINTEEBASE_H
 #endif
 
-#include "utilities/saferemnant.h"
+#include <atomic>
 
 namespace regina {
 
@@ -59,7 +59,7 @@ namespace regina {
  *
  * The overhead introduced by subclassing from SafePointeeBase without using
  * the features of the accompanying smart pointer SafePtr are minimal:
- * one extra pointer that needs to be zeroed upon construction.
+ * one extra (atomic) integer that needs to be zeroed upon construction.
  *
  * Regina's classes that derive from SafePointeeBase do so to help with
  * python wrapping.
@@ -75,19 +75,10 @@ public:
     /**
      * Prevent derived classes from accidentally calling the copy constructor.
      * A derived class' copy constructor by default calls the protected default
-     * constructor, which it should because it sets the remnant_ to zero on
+     * constructor, which it should because it sets the refCount_ to zero on
      * the copied object.
      */
     SafePointeeBase(const SafePointeeBase &) = delete;
-
-    /**
-     * Destructor.
-     *
-     * Once this destructor is called, any SafePtr that points to this object
-     * will be aware that the object has expired and that the pointer cannot
-     * be dereferenced any longer.
-     */
-    ~SafePointeeBase();
 
     /**
      * Prevent derived classes from accidentally calling the assignment
@@ -112,9 +103,10 @@ protected:
     SafePointeeBase();
 
 private:
-    friend class detail::SafeRemnant<T>;
-    detail::SafeRemnant<T> *remnant_;
-        /**< Points to the corresponding persistent object. */
+    template<class U> friend class SafePtr;
+
+    std::atomic<int> refCount_;
+        /**< Counts how many SafePtr are pointing to this object. */
 };
 
 /*@}*/
@@ -122,23 +114,14 @@ private:
 // Inline functions for SafePointeeBase
 
 template <class T>
-inline SafePointeeBase<T>::SafePointeeBase() : remnant_(nullptr) {
-}
-
-template <class T>
-inline SafePointeeBase<T>::~SafePointeeBase() {
-    // If existing, expire the remnant. Thus, all SafePtr's pointing to
-    // this object know that they cannot be dereferenced anylonger.
-    if (remnant_) {
-        remnant_->expire();
-    }
+inline SafePointeeBase<T>::SafePointeeBase() : refCount_(0) {
 }
 
 template <class T>
 inline bool SafePointeeBase<T>::hasSafePtr() const {
     // When the first SafePtr is created, it creates a new remnant;
     // when the last SafePtr is destroyed, it resets remnant_ to null.
-    return remnant_;
+    return refCount_.load() > 0;
 }
 
 } // namespace regina
