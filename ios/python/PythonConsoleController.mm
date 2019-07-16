@@ -34,6 +34,7 @@
 #import "ReginaHelper.h"
 #import "TextHelper.h"
 #import "packet/script.h"
+#import "utilities/i18nutils.h"
 #import "../python/gui/pythoninterpreter.h"
 #import "../python/gui/pythonoutputstream.h"
 
@@ -486,7 +487,7 @@ public:
     // We only send the last "word", where a word starts with a character or
     // underscore, and only contains letters, numbers, underscores and the dot.
     NSRegularExpression* re = [[NSRegularExpression alloc]
-                               initWithPattern:@"([A-Za-z_][A-Za-z0-9_.]*)$"
+                               initWithPattern:@"([\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}_][\\w_.]*)$"
                                options:0
                                error:nil];
     NSTextCheckingResult* match = [re firstMatchInString:textToComplete
@@ -509,8 +510,26 @@ public:
         // No completions for this word.
         return nil;
     } else {
-        NSString* replacement = [NSString stringWithUTF8String:comp.prefix().c_str()];
-        return [replacement substringFromIndex:word.length];
+        // When returning the completion, ignore the initial word that was matched.
+        
+        // Beware: the longest common prefix might not be valid UTF-8.
+        // We will set validated to the longest valid UTF-8 prefix.
+        const std::string& completion = comp.prefix();
+        
+        NSString* validated;
+        auto valid = regina::i18n::utf8ValidTo(completion);
+        if (valid == completion.end())
+            validated = [NSString stringWithUTF8String:completion.c_str()];
+        else
+            validated = [NSString stringWithUTF8String:std::string(completion.begin(), valid).c_str()];
+        
+        if (validated.length >= word.length)
+            return [validated substringFromIndex:word.length];
+        else {
+            // Something broke: we did not even get the initial matching word.
+            NSLog(@"ERROR: UTF-8 validation failed for match during completion");
+            return nil;
+        }
     }
 }
 
