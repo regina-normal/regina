@@ -487,7 +487,7 @@ public:
     // We only send the last "word", where a word starts with a character or
     // underscore, and only contains letters, numbers, underscores and the dot.
     NSRegularExpression* re = [[NSRegularExpression alloc]
-                               initWithPattern:@"([\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}_][\\w_.]*)$"
+                               initWithPattern:@"[\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}_][\\w_.]*$"
                                options:0
                                error:nil];
     NSTextCheckingResult* match = [re firstMatchInString:textToComplete
