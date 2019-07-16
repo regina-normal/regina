@@ -195,6 +195,8 @@ Version 5.2  [ 29 September, 2017 ]
         Routine politeThreads():
             - New routine to help user interfaces choose an appropriate
               level of parallelisation.
+        Routine utf8ValidTo():
+            - New routine to validate UTF-8 strings.
         Headers engine.h, output.h:
             - Moved into the core/ subdirectory, to help avoid naming conflicts
               with other software packages.  The original headers have

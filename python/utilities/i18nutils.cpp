@@ -39,5 +39,10 @@ void addLocale(pybind11::module& m) {
         .def_static("codeset", &regina::i18n::Locale::codeset)
     ;
     regina::python::no_eq_operators(c);
+
+    m.def("utf8ValidTo", [](const char* s) {
+        const char* ans = regina::i18n::utf8ValidTo(s);
+        return (ans - s);
+    });
 }
 

@@ -44,6 +44,46 @@
 namespace regina {
 namespace i18n {
 
+std::string::const_iterator utf8ValidTo(const std::string& s) {
+    const char* ans = utf8ValidTo(s.c_str());
+    return s.begin() + (ans - s.c_str());
+}
+
+const char* utf8ValidTo(const char* s) {
+    const char* p = s;
+    while (*p) {
+        if (! (*p & 0x80)) {
+            ++p;
+        } else if (! (*p & 0x40)) {
+            // Invalid!
+            return p;
+        } else if (! (*p & 0x20)) {
+            // 2-byte code
+            if ((*(p+1) & 0xC0) == 0x80)
+                p += 2;
+            else
+                return p;
+        } else if (! (*p & 0x10)) {
+            // 3-byte code
+            if ((*(p+1) & 0xC0) == 0x80 && (*(p+2) & 0xC0) == 0x80)
+                p += 3;
+            else
+                return p;
+        } else if (! (*p & 0x08)) {
+            // 4-byte code
+            if ((*(p+1) & 0xC0) == 0x80 && (*(p+2) & 0xC0) == 0x80 &&
+                    (*(p+3) & 0xC0) == 0x80)
+                p += 4;
+            else
+                return p;
+        } else {
+            // Invalid!
+            return p;
+        }
+    }
+    return p;
+}
+
 bool Locale::initialised = false;
 
 const iconv_t IConvStreamBuffer::cdNone((iconv_t)(-1));
