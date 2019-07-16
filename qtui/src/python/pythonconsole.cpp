@@ -537,7 +537,6 @@ void PythonConsole::processCompletion() {
     // Send a request for a completion to python.
     // We only send the last "word", where a word starts with a character or
     // underscore, and only contains letters,numbers,underscores and the dot
-    QString cmd = "__regina_tab_completion.complete(\"%1\",%2) or \">\"";
     QRegExp re("([A-Za-z_][A-Za-z0-9_.]*)$");
     QString lastWord = input->text();
     int pos=re.indexIn(input->text());
