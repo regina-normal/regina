@@ -85,9 +85,7 @@ class PythonCompleter {
  * be used to decide what text to immediately append to the current line
  * when tab is pressed.
  *
- * \warning This class computes the longest common prefix using raw
- * characters, with no understanding of unicode.  It is possible that
- * the resulting prefix will be an invalid UTF-8 string.
+ * The common prefix is computed in terms of unicode characters, not raw bytes.
  */
 class PrefixCompleter : public PythonCompleter {
     private:
@@ -109,9 +107,8 @@ class PrefixCompleter : public PythonCompleter {
          * far.  If no completions have been received at all, then this
          * will be the empty string.
          *
-         * \warning This might not be a valid UTF-8 string, since the
-         * longest common prefix computation works with raw characters
-         * and does not understand unicode.
+         * The common prefix is computed in terms of unicode characters,
+         * and the return value will be a valid UTF-8 string.
          *
          * @return the longest common prefix for all completions.
          */

@@ -564,11 +564,76 @@ bool PrefixCompleter::addCompletion(const std::string& s) {
         auto pit = prefix_.begin();
         auto sit = s.begin();
 
-        while (pit != prefix_.end() && sit != prefix_.end()) {
+        while (pit != prefix_.end() && sit != s.end()) {
             if (*pit != *sit)
                 break;
-            ++pit;
-            ++sit;
+
+            // The first bytes are the same.
+            // However, we need to compare unicode characters, not bytes.
+
+            if (! (*pit & 0x80)) {
+                // 0xxxxxxx: 1-byte code.
+                // These are equal and valid unicode characters.
+                ++pit; ++sit;
+                continue;
+            }
+
+            // We have a multi-byte unicode character.
+            // Leave pit pointing at the first byte until we're
+            // satisfied that both unicode characters are valid and equal.
+
+            if (! (*pit & 0x40)) {
+                // 10xxxxxx: Invalid code
+                break;
+            }
+
+            auto tmp = pit;
+            ++tmp; ++sit; // move to second byte
+
+            // Check the second byte.
+            if (tmp == prefix_.end() || sit == s.end() || // incomplete
+                    *tmp != *sit || // unequal unicode characters
+                    (*tmp & 0xC0) != 0x80 || (*sit & 0xC0) != 0x80) // invalid
+                break;
+
+            ++tmp; ++sit; // move to third byte
+
+            if (! (*pit & 0x20)) {
+                // 110xxxxx: 2-byte codes, and they are valid and equal.
+                pit = tmp;
+                continue;
+            }
+
+            // Check the third byte.
+            if (tmp == prefix_.end() || sit == s.end() || // incomplete
+                    *tmp != *sit || // unequal unicode characters
+                    (*tmp & 0xC0) != 0x80 || (*sit & 0xC0) != 0x80) // invalid
+                break;
+
+            ++tmp; ++sit; // move to fourth byte
+
+            if (! (*pit & 0x10)) {
+                // 1110xxxx: 3-byte codes, and they are valid and equal.
+                pit = tmp;
+                continue;
+            }
+
+            // Check the fourth byte.
+            if (tmp == prefix_.end() || sit == s.end() || // incomplete
+                    *tmp != *sit || // unequal unicode characters
+                    (*tmp & 0xC0) != 0x80 || (*sit & 0xC0) != 0x80) // invalid
+                break;
+
+            ++tmp; ++sit; // move beyond the fourth byte
+
+            if (! (*pit & 0x08)) {
+                // 11110xxx: 4-byte codes, and they are valid and equal.
+                pit = tmp;
+                continue;
+            }
+
+            // 11111xxx: Invalid codes!
+            break;
         }
 
         prefix_.erase(pit, prefix_.end());

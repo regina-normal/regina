@@ -546,7 +546,8 @@ void PythonConsole::processCompletion() {
         return;
     }
 
-    input->setCompletionLineStart(input->text().left(pos));
+    QString lineStart = input->text().left(pos);
+    input->setCompletionLineStart(lineStart);
     lastWord = re.cap(1);
 
     if (interpreter->complete(lastWord.toUtf8().constData(), comp) < 0) {
@@ -564,20 +565,16 @@ void PythonConsole::processCompletion() {
     input->setFocus();
 
     if (comp.count() > 1) {
-        // Find a substring common to all suggestions
+        // Find a substring common to all suggestions.
+        // Note: the PrefixCompleter base class computes this substring in
+        // terms of unicode (i.e., it compares UTF-8 characters, not raw bytes).
         QString prefix(comp.prefix().c_str());
 
         // Get everything except the last word, and then append the letters
         // common to all suggestions.
         if (! prefix.isEmpty()) {
-            QRegExp re("^(.*[^A-Za-z_.])[[\\]A-Za-z_][A-Za-z0-9_.]*$");
-            QString start=""; 
-            int pos=0;
-            if (re.indexIn(input->text(),pos) != -1 ) {
-                start = re.cap(1);
-            }
-            start+=prefix;
-            input->setText(start);
+            lineStart += prefix;
+            input->setText(lineStart);
         }
 
         completer = new QCompleter(comp.completions(), this);
@@ -597,14 +594,8 @@ void PythonConsole::processCompletion() {
         input->completer()->complete();
     } else if (comp.count() == 1) {
         // Get everything except the last word, and then append the suggestion.
-        QRegExp re("^(.*[^A-Za-z_.])[[\\]A-Za-z_][A-Za-z0-9_.]*$");
-        QString start=""; 
-        int pos=0;
-        if (re.indexIn(input->text(),pos) != -1 ) {
-            start = re.cap(1);
-        }
-        start+=comp.completions().at(0);
-        input->setText(start);
+        lineStart += comp.completions().at(0);
+        input->setText(lineStart);
     } else {
         // No completions, an error occured.
         // Note that if a valid word is completed (like "from") the whole word

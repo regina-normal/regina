@@ -510,24 +510,16 @@ public:
         // No completions for this word.
         return nil;
     } else {
+        // Note: PrefixCompleter does understand unicode, and computes the
+        // longest common prefix in terms of UTF-8 unicode characters.
+        NSString* completion = [NSString stringWithUTF8String:comp.prefix().c_str()];
+        
         // When returning the completion, ignore the initial word that was matched.
-        
-        // Beware: the longest common prefix might not be valid UTF-8.
-        // We will set validated to the longest valid UTF-8 prefix.
-        const std::string& completion = comp.prefix();
-        
-        NSString* validated;
-        auto valid = regina::i18n::utf8ValidTo(completion);
-        if (valid == completion.end())
-            validated = [NSString stringWithUTF8String:completion.c_str()];
-        else
-            validated = [NSString stringWithUTF8String:std::string(completion.begin(), valid).c_str()];
-        
-        if (validated.length >= word.length)
-            return [validated substringFromIndex:word.length];
+        if (completion.length >= word.length)
+            return [completion substringFromIndex:word.length];
         else {
             // Something broke: we did not even get the initial matching word.
-            NSLog(@"ERROR: UTF-8 validation failed for match during completion");
+            NSLog(@"ERROR: Completion does not include original matched word");
             return nil;
         }
     }
