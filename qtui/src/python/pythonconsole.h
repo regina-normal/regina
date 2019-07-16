@@ -236,8 +236,10 @@ class PythonConsole : public QMainWindow {
 
         /**
          * Process tab completion on the partial line.
+         * The arguments indicate the range of selected text, or if
+         * nothing is selected, the current cursor position.
          **/
-        void processCompletion();
+        void processCompletion(int start, int end);
 
     private:
         /**

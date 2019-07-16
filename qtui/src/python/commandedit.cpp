@@ -62,10 +62,18 @@ bool CommandEdit::event(QEvent* event) {
         }
         setCompleter(0); // Started typing again, disable completer
         if (keyEvent->key() == Qt::Key_Tab) {
-            // If we have some text, and it doesn't end in whitespace, we
-            // attempt tab completion. Else just insert tabs as normal.
-            if ((text().length() > 0) && (!text().right(1).contains(" "))) {
-                emit completionRequested();
+            // If there is some text before the cursor, and it doesn't
+            // end in whitespace, then attempt tab completion.
+            // Otherwise just insert a tab (using spaces) as normal.
+            int start, end;
+            if (hasSelectedText()) {
+                start = selectionStart();
+                end = selectionEnd();
+            } else
+                start = end = cursorPosition();
+
+            if (start > 0 && ! text()[start - 1].isSpace()) {
+                emit completionRequested(start, end);
                 return true;
             } else {
                 insert(tabReplacement);
@@ -131,7 +139,8 @@ void CommandEdit::keyPressEvent(QKeyEvent* event) {
 }
 
 void CommandEdit::complete(QString completion) {
-    setText(lineStart + completion);
+    setText(lineStart + completion + lineEnd);
+    setCursorPosition(lineStart.length() + completion.length());
 }
 
 void CommandEdit::highlightErrorInInput() {
@@ -142,8 +151,9 @@ void CommandEdit::highlightErrorInInput() {
     setPalette(pal);
 }
 
-void CommandEdit::setCompletionLineStart(QString line) {
-    lineStart = line;
+void CommandEdit::setCompletionSurrounds(QString start, QString end) {
+    lineStart = start;
+    lineEnd = end;
 }
 
 void CommandEdit::clearErrorInInput() {

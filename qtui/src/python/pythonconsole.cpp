@@ -125,7 +125,8 @@ PythonConsole::PythonConsole(QWidget* parent, PythonManager* useManager) :
     input->setFocus();
 
     completer = nullptr;
-    connect(input, SIGNAL(completionRequested()), this, SLOT(processCompletion()),Qt::QueuedConnection);
+    connect(input, SIGNAL(completionRequested(int, int)),
+        this, SLOT(processCompletion(int, int)),Qt::QueuedConnection);
 
     inputAreaLayout->addWidget(input, 1);
     layout->addLayout(inputAreaLayout);
@@ -537,23 +538,31 @@ void PythonConsole::processCommand() {
         allowInput(done);
 }
 
-void PythonConsole::processCompletion() {
+void PythonConsole::processCompletion(int start, int end) {
     GUICompleter comp;
 
     // Send a request for a completion to python.
-    // We only send the last "word", where a word starts with a character or
-    // underscore, and only contains letters,numbers,underscores and the dot
+    // We only send the last "word" before the cursor / selected block, where
+    // a "word" starts with a character or underscore, and only contains
+    // letters, numbers, underscores and/or the dot.
     QRegularExpression re("[\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}_][\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}_.]*$");
-    QRegularExpressionMatch m = re.match(input->text());
+    QRegularExpressionMatch m;
+    if (start == input->text().length())
+        m = re.match(input->text());
+    else
+        m = re.match(input->text().left(start));
     if (! m.hasMatch()) {
         // Nothing to complete.
         return;
     }
 
+    // The completion (if any) gets inserted between lineStart and lineEnd:
     QString lineStart = input->text().left(m.capturedStart());
-    input->setCompletionLineStart(lineStart);
-    QString lastWord = m.captured();
+    QString lineEnd = input->text().mid(end);
+    input->setCompletionSurrounds(lineStart, lineEnd);
 
+    // Ask python for all completions.
+    QString lastWord = m.captured();
     if (interpreter->complete(lastWord.toUtf8().constData(), comp) < 0) {
         // Completion failed.
         return;
@@ -568,24 +577,31 @@ void PythonConsole::processCompletion() {
     // signal.
     input->setFocus();
 
-    if (comp.count() > 1) {
+    if (comp.count() >= 1) {
         // Find a substring common to all suggestions.
         // Note: the PrefixCompleter base class computes this substring in
         // terms of unicode (i.e., it compares UTF-8 characters, not raw bytes).
         QString prefix(comp.prefix().c_str());
 
-        // Get everything except the last word, and then append the letters
-        // common to all suggestions.
-        if (! prefix.isEmpty()) {
-            lineStart += prefix;
-            input->setText(lineStart);
+        // Automatically extend the last word to become this prefix.
+        if (prefix.length() >= lastWord.length()) {
+            input->insert(prefix.mid(lastWord.length()));
+        } else {
+            // This should never happen.
+            std::cerr << "ERROR: Completion does not include "
+                "original matched word" << std::endl;
+            return;
         }
 
+        if (comp.count() == 1)
+            return;
+
+        // There are multiple completions; show them to the user.
         completer = new QCompleter(comp.completions(), this);
         completer->setCaseSensitivity(Qt::CaseInsensitive);
         completer->setWidget(input);
-        // Disconnect activated signal from completer
-        
+
+        // Disconnect activated signals from the new completer.
         // We call our own instead, since the default action is to completely
         // replace the text.
         disconnect(completer, nullptr, input, nullptr);
@@ -593,14 +609,11 @@ void PythonConsole::processCompletion() {
             input, SLOT(complete(QString)));
         connect(completer, SIGNAL(highlighted(const QString&)),
             input, SLOT(complete(QString)));
+
         // Tell the completer to give suggestions "now", normal operation is to
         // wait until the user types something, but here the user has already
         // typed.
         completer->complete();
-    } else if (comp.count() == 1) {
-        // Get everything except the last word, and then append the suggestion.
-        lineStart += comp.completions().at(0);
-        input->setText(lineStart);
     } else {
         // No completions, an error occured.
         // Note that if a valid word is completed (like "from") the whole word
