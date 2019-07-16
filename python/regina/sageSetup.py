@@ -12,21 +12,6 @@ import sage.all
 engine._addSageHacks()
 
 # -------------------------------------------------------------------------
-# Census data location
-# -------------------------------------------------------------------------
-
-# In sageRegina, the census files are supplied differently.
-# Set the location here.
-try:
-    from .pyCensus import __path__ as _pyCensusPath
-    GlobalDirs.setDirs(
-        GlobalDirs.home(),
-        GlobalDirs.pythonModule(),
-        _pyCensusPath[0])
-except ImportError:
-    pass
-
-# -------------------------------------------------------------------------
 # Conversion from Regina objects to Sage objects
 # -------------------------------------------------------------------------
 
