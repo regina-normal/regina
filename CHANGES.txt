@@ -214,6 +214,10 @@ Version 5.2  [ 29 September, 2017 ]
           argument.  Previously, when the argument was outside the usual
           32/64-bit native C++ long integer range, the automatic conversion
           went via floating-point arithmetic, resulting in a loss of precision.
+    USER INTERFACES:
+        - The iPad python environment is much more pleasant to work with.
+        - Python tab completion in all user interfaces is more natural and now
+          supports unicode.
     UTILITIES:
         retriangulate:
             - New utility that exhaustively retriangulates a given manifold.
