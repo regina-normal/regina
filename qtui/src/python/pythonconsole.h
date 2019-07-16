@@ -203,38 +203,9 @@ class PythonConsole : public QMainWindow {
          virtual QSize sizeHint() const;
 
         /**
-         * Track who is getting output from python.
-         */
-        bool outputToTabCompletion;
-        /**
-         * The list of possible completions.
-         */
-        QStringList* completions;
-        /**
-         * Track what index into the completions has
-         * been returned by the python.
-         */
-        int nextCompletion;
-        /**
          * A completer object to handle python tab completion.
          */
         QCompleter* completer;
-        /**
-         * Tab completion results are in, display them.
-         */
-        void completionsFinished();
-        /**
-         * Reqest another completion. Needs to be a function
-         * that the output stream can call, to emit a signal so
-         * the request isn't blocking.
-         */
-        void requestNextCompletion();
-
-    signals:
-        /**
-         * The signal sent when requesting another completion.
-         */
-        void doNextCompletion();
 
     private:
         /**
@@ -267,10 +238,6 @@ class PythonConsole : public QMainWindow {
          * Process tab completion on the partial line.
          **/
         void processCompletion();
-        /**
-         * Request the next tab completion option from pythons readline
-         */
-        void getNextCompletion();
 
     private:
         /**
