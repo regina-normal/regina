@@ -57,6 +57,7 @@
 #include <QHBoxLayout>
 #include <QLabel>
 #include <QMenuBar>
+#include <QRegularExpression>
 #include <QTextCodec>
 #include <QTextDocument>
 #include <QTextEdit>
@@ -542,17 +543,16 @@ void PythonConsole::processCompletion() {
     // Send a request for a completion to python.
     // We only send the last "word", where a word starts with a character or
     // underscore, and only contains letters,numbers,underscores and the dot
-    QRegExp re("([A-Za-z_][A-Za-z0-9_.]*)$");
-    QString lastWord = input->text();
-    int pos=re.indexIn(input->text());
-    if (pos == -1) {
+    QRegularExpression re("[\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}_][\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}\\p{Nd}_.]*$");
+    QRegularExpressionMatch m = re.match(input->text());
+    if (! m.hasMatch()) {
         // Nothing to complete.
         return;
     }
 
-    QString lineStart = input->text().left(pos);
+    QString lineStart = input->text().left(m.capturedStart());
     input->setCompletionLineStart(lineStart);
-    lastWord = re.cap(1);
+    QString lastWord = m.captured();
 
     if (interpreter->complete(lastWord.toUtf8().constData(), comp) < 0) {
         // Completion failed.
