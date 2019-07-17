@@ -834,6 +834,10 @@
 		052FA23B180612DD00FAE4DF /* unix_file_io.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D5C180600FA00FAE4DF /* unix_file_io.c */; };
 		052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D8F180600FB00FAE4DF /* update_shapes.c */; };
 		052FA23D180612DD00FAE4DF /* volume.c in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D90180600FB00FAE4DF /* volume.c */; };
+		0534FAE222DFDDA7000A96A3 /* memstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0534FADF22DFDDA6000A96A3 /* memstream.cpp */; };
+		0534FAE322DFDDA7000A96A3 /* memstream.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0534FADF22DFDDA6000A96A3 /* memstream.cpp */; };
+		0534FAE422DFDDA7000A96A3 /* zstr.h in Headers */ = {isa = PBXBuildFile; fileRef = 0534FAE022DFDDA7000A96A3 /* zstr.h */; };
+		0534FAE522DFDDA7000A96A3 /* memstream.h in Headers */ = {isa = PBXBuildFile; fileRef = 0534FAE122DFDDA7000A96A3 /* memstream.h */; };
 		053CAB131DA4A27500A92F98 /* nrational.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB121DA4A27500A92F98 /* nrational.h */; };
 		053CAB161DA4A50700A92F98 /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */; };
 		053CAB171DA4A50800A92F98 /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */; };
@@ -3153,6 +3157,9 @@
 		052FA13E1806103000FAE4DF /* MasterViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MasterViewController.h; sourceTree = "<group>"; };
 		052FA13F1806103000FAE4DF /* MasterViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = MasterViewController.mm; sourceTree = "<group>"; };
 		052FA1441806103000FAE4DF /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		0534FADF22DFDDA6000A96A3 /* memstream.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = memstream.cpp; sourceTree = "<group>"; };
+		0534FAE022DFDDA7000A96A3 /* zstr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zstr.h; sourceTree = "<group>"; };
+		0534FAE122DFDDA7000A96A3 /* memstream.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = memstream.h; sourceTree = "<group>"; };
 		053CAB121DA4A27500A92F98 /* nrational.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nrational.h; sourceTree = "<group>"; };
 		053CAB141DA4A4FB00A92F98 /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
 		053CAB181DA4A9CC00A92F98 /* nprimes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprimes.h; sourceTree = "<group>"; };
@@ -6210,6 +6217,8 @@
 				052F9E67180600FB00FAE4DF /* intutils.h */,
 				052F9E6C180600FB00FAE4DF /* listoncall.h */,
 				052F9E6D180600FB00FAE4DF /* markedvector.h */,
+				0534FADF22DFDDA6000A96A3 /* memstream.cpp */,
+				0534FAE122DFDDA7000A96A3 /* memstream.h */,
 				052F9E68180600FB00FAE4DF /* memutils.h */,
 				050C64B11DA3085C00C9420F /* nbooleans.h */,
 				052F9E77180600FB00FAE4DF /* osutils.cpp */,
@@ -6232,6 +6241,7 @@
 				05A73C7919B2EDFC0099C617 /* xmlelementreader.h */,
 				052F9E7F180600FB00FAE4DF /* xmlutils.cpp */,
 				052F9E80180600FB00FAE4DF /* xmlutils.h */,
+				0534FAE022DFDDA7000A96A3 /* zstr.h */,
 			);
 			path = utilities;
 			sourceTree = "<group>";
@@ -7957,6 +7967,7 @@
 				05FB46E71DD92D4A00BB00E5 /* grouppresentation.h in Headers */,
 				052FA009180600FB00FAE4DF /* nsatblock.h in Headers */,
 				05431F7A1C40F3C9009BC072 /* matrix.h in Headers */,
+				0534FAE422DFDDA7000A96A3 /* zstr.h in Headers */,
 				052FA098180600FB00FAE4DF /* tritmask.h in Headers */,
 				052F9EFE180600FB00FAE4DF /* typetrie.h in Headers */,
 				050C64C01DA32E7D00C9420F /* nhilbertcd.h in Headers */,
@@ -8146,6 +8157,7 @@
 				054209241DF28C990018AB24 /* contextswitch.h in Headers */,
 				055114E31DCC85F200EC753C /* xmltrireader4.h in Headers */,
 				053CAB311DA8D6B100A92F98 /* nsurfacefilter.h in Headers */,
+				0534FAE522DFDDA7000A96A3 /* memstream.h in Headers */,
 				053CAB251DA6F9FE00A92F98 /* nperm-impl.h in Headers */,
 				054209251DF28C990018AB24 /* definitionref.h in Headers */,
 				0591E7DF1C4F750200793A9C /* hsvectorstandard.h in Headers */,
@@ -9558,6 +9570,7 @@
 				055114E61DCC860200EC753C /* xmltrireader4.cpp in Sources */,
 				05249ECC1DBC16D6001FE29E /* isosig.cpp in Sources */,
 				05A0675C1DFA68470047872E /* trisolidtorus.cpp in Sources */,
+				0534FAE322DFDDA7000A96A3 /* memstream.cpp in Sources */,
 				052FA1A61806129B00FAE4DF /* packet.cpp in Sources */,
 				0591E8581C4F77A400793A9C /* triangulation4.cpp in Sources */,
 				0591E84D1C4F777000793A9C /* census4.cpp in Sources */,
@@ -10290,6 +10303,7 @@
 				05C1BED41DCA89DA007C946B /* triangulation2.cpp in Sources */,
 				050C64871DA1249600C9420F /* globaldirs.cpp in Sources */,
 				052F9F3B180600FB00FAE4DF /* integer.cpp in Sources */,
+				0534FAE222DFDDA7000A96A3 /* memstream.cpp in Sources */,
 				052F9F9B180600FB00FAE4DF /* subdivide.c in Sources */,
 				05A0672E1DFA68190047872E /* satblocktypes.cpp in Sources */,
 				0591E7DE1C4F750200793A9C /* hsvectorstandard.cpp in Sources */,

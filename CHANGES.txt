@@ -69,6 +69,8 @@ Version 5.2  [ 29 September, 2017 ]
               classes and methods to interface with the Boost Graph Library.
         Class MarkedAbelianGroup:
             - New routine isZ().
+        Class mem_istream, mem_streambuf:
+            - New classes to support input streams that read from memory.
         Class NormalHypersurfaces:
             - New routine sort() to sort hypersurfaces by arbitrary criteria.
             - The postconditions for enumerate() and makeMatchingEquations()
