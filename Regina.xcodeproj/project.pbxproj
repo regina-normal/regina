@@ -12154,7 +12154,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
-					/sw/include/python3.7,
+					/sw/include/python3.7m,
 				);
 				MACH_O_TYPE = mh_bundle;
 				MTL_ENABLE_DEBUG_INFO = NO;
@@ -12248,7 +12248,7 @@
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/graphviz.framework/Headers",
-					/sw/include/python3.7,
+					/sw/include/python3.7m,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
 				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
