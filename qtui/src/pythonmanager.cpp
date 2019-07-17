@@ -161,7 +161,7 @@ namespace {
         ReginaSupport::warn(parent,
             QObject::tr("Python scripting has been "
             "disabled in your build of Regina."),
-            QObject::tr("<qt>This is because no boost.python installation "
+            QObject::tr("<qt>This is because no Python installation "
             "could be found when Regina was compiled.  "
             "Watch the output of <b>cmake</b> at compile time "
             "for a more detailed explanation, or "

@@ -72,8 +72,7 @@
  * WARNING: We never call Py_Finalize().
  *
  * It can't be called during the program since multiple
- * initialise/finalise sequences cause problems with boost.python
- * modules.
+ * initialise/finalise sequences cause problems with our python modules.
  *
  * It can't be called during global object destruction since this seems to
  * be too late and a crash results (PyThreadState_Get: no current thread).

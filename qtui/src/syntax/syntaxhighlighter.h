@@ -42,7 +42,6 @@
 #include "syntax/definition.h"
 #include "syntax/theme.h"
 #include <memory>
-#include <boost/noncopyable.hpp>
 
 #include <QSyntaxHighlighter>
 
