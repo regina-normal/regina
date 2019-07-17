@@ -32,12 +32,10 @@
 
 #include <cstdio>
 #include <cstring>
+#include <fstream>
 #include <iostream>
-#include <sstream>
-#include <boost/iostreams/device/file.hpp>
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/gzip.hpp>
 #include "file/fileinfo.h"
+#include "utilities/zstr.h"
 
 namespace regina {
 
@@ -84,18 +82,20 @@ FileInfo* FileInfo::identify(const std::string& idPathname) {
         ans = new FileInfo();
         ans->compressed = false;
     } else {
+        // Try for compressed XML.
         std::ifstream file(idPathname.c_str(),
             std::ios_base::in | std::ios_base::binary);
-        if (file && file.peek() == 0x1f) {
-            ::boost::iostreams::filtering_istream in;
-            in.push(::boost::iostreams::gzip_decompressor());
-            in.push(file);
+        if (file) {
+            try {
+                zstr::istream in(file);
 
-            std::string s;
-            in >> s;
-            if ((! in.eof()) && (s == "<?xml")) {
-                ans = new FileInfo();
-                ans->compressed = true;
+                std::string s;
+                in >> s;
+                if ((! in.eof()) && (s == "<?xml")) {
+                    ans = new FileInfo();
+                    ans->compressed = true;
+                }
+            } catch (const zstr::Exception& e) {
             }
         }
     }
@@ -113,63 +113,64 @@ FileInfo* FileInfo::identify(const std::string& idPathname) {
         if (! file)
             return ans;
 
-        ::boost::iostreams::filtering_istream in;
-        if (file.peek() == 0x1f)
-            in.push(::boost::iostreams::gzip_decompressor());
-        in.push(file);
+        try {
+            zstr::istream in(file); // Can handle compressed or uncompressed.
 
-        std::string s;
+            std::string s;
 
-        // Start by slurping in the opening "<?xml".
-        if (in.eof())
-            return ans;
-        in >> s;
-        if (s != "<?xml")
-            return ans;
-
-        // Hunt for the matching "...?>".
-        // Try skipping through several strings in case there are extra
-        // arguments in the XML prologue (such as encoding or standalone
-        // declarations).
-        int i;
-        for (i = 0; ; i++) {
+            // Start by slurping in the opening "<?xml".
             if (in.eof())
                 return ans;
             in >> s;
-            if (s.length() >= 2 &&
-                    s[s.length() - 2] == '?' &&
-                    s[s.length() - 1] == '>')
-                break;
-
-            // If we can't find it after enough tries, just give up.
-            // Ten tries should be more than sufficient, since the current XML
-            // spec supports only version, encoding and standalone arguments
-            // at present.
-            if (i >= 10)
+            if (s != "<?xml")
                 return ans;
+
+            // Hunt for the matching "...?>".
+            // Try skipping through several strings in case there are extra
+            // arguments in the XML prologue (such as encoding or standalone
+            // declarations).
+            int i;
+            for (i = 0; ; i++) {
+                if (in.eof())
+                    return ans;
+                in >> s;
+                if (s.length() >= 2 &&
+                        s[s.length() - 2] == '?' &&
+                        s[s.length() - 1] == '>')
+                    break;
+
+                // If we can't find it after enough tries, just give up.
+                // Ten tries should be more than sufficient, since the current XML
+                // spec supports only version, encoding and standalone arguments
+                // at present.
+                if (i >= 10)
+                    return ans;
+            }
+
+            // The next thing we see should be the <reginadata ...> element.
+            if (in.eof())
+                return ans;
+            in >> s;
+            if (s != "<reginadata")
+                return ans;
+
+            // Next should be the engine version.
+            if (in.eof())
+                return ans;
+            in >> s;
+            if (s.length() < 8)
+                return ans;
+            if (s.substr(0, 8).compare("engine=\"") != 0)
+                return ans;
+
+            // We've found the engine attribute; extract its value.
+            std::string::size_type pos = s.find('"', 8);
+            if (pos == std::string::npos)
+                return ans;
+            ans->engine_ = s.substr(8, pos - 8);
+        } catch (const zstr::Exception& e) {
+            return ans;
         }
-
-        // The next thing we see should be the <reginadata ...> element.
-        if (in.eof())
-            return ans;
-        in >> s;
-        if (s != "<reginadata")
-            return ans;
-
-        // Next should be the engine version.
-        if (in.eof())
-            return ans;
-        in >> s;
-        if (s.length() < 8)
-            return ans;
-        if (s.substr(0, 8).compare("engine=\"") != 0)
-            return ans;
-
-        // We've found the engine attribute; extract its value.
-        std::string::size_type pos = s.find('"', 8);
-        if (pos == std::string::npos)
-            return ans;
-        ans->engine_ = s.substr(8, pos - 8);
 
         // That's as far as we need to go; we've extracted everything we want.
         ans->invalid = false;

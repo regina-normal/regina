@@ -70,7 +70,8 @@ EXCLUDE = \
     @PROJECT_SOURCE_DIR@/engine/libnormaliz \
     @PROJECT_SOURCE_DIR@/engine/foreign/casson.h \
     @PROJECT_SOURCE_DIR@/engine/snappea/kernel \
-    @PROJECT_SOURCE_DIR@/engine/syntax
+    @PROJECT_SOURCE_DIR@/engine/syntax \
+    @PROJECT_SOURCE_DIR@/engine/utilities/zstr.h
 EXCLUDE_PATTERNS = *-impl.h
 
 IMAGE_PATH           =

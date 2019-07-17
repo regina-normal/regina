@@ -32,16 +32,13 @@
 
 #include <set>
 #include <fstream>
-#include <sstream>
-#include <boost/iostreams/device/file.hpp>
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/gzip.hpp>
 #include "core/engine.h"
 #include "packet/packet.h"
 #include "packet/script.h"
 #include "utilities/base64.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
+#include "utilities/zstr.h"
 
 namespace regina {
 
@@ -637,10 +634,14 @@ bool Packet::save(std::ostream& s, bool compressed) const {
         return false;
 
     if (compressed) {
-        ::boost::iostreams::filtering_ostream out;
-        out.push(::boost::iostreams::gzip_compressor());
-        out.push(s);
-        writeXMLFile(out);
+        try {
+            zstr::ostream out(s);
+            writeXMLFile(out);
+        } catch (const zstr::Exception& e) {
+            std::cerr << "ERROR: Could not save with compression: "
+                << e.what() << std::endl;
+            return false;
+        }
     } else {
         writeXMLFile(s);
     }

@@ -15,7 +15,9 @@ Version 5.2  [ 29 September, 2017 ]
         - For Python 2, there is now a minimum requirement of Python >= 2.6.
         - Now builds under gcc7 and gcc8.
         - Updated the bundled copy of Normaliz to version 3.7.2 (17 Apr 2019).
-        - Now uses pybind11 instead of boost.python to create python bindings.
+        - Now requires Boost in header form only, and only at build time:
+          Regina no longer links against any of Boost's shared libraries.
+        - Now uses pybind11 instead of Boost.Python to create python bindings.
     ENGINE:
         Class BitManipulator, GenericBitManipulator:
             - BitManipulator has a new routine nextPermutation() to

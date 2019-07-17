@@ -17,7 +17,7 @@ ENDIF(BUILD_PYTHON_BINDINGS)
 IF(LIBGVC_FOUND)
   IF(${GRAPHVIZ_TYPE} STREQUAL Framework)
     INCLUDE_DIRECTORIES("${GRAPHVIZ_FRAMEWORK}/Headers")
-    SET(LINK_LIBS ${LINK_LIBS} ${GRAPHVIZ_FRAMEWORK})
+    SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} ${GRAPHVIZ_FRAMEWORK})
   ELSE (${GRAPHVIZ_TYPE} STREQUAL Framework)
     # Alas, the pkg-config files shipped with Graphviz under windows are wrong.
     # They give the wrong library directory, and even worse they give the

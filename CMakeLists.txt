@@ -334,35 +334,13 @@ MACRO_LOG_FEATURE(JANSSON_FOUND
   "http://www.digip.org/jansson/"
   TRUE)
 
-FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams)
+FIND_PACKAGE(Boost 1.55)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
   "Boost (>= 1.55)"
-  "Essential: C++ components (iostreams)"
+  "Essential: C++ components (headers only)"
   "http://www.boost.org/"
   TRUE)
-
-IF (Boost_FOUND)
-  SET (OLD_INCLUDES ${CMAKE_REQUIRED_INCLUDES})
-  SET (OLD_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-  SET (CMAKE_REQUIRED_INCLUDES ${Boost_INCLUDE_DIR})
-  SET (CMAKE_REQUIRED_LIBRARIES ${Boost_IOSTREAMS_LIBRARY})
-  # Ensure that boost.iostream was built against zlib.
-  # If not, we will display the error message at the very end, after
-  # MACRO_DISPLAY_FEATURE_LOG().
-  CHECK_CXX_SOURCE_COMPILES("
-    #include <boost/iostreams/filtering_streambuf.hpp>
-    #include <boost/iostreams/filter/gzip.hpp>
-
-    int main() {
-        boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
-        in.push(boost::iostreams::gzip_decompressor());
-        return 0;
-    }"
-    BOOST_IOSTREAMS_ZLIB_FOUND)
-  SET (CMAKE_REQUIRED_INCLUDES ${OLD_INCLUDES})
-  SET (CMAKE_REQUIRED_LIBRARIES ${OLD_LIBRARIES})
-ENDIF (Boost_FOUND)
 
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
@@ -673,12 +651,6 @@ CONFIGURE_FILE (
 )
 
 MACRO_DISPLAY_FEATURE_LOG()
-
-IF (Boost_FOUND AND NOT BOOST_IOSTREAMS_ZLIB_FOUND)
-  MESSAGE(FATAL_ERROR
-"Your boost.iostreams library appears to have been built without zlib/gzip support.  Regina needs this functionality.
-If you built boost yourself, make sure that you built it with the libz development files installed.  You should see the line '- zlib : yes' appear in boost's configuration checks, at the very beginning of the boost build.")
-ENDIF (Boost_FOUND AND NOT BOOST_IOSTREAMS_ZLIB_FOUND)
 
 # CPack configuration to allow the developers to build a source tarball:
 set(CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION_MAJOR})

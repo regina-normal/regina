@@ -34,8 +34,11 @@
 
 #include <cctype>
 #include <cstdlib>
+#include <fstream>
 #include <iostream>
 #include <string>
+#include "utilities/zstr.h"
+
 #ifdef QDBM_AS_TOKYOCABINET
 #include <depot.h>
 #include <cabin.h>
@@ -46,9 +49,6 @@
 #include <tcbdb.h>
 #include <tcutil.h>
 #endif
-#include <boost/iostreams/device/file.hpp>
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/gzip.hpp>
 
 #ifdef QDBM_AS_TOKYOCABINET
   #define DB_CLOSE(x) vlclose(x);
@@ -85,11 +85,6 @@ int main(int argc, char* argv[]) {
         std::exit(1);
     }
 
-    ::boost::iostreams::filtering_istream in;
-    if (file.peek() == 0x1f)
-        in.push(::boost::iostreams::gzip_decompressor());
-    in.push(file);
-
     // Initialise the database.
 #ifdef QDBM_AS_TOKYOCABINET
     VILLA* db;
@@ -109,48 +104,60 @@ int main(int argc, char* argv[]) {
     }
 #endif
 
-    // Fill the database with the user-supplied key-value pairs.
-    std::string sig, name;
-    const char* pos;
     unsigned long tot = 0;
-    while (true) {
-        in >> sig;
-        if (in.eof())
-            break;
 
-        std::getline(in, name);
-        if (in.eof()) {
-            std::cerr << "ERROR: Signature " << sig
-                << " is missing a corresponding name.\n\n";
-            DB_CLOSE(db);
-            usage(argv[0]);
-        }
+    // The following try-catch block is to catch input decompression errors.
+    try {
+        // Prepare to decompress the input file.
+        // Note that zstr can handle both compressed and uncompressed inputs.
+        zstr::istream in(file);
 
-        // Skip initial whitespace in the manifold name (which will
-        // always be present, since the previous in >> sig
-        // does not eat the separating whitespace).
-        pos = name.c_str();
-        while (*pos && std::isspace(*pos))
-            ++pos;
-        if (! *pos) {
-            std::cerr << "ERROR: Signature " << sig
-                << " has an empty name.\n\n";
-            DB_CLOSE(db);
-            usage(argv[0]);
-        }
+        // Fill the database with the user-supplied key-value pairs.
+        std::string sig, name;
+        const char* pos;
+        while (true) {
+            in >> sig;
+            if (in.eof())
+                break;
 
-#ifdef QDBM_AS_TOKYOCABINET
-        if (! vlput(db, sig.c_str(), sig.length(),
-                pos, -1 /* strlen */, VL_DDUP)) {
-#else
-        if (! tcbdbputdup2(db, sig.c_str(), pos)) {
-#endif
-            std::cerr << "ERROR: Could not store the record for "
-                << sig << " in the database." << std::endl;
-            DB_CLOSE(db);
-            std::exit(1);
+            std::getline(in, name);
+            if (in.eof()) {
+                std::cerr << "ERROR: Signature " << sig
+                    << " is missing a corresponding name.\n\n";
+                DB_CLOSE(db);
+                usage(argv[0]);
+            }
+
+            // Skip initial whitespace in the manifold name (which will
+            // always be present, since the previous in >> sig
+            // does not eat the separating whitespace).
+            pos = name.c_str();
+            while (*pos && std::isspace(*pos))
+                ++pos;
+            if (! *pos) {
+                std::cerr << "ERROR: Signature " << sig
+                    << " has an empty name.\n\n";
+                DB_CLOSE(db);
+                usage(argv[0]);
+            }
+
+    #ifdef QDBM_AS_TOKYOCABINET
+            if (! vlput(db, sig.c_str(), sig.length(),
+                    pos, -1 /* strlen */, VL_DDUP)) {
+    #else
+            if (! tcbdbputdup2(db, sig.c_str(), pos)) {
+    #endif
+                std::cerr << "ERROR: Could not store the record for "
+                    << sig << " in the database." << std::endl;
+                DB_CLOSE(db);
+                std::exit(1);
+            }
+            ++tot;
         }
-        ++tot;
+    } catch (const zstr::Exception& e) {
+        std::cerr << "ERROR: Could not read input: " << e.what() << std::endl;
+        DB_CLOSE(db);
+        std::exit(1);
     }
 
     // Close and tidy up.
