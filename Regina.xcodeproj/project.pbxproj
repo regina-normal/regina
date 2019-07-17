@@ -2031,9 +2031,6 @@
 		05D6CFA41A01D0A60039150F /* Tri3Graph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6CFA31A01D0A60039150F /* Tri3Graph.mm */; };
 		05DADB1821928EC400DC80E1 /* binom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DADB1621928EBF00DC80E1 /* binom.cpp */; };
 		05DADB1921928EC500DC80E1 /* binom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DADB1621928EBF00DC80E1 /* binom.cpp */; };
-		05DC051D1C41B85100C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
-		05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051E1C41B87200C76D71 /* boost.framework */; };
-		05DC05201C41B88D00C76D71 /* boost.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05DC051C1C41B85100C76D71 /* boost.framework */; };
 		05DC137D1FEB869200171D66 /* pachner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC137B1FEB868F00171D66 /* pachner.cpp */; };
 		05DC137E1FEB869200171D66 /* pachner-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05DC137C1FEB869100171D66 /* pachner-impl.h */; };
 		05DC137F1FEB86AB00171D66 /* pachner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC137B1FEB868F00171D66 /* pachner.cpp */; };
@@ -4477,8 +4474,6 @@
 		05D6CFA31A01D0A60039150F /* Tri3Graph.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3Graph.mm; sourceTree = "<group>"; };
 		05D81A8B1C66B0E500DDCE64 /* output.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = output.h; sourceTree = "<group>"; };
 		05DADB1621928EBF00DC80E1 /* binom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = binom.cpp; sourceTree = "<group>"; };
-		05DC051C1C41B85100C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/osx/boost.framework; sourceTree = "<group>"; };
-		05DC051E1C41B87200C76D71 /* boost.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = boost.framework; path = ../../Library/Frameworks/ios/boost.framework; sourceTree = "<group>"; };
 		05DC137B1FEB868F00171D66 /* pachner.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pachner.cpp; sourceTree = "<group>"; };
 		05DC137C1FEB869100171D66 /* pachner-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pachner-impl.h"; sourceTree = "<group>"; };
 		05DC13801FEB86E900171D66 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
@@ -4618,7 +4613,6 @@
 				057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */,
 				057FA754180615F6008E25F6 /* libz.dylib in Frameworks */,
 				05249EA01DBB8D89001FE29E /* libsqlite3.tbd in Frameworks */,
-				05DC051F1C41B87200C76D71 /* boost.framework in Frameworks */,
 				056AA99D1C41DAC300FA81D3 /* cppunit.framework in Frameworks */,
 				056AA9A11C41DDF500FA81D3 /* graphviz.framework in Frameworks */,
 				054208E91DF0D6870018AB24 /* jansson.framework in Frameworks */,
@@ -4743,7 +4737,6 @@
 				055B7318181D7F2500449D14 /* libiconv.dylib in Frameworks */,
 				055B731A181D7F2C00449D14 /* libxml2.dylib in Frameworks */,
 				052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */,
-				05DC05201C41B88D00C76D71 /* boost.framework in Frameworks */,
 				054208E71DF0D65A0018AB24 /* jansson.framework in Frameworks */,
 				056AA9A41C41DE8700FA81D3 /* libgmp.framework in Frameworks */,
 				056AA9A51C41DE8700FA81D3 /* libgmpxx.framework in Frameworks */,
@@ -4768,7 +4761,6 @@
 			files = (
 				05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */,
 				05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */,
-				05DC051D1C41B85100C76D71 /* boost.framework in Frameworks */,
 				056AA9981C41DA4800FA81D3 /* libtokyocabinet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -7691,7 +7683,6 @@
 		05C65E771D9C7B0B00877233 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				05DC051E1C41B87200C76D71 /* boost.framework */,
 				056AA99C1C41DAC100FA81D3 /* cppunit.framework */,
 				056AA9A01C41DDF400FA81D3 /* graphviz.framework */,
 				054208E81DF0D6860018AB24 /* jansson.framework */,
@@ -7714,7 +7705,6 @@
 		05C65E781D9C7B1200877233 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
-				05DC051C1C41B85100C76D71 /* boost.framework */,
 				056AA9991C41DA6900FA81D3 /* cppunit.framework */,
 				05CAFB541C4D8FCE0001C253 /* graphviz.framework */,
 				054208E61DF0D6590018AB24 /* jansson.framework */,
