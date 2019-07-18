@@ -42,7 +42,6 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -94,8 +93,7 @@ class SigPartialIsomorphism;
  * available from the Regina website.
  */
 class REGINA_API Signature :
-        public ShortOutput<Signature>,
-        public boost::noncopyable {
+        public ShortOutput<Signature> {
     private:
         unsigned order_;
             /**< The number of quads in this splitting surface. */
@@ -249,6 +247,10 @@ class REGINA_API Signature :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
+
+        // Make this class non-copyable.
+        Signature(const Signature&) = delete;
+        Signature& operator = (const Signature&) = delete;
 
     private:
         /**
