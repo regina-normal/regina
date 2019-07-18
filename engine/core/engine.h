@@ -44,9 +44,6 @@
 
 /**
  * Contains the entire Regina calculation engine.
- *
- * \todo \prob Derive from boost::noncopyable where appropriate.
- * \todo \featurelong Enhance the test suite for the calculation engine.
  */
 namespace regina {
 
