@@ -30,7 +30,6 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/next_prior.hpp>
 #include <sstream>
 #include "census/gluingpermsearcher3.h"
 #include "triangulation/dim3.h"
@@ -191,11 +190,11 @@ ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
     for (face.setFirst(); ! face.isPastEnd(nTets, true); ++face)
         if (! orderAssigned[face.simp * 4 + face.facet]) {
             order[orderDone] = face;
-            if (face.facet < 3 && pairing->dest(boost::next(face)).simp ==
-                    pairing->dest(face).simp)
+            if (face.facet < 3 && pairing->dest(face.simp, face.facet + 1).
+                    simp == pairing->dest(face).simp)
                 orderType[orderDone] = EDGE_DOUBLE_FIRST;
-            else if (face.facet > 0 && pairing->dest(boost::prior(face)).simp ==
-                    pairing->dest(face).simp)
+            else if (face.facet > 0 && pairing->dest(face.simp, face.facet - 1).
+                    simp == pairing->dest(face).simp)
                 orderType[orderDone] = EDGE_DOUBLE_SECOND;
             else
                 orderType[orderDone] = EDGE_MISC;
