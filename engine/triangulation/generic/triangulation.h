@@ -108,15 +108,6 @@ class FaceList {
 
     public:
         /**
-         * Explicitly disable the copy constructor.
-         */
-        FaceList(const FaceList&) = delete;
-        /**
-         * Explicitly disable the assignment operator.
-         */
-        FaceList& operator = (const FaceList&) = delete;
-
-        /**
          * Returns the number of <i>subdim</i>-faces in the triangulation.
          *
          * @return the number of <i>subdim</i>-faces.
@@ -142,6 +133,10 @@ class FaceList {
          * @return an iterator beyond the end of this list.
          */
         Iterator end() const;
+
+        // Make this class non-copyable.
+        FaceList(const FaceList&) = delete;
+        FaceList& operator = (const FaceList&) = delete;
 
     protected:
         /**

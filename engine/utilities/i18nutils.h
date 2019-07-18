@@ -109,9 +109,7 @@ class REGINA_API Locale {
          */
         static const char* codeset();
 
-        /**
-         * Disable the default constructor, since all routines are static.
-         */
+        // Make this class non-constructible.
         Locale() = delete;
 };
 
