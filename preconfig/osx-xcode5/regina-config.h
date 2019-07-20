@@ -4,15 +4,17 @@
    are found in utilities/intutils.h. */
 /* #undef INTERNAL_INT128_T_FOUND */
 
+/* Define if both __int128 and __uint128 types are available.
+   This macro is for internal use only; end users should use the macro
+   INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
+   are found in utilities/intutils.h. */
+#define INTERNAL___INT128_FOUND
+
 /* Define if both __int128_t and __uint128_t types are available.
    This macro is for internal use only; end users should use the macro
    INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
    are found in utilities/intutils.h. */
 #define INTERNAL___INT128_T_FOUND
-
-/* Define if we should use boost's compile-time 128-bit integer detection,
-   instead of explicitly testing for 128-bit integer types in cmake. */
-/* #undef USE_BOOST_INT128 */
 
 /* Define if 64-bit integer literals are available with no suffix */
 #define NUMERIC_64_FOUND

@@ -18,6 +18,8 @@ Version 5.2  [ 29 September, 2017 ]
         - Now requires Boost in header form only, and only at build time:
           Regina no longer links against any of Boost's shared libraries.
         - Now uses pybind11 instead of Boost.Python to create python bindings.
+        - Removed the cmake option USE_BOOST_INT128, since the boost 128-bit
+          integer detection does not know more than the cmake tests can provide.
     ENGINE:
         Class AbelianGroup:
             - Added assignment operator.

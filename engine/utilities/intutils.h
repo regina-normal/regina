@@ -197,22 +197,13 @@ struct IntOfSize<8> {
     typedef uint64_t utype;
 };
 
-#if defined(USE_BOOST_INT128)
-    #if defined(BOOST_HAS_INT128)
-        #define INT128_AVAILABLE
-        template <>
-        struct IntOfSize<16> {
-            typedef boost::int128_type type;
-            typedef boost::uint128_type utype;
-        };
-    #else
-        #undef INT128_AVAILABLE
-        template <>
-        struct IntOfSize<16> {
-            typedef void type;
-            typedef void utype;
-        };
-    #endif
+#if defined(INTERNAL___INT128_FOUND)
+    #define INT128_AVAILABLE
+    template <>
+    struct IntOfSize<16> {
+        typedef __int128 type;
+        typedef __uint128 utype;
+    };
 #elif defined(INTERNAL___INT128_T_FOUND)
     #define INT128_AVAILABLE
     template <>
