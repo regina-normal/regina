@@ -65,13 +65,13 @@ namespace regina {
 template <class T>
 class Matrix : public Output<Matrix<T>> {
     protected:
-        unsigned long nRows;
+        unsigned long rows_;
             /**< The number of rows in the matrix. */
-        unsigned long nCols;
+        unsigned long cols_;
             /**< The number of columns in the matrix. */
-        T** data;
+        T** data_;
             /**< The actual entries in the matrix.
-             *   <tt>data[r][c]</tt> is the element in row \a r,
+             *   <tt>data_[r][c]</tt> is the element in row \a r,
              *   column \a c. */
 
     public:
@@ -87,31 +87,31 @@ class Matrix : public Output<Matrix<T>> {
          * @param cols the number of columns in the new matrix.
          */
         Matrix(unsigned long rows, unsigned long cols) :
-                nRows(rows), nCols(cols), data(new T*[rows]){
+                rows_(rows), cols_(cols), data_(new T*[rows]){
             for (unsigned long i = 0; i < rows; i++)
-                data[i] = new T[cols];
+                data_[i] = new T[cols];
         }
         /**
          * Creates a new matrix that is a clone of the given matrix.
          *
          * @param cloneMe the matrix to clone.
          */
-        Matrix(const Matrix& cloneMe) : nRows(cloneMe.nRows),
-                nCols(cloneMe.nCols), data(new T*[cloneMe.nRows]) {
+        Matrix(const Matrix& cloneMe) : rows_(cloneMe.rows_),
+                cols_(cloneMe.cols_), data_(new T*[cloneMe.rows_]) {
             unsigned long r, c;
-            for (r = 0; r < nRows; r++) {
-                data[r] = new T[nCols];
-                for (c = 0; c < nCols; c++)
-                    data[r][c] = cloneMe.data[r][c];
+            for (r = 0; r < rows_; r++) {
+                data_[r] = new T[cols_];
+                for (c = 0; c < cols_; c++)
+                    data_[r][c] = cloneMe.data_[r][c];
             }
         }
         /**
          * Destroys this matrix.
          */
         ~Matrix() {
-            for (unsigned long i = 0; i < nRows; i++)
-                delete[] data[i];
-            delete[] data;
+            for (unsigned long i = 0; i < rows_; i++)
+                delete[] data_[i];
+            delete[] data_;
         }
 
         /**
@@ -121,9 +121,9 @@ class Matrix : public Output<Matrix<T>> {
          */
         void initialise(const T& value) {
             unsigned long r, c;
-            for (r = 0; r < nRows; r++)
-                for (c = 0; c < nCols; c++)
-                    data[r][c] = value;
+            for (r = 0; r < rows_; r++)
+                for (c = 0; c < cols_; c++)
+                    data_[r][c] = value;
         }
 
 #ifdef __DOXYGEN
@@ -149,7 +149,7 @@ class Matrix : public Output<Matrix<T>> {
          * @return the number of rows.
          */
         unsigned long rows() const {
-            return nRows;
+            return rows_;
         }
         /**
          * Returns the number of columns in this matrix.
@@ -157,7 +157,7 @@ class Matrix : public Output<Matrix<T>> {
          * @return the number of columns.
          */
         unsigned long columns() const {
-            return nCols;
+            return cols_;
         }
 
         /**
@@ -180,7 +180,7 @@ class Matrix : public Output<Matrix<T>> {
          * @return a reference to the entry in the given row and column.
          */
         T& entry(unsigned long row, unsigned long column) {
-            return data[row][column];
+            return data_[row][column];
         }
         /**
          * Returns the entry at the given row and column.
@@ -197,7 +197,7 @@ class Matrix : public Output<Matrix<T>> {
          * @return a reference to the entry in the given row and column.
          */
         const T& entry(unsigned long row, unsigned long column) const {
-            return data[row][column];
+            return data_[row][column];
         }
 
         /**
@@ -221,13 +221,13 @@ class Matrix : public Output<Matrix<T>> {
          * or \c false otherwise.
          */
         bool operator == (const Matrix<T>& other) const {
-            if (nRows != other.nRows || nCols != other.nCols)
+            if (rows_ != other.rows_ || cols_ != other.cols_)
                 return false;
 
             unsigned long r, c;
-            for (r = 0; r < nRows; ++r)
-                for (c = 0; c < nCols; ++c)
-                    if (! (data[r][c] == other.data[r][c]))
+            for (r = 0; r < rows_; ++r)
+                for (c = 0; c < cols_; ++c)
+                    if (! (data_[r][c] == other.data_[r][c]))
                         return false;
 
             return true;
@@ -270,10 +270,10 @@ class Matrix : public Output<Matrix<T>> {
          */
         void writeMatrix(std::ostream& out) const {
             unsigned long r, c;
-            for (r = 0; r < nRows; r++) {
-                for (c = 0; c < nCols; c++) {
+            for (r = 0; r < rows_; r++) {
+                for (c = 0; c < cols_; c++) {
                     if (c > 0) out << ' ';
-                    out << data[r][c];
+                    out << data_[r][c];
                 }
                 out << '\n';
             }
@@ -289,10 +289,10 @@ class Matrix : public Output<Matrix<T>> {
          */
         void swapRows(unsigned long first, unsigned long second) {
             T tmp;
-            for (unsigned long i = 0; i < nCols; i++) {
-                tmp = data[first][i];
-                data[first][i] = data[second][i];
-                data[second][i] = tmp;
+            for (unsigned long i = 0; i < cols_; i++) {
+                tmp = data_[first][i];
+                data_[first][i] = data_[second][i];
+                data_[second][i] = tmp;
             }
         }
         /**
@@ -305,10 +305,10 @@ class Matrix : public Output<Matrix<T>> {
          */
         void swapColumns(unsigned long first, unsigned long second) {
             T tmp;
-            for (unsigned long i = 0; i < nRows; i++) {
-                tmp = data[i][first];
-                data[i][first] = data[i][second];
-                data[i][second] = tmp;
+            for (unsigned long i = 0; i < rows_; i++) {
+                tmp = data_[i][first];
+                data_[i][first] = data_[i][second];
+                data_[i][second] = tmp;
             }
         }
 
@@ -321,7 +321,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const {
-            out << nRows << " x " << nCols << " matrix";
+            out << rows_ << " x " << cols_ << " matrix";
         }
         /**
          * Writes a detailed text representation of this object to the
@@ -403,8 +403,8 @@ class MatrixRing : public Matrix<T> {
          */
         void makeIdentity() {
             this->initialise(zero);
-            for (unsigned long i = 0; i < this->nRows && i < this->nCols; i++)
-                this->data[i][i] = one;
+            for (unsigned long i = 0; i < this->rows_ && i < this->cols_; i++)
+                this->data_[i][i] = one;
         }
 
         /**
@@ -420,15 +420,15 @@ class MatrixRing : public Matrix<T> {
          * @return \c true if and only if this is a square identity matrix.
          */
         bool isIdentity() const {
-            if (this->nRows != this->nCols)
+            if (this->rows_ != this->cols_)
                 return false;
 
             unsigned long r, c;
-            for (r = 0; r < this->nRows; ++r)
-                for (c = 0; c < this->nCols; ++c) {
-                    if (r == c && this->data[r][c] != one)
+            for (r = 0; r < this->rows_; ++r)
+                for (c = 0; c < this->cols_; ++c) {
+                    if (r == c && this->data_[r][c] != one)
                         return false;
-                    if (r != c && this->data[r][c] != zero)
+                    if (r != c && this->data_[r][c] != zero)
                         return false;
                 }
 
@@ -441,9 +441,9 @@ class MatrixRing : public Matrix<T> {
          * @return \c true if and only if all entries in the matrix are zero.
          */
         bool isZero() const {
-            for (size_t r=0; r<this->nRows; ++r)
-                for (size_t c=0; c<this->nCols; ++c)
-                    if (this->data[r][c] != zero)
+            for (size_t r=0; r<this->rows_; ++r)
+                for (size_t c=0; c<this->cols_; ++c)
+                    if (this->data_[r][c] != zero)
                         return false;
             return true;
         }
@@ -458,8 +458,8 @@ class MatrixRing : public Matrix<T> {
          * @param dest the row that will be added to.
          */
         void addRow(unsigned long source, unsigned long dest) {
-            for (unsigned long i = 0; i < this->nCols; i++)
-                this->data[dest][i] += this->data[source][i];
+            for (unsigned long i = 0; i < this->cols_; i++)
+                this->data_[dest][i] += this->data_[source][i];
         }
         /**
          * Adds the given number of copies of the given source row to
@@ -478,8 +478,8 @@ class MatrixRing : public Matrix<T> {
          */
         void addRow(unsigned long source, unsigned long dest,
                 T copies) {
-            for (unsigned long i = 0; i < this->nCols; i++)
-                this->data[dest][i] += copies * this->data[source][i];
+            for (unsigned long i = 0; i < this->cols_; i++)
+                this->data_[dest][i] += copies * this->data_[source][i];
         }
         /**
          * Adds the given source column to the given destination column.
@@ -491,8 +491,8 @@ class MatrixRing : public Matrix<T> {
          * @param dest the column that will be added to.
          */
         void addCol(unsigned long source, unsigned long dest) {
-            for (unsigned long i = 0; i < this->nRows; i++)
-                this->data[i][dest] += this->data[i][source];
+            for (unsigned long i = 0; i < this->rows_; i++)
+                this->data_[i][dest] += this->data_[i][source];
         }
         /**
          * Adds the given number of copies of the given source column to
@@ -511,8 +511,8 @@ class MatrixRing : public Matrix<T> {
          */
         void addCol(unsigned long source, unsigned long dest,
                 T copies) {
-            for (unsigned long i = 0; i < this->nRows; i++)
-                this->data[i][dest] += copies * this->data[i][source];
+            for (unsigned long i = 0; i < this->rows_; i++)
+                this->data_[i][dest] += copies * this->data_[i][source];
         }
         /**
          * Multiplies the given row by the given factor.
@@ -526,8 +526,8 @@ class MatrixRing : public Matrix<T> {
          * @param factor the factor by which to multiply the given row.
          */
         void multRow(unsigned long row, T factor) {
-            for (unsigned long i = 0; i < this->nCols; i++)
-                this->data[row][i] *= factor;
+            for (unsigned long i = 0; i < this->cols_; i++)
+                this->data_[row][i] *= factor;
         }
         /**
          * Multiplies the given column by the given factor.
@@ -541,8 +541,8 @@ class MatrixRing : public Matrix<T> {
          * @param factor the factor by which to multiply the given column.
          */
         void multCol(unsigned long column, T factor) {
-            for (unsigned long i = 0; i < this->nRows; i++)
-                this->data[i][column] *= factor;
+            for (unsigned long i = 0; i < this->rows_; i++)
+                this->data_[i][column] *= factor;
         }
 
         /**
@@ -569,15 +569,15 @@ class MatrixRing : public Matrix<T> {
         std::unique_ptr<MatrixRing<T>> operator * (const MatrixRing<T>& other)
                 const {
             std::unique_ptr<MatrixRing<T> > ans(new MatrixRing<T>(
-                this->nRows, other.nCols));
+                this->rows_, other.cols_));
 
             unsigned long row, col, k;
-            for (row = 0; row < this->nRows; row++)
-                for (col = 0; col < other.nCols; col++) {
-                    ans->data[row][col] = zero;
-                    for (k = 0; k < this->nCols; k++)
-                        ans->data[row][col] +=
-                            (this->data[row][k] * other.data[k][col]);
+            for (row = 0; row < this->rows_; row++)
+                for (col = 0; col < other.cols_; col++) {
+                    ans->data_[row][col] = zero;
+                    for (k = 0; k < this->cols_; k++)
+                        ans->data_[row][col] +=
+                            (this->data_[row][k] * other.data_[k][col]);
                 }
 
             return ans;
@@ -592,7 +592,7 @@ class MatrixRing : public Matrix<T> {
          * \pre The class \a MatrixClass is a subclass of MatrixRing<T>,
          * and can be fully initialised by calling the two-argument constructor
          * (passing the row and column counts) and then settng individual
-         * elements via \a data[r][c].  In particular, there should not be any
+         * elements via \a data_[r][c].  In particular, there should not be any
          * new data members that need explicit initialisation.
          *
          * \ifacespython Not present, but the python multiplication operator
@@ -606,15 +606,15 @@ class MatrixRing : public Matrix<T> {
         std::unique_ptr<MatrixClass> multiplyAs(const MatrixRing<T>& other)
                 const {
             std::unique_ptr<MatrixClass> ans(new MatrixClass(
-                this->nRows, other.nCols));
+                this->rows_, other.cols_));
 
             unsigned long row, col, k;
-            for (row = 0; row < this->nRows; row++)
-                for (col = 0; col < other.nCols; col++) {
-                    ans->data[row][col] = zero;
-                    for (k = 0; k < this->nCols; k++)
-                        ans->data[row][col] +=
-                            (this->data[row][k] * other.data[k][col]);
+            for (row = 0; row < this->rows_; row++)
+                for (col = 0; col < other.cols_; col++) {
+                    ans->data_[row][col] = zero;
+                    for (k = 0; k < this->cols_; k++)
+                        ans->data_[row][col] +=
+                            (this->data_[row][k] * other.data_[k][col]);
                 }
 
             return ans;
@@ -634,10 +634,10 @@ class MatrixRing : public Matrix<T> {
          * @return the determinant of this matrix.
          */
         T det() const {
-            unsigned long n = this->nRows;
+            unsigned long n = this->rows_;
 
             // Just in case...
-            if (n != this->nCols || n == 0)
+            if (n != this->cols_ || n == 0)
                 return zero;
 
             T* partial[2];
@@ -664,7 +664,7 @@ class MatrixRing : public Matrix<T> {
                         for (prevCurr = prevHead; prevCurr < n; prevCurr++)
                             partial[layer][head + head * n] -=
                                 (partial[layer ^ 1][prevHead + prevCurr * n] *
-                                this->data[prevCurr][prevHead]);
+                                this->data_[prevCurr][prevHead]);
 
                     // If curr > head, we need to continue an existing clow.
                     for (curr = head + 1; curr < n; curr++) {
@@ -672,7 +672,7 @@ class MatrixRing : public Matrix<T> {
                         for (prevCurr = head; prevCurr < n; prevCurr++)
                             partial[layer][head + curr * n] +=
                                 (partial[layer ^ 1][head + prevCurr * n] *
-                                this->data[prevCurr][curr]);
+                                this->data_[prevCurr][curr]);
                     }
                 }
             }
@@ -682,7 +682,7 @@ class MatrixRing : public Matrix<T> {
             for (head = 0; head < n; head++)
                 for (curr = head; curr < n; curr++)
                     ans += (partial[layer][head + curr * n] *
-                        this->data[curr][head]);
+                        this->data_[curr][head]);
 
             delete[] partial[0];
             delete[] partial[1];
@@ -886,22 +886,22 @@ inline MatrixIntDomain<T>::MatrixIntDomain(const MatrixIntDomain<T>& cloneMe) :
 
 template <typename T>
 void MatrixIntDomain<T>::divRowExact(unsigned long row, const T& divBy) {
-    for (T* x = this->data[row]; x != this->data[row] + Matrix<T>::nCols; ++x)
+    for (T* x = this->data_[row]; x != this->data_[row] + Matrix<T>::cols_; ++x)
         x->divByExact(divBy);
 }
 
 template <typename T>
 void MatrixIntDomain<T>::divColExact(unsigned long col, const T& divBy) {
-    for (T** row = this->data; row != this->data + Matrix<T>::nRows; ++row)
+    for (T** row = this->data_; row != this->data_ + Matrix<T>::rows_; ++row)
         (*row)[col].divByExact(divBy);
 }
 
 template <typename T>
 T MatrixIntDomain<T>::gcdRow(unsigned long row) {
-    T* x = this->data[row];
+    T* x = this->data_[row];
 
     T gcd = *x++;
-    while (x != this->data[row] + Matrix<T>::nCols && gcd != 1L && gcd != -1L)
+    while (x != this->data_[row] + Matrix<T>::cols_ && gcd != 1L && gcd != -1L)
         gcd = gcd.gcd(*x++);
 
     if (gcd < 0L)
@@ -911,10 +911,10 @@ T MatrixIntDomain<T>::gcdRow(unsigned long row) {
 
 template <typename T>
 T MatrixIntDomain<T>::gcdCol(unsigned long col) {
-    T** row = this->data;
+    T** row = this->data_;
 
     T gcd = (*row++)[col];
-    while (row != this->data + Matrix<T>::nRows && gcd != 1L && gcd != -1L)
+    while (row != this->data_ + Matrix<T>::rows_ && gcd != 1L && gcd != -1L)
         gcd = gcd.gcd((*row++)[col]);
 
     if (gcd < 0L)
