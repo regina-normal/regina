@@ -41,7 +41,6 @@
 
 #include <iostream>
 #include <memory>
-#include <boost/noncopyable.hpp>
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/integer.h"
@@ -64,7 +63,7 @@ namespace regina {
  * \ifacespython Not present, although the typedef MatrixInt is.
  */
 template <class T>
-class Matrix : public Output<Matrix<T> >, public boost::noncopyable {
+class Matrix : public Output<Matrix<T>> {
     protected:
         unsigned long nRows;
             /**< The number of rows in the matrix. */
@@ -335,6 +334,9 @@ class Matrix : public Output<Matrix<T> >, public boost::noncopyable {
         void writeTextLong(std::ostream& out) const {
             writeMatrix(out);
         }
+
+        // Make this class non-assignable.
+        Matrix& operator = (const Matrix&) = delete;
 };
 
 /**

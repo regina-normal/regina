@@ -49,7 +49,6 @@
 #include <memory>
 #include <vector>
 #include <cstddef>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -119,8 +118,7 @@ namespace regina {
  * @author Ryan Budney
  */
 class REGINA_API HomologicalData :
-    public ShortOutput<HomologicalData>,
-    public boost::noncopyable {
+    public ShortOutput<HomologicalData> {
 private:
     /**
      * A fairly primitive class that implements sorted arrays of
@@ -145,6 +143,16 @@ private:
              */
             inline SortedArray() {
             }
+
+            /**
+             * Construct a clone of the given array.
+             */
+            SortedArray(const SortedArray&) = default;
+
+            /**
+             * Set this to a clone of the given array.
+             */
+            SortedArray& operator = (const SortedArray&) = default;
 
             /**
              * Return the number of elements in this array.
@@ -746,6 +754,9 @@ public:
      * on the manifold's homological data.
      */
     const std::string& embeddabilityComment();
+
+    // Make this class non-assignable.
+    HomologicalData& operator = (const HomologicalData&) = delete;
 };
 
 /**

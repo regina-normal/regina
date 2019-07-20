@@ -486,6 +486,10 @@ class TreeTraversal : public BanConstraint {
         bool verify(const AngleStructure* s,
                 const MatrixInt* angleEqns = 0) const;
 
+        // Mark this class as non-copyable.
+        TreeTraversal(const TreeTraversal&) = delete;
+        TreeTraversal& operator = (const TreeTraversal&) = delete;
+
     protected:
         /**
          * Initialises a new base object for running the tree traversal

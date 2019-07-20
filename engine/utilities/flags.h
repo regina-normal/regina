@@ -91,8 +91,7 @@ class Flags {
          *
          * @param init the flag set to clone.
          */
-        inline Flags(const Flags<T>& init) : value_(init.value_) {
-        }
+        inline Flags(const Flags<T>& init) = default;
 
         /**
          * Returns the integer representation of this set.
@@ -210,10 +209,7 @@ class Flags {
          * @param rhs the new value of this flag set.
          * @return a reference to this flag set.
          */
-        inline Flags<T>& operator = (const Flags<T>& rhs) {
-            value_ = rhs.value_;
-            return *this;
-        }
+        inline Flags<T>& operator = (const Flags<T>& rhs) = default;
 
         /**
          * Changes this flag set by taking a bitwise OR with the given

@@ -46,7 +46,6 @@
 #include "triangulation/alias/simplex.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace detail {
@@ -99,7 +98,6 @@ class ComponentBase :
         public Output<ComponentBase<dim>>,
         public alias::Simplices<ComponentBase<dim>, dim>,
         public alias::SimplexAt<ComponentBase<dim>, dim, false>,
-        public boost::noncopyable,
         public MarkedElement {
     private:
         std::vector<Simplex<dim>*> simplices_;
@@ -259,6 +257,10 @@ class ComponentBase :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        // Make this class non-copyable.
+        ComponentBase(const ComponentBase&) = delete;
+        ComponentBase& operator = (const ComponentBase&) = delete;
 
     protected:
         /**

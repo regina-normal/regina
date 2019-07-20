@@ -77,7 +77,7 @@ class REGINA_API Handlebody : public Manifold {
          *
          * @param cloneMe the handlebody to clone.
          */
-        Handlebody(const Handlebody& cloneMe);
+        Handlebody(const Handlebody& cloneMe) = default;
         /**
          * Destroys this handlebody.
          */
@@ -114,6 +114,13 @@ class REGINA_API Handlebody : public Manifold {
          */
         bool operator != (const Handlebody& compare) const;
 
+        /**
+         * Sets this to be a clone of the given handlebody.
+         *
+         * @param cloneMe the handlebody to clone.
+         */
+        Handlebody& operator = (const Handlebody& cloneMe) = default;
+
         AbelianGroup* homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -135,9 +142,6 @@ class REGINA_API Handlebody : public Manifold {
 
 inline Handlebody::Handlebody(unsigned long newHandles, bool newOrientable) :
         nHandles(newHandles), orientable(newOrientable) {
-}
-inline Handlebody::Handlebody(const Handlebody& cloneMe) : Manifold(),
-        nHandles(cloneMe.nHandles), orientable(cloneMe.orientable) {
 }
 inline Handlebody::~Handlebody() {
 }

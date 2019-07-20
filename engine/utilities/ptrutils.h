@@ -72,7 +72,7 @@ namespace regina {
  */
 template <typename T>
 inline T* clonePtr(T* cloneMe) {
-    return (cloneMe ? new T(*cloneMe) : 0);
+    return (cloneMe ? new T(*cloneMe) : nullptr);
 }
 
 /**
@@ -97,7 +97,7 @@ inline T* clonePtr(T* cloneMe) {
  */
 template <typename T>
 inline T* clonePtr(const std::unique_ptr<T>& cloneMe) {
-    return (cloneMe.get() ? new T(*cloneMe) : 0);
+    return (cloneMe.get() ? new T(*cloneMe) : nullptr);
 }
 
 /**

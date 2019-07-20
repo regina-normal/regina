@@ -88,7 +88,7 @@ class REGINA_API LensSpace : public Manifold {
          *
          * @param cloneMe the lens space to clone.
          */
-        LensSpace(const LensSpace& cloneMe);
+        LensSpace(const LensSpace& cloneMe) = default;
         /**
          * Destroys this lens space.
          */
@@ -131,6 +131,13 @@ class REGINA_API LensSpace : public Manifold {
          */
         bool operator != (const LensSpace& compare) const;
 
+        /**
+         * Sets this to be a clone of the given lens space.
+         *
+         * @param cloneMe the lens space to clone.
+         */
+        LensSpace& operator = (const LensSpace& cloneMe) = default;
+
         Triangulation<3>* construct() const override;
         AbelianGroup* homology() const override;
         bool isHyperbolic() const override;
@@ -161,9 +168,6 @@ class REGINA_API LensSpace : public Manifold {
 inline LensSpace::LensSpace(unsigned long newP, unsigned long newQ) :
         p_(newP), q_(newQ) {
     reduce();
-}
-inline LensSpace::LensSpace(const LensSpace& cloneMe) :
-        Manifold(), p_(cloneMe.p_), q_(cloneMe.q_) {
 }
 inline LensSpace::~LensSpace() {
 }

@@ -87,8 +87,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API EnumConstraints :
-        public std::vector<std::set<unsigned long> > {
+class REGINA_API EnumConstraints : public std::vector<std::set<unsigned long>> {
     public:
         /**
          * Creates an empty list of constraints.
@@ -102,6 +101,26 @@ class REGINA_API EnumConstraints :
          * @param size the number of constraints to include in the new list.
          */
         EnumConstraints(size_t size);
+
+        /**
+         * Create a clone of the given list of constraints.
+         */
+        EnumConstraints(const EnumConstraints&) = default;
+
+        /**
+         * Moves the given list of constraints into this new list.
+         */
+        EnumConstraints(EnumConstraints&&) = default;
+
+        /**
+         * Set this to be a clone of the given list of constraints.
+         */
+        EnumConstraints& operator = (const EnumConstraints&) = default;
+
+        /**
+         * Moves the given list of constraints into this list.
+         */
+        EnumConstraints& operator = (EnumConstraints&&) = default;
 };
 
 /**
@@ -121,7 +140,7 @@ inline EnumConstraints::EnumConstraints() {
 }
 
 inline EnumConstraints::EnumConstraints(size_t size) :
-        std::vector<std::set<unsigned long> >(size) {
+        std::vector<std::set<unsigned long>>(size) {
 }
 
 } // namespace regina

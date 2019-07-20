@@ -75,7 +75,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API SatBlockStarter : boost::noncopyable {
+class REGINA_API SatBlockStarter {
     private:
         Triangulation<3> triangulation_;
             /**< The triangulation of the saturated block. */
@@ -103,6 +103,10 @@ class REGINA_API SatBlockStarter : boost::noncopyable {
          * @return the block structure.
          */
         const SatBlock* block() const;
+
+        // Mark this class as non-copyable.
+        SatBlockStarter(const SatBlockStarter&) = delete;
+        SatBlockStarter& operator = (const SatBlockStarter&) = delete;
 
     private:
         /**
@@ -269,7 +273,17 @@ class REGINA_API SatBlockStarterSearcher {
          */
         void findStarterBlocks(Triangulation<3>* tri);
 
+        // Mark this class as non-copyable.
+        SatBlockStarterSearcher(const SatBlockStarterSearcher&) = delete;
+        SatBlockStarterSearcher& operator = (const SatBlockStarterSearcher&) =
+            delete;
+
     protected:
+        /**
+         * Default constructor, for use by subclasses.
+         */
+        SatBlockStarterSearcher() = default;
+
         /**
          * Used by subclasses to process each starter block embedding that
          * is found.

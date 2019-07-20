@@ -50,7 +50,6 @@
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
 #include "utilities/property.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -350,7 +349,7 @@ struct NormalInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NormalSurfaceVector : public boost::noncopyable {
+class REGINA_API NormalSurfaceVector {
     protected:
         Ray coords_;
             /**< The raw vector of normal coordinates. */
@@ -788,6 +787,10 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
             static EnumConstraints* makeEmbeddedConstraints(
                 const Triangulation<3>* triangulation);
         #endif
+
+        // Make this class non-assignable, since we do not want to
+        // accidentally change coordinate systems.
+        NormalSurfaceVector& operator = (const NormalSurfaceVector&) = delete;
 };
 
 /**
@@ -810,9 +813,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  */
-class REGINA_API NormalSurface :
-        public ShortOutput<NormalSurface>,
-        public boost::noncopyable {
+class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
     protected:
         NormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
@@ -1710,6 +1711,10 @@ class REGINA_API NormalSurface :
          * supported in the underlying coordinate system.
          */
         bool systemAllowsOriented() const;
+
+        // Make this class non-copyable.
+        NormalSurface(const NormalSurface&) = delete;
+        NormalSurface& operator = (const NormalSurface&) = delete;
 
     protected:
         /**

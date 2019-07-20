@@ -40,7 +40,6 @@
 #define __CENSUS_H
 #endif
 
-#include <boost/noncopyable.hpp>
 #include "regina-core.h"
 #include "triangulation/facetpairing3.h"
 #include "utilities/boolset.h"
@@ -97,6 +96,16 @@ class REGINA_API CensusDB {
         CensusDB(const std::string& filename, const std::string& desc);
 
         /**
+         * Creates a new clone of the given database reference.
+         */
+        CensusDB(const CensusDB&) = default;
+
+        /**
+         * Moves the given database reference into this new object.
+         */
+        CensusDB(CensusDB&&) = default;
+
+        /**
          * Returns the filename where this database is stored.
          *
          * @return the database filename.
@@ -129,6 +138,16 @@ class REGINA_API CensusDB {
          * then the return value will be \c true.
          */
         bool lookup(const std::string& isoSig, CensusHits* hits) const;
+
+        /**
+         * Sets this to be a clone of the given database reference.
+         */
+        CensusDB& operator = (const CensusDB&) = default;
+
+        /**
+         * Moves the given database reference into this object.
+         */
+        CensusDB& operator = (CensusDB&&) = default;
 };
 
 /**
@@ -140,7 +159,7 @@ class REGINA_API CensusDB {
  * CensusHits class, which essentially represents a list of individual
  * CensusHit objects.
  */
-class REGINA_API CensusHit : public boost::noncopyable {
+class REGINA_API CensusHit {
     private:
         const std::string name_;
             /**< The human-readable name associated with the triangulation
@@ -181,6 +200,10 @@ class REGINA_API CensusHit : public boost::noncopyable {
          * the last hit.
          */
         const CensusHit* next() const;
+
+        // Make this class non-copyable.
+        CensusHit(const CensusHit&) = delete;
+        CensusHit& operator = (const CensusHit&) = delete;
 
     private:
         /**
@@ -229,7 +252,7 @@ class REGINA_API CensusHit : public boost::noncopyable {
  * CensusHit::next() to retrieve the next hit in the list (this will return
  * \c null if no more hits were found).
  */
-class REGINA_API CensusHits : public boost::noncopyable {
+class REGINA_API CensusHits {
     private:
         CensusHit* first_;
             /**< The first hit in the list, or \c null if there are no hits. */
@@ -322,6 +345,10 @@ class REGINA_API CensusHits : public boost::noncopyable {
          * @param hit the hit to append to this list.
          */
         void append(CensusHit* hit);
+
+        // Make this class non-copyable.
+        CensusHits(const CensusHits&) = delete;
+        CensusHits& operator = (const CensusHits&) = delete;
 };
 
 /**
@@ -517,6 +544,9 @@ class REGINA_API Census {
          * @return a newly created list of all database matches.
          */
         static CensusHits* lookup(const std::string& isoSig);
+
+        // Make this class non-constructible.
+        Census() = delete;
 
     private:
         /**

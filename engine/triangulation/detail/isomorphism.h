@@ -47,7 +47,6 @@
 #include "triangulation/forward.h"
 #include "maths/perm.h"
 #include <algorithm>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace detail {
@@ -76,8 +75,7 @@ namespace detail {
 template <int dim>
 class IsomorphismBase :
         public Output<IsomorphismBase<dim>>,
-        public alias::IsomorphismImage<IsomorphismBase<dim>, dim>,
-        public boost::noncopyable {
+        public alias::IsomorphismImage<IsomorphismBase<dim>, dim> {
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
     protected:
         unsigned nSimplices_;
@@ -330,6 +328,9 @@ class IsomorphismBase :
          * @return the newly constructed random isomorphism.
          */
         static Isomorphism<dim>* random(unsigned nSimplices, bool even = false);
+
+        // Make this class non-assignable.
+        IsomorphismBase& operator = (const IsomorphismBase&) = delete;
 };
 
 /*@}*/

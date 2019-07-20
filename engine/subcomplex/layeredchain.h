@@ -121,7 +121,7 @@ class REGINA_API LayeredChain : public StandardTriangulation {
          *
          * @param cloneMe the layered chain to clone.
          */
-        LayeredChain(const LayeredChain& cloneMe);
+        LayeredChain(const LayeredChain& cloneMe) = default;
 
         /**
          * Destroys this layered chain.
@@ -268,11 +268,6 @@ class REGINA_API LayeredChain : public StandardTriangulation {
 inline LayeredChain::LayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles) :
         bottom_(tet), top_(tet), index_(1), bottomVertexRoles_(vertexRoles),
         topVertexRoles_(vertexRoles) {
-}
-inline LayeredChain::LayeredChain(const LayeredChain& cloneMe) :
-        StandardTriangulation(), bottom_(cloneMe.bottom_), top_(cloneMe.top_),
-        index_(cloneMe.index_), bottomVertexRoles_(cloneMe.bottomVertexRoles_),
-        topVertexRoles_(cloneMe.topVertexRoles_) {
 }
 inline LayeredChain::~LayeredChain() {
 }

@@ -48,6 +48,7 @@ void addGraphTriple(pybind11::module& m) {
             return new GraphTriple(
                 new SFSpace(s1), new SFSpace(s2), new SFSpace(s3), m1, m2);
         }))
+        .def(pybind11::init<const GraphTriple&>())
         .def("end", &GraphTriple::end,
             pybind11::return_value_policy::reference_internal)
         .def("centre", &GraphTriple::centre,

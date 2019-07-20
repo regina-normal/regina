@@ -42,7 +42,6 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -73,9 +72,7 @@ class Manifold;
  * of both routines, which call the pure virtual function writeName()
  * (which every subclass must override).
  */
-class REGINA_API StandardTriangulation :
-        public Output<StandardTriangulation>,
-        public boost::noncopyable {
+class REGINA_API StandardTriangulation : public Output<StandardTriangulation> {
     public:
         /**
          * A destructor that does nothing.
@@ -283,6 +280,22 @@ class REGINA_API StandardTriangulation :
          */
         static StandardTriangulation* isStandardTriangulation(
             Triangulation<3>* tri);
+
+        // Mark this class as non-assignable.
+        StandardTriangulation& operator = (const StandardTriangulation&) =
+            delete;
+
+    protected:
+        /**
+         * Default constructor.  This is needed for subclasses to implicitly
+         * call from their own constructors.
+         */
+        StandardTriangulation() = default;
+        /**
+         * Do-nothing copy constructor.  This is needed for subclasses to
+         * implicitly call from their own default copy constructors.
+         */
+        StandardTriangulation(const StandardTriangulation&) = default;
 };
 
 /**

@@ -85,6 +85,11 @@ class PosOrder {
         inline PosOrder(const MatrixInt& matrix);
 
         /**
+         * Creates a clone of the given helper objet.
+         */
+        PosOrder(const PosOrder&) = default;
+
+        /**
          * Determines whether the hyperplane described by
          * row \a i of the matrix is smaller
          * than the hyperplane described by row \a j.
@@ -100,6 +105,9 @@ class PosOrder {
          * row \a i is smaller than the hyperplane described by row \a j.
          */
         inline bool operator () (long i, long j) const;
+
+        // Make this class non-assignable, since \a matrix_ is a reference.
+        PosOrder& operator = (const PosOrder&) = delete;
 };
 
 /**

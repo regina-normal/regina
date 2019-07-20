@@ -319,6 +319,10 @@ class REGINA_API DiscSetTet {
          */
         void discFromArc(int arcFace, int arcVertex, unsigned long arcNumber,
             int& discType, unsigned long& discNumber) const;
+
+        // Make this class non-copyable.
+        DiscSetTet(const DiscSetTet&) = delete;
+        DiscSetTet& operator = (const DiscSetTet&) = delete;
 };
 
 /**
@@ -458,6 +462,10 @@ class DiscSetTetData : public DiscSetTet {
             assert(discNumber < internalNDiscs[discType]);
             return internalData[discType][discNumber];
         }
+
+        // Make this class non-copyable.
+        DiscSetTetData(const DiscSetTet&) = delete;
+        DiscSetTetData& operator = (const DiscSetTet&) = delete;
 };
 
 /**
@@ -613,6 +621,10 @@ class REGINA_API DiscSetSurface {
          * @return an iterator at the end of the range of all normal discs.
          */
         DiscSpecIterator end() const;
+
+        // Make this class non-copyable.
+        DiscSetSurface(const DiscSetSurface&) = delete;
+        DiscSetSurface& operator = (const DiscSetSurface&) = delete;
 };
 
 /**
@@ -685,6 +697,10 @@ class DiscSetSurfaceData : public DiscSetSurface {
             return dynamic_cast<DiscSetTetData<T>*>(discSets[disc.tetIndex])->
                 data(disc.type, disc.number);
         }
+
+        // Make this class non-copyable.
+        DiscSetSurfaceData(const DiscSetSurfaceData&) = delete;
+        DiscSetSurfaceData& operator = (const DiscSetSurfaceData&) = delete;
 };
 
 /**

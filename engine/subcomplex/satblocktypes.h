@@ -82,7 +82,7 @@ class REGINA_API SatMobius : public SatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        SatMobius(const SatMobius& cloneMe);
+        SatMobius(const SatMobius& cloneMe) = default;
 
         /**
          * Describes how the Mobius band is attached to the
@@ -286,7 +286,7 @@ class REGINA_API SatTriPrism : public SatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        SatTriPrism(const SatTriPrism& cloneMe);
+        SatTriPrism(const SatTriPrism& cloneMe) = default;
 
         /**
          * Is this prism of major type or minor type?  See the class
@@ -396,7 +396,7 @@ class REGINA_API SatCube : public SatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        SatCube(const SatCube& cloneMe);
+        SatCube(const SatCube& cloneMe) = default;
 
         virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
@@ -482,7 +482,7 @@ class REGINA_API SatReflectorStrip : public SatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        SatReflectorStrip(const SatReflectorStrip& cloneMe);
+        SatReflectorStrip(const SatReflectorStrip& cloneMe) = default;
 
         virtual SatBlock* clone() const override;
         virtual void adjustSFS(SFSpace& sfs, bool reflect) const override;
@@ -586,7 +586,7 @@ class REGINA_API SatLayering : public SatBlock {
          *
          * @param cloneMe the block structure to clone.
          */
-        SatLayering(const SatLayering& cloneMe);
+        SatLayering(const SatLayering& cloneMe) = default;
 
         /**
          * Does this describe a layering over the horizontal edge of the
@@ -645,10 +645,6 @@ class REGINA_API SatLayering : public SatBlock {
 
 // Inline functions for SatMobius
 
-inline SatMobius::SatMobius(const SatMobius& cloneMe) : SatBlock(cloneMe),
-        position_(cloneMe.position_) {
-}
-
 inline SatMobius::SatMobius(int position) : SatBlock(1),
         position_(position) {
 }
@@ -681,10 +677,6 @@ inline SatBlock* SatLST::clone() const {
 
 // Inline functions for SatTriPrism
 
-inline SatTriPrism::SatTriPrism(const SatTriPrism& cloneMe) :
-        SatBlock(cloneMe), major_(cloneMe.major_) {
-}
-
 inline SatTriPrism::SatTriPrism(bool major) : SatBlock(3), major_(major) {
 }
 
@@ -710,9 +702,6 @@ inline void SatTriPrism::writeAbbr(std::ostream& out, bool tex) const {
 
 // Inline functions for SatCube
 
-inline SatCube::SatCube(const SatCube& cloneMe) : SatBlock(cloneMe) {
-}
-
 inline SatCube::SatCube() : SatBlock(4) {
 }
 
@@ -732,10 +721,6 @@ inline void SatCube::writeAbbr(std::ostream& out, bool tex) const {
 }
 
 // Inline functions for SatReflectorStrip
-
-inline SatReflectorStrip::SatReflectorStrip(
-        const SatReflectorStrip& cloneMe) : SatBlock(cloneMe) {
-}
 
 inline SatReflectorStrip::SatReflectorStrip(unsigned length, bool twisted) :
         SatBlock(length, twisted) {
@@ -766,10 +751,6 @@ inline void SatReflectorStrip::writeAbbr(std::ostream& out, bool tex) const {
 }
 
 // Inline functions for SatLayering
-
-inline SatLayering::SatLayering(const SatLayering& cloneMe) :
-        SatBlock(cloneMe), overHorizontal_(cloneMe.overHorizontal_) {
-}
 
 inline SatLayering::SatLayering(bool overHorizontal) :
         SatBlock(2), overHorizontal_(overHorizontal) {

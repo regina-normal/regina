@@ -166,6 +166,10 @@ class REGINA_API SigPartialIsomorphism {
             const SigPartialIsomorphism* other,
             unsigned fromCycleGroup = 0) const;
 
+        // Make this class non-assignable.
+        SigPartialIsomorphism& operator = (const SigPartialIsomorphism&) =
+            delete;
+
     private:
         /**
          * Creates a new partial isomorphism that is an extension of the

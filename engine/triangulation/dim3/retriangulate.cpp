@@ -38,7 +38,6 @@
 #include <set>
 #include <system_error>
 #include <thread>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -58,7 +57,7 @@ namespace {
     };
 
     template <bool threading>
-    class TriBFS : protected SyncData<threading>, public boost::noncopyable {
+    class TriBFS : protected SyncData<threading> {
         private:
             typedef std::set<std::string> SigSet;
 
@@ -96,6 +95,10 @@ namespace {
                 ProgressTrackerOpen* tracker);
 
             bool done() const;
+
+            // Make this class non-copyable.
+            TriBFS(const TriBFS&) = delete;
+            TriBFS& operator = (const TriBFS&) = delete;
 
         private:
             // candidate() may assume that alt will be deleted immediately

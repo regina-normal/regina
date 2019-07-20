@@ -138,6 +138,10 @@ class REGINA_API XMLCallback : public regina::xml::XMLParserCallback {
         virtual void error(const std::string& s) override;
         virtual void fatal_error(const std::string& s) override;
 
+        // Make this class non-copyable.
+        XMLCallback(const XMLCallback&) = delete;
+        XMLCallback& operator = (const XMLCallback&) = delete;
+
     private:
         /**
          * Returns the element reader processing the deepest-level

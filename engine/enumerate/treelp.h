@@ -358,6 +358,10 @@ class LPMatrix {
          * @param out the output stream to write to.
          */
         void dump(std::ostream& out) const;
+
+        // Mark this class as non-copyable:
+        LPMatrix(const LPMatrix&) = delete;
+        LPMatrix& operator = (const LPMatrix&) = delete;
 };
 
 /**
@@ -412,6 +416,10 @@ struct LPCol : public LPConstraint::Coefficients {
      * @param val the value at this location in the matrix.
      */
     inline void push(unsigned row, int val);
+
+    // Mark this class as non-copyable:
+    LPCol(const LPCol&) = delete;
+    LPCol& operator = (const LPCol&) = delete;
 };
 
 /**
@@ -768,6 +776,10 @@ class LPInitialTableaux {
          */
         template <typename IntType>
         void fillInitialTableaux(LPMatrix<IntType>& m) const;
+
+        // Mark this class as non-copyable:
+        LPInitialTableaux(const LPInitialTableaux&) = delete;
+        LPInitialTableaux& operator = (const LPInitialTableaux&) = delete;
 
     private:
         /**
@@ -1257,6 +1269,10 @@ class LPData {
          */
         template <class RayClass>
         void extractSolution(RayClass& v, const char* type) const;
+
+        // Mark this class as non-copyable:
+        LPData(const LPData&) = delete;
+        LPData& operator = (const LPData&) = delete;
 
     private:
         /**

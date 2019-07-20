@@ -149,6 +149,10 @@ class TypeTrie {
          * vector stored in this trie.
          */
         bool dominates(const char* vec, unsigned len) const;
+
+        // Mark this class as non-copyable.
+        TypeTrie(const TypeTrie&) = delete;
+        TypeTrie& operator = (const TypeTrie&) = delete;
 };
 
 /**

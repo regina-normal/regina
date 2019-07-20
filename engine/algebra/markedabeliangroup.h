@@ -45,7 +45,6 @@
 #include "core/output.h"
 #include "maths/matrix.h"
 #include "utilities/ptrutils.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -90,8 +89,7 @@ class HomMarkedAbelianGroup;
  * cycleGen().
  */
 class REGINA_API MarkedAbelianGroup :
-        public ShortOutput<MarkedAbelianGroup, true>,
-        public boost::noncopyable {
+        public ShortOutput<MarkedAbelianGroup, true> {
     private:
         /** Internal original M */
         MatrixInt OM; // copy of initializing M
@@ -652,6 +650,9 @@ class REGINA_API MarkedAbelianGroup :
          *  torsion subgroup into this group. 
          */
         std::unique_ptr<HomMarkedAbelianGroup> torsionInclusion() const;
+
+        // Make this class non-assignable.
+        MarkedAbelianGroup& operator = (const MarkedAbelianGroup&) = delete;
 };
 
 /**
@@ -708,8 +709,7 @@ class REGINA_API MarkedAbelianGroup :
  * @author Ryan Budney
  */
 class REGINA_API HomMarkedAbelianGroup :
-        public Output<HomMarkedAbelianGroup>,
-        public boost::noncopyable {
+        public Output<HomMarkedAbelianGroup> {
     private:
         /** internal rep of domain of the homomorphism */
         MarkedAbelianGroup domain_;
@@ -1020,6 +1020,10 @@ class REGINA_API HomMarkedAbelianGroup :
          * @param out the output stream.
          */
         void writeReducedMatrix(std::ostream& out) const;
+
+        // Make this class non-assignable.
+        HomMarkedAbelianGroup& operator = (const HomMarkedAbelianGroup&)
+            = delete;
 
     private:
         /**

@@ -82,8 +82,7 @@ struct NormalInfo<NS_AN_QUAD_OCT> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSVectorQuadOct :
-        public NSVectorMirrored {
+class REGINA_API NSVectorQuadOct : public NSVectorMirrored {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorQuadOct, NS_AN_QUAD_OCT,
         NSVectorMirrored);
 

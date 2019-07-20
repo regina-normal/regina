@@ -19,6 +19,8 @@ Version 5.2  [ 29 September, 2017 ]
           Regina no longer links against any of Boost's shared libraries.
         - Now uses pybind11 instead of Boost.Python to create python bindings.
     ENGINE:
+        Class AbelianGroup:
+            - Added assignment operator.
         Class BitManipulator, GenericBitManipulator:
             - BitManipulator has a new routine nextPermutation() to
               iterate through bitmasks with a fixed number of true bits.
@@ -31,11 +33,15 @@ Version 5.2  [ 29 September, 2017 ]
               boundary component as a precondition.  This is to avoid having
               to define what Regina actually computes in such a scenario,
               which is well-defined but not topologically meaningful.
+        Class CensusDB:
+            - Added copy and move constructors and assignment operators.
         Class CensusHits, CensusHitIterator:
             - Routine CensusHits::first() now returns a const pointer.
             - You can now iterate over a CensusHits object using C++11
               range-based for loops, thanks to the new CensusHitIterator
               class.  In Python, CensusHits is now an iterable object.
+        Class DegreeLessThan, DegreeGreaterThan:
+            - Added copy constructors.
         Class DiscSetSurface:
             - Now supports C++11 range-based for loops to iterate over all
               normal discs.  In particular, there are new begin() and end()
@@ -45,6 +51,8 @@ Version 5.2  [ 29 September, 2017 ]
             - Updated to fit the standard C++ forward iterator concept.
               In particular, increment operators now have return values.
             - Now specialises std::iterator_traits for this iterator type.
+        Class EnumConstraints:
+            - Added copy and move constructors and assignment operators.
         Class FacePair:
             - Added an output stream operator.
             - Replaced naive ++/-- operators with pairs of proper pre/post
@@ -53,20 +61,33 @@ Version 5.2  [ 29 September, 2017 ]
             - Added output stream operators.
             - Preincrement and predecrement operators now return a reference
               instead of a clone, to match usual ++/-- behaviour.
+        Class FileInfo:
+            - Added copy constructor and assignment operator.
+        Class GraphLoop, GraphPair, GraphTriple:
+            - New copy constructors and assignment operators.
         Class GroupPresentation:
             - New Python-only sage() routine that converts a Regina
               group presentation to a mathematical object native to Sage.
+        Class Handlebody:
+            - New assignment operator.
         Class Isomorphism<dim>:
             - The random() function now takes an optional argument to enforce
               orientation-preserving isomorphisms only.
         Class Laurent2:
             - New constuctor that shifts a given polynomial by x^e y^e.
+        Class LensSpace:
+            - New assignment operator.
         Class LightweightSequence:
             - New copy constructor and assignment operator for deep copies.
             - Constructor by size is now marked as explicit.
         Class Link, Crossing, StrandRef, Tangle:
             - New classes to support knots and links, plus other additional
               classes and methods to interface with the Boost Graph Library.
+        Class Manifold:
+            - All manifold subclasses now have copy constructors and
+              assignment operators.
+            - Added some protected default constructors and operators so
+              that base classes can use default implementations.
         Class MarkedAbelianGroup:
             - New routine isZ().
         Class mem_istream, mem_streambuf:
@@ -120,14 +141,31 @@ Version 5.2  [ 29 September, 2017 ]
                   Likewise, when they are called from the child destructor,
                   the second argument (representing the child) will be null.
             - This class is now available for overriding in python!
+            - PacketListener is now explicitly non-copyable, since copying the
+              set of packets being listened to is not a lightweight operatation.
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.
+        Class PosOrder:
+            - Added copy constructor.
+        Class Property:
+            - Added a copy constructor, though (like the assignment operator)
+              this cannot be used with the StoreManagedPtr storage policy.
+            - The assignment operator now returns a non-const reference
+              (not a const reference).
         Class SafePointeeBase:
             - Added hasSafePtr() to test whether safe pointers are being used.
+        Class SatBlockSpec:
+            - Added copy constructor and assignment operator.
+        Class SFSpace:
+            - Assignment operator now returns a reference (not void).
+        Class SimpleSurfaceBundle:
+            - New assignment operator.
         Class Simplex<dim>:
             - New convenience routine edge(i,j) that returns the edge
               between two given vertices.
+        Class SnapPeaCensusManifold:
+            - New assignment operator.
         Class SnapPeaTriangulation:
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the
@@ -135,6 +173,8 @@ Version 5.2  [ 29 September, 2017 ]
         Class SurfaceFilterProperties:
             - In python, eulerChars() now returns a python set (not a python
               list).
+        Class TorusBundle:
+            - New assignment operator.
         Class TreeDecomposition:
             - New copy constructor.
             - New constructor that takes a Link.

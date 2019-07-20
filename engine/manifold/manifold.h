@@ -42,7 +42,6 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/forward.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -59,13 +58,12 @@ class AbelianGroup;
  * 3-manifold that may be in use is not of interest.
  *
  * Subclasses corresponding to the different types of 3-manifold must
- * (of course) override all pure virtual functions.  They must not override
+ * (of course) override all pure virtual functions.  They must also provide
+ * a copy constructor and assignment operator.  They must not override
  * writeTextShort() or writeTextLong(), since these routines are \e not virtual,
  * and are provided by the base class Manifold.
  */
-class REGINA_API Manifold :
-        public Output<Manifold>,
-        public boost::noncopyable {
+class REGINA_API Manifold : public Output<Manifold> {
     public:
         /**
          * A destructor that does nothing.
@@ -267,6 +265,20 @@ class REGINA_API Manifold :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+    protected:
+        /**
+         * The default assignment operator.
+         *
+         * For the base Manifold class, this operator does nothing.  It is
+         * provided so that derived classes can, if they wish, declare a default
+         * assignment operator (whereupon the compiler will automatically
+         * include a call to this base class operator).  It is protected
+         * so that external users do not accidentally call it (since every
+         * Manifold really belongs to a subclass of Manifold, but this operator
+         * does not copy any subclass data).
+         */
+        Manifold& operator = (const Manifold&) = default;
 };
 
 /**

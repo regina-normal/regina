@@ -101,14 +101,14 @@ struct REGINA_API SFSFibre {
      *
      * @param cloneMe the exceptional fibre to clone.
      */
-    SFSFibre(const SFSFibre& cloneMe);
+    SFSFibre(const SFSFibre& cloneMe) = default;
 
     /**
      * Makes this exceptional fibre a clone of the given fibre.
      *
      * @param cloneMe the exceptional fibre to clone.
      */
-    void operator = (const SFSFibre& cloneMe);
+    SFSFibre& operator = (const SFSFibre& cloneMe) = default;
     /**
      * Determines if this and the given exceptional fibre are identical.
      * This requires both fibres to have the same values for \a alpha
@@ -357,7 +357,7 @@ class REGINA_API SFSpace : public Manifold {
          *
          * @param cloneMe the Seifert fibred space to clone.
          */
-        SFSpace(const SFSpace& cloneMe);
+        SFSpace(const SFSpace& cloneMe) = default;
         /**
          * Destroys this Seifert fibred space.
          */
@@ -369,7 +369,7 @@ class REGINA_API SFSpace : public Manifold {
          *
          * @param cloneMe the Seifert fibred space to clone.
          */
-        void operator = (const SFSpace& cloneMe);
+        SFSpace& operator = (const SFSpace& cloneMe) = default;
 
         /**
          * Returns which of the eleven predefined classes this space
@@ -858,14 +858,7 @@ inline SFSFibre::SFSFibre() {
 inline SFSFibre::SFSFibre(long newAlpha, long newBeta) :
         alpha(newAlpha), beta(newBeta) {
 }
-inline SFSFibre::SFSFibre(const SFSFibre& cloneMe) :
-        alpha(cloneMe.alpha), beta(cloneMe.beta) {
-}
 
-inline void SFSFibre::operator = (const SFSFibre& cloneMe) {
-    alpha = cloneMe.alpha;
-    beta = cloneMe.beta;
-}
 inline bool SFSFibre::operator == (const SFSFibre& compare) const {
     return (alpha == compare.alpha && beta == compare.beta);
 }
@@ -892,16 +885,6 @@ inline SFSpace::SFSpace(SFSpace::classType useClass, unsigned long genus,
         punctures_(punctures), puncturesTwisted_(puncturesTwisted),
         reflectors_(reflectors), reflectorsTwisted_(reflectorsTwisted),
         nFibres_(0), b_(0) {
-}
-
-inline SFSpace::SFSpace(const SFSpace& cloneMe) : Manifold(),
-        class_(cloneMe.class_), genus_(cloneMe.genus_),
-        punctures_(cloneMe.punctures_),
-        puncturesTwisted_(cloneMe.puncturesTwisted_),
-        reflectors_(cloneMe.reflectors_),
-        reflectorsTwisted_(cloneMe.reflectorsTwisted_),
-        fibres_(cloneMe.fibres_), nFibres_(cloneMe.nFibres_),
-        b_(cloneMe.b_) {
 }
 
 inline SFSpace::~SFSpace() {

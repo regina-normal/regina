@@ -96,9 +96,7 @@ class Tritmask1 {
          *
          * @param cloneMe the tritmask to clone.
          */
-        inline Tritmask1(const Tritmask1<T>& cloneMe) :
-                mask1(cloneMe.mask1), mask2(cloneMe.mask2) {
-        }
+        inline Tritmask1(const Tritmask1<T>& cloneMe) = default;
 
         /**
          * Sets all trits of this tritmask to 0.
@@ -113,11 +111,7 @@ class Tritmask1 {
          * @param other the tritmask to clone.
          * @return a reference to this tritmask.
          */
-        Tritmask1<T>& operator = (const Tritmask1<T>& other) {
-            mask1 = other.mask1;
-            mask2 = other.mask2;
-            return *this;
-        }
+        Tritmask1<T>& operator = (const Tritmask1<T>& other) = default;
 
         /**
          * Returns the value of the given trit in this tritmask.
@@ -335,10 +329,7 @@ class Tritmask2 {
          *
          * @param cloneMe the tritmask to clone.
          */
-        inline Tritmask2(const Tritmask2<T, U>& cloneMe) :
-                low1(cloneMe.low1), low2(cloneMe.low2),
-                high1(cloneMe.high1), high2(cloneMe.high2) {
-        }
+        inline Tritmask2(const Tritmask2<T, U>& cloneMe) = default;
 
         /**
          * Sets all trits of this tritmask to 0.
@@ -354,13 +345,7 @@ class Tritmask2 {
          * @param other the tritmask to clone.
          * @return a reference to this tritmask.
          */
-        Tritmask2<T, U>& operator = (const Tritmask2<T, U>& other) {
-            low1 = other.low1;
-            low2 = other.low2;
-            high1 = other.high1;
-            high2 = other.high2;
-            return *this;
-        }
+        Tritmask2<T, U>& operator = (const Tritmask2<T, U>& other) = default;
 
         /**
          * Returns the value of the given trit in this tritmask.

@@ -112,6 +112,10 @@ class REGINA_API SigCensus {
          */
         void* run(void* param);
 
+        // Make this class non-copyable.
+        SigCensus(const SigCensus&) = delete;
+        SigCensus& operator = (const SigCensus&) = delete;
+
     private:
         /**
          * Creates a new structure to form a signature census.

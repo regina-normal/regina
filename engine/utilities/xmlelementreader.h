@@ -190,6 +190,10 @@ class REGINA_API XMLElementReader {
          * reader has not yet been destroyed.
          */
         virtual void abort(XMLElementReader* subReader);
+
+        // Make this class non-copyable.
+        XMLElementReader(const XMLElementReader&) = delete;
+        XMLElementReader& operator = (const XMLElementReader&) = delete;
 };
 
 /**

@@ -203,6 +203,10 @@ class REGINA_API ProgressTrackerBase {
          */
         void setFinished();
 
+        // Make this class non-copyable.
+        ProgressTrackerBase(const ProgressTrackerBase&) = delete;
+        ProgressTrackerBase& operator = (const ProgressTrackerBase&) = delete;
+
     protected:
         /**
          * Creates a new progress tracker.

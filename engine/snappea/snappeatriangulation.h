@@ -95,6 +95,16 @@ struct SnapPeaFatalError : public SnapPeaException {
      * the error occurred.
      */
     SnapPeaFatalError(const char* fromFunction, const char* fromFile);
+
+    /**
+     * Clones the given exception.
+     */
+    SnapPeaFatalError(const SnapPeaFatalError&) = default;
+
+    /**
+     * Sets this to a copy of the given exception.
+     */
+    SnapPeaFatalError& operator = (const SnapPeaFatalError&) = default;
 };
 
 /**
@@ -127,9 +137,7 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * be deleted and replaced with new ones (using fresh data re-fetched from
  * the SnapPea kernel).
  */
-class REGINA_API Cusp :
-        public ShortOutput<Cusp>,
-        public boost::noncopyable {
+class REGINA_API Cusp : public ShortOutput<Cusp> {
     private:
         Vertex<3>* vertex_;
             /**< The corresponding vertex of the Regina triangulation. */
@@ -198,6 +206,10 @@ class REGINA_API Cusp :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
+
+        // Make this class non-copyable.
+        Cusp(const Cusp&) = delete;
+        Cusp& operator = (const Cusp&) = delete;
 
     private:
         /**

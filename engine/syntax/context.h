@@ -58,13 +58,12 @@
 #include "syntax/definition.h"
 #include "syntax/definitionref.h"
 
-#include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
 namespace regina {
 namespace syntax {
 
-class REGINA_API Context : public boost::noncopyable
+class REGINA_API Context
 {
 public:
     Context();
@@ -92,6 +91,10 @@ public:
     void load(xmlTextReaderPtr reader);
     void resolveContexts();
     void resolveIncludes();
+
+    // Make this class non-copyable.
+    Context(const Context&) = delete;
+    Context& operator = (const Context&) = delete;
 
 private:
     enum ResolveState {

@@ -88,7 +88,7 @@ struct REGINA_API PrismSpec {
      *
      * @param cloneMe the prism specifier to clone.
      */
-    PrismSpec(const PrismSpec& cloneMe);
+    PrismSpec(const PrismSpec& cloneMe) = default;
 
     /**
      * Copies the values from the given prism specifier into this specifier.
@@ -96,7 +96,7 @@ struct REGINA_API PrismSpec {
      * @param cloneMe the prism specifier whose values should be copied.
      * @return a reference to this prism specifier.
      */
-    PrismSpec& operator = (const PrismSpec& cloneMe);
+    PrismSpec& operator = (const PrismSpec& cloneMe) = default;
     /**
      * Determines if this and the given prism specifier contain identical
      * information.
@@ -148,15 +148,7 @@ inline PrismSpec::PrismSpec() {
 inline PrismSpec::PrismSpec(size_t newTetIndex, int newEdge) :
         tetIndex(newTetIndex), edge(newEdge) {
 }
-inline PrismSpec::PrismSpec(const PrismSpec& cloneMe) :
-        tetIndex(cloneMe.tetIndex), edge(cloneMe.edge) {
-}
 
-inline PrismSpec& PrismSpec::operator = (const PrismSpec& cloneMe) {
-    tetIndex = cloneMe.tetIndex;
-    edge = cloneMe.edge;
-    return *this;
-}
 inline bool PrismSpec::operator == (const PrismSpec& other) const {
     return (tetIndex == other.tetIndex && edge == other.edge);
 }

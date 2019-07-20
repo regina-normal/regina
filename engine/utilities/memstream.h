@@ -76,6 +76,10 @@ class REGINA_API mem_istream : public std::istream {
          * characters being read.
          */
         ~mem_istream();
+
+        // Make this class non-copyable.
+        mem_istream(const mem_istream&) = delete;
+        mem_istream& operator = (const mem_istream&) = delete;
 };
 
 /**
@@ -108,7 +112,7 @@ class REGINA_API mem_streambuf : public std::streambuf {
          * This buffer will refer to the same array of characters, and
          * will have the same current position as \a rhs.
          */
-        mem_streambuf&operator= (const mem_streambuf& rhs) = default;
+        mem_streambuf& operator = (const mem_streambuf& rhs) = default;
 
     protected:
         int_type underflow() override;

@@ -76,8 +76,7 @@ struct HyperInfo<HS_STANDARD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API HSVectorStandard :
-        public NormalHypersurfaceVector {
+class REGINA_API HSVectorStandard : public NormalHypersurfaceVector {
     REGINA_NORMAL_HYPERSURFACE_FLAVOUR(HSVectorStandard, HS_STANDARD,
         NormalHypersurfaceVector);
 
@@ -94,8 +93,7 @@ class REGINA_API HSVectorStandard :
          *
          * @param cloneMe the vector to clone.
          */
-        HSVectorStandard(
-            const Vector<LargeInteger>& cloneMe);
+        HSVectorStandard(const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger tetrahedra(size_t pentIndex,
             int vertex, const Triangulation<4>* triang) const override;

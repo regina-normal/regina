@@ -131,7 +131,7 @@ class REGINA_API SnapPeaCensusManifold : public Manifold {
          *
          * @param cloneMe the census manifold to clone.
          */
-        SnapPeaCensusManifold(const SnapPeaCensusManifold& cloneMe);
+        SnapPeaCensusManifold(const SnapPeaCensusManifold& cloneMe) = default;
         /**
          * Destroys this structure.
          */
@@ -181,6 +181,14 @@ class REGINA_API SnapPeaCensusManifold : public Manifold {
          */
         bool operator != (const SnapPeaCensusManifold& compare) const;
 
+        /**
+         * Sets this to be a clone of the given SnapPea census manifold.
+         *
+         * @param cloneMe the census manifold to clone.
+         */
+        SnapPeaCensusManifold& operator = (
+            const SnapPeaCensusManifold& cloneMe) = default;
+
         Triangulation<3>* construct() const override;
         AbelianGroup* homology() const override;
         bool isHyperbolic() const override;
@@ -205,10 +213,6 @@ class REGINA_API SnapPeaCensusManifold : public Manifold {
 inline SnapPeaCensusManifold::SnapPeaCensusManifold(char newSection,
         unsigned long newIndex) :
         section_(newSection), index_(newIndex) {
-}
-inline SnapPeaCensusManifold::SnapPeaCensusManifold(
-        const SnapPeaCensusManifold& cloneMe) : Manifold(),
-        section_(cloneMe.section_), index_(cloneMe.index_) {
 }
 inline SnapPeaCensusManifold::~SnapPeaCensusManifold() {
 }

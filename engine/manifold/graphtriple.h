@@ -42,11 +42,10 @@
 
 #include "regina-core.h"
 #include "manifold/manifold.h"
+#include "manifold/sfs.h"
 #include "maths/matrix2.h"
 
 namespace regina {
-
-class SFSpace;
 
 /**
  * \weakgroup manifold
@@ -185,6 +184,12 @@ class REGINA_API GraphTriple : public Manifold {
         GraphTriple(SFSpace* end0, SFSpace* centre, SFSpace* end1,
             const Matrix2& matchingReln0, const Matrix2& matchingReln1);
         /**
+         * Creates a clone of the given graph manifold.
+         *
+         * @param cloneMe the manifold to clone.
+         */
+        GraphTriple(const GraphTriple& cloneMe);
+        /**
          * Destroys this structure along with the component Seifert
          * fibred spaces and matching matrices.
          */
@@ -249,6 +254,13 @@ class REGINA_API GraphTriple : public Manifold {
          */
         bool operator < (const GraphTriple& compare) const;
 
+        /**
+         * Sets this to be a clone of the given graph manifold.
+         *
+         * @param cloneMe the manifold to clone.
+         */
+        GraphTriple& operator = (const GraphTriple& cloneMe);
+
         AbelianGroup* homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
@@ -307,6 +319,23 @@ inline GraphTriple::GraphTriple(SFSpace* end0, SFSpace* centre,
     matchingReln_[1] = matchingReln1;
 
     reduce();
+}
+
+inline GraphTriple::GraphTriple(const GraphTriple& cloneMe) {
+    end_[0] = new SFSpace(*cloneMe.end_[0]);
+    end_[1] = new SFSpace(*cloneMe.end_[1]);
+    centre_ = new SFSpace(*cloneMe.centre_);
+    matchingReln_[0] = cloneMe.matchingReln_[0];
+    matchingReln_[1] = cloneMe.matchingReln_[1];
+}
+
+inline GraphTriple& GraphTriple::operator = (const GraphTriple& cloneMe) {
+    *end_[0] = *cloneMe.end_[0];
+    *end_[1] = *cloneMe.end_[1];
+    *centre_ = *cloneMe.centre_;
+    matchingReln_[0] = cloneMe.matchingReln_[0];
+    matchingReln_[1] = cloneMe.matchingReln_[1];
+    return *this;
 }
 
 inline const SFSpace& GraphTriple::end(unsigned which) const {

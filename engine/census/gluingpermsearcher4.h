@@ -306,6 +306,10 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned long nStates);
+
+            // Make this class non-copyable.
+            PentEdgeState(const PentEdgeState&) = delete;
+            PentEdgeState& operator = (const PentEdgeState&) = delete;
         };
 
         /**
@@ -406,6 +410,10 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned long nStates);
+
+            // Make this class non-copyable.
+            PentTriangleState(const PentTriangleState&) = delete;
+            PentTriangleState& operator = (const PentTriangleState&) = delete;
         };
 
     public:
@@ -766,6 +774,10 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
          */
         static GluingPermSearcher<4>* readTaggedData(std::istream& in,
                 GluingPermSearcher<4>::Use use, void* useArgs = 0);
+
+        // Make this class non-copyable.
+        // The base class GluingPerms already makes it non-assignable.
+        GluingPermSearcher(const GluingPermSearcher&) = delete;
 
     protected:
         /**

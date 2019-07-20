@@ -60,18 +60,6 @@ std::ostream& operator << (std::ostream& out, const SFSFibre& f) {
     return (out << '(' << f.alpha << ',' << f.beta << ')');
 }
 
-void SFSpace::operator = (const SFSpace& cloneMe) {
-    class_ = cloneMe.class_;
-    genus_ = cloneMe.genus_;
-    punctures_ = cloneMe.punctures_;
-    puncturesTwisted_ = cloneMe.puncturesTwisted_;
-    reflectors_ = cloneMe.reflectors_;
-    reflectorsTwisted_ = cloneMe.reflectorsTwisted_;
-    fibres_ = cloneMe.fibres_;
-    nFibres_ = cloneMe.nFibres_;
-    b_ = cloneMe.b_;
-}
-
 SFSFibre SFSpace::fibre(unsigned long which) const {
     FibreIteratorConst pos = fibres_.begin();
     advance(pos, which);

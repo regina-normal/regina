@@ -428,6 +428,10 @@ class DegreeLessThan {
          */
         DegreeLessThan(const Triangulation<dim>& tri);
         /**
+         * Creates a new clone of the given function object.
+         */
+        DegreeLessThan(const DegreeLessThan&) = default;
+        /**
          * Compares the degrees of the <i>subdim</i>-dimensional faces
          * at the given indices within the working triangulation.
          * The triangulation that is used will be the one that was
@@ -445,6 +449,9 @@ class DegreeLessThan {
          * face \a b within the given triangulation.
          */
         bool operator() (unsigned a, unsigned b) const;
+
+        // Make this class non-assignable, since \a tri_ is a reference.
+        DegreeLessThan& operator = (const DegreeLessThan&) = delete;
 };
 
 /**
@@ -481,6 +488,10 @@ class DegreeGreaterThan {
          */
         DegreeGreaterThan(const Triangulation<dim>& tri);
         /**
+         * Creates a new clone of the given function object.
+         */
+        DegreeGreaterThan(const DegreeGreaterThan&) = default;
+        /**
          * Compares the degrees of the <i>subdim</i>-dimensional faces
          * at the given indices within the working triangulation.
          * The triangulation that is used will be the one that was
@@ -498,6 +509,9 @@ class DegreeGreaterThan {
          * face \a b within the given triangulation.
          */
         bool operator() (unsigned a, unsigned b) const;
+
+        // Make this class non-assignable, since \a tri_ is a reference.
+        DegreeGreaterThan& operator = (const DegreeGreaterThan&) = delete;
 };
 
 /*@}*/

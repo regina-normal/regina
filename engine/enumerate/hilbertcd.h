@@ -133,6 +133,9 @@ class HilbertCD {
         static void enumerateHilbertBasis(OutputIterator results,
             const MatrixInt& subspace, const EnumConstraints* constraints);
 
+        // Mark this class as non-constructible.
+        HilbertCD() = delete;
+
     private:
         /**
          * A helper class for Hilbert basis enumeration, describing a
@@ -161,6 +164,16 @@ class HilbertCD {
              * therefore the toatl length of this vector).
              */
             inline VecSpec(size_t dim);
+
+            /**
+             * Creates a new clone of the given vector.
+             */
+            VecSpec(const VecSpec&) = default;
+
+            /**
+             * Sets this to be a clone of the given vector.
+             */
+            VecSpec& operator = (const VecSpec&) = default;
         };
         /**
          * Identical to the public routine enumerateHilbertBasis(),
@@ -180,12 +193,6 @@ class HilbertCD {
         template <class RayClass, class BitmaskType, class OutputIterator>
         static void enumerateUsingBitmask(OutputIterator results,
             const MatrixInt& subspace, const EnumConstraints* constraints);
-
-        /**
-         * Private constructor to ensure that objects of this class are
-         * never created.
-         */
-        HilbertCD();
 };
 
 /**
@@ -197,11 +204,6 @@ class HilbertCD {
 [[deprecated]] typedef HilbertCD NHilbertCD;
 
 /*@}*/
-
-// Inline functions for HilbertCD
-
-inline HilbertCD::HilbertCD() {
-}
 
 // Inline functions for HilbertCD::VecSpec
 

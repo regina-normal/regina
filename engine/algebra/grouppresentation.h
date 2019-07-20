@@ -50,7 +50,6 @@
 #include "utilities/ptrutils.h"
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -88,7 +87,7 @@ struct REGINA_API GroupExpressionTerm {
      *
      * @param cloneMe a term whose data will be copied to the new term.
      */
-    GroupExpressionTerm(const GroupExpressionTerm& cloneMe);
+    GroupExpressionTerm(const GroupExpressionTerm& cloneMe) = default;
 
     /**
      * Makes this term identical to the given term.
@@ -96,7 +95,8 @@ struct REGINA_API GroupExpressionTerm {
      * @param cloneMe the term whose data will be copied to this term.
      * @return a reference to this term.
      */
-    GroupExpressionTerm& operator = (const GroupExpressionTerm& cloneMe);
+    GroupExpressionTerm& operator = (const GroupExpressionTerm& cloneMe)
+        = default;
     /**
      * Determines whether this and the given term contain identical data.
      *
@@ -185,8 +185,7 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * order.
  */
 class REGINA_API GroupExpression :
-        public ShortOutput<GroupExpression>,
-        public boost::noncopyable {
+        public ShortOutput<GroupExpression> {
     private:
         std::list<GroupExpressionTerm> terms_;
             /** The terms that make up this expression. */
@@ -202,7 +201,7 @@ class REGINA_API GroupExpression :
          *
          * @param cloneMe the expression to clone.
          */
-        GroupExpression(const GroupExpression& cloneMe);
+        GroupExpression(const GroupExpression& cloneMe) = default;
         /**
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
@@ -239,7 +238,7 @@ class REGINA_API GroupExpression :
          * @param cloneMe the expression to clone.
          * @return a reference to this expression.
          */
-        GroupExpression& operator = (const GroupExpression& cloneMe);
+        GroupExpression& operator = (const GroupExpression& cloneMe) = default;
 
         /**
          * Equality operator. Checks to see whether or not these two words
@@ -684,8 +683,7 @@ class REGINA_API GroupExpression :
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
  */
 class REGINA_API GroupPresentation :
-        public Output<GroupPresentation>,
-        public boost::noncopyable {
+        public Output<GroupPresentation> {
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */
@@ -1473,17 +1471,6 @@ inline GroupExpressionTerm::GroupExpressionTerm() {
 inline GroupExpressionTerm::GroupExpressionTerm(unsigned long newGen,
         long newExp) : generator(newGen), exponent(newExp) {
 }
-inline GroupExpressionTerm::GroupExpressionTerm(
-        const GroupExpressionTerm& cloneMe) :
-        generator(cloneMe.generator), exponent(cloneMe.exponent) {
-}
-
-inline GroupExpressionTerm& GroupExpressionTerm::operator = (
-        const GroupExpressionTerm& cloneMe) {
-    generator = cloneMe.generator;
-    exponent = cloneMe.exponent;
-    return *this;
-}
 
 inline bool GroupExpressionTerm::operator == (
         const GroupExpressionTerm& other) const {
@@ -1520,22 +1507,12 @@ inline bool GroupExpressionTerm::operator < (
 inline GroupExpression::GroupExpression() {
 }
 
-inline GroupExpression::GroupExpression(const GroupExpression& cloneMe) :
-        terms_(cloneMe.terms_) {
-}
-
 inline bool GroupExpression::operator ==(const GroupExpression& comp) const {
     return terms_ == comp.terms_;
 }
 
 inline bool GroupExpression::operator !=(const GroupExpression& comp) const {
     return terms_ != comp.terms_;
-}
-
-inline GroupExpression& GroupExpression::operator=(
-        const GroupExpression& cloneMe) {
-    terms_ = cloneMe.terms_;
-    return *this;
 }
 
 inline std::list<GroupExpressionTerm>& GroupExpression::terms() {

@@ -512,6 +512,10 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
         static GluingPermSearcher<3>* readTaggedData(std::istream& in,
                 GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
+        // Make this class non-copyable.
+        // The base class GluingPerms already makes it non-assignable.
+        GluingPermSearcher(const GluingPermSearcher&) = delete;
+
     protected:
         /**
          * Compares the current set of gluing permutations with its
@@ -852,6 +856,10 @@ class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned long nStates);
+
+            // Mark this class as non-copyable.
+            TetVertexState(const TetVertexState&) = delete;
+            TetVertexState& operator = (const TetVertexState&) = delete;
         };
 
         /**
@@ -992,6 +1000,10 @@ class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned nTets);
+
+            // Mark this class as non-copyable.
+            TetEdgeState(const TetEdgeState&) = delete;
+            TetEdgeState& operator = (const TetEdgeState&) = delete;
         };
 
     public:
@@ -1656,6 +1668,10 @@ class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned long nStates);
+
+            // Mark this class as non-copyable.
+            TetVertexState(const TetVertexState&) = delete;
+            TetVertexState& operator = (const TetVertexState&) = delete;
         };
 
         /**
@@ -1796,6 +1812,10 @@ class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned nTets);
+
+            // Mark this class as non-copyable.
+            TetEdgeState(const TetEdgeState&) = delete;
+            TetEdgeState& operator = (const TetEdgeState&) = delete;
         };
 
     public:

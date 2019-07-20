@@ -231,6 +231,9 @@ class GluingPerms {
          */
         virtual void dumpData(std::ostream& out) const;
 
+        // Make this class non-assignable.
+        GluingPerms& operator = (const GluingPerms&) = delete;
+
     protected:
         /**
          * Creates a new permutation set.  All internal arrays will be

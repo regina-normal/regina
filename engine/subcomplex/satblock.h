@@ -44,7 +44,6 @@
 #include "core/output.h"
 #include "subcomplex/satannulus.h"
 #include <set>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -110,9 +109,7 @@ class SFSpace;
  * triangulation-specific information stored in the subclass.  See the
  * transform() documentation for further details.
  */
-class REGINA_API SatBlock :
-        public Output<SatBlock>,
-        public boost::noncopyable {
+class REGINA_API SatBlock : public Output<SatBlock> {
     public:
         typedef std::set<Tetrahedron<3>*> TetList;
             /**< The data structure used to store a list of tetrahedra
@@ -578,6 +575,9 @@ class REGINA_API SatBlock :
          * @param out the output stream to which to write.
          */
          virtual void writeTextLong(std::ostream& out) const;
+
+         // Mark this class as non-assignable.
+         SatBlock& operator = (const SatBlock&) = delete;
 
     protected:
         /**

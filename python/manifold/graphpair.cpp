@@ -51,6 +51,7 @@ void addGraphPair(pybind11::module& m) {
             // Clone the given SFSs to avoid claiming ownership of them.
             return new GraphPair(new SFSpace(s1), new SFSpace(s2), m);
         }))
+        .def(pybind11::init<const GraphPair&>())
         .def("sfs", &GraphPair::sfs,
             pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &GraphPair::matchingReln,

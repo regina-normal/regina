@@ -41,7 +41,6 @@
 
 #include <functional>
 #include <vector>
-#include <boost/noncopyable.hpp>
 #include "regina-core.h"
 #include "maths/integer.h"
 #include "maths/laurent.h"
@@ -416,8 +415,7 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  * such operations then you should use a pointer to the relevant Crossing
  * object instead.
  */
-class REGINA_API Crossing : public MarkedElement,
-        public Output<Crossing>, public boost::noncopyable {
+class REGINA_API Crossing : public MarkedElement, public Output<Crossing> {
     private:
         int sign_;
             /**< The sign of the crossing, which must be +1 or -1.
@@ -554,6 +552,10 @@ class REGINA_API Crossing : public MarkedElement,
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        // Make this class non-copyable.
+        Crossing(const Crossing&) = delete;
+        Crossing& operator = (const Crossing&) = delete;
 
     private:
         /**

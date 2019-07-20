@@ -394,6 +394,10 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
         static GluingPermSearcher<2>* readTaggedData(std::istream& in,
                 GluingPermSearcher<2>::Use use, void* useArgs = 0);
 
+        // Make this class non-copyable.
+        // The base class GluingPerms already makes it non-assignable.
+        GluingPermSearcher(const GluingPermSearcher&) = delete;
+
     protected:
         /**
          * Compares the current set of gluing permutations with its

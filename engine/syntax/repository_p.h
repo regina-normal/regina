@@ -54,7 +54,6 @@
 
 #include "regina-core.h"
 #include <map>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace syntax {
@@ -63,7 +62,7 @@ class Definition;
 class Repository;
 class Theme;
 
-class REGINA_API RepositoryPrivate : public boost::noncopyable
+class REGINA_API RepositoryPrivate
 {
 public:
     RepositoryPrivate();
@@ -82,6 +81,10 @@ public:
     std::vector<Theme> m_themes;
 
     uint16_t m_formatId;
+
+    // Make this class non-copyable.
+    RepositoryPrivate(const RepositoryPrivate&) = delete;
+    RepositoryPrivate& operator = (const RepositoryPrivate&) = delete;
 };
 
 } } // namespace regina::syntax

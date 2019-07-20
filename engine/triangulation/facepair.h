@@ -95,7 +95,7 @@ class REGINA_API FacePair {
          *
          * @param cloneMe the face pair to clone.
          */
-        FacePair(const FacePair& cloneMe);
+        FacePair(const FacePair& cloneMe) = default;
 
         /**
          * Returns the smaller of the two face numbers in this pair.
@@ -151,7 +151,7 @@ class REGINA_API FacePair {
          * @param cloneMe the face pair to clone.
          * @return a reference to this face pair.
          */
-        FacePair& operator = (const FacePair& cloneMe);
+        FacePair& operator = (const FacePair& cloneMe) = default;
         /**
          * Determines if this and the given face pair are equal.
          *
@@ -276,10 +276,6 @@ std::ostream& operator << (std::ostream& out, const FacePair& pair);
 inline FacePair::FacePair() : first_(0), second_(1) {
 }
 
-inline FacePair::FacePair(const FacePair& cloneMe) :
-        first_(cloneMe.first_), second_(cloneMe.second_) {
-}
-
 inline unsigned FacePair::lower() const {
     return first_;
 }
@@ -294,12 +290,6 @@ inline bool FacePair::isBeforeStart() const {
 
 inline bool FacePair::isPastEnd() const {
     return (first_ >= 3);
-}
-
-inline FacePair& FacePair::operator = (const FacePair& cloneMe) {
-    first_ = cloneMe.first_;
-    second_ = cloneMe.second_;
-    return *this;
 }
 
 inline bool FacePair::operator == (const FacePair& other) const {

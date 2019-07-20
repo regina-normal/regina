@@ -47,6 +47,7 @@ void addSatRegion(pybind11::module& m) {
     auto s = pybind11::class_<SatBlockSpec>(m, "SatBlockSpec")
         .def(pybind11::init<>())
         .def(pybind11::init<SatBlock*, bool, bool>())
+        .def(pybind11::init<const SatBlockSpec&>())
         .def_readonly("block", &SatBlockSpec::block)
         .def_readonly("refVert", &SatBlockSpec::refVert)
         .def_readonly("refHoriz", &SatBlockSpec::refHoriz)

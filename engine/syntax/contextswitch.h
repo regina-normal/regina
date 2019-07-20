@@ -54,7 +54,6 @@
 
 #include "regina-core.h"
 #include <string>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace syntax {
@@ -62,7 +61,7 @@ namespace syntax {
 class Context;
 class Definition;
 
-class REGINA_API ContextSwitch : public boost::noncopyable
+class REGINA_API ContextSwitch
 {
 public:
     ContextSwitch();
@@ -75,6 +74,10 @@ public:
 
     void parse(const std::string& contextInstr);
     void resolve(const Definition &def);
+
+    // Make this class non-copyable.
+    ContextSwitch(const ContextSwitch&) = delete;
+    ContextSwitch& operator = (const ContextSwitch&) = delete;
 
 private:
     std::string m_defName;

@@ -330,7 +330,7 @@ class REGINA_API Perm<5> {
          *
          * @param cloneMe the permutation to clone.
          */
-        Perm(const Perm<5>& cloneMe);
+        Perm(const Perm<5>& cloneMe) = default;
 
         /**
          * Returns the internal code representing this permutation.
@@ -384,7 +384,7 @@ class REGINA_API Perm<5> {
          * to this permutation.
          * @return a reference to this permutation.
          */
-        Perm<5>& operator = (const Perm<5>& cloneMe);
+        Perm<5>& operator = (const Perm<5>& cloneMe) = default;
 
         /**
          * Returns the composition of this permutation with the given
@@ -748,9 +748,6 @@ inline Perm<5>::Perm(int a0, int a1, int b0, int b1,
         (e1 << (3*e0));
 }
 
-inline Perm<5>::Perm(const Perm<5>& cloneMe) : code(cloneMe.code) {
-}
-
 inline Perm<5>::Code Perm<5>::permCode() const {
     return code;
 }
@@ -761,11 +758,6 @@ inline void Perm<5>::setPermCode(Code newCode) {
 
 inline Perm<5> Perm<5>::fromPermCode(Code newCode) {
     return Perm<5>(newCode);
-}
-
-inline Perm<5>& Perm<5>::operator = (const Perm<5>& cloneMe) {
-    code = cloneMe.code;
-    return *this;
 }
 
 inline Perm<5> Perm<5>::operator *(const Perm<5>& q) const {

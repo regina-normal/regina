@@ -838,7 +838,7 @@ class REGINA_API NormalSurfaces : public Packet {
                  *
                  * @param cloneMe the iterator to clone.
                  */
-                VectorIterator(const VectorIterator& cloneMe);
+                VectorIterator(const VectorIterator& cloneMe) = default;
 
                 /**
                  * Makes this a copy of the given iterator.
@@ -846,7 +846,8 @@ class REGINA_API NormalSurfaces : public Packet {
                  * @param cloneMe the iterator to clone.
                  * @return a reference to this iterator.
                  */
-                VectorIterator& operator = (const VectorIterator& cloneMe);
+                VectorIterator& operator = (const VectorIterator& cloneMe) =
+                    default;
 
                 /**
                  * Compares this with the given operator for equality.
@@ -982,7 +983,7 @@ class REGINA_API NormalSurfaces : public Packet {
              *
              * @param cloneMe the output iterator to clone.
              */
-            SurfaceInserter(const SurfaceInserter& cloneMe);
+            SurfaceInserter(const SurfaceInserter& cloneMe) = default;
 
             /**
              * Sets this iterator to be a clone of the given output iterator.
@@ -990,7 +991,8 @@ class REGINA_API NormalSurfaces : public Packet {
              * @param cloneMe the output iterator to clone.
              * @return this output iterator.
              */
-            SurfaceInserter& operator =(const SurfaceInserter& cloneMe);
+            SurfaceInserter& operator =(const SurfaceInserter& cloneMe) =
+                default;
 
             /**
              * Appends a normal surface to the end of the appropriate
@@ -1214,6 +1216,11 @@ class REGINA_API NormalSurfaces : public Packet {
                     MatrixInt* eqns, ProgressTracker* tracker);
 
                 /**
+                 * Default move constructor.
+                 */
+                Enumerator(Enumerator&&) = default;
+
+                /**
                  * Performs the real enumeration work, in a setting
                  * where the underlying coordinate system is
                  * a compile-time constant.
@@ -1233,6 +1240,10 @@ class REGINA_API NormalSurfaces : public Packet {
                  */
                 template <typename Coords>
                 void operator() ();
+
+                // Make this class non-copyable.
+                Enumerator(const Enumerator&) = delete;
+                Enumerator& operator = (const Enumerator&) = delete;
 
             private:
                 /**
@@ -1518,17 +1529,6 @@ inline void NormalSurfaces::sort(Comparison&& comp) {
 inline NormalSurfaces::VectorIterator::VectorIterator() {
 }
 
-inline NormalSurfaces::VectorIterator::VectorIterator(
-        const NormalSurfaces::VectorIterator& cloneMe) :
-        it_(cloneMe.it_) {
-}
-
-inline NormalSurfaces::VectorIterator& NormalSurfaces::VectorIterator::
-        operator =(const NormalSurfaces::VectorIterator& cloneMe) {
-    it_ = cloneMe.it_;
-    return *this;
-}
-
 inline bool NormalSurfaces::VectorIterator::operator ==(
         const NormalSurfaces::VectorIterator& other) const {
     return (it_ == other.it_);
@@ -1583,20 +1583,6 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors()
 inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
         NormalSurfaces& newList, Triangulation<3>* newOwner) :
         list(&newList), owner(newOwner) {
-}
-
-inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
-        const SurfaceInserter& cloneMe) : list(cloneMe.list),
-        owner(cloneMe.owner) {
-}
-
-
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator =(
-        const SurfaceInserter& cloneMe) {
-    list = cloneMe.list;
-    owner = cloneMe.owner;
-    return *this;
 }
 
 inline NormalSurfaces::SurfaceInserter&

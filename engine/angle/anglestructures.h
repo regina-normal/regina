@@ -266,7 +266,7 @@ class REGINA_API AngleStructures : public Packet {
 
         /**
          * An output iterator used to insert angle structures into an
-         * AngleStructures.
+         * AngleStructures list.
          *
          * Objects of type <tt>AngleStructure*</tt> and
          * <tt>AngleStructureVector*</tt> can be assigned to this
@@ -306,7 +306,7 @@ class REGINA_API AngleStructures : public Packet {
              *
              * @param cloneMe the output iterator to clone.
              */
-            StructureInserter(const StructureInserter& cloneMe);
+            StructureInserter(const StructureInserter& cloneMe) = default;
 
             /**
              * Sets this iterator to be a clone of the given output iterator.
@@ -314,7 +314,8 @@ class REGINA_API AngleStructures : public Packet {
              * @param cloneMe the output iterator to clone.
              * @return this output iterator.
              */
-            StructureInserter& operator =(const StructureInserter& cloneMe);
+            StructureInserter& operator =(const StructureInserter& cloneMe)
+                = default;
 
             /**
              * Appends an angle structure to the end of the appropriate
@@ -463,19 +464,6 @@ inline AngleStructures::StructureInserter::StructureInserter() : list(0),
 inline AngleStructures::StructureInserter::StructureInserter(
         AngleStructures& newList, Triangulation<3>* newOwner) :
         list(&newList), owner(newOwner) {
-}
-
-inline AngleStructures::StructureInserter::StructureInserter(
-        const StructureInserter& cloneMe) : list(cloneMe.list),
-        owner(cloneMe.owner) {
-}
-
-inline AngleStructures::StructureInserter&
-        AngleStructures::StructureInserter::operator =(
-        const StructureInserter& cloneMe) {
-    list = cloneMe.list;
-    owner = cloneMe.owner;
-    return *this;
 }
 
 inline AngleStructures::StructureInserter&

@@ -107,7 +107,7 @@ struct FacetSpec {
      *
      * @param cloneMe the specifier to clone.
      */
-    FacetSpec(const FacetSpec<dim>& cloneMe);
+    FacetSpec(const FacetSpec<dim>& cloneMe) = default;
 
     /**
      * Determines if this specifier represents the overall boundary.
@@ -171,7 +171,7 @@ struct FacetSpec {
      * @param other the given specifier.
      * @return a reference to this specifier.
      */
-    FacetSpec& operator = (const FacetSpec<dim>& other);
+    FacetSpec& operator = (const FacetSpec<dim>& other) = default;
     /**
      * Increments this specifier.  It will be changed to point to the
      * next simplex facet.
@@ -318,11 +318,6 @@ inline FacetSpec<dim>::FacetSpec(int newSimp, int newFacet) :
 }
 
 template <int dim>
-inline FacetSpec<dim>::FacetSpec(const FacetSpec& cloneMe) :
-        simp(cloneMe.simp), facet(cloneMe.facet) {
-}
-
-template <int dim>
 inline bool FacetSpec<dim>::isBoundary(size_t nSimplices) const {
     return (simp == static_cast<int>(nSimplices) && facet == 0);
 }
@@ -360,14 +355,6 @@ template <int dim>
 inline void FacetSpec<dim>::setPastEnd(size_t nSimplices) {
     simp = nSimplices;
     facet = 1;
-}
-
-template <int dim>
-inline FacetSpec<dim>& FacetSpec<dim>::operator = (
-        const FacetSpec<dim>& other) {
-    simp = other.simp;
-    facet = other.facet;
-    return *this;
 }
 
 template <int dim>

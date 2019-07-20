@@ -48,7 +48,6 @@
 
 #include "regina-core.h"
 #include <cstddef>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace syntax {
@@ -74,9 +73,16 @@ class RegExpr;
 class StringDetect;
 class WordDetect;
 
-class REGINA_API RegEx : public boost::noncopyable {
+class REGINA_API RegEx {
     public:
         virtual ~RegEx() {}
+
+        // Make this class non-copyable.
+        RegEx(const RegEx&) = delete;
+        RegEx& operator = (const RegEx&) = delete;
+
+    protected:
+        RegEx() = default;
 };
 
 class REGINA_API MatchResult
@@ -93,7 +99,7 @@ class REGINA_API MatchResult
         int m_skipOffset;
 };
 
-class REGINA_API Matcher : public boost::noncopyable {
+class REGINA_API Matcher {
     public:
         virtual bool textEmpty() const = 0;
         virtual size_t textSize() const = 0;
@@ -116,6 +122,13 @@ class REGINA_API Matcher : public boost::noncopyable {
         virtual MatchResult match(RegExpr& rule, int offset) = 0;
         virtual MatchResult match(StringDetect& rule, int offset) = 0;
         virtual MatchResult match(WordDetect& rule, int offset) = 0;
+
+        // Make this class non-copyable.
+        Matcher(const Matcher&) = delete;
+        Matcher& operator = (const Matcher&) = delete;
+
+    protected:
+        Matcher() = default;
 };
 
 inline MatchResult::MatchResult(int offset) :

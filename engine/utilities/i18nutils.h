@@ -223,6 +223,10 @@ class REGINA_API IConvStreamBuffer : public std::streambuf {
          * @return 0 on success, or -1 on error.
          */
         int sync();
+
+        // Make this class non-copyable.
+        IConvStreamBuffer(const IConvStreamBuffer&) = delete;
+        IConvStreamBuffer& operator = (const IConvStreamBuffer&) = delete;
 };
 
 /**
@@ -279,6 +283,10 @@ class REGINA_API IConvStream : public std::ostream {
          */
         IConvStream(std::ostream& dest,
             const char* srcCode, const char* destCode);
+
+        // Make this class non-copyable.
+        IConvStream(const IConvStream&) = delete;
+        IConvStream& operator = (const IConvStream&) = delete;
 };
 
 // Inline functions for IConvStreamBuffer

@@ -44,7 +44,6 @@
 #include "core/output.h"
 #include "maths/matrix2.h"
 #include "triangulation/dim3.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -79,9 +78,7 @@ namespace regina {
  * class without reason).  This triangulation can be accessed through the
  * core() routine.
  */
-class REGINA_API TxICore :
-        public Output<TxICore>,
-        public boost::noncopyable {
+class REGINA_API TxICore : public Output<TxICore> {
     protected:
         Triangulation<3> core_;
             /**< A full copy of the <tt>T x I</tt> triangulation that is
@@ -309,6 +306,10 @@ class REGINA_API TxICore :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        // Mark this class as non-copyable.
+        TxICore(const TxICore&) = delete;
+        TxICore& operator = (const TxICore&) = delete;
 
     protected:
         /**

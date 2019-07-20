@@ -482,8 +482,7 @@ class TriangulationBase :
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
-        public alias::FacesOfTriangulation<TriangulationBase<dim>, dim>,
-        public boost::noncopyable {
+        public alias::FacesOfTriangulation<TriangulationBase<dim>, dim> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
@@ -1893,6 +1892,9 @@ class TriangulationBase :
         static size_t isoSigComponentSize(const std::string& sig);
 
         /*@}*/
+
+        // Make this class non-assignable.
+        TriangulationBase& operator = (const TriangulationBase&) = delete;
 
     protected:
         /**

@@ -43,7 +43,6 @@
 #include "regina-core.h"
 #include <list>
 #include <map>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -125,7 +124,7 @@ class REGINA_API XMLTreeResolutionTask {
  * whose virtual resolve() function is overridden to perform whatever
  * "fleshing out" work is required for the type of packet under consideration.
  */
-class REGINA_API XMLTreeResolver : boost::noncopyable {
+class REGINA_API XMLTreeResolver {
     public:
         typedef std::map<std::string, Packet*> IDMap;
             /**< A type that maps internal IDs from the data file to the
@@ -213,6 +212,10 @@ class REGINA_API XMLTreeResolver : boost::noncopyable {
          * (so subsequent calls to resolve() are safe and will do nothing).
          */
         void resolve();
+
+        // Make this class non-copyable.
+        XMLTreeResolver(const XMLTreeResolver&) = delete;
+        XMLTreeResolver& operator = (const XMLTreeResolver&) = delete;
 };
 
 /*@}*/

@@ -40,7 +40,6 @@
 #endif
 
 #include <vector>
-#include <boost/noncopyable.hpp>
 #include "core/output.h"
 #include "utilities/markedvector.h"
 
@@ -354,7 +353,7 @@ std::ostream& operator << (std::ostream& out, const ModelLinkGraphArc& a);
  * should use a pointer to the relevant ModelLinkGraphNode instead.
  */
 class ModelLinkGraphNode : public MarkedElement,
-        public Output<ModelLinkGraphNode>, public boost::noncopyable {
+        public Output<ModelLinkGraphNode> {
     private:
         ModelLinkGraphArc adj_[4];
             /**< Stores the arcs at the \e other endpoints of the four
@@ -427,6 +426,10 @@ class ModelLinkGraphNode : public MarkedElement,
          */
         void writeTextLong(std::ostream& out) const;
 
+        // Make this class non-copyable.
+        ModelLinkGraphNode(const ModelLinkGraphNode&) = delete;
+        ModelLinkGraphNode& operator = (const ModelLinkGraphNode&) = delete;
+
     private:
         /**
          * Initialises the \a adj_ array to contain null arcs.
@@ -452,8 +455,7 @@ class ModelLinkGraphNode : public MarkedElement,
  * you include link/graph.h, you can use a Link directly as a directed graph
  * type with the Boost Graph Library.
  */
-class REGINA_API ModelLinkGraph :
-        public Output<ModelLinkGraph>, public boost::noncopyable {
+class REGINA_API ModelLinkGraph : public Output<ModelLinkGraph> {
     public:
         /**
          * A routine that can do arbitrary processing upon a knot or link.
@@ -829,6 +831,9 @@ class REGINA_API ModelLinkGraph :
          * was found to be invalid.
          */
         static ModelLinkGraph* fromPlantri(const std::string& plantri);
+
+        // Make this class non-assignable.
+        ModelLinkGraph& operator = (const ModelLinkGraph&) = delete;
 };
 
 /**
@@ -844,8 +849,7 @@ class REGINA_API ModelLinkGraph :
  * At present, this class insists that each 2-cell is a topological disc.
  * As a consequence, this class cannot work with empty or disconnected graphs.
  */
-class REGINA_API ModelLinkGraphCells :
-        public Output<ModelLinkGraphCells>, public boost::noncopyable {
+class REGINA_API ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
     private:
         ModelLinkGraphArc* arcs_;
             /**< Stores the boundary of each cell.  Specifically, for cell
@@ -1086,6 +1090,9 @@ class REGINA_API ModelLinkGraphCells :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        // Make this class non-assignable.
+        ModelLinkGraphCells& operator = (const ModelLinkGraphCells&) = delete;
 
     private:
         /**

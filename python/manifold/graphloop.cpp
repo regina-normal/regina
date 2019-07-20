@@ -50,6 +50,7 @@ void addGraphLoop(pybind11::module& m) {
             // Clone the given SFS to avoid claiming ownership of it.
             return new GraphLoop(new SFSpace(s), m);
         }))
+        .def(pybind11::init<const GraphLoop&>())
         .def("sfs", &GraphLoop::sfs,
             pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &GraphLoop::matchingReln,

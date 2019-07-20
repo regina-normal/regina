@@ -278,6 +278,11 @@ class MarkedVector : private std::vector<T*> {
                     local != std::vector<T*>::end(); ++local)
                 (*local)->marking_ = i++;
         }
+
+        // Marked vectors cannot be copied, because elements should only
+        // belong to one vector at a time.
+        MarkedVector(const MarkedVector&) = delete;
+        MarkedVector& operator = (const MarkedVector&) = delete;
 };
 
 /*@}*/

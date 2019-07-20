@@ -699,6 +699,10 @@ class BanConstraintBase {
          */
         static bool supported(NormalCoords coords);
 #endif
+
+        // Mark this class as non-copyable.
+        BanConstraintBase(const BanConstraintBase&) = delete;
+        BanConstraintBase& operator = (const BanConstraintBase&) = delete;
 };
 
 /**

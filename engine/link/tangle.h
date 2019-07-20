@@ -81,7 +81,7 @@ namespace regina {
  * then the corresponding return value of Crossing::next() or
  * Crossing::prev() (whichever is relevant) will be a null strand reference.
  */
-class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
+class REGINA_API Tangle : public Output<Tangle> {
     private:
         char type_;
             /**< Indicates how the four endpoints connect; this will be
@@ -732,6 +732,9 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
         static Tangle* fromOrientedGauss(Iterator begin, Iterator end);
 
         /*@}*/
+
+        // Make this class non-assignable.
+        Tangle& operator = (const Tangle&) = delete;
 
     private:
         /**

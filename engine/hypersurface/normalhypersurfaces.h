@@ -356,7 +356,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  *
                  * @param cloneMe the iterator to clone.
                  */
-                VectorIterator(const VectorIterator& cloneMe);
+                VectorIterator(const VectorIterator& cloneMe) = default;
 
                 /**
                  * Makes this a copy of the given iterator.
@@ -364,7 +364,8 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * @param cloneMe the iterator to clone.
                  * @return a reference to this iterator.
                  */
-                VectorIterator& operator = (const VectorIterator& cloneMe);
+                VectorIterator& operator = (const VectorIterator& cloneMe) =
+                    default;
 
                 /**
                  * Compares this with the given operator for equality.
@@ -490,7 +491,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
              *
              * @param cloneMe the output iterator to clone.
              */
-            HypersurfaceInserter(const HypersurfaceInserter& cloneMe);
+            HypersurfaceInserter(const HypersurfaceInserter& cloneMe) = default;
 
             /**
              * Sets this iterator to be a clone of the given output iterator.
@@ -499,7 +500,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
              * @return this output iterator.
              */
             HypersurfaceInserter& operator = (
-                const HypersurfaceInserter& cloneMe);
+                const HypersurfaceInserter& cloneMe) = default;
 
             /**
              * Appends a normal hypersurface to the end of the appropriate
@@ -588,6 +589,11 @@ class REGINA_API NormalHypersurfaces : public Packet {
                     MatrixInt* eqns, ProgressTracker* tracker);
 
                 /**
+                 * Default move constructor.
+                 */
+                Enumerator(Enumerator&&) = default;
+
+                /**
                  * Performs the real enumeration work, in a setting
                  * where the underlying coordinate system is
                  * a compile-time constant.
@@ -606,6 +612,10 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  */
                 template <typename Coords>
                 void operator() ();
+
+                // Make this class non-copyable.
+                Enumerator(const Enumerator&) = delete;
+                Enumerator& operator = (const Enumerator&) = delete;
 
             private:
                 /**
@@ -831,18 +841,6 @@ inline MatrixInt* NormalHypersurfaces::recreateMatchingEquations() const {
 inline NormalHypersurfaces::VectorIterator::VectorIterator() {
 }
 
-inline NormalHypersurfaces::VectorIterator::VectorIterator(
-        const NormalHypersurfaces::VectorIterator& cloneMe) :
-        it_(cloneMe.it_) {
-}
-
-inline NormalHypersurfaces::VectorIterator&
-        NormalHypersurfaces::VectorIterator::operator =(
-        const NormalHypersurfaces::VectorIterator& cloneMe) {
-    it_ = cloneMe.it_;
-    return *this;
-}
-
 inline bool NormalHypersurfaces::VectorIterator::operator ==(
         const NormalHypersurfaces::VectorIterator& other) const {
     return (it_ == other.it_);
@@ -896,20 +894,6 @@ inline NormalHypersurfaces::VectorIterator
 inline NormalHypersurfaces::HypersurfaceInserter::HypersurfaceInserter(
         NormalHypersurfaces& list, Triangulation<4>* owner) :
         list_(&list), owner_(owner) {
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter::HypersurfaceInserter(
-        const HypersurfaceInserter& cloneMe) : list_(cloneMe.list_),
-        owner_(cloneMe.owner_) {
-}
-
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator =(
-        const HypersurfaceInserter& cloneMe) {
-    list_ = cloneMe.list_;
-    owner_ = cloneMe.owner_;
-    return *this;
 }
 
 inline NormalHypersurfaces::HypersurfaceInserter&

@@ -248,8 +248,7 @@ class REGINA_API Signature :
          */
         void writeTextShort(std::ostream& out) const;
 
-        // Make this class non-copyable.
-        Signature(const Signature&) = delete;
+        // Make this class non-assignable.
         Signature& operator = (const Signature&) = delete;
 
     private:

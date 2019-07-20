@@ -49,7 +49,6 @@
 #include "core/output.h"
 #include "packet/packettype.h"
 #include "utilities/safepointeebase.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -219,8 +218,7 @@ struct PacketInfo;
  */
 class REGINA_API Packet :
         public Output<Packet>,
-        public SafePointeeBase<Packet>,
-        public boost::noncopyable {
+        public SafePointeeBase<Packet> {
     private:
         std::string label_;
             /**< The label for this individual packet of information. */
@@ -1328,6 +1326,10 @@ class REGINA_API Packet :
             XMLTreeResolver& resolver);
         #endif
 
+        // Make this class non-copyable.
+        Packet(const Packet&) = delete;
+        Packet& operator = (const Packet&) = delete;
+
         /**
          * An object that facilitates firing packetToBeChanged() and
          * packetWasChanged() events.
@@ -1356,7 +1358,7 @@ class REGINA_API Packet :
          * entire change set, instead of many events representing each
          * individual modification.
          */
-        class ChangeEventSpan : public boost::noncopyable {
+        class ChangeEventSpan {
             private:
                 Packet* packet_;
                     /**< The packet for which change events are fired. */
@@ -1384,6 +1386,10 @@ class REGINA_API Packet :
                  * registered listeners for the given packet.
                  */
                 ~ChangeEventSpan();
+
+                // Make this class non-copyable.
+                ChangeEventSpan(const ChangeEventSpan&) = delete;
+                ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
         };
 
     protected:
@@ -2454,6 +2460,16 @@ class REGINA_API PacketListener {
         virtual void childWasRenamed(Packet* packet, Packet* child);
 
         /*@}*/
+
+        // Make this class non-copyable.
+        PacketListener(const PacketListener&) = delete;
+        PacketListener& operator = (const PacketListener&) = delete;
+
+    protected:
+        /**
+         * A default constructor that does nothing.
+         */
+        PacketListener() = default;
 
     /**
      * Allow packets to automatically deregister listeners as they are

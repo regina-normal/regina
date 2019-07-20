@@ -56,13 +56,12 @@
 #include <set>
 #include <string>
 #include <vector>
-#include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
 namespace regina {
 namespace syntax {
 
-class REGINA_API KeywordList : public boost::noncopyable
+class REGINA_API KeywordList
 {
 public:
     KeywordList();
@@ -82,6 +81,10 @@ public:
 
     void load(xmlTextReaderPtr reader);
     void setCaseSensitivity(bool caseSensitive);
+
+    // Make this class non-copyable.
+    KeywordList(const KeywordList&) = delete;
+    KeywordList& operator = (const KeywordList&) = delete;
 
 private:
     std::string m_name;
