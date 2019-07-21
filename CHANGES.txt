@@ -20,6 +20,7 @@ Version 5.2  [ 29 September, 2017 ]
         - Now uses pybind11 instead of Boost.Python to create python bindings.
         - Removed the cmake option USE_BOOST_INT128, since the boost 128-bit
           integer detection does not know more than the cmake tests can provide.
+        - Now requires CMake version >= 3.1.
     ENGINE:
         Class AbelianGroup:
             - Added assignment operator.

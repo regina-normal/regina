@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8.11)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.1)
 PROJECT (regina)
 
 # Let the user override the package name.
@@ -153,32 +153,18 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   SET(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-# C++11 requirements
+# Make sure we have std::thread (which has in the past been missing on windows).
 INCLUDE(CheckCXX11Features)
 SET(HAVE_CXX11_FEATURES TRUE)
-NEED_CXX11_FEATURE("auto")
-NEED_CXX11_FEATURE("constexpr")
-NEED_CXX11_FEATURE("long_long")
-NEED_CXX11_FEATURE("nullptr")
-NEED_CXX11_FEATURE("rvalue_references")
-NEED_CXX11_FEATURE("static_assert")
-NEED_CXX11_FEATURE("stdexceptionptr")
 NEED_CXX11_FEATURE("stdthread")
-NEED_CXX11_FEATURE("variadic_templates")
 IF(NOT HAVE_CXX11_FEATURES)
-  MESSAGE(FATAL_ERROR "Regina requires full C++11 support to compile.")
+  MESSAGE(FATAL_ERROR "Regina requires full C++11 support, including std::thread, to compile.")
 ENDIF()
 
-# C++14 partial requirements
-INCLUDE(CheckCXX14Features)
-SET(HAVE_CXX14_FEATURES TRUE)
-NEED_CXX14_FEATURE("deprecated")
-NEED_CXX14_FEATURE("deprecated_typedef")
-NEED_CXX14_FEATURE("deprecated_using")
-IF(NOT HAVE_CXX14_FEATURES)
-  MESSAGE(FATAL_ERROR "Regina requires partial C++14 support to compile.")
-ENDIF()
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX14_SWITCH}")
+# Make everything use C++14 (or later).
+SET(CMAKE_CXX_STANDARD 14)
+SET(CMAKE_CXX_STANDARD_REQUIRED YES)
+SET(CMAKE_CXX_EXTENSIONS OFF)
 
 # Regina's own cmake scripts:
 INCLUDE( ReginaMacros )
