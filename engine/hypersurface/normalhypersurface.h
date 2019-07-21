@@ -60,8 +60,8 @@ namespace regina {
 
 class EnumConstraints;
 
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
+template <typename, bool> class Matrix;
+typedef Matrix<Integer, true> MatrixInt;
 
 /**
  * A template that stores information about a particular

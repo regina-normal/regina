@@ -57,8 +57,8 @@ class AngleStructureVector;
 class NormalSurfaceVector;
 class Ray;
 
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
+template <typename, bool> class Matrix;
+typedef Matrix<Integer, true> MatrixInt;
 
 /**
  * \weakgroup enumerate

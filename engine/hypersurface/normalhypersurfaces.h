@@ -56,9 +56,6 @@ class NormalHypersurfaces;
 class ProgressTracker;
 class XMLPacketReader;
 
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
-
 /**
  * \weakgroup hypersurface
  * @{

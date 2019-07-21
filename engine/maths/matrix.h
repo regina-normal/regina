@@ -41,11 +41,63 @@
 
 #include <iostream>
 #include <memory>
+#include <type_traits> // for std::enable_if_t
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/integer.h"
 
+#ifndef __DOXYGEN
+// The following macros are used to conditionally enable member functions
+// of Matrix only for certain underlying types T.
+//
+// A side-effect is that every member function that uses these macros is
+// now a \e template member function (this is so we can use SFINAE to
+// remove unwanted member functions without compile errors).  The user
+// should never specify their own template arguments, and indeed the template
+// parameter pack Args is there precisely to stop users from doing this.
+/**
+ * Use this as the return type for a Matrix member function that is only
+ * available when working with matrices over rings.
+ *
+ * Equivalent to \a returnType if the Matrix template argument \a ring is
+ * \c true, and removes the member function completey otherwise.
+ *
+ * This macro cannot be used with templated member functions.
+ */
+#define REGINA_ENABLE_FOR_RING(returnType) \
+    template <typename... Args, typename Return = returnType> \
+    std::enable_if_t<ring, Return>
+/**
+ * Use this as the return type for a deprecated Matrix member function that is
+ * only available when working with matrices over rings.
+ *
+ * Equivalent to <tt>[[deprecated]] returnType</tt> if the Matrix template
+ * argument \a ring is \c true, and removes the member function completey
+ * otherwise.
+ *
+ * This macro cannot be used with templated member functions.
+ */
+#define REGINA_ENABLE_FOR_RING_DEPRECATED(returnType) \
+    template <typename... Args, typename Return = returnType> \
+    [[deprecated]] std::enable_if_t<ring, Return>
+/**
+ * Use this as the return type for a Matrix member function that is only
+ * available when working with matrices over Regina's own integer classes.
+ *
+ * Equivalent to \a returnType if the Matrix template argument \a T is one of
+ * Regina's own integer classes (Integer, LargeInteger or NativeInteger),
+ * and removes the member function completey otherwise.
+ *
+ * This macro cannot be used with templated member functions.
+ */
+#define REGINA_ENABLE_FOR_REGINA_INTEGER(returnType) \
+    template <typename... Args, typename Return = returnType> \
+    std::enable_if_t<MatrixTypeInfo<T>::isReginaInteger, Return>
+#endif
+
 namespace regina {
+
+class Rational;
 
 /**
  * \weakgroup maths
@@ -53,18 +105,142 @@ namespace regina {
  */
 
 /**
+ * Provides additive and multiplicative identity constants for the Matrix class.
+ *
+ * \deprecated These constants are deprecated, and will be removed in a future
+ * release of Regina.  You should simply use the integers 0 and 1 instead.
+ *
+ * \tparam T the underlying type, which represents an element of a ring.
+ * \tparam ring \c true if the constants \c zero and \c one should be defined.
+ * If \a ring is \c false, then this class will be empty.
+ */
+template <typename T, bool ring>
+struct MatrixRingIdentities {
+    [[deprecated]] static const T zero;
+        /**< The additive identity in the underlying ring. */
+    [[deprecated]] static const T one;
+        /**< The multiplicative identity in the underlying ring. */
+};
+
+#ifndef __DOXYGEN
+template <typename T>
+struct MatrixRingIdentities<T, false> {
+};
+#endif
+
+#ifdef __DOXYGEN
+/**
+ * A class that helps with enabling/disabling member functions of Matrix<T>
+ * according to properties of the underyling type \a T.
+ */
+template <typename T>
+struct MatrixTypeInfo {
+    /**
+     * Indicates whether Matrix<T> will by default include the member functions
+     * designed for matrices over rings.  Note that you can always override
+     * this default for a specific matrix class by using the optional \a ring
+     * parameter to the Matrix template.
+     *
+     * At present, Matrix<T> includes functions designed for rings by default
+     * when \a T is one of the following types:
+     *
+     * - native C++ integer types (i.e., where std::is_integral<T>::value
+     *   is \c true and \a T is not bool); or
+     *
+     * - Regina's own types Integer, LargeInteger, NativeInteger<...>,
+     *   and Rational.
+     *
+     * Other types may be added to this list in future versions of Regina.
+     */
+    static constexpr bool ringByDefault = false;
+
+    /**
+     * Indicates whether \a T is one of Regina's own integer types.
+     *
+     * This is true only when \a T is one of the types Integer, LargeInteger,
+     * or NativeInteger<...>.
+     */
+    static constexpr bool isReginaInteger = false;
+};
+#else
+template <typename T>
+struct MatrixTypeInfo {
+    static constexpr bool ringByDefault =
+        std::is_integral<T>::value && ! std::is_same<T, bool>::value;
+    static constexpr bool isReginaInteger = false;
+};
+
+template <>
+struct MatrixTypeInfo<Rational> {
+    static constexpr bool ringByDefault = true;
+    static constexpr bool isReginaInteger = false;
+};
+
+template <bool supportInfinity>
+struct MatrixTypeInfo<IntegerBase<supportInfinity>> {
+    static constexpr bool ringByDefault = true;
+    static constexpr bool isReginaInteger = true;
+};
+
+template <int bytes>
+struct MatrixTypeInfo<NativeInteger<bytes>> {
+    static constexpr bool ringByDefault = true;
+    static constexpr bool isReginaInteger = true;
+};
+#endif
+
+/**
  * Represents a matrix of elements of the given type \a T.
  *
- * \pre Type \a T has a default constructor and overloads the assignment
- * (<tt>=</tt>) operator.
- * \pre An element <i>t</i> of type \a T can be written to an output stream
- * <i>out</i> using the standard expression <tt>out << t</tt>.
+ * As of Regina 5.3, the old subclasses of Matrix have now been merged into a
+ * single Matrix class.  The additional member functions that the old
+ * subclasses MatrixRing and MatrixIntDomain used to provide are now part of
+ * Matrix, and are enabled or disabled according to the Matrix template
+ * parameters.
  *
- * \ifacespython Not present, although the typedef MatrixInt is.
+ * It is generally safe to just use the type Matrix<T>, since the \c ring
+ * argument has a sensible default.  See the documentation for
+ * MatrixTypeInfo::ringByDefault for details.
+ *
+ * There are several requirements for the underlying type \a T.
+ * For all matrix types:
+ *
+ * - \a T must have a default constructor and an assignment operator.
+ *
+ * - An element <i>t</i> of type \a T must be writable to an output stream
+ *   using the standard stream operator <tt>&lt;&lt;</tt>.
+ *
+ * If \a ring is \c true, then in addition to this:
+ *
+ * - \a T must support binary operators <tt>+</tt>, <tt>-</tt> and <tt>*</tt>,
+ *   and unary operators <tt>+=</tt>, <tt>-=</tt> and <tt>*=</tt>.
+ *
+ * - \a T must be able to be constructed or assigned to from the integers
+ *   0 and 1 (representing the additive and multiplicative identities in the
+ *   ring respectively).  Likewise, \a T must be able to be tested for
+ *   equality or inequality against 0 or 1 also.
+ *
+ * In particular, all of Regina's integer and rational types (Integer,
+ * LargeInteger, NativeInteger<...> and Rational) satisfy all of these
+ * requirements, and will set \a ring to \c true by default.
+ *
+ * The header maths/matrixops.h contains several other algorithms that
+ * work with the specific class Matrix<Integer>.
+ *
+ * \ifacespython Not present in general, although the specific type
+ * Matrix<Integer> is available under the name MatrixInt.
+ *
+ * \tparam T the type of each individual matrix element.
+ * \tparam ring \c true if we should enable member functions that only
+ * work when T represents an element of a ring.  This has a sensible default;
+ * see the documentation for MatrixTypeInfo::ringByDefault for details.
  */
-template <class T>
-class Matrix : public Output<Matrix<T>> {
-    protected:
+template <class T, bool ring = MatrixTypeInfo<T>::ringByDefault>
+class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
+    static_assert(ring || ! MatrixTypeInfo<T>::isReginaInteger,
+        "Using Matrix with Regina's own integer types requires ring=true.");
+
+    private:
         unsigned long rows_;
             /**< The number of rows in the matrix. */
         unsigned long cols_;
@@ -77,11 +253,17 @@ class Matrix : public Output<Matrix<T>> {
     public:
         /**
          * Creates a new matrix of the given size.
-         * All entries will be initialised using their default
-         * constructors.
+         * All entries will be initialised using their default constructors.
          *
-         * \pre The given number of rows and columns are
-         * both strictly positive.
+         * In particular, this means that for Regina's own integer classes
+         * (Integer, LargeInteger and NativeInteger), all entries will be
+         * initialised to zero.
+         *
+         * \warning If \a T is a native C++ integer type (such as \c int
+         * or \c long), then the matrix elements will not be initialised
+         * to any particular value.
+         *
+         * \pre The given number of rows and columns are both strictly positive.
          *
          * @param rows the number of rows in the new matrix.
          * @param cols the number of columns in the new matrix.
@@ -220,7 +402,7 @@ class Matrix : public Output<Matrix<T>> {
          * @return \c true if the matrices are equal as described above,
          * or \c false otherwise.
          */
-        bool operator == (const Matrix<T>& other) const {
+        bool operator == (const Matrix& other) const {
             if (rows_ != other.rows_ || cols_ != other.cols_)
                 return false;
 
@@ -253,7 +435,7 @@ class Matrix : public Output<Matrix<T>> {
          * @return \c true if the matrices are different as described above,
          * or \c false otherwise.
          */
-        bool operator != (const Matrix<T>& other) const {
+        bool operator != (const Matrix& other) const {
             return ! ((*this) == other);
         }
 
@@ -335,76 +517,18 @@ class Matrix : public Output<Matrix<T>> {
             writeMatrix(out);
         }
 
-        // Make this class non-assignable.
-        Matrix& operator = (const Matrix&) = delete;
-};
-
-/**
- * Represents a matrix of elements from a given ring \a T.
- *
- * Note that many important functions (such as entry()) are inherited
- * from the parent class Matrix, and are not documented again here.
- *
- * \pre Type \a T has a default constructor and overloads the assignment
- * (<tt>=</tt>) operator.
- * \pre An element <i>t</i> of type \a T can be written to an output stream
- * <i>out</i> using the standard expression <tt>out << t</tt>.
- * \pre Type \a T provides binary operators <tt>+</tt>, <tt>-</tt> and
- * <tt>*</tt> and unary operators <tt>+=</tt>, <tt>-=</tt> and <tt>*=</tt>.
- * \pre Type \a T has a long integer constructor.  That is, if \c a is of
- * type \a T, then \c a can be initialised to a long integer \c l using
- * <tt>a(l)</tt>.
- * Here the value 1 refers to the multiplicative identity in the ring \a T.
- *
- * \ifacespython Not present, although the typedef MatrixInt is.
- */
-template <class T>
-class MatrixRing : public Matrix<T> {
-    public:
-        static const T zero;
-            /**< Zero in the underlying ring.
-             *   This would be \c const if it weren't for the fact that
-             *   some compilers don't like this.  It should never be
-             *   modified! */
-        static const T one;
-            /**< One (the multiplicative identity) in the underlying ring.
-             *   This would be \c const if it weren't for the fact that
-             *   some compilers don't like this.  It should never be
-             *   modified! */
-
-    public:
-        /**
-         * Creates a new matrix of the given size.
-         * All entries will be initialised using their default constructors.
-         *
-         * \pre The given number of rows and columns are
-         * both strictly positive.
-         *
-         * @param rows the number of rows in the new matrix.
-         * @param cols the number of columns in the new matrix.
-         */
-        MatrixRing(unsigned long rows, unsigned long cols) :
-                Matrix<T>(rows, cols) {
-        }
-        /**
-         * Creates a new matrix that is a clone of the given matrix.
-         *
-         * @param cloneMe the matrix to clone.
-         */
-        MatrixRing(const Matrix<T>& cloneMe) :
-                Matrix<T>(cloneMe) {
-        }
-
         /**
          * Turns this matrix into an identity matrix.
-         * This matrix need not be square; after this routine it will
-         * have <tt>entry(r,c)</tt> equal to <tt>one</tt> if
-         * <tt>r == c</tt> and <tt>zero</tt> otherwise.
+         * This matrix need not be square; after this routine it will have
+         * <tt>entry(r,c)</tt> equal to 1 if <tt>r == c</tt> and 0 otherwise.
+         *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
          */
-        void makeIdentity() {
-            this->initialise(zero);
+        REGINA_ENABLE_FOR_RING(void) makeIdentity() {
+            this->initialise(0);
             for (unsigned long i = 0; i < this->rows_ && i < this->cols_; i++)
-                this->data_[i][i] = one;
+                this->data_[i][i] = 1;
         }
 
         /**
@@ -417,18 +541,21 @@ class MatrixRing : public Matrix<T> {
          * If this matrix is not square, isIdentity() will always return
          * \c false (even if makeIdentity() was called earlier).
          *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
          * @return \c true if and only if this is a square identity matrix.
          */
-        bool isIdentity() const {
+        REGINA_ENABLE_FOR_RING(bool) isIdentity() const {
             if (this->rows_ != this->cols_)
                 return false;
 
             unsigned long r, c;
             for (r = 0; r < this->rows_; ++r)
                 for (c = 0; c < this->cols_; ++c) {
-                    if (r == c && this->data_[r][c] != one)
+                    if (r == c && this->data_[r][c] != 1)
                         return false;
-                    if (r != c && this->data_[r][c] != zero)
+                    if (r != c && this->data_[r][c] != 0)
                         return false;
                 }
 
@@ -438,12 +565,15 @@ class MatrixRing : public Matrix<T> {
         /**
          * Determines whether this is the zero matrix.
          *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
          * @return \c true if and only if all entries in the matrix are zero.
          */
-        bool isZero() const {
+        REGINA_ENABLE_FOR_RING(bool) isZero() const {
             for (size_t r=0; r<this->rows_; ++r)
                 for (size_t c=0; c<this->cols_; ++c)
-                    if (this->data_[r][c] != zero)
+                    if (this->data_[r][c] != 0)
                         return false;
             return true;
         }
@@ -451,13 +581,17 @@ class MatrixRing : public Matrix<T> {
         /**
          * Adds the given source row to the given destination row.
          *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
          * \pre The two given rows are distinct and between 0 and
          * rows()-1 inclusive.
          *
          * @param source the row to add.
          * @param dest the row that will be added to.
          */
-        void addRow(unsigned long source, unsigned long dest) {
+        REGINA_ENABLE_FOR_RING(void) addRow(
+                unsigned long source, unsigned long dest) {
             for (unsigned long i = 0; i < this->cols_; i++)
                 this->data_[dest][i] += this->data_[source][i];
         }
@@ -468,6 +602,9 @@ class MatrixRing : public Matrix<T> {
          * Note that \a copies is passed by value in case it is an
          * element of the row to be changed.
          *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
          * \pre The two given rows are distinct and between 0 and
          * rows()-1 inclusive.
          *
@@ -476,13 +613,16 @@ class MatrixRing : public Matrix<T> {
          * @param copies the number of copies of \a source to add to
          * \a dest.
          */
-        void addRow(unsigned long source, unsigned long dest,
-                T copies) {
+        REGINA_ENABLE_FOR_RING(void) addRow(
+                unsigned long source, unsigned long dest, T copies) {
             for (unsigned long i = 0; i < this->cols_; i++)
                 this->data_[dest][i] += copies * this->data_[source][i];
         }
         /**
          * Adds the given source column to the given destination column.
+         *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
          *
          * \pre The two given columns are distinct and between 0 and
          * columns()-1 inclusive.
@@ -490,7 +630,8 @@ class MatrixRing : public Matrix<T> {
          * @param source the columns to add.
          * @param dest the column that will be added to.
          */
-        void addCol(unsigned long source, unsigned long dest) {
+        REGINA_ENABLE_FOR_RING(void) addCol(
+                unsigned long source, unsigned long dest) {
             for (unsigned long i = 0; i < this->rows_; i++)
                 this->data_[i][dest] += this->data_[i][source];
         }
@@ -501,6 +642,9 @@ class MatrixRing : public Matrix<T> {
          * Note that \a copies is passed by value in case it is an
          * element of the row to be changed.
          *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
          * \pre The two given columns are distinct and between 0 and
          * columns()-1 inclusive.
          *
@@ -509,8 +653,8 @@ class MatrixRing : public Matrix<T> {
          * @param copies the number of copies of \a source to add to
          * \a dest.
          */
-        void addCol(unsigned long source, unsigned long dest,
-                T copies) {
+        REGINA_ENABLE_FOR_RING(void) addCol(
+                unsigned long source, unsigned long dest, T copies) {
             for (unsigned long i = 0; i < this->rows_; i++)
                 this->data_[i][dest] += copies * this->data_[i][source];
         }
@@ -520,12 +664,15 @@ class MatrixRing : public Matrix<T> {
          * Note that \a factor is passed by value in case it is an
          * element of the row to be changed.
          *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
          * \pre The given row is between 0 and rows()-1 inclusive.
          *
          * @param row the row to work with.
          * @param factor the factor by which to multiply the given row.
          */
-        void multRow(unsigned long row, T factor) {
+        REGINA_ENABLE_FOR_RING(void) multRow(unsigned long row, T factor) {
             for (unsigned long i = 0; i < this->cols_; i++)
                 this->data_[row][i] *= factor;
         }
@@ -535,12 +682,15 @@ class MatrixRing : public Matrix<T> {
          * Note that \a factor is passed by value in case it is an
          * element of the row to be changed.
          *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
          * \pre The given column is between 0 and columns()-1 inclusive.
          *
          * @param column the column to work with.
          * @param factor the factor by which to multiply the given column.
          */
-        void multCol(unsigned long column, T factor) {
+        REGINA_ENABLE_FOR_RING(void) multCol(unsigned long column, T factor) {
             for (unsigned long i = 0; i < this->rows_; i++)
                 this->data_[i][column] *= factor;
         }
@@ -549,32 +699,23 @@ class MatrixRing : public Matrix<T> {
          * Multiplies this by the given matrix, and returns the result.
          * This matrix is not changed.
          *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
          *
-         * \warning The returned matrix will be of the exact class
-         * MatrixRing<T>, even if both this and \a other are of some common
-         * subclass of MatrixRing<T>.  If you need a subclass to be returned,
-         * consider calling multiplyAs() instead.
-         *
-         * \ifacespython The multiplication operator for a subclass (such as
-         * MatrixIntDomain) will return a new matrix of that same subclass.
-         * That is, the python multiplication operator really calls
-         * multiplyAs(), not this routine.
-         *
          * @param other the matrix by which to multiply this matrix.
-         * @return a newly allocated matrix representing
-         * <tt>this * other</tt>.
+         * @return a newly allocated matrix representing <tt>this * other</tt>.
          */
-        std::unique_ptr<MatrixRing<T>> operator * (const MatrixRing<T>& other)
-                const {
-            std::unique_ptr<MatrixRing<T> > ans(new MatrixRing<T>(
-                this->rows_, other.cols_));
+        REGINA_ENABLE_FOR_RING(std::unique_ptr<Matrix>) operator * (
+                const Matrix& other) const {
+            std::unique_ptr<Matrix> ans(new Matrix(this->rows_, other.cols_));
 
             unsigned long row, col, k;
             for (row = 0; row < this->rows_; row++)
                 for (col = 0; col < other.cols_; col++) {
-                    ans->data_[row][col] = zero;
+                    ans->data_[row][col] = 0;
                     for (k = 0; k < this->cols_; k++)
                         ans->data_[row][col] +=
                             (this->data_[row][k] * other.data_[k][col]);
@@ -584,34 +725,41 @@ class MatrixRing : public Matrix<T> {
         }
 
         /**
-         * Multiplies this by the given matrix, and returns a new matrix of
-         * subclass \a MatrixClass.  This matrix is not changed.
+         * Deprecated alias for the multiplication operator.
+         * Multiplies this by the given matrix, and returns a new matrix
+         * (of this same class) as a result.  This matrix is not changed.
+         *
+         * As of Regina 5.3, the template parameter \a MatrixClass has been
+         * removed, since Regina's old matrix class hierarchy has been replaced
+         * with a single Matrix class.  It is harmless if you still pass a
+         * template parameter, but your parameter will be ignored.
+         *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
          *
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
-         * \pre The class \a MatrixClass is a subclass of MatrixRing<T>,
-         * and can be fully initialised by calling the two-argument constructor
-         * (passing the row and column counts) and then settng individual
-         * elements via \a data_[r][c].  In particular, there should not be any
-         * new data members that need explicit initialisation.
          *
-         * \ifacespython Not present, but the python multiplication operator
-         * performs the same task (see the python notes for operator *).
+         * \deprecated Simply use the multiplication operator.  This
+         * routine dated back to when Matrix had a hierarchy of subclasses
+         * that offered different capabilities according to the underlying
+         * type \a T.  Now that there is just a single class Matrix,
+         * this routine is no longer required.
+         *
+         * \ifacespython Not present.
          *
          * @param other the matrix by which to multiply this matrix.
-         * @return a newly allocated matrix representing
-         * <tt>this * other</tt>.
+         * @return a newly allocated matrix representing <tt>this * other</tt>.
          */
-        template <class MatrixClass>
-        std::unique_ptr<MatrixClass> multiplyAs(const MatrixRing<T>& other)
-                const {
-            std::unique_ptr<MatrixClass> ans(new MatrixClass(
+        REGINA_ENABLE_FOR_RING_DEPRECATED(std::unique_ptr<Matrix>) multiplyAs(
+                const Matrix& other) const {
+            std::unique_ptr<Matrix<T>> ans(new Matrix<T>(
                 this->rows_, other.cols_));
 
             unsigned long row, col, k;
             for (row = 0; row < this->rows_; row++)
                 for (col = 0; col < other.cols_; col++) {
-                    ans->data_[row][col] = zero;
+                    ans->data_[row][col] = 0;
                     for (k = 0; k < this->cols_; k++)
                         ans->data_[row][col] +=
                             (this->data_[row][k] * other.data_[k][col]);
@@ -629,16 +777,19 @@ class MatrixRing : public Matrix<T> {
          * Combinatorics, algorithms, and complexity", Chicago J. Theor.
          * Comput. Sci., Vol. 1997, Article 5.
          *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
          * \pre This is a square matrix.
          *
          * @return the determinant of this matrix.
          */
-        T det() const {
+        REGINA_ENABLE_FOR_RING(T) det() const {
             unsigned long n = this->rows_;
 
             // Just in case...
             if (n != this->cols_ || n == 0)
-                return zero;
+                return 0;
 
             T* partial[2];
             partial[0] = new T[n * n];
@@ -649,9 +800,9 @@ class MatrixRing : public Matrix<T> {
             // Treat the smallest cases of len = 1 separately.
             int layer = 0;
             for (head = 0; head < n; head++) {
-                partial[0][head + head * n] = one;
+                partial[0][head + head * n] = 1;
                 for (curr = head + 1; curr < n; curr++)
-                    partial[0][head + curr * n] = zero;
+                    partial[0][head + curr * n] = 0;
             }
 
             // Work up through incrementing values of len.
@@ -659,7 +810,7 @@ class MatrixRing : public Matrix<T> {
                 layer ^= 1;
                 for (head = 0; head < n; head++) {
                     // If curr == head, we need to open a new clow.
-                    partial[layer][head + head * n] = zero;
+                    partial[layer][head + head * n] = 0;
                     for (prevHead = 0; prevHead < head; prevHead++)
                         for (prevCurr = prevHead; prevCurr < n; prevCurr++)
                             partial[layer][head + head * n] -=
@@ -668,7 +819,7 @@ class MatrixRing : public Matrix<T> {
 
                     // If curr > head, we need to continue an existing clow.
                     for (curr = head + 1; curr < n; curr++) {
-                        partial[layer][head + curr * n] = zero;
+                        partial[layer][head + curr * n] = 0;
                         for (prevCurr = head; prevCurr < n; prevCurr++)
                             partial[layer][head + curr * n] +=
                                 (partial[layer ^ 1][head + prevCurr * n] *
@@ -678,7 +829,7 @@ class MatrixRing : public Matrix<T> {
             }
 
             // All done.  Sum up the determinant.
-            T ans = zero;
+            T ans = 0;
             for (head = 0; head < n; head++)
                 for (curr = head; curr < n; curr++)
                     ans += (partial[layer][head + curr * n] *
@@ -688,63 +839,15 @@ class MatrixRing : public Matrix<T> {
             delete[] partial[1];
             return (n % 2 == 0 ? -ans : ans);
         }
-};
-
-/**
- * Represents a matrix of elements from a given integral domain \a T.
- *
- * Note that many important functions (such as entry()) are inherited
- * from the superclasses Matrix and MatrixRing, and are not documented
- * again here.  Many other algorithms that work on MatrixIntDomain<Integer>
- * are available in the maths/matrixops.h file. 
- *
- * \pre Type \a T has a default constructor and overloads the assignment
- * (<tt>=</tt>) operator.
- * \pre An element <i>t</i> of type \a T can be written to an output stream
- * <i>out</i> using the standard expression <tt>out << t</tt>.
- * \pre Type \a T provides binary operators <tt>+</tt>, <tt>-</tt> and
- * <tt>*</tt> and unary operators <tt>+=</tt>, <tt>-=</tt> and <tt>*=</tt>.
- * \pre Type \a T has a long integer constructor.  That is, if \c a is of
- * type \a T, then \c a can be initialised to a long integer \c l using
- * <tt>a(l)</tt>.
- * \pre Type \a T can be tested for equality or inequality against an integer.
- * \pre Type \a T has member functions divByExact() and gcdWith() that behave
- * in a similar way to the Integer member functions of these names.
- *
- * All of Regina's integer types (Integer, LargeInteger and the various
- * NativeInteger classes) satisfy these requirements.
- *
- * \ifacespython Not present, although the typedef MatrixInt is.
- */
-template <typename T>
-class MatrixIntDomain : public MatrixRing<T> {
-    public:
-        /**
-         * Creates a new matrix of the given size.
-         * All entries will be initialised using their default constructors.
-         *
-         * Note that, for MatrixIntDomain<Integer>, this means that all
-         * entries will be initialised to zero.
-         *
-         * \pre The given number of rows and columns are
-         * both strictly positive.
-         *
-         * @param rows the number of rows in the new matrix.
-         * @param cols the number of columns in the new matrix.
-         */
-        MatrixIntDomain(unsigned long rows, unsigned long cols);
-        /**
-         * Creates a new matrix that is a clone of the given matrix.
-         *
-         * @param cloneMe the matrix to clone.
-         */
-        MatrixIntDomain(const MatrixIntDomain<T>& cloneMe);
 
         /**
          * Divides all elements of the given row by the given integer.
          * This can only be used when the given integer divides into all
          * row elements exactly (with no remainder).  For the Integer class,
          * this may be much faster than ordinary division.
+         *
+         * This routine is only available when \a T is one of Regina's
+         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
          *
          * \pre The argument \a divBy is neither zero nor infinity, and
          * none of the elements of the given row are infinity.
@@ -756,13 +859,20 @@ class MatrixIntDomain : public MatrixRing<T> {
          * divided by \a divBy.
          * @param divBy the integer to divide each row element by.
          */
-        void divRowExact(unsigned long row, const T& divBy);
+        REGINA_ENABLE_FOR_REGINA_INTEGER(void) divRowExact(
+                unsigned long row, const T& divBy) {
+            for (T* x = this->data_[row]; x != this->data_[row] + cols_; ++x)
+                x->divByExact(divBy);
+        }
 
         /**
          * Divides all elements of the given column by the given integer.
          * This can only be used when the given integer divides into all
          * column elements exactly (with no remainder).  For the Integer class,
          * this may be much faster than ordinary division.
+         *
+         * This routine is only available when \a T is one of Regina's
+         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
          *
          * \pre The argument \a divBy is neither zero nor infinity, and
          * none of the elements of the given column are infinity.
@@ -774,51 +884,98 @@ class MatrixIntDomain : public MatrixRing<T> {
          * divided by \a divBy.
          * @param divBy the integer to divide each column element by.
          */
-        void divColExact(unsigned long col, const T& divBy);
+        REGINA_ENABLE_FOR_REGINA_INTEGER(void) divColExact(
+                unsigned long col, const T& divBy) {
+            for (T** row = this->data_; row != this->data_ + rows_; ++row)
+                (*row)[col].divByExact(divBy);
+        }
 
         /**
          * Computes the greatest common divisor of all elements of the
          * given row.  The value returned is guaranteed to be non-negative.
+         *
+         * This routine is only available when \a T is one of Regina's
+         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
          *
          * \pre The given row number is between 0 and rows()-1 inclusive.
          *
          * @param row the index of the row whose gcd should be computed.
          * @return the greatest common divisor of all elements of this row.
          */
-        T gcdRow(unsigned long row);
+        REGINA_ENABLE_FOR_REGINA_INTEGER(T) gcdRow(unsigned long row) {
+            T* x = this->data_[row];
+
+            T gcd = *x++;
+            while (x != this->data_[row] + cols_ && gcd != 1 && gcd != -1)
+                gcd = gcd.gcd(*x++);
+
+            if (gcd < 0)
+                gcd.negate();
+            return gcd;
+        }
 
         /**
          * Computes the greatest common divisor of all elements of the
          * given column.  The value returned is guaranteed to be non-negative.
+         *
+         * This routine is only available when \a T is one of Regina's
+         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
          *
          * \pre The given column number is between 0 and columns()-1 inclusive.
          *
          * @param col the index of the column whose gcd should be computed.
          * @return the greatest common divisor of all elements of this column.
          */
-        T gcdCol(unsigned long col);
+        REGINA_ENABLE_FOR_REGINA_INTEGER(T) gcdCol(unsigned long col) {
+            T** row = this->data_;
+
+            T gcd = (*row++)[col];
+            while (row != this->data_ + rows_ && gcd != 1 && gcd != -1)
+                gcd = gcd.gcd((*row++)[col]);
+
+            if (gcd < 0)
+                gcd.negate();
+            return gcd;
+        }
 
         /**
          * Reduces the given row by dividing all its elements by their
          * greatest common divisor.  It is guaranteed that, if the row is
          * changed at all, it will be divided by a \e positive integer.
          *
+         * This routine is only available when \a T is one of Regina's
+         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
+         *
          * \pre The given row number is between 0 and rows()-1 inclusive.
          *
          * @param row the index of the row to reduce.
          */
-        void reduceRow(unsigned long row);
+        REGINA_ENABLE_FOR_REGINA_INTEGER(void) reduceRow(unsigned long row) {
+            T gcd = gcdRow(row);
+            if (gcd != 0 && gcd != 1)
+                divRowExact(row, gcd);
+        }
 
         /**
          * Reduces the given column by dividing all its elements by their
          * greatest common divisor.  It is guaranteed that, if the column is
          * changed at all, it will be divided by a \e positive integer.
          *
+         * This routine is only available when \a T is one of Regina's
+         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
+         *
          * \pre The given column number is between 0 and columns()-1 inclusive.
          *
          * @param col the index of the column to reduce.
          */
-        void reduceCol(unsigned long col);
+        REGINA_ENABLE_FOR_REGINA_INTEGER(void) reduceCol(unsigned long col) {
+            T gcd = gcdCol(col);
+            if (gcd != 0 && gcd != 1)
+                divColExact(col, gcd);
+        }
+
+        // Make this class non-assignable.
+        Matrix& operator = (const Matrix&) = delete;
 };
 
 /**
@@ -828,13 +985,34 @@ class MatrixIntDomain : public MatrixRing<T> {
  * algorithms over integer matrices.  Since the underlying type is
  * Regina's Integer class, calculations will be exact regardless of
  * how large the integers become.
- *
- * \ifacespython This represents the class MatrixIntDomain<Integer>,
- * which inherits from Matrix<Integer> and MatrixRing<Integer>.
- * Most but not all inherited functions are implemented; see the individual
- * members' documentation for exceptions where they arise.
  */
-typedef MatrixIntDomain<Integer> MatrixInt;
+typedef Matrix<Integer> MatrixInt;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class MatrixRing has now been absorbed into the main
+ * Matrix class.  The old MatrixRing functionality is made available to
+ * Matrix when the template parameter \a ring is \c true.
+ */
+template <class T>
+using MatrixRing [[deprecated]] = Matrix<T, true>;
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class MatrixIntDomain has now been absorbed into the main
+ * Matrix class.  The old MatrixIntDomain functionality is made available to
+ * Matrix only when \a T is one of Regina's own integer classes (Integer,
+ * LargeInteger, or NativeInteger).
+ *
+ * \pre T is one of Regina's own integer classes (Integer, LargeInteger,
+ * or NativeInteger).
+ */
+template <class T>
+using MatrixIntDomain [[deprecated]] = Matrix<T, true>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -843,16 +1021,18 @@ typedef MatrixIntDomain<Integer> MatrixInt;
  * \deprecated The class NMatrix has now been renamed to Matrix.
  */
 template <class T>
-using NMatrix [[deprecated]] = Matrix<T>;
+using NMatrix [[deprecated]] = Matrix<T, false>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
  *
- * \deprecated The class NMatrixRing has now been renamed to MatrixRing.
+ * \deprecated The class NMatrixRing was long ago renamed to MatrixRing,
+ * and has now been absorbed into the main Matrix class.  You should set the
+ * extra template parameter \a ring for the Matrix class to \c true.
  */
 template <class T>
-using NMatrixRing [[deprecated]] = MatrixRing<T>;
+using NMatrixRing [[deprecated]] = Matrix<T, true>;
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -864,77 +1044,13 @@ using NMatrixRing [[deprecated]] = MatrixRing<T>;
 
 /*@}*/
 
-// Constants for MatrixRing
+// Constants for MatrixRingIdentities:
 
-template <class T>
-const T MatrixRing<T>::zero(0L);
-    /**< Zero in the underlying ring. */
-template <class T>
-const T MatrixRing<T>::one(1L);
-    /**< One (the multiplicative identity) in the underlying ring. */
+template <typename T, bool ring>
+const T MatrixRingIdentities<T, ring>::zero(0);
 
-// Implementation details for MatrixIntDomain
-
-template <typename T>
-inline MatrixIntDomain<T>::MatrixIntDomain(unsigned long rows, unsigned long cols) :
-        MatrixRing<T>(rows, cols) {
-}
-template <typename T>
-inline MatrixIntDomain<T>::MatrixIntDomain(const MatrixIntDomain<T>& cloneMe) :
-        MatrixRing<T>(cloneMe) {
-}
-
-template <typename T>
-void MatrixIntDomain<T>::divRowExact(unsigned long row, const T& divBy) {
-    for (T* x = this->data_[row]; x != this->data_[row] + Matrix<T>::cols_; ++x)
-        x->divByExact(divBy);
-}
-
-template <typename T>
-void MatrixIntDomain<T>::divColExact(unsigned long col, const T& divBy) {
-    for (T** row = this->data_; row != this->data_ + Matrix<T>::rows_; ++row)
-        (*row)[col].divByExact(divBy);
-}
-
-template <typename T>
-T MatrixIntDomain<T>::gcdRow(unsigned long row) {
-    T* x = this->data_[row];
-
-    T gcd = *x++;
-    while (x != this->data_[row] + Matrix<T>::cols_ && gcd != 1L && gcd != -1L)
-        gcd = gcd.gcd(*x++);
-
-    if (gcd < 0L)
-        gcd.negate();
-    return gcd;
-}
-
-template <typename T>
-T MatrixIntDomain<T>::gcdCol(unsigned long col) {
-    T** row = this->data_;
-
-    T gcd = (*row++)[col];
-    while (row != this->data_ + Matrix<T>::rows_ && gcd != 1L && gcd != -1L)
-        gcd = gcd.gcd((*row++)[col]);
-
-    if (gcd < 0L)
-        gcd.negate();
-    return gcd;
-}
-
-template <typename T>
-void MatrixIntDomain<T>::reduceRow(unsigned long row) {
-    T gcd = gcdRow(row);
-    if (gcd != 0L && gcd != 1L)
-        divRowExact(row, gcd);
-}
-
-template <typename T>
-inline void MatrixIntDomain<T>::reduceCol(unsigned long col) {
-    T gcd = gcdCol(col);
-    if (gcd != 0L && gcd != 1L)
-        divColExact(col, gcd);
-}
+template <typename T, bool ring>
+const T MatrixRingIdentities<T, ring>::one(1);
 
 } // namespace regina
 

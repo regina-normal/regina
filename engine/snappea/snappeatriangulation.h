@@ -53,8 +53,8 @@ namespace snappea {
 class SnapPeaTriangulation;
 class XMLSnapPeaReader;
 
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
+template <typename, bool> class Matrix;
+typedef Matrix<Integer, true> MatrixInt;
 
 /**
  * \addtogroup snappea SnapPea Triangulations

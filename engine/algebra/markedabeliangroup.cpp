@@ -78,7 +78,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
     TORLoc = rankOM; // to keep mod-p calculations happy. 
 
     // construct the internal presentation matrix.
-    std::unique_ptr<MatrixRing<Integer> > prod=OMRi*ON;
+    std::unique_ptr<MatrixInt> prod=OMRi*ON;
     MatrixInt ORN(N.rows()-rankOM, N.columns());
     ornR.reset( new MatrixInt( ORN.columns(), ORN.columns() ) );
     ornRi.reset(new MatrixInt( ORN.columns(), ORN.columns() ) );
@@ -152,7 +152,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
     // starting by computing the trunc[OMRi*N] matrix and padding with 
     // a diagonal p matrix
 
-    std::unique_ptr<MatrixRing<Integer> > OMRiN = OMRi*ON;
+    std::unique_ptr<MatrixInt> OMRiN = OMRi*ON;
 
     // hmm, if we're using p == 0 coefficients, lets keep it simple
     if (coeff > 0)
@@ -244,7 +244,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
 bool MarkedAbelianGroup::isChainComplex() const
 {
     if (OM.columns() != ON.rows()) return false;
-    std::unique_ptr<MatrixRing<Integer> > prod = OM*ON;
+    std::unique_ptr<MatrixInt> prod = OM*ON;
     for (unsigned long i=0; i<prod->rows(); i++) 
       for (unsigned long j=0; j<prod->columns(); j++)
         if (prod->entry(i,j) != 0) return false;
@@ -986,7 +986,7 @@ void HomMarkedAbelianGroup::computeImage() {
 std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::operator * (const 
       HomMarkedAbelianGroup &X) const
 {
-    std::unique_ptr<MatrixRing<Integer> > prod=matrix*X.matrix;
+    std::unique_ptr<MatrixInt> prod=matrix*X.matrix;
     MatrixInt compMat(matrix.rows(), X.matrix.columns() );
     for (unsigned long i=0;i<prod->rows();i++) 
       for (unsigned long j=0;j<prod->columns();j++)
@@ -1138,10 +1138,8 @@ bool HomMarkedAbelianGroup::isChainMap(
     ) return false;
  if ( (range().M() != other.range().N()) ||
       (domain().M() != other.domain().N()) ) return false;
- std::unique_ptr< MatrixRing<Integer> >
-    prodLU = range_.M() * definingMatrix();
- std::unique_ptr< MatrixRing<Integer> >
-    prodBR = other.definingMatrix() * domain_.M();
+ std::unique_ptr<MatrixInt> prodLU = range_.M() * definingMatrix();
+ std::unique_ptr<MatrixInt> prodBR = other.definingMatrix() * domain_.M();
  if ( (*prodLU) != (*prodBR) ) return false;
  return true;
 }

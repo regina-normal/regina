@@ -106,7 +106,12 @@ GENERATE_MAN         = NO
 ENABLE_PREPROCESSING = YES
 MACRO_EXPANSION      = YES
 EXPAND_ONLY_PREDEF   = YES
-PREDEFINED           = __DOXYGEN REGINA_API=
+PREDEFINED           = \
+    __DOXYGEN \
+    REGINA_API= \
+    REGINA_ENABLE_FOR_RING(returnType)=returnType \
+    REGINA_ENABLE_FOR_INTDOMAIN(returnType)=returnType \
+    "REGINA_ENABLE_FOR_RING_DEPRECATED(returnType)=[[deprecated]] returnType"
 
 SEARCH_INCLUDES      = YES
 INCLUDE_PATH         = @PROJECT_SOURCE_DIR@/engine

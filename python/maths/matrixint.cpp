@@ -72,34 +72,34 @@ void addMatrixInt(pybind11::module& m) {
                 const regina::Integer& value){
             m.entry(row, col) = value;
         })
-        .def("isIdentity", &MatrixInt::isIdentity)
-        .def("isZero", &MatrixInt::isZero)
+        .def("isIdentity", &MatrixInt::isIdentity<>)
+        .def("isZero", &MatrixInt::isZero<>)
         .def("swapRows", &MatrixInt::swapRows)
         .def("swapColumns", &MatrixInt::swapColumns)
-        .def("makeIdentity", &MatrixInt::makeIdentity)
+        .def("makeIdentity", &MatrixInt::makeIdentity<>)
         .def("addRow",
             overload_cast<unsigned long, unsigned long>(
-            &MatrixInt::addRow))
+            &MatrixInt::addRow<>))
         .def("addRow",
             overload_cast<unsigned long, unsigned long, regina::Integer>(
-            &MatrixInt::addRow))
+            &MatrixInt::addRow<>))
         .def("addCol",
             overload_cast<unsigned long, unsigned long>(
-            &MatrixInt::addCol))
+            &MatrixInt::addCol<>))
         .def("addCol",
             overload_cast<unsigned long, unsigned long, regina::Integer>(
-            &MatrixInt::addCol))
-        .def("multRow", &MatrixInt::multRow)
-        .def("multCol", &MatrixInt::multCol)
-        .def("det", &MatrixInt::det)
-        .def("divRowExact", &MatrixInt::divRowExact)
-        .def("divColExact", &MatrixInt::divColExact)
-        .def("gcdRow", &MatrixInt::gcdRow)
-        .def("gcdCol", &MatrixInt::gcdCol)
-        .def("reduceRow", &MatrixInt::reduceRow)
-        .def("reduceCol", &MatrixInt::reduceCol)
+            &MatrixInt::addCol<>))
+        .def("multRow", &MatrixInt::multRow<>)
+        .def("multCol", &MatrixInt::multCol<>)
+        .def("det", &MatrixInt::det<>)
+        .def("divRowExact", &MatrixInt::divRowExact<>)
+        .def("divColExact", &MatrixInt::divColExact<>)
+        .def("gcdRow", &MatrixInt::gcdRow<>)
+        .def("gcdCol", &MatrixInt::gcdCol<>)
+        .def("reduceRow", &MatrixInt::reduceRow<>)
+        .def("reduceCol", &MatrixInt::reduceCol<>)
         .def("__mul__", [](const MatrixInt& m1, const MatrixInt& m2){
-            return m1.multiplyAs<MatrixInt>(m2);
+            return m1 * m2;
         })
         .def_readonly_static("zero", &MatrixInt::zero)
         .def_readonly_static("one", &MatrixInt::one)
