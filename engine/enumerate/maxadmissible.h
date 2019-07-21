@@ -46,8 +46,6 @@
 
 namespace regina {
 
-class EnumConstraints;
-
 /**
  * \weakgroup enumerate
  * @{

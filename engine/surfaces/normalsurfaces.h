@@ -44,6 +44,7 @@
 #include <iterator>
 #include <vector>
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "packet/packet.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalflags.h"

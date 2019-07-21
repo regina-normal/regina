@@ -48,7 +48,6 @@
 
 namespace regina {
 
-class EnumConstraints;
 class Ray;
 
 /**

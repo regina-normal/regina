@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "surfaces/nsvectormirrored.h"
 
 namespace regina {

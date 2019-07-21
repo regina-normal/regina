@@ -55,7 +55,8 @@ Version 5.2  [ 29 September, 2017 ]
               In particular, increment operators now have return values.
             - Now specialises std::iterator_traits for this iterator type.
         Class EnumConstraints:
-            - Added copy and move constructors and assignment operators.
+            - Now just a typedef for std::vector<std::set<unsigned long>>,
+              instead of being a derived class with no extra functionality.
         Class FacePair:
             - Added an output stream operator.
             - Replaced naive ++/-- operators with pairs of proper pre/post

@@ -41,6 +41,7 @@
 #endif
 
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "enumerate/ordering.h"
 #include "maths/ray.h"
 #include "maths/matrix.h"
@@ -49,7 +50,6 @@
 
 namespace regina {
 
-class EnumConstraints;
 class Ray;
 class ProgressTracker;
 

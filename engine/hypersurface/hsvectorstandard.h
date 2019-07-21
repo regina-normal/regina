@@ -41,6 +41,7 @@
 #endif
 
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "hypersurface/normalhypersurface.h"
 
 namespace regina {

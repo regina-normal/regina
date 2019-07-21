@@ -77,7 +77,6 @@
 
 namespace regina {
 
-class EnumConstraints;
 class ProgressTracker;
 
 /**

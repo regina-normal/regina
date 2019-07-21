@@ -44,6 +44,7 @@
 #include <iterator>
 #include <vector>
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "hypersurface/hypercoords.h"
 #include "hypersurface/hyperflags.h"
 #include "hypersurface/normalhypersurface.h"

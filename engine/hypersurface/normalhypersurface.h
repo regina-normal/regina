@@ -58,8 +58,6 @@ namespace regina {
  * @{
  */
 
-class EnumConstraints;
-
 template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
 

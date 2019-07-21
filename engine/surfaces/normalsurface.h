@@ -201,8 +201,6 @@ REGINA_API extern const Perm<4> __octDiscArcs[24];
 #define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
 #endif
 
-class EnumConstraints;
-
 template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
 
