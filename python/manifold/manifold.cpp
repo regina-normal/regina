@@ -57,7 +57,11 @@ void addManifold(pybind11::module& m) {
         .def("writeStructure", [](const Manifold& m) {
             m.writeStructure(std::cout);
         })
-        .def(pybind11::self < pybind11::self)
+        // We cannot bind the < operator in the normal way:
+        // see https://github.com/pybind/pybind11/issues/1487 for details.
+        .def("__lt__", [](const Manifold& lhs, const Manifold& rhs) {
+            return lhs < rhs;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
