@@ -118,9 +118,18 @@ class Isomorphism : public detail::IsomorphismBase<dim> {
         /**
          * Creates a copy of the given isomorphism.
          *
-         * @param copy the isomorphism to copy.
+         * @param src the isomorphism to copy.
          */
-        Isomorphism(const Isomorphism& copy);
+        Isomorphism(const Isomorphism& src) = default;
+        /**
+         * Moves the given isomorphism into this new isomorphism.
+         * This is a fast (constant time) operation.
+         *
+         * The isomorphism that is passed (\a src) will no longer be usable.
+         *
+         * @param src the isomorphism to move.
+         */
+        Isomorphism(Isomorphism&& src) noexcept = default;
 };
 
 /*@}*/
@@ -130,11 +139,6 @@ class Isomorphism : public detail::IsomorphismBase<dim> {
 template <int dim>
 inline Isomorphism<dim>::Isomorphism(unsigned nSimplices) :
         detail::IsomorphismBase<dim>(nSimplices) {
-}
-
-template <int dim>
-inline Isomorphism<dim>::Isomorphism(const Isomorphism& copy) :
-        detail::IsomorphismBase<dim>(copy) {
 }
 
 } // namespace regina

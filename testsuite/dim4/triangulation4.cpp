@@ -1568,12 +1568,8 @@ class Triangulation4Test : public TriangulationTest<4> {
             // is a slow test and we are running it over a great many examples.
             for (unsigned i = 0; i < 2; ++i) {
                 Triangulation<4> other(*tri);
-                if (i > 0) {
-                    Isomorphism<4>* iso = Isomorphism<4>::random(
-                        other.size());
-                    iso->applyInPlace(&other);
-                    delete iso;
-                }
+                if (i > 0)
+                    Isomorphism<4>::random(other.size()).applyInPlace(&other);
 
                 other.idealToFinite();
                 clearProperties(other);

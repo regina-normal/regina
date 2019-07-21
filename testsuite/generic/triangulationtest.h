@@ -410,7 +410,7 @@ struct PachnerHelperCollapseEdge {
         "dimensions 3 or 4.");
     static void verifyCollapseEdge(const Triangulation<dim>& /* orig */,
             const Triangulation<dim>& /* altered */,
-            const Isomorphism<dim>* /* iso */, int /* simplex */) {
+            const Isomorphism<dim>& /* iso */, int /* simplex */) {
     }
 };
 
@@ -418,14 +418,14 @@ template <int dim>
 struct PachnerHelperCollapseEdge<dim, true> {
     static void verifyCollapseEdge(const Triangulation<dim>& orig,
             const Triangulation<dim>& altered,
-            const Isomorphism<dim>* iso, int simplex) {
+            const Isomorphism<dim>& iso, int simplex) {
         regina::Triangulation<dim> copy(altered);
 
         bool res = copy.collapseEdge(
-            copy.simplex(iso->simpImage(orig.size() + dim - 1))->edge(
+            copy.simplex(iso.simpImage(orig.size() + dim - 1))->edge(
                 regina::Edge<dim>::edgeNumber
-                    [iso->facetPerm(orig.size() + dim - 1)[0]]
-                    [iso->facetPerm(orig.size() + dim - 1)[dim]]),
+                    [iso.facetPerm(orig.size() + dim - 1)[0]]
+                    [iso.facetPerm(orig.size() + dim - 1)[dim]]),
             true, true);
         clearProperties(copy);
 
@@ -595,9 +595,8 @@ class TriangulationTest : public CppUnit::TestFixture {
             delete oriented;
 
             for (int i = 0; i < trials; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
-                Triangulation<dim>* t = iso->apply(tri);
-                delete iso;
+                Triangulation<dim>* t =
+                    Isomorphism<dim>::random(tri->size()).apply(tri);
 
                 t->orient();
                 clearProperties(*t);
@@ -619,9 +618,8 @@ class TriangulationTest : public CppUnit::TestFixture {
             clearProperties(canonical);
 
             for (int i = 0; i < trials; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
-                Triangulation<dim>* t = iso->apply(tri);
-                delete iso;
+                Triangulation<dim>* t =
+                    Isomorphism<dim>::random(tri->size()).apply(tri);
 
                 t->makeCanonical();
                 clearProperties(*t);
@@ -717,9 +715,8 @@ class TriangulationTest : public CppUnit::TestFixture {
 
             std::string otherSig;
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
-                Triangulation<dim>* other = iso->apply(tri);
-                delete iso;
+                Triangulation<dim>* other =
+                    Isomorphism<dim>::random(tri->size()).apply(tri);
 
                 otherSig = other->isoSig();
                 if (otherSig != sig) {
@@ -733,10 +730,8 @@ class TriangulationTest : public CppUnit::TestFixture {
                 delete other;
             }
             for (unsigned i = 0; i < 10; ++i) {
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(tri->size());
                 Triangulation<dim> other(*tri);
-                iso->applyInPlace(&other);
-                delete iso;
+                Isomorphism<dim>::random(tri->size()).applyInPlace(&other);
 
                 otherSig = other.isoSig();
                 if (otherSig != sig) {
@@ -1221,9 +1216,9 @@ class TriangulationTest : public CppUnit::TestFixture {
                 }
 
                 // Randomly relabel the simplices, but preserve orientation.
-                Isomorphism<dim>* iso = Isomorphism<dim>::random(large.size(),
+                Isomorphism<dim> iso = Isomorphism<dim>::random(large.size(),
                     true);
-                iso->applyInPlace(&large);
+                iso.applyInPlace(&large);
                 clearProperties(large);
 
                 if (k == dim) {
@@ -1238,8 +1233,8 @@ class TriangulationTest : public CppUnit::TestFixture {
 
                     res = copy.pachner(
                         FaceHelper<dim, dim - k>::face(
-                            copy.simplex(iso->simpImage(large.size() - 1)),
-                            iso->facetPerm(large.size() - 1)),
+                            copy.simplex(iso.simpImage(large.size() - 1)),
+                            iso.facetPerm(large.size() - 1)),
                         true, true);
                     clearProperties(copy);
 
@@ -1270,8 +1265,6 @@ class TriangulationTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
                 }
-
-                delete iso;
             }
         }
 

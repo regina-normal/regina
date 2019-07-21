@@ -3916,9 +3916,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             b.reorderTetrahedraBFS(true);
             clearProperties(b);
 
-            Isomorphism<3>* iso = Isomorphism<3>::random(t->size());
-            Triangulation<3>* c = iso->apply(t);
-            delete iso;
+            Triangulation<3>* c = Isomorphism<3>::random(t->size()).apply(t);
             clearProperties(*c);
 
             Triangulation<3> d(*c);
@@ -4075,21 +4073,19 @@ class Triangulation3Test : public TriangulationTest<3> {
                     // Apply a random isomorphism.
                     unsigned idx = bdry->index();
 
-                    Isomorphism<3>* iso = Isomorphism<3>::random(t.size());
-                    iso->applyInPlace(&t);
+                    Isomorphism<3> iso = Isomorphism<3>::random(t.size());
+                    iso.applyInPlace(&t);
 
-                    Perm<4> p = iso->facetPerm(idx);
+                    Perm<4> p = iso.facetPerm(idx);
                     if (r1 <= 2) {
-                        e2 = t.simplex(iso->simpImage(idx))->edge(p[1], p[2]);
-                        e3 = t.simplex(iso->simpImage(idx))->edge(p[0], p[2]);
-                        e1 = t.simplex(iso->simpImage(idx))->edge(p[0], p[1]);
+                        e2 = t.simplex(iso.simpImage(idx))->edge(p[1], p[2]);
+                        e3 = t.simplex(iso.simpImage(idx))->edge(p[0], p[2]);
+                        e1 = t.simplex(iso.simpImage(idx))->edge(p[0], p[1]);
                     } else {
-                        e1 = t.simplex(iso->simpImage(idx))->edge(p[1], p[2]);
-                        e2 = t.simplex(iso->simpImage(idx))->edge(p[0], p[2]);
-                        e3 = t.simplex(iso->simpImage(idx))->edge(p[0], p[1]);
+                        e1 = t.simplex(iso.simpImage(idx))->edge(p[1], p[2]);
+                        e2 = t.simplex(iso.simpImage(idx))->edge(p[0], p[2]);
+                        e3 = t.simplex(iso.simpImage(idx))->edge(p[0], p[1]);
                     }
-
-                    delete iso;
                 }
 
                 if (! (e1->isBoundary() && e2->isBoundary() &&
