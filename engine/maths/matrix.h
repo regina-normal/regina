@@ -175,6 +175,11 @@ struct MatrixRingIdentities<T, false> {
  * The header maths/matrixops.h contains several other algorithms that
  * work with the specific class Matrix<Integer>.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment,
+ * and long chains of operators such as <tt>a = b * c * d</tt> should not
+ * perform any deep copies at all.
+ *
  * \ifacespython Not present in general, although the specific type
  * Matrix<Integer> is available under the name MatrixInt.
  *
@@ -226,24 +231,91 @@ class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
         /**
          * Creates a new matrix that is a clone of the given matrix.
          *
-         * @param cloneMe the matrix to clone.
+         * This constructor induces a deep copy of \a src.
+         *
+         * @param src the matrix to clone.
          */
-        Matrix(const Matrix& cloneMe) : rows_(cloneMe.rows_),
-                cols_(cloneMe.cols_), data_(new T*[cloneMe.rows_]) {
+        Matrix(const Matrix& src) : rows_(src.rows_),
+                cols_(src.cols_), data_(new T*[src.rows_]) {
             unsigned long r, c;
             for (r = 0; r < rows_; r++) {
                 data_[r] = new T[cols_];
                 for (c = 0; c < cols_; c++)
-                    data_[r][c] = cloneMe.data_[r][c];
+                    data_[r][c] = src.data_[r][c];
             }
+        }
+        /**
+         * Moves the given matrix into this new matrix.
+         * This is a fast (constant time) operation.
+         *
+         * The matrix that is passed (\a src) will no longer be usable.
+         *
+         * @param src the matrix to move.
+         */
+        Matrix(Matrix&& src) noexcept :
+                rows_(src.rows_), cols_(src.cols_), data_(src.data_) {
+            src.data_ = nullptr;
         }
         /**
          * Destroys this matrix.
          */
         ~Matrix() {
-            for (unsigned long i = 0; i < rows_; i++)
-                delete[] data_[i];
-            delete[] data_;
+            if (data_) {
+                for (unsigned long i = 0; i < rows_; ++i)
+                    delete[] data_[i];
+                delete[] data_;
+            }
+        }
+
+        /**
+         * Copies the given matrix into this matrix.
+         *
+         * It does not matter if this and the given matrix have different
+         * sizes; if they do then this matrix will be resized as a result.
+         *
+         * This operator induces a deep copy of \a src.
+         *
+         * @param src the matrix to copy.
+         * @return a reference to this matrix.
+         */
+        Matrix& operator = (const Matrix& src) {
+            if (rows_ != src.rows_ || cols_ != src.cols_) {
+                for (unsigned long i = 0; i < rows_; ++i)
+                    delete[] data_[i];
+                delete[] data_;
+
+                rows_ = src.rows_;
+                cols_ = src.cols_;
+
+                data_ = new T*[rows_];
+                for (unsigned long i = 0; i < rows_; ++i)
+                    data_[i] = new T[cols_];
+            }
+
+            for (unsigned long i = 0; i < rows_; ++i)
+                std::copy(src.data_[i], src.data_[i] + cols_, data_[i]);
+            return *this;
+        }
+        /**
+         * Moves the given matrix into this matrix.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given matrix have different
+         * sizes; if they do then this matrix will be resized as a result.
+         *
+         * The matrix that is passed (\a src) will no longer be usable.
+         *
+         * @param src the matrix to move.
+         * @return a reference to this matrix.
+         */
+        Matrix& operator = (Matrix&& src) noexcept {
+            // Strictly speaking, we could just assign cols_ instead of
+            // swapping.
+            std::swap(rows_, src.rows_);
+            std::swap(cols_, src.cols_);
+            std::swap(data_, src.data_);
+            // Let src dispose of the original contents in its own destructor.
+            return *this;
         }
 
         /**
@@ -655,20 +727,19 @@ class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
          *
-         * @param other the matrix by which to multiply this matrix.
-         * @return a newly allocated matrix representing <tt>this * other</tt>.
+         * @param other the other matrix to multiply this matrix by.
+         * @return the product matrix <tt>this * other</tt>.
          */
-        REGINA_ENABLE_FOR_RING(std::unique_ptr<Matrix>) operator * (
-                const Matrix& other) const {
-            std::unique_ptr<Matrix> ans(new Matrix(this->rows_, other.cols_));
+        REGINA_ENABLE_FOR_RING(Matrix) operator * (const Matrix& other) const {
+            Matrix ans(this->rows_, other.cols_);
 
             unsigned long row, col, k;
-            for (row = 0; row < this->rows_; row++)
-                for (col = 0; col < other.cols_; col++) {
-                    ans->data_[row][col] = 0;
-                    for (k = 0; k < this->cols_; k++)
-                        ans->data_[row][col] +=
-                            (this->data_[row][k] * other.data_[k][col]);
+            for (row = 0; row < rows_; ++row)
+                for (col = 0; col < other.cols_; ++col) {
+                    ans.data_[row][col] = 0;
+                    for (k = 0; k < cols_; ++k)
+                        ans.data_[row][col] +=
+                            (data_[row][k] * other.data_[k][col]);
                 }
 
             return ans;
@@ -690,32 +761,20 @@ class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
          * \pre The number of columns in this matrix equals the number
          * of rows in the given matrix.
          *
-         * \deprecated Simply use the multiplication operator.  This
-         * routine dated back to when Matrix had a hierarchy of subclasses
-         * that offered different capabilities according to the underlying
-         * type \a T.  Now that there is just a single class Matrix,
-         * this routine is no longer required.
+         * \deprecated Simply use the multiplication operator (which is now
+         * identical to this routine).  This routine multiplyAs() dated back
+         * to when Matrix had a hierarchy of subclasses that offered different
+         * capabilities according to the underlying type \a T.  Now that there
+         * is just a single class Matrix, this routine is no longer required.
          *
          * \ifacespython Not present.
          *
-         * @param other the matrix by which to multiply this matrix.
-         * @return a newly allocated matrix representing <tt>this * other</tt>.
+         * @param other the other matrix to multiply this matrix by.
+         * @return the product matrix <tt>this * other</tt>.
          */
-        REGINA_ENABLE_FOR_RING_DEPRECATED(std::unique_ptr<Matrix>) multiplyAs(
+        REGINA_ENABLE_FOR_RING_DEPRECATED(Matrix) multiplyAs(
                 const Matrix& other) const {
-            std::unique_ptr<Matrix<T>> ans(new Matrix<T>(
-                this->rows_, other.cols_));
-
-            unsigned long row, col, k;
-            for (row = 0; row < this->rows_; row++)
-                for (col = 0; col < other.cols_; col++) {
-                    ans->data_[row][col] = 0;
-                    for (k = 0; k < this->cols_; k++)
-                        ans->data_[row][col] +=
-                            (this->data_[row][k] * other.data_[k][col]);
-                }
-
-            return ans;
+            return (*this * other);
         }
 
         /**
@@ -923,9 +982,6 @@ class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
             if (gcd != 0 && gcd != 1)
                 divColExact(col, gcd);
         }
-
-        // Make this class non-assignable.
-        Matrix& operator = (const Matrix&) = delete;
 };
 
 /**

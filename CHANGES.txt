@@ -103,6 +103,12 @@ Version 5.2  [ 29 September, 2017 ]
               functions are available only for Regina's own integer classes.
               The old class names MatrixRing and MatrixIntDomain are still
               available as deprecated typedefs.
+            - Added (fast) move constructors and move assignment operators,
+              and a (slow) copy assignment operator.
+            - The multiplication operator and the multiplyAs() routines now
+              return a Matrix, not a std::unique_ptr<Matrix>.  Now that
+              Matrix has a move constructor and assignment operator, this
+              should not be inducing unwanted deep copies.
             - The routine multiplyAs is now deprecated (since there is no
               longer a Matrix class hierarchy), and it ignores its template
               arguments (instead always returning a matrix of the same class).
