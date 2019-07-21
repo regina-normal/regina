@@ -45,6 +45,7 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/integer.h"
+#include "utilities/intutils.h"
 
 #ifndef __DOXYGEN
 // The following macros are used to conditionally enable member functions
@@ -92,7 +93,7 @@
  */
 #define REGINA_ENABLE_FOR_REGINA_INTEGER(returnType) \
     template <typename... Args, typename Return = returnType> \
-    std::enable_if_t<MatrixTypeInfo<T>::isReginaInteger, Return>
+    std::enable_if_t<IsReginaInteger<T>::value, Return>
 #endif
 
 namespace regina {
@@ -128,67 +129,6 @@ struct MatrixRingIdentities<T, false> {
 };
 #endif
 
-#ifdef __DOXYGEN
-/**
- * A class that helps with enabling/disabling member functions of Matrix<T>
- * according to properties of the underyling type \a T.
- */
-template <typename T>
-struct MatrixTypeInfo {
-    /**
-     * Indicates whether Matrix<T> will by default include the member functions
-     * designed for matrices over rings.  Note that you can always override
-     * this default for a specific matrix class by using the optional \a ring
-     * parameter to the Matrix template.
-     *
-     * At present, Matrix<T> includes functions designed for rings by default
-     * when \a T is one of the following types:
-     *
-     * - native C++ integer types (i.e., where std::is_integral<T>::value
-     *   is \c true and \a T is not bool); or
-     *
-     * - Regina's own types Integer, LargeInteger, NativeInteger<...>,
-     *   and Rational.
-     *
-     * Other types may be added to this list in future versions of Regina.
-     */
-    static constexpr bool ringByDefault = false;
-
-    /**
-     * Indicates whether \a T is one of Regina's own integer types.
-     *
-     * This is true only when \a T is one of the types Integer, LargeInteger,
-     * or NativeInteger<...>.
-     */
-    static constexpr bool isReginaInteger = false;
-};
-#else
-template <typename T>
-struct MatrixTypeInfo {
-    static constexpr bool ringByDefault =
-        std::is_integral<T>::value && ! std::is_same<T, bool>::value;
-    static constexpr bool isReginaInteger = false;
-};
-
-template <>
-struct MatrixTypeInfo<Rational> {
-    static constexpr bool ringByDefault = true;
-    static constexpr bool isReginaInteger = false;
-};
-
-template <bool supportInfinity>
-struct MatrixTypeInfo<IntegerBase<supportInfinity>> {
-    static constexpr bool ringByDefault = true;
-    static constexpr bool isReginaInteger = true;
-};
-
-template <int bytes>
-struct MatrixTypeInfo<NativeInteger<bytes>> {
-    static constexpr bool ringByDefault = true;
-    static constexpr bool isReginaInteger = true;
-};
-#endif
-
 /**
  * Represents a matrix of elements of the given type \a T.
  *
@@ -199,8 +139,16 @@ struct MatrixTypeInfo<NativeInteger<bytes>> {
  * parameters.
  *
  * It is generally safe to just use the type Matrix<T>, since the \c ring
- * argument has a sensible default.  See the documentation for
- * MatrixTypeInfo::ringByDefault for details.
+ * argument has a sensible default.  At present, \c ring defaults to \c true
+ * (thereby enabling member functions designed for matrices over rings)
+ * when \a T is one of the following types:
+ *
+ * - native C++ integer types (i.e., where std::is_integral<T>::value
+ *   is \c true and \a T is not bool); or
+ *
+ * - Regina's own types Integer, LargeInteger, NativeInteger<...>, and Rational.
+ *
+ * Other types may be added to this list in future versions of Regina.
  *
  * There are several requirements for the underlying type \a T.
  * For all matrix types:
@@ -233,11 +181,13 @@ struct MatrixTypeInfo<NativeInteger<bytes>> {
  * \tparam T the type of each individual matrix element.
  * \tparam ring \c true if we should enable member functions that only
  * work when T represents an element of a ring.  This has a sensible default;
- * see the documentation for MatrixTypeInfo::ringByDefault for details.
+ * see above in the class documentation for details.
  */
-template <class T, bool ring = MatrixTypeInfo<T>::ringByDefault>
+template <class T, bool ring =
+        ((std::is_integral<T>::value && ! std::is_same<T, bool>::value) ||
+        IsReginaInteger<T>::value || std::is_same<T, Rational>::value)>
 class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
-    static_assert(ring || ! MatrixTypeInfo<T>::isReginaInteger,
+    static_assert(ring || ! IsReginaInteger<T>::value,
         "Using Matrix with Regina's own integer types requires ring=true.");
 
     private:

@@ -75,6 +75,8 @@ Version 5.2  [ 29 September, 2017 ]
         Class Isomorphism<dim>:
             - The random() function now takes an optional argument to enforce
               orientation-preserving isomorphisms only.
+        Class IsReginaInteger:
+            - New type trait to identify Regina's own integer types.
         Class Laurent2:
             - New constuctor that shifts a given polynomial by x^e y^e.
         Class LensSpace:
