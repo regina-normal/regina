@@ -102,6 +102,8 @@ class REGINA_API CensusDB {
 
         /**
          * Moves the given database reference into this new object.
+         *
+         * The reference that was passed will no longer be usable.
          */
         CensusDB(CensusDB&&) = default;
 
@@ -146,6 +148,8 @@ class REGINA_API CensusDB {
 
         /**
          * Moves the given database reference into this object.
+         *
+         * The reference that was passed will no longer be usable.
          */
         CensusDB& operator = (CensusDB&&) = default;
 };
