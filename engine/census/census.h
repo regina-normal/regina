@@ -105,7 +105,7 @@ class REGINA_API CensusDB {
          *
          * The reference that was passed will no longer be usable.
          */
-        CensusDB(CensusDB&&) = default;
+        CensusDB(CensusDB&&) noexcept = default;
 
         /**
          * Returns the filename where this database is stored.
@@ -151,7 +151,7 @@ class REGINA_API CensusDB {
          *
          * The reference that was passed will no longer be usable.
          */
-        CensusDB& operator = (CensusDB&&) = default;
+        CensusDB& operator = (CensusDB&&) noexcept = default;
 };
 
 /**
