@@ -91,6 +91,11 @@ namespace regina {
  * Note that for all types of isomorphism, triangulation \a U is allowed
  * to contain more simplices than triangulation \a T.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment, and
+ * calling routines that return an Isomorphism (e.g., identity() and random())
+ * should not perform any unwanted deep copies.
+ *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., Isomorphism2 and Isomorphism3 for dimensions 2 and 3).
