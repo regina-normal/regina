@@ -57,8 +57,8 @@
 // should never specify their own template arguments, and indeed the template
 // parameter pack Args is there precisely to stop users from doing this.
 /**
- * Use this as the return type for a Matrix member function that is only
- * available when working with matrices over rings.
+ * Use this as the return type for a non-static Matrix member function that is
+ * only available when working with matrices over rings.
  *
  * Equivalent to \a returnType if the Matrix template argument \a ring is
  * \c true, and removes the member function completey otherwise.
@@ -68,6 +68,19 @@
 #define REGINA_ENABLE_FOR_RING(returnType) \
     template <typename... Args, typename Return = returnType> \
     std::enable_if_t<ring, Return>
+/**
+ * Use this as the return type for a static Matrix member function that is
+ * only available when working with matrices over rings.
+ *
+ * Equivalent to <tt>static returnType</tt> if the Matrix template
+ * argument \a ring is \c true, and removes the member function completey
+ * otherwise.
+ *
+ * This macro cannot be used with templated member functions.
+ */
+#define REGINA_ENABLE_FOR_RING_STATIC(returnType) \
+    template <typename... Args, typename Return = returnType> \
+    static std::enable_if_t<ring, Return>
 /**
  * Use this as the return type for a deprecated Matrix member function that is
  * only available when working with matrices over rings.
@@ -537,6 +550,24 @@ class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
          */
         void writeTextLong(std::ostream& out) const {
             writeMatrix(out);
+        }
+
+        /**
+         * Returns an identity matrix of the given size.
+         * The matrix returned will have \a size rows and \a size columns.
+         *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
+         * @param size the number of rows and columns of the matrix to build.
+         * @return an identity matrix of the given size.
+         */
+        REGINA_ENABLE_FOR_RING_STATIC(Matrix) identity(unsigned long size) {
+            Matrix ans(size, size);
+            ans.initialise(0);
+            for (unsigned long i = 0; i < size; ++i)
+                ans.data_[i][i] = 1;
+            return ans;
         }
 
         /**
