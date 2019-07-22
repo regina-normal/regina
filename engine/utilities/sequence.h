@@ -59,6 +59,9 @@ namespace regina {
  * sequence and forces a reallocation of the underlying storage.
  * See init() for details.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move construtors and move assignment.
+ *
  * \ifacespython Not present.
  */
 template <typename T>
@@ -101,12 +104,21 @@ class REGINA_API LightweightSequence {
         /**
          * Create a copy of the given sequence.
          *
-         * This is a deep copy, in that all of the elements of \a cloneMe
-         * will be copied into the new sequence.
+         * This induces a deep copy of \a src, in that all of the elements of
+         * \a src will be copied into the new sequence.
          *
-         * @param cloneMe the sequence to copy.
+         * @param src the sequence to copy.
          */
-        LightweightSequence(const LightweightSequence& cloneMe);
+        LightweightSequence(const LightweightSequence& src);
+        /**
+         * Moves the contents of the given sequence to this new sequence.
+         * This is a fast (constant time) operation.
+         *
+         * The sequence that was passed (\a src) will no longer be usable.
+         *
+         * @param src the sequence to move.
+         */
+        LightweightSequence(LightweightSequence&& src) noexcept;
         /**
          * Destroys this sequence and all of its elements.
          *
@@ -208,13 +220,23 @@ class REGINA_API LightweightSequence {
          * Converts this into a copy of the given sequence.
          * Any existing elements of this sequence will be deleted.
          *
-         * This is a deep copy, in that all of the elements of \a cloneMe
-         * will be copied into this sequence.
+         * This induces a deep copy of \a src, in that all of the elements of
+         * \a src will be copied into the new sequence.
          *
-         * @param cloneMe the sequence to copy.
+         * @param src the sequence to copy.
          * @return a reference to this sequence.
          */
-        LightweightSequence<T>& operator = (const LightweightSequence& cloneMe);
+        LightweightSequence<T>& operator = (const LightweightSequence& src);
+        /**
+         * Moves the contents of the given sequence to this sequence.
+         * This is a fast (constant time) operation.
+         *
+         * The sequence that was passed (\a src) will no longer be usable.
+         *
+         * @param src the sequence to move.
+         * @return a reference to this sequence.
+         */
+        LightweightSequence<T>& operator = (LightweightSequence&& src) noexcept;
 
         /**
          * Tests whether this and the given sequence are identical.
@@ -286,13 +308,21 @@ class REGINA_API LightweightSequence {
          *
          * Note that the indices \a i0, \a i1, ... do not need to be in
          * increasing order.
+         *
+         * This class is meant to be lightweight: it merely stores a
+         * reference to the list of elements to compare, and it is safe
+         * and fast to pass around by value.  The cost of this is that
+         * the caller \e must ensure that the list of elements to compare
+         * (which is a C-style array) has a lifespan at least as long as
+         * this object.  This behaviour is new as of Regina 5.3; in past
+         * versions of Regina the list of elements was copied on construction.
          */
         template <typename Iterator>
         class REGINA_API SubsequenceCompareFirstPtr {
             private:
                 size_t nSub_;
                     /**< The number of elements to compare in each sequence. */
-                size_t* sub_;
+                const size_t* sub_;
                     /**< The indices of the elements to compare in each
                          sequence. */
 
@@ -305,6 +335,12 @@ class REGINA_API LightweightSequence {
                  * sequences.  The indices of the elements to compare
                  * should be passed to this constructor.
                  *
+                 * \warning This class merely copies the pointer \a sub,
+                 * and does not take a deep copy.  The caller of this
+                 * routine must ensure that the array \a sub has a lifespan
+                 * at least as long as this function object and any
+                 * function objects that are copied from it.
+                 *
                  * @param nSub the number of elements to compare from
                  * each sequence.
                  * @param sub the indices of the elements to compare
@@ -313,16 +349,18 @@ class REGINA_API LightweightSequence {
                  */
                 SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub);
                 /**
-                 * Creates a clone of the given function object.
-                 *
-                 * @param cloneMe the function object to copy.
+                 * Copies the given function object into this new object.
                  */
                 SubsequenceCompareFirstPtr(
-                    const SubsequenceCompareFirstPtr<Iterator>& cloneMe);
+                    const SubsequenceCompareFirstPtr<Iterator>&) = default;
+
                 /**
-                 * Destroys this function object.
+                 * Copies the given function object into this object.
+                 *
+                 * @return a reference to this function object.
                  */
-                ~SubsequenceCompareFirstPtr();
+                SubsequenceCompareFirstPtr<Iterator>& operator = (
+                    const SubsequenceCompareFirstPtr<Iterator>&) = default;
 
                 /**
                  * Tests whether the subsequences referred to by the
@@ -376,18 +414,6 @@ class REGINA_API LightweightSequence {
                  * the subsequence indicated by \a b.
                  */
                 bool operator () (Iterator a, Iterator b) const;
-
-                /**
-                 * Makes this function object identical to the given
-                 * function object.  The original list of indices that
-                 * was previously stored with this function object will
-                 * be destroyed.
-                 *
-                 * @param cloneMe the function object to copy.
-                 * @return a reference to this function object.
-                 */
-                SubsequenceCompareFirstPtr<Iterator>& operator = (
-                    const SubsequenceCompareFirstPtr<Iterator>& cloneMe);
         };
 };
 
@@ -420,9 +446,16 @@ inline LightweightSequence<T>::LightweightSequence(size_t size) :
 
 template <typename T>
 inline LightweightSequence<T>::LightweightSequence(
-        const LightweightSequence& cloneMe) :
-        data_(new T[cloneMe.size_]), size_(cloneMe.size_) {
-    std::copy(cloneMe.data_, cloneMe.data_ + size_, data_);
+        const LightweightSequence& src) :
+        data_(new T[src.size_]), size_(src.size_) {
+    std::copy(src.data_, src.data_ + size_, data_);
+}
+
+template <typename T>
+inline LightweightSequence<T>::LightweightSequence(
+        LightweightSequence&& src) noexcept:
+        data_(src.data_), size_(src.size_) {
+    src.data_ = nullptr;
 }
 
 template <typename T>
@@ -478,13 +511,23 @@ inline typename LightweightSequence<T>::const_iterator
 
 template <typename T>
 inline LightweightSequence<T>& LightweightSequence<T>::operator = (
-        const LightweightSequence& cloneMe) {
-    size_ = cloneMe.size_;
+        const LightweightSequence& src) {
+    size_ = src.size_;
 
     delete[] data_;
     data_ = new T[size_];
-    std::copy(cloneMe.data_, cloneMe.data_ + size_, data_);
+    std::copy(src.data_, src.data_ + size_, data_);
 
+    return *this;
+}
+
+template <typename T>
+inline LightweightSequence<T>& LightweightSequence<T>::operator = (
+        LightweightSequence&& src) noexcept {
+    // Strictly speaking, we could just assign size_ instead of swapping.
+    std::swap(size_, src.size_);
+    std::swap(data_, src.data_);
+    // Let src dispose of the original contents in its own destructor.
     return *this;
 }
 
@@ -542,26 +585,7 @@ template <typename T>
 template <typename Iterator>
 inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
         SubsequenceCompareFirstPtr(size_t nSub, const size_t* sub) :
-        nSub_(nSub), sub_(new size_t[nSub]) {
-    for (size_t i = 0; i < nSub_; ++i)
-        sub_[i] = sub[i];
-}
-
-template <typename T>
-template <typename Iterator>
-inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
-        SubsequenceCompareFirstPtr(
-        const SubsequenceCompareFirstPtr<Iterator>& cloneMe) :
-        nSub_(cloneMe.nSub_), sub_(new size_t[cloneMe.nSub_]) {
-    for (size_t i = 0; i < nSub_; ++i)
-        sub_[i] = cloneMe.sub_[i];
-}
-
-template <typename T>
-template <typename Iterator>
-inline LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
-        ~SubsequenceCompareFirstPtr()  {
-    delete[] sub_;
+        nSub_(nSub), sub_(sub) {
 }
 
 template <typename T>
@@ -596,22 +620,6 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
         else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
             return false;
     return false;
-}
-
-template <typename T>
-template <typename Iterator>
-inline typename LightweightSequence<T>::template SubsequenceCompareFirstPtr<Iterator>&
-        LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
-        operator = (
-        const SubsequenceCompareFirstPtr<Iterator>& cloneMe) {
-    delete[] sub_;
-
-    nSub_ = cloneMe.nSub_;
-    sub_ = new size_t[nSub_];
-    for (size_t i = 0; i < nSub_; ++i)
-        sub_[i] = cloneMe.sub_[i];
-
-    return *this;
 }
 
 } // namespace regina
