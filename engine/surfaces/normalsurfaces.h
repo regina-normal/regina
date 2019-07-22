@@ -1231,7 +1231,7 @@ class REGINA_API NormalSurfaces : public Packet {
                  * tree as a child of \a triang_.
                  *
                  * The matching equation matrix \a eqns_ will be deleted
-                 * at the end of this routine.
+                 * during this routine.
                  *
                  * \tparam Coords an instance of the NormalInfo<> template
                  * class.
@@ -1261,6 +1261,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillVertex();
@@ -1282,6 +1285,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillFundamental();
@@ -1297,6 +1303,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * If \a tracker_ is non-null, this routine assumes that
                  * an appropriate tracker stage has already been
                  * declared, and works through that stage only.
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1315,6 +1324,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * an appropriate tracker stage has already been
                  * declared, and works through that stage only.
                  *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
+                 *
                  * \pre We are enumerating embedded surfaces only.
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1328,6 +1340,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * This does all of the work for fillVertexTree(), aside
                  * from the initial selection of an integer type.  See
                  * the nodes for fillVertexTree() for further details.
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre We are enumerating embedded surfaces only.
                  * \pre The underlying triangulation is non-empty.
@@ -1351,6 +1366,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
+                 *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Coords>
@@ -1368,6 +1386,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1387,6 +1408,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
+                 *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Coords>
@@ -1404,6 +1428,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */

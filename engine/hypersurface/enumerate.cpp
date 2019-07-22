@@ -88,7 +88,7 @@ void NormalHypersurfaces::Enumerator::operator() () {
         tracker_->setFinished();
 
     // Clean up.
-    delete eqns_;
+    delete eqns_; // This might or might not have been done by fill...().
 }
 
 template <typename Coords>
@@ -171,9 +171,8 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
         HS_VERTEX | (list_->which_.has(HS_EMBEDDED_ONLY) ?
             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
-    Enumerator e(vtx, triang_,
-        new MatrixInt(*eqns_) /* clone which will be destroyed */,
-        0 /* don't set another progress tracker */);
+    Enumerator e(vtx, triang_, eqns_, nullptr /* no inner progress tracker */);
+    eqns_ = nullptr; // The inner enumerator's destructor will delete eqns_.
     e.fillVertex<Coords>();
 
     // Finalise the algorithm flags for this list: combine HS_HILBERT_PRIMAL
