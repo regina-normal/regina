@@ -76,6 +76,7 @@ void addMatrixInt(pybind11::module& m) {
         .def("isZero", &MatrixInt::isZero<>)
         .def("swapRows", &MatrixInt::swapRows)
         .def("swapColumns", &MatrixInt::swapColumns)
+        .def_static("identity", &MatrixInt::identity<>)
         .def("makeIdentity", &MatrixInt::makeIdentity<>)
         .def("addRow",
             overload_cast<unsigned long, unsigned long>(
