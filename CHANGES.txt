@@ -108,6 +108,8 @@ Version 5.2  [ 29 September, 2017 ]
               that base classes can use default implementations.
         Class MarkedAbelianGroup:
             - New routine isZ().
+        Class MarkedVector:
+            - Added a move constructor and move assignment.
         Class Matrix, MatrixRing, MatrixIntDomain:
             - These classes have now been merged into a single Matrix class.
               There is a new template argument to indicate whether the ring

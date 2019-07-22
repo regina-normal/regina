@@ -135,6 +135,11 @@ class REGINA_API MarkedElement {
  * are not destroyed when they are removed from a vector or when the vector
  * is eventually destroyed.
  *
+ * Since an object can only belong to one MarkedVector at a time, this
+ * class does not offer a copy constructor or copy assignment.  Instead it
+ * supports a move constructor and move assignment, as well as a swap()
+ * function, all of which preserve this constraint.
+ *
  * \pre The type \a T is a class derived from MarkedElement.
  *
  * \ifacespython Not present.
@@ -161,6 +166,22 @@ class MarkedVector : private std::vector<T*> {
          * Constructs a new empty vector.
          */
         inline MarkedVector() {}
+
+        /**
+         * Moves the contents of the given vector into this new vector.
+         *
+         * The vector that was passed will no longer be usable.
+         */
+        MarkedVector(MarkedVector&&) noexcept = default;
+
+        /**
+         * Moves the contents of the given vector into this vector.
+         *
+         * The vector that was passed will no longer be usable.
+         *
+         * @return a reference to this vector.
+         */
+        MarkedVector& operator = (MarkedVector&&) noexcept = default;
 
         /**
          * Casts this vector to a const std::vector, thus providing
