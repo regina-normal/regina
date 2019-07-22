@@ -255,7 +255,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * @param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * @return the newly created normal surface list.  Note that if
          * a progress tracker is passed then this list may not be completely
          * filled when this routine returns.  If an error occurs (as
@@ -265,7 +265,7 @@ class REGINA_API NormalSurfaces : public Packet {
             NormalCoords coords,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,
-            ProgressTracker* tracker = 0);
+            ProgressTracker* tracker = nullptr);
 
         /**
          * Returns the coordinate system being used by the
@@ -425,7 +425,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * links of the underlying triangulation, and will verify that
          * the coordinate system and embedded-only flag are set to
          * NS_QUAD and \c true respectively.  If any of
-         * these checks fails, this routine will do nothing and return 0.
+         * these checks fails, this routine will do nothing and return \c null.
          *
          * \pre The underlying triangulation (the parent packet of this
          * normal surface list) is valid, and the link of every vertex
@@ -438,7 +438,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex normal surfaces in standard (tri-quad)
-         * coordinates, or 0 if any of the basic sanity checks failed.
+         * coordinates, or \c null if any of the basic sanity checks failed.
          */
         NormalSurfaces* quadToStandard() const;
 
@@ -462,8 +462,8 @@ class REGINA_API NormalSurfaces : public Packet {
          * NS_AN_QUAD_OCT and with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex almost normal surfaces in standard
-         * tri-quad-oct coordinates, or 0 if any of the basic sanity checks
-         * failed.
+         * tri-quad-oct coordinates, or \c null if any of the basic sanity
+         * checks failed.
          */
         NormalSurfaces* quadOctToStandardAN() const;
 
@@ -499,7 +499,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * links of the underlying triangulation, and will verify that
          * the coordinate system and embedded-only flag are set to
          * NS_STANDARD and \c true respectively.  If any of
-         * these checks fails, this routine will do nothing and return 0.
+         * these checks fails, this routine will do nothing and return \c null.
          *
          * \pre The underlying triangulation (the parent packet of this
          * normal surface list) is valid, and the link of every vertex
@@ -512,7 +512,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * NS_STANDARD and with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex normal surfaces in quadrilateral
-         * coordinates, or 0 if any of the basic sanity checks failed.
+         * coordinates, or \c null if any of the basic sanity checks failed.
          */
         NormalSurfaces* standardToQuad() const;
 
@@ -535,7 +535,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * NS_AN_STANDARD and with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex almost normal surfaces in
-         * quadrilateral-octagon coordinates, or 0 if any of the basic
+         * quadrilateral-octagon coordinates, or \c null if any of the basic
          * sanity checks failed.
          */
         NormalSurfaces* standardANToQuadOct() const;
@@ -1115,12 +1115,12 @@ class REGINA_API NormalSurfaces : public Packet {
          * @param reducedList a full list of vertex surfaces in
          * (quad or quad-oct) coordinates for the given triangulation.
          * @param tracker a progress tracker to be used for progress reporting
-         * and cancellation requests, or 0 if this is not required.
+         * and cancellation requests, or \c null if this is not required.
          */
         template <class Variant>
         void buildStandardFromReduced(Triangulation<3>* owner,
             const std::vector<NormalSurface*>& reducedList,
-            ProgressTracker* tracker = 0);
+            ProgressTracker* tracker = nullptr);
 
         /**
          * Implements the one-template-argument version of
@@ -1192,7 +1192,7 @@ class REGINA_API NormalSurfaces : public Packet {
                 ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
-                         or 0 if no progress tracker is in use. */
+                         or \c null if no progress tracker is in use. */
 
             public:
                 /**
@@ -1207,7 +1207,7 @@ class REGINA_API NormalSurfaces : public Packet {
                  * has finished.  This pointer \e must be non-null, i.e., Regina
                  * must have been able to construct the matching equations.
                  * @param tracker the progress tracker to use for progress
-                 * reporting and cancellation polling, or 0 if these
+                 * reporting and cancellation polling, or \c null if these
                  * capabilities are not required.
                  */
                 Enumerator(NormalSurfaces* list, Triangulation<3>* triang,

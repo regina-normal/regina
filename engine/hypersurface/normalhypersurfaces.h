@@ -179,7 +179,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
          * @param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * @return the newly created normal hypersurface list.  Note that if
          * a progress tracker is passed then this list may not be completely
          * filled when this routine returns.  If an error occurs (as
@@ -189,7 +189,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
             HyperCoords coords,
             HyperList which = HS_LIST_DEFAULT,
             HyperAlg algHints = HS_ALG_DEFAULT,
-            ProgressTracker* tracker = 0);
+            ProgressTracker* tracker = nullptr);
 
         /**
          * Returns the coordinate system being used by the
@@ -564,7 +564,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
                 ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
-                         or 0 if no progress tracker is in use. */
+                         or \c null if no progress tracker is in use. */
 
             public:
                 /**
@@ -580,7 +580,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * has finished.  This pointer \e must be non-null, i.e., Regina
                  * must have been able to construct the matching equations.
                  * @param tracker the progress tracker to use for
-                 * progress reporting and cancellation polling, or 0 if
+                 * progress reporting and cancellation polling, or \c null if
                  * these capabilities are not required.
                  */
                 Enumerator(NormalHypersurfaces* list, Triangulation<4>* triang,
