@@ -1761,8 +1761,8 @@ class TriangulationBase :
          * minor dimension-specific adjustments.
          *
          * \ifacespython The isomorphism argument is not present.
-         * Instead there are two routines: fromIsoSig(), which returns a
-         * string only, and fromIsoSigDetail(), which returns a pair
+         * Instead there are two routines: isoSig(), which returns a
+         * string only, and isoSigDetail(), which returns a pair
          * (\a signature, \a relabelling).
          *
          * \pre If \a relabelling is non-null, then this triangulation
