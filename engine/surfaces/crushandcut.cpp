@@ -1430,7 +1430,6 @@ namespace {
                 // Look for a normal disc or sphere to crush.
                 NormalSurface* ans;
                 Triangulation<3>* crush;
-                unsigned nComp;
                 bool found;
                 while (true) {
                     t_[side]->intelligentSimplify();
@@ -1490,7 +1489,7 @@ namespace {
 
                     // Find the piece in the crushed triangulation with the
                     // right Euler characteristic on the boundary, if it exists.
-                    nComp = crush->splitIntoComponents();
+                    crush->splitIntoComponents();
                     t_[side] = static_cast<Triangulation<3>*>(
                         crush->firstChild());
                     while (t_[side]) {

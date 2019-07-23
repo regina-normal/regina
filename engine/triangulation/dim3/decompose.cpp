@@ -796,7 +796,6 @@ bool Triangulation<3>::hasCompressingDisc() const {
         NormalSurface* ans;
         Triangulation<3>* crush;
         Triangulation<3>* comp;
-        unsigned nComp;
 
         while (true) {
             use->intelligentSimplify();
@@ -838,7 +837,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
             delete ans;
             delete use;
 
-            nComp = crush->splitIntoComponents();
+            crush->splitIntoComponents();
             comp = static_cast<Triangulation<3>*>(crush->firstChild());
             while (comp) {
                 if (comp->countBoundaryComponents() == 1 &&
