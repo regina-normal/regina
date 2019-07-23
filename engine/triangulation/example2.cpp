@@ -74,12 +74,13 @@ Triangulation<2>* Example<2>::mobius() {
 
 Triangulation<2>* Example<2>::orientable(
         unsigned genus, unsigned punctures) {
+    if (genus == 0 && punctures == 0)
+        return sphere();
+
     Triangulation<2>* ans = new Triangulation<2>();
 
     if (genus == 0) {
-        if (punctures == 0)
-            return sphere();
-
+        // Fact: punctures >= 1.
         unsigned n = 3 * punctures - 2;
         unsigned i;
         for (i = 0; i < n; ++i)
