@@ -8,7 +8,7 @@
    This macro is for internal use only; end users should use the macro
    INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
    are found in utilities/intutils.h. */
-#define INTERNAL___INT128_FOUND
+/* #undef INTERNAL___INT128_FOUND */
 
 /* Define if both __int128_t and __uint128_t types are available.
    This macro is for internal use only; end users should use the macro
