@@ -3269,6 +3269,8 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
 
             if (! tracker->isCancelled())
                 homflyAZ_ = ans;
+            else
+                delete ans; // in case the user cancelled *after* returning ans
 
             tracker->setFinished();
         }).detach();
