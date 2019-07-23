@@ -301,15 +301,19 @@ size_t TriangulationBase<dim>::findIsomorphisms(
         // startSimp[comp] and startPerm[comp].
         if (comp == static_cast<long>(nComponents)) {
             // We have an isomorphism!!!
-            *output++ = new Isomorphism<dim>(iso);
-
             if (firstOnly) {
+                // Move iso into the output list, to avoid a deep copy.
+                *output++ = new Isomorphism<dim>(std::move(iso));
                 delete[] whichComp;
                 delete[] startSimp;
                 delete[] startPerm;
                 return 1;
             } else
                 nResults++;
+
+            // Make a deep copy of iso, since iso is our "scratch space"
+            // and will keep on changing as we keep searching.
+            *output++ = new Isomorphism<dim>(iso);
 
             // Back down to the previous component, and clear the
             // mapping for that previous component so we can make way
