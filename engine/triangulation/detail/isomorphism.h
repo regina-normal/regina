@@ -380,7 +380,6 @@ inline IsomorphismBase<dim>::IsomorphismBase(const IsomorphismBase<dim>& src) :
         nSimplices_(src.nSimplices_),
         simpImage_(new int[src.nSimplices_]),
         facetPerm_(new Perm<dim+1>[src.nSimplices_]) {
-    std::cerr << "Isomorphism: deep copy(init)" << std::endl;
     std::copy(src.simpImage_, src.simpImage_ + nSimplices_, simpImage_);
     std::copy(src.facetPerm_, src.facetPerm_ + nSimplices_, facetPerm_);
 }
@@ -404,7 +403,6 @@ inline IsomorphismBase<dim>::~IsomorphismBase() {
 template <int dim>
 IsomorphismBase<dim>& IsomorphismBase<dim>::operator = (
         const IsomorphismBase<dim>& src) {
-    std::cerr << "Isomorphism: deep copy(=)" << std::endl;
     if (nSimplices_ != src.nSimplices_) {
         delete[] simpImage_;
         delete facetPerm_;
