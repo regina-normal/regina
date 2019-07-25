@@ -186,6 +186,9 @@ Version 5.2  [ 29 September, 2017 ]
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.
+        Class Polynomial:
+            - Added move constructor and assignment operator.
+            - Added binary operators +, *.
         Class PosOrder:
             - Added copy constructor.
         Class Property:

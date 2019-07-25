@@ -377,6 +377,13 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * Note that the degree of this polynomial might change as a
          * result of this operation.
          *
+         * \warning This routine may trigger a deep copy (currently this
+         * happens when \a other has higher degree than this).  Consider using
+         * the binary <tt>+</tt> operator instead, which is better able to
+         * avoid this deep copy where possible.  Although <tt>+</tt> returns a
+         * polynomial by value, this is typically cheap thanks to
+         * move construction/assignment.
+         *
          * @param other the polynomial to add to this.
          * @return a reference to this polynomial.
          */
@@ -396,6 +403,11 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
 
         /**
          * Multiplies this by the given polynomial.
+         *
+         * If you are using <tt>*=</tt> to avoid deep copies, you can also
+         * consider the binary <tt>*</tt> operator, which is typically just
+         * as efficient.  Whilst <tt>*</tt> returns a polynomial by value,
+         * this is typically cheap thanks to move construction/assignment.
          *
          * @param other the polynomial to multiply this by.
          * @return a reference to this polynomial.
@@ -559,7 +571,104 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @return this polynomial as a unicode-enabled human-readable string.
          */
         std::string utf8(const char* variable) const;
+
+    private:
+        /**
+         * Constructs a new polynomial with the given degree and coefficients.
+         *
+         * The data members \a degree_ and \a coeff_ will be set to the given
+         * values; in particular, the new object will take ownership of the
+         * coefficient array.
+         */
+        Polynomial(size_t degree, T* coeff);
+
+    template <typename U>
+    friend Polynomial<U> operator *(const Polynomial<U>&, const Polynomial<U>&);
 };
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>, and
+ * it is sometimes faster (since it has more flexibility to avoid an internal
+ * deep copy than the <tt>+=</tt> operator).  Although it returns a polynomial
+ * by value, this is typically cheap thanks to move construction/assignment.
+ *
+ * @param lhs the first polynomial to multiply.
+ * @param rhs the second polynomial to multiply.
+ * @return the product of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>, and
+ * it is sometimes faster (since it has more flexibility to avoid an internal
+ * deep copy than the <tt>+=</tt> operator).  Although it returns a polynomial
+ * by value, this is typically cheap thanks to move construction/assignment.
+ *
+ * Since \a lhs is an rvalue reference, this routine might use it as scratch
+ * space.  You should assume that \a lhs is unusable after this routine returns.
+ *
+ * @param lhs the first polynomial to multiply.
+ * @param rhs the second polynomial to multiply.
+ * @return the product of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>, and
+ * it is sometimes faster (since it has more flexibility to avoid an internal
+ * deep copy than the <tt>+=</tt> operator).  Although it returns a polynomial
+ * by value, this is typically cheap thanks to move construction/assignment.
+ *
+ * Since \a rhs is an rvalue reference, this routine might use it as scratch
+ * space.  You should assume that \a rhs is unusable after this routine returns.
+ *
+ * @param lhs the first polynomial to multiply.
+ * @param rhs the second polynomial to multiply.
+ * @return the product of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>, and
+ * it is sometimes faster (since it has more flexibility to avoid an internal
+ * deep copy than the <tt>+=</tt> operator).  Although it returns a polynomial
+ * by value, this is typically cheap thanks to move construction/assignment.
+ *
+ * Since both arguments are rvalue references, this routine might use them as
+ * scratch space.  You should assume that both arguments are unusable after
+ * this routine returns.
+ *
+ * @param lhs the first polynomial to multiply.
+ * @param rhs the second polynomial to multiply.
+ * @return the product of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
+
+/**
+ * Multiplies the two given polynomials.
+ *
+ * This operator <tt>*</tt> is typically just as efficient as <tt>*=</tt>.
+ * Although it returns a polynomial by value, this is typically cheap
+ * thanks to move construction/assignment.
+ *
+ * @param lhs the first polynomial to multiply.
+ * @param rhs the second polynomial to multiply.
+ * @return the product of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -1111,6 +1220,58 @@ inline std::string Polynomial<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();
+}
+
+template <typename T>
+inline Polynomial<T>::Polynomial(size_t degree, T* coeff) :
+        degree_(degree), coeff_(coeff) {
+}
+
+template <typename T>
+Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
+    // Add in whichever diretion avoids the deep copy in +=.
+    if (lhs.degree() >= rhs.degree())
+        return std::move(Polynomial<T>(lhs) += rhs);
+    else
+        return std::move(Polynomial<T>(rhs) += lhs);
+}
+
+template <typename T>
+inline Polynomial<T> operator + (Polynomial<T>&& lhs,
+        const Polynomial<T>& rhs) {
+    // If deg(lhs) < deg(rhs) then a deep copy is unavoidable.
+    return std::move(lhs += rhs);
+}
+
+template <typename T>
+inline Polynomial<T> operator + (const Polynomial<T>& lhs,
+        Polynomial<T>&& rhs) {
+    // If deg(rhs) < deg(lhs) then a deep copy is unavoidable.
+    return std::move(rhs += lhs);
+}
+
+template <typename T>
+inline Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs) {
+    // Add in whichever diretion avoids the deep copy in +=.
+    if (lhs.degree() >= rhs.degree())
+        return std::move(lhs += rhs);
+    else
+        return std::move(rhs += lhs);
+}
+
+template <typename T>
+Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
+    if (lhs.isZero() || rhs.isZero())
+        return Polynomial<T>();
+
+    size_t i, j;
+    T* coeff = new T[lhs.degree_ + rhs.degree_ + 1];
+    for (i = 0; i <= lhs.degree_; ++i)
+        for (j = 0; j <= rhs.degree_; ++j)
+            coeff[i + j] += (lhs.coeff_[i] * rhs.coeff_[j]);
+
+    // Both leading coefficients are non-zero, so the degree is correct.
+    return Polynomial<T>(lhs.degree_ + rhs.degree_, coeff);
 }
 
 } // namespace regina
