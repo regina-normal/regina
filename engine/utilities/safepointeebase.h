@@ -119,8 +119,6 @@ inline SafePointeeBase<T>::SafePointeeBase() : refCount_(0) {
 
 template <class T>
 inline bool SafePointeeBase<T>::hasSafePtr() const {
-    // When the first SafePtr is created, it creates a new remnant;
-    // when the last SafePtr is destroyed, it resets remnant_ to null.
     return refCount_.load() > 0;
 }
 
