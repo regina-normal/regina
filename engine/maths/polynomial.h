@@ -857,7 +857,6 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
         delete[] coeff_;
         coeff_ = new T[value.degree() + 1];
     }
-    std::cerr << "Polynomial: deep copy (=)" << std::endl;
     degree_ = value.degree();
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] = value[i];
