@@ -54,7 +54,7 @@ namespace regina {
 /**
  * Represents a single-variable Laurent polynomial with coefficients of
  * type \a T.  A Laurent polynomial differs from an ordinary polynomial
- * in that it allows negative exponents (so, unlike the NPolynomial class,
+ * in that it allows negative exponents (so, unlike the Polynomial class,
  * you can represent both <tt>2+3x</tt> and <tt>1+1/x</tt>).
  *
  * The type \a T must represent a ring with no zero divisors.
