@@ -990,10 +990,13 @@ Polynomial<T>& Polynomial<T>::operator /= (const Polynomial<T>& other) {
     }
 
     // The divisor has positive degree.
-    if (degree_ == 0)
+    if (degree_ < other.degree_) {
+        // The quotient is zero.
+        init();
         return *this;
+    }
 
-    // Both this and the divisor have positive degree.
+    // We now have 0 < deg(other) <= deg(this).
     T* remainder = coeff_;
     coeff_ = new T[degree_ - other.degree_ + 1];
     for (i = degree_; i >= other.degree_; --i) {

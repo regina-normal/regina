@@ -189,6 +189,12 @@ Version 5.2  [ 29 September, 2017 ]
         Class Polynomial:
             - Added move constructor and assignment operator.
             - Added binary operators +, *.
+            - Fixed a bug when using /= to divide a lower-degree polynomial by
+              a higher-degree polynomial.  This should set the LHS to zero;
+              instead it did nothing if LHS was a constant, and crashed if LHS
+              had positive degree.  The bad code path was unreachable in
+              Regina's own code, so users would only have experienced the bug
+              if they were using Regina's Polynomial class in their own code.
         Class PosOrder:
             - Added copy constructor.
         Class Property:
