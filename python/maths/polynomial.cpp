@@ -111,6 +111,8 @@ void addPolynomial(pybind11::module& m) {
         .def(pybind11::self -= pybind11::self)
         .def(pybind11::self *= pybind11::self)
         .def(pybind11::self /= pybind11::self)
+        .def(pybind11::self + pybind11::self)
+        .def(pybind11::self * pybind11::self)
         .def("divisionAlg", [](const Polynomial<Rational>& p,
                 const Polynomial<Rational>& divisor) {
             std::unique_ptr<Polynomial<Rational>> q(new Polynomial<Rational>);
