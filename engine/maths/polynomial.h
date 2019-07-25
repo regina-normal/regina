@@ -71,6 +71,11 @@ namespace regina {
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment,
+ * and long chains of operators such as <tt>a = b * c + d</tt> are
+ * efficient in that they only use a single deep copy.
+ *
  * \ifacespython In Python, the class Polynomial refers to the specific
  * template class Polynomial<Rational>.
  */
@@ -101,6 +106,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * A note for developers: even though this routine is identical to
          * the templated copy constructor, it must be declared and
          * implemented separately.  Otherwise the compiler might create
@@ -113,12 +120,24 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
          * @param value the polynomial to clone.
          */
         template <typename U>
         Polynomial(const Polynomial<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this new polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         */
+        Polynomial(Polynomial<T>&& value) noexcept;
 
         /**
          * Creates a new polynomial from the given sequence of coefficients.
@@ -128,6 +147,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * There is no problem if the leading coefficient (i.e., the
          * last coefficient in the sequence) is zero.
          * An empty sequence will be treated as the zero polynomial.
+         *
+         * This constructor induces a deep copy of the given range.
          *
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
@@ -169,6 +190,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * There is no problem if the leading coefficient (i.e., the
          * last coefficient in the sequence) is zero.
          * An empty sequence will be treated as the zero polynomial.
+         *
+         * This routine induces a deep copy of the given range.
          *
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
@@ -275,6 +298,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * (but if they do not, then the degree of this polynomial will
          * of course change).
          *
+         * This operator induces a deep copy of the given polynomial.
+         *
          * A note to developers: although this is identical to the templated
          * assignment operator, it must be declared and implemented separately.
          * See the copy constructor for further details.
@@ -291,11 +316,28 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * (but if they do not, then the degree of this polynomial will
          * of course change).
          *
+         * This operator induces a deep copy of the given polynomial.
+         *
          * @param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
         template <typename U>
         Polynomial& operator = (const Polynomial<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given polynomial need not have the same degree
+         * (but if they do not, then the degree of this polynomial will
+         * of course change).
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         * @return a reference to this polynomial.
+         */
+        Polynomial& operator = (Polynomial<T>&& value) noexcept;
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -563,6 +605,12 @@ inline Polynomial<T>::Polynomial(const Polynomial<U>& value) :
 }
 
 template <typename T>
+inline Polynomial<T>::Polynomial(Polynomial<T>&& value) noexcept :
+        degree_(value.degree_), coeff_(value.coeff_) {
+    value.coeff_ = nullptr;
+}
+
+template <typename T>
 inline Polynomial<T>::~Polynomial() {
     delete[] coeff_;
 }
@@ -700,9 +748,19 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
         delete[] coeff_;
         coeff_ = new T[value.degree() + 1];
     }
+    std::cerr << "Polynomial: deep copy (=)" << std::endl;
     degree_ = value.degree();
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] = value[i];
+    return *this;
+}
+
+template <typename T>
+inline Polynomial<T>& Polynomial<T>::operator = (Polynomial<T>&& value)
+        noexcept {
+    std::swap(coeff_, value.coeff_);
+    std::swap(degree_, value.degree_);
+    // Let value dispose of the original contents in its own destructor.
     return *this;
 }
 
