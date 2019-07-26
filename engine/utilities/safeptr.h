@@ -1,4 +1,3 @@
-
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
@@ -40,8 +39,6 @@
 #define __SAFEPTR_H
 #endif
 
-#include <boost/intrusive_ptr.hpp>
-
 /**
  * \weakgroup utilities
  * @{
@@ -50,10 +47,6 @@
 namespace regina {
 
 template <class> class SafePointeeBase;
-
-namespace detail {
-    template <class> class SafeRemnant;
-}
 
 /**
  * A reference counted smart pointer that supports alternate models of
@@ -78,14 +71,12 @@ namespace detail {
  *
  * Destruction works as follows:
  *
- * - If a pointee's destructor is called, all SafePtr pointers that point to it
- *   will become expired.  These SafePtr pointers are still safe to use, but
- *   get() will return \c null.
- * - If a pointee has one or more SafePtr pointers to it, then when the last
- *   of these safe pointers is destroyed, the pointee itself will be destroyed
- *   if and only if the pointee's hasOwner() returns \c false.
- *
- * Under the hood, SafePtr uses SafeRemnant to achieve this.
+ * - An object will stay alive as long as one SafePtr is pointing to it.
+ * - It is never safe to call delete on a raw pointer.
+ * - Instead subclasses of SafePointeeBase such as Packet::safeDelete implement
+ *   their own destruction policy.
+ * - Destroying a SafePtr will destroy the object if no other SafePtr is
+ *   pointing to that object and the pointee's hasOwner() returns \c false.
  *
  * @author Matthias Goerner
  */
@@ -93,7 +84,7 @@ template<class T>
 class SafePtr {
 public:
     /**
-     * The pointee type.  This typedef is used by the boost infrastructure.
+     * The pointee type.  This typedef is used by the pybind11 infrastructure.
      */
     typedef T element_type;
 
@@ -101,12 +92,16 @@ public:
      * Constructs a new null pointer.
      */
     SafePtr();
+
     /**
      * Constructs a new safe pointer that points to the given object.
      *
      * @param object the pointee.  This may be \c null.
      */
     SafePtr(T* object);
+
+    ~SafePtr();
+
     /**
      * Copy constructor.  This constructor can also be used to cast a
      * SafePtr for a derived class \a Y to a SafePtr for a base class \a T.
@@ -117,6 +112,7 @@ public:
      * @param other the pointer to copy.
      */
     template<class Y> SafePtr(const SafePtr<Y>& other);
+
     /**
      * Returns a raw pointer to the pointee, or \c null if the pointee
      * has already been destroyed.
@@ -152,41 +148,21 @@ public:
     SafePtr<T>& operator = (const SafePtr<T>&) = delete;
 
 private:
-    boost::intrusive_ptr<detail::SafeRemnant<typename T::SafePointeeType>>
-        remnant_;
-    /**< The remnant that points to the pointee. */
+    T* object_;
 };
 
-} // namespace regina
-
-/*@}*/
-
-namespace boost {
-/**
- * Extracts a raw pointer from the given safe pointer.
- *
- * This is required for SafePtr to support the boost dereferencable concept.
- *
- * @param ptr a safe pointer.  This may be \c null.
- * @return the corresponding raw pointer.
- */
 template<class T>
-inline T* get_pointer(regina::SafePtr<T> const& ptr) {
-    return ptr.get();
-}
-} // namespace boost
-
-namespace regina {
-
-template<class T>
-inline SafePtr<T>::SafePtr() {
+inline SafePtr<T>::SafePtr()
+    : object_(nullptr)
+{
 }
 
 template<class T>
-inline SafePtr<T>::SafePtr(T* object) {
+inline SafePtr<T>::SafePtr(T* object)
+    : object_(object)
+{
     if (object) {
-        remnant_.reset(detail::SafeRemnant<typename T::SafePointeeType>::
-            getOrCreate(object));
+        object->refCount_.fetch_add(1);
     }
 }
 
@@ -199,24 +175,38 @@ inline SafePtr<T>::SafePtr(const SafePtr<Y> &other) : SafePtr(other.get()) {
 // a pointer to T or a dervied class of T.
 template<class T>
 inline T* SafePtr<T>::get() const {
-    if (not remnant_) {
-        return nullptr;
-    }
-    return static_cast<T*>(remnant_->get());
+    return object_;
 }
 
 template<class T>
 inline SafePtr<T>::operator bool() const {
-    return (remnant_ && remnant_->get());
+    return object_;
 }
 
 template<class T>
 inline void SafePtr<T>::reset(T* object) {
+    if (object_) {
+        if (object_->refCount_.fetch_sub(1) == 1) {
+            if (!object_->hasOwner()) {
+                delete object_;
+            }
+        }
+    }
+    object_ = object;
     if (object) {
-        remnant_.reset(detail::SafeRemnant<typename T::SafePointeeType>::
-            getOrCreate(object));
-    } else
-        remnant_.reset(nullptr);
+        object->_refCount->fetch_add(1);
+    }
+}
+
+template<class T>
+inline SafePtr<T>::~SafePtr() {
+    if (object_) {
+        if (object_->refCount_.fetch_sub(1) == 1) {
+            if (!object_->hasOwner()) {
+                delete object_;
+            }
+        }
+    }
 }
 
 } // namespace regina
