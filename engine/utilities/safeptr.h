@@ -149,6 +149,7 @@ public:
 
 private:
     T* object_;
+        /** The pointee. */
 };
 
 template<class T>

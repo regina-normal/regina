@@ -50,7 +50,7 @@ namespace regina {
 
 /**
  * A base class for objects of type \a T to be referenceable by a SafePtr.
- * Such objects are referred to as pointees of SafePtr.
+ * Such objects are referred to as \e pointees of SafePtr.
  *
  * The class \a T must derive from SafePointeeBase<T>, and must implement
  * hasOwner() to indicate whether any non-SafePtr claims ownership of it.
@@ -59,7 +59,7 @@ namespace regina {
  *
  * The overhead introduced by subclassing from SafePointeeBase without using
  * the features of the accompanying smart pointer SafePtr are minimal:
- * one extra (atomic) integer that needs to be zeroed upon construction.
+ * one extra atomic integer that needs to be zeroed upon construction.
  *
  * Regina's classes that derive from SafePointeeBase do so to help with
  * python wrapping.
