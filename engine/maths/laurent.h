@@ -787,7 +787,7 @@ Laurent<T>& Laurent<T>::operator = (const Laurent<U>& other) {
 }
 
 template <typename T>
-inline Laurent<T>& Laurent<T>::operator = (Laurent<T>&& other) {
+inline Laurent<T>& Laurent<T>::operator = (Laurent<T>&& other) noexcept {
     // Strictly speaking we could just assign these integers.
     std::swap(minExp_, other.minExp_);
     std::swap(maxExp_, other.maxExp_);

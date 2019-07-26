@@ -159,7 +159,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          *
          * @param value the field element to move.
          */
-        Cyclotomic(Cyclotomic<T>&& value) noexcept;
+        Cyclotomic(Cyclotomic&& value) noexcept;
         /**
          * Destroys this field element.
          *
@@ -389,7 +389,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * @param value the field element to move.
          * @return a reference to this field element.
          */
-        Cyclotomic& operator = (Cyclotomic<T>&& value) noexcept;
+        Cyclotomic& operator = (Cyclotomic&& value) noexcept;
 
         /**
          * Sets this field element to the given rational.

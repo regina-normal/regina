@@ -957,11 +957,11 @@ int IntegerBase<supportInfinity>::legendre(
 
     if (! large_) {
         mpz_clear(gmp_this);
-        delete gmp_this;
+        delete[] gmp_this;
     }
     if (! p.large_) {
         mpz_clear(gmp_p);
-        delete gmp_p;
+        delete[] gmp_p;
     }
 
     return ans;
