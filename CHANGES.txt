@@ -45,6 +45,7 @@ Version 5.2  [ 29 September, 2017 ]
               class.  In Python, CensusHits is now an iterable object.
         Class Cyclotomic:
             - Added move constructor and assignment operator.
+            - Added binary operators +, *.
         Class DegreeLessThan, DegreeGreaterThan:
             - Added copy constructors.
         Class DiscSetSurface:

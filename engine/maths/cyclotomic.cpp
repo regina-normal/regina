@@ -86,11 +86,30 @@ Cyclotomic& Cyclotomic::operator *= (const Cyclotomic& other) {
             for (j = 0; j < degree_; ++j)
                 tmp[i + j - degree_] -= (tmp[i] * cyc[j]);
 
-    for (i = 0; i < degree_; ++i)
-        coeff_[i] = tmp[i];
+    std::copy(tmp, tmp + degree_, coeff_);
 
     delete[] tmp;
     return *this;
+}
+
+Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs) {
+    const Polynomial<Integer>& cyc = Cyclotomic::cyclotomic(lhs.field_);
+
+    size_t i, j;
+    Rational* tmp = new Rational[lhs.degree_ * 2 - 1];
+    for (i = 0; i < lhs.degree_; ++i)
+        for (j = 0; j < lhs.degree_; ++j)
+            tmp[i + j] += (lhs.coeff_[i] * rhs.coeff_[j]);
+    for (i = lhs.degree_ * 2 - 2; i >= lhs.degree_; --i)
+        if (tmp[i] != 0)
+            for (j = 0; j < lhs.degree_; ++j)
+                tmp[i + j - lhs.degree_] -= (tmp[i] * cyc[j]);
+
+    Rational* coeff = new Rational[lhs.degree_];
+    std::copy(tmp, tmp + lhs.degree_, coeff);
+
+    delete[] tmp;
+    return Cyclotomic(lhs.field_, lhs.degree_, coeff);
 }
 
 const Polynomial<Integer>& Cyclotomic::cyclotomic(size_t n) {

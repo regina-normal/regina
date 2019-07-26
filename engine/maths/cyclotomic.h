@@ -448,6 +448,11 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
         /**
          * Adds the given field element to this.
          *
+         * If you are using <tt>+=</tt> to avoid deep copies, you can also
+         * consider the binary <tt>+</tt> operator, which is typically just
+         * as efficient.  Whilst <tt>+</tt> returns a field element by value,
+         * this is typically cheap thanks to move construction/assignment.
+         *
          * \pre The argument \a other belongs to the same cyclotomic field
          * as this.
          *
@@ -469,6 +474,11 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
 
         /**
          * Multiplies this by the given field element.
+         *
+         * If you are using <tt>*=</tt> to avoid deep copies, you can also
+         * consider the binary <tt>*</tt> operator, which is typically just
+         * as efficient.  Whilst <tt>*</tt> returns a field element by value,
+         * this is typically cheap thanks to move construction/assignment.
          *
          * \pre The argument \a other belongs to the same cyclotomic field
          * as this.
@@ -581,7 +591,107 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * string.
          */
         std::string utf8(const char* variable) const;
+
+    private:
+        /**
+         * Constructs a new field element with the given data.
+         *
+         * The data members \a field_, \a degree_ and \a coeff_ will be
+         * set to the given values; in particular, the new object will
+         * take ownership of the coefficient array.
+         */
+        Cyclotomic(size_t field, size_t degree, Rational* coeff);
+
+    friend Cyclotomic operator * (const Cyclotomic&, const Cyclotomic&);
 };
+
+/**
+ * Adds the two given cyclotomic field elements.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as creating
+ * a clone (since both arguments are read-only) and then calling <tt>+=</tt>.
+ * Although this operator returns a field element by value, this is typically
+ * cheap thanks to move construction/assignment.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to add.
+ * @param rhs the second field element to add.
+ * @return the sum of both field elements.
+ */
+Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
+
+/**
+ * Adds the two given cyclotomic field elements.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
+ * Although it returns a field element by value, this is typically cheap
+ * thanks to move construction/assignment.
+ *
+ * Since \a lhs is an rvalue reference, this routine might use it as scratch
+ * space.  You should assume that \a lhs is unusable after this routine returns.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to add.
+ * @param rhs the second field element to add.
+ * @return the sum of both field elements.
+ */
+Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
+
+/**
+ * Adds the two given cyclotomic field elements.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
+ * Although it returns a field element by value, this is typically cheap
+ * thanks to move construction/assignment.
+ *
+ * Since \a rhs is an rvalue reference, this routine might use it as scratch
+ * space.  You should assume that \a rhs is unusable after this routine returns.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to add.
+ * @param rhs the second field element to add.
+ * @return the sum of both field elements.
+ */
+Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
+
+/**
+ * Adds the two given cyclotomic field elements.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
+ * Although it returns a field element by value, this is typically cheap
+ * thanks to move construction/assignment.
+ *
+ * Since both arguments are rvalue references, this routine might use them as
+ * scratch space.  You should assume that both arguments are unusable after
+ * this routine returns.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to add.
+ * @param rhs the second field element to add.
+ * @return the sum of both field elements.
+ */
+Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
+
+/**
+ * Multiplies the two given cyclotomic field elements.
+ *
+ * This operator <tt>*</tt> is typically just as efficient as <tt>*=</tt>
+ * (and is faster when both arguments are read-only, since <tt>*=</tt>
+ * requires you to make a writeable clone of one of the arguments).
+ * Although this operator returns a field element by value, this is typically
+ * cheap thanks to move construction/assignment.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to multiply.
+ * @param rhs the second field element to multiply.
+ * @return the product of both field elements.
+ */
+Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -628,6 +738,10 @@ inline Cyclotomic::Cyclotomic(const Cyclotomic& value) :
 inline Cyclotomic::Cyclotomic(Cyclotomic&& value) noexcept :
         field_(value.field_), degree_(value.degree_), coeff_(value.coeff_) {
     value.coeff_ = nullptr;
+}
+
+inline Cyclotomic::Cyclotomic(size_t field, size_t degree, Rational* coeff) :
+        field_(field), degree_(degree), coeff_(coeff) {
 }
 
 inline Cyclotomic::~Cyclotomic() {
@@ -758,6 +872,23 @@ inline std::string Cyclotomic::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();
+}
+
+inline Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs) {
+    // We have to make a deep copy since both arguments are read-only.
+    return std::move(Cyclotomic(lhs) += rhs);
+}
+
+inline Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs) {
+    return std::move(lhs += rhs);
+}
+
+inline Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs) {
+    return std::move(rhs += lhs);
+}
+
+inline Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs) {
+    return std::move(lhs += rhs);
 }
 
 } // namespace regina
