@@ -119,21 +119,18 @@ public:
     template<class Y> SafePtr(const SafePtr<Y>& other);
 
     /**
-     * Returns a raw pointer to the pointee, or \c null if the pointee
-     * has already been destroyed.
+     * Returns a raw pointer to the pointee.
      *
      * @return the pointee.
      */
     T* get() const;
 
     /**
-     * Returns \c true if the pointee is non-null and has not yet been
-     * destroyed.
+     * Returns \c true if the pointee is non-null.
      *
      * This is equivalent to testing whether get() is not \c null.
      *
-     * @return \c true if and only if the pointee is non-null and has
-     * not yet been destroyed.
+     * @return \c true if and only if the pointee is non-null.
      */
     operator bool() const;
 
