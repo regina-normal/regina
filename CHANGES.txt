@@ -43,6 +43,8 @@ Version 5.2  [ 29 September, 2017 ]
             - You can now iterate over a CensusHits object using C++11
               range-based for loops, thanks to the new CensusHitIterator
               class.  In Python, CensusHits is now an iterable object.
+        Class Cyclotomic:
+            - Added move constructor and assignment operator.
         Class DegreeLessThan, DegreeGreaterThan:
             - Added copy constructors.
         Class DiscSetSurface:
@@ -85,7 +87,10 @@ Version 5.2  [ 29 September, 2017 ]
               this should not be inducing unwanted deep copies.
         Class IsReginaInteger:
             - New type trait to identify Regina's own integer types.
+        Class Laurent:
+            - Added move constructor and assignment operator.
         Class Laurent2:
+            - Added move constructor and assignment operator.
             - New constuctor that shifts a given polynomial by x^e y^e.
         Class LensSpace:
             - New assignment operator.

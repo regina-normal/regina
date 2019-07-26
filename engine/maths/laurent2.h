@@ -70,8 +70,13 @@ namespace regina {
  * are supported, but native data types such as int and long are not
  * (since they have no zero-initialising default constructor).
  *
- * The underlying storage method for this class is dense (i.e., all
- * coefficients are explicitly stored, including zero coefficients).
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment,
+ * and long chains of operators such as <tt>a = b * c + d</tt> are
+ * efficient in that they only use a single deep copy.
+ *
+ * The underlying storage method for this class is sparse: only the
+ * non-zero coefficients are stored.
  *
  * See also the class Laurent, which describes Laurent polynomials in
  * just one variable.
@@ -97,7 +102,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         /**
          * Creates the zero polynomial.
          */
-        Laurent2();
+        Laurent2() = default;
 
         /**
          * Creates the polynomial <tt>x^d y^e</tt> for the given exponents
@@ -111,6 +116,8 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * A note for developers: even though this routine is identical to
          * the templated copy constructor, it must be declared and
          * implemented separately.  Otherwise the compiler might create
@@ -121,8 +128,20 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         Laurent2(const Laurent2<T>& value);
 
         /**
+         * Moves the contents of the given polynomial to this new polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         */
+        Laurent2(Laurent2<T>&& value) noexcept = default;
+
+        /**
          * Creates a copy of the given polynomial with all terms
          * multiplied by <tt>x^d y^e</tt> for some integers \a d and \a e.
+         *
+         * This constructor induces a deep (and modified) copy of \a value.
          *
          * @param toShift the polynomial to clone and shift.
          * @param xShift the integer \a d, which will be added to all
@@ -134,6 +153,8 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
 
         /**
          * Creates a new copy of the given polynomial.
+         *
+         * This constructor induces a deep copy of \a value.
          *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
@@ -224,6 +245,8 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * A note to developers: although this is identical to the templated
          * assignment operator, it must be declared and implemented separately.
          * See the copy constructor for further details.
@@ -239,11 +262,27 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * @param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
         template <typename U>
         Laurent2& operator = (const Laurent2<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given polynomial need not have the same range of
+         * non-zero coefficients.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         * @return a reference to this polynomial.
+         */
+        Laurent2& operator = (Laurent2<T>&& value) noexcept = default;
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -335,7 +374,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * @return a reference to the given output stream.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
-            const char* varX = 0, const char* varY = 0) const;
+            const char* varX = nullptr, const char* varY = nullptr) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
@@ -350,7 +389,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * \c null, in which case the default symbol <tt>'y'</tt> will be used.
          * @return this polynomial as a human-readable string.
          */
-        std::string str(const char* varX, const char* varY = 0) const;
+        std::string str(const char* varX, const char* varY = nullptr) const;
 
         /**
          * Returns this polynomial as a human-readable string using unicode
@@ -372,7 +411,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * \c null, in which case the default symbol <tt>'y'</tt> will be used.
          * @return this polynomial as a unicode-enabled human-readable string.
          */
-        std::string utf8(const char* varX, const char* varY = 0) const;
+        std::string utf8(const char* varX, const char* varY = nullptr) const;
 
     private:
         /**
@@ -389,10 +428,6 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
 
 template <typename T>
 const T Laurent2<T>::zero_(0);
-
-template <typename T>
-inline Laurent2<T>::Laurent2() {
-}
 
 template <typename T>
 inline Laurent2<T>::Laurent2(long xExp, long yExp) {

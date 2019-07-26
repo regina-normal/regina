@@ -69,6 +69,11 @@ namespace regina {
  * are supported, but native data types such as int and long are not
  * (since they have no zero-initialising default constructor).
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment,
+ * and long chains of operators such as <tt>a = b * c + d</tt> are
+ * efficient in that they only use a single deep copy.
+ *
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
  *
@@ -115,6 +120,8 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * A note for developers: even though this routine is identical to
          * the templated copy constructor, it must be declared and
          * implemented separately.  Otherwise the compiler might create
@@ -127,12 +134,24 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
          * @param value the polynomial to clone.
          */
         template <typename U>
         Laurent(const Laurent<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this new polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         */
+        Laurent(Laurent<T>&& value) noexcept;
 
         /**
          * Creates a new polynomial from the given sequence of coefficients.
@@ -144,6 +163,8 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * There is no problem if the first and/or last coefficient in
          * the sequence is zero.
          * An empty sequence will be treated as the zero polynomial.
+         *
+         * This constructor induces a deep copy of the given range.
          *
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
@@ -189,6 +210,8 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * There is no problem if the first and/or last coefficient in
          * the sequence is zero.
          * An empty sequence will be treated as the zero polynomial.
+         *
+         * This routine induces a deep copy of the given range.
          *
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
@@ -294,6 +317,8 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * This and the given polynomial need not have the same minimum
          * and/or maximum exponents.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * A note to developers: although this is identical to the templated
          * assignment operator, it must be declared and implemented separately.
          * See the copy constructor for further details.
@@ -309,11 +334,27 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * This and the given polynomial need not have the same minimum
          * and/or maximum exponents.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * @param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
         template <typename U>
         Laurent& operator = (const Laurent<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given polynomial need not have the same minimum
+         * and/or maximum exponents.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         * @return a reference to this polynomial.
+         */
+        Laurent& operator = (Laurent<T>&& value) noexcept;
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -439,7 +480,7 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * @return a reference to the given output stream.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
-            const char* variable = 0) const;
+            const char* variable = nullptr) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
@@ -523,7 +564,7 @@ inline Laurent<T>::Laurent(long exp) :
 template <typename T>
 template <typename iterator>
 inline Laurent<T>::Laurent(long minExp, iterator begin, iterator end) :
-        coeff_(0) {
+        coeff_(nullptr) {
     init(minExp, begin, end);
 }
 
@@ -542,6 +583,13 @@ inline Laurent<T>::Laurent(const Laurent<U>& value) :
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
     for (size_t i = 0; i <= maxExp_ - minExp_; ++i)
         coeff_[i] = value.coeff_[i + value.minExp_ - value.base_];
+}
+
+template <typename T>
+inline Laurent<T>::Laurent(Laurent<T>&& value) noexcept :
+        minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.base_),
+        coeff_(value.coeff_) {
+    value.coeff_ = nullptr;
 }
 
 template <typename T>
@@ -735,6 +783,17 @@ Laurent<T>& Laurent<T>::operator = (const Laurent<U>& other) {
     maxExp_ = other.maxExp_;
     for (long exp = minExp_; exp <= maxExp_; ++exp)
         coeff_[exp - base_] = other.coeff_[exp - other.base_];
+    return *this;
+}
+
+template <typename T>
+inline Laurent<T>& Laurent<T>::operator = (Laurent<T>&& other) {
+    // Strictly speaking we could just assign these integers.
+    std::swap(minExp_, other.minExp_);
+    std::swap(maxExp_, other.maxExp_);
+    std::swap(base_, other.base_);
+    // Let other dispose of the original contents in its own destructor.
+    std::swap(coeff_, other.coeff_);
     return *this;
 }
 

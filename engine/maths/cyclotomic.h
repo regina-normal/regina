@@ -75,6 +75,11 @@ namespace regina {
  *
  * This class requires that the order \a n is strictly positive.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment,
+ * and long chains of operators such as <tt>a = b * c + d</tt> are
+ * efficient in that they only use a single deep copy.
+ *
  * Although this class makes use of global data in its implementation, all
  * of its methods are thread-safe.
  */
@@ -141,9 +146,20 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * Creates a copy of the given field element, within the
          * same cyclotomic field.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * @param value the field element to copy.
          */
         Cyclotomic(const Cyclotomic& value);
+        /**
+         * Moves the contents of the given field element to this new
+         * field element.  This is a fast (constant time) operation.
+         *
+         * The element that was passed (\a value) will no longer be usable.
+         *
+         * @param value the field element to move.
+         */
+        Cyclotomic(Cyclotomic<T>&& value) noexcept;
         /**
          * Destroys this field element.
          *
@@ -349,10 +365,31 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * be safely discarded.  If \a value is uninitialised then this
          * field element will become uninitialised also.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * @param value the new value to assign to this field element.
          * @return a reference to this field element.
          */
         Cyclotomic& operator = (const Cyclotomic& value);
+
+        /**
+         * Moves the contents of the given field element to this
+         * field element.  This is a fast (constant time) operation.
+         *
+         * This assignment operator is safe even if this and \a value belong
+         * to different cyclotomic fields, or if this and/or \a value has not
+         * yet been initialised.  The underlying field for this element will
+         * simply be changed to match the underlying field for \a value,
+         * and all old information stored for this element (if any) will
+         * be safely discarded.  If \a value is uninitialised then this
+         * field element will become uninitialised also.
+         *
+         * The element that was passed (\a value) will no longer be usable.
+         *
+         * @param value the field element to move.
+         * @return a reference to this field element.
+         */
+        Cyclotomic& operator = (Cyclotomic<T>&& value) noexcept;
 
         /**
          * Sets this field element to the given rational.
@@ -498,7 +535,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * will be used.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
-            const char* variable = 0) const;
+            const char* variable = nullptr) const;
 
         /**
          * Returns this field element as a human-readable string, using the
@@ -558,7 +595,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
 
 // Inline functions for Cyclotomic
 
-inline Cyclotomic::Cyclotomic() : field_(0), degree_(0), coeff_(0) {
+inline Cyclotomic::Cyclotomic() : field_(0), degree_(0), coeff_(nullptr) {
 }
 
 inline Cyclotomic::Cyclotomic(size_t field) :
@@ -586,6 +623,11 @@ inline Cyclotomic::Cyclotomic(const Cyclotomic& value) :
         coeff_(new Rational[value.degree_]) {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] = value.coeff_[i];
+}
+
+inline Cyclotomic::Cyclotomic(Cyclotomic&& value) noexcept :
+        field_(value.field_), degree_(value.degree_), coeff_(value.coeff_) {
+    value.coeff_ = nullptr;
 }
 
 inline Cyclotomic::~Cyclotomic() {
@@ -647,6 +689,15 @@ inline Cyclotomic& Cyclotomic::operator = (const Cyclotomic& other) {
     degree_ = other.degree_;
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] = other.coeff_[i];
+    return *this;
+}
+
+inline Cyclotomic& Cyclotomic::operator = (Cyclotomic&& other) noexcept {
+    // Strictly speaking we could just assign field_ and degree_.
+    std::swap(field_, other.field_);
+    std::swap(degree_, other.degree_);
+    // Let other dispose of the original contents in its own destructor.
+    std::swap(coeff_, other.coeff_);
     return *this;
 }
 
