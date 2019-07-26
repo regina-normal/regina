@@ -72,11 +72,16 @@ template <class> class SafePointeeBase;
  * Destruction works as follows:
  *
  * - An object will stay alive as long as one SafePtr is pointing to it.
- * - It is never safe to call delete on a raw pointer.
- * - Instead subclasses of SafePointeeBase such as Packet::safeDelete implement
- *   their own destruction policy.
- * - Destroying a SafePtr will destroy the object if no other SafePtr is
- *   pointing to that object and the pointee's hasOwner() returns \c false.
+ * - It is never safe to call \c delete on a raw pointer to an object of type
+ *   \a T, unless you know (e.g., from human analysis of the program logic)
+ *   that no SafePtr points to that same object.
+ * - Subclasses of SafePointeeBase may provide their own destruction routines
+ *   for users to call instead of \c delete, which are always safe to call
+ *   regardless of whether there are SafePtr or not.  For example, users should
+ *   always delete packets by calling Packet::safeDelete(), not \c delete.
+ * - Destroying a SafePtr will destroy the underlying object of type \a T
+ *   if and only if: (i) no other SafePtr is pointing to that object, and
+ *   (ii) the pointee's hasOwner() returns \c false.
  *
  * @author Matthias Goerner
  */
