@@ -197,7 +197,7 @@ inline void SafePtr<T>::reset(T* object) {
     }
     object_ = object;
     if (object) {
-        object->_refCount->fetch_add(1);
+        object->refCount_.fetch_add(1);
     }
 }
 
