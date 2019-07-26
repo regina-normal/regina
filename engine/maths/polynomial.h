@@ -589,14 +589,15 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>, and
+ * This operator <tt>+</tt> is typically just as efficient as creating a clone
+ * (since both arguments are read-only) and then calling <tt>+=</tt>.  Moreover,
  * it is sometimes faster (since it has more flexibility to avoid an internal
  * deep copy than the <tt>+=</tt> operator).  Although it returns a polynomial
  * by value, this is typically cheap thanks to move construction/assignment.
  *
- * @param lhs the first polynomial to multiply.
- * @param rhs the second polynomial to multiply.
- * @return the product of both polynomials.
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
  */
 template <typename T>
 Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
@@ -612,9 +613,9 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
  * Since \a lhs is an rvalue reference, this routine might use it as scratch
  * space.  You should assume that \a lhs is unusable after this routine returns.
  *
- * @param lhs the first polynomial to multiply.
- * @param rhs the second polynomial to multiply.
- * @return the product of both polynomials.
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
  */
 template <typename T>
 Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
@@ -630,9 +631,9 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
  * Since \a rhs is an rvalue reference, this routine might use it as scratch
  * space.  You should assume that \a rhs is unusable after this routine returns.
  *
- * @param lhs the first polynomial to multiply.
- * @param rhs the second polynomial to multiply.
- * @return the product of both polynomials.
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
  */
 template <typename T>
 Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
@@ -649,9 +650,9 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
  * scratch space.  You should assume that both arguments are unusable after
  * this routine returns.
  *
- * @param lhs the first polynomial to multiply.
- * @param rhs the second polynomial to multiply.
- * @return the product of both polynomials.
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
  */
 template <typename T>
 Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
@@ -659,7 +660,9 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
 /**
  * Multiplies the two given polynomials.
  *
- * This operator <tt>*</tt> is typically just as efficient as <tt>*=</tt>.
+ * This operator <tt>*</tt> is typically just as efficient as <tt>*=</tt>
+ * (and is faster when both arguments are read-only, since <tt>*=</tt>
+ * requires you to make a writeable clone of one of the arguments).
  * Although it returns a polynomial by value, this is typically cheap
  * thanks to move construction/assignment.
  *
@@ -1231,7 +1234,8 @@ inline Polynomial<T>::Polynomial(size_t degree, T* coeff) :
 
 template <typename T>
 Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
-    // Add in whichever diretion avoids the deep copy in +=.
+    // We have to make one deep copy, since both arguments are read-only.
+    // Add in whichever diretion avoids a second deep copy inside +=.
     if (lhs.degree() >= rhs.degree())
         return std::move(Polynomial<T>(lhs) += rhs);
     else
