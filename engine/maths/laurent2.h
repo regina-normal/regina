@@ -298,6 +298,11 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
 
         /**
          * Negates this polynomial.
+         *
+         * If you are using negate() to avoid deep copies, you can also
+         * consider the unary <tt>-</tt> operator, which is typically just
+         * as efficient.  Whilst <tt>-</tt> returns a polynomial by value,
+         * this is typically cheap thanks to move construction/assignment.
          */
         void negate();
 
@@ -511,6 +516,37 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
  */
 template <typename T>
 Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
+
+/**
+ * Returns the negative of the given polynomial.
+ *
+ * This operator <tt>-</tt> is typically just as efficient as creating
+ * a clone (since the argument is read-only) and then calling negate().
+ * Although it returns a polynomial by value, this is typically
+ * cheap thanks to move construction/assignment.
+ *
+ * @param arg the polynomial to negate.
+ * @return the negative of \a arg.
+ */
+template <typename T>
+Laurent2<T> operator - (const Laurent2<T>& arg);
+
+/**
+ * Returns the negative of the given polynomial.
+ *
+ * This operator <tt>-</tt> is typically just as efficient as calling negate().
+ * Although it returns a polynomial by value, this is typically
+ * cheap thanks to move construction/assignment.
+ *
+ * Since the argument is an rvalue reference, this routine might use it as
+ * scratch space.  You should assume that the argument is unusable after
+ * this routine returns.
+ *
+ * @param arg the polynomial to negate.
+ * @return the negative of \a arg.
+ */
+template <typename T>
+Laurent2<T> operator - (Laurent2<T>&& arg);
 
 /**
  * Multiplies the two given polynomials.
@@ -825,6 +861,20 @@ inline Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
 template <typename T>
 inline Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
     return std::move(lhs += rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator - (const Laurent2<T>& arg) {
+    // Unavoidable deep copy here.
+    Laurent2<T> ans(arg);
+    ans.negate();
+    return ans;
+}
+
+template <typename T>
+inline Laurent2<T> operator - (Laurent2<T>&& arg) {
+    arg.negate();
+    return std::move(arg);
 }
 
 template <typename T>
