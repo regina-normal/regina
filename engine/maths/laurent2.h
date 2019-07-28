@@ -327,6 +327,11 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
+         * If you are using <tt>+=</tt> to avoid deep copies, you can also
+         * consider the binary <tt>+</tt> operator, which is typically just
+         * as efficient.  Whilst <tt>+</tt> returns a polynomial by value,
+         * this is typically cheap thanks to move construction/assignment.
+         *
          * @param other the polynomial to add to this.
          * @return a reference to this polynomial.
          */
@@ -348,6 +353,11 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          *
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
+         *
+         * If you are using <tt>*=</tt> to avoid deep copies, you can also
+         * consider the binary <tt>*</tt> operator, which is typically just
+         * as efficient.  Whilst <tt>*</tt> returns a polynomial by value,
+         * this is typically cheap thanks to move construction/assignment.
          *
          * @param other the polynomial to multiply this by.
          * @return a reference to this polynomial.
@@ -419,10 +429,106 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          */
         void removeZeroes();
 
+    template <typename U>
+    friend Laurent2<U> operator * (const Laurent2<U>&, const Laurent2<U>&);
+
     // For the time being, allow HOMFLY calculations to do low-level
     // operations on these polynomials.
     friend class Link;
 };
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as creating
+ * a clone (since both arguments are read-only) and then calling <tt>+=</tt>.
+ * Although this operator returns a field element by value, this is typically
+ * cheap thanks to move construction/assignment.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
+ * Although it returns a field element by value, this is typically cheap
+ * thanks to move construction/assignment.
+ *
+ * Since \a lhs is an rvalue reference, this routine might use it as scratch
+ * space.  You should assume that \a lhs is unusable after this routine returns.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
+ * Although it returns a field element by value, this is typically cheap
+ * thanks to move construction/assignment.
+ *
+ * Since \a rhs is an rvalue reference, this routine might use it as scratch
+ * space.  You should assume that \a rhs is unusable after this routine returns.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
+ * Although it returns a field element by value, this is typically cheap
+ * thanks to move construction/assignment.
+ *
+ * Since both arguments are rvalue references, this routine might use them as
+ * scratch space.  You should assume that both arguments are unusable after
+ * this routine returns.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
+
+/**
+ * Multiplies the two given polynomials.
+ *
+ * This operator <tt>*</tt> is typically just as efficient as <tt>*=</tt>
+ * (and is faster when both arguments are read-only, since <tt>*=</tt>
+ * requires you to make a writeable clone of one of the arguments).
+ * Although this operator returns a polynomial by value, this is typically
+ * cheap thanks to move construction/assignment.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to multiply.
+ * @param rhs the second polynomial to multiply.
+ * @return the product of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
 
 /*@}*/
 
@@ -698,6 +804,50 @@ void Laurent2<T>::removeZeroes() {
             it = coeff_.erase(it); // C++11: returns next element.
         else
             ++it;
+}
+
+template <typename T>
+inline Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
+    // We have to make a deep copy since both arguments are read-only.
+    return std::move(Laurent2<T>(lhs) += rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
+    return std::move(lhs += rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
+    return std::move(rhs += lhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
+    return std::move(lhs += rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
+    if (lhs.isZero() || rhs.isZero())
+        return Laurent2<T>(); // zero
+
+    Laurent2<T> ans;
+
+    for (const auto& left : lhs.coeff_)
+        for (const auto& right : rhs.coeff_) {
+            typename Laurent2<T>::Exponents e(
+                left.first.first + right.first.first,
+                left.first.second + right.first.second);
+            T term = left.second * right.second;
+            auto result = ans.coeff_.emplace(e, term);
+            if (! result.second)
+                result.first->second += term;
+        }
+
+    // We might have zeroed out some coefficients.
+    ans.removeZeroes();
+    return ans;
 }
 
 } // namespace regina

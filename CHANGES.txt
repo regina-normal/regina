@@ -90,8 +90,10 @@ Version 5.2  [ 29 September, 2017 ]
             - New type trait to identify Regina's own integer types.
         Class Laurent:
             - Added move constructor and assignment operator.
+            - Added binary operators +, *.
         Class Laurent2:
             - Added move constructor and assignment operator.
+            - Added binary operators +, *.
             - New constuctor that shifts a given polynomial by x^e y^e.
         Class LensSpace:
             - New assignment operator.
