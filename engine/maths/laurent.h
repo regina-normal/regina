@@ -1274,7 +1274,7 @@ void Laurent<T>::fixDegrees() {
 }
 
 template <typename T>
-Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
+inline Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
     // We have to make one deep copy, since both arguments are read-only.
     // If we can, choose a direction for the addition that avoids a
     // second internal deep copy within +=.
@@ -1285,17 +1285,17 @@ Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
 }
 
 template <typename T>
-Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs) {
+inline Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs) {
     return std::move(lhs += rhs);
 }
 
 template <typename T>
-Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs) {
+inline Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs) {
     return std::move(rhs += lhs);
 }
 
 template <typename T>
-Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs) {
+inline Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs) {
     // If we can, choose a direction for the addition that avoids a
     // deep copy within +=.
     if (lhs.base_ <= rhs.minExp_ && rhs.maxExp_ <= lhs.maxExp_)
