@@ -418,6 +418,12 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
 
         /**
          * Inverts this field element.
+         * This field element is changed directly.
+         *
+         * If you are using invert() to avoid deep copies, you can also
+         * consider inverse(), which is typically just as efficient.
+         * Whilst inverse() returns a field element by value, this is
+         * typically cheap thanks to move construction/assignment.
          *
          * \pre This field element has already been initialised (and so
          * it already has specified an underlying cyclotomic field).
@@ -425,6 +431,23 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre This field element is non-zero.
          */
         void invert();
+
+        /**
+         * Returns the inverse of this field element.
+         * This field element is not changed.
+         *
+         * This routine is typically just as efficient as invert()
+         * (and is faster when the field element is read-only, since invert()
+         * requires you to make a writeable clone).
+         * Although this routine returns a field element by value, this is
+         * typically cheap thanks to move construction/assignment.
+         *
+         * \pre This field element has already been initialised (and so
+         * it already has specified an underlying cyclotomic field).
+         *
+         * \pre This field element is non-zero.
+         */
+        Cyclotomic inverse() const;
 
         /**
          * Multiplies this field element by the given rational.

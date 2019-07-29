@@ -73,6 +73,20 @@ void Cyclotomic::invert() {
     delete self;
 }
 
+Cyclotomic Cyclotomic::inverse() const {
+    Polynomial<Rational>* self = polynomial();
+    Polynomial<Rational> gcd, u, v;
+
+    self->gcdWithCoeffs(cyclotomic(field_), gcd, u, v);
+
+    Rational* coeff = new Rational[degree_]; // initialises to zero
+    for (size_t i = 0; i < degree_ && i <= u.degree(); ++i)
+        coeff[i] = u[i];
+
+    delete self;
+    return Cyclotomic(field_, degree_, coeff);
+}
+
 Cyclotomic& Cyclotomic::operator *= (const Cyclotomic& other) {
     const Polynomial<Integer>& cyc = cyclotomic(field_);
 
