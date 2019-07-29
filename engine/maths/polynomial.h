@@ -1281,7 +1281,8 @@ inline Polynomial<T>::Polynomial(size_t degree, T* coeff) :
 }
 
 template <typename T>
-Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
+inline Polynomial<T> operator + (const Polynomial<T>& lhs,
+        const Polynomial<T>& rhs) {
     // We have to make one deep copy, since both arguments are read-only.
     // Add in whichever diretion avoids a second deep copy inside +=.
     if (lhs.degree() >= rhs.degree())
