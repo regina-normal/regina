@@ -1179,13 +1179,8 @@ void Polynomial<T>::gcdWithCoeffs(const Polynomial<U>& other,
     while (! y.isZero()) {
         gcd.divisionAlg(y, q, r);
 
-        tmp = q;
-        tmp *= uu;
-        u -= tmp;
-
-        tmp = q;
-        tmp *= vv;
-        v -= tmp;
+        u -= (q * uu);
+        v -= (q * vv);
 
         u.swap(uu);
         v.swap(vv);
