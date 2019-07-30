@@ -408,11 +408,11 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
 
         /**
          * Negates this field element.
+         * This field element is changed directly.
          *
          * If you are using negate() to avoid deep copies, you can also
          * consider the unary <tt>-</tt> operator, which is typically just
-         * as efficient.  Whilst <tt>-</tt> returns a field element by value,
-         * this is typically cheap thanks to move construction/assignment.
+         * as efficient thanks to move construction/assignment.
          */
         void negate();
 
@@ -707,31 +707,13 @@ Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
 /**
  * Returns the negative of the given field element.
  *
- * This operator <tt>-</tt> is typically just as efficient as creating
- * a clone (since the argument is read-only) and then calling negate().
- * Although it returns a field element by value, this is typically
- * cheap thanks to move construction/assignment.
+ * This operator <tt>-</tt> is typically just as efficient as calling negate(),
+ * thanks to move construction and move assignment.
  *
  * @param arg the field element to negate.
  * @return the negative of \a arg.
  */
-Cyclotomic operator - (const Cyclotomic& arg);
-
-/**
- * Returns the negative of the given field element.
- *
- * This operator <tt>-</tt> is typically just as efficient as calling negate().
- * Although it returns a field element by value, this is typically
- * cheap thanks to move construction/assignment.
- *
- * Since the argument is an rvalue reference, this routine might use it as
- * scratch space.  You should assume that the argument is unusable after
- * this routine returns.
- *
- * @param arg the field element to negate.
- * @return the negative of \a arg.
- */
-Cyclotomic operator - (Cyclotomic&& arg);
+Cyclotomic operator - (Cyclotomic arg);
 
 /**
  * Multiplies the two given cyclotomic field elements.
@@ -948,16 +930,9 @@ inline Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs) {
     return std::move(lhs += rhs);
 }
 
-inline Cyclotomic operator - (const Cyclotomic& arg) {
-    // Unavoidable deep copy here.
-    Cyclotomic ans(arg);
-    ans.negate();
-    return ans;
-}
-
-inline Cyclotomic operator - (Cyclotomic&& arg) {
+inline Cyclotomic operator - (Cyclotomic arg) {
     arg.negate();
-    return std::move(arg);
+    return arg;
 }
 
 } // namespace regina

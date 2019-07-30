@@ -352,11 +352,11 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
 
         /**
          * Negates this polynomial.
+         * This field element is changed directly.
          *
          * If you are using negate() to avoid deep copies, you can also
          * consider the unary <tt>-</tt> operator, which is typically just
-         * as efficient.  Whilst <tt>-</tt> returns a polynomial by value,
-         * this is typically cheap thanks to move construction/assignment.
+         * as efficient thanks to move construction/assignment.
          */
         void negate();
 
@@ -670,33 +670,14 @@ Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
 /**
  * Returns the negative of the given polynomial.
  *
- * This operator <tt>-</tt> is typically just as efficient as creating
- * a clone (since the argument is read-only) and then calling negate().
- * Although it returns a polynomial by value, this is typically
- * cheap thanks to move construction/assignment.
+ * This operator <tt>-</tt> is typically just as efficient as calling negate(),
+ * thanks to move construction and move assignment.
  *
  * @param arg the polynomial to negate.
  * @return the negative of \a arg.
  */
 template <typename T>
-Polynomial<T> operator - (const Polynomial<T>& arg);
-
-/**
- * Returns the negative of the given polynomial.
- *
- * This operator <tt>-</tt> is typically just as efficient as calling negate().
- * Although it returns a polynomial by value, this is typically
- * cheap thanks to move construction/assignment.
- *
- * Since the argument is an rvalue reference, this routine might use it as
- * scratch space.  You should assume that the argument is unusable after
- * this routine returns.
- *
- * @param arg the polynomial to negate.
- * @return the negative of \a arg.
- */
-template <typename T>
-Polynomial<T> operator - (Polynomial<T>&& arg);
+Polynomial<T> operator - (Polynomial<T> arg);
 
 /**
  * Multiplies the two given polynomials.
@@ -1310,17 +1291,9 @@ inline Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs) {
 }
 
 template <typename T>
-inline Polynomial<T> operator - (const Polynomial<T>& arg) {
-    // Unavoidable deep copy here.
-    Polynomial<T> ans(arg);
-    ans.negate();
-    return ans;
-}
-
-template <typename T>
 inline Polynomial<T> operator - (Polynomial<T>&& arg) {
     arg.negate();
-    return std::move(arg);
+    return arg;
 }
 
 template <typename T>
