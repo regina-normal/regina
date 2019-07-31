@@ -71,9 +71,10 @@ namespace regina {
  * (since they have no zero-initialising default constructor).
  *
  * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment,
- * and long chains of operators such as <tt>a = b * c + d</tt> are
- * efficient in that they only use a single deep copy.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Functions that take or return objects by value are designed to be just as
+ * efficient as working with references or pointers, and long chains of
+ * operators such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
  *
  * The underlying storage method for this class is sparse: only the
  * non-zero coefficients are stored.
@@ -299,10 +300,6 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         /**
          * Negates this polynomial.
          * This field element is changed directly.
-         *
-         * If you are using negate() to avoid deep copies, you can also
-         * consider the unary <tt>-</tt> operator, which is typically just
-         * as efficient thanks to move construction/assignment.
          */
         void negate();
 
@@ -332,11 +329,6 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
-         * If you are using <tt>+=</tt> to avoid deep copies, you can also
-         * consider the binary <tt>+</tt> operator, which is typically just
-         * as efficient.  Whilst <tt>+</tt> returns a polynomial by value,
-         * this is typically cheap thanks to move construction/assignment.
-         *
          * @param other the polynomial to add to this.
          * @return a reference to this polynomial.
          */
@@ -358,11 +350,6 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          *
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
-         *
-         * If you are using <tt>*=</tt> to avoid deep copies, you can also
-         * consider the binary <tt>*</tt> operator, which is typically just
-         * as efficient.  Whilst <tt>*</tt> returns a polynomial by value,
-         * this is typically cheap thanks to move construction/assignment.
          *
          * @param other the polynomial to multiply this by.
          * @return a reference to this polynomial.
@@ -445,11 +432,6 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is typically just as efficient as creating
- * a clone (since both arguments are read-only) and then calling <tt>+=</tt>.
- * Although this operator returns a field element by value, this is typically
- * cheap thanks to move construction/assignment.
- *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
  * @param lhs the first polynomial to add.
@@ -461,13 +443,6 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
 
 /**
  * Adds the two given polynomials.
- *
- * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
- * Although it returns a field element by value, this is typically cheap
- * thanks to move construction/assignment.
- *
- * Since \a lhs is an rvalue reference, this routine might use it as scratch
- * space.  You should assume that \a lhs is unusable after this routine returns.
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
@@ -481,13 +456,6 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
 /**
  * Adds the two given polynomials.
  *
- * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
- * Although it returns a field element by value, this is typically cheap
- * thanks to move construction/assignment.
- *
- * Since \a rhs is an rvalue reference, this routine might use it as scratch
- * space.  You should assume that \a rhs is unusable after this routine returns.
- *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
  * @param lhs the first polynomial to add.
@@ -499,14 +467,6 @@ Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
 
 /**
  * Adds the two given polynomials.
- *
- * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
- * Although it returns a field element by value, this is typically cheap
- * thanks to move construction/assignment.
- *
- * Since both arguments are rvalue references, this routine might use them as
- * scratch space.  You should assume that both arguments are unusable after
- * this routine returns.
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *
@@ -520,9 +480,6 @@ Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
 /**
  * Returns the negative of the given polynomial.
  *
- * This operator <tt>-</tt> is typically just as efficient as calling negate(),
- * thanks to move construction and move assignment.
- *
  * @param arg the polynomial to negate.
  * @return the negative of \a arg.
  */
@@ -531,12 +488,6 @@ Laurent2<T> operator - (Laurent2<T> arg);
 
 /**
  * Multiplies the two given polynomials.
- *
- * This operator <tt>*</tt> is typically just as efficient as <tt>*=</tt>
- * (and is faster when both arguments are read-only, since <tt>*=</tt>
- * requires you to make a writeable clone of one of the arguments).
- * Although this operator returns a polynomial by value, this is typically
- * cheap thanks to move construction/assignment.
  *
  * The two polynomials need not have the same range of non-zero coefficients.
  *

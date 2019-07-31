@@ -76,9 +76,10 @@ namespace regina {
  * This class requires that the order \a n is strictly positive.
  *
  * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment,
- * and long chains of operators such as <tt>a = b * c + d</tt> are
- * efficient in that they only use a single deep copy.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Functions that take or return objects by value are designed to be just as
+ * efficient as working with references or pointers, and long chains of
+ * operators such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
  *
  * Although this class makes use of global data in its implementation, all
  * of its methods are thread-safe.
@@ -409,21 +410,12 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
         /**
          * Negates this field element.
          * This field element is changed directly.
-         *
-         * If you are using negate() to avoid deep copies, you can also
-         * consider the unary <tt>-</tt> operator, which is typically just
-         * as efficient thanks to move construction/assignment.
          */
         void negate();
 
         /**
          * Inverts this field element.
          * This field element is changed directly.
-         *
-         * If you are using invert() to avoid deep copies, you can also
-         * consider inverse(), which is typically just as efficient.
-         * Whilst inverse() returns a field element by value, this is
-         * typically cheap thanks to move construction/assignment.
          *
          * \pre This field element has already been initialised (and so
          * it already has specified an underlying cyclotomic field).
@@ -435,12 +427,6 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
         /**
          * Returns the inverse of this field element.
          * This field element is not changed.
-         *
-         * This routine is typically just as efficient as invert()
-         * (and is faster when the field element is read-only, since invert()
-         * requires you to make a writeable clone).
-         * Although this routine returns a field element by value, this is
-         * typically cheap thanks to move construction/assignment.
          *
          * \pre This field element has already been initialised (and so
          * it already has specified an underlying cyclotomic field).
@@ -476,11 +462,6 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
         /**
          * Adds the given field element to this.
          *
-         * If you are using <tt>+=</tt> to avoid deep copies, you can also
-         * consider the binary <tt>+</tt> operator, which is typically just
-         * as efficient.  Whilst <tt>+</tt> returns a field element by value,
-         * this is typically cheap thanks to move construction/assignment.
-         *
          * \pre The argument \a other belongs to the same cyclotomic field
          * as this.
          *
@@ -502,11 +483,6 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
 
         /**
          * Multiplies this by the given field element.
-         *
-         * If you are using <tt>*=</tt> to avoid deep copies, you can also
-         * consider the binary <tt>*</tt> operator, which is typically just
-         * as efficient.  Whilst <tt>*</tt> returns a field element by value,
-         * this is typically cheap thanks to move construction/assignment.
          *
          * \pre The argument \a other belongs to the same cyclotomic field
          * as this.
@@ -636,11 +612,6 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
 /**
  * Adds the two given cyclotomic field elements.
  *
- * This operator <tt>+</tt> is typically just as efficient as creating
- * a clone (since both arguments are read-only) and then calling <tt>+=</tt>.
- * Although this operator returns a field element by value, this is typically
- * cheap thanks to move construction/assignment.
- *
  * \pre Both arguments belong to the same cyclotomic field.
  *
  * @param lhs the first field element to add.
@@ -651,13 +622,6 @@ Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
 /**
  * Adds the two given cyclotomic field elements.
- *
- * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
- * Although it returns a field element by value, this is typically cheap
- * thanks to move construction/assignment.
- *
- * Since \a lhs is an rvalue reference, this routine might use it as scratch
- * space.  You should assume that \a lhs is unusable after this routine returns.
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
@@ -670,13 +634,6 @@ Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
 /**
  * Adds the two given cyclotomic field elements.
  *
- * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
- * Although it returns a field element by value, this is typically cheap
- * thanks to move construction/assignment.
- *
- * Since \a rhs is an rvalue reference, this routine might use it as scratch
- * space.  You should assume that \a rhs is unusable after this routine returns.
- *
  * \pre Both arguments belong to the same cyclotomic field.
  *
  * @param lhs the first field element to add.
@@ -687,14 +644,6 @@ Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
 
 /**
  * Adds the two given cyclotomic field elements.
- *
- * This operator <tt>+</tt> is typically just as efficient as <tt>+=</tt>.
- * Although it returns a field element by value, this is typically cheap
- * thanks to move construction/assignment.
- *
- * Since both arguments are rvalue references, this routine might use them as
- * scratch space.  You should assume that both arguments are unusable after
- * this routine returns.
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
@@ -707,9 +656,6 @@ Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
 /**
  * Returns the negative of the given field element.
  *
- * This operator <tt>-</tt> is typically just as efficient as calling negate(),
- * thanks to move construction and move assignment.
- *
  * @param arg the field element to negate.
  * @return the negative of \a arg.
  */
@@ -717,12 +663,6 @@ Cyclotomic operator - (Cyclotomic arg);
 
 /**
  * Multiplies the two given cyclotomic field elements.
- *
- * This operator <tt>*</tt> is typically just as efficient as <tt>*=</tt>
- * (and is faster when both arguments are read-only, since <tt>*=</tt>
- * requires you to make a writeable clone of one of the arguments).
- * Although this operator returns a field element by value, this is typically
- * cheap thanks to move construction/assignment.
  *
  * \pre Both arguments belong to the same cyclotomic field.
  *
