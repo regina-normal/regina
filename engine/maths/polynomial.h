@@ -1331,7 +1331,7 @@ inline Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs) {
 }
 
 template <typename T>
-inline Polynomial<T> operator - (Polynomial<T>&& arg) {
+inline Polynomial<T> operator - (Polynomial<T> arg) {
     arg.negate();
     return arg;
 }
