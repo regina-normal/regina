@@ -87,10 +87,13 @@ namespace regina {
  */
 template <typename T>
 class Laurent2 : public ShortOutput<Laurent2<T>, true> {
+    public:
+        typedef T Coefficient;
+            /**< The type of each coefficient of the polynomial. */
+
     private:
         typedef std::pair<long, long> Exponents;
 
-    private:
         std::map<Exponents, T> coeff_;
             /**< Stores all non-zero coefficients of the polynomial.
                  Specifically, coeff_[(i,j)] stores the coefficient of
@@ -428,6 +431,52 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
     // operations on these polynomials.
     friend class Link;
 };
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent2<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param poly the polynomial to multiply by.
+ * @param scalar the scalar to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Laurent2<T> operator * (Laurent2<T> poly,
+    const typename Laurent2<T>::Coefficient& scalar);
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent2<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param scalar the scalar to multiply by.
+ * @param poly the polynomial to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
+    Laurent2<T> poly);
+
+/**
+ * Divides the given polynomial by the given scalar constant.
+ *
+ * This uses the division operator /= for the coefficient type \a T.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent2<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * @param poly the polynomial to divide by the given scalar.
+ * @param scalar the scalar factor to divide by.
+ * @return the quotient of the given polynomial by the given scalar.
+ */
+template <typename T>
+Laurent2<T> operator / (Laurent2<T> poly,
+    const typename Laurent2<T>::Coefficient& scalar);
 
 /**
  * Adds the two given polynomials.
@@ -772,6 +821,33 @@ void Laurent2<T>::removeZeroes() {
             it = coeff_.erase(it); // C++11: returns next element.
         else
             ++it;
+}
+
+template <typename T>
+inline Laurent2<T> operator * (Laurent2<T> poly,
+        const typename Laurent2<T>::Coefficient& scalar) {
+    // When the argument poly is an lvalue reference, we perform a deep copy
+    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
+    // since the argument can be ignored.  This special-case optimisation
+    // would require two different lvalue/rvalue implementations of *, and
+    // so we leave it for now.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
+        Laurent2<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Laurent2<T> operator / (Laurent2<T> poly,
+        const typename Laurent2<T>::Coefficient& scalar) {
+    poly /= scalar;
+    return poly;
 }
 
 template <typename T>

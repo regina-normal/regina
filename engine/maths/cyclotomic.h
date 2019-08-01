@@ -85,6 +85,11 @@ namespace regina {
  * of its methods are thread-safe.
  */
 class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
+    public:
+        typedef Rational Coefficient;
+            /**< The type of each coefficient of the polynomial that is
+                 used to store a field element. */
+
     private:
         size_t field_;
             /**< The order \a n of the underlying cyclotomic field.
@@ -610,6 +615,35 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
 };
 
 /**
+ * Multiplies the given field element by the given rational.
+ *
+ * @param elt the field element to multiply by.
+ * @param scalar the rational to multiply by.
+ * @return the product of the given field element and rational.
+ */
+Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
+
+/**
+ * Multiplies the given field element by the given rational.
+ *
+ * @param scalar the rational to multiply by.
+ * @param elt the field element to multiply by.
+ * @return the product of the given field element and rational.
+ */
+Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
+
+/**
+ * Divides the given field element by the given rational.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * @param elt the field element to divide by the given rational.
+ * @param scalar the rational to divide by.
+ * @return the quotient of the given field element by the given rational.
+ */
+Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
+
+/**
  * Adds the two given cyclotomic field elements.
  *
  * \pre Both arguments belong to the same cyclotomic field.
@@ -851,6 +885,27 @@ inline std::string Cyclotomic::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();
+}
+
+inline Cyclotomic operator * (Cyclotomic elt, const Rational& scalar) {
+    // When the argument elt is an lvalue reference, we perform a deep copy
+    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
+    // since the argument can be ignored.  This special-case optimisation
+    // would require two different lvalue/rvalue implementations of *, and
+    // so we leave it for now.
+    elt *= scalar;
+    return elt;
+}
+
+inline Cyclotomic operator * (const Rational& scalar, Cyclotomic elt) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    elt *= scalar;
+    return elt;
+}
+
+inline Cyclotomic operator / (Cyclotomic elt, const Rational& scalar) {
+    elt /= scalar;
+    return elt;
 }
 
 inline Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs) {

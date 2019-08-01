@@ -46,7 +46,7 @@ Version 5.2  [ 29 September, 2017 ]
         Class Cyclotomic:
             - Added move constructor and assignment operator.
             - Added inverse().
-            - Added binary operators +, * and unary operator -.
+            - Added operators +, *, -, / in several variants.
         Class DegreeLessThan, DegreeGreaterThan:
             - Added copy constructors.
         Class DiscSetSurface:
@@ -91,10 +91,10 @@ Version 5.2  [ 29 September, 2017 ]
             - New type trait to identify Regina's own integer types.
         Class Laurent:
             - Added move constructor and assignment operator.
-            - Added binary operators +, * and unary operator -.
+            - Added operators +, *, -, / in several variants.
         Class Laurent2:
             - Added move constructor and assignment operator.
-            - Added binary operators +, * and unary operator -.
+            - Added operators +, *, -, / in several variants.
             - New constuctor that shifts a given polynomial by x^e y^e.
         Class LensSpace:
             - New assignment operator.
@@ -198,7 +198,7 @@ Version 5.2  [ 29 September, 2017 ]
         Class Polynomial:
             - Added move constructor and assignment operator.
             - Added negate().
-            - Added binary operators +, * and unary operator -.
+            - Added operators +, *, -, / in several variants.
             - Fixed a bug when using /= to divide a lower-degree polynomial by
               a higher-degree polynomial.  This should set the LHS to zero;
               instead it did nothing if LHS was a constant, and crashed if LHS

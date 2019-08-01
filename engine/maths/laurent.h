@@ -87,6 +87,10 @@ namespace regina {
  */
 template <typename T>
 class Laurent : public ShortOutput<Laurent<T>, true> {
+    public:
+        typedef T Coefficient;
+            /**< The type of each coefficient of the polynomial. */
+
     private:
         long minExp_;
             /**< The minimum exponent that appears in the polynomial,
@@ -572,6 +576,52 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
     template <typename U>
     friend Laurent<U> operator * (const Laurent<U>&, const Laurent<U>&);
 };
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param poly the polynomial to multiply by.
+ * @param scalar the scalar to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Laurent<T> operator * (Laurent<T> poly,
+    const typename Laurent<T>::Coefficient& scalar);
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param scalar the scalar to multiply by.
+ * @param poly the polynomial to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Laurent<T> operator * (const typename Laurent<T>::Coefficient& scalar,
+    Laurent<T> poly);
+
+/**
+ * Divides the given polynomial by the given scalar constant.
+ *
+ * This uses the division operator /= for the coefficient type \a T.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * @param poly the polynomial to divide by the given scalar.
+ * @param scalar the scalar factor to divide by.
+ * @return the quotient of the given polynomial by the given scalar.
+ */
+template <typename T>
+Laurent<T> operator / (Laurent<T> poly,
+    const typename Laurent<T>::Coefficient& scalar);
 
 /**
  * Adds the two given polynomials.
@@ -1215,6 +1265,33 @@ void Laurent<T>::fixDegrees() {
         base_ -= minExp_;
         minExp_ = maxExp_ = 0;
     }
+}
+
+template <typename T>
+inline Laurent<T> operator * (Laurent<T> poly,
+        const typename Laurent<T>::Coefficient& scalar) {
+    // When the argument poly is an lvalue reference, we perform a deep copy
+    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
+    // since the argument can be ignored.  This special-case optimisation
+    // would require two different lvalue/rvalue implementations of *, and
+    // so we leave it for now.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Laurent<T> operator * (const typename Laurent<T>::Coefficient& scalar,
+        Laurent<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Laurent<T> operator / (Laurent<T> poly,
+        const typename Laurent<T>::Coefficient& scalar) {
+    poly /= scalar;
+    return poly;
 }
 
 template <typename T>

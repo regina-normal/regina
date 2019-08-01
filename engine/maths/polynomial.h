@@ -83,6 +83,10 @@ namespace regina {
  */
 template <typename T>
 class Polynomial : public ShortOutput<Polynomial<T>, true> {
+    public:
+        typedef T Coefficient;
+            /**< The type of each coefficient of the polynomial. */
+
     private:
         size_t degree_;
             /**< The degree of the polynomial.  Here the zero polynomial
@@ -586,6 +590,52 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
     template <typename U>
     friend Polynomial<U> operator *(const Polynomial<U>&, const Polynomial<U>&);
 };
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Polynomial<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param poly the polynomial to multiply by.
+ * @param scalar the scalar to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Polynomial<T> operator * (Polynomial<T> poly,
+    const typename Polynomial<T>::Coefficient& scalar);
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Polynomial<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param scalar the scalar to multiply by.
+ * @param poly the polynomial to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
+    Polynomial<T> poly);
+
+/**
+ * Divides the given polynomial by the given scalar constant.
+ *
+ * This uses the division operator /= for the coefficient type \a T.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Polynomial<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * @param poly the polynomial to divide by the given scalar.
+ * @param scalar the scalar factor to divide by.
+ * @return the quotient of the given polynomial by the given scalar.
+ */
+template <typename T>
+Polynomial<T> operator / (Polynomial<T> poly,
+    const typename Polynomial<T>::Coefficient& scalar);
 
 /**
  * Adds the two given polynomials.
@@ -1217,6 +1267,33 @@ inline std::string Polynomial<T>::utf8(const char* variable) const {
 template <typename T>
 inline Polynomial<T>::Polynomial(size_t degree, T* coeff) :
         degree_(degree), coeff_(coeff) {
+}
+
+template <typename T>
+inline Polynomial<T> operator * (Polynomial<T> poly,
+        const typename Polynomial<T>::Coefficient& scalar) {
+    // When the argument poly is an lvalue reference, we perform a deep copy
+    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
+    // since the argument can be ignored.  This special-case optimisation
+    // would require two different lvalue/rvalue implementations of *, and
+    // so we leave it for now.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Polynomial<T> operator * (
+        const typename Polynomial<T>::Coefficient& scalar, Polynomial<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Polynomial<T> operator / (Polynomial<T> poly,
+        const typename Polynomial<T>::Coefficient& scalar) {
+    poly /= scalar;
+    return poly;
 }
 
 template <typename T>
