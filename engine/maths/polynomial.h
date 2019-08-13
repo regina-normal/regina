@@ -588,6 +588,9 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial(size_t degree, T* coeff);
 
     template <typename U>
+    friend Polynomial<U> operator +(const Polynomial<U>&, const Polynomial<U>&);
+
+    template <typename U>
     friend Polynomial<U> operator *(const Polynomial<U>&, const Polynomial<U>&);
 };
 
@@ -1297,14 +1300,26 @@ inline Polynomial<T> operator / (Polynomial<T> poly,
 }
 
 template <typename T>
-inline Polynomial<T> operator + (const Polynomial<T>& lhs,
-        const Polynomial<T>& rhs) {
-    // We have to make one deep copy, since both arguments are read-only.
-    // Add in whichever diretion avoids a second deep copy inside +=.
-    if (lhs.degree() >= rhs.degree())
-        return std::move(Polynomial<T>(lhs) += rhs);
-    else
-        return std::move(Polynomial<T>(rhs) += lhs);
+Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
+    if (lhs.degree_ >= rhs.degree_) {
+        T* coeff = new T[lhs.degree_ + 1];
+
+        for (size_t i = 0 ; i <= rhs.degree_; ++i)
+            coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
+        std::copy(lhs.coeff_ + rhs.degree_ + 1, lhs.coeff_ + lhs.degree_ + 1,
+            coeff + rhs.degree_ + 1);
+
+        return Polynomial<T>(lhs.degree_, coeff);
+    } else {
+        T* coeff = new T[rhs.degree_ + 1];
+
+        for (size_t i = 0 ; i <= lhs.degree_; ++i)
+            coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
+        std::copy(rhs.coeff_ + lhs.degree_ + 1, rhs.coeff_ + rhs.degree_ + 1,
+            coeff + lhs.degree_ + 1);
+
+        return Polynomial<T>(rhs.degree_, coeff);
+    }
 }
 
 template <typename T>

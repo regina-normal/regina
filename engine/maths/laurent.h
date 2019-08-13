@@ -1295,14 +1295,41 @@ inline Laurent<T> operator / (Laurent<T> poly,
 }
 
 template <typename T>
-inline Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
-    // We have to make one deep copy, since both arguments are read-only.
-    // If we can, choose a direction for the addition that avoids a
-    // second internal deep copy within +=.
-    if (lhs.base_ <= rhs.minExp_ && rhs.maxExp_ <= lhs.maxExp_)
-        return std::move(Laurent<T>(lhs) += rhs);
-    else
-        return std::move(Laurent<T>(rhs) += lhs);
+Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
+    long minExp = std::min(lhs.minExp_, rhs.minExp_);
+    long maxExp = std::max(lhs.maxExp_, rhs.maxExp_);
+    T* coeff = new T[maxExp - minExp + 1];
+
+    long exp /* next exponent */, idx /* next index into coeff */;
+
+    if (lhs.minExp_ < rhs.minExp_) {
+        std::copy(lhs.coeff_ + lhs.minExp_ - lhs.base_,
+            lhs.coeff_ + rhs.minExp_ - lhs.base_, coeff);
+        exp = rhs.minExp_;
+        idx = rhs.minExp_ - lhs.minExp_;
+    } else if (rhs.minExp_ < lhs.minExp_) {
+        std::copy(rhs.coeff_ + rhs.minExp_ - rhs.base_,
+            rhs.coeff_ + lhs.minExp_ - rhs.base_, coeff);
+        exp = lhs.minExp_;
+        idx = lhs.minExp_ - rhs.minExp_;
+    } else {
+        exp = lhs.minExp_;
+        idx = 0;
+    }
+
+    for ( ; exp <= lhs.maxExp_ && exp <= rhs.maxExp_; ++idx, ++exp)
+        coeff[idx] = lhs.coeff_[exp - lhs.base_] + rhs.coeff_[exp - rhs.base_];
+
+    // exp is now (lhs.maxExp_ + 1) or (rhs.maxExp_ + 1).
+    if (exp <= lhs.maxExp_) {
+        std::copy(lhs.coeff_ + exp - lhs.base_,
+            lhs.coeff_ + lhs.maxExp_ + 1 - lhs.base_, coeff + idx);
+    } else if (exp <= rhs.maxExp_) {
+        std::copy(rhs.coeff_ + exp - rhs.base_,
+            rhs.coeff_ + rhs.maxExp_ + 1 - rhs.base_, coeff + idx);
+    }
+
+    return Laurent<T>(minExp, maxExp, coeff);
 }
 
 template <typename T>

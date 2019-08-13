@@ -611,6 +611,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          */
         Cyclotomic(size_t field, size_t degree, Rational* coeff);
 
+    friend Cyclotomic operator + (const Cyclotomic&, const Cyclotomic&);
     friend Cyclotomic operator * (const Cyclotomic&, const Cyclotomic&);
 };
 
@@ -909,8 +910,10 @@ inline Cyclotomic operator / (Cyclotomic elt, const Rational& scalar) {
 }
 
 inline Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs) {
-    // We have to make a deep copy since both arguments are read-only.
-    return std::move(Cyclotomic(lhs) += rhs);
+    Rational* coeff = new Rational[lhs.degree_];
+    for (size_t i = 0; i < lhs.degree_; ++i)
+        coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
+    return Cyclotomic(lhs.field_, lhs.degree_, coeff);
 }
 
 inline Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs) {
