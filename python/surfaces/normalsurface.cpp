@@ -114,6 +114,7 @@ void addNormalSurface(pybind11::module& m) {
             pybind11::return_value_policy::reference)
         .def("isSplitting", &NormalSurface::isSplitting)
         .def("isCentral", &NormalSurface::isCentral)
+        .def("countBoundaries", &NormalSurface::countBoundaries)
         .def("isCompressingDisc", &NormalSurface::isCompressingDisc,
             pybind11::arg("knownConnected") = false)
         .def("isIncompressible", &NormalSurface::isIncompressible)

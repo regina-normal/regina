@@ -829,6 +829,8 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
                  between 0 and 2 inclusive. */
         mutable Property<LargeInteger> eulerChar_;
             /**< The Euler characteristic of this surface. */
+        mutable Property<size_t> boundaries_;
+            /**< The number of disjoint boundary curves on this surface. */
         mutable Property<bool> orientable;
             /**< Is this surface orientable? */
         mutable Property<bool> twoSided;
@@ -1349,6 +1351,28 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
         LargeInteger isCentral() const;
 
         /**
+         * Returns the number of disjoint boundary curves on this surface.
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
+         * \pre This normal surface is embedded (not singular or immersed).
+         * \pre This normal surface is compact (has finitely many discs).
+         *
+         * \warning This routine explicitly builds the normal arcs on
+         * the boundary.  If the normal coordinates are extremely large,
+         * (in particular, of a similar order of magnitude as the
+         * largest possible long integer), then the behaviour of this
+         * routine is undefined.
+         *
+         * @author Alex He
+         *
+         * @return the number of disjoint boundary curves.
+         */
+        size_t countBoundaries() const;
+
+        /**
          * Determines whether this surface represents a compressing disc
          * in the underlying 3-manifold.
          *
@@ -1741,6 +1765,11 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          * stores the result as a property.
          */
         void calculateRealBoundary() const;
+        /**
+         * Computes the number of disjoint boundary curves and stores the
+         * result as a property.
+         */
+        void calculateBoundaries() const;
 
     friend class XMLNormalSurfaceReader;
 };
@@ -1896,6 +1925,12 @@ inline bool NormalSurface::hasRealBoundary() const {
     if (! realBoundary.known())
         calculateRealBoundary();
     return realBoundary.value();
+}
+
+inline size_t NormalSurface::countBoundaries() const {
+    if (! boundaries_.known())
+        calculateBoundaries();
+    return boundaries_.value();
 }
 
 inline bool NormalSurface::isVertexLinking() const {

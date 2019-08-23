@@ -154,6 +154,7 @@ Version 5.2  [ 29 September, 2017 ]
               Currently NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED are the only
               coordinate systems where this can happen.
         Class NormalSurface:
+            - New routine countBoundaries(), thanks to Alex He.
             - Explicitly added preconditions to isOrientable(),
               isConnected() and isTwoSided() that the surface must be embedded.
               These preconditions were always required by the code, but
