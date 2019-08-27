@@ -100,28 +100,30 @@ void addLink(pybind11::module& m) {
         .def("component", &Link::component)
         .def("strand", &Link::strand)
         .def("translate", &Link::translate)
+        // In the following overloads, we define functions twice because
+        // overload_cast gets confused between templated/non-templated variants.
+        // Also: the versions that take a std::vector must come *last*,
+        // since otherwise it treats func(x) as func([x]) never sees
+        // the non-vector version.
+        .def_static("fromGauss", [](const std::string& s) {
+            return Link::fromGauss(s);
+        })
         .def_static("fromGauss", [](const std::vector<int>& v) {
             return Link::fromGauss(v.begin(), v.end());
         })
-        .def_static("fromGauss", [](const std::string& s) {
-            // overload_cast confused with templated vs non-templated versions.
-            return Link::fromGauss(s);
+        .def_static("fromOrientedGauss", [](const std::string& s) {
+            return Link::fromOrientedGauss(s);
         })
         .def_static("fromOrientedGauss", [](const std::vector<std::string>& v) {
             return Link::fromOrientedGauss(v.begin(), v.end());
         })
-        .def_static("fromOrientedGauss", [](const std::string& s) {
-            // overload_cast confused with templated vs non-templated versions.
-            return Link::fromOrientedGauss(s);
-        })
         .def_static("fromJenkins",
             overload_cast<const std::string&>(&Link::fromJenkins))
+        .def_static("fromDT", [](const std::string& s) {
+            return Link::fromDT(s);
+        })
         .def_static("fromDT", [](const std::vector<int>& v) {
             return Link::fromDT(v.begin(), v.end());
-        })
-        .def_static("fromDT", [](const std::string& s) {
-            // overload_cast confused with templated vs non-templated versions.
-            return Link::fromDT(s);
         })
         .def_static("fromKnotSig", &Link::fromKnotSig)
         .def("swapContents", &Link::swapContents)

@@ -80,12 +80,16 @@ void addTangle(pybind11::module& m) {
             pybind11::arg("perform") = true)
         .def("orientedGauss",
             overload_cast<>(&Tangle::orientedGauss, pybind11::const_))
+        // In the following overloads, we define functions twice because
+        // overload_cast gets confused between templated/non-templated variants.
+        // Also: the versions that take a std::vector must come *last*,
+        // since otherwise it treats func(x) as func([x]) never sees
+        // the non-vector version.
+        .def_static("fromOrientedGauss", [](const std::string& s) {
+            return Tangle::fromOrientedGauss(s);
+        })
         .def_static("fromOrientedGauss", [](const std::vector<std::string>& v) {
             return Tangle::fromOrientedGauss(v.begin(), v.end());
-        })
-        .def_static("fromOrientedGauss", [](const std::string& s) {
-            // overload_cast confused with templated vs non-templated versions.
-            return Tangle::fromOrientedGauss(s);
         })
     ;
     regina::python::add_output(c);
