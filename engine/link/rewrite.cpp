@@ -35,14 +35,25 @@
 #include <condition_variable>
 #include <mutex>
 #include <queue>
+#include <map>
 #include <set>
 #include <system_error>
 #include <thread>
+
+// The following code is written to support optional backtracing (i.e.,
+// when a rewriting path is found for which action returns true, it outputs
+// the sequence of links that it passed through to get there).
+//
+// HOWEVER: This code is not well optimised and it simply dumps the
+// backtrace to std::cerr, and so it is currently disabled and not available
+// at all through the API.  To turn on backtracing, simply change the
+// typedef SigSet from SigGraph<false> to SigGraph<true>.
 
 namespace regina {
 
 namespace {
     template <bool threading> class SyncData;
+    template <bool backtrace> class SigGraph;
 
     template <>
     class SyncData<true> {
@@ -56,17 +67,67 @@ namespace {
     class SyncData<false> {
     };
 
+    template <>
+    class SigGraph<true> : private std::map<std::string, std::string> {
+        public:
+            using std::map<std::string, std::string>::iterator;
+
+            auto insertStart(const std::string& sig) {
+                return insert(std::make_pair(sig, std::string()));
+            }
+
+            auto insertDerived(const std::string& sig,
+                    const std::string& from) {
+                return insert(std::make_pair(sig, from));
+            }
+
+            static const std::string& sig(iterator it) {
+                return it->first;
+            }
+
+            void backtrace(const std::string& sig) const {
+                std::cerr << sig;
+                for (auto it = find(sig); ! it->second.empty();
+                        it = find(it->second))
+                    std::cerr << " <- " << it->second;
+                std::cerr << std::endl;
+            }
+    };
+
+    template <>
+    class SigGraph<false> : private std::set<std::string> {
+        public:
+            using std::set<std::string>::iterator;
+
+            auto insertStart(const std::string& sig) {
+                return insert(sig);
+            }
+
+            auto insertDerived(const std::string& sig, const std::string&) {
+                return insert(sig);
+            }
+
+            static const std::string& sig(iterator it) {
+                return *it;
+            }
+
+            void backtrace(const std::string&) const {
+            }
+    };
+
     template <bool threading>
     class LinkBFS : protected SyncData<threading> {
         private:
-            typedef std::set<std::string> SigSet;
+            // To switch on backtracing, change the following typedef to
+            // SigGraph<true>.
+            typedef SigGraph<false> SigSet;
 
             static bool lowerPriority(SigSet::iterator a, SigSet::iterator b) {
                 // The function should compute whether a.size > b.size,
                 // where "size" measures number of crossings.
                 // We will use string length, which is fast to compute
                 // and (for knots) should have the same effect.
-                return a->length() > b->length();
+                return SigSet::sig(a).length() > SigSet::sig(b).length();
             }
 
             const size_t maxCrossings_;
@@ -99,7 +160,7 @@ namespace {
         private:
             // candidate() may assume that alt will be deleted immediately
             // after returning.
-            bool candidate(Link& alt);
+            bool candidate(Link& alt, const std::string& from);
             void propagateFrom(const SigSet::iterator& it);
     };
 
@@ -115,7 +176,7 @@ namespace {
             // We cannot use copy from here, since action_() might have
             // changed it.
         }
-        process_.push(sigs_.insert(link.knotSig()).first);
+        process_.push(sigs_.insertStart(link.knotSig()).first);
         return false;
     }
 
@@ -125,13 +186,13 @@ namespace {
         // requres that insertion into a std::set does not invalidate
         // iterators.
 
-        Link* t = Link::fromKnotSig(*it);
+        Link* t = Link::fromKnotSig(SigSet::sig(it));
         if (t->size() == 0) {
             // We have a zero-crossing unknot.
             // There is only one move we can perform on this.
             Link alt(*t, false);
             alt.r1(regina::StrandRef(), 0, 1 /* sign */, false, true);
-            candidate(alt);
+            candidate(alt, SigSet::sig(it));
             delete t;
             return;
         }
@@ -144,7 +205,7 @@ namespace {
             if (t->r1(t->crossing(i), true, false)) {
                 Link alt(*t, false);
                 alt.r1(alt.crossing(i), false, true);
-                if (candidate(alt)) {
+                if (candidate(alt, SigSet::sig(it))) {
                     delete t;
                     return;
                 }
@@ -156,7 +217,7 @@ namespace {
             if (t->r2(t->crossing(i), true, false)) {
                 Link alt(*t, false);
                 alt.r2(alt.crossing(i), false, true);
-                if (candidate(alt)) {
+                if (candidate(alt, SigSet::sig(it))) {
                     delete t;
                     return;
                 }
@@ -169,7 +230,7 @@ namespace {
                 if (t->r3(t->crossing(i), side, true, false)) {
                     Link alt(*t, false);
                     alt.r3(alt.crossing(i), side, false, true);
-                    if (candidate(alt)) {
+                    if (candidate(alt, SigSet::sig(it))) {
                         delete t;
                         return;
                     }
@@ -186,7 +247,7 @@ namespace {
                             Link alt(*t, false);
                             alt.r1(alt.crossing(i)->strand(strand),
                                 side, sign, false, true);
-                            if (candidate(alt)) {
+                            if (candidate(alt, SigSet::sig(it))) {
                                 delete t;
                                 return;
                             }
@@ -276,7 +337,7 @@ namespace {
                             alt.r2(alt.translate(upperArc), upperSide,
                                 alt.translate(lowerArc), lowerSide,
                                 false, true);
-                            if (candidate(alt)) {
+                            if (candidate(alt, SigSet::sig(it))) {
                                 delete t;
                                 return;
                             }
@@ -380,14 +441,14 @@ namespace {
     }
 
     template <>
-    bool LinkBFS<true>::candidate(Link& alt) {
+    bool LinkBFS<true>::candidate(Link& alt, const std::string& from) {
         const std::string sig = alt.knotSig();
 
         std::lock_guard<std::mutex> lock(mutex_);
         if (done_)
             return false;
 
-        auto result = sigs_.insert(sig);
+        auto result = sigs_.insertDerived(sig, from);
         if (result.second) {
             // We have not seen this diagram before.
             if (process_.empty()) {
@@ -399,8 +460,10 @@ namespace {
             } else
                 process_.push(result.first);
 
-            if (action_(alt))
+            if (action_(alt)) {
+                sigs_.backtrace(sig);
                 return (done_ = true);
+            }
             // We cannot use alt from here, since action_() might have
             // changed it.
         }
@@ -408,16 +471,18 @@ namespace {
     }
 
     template <>
-    bool LinkBFS<false>::candidate(Link& alt) {
+    bool LinkBFS<false>::candidate(Link& alt, const std::string& from) {
         const std::string sig = alt.knotSig();
 
-        auto result = sigs_.insert(sig);
+        auto result = sigs_.insertDerived(sig, from);
         if (result.second) {
             // We have not seen this diagram before.
             process_.push(result.first);
 
-            if (action_(alt))
+            if (action_(alt)) {
+                sigs_.backtrace(sig);
                 return (done_ = true);
+            }
             // We cannot use alt from here, since action_() might have
             // changed it.
         }
