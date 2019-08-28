@@ -1101,6 +1101,13 @@ class REGINA_API Triangulation<3> :
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
+         * If \a height is negative, then there will be \e no bound on
+         * the number of additional tetrahedra.  This means that the
+         * routine will not terminate until a simpler triangulation is found.
+         * If no simpler diagram exists then the only way to terminate this
+         * function is to cancel the operation via a progress tracker
+         * (read on for details).
+         *
          * If you want a \e fast simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
          * is that, for very stubborn triangulations where intelligentSimplify()
@@ -1124,7 +1131,6 @@ class REGINA_API Triangulation<3> :
          * If this routine is unable to simplify the triangulation, then
          * the triangulation will not be changed.
          *
-         * If \a height is negative, then this routine will do nothing.
          * If no progress tracker was passed then it will immediately return
          * \c false; otherwise the progress tracker will immediately be
          * marked as finished.
@@ -1132,8 +1138,8 @@ class REGINA_API Triangulation<3> :
          * \pre This triangulation is connected.
          *
          * @param height the maximum number of \e additional tetrahedra to
-         * allow, beyond the number of tetrahedra originally present in the
-         * triangulation.
+         * allow beyond the number of tetrahedra originally present in the
+         * triangulation, or a negative number if this should not be bounded.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
@@ -1198,6 +1204,11 @@ class REGINA_API Triangulation<3> :
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
+         * If \a height is negative, then there will be \e no bound on
+         * the number of additional tetrahedra.  This means that the
+         * routine will <i>never terminate</i>, unless \a action returns
+         * \c true for some triangulation that is passed to it.
+         *
          * If a progress tracker is passed, then the exploration of
          * triangulations will take place in a new thread and this
          * routine will return immediately.
@@ -1211,7 +1222,6 @@ class REGINA_API Triangulation<3> :
          * protected by a mutex (i.e., different threads will never be
          * calling \a action at the same time).
          *
-         * If \a height is negative, then this routine will do nothing.
          * If no progress tracker was passed then it will immediately return
          * \c false; otherwise the progress tracker will immediately be
          * marked as finished.
@@ -1228,8 +1238,8 @@ class REGINA_API Triangulation<3> :
          * \ifacespython Not present.
          *
          * @param height the maximum number of \e additional tetrahedra to
-         * allow, beyond the number of tetrahedra originally present in the
-         * triangulation.
+         * allow beyond the number of tetrahedra originally present in the
+         * triangulation, or a negative number if this should not be bounded.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will

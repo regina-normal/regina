@@ -273,6 +273,10 @@ Version 5.2  [ 29 September, 2017 ]
               boundary curves for knot complements.
             - New deprecated routine fourOneMove(), added for completeness.
               Use the new pachner() routines instead.
+            - When retriangulation() or simplifyExhaustive() is given a
+              negative height, it now puts no limit on the number of
+              additional tetrahedra (instead of doing nothing).
+              This is a backward-incompatible change in behaviour.
         Class Triangulation<2>:
             - New deprecated routines threeOneMove() and twoTwoMove(),
               added for completeness.  Use the new pachner() routines instead.

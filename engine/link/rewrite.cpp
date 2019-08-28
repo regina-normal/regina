@@ -33,6 +33,7 @@
 #include "link/link.h"
 #include "progress/progresstracker.h"
 #include <condition_variable>
+#include <limits>
 #include <mutex>
 #include <queue>
 #include <map>
@@ -495,14 +496,15 @@ namespace {
         if (tracker)
             tracker->newStage("Exploring diagrams");
 
-        if (height < 0 || link.countComponents() != 1) {
+        if (link.countComponents() != 1) {
             if (tracker)
                 tracker->setFinished();
             return false;
         }
 
         if (nThreads <= 1) {
-            LinkBFS<false> bfs(link.size() + height, action);
+            LinkBFS<false> bfs((height >= 0 ? link.size() + height :
+                std::numeric_limits<std::size_t>::max()), action);
             if (bfs.seed(link)) {
                 if (tracker)
                     tracker->setFinished();
@@ -513,7 +515,8 @@ namespace {
                 tracker->setFinished();
             return bfs.done();
         } else {
-            LinkBFS<true> bfs(link.size() + height, action);
+            LinkBFS<true> bfs((height >= 0 ? link.size() + height :
+                std::numeric_limits<std::size_t>::max()), action);
             if (bfs.seed(link)) {
                 if (tracker)
                     tracker->setFinished();

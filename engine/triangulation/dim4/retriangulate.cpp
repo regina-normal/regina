@@ -33,6 +33,7 @@
 #include "progress/progresstracker.h"
 #include "triangulation/dim4.h"
 #include <condition_variable>
+#include <limits>
 #include <mutex>
 #include <queue>
 #include <set>
@@ -337,14 +338,9 @@ namespace {
         if (tracker)
             tracker->newStage("Exploring triangulations");
 
-        if (height < 0) {
-            if (tracker)
-                tracker->setFinished();
-            return false;
-        }
-
         if (nThreads <= 1) {
-            TriBFS<false> bfs(tri.size() + height, action);
+            TriBFS<false> bfs((height >= 0 ? tri.size() + height :
+                std::numeric_limits<std::size_t>::max()), action);
             if (bfs.seed(tri)) {
                 if (tracker)
                     tracker->setFinished();
@@ -355,7 +351,8 @@ namespace {
                 tracker->setFinished();
             return bfs.done();
         } else {
-            TriBFS<true> bfs(tri.size() + height, action);
+            TriBFS<true> bfs((height >= 0 ? tri.size() + height :
+                std::numeric_limits<std::size_t>::max()), action);
             if (bfs.seed(tri)) {
                 if (tracker)
                     tracker->setFinished();

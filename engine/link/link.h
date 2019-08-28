@@ -1586,6 +1586,13 @@ class REGINA_API Link : public Packet {
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
+         * If \a height is negative, then there will be \e no bound on
+         * the number of additional crossings.  This means that the
+         * routine will not terminate until a simpler diagram is found.
+         * If no simpler diagram exists then the only way to terminate this
+         * function is to cancel the operation via a progress tracker
+         * (read on for details).
+         *
          * If you want a \e fast simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
          * is that, for very stubborn knot diagrams where intelligentSimplify()
@@ -1609,15 +1616,14 @@ class REGINA_API Link : public Packet {
          * If this routine is unable to simplify the knot diagram, then
          * this knot diagram will not be changed.
          *
-         * If \a height is negative, or if this link does not have
-         * precisely one component, then this routine will do nothing.
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
+         * If this link does not have precisely one component, then this
+         * routine will do nothing.  If no progress tracker was passed then
+         * it will immediately return \c false; otherwise the progress tracker
+         * will immediately be marked as finished.
          *
          * @param height the maximum number of \e additional crossings to
-         * allow, beyond the number of crossings originally present in this
-         * diagram.
+         * allow beyond the number of crossings originally present in this
+         * diagram, or a negative number if this should not be bounded.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
@@ -1685,6 +1691,11 @@ class REGINA_API Link : public Packet {
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
+         * If \a height is negative, then there will be \e no bound on
+         * the number of additional crossings.  This means that the
+         * routine will <i>never terminate</i>, unless \a action returns
+         * \c true for some knot diagram that is passed to it.
+         *
          * If a progress tracker is passed, then the exploration of
          * knot diagrams will take place in a new thread and this
          * routine will return immediately.
@@ -1698,11 +1709,10 @@ class REGINA_API Link : public Packet {
          * protected by a mutex (i.e., different threads will never be
          * calling \a action at the same time).
          *
-         * If \a height is negative, or if this link does not have
-         * precisely one component, then this routine will do nothing.
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
+         * If this link does not have precisely one component, then this
+         * routine will do nothing.  If no progress tracker was passed then
+         * it will immediately return \c false; otherwise the progress tracker
+         * will immediately be marked as finished.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
@@ -1714,8 +1724,8 @@ class REGINA_API Link : public Packet {
          * \ifacespython Not present.
          *
          * @param height the maximum number of \e additional crossings to
-         * allow, beyond the number of crossings originally present in this
-         * knot diagram.
+         * allow beyond the number of crossings originally present in this
+         * knot diagram, or a negative number if this should not be bounded.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
