@@ -338,7 +338,11 @@ IF (NOT DISABLE_PYTHON)
     # Check the python versions.
     MESSAGE (STATUS "Python interpreter: ${PYTHON_VERSION_STRING}")
     MESSAGE (STATUS "Python libraries: ${PYTHONLIBS_VERSION_STRING}")
-    IF (NOT ${PYTHONLIBS_VERSION_STRING} STREQUAL ${PYTHON_VERSION_STRING})
+
+    string(FIND ${PYTHONLIBS_VERSION_STRING}
+      "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH}"
+      _python_version_match)
+    IF (NOT "${_python_version_match}" EQUAL 0)
       MESSAGE(FATAL_ERROR "Python version mismatch.")
     ENDIF ()
 
