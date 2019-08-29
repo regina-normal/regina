@@ -43,6 +43,8 @@
 
 namespace regina {
 
+template <class T> class SafePtr;
+
 /**
  * \weakgroup utilities
  * @{
@@ -103,7 +105,7 @@ protected:
     SafePointeeBase();
 
 private:
-    template<class U> friend class SafePtr;
+    template<class U> friend class regina::SafePtr;
 
     std::atomic<int> refCount_;
         /**< Counts how many SafePtr are pointing to this object. */
