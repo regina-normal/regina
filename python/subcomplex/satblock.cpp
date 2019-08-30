@@ -71,7 +71,11 @@ void addSatBlock(pybind11::module& m) {
         .def("writeAbbr", [](const SatBlock& b, bool tex) {
             b.writeAbbr(std::cout, tex);
         }, pybind11::arg("tex") = false)
-        .def(pybind11::self < pybind11::self)
+        // We cannot bind the < operator in the normal way:
+        // see https://github.com/pybind/pybind11/issues/1487 for details.
+        .def("__lt__", [](const SatBlock& lhs, const SatBlock& rhs) {
+            return lhs < rhs;
+        })
         .def_static("isBlock", [](const SatAnnulus& a) {
             SatBlock::TetList avoidTets;
             return SatBlock::isBlock(a, avoidTets);
