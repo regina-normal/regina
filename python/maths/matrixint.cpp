@@ -72,33 +72,62 @@ void addMatrixInt(pybind11::module& m) {
                 const regina::Integer& value){
             m.entry(row, col) = value;
         })
-        .def("isIdentity", &MatrixInt::isIdentity<>)
-        .def("isZero", &MatrixInt::isZero<>)
+        // The C-style casts below are to avoid a compile error under gcc7
+        // (but not gcc8), where the compiler cannot determine the type of a
+        // template member function.
+        .def("isIdentity",
+            (bool (MatrixInt::*)() const)
+            &MatrixInt::isIdentity<>)
+        .def("isZero",
+            (bool (MatrixInt::*)() const)
+            &MatrixInt::isZero<>)
         .def("swapRows", &MatrixInt::swapRows)
         .def("swapColumns", &MatrixInt::swapColumns)
-        .def_static("identity", &MatrixInt::identity<>)
-        .def("makeIdentity", &MatrixInt::makeIdentity<>)
+        .def_static("identity",
+            (MatrixInt (*)(unsigned long))
+            &MatrixInt::identity<>)
+        .def("makeIdentity",
+            (void (MatrixInt::*)())
+            &MatrixInt::makeIdentity<>)
         .def("addRow",
-            overload_cast<unsigned long, unsigned long>(
-            &MatrixInt::addRow<>))
+            (void (MatrixInt::*)(unsigned long, unsigned long))
+            &MatrixInt::addRow<>)
         .def("addRow",
-            overload_cast<unsigned long, unsigned long, regina::Integer>(
-            &MatrixInt::addRow<>))
+            (void (MatrixInt::*)(unsigned long, unsigned long, regina::Integer))
+            &MatrixInt::addRow<>)
         .def("addCol",
-            overload_cast<unsigned long, unsigned long>(
-            &MatrixInt::addCol<>))
+            (void (MatrixInt::*)(unsigned long, unsigned long))
+            &MatrixInt::addCol<>)
         .def("addCol",
-            overload_cast<unsigned long, unsigned long, regina::Integer>(
-            &MatrixInt::addCol<>))
-        .def("multRow", &MatrixInt::multRow<>)
-        .def("multCol", &MatrixInt::multCol<>)
-        .def("det", &MatrixInt::det<>)
-        .def("divRowExact", &MatrixInt::divRowExact<>)
-        .def("divColExact", &MatrixInt::divColExact<>)
-        .def("gcdRow", &MatrixInt::gcdRow<>)
-        .def("gcdCol", &MatrixInt::gcdCol<>)
-        .def("reduceRow", &MatrixInt::reduceRow<>)
-        .def("reduceCol", &MatrixInt::reduceCol<>)
+            (void (MatrixInt::*)(unsigned long, unsigned long, regina::Integer))
+            &MatrixInt::addCol<>)
+        .def("multRow",
+            (void (MatrixInt::*)(unsigned long, regina::Integer))
+            &MatrixInt::multRow<>)
+        .def("multCol",
+            (void (MatrixInt::*)(unsigned long, regina::Integer))
+            &MatrixInt::multCol<>)
+        .def("det",
+            (regina::Integer (MatrixInt::*)() const)
+            &MatrixInt::det<>)
+        .def("divRowExact",
+            (void (MatrixInt::*)(unsigned long, const regina::Integer&))
+            &MatrixInt::divRowExact<>)
+        .def("divColExact",
+            (void (MatrixInt::*)(unsigned long, const regina::Integer&))
+            &MatrixInt::divColExact<>)
+        .def("gcdRow",
+            (regina::Integer (MatrixInt::*)(unsigned long))
+            &MatrixInt::gcdRow<>)
+        .def("gcdCol",
+            (regina::Integer (MatrixInt::*)(unsigned long))
+            &MatrixInt::gcdCol<>)
+        .def("reduceRow",
+            (void (MatrixInt::*)(unsigned long))
+            &MatrixInt::reduceRow<>)
+        .def("reduceCol",
+            (void (MatrixInt::*)(unsigned long))
+            &MatrixInt::reduceCol<>)
         .def("__mul__", [](const MatrixInt& m1, const MatrixInt& m2){
             return m1 * m2;
         })
