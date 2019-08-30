@@ -40,6 +40,7 @@
 #include <QKeyEvent>
 #include <QKeySequence>
 #include <QPalette>
+#include <QtGlobal> // For QT_VERSION
 
 #define COMMAND_EDIT_DEFAULT_SPACES_PER_TAB 4
 
@@ -68,7 +69,11 @@ bool CommandEdit::event(QEvent* event) {
             int start, end;
             if (hasSelectedText()) {
                 start = selectionStart();
-                end = selectionEnd();
+#if QT_VERSION >= 0x051000
+                end = selectionEnd(); // Introduced in Qt 5.10.
+#else
+                end = start + selectedText().length();
+#endif
             } else
                 start = end = cursorPosition();
 
