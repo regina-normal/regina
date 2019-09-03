@@ -236,6 +236,9 @@ class REGINA_API GlobalDirs {
                 const std::string& pythonModuleDir,
                 const std::string& censusDir = std::string());
 
+        // Make this class non-constructible.
+        GlobalDirs() = delete;
+
     private:
         static std::string home_;
             /**< Regina's primary home directory. */

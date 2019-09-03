@@ -4,7 +4,7 @@
 # Copyright (c) 2015-2018, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Provides tests for the wrapping of Packet subclasses through SafeHeldType
+# Provides tests for the wrapping of Packet subclasses through SafePtr
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -31,19 +31,25 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-print
-print "-----------------------------------------------------------"
-print "Basic:"
-print
+# NOTE: Since the move to pybind11 and Packet::safeDelete(), python references
+# to packets never expire.  Therefore we should never raise any exceptions.
+# in this test.
 
-print Example3.poincareHomologySphere().isoSig()
-print Text("Hello World")
-print Text("Hello World").text()
+from __future__ import print_function
 
-print
-print "-----------------------------------------------------------"
-print "Basic container tests:"
-print
+print()
+print("-----------------------------------------------------------")
+print("Basic:")
+print()
+
+print(Example3.poincareHomologySphere().isoSig())
+print(Text("Hello World"))
+print(Text("Hello World").text())
+
+print()
+print("-----------------------------------------------------------")
+print("Basic container tests:")
+print()
 
 t1 = Triangulation3()
 t2 = Example3.poincareHomologySphere()
@@ -55,98 +61,98 @@ t = Text()
 c = Container()
 c.insertChildFirst(t1)
 
-print c.countChildren()
+print(c.countChildren())
 
-print t1.isoSig()
+print(t1.isoSig())
 t1.newTetrahedron()
 
-print c.firstChild()
-print c.firstChild().isoSig()
+print(c.firstChild())
+print(c.firstChild().isoSig())
 
 t1 = None
 
-print c.firstChild().isoSig()
+print(c.firstChild().isoSig())
 
 temp = c.lastChild()
 
 temp.newTetrahedron()
 
-print temp.isoSig()
+print(temp.isoSig())
 
-print
-print "-----------------------------------------------------------"
-print "Erasing container:"
-print
+print()
+print("-----------------------------------------------------------")
+print("Erasing container:")
+print()
 
 c = None
 
 try:
-    print temp.isoSig()
+    print(temp.isoSig())
 except RuntimeError:
-    print "Got exception"
+    print("Got exception")
 
-print
-print "-----------------------------------------------------------"
-print "Nested tests:"
-print
+print()
+print("-----------------------------------------------------------")
+print("Nested tests:")
+print()
 
 t2.insertChildFirst(t3)
 t2.insertChildFirst(p)
 p.insertChildLast(t)
 t.setText("Hello World")
 
-print t.text()
+print(t.text())
 
 p.lastChild().setText("Text set")
 
 l = p.firstChild()
 
-print l.text()
+print(l.text())
 
 t2.insertChildAfter(Text("New"), t3)
 
-print t2.countChildren()
-print t2.countDescendants()
+print(t2.countChildren())
+print(t2.countDescendants())
 
 m = l.root()
 
-print m == t2
+print(m == t2)
 
-print m.isoSig()
+print(m.isoSig())
 
 m = None
 
-print p.isNull()
+print(p.isNull())
 
-print p.totalTreeSize()
+print(p.totalTreeSize())
 
 it = t2
 
 while it:
-    print it
+    print(it)
     it = it.nextTreePacket()
 
 t2 = None
 
-print
-print "Erase nested:"
-print "-----------------------------------------------------------"
-print
+print()
+print("Erase nested:")
+print("-----------------------------------------------------------")
+print()
 
 try:
-    print l
+    print(l)
 except RuntimeError:
-    print "Got exception"
+    print("Got exception")
 
 try:
-    print t3
+    print(t3)
 except RuntimeError:
-    print "Got exception"
+    print("Got exception")
 
-print
-print "Make orphan:"
-print "-----------------------------------------------------------"
-print
+print()
+print("Make orphan:")
+print("-----------------------------------------------------------")
+print()
 
 d1 = Triangulation3(); d1.newTetrahedron()
 d2 = Triangulation3(); d2.newTetrahedron(); d2.newTetrahedron()
@@ -154,20 +160,20 @@ d3 = Triangulation3(); d3.newTetrahedron(); d3.newTetrahedron(); d3.newTetrahedr
 d1.insertChildLast(d2)
 d2.insertChildLast(d3)
 
-print d1
-print d2
-print d3
+print(d1)
+print(d2)
+print(d3)
 
 d2.makeOrphan()
-print d1
-print d2
-print d3
+print(d1)
+print(d2)
+print(d3)
 
 try:
     d2 = None
-    print d1
-    print d2
-    print d3
+    print(d1)
+    print(d2)
+    print(d3)
 except RuntimeError:
-    print "Got exception"
+    print("Got exception")
 

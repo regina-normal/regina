@@ -41,13 +41,12 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/facenumbering.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
 #include <cassert>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace detail {
@@ -71,16 +70,6 @@ template <int> class TriangulationBase;
  */
 template <int dim, int subdim>
 class SimplexFaces {
-    public:
-        /**
-         * Explicitly disable the copy constructor.
-         */
-        SimplexFaces(const SimplexFaces&) = delete;
-        /**
-         * Explicitly disable the assignment operator.
-         */
-        SimplexFaces& operator = (const SimplexFaces&) = delete;
-
     protected:
         Face<dim, subdim>* face_[FaceNumbering<dim, subdim>::nFaces];
             /**< The faces of the underlying triangulation that form the
@@ -115,6 +104,10 @@ class SimplexFaces {
          */
         bool sameDegrees(const SimplexFaces<dim, subdim>& other,
             Perm<dim + 1> p) const;
+
+        // Make this class non-copyable.
+        SimplexFaces(const SimplexFaces&) = delete;
+        SimplexFaces& operator = (const SimplexFaces&) = delete;
 };
 
 /**
@@ -180,8 +173,7 @@ class SimplexBase :
         public MarkedElement,
         public Output<SimplexBase<dim>>,
         protected SimplexFacesSuite<dim, dim-1>,
-        public alias::FaceOfSimplex<SimplexBase<dim>, dim>,
-        public boost::noncopyable {
+        public alias::FaceOfSimplex<SimplexBase<dim>, dim> {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
     public:
         typedef typename IntOfMinSize<(dim / 8) + 1>::utype FacetMask;
@@ -600,6 +592,10 @@ class SimplexBase :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        // Make this class non-copyable.
+        SimplexBase(const SimplexBase&) = delete;
+        SimplexBase& operator = (const SimplexBase&) = delete;
 
     protected:
         /**

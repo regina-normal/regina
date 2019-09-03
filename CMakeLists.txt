@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 2.8.11)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.1)
 PROJECT (regina)
 
 # Let the user override the package name.
@@ -121,6 +121,19 @@ ELSE(PACKAGING_MODE)
   SET(REGINA_MANDATORY_MPI FALSE)
 ENDIF(PACKAGING_MODE)
 
+# Options that indicate how python is shipped.
+IF(NOT PYTHON_CORE_IN_ZIP)
+  SET (PYTHON_CORE_IN_ZIP OFF CACHE STRING
+    "Indicates that Regina ships its own Python, with the core Python libraries in pythonXY.zip."
+    FORCE)
+ENDIF(NOT PYTHON_CORE_IN_ZIP)
+
+# The iOS build of Regina links the python module directly into the GUI,
+# and there is a flag in regina-config.h to indicate this.
+# Such a configuration is not, however, supported by regina's cmake build
+# system, and so we do not allow cmake users to enable it.
+SET (PYTHON_STATIC_LINK OFF)
+
 # For pretty logging of optional features at the end of the cmake run:
 INCLUDE(MacroLogFeature)
 
@@ -140,32 +153,18 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   SET(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-# C++11 requirements
+# Make sure we have std::thread (which has in the past been missing on windows).
 INCLUDE(CheckCXX11Features)
 SET(HAVE_CXX11_FEATURES TRUE)
-NEED_CXX11_FEATURE("auto")
-NEED_CXX11_FEATURE("constexpr")
-NEED_CXX11_FEATURE("long_long")
-NEED_CXX11_FEATURE("nullptr")
-NEED_CXX11_FEATURE("rvalue_references")
-NEED_CXX11_FEATURE("static_assert")
-NEED_CXX11_FEATURE("stdexceptionptr")
 NEED_CXX11_FEATURE("stdthread")
-NEED_CXX11_FEATURE("variadic_templates")
 IF(NOT HAVE_CXX11_FEATURES)
-  MESSAGE(FATAL_ERROR "Regina requires full C++11 support to compile.")
+  MESSAGE(FATAL_ERROR "Regina requires full C++11 support, including std::thread, to compile.")
 ENDIF()
 
-# C++14 partial requirements
-INCLUDE(CheckCXX14Features)
-SET(HAVE_CXX14_FEATURES TRUE)
-NEED_CXX14_FEATURE("deprecated")
-NEED_CXX14_FEATURE("deprecated_typedef")
-NEED_CXX14_FEATURE("deprecated_using")
-IF(NOT HAVE_CXX14_FEATURES)
-  MESSAGE(FATAL_ERROR "Regina requires partial C++14 support to compile.")
-ENDIF()
-SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${CXX14_SWITCH}")
+# Make everything use C++14 (or later).
+SET(CMAKE_CXX_STANDARD 14)
+SET(CMAKE_CXX_STANDARD_REQUIRED YES)
+SET(CMAKE_CXX_EXTENSIONS OFF)
 
 # Regina's own cmake scripts:
 INCLUDE( ReginaMacros )
@@ -243,18 +242,19 @@ if(NOT LANGINFO_FOUND)
   MESSAGE(WARNING "langinfo not found: UTF-8 will be used always, and the locale-specific encoding will be ignored.")
 endif(NOT LANGINFO_FOUND)
 
-IF(NOT USE_BOOST_INT128)
-  SET (USE_BOOST_INT128 OFF CACHE STRING
-    "Use boost's compile-time 128-bit integer detection, instead of explicitly testing for 128-bit integers here in cmake."
-    FORCE)
-ENDIF(NOT USE_BOOST_INT128)
-
 CHECK_CXX_SOURCE_COMPILES("
   #include <stdint.h>
   int128_t x;
   uint128_t y;
   int main() { return 0; }"
   INTERNAL_INT128_T_FOUND )
+
+CHECK_CXX_SOURCE_COMPILES("
+  #include <stdint.h>
+  __int128 x;
+  __uint128 y;
+  int main() { return 0; }"
+  INTERNAL___INT128_FOUND )
 
 CHECK_CXX_SOURCE_COMPILES("
   #include <stdint.h>
@@ -321,54 +321,44 @@ MACRO_LOG_FEATURE(JANSSON_FOUND
   "http://www.digip.org/jansson/"
   TRUE)
 
-IF (DISABLE_PYTHON)
-  MESSAGE (STATUS "Searching for Boost with no python component")
-  FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams)
-ELSE (DISABLE_PYTHON)
-  MESSAGE (STATUS "Searching for Boost using python27 component")
-  FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python27)
-  IF (Boost_FOUND)
-    SET (Boost_PYTHON_LIBRARY ${Boost_PYTHON27_LIBRARY})
-  ELSE (Boost_FOUND)
-    MESSAGE (STATUS "Searching for Boost using python component")
-    FIND_PACKAGE(Boost 1.55 COMPONENTS iostreams python)
-  ENDIF (Boost_FOUND)
-ENDIF (DISABLE_PYTHON)
-
+FIND_PACKAGE(Boost 1.55)
 INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
 MACRO_LOG_FEATURE(Boost_FOUND
   "Boost (>= 1.55)"
-  "Essential: C++ components (iostreams, python)"
+  "Essential: C++ components (headers only)"
   "http://www.boost.org/"
   TRUE)
 
-IF (Boost_FOUND)
-  SET (OLD_INCLUDES ${CMAKE_REQUIRED_INCLUDES})
-  SET (OLD_LIBRARIES ${CMAKE_REQUIRED_LIBRARIES})
-  SET (CMAKE_REQUIRED_INCLUDES ${Boost_INCLUDE_DIR})
-  SET (CMAKE_REQUIRED_LIBRARIES ${Boost_IOSTREAMS_LIBRARY})
-  # Ensure that boost.iostream was built against zlib.
-  # If not, we will display the error message at the very end, after
-  # MACRO_DISPLAY_FEATURE_LOG().
-  CHECK_CXX_SOURCE_COMPILES("
-    #include <boost/iostreams/filtering_streambuf.hpp>
-    #include <boost/iostreams/filter/gzip.hpp>
+IF (NOT DISABLE_PYTHON)
+  MESSAGE (STATUS "Searching for a Python installation")
+  FIND_PACKAGE(PythonInterp)
+  FIND_PACKAGE(PythonLibs)
 
-    int main() {
-        boost::iostreams::filtering_streambuf<boost::iostreams::input> in;
-        in.push(boost::iostreams::gzip_decompressor());
-        return 0;
-    }"
-    BOOST_IOSTREAMS_ZLIB_FOUND)
-  SET (CMAKE_REQUIRED_INCLUDES ${OLD_INCLUDES})
-  SET (CMAKE_REQUIRED_LIBRARIES ${OLD_LIBRARIES})
+  IF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+    # Check the python versions.
+    MESSAGE (STATUS "Python interpreter: ${PYTHON_VERSION_STRING}")
+    MESSAGE (STATUS "Python libraries: ${PYTHONLIBS_VERSION_STRING}")
 
-  IF(NOT REGINA_BOOST_DO_NOT_FIX_CONVERTERS)
-    SET (REGINA_BOOST_DO_NOT_FIX_CONVERTERS OFF CACHE STRING
-      "Do not work around the pointer registration bug from Boost 1.60.  You should set this if you are compiling against a patched version of Boost 1.60."
-      FORCE)
-  ENDIF(NOT REGINA_BOOST_DO_NOT_FIX_CONVERTERS)
-ENDIF (Boost_FOUND)
+    string(FIND ${PYTHONLIBS_VERSION_STRING}
+      "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH}"
+      _python_version_match)
+    IF (NOT "${_python_version_match}" EQUAL 0)
+      MESSAGE(FATAL_ERROR "Python version mismatch.")
+    ENDIF ()
+
+    IF (${PYTHON_VERSION_MAJOR} EQUAL 2)
+      IF (${PYTHON_VERSION_MINOR} LESS 6)
+        MESSAGE(FATAL_ERROR "For Python 2.x, Regina needs Python >= 2.6.")
+      ENDIF ()
+    ELSEIF (${PYTHON_VERSION_MAJOR} EQUAL 3)
+      IF (${PYTHON_VERSION_MINOR} LESS 1)
+        MESSAGE(FATAL_ERROR "For Python 3.x, Regina needs Python >= 3.1.")
+      ENDIF ()
+    ELSE ()
+      MESSAGE(FATAL_ERROR "Unknown Python major version: ${PYTHON_VERSION_MAJOR}")
+    ENDIF ()
+  ENDIF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+ENDIF (NOT DISABLE_PYTHON)
 
 FIND_PACKAGE(PkgConfig)
 IF(NOT PKG_CONFIG_FOUND)
@@ -476,12 +466,7 @@ else ()
   SET (REGINA_PYTHON_EXTENSION_NONSTANDARD FALSE)
 endif ()
 
-IF(NOT DISABLE_PYTHON)
-  FIND_PACKAGE(PythonInterp)
-  FIND_PACKAGE(PythonLibs)
-ENDIF(NOT DISABLE_PYTHON)
-
-IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+IF(PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   # We can support python.
 
   # Find the site-packages location in which the XDG build needs to put
@@ -498,12 +483,10 @@ IF(Boost_FOUND AND PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   ENDIF ()
 
   ADD_SUBDIRECTORY(python)
-  SET(BOOST_PYTHON_FOUND TRUE)
+  SET(BUILD_PYTHON_BINDINGS TRUE)
 
   MESSAGE(STATUS "Python bindings enabled")
-ELSEIF(Boost_FOUND)
-  # Boost itself is mandatory - if it was not found then we have
-  # bigger problems.
+ELSEIF(PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
   MESSAGE(WARNING "Could not find Python interpreter and/or development files: Python bindings disabled.")
 ENDIF()
 MACRO_LOG_FEATURE(PYTHONINTERP_FOUND
@@ -592,6 +575,8 @@ ELSE(DISABLE_GUI)
         string(REGEX REPLACE "\n" "" _TMP_STR "${_TMP_STR}")
         set(LIBGVC_LIBDIR "${_TMP_STR}" CACHE INTERNAL "")
       ENDIF(WIN32)
+    ELSE(LIBGVC_FOUND)
+      SET(GRAPHVIZ_TYPE None)
     ENDIF(LIBGVC_FOUND)
   ENDIF(APPLE AND GRAPHVIZ_FRAMEWORK_PATH)
   MACRO_LOG_FEATURE(LIBGVC_FOUND
@@ -659,12 +644,6 @@ CONFIGURE_FILE (
 )
 
 MACRO_DISPLAY_FEATURE_LOG()
-
-IF (Boost_FOUND AND NOT BOOST_IOSTREAMS_ZLIB_FOUND)
-  MESSAGE(FATAL_ERROR
-"Your boost.iostreams library appears to have been built without zlib/gzip support.  Regina needs this functionality.
-If you built boost yourself, make sure that you built it with the libz development files installed.  You should see the line '- zlib : yes' appear in boost's configuration checks, at the very beginning of the boost build.")
-ENDIF (Boost_FOUND AND NOT BOOST_IOSTREAMS_ZLIB_FOUND)
 
 # CPack configuration to allow the developers to build a source tarball:
 set(CPACK_PACKAGE_VERSION_MAJOR ${PACKAGE_VERSION_MAJOR})

@@ -103,7 +103,7 @@ struct REGINA_API DiscType {
      *
      * @param cloneMe the disc type to clone.
      */
-    DiscType(const DiscType& cloneMe);
+    DiscType(const DiscType& cloneMe) = default;
 
     /**
      * Sets this to a copy of the given disc type.
@@ -111,7 +111,7 @@ struct REGINA_API DiscType {
      * @param cloneMe the disc type to clone.
      * @return a reference to this disc type.
      */
-    DiscType& operator = (const DiscType& cloneMe);
+    DiscType& operator = (const DiscType& cloneMe) = default;
     /**
      * Determines if this and the given disc type are identical.
      *
@@ -171,16 +171,6 @@ inline DiscType::DiscType() : tetIndex(0), type(-1) {
 
 inline DiscType::DiscType(size_t newTetIndex, int newType) :
         tetIndex(newTetIndex), type(newType) {
-}
-
-inline DiscType::DiscType(const DiscType& cloneMe) :
-        tetIndex(cloneMe.tetIndex), type(cloneMe.type) {
-}
-
-inline DiscType& DiscType::operator = (const DiscType& cloneMe) {
-    tetIndex = cloneMe.tetIndex;
-    type = cloneMe.type;
-    return *this;
 }
 
 inline bool DiscType::operator == (const DiscType& compare) const {

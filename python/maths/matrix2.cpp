@@ -30,9 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "maths/matrix2.h"
 #include "../helpers.h"
+
+using pybind11::overload_cast;
 
 namespace regina {
     /**
@@ -50,20 +53,16 @@ namespace regina {
             }
 
             long getItem(int whichCol) {
-                if (whichCol < 0 || whichCol > 1) {
-                    PyErr_SetString(PyExc_IndexError,
+                if (whichCol < 0 || whichCol > 1)
+                    throw pybind11::index_error(
                         "Matrix2 column index out of range");
-                    ::boost::python::throw_error_already_set();
-                }
                 return row[whichCol];
             }
 
             void setItem(int whichCol, long value) {
-                if (whichCol < 0 || whichCol > 1) {
-                    PyErr_SetString(PyExc_IndexError,
+                if (whichCol < 0 || whichCol > 1)
+                    throw pybind11::index_error(
                         "Matrix2 column index out of range");
-                    ::boost::python::throw_error_already_set();
-                }
                 row[whichCol] = value;
             }
 
@@ -77,77 +76,59 @@ namespace regina {
     };
 }
 
-namespace {
-    /**
-     * A trivial routine for returning the size of a 2-by-2 matrix.
-     */
-    template <class T>
-    long size2(const T&) {
-        return 2;
-    }
-
-    /**
-     * Return a new object for accessing the given row of the given matrix.
-     */
-    regina::Matrix2Row* Matrix2_getRow(regina::Matrix2& m, int whichRow) {
-        if (whichRow < 0 || whichRow > 1) {
-            PyErr_SetString(PyExc_IndexError,
-                "Matrix2 row index out of range");
-            ::boost::python::throw_error_already_set();
-        }
-        return new regina::Matrix2Row(m, whichRow);
-    }
-}
-
-using namespace boost::python;
 using regina::Matrix2;
 using regina::Matrix2Row;
 
-namespace {
-    bool (*simpler1)(const Matrix2&, const Matrix2&) = &regina::simpler;
-    bool (*simpler2)(const Matrix2&, const Matrix2&,
-        const Matrix2&, const Matrix2&) = &regina::simpler;
-}
-
-void addMatrix2() {
-    class_<Matrix2Row>("Matrix2Row", ::boost::python::no_init)
+void addMatrix2(pybind11::module& m) {
+    auto c1 = pybind11::class_<Matrix2Row>(m, "Matrix2Row")
         .def("__getitem__", &Matrix2Row::getItem)
         .def("__setitem__", &Matrix2Row::setItem)
-        .def("__len__", size2<Matrix2Row>)
-        .def(regina::python::add_eq_operators())
+        .def("__len__", [](const Matrix2Row&) {
+            return 2;
+        })
         ;
+    regina::python::add_eq_operators(c1);
 
-    class_<Matrix2>("Matrix2")
-        .def(init<const Matrix2&>())
-        .def(init<long, long, long, long>())
-        .def("__getitem__", Matrix2_getRow,
-            return_value_policy<manage_new_object,
-            with_custodian_and_ward_postcall<0, 1> >())
-        .def("__len__", &size2<regina::Matrix2>)
-        .def(self * self)
-        .def(self * long())
-        .def(self + self)
-        .def(self - self)
-        .def(- self)
+    auto c2 = pybind11::class_<Matrix2>(m, "Matrix2")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const Matrix2&>())
+        .def(pybind11::init<long, long, long, long>())
+        .def("__getitem__", [](Matrix2& m, int row) {
+            if (row < 0 || row > 1)
+                throw pybind11::index_error(
+                    "Matrix2 row index out of range");
+            return new Matrix2Row(m, row);
+        }, pybind11::keep_alive<0, 1>())
+        .def("__len__", [](const Matrix2&) {
+            return 2;
+        })
+        .def(pybind11::self * pybind11::self)
+        .def(pybind11::self * long())
+        .def(pybind11::self + pybind11::self)
+        .def(pybind11::self - pybind11::self)
+        .def(- pybind11::self)
         .def("transpose", &Matrix2::transpose)
         .def("inverse", &Matrix2::inverse)
-        .def(self += self)
-        .def(self -= self)
-        .def(self *= self)
-        .def(self *= long())
+        .def(pybind11::self += pybind11::self)
+        .def(pybind11::self -= pybind11::self)
+        .def(pybind11::self *= pybind11::self)
+        .def(pybind11::self *= long())
         .def("negate", &Matrix2::negate)
         .def("invert", &Matrix2::invert)
         .def("determinant", &Matrix2::determinant)
         .def("isIdentity", &Matrix2::isIdentity)
         .def("isZero", &Matrix2::isZero)
-        .def(self_ns::str(self))
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_eq_operators(c2);
+    regina::python::add_output_ostream(c2);
 
-    def("simpler", simpler1);
-    def("simpler", simpler2);
+    m.def("simpler", overload_cast<const Matrix2&, const Matrix2&>(
+        &regina::simpler));
+    m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,
+            const Matrix2&, const Matrix2&>(
+        &regina::simpler));
 
-    scope().attr("NMatrix2Row") = scope().attr("Matrix2Row");
-    scope().attr("NMatrix2") = scope().attr("Matrix2");
+    m.attr("NMatrix2Row") = m.attr("Matrix2Row");
+    m.attr("NMatrix2") = m.attr("Matrix2");
 }
 

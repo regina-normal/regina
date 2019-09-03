@@ -85,10 +85,14 @@ fi
 
 regina_engine_libs="-lregina-engine @RECONFIG_LINK_FLAGS@"
 
+if test "$echo_cflags" = "yes" -o "$echo_libs" = "yes"; then
+	echo "@CMAKE_CXX14_STANDARD_COMPILE_OPTION@"
+fi
+
 if test "$echo_cflags" = "yes"; then
 	includes="@RECONFIG_INCLUDE_FLAGS@"
 	includes="-I@INCLUDEDIR@ $includes"
-	echo "@CXX14_SWITCH@" $includes
+	echo $includes
 fi
 
 if test "$echo_libs" = "yes"; then

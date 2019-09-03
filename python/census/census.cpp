@@ -30,65 +30,82 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "census/census.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::Census;
 using regina::CensusDB;
 using regina::CensusHit;
+using regina::CensusHitIterator;
 using regina::CensusHits;
 using regina::Triangulation;
 
 namespace {
-    CensusHits* (*lookup_tri)(const Triangulation<3>&) = &Census::lookup;
-    CensusHits* (*lookup_sig)(const std::string&) = &Census::lookup;
+    // Support for iterables and iterators:
+    const CensusHit* nextHit(CensusHitIterator& it) {
+        if (*it)
+            return *it++;
+        else
+            throw pybind11::stop_iteration();
+    }
 }
 
-void addCensus() {
-    class_<CensusDB>("CensusDB",
-            init<const std::string&, const std::string&>())
-        .def("filename", &CensusDB::filename,
-            return_value_policy<copy_const_reference>())
-        .def("desc", &CensusDB::desc,
-            return_value_policy<copy_const_reference>())
+void addCensus(pybind11::module& m) {
+    auto db = pybind11::class_<CensusDB>(m, "CensusDB")
+        .def(pybind11::init<const std::string&, const std::string&>())
+        .def(pybind11::init<const CensusDB&>())
+        .def("filename", &CensusDB::filename)
+        .def("desc", &CensusDB::desc)
         .def("lookup", &CensusDB::lookup)
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_eq_operators(db);
 
-    class_<CensusHit, std::auto_ptr<CensusHit>,
-            boost::noncopyable>("CensusHit", no_init)
-        .def("name", &CensusHit::name,
-            return_value_policy<copy_const_reference>())
+    auto h = pybind11::class_<CensusHit>(m, "CensusHit")
+        .def("name", &CensusHit::name)
         .def("db", &CensusHit::db,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference)
         .def("next", &CensusHit::next,
-            return_internal_reference<>())
-        .def(regina::python::add_eq_operators())
+            pybind11::return_value_policy::reference_internal)
     ;
+    regina::python::add_eq_operators(h);
 
-    class_<CensusHits, std::auto_ptr<CensusHits>,
-            boost::noncopyable>("CensusHits", init<>())
+    auto hs = pybind11::class_<CensusHits>(m, "CensusHits")
+        .def(pybind11::init<>())
         .def("first", &CensusHits::first,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("count", &CensusHits::count)
         .def("empty", &CensusHits::empty)
-        .def(regina::python::add_eq_operators())
+        .def("begin", &CensusHits::begin)
+        .def("end", &CensusHits::end)
+        .def("__iter__", &CensusHits::begin)
     ;
+    regina::python::add_eq_operators(hs);
 
-    class_<Census, std::auto_ptr<Census>,
-            boost::noncopyable>("Census", no_init)
-        .def("lookup", lookup_tri, return_value_policy<manage_new_object>())
-        .def("lookup", lookup_sig, return_value_policy<manage_new_object>())
-        .def(regina::python::no_eq_operators())
-        .staticmethod("lookup")
+    auto it = pybind11::class_<CensusHitIterator>(m, "CensusHitIterator")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const CensusHitIterator&>())
+        .def(pybind11::init<const CensusHit*>())
+        .def("next", nextHit, // for python 2
+            pybind11::return_value_policy::reference)
+        .def("__next__", nextHit, // for python 3
+            pybind11::return_value_policy::reference)
     ;
+    regina::python::add_eq_operators(it);
 
-    scope().attr("NCensusDB") = scope().attr("CensusDB");
-    scope().attr("NCensusHit") = scope().attr("CensusHit");
-    scope().attr("NCensusHits") = scope().attr("CensusHits");
-    scope().attr("NCensus") = scope().attr("Census");
+    auto c = pybind11::class_<Census>(m, "Census")
+        .def_static("lookup",
+            overload_cast<const Triangulation<3>&>(&Census::lookup))
+        .def_static("lookup",
+            overload_cast<const std::string&>(&Census::lookup))
+    ;
+    regina::python::no_eq_operators(c);
+
+    m.attr("NCensusDB") = m.attr("CensusDB");
+    m.attr("NCensusHit") = m.attr("CensusHit");
+    m.attr("NCensusHits") = m.attr("CensusHits");
+    m.attr("NCensus") = m.attr("Census");
 }
 

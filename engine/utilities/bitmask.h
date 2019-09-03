@@ -546,8 +546,7 @@ class Bitmask1 {
          *
          * @param cloneMe the bitmask to clone.
          */
-        inline Bitmask1(const Bitmask1<T>& cloneMe) : mask(cloneMe.mask) {
-        }
+        inline Bitmask1(const Bitmask1<T>& cloneMe) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -572,10 +571,7 @@ class Bitmask1 {
          * @param other the bitmask to clone.
          * @return a reference to this bitmask.
          */
-        Bitmask1<T>& operator = (const Bitmask1<T>& other) {
-            mask = other.mask;
-            return *this;
-        }
+        Bitmask1<T>& operator = (const Bitmask1<T>& other) = default;
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but
@@ -939,9 +935,7 @@ class Bitmask2 {
          *
          * @param cloneMe the bitmask to clone.
          */
-        inline Bitmask2(const Bitmask2<T, U>& cloneMe) :
-                low(cloneMe.low), high(cloneMe.high) {
-        }
+        inline Bitmask2(const Bitmask2<T, U>& cloneMe) = default;
 
         /**
          * Sets all bits of this bitmask to \c false.
@@ -968,11 +962,7 @@ class Bitmask2 {
          * @param other the bitmask to clone.
          * @return a reference to this bitmask.
          */
-        Bitmask2<T, U>& operator = (const Bitmask2<T, U>& other) {
-            low = other.low;
-            high = other.high;
-            return *this;
-        }
+        Bitmask2<T, U>& operator = (const Bitmask2<T, U>& other) = default;
 
         /**
          * Leaves the first \a numBits bits of this bitmask intact, but

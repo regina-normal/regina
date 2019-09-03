@@ -93,7 +93,7 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
          *
          * \ifacespython Not present.
          */
-        FaceEmbedding();
+        FaceEmbedding() = default;
 
         /**
          * Creates a new object containing the given data.
@@ -111,7 +111,14 @@ class FaceEmbedding : public detail::FaceEmbeddingBase<dim, subdim> {
          *
          * @param cloneMe the object to copy.
          */
-        FaceEmbedding(const FaceEmbedding& cloneMe);
+        FaceEmbedding(const FaceEmbedding& cloneMe) = default;
+
+        /**
+         * Sets this to be a copy of the given object.
+         *
+         * @param cloneMe the object to copy.
+         */
+        FaceEmbedding& operator = (const FaceEmbedding& cloneMe) = default;
 };
 
 /**
@@ -374,19 +381,9 @@ using Pentachoron = Face<dim, 4>;
 // Inline functions for FaceEmbedding
 
 template <int dim, int subdim>
-inline FaceEmbedding<dim, subdim>::FaceEmbedding() {
-}
-
-template <int dim, int subdim>
 inline FaceEmbedding<dim, subdim>::FaceEmbedding(
         Simplex<dim>* simplex, int face) :
         detail::FaceEmbeddingBase<dim, subdim>(simplex, face) {
-}
-
-template <int dim, int subdim>
-inline FaceEmbedding<dim, subdim>::FaceEmbedding(
-        const FaceEmbedding& cloneMe) :
-        detail::FaceEmbeddingBase<dim, subdim>(cloneMe) {
 }
 
 // Inline functions for Face

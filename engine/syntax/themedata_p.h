@@ -57,7 +57,6 @@
 #include "syntax/textstyledata_p.h"
 
 #include <string>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace syntax {
@@ -65,7 +64,7 @@ namespace syntax {
 /**
  * Data container for a Theme.
  */
-class REGINA_API ThemeData : boost::noncopyable
+class REGINA_API ThemeData
 {
 public:
     static ThemeData* get(const Theme &theme);
@@ -152,6 +151,10 @@ public:
      * Returns whether the given style should be shown struck through.
      */
     bool isStrikeThrough(Theme::TextStyle style) const;
+
+    // Make this class non-copyable.
+    ThemeData(const ThemeData&) = delete;
+    ThemeData& operator = (const ThemeData&) = delete;
 
 public:
     /**

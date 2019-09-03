@@ -34,7 +34,6 @@
 #include <cctype>
 #include "split/signature.h"
 #include "triangulation/dim3.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 

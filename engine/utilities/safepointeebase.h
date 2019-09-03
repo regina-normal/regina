@@ -39,9 +39,11 @@
 #define __SAFEPOINTEEBASE_H
 #endif
 
-#include "utilities/saferemnant.h"
+#include <atomic>
 
 namespace regina {
+
+template <class T> class SafePtr;
 
 /**
  * \weakgroup utilities
@@ -50,7 +52,7 @@ namespace regina {
 
 /**
  * A base class for objects of type \a T to be referenceable by a SafePtr.
- * Such objects are referred to as pointees of SafePtr.
+ * Such objects are referred to as \e pointees of SafePtr.
  *
  * The class \a T must derive from SafePointeeBase<T>, and must implement
  * hasOwner() to indicate whether any non-SafePtr claims ownership of it.
@@ -59,7 +61,7 @@ namespace regina {
  *
  * The overhead introduced by subclassing from SafePointeeBase without using
  * the features of the accompanying smart pointer SafePtr are minimal:
- * one extra pointer that needs to be zeroed upon construction.
+ * one extra atomic integer that needs to be zeroed upon construction.
  *
  * Regina's classes that derive from SafePointeeBase do so to help with
  * python wrapping.
@@ -75,19 +77,10 @@ public:
     /**
      * Prevent derived classes from accidentally calling the copy constructor.
      * A derived class' copy constructor by default calls the protected default
-     * constructor, which it should because it sets the remnant_ to zero on
+     * constructor, which it should because it sets the refCount_ to zero on
      * the copied object.
      */
     SafePointeeBase(const SafePointeeBase &) = delete;
-
-    /**
-     * Destructor.
-     *
-     * Once this destructor is called, any SafePtr that points to this object
-     * will be aware that the object has expired and that the pointer cannot
-     * be dereferenced any longer.
-     */
-    ~SafePointeeBase();
 
     /**
      * Prevent derived classes from accidentally calling the assignment
@@ -100,6 +93,11 @@ public:
      */
     typedef T SafePointeeType;
 
+    /**
+     * Is there one or more SafePtr currently pointing to this object?
+     */
+    bool hasSafePtr() const;
+
 protected:
     /**
      * Default constructor.
@@ -107,9 +105,10 @@ protected:
     SafePointeeBase();
 
 private:
-    friend class detail::SafeRemnant<T>;
-    detail::SafeRemnant<T> *remnant_;
-        /**< Points to the corresponding persistent object. */
+    template<class U> friend class regina::SafePtr;
+
+    std::atomic<int> refCount_;
+        /**< Counts how many SafePtr are pointing to this object. */
 };
 
 /*@}*/
@@ -117,16 +116,12 @@ private:
 // Inline functions for SafePointeeBase
 
 template <class T>
-inline SafePointeeBase<T>::SafePointeeBase() : remnant_(0) {
+inline SafePointeeBase<T>::SafePointeeBase() : refCount_(0) {
 }
 
 template <class T>
-inline SafePointeeBase<T>::~SafePointeeBase() {
-    // If existing, expire the remnant. Thus, all SafePtr's pointing to
-    // this object know that they cannot be dereferenced anylonger.
-    if (remnant_) {
-        remnant_->expire();
-    }
+inline bool SafePointeeBase<T>::hasSafePtr() const {
+    return refCount_.load() > 0;
 }
 
 } // namespace regina

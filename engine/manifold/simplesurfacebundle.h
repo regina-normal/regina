@@ -91,7 +91,7 @@ class REGINA_API SimpleSurfaceBundle : public Manifold {
          *
          * @param cloneMe the surface bundle to clone.
          */
-        SimpleSurfaceBundle(const SimpleSurfaceBundle& cloneMe);
+        SimpleSurfaceBundle(const SimpleSurfaceBundle& cloneMe) = default;
         /**
          * Returns the specific type of surface bundle being represented.
          *
@@ -118,11 +118,19 @@ class REGINA_API SimpleSurfaceBundle : public Manifold {
          */
         bool operator != (const SimpleSurfaceBundle& compare) const;
 
-        virtual Triangulation<3>* construct() const;
-        AbelianGroup* homology() const;
-        bool isHyperbolic() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        /**
+         * Sets this to be a clone of the given surface bundle.
+         *
+         * @param cloneMe the surface bundle to clone.
+         */
+        SimpleSurfaceBundle& operator = (const SimpleSurfaceBundle& cloneMe) =
+            default;
+
+        Triangulation<3>* construct() const override;
+        AbelianGroup* homology() const override;
+        bool isHyperbolic() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
 /**
@@ -140,10 +148,6 @@ class REGINA_API SimpleSurfaceBundle : public Manifold {
 
 inline SimpleSurfaceBundle::SimpleSurfaceBundle(
         int newType) : type_(newType) {
-}
-inline SimpleSurfaceBundle::SimpleSurfaceBundle(
-        const SimpleSurfaceBundle& cloneMe) : Manifold(),
-        type_(cloneMe.type_) {
 }
 inline int SimpleSurfaceBundle::type() const {
     return type_;

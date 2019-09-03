@@ -1,0 +1,15 @@
+# Files to compile
+SET ( FILES engine )
+
+# Prepend folder name
+FOREACH ( SOURCE_FILE ${FILES} )
+  SET ( SOURCES ${SOURCES} core/${SOURCE_FILE})
+ENDFOREACH(SOURCE_FILE)
+SET(SOURCES ${SOURCES} PARENT_SCOPE)
+
+if (${REGINA_INSTALL_DEV})
+  INSTALL(FILES
+    engine.h
+    output.h
+    DESTINATION ${INCLUDEDIR}/core COMPONENT Development)
+endif (${REGINA_INSTALL_DEV})

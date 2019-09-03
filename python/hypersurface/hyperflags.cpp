@@ -30,69 +30,95 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "hypersurface/hyperflags.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::HyperAlg;
+using regina::HyperAlgFlags;
 using regina::HyperList;
+using regina::HyperListFlags;
 
-namespace {
-    bool (HyperList::*has_list)(const HyperList&) const = &HyperList::has;
-    bool (HyperAlg::*has_alg)(const HyperAlg&) const = &HyperAlg::has;
-    void (HyperList::*clear_list)(const HyperList&) = &HyperList::clear;
-    void (HyperAlg::*clear_alg)(const HyperAlg&) = &HyperAlg::clear;
-}
+void addHyperFlags(pybind11::module& m) {
+    pybind11::enum_<HyperListFlags>(m, "HyperListFlags")
+        .value("HS_EMBEDDED_ONLY", regina::HS_EMBEDDED_ONLY)
+        .value("HS_IMMERSED_SINGULAR", regina::HS_IMMERSED_SINGULAR)
+        .value("HS_VERTEX", regina::HS_VERTEX)
+        .value("HS_FUNDAMENTAL", regina::HS_FUNDAMENTAL)
+        .value("HS_LEGACY", regina::HS_LEGACY)
+        .value("HS_CUSTOM", regina::HS_CUSTOM)
+        .export_values()
+        ;
 
-void addHyperFlags() {
-    scope global;
-
-    class_<HyperList>("HyperList")
-        .def(init<const HyperList&>())
-        .def("has", has_list)
+    auto l = pybind11::class_<HyperList>(m, "HyperList")
+        .def(pybind11::init<>())
+        .def(pybind11::init<HyperListFlags>())
+        .def(pybind11::init<const HyperList&>())
+        .def("has", overload_cast<const HyperList&>(
+            &HyperList::has, pybind11::const_))
         .def("intValue", &HyperList::intValue)
-        .def("fromInt", &HyperList::fromInt)
-        .def(self |= self)
-        .def(self &= self)
-        .def(self ^= self)
-        .def(self | self)
-        .def(self & self)
-        .def(self ^ self)
-        .def("clear", clear_list)
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromInt")
+        .def_static("fromInt", &HyperList::fromInt)
+        .def(pybind11::self |= pybind11::self)
+        .def(pybind11::self &= pybind11::self)
+        .def(pybind11::self ^= pybind11::self)
+        .def(pybind11::self | pybind11::self)
+        .def(pybind11::self & pybind11::self)
+        .def(pybind11::self ^ pybind11::self)
+        .def("clear", overload_cast<const HyperList&>(&HyperList::clear))
+        .def("ensureOne",
+            overload_cast<HyperListFlags, HyperListFlags>(
+            &HyperList::ensureOne))
+        .def("ensureOne",
+            overload_cast<HyperListFlags, HyperListFlags, HyperListFlags>(
+            &HyperList::ensureOne))
+        .def("ensureOne",
+            overload_cast<HyperListFlags, HyperListFlags, HyperListFlags,
+                HyperListFlags>(
+            &HyperList::ensureOne))
+        ;
+    regina::python::add_eq_operators(l);
+
+    pybind11::implicitly_convertible<HyperListFlags, HyperList>();
+
+    pybind11::enum_<HyperAlgFlags>(m, "HyperAlgFlags")
+        .value("HS_ALG_DEFAULT", regina::HS_ALG_DEFAULT)
+        .value("HS_VERTEX_DD", regina::HS_VERTEX_DD)
+        .value("HS_HILBERT_PRIMAL", regina::HS_HILBERT_PRIMAL)
+        .value("HS_HILBERT_DUAL", regina::HS_HILBERT_DUAL)
+        .value("HS_ALG_LEGACY", regina::HS_ALG_LEGACY)
+        .value("HS_ALG_CUSTOM", regina::HS_ALG_CUSTOM)
+        .export_values()
         ;
 
-    global.attr("HS_EMBEDDED_ONLY") = HyperList(regina::HS_EMBEDDED_ONLY);
-    global.attr("HS_IMMERSED_SINGULAR") =
-        HyperList(regina::HS_IMMERSED_SINGULAR);
-    global.attr("HS_VERTEX") = HyperList(regina::HS_VERTEX);
-    global.attr("HS_FUNDAMENTAL") = HyperList(regina::HS_FUNDAMENTAL);
-    global.attr("HS_LEGACY") = HyperList(regina::HS_LEGACY);
-    global.attr("HS_CUSTOM") = HyperList(regina::HS_CUSTOM);
-
-    class_<HyperAlg>("HyperAlg")
-        .def(init<const HyperAlg&>())
-        .def("has", has_alg)
+    auto a = pybind11::class_<HyperAlg>(m, "HyperAlg")
+        .def(pybind11::init<>())
+        .def(pybind11::init<HyperAlgFlags>())
+        .def(pybind11::init<const HyperAlg&>())
+        .def("has", overload_cast<const HyperAlg&>(
+            &HyperAlg::has, pybind11::const_))
         .def("intValue", &HyperAlg::intValue)
-        .def("fromInt", &HyperAlg::fromInt)
-        .def(self |= self)
-        .def(self &= self)
-        .def(self ^= self)
-        .def(self | self)
-        .def(self & self)
-        .def(self ^ self)
-        .def("clear", clear_alg)
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromInt")
+        .def_static("fromInt", &HyperAlg::fromInt)
+        .def(pybind11::self |= pybind11::self)
+        .def(pybind11::self &= pybind11::self)
+        .def(pybind11::self ^= pybind11::self)
+        .def(pybind11::self | pybind11::self)
+        .def(pybind11::self & pybind11::self)
+        .def(pybind11::self ^ pybind11::self)
+        .def("clear", overload_cast<const HyperAlg&>(&HyperAlg::clear))
+        .def("ensureOne",
+            overload_cast<HyperAlgFlags, HyperAlgFlags>(
+            &HyperAlg::ensureOne))
+        .def("ensureOne",
+            overload_cast<HyperAlgFlags, HyperAlgFlags, HyperAlgFlags>(
+            &HyperAlg::ensureOne))
+        .def("ensureOne",
+            overload_cast<HyperAlgFlags, HyperAlgFlags, HyperAlgFlags,
+                HyperAlgFlags>(
+            &HyperAlg::ensureOne))
         ;
+    regina::python::add_eq_operators(a);
 
-    global.attr("HS_ALG_DEFAULT") = HyperAlg(regina::HS_ALG_DEFAULT);
-    global.attr("HS_VERTEX_DD") = HyperAlg(regina::HS_VERTEX_DD);
-    global.attr("HS_HILBERT_PRIMAL") = HyperAlg(regina::HS_HILBERT_PRIMAL);
-    global.attr("HS_HILBERT_DUAL") = HyperAlg(regina::HS_HILBERT_DUAL);
-    global.attr("HS_ALG_LEGACY") = HyperAlg(regina::HS_ALG_LEGACY);
-    global.attr("HS_ALG_CUSTOM") = HyperAlg(regina::HS_ALG_CUSTOM);
-
+    pybind11::implicitly_convertible<HyperAlgFlags, HyperAlg>();
 }

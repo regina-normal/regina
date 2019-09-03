@@ -92,11 +92,6 @@ class Example : public detail::ExampleBase<dim> {
     static_assert(! standardDim(dim),
         "The generic implementation of Example<dim> "
         "should not be used for Regina's standard dimensions.");
-
-    /**
-     * Explicitly disable the default constructor.
-     */
-    Example() = delete;
 };
 
 /*@}*/

@@ -31,7 +31,6 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-
 # Fetch the python/testsuite path in the source tree, since we will need
 # to access external files.
 import sys
@@ -57,36 +56,36 @@ suffixes = [ '', 'a', 'alpha', '.', '.0', '.01', '.0.1', '.1',
 for v in oldVersions:
 	for s in suffixes:
 		if regina.versionUsesUTF8(v + s):
-			print 'ERROR: Version ' + v + s + ' claims to use UTF-8.'
+			print('ERROR: Version ' + v + s + ' claims to use UTF-8.')
 
 for v in newVersions:
 	for s in suffixes:
 		if not regina.versionUsesUTF8(v + s):
-			print 'ERROR: Version ' + v + s + ' does not claim to use UTF-8.'
+			print('ERROR: Version ' + v + s + ' does not claim to use UTF-8.')
 
 # Load a file created by an old version of regina.  This file stores it
 # strings as LATIN1, which should be converted to UTF-8 on import.
 i18nOld = regina.open(testpath + '/i18n-latin1.rga')
 if i18nOld != None:
-	print i18nOld.label()
-	print i18nOld.text()
+	print(i18nOld.label())
+	print(i18nOld.text())
 
 # Load a version of the same file created by a newer version of Regina,
 # which stores strings directly in UTF-8.
 i18nNew = regina.open(testpath + '/i18n-utf8.rga')
 if i18nNew != None:
-	print i18nNew.label()
-	print i18nNew.text()
+	print(i18nNew.label())
+	print(i18nNew.text())
 
 # Import a triangulation from SnapPea that uses a subscript character in
 # the triangulation name.
 subscriptImport = SnapPeaTriangulation(testpath + '/O2_1.tri')
 if subscriptImport != None:
-	print subscriptImport.label()
+	print(subscriptImport.label())
 
 # Load a Regina data file with a pre-saved version of this same SnapPea
 # triangulation.
 subscriptLoad = regina.open(testpath + '/O2_1.rga')
 if subscriptLoad != None:
-	print subscriptLoad.firstChild().label()
+	print(subscriptLoad.firstChild().label())
 

@@ -131,7 +131,7 @@ void PacketChooser::packetWasRenamed(regina::Packet* renamed) {
     }
 }
 
-void PacketChooser::packetToBeDestroyed(regina::Packet* toDestroy) {
+void PacketChooser::packetToBeDestroyed(regina::PacketShell toDestroy) {
     // Just remove the item that is being destroyed.
     std::vector<regina::Packet*>::iterator it = std::find(
         packets.begin(), packets.end(), toDestroy);

@@ -41,8 +41,7 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "output.h"
-#include <boost/noncopyable.hpp>
+#include "core/output.h"
 
 namespace regina {
 
@@ -73,8 +72,7 @@ class GroupPresentation;
  * \todo Add a routine to attempt to verify validity of homomorphism.
  */
 class REGINA_API HomGroupPresentation :
-        public Output<HomGroupPresentation>,
-        public boost::noncopyable {
+        public Output<HomGroupPresentation> {
     private:
         GroupPresentation* domain_;
             /**< The domain of the homomorphism. */
@@ -365,6 +363,9 @@ class REGINA_API HomGroupPresentation :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        // Make this class non-assignable.
+        HomGroupPresentation& operator = (const HomGroupPresentation&) = delete;
 };
 
 /**

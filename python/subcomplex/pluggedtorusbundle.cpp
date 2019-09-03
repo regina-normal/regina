@@ -30,37 +30,30 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/pluggedtorusbundle.h"
 #include "subcomplex/satregion.h"
 #include "subcomplex/txicore.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::PluggedTorusBundle;
 
-void addPluggedTorusBundle() {
-    class_<PluggedTorusBundle, bases<regina::StandardTriangulation>,
-            std::auto_ptr<PluggedTorusBundle>, boost::noncopyable>
-            ("PluggedTorusBundle", no_init)
+void addPluggedTorusBundle(pybind11::module& m) {
+    pybind11::class_<PluggedTorusBundle, regina::StandardTriangulation>
+            (m, "PluggedTorusBundle")
         .def("bundle", &PluggedTorusBundle::bundle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("bundleIso", &PluggedTorusBundle::bundleIso,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("region", &PluggedTorusBundle::region,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &PluggedTorusBundle::matchingReln,
-            return_internal_reference<>())
-        .def("isPluggedTorusBundle", &PluggedTorusBundle::isPluggedTorusBundle,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isPluggedTorusBundle")
+            pybind11::return_value_policy::reference_internal)
+        .def_static("isPluggedTorusBundle",
+            &PluggedTorusBundle::isPluggedTorusBundle)
     ;
 
-    implicitly_convertible<std::auto_ptr<PluggedTorusBundle>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NPluggedTorusBundle") = scope().attr("PluggedTorusBundle");
+    m.attr("NPluggedTorusBundle") = m.attr("PluggedTorusBundle");
 }
 

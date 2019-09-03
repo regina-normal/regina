@@ -330,7 +330,7 @@ static NSMutableCharacterSet* eulerSeparators;
     [self updateSubfilters];
 }
 
-- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child inParentDestructor:(bool)d
+- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child
 {
     // Be brutal for now: just reload the entire table.
     [self updateSubfilters];

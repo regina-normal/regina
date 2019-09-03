@@ -198,10 +198,10 @@ class REGINA_API BlockedSFSTriple : public StandardTriangulation {
          */
         const Matrix2& matchingReln(int which) const;
 
-        Manifold* manifold() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
+        Manifold* manifold() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
+        void writeTextLong(std::ostream& out) const override;
 
         /**
          * Determines if the given triangulation is a blocked sequence of

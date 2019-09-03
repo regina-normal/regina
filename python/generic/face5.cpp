@@ -32,23 +32,23 @@
 
 #include "face-bindings.h"
 
-void addFace5() {
-    addFace<5, 0>("Face5_0", "FaceEmbedding5_0");
-    addFace<5, 1>("Face5_1", "FaceEmbedding5_1");
-    addFace<5, 2>("Face5_2", "FaceEmbedding5_2");
-    addFace<5, 3>("Face5_3", "FaceEmbedding5_3");
-    addFace<5, 4>("Face5_4", "FaceEmbedding5_4");
+void addFace5(pybind11::module& m) {
+    addFace<5, 0>(m, "Face5_0", "FaceEmbedding5_0");
+    addFace<5, 1>(m, "Face5_1", "FaceEmbedding5_1");
+    addFace<5, 2>(m, "Face5_2", "FaceEmbedding5_2");
+    addFace<5, 3>(m, "Face5_3", "FaceEmbedding5_3");
+    addFace<5, 4>(m, "Face5_4", "FaceEmbedding5_4");
 
-    scope().attr("VertexEmbedding5") = scope().attr("FaceEmbedding5_0");
-    scope().attr("EdgeEmbedding5") = scope().attr("FaceEmbedding5_1");
-    scope().attr("TriangleEmbedding5") = scope().attr("FaceEmbedding5_2");
-    scope().attr("TetrahedronEmbedding5") = scope().attr("FaceEmbedding5_3");
-    scope().attr("PentachoronEmbedding5") = scope().attr("FaceEmbedding5_4");
+    m.attr("VertexEmbedding5") = m.attr("FaceEmbedding5_0");
+    m.attr("EdgeEmbedding5") = m.attr("FaceEmbedding5_1");
+    m.attr("TriangleEmbedding5") = m.attr("FaceEmbedding5_2");
+    m.attr("TetrahedronEmbedding5") = m.attr("FaceEmbedding5_3");
+    m.attr("PentachoronEmbedding5") = m.attr("FaceEmbedding5_4");
 
-    scope().attr("Vertex5") = scope().attr("Face5_0");
-    scope().attr("Edge5") = scope().attr("Face5_1");
-    scope().attr("Triangle5") = scope().attr("Face5_2");
-    scope().attr("Tetrahedron5") = scope().attr("Face5_3");
-    scope().attr("Pentachoron5") = scope().attr("Face5_4");
+    m.attr("Vertex5") = m.attr("Face5_0");
+    m.attr("Edge5") = m.attr("Face5_1");
+    m.attr("Triangle5") = m.attr("Face5_2");
+    m.attr("Tetrahedron5") = m.attr("Face5_3");
+    m.attr("Pentachoron5") = m.attr("Face5_4");
 }
 

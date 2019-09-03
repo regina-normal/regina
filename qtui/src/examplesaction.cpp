@@ -82,7 +82,7 @@ void ExamplesAction::exampleActivated(QAction* action) {
 }
 
 void ExamplesAction::fillStandard() {
-    addUrl("sample-misc.rga",
+    addUrl("sample.rga",
         tr("Introductory Examples"));
     addUrl("closed-or-census.rga",
         tr("Closed Census (Orientable)"));

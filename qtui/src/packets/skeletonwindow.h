@@ -38,7 +38,7 @@
 #ifndef __SKELETONWINDOW_H
 #define __SKELETONWINDOW_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 #include "triangulation/forward.h"
 
 #include <QDialog>
@@ -139,9 +139,9 @@ class SkeletonWindow : public QDialog, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasChanged(regina::Packet* packet);
-        void packetWasRenamed(regina::Packet* packet);
-        void packetToBeDestroyed(regina::Packet* packet);
+        void packetWasChanged(regina::Packet* packet) override;
+        void packetWasRenamed(regina::Packet* packet) override;
+        void packetToBeDestroyed(regina::PacketShell packet) override;
 };
 
 /**

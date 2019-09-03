@@ -30,112 +30,82 @@
  *                                                                        *
  **************************************************************************/
 
-// We need to see Python.h first to avoid a "portability fix" in pyport.h
-// that breaks boost.python on MacOSX.
-#include "Python.h"
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "maths/perm.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::Perm;
 
 namespace {
-    template <int n>
-    boost::shared_ptr<Perm<n>> fromList(boost::python::list l) {
-        long len = boost::python::len(l);
-        if ( len != n ) {
-            char err[80];
-            snprintf(err, 80, "Initialisation list for Perm%d must contain "
-                              "exactly %d integers.", n, n);
-            PyErr_SetString(PyExc_ValueError, err);
-            boost::python::throw_error_already_set();
-        }
-        int image[n];
-        for ( long i = 0; i < n; i++) {
-            extract<int> val(l[i]);
-            if (!val.check()) {
-                // Throws an exception
-                val();
-            }
-            image[i] = val();
-        }
-        return boost::shared_ptr<Perm<n>>(new Perm<n>(image));
-    }
-
     template <int n, int k>
-    struct Perm_extend : boost::python::def_visitor<Perm_extend<n, k>> {
-        friend class boost::python::def_visitor_access;
-
-        template <typename Class>
-        void visit(Class& c) const {
-            c.def("extend", &Perm<n>::template extend<k>);
-            c.def(Perm_extend<n, k-1>());
+    struct Perm_extend {
+        template <class C, typename... options>
+        static void add_bindings(pybind11::class_<C, options...>& c) {
+            c.def_static("extend", &Perm<n>::template extend<k>);
+            Perm_extend<n, k-1>::add_bindings(c);
         }
     };
 
     template <int n>
-    struct Perm_extend<n, 2> : boost::python::def_visitor<Perm_extend<n, 2>> {
-        friend class boost::python::def_visitor_access;
-
-        template <typename Class>
-        void visit(Class& c) const {
-            c.def("extend", &Perm<n>::template extend<2>);
-            c.staticmethod("extend");
+    struct Perm_extend<n, 2> {
+        template <class C, typename... options>
+        static void add_bindings(pybind11::class_<C, options...>& c) {
+            c.def_static("extend", &Perm<n>::template extend<2>);
         }
     };
 
     template <int n, int k>
-    struct Perm_contract : boost::python::def_visitor<Perm_contract<n, k>> {
-        friend class boost::python::def_visitor_access;
-
-        template <typename Class>
-        void visit(Class& c) const {
-            c.def("contract", &Perm<n>::template contract<k>);
-            c.def(Perm_contract<n, k+1>());
+    struct Perm_contract {
+        template <class C, typename... options>
+        static void add_bindings(pybind11::class_<C, options...>& c) {
+            c.def_static("contract", &Perm<n>::template contract<k>);
+            Perm_contract<n, k+1>::add_bindings(c);
         }
     };
 
     template <int n>
-    struct Perm_contract<n, 16> :
-            boost::python::def_visitor<Perm_contract<n, 16>> {
-        friend class boost::python::def_visitor_access;
-
-        template <typename Class>
-        void visit(Class& c) const {
-            c.def("contract", &Perm<n>::template contract<16>);
-            c.staticmethod("contract");
+    struct Perm_contract<n, 16> {
+        template <class C, typename... options>
+        static void add_bindings(pybind11::class_<C, options...>& c) {
+            c.def_static("contract", &Perm<n>::template contract<16>);
         }
     };
 
     template <int n>
-    struct Perm_contract<n, 17> :
-            boost::python::def_visitor<Perm_contract<n, 17>> {
-        friend class boost::python::def_visitor_access;
-
-        template <typename Class>
-        void visit(Class& c) const {
+    struct Perm_contract<n, 17> {
+        template <class C, typename... options>
+        static void add_bindings(pybind11::class_<C, options...>& c) {
             // Only called for Perm16, which has no contract() methods at all.
         }
-    };
-
-    template <int n>
-    struct PermHelper {
-        BOOST_PYTHON_FUNCTION_OVERLOADS(OL_rand, Perm<n>::rand, 0, 1);
     };
 }
 
 template <int n>
-void addPerm(const char* name) {
-    scope s = class_<Perm<n> >(name)
-        .def(init<int, int>())
-        .def(init<const Perm<n>&>())
-        .def("__init__", make_constructor(fromList<n>))
+void addPerm(pybind11::module& m, const char* name) {
+    auto c = pybind11::class_<Perm<n>>(m, name)
+        .def(pybind11::init<>())
+        .def(pybind11::init<int, int>())
+        .def(pybind11::init<const Perm<n>&>())
+        .def(pybind11::init([](pybind11::list l) {
+            if (l.size() != n)
+                throw pybind11::index_error(
+                    "Initialisation list has the wrong length");
+            int image[n];
+            try {
+                for (long i = 0; i < n; i++)
+                    image[i] = l[i].cast<int>();
+            } catch (pybind11::cast_error const &) {
+                throw std::invalid_argument(
+                    "List element not convertible to int");
+            }
+            return new Perm<n>(image);
+        }))
         .def("permCode", &Perm<n>::permCode)
         .def("setPermCode", &Perm<n>::setPermCode)
-        .def("fromPermCode", &Perm<n>::fromPermCode)
-        .def("isPermCode", &Perm<n>::isPermCode)
-        .def(self * self)
+        .def_static("fromPermCode", &Perm<n>::fromPermCode)
+        .def_static("isPermCode", &Perm<n>::isPermCode)
+        .def(pybind11::self * pybind11::self)
         .def("inverse", &Perm<n>::inverse)
         .def("reverse", &Perm<n>::reverse)
         .def("sign", &Perm<n>::sign)
@@ -143,53 +113,48 @@ void addPerm(const char* name) {
         .def("preImageOf", &Perm<n>::preImageOf)
         .def("compareWith", &Perm<n>::compareWith)
         .def("isIdentity", &Perm<n>::isIdentity)
-        .def("atIndex", &Perm<n>::atIndex)
+        .def_static("atIndex", &Perm<n>::atIndex)
         .def("index", &Perm<n>::index)
-        .def("rand", &Perm<n>::rand, typename PermHelper<n>::OL_rand())
+        .def_static("rand", &Perm<n>::rand,
+            pybind11::arg("even") = false)
         .def("trunc", &Perm<n>::trunc)
         .def("clear", &Perm<n>::clear)
-        .def("__repr__", &Perm<n>::str)
-        .def(Perm_extend<n, n-1>())
-        .def(Perm_contract<n, n+1>())
-        .def(regina::python::add_output_basic())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromPermCode")
-        .staticmethod("isPermCode")
-        .staticmethod("atIndex")
-        .staticmethod("rand")
+        .def_readonly_static("nPerms", &Perm<n>::nPerms)
+        .def_readonly_static("nPerms_1", &Perm<n>::nPerms_1)
+        .def_readonly_static("imageBits", &Perm<n>::imageBits)
     ;
-
-    s.attr("nPerms") = Perm<n>::nPerms;
-    s.attr("nPerms_1") = Perm<n>::nPerms_1;
-    s.attr("imageBits") = Perm<n>::imageBits;
+    Perm_extend<n, n-1>::add_bindings(c);
+    Perm_contract<n, n+1>::add_bindings(c);
+    regina::python::add_output_basic(c, true /* __repr__ */);
+    regina::python::add_eq_operators(c);
 }
 
-void addPerm() {
-    boost::python::def("digit", regina::digit);
-    boost::python::def("factorial", regina::factorial);
+void addPerm(pybind11::module& m) {
+    m.def("digit", regina::digit);
+    m.def("factorial", regina::factorial);
 
-    addPerm<6>("Perm6");
-    addPerm<7>("Perm7");
-    addPerm<8>("Perm8");
-    addPerm<9>("Perm9");
-    addPerm<10>("Perm10");
-    addPerm<11>("Perm11");
-    addPerm<12>("Perm12");
-    addPerm<13>("Perm13");
-    addPerm<14>("Perm14");
-    addPerm<15>("Perm15");
-    addPerm<16>("Perm16");
+    addPerm<6>(m, "Perm6");
+    addPerm<7>(m, "Perm7");
+    addPerm<8>(m, "Perm8");
+    addPerm<9>(m, "Perm9");
+    addPerm<10>(m, "Perm10");
+    addPerm<11>(m, "Perm11");
+    addPerm<12>(m, "Perm12");
+    addPerm<13>(m, "Perm13");
+    addPerm<14>(m, "Perm14");
+    addPerm<15>(m, "Perm15");
+    addPerm<16>(m, "Perm16");
 
-    scope().attr("NPerm6") = scope().attr("Perm6");
-    scope().attr("NPerm7") = scope().attr("Perm7");
-    scope().attr("NPerm8") = scope().attr("Perm8");
-    scope().attr("NPerm9") = scope().attr("Perm9");
-    scope().attr("NPerm10") = scope().attr("Perm10");
-    scope().attr("NPerm11") = scope().attr("Perm11");
-    scope().attr("NPerm12") = scope().attr("Perm12");
-    scope().attr("NPerm13") = scope().attr("Perm13");
-    scope().attr("NPerm14") = scope().attr("Perm14");
-    scope().attr("NPerm15") = scope().attr("Perm15");
-    scope().attr("NPerm16") = scope().attr("Perm16");
+    m.attr("NPerm6") = m.attr("Perm6");
+    m.attr("NPerm7") = m.attr("Perm7");
+    m.attr("NPerm8") = m.attr("Perm8");
+    m.attr("NPerm9") = m.attr("Perm9");
+    m.attr("NPerm10") = m.attr("Perm10");
+    m.attr("NPerm11") = m.attr("Perm11");
+    m.attr("NPerm12") = m.attr("Perm12");
+    m.attr("NPerm13") = m.attr("Perm13");
+    m.attr("NPerm14") = m.attr("Perm14");
+    m.attr("NPerm15") = m.attr("Perm15");
+    m.attr("NPerm16") = m.attr("Perm16");
 }
 

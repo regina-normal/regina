@@ -40,8 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
-#include <boost/noncopyable.hpp>
+#include "core/output.h"
 
 namespace regina {
 
@@ -62,9 +61,7 @@ namespace regina {
  * that this class now recognises is TYPE_XML (compressed or uncompressed
  * XML data files).
  */
-class REGINA_API FileInfo :
-        public Output<FileInfo>,
-        public boost::noncopyable {
+class REGINA_API FileInfo : public Output<FileInfo> {
     public:
         static const int TYPE_XML;
             /**< Represents a new-style XML data file. */
@@ -88,6 +85,12 @@ class REGINA_API FileInfo :
                  \c false otherwise. */
 
     public:
+        /**
+         * Creates a new copy of the given file information.
+         *
+         * @param cloneMe the file information to clone.
+         */
+        FileInfo(const FileInfo&) = default;
         /**
          * Returns the pathname of the data file being described.
          *
@@ -132,6 +135,13 @@ class REGINA_API FileInfo :
          * otherwise.
          */
         bool isInvalid() const;
+
+        /**
+         * Sets this to be a copy of the given file information.
+         *
+         * @param cloneMe the file information to clone.
+         */
+        FileInfo& operator = (const FileInfo&) = default;
 
         /**
          * Return information about the given Regina data file.

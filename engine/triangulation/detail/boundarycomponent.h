@@ -41,12 +41,11 @@
 
 #include <vector>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace detail {
@@ -151,6 +150,11 @@ class WeakFaceList {
                 ReorderIterator(const ReorderIterator&) = default;
 
                 /**
+                 * Assignment operator.
+                 */
+                ReorderIterator& operator = (const ReorderIterator&) = default;
+
+                /**
                  * Tests whether this and the given iterator point to
                  * the same face.
                  */
@@ -196,6 +200,11 @@ class WeakFaceList {
         };
 
     protected:
+        /**
+         * Default constructor that leaves the list of faces empty.
+         */
+        WeakFaceList() = default;
+
         /**
          * Reorders and relabels all <i>subdim</i>-faces of the given
          * triangulation so that they appear in the same order as the
@@ -269,6 +278,10 @@ class WeakFaceList {
 
             delete[] map;
         }
+
+        // Make this class non-copyable.
+        WeakFaceList(const WeakFaceList&) = delete;
+        WeakFaceList& operator = (const WeakFaceList&) = delete;
 };
 
 /**
@@ -374,8 +387,6 @@ class BoundaryComponentFaceStorage :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool allFaces = true;
 
@@ -607,8 +618,6 @@ class BoundaryComponentFaceStorage<dim, false> {
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool allFaces = false;
 
@@ -698,6 +707,13 @@ class BoundaryComponentFaceStorage<dim, false> {
         Component<dim>* component() const {
             return facets_.front()->component();
         }
+
+        // Make this class non-copyable, since we do not inherit
+        // non-copyability from WeakFaceList.
+        BoundaryComponentFaceStorage(const BoundaryComponentFaceStorage&) =
+            delete;
+        BoundaryComponentFaceStorage& operator = (
+            const BoundaryComponentFaceStorage&) = delete;
 
     protected:
         /**
@@ -791,8 +807,6 @@ class BoundaryComponentFaceInterface :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool allowVertex = true;
 
@@ -958,8 +972,6 @@ class BoundaryComponentFaceInterface<dim, allFaces, false> :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool allowVertex = false;
 
@@ -1055,8 +1067,6 @@ class BoundaryComponentStorage :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool canBuild = true;
 
@@ -1172,8 +1182,6 @@ class BoundaryComponentStorage<dim, allFaces, allowVertex, false> :
          *
          * This is a compile-time constant only, with no linkage - any attempt
          * to create a reference or pointer to it will give a linker error.
-         *
-         * \ifacespython Not present.
          */
         static constexpr bool canBuild = false;
 };
@@ -1201,7 +1209,6 @@ class BoundaryComponentBase :
             standardDim(dim) /* allFaces */,
             (standardDim(dim) && dim > 2) /* allowVertex */,
             (dim > 2) /* canBuild */>,
-        public boost::noncopyable,
         public MarkedElement {
     protected:
         bool orientable_;
@@ -1232,6 +1239,11 @@ class BoundaryComponentBase :
         bool isOrientable() const {
             return orientable_;
         }
+
+        // Make this class non-copyable.
+        BoundaryComponentBase(const BoundaryComponentBase&) = delete;
+        BoundaryComponentBase& operator = (const BoundaryComponentBase&) =
+            delete;
 
     protected:
         /**

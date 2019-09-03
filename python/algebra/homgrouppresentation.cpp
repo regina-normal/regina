@@ -30,43 +30,35 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
 #include "algebra/markedabeliangroup.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::GroupExpression;
 using regina::GroupPresentation;
 using regina::HomGroupPresentation;
 
-namespace {
-    GroupExpression (HomGroupPresentation::*evaluate_ulong)(
-        unsigned long) const = &HomGroupPresentation::evaluate;
-    GroupExpression (HomGroupPresentation::*evaluate_exp)(
-        const GroupExpression&) const = &HomGroupPresentation::evaluate;
-    GroupExpression (HomGroupPresentation::*invEvaluate_ulong)(
-        unsigned long) const = &HomGroupPresentation::invEvaluate;
-    GroupExpression (HomGroupPresentation::*invEvaluate_exp)(
-        const GroupExpression&) const = &HomGroupPresentation::invEvaluate;
-}
-
-void addHomGroupPresentation() {
-    class_<HomGroupPresentation, std::auto_ptr<HomGroupPresentation>,
-            boost::noncopyable>
-            ("HomGroupPresentation", init<const HomGroupPresentation&>())
-        .def(init<const GroupPresentation&>())
+void addHomGroupPresentation(pybind11::module& m) {
+    auto c = pybind11::class_<HomGroupPresentation>(m, "HomGroupPresentation")
+        .def(pybind11::init<const HomGroupPresentation&>())
+        .def(pybind11::init<const GroupPresentation&>())
         .def("domain", &HomGroupPresentation::domain,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("range", &HomGroupPresentation::range,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("knowsInverse", &HomGroupPresentation::knowsInverse)
-        .def("evaluate", evaluate_exp)
-        .def("evaluate", evaluate_ulong)
-        .def("invEvaluate", invEvaluate_exp)
-        .def("invEvaluate", invEvaluate_ulong)
+        .def("evaluate", overload_cast<unsigned long>(
+            &HomGroupPresentation::evaluate, pybind11::const_))
+        .def("evaluate", overload_cast<const GroupExpression&>(
+            &HomGroupPresentation::evaluate, pybind11::const_))
+        .def("invEvaluate", overload_cast<unsigned long>(
+            &HomGroupPresentation::invEvaluate, pybind11::const_))
+        .def("invEvaluate", overload_cast<const GroupExpression&>(
+            &HomGroupPresentation::invEvaluate, pybind11::const_))
         .def("intelligentSimplify",
             &HomGroupPresentation::intelligentSimplify)
         .def("intelligentNielsen",
@@ -80,9 +72,9 @@ void addHomGroupPresentation() {
         .def("verifyIsomorphism", &HomGroupPresentation::verifyIsomorphism)
         .def("markedAbelianisation",
             &HomGroupPresentation::markedAbelianisation)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
-    scope().attr("NHomGroupPresentation") = scope().attr("HomGroupPresentation");
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
+    m.attr("NHomGroupPresentation") = m.attr("HomGroupPresentation");
 }
 

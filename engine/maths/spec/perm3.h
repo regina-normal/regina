@@ -300,7 +300,7 @@ class REGINA_API Perm<3> {
          *
          * @param cloneMe the permutation to clone.
          */
-        Perm(const Perm<3>& cloneMe);
+        Perm(const Perm<3>& cloneMe) = default;
 
         /**
          * Returns the internal code representing this permutation.
@@ -354,7 +354,7 @@ class REGINA_API Perm<3> {
          * to this permutation.
          * @return a reference to this permutation.
          */
-        Perm<3>& operator = (const Perm<3>& cloneMe);
+        Perm<3>& operator = (const Perm<3>& cloneMe) = default;
 
         /**
          * Returns the composition of this permutation with the given
@@ -706,9 +706,6 @@ inline Perm<3>::Perm(const int* image) {
     }
 }
 
-inline Perm<3>::Perm(const Perm<3>& cloneMe) : code_(cloneMe.code_) {
-}
-
 inline Perm<3>::Code Perm<3>::permCode() const {
     return code_;
 }
@@ -724,11 +721,6 @@ inline Perm<3> Perm<3>::fromPermCode(Code code) {
 inline bool Perm<3>::isPermCode(Code code) {
     // code >= 0 is a no-op because we are using an unsigned data type.
     return (code < 6);
-}
-
-inline Perm<3>& Perm<3>::operator = (const Perm<3>& cloneMe) {
-    code_ = cloneMe.code_;
-    return *this;
 }
 
 inline Perm<3> Perm<3>::operator * (const Perm<3>& q) const {

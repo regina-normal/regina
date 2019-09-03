@@ -42,11 +42,10 @@
 
 #include "regina-core.h"
 #include "manifold/manifold.h"
+#include "manifold/sfs.h"
 #include "maths/matrix2.h"
 
 namespace regina {
-
-class SFSpace;
 
 /**
  * \weakgroup manifold
@@ -155,6 +154,12 @@ class REGINA_API GraphPair : public Manifold {
         GraphPair(SFSpace* sfs0, SFSpace* sfs1,
             const Matrix2& matchingReln);
         /**
+         * Creates a clone of the given graph manifold.
+         *
+         * @param cloneMe the manifold to clone.
+         */
+        GraphPair(const GraphPair& cloneMe);
+        /**
          * Destroys this structure along with the component Seifert
          * fibred spaces and the matching matrix.
          */
@@ -198,10 +203,17 @@ class REGINA_API GraphPair : public Manifold {
          */
         bool operator < (const GraphPair& compare) const;
 
-        AbelianGroup* homology() const;
-        bool isHyperbolic() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        /**
+         * Sets this to be a clone of the given graph manifold.
+         *
+         * @param cloneMe the manifold to clone.
+         */
+        GraphPair& operator = (const GraphPair& cloneMe);
+
+        AbelianGroup* homology() const override;
+        bool isHyperbolic() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 
     private:
         /**
@@ -249,6 +261,19 @@ inline GraphPair::GraphPair(SFSpace* sfs0, SFSpace* sfs1,
     sfs_[1] = sfs1;
 
     reduce();
+}
+
+inline GraphPair::GraphPair(const GraphPair& cloneMe) :
+        matchingReln_(cloneMe.matchingReln_) {
+    sfs_[0] = new SFSpace(*cloneMe.sfs_[0]);
+    sfs_[1] = new SFSpace(*cloneMe.sfs_[1]);
+}
+
+inline GraphPair& GraphPair::operator = (const GraphPair& cloneMe) {
+    *sfs_[0] = *cloneMe.sfs_[0];
+    *sfs_[1] = *cloneMe.sfs_[1];
+    matchingReln_ = cloneMe.matchingReln_;
+    return *this;
 }
 
 inline const SFSpace& GraphPair::sfs(unsigned which) const {

@@ -4,7 +4,7 @@
 # Copyright (c) 2015-2018, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Provides basic tests of the SafeHeldType
+# Provides basic tests of the SafePtr
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -31,11 +31,15 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-print "Constructor:"
+# NOTE: Since the move to pybind11 and Packet::safeDelete(), python references
+# to packets never expire.  Therefore we should never raise any exceptions.
+# in this test.
 
-print Container()
+print("Constructor:")
 
-print "Deleting parent:"
+print(Container())
+
+print("Deleting parent:")
 
 c  = Container()
 c1 = Container()
@@ -45,11 +49,11 @@ c.insertChildFirst(c1)
 c = None
 
 try:
-    print c1
+    print(c1)
 except RuntimeError:
-    print "Got exception"
+    print("Got exception")
 
-print "Deleting matriarch:"
+print("Deleting matriarch:")
     
 c  = Container()
 c.insertChildFirst(Container())
@@ -61,16 +65,16 @@ c2 = c.firstChild().firstChild()
 c  = None
 
 try:
-    print c1
+    print(c1)
 except RuntimeError:
-    print "Got exception"
+    print("Got exception")
 
 try:
-    print c2
+    print(c2)
 except RuntimeError:
-    print "Got exception"
+    print("Got exception")
 
-print "Multiple references:"
+print("Multiple references:")
 
 c = Container()
 c1 = Container()
@@ -79,32 +83,32 @@ c2 = Container()
 c.insertChildFirst(c1)
 c1.insertChildFirst(c2)
 
-print c
-print c1
-print c2
+print(c)
+print(c1)
+print(c2)
 
 c1 = None
 
-print c
-print c2
+print(c)
+print(c2)
 
 d = c2.root()
 
 c = None
 
-print c2
+print(c2)
 
 e = c2.root()
 
-print c2
+print(c2)
 
 e = None
 
-print c2
+print(c2)
 
 d = None
 
 try:
-    print c2
+    print(c2)
 except RuntimeError:
-    print "Got exception"
+    print("Got exception")

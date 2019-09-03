@@ -49,26 +49,8 @@ class QWidget;
 
 namespace regina {
     class Packet;
+    class Script;
 }
-
-/**
- * Represents a single python variable.
- */
-struct PythonVariable {
-    QString name;
-        /**< The name of the variable. */
-    regina::Packet* value;
-        /**< The value of the variable.  This may be 0, in which case
-             the corresponding Python value will be None. */
-
-    /**
-     * Basic constructors.
-     */
-    PythonVariable();
-    PythonVariable(const QString& newName, regina::Packet* newValue);
-};
-
-typedef QLinkedList<PythonVariable> PythonVariableList;
 
 /**
  * Provides simple management for python consoles.  Consoles launched
@@ -113,22 +95,7 @@ class PythonManager {
          * to the user and 0 is returned.
          */
         PythonConsole* launchPythonConsole(QWidget* parent,
-                const QString& script,
-                const PythonVariableList& initialVariables);
-
-        /**
-         * Attempts to compile the given python script.  If the compile
-         * succeeds, 0 is returned.  If the compile fails, a new python
-         * console is opened displaying the appropriate error and this new
-         * console is returned.
-         *
-         * If a new console is opened, it is automatically registered with
-         * this python manager.
-         *
-         * If python scripting is not built in, a notice is displayed
-         * to the user and 0 is returned.
-         */
-        PythonConsole* compileScript(QWidget* parent, const QString& script);
+                regina::Script* script);
 
         /**
          * Destroys any consoles still in existence that were either
@@ -155,13 +122,6 @@ class PythonManager {
          */
         static void openPythonReference(QWidget* topLevelWindow);
 };
-
-inline PythonVariable::PythonVariable() : value(0) {
-}
-
-inline PythonVariable::PythonVariable(const QString& newName,
-        regina::Packet* newValue) : name(newName), value(newValue) {
-}
 
 #endif
 

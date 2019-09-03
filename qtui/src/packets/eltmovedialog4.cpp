@@ -429,7 +429,7 @@ void EltMoveDialog4::packetWasChanged(regina::Packet*) {
     updateApply();
 }
 
-void EltMoveDialog4::packetToBeDestroyed(regina::Packet*) {
+void EltMoveDialog4::packetToBeDestroyed(regina::PacketShell) {
     reject();
 }
 

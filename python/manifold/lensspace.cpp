@@ -30,26 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "manifold/lensspace.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::LensSpace;
 
-void addLensSpace() {
-    class_<LensSpace, bases<regina::Manifold>,
-            std::auto_ptr<LensSpace>, boost::noncopyable>
-            ("LensSpace", init<unsigned long, unsigned long>())
-        .def(init<const LensSpace&>())
+void addLensSpace(pybind11::module& m) {
+    auto c = pybind11::class_<LensSpace, regina::Manifold>(m, "LensSpace")
+        .def(pybind11::init<unsigned long, unsigned long>())
+        .def(pybind11::init<const LensSpace&>())
         .def("p", &LensSpace::p)
         .def("q", &LensSpace::q)
-        .def(regina::python::add_eq_operators())
     ;
+    // The LensSpace subclass defines its own equality tests, so we
+    // should not just inherit the compare-by-pointer test from Manifold.
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NLensSpace") = scope().attr("LensSpace");
-
-    implicitly_convertible<std::auto_ptr<LensSpace>,
-        std::auto_ptr<regina::Manifold> >();
+    m.attr("NLensSpace") = m.attr("LensSpace");
 }
 

@@ -37,7 +37,7 @@
 #ifndef __FILTERCOMB_H
 #define __FILTERCOMB_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #include "../packetui.h"
 
@@ -83,20 +83,21 @@ class FilterCombUI : public QObject, public PacketUI,
         /**
          * PacketUI overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        QString getPacketMenuText() const;
-        void refresh();
-        void setReadWrite(bool readWrite);
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
+        void setReadWrite(bool readWrite) override;
 
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::Packet* packet);
-        void childWasAdded(regina::Packet* packet, regina::Packet* child);
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor);
-        void childrenWereReordered(regina::Packet* packet);
+        void packetWasRenamed(regina::Packet* packet) override;
+        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+            override;
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+            override;
+        void childrenWereReordered(regina::Packet* packet) override;
 
     public slots:
         /**

@@ -249,14 +249,14 @@ class REGINA_API PDF : public Packet {
          */
         bool savePDF(const char* filename) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const;
+        virtual bool dependsOnParent() const override;
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 };
 
 /**

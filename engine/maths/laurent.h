@@ -40,7 +40,7 @@
  */
 
 #include "utilities/stringutils.h"
-#include "output.h"
+#include "core/output.h"
 #include <iostream>
 #include <sstream>
 
@@ -54,7 +54,7 @@ namespace regina {
 /**
  * Represents a single-variable Laurent polynomial with coefficients of
  * type \a T.  A Laurent polynomial differs from an ordinary polynomial
- * in that it allows negative exponents (so, unlike the NPolynomial class,
+ * in that it allows negative exponents (so, unlike the Polynomial class,
  * you can represent both <tt>2+3x</tt> and <tt>1+1/x</tt>).
  *
  * The type \a T must represent a ring with no zero divisors.
@@ -69,6 +69,13 @@ namespace regina {
  * are supported, but native data types such as int and long are not
  * (since they have no zero-initialising default constructor).
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Functions that take or return objects by value are designed to be just as
+ * efficient as working with references or pointers (any variations to
+ * this are noted in the method documentation), and long chains of operators
+ * such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
+ *
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
  *
@@ -80,6 +87,10 @@ namespace regina {
  */
 template <typename T>
 class Laurent : public ShortOutput<Laurent<T>, true> {
+    public:
+        typedef T Coefficient;
+            /**< The type of each coefficient of the polynomial. */
+
     private:
         long minExp_;
             /**< The minimum exponent that appears in the polynomial,
@@ -115,6 +126,8 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * A note for developers: even though this routine is identical to
          * the templated copy constructor, it must be declared and
          * implemented separately.  Otherwise the compiler might create
@@ -127,12 +140,24 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
          * @param value the polynomial to clone.
          */
         template <typename U>
         Laurent(const Laurent<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this new polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         */
+        Laurent(Laurent<T>&& value) noexcept;
 
         /**
          * Creates a new polynomial from the given sequence of coefficients.
@@ -144,6 +169,8 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * There is no problem if the first and/or last coefficient in
          * the sequence is zero.
          * An empty sequence will be treated as the zero polynomial.
+         *
+         * This constructor induces a deep copy of the given range.
          *
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
@@ -189,6 +216,8 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * There is no problem if the first and/or last coefficient in
          * the sequence is zero.
          * An empty sequence will be treated as the zero polynomial.
+         *
+         * This routine induces a deep copy of the given range.
          *
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
@@ -294,6 +323,8 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * This and the given polynomial need not have the same minimum
          * and/or maximum exponents.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * A note to developers: although this is identical to the templated
          * assignment operator, it must be declared and implemented separately.
          * See the copy constructor for further details.
@@ -309,11 +340,27 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * This and the given polynomial need not have the same minimum
          * and/or maximum exponents.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * @param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
         template <typename U>
         Laurent& operator = (const Laurent<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given polynomial need not have the same minimum
+         * and/or maximum exponents.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         * @return a reference to this polynomial.
+         */
+        Laurent& operator = (Laurent<T>&& value) noexcept;
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -364,6 +411,7 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
 
         /**
          * Negates this polynomial.
+         * This field element is changed directly.
          */
         void negate();
 
@@ -392,6 +440,11 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          *
          * The given polynomial need not have the same minimum and/or
          * maximum exponents as this.
+         *
+         * \warning This routine may trigger a deep copy (depending upon
+         * the range of exponents used in \a other).  Consider using
+         * the binary <tt>+</tt> operator instead, which is better able to
+         * avoid this deep copy where possible.
          *
          * @param other the polynomial to add to this.
          * @return a reference to this polynomial.
@@ -439,7 +492,7 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * @return a reference to the given output stream.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
-            const char* variable = 0) const;
+            const char* variable = nullptr) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
@@ -478,6 +531,18 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
 
     private:
         /**
+         * Constructs a new polynomial with the given exponent range and
+         * coefficients.  It is assumed that the coefficient array starts
+         * at exponent \a minExp.
+         *
+         * The data members \a minExp_, \a maxExp_ and \a coeff_ will be
+         * set to the given values, and \a base_ will be set to \a minExp.
+         * In particular, the new object will take ownership of the
+         * coefficient array.
+         */
+        Laurent(long minExp, long maxExp, T* coeff);
+
+        /**
          * Expands the array of coefficients if necessary so that
          * minExp_ <= newMin_ and maxExp_ >= newMax.
          *
@@ -501,7 +566,133 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * \a minExp_, \a maxExp_ and \a base_ will be set to zero.
          */
         void fixDegrees();
+
+    template <typename U>
+    friend Laurent<U> operator + (const Laurent<U>&, const Laurent<U>&);
+
+    template <typename U>
+    friend Laurent<U> operator + (Laurent<U>&&, Laurent<U>&&);
+
+    template <typename U>
+    friend Laurent<U> operator * (const Laurent<U>&, const Laurent<U>&);
 };
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param poly the polynomial to multiply by.
+ * @param scalar the scalar to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Laurent<T> operator * (Laurent<T> poly,
+    const typename Laurent<T>::Coefficient& scalar);
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param scalar the scalar to multiply by.
+ * @param poly the polynomial to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Laurent<T> operator * (const typename Laurent<T>::Coefficient& scalar,
+    Laurent<T> poly);
+
+/**
+ * Divides the given polynomial by the given scalar constant.
+ *
+ * This uses the division operator /= for the coefficient type \a T.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * @param poly the polynomial to divide by the given scalar.
+ * @param scalar the scalar factor to divide by.
+ * @return the quotient of the given polynomial by the given scalar.
+ */
+template <typename T>
+Laurent<T> operator / (Laurent<T> poly,
+    const typename Laurent<T>::Coefficient& scalar);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs);
+
+/**
+ * Returns the negative of the given polynomial.
+ *
+ * @param arg the polynomial to negate.
+ * @return the negative of \a arg.
+ */
+template <typename T>
+Laurent<T> operator - (Laurent<T> arg);
+
+/**
+ * Multiplies the two given polynomials.
+ *
+ * @param lhs the first polynomial to multiply.
+ * @param rhs the second polynomial to multiply.
+ * @return the product of both polynomials.
+ */
+template <typename T>
+Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs);
 
 /*@}*/
 
@@ -523,7 +714,7 @@ inline Laurent<T>::Laurent(long exp) :
 template <typename T>
 template <typename iterator>
 inline Laurent<T>::Laurent(long minExp, iterator begin, iterator end) :
-        coeff_(0) {
+        coeff_(nullptr) {
     init(minExp, begin, end);
 }
 
@@ -542,6 +733,18 @@ inline Laurent<T>::Laurent(const Laurent<U>& value) :
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
     for (size_t i = 0; i <= maxExp_ - minExp_; ++i)
         coeff_[i] = value.coeff_[i + value.minExp_ - value.base_];
+}
+
+template <typename T>
+inline Laurent<T>::Laurent(Laurent<T>&& value) noexcept :
+        minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.base_),
+        coeff_(value.coeff_) {
+    value.coeff_ = nullptr;
+}
+
+template <typename T>
+inline Laurent<T>::Laurent(long minExp, long maxExp, T* coeff) :
+        minExp_(minExp), maxExp_(maxExp), base_(minExp), coeff_(coeff) {
 }
 
 template <typename T>
@@ -735,6 +938,17 @@ Laurent<T>& Laurent<T>::operator = (const Laurent<U>& other) {
     maxExp_ = other.maxExp_;
     for (long exp = minExp_; exp <= maxExp_; ++exp)
         coeff_[exp - base_] = other.coeff_[exp - other.base_];
+    return *this;
+}
+
+template <typename T>
+inline Laurent<T>& Laurent<T>::operator = (Laurent<T>&& other) noexcept {
+    // Strictly speaking we could just assign these integers.
+    std::swap(minExp_, other.minExp_);
+    std::swap(maxExp_, other.maxExp_);
+    std::swap(base_, other.base_);
+    // Let other dispose of the original contents in its own destructor.
+    std::swap(coeff_, other.coeff_);
     return *this;
 }
 
@@ -1051,6 +1265,115 @@ void Laurent<T>::fixDegrees() {
         base_ -= minExp_;
         minExp_ = maxExp_ = 0;
     }
+}
+
+template <typename T>
+inline Laurent<T> operator * (Laurent<T> poly,
+        const typename Laurent<T>::Coefficient& scalar) {
+    // When the argument poly is an lvalue reference, we perform a deep copy
+    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
+    // since the argument can be ignored.  This special-case optimisation
+    // would require two different lvalue/rvalue implementations of *, and
+    // so we leave it for now.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Laurent<T> operator * (const typename Laurent<T>::Coefficient& scalar,
+        Laurent<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Laurent<T> operator / (Laurent<T> poly,
+        const typename Laurent<T>::Coefficient& scalar) {
+    poly /= scalar;
+    return poly;
+}
+
+template <typename T>
+Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
+    long minExp = std::min(lhs.minExp_, rhs.minExp_);
+    long maxExp = std::max(lhs.maxExp_, rhs.maxExp_);
+    T* coeff = new T[maxExp - minExp + 1];
+
+    long exp /* next exponent */, idx /* next index into coeff */;
+
+    if (lhs.minExp_ < rhs.minExp_) {
+        std::copy(lhs.coeff_ + lhs.minExp_ - lhs.base_,
+            lhs.coeff_ + rhs.minExp_ - lhs.base_, coeff);
+        exp = rhs.minExp_;
+        idx = rhs.minExp_ - lhs.minExp_;
+    } else if (rhs.minExp_ < lhs.minExp_) {
+        std::copy(rhs.coeff_ + rhs.minExp_ - rhs.base_,
+            rhs.coeff_ + lhs.minExp_ - rhs.base_, coeff);
+        exp = lhs.minExp_;
+        idx = lhs.minExp_ - rhs.minExp_;
+    } else {
+        exp = lhs.minExp_;
+        idx = 0;
+    }
+
+    for ( ; exp <= lhs.maxExp_ && exp <= rhs.maxExp_; ++idx, ++exp)
+        coeff[idx] = lhs.coeff_[exp - lhs.base_] + rhs.coeff_[exp - rhs.base_];
+
+    // exp is now (lhs.maxExp_ + 1) or (rhs.maxExp_ + 1).
+    if (exp <= lhs.maxExp_) {
+        std::copy(lhs.coeff_ + exp - lhs.base_,
+            lhs.coeff_ + lhs.maxExp_ + 1 - lhs.base_, coeff + idx);
+    } else if (exp <= rhs.maxExp_) {
+        std::copy(rhs.coeff_ + exp - rhs.base_,
+            rhs.coeff_ + rhs.maxExp_ + 1 - rhs.base_, coeff + idx);
+    }
+
+    return Laurent<T>(minExp, maxExp, coeff);
+}
+
+template <typename T>
+inline Laurent<T> operator + (Laurent<T>&& lhs, const Laurent<T>& rhs) {
+    return std::move(lhs += rhs);
+}
+
+template <typename T>
+inline Laurent<T> operator + (const Laurent<T>& lhs, Laurent<T>&& rhs) {
+    return std::move(rhs += lhs);
+}
+
+template <typename T>
+inline Laurent<T> operator + (Laurent<T>&& lhs, Laurent<T>&& rhs) {
+    // If we can, choose a direction for the addition that avoids a
+    // deep copy within +=.
+    if (lhs.base_ <= rhs.minExp_ && rhs.maxExp_ <= lhs.maxExp_)
+        return std::move(lhs += rhs);
+    else
+        return std::move(rhs += lhs);
+}
+
+template <typename T>
+inline Laurent<T> operator - (Laurent<T> arg) {
+    arg.negate();
+    return arg;
+}
+
+template <typename T>
+Laurent<T> operator * (const Laurent<T>& lhs, const Laurent<T>& rhs) {
+    if (lhs.isZero() || rhs.isZero())
+        return Laurent<T>(); // zero
+
+    long i, j;
+    T* coeff = new T[lhs.maxExp_ - lhs.minExp_ + rhs.maxExp_ - rhs.minExp_ + 1];
+    for (i = lhs.minExp_; i <= lhs.maxExp_; ++i)
+        for (j = rhs.minExp_; j <= rhs.maxExp_; ++j)
+            coeff[i + j - lhs.minExp_ - rhs.minExp_] +=
+                (lhs.coeff_[i - lhs.base_] * rhs.coeff_[j - rhs.base_]);
+
+    // Note: the final minExp/maxExp coefficients will both be non-zero,
+    // since the same is true of both lhs and rhs.
+    return Laurent<T>(lhs.minExp_ + rhs.minExp_, lhs.maxExp_ + rhs.maxExp_,
+        coeff);
 }
 
 } // namespace regina

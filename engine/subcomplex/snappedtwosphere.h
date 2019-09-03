@@ -41,9 +41,8 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "subcomplex/snappedball.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -68,9 +67,7 @@ class SnappedBall;
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class REGINA_API SnappedTwoSphere :
-        public ShortOutput<SnappedTwoSphere>,
-        public boost::noncopyable {
+class REGINA_API SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
     private:
         SnappedBall* ball[2];
             /**< The two snapped 3-balls whose equators are joined. */
@@ -140,6 +137,10 @@ class REGINA_API SnappedTwoSphere :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
+
+        // Mark this class as non-copyable.
+        SnappedTwoSphere(const SnappedTwoSphere&) = delete;
+        SnappedTwoSphere& operator = (const SnappedTwoSphere&) = delete;
 
     private:
         /**

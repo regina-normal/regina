@@ -41,7 +41,6 @@
 #endif
 
 #include "regina-core.h"
-#include <boost/noncopyable.hpp>
 #include <list>
 
 namespace regina {
@@ -83,7 +82,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <typename T>
-class ListOnCall : public boost::noncopyable {
+class ListOnCall {
     public:
         /**
          * An iterator over this list.  This operates as a forward
@@ -145,6 +144,10 @@ class ListOnCall : public boost::noncopyable {
         iterator end() const {
             return items.end();
         }
+
+        // Make this class non-copyable.
+        ListOnCall(const ListOnCall&) = delete;
+        ListOnCall& operator = (const ListOnCall&) = delete;
 
     protected:
         /**

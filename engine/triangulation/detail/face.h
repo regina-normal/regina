@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "maths/perm.h"
 #include "triangulation/facenumbering.h"
 #include "triangulation/alias/face.h"
@@ -51,7 +51,6 @@
 #include "utilities/markedvector.h"
 #include <deque>
 #include <vector>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace detail {
@@ -159,14 +158,15 @@ class FaceEmbeddingBase :
          *
          * @param cloneMe the object to copy.
          */
-        FaceEmbeddingBase(const FaceEmbeddingBase& cloneMe);
+        FaceEmbeddingBase(const FaceEmbeddingBase& cloneMe) = default;
 
         /**
          * Makes this a copy of the given object.
          *
          * @param cloneMe the object to copy.
          */
-        FaceEmbeddingBase& operator = (const FaceEmbeddingBase& cloneMe);
+        FaceEmbeddingBase& operator = (const FaceEmbeddingBase& cloneMe) =
+            default;
 
         /**
          * Returns the top-dimensional simplex in which the underlying
@@ -429,7 +429,16 @@ class FaceStorage {
         bool inMaximalForest() const;
 #endif
 
+        // Make this class non-copyable.
+        FaceStorage(const FaceStorage&) = delete;
+        FaceStorage& operator = (const FaceStorage&) = delete;
+
     protected:
+        /**
+         * Default constructor that leaves the list of embeddings empty.
+         */
+        FaceStorage() = default;
+
         /**
          * Internal routine to help build the skeleton of a triangulation.
          *
@@ -461,7 +470,16 @@ class FaceStorage<dim, 2> {
         const FaceEmbedding<dim, dim-2>& front() const;
         const FaceEmbedding<dim, dim-2>& back() const;
 
+        // Make this class non-copyable.
+        FaceStorage(const FaceStorage&) = delete;
+        FaceStorage& operator = (const FaceStorage&) = delete;
+
     protected:
+        /**
+         * Default constructor that leaves the list of embeddings empty.
+         */
+        FaceStorage() = default;
+
         void push_front(const FaceEmbedding<dim, dim-2>& emb);
         void push_back(const FaceEmbedding<dim, dim-2>& emb);
 };
@@ -473,8 +491,6 @@ class FaceStorage<dim, 1> {
         FaceEmbedding<dim, dim-1> embeddings_[2];
 
     public:
-        FaceStorage();
-
         size_t degree() const;
         const FaceEmbedding<dim, dim-1>& embedding(size_t index) const;
 
@@ -486,7 +502,12 @@ class FaceStorage<dim, 1> {
 
         bool inMaximalForest() const;
 
+        // Make this class non-copyable.
+        FaceStorage(const FaceStorage&) = delete;
+        FaceStorage& operator = (const FaceStorage&) = delete;
+
     protected:
+        FaceStorage();
         void push_back(const FaceEmbedding<dim, dim-1>& emb);
 };
 
@@ -878,8 +899,7 @@ class FaceBase :
         public FaceNumbering<dim, subdim>,
         public MarkedElement,
         public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
-        public Output<Face<dim, subdim>>,
-        public boost::noncopyable {
+        public Output<Face<dim, subdim>> {
     private:
         Component<dim>* component_;
             /**< The component that this face belongs to. */
@@ -1053,6 +1073,8 @@ class FaceBase :
          */
         void writeTextLong(std::ostream& out) const;
 
+        // This class inherits non-copyability from FaceStorage.
+
     protected:
         /**
          * Creates a new face.  The face will be initialised as belong
@@ -1080,20 +1102,6 @@ template <int dim, int subdim>
 inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase(
         Simplex<dim>* simplex, int face) :
         simplex_(simplex), face_(face) {
-}
-
-template <int dim, int subdim>
-inline FaceEmbeddingBase<dim, subdim>::FaceEmbeddingBase(
-        const FaceEmbeddingBase& cloneMe) :
-        simplex_(cloneMe.simplex_), face_(cloneMe.face_) {
-}
-
-template <int dim, int subdim>
-inline FaceEmbeddingBase<dim, subdim>& FaceEmbeddingBase<dim, subdim>::
-        operator = (const FaceEmbeddingBase& cloneMe) {
-    simplex_ = cloneMe.simplex_;
-    face_ = cloneMe.face_;
-    return *this;
 }
 
 template <int dim, int subdim>

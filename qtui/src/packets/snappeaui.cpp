@@ -246,8 +246,8 @@ void SnapPeaHeaderUI::childWasAdded(regina::Packet* packet,
 }
 
 void SnapPeaHeaderUI::childWasRemoved(regina::Packet* packet,
-        regina::Packet* child, bool inParentDestructor) {
-    if (! inParentDestructor)
+        regina::Packet*) {
+    if (packet) // not in packet's destructor
         refreshLock();
 }
 

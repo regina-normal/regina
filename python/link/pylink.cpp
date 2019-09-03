@@ -30,15 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-void addExampleLink();
-void addLink();
-void addModelLinkGraph();
-void addTangle();
+namespace pybind11 { class module; }
 
-void addLinkClasses() {
-    addExampleLink();
-    addLink();
-    addModelLinkGraph();
-    addTangle();
+void addExampleLink(pybind11::module& m);
+void addLink(pybind11::module& m);
+void addModelLinkGraph(pybind11::module& m);
+void addTangle(pybind11::module& m);
+
+void addLinkClasses(pybind11::module& m) {
+    addExampleLink(m);
+    addLink(m);
+    addModelLinkGraph(m);
+    addTangle(m);
 }
 

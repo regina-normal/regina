@@ -30,24 +30,24 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "surfaces/prism.h"
 #include "surfaces/normalsurface.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::PrismSpec;
 
-void addPrism() {
-    class_<PrismSpec>("PrismSpec")
-        .def(init<unsigned long, int>())
-        .def(init<const PrismSpec&>())
+void addPrism(pybind11::module& m) {
+    auto c = pybind11::class_<PrismSpec>(m, "PrismSpec")
+        .def(pybind11::init<>())
+        .def(pybind11::init<unsigned long, int>())
+        .def(pybind11::init<const PrismSpec&>())
         .def_readwrite("tetIndex", &PrismSpec::tetIndex)
         .def_readwrite("edge", &PrismSpec::edge)
-        .def(self_ns::str(self))
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output_ostream(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NPrismSpec") = scope().attr("PrismSpec");
+    m.attr("NPrismSpec") = m.attr("PrismSpec");
 }
 

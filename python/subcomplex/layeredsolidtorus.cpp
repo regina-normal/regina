@@ -30,52 +30,39 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/layeredsolidtorus.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::LayeredSolidTorus;
 
-void addLayeredSolidTorus() {
-    class_<LayeredSolidTorus, bases<regina::StandardTriangulation>,
-            std::auto_ptr<LayeredSolidTorus>, boost::noncopyable>
-            ("LayeredSolidTorus", no_init)
-        .def("clone", &LayeredSolidTorus::clone,
-            return_value_policy<manage_new_object>())
+void addLayeredSolidTorus(pybind11::module& m) {
+    pybind11::class_<LayeredSolidTorus, regina::StandardTriangulation>
+            (m, "LayeredSolidTorus")
+        .def("clone", &LayeredSolidTorus::clone)
         .def("size", &LayeredSolidTorus::size)
         .def("base", &LayeredSolidTorus::base,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("baseEdge", &LayeredSolidTorus::baseEdge)
         .def("baseEdgeGroup", &LayeredSolidTorus::baseEdgeGroup)
         .def("baseFace", &LayeredSolidTorus::baseFace)
         .def("topLevel", &LayeredSolidTorus::topLevel,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("meridinalCuts", &LayeredSolidTorus::meridinalCuts)
         .def("topEdge", &LayeredSolidTorus::topEdge)
         .def("topEdgeGroup", &LayeredSolidTorus::topEdgeGroup)
         .def("topFace", &LayeredSolidTorus::topFace)
-        .def("flatten", &LayeredSolidTorus::flatten,
-            return_value_policy<manage_new_object>())
+        .def("flatten", &LayeredSolidTorus::flatten)
         .def("transform", &LayeredSolidTorus::transform)
-        .def("formsLayeredSolidTorusBase",
-            &LayeredSolidTorus::formsLayeredSolidTorusBase,
-            return_value_policy<manage_new_object>())
-        .def("formsLayeredSolidTorusTop",
-            &LayeredSolidTorus::formsLayeredSolidTorusTop,
-            return_value_policy<manage_new_object>())
-        .def("isLayeredSolidTorus", &LayeredSolidTorus::isLayeredSolidTorus,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("formsLayeredSolidTorusBase")
-        .staticmethod("formsLayeredSolidTorusTop")
-        .staticmethod("isLayeredSolidTorus")
+        .def_static("formsLayeredSolidTorusBase",
+            &LayeredSolidTorus::formsLayeredSolidTorusBase)
+        .def_static("formsLayeredSolidTorusTop",
+            &LayeredSolidTorus::formsLayeredSolidTorusTop)
+        .def_static("isLayeredSolidTorus",
+            &LayeredSolidTorus::isLayeredSolidTorus)
     ;
 
-    implicitly_convertible<std::auto_ptr<LayeredSolidTorus>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NLayeredSolidTorus") = scope().attr("LayeredSolidTorus");
+    m.attr("NLayeredSolidTorus") = m.attr("LayeredSolidTorus");
 }
 

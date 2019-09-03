@@ -198,13 +198,15 @@ DiscSpec* DiscSetSurface::adjacentDisc(const DiscSpec& disc,
 }
 
 void DiscSpecIterator::makeValid() {
+    if (current.tetIndex == internalDiscSet->nTets())
+        return;
     while (current.number ==
             internalDiscSet->nDiscs(current.tetIndex, current.type)) {
         current.number = 0;
-        current.type++;
+        ++current.type;
         if (current.type == 10) {
             current.type = 0;
-            current.tetIndex++;
+            ++current.tetIndex;
             if (current.tetIndex == internalDiscSet->nTets())
                 break;
         }

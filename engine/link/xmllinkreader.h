@@ -100,8 +100,8 @@ class REGINA_API XMLLinkCrossingsReader : public XMLElementReader {
         XMLLinkCrossingsReader(Link* link);
 
         virtual void startElement(const std::string&,
-            const regina::xml::XMLPropertyDict&, XMLElementReader*);
-        virtual void initialChars(const std::string& chars);
+            const regina::xml::XMLPropertyDict&, XMLElementReader*) override;
+        virtual void initialChars(const std::string& chars) override;
 
         bool broken() const;
 };

@@ -30,16 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "surfaces/normalcoords.h"
-#include "../helpers.h"
 
-using namespace boost::python;
-
-void addNormalCoords() {
-    scope global;
-
-    enum_<regina::NormalCoords>("NormalCoords")
+void addNormalCoords(pybind11::module& m) {
+    pybind11::enum_<regina::NormalCoords>(m, "NormalCoords")
         .value("NS_STANDARD", regina::NS_STANDARD)
         .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)
         .value("NS_QUAD", regina::NS_QUAD)
@@ -52,19 +47,7 @@ void addNormalCoords() {
         .value("NS_ORIENTED", regina::NS_ORIENTED)
         .value("NS_ORIENTED_QUAD", regina::NS_ORIENTED_QUAD)
         .value("NS_ANGLE", regina::NS_ANGLE)
+        .export_values()
         ;
-
-    global.attr("NS_STANDARD") = regina::NS_STANDARD;
-    global.attr("NS_AN_STANDARD") = regina::NS_AN_STANDARD;
-    global.attr("NS_QUAD") = regina::NS_QUAD;
-    global.attr("NS_QUAD_CLOSED") = regina::NS_QUAD_CLOSED;
-    global.attr("NS_AN_QUAD_OCT") = regina::NS_AN_QUAD_OCT;
-    global.attr("NS_AN_QUAD_OCT_CLOSED") = regina::NS_AN_QUAD_OCT_CLOSED;
-    global.attr("NS_EDGE_WEIGHT") = regina::NS_EDGE_WEIGHT;
-    global.attr("NS_TRIANGLE_ARCS") = regina::NS_TRIANGLE_ARCS;
-    global.attr("NS_AN_LEGACY") = regina::NS_AN_LEGACY;
-    global.attr("NS_ORIENTED") = regina::NS_ORIENTED;
-    global.attr("NS_ORIENTED_QUAD") = regina::NS_ORIENTED_QUAD;
-    global.attr("NS_ANGLE") = regina::NS_ANGLE;
 }
 

@@ -30,97 +30,73 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "algebra/abeliangroup.h"
 #include "maths/matrix.h"
 #include "../helpers.h"
-#include <boost/python/detail/api_placeholder.hpp> // For len().
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::AbelianGroup;
 using regina::Integer;
 using regina::MatrixInt;
 
 namespace {
-    void (AbelianGroup::*addTorsionElement_large)(
-        const regina::Integer&, unsigned) =
-        &AbelianGroup::addTorsionElement;
-    void (AbelianGroup::*addTorsionElement_long)(unsigned long,
-        unsigned) = &AbelianGroup::addTorsionElement;
-    void (AbelianGroup::*addGroup_matrix)(const MatrixInt&) =
-        &AbelianGroup::addGroup;
-    void (AbelianGroup::*addGroup_group)(const AbelianGroup&) =
-        &AbelianGroup::addGroup;
-    unsigned (AbelianGroup::*torsionRank_large)(
-        const regina::Integer&) const = &AbelianGroup::torsionRank;
-    unsigned (AbelianGroup::*torsionRank_long)(unsigned long)
-        const = &AbelianGroup::torsionRank;
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addRank,
-        AbelianGroup::addRank, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_addTorsionElement,
-        AbelianGroup::addTorsionElement, 1, 2);
-
-    void addTorsionElements_dict(AbelianGroup& g,
-            boost::python::list elements) {
+    void addTorsionElements(AbelianGroup& g, pybind11::list elements) {
         std::multiset<regina::Integer> set;
 
-        long len = boost::python::len(elements);
-        for (long i = 0; i < len; i++) {
-            // Accept any type that we know how to convert to a large
-            // integer.
-            extract<regina::Integer&> x_large(elements[i]);
-            if (x_large.check()) {
-                set.insert(x_large());
+        for (auto item : elements) {
+            // Accept any type that we know how to convert to a large integer.
+            // This includes (at least) regina::Integer, python integers
+            // (both int and long), and strings.
+            try {
+                set.insert(item.cast<regina::Integer>());
                 continue;
+            } catch (pybind11::cast_error const &) {
+                throw std::invalid_argument(
+                    "List element not convertible to Integer");
             }
-            extract<long> x_long(elements[i]);
-            if (x_long.check()) {
-                set.insert(x_long());
-                continue;
-            }
-            extract<const char*> x_str(elements[i]);
-            if (x_str.check()) {
-                set.insert(x_str());
-                continue;
-            }
-
-            // Throw an exception.
-            x_large();
         }
 
         g.addTorsionElements(set);
     }
 }
 
-void addAbelianGroup() {
-    class_<AbelianGroup, std::auto_ptr<AbelianGroup>, boost::noncopyable>
-            ("AbelianGroup")
-        .def(init<const AbelianGroup&>())
-        .def(init<const MatrixInt&, const MatrixInt&>())
-        .def(init<const MatrixInt&, const MatrixInt&, const Integer&>())
-        .def("addRank", &AbelianGroup::addRank, OL_addRank())
-        .def("addTorsionElement", addTorsionElement_large,
-            OL_addTorsionElement())
-        .def("addTorsionElement", addTorsionElement_long,
-            OL_addTorsionElement())
-        .def("addTorsionElements", addTorsionElements_dict)
-        .def("addGroup", addGroup_matrix)
-        .def("addGroup", addGroup_group)
+void addAbelianGroup(pybind11::module& m) {
+    auto c = pybind11::class_<AbelianGroup>(m, "AbelianGroup")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const AbelianGroup&>())
+        .def(pybind11::init<const MatrixInt&, const MatrixInt&>())
+        .def(pybind11::init<const MatrixInt&, const MatrixInt&,
+            const Integer&>())
+        .def("addRank", &AbelianGroup::addRank,
+            pybind11::arg("extraRank") = 1)
+        .def("addTorsionElement",
+            overload_cast<const regina::Integer&, unsigned>(
+            &AbelianGroup::addTorsionElement),
+            pybind11::arg(), pybind11::arg("mult") = 1)
+        .def("addTorsionElement", overload_cast<unsigned long, unsigned>(
+            &AbelianGroup::addTorsionElement),
+            pybind11::arg(), pybind11::arg("mult") = 1)
+        .def("addTorsionElements", addTorsionElements)
+        .def("addGroup", overload_cast<const MatrixInt&>(
+            &AbelianGroup::addGroup))
+        .def("addGroup", overload_cast<const AbelianGroup&>(
+            &AbelianGroup::addGroup))
         .def("rank", &AbelianGroup::rank)
-        .def("torsionRank", torsionRank_large)
-        .def("torsionRank", torsionRank_long)
+        .def("torsionRank", overload_cast<const regina::Integer&>(
+            &AbelianGroup::torsionRank, pybind11::const_))
+        .def("torsionRank", overload_cast<unsigned long>(
+            &AbelianGroup::torsionRank, pybind11::const_))
         .def("countInvariantFactors", &AbelianGroup::countInvariantFactors)
-        .def("invariantFactor", &AbelianGroup::invariantFactor,
-            return_value_policy<return_by_value>())
+        .def("invariantFactor", &AbelianGroup::invariantFactor)
         .def("isTrivial", &AbelianGroup::isTrivial)
         .def("isZ", &AbelianGroup::isZ)
         .def("isZn", &AbelianGroup::isZn)
         .def("utf8", &AbelianGroup::utf8)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NAbelianGroup") = scope().attr("AbelianGroup");
+    m.attr("NAbelianGroup") = m.attr("AbelianGroup");
 }
 

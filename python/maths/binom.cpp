@@ -30,13 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "maths/binom.h"
 
-using namespace boost::python;
-
-void addBinom() {
-    def("binomSmall", regina::binomSmall);
-    def("binomMedium", regina::binomMedium);
+void addBinom(pybind11::module& m) {
+    m.def("binomSmall", regina::binomSmall);
+    m.def("binomMedium", regina::binomMedium);
 }
 

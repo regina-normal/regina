@@ -124,10 +124,10 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         /**
          * PacketUI overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        QString getPacketMenuText() const;
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        QString getPacketMenuText() const override;
+        void refresh() override;
 
         /**
          * Refresh just the text header above the table.
@@ -137,7 +137,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::Packet* packet);
+        void packetWasRenamed(regina::Packet* packet) override;
         
     public slots:
         /**

@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "algebra/markedabeliangroup.h"
 #include "maths/rational.h"
 #include "triangulation/dim3.h"
@@ -49,7 +49,6 @@
 #include <memory>
 #include <vector>
 #include <cstddef>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -119,8 +118,7 @@ namespace regina {
  * @author Ryan Budney
  */
 class REGINA_API HomologicalData :
-    public ShortOutput<HomologicalData>,
-    public boost::noncopyable {
+    public ShortOutput<HomologicalData> {
 private:
     /**
      * A fairly primitive class that implements sorted arrays of
@@ -145,6 +143,16 @@ private:
              */
             inline SortedArray() {
             }
+
+            /**
+             * Construct a clone of the given array.
+             */
+            SortedArray(const SortedArray&) = default;
+
+            /**
+             * Set this to a clone of the given array.
+             */
+            SortedArray& operator = (const SortedArray&) = default;
 
             /**
              * Return the number of elements in this array.
@@ -623,9 +631,6 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * \ifacespython Not available, though the string routine
-     * torsionRankVectorString() can still be used.
-     *
      * @return the torsion form rank vector.
      */
     const std::vector< std::pair< Integer,
@@ -649,9 +654,6 @@ public:
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
      *
-     * \ifacespython Not available, though the string routine
-     * torsionSigmaVectorString() can still be used.
-     *
      * @return the Kawauchi-Kojima sigma-vector.
      */
     const std::vector<LargeInteger>& torsionSigmaVector();
@@ -674,9 +676,6 @@ public:
      * Math. Ann. 253 (1980), 29--42.
      *
      * \pre The triangulation is of a connected orientable 3-manifold.
-     *
-     * \ifacespython Not available, though the string routine
-     * torsionLegendreSymbolVectorString() can still be used.
      *
      * @return the Legendre symbol vector associated to the torsion
      * linking form.
@@ -755,6 +754,9 @@ public:
      * on the manifold's homological data.
      */
     const std::string& embeddabilityComment();
+
+    // Make this class non-assignable.
+    HomologicalData& operator = (const HomologicalData&) = delete;
 };
 
 /**

@@ -31,89 +31,121 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
-def watcher(p):
-    c = Container()
-    p.insertChildLast(c)
-    return c
+class Watcher(PacketListener):
+    def __init__(self, packet, label):
+        PacketListener.__init__(self)
+        packet.setLabel(label)
+        packet.listen(self)
+    def packetToBeDestroyed(self, packet):
+        print('Destroying: ' + packet.label())
 
-def ensureAlive(watcher):
-    try:
-        watcher.label()
-    except:
-        print 'ERROR: ensureAlive failed'
 
-def ensureDestroyed(watcher):
-    try:
-        watcher.label()
-        print 'ERROR: ensureDestroyed failed'
-    except:
-        pass
-
-print 'Script variables #1'
-a = Container(); aw = watcher(a)
-b = Triangulation3(); b.newSimplex(); bw = watcher(b)
-c = Script(); cw = watcher(c)
+print('Script variables #1')
+print('Step 1')
+a = Container(); aw1 = Watcher(a, 'a1')
+print('Step 2')
+b = Triangulation3(); b.newSimplex(); bw1 = Watcher(b, 'b1')
+print('Step 3')
+c = Script(); cw1 = Watcher(c, 'c1')
+print('Step 4')
 a.insertChildLast(b)
+print('Step 5')
 a.insertChildLast(c)
+print('Step 6')
 c.addVariable('foo', b)
-ensureAlive(aw); ensureAlive(bw); ensureAlive(cw)
+print('Step 7')
 val = c.variableValue('foo')
-ensureAlive(aw); ensureAlive(bw); ensureAlive(cw)
-a = None
-ensureDestroyed(aw); ensureDestroyed(bw); ensureDestroyed(cw)
+print('Step 8')
+a = None # destroys a1
+print('Step 9')
+# (b1 == val) and c1 are orphaned but alive
+print(b); print(b.label()); print(b.parent())
+print(c); print(c.label()); print(c.parent())
 
-print 'Script variables #2'
-a = Container(); aw = watcher(a)
-b = Triangulation3(); b.newSimplex(); bw = watcher(b)
-c = Script(); cw = watcher(c)
+print('Script variables #2')
+print('Step 1')
+a = Container(); aw2 = Watcher(a, 'a2')
+print('Step 2')
+b = Triangulation3(); b.newSimplex(); bw2 = Watcher(b, 'b2')
+print('Step 3')
+c = Script(); cw2 = Watcher(c, 'c2') # destroys c1
+print('Step 4')
 a.insertChildLast(b)
+print('Step 5')
 a.insertChildLast(c)
+print('Step 6')
 c.addVariable('foo', a)
-ensureAlive(aw); ensureAlive(bw); ensureAlive(cw)
-val = c.variableValue('foo')
-ensureAlive(aw); ensureAlive(bw); ensureAlive(cw)
+print('Step 7')
+val = c.variableValue('foo') # destroys b1
+print('Step 8')
 a = None
-ensureAlive(aw); ensureAlive(bw); ensureAlive(cw)
-val = None
-ensureDestroyed(aw); ensureDestroyed(bw); ensureDestroyed(cw)
+print('Step 9')
+val = None # destroys a
+print('Step 10')
+# b2 and c2 are orphaned but alive
+print(b); print(b.label()); print(b.parent())
+print(c); print(c.label()); print(c.parent())
 
-print 'Example triangulation'
-f = ExampleSnapPea.figureEight(); fw = watcher(f)
-ensureAlive(fw)
-f = None
-ensureDestroyed(fw)
+print('Example triangulation')
+print('Step 1')
+f = ExampleSnapPea.figureEight(); fw = Watcher(f, 'f')
+print('Step 2')
+f = None # destroys f
+print('Step 3')
 
-print 'Vertex link #1'
-t = Example3.lens(7,1); tw = watcher(t)
-v = t.vertex(0).buildLink(); vw = watcher(v)
+print('Vertex link #1')
+print('Step 1')
+t = Example3.lens(7,1); tw = Watcher(t, 't1')
+print('Step 2')
+v = t.vertex(0).buildLink(); vw = Watcher(v, 'v1')
+print('Step 3')
 t.insertChildLast(v)
-ensureAlive(tw); ensureAlive(vw)
-t = None
-ensureDestroyed(tw); ensureDestroyed(vw)
+print('Step 4')
+t = None # destroys t
+print('Step 5')
+# v1 is orphaned but alive
+print(v); print(v.label()); print(v.parent())
 
-print 'Vertex link #2'
-t = Example3.lens(7,1); tw = watcher(t)
-v = t.vertex(0).buildLink(); vw = watcher(v)
-ensureAlive(tw); ensureAlive(vw)
-t = None
-ensureDestroyed(tw); ensureAlive(vw)
-v = None
-ensureDestroyed(tw); ensureDestroyed(vw)
+print('Vertex link #2')
+print('Step 1')
+t = Example3.lens(7,1); tw = Watcher(t, 't2')
+print('Step 2')
+v = t.vertex(0).buildLink(); vw = Watcher(v, 'v2') # destroys v1
+print('Step 3')
+t = None # destroys t2
+print('Step 4')
+v = None # destroys v2
+print('Step 5')
 
-print 'Vertex link detailed #1'
-t = Example3.lens(7,1); tw = watcher(t)
-v = t.vertex(0).buildLinkDetail(); vw = watcher(v[0])
+print('Vertex link detailed #1')
+print('Step 1')
+t = Example3.lens(7,1); tw = Watcher(t, 't3')
+print('Step 2')
+v = t.vertex(0).buildLinkDetail(); vw = Watcher(v[0], 'v3')
+print('Step 3')
 t.insertChildLast(v[0])
-ensureAlive(tw); ensureAlive(vw)
-t = None
-ensureDestroyed(tw); ensureDestroyed(vw)
+print('Step 4')
+t = None # destroys t3
+print('Step 5')
+# v3 is orphaned but alive
+print(v[0]); print(v[0].label()); print(v[0].parent())
 
-print 'Vertex link detailed #2'
-t = Example3.lens(7,1); tw = watcher(t)
-v = t.vertex(0).buildLinkDetail(); vw = watcher(v[0])
-ensureAlive(tw); ensureAlive(vw)
-t = None
-ensureDestroyed(tw); ensureAlive(vw)
-v = None
-ensureDestroyed(tw); ensureDestroyed(vw)
+print('Vertex link detailed #2')
+print('Step 1')
+t = Example3.lens(7,1); tw = Watcher(t, 't4')
+print('Step 2')
+v = t.vertex(0).buildLinkDetail(); vw = Watcher(v[0], 'v4') # destroys v3
+print('Step 3')
+t = None # destroys t4
+print('Step 4')
+v = None # destroys v4
+print('Step 5')
 
+# b2 and c2 are still alive at this point
+print(b); print(b.label()); print(b.parent())
+print(c); print(c.label()); print(c.parent())
+
+# Destroy their watchers now, so they do not try to call print() as the
+# entire python system is shutting down
+bw2 = None
+cw2 = None

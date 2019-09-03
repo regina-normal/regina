@@ -30,31 +30,33 @@
  *                                                                        *
  **************************************************************************/
 
-void addBoundaryComponent3();
-void addComponent3();
-void addEdge3();
-void addExample3();
-void addFacePair();
-void addFacetPairing3();
-void addHomologicalData();
-void addIsomorphism3();
-void addTetrahedron3();
-void addTriangle3();
-void addTriangulation3();
-void addVertex3();
+namespace pybind11 { class module; }
 
-void addTriangulationClasses() {
-    addBoundaryComponent3();
-    addComponent3();
-    addEdge3();
-    addExample3();
-    addFacePair();
-    addFacetPairing3();
-    addHomologicalData();
-    addIsomorphism3();
-    addTetrahedron3();
-    addTriangle3();
-    addTriangulation3();
-    addVertex3();
+void addBoundaryComponent3(pybind11::module& m);
+void addComponent3(pybind11::module& m);
+void addEdge3(pybind11::module& m);
+void addExample3(pybind11::module& m);
+void addFacePair(pybind11::module& m);
+void addFacetPairing3(pybind11::module& m);
+void addHomologicalData(pybind11::module& m);
+void addIsomorphism3(pybind11::module& m);
+void addTetrahedron3(pybind11::module& m);
+void addTriangle3(pybind11::module& m);
+void addTriangulation3(pybind11::module& m);
+void addVertex3(pybind11::module& m);
+
+void addTriangulationClasses(pybind11::module& m) {
+    addBoundaryComponent3(m);
+    addComponent3(m);
+    addEdge3(m);
+    addExample3(m);
+    addFacePair(m);
+    addFacetPairing3(m);
+    addHomologicalData(m);
+    addIsomorphism3(m);
+    addTetrahedron3(m);
+    addTriangle3(m);
+    addTriangulation3(m);
+    addVertex3(m);
 }
 

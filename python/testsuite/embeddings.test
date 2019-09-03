@@ -33,7 +33,7 @@
 
 def doit(list):
 	for f in list:
-		print f
+		print(f)
 
 t = Triangulation2()
 s = t.newSimplex()

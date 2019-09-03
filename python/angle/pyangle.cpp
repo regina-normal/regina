@@ -30,11 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-void addAngleStructure();
-void addAngleStructures();
+namespace pybind11 { class module; }
 
-void addAngleClasses() {
-    addAngleStructure();
-    addAngleStructures();
+void addAngleStructure(pybind11::module& m);
+void addAngleStructures(pybind11::module& m);
+
+void addAngleClasses(pybind11::module& m) {
+    addAngleStructure(m);
+    addAngleStructures(m);
 }
 

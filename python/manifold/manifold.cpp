@@ -30,51 +30,42 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "algebra/abeliangroup.h"
 #include "manifold/manifold.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::Manifold;
 
-namespace {
-    void writeName_stdio(const Manifold& m) {
-        m.writeName(std::cout);
-    }
-    void writeTeXName_stdio(const Manifold& m) {
-        m.writeTeXName(std::cout);
-    }
-    void writeStructure_stdio(const Manifold& m) {
-        m.writeStructure(std::cout);
-    }
-}
-
-void addManifold() {
-    class_<Manifold, boost::noncopyable, std::auto_ptr<Manifold> >
-            ("Manifold", no_init)
+void addManifold(pybind11::module& m) {
+    auto c = pybind11::class_<Manifold>(m, "Manifold")
         .def("name", &Manifold::name)
         .def("TeXName", &Manifold::TeXName)
         .def("structure", &Manifold::structure)
-        .def("construct", &Manifold::construct,
-            return_value_policy<to_held_type<> >())
-        .def("homology", &Manifold::homology,
-            return_value_policy<manage_new_object>())
-        .def("homologyH1", &Manifold::homologyH1,
-            return_value_policy<manage_new_object>())
+        .def("construct", &Manifold::construct)
+        .def("homology", &Manifold::homology)
+        .def("homologyH1", &Manifold::homologyH1)
         .def("isHyperbolic", &Manifold::isHyperbolic)
-        .def("writeName", writeName_stdio)
-        .def("writeTeXName", writeTeXName_stdio)
-        .def("writeStructure", writeStructure_stdio)
-        .def(self < self)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
+        .def("writeName", [](const Manifold& m) {
+            m.writeName(std::cout);
+        })
+        .def("writeTeXName", [](const Manifold& m) {
+            m.writeTeXName(std::cout);
+        })
+        .def("writeStructure", [](const Manifold& m) {
+            m.writeStructure(std::cout);
+        })
+        // We cannot bind the < operator in the normal way:
+        // see https://github.com/pybind/pybind11/issues/1487 for details.
+        .def("__lt__", [](const Manifold& lhs, const Manifold& rhs) {
+            return lhs < rhs;
+        })
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NManifold") = scope().attr("Manifold");
-
+    m.attr("NManifold") = m.attr("Manifold");
 }
 

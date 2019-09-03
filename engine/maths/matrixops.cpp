@@ -354,7 +354,7 @@ unsigned rowBasis(MatrixInt& matrix) {
 
         // Find the first non-zero entry in row doneRows.
         for (c = doneRows; c < n; ++c)
-            if (echelon.entry(doneRows, lead[c]) != MatrixInt::zero)
+            if (echelon.entry(doneRows, lead[c]) != 0)
                 break;
 
         if (c == n) {
@@ -377,7 +377,7 @@ unsigned rowBasis(MatrixInt& matrix) {
 
             for (r = doneRows + 1; r < rank; ++r) {
                 coeff2 = echelon.entry(r, lead[doneRows]);
-                if (coeff2 != MatrixInt::zero) {
+                if (coeff2 != 0) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(doneRows, r, -coeff2);
 
@@ -415,7 +415,7 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
 
         // Find the first non-zero entry in row doneRows.
         for (c = doneRows; c < n; ++c)
-            if (echelon.entry(doneRows, lead[c]) != MatrixInt::zero)
+            if (echelon.entry(doneRows, lead[c]) != 0)
                 break;
 
         if (c == n) {
@@ -438,7 +438,7 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
 
             for (r = doneRows + 1; r < rank; ++r) {
                 coeff2 = echelon.entry(r, lead[doneRows]);
-                if (coeff2 != MatrixInt::zero) {
+                if (coeff2 != 0) {
                     echelon.multRow(r, coeff1);
                     echelon.addRow(doneRows, r, -coeff2);
 
@@ -451,7 +451,7 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
     }
 
     // Now form the basis for the orthogonal complement.
-    complement.initialise(MatrixInt::zero);
+    complement.initialise(0);
 
     Integer lcmLead = 1;
     for (r = 0; r < n; ++r) {
@@ -471,7 +471,7 @@ unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement) {
 
             for (tmp = 0; tmp < r; ++tmp) {
                 coeff2 = echelon.entry(tmp, lead[r]);
-                if (coeff2 != MatrixInt::zero) {
+                if (coeff2 != 0) {
                     echelon.multRow(tmp, coeff1);
                     echelon.addRow(r, tmp, -coeff2);
 

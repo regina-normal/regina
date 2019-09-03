@@ -31,6 +31,7 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from __future__ import print_function
 
 import sys
 if (len(sys.argv) > 1):
@@ -39,12 +40,12 @@ else:
     testpath = '.'
 
 pdf = PDF()
-print 'Null:', pdf.isNull()
-print 'Size:', pdf.size()
+print('Null:', pdf.isNull())
+print('Size:', pdf.size())
 
 pdf = PDF(testpath + '/sample.pdf')
-print 'Null:', pdf.isNull()
-print 'Size:', pdf.size()
+print('Null:', pdf.isNull())
+print('Size:', pdf.size())
 
 # TODO: Export and compare.
 

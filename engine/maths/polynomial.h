@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "utilities/stringutils.h"
-#include "output.h"
+#include "core/output.h"
 #include <iostream>
 
 namespace regina {
@@ -71,11 +71,22 @@ namespace regina {
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Functions that take or return objects by value are designed to be just as
+ * efficient as working with references or pointers (any variations to
+ * this are noted in the method documentation), and long chains of operators
+ * such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
+ *
  * \ifacespython In Python, the class Polynomial refers to the specific
  * template class Polynomial<Rational>.
  */
 template <typename T>
 class Polynomial : public ShortOutput<Polynomial<T>, true> {
+    public:
+        typedef T Coefficient;
+            /**< The type of each coefficient of the polynomial. */
+
     private:
         size_t degree_;
             /**< The degree of the polynomial.  Here the zero polynomial
@@ -101,6 +112,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * A note for developers: even though this routine is identical to
          * the templated copy constructor, it must be declared and
          * implemented separately.  Otherwise the compiler might create
@@ -113,12 +126,24 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
          * @param value the polynomial to clone.
          */
         template <typename U>
         Polynomial(const Polynomial<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this new polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         */
+        Polynomial(Polynomial<T>&& value) noexcept;
 
         /**
          * Creates a new polynomial from the given sequence of coefficients.
@@ -128,6 +153,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * There is no problem if the leading coefficient (i.e., the
          * last coefficient in the sequence) is zero.
          * An empty sequence will be treated as the zero polynomial.
+         *
+         * This constructor induces a deep copy of the given range.
          *
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
@@ -169,6 +196,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * There is no problem if the leading coefficient (i.e., the
          * last coefficient in the sequence) is zero.
          * An empty sequence will be treated as the zero polynomial.
+         *
+         * This routine induces a deep copy of the given range.
          *
          * \pre Objects of type \a T can be assigned values from
          * dereferenced iterators of type \a iterator.
@@ -275,6 +304,8 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * (but if they do not, then the degree of this polynomial will
          * of course change).
          *
+         * This operator induces a deep copy of the given polynomial.
+         *
          * A note to developers: although this is identical to the templated
          * assignment operator, it must be declared and implemented separately.
          * See the copy constructor for further details.
@@ -291,11 +322,28 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * (but if they do not, then the degree of this polynomial will
          * of course change).
          *
+         * This operator induces a deep copy of the given polynomial.
+         *
          * @param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
         template <typename U>
         Polynomial& operator = (const Polynomial<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given polynomial need not have the same degree
+         * (but if they do not, then the degree of this polynomial will
+         * of course change).
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         * @return a reference to this polynomial.
+         */
+        Polynomial& operator = (Polynomial<T>&& value) noexcept;
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -307,6 +355,12 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * with this.
          */
         void swap(Polynomial<T>& other);
+
+        /**
+         * Negates this polynomial.
+         * This field element is changed directly.
+         */
+        void negate();
 
         /**
          * Multiplies this polynomial by the given constant.
@@ -334,6 +388,11 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * The given polynomial need not have the same degree as this.
          * Note that the degree of this polynomial might change as a
          * result of this operation.
+         *
+         * \warning This routine may trigger a deep copy (currently this
+         * happens when \a other has higher degree than this).  Consider using
+         * the binary <tt>+</tt> operator instead, which is better able to
+         * avoid this deep copy where possible.
          *
          * @param other the polynomial to add to this.
          * @return a reference to this polynomial.
@@ -517,7 +576,140 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @return this polynomial as a unicode-enabled human-readable string.
          */
         std::string utf8(const char* variable) const;
+
+    private:
+        /**
+         * Constructs a new polynomial with the given degree and coefficients.
+         *
+         * The data members \a degree_ and \a coeff_ will be set to the given
+         * values; in particular, the new object will take ownership of the
+         * coefficient array.
+         */
+        Polynomial(size_t degree, T* coeff);
+
+    template <typename U>
+    friend Polynomial<U> operator +(const Polynomial<U>&, const Polynomial<U>&);
+
+    template <typename U>
+    friend Polynomial<U> operator *(const Polynomial<U>&, const Polynomial<U>&);
 };
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Polynomial<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param poly the polynomial to multiply by.
+ * @param scalar the scalar to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Polynomial<T> operator * (Polynomial<T> poly,
+    const typename Polynomial<T>::Coefficient& scalar);
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Polynomial<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param scalar the scalar to multiply by.
+ * @param poly the polynomial to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Polynomial<T> operator * (const typename Polynomial<T>::Coefficient& scalar,
+    Polynomial<T> poly);
+
+/**
+ * Divides the given polynomial by the given scalar constant.
+ *
+ * This uses the division operator /= for the coefficient type \a T.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Polynomial<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * @param poly the polynomial to divide by the given scalar.
+ * @param scalar the scalar factor to divide by.
+ * @return the quotient of the given polynomial by the given scalar.
+ */
+template <typename T>
+Polynomial<T> operator / (Polynomial<T> poly,
+    const typename Polynomial<T>::Coefficient& scalar);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator + (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator + (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * This operator <tt>+</tt> is sometimes faster than using <tt>+=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
+
+/**
+ * Returns the negative of the given polynomial.
+ *
+ * @param arg the polynomial to negate.
+ * @return the negative of \a arg.
+ */
+template <typename T>
+Polynomial<T> operator - (Polynomial<T> arg);
+
+/**
+ * Multiplies the two given polynomials.
+ *
+ * @param lhs the first polynomial to multiply.
+ * @param rhs the second polynomial to multiply.
+ * @return the product of both polynomials.
+ */
+template <typename T>
+Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -560,6 +752,12 @@ inline Polynomial<T>::Polynomial(const Polynomial<U>& value) :
         degree_(value.degree()), coeff_(new T[value.degree() + 1]) {
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] = value[i];
+}
+
+template <typename T>
+inline Polynomial<T>::Polynomial(Polynomial<T>&& value) noexcept :
+        degree_(value.degree_), coeff_(value.coeff_) {
+    value.coeff_ = nullptr;
 }
 
 template <typename T>
@@ -707,9 +905,25 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
 }
 
 template <typename T>
+inline Polynomial<T>& Polynomial<T>::operator = (Polynomial<T>&& value)
+        noexcept {
+    std::swap(coeff_, value.coeff_);
+    std::swap(degree_, value.degree_);
+    // Let value dispose of the original contents in its own destructor.
+    return *this;
+}
+
+template <typename T>
 inline void Polynomial<T>::swap(Polynomial<T>& other) {
     std::swap(degree_, other.degree_);
     std::swap(coeff_, other.coeff_);
+}
+
+template <typename T>
+inline void Polynomial<T>::negate() {
+    for (size_t i = 0; i <= degree_; ++i)
+        if (coeff_[i] != 0)
+            coeff_[i] = - coeff_[i];
 }
 
 template <typename T>
@@ -823,10 +1037,13 @@ Polynomial<T>& Polynomial<T>::operator /= (const Polynomial<T>& other) {
     }
 
     // The divisor has positive degree.
-    if (degree_ == 0)
+    if (degree_ < other.degree_) {
+        // The quotient is zero.
+        init();
         return *this;
+    }
 
-    // Both this and the divisor have positive degree.
+    // We now have 0 < deg(other) <= deg(this).
     T* remainder = coeff_;
     coeff_ = new T[degree_ - other.degree_ + 1];
     for (i = degree_; i >= other.degree_; --i) {
@@ -959,13 +1176,8 @@ void Polynomial<T>::gcdWithCoeffs(const Polynomial<U>& other,
     while (! y.isZero()) {
         gcd.divisionAlg(y, q, r);
 
-        tmp = q;
-        tmp *= uu;
-        u -= tmp;
-
-        tmp = q;
-        tmp *= vv;
-        v -= tmp;
+        u -= (q * uu);
+        v -= (q * vv);
 
         u.swap(uu);
         v.swap(vv);
@@ -1053,6 +1265,105 @@ inline std::string Polynomial<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();
+}
+
+template <typename T>
+inline Polynomial<T>::Polynomial(size_t degree, T* coeff) :
+        degree_(degree), coeff_(coeff) {
+}
+
+template <typename T>
+inline Polynomial<T> operator * (Polynomial<T> poly,
+        const typename Polynomial<T>::Coefficient& scalar) {
+    // When the argument poly is an lvalue reference, we perform a deep copy
+    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
+    // since the argument can be ignored.  This special-case optimisation
+    // would require two different lvalue/rvalue implementations of *, and
+    // so we leave it for now.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Polynomial<T> operator * (
+        const typename Polynomial<T>::Coefficient& scalar, Polynomial<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Polynomial<T> operator / (Polynomial<T> poly,
+        const typename Polynomial<T>::Coefficient& scalar) {
+    poly /= scalar;
+    return poly;
+}
+
+template <typename T>
+Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
+    if (lhs.degree_ >= rhs.degree_) {
+        T* coeff = new T[lhs.degree_ + 1];
+
+        for (size_t i = 0 ; i <= rhs.degree_; ++i)
+            coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
+        std::copy(lhs.coeff_ + rhs.degree_ + 1, lhs.coeff_ + lhs.degree_ + 1,
+            coeff + rhs.degree_ + 1);
+
+        return Polynomial<T>(lhs.degree_, coeff);
+    } else {
+        T* coeff = new T[rhs.degree_ + 1];
+
+        for (size_t i = 0 ; i <= lhs.degree_; ++i)
+            coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
+        std::copy(rhs.coeff_ + lhs.degree_ + 1, rhs.coeff_ + rhs.degree_ + 1,
+            coeff + lhs.degree_ + 1);
+
+        return Polynomial<T>(rhs.degree_, coeff);
+    }
+}
+
+template <typename T>
+inline Polynomial<T> operator + (Polynomial<T>&& lhs,
+        const Polynomial<T>& rhs) {
+    // If deg(lhs) < deg(rhs) then a deep copy is unavoidable.
+    return std::move(lhs += rhs);
+}
+
+template <typename T>
+inline Polynomial<T> operator + (const Polynomial<T>& lhs,
+        Polynomial<T>&& rhs) {
+    // If deg(rhs) < deg(lhs) then a deep copy is unavoidable.
+    return std::move(rhs += lhs);
+}
+
+template <typename T>
+inline Polynomial<T> operator + (Polynomial<T>&& lhs, Polynomial<T>&& rhs) {
+    // Add in whichever diretion avoids the deep copy in +=.
+    if (lhs.degree() >= rhs.degree())
+        return std::move(lhs += rhs);
+    else
+        return std::move(rhs += lhs);
+}
+
+template <typename T>
+inline Polynomial<T> operator - (Polynomial<T> arg) {
+    arg.negate();
+    return arg;
+}
+
+template <typename T>
+Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
+    if (lhs.isZero() || rhs.isZero())
+        return Polynomial<T>();
+
+    size_t i, j;
+    T* coeff = new T[lhs.degree_ + rhs.degree_ + 1];
+    for (i = 0; i <= lhs.degree_; ++i)
+        for (j = 0; j <= rhs.degree_; ++j)
+            coeff[i + j] += (lhs.coeff_[i] * rhs.coeff_[j]);
+
+    // Both leading coefficients are non-zero, so the degree is correct.
+    return Polynomial<T>(lhs.degree_ + rhs.degree_, coeff);
 }
 
 } // namespace regina

@@ -2,7 +2,7 @@
 # importable python module even when the user runs directly out of the
 # source tree.
 
-FILE(COPY __init__.py purePyMethods.py DESTINATION .)
+FILE(COPY __init__.py purePyMethods.py sageSetup.py DESTINATION .)
 
 # Rewrite the source list to be relative to this directory.
 FOREACH (SOURCE_FILE ${SOURCES})
@@ -27,15 +27,15 @@ IF (APPLE)
   # On MacOS this requires the "-undefined dynamic_lookup" linker flag.
   SET_TARGET_PROPERTIES(engine PROPERTIES LINK_FLAGS
     "-undefined dynamic_lookup")
-  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY} ${Boost_PYTHON_LIBRARY})
+  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY})
 ELSEIF (WIN32)
-  # On Windows, just link everything in; the boost.python build scripts
-  # do this also.
-  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY} ${Boost_PYTHON_LIBRARY} ${PYTHON_LIBRARIES})
+  # On Windows, just link everything in; Windows is hard enough to
+  # support as it is. :/
+  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY} ${PYTHON_LIBRARIES})
 ELSE ()
   # On Linux and relations, again do not link with ${PYTHON_LIBRARIES}.
   # This should not require any special linker flags.
-  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY} ${Boost_PYTHON_LIBRARY})
+  TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY})
 ENDIF ()
 
 IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
@@ -48,5 +48,5 @@ ELSE (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   SET(MODULEDIR ${PYLIBDIR}/regina)
 ENDIF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
 
-INSTALL(FILES __init__.py purePyMethods.py DESTINATION ${MODULEDIR} COMPONENT Runtime)
+INSTALL(FILES __init__.py purePyMethods.py sageSetup.py DESTINATION ${MODULEDIR} COMPONENT Runtime)
 INSTALL(TARGETS engine LIBRARY DESTINATION ${MODULEDIR} COMPONENT Runtime)

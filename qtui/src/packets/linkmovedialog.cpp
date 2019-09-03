@@ -340,7 +340,7 @@ void LinkMoveDialog::packetWasChanged(regina::Packet*) {
     fill();
 }
 
-void LinkMoveDialog::packetToBeDestroyed(regina::Packet*) {
+void LinkMoveDialog::packetToBeDestroyed(regina::PacketShell) {
     reject();
 }
 

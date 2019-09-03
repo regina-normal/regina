@@ -31,29 +31,22 @@
  **************************************************************************/
 
 #include "packet/container.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using regina::python::SafeHeldType;
 using regina::Container;
 
-void addContainer() {
-    class_<Container, bases<regina::Packet>,
-            SafeHeldType<Container>, boost::noncopyable>(
-            "Container", init<>())
-        .def(init<const std::string&>())
-        .attr("typeID") = regina::PACKET_CONTAINER
+void addContainer(pybind11::module& m) {
+    pybind11::class_<Container, regina::Packet, regina::SafePtr<Container>>(
+            m, "Container")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const std::string&>())
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return Container::typeID;
+        })
     ;
 
-    implicitly_convertible<SafeHeldType<Container>,
-        SafeHeldType<regina::Packet>>();
-
-    FIX_REGINA_BOOST_CONVERTERS(Container);
-
-    scope().attr("NContainer") = scope().attr("Container");
+    m.attr("NContainer") = m.attr("Container");
 }
 

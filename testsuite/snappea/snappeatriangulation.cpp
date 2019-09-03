@@ -520,7 +520,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                     "surfaces in quad space.");
 
             regina::MatrixInt* m;
-            bool found[4];
+            bool found[4] = {}; // initialises to false
             for (int i = 0; i < s->size(); ++i) {
                 m = s->surface(i)->boundaryIntersections();
                 if (m->rows() != 1 || m->columns() != 2) {

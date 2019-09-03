@@ -201,6 +201,9 @@ class REGINA_API ExampleLink {
          * destroyed by the caller of this routine.
          */
         static Link* gst();
+
+        // Make this class non-constructible.
+        ExampleLink() = delete;
 };
 
 /*@}*/

@@ -41,10 +41,9 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "maths/matrix2.h"
 #include "triangulation/dim3.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -79,9 +78,7 @@ namespace regina {
  * class without reason).  This triangulation can be accessed through the
  * core() routine.
  */
-class REGINA_API TxICore :
-        public Output<TxICore>,
-        public boost::noncopyable {
+class REGINA_API TxICore : public Output<TxICore> {
     protected:
         Triangulation<3> core_;
             /**< A full copy of the <tt>T x I</tt> triangulation that is
@@ -117,6 +114,10 @@ class REGINA_API TxICore :
          * Successive calls to this routine will returns the same
          * triangulation (i.e., it is not recreated each time).  The
          * triangulation that is returned may not be modified or destroyed.
+         *
+         * \ifacespython This routine returns a new clone of the triangulation
+         * each time it is called, since Python will claim ownership of the
+         * triangulation that is returned.
          *
          * @return the full triangulation.
          */
@@ -306,6 +307,10 @@ class REGINA_API TxICore :
          */
         void writeTextLong(std::ostream& out) const;
 
+        // Mark this class as non-copyable.
+        TxICore(const TxICore&) = delete;
+        TxICore& operator = (const TxICore&) = delete;
+
     protected:
         /**
          * Default constructor that performs no initialisation.
@@ -419,8 +424,8 @@ class REGINA_API TxIDiagonalCore : public TxICore {
          */
         unsigned long k() const;
 
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
 /**
@@ -467,8 +472,8 @@ class REGINA_API TxIParallelCore : public TxICore {
          */
         TxIParallelCore();
 
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
 /**

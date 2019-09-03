@@ -30,44 +30,33 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "manifold/graphloop.h"
 #include "manifold/sfs.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::GraphLoop;
 using regina::Matrix2;
 using regina::SFSpace;
 
-namespace {
-    GraphLoop* createGraphLoop_longs(const SFSpace& s,
-            long a, long b, long c, long d) {
-        return new GraphLoop(new SFSpace(s), a, b, c, d);
-    }
-
-    GraphLoop* createGraphLoop_matrix(const SFSpace& s, const Matrix2& m) {
-        return new GraphLoop(new SFSpace(s), m);
-    }
-}
-
-void addGraphLoop() {
-    class_<GraphLoop, bases<regina::Manifold>,
-            std::auto_ptr<GraphLoop>, boost::noncopyable>
-            ("GraphLoop", no_init)
-        .def("__init__", make_constructor(createGraphLoop_longs))
-        .def("__init__", make_constructor(createGraphLoop_matrix))
+void addGraphLoop(pybind11::module& m) {
+    pybind11::class_<GraphLoop, regina::Manifold>(m, "GraphLoop")
+        .def(pybind11::init([](const SFSpace& s,
+                long a, long b, long c, long d) {
+            // Clone the given SFS to avoid claiming ownership of it.
+            return new GraphLoop(new SFSpace(s), a, b, c, d);
+        }))
+        .def(pybind11::init([](const SFSpace& s, const Matrix2& m) {
+            // Clone the given SFS to avoid claiming ownership of it.
+            return new GraphLoop(new SFSpace(s), m);
+        }))
+        .def(pybind11::init<const GraphLoop&>())
         .def("sfs", &GraphLoop::sfs,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("matchingReln", &GraphLoop::matchingReln,
-            return_internal_reference<>())
-        .def(self < self)
-        .def(regina::python::add_eq_operators())
+            pybind11::return_value_policy::reference_internal)
     ;
 
-    scope().attr("NGraphLoop") = scope().attr("GraphLoop");
-
-    implicitly_convertible<std::auto_ptr<GraphLoop>,
-        std::auto_ptr<regina::Manifold> >();
+    m.attr("NGraphLoop") = m.attr("GraphLoop");
 }
 

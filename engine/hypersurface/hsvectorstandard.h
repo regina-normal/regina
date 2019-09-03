@@ -41,6 +41,7 @@
 #endif
 
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "hypersurface/normalhypersurface.h"
 
 namespace regina {
@@ -76,8 +77,7 @@ struct HyperInfo<HS_STANDARD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API HSVectorStandard :
-        public NormalHypersurfaceVector {
+class REGINA_API HSVectorStandard : public NormalHypersurfaceVector {
     REGINA_NORMAL_HYPERSURFACE_FLAVOUR(HSVectorStandard, HS_STANDARD,
         NormalHypersurfaceVector);
 
@@ -94,15 +94,14 @@ class REGINA_API HSVectorStandard :
          *
          * @param cloneMe the vector to clone.
          */
-        HSVectorStandard(
-            const Vector<LargeInteger>& cloneMe);
+        HSVectorStandard(const Vector<LargeInteger>& cloneMe);
 
         virtual LargeInteger tetrahedra(size_t pentIndex,
-            int vertex, const Triangulation<4>* triang) const;
+            int vertex, const Triangulation<4>* triang) const override;
         virtual LargeInteger prisms(size_t pentIndex,
-            int prismType, const Triangulation<4>* triang) const;
+            int prismType, const Triangulation<4>* triang) const override;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Triangulation<4>* triang) const;
+            const Triangulation<4>* triang) const override;
 
         static NormalHypersurfaceVector* makeZeroVector(
             const Triangulation<4>* triangulation);

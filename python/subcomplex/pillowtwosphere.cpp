@@ -30,30 +30,25 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/pillowtwosphere.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::PillowTwoSphere;
 
-void addPillowTwoSphere() {
-    class_<PillowTwoSphere, std::auto_ptr<PillowTwoSphere>,
-            boost::noncopyable>
-            ("PillowTwoSphere", no_init)
-        .def("clone", &PillowTwoSphere::clone,
-            return_value_policy<manage_new_object>())
+void addPillowTwoSphere(pybind11::module& m) {
+    auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere")
+        .def("clone", &PillowTwoSphere::clone)
         .def("triangle", &PillowTwoSphere::triangle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("triangleMapping", &PillowTwoSphere::triangleMapping)
-        .def("formsPillowTwoSphere", &PillowTwoSphere::formsPillowTwoSphere,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("formsPillowTwoSphere")
+        .def_static("formsPillowTwoSphere",
+            &PillowTwoSphere::formsPillowTwoSphere)
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NPillowTwoSphere") = scope().attr("PillowTwoSphere");
+    m.attr("NPillowTwoSphere") = m.attr("PillowTwoSphere");
 }
 

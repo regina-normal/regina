@@ -30,11 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-void addExampleSnapPea();
-void addSnapPeaTriangulation();
+namespace pybind11 { class module; }
 
-void addSnapPeaClasses() {
-    addExampleSnapPea();
-    addSnapPeaTriangulation();
+void addExampleSnapPea(pybind11::module& m);
+void addSnapPeaTriangulation(pybind11::module& m);
+
+void addSnapPeaClasses(pybind11::module& m) {
+    addExampleSnapPea(m);
+    addSnapPeaTriangulation(m);
 }
 

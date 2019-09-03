@@ -41,7 +41,6 @@
 
 #include <functional>
 #include <vector>
-#include <boost/noncopyable.hpp>
 #include "regina-core.h"
 #include "maths/integer.h"
 #include "maths/laurent.h"
@@ -255,7 +254,8 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name inc().
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name inc().
          *
          * @return a reference to this object.
          */
@@ -272,8 +272,7 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * preincrement operator is available under the name inc().
+         * \ifacespython This routine is available under the name inc().
          *
          * @return a copy of this object before the change took place.
          */
@@ -290,7 +289,8 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is available under the name dec().
+         * \ifacespython This routine is not available; however, the
+         * postincrement operator is available under the name dec().
          *
          * @return a reference to this object.
          */
@@ -307,8 +307,7 @@ class REGINA_API StrandRef {
          * \pre This is not a null reference, i.e., crossing() does not
          * return \c null.
          *
-         * \ifacespython This routine is not available; however, the
-         * preincrement operator is available under the name dec().
+         * \ifacespython This routine is available under the name dec().
          *
          * @return a copy of this object before the change took place.
          */
@@ -416,8 +415,7 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  * such operations then you should use a pointer to the relevant Crossing
  * object instead.
  */
-class REGINA_API Crossing : public MarkedElement,
-        public Output<Crossing>, public boost::noncopyable {
+class REGINA_API Crossing : public MarkedElement, public Output<Crossing> {
     private:
         int sign_;
             /**< The sign of the crossing, which must be +1 or -1.
@@ -554,6 +552,10 @@ class REGINA_API Crossing : public MarkedElement,
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        // Make this class non-copyable.
+        Crossing(const Crossing&) = delete;
+        Crossing& operator = (const Crossing&) = delete;
 
     private:
         /**
@@ -1584,6 +1586,13 @@ class REGINA_API Link : public Packet {
          * either you find a simplification or the routine becomes
          * too expensive to run.
          *
+         * If \a height is negative, then there will be \e no bound on
+         * the number of additional crossings.  This means that the
+         * routine will not terminate until a simpler diagram is found.
+         * If no simpler diagram exists then the only way to terminate this
+         * function is to cancel the operation via a progress tracker
+         * (read on for details).
+         *
          * If you want a \e fast simplification routine, you should call
          * intelligentSimplify() instead.  The benefit of simplifyExhaustive()
          * is that, for very stubborn knot diagrams where intelligentSimplify()
@@ -1607,15 +1616,14 @@ class REGINA_API Link : public Packet {
          * If this routine is unable to simplify the knot diagram, then
          * this knot diagram will not be changed.
          *
-         * If \a height is negative, or if this link does not have
-         * precisely one component, then this routine will do nothing.
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
+         * If this link does not have precisely one component, then this
+         * routine will do nothing.  If no progress tracker was passed then
+         * it will immediately return \c false; otherwise the progress tracker
+         * will immediately be marked as finished.
          *
          * @param height the maximum number of \e additional crossings to
-         * allow, beyond the number of crossings originally present in this
-         * diagram.
+         * allow beyond the number of crossings originally present in this
+         * diagram, or a negative number if this should not be bounded.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
@@ -1683,6 +1691,11 @@ class REGINA_API Link : public Packet {
          * and if necessary try increasing \a height one at a time until
          * this routine becomes too expensive to run.
          *
+         * If \a height is negative, then there will be \e no bound on
+         * the number of additional crossings.  This means that the
+         * routine will <i>never terminate</i>, unless \a action returns
+         * \c true for some knot diagram that is passed to it.
+         *
          * If a progress tracker is passed, then the exploration of
          * knot diagrams will take place in a new thread and this
          * routine will return immediately.
@@ -1696,11 +1709,10 @@ class REGINA_API Link : public Packet {
          * protected by a mutex (i.e., different threads will never be
          * calling \a action at the same time).
          *
-         * If \a height is negative, or if this link does not have
-         * precisely one component, then this routine will do nothing.
-         * If no progress tracker was passed then it will immediately return
-         * \c false; otherwise the progress tracker will immediately be
-         * marked as finished.
+         * If this link does not have precisely one component, then this
+         * routine will do nothing.  If no progress tracker was passed then
+         * it will immediately return \c false; otherwise the progress tracker
+         * will immediately be marked as finished.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
@@ -1712,8 +1724,8 @@ class REGINA_API Link : public Packet {
          * \ifacespython Not present.
          *
          * @param height the maximum number of \e additional crossings to
-         * allow, beyond the number of crossings originally present in this
-         * knot diagram.
+         * allow beyond the number of crossings originally present in this
+         * knot diagram, or a negative number if this should not be bounded.
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
@@ -2280,9 +2292,9 @@ class REGINA_API Link : public Packet {
          */
         /*@{*/
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
-        virtual bool dependsOnParent() const;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
+        virtual bool dependsOnParent() const override;
 
         /*@}*/
         /**
@@ -2908,7 +2920,7 @@ class REGINA_API Link : public Packet {
          * allowed, and it is currently up to the user to enforce this.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
-         * iterators, this routine takes a Python list of tokens.
+         * iterators, this routine takes a Python list of integers.
          *
          * @author Adam Gowty
          *
@@ -3040,7 +3052,7 @@ class REGINA_API Link : public Packet {
          * allowed, and it is currently up to the user to enforce this.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
-         * iterators, this routine takes a Python list of tokens.
+         * iterators, this routine takes a Python list of strings.
          *
          * @param begin an iterator that points to the beginning of the
          * sequence of tokens for an "oriented" Gauss code.
@@ -3277,7 +3289,7 @@ class REGINA_API Link : public Packet {
          * allowed, and it is currently up to the user to enforce this.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
-         * iterators, this routine takes a Python list of tokens.
+         * iterators, this routine takes a Python list of integers.
          *
          * @author Much of the code for this routine is based on the
          * Dowker-Thistlethwaite implementation in the SnapPea/SnapPy kernel.
@@ -3300,8 +3312,8 @@ class REGINA_API Link : public Packet {
             XMLTreeResolver& resolver);
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 
     private:
         /**

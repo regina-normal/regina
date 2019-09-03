@@ -40,6 +40,7 @@
 #define __NSVECTORORIENTEDQUAD_H
 #endif
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "surfaces/nsvectormirrored.h"
 
 namespace regina {
@@ -85,8 +86,7 @@ struct NormalInfo<NS_ORIENTED_QUAD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSVectorOrientedQuad :
-        public NSVectorMirrored {
+class REGINA_API NSVectorOrientedQuad : public NSVectorMirrored {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorOrientedQuad, NS_ORIENTED_QUAD,
         NSVectorMirrored);
 
@@ -108,16 +108,18 @@ class REGINA_API NSVectorOrientedQuad :
         static NormalSurfaceVector* makeMirror(const Ray& original,
             const Triangulation<3>* triang);
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>* triang)
-            const;
+            const override;
 
-        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang) const;
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang)
+            const override;
 
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang) const;
+            int quadType, const Triangulation<3>* triang) const override;
         virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang, bool orientation) const;
+            int quadType, const Triangulation<3>* triang, bool orientation)
+            const override;
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const Triangulation<3>* triang) const;
+            int octType, const Triangulation<3>* triang) const override;
 
         static NormalSurfaceVector* makeZeroVector(
             const Triangulation<3>* triangulation);

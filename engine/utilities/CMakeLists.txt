@@ -5,6 +5,7 @@ SET ( FILES
   boolset
   base64
   i18nutils
+  memstream
   osutils
   stringutils
   xmlcallback
@@ -30,6 +31,7 @@ if (${REGINA_INSTALL_DEV})
     intutils.h
     listoncall.h
     markedvector.h
+    memstream.h
     memutils.h
     nbooleans.h
     osutils.h
@@ -39,7 +41,6 @@ if (${REGINA_INSTALL_DEV})
     registryutils.h
     safepointeebase.h
     safeptr.h
-    saferemnant.h
     sequence.h
     stringutils.h
     stringutils-impl.h

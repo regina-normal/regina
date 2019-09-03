@@ -1,0 +1,44 @@
+example$ regina-python
+Regina 5.2
+Software for low-dimensional topology
+Copyright (c) 1999-2019, The Regina development team
+>>> ################################
+... #
+... #  Sample Python Script
+... #
+... #  Illustrates the traversal and manipulation of an entire packet tree.
+... #
+... #  See the file "tree.session" for the results of running this script.
+... #
+... ################################
+... 
+>>> # Recreate the original SnapPea census of cusped hyperbolic manifolds
+... # triangulated by at most 5 tetrahedra.
+... census = Container()
+>>> for i in range(415):
+...     mfd = SnapPeaCensusManifold(SnapPeaCensusManifold.SEC_5, i)
+...     tri = mfd.construct()
+...     tri.setLabel(mfd.name())
+...     census.insertChildLast(tri)
+... 
+>>> # The triangulations are now all children of the "census" container.
+... # Remove all triangulations with more than two tetrahedra.
+... tri = census.firstChild()
+>>> while tri != None:
+...     next = tri.nextSibling()
+...     if tri.size() > 2:
+...         tri.makeOrphan()
+...     tri = next
+... 
+>>> # Print the homology of each remaining triangulation.
+... tri = census.firstChild()
+>>> while tri != None:
+...     print(tri.label() + ":", tri.homology())
+...     tri = tri.nextSibling()
+... 
+Gieseking manifold: Z
+SnapPea m001: Z + Z_2
+SnapPea m002: Z + Z_2
+SnapPea m003: Z + Z_5
+Figure eight knot complement: Z
+>>>

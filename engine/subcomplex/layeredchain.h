@@ -121,7 +121,7 @@ class REGINA_API LayeredChain : public StandardTriangulation {
          *
          * @param cloneMe the layered chain to clone.
          */
-        LayeredChain(const LayeredChain& cloneMe);
+        LayeredChain(const LayeredChain& cloneMe) = default;
 
         /**
          * Destroys this layered chain.
@@ -245,11 +245,11 @@ class REGINA_API LayeredChain : public StandardTriangulation {
          */
         void invert();
 
-        Manifold* manifold() const;
-        AbelianGroup* homology() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
-        void writeTextLong(std::ostream& out) const;
+        Manifold* manifold() const override;
+        AbelianGroup* homology() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
+        void writeTextLong(std::ostream& out) const override;
 };
 
 /**
@@ -268,11 +268,6 @@ class REGINA_API LayeredChain : public StandardTriangulation {
 inline LayeredChain::LayeredChain(Tetrahedron<3>* tet, Perm<4> vertexRoles) :
         bottom_(tet), top_(tet), index_(1), bottomVertexRoles_(vertexRoles),
         topVertexRoles_(vertexRoles) {
-}
-inline LayeredChain::LayeredChain(const LayeredChain& cloneMe) :
-        StandardTriangulation(), bottom_(cloneMe.bottom_), top_(cloneMe.top_),
-        index_(cloneMe.index_), bottomVertexRoles_(cloneMe.bottomVertexRoles_),
-        topVertexRoles_(cloneMe.topVertexRoles_) {
 }
 inline LayeredChain::~LayeredChain() {
 }

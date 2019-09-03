@@ -100,6 +100,9 @@ class REGINA_API ExampleSnapPea {
          * destroyed by the caller of this routine.
          */
         static SnapPeaTriangulation* x101();
+
+        // Make this class non-constructible.
+        ExampleSnapPea() = delete;
 };
 
 /**

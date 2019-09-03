@@ -187,6 +187,10 @@ class TrieSet {
          */
         bool hasExtraSuperset(const T& subset, const T& exc1, const T& exc2,
             unsigned long universeSize) const;
+
+        // Make this class non-copyable.
+        TrieSet(const TrieSet&) = delete;
+        TrieSet& operator = (const TrieSet&) = delete;
 };
 
 /*@}*/

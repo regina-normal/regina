@@ -30,38 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "split/signature.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
 using regina::Signature;
 
-namespace {
-    void writeCycles(const Signature& sig, const std::string& cycleOpen,
-            const std::string& cycleClose, const std::string& cycleJoin) {
-        sig.writeCycles(std::cout, cycleOpen, cycleClose, cycleJoin);
-    }
-}
-
-void addSignature() {
-    class_<Signature, std::auto_ptr<Signature>,
-        boost::noncopyable>("Signature", init<const Signature&>())
+void addSignature(pybind11::module& m) {
+    auto c = pybind11::class_<Signature>(m, "Signature")
+        .def(pybind11::init<const Signature&>())
         .def("order", &Signature::order)
-        .def("parse", &Signature::parse,
-            return_value_policy<manage_new_object>())
-        .def("triangulate", &Signature::triangulate,
-            return_value_policy<to_held_type<> >())
-        .def("writeCycles", &writeCycles)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("parse")
+        .def_static("parse", &Signature::parse)
+        .def("triangulate", &Signature::triangulate)
+        .def("writeCycles", [](const Signature& sig,
+                const std::string& cycleOpen, const std::string& cycleClose,
+                const std::string& cycleJoin) {
+            sig.writeCycles(std::cout, cycleOpen, cycleClose, cycleJoin);
+        })
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NSignature") = scope().attr("Signature");
+    m.attr("NSignature") = m.attr("Signature");
 }
 

@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Computational Engine                                                  *
  *                                                                        *
  *  Copyright (c) 1999-2018, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,22 +30,90 @@
  *                                                                        *
  **************************************************************************/
 
-#include "pythonoutputstream.h"
+#include <regina-config.h>
+#include <thread>
 
-void PythonOutputStream::write(const std::string& data) {
-    buffer.append(data);
+#include "core/engine.h"
+#include "utilities/intutils.h"
 
-    std::string::size_type pos;
-    while ((pos = buffer.find('\n')) < buffer.length()) {
-        processOutput(buffer.substr(0, pos + 1));
-        buffer.erase(0, pos + 1);
+namespace regina {
+
+const char* versionString() {
+    return PACKAGE_VERSION;
+}
+
+int versionMajor() {
+    return PACKAGE_VERSION_MAJOR;
+}
+
+int versionMinor() {
+    return PACKAGE_VERSION_MINOR;
+}
+
+bool versionUsesUTF8(const char* version) {
+    // No version is fine.
+    // Also any version that does not begin with 0-4 is fine.
+    if (version[0] < '0' || version[0] > '4')
+        return true;
+
+    if (version[0] < '4') {
+        // Deal with 0.x .. 3.x.
+        // Unless this is the beginning of a larger number,
+        // this is a bad version.
+        return (version[0] != '0' &&
+            version[1] >= '0' && version[1] <= '9');
+    } else {
+        // The 4.x case is a bit messier to deal with.
+
+        // If it's the beginning of a larger number, we're fine.
+        if (version[1] >= '0' && version[1] <= '9')
+            return true;
+
+        // Definitely begins with 4 and 4 alone.
+        // The only way to save ourselves is to have 4.x for x >= 5.
+        if (version[1] != '.')
+            return false;
+
+        // We definitely begin with "4.".
+        // The only good possibilities now are to begin with:
+        // - 4.[number larger than 4]
+        if (version[2] == '0')
+            return false;
+        else if (version[2] >= '1' && version[2] <= '4')
+            return (version[3] >= '0' && version[3] <= '9');
+        else if (version[2] >= '5' && version[2] <= '9')
+            return true;
+        else
+            return false;
     }
 }
 
-void PythonOutputStream::flush() {
-    if (! buffer.empty()) {
-        processOutput(buffer);
-        buffer.clear();
-    }
+const char* versionSnapPy() {
+    return SNAPPY_VERSION;
 }
+
+const char* versionSnapPea() {
+    return SNAPPY_VERSION;
+}
+
+bool hasInt128() {
+#ifdef INT128_AVAILABLE
+    return true;
+#else
+    return false;
+#endif
+}
+
+int politeThreads() {
+    int result = std::thread::hardware_concurrency() / 2;
+    if (result < 1)
+        result = 1;
+    return result;
+}
+
+int testEngine(int value) {
+    return value;
+}
+
+} // namespace regina
 

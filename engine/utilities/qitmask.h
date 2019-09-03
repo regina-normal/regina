@@ -119,9 +119,7 @@ class Qitmask1 {
          *
          * @param cloneMe the qitmask to clone.
          */
-        inline Qitmask1(const Qitmask1<T>& cloneMe) :
-                mask1(cloneMe.mask1), mask2(cloneMe.mask2) {
-        }
+        inline Qitmask1(const Qitmask1<T>& cloneMe) = default;
 
         /**
          * Sets all qits of this qitmask to 0.
@@ -136,11 +134,7 @@ class Qitmask1 {
          * @param other the qitmask to clone.
          * @return a reference to this qitmask.
          */
-        Qitmask1<T>& operator = (const Qitmask1<T>& other) {
-            mask1 = other.mask1;
-            mask2 = other.mask2;
-            return *this;
-        }
+        Qitmask1<T>& operator = (const Qitmask1<T>& other) = default;
 
         /**
          * Returns the value of the given qit in this qitmask.
@@ -338,10 +332,7 @@ class Qitmask2 {
          *
          * @param cloneMe the qitmask to clone.
          */
-        inline Qitmask2(const Qitmask2<T, U>& cloneMe) :
-                low1(cloneMe.low1), low2(cloneMe.low2),
-                high1(cloneMe.high1), high2(cloneMe.high2) {
-        }
+        inline Qitmask2(const Qitmask2<T, U>& cloneMe) = default;
 
         /**
          * Sets all qits of this qitmask to 0.
@@ -357,13 +348,7 @@ class Qitmask2 {
          * @param other the qitmask to clone.
          * @return a reference to this qitmask.
          */
-        Qitmask2<T, U>& operator = (const Qitmask2<T, U>& other) {
-            low1 = other.low1;
-            low2 = other.low2;
-            high1 = other.high1;
-            high2 = other.high2;
-            return *this;
-        }
+        Qitmask2<T, U>& operator = (const Qitmask2<T, U>& other) = default;
 
         /**
          * Returns the value of the given qit in this qitmask.

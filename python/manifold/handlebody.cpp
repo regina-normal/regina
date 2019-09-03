@@ -30,26 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "manifold/handlebody.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::Handlebody;
 
-void addHandlebody() {
-    class_<Handlebody, bases<regina::Manifold>,
-            std::auto_ptr<Handlebody>, boost::noncopyable>
-            ("Handlebody", init<unsigned long, bool>())
-        .def(init<const Handlebody&>())
+void addHandlebody(pybind11::module& m) {
+    auto c = pybind11::class_<Handlebody, regina::Manifold>(m, "Handlebody")
+        .def(pybind11::init<unsigned long, bool>())
+        .def(pybind11::init<const Handlebody&>())
         .def("handles", &Handlebody::handles)
         .def("isOrientable", &Handlebody::isOrientable)
-        .def(regina::python::add_eq_operators())
     ;
+    // The Handlebody subclass defines its own equality tests, so we
+    // should not just inherit the compare-by-pointer test from Manifold.
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NHandlebody") = scope().attr("Handlebody");
-
-    implicitly_convertible<std::auto_ptr<Handlebody>,
-        std::auto_ptr<regina::Manifold> >();
+    m.attr("NHandlebody") = m.attr("Handlebody");
 }
 

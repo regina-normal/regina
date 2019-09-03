@@ -30,33 +30,24 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/layeredloop.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::LayeredLoop;
 
-void addLayeredLoop() {
-    class_<LayeredLoop, bases<regina::StandardTriangulation>,
-            std::auto_ptr<LayeredLoop>, boost::noncopyable>
-            ("LayeredLoop", no_init)
-        .def("clone", &LayeredLoop::clone,
-            return_value_policy<manage_new_object>())
+void addLayeredLoop(pybind11::module& m) {
+    pybind11::class_<LayeredLoop, regina::StandardTriangulation>
+            (m, "LayeredLoop")
+        .def("clone", &LayeredLoop::clone)
         .def("length", &LayeredLoop::length)
         .def("isTwisted", &LayeredLoop::isTwisted)
         .def("hinge", &LayeredLoop::hinge,
-            return_value_policy<reference_existing_object>())
-        .def("isLayeredLoop", &LayeredLoop::isLayeredLoop,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isLayeredLoop")
+            pybind11::return_value_policy::reference)
+        .def_static("isLayeredLoop", &LayeredLoop::isLayeredLoop)
     ;
 
-    implicitly_convertible<std::auto_ptr<LayeredLoop>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NLayeredLoop") = scope().attr("LayeredLoop");
+    m.attr("NLayeredLoop") = m.attr("LayeredLoop");
 }
 

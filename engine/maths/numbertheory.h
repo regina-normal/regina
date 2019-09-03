@@ -97,6 +97,9 @@ REGINA_API long gcd(long a, long b);
  * will be 1 or -1 so that <tt>u*a + v*b = d</tt> still holds.  If both
  * given integers are zero, both of the coefficients will be set to zero.
  *
+ * \ifacespython The arguments \a u and \a v are not present.  Instead,
+ * this routine returns the tuple (\a gcd, \a u, \a v).
+ *
  * @param a one of the integers to work with.
  * @param b the other integer with which to work.
  * @param u a variable into which the final coefficient of \a a will be

@@ -58,13 +58,12 @@
 #include "syntax/theme.h"
 
 #include <string>
-#include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
 namespace regina {
 namespace syntax {
 
-class REGINA_API FormatPrivate : public boost::noncopyable
+class REGINA_API FormatPrivate
 {
 public:
     FormatPrivate();
@@ -78,6 +77,10 @@ public:
     Theme::TextStyle defaultStyle;
     uint16_t id;
     bool spellCheck;
+
+    // Make this class non-copyable.
+    FormatPrivate(const FormatPrivate&) = delete;
+    FormatPrivate& operator = (const FormatPrivate&) = delete;
 };
 
 } } // namespace regina::syntax

@@ -4,15 +4,17 @@
    are found in utilities/intutils.h. */
 /* #undef INTERNAL_INT128_T_FOUND */
 
+/* Define if both __int128 and __uint128 types are available.
+   This macro is for internal use only; end users should use the macro
+   INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
+   are found in utilities/intutils.h. */
+/* #undef INTERNAL___INT128_FOUND */
+
 /* Define if both __int128_t and __uint128_t types are available.
    This macro is for internal use only; end users should use the macro
    INT128_AVAILABLE and the typedefs from IntOfSize<16>, all of which
    are found in utilities/intutils.h. */
 #define INTERNAL___INT128_T_FOUND
-
-/* Define if we should use boost's compile-time 128-bit integer detection,
-   instead of explicitly testing for 128-bit integer types in cmake. */
-/* #undef USE_BOOST_INT128 */
 
 /* Define if 64-bit integer literals are available with no suffix */
 #define NUMERIC_64_FOUND
@@ -20,8 +22,8 @@
 /* Define if 64-bit integer literals are available using the LL suffix */
 #define NUMERIC_64_LL_FOUND
 
-/* Define if Boost.Python is available. */
-#define BOOST_PYTHON_FOUND
+/* Define if we are building the Python bindings. */
+#define BUILD_PYTHON_BINDINGS
 
 /* Define if the Graphviz libraries are available. */
 #define LIBGVC_FOUND
@@ -35,17 +37,25 @@
 /* Define if we are building a standard freedesktop.org installation in
    a fixed location on the filesystem.
    Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
-#define REGINA_INSTALL_XDG
+/* #undef REGINA_INSTALL_XDG */
 
 /* Define if we are building a self-contained MacOS app bundle that users can
    drag and drop.
    Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
-/* #undef REGINA_INSTALL_BUNDLE */
+#define REGINA_INSTALL_BUNDLE
 
 /* Define if we are building a self-contained movable install directory
    for MS Windows.
    Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
 /* #undef REGINA_INSTALL_WINDOWS */
+
+/* Define if Regina ships its own python, with the core python libraries
+   in pythonXY.zip. */
+/* #undef PYTHON_CORE_IN_ZIP */
+
+/* Define if Regina's python module is statically linked into the user
+   interface. */
+/* #undef PYTHON_STATIC_LINK */
 
 /* Define as const if the declaration of iconv() needs const, or empty if not. */
 #define ICONV_CONST 

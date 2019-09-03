@@ -41,9 +41,8 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/forward.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -195,9 +194,7 @@ enum NiceType {
  * TreeDecomposition::makeNice() then it is guaranteed that the root bag
  * will be empty).
  */
-class REGINA_API TreeBag :
-        public ShortOutput<TreeBag>,
-        public boost::noncopyable {
+class REGINA_API TreeBag : public ShortOutput<TreeBag> {
     private:
         int size_;
             /**< The number of nodes (of the graph \a G) stored in this bag. */
@@ -467,6 +464,9 @@ class REGINA_API TreeBag :
          */
         void writeTextShort(std::ostream& out) const;
 
+        // Make this class non-assignable.
+        TreeBag& operator = (const TreeBag&) = delete;
+
     private:
         /**
          * Creates a new bag with space allocated to hold the given number of
@@ -614,9 +614,7 @@ class REGINA_API TreeBag :
  * underlying graph \a G is empty then the tree decomposition may
  * contain no bags at all.
  */
-class REGINA_API TreeDecomposition :
-        public Output<TreeDecomposition>,
-        public boost::noncopyable {
+class REGINA_API TreeDecomposition : public Output<TreeDecomposition> {
     protected:
         /**
          * Represents a graph, which may be directed or undirected.
@@ -656,6 +654,10 @@ class REGINA_API TreeDecomposition :
              * @param out the output stream to which to write.
              */
             void dump(std::ostream& out) const;
+
+            // Make this class non-copyable.
+            Graph(const Graph&) = delete;
+            Graph& operator = (const Graph&) = delete;
         };
 
     private:
@@ -762,9 +764,10 @@ class REGINA_API TreeDecomposition :
          * other types you will need to include treedecomposition-impl.h
          * along with this header.
          *
-         * \ifacespython The adjacency matrix should be given as a
-         * list of lists.  There is no need to use the same data type \a T
-         * throughout: each element of the matrix will be individually
+         * \ifacespython The argument \a order is not present (it will be
+         * deduced automatically from \a graph).  The adjacency matrix should
+         * be given as a list of lists.  There is no need to use the same data
+         * type \a T throughout: each element of the matrix will be individually
          * interpreted as a boolean as described above.
          *
          * @param order the number of nodes in the graph.
@@ -1266,6 +1269,9 @@ class REGINA_API TreeDecomposition :
          * @see https://pacechallenge.wordpress.com/pace-2016/track-a-treewidth/
          */
         static TreeDecomposition* fromPACE(std::istream& in);
+
+        // Make this class non-assignable.
+        TreeDecomposition& operator = (const TreeDecomposition&) = delete;
 
     private:
         /**

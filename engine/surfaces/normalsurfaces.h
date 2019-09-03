@@ -44,20 +44,17 @@
 #include <iterator>
 #include <vector>
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "packet/packet.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 
 class NormalSurfaces;
 class ProgressTracker;
 class XMLPacketReader;
-
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
 
 /**
  * \weakgroup surfaces
@@ -258,7 +255,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * @param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * @return the newly created normal surface list.  Note that if
          * a progress tracker is passed then this list may not be completely
          * filled when this routine returns.  If an error occurs (as
@@ -268,7 +265,7 @@ class REGINA_API NormalSurfaces : public Packet {
             NormalCoords coords,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,
-            ProgressTracker* tracker = 0);
+            ProgressTracker* tracker = nullptr);
 
         /**
          * Returns the coordinate system being used by the
@@ -374,11 +371,11 @@ class REGINA_API NormalSurfaces : public Packet {
          */
         void writeAllSurfaces(std::ostream& out) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const;
+        virtual bool dependsOnParent() const override;
 
         /**
          * Converts the set of all embedded vertex normal surfaces in
@@ -428,7 +425,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * links of the underlying triangulation, and will verify that
          * the coordinate system and embedded-only flag are set to
          * NS_QUAD and \c true respectively.  If any of
-         * these checks fails, this routine will do nothing and return 0.
+         * these checks fails, this routine will do nothing and return \c null.
          *
          * \pre The underlying triangulation (the parent packet of this
          * normal surface list) is valid, and the link of every vertex
@@ -441,7 +438,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex normal surfaces in standard (tri-quad)
-         * coordinates, or 0 if any of the basic sanity checks failed.
+         * coordinates, or \c null if any of the basic sanity checks failed.
          */
         NormalSurfaces* quadToStandard() const;
 
@@ -465,8 +462,8 @@ class REGINA_API NormalSurfaces : public Packet {
          * NS_AN_QUAD_OCT and with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex almost normal surfaces in standard
-         * tri-quad-oct coordinates, or 0 if any of the basic sanity checks
-         * failed.
+         * tri-quad-oct coordinates, or \c null if any of the basic sanity
+         * checks failed.
          */
         NormalSurfaces* quadOctToStandardAN() const;
 
@@ -502,7 +499,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * links of the underlying triangulation, and will verify that
          * the coordinate system and embedded-only flag are set to
          * NS_STANDARD and \c true respectively.  If any of
-         * these checks fails, this routine will do nothing and return 0.
+         * these checks fails, this routine will do nothing and return \c null.
          *
          * \pre The underlying triangulation (the parent packet of this
          * normal surface list) is valid, and the link of every vertex
@@ -515,7 +512,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * NS_STANDARD and with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex normal surfaces in quadrilateral
-         * coordinates, or 0 if any of the basic sanity checks failed.
+         * coordinates, or \c null if any of the basic sanity checks failed.
          */
         NormalSurfaces* standardToQuad() const;
 
@@ -538,7 +535,7 @@ class REGINA_API NormalSurfaces : public Packet {
          * NS_AN_STANDARD and with \a embeddedOnly set to \c true.
          *
          * @return a full list of vertex almost normal surfaces in
-         * quadrilateral-octagon coordinates, or 0 if any of the basic
+         * quadrilateral-octagon coordinates, or \c null if any of the basic
          * sanity checks failed.
          */
         NormalSurfaces* standardANToQuadOct() const;
@@ -839,7 +836,7 @@ class REGINA_API NormalSurfaces : public Packet {
                  *
                  * @param cloneMe the iterator to clone.
                  */
-                VectorIterator(const VectorIterator& cloneMe);
+                VectorIterator(const VectorIterator& cloneMe) = default;
 
                 /**
                  * Makes this a copy of the given iterator.
@@ -847,7 +844,8 @@ class REGINA_API NormalSurfaces : public Packet {
                  * @param cloneMe the iterator to clone.
                  * @return a reference to this iterator.
                  */
-                VectorIterator& operator = (const VectorIterator& cloneMe);
+                VectorIterator& operator = (const VectorIterator& cloneMe) =
+                    default;
 
                 /**
                  * Compares this with the given operator for equality.
@@ -936,8 +934,8 @@ class REGINA_API NormalSurfaces : public Packet {
         NormalSurfaces(NormalCoords coords, NormalList which,
             NormalAlg algorithm);
 
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 
         /**
          * An output iterator used to insert surfaces into an
@@ -983,7 +981,7 @@ class REGINA_API NormalSurfaces : public Packet {
              *
              * @param cloneMe the output iterator to clone.
              */
-            SurfaceInserter(const SurfaceInserter& cloneMe);
+            SurfaceInserter(const SurfaceInserter& cloneMe) = default;
 
             /**
              * Sets this iterator to be a clone of the given output iterator.
@@ -991,7 +989,8 @@ class REGINA_API NormalSurfaces : public Packet {
              * @param cloneMe the output iterator to clone.
              * @return this output iterator.
              */
-            SurfaceInserter& operator =(const SurfaceInserter& cloneMe);
+            SurfaceInserter& operator =(const SurfaceInserter& cloneMe) =
+                default;
 
             /**
              * Appends a normal surface to the end of the appropriate
@@ -1116,12 +1115,12 @@ class REGINA_API NormalSurfaces : public Packet {
          * @param reducedList a full list of vertex surfaces in
          * (quad or quad-oct) coordinates for the given triangulation.
          * @param tracker a progress tracker to be used for progress reporting
-         * and cancellation requests, or 0 if this is not required.
+         * and cancellation requests, or \c null if this is not required.
          */
         template <class Variant>
         void buildStandardFromReduced(Triangulation<3>* owner,
             const std::vector<NormalSurface*>& reducedList,
-            ProgressTracker* tracker = 0);
+            ProgressTracker* tracker = nullptr);
 
         /**
          * Implements the one-template-argument version of
@@ -1193,7 +1192,7 @@ class REGINA_API NormalSurfaces : public Packet {
                 ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
-                         or 0 if no progress tracker is in use. */
+                         or \c null if no progress tracker is in use. */
 
             public:
                 /**
@@ -1208,11 +1207,16 @@ class REGINA_API NormalSurfaces : public Packet {
                  * has finished.  This pointer \e must be non-null, i.e., Regina
                  * must have been able to construct the matching equations.
                  * @param tracker the progress tracker to use for progress
-                 * reporting and cancellation polling, or 0 if these
+                 * reporting and cancellation polling, or \c null if these
                  * capabilities are not required.
                  */
                 Enumerator(NormalSurfaces* list, Triangulation<3>* triang,
                     MatrixInt* eqns, ProgressTracker* tracker);
+
+                /**
+                 * Default move constructor.
+                 */
+                Enumerator(Enumerator&&) = default;
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -1227,13 +1231,17 @@ class REGINA_API NormalSurfaces : public Packet {
                  * tree as a child of \a triang_.
                  *
                  * The matching equation matrix \a eqns_ will be deleted
-                 * at the end of this routine.
+                 * during this routine.
                  *
                  * \tparam Coords an instance of the NormalInfo<> template
                  * class.
                  */
                 template <typename Coords>
                 void operator() ();
+
+                // Make this class non-copyable.
+                Enumerator(const Enumerator&) = delete;
+                Enumerator& operator = (const Enumerator&) = delete;
 
             private:
                 /**
@@ -1253,6 +1261,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillVertex();
@@ -1274,6 +1285,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillFundamental();
@@ -1289,6 +1303,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * If \a tracker_ is non-null, this routine assumes that
                  * an appropriate tracker stage has already been
                  * declared, and works through that stage only.
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1307,6 +1324,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * an appropriate tracker stage has already been
                  * declared, and works through that stage only.
                  *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
+                 *
                  * \pre We are enumerating embedded surfaces only.
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1320,6 +1340,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * This does all of the work for fillVertexTree(), aside
                  * from the initial selection of an integer type.  See
                  * the nodes for fillVertexTree() for further details.
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre We are enumerating embedded surfaces only.
                  * \pre The underlying triangulation is non-empty.
@@ -1343,6 +1366,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
+                 *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Coords>
@@ -1360,6 +1386,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1379,6 +1408,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
+                 *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Coords>
@@ -1396,6 +1428,9 @@ class REGINA_API NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1478,7 +1513,8 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
 // Inline functions for NormalSurfaces
 
 inline NormalSurfaces::~NormalSurfaces() {
-    for_each(surfaces.begin(), surfaces.end(), FuncDelete<NormalSurface>());
+    for (auto s : surfaces)
+        delete s;
 }
 
 inline NormalCoords NormalSurfaces::coords() const {
@@ -1516,17 +1552,6 @@ inline void NormalSurfaces::sort(Comparison&& comp) {
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator() {
-}
-
-inline NormalSurfaces::VectorIterator::VectorIterator(
-        const NormalSurfaces::VectorIterator& cloneMe) :
-        it_(cloneMe.it_) {
-}
-
-inline NormalSurfaces::VectorIterator& NormalSurfaces::VectorIterator::
-        operator =(const NormalSurfaces::VectorIterator& cloneMe) {
-    it_ = cloneMe.it_;
-    return *this;
 }
 
 inline bool NormalSurfaces::VectorIterator::operator ==(
@@ -1583,20 +1608,6 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors()
 inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
         NormalSurfaces& newList, Triangulation<3>* newOwner) :
         list(&newList), owner(newOwner) {
-}
-
-inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
-        const SurfaceInserter& cloneMe) : list(cloneMe.list),
-        owner(cloneMe.owner) {
-}
-
-
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator =(
-        const SurfaceInserter& cloneMe) {
-    list = cloneMe.list;
-    owner = cloneMe.owner;
-    return *this;
 }
 
 inline NormalSurfaces::SurfaceInserter&

@@ -33,12 +33,12 @@
 #include "progress/progresstracker.h"
 #include "triangulation/dim3.h"
 #include <condition_variable>
+#include <limits>
 #include <mutex>
 #include <queue>
 #include <set>
 #include <system_error>
 #include <thread>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -58,7 +58,7 @@ namespace {
     };
 
     template <bool threading>
-    class TriBFS : protected SyncData<threading>, public boost::noncopyable {
+    class TriBFS : protected SyncData<threading> {
         private:
             typedef std::set<std::string> SigSet;
 
@@ -96,6 +96,10 @@ namespace {
                 ProgressTrackerOpen* tracker);
 
             bool done() const;
+
+            // Make this class non-copyable.
+            TriBFS(const TriBFS&) = delete;
+            TriBFS& operator = (const TriBFS&) = delete;
 
         private:
             // candidate() may assume that alt will be deleted immediately
@@ -296,14 +300,9 @@ namespace {
         if (tracker)
             tracker->newStage("Exploring triangulations");
 
-        if (height < 0) {
-            if (tracker)
-                tracker->setFinished();
-            return false;
-        }
-
         if (nThreads <= 1) {
-            TriBFS<false> bfs(tri.size() + height, action);
+            TriBFS<false> bfs((height >= 0 ? tri.size() + height :
+                std::numeric_limits<std::size_t>::max()), action);
             if (bfs.seed(tri)) {
                 if (tracker)
                     tracker->setFinished();
@@ -314,7 +313,8 @@ namespace {
                 tracker->setFinished();
             return bfs.done();
         } else {
-            TriBFS<true> bfs(tri.size() + height, action);
+            TriBFS<true> bfs((height >= 0 ? tri.size() + height :
+                std::numeric_limits<std::size_t>::max()), action);
             if (bfs.seed(tri)) {
                 if (tracker)
                     tracker->setFinished();

@@ -46,8 +46,6 @@
 
 namespace regina {
 
-class EnumConstraints;
-
 /**
  * \weakgroup enumerate
  * @{
@@ -124,6 +122,9 @@ class MaxAdmissible {
         static std::vector<BitmaskType>* enumerate(
                 RayIterator beginExtremalRays, RayIterator endExtremalRays,
                 const EnumConstraints* constraints);
+
+        // Mark this class as non-constructible.
+        MaxAdmissible() = delete;
 };
 
 /*@}*/

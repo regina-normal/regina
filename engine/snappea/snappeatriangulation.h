@@ -53,8 +53,8 @@ namespace snappea {
 class SnapPeaTriangulation;
 class XMLSnapPeaReader;
 
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
+template <typename, bool> class Matrix;
+typedef Matrix<Integer, true> MatrixInt;
 
 /**
  * \addtogroup snappea SnapPea Triangulations
@@ -95,6 +95,16 @@ struct SnapPeaFatalError : public SnapPeaException {
      * the error occurred.
      */
     SnapPeaFatalError(const char* fromFunction, const char* fromFile);
+
+    /**
+     * Clones the given exception.
+     */
+    SnapPeaFatalError(const SnapPeaFatalError&) = default;
+
+    /**
+     * Sets this to a copy of the given exception.
+     */
+    SnapPeaFatalError& operator = (const SnapPeaFatalError&) = default;
 };
 
 /**
@@ -127,9 +137,7 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * be deleted and replaced with new ones (using fresh data re-fetched from
  * the SnapPea kernel).
  */
-class REGINA_API Cusp :
-        public ShortOutput<Cusp>,
-        public boost::noncopyable {
+class REGINA_API Cusp : public ShortOutput<Cusp> {
     private:
         Vertex<3>* vertex_;
             /**< The corresponding vertex of the Regina triangulation. */
@@ -198,6 +206,10 @@ class REGINA_API Cusp :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
+
+        // Make this class non-copyable.
+        Cusp(const Cusp&) = delete;
+        Cusp& operator = (const Cusp&) = delete;
 
     private:
         /**
@@ -1317,9 +1329,9 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          */
         /*@{*/
 
-        virtual std::string snapPea() const;
-        virtual void snapPea(std::ostream& out) const;
-        virtual bool saveSnapPea(const char* filename) const;
+        virtual std::string snapPea() const override;
+        virtual void snapPea(std::ostream& out) const override;
+        virtual bool saveSnapPea(const char* filename) const override;
 
         /*@}*/
         /**
@@ -1327,10 +1339,10 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          */
         /*@{*/
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
 
-        virtual bool dependsOnParent() const;
+        virtual bool dependsOnParent() const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
 
@@ -1340,13 +1352,13 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          */
         /*@{*/
 
-        virtual void packetWasChanged(Packet* packet);
+        virtual void packetWasChanged(Packet* packet) override;
 
         /*@}*/
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 
     private:
         /**

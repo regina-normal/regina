@@ -30,31 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "angle/anglestructure.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
 using namespace regina::python;
 using regina::AngleStructure;
 
-void addAngleStructure() {
-    class_<AngleStructure, std::auto_ptr<AngleStructure>, boost::noncopyable>
-            ("AngleStructure", no_init)
-        .def("clone", &AngleStructure::clone,
-            return_value_policy<manage_new_object>())
+void addAngleStructure(pybind11::module& m) {
+    auto c = pybind11::class_<AngleStructure>(m, "AngleStructure")
+        .def("clone", &AngleStructure::clone)
         .def("angle", &AngleStructure::angle)
-        .def("triangulation", &AngleStructure::triangulation,
-            return_value_policy<to_held_type<> >())
+        .def("triangulation", &AngleStructure::triangulation)
         .def("isStrict", &AngleStructure::isStrict)
         .def("isTaut", &AngleStructure::isTaut)
         .def("isVeering", &AngleStructure::isVeering)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NAngleStructure") = scope().attr("AngleStructure");
+    m.attr("NAngleStructure") = m.attr("AngleStructure");
 }
 

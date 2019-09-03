@@ -39,7 +39,6 @@
 #define __PROPERTY_H
 #endif
 
-#include <boost/noncopyable.hpp>
 #include "regina-core.h"
 
 namespace regina {
@@ -54,9 +53,8 @@ namespace regina {
  * held by value.  That is, upon assignment or initialisation the
  * underlying value will be copied into the Property wrapper.
  *
- * The property type T must have a copy assignment
- * operator, and it must also have either a copy constructor and/or a
- * default constructor according to which Property constructors are used.
+ * The property type \a T must have a default constructor, a copy constructor,
+ * and a copy assignment operator.
  *
  * See the Property class notes for details.
  *
@@ -77,6 +75,31 @@ class StoreValue {
             /**< The held property value. */
 
     public:
+        /**
+         * Creates an uninitialised property value.
+         */
+        StoreValue() = default;
+
+        /**
+         * Create a clone of the given property value.
+         *
+         * This clones the given property's value, regardless of whether
+         * the property is uninitialised and/or unknown.
+         *
+         * @param cloneMe the property to clone.
+         */
+        StoreValue(const StoreValue&) = default;
+
+        /**
+         * Sets this to be a clone of the given property value.
+         *
+         * This clones the given property's value, regardless of whether
+         * the property is uninitialised and/or unknown.
+         *
+         * @param cloneMe the property to clone.
+         */
+        StoreValue& operator = (const StoreValue&) = default;
+
         /**
          * Cleans up any currently held value before the property value is
          * changed or cleared.
@@ -122,19 +145,39 @@ class StoreConstPtr {
 
     public:
         /**
-         * Constructor that sets the held pointer to 0.
+         * Constructor that sets the held pointer to \c null.
          */
-        StoreConstPtr() : value_(0) {
+        StoreConstPtr() : value_(nullptr) {
         }
+
+        /**
+         * Create a clone of the given property value.
+         *
+         * This clones the given property's pointer, regardless of whether
+         * the property is known or unknown.
+         *
+         * @param cloneMe the property to clone.
+         */
+        StoreConstPtr(const StoreConstPtr&) = default;
+
+        /**
+         * Sets this to be a clone of the given property value.
+         *
+         * This clones the given property's pointer, regardless of whether
+         * the property is known or unknown.
+         *
+         * @param cloneMe the property to clone.
+         */
+        StoreConstPtr& operator = (const StoreConstPtr&) = default;
 
         /**
          * Cleans up any currently held value before the property value is
          * changed or cleared.
          *
-         * This implementation resets the held pointer to 0.
+         * This implementation resets the held pointer to \c null.
          */
         void clear() {
-            value_ = 0;
+            value_ = nullptr;
         }
 
         /**
@@ -176,24 +219,28 @@ class StoreManagedPtr {
 
     public:
         /**
-         * Constructor that sets the held pointer to 0.
+         * Constructor that sets the held pointer to \c null.
          */
-        StoreManagedPtr() : value_(0) {
+        StoreManagedPtr() : value_(nullptr) {
         }
 
         /**
          * Cleans up any currently held value before the property value is
          * changed or cleared.
          *
-         * This implementation resets the held pointer to 0 and
+         * This implementation resets the held pointer to \c null and
          * destroys the previously held value if any exists.
          */
         void clear() {
             if (value_) {
                 delete value_;
-                value_ = 0;
+                value_ = nullptr;
             }
         }
+
+        // Explicitly disallow cloning properties of this type.
+        StoreManagedPtr(const StoreManagedPtr&) = delete;
+        StoreManagedPtr& operator = (const StoreManagedPtr&) = delete;
 
     protected:
         /**
@@ -230,7 +277,7 @@ class StoreManagedPtr {
  * \ifacespython Not present.
  */
 template <typename T, template <typename Stored> class Storage = StoreValue>
-class Property : protected Storage<T>, public boost::noncopyable {
+class Property : protected Storage<T> {
     public:
         typedef typename Storage<T>::InitType InitType;
             /**< The type by which new values for the underlying
@@ -248,6 +295,28 @@ class Property : protected Storage<T>, public boost::noncopyable {
          * Constructor.  This property is initially marked as unknown.
          */
         Property() : Storage<T>(), known_(false) {
+        }
+
+        /**
+         * Makes a new clone of the given property.  If the given
+         * property is marked as known, its value will be copied and
+         * this property will also be marked as known.  Otherwise this
+         * property will be marked as unknown.
+         *
+         * This copy constructor is slightly inefficient, in that it
+         * first default-constructs its own held value, and then if
+         * \a newValue is known it will copy that value across.
+         *
+         * For storage policies that do not allow copying (such as
+         * StoreManagedPtr), any attempt to use this copy constructor
+         * will generate a compile error.
+         *
+         * @param newValue the property to clone.
+         */
+        Property(const Property<T, Storage>& newValue) :
+                Storage<T>(), known_(newValue.known_) {
+            if (known_)
+                Storage<T>::operator = (newValue);
         }
 
         /**
@@ -302,21 +371,19 @@ class Property : protected Storage<T>, public boost::noncopyable {
          * this property will also be marked as known.  Otherwise this
          * property will be marked as unknown.
          *
+         * For storage policies that do not allow copying (such as
+         * StoreManagedPtr), any attempt to use this assignment operator
+         * will generate a compile error.
+         *
          * @param newValue the property to copy into this property.
          * @return a reference to this property.
          */
-        const Property<T, Storage>& operator = (
-                const Property<T, Storage>& newValue) {
-            Storage<T>::clear();
-
-            // Use the value() query so that we initialise from
-            // QueryType, not from the held type.  This means that if
-            // the value shouldn't be copied directly (e.g., with
-            // StoreManagedPtr) then we'll get a compile error.
+        Property& operator = (const Property& newValue) {
             if (newValue.known_)
-                Storage<T>::value_ = newValue.value();
+                Storage<T>::operator = (newValue);
+            else
+                Storage<T>::clear();
             known_ = newValue.known_;
-
             return *this;
         }
 

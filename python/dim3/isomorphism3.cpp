@@ -30,47 +30,36 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::Isomorphism;
 
-namespace {
-    int (Isomorphism<3>::*simpImage_const)(unsigned) const =
-        &Isomorphism<3>::simpImage;
-    regina::Perm<4> (Isomorphism<3>::*facetPerm_const)(unsigned) const =
-        &Isomorphism<3>::facetPerm;
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_random, Isomorphism<3>::random, 1, 2);
-}
-
-void addIsomorphism3() {
-    class_<Isomorphism<3>, std::auto_ptr<Isomorphism<3>>, boost::noncopyable>
-            ("Isomorphism3", init<const Isomorphism<3>&>())
+void addIsomorphism3(pybind11::module& m) {
+    auto c = pybind11::class_<Isomorphism<3>>(m, "Isomorphism3")
+        .def(pybind11::init<const Isomorphism<3>&>())
         .def("size", &Isomorphism<3>::size)
-        .def("simpImage", simpImage_const)
-        .def("tetImage", simpImage_const)
-        .def("facetPerm", facetPerm_const)
-        .def("facePerm", facetPerm_const)
+        .def("simpImage", overload_cast<unsigned>(
+            &Isomorphism<3>::simpImage, pybind11::const_))
+        .def("tetImage", overload_cast<unsigned>(
+            &Isomorphism<3>::tetImage, pybind11::const_))
+        .def("facetPerm", overload_cast<unsigned>(
+            &Isomorphism<3>::facetPerm, pybind11::const_))
+        .def("facePerm", overload_cast<unsigned>(
+            &Isomorphism<3>::facePerm, pybind11::const_))
         .def("__getitem__", &Isomorphism<3>::operator[])
         .def("isIdentity", &Isomorphism<3>::isIdentity)
-        .def("apply", &Isomorphism<3>::apply,
-            return_value_policy<to_held_type<> >())
+        .def("apply", &Isomorphism<3>::apply)
         .def("applyInPlace", &Isomorphism<3>::applyInPlace)
-        .def("random", &Isomorphism<3>::random,
-            OL_random()[return_value_policy<manage_new_object>()])
-        .def("identity", &Isomorphism<3>::identity,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("random")
-        .staticmethod("identity")
+        .def_static("random", &Isomorphism<3>::random,
+            pybind11::arg(), pybind11::arg("even") = false)
+        .def_static("identity", &Isomorphism<3>::identity)
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NIsomorphism") = scope().attr("Isomorphism3");
+    m.attr("NIsomorphism") = m.attr("Isomorphism3");
 }
 

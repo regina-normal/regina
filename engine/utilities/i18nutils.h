@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "regina-config.h"
 #include <iostream>
+#include <string>
 #include <iconv.h>
 
 namespace regina {
@@ -57,6 +58,34 @@ namespace i18n {
  * \weakgroup utilities
  * @{
  */
+
+/**
+ * Identifies the longest prefix of the given string that is valid UTF-8.
+ *
+ * The substring from <tt>s.begin()</tt> to the iterator that is
+ * returned is guaranteed to be valid UTF-8.  If the entire string is
+ * valid UTF-8, then this routine will return <tt>s.end()</tt>.
+ *
+ * \ifacespython This routine returns the \e length of the longest valid
+ * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
+ *
+ * @return an iterator marking the end of the longest valid UTF-8 prefix.
+ */
+REGINA_API std::string::const_iterator utf8ValidTo(const std::string& s);
+
+/**
+ * Identifies the longest prefix of the given string that is valid UTF-8.
+ *
+ * The substring from \a s until just before the pointer that is returned
+ * is guaranteed to be valid UTF-8.  If the entire string is valid UTF-8,
+ * then this routine will return a pointer to the null terminator of \a s.
+ *
+ * \ifacespython This routine returns the \e length of the longest valid
+ * UTF-8 prefix.  The length is measured in raw bytes (not unicode characters).
+ *
+ * @return a pointer marking the end of the longest valid UTF-8 prefix.
+ */
+REGINA_API const char* utf8ValidTo(const char* s);
 
 /**
  * A simple class with static routines for querying information about the
@@ -80,9 +109,7 @@ class REGINA_API Locale {
          */
         static const char* codeset();
 
-        /**
-         * Disable the default constructor, since all routines are static.
-         */
+        // Make this class non-constructible.
         Locale() = delete;
 };
 
@@ -196,6 +223,10 @@ class REGINA_API IConvStreamBuffer : public std::streambuf {
          * @return 0 on success, or -1 on error.
          */
         int sync();
+
+        // Make this class non-copyable.
+        IConvStreamBuffer(const IConvStreamBuffer&) = delete;
+        IConvStreamBuffer& operator = (const IConvStreamBuffer&) = delete;
 };
 
 /**
@@ -252,6 +283,10 @@ class REGINA_API IConvStream : public std::ostream {
          */
         IConvStream(std::ostream& dest,
             const char* srcCode, const char* destCode);
+
+        // Make this class non-copyable.
+        IConvStream(const IConvStream&) = delete;
+        IConvStream& operator = (const IConvStream&) = delete;
 };
 
 // Inline functions for IConvStreamBuffer

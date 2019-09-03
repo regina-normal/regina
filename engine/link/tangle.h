@@ -81,7 +81,7 @@ namespace regina {
  * then the corresponding return value of Crossing::next() or
  * Crossing::prev() (whichever is relevant) will be a null strand reference.
  */
-class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
+class REGINA_API Tangle : public Output<Tangle> {
     private:
         char type_;
             /**< Indicates how the four endpoints connect; this will be
@@ -719,7 +719,7 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
          * up to the user to enforce this.
          *
          * \ifacespython Instead of a pair of begin and past-the-end
-         * iterators, this routine takes a Python list of tokens.
+         * iterators, this routine takes a Python list of strings.
          *
          * @param begin an iterator that points to the beginning of the
          * sequence of tokens for an oriented Gauss code.
@@ -732,6 +732,9 @@ class REGINA_API Tangle : public Output<Tangle>, public boost::noncopyable {
         static Tangle* fromOrientedGauss(Iterator begin, Iterator end);
 
         /*@}*/
+
+        // Make this class non-assignable.
+        Tangle& operator = (const Tangle&) = delete;
 
     private:
         /**

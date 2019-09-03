@@ -32,28 +32,28 @@
 
 #include "face-bindings.h"
 
-void addFace10() {
-    addFace<10, 0>("Face10_0", "FaceEmbedding10_0");
-    addFace<10, 1>("Face10_1", "FaceEmbedding10_1");
-    addFace<10, 2>("Face10_2", "FaceEmbedding10_2");
-    addFace<10, 3>("Face10_3", "FaceEmbedding10_3");
-    addFace<10, 4>("Face10_4", "FaceEmbedding10_4");
-    addFace<10, 5>("Face10_5", "FaceEmbedding10_5");
-    addFace<10, 6>("Face10_6", "FaceEmbedding10_6");
-    addFace<10, 7>("Face10_7", "FaceEmbedding10_7");
-    addFace<10, 8>("Face10_8", "FaceEmbedding10_8");
-    addFace<10, 9>("Face10_9", "FaceEmbedding10_9");
+void addFace10(pybind11::module& m) {
+    addFace<10, 0>(m, "Face10_0", "FaceEmbedding10_0");
+    addFace<10, 1>(m, "Face10_1", "FaceEmbedding10_1");
+    addFace<10, 2>(m, "Face10_2", "FaceEmbedding10_2");
+    addFace<10, 3>(m, "Face10_3", "FaceEmbedding10_3");
+    addFace<10, 4>(m, "Face10_4", "FaceEmbedding10_4");
+    addFace<10, 5>(m, "Face10_5", "FaceEmbedding10_5");
+    addFace<10, 6>(m, "Face10_6", "FaceEmbedding10_6");
+    addFace<10, 7>(m, "Face10_7", "FaceEmbedding10_7");
+    addFace<10, 8>(m, "Face10_8", "FaceEmbedding10_8");
+    addFace<10, 9>(m, "Face10_9", "FaceEmbedding10_9");
 
-    scope().attr("VertexEmbedding10") = scope().attr("FaceEmbedding10_0");
-    scope().attr("EdgeEmbedding10") = scope().attr("FaceEmbedding10_1");
-    scope().attr("TriangleEmbedding10") = scope().attr("FaceEmbedding10_2");
-    scope().attr("TetrahedronEmbedding10") = scope().attr("FaceEmbedding10_3");
-    scope().attr("PentachoronEmbedding10") = scope().attr("FaceEmbedding10_4");
+    m.attr("VertexEmbedding10") = m.attr("FaceEmbedding10_0");
+    m.attr("EdgeEmbedding10") = m.attr("FaceEmbedding10_1");
+    m.attr("TriangleEmbedding10") = m.attr("FaceEmbedding10_2");
+    m.attr("TetrahedronEmbedding10") = m.attr("FaceEmbedding10_3");
+    m.attr("PentachoronEmbedding10") = m.attr("FaceEmbedding10_4");
 
-    scope().attr("Vertex10") = scope().attr("Face10_0");
-    scope().attr("Edge10") = scope().attr("Face10_1");
-    scope().attr("Triangle10") = scope().attr("Face10_2");
-    scope().attr("Tetrahedron10") = scope().attr("Face10_3");
-    scope().attr("Pentachoron10") = scope().attr("Face10_4");
+    m.attr("Vertex10") = m.attr("Face10_0");
+    m.attr("Edge10") = m.attr("Face10_1");
+    m.attr("Triangle10") = m.attr("Face10_2");
+    m.attr("Tetrahedron10") = m.attr("Face10_3");
+    m.attr("Pentachoron10") = m.attr("Face10_4");
 }
 

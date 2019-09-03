@@ -30,47 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/example.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::Example;
 
 template <int dim>
-void addExample(const char* name) {
-    class_<Example<dim>>(name, no_init)
-        .def("sphere", &Example<dim>::sphere,
-            return_value_policy<to_held_type<> >())
-        .def("simplicialSphere", &Example<dim>::simplicialSphere,
-            return_value_policy<to_held_type<> >())
-        .def("sphereBundle", &Example<dim>::sphereBundle,
-            return_value_policy<to_held_type<> >())
-        .def("twistedSphereBundle", &Example<dim>::twistedSphereBundle,
-            return_value_policy<to_held_type<> >())
-        .def("ball", &Example<dim>::ball,
-            return_value_policy<to_held_type<> >())
-        .def("ballBundle", &Example<dim>::ballBundle,
-            return_value_policy<to_held_type<> >())
-        .def("twistedBallBundle", &Example<dim>::twistedBallBundle,
-            return_value_policy<to_held_type<> >())
-        .def("doubleCone", &Example<dim>::doubleCone,
-            return_value_policy<to_held_type<>>())
-        .def("singleCone", &Example<dim>::singleCone,
-            return_value_policy<to_held_type<>>())
-        .def(regina::python::no_eq_operators())
-        .staticmethod("sphere")
-        .staticmethod("simplicialSphere")
-        .staticmethod("sphereBundle")
-        .staticmethod("twistedSphereBundle")
-        .staticmethod("ball")
-        .staticmethod("ballBundle")
-        .staticmethod("twistedBallBundle")
-        .staticmethod("doubleCone")
-        .staticmethod("singleCone")
+void addExample(pybind11::module& m, const char* name) {
+    auto c = pybind11::class_<Example<dim>>(m, name)
+        .def_static("sphere", &Example<dim>::sphere)
+        .def_static("simplicialSphere", &Example<dim>::simplicialSphere)
+        .def_static("sphereBundle", &Example<dim>::sphereBundle)
+        .def_static("twistedSphereBundle", &Example<dim>::twistedSphereBundle)
+        .def_static("ball", &Example<dim>::ball)
+        .def_static("ballBundle", &Example<dim>::ballBundle)
+        .def_static("twistedBallBundle", &Example<dim>::twistedBallBundle)
+        .def_static("doubleCone", &Example<dim>::doubleCone)
+        .def_static("singleCone", &Example<dim>::singleCone)
     ;
+    regina::python::no_eq_operators(c);
 }
 

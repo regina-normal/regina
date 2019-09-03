@@ -48,11 +48,9 @@
 #include "regina-core.h"
 #include "regina-config.h"
 #include "enumerate/doubledescription.h"
-#include "enumerate/enumconstraints.h"
 #include "maths/matrixops.h"
 #include "maths/ray.h"
 #include "progress/progresstracker.h"
-#include "utilities/memutils.h"
 #include "utilities/bitmask.h"
 #include "utilities/trieset.h"
 

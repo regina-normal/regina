@@ -40,7 +40,7 @@
  */
 
 #include "utilities/stringutils.h"
-#include "output.h"
+#include "core/output.h"
 #include <iostream>
 #include <map>
 #include <sstream>
@@ -70,8 +70,14 @@ namespace regina {
  * are supported, but native data types such as int and long are not
  * (since they have no zero-initialising default constructor).
  *
- * The underlying storage method for this class is dense (i.e., all
- * coefficients are explicitly stored, including zero coefficients).
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Functions that take or return objects by value are designed to be just as
+ * efficient as working with references or pointers, and long chains of
+ * operators such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
+ *
+ * The underlying storage method for this class is sparse: only the
+ * non-zero coefficients are stored.
  *
  * See also the class Laurent, which describes Laurent polynomials in
  * just one variable.
@@ -81,10 +87,13 @@ namespace regina {
  */
 template <typename T>
 class Laurent2 : public ShortOutput<Laurent2<T>, true> {
+    public:
+        typedef T Coefficient;
+            /**< The type of each coefficient of the polynomial. */
+
     private:
         typedef std::pair<long, long> Exponents;
 
-    private:
         std::map<Exponents, T> coeff_;
             /**< Stores all non-zero coefficients of the polynomial.
                  Specifically, coeff_[(i,j)] stores the coefficient of
@@ -97,7 +106,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         /**
          * Creates the zero polynomial.
          */
-        Laurent2();
+        Laurent2() = default;
 
         /**
          * Creates the polynomial <tt>x^d y^e</tt> for the given exponents
@@ -111,6 +120,8 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         /**
          * Creates a new copy of the given polynomial.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * A note for developers: even though this routine is identical to
          * the templated copy constructor, it must be declared and
          * implemented separately.  Otherwise the compiler might create
@@ -121,8 +132,20 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         Laurent2(const Laurent2<T>& value);
 
         /**
+         * Moves the contents of the given polynomial to this new polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         */
+        Laurent2(Laurent2<T>&& value) noexcept = default;
+
+        /**
          * Creates a copy of the given polynomial with all terms
          * multiplied by <tt>x^d y^e</tt> for some integers \a d and \a e.
+         *
+         * This constructor induces a deep (and modified) copy of \a value.
          *
          * @param toShift the polynomial to clone and shift.
          * @param xShift the integer \a d, which will be added to all
@@ -134,6 +157,8 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
 
         /**
          * Creates a new copy of the given polynomial.
+         *
+         * This constructor induces a deep copy of \a value.
          *
          * \pre Objects of type \a T can be assigned values of type \a U.
          *
@@ -224,6 +249,8 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * A note to developers: although this is identical to the templated
          * assignment operator, it must be declared and implemented separately.
          * See the copy constructor for further details.
@@ -239,11 +266,27 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * This and the given polynomial need not have the same range of
          * non-zero coefficients.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * @param value the polynomial to copy.
          * @return a reference to this polynomial.
          */
         template <typename U>
         Laurent2& operator = (const Laurent2<U>& value);
+
+        /**
+         * Moves the contents of the given polynomial to this polynomial.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given polynomial need not have the same range of
+         * non-zero coefficients.
+         *
+         * The polynomial that was passed (\a value) will no longer be usable.
+         *
+         * @param value the polynomial to move.
+         * @return a reference to this polynomial.
+         */
+        Laurent2& operator = (Laurent2<T>&& value) noexcept = default;
 
         /**
          * Swaps the contents of this and the given polynomial.
@@ -259,6 +302,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
 
         /**
          * Negates this polynomial.
+         * This field element is changed directly.
          */
         void negate();
 
@@ -335,7 +379,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * @return a reference to the given output stream.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
-            const char* varX = 0, const char* varY = 0) const;
+            const char* varX = nullptr, const char* varY = nullptr) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the
@@ -350,7 +394,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * \c null, in which case the default symbol <tt>'y'</tt> will be used.
          * @return this polynomial as a human-readable string.
          */
-        std::string str(const char* varX, const char* varY = 0) const;
+        std::string str(const char* varX, const char* varY = nullptr) const;
 
         /**
          * Returns this polynomial as a human-readable string using unicode
@@ -372,7 +416,7 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * \c null, in which case the default symbol <tt>'y'</tt> will be used.
          * @return this polynomial as a unicode-enabled human-readable string.
          */
-        std::string utf8(const char* varX, const char* varY = 0) const;
+        std::string utf8(const char* varX, const char* varY = nullptr) const;
 
     private:
         /**
@@ -380,19 +424,133 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          */
         void removeZeroes();
 
+    template <typename U>
+    friend Laurent2<U> operator * (const Laurent2<U>&, const Laurent2<U>&);
+
     // For the time being, allow HOMFLY calculations to do low-level
     // operations on these polynomials.
     friend class Link;
 };
 
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent2<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param poly the polynomial to multiply by.
+ * @param scalar the scalar to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Laurent2<T> operator * (Laurent2<T> poly,
+    const typename Laurent2<T>::Coefficient& scalar);
+
+/**
+ * Multiplies the given polynomial by the given scalar constant.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent2<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * @param scalar the scalar to multiply by.
+ * @param poly the polynomial to multiply by.
+ * @return the product of the given polynomial and scalar.
+ */
+template <typename T>
+Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
+    Laurent2<T> poly);
+
+/**
+ * Divides the given polynomial by the given scalar constant.
+ *
+ * This uses the division operator /= for the coefficient type \a T.
+ *
+ * The scalar is simply of type \a T; we use the identical type
+ * Laurent2<T>::Coefficient here to assist with C++ template type matching.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * @param poly the polynomial to divide by the given scalar.
+ * @param scalar the scalar factor to divide by.
+ * @return the quotient of the given polynomial by the given scalar.
+ */
+template <typename T>
+Laurent2<T> operator / (Laurent2<T> poly,
+    const typename Laurent2<T>::Coefficient& scalar);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
+
+/**
+ * Adds the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to add.
+ * @param rhs the second polynomial to add.
+ * @return the sum of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
+
+/**
+ * Returns the negative of the given polynomial.
+ *
+ * @param arg the polynomial to negate.
+ * @return the negative of \a arg.
+ */
+template <typename T>
+Laurent2<T> operator - (Laurent2<T> arg);
+
+/**
+ * Multiplies the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the first polynomial to multiply.
+ * @param rhs the second polynomial to multiply.
+ * @return the product of both polynomials.
+ */
+template <typename T>
+Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
+
 /*@}*/
 
 template <typename T>
 const T Laurent2<T>::zero_(0);
-
-template <typename T>
-inline Laurent2<T>::Laurent2() {
-}
 
 template <typename T>
 inline Laurent2<T>::Laurent2(long xExp, long yExp) {
@@ -663,6 +821,83 @@ void Laurent2<T>::removeZeroes() {
             it = coeff_.erase(it); // C++11: returns next element.
         else
             ++it;
+}
+
+template <typename T>
+inline Laurent2<T> operator * (Laurent2<T> poly,
+        const typename Laurent2<T>::Coefficient& scalar) {
+    // When the argument poly is an lvalue reference, we perform a deep copy
+    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
+    // since the argument can be ignored.  This special-case optimisation
+    // would require two different lvalue/rvalue implementations of *, and
+    // so we leave it for now.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Laurent2<T> operator * (const typename Laurent2<T>::Coefficient& scalar,
+        Laurent2<T> poly) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    poly *= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Laurent2<T> operator / (Laurent2<T> poly,
+        const typename Laurent2<T>::Coefficient& scalar) {
+    poly /= scalar;
+    return poly;
+}
+
+template <typename T>
+inline Laurent2<T> operator + (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
+    // We have to make a deep copy since both arguments are read-only.
+    return std::move(Laurent2<T>(lhs) += rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator + (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
+    return std::move(lhs += rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator + (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
+    return std::move(rhs += lhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator + (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
+    return std::move(lhs += rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator - (Laurent2<T> arg) {
+    arg.negate();
+    return arg;
+}
+
+template <typename T>
+inline Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
+    if (lhs.isZero() || rhs.isZero())
+        return Laurent2<T>(); // zero
+
+    Laurent2<T> ans;
+
+    for (const auto& left : lhs.coeff_)
+        for (const auto& right : rhs.coeff_) {
+            typename Laurent2<T>::Exponents e(
+                left.first.first + right.first.first,
+                left.first.second + right.first.second);
+            T term = left.second * right.second;
+            auto result = ans.coeff_.emplace(e, term);
+            if (! result.second)
+                result.first->second += term;
+        }
+
+    // We might have zeroed out some coefficients.
+    ans.removeZeroes();
+    return ans;
 }
 
 } // namespace regina

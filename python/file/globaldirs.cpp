@@ -30,50 +30,30 @@
  *                                                                        *
  **************************************************************************/
 
-// We need to see Python.h first to avoid a "portability fix" in pyport.h
-// that breaks boost.python on MacOSX.
-#include "Python.h"
-
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "file/globaldirs.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::GlobalDirs;
 
-namespace {
-    void setDirs_2(const std::string& x, const std::string& y) {
-        GlobalDirs::setDirs(x, y);
-    }
-
-    void setDirs_3(const std::string& x, const std::string& y,
-            const std::string& z) {
-        GlobalDirs::setDirs(x, y, z);
-    }
-}
-
-void addGlobalDirs() {
-    class_<GlobalDirs>("GlobalDirs", no_init)
-        .def("home", &GlobalDirs::home)
-        .def("pythonModule", &GlobalDirs::pythonModule)
-        .def("census", &GlobalDirs::census)
-        .def("pythonLibs", &GlobalDirs::pythonLibs)
-        .def("examples", &GlobalDirs::examples)
-        .def("engineDocs", &GlobalDirs::engineDocs)
-        .def("data", &GlobalDirs::data)
-        .def("setDirs", setDirs_2)
-        .def("setDirs", setDirs_3)
-        .def(regina::python::no_eq_operators())
-        .staticmethod("home")
-        .staticmethod("pythonModule")
-        .staticmethod("census")
-        .staticmethod("pythonLibs")
-        .staticmethod("examples")
-        .staticmethod("engineDocs")
-        .staticmethod("data")
-        .staticmethod("setDirs")
+void addGlobalDirs(pybind11::module& m) {
+    auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs")
+        .def_static("home", &GlobalDirs::home)
+        .def_static("pythonModule", &GlobalDirs::pythonModule)
+        .def_static("census", &GlobalDirs::census)
+        .def_static("pythonLibs", &GlobalDirs::pythonLibs)
+        .def_static("examples", &GlobalDirs::examples)
+        .def_static("engineDocs", &GlobalDirs::engineDocs)
+        .def_static("data", &GlobalDirs::data)
+        .def_static("setDirs", overload_cast<const std::string&,
+                const std::string&, const std::string&>(
+            &GlobalDirs::setDirs),
+            pybind11::arg(), pybind11::arg(),
+            pybind11::arg("censusDir") = std::string())
     ;
+    regina::python::no_eq_operators(c);
 
-    scope().attr("NGlobalDirs") = scope().attr("GlobalDirs");
+    m.attr("NGlobalDirs") = m.attr("GlobalDirs");
 }
 

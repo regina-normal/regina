@@ -1,6 +1,5 @@
 # Files to compile
 SET ( FILES
-  face
   facehelper
   facetpairing2
   facetpairing4

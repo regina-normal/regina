@@ -46,7 +46,6 @@
 #include "regina-core.h"
 #include "angle/anglestructure.h"
 #include "packet/packet.h"
-#include "utilities/memutils.h"
 #include "utilities/property.h"
 
 namespace regina {
@@ -233,11 +232,11 @@ class REGINA_API AngleStructures : public Packet {
          */
         static AngleStructures* enumerateTautDD(Triangulation<3>* owner);
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const;
+        virtual bool dependsOnParent() const override;
 
     protected:
         /**
@@ -251,8 +250,8 @@ class REGINA_API AngleStructures : public Packet {
          */
         AngleStructures(bool tautOnly);
 
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 
         /**
          * Calculate whether the convex span of this list includes a
@@ -267,7 +266,7 @@ class REGINA_API AngleStructures : public Packet {
 
         /**
          * An output iterator used to insert angle structures into an
-         * AngleStructures.
+         * AngleStructures list.
          *
          * Objects of type <tt>AngleStructure*</tt> and
          * <tt>AngleStructureVector*</tt> can be assigned to this
@@ -307,7 +306,7 @@ class REGINA_API AngleStructures : public Packet {
              *
              * @param cloneMe the output iterator to clone.
              */
-            StructureInserter(const StructureInserter& cloneMe);
+            StructureInserter(const StructureInserter& cloneMe) = default;
 
             /**
              * Sets this iterator to be a clone of the given output iterator.
@@ -315,7 +314,8 @@ class REGINA_API AngleStructures : public Packet {
              * @param cloneMe the output iterator to clone.
              * @return this output iterator.
              */
-            StructureInserter& operator =(const StructureInserter& cloneMe);
+            StructureInserter& operator =(const StructureInserter& cloneMe)
+                = default;
 
             /**
              * Appends an angle structure to the end of the appropriate
@@ -420,8 +420,8 @@ REGINA_API MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
 // Inline functions for AngleStructures
 
 inline AngleStructures::~AngleStructures() {
-    for_each(structures.begin(), structures.end(),
-        FuncDelete<AngleStructure>());
+    for (auto a : structures)
+        delete a;
 }
 
 inline bool AngleStructures::isTautOnly() const {
@@ -464,19 +464,6 @@ inline AngleStructures::StructureInserter::StructureInserter() : list(0),
 inline AngleStructures::StructureInserter::StructureInserter(
         AngleStructures& newList, Triangulation<3>* newOwner) :
         list(&newList), owner(newOwner) {
-}
-
-inline AngleStructures::StructureInserter::StructureInserter(
-        const StructureInserter& cloneMe) : list(cloneMe.list),
-        owner(cloneMe.owner) {
-}
-
-inline AngleStructures::StructureInserter&
-        AngleStructures::StructureInserter::operator =(
-        const StructureInserter& cloneMe) {
-    list = cloneMe.list;
-    owner = cloneMe.owner;
-    return *this;
 }
 
 inline AngleStructures::StructureInserter&

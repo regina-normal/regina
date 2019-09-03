@@ -108,15 +108,6 @@ class FaceList {
 
     public:
         /**
-         * Explicitly disable the copy constructor.
-         */
-        FaceList(const FaceList&) = delete;
-        /**
-         * Explicitly disable the assignment operator.
-         */
-        FaceList& operator = (const FaceList&) = delete;
-
-        /**
          * Returns the number of <i>subdim</i>-faces in the triangulation.
          *
          * @return the number of <i>subdim</i>-faces.
@@ -142,6 +133,10 @@ class FaceList {
          * @return an iterator beyond the end of this list.
          */
         Iterator end() const;
+
+        // Make this class non-copyable.
+        FaceList(const FaceList&) = delete;
+        FaceList& operator = (const FaceList&) = delete;
 
     protected:
         /**
@@ -365,9 +360,9 @@ class Triangulation :
          */
         /*@{*/
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
-        virtual bool dependsOnParent() const;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
+        virtual bool dependsOnParent() const override;
 
         /*@}*/
 
@@ -375,8 +370,8 @@ class Triangulation :
                 XMLTreeResolver& resolver);
 
     protected:
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 
     private:
         /**
@@ -433,6 +428,10 @@ class DegreeLessThan {
          */
         DegreeLessThan(const Triangulation<dim>& tri);
         /**
+         * Creates a new clone of the given function object.
+         */
+        DegreeLessThan(const DegreeLessThan&) = default;
+        /**
          * Compares the degrees of the <i>subdim</i>-dimensional faces
          * at the given indices within the working triangulation.
          * The triangulation that is used will be the one that was
@@ -450,6 +449,9 @@ class DegreeLessThan {
          * face \a b within the given triangulation.
          */
         bool operator() (unsigned a, unsigned b) const;
+
+        // Make this class non-assignable, since \a tri_ is a reference.
+        DegreeLessThan& operator = (const DegreeLessThan&) = delete;
 };
 
 /**
@@ -486,6 +488,10 @@ class DegreeGreaterThan {
          */
         DegreeGreaterThan(const Triangulation<dim>& tri);
         /**
+         * Creates a new clone of the given function object.
+         */
+        DegreeGreaterThan(const DegreeGreaterThan&) = default;
+        /**
          * Compares the degrees of the <i>subdim</i>-dimensional faces
          * at the given indices within the working triangulation.
          * The triangulation that is used will be the one that was
@@ -503,6 +509,9 @@ class DegreeGreaterThan {
          * face \a b within the given triangulation.
          */
         bool operator() (unsigned a, unsigned b) const;
+
+        // Make this class non-assignable, since \a tri_ is a reference.
+        DegreeGreaterThan& operator = (const DegreeGreaterThan&) = delete;
 };
 
 /*@}*/

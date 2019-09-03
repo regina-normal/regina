@@ -29,6 +29,7 @@
 #include <list>
 #include <map>
 #include <boost/dynamic_bitset.hpp>
+#include "libnormaliz/matrix.h"
 
 namespace libnormaliz {
 using std::vector;

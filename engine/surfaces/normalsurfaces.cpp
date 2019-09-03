@@ -239,8 +239,8 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
 Packet* NormalSurfaces::internalClonePacket(Packet* /* parent */) const {
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, which_, algorithm_);
-    transform(surfaces.begin(), surfaces.end(), back_inserter(ans->surfaces),
-        FuncNewClonePtr<NormalSurface>());
+    for (auto s : surfaces)
+        ans->surfaces.push_back(static_cast<NormalSurface*>(s->clone()));
     return ans;
 }
 

@@ -41,13 +41,12 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/facetspec.h"
 #include "triangulation/alias/isomorphism.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"
 #include <algorithm>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace detail {
@@ -76,8 +75,7 @@ namespace detail {
 template <int dim>
 class IsomorphismBase :
         public Output<IsomorphismBase<dim>>,
-        public alias::IsomorphismImage<IsomorphismBase<dim>, dim>,
-        public boost::noncopyable {
+        public alias::IsomorphismImage<IsomorphismBase<dim>, dim> {
     static_assert(dim >= 2, "Isomorphism requires dimension >= 2.");
     protected:
         unsigned nSimplices_;
@@ -104,13 +102,53 @@ class IsomorphismBase :
         /**
          * Creates a new copy of the given isomorphism.
          *
-         * @param copy the isomorphism to copy.
+         * This constructor induces a deep copy of \a src.
+         *
+         * @param src the isomorphism to copy.
          */
-        IsomorphismBase(const IsomorphismBase<dim>& copy);
+        IsomorphismBase(const IsomorphismBase<dim>& src);
+        /**
+         * Moves the given isomorphism into this new isomorphism.
+         * This is a fast (constant time) operation.
+         *
+         * The isomorphism that is passed (\a src) will no longer be usable.
+         *
+         * @param src the isomorphism to move.
+         */
+        IsomorphismBase(IsomorphismBase<dim>&& src) noexcept;
         /**
          * Destroys this isomorphism.
          */
         ~IsomorphismBase();
+
+        /**
+         * Copies the given isomorphism into this isomorphism.
+         *
+         * It does not matter if this and the given isomorphism use different
+         * numbers of simplices; if they do then this isomorphism will be
+         * resized as a result.
+         *
+         * This operator induces a deep copy of \a src.
+         *
+         * @param src the isomorphism to copy.
+         * @return a reference to this isomorphism.
+         */
+        IsomorphismBase& operator = (const IsomorphismBase& src);
+
+        /**
+         * Moves the given isomorphism into this isomorphism.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given isomorphism use different
+         * numbers of simplices; if they do then this isomorphism will be
+         * resized as a result.
+         *
+         * The isomorphism that is passed (\a src) will no longer be usable.
+         *
+         * @param src the isomorphism to move.
+         * @return a reference to this isomorphism.
+         */
+        IsomorphismBase& operator = (IsomorphismBase&& src) noexcept;
 
         /**
          * Returns the number of simplices in the source triangulation
@@ -297,14 +335,11 @@ class IsomorphismBase :
          * Returns the identity isomorphism for the given number of simplices.
          * This isomorphism sends every simplex and every vertex to itself.
          *
-         * The isomorphism will be newly constructed, and must be
-         * destroyed by the caller of this routine.
-         *
          * @param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
-         * @return the newly constructed identity isomorphism.
+         * @return the identity isomorphism.
          */
-        static Isomorphism<dim>* identity(unsigned nSimplices);
+        static Isomorphism<dim> identity(unsigned nSimplices);
 
         /**
          * Returns a random isomorphism for the given number of simplices.
@@ -312,9 +347,6 @@ class IsomorphismBase :
          * 0 to <tt>nSimplices-1</tt> in a random fashion, and for
          * each simplex a random permutation of its (\a dim + 1) vertices
          * will be selected.
-         *
-         * The isomorphism will be newly constructed, and must be
-         * destroyed by the caller of this routine.
          *
          * Note that both the STL random number generator and the
          * standard C function rand() are used in this routine.  All
@@ -327,9 +359,9 @@ class IsomorphismBase :
          * vertices permuted with an even permutation.  This means that,
          * if the random isomorphism is applied to an oriented triangulation,
          * it will preserve the orientation.
-         * @return the newly constructed random isomorphism.
+         * @return the new random isomorphism.
          */
-        static Isomorphism<dim>* random(unsigned nSimplices, bool even = false);
+        static Isomorphism<dim> random(unsigned nSimplices, bool even = false);
 };
 
 /*@}*/
@@ -344,18 +376,57 @@ inline IsomorphismBase<dim>::IsomorphismBase(unsigned nSimplices) :
 }
 
 template <int dim>
-inline IsomorphismBase<dim>::IsomorphismBase(const IsomorphismBase<dim>& copy) :
-        nSimplices_(copy.nSimplices_),
-        simpImage_(new int[copy.nSimplices_]),
-        facetPerm_(new Perm<dim+1>[copy.nSimplices_]) {
-    std::copy(copy.simpImage_, copy.simpImage_ + nSimplices_, simpImage_);
-    std::copy(copy.facetPerm_, copy.facetPerm_ + nSimplices_, facetPerm_);
+inline IsomorphismBase<dim>::IsomorphismBase(const IsomorphismBase<dim>& src) :
+        nSimplices_(src.nSimplices_),
+        simpImage_(new int[src.nSimplices_]),
+        facetPerm_(new Perm<dim+1>[src.nSimplices_]) {
+    std::copy(src.simpImage_, src.simpImage_ + nSimplices_, simpImage_);
+    std::copy(src.facetPerm_, src.facetPerm_ + nSimplices_, facetPerm_);
+}
+
+template <int dim>
+inline IsomorphismBase<dim>::IsomorphismBase(IsomorphismBase<dim>&& src)
+        noexcept:
+        nSimplices_(src.nSimplices_),
+        simpImage_(src.simpImage_),
+        facetPerm_(src.facetPerm_) {
+    src.simpImage_ = nullptr;
+    src.facetPerm_ = nullptr;
 }
 
 template <int dim>
 inline IsomorphismBase<dim>::~IsomorphismBase() {
     delete[] simpImage_;
     delete[] facetPerm_;
+}
+
+template <int dim>
+IsomorphismBase<dim>& IsomorphismBase<dim>::operator = (
+        const IsomorphismBase<dim>& src) {
+    if (nSimplices_ != src.nSimplices_) {
+        delete[] simpImage_;
+        delete facetPerm_;
+
+        nSimplices_ = src.nSimplices_;
+
+        simpImage_ = new int[nSimplices_];
+        facetPerm_ = new Perm<dim+1>[nSimplices_];
+    }
+
+    std::copy(src.simpImage_, src.simpImage_ + nSimplices_, simpImage_);
+    std::copy(src.facetPerm_, src.facetPerm_ + nSimplices_, facetPerm_);
+    return *this;
+}
+
+template <int dim>
+IsomorphismBase<dim>& IsomorphismBase<dim>::operator = (
+        IsomorphismBase<dim>&& src) noexcept{
+    // Strictly speaking, we could just assign nSimplices_ instead of swapping.
+    std::swap(nSimplices_, src.nSimplices_);
+    std::swap(simpImage_, src.simpImage_);
+    std::swap(facetPerm_, src.facetPerm_);
+    // Let src dispose of the original contents in its own destructor.
+    return *this;
 }
 
 template <int dim>
@@ -473,26 +544,26 @@ inline void IsomorphismBase<dim>::writeTextLong(std::ostream& out) const {
 }
 
 template <int dim>
-inline Isomorphism<dim>* IsomorphismBase<dim>::identity(unsigned nSimplices) {
-    Isomorphism<dim>* id = new Isomorphism<dim>(nSimplices);
+inline Isomorphism<dim> IsomorphismBase<dim>::identity(unsigned nSimplices) {
+    Isomorphism<dim> id(nSimplices);
     for (unsigned i = 0; i < nSimplices; ++i)
-        id->simpImage_[i] = i;
+        id.simpImage_[i] = i;
     return id;
 }
 
 template <int dim>
-Isomorphism<dim>* IsomorphismBase<dim>::random(unsigned nSimplices, bool even) {
-    Isomorphism<dim>* ans = new Isomorphism<dim>(nSimplices);
+Isomorphism<dim> IsomorphismBase<dim>::random(unsigned nSimplices, bool even) {
+    Isomorphism<dim> ans(nSimplices);
 
     // Randomly choose the destination simplices.
     unsigned i;
-    for (i = 0; i < nSimplices; i++)
-        ans->simpImage_[i] = i;
-    std::random_shuffle(ans->simpImage_, ans->simpImage_ + nSimplices);
+    for (i = 0; i < nSimplices; ++i)
+        ans.simpImage_[i] = i;
+    std::random_shuffle(ans.simpImage_, ans.simpImage_ + nSimplices);
 
     // Randomly choose the individual permutations.
-    for (i = 0; i < nSimplices; i++)
-        ans->facetPerm_[i] = Perm<dim+1>::rand(even);
+    for (i = 0; i < nSimplices; ++i)
+        ans.facetPerm_[i] = Perm<dim+1>::rand(even);
 
     return ans;
 }

@@ -44,8 +44,6 @@
 #include "maths/perm.h"
 #include "triangulation/forward.h"
 
-#include <boost/noncopyable.hpp>
-
 namespace regina {
 
 /**
@@ -110,7 +108,7 @@ namespace regina {
  * how many additional tetrahedra have been layered upon this pair of triangles
  * according to the rules above.
  */
-class REGINA_API Layering : public boost::noncopyable {
+class REGINA_API Layering {
     private:
         unsigned long size_;
             /**< The number of tetrahedra that have been layered. */
@@ -404,6 +402,10 @@ class REGINA_API Layering : public boost::noncopyable {
         bool matchesTop(Tetrahedron<3>* upperBdry0, Perm<4> upperRoles0,
             Tetrahedron<3>* upperBdry1, Perm<4> upperRoles1,
             Matrix2& upperReln) const;
+
+        // Mark this class as non-copyable.
+        Layering(const Layering&) = delete;
+        Layering& operator = (const Layering&) = delete;
 };
 
 /**

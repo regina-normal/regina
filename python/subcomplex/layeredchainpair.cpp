@@ -30,31 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/layeredchainpair.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::LayeredChainPair;
 
-void addLayeredChainPair() {
-    class_<LayeredChainPair, bases<regina::StandardTriangulation>,
-            std::auto_ptr<LayeredChainPair>, boost::noncopyable>
-            ("LayeredChainPair", no_init)
-        .def("clone", &LayeredChainPair::clone,
-            return_value_policy<manage_new_object>())
+void addLayeredChainPair(pybind11::module& m) {
+    pybind11::class_<LayeredChainPair, regina::StandardTriangulation>
+            (m, "LayeredChainPair")
+        .def("clone", &LayeredChainPair::clone)
         .def("chain", &LayeredChainPair::chain,
-            return_internal_reference<>())
-        .def("isLayeredChainPair", &LayeredChainPair::isLayeredChainPair,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isLayeredChainPair")
+            pybind11::return_value_policy::reference_internal)
+        .def_static("isLayeredChainPair", &LayeredChainPair::isLayeredChainPair)
     ;
 
-    implicitly_convertible<std::auto_ptr<LayeredChainPair>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NLayeredChainPair") = scope().attr("LayeredChainPair");
+    m.attr("NLayeredChainPair") = m.attr("LayeredChainPair");
 }
 

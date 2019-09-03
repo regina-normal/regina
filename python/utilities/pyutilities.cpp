@@ -30,17 +30,19 @@
  *                                                                        *
  **************************************************************************/
 
-void addIntUtils();
-void addLocale();
-void addBoolSet();
-void addOSUtils();
-void addStringUtils();
+namespace pybind11 { class module; }
 
-void addUtilitiesClasses() {
-    addIntUtils();
-    addLocale();
-    addBoolSet();
-    addOSUtils();
-    addStringUtils();
+void addIntUtils(pybind11::module& m);
+void addLocale(pybind11::module& m);
+void addBoolSet(pybind11::module& m);
+void addOSUtils(pybind11::module& m);
+void addStringUtils(pybind11::module& m);
+
+void addUtilitiesClasses(pybind11::module& m) {
+    addIntUtils(m);
+    addLocale(m);
+    addBoolSet(m);
+    addOSUtils(m);
+    addStringUtils(m);
 }
 

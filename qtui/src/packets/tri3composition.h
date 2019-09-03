@@ -37,7 +37,7 @@
 #ifndef __TRI3COMPOSITION_H
 #define __TRI3COMPOSITION_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 #include "subcomplex/standardtri.h"
 #include "triangulation/dim3.h"
 
@@ -102,14 +102,14 @@ class Tri3CompositionUI : public QObject, public PacketViewerTab,
         /**
          * PacketViewerTab overrides.
          */
-        regina::Packet* getPacket();
-        QWidget* getInterface();
-        void refresh();
+        regina::Packet* getPacket() override;
+        QWidget* getInterface() override;
+        void refresh() override;
 
         /**
          * PacketListener overrides.
          */
-        void packetToBeDestroyed(regina::Packet* packet);
+        void packetToBeDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**

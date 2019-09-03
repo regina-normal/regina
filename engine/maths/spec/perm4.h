@@ -325,7 +325,7 @@ class REGINA_API Perm<4> {
          *
          * @param cloneMe the permutation to clone.
          */
-        Perm(const Perm<4>& cloneMe);
+        Perm(const Perm<4>& cloneMe) = default;
 
         /**
          * Returns the first-generation code representing this permutation.
@@ -454,7 +454,7 @@ class REGINA_API Perm<4> {
          * to this permutation.
          * @return a reference to this permutation.
          */
-        Perm<4>& operator = (const Perm<4>& cloneMe);
+        Perm<4>& operator = (const Perm<4>& cloneMe) = default;
 
         /**
          * Returns the composition of this permutation with the given
@@ -819,9 +819,6 @@ inline Perm<4>::Perm(const int* image) :
         image[0], image[1], image[2], image[3]))) {
 }
 
-inline Perm<4>::Perm(const Perm<4>& cloneMe) : code_(cloneMe.code_) {
-}
-
 inline Perm<4>::Code Perm<4>::permCode() const {
     return static_cast<Code>(
         imageTable[code_][0] |
@@ -861,11 +858,6 @@ inline Perm<4> Perm<4>::fromPermCode2(Code code) {
 inline bool Perm<4>::isPermCode2(Code code) {
     // code >= 0 is automatic because we are using an unsigned data type.
     return (code < 24);
-}
-
-inline Perm<4>& Perm<4>::operator = (const Perm<4>& cloneMe) {
-    code_ = cloneMe.code_;
-    return *this;
 }
 
 inline Perm<4> Perm<4>::operator *(const Perm<4>& q) const {

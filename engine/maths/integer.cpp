@@ -100,7 +100,7 @@ const IntegerBase<true> IntegerBase<true>::infinity(false, false);
 template <bool supportInfinity>
 IntegerBase<supportInfinity>::IntegerBase(
         const char* value, int base, bool* valid) :
-        large_(0) {
+        large_(nullptr) {
     char* endptr;
     errno = 0;
     small_ = strtol(value, &endptr, base);
@@ -128,7 +128,7 @@ IntegerBase<supportInfinity>::IntegerBase(
 template <bool supportInfinity>
 IntegerBase<supportInfinity>::IntegerBase(
         const std::string& value, int base, bool* valid) :
-        large_(0) {
+        large_(nullptr) {
     char* endptr;
     errno = 0;
     small_ = strtol(value.c_str(), &endptr, base);
@@ -158,7 +158,7 @@ std::string IntegerBase<supportInfinity>::stringValue(int base) const {
     if (isInfinite())
         return "inf";
     else if (large_) {
-        char* str = mpz_get_str(0, base, large_);
+        char* str = mpz_get_str(nullptr, base, large_);
         std::string ans(str);
         free(str);
         return ans;
@@ -168,7 +168,7 @@ std::string IntegerBase<supportInfinity>::stringValue(int base) const {
         mpz_t tmp;
         mpz_init_set_si(tmp, small_);
 
-        char* str = mpz_get_str(0, base, tmp);
+        char* str = mpz_get_str(nullptr, base, tmp);
         std::string ans(str);
         free(str);
 
@@ -213,7 +213,7 @@ std::ostream& operator << (std::ostream& out,
     if (i.isInfinite())
         out << "inf";
     else if (i.large_) {
-        char* str = mpz_get_str(0, 10, i.large_);
+        char* str = mpz_get_str(nullptr, 10, i.large_);
         out << str;
         free(str);
     } else
@@ -957,11 +957,11 @@ int IntegerBase<supportInfinity>::legendre(
 
     if (! large_) {
         mpz_clear(gmp_this);
-        delete gmp_this;
+        delete[] gmp_this;
     }
     if (! p.large_) {
         mpz_clear(gmp_p);
-        delete gmp_p;
+        delete[] gmp_p;
     }
 
     return ans;

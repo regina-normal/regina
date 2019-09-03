@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "surfaces/nsvectormirrored.h"
 
 namespace regina {
@@ -82,8 +83,7 @@ struct NormalInfo<NS_AN_QUAD_OCT> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSVectorQuadOct :
-        public NSVectorMirrored {
+class REGINA_API NSVectorQuadOct : public NSVectorMirrored {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorQuadOct, NS_AN_QUAD_OCT,
         NSVectorMirrored);
 
@@ -105,9 +105,10 @@ class REGINA_API NSVectorQuadOct :
         static NormalSurfaceVector* makeMirror(const Ray& original,
             const Triangulation<3>* triang);
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>* triang)
-            const;
+            const override;
 
-        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang) const;
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang)
+            const override;
 
         static NormalSurfaceVector* makeZeroVector(
             const Triangulation<3>* triangulation);

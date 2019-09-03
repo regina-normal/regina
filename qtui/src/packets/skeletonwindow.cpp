@@ -149,7 +149,7 @@ void SkeletonWindow::packetWasRenamed(regina::Packet*) {
     updateCaption();
 }
 
-void SkeletonWindow::packetToBeDestroyed(regina::Packet*) {
+void SkeletonWindow::packetToBeDestroyed(regina::PacketShell) {
     accepted();
 }
 

@@ -40,7 +40,6 @@
 #define __CENSUS_H
 #endif
 
-#include <boost/noncopyable.hpp>
 #include "regina-core.h"
 #include "triangulation/facetpairing3.h"
 #include "utilities/boolset.h"
@@ -48,6 +47,7 @@
 namespace regina {
 
 class CensusHits;
+class CensusHitIterator;
 
 /**
  * \addtogroup census Census of Triangulations
@@ -96,6 +96,18 @@ class REGINA_API CensusDB {
         CensusDB(const std::string& filename, const std::string& desc);
 
         /**
+         * Creates a new clone of the given database reference.
+         */
+        CensusDB(const CensusDB&) = default;
+
+        /**
+         * Moves the given database reference into this new object.
+         *
+         * The reference that was passed will no longer be usable.
+         */
+        CensusDB(CensusDB&&) noexcept = default;
+
+        /**
          * Returns the filename where this database is stored.
          *
          * @return the database filename.
@@ -128,6 +140,18 @@ class REGINA_API CensusDB {
          * then the return value will be \c true.
          */
         bool lookup(const std::string& isoSig, CensusHits* hits) const;
+
+        /**
+         * Sets this to be a clone of the given database reference.
+         */
+        CensusDB& operator = (const CensusDB&) = default;
+
+        /**
+         * Moves the given database reference into this object.
+         *
+         * The reference that was passed will no longer be usable.
+         */
+        CensusDB& operator = (CensusDB&&) noexcept = default;
 };
 
 /**
@@ -139,7 +163,7 @@ class REGINA_API CensusDB {
  * CensusHits class, which essentially represents a list of individual
  * CensusHit objects.
  */
-class REGINA_API CensusHit : public boost::noncopyable {
+class REGINA_API CensusHit {
     private:
         const std::string name_;
             /**< The human-readable name associated with the triangulation
@@ -148,7 +172,7 @@ class REGINA_API CensusHit : public boost::noncopyable {
             /**< The database in which the triangulation was found. */
         CensusHit* next_;
             /**< A pointer to the next hit in the list that was found for the
-                 same triangulation, or 0 if this is the last hit. */
+                 same triangulation, or \c null if this is the last hit. */
 
     public:
         /**
@@ -167,7 +191,7 @@ class REGINA_API CensusHit : public boost::noncopyable {
          */
         const CensusDB* db() const;
         /**
-         * Returns the next hit for the same triangulation, or 0 if
+         * Returns the next hit for the same triangulation, or \c null if
          * there are no more hits.
          *
          * Recall that hits are typically returned using the CensusHits
@@ -176,10 +200,14 @@ class REGINA_API CensusHit : public boost::noncopyable {
          * CensusHits::first() to retrieve the first hit, and then for each
          * hit call CensusHit::next() (this function) to retrieve the next hit.
          *
-         * @return the next hit after this in the list, or 0 if this is the
-         * last hit.
+         * @return the next hit after this in the list, or \c null if this is
+         * the last hit.
          */
         const CensusHit* next() const;
+
+        // Make this class non-copyable.
+        CensusHit(const CensusHit&) = delete;
+        CensusHit& operator = (const CensusHit&) = delete;
 
     private:
         /**
@@ -204,18 +232,36 @@ class REGINA_API CensusHit : public boost::noncopyable {
  * A given triangulation might have several hits across Regina's databases
  * (or even in the same database).  The complete set of hits for a given
  * triangulation is represented by a single CensusHits object (which is
- * essentially a linked list of individual CensusHit objects).  To iterate
- * through this list, you begin by calling CensusHits::first(), which will
- * return the first hit (or 0 if there are no hits at all).  Then, for each
- * individual hit, you can call CensusHit::next() to retrieve the next hit
- * in the list (this will return 0 if no more hits were found).
+ * essentially a linked list of individual CensusHit objects).
+ *
+ * The simplest way to iterate through this list is using a C++11
+ * range-based \c for loop:
+ *
+ * \code{.cpp}
+ * CensusHits* hits = Census::lookup(...);
+ * for (const CensusHit* h : *hits) { ... }
+ * \endcode
+ *
+ * In Python, you can treat this list as an iterable object:
+ *
+ * \code{.py}
+ * hits = Census.lookup(...)
+ * for h in hits:
+ *     ...
+ * \endcode
+ *
+ * If you wish to iterate through this list manually, you can begin by
+ * calling CensusHits::first(), which will return the first hit (or \c null
+ * if there are no hits at all).  Then, for each individual hit, you can call
+ * CensusHit::next() to retrieve the next hit in the list (this will return
+ * \c null if no more hits were found).
  */
-class REGINA_API CensusHits : public boost::noncopyable {
+class REGINA_API CensusHits {
     private:
         CensusHit* first_;
-            /**< The first hit in the list, or 0 if there are no hits. */
+            /**< The first hit in the list, or \c null if there are no hits. */
         CensusHit* last_;
-            /**< The last hit in the list, or 0 if there are no hits. */
+            /**< The last hit in the list, or \c null if there are no hits. */
         size_t count_;
             /**< The total number of hits in the list. */
 
@@ -235,9 +281,9 @@ class REGINA_API CensusHits : public boost::noncopyable {
          * To continue iterating, you can call CensusHit::next() upon each
          * individual hit to retrieve the next hit in the list.
          *
-         * @return the first hit, or 0 if there are no hits at all.
+         * @return the first hit, or \c null if there are no hits at all.
          */
-        CensusHit* first() const;
+        const CensusHit* first() const;
         /**
          * Returns the total number of hits in this list.
          *
@@ -257,14 +303,153 @@ class REGINA_API CensusHits : public boost::noncopyable {
         bool empty() const;
 
         /**
+         * Returns an iterator at the beginning of this list of hits.
+         *
+         * The begin() and end() routines allow you to iterate through
+         * all hits in this list using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * CensusHits* hits = Census::lookup(...);
+         * for (const CensusHit* h : *hits) { ... }
+         * \endcode
+         *
+         * In Python, a CensusHits object can be treated as an iterable object:
+         *
+         * \code{.py}
+         * hits = Census.lookup(...)
+         * for h in hits:
+         *     ...
+         * \endcode
+         *
+         * @return an iterator at the beginning of this list of hits.
+         */
+        CensusHitIterator begin() const;
+
+        /**
+         * Returns an iterator beyond the end of this list of hits.
+         *
+         * In C++, the begin() and end() routines allow you to iterate through
+         * an entire list of census hits using C++11 range-based \c for loops.
+         * In Python, a CensusHits object can be treated as an iterable object.
+         *
+         * See the begin() documentation for further details.
+         *
+         * @return an iterator beyond the end of this list of hits.
+         */
+        CensusHitIterator end() const;
+
+        /**
          * Appends a new hit to the end of this list.  This list will
          * take ownership of the given object.
+         *
+         * This operation does not invalidate any CensusHitIterator iterators.
          *
          * \ifacespython Not present.
          *
          * @param hit the hit to append to this list.
          */
         void append(CensusHit* hit);
+
+        // Make this class non-copyable.
+        CensusHits(const CensusHits&) = delete;
+        CensusHits& operator = (const CensusHits&) = delete;
+};
+
+/**
+ * A forward iterator that walks through all hits stored by a single
+ * CensusHits object.
+ *
+ * This header also specialises std::iterator_traits for this iterator class.
+ *
+ * \ifacespython Instead of the C++ interface described here, in Python
+ * the classes CensusHits and CensusHitIterator together implement the
+ * Python iterable/iterator interface.  The class CensusHits has just
+ * the single function <tt>__iter__()</tt>, which returns a CensusHitIterator;
+ * then CensusHitIterator implements <tt>next()</tt>, which either returns
+ * the next hit in the census or else throws a <tt>StopException</tt> if
+ * there are no more hits to return.
+ */
+class REGINA_API CensusHitIterator {
+    private:
+        const CensusHit* current_;
+            /**< The hit that this iterator is pointing to, or
+                 \c null for a past-the-end iterator. */
+
+    public:
+        /**
+         * Creates a past-the-end iterator.
+         */
+        CensusHitIterator();
+        /**
+         * Default copy constructor.
+         */
+        CensusHitIterator(const CensusHitIterator&) = default;
+        /**
+         * Creates a new iterator pointing to the given census hit.
+         *
+         * @param current the census hit that the new iterator should
+         * point to, or \c null if the new iterator should be past-the-end.
+         */
+        CensusHitIterator(const CensusHit* current);
+
+        /**
+         * Default copy assignment operator.
+         */
+        CensusHitIterator& operator = (const CensusHitIterator&) = default;
+
+        /**
+         * Tests whether this and the given iterator are equal.
+         *
+         * @return true if and only if the two iterators are equal.
+         */
+        bool operator == (const CensusHitIterator& rhs) const;
+        /**
+         * Tests whether this and the given iterator are different.
+         *
+         * @return true if and only if the two iterators are different.
+         */
+        bool operator != (const CensusHitIterator& rhs) const;
+
+        /**
+         * Preincrement operator.  This moves the iterator to point to the
+         * next hit for the same triangulation in the census databases,
+         * as defined by CensusHit::next().
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current census hit and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is past-the-end.
+         *
+         * @return a reference to this iterator.
+         */
+        CensusHitIterator& operator ++ ();
+        /**
+         * Postincrement operator.  This moves the iterator to point to the
+         * next hit for the same triangulation in the census databases,
+         * as defined by CensusHit::next().
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current census hit and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is past-the-end.
+         *
+         * @return a a copy of this iterator before it was incremented.
+         */
+        CensusHitIterator operator ++ (int);
+
+        /**
+         * Returns the census hit that this iterator is currently pointing to,
+         * or \c null if this iterator is past-the-end.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current census hit and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is past-the-end.
+         *
+         * @return the current census hit, or \c null if this iterator
+         * is past-the-end.
+         */
+        const CensusHit* operator * () const;
 };
 
 /**
@@ -364,6 +549,9 @@ class REGINA_API Census {
          */
         static CensusHits* lookup(const std::string& isoSig);
 
+        // Make this class non-constructible.
+        Census() = delete;
+
     private:
         /**
          * Constructs a CensusDB object for one of Regina's in-built
@@ -411,7 +599,22 @@ class REGINA_API Census {
  */
 [[deprecated]] typedef Census NCensus;
 
+} // namespace regina
+
 /*@}*/
+
+namespace std {
+    template <>
+    struct iterator_traits<regina::CensusHitIterator> {
+        typedef ptrdiff_t difference_type;
+        typedef const regina::CensusHit* value_type;
+        typedef regina::CensusHit const* const* pointer_type;
+        typedef regina::CensusHit const* const& reference_type;
+        typedef std::forward_iterator_tag iterator_category;
+    };
+} // namespace std
+
+namespace regina {
 
 // Inline functions for CensusDB:
 
@@ -430,11 +633,11 @@ inline const std::string& CensusDB::desc() const {
 // Inline functions for CensusHit:
 
 inline CensusHit::CensusHit(const char* name, const CensusDB* db) :
-        name_(name), db_(db), next_(0) {
+        name_(name), db_(db), next_(nullptr) {
 }
 
 inline CensusHit::CensusHit(const std::string& name, const CensusDB* db) :
-        name_(name), db_(db), next_(0) {
+        name_(name), db_(db), next_(nullptr) {
 }
 
 inline const std::string& CensusHit::name() const {
@@ -451,7 +654,8 @@ inline const CensusHit* CensusHit::next() const {
 
 // Inline functions for CensusHits:
 
-inline CensusHits::CensusHits() : first_(0), last_(0), count_(0) {
+inline CensusHits::CensusHits() :
+        first_(nullptr), last_(nullptr), count_(0) {
 }
 
 inline CensusHits::~CensusHits() {
@@ -463,7 +667,7 @@ inline CensusHits::~CensusHits() {
     }
 }
 
-inline CensusHit* CensusHits::first() const {
+inline const CensusHit* CensusHits::first() const {
     return first_;
 }
 
@@ -475,12 +679,54 @@ inline bool CensusHits::empty() const {
     return ! first_;
 }
 
+inline CensusHitIterator CensusHits::begin() const {
+    return CensusHitIterator(first_);
+}
+
+inline CensusHitIterator CensusHits::end() const {
+    return CensusHitIterator(nullptr);
+}
+
 inline void CensusHits::append(CensusHit* hit) {
     if (! first_)
         last_ = first_ = hit;
     else
         last_ = last_->next_ = hit; // Assigns last_->next_, then last_.
     ++count_;
+}
+
+// Inline functions for CensusHitIterator:
+
+inline CensusHitIterator::CensusHitIterator() : current_(nullptr) {
+}
+
+inline CensusHitIterator::CensusHitIterator(const CensusHit* current) :
+        current_(current) {
+}
+
+inline bool CensusHitIterator::operator == (const CensusHitIterator& rhs)
+        const {
+    return (current_ == rhs.current_);
+}
+
+inline bool CensusHitIterator::operator != (const CensusHitIterator& rhs)
+        const {
+    return (current_ != rhs.current_);
+}
+
+inline CensusHitIterator& CensusHitIterator::operator ++ () {
+    current_ = current_->next();
+    return *this;
+}
+
+inline CensusHitIterator CensusHitIterator::operator ++ (int) {
+    CensusHitIterator ans(*this);
+    current_ = current_->next();
+    return ans;
+}
+
+inline const CensusHit* CensusHitIterator::operator * () const {
+    return current_;
 }
 
 } // namespace regina

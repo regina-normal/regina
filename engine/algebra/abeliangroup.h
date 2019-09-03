@@ -42,13 +42,12 @@
 #include <set>
 #include "regina-core.h"
 #include "maths/integer.h"
-#include "output.h"
-#include <boost/noncopyable.hpp>
+#include "core/output.h"
 
 namespace regina {
 
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
+template <typename, bool> class Matrix;
+typedef Matrix<Integer, true> MatrixInt;
 
 /**
  * \addtogroup algebra Algebraic Structures
@@ -72,8 +71,7 @@ typedef MatrixIntDomain<Integer> MatrixInt;
  * the like.
  */
 class REGINA_API AbelianGroup :
-        public ShortOutput<AbelianGroup, true>,
-        public boost::noncopyable {
+        public ShortOutput<AbelianGroup, true> {
     protected:
         unsigned rank_;
             /**< The rank of the group (the number of Z components). */
@@ -91,7 +89,7 @@ class REGINA_API AbelianGroup :
          *
          * @param cloneMe the group to clone.
          */
-        AbelianGroup(const AbelianGroup& cloneMe);
+        AbelianGroup(const AbelianGroup& cloneMe) = default;
         /**
          * Creates an abelian group as the homology of a chain complex.
          *
@@ -331,6 +329,13 @@ class REGINA_API AbelianGroup :
         bool operator != (const AbelianGroup& other) const;
 
         /**
+         * Sets this to be a clone of the given group.
+         *
+         * @param cloneMe the group to clone.
+         */
+        AbelianGroup& operator = (const AbelianGroup& cloneMe) = default;
+
+        /**
          * Writes a chunk of XML containing this abelian group.
          *
          * \ifacespython Not present.
@@ -394,10 +399,6 @@ class REGINA_API AbelianGroup :
 // Inline functions for AbelianGroup
 
 inline AbelianGroup::AbelianGroup() : rank_(0) {
-}
-
-inline AbelianGroup::AbelianGroup(const AbelianGroup& g) :
-        rank_(g.rank_), invariantFactors(g.invariantFactors) {
 }
 
 inline void AbelianGroup::addRank(int extraRank) {

@@ -53,12 +53,11 @@
 #endif
 
 #include "regina-core.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 namespace syntax {
 
-class REGINA_API TextStyleData : public boost::noncopyable
+class REGINA_API TextStyleData
 {
 public:
     // Constructor initializing all data.
@@ -91,6 +90,10 @@ public:
     bool hasItalic :1;
     bool hasUnderline :1;
     bool hasStrikeThrough :1;
+
+    // Make this class non-copyable.
+    TextStyleData(const TextStyleData&) = delete;
+    TextStyleData& operator = (const TextStyleData&) = delete;
 };
 
 } } // namespace regina::syntax

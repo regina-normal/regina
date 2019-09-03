@@ -1,10 +1,10 @@
 Constructor:
 Container
 Deleting parent:
-Got exception
+Container
 Deleting matriarch:
-Got exception
-Got exception
+Container
+Container
 Multiple references:
 Container
 Container
@@ -14,4 +14,4 @@ Container
 Container
 Container
 Container
-Got exception
+Container

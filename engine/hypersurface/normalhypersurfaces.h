@@ -44,11 +44,11 @@
 #include <iterator>
 #include <vector>
 #include "regina-core.h"
+#include "enumerate/enumconstraints.h"
 #include "hypersurface/hypercoords.h"
 #include "hypersurface/hyperflags.h"
 #include "hypersurface/normalhypersurface.h"
 #include "packet/packet.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -56,9 +56,6 @@ class NormalHypersurface;
 class NormalHypersurfaces;
 class ProgressTracker;
 class XMLPacketReader;
-
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
 
 /**
  * \weakgroup hypersurface
@@ -182,7 +179,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
          * @param algHints passes requests to Regina for which specific
          * enumeration algorithm should be used.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * @return the newly created normal hypersurface list.  Note that if
          * a progress tracker is passed then this list may not be completely
          * filled when this routine returns.  If an error occurs (as
@@ -192,7 +189,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
             HyperCoords coords,
             HyperList which = HS_LIST_DEFAULT,
             HyperAlg algHints = HS_ALG_DEFAULT,
-            ProgressTracker* tracker = 0);
+            ProgressTracker* tracker = nullptr);
 
         /**
          * Returns the coordinate system being used by the
@@ -263,11 +260,11 @@ class REGINA_API NormalHypersurfaces : public Packet {
          */
         const NormalHypersurface* hypersurface(size_t index) const;
 
-        virtual void writeTextShort(std::ostream& out) const;
-        virtual void writeTextLong(std::ostream& out) const;
+        virtual void writeTextShort(std::ostream& out) const override;
+        virtual void writeTextLong(std::ostream& out) const override;
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
-        virtual bool dependsOnParent() const;
+        virtual bool dependsOnParent() const override;
 
         /**
          * Sorts the hypersurfaces in this list according to the given
@@ -357,7 +354,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  *
                  * @param cloneMe the iterator to clone.
                  */
-                VectorIterator(const VectorIterator& cloneMe);
+                VectorIterator(const VectorIterator& cloneMe) = default;
 
                 /**
                  * Makes this a copy of the given iterator.
@@ -365,7 +362,8 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * @param cloneMe the iterator to clone.
                  * @return a reference to this iterator.
                  */
-                VectorIterator& operator = (const VectorIterator& cloneMe);
+                VectorIterator& operator = (const VectorIterator& cloneMe) =
+                    default;
 
                 /**
                  * Compares this with the given operator for equality.
@@ -454,8 +452,8 @@ class REGINA_API NormalHypersurfaces : public Packet {
         NormalHypersurfaces(HyperCoords coords, HyperList which,
             HyperAlg algorithm);
 
-        virtual Packet* internalClonePacket(Packet* parent) const;
-        virtual void writeXMLPacketData(std::ostream& out) const;
+        virtual Packet* internalClonePacket(Packet* parent) const override;
+        virtual void writeXMLPacketData(std::ostream& out) const override;
 
         /**
          * An output iterator used to insert hypersurfaces into an
@@ -491,7 +489,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
              *
              * @param cloneMe the output iterator to clone.
              */
-            HypersurfaceInserter(const HypersurfaceInserter& cloneMe);
+            HypersurfaceInserter(const HypersurfaceInserter& cloneMe) = default;
 
             /**
              * Sets this iterator to be a clone of the given output iterator.
@@ -500,7 +498,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
              * @return this output iterator.
              */
             HypersurfaceInserter& operator = (
-                const HypersurfaceInserter& cloneMe);
+                const HypersurfaceInserter& cloneMe) = default;
 
             /**
              * Appends a normal hypersurface to the end of the appropriate
@@ -566,7 +564,7 @@ class REGINA_API NormalHypersurfaces : public Packet {
                 ProgressTracker* tracker_;
                     /**< The progress tracker through which progress is
                          reported and cancellation requests are accepted,
-                         or 0 if no progress tracker is in use. */
+                         or \c null if no progress tracker is in use. */
 
             public:
                 /**
@@ -582,11 +580,16 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * has finished.  This pointer \e must be non-null, i.e., Regina
                  * must have been able to construct the matching equations.
                  * @param tracker the progress tracker to use for
-                 * progress reporting and cancellation polling, or 0 if
+                 * progress reporting and cancellation polling, or \c null if
                  * these capabilities are not required.
                  */
                 Enumerator(NormalHypersurfaces* list, Triangulation<4>* triang,
                     MatrixInt* eqns, ProgressTracker* tracker);
+
+                /**
+                 * Default move constructor.
+                 */
+                Enumerator(Enumerator&&) = default;
 
                 /**
                  * Performs the real enumeration work, in a setting
@@ -601,12 +604,16 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * tree as a child of \a triang_.
                  *
                  * The matching equation matrix \a eqns_ will be deleted
-                 * at the end of this routine.
+                 * during this routine.
                  *
                  * \tparam Coords an instance of the HyperInfo<> template class.
                  */
                 template <typename Coords>
                 void operator() ();
+
+                // Make this class non-copyable.
+                Enumerator(const Enumerator&) = delete;
+                Enumerator& operator = (const Enumerator&) = delete;
 
             private:
                 /**
@@ -626,6 +633,9 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillVertex();
@@ -647,6 +657,9 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillFundamental();
@@ -662,6 +675,9 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * If \a tracker_ is non-null, this routine assumes that
                  * an appropriate tracker stage has already been
                  * declared, and works through that stage only.
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -681,6 +697,9 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
+                 *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Coords>
@@ -698,6 +717,9 @@ class REGINA_API NormalHypersurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
+                 *
+                 * This routine \e may delete the matching equation matrix
+                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -786,8 +808,8 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
 // Inline functions for NormalHypersurfaces
 
 inline NormalHypersurfaces::~NormalHypersurfaces() {
-    for_each(surfaces_.begin(), surfaces_.end(),
-        FuncDelete<NormalHypersurface>());
+    for (auto s : surfaces_)
+        delete s;
 }
 
 inline HyperCoords NormalHypersurfaces::coords() const {
@@ -830,18 +852,6 @@ inline MatrixInt* NormalHypersurfaces::recreateMatchingEquations() const {
 }
 
 inline NormalHypersurfaces::VectorIterator::VectorIterator() {
-}
-
-inline NormalHypersurfaces::VectorIterator::VectorIterator(
-        const NormalHypersurfaces::VectorIterator& cloneMe) :
-        it_(cloneMe.it_) {
-}
-
-inline NormalHypersurfaces::VectorIterator&
-        NormalHypersurfaces::VectorIterator::operator =(
-        const NormalHypersurfaces::VectorIterator& cloneMe) {
-    it_ = cloneMe.it_;
-    return *this;
 }
 
 inline bool NormalHypersurfaces::VectorIterator::operator ==(
@@ -897,20 +907,6 @@ inline NormalHypersurfaces::VectorIterator
 inline NormalHypersurfaces::HypersurfaceInserter::HypersurfaceInserter(
         NormalHypersurfaces& list, Triangulation<4>* owner) :
         list_(&list), owner_(owner) {
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter::HypersurfaceInserter(
-        const HypersurfaceInserter& cloneMe) : list_(cloneMe.list_),
-        owner_(cloneMe.owner_) {
-}
-
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator =(
-        const HypersurfaceInserter& cloneMe) {
-    list_ = cloneMe.list_;
-    owner_ = cloneMe.owner_;
-    return *this;
 }
 
 inline NormalHypersurfaces::HypersurfaceInserter&

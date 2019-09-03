@@ -36,10 +36,8 @@
 #import "packet/container.h"
 #import "packet/text.h"
 #import "snappea/snappeatriangulation.h"
+#import "utilities/memstream.h"
 #import "utilities/safeptr.h"
-#import <boost/iostreams/device/array.hpp>
-#import <boost/iostreams/stream.hpp>
-#import <sstream>
 
 static NSURL* docsDir_ = nil;
 
@@ -238,7 +236,8 @@ enum DocError {
         
         _type = DOC_FOREIGN;
     } else {
-        boost::iostreams::stream<boost::iostreams::array_source> s(static_cast<const char*>(data.bytes), data.length);
+        const char* buffer = static_cast<const char*>(data.bytes);
+        regina::mem_istream s(buffer, buffer + data.length);
         _tree.reset(regina::open(s));
         if (! _tree) {
             *outError = [NSError errorWithDomain:@"ReginaDocument"

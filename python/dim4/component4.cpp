@@ -30,34 +30,16 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 
-using namespace boost::python;
 using regina::Component;
 
-namespace {
-    boost::python::list pentachora_list(Component<4>& t) {
-        boost::python::list ans;
-        for (std::vector<regina::Simplex<4>*>::const_iterator it =
-                t.simplices().begin(); it != t.simplices().end(); ++it)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list bc_list(Component<4>& t) {
-        boost::python::list ans;
-        for (auto s : t.boundaryComponents())
-            ans.append(boost::python::ptr(s));
-        return ans;
-    }
-}
-
-void addComponent4() {
-    class_<Component<4>, std::auto_ptr<Component<4>>, boost::noncopyable>
-            ("Component4", no_init)
+void addComponent4(pybind11::module& m) {
+    auto c = pybind11::class_<Component<4>>(m, "Component4")
         .def("index", &Component<4>::index)
         .def("size", &Component<4>::size)
         .def("countPentachora", &Component<4>::countPentachora)
@@ -67,29 +49,38 @@ void addComponent4() {
         .def("countEdges", &Component<4>::countEdges)
         .def("countVertices", &Component<4>::countVertices)
         .def("countBoundaryComponents", &Component<4>::countBoundaryComponents)
-        .def("simplices", pentachora_list)
-        .def("pentachora", pentachora_list)
-        .def("faces", &regina::python::faces<Component<4>, 4>)
-        .def("vertices", regina::python::faces_list<Component<4>, 4, 0>)
-        .def("edges", regina::python::faces_list<Component<4>, 4, 1>)
-        .def("triangles", regina::python::faces_list<Component<4>, 4, 2>)
-        .def("tetrahedra", regina::python::faces_list<Component<4>, 4, 3>)
-        .def("boundaryComponents", bc_list)
+        .def("simplices", &Component<4>::simplices,
+            pybind11::return_value_policy::reference)
+        .def("pentachora", &Component<4>::pentachora,
+            pybind11::return_value_policy::reference)
+        .def("faces", &regina::python::faces<Component<4>, 4,
+            pybind11::return_value_policy::reference>)
+        .def("vertices", &Component<4>::vertices,
+            pybind11::return_value_policy::reference)
+        .def("edges", &Component<4>::edges,
+            pybind11::return_value_policy::reference)
+        .def("triangles", &Component<4>::triangles,
+            pybind11::return_value_policy::reference)
+        .def("tetrahedra", &Component<4>::tetrahedra,
+            pybind11::return_value_policy::reference)
+        .def("boundaryComponents", &Component<4>::boundaryComponents,
+            pybind11::return_value_policy::reference)
         .def("simplex", &Component<4>::simplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("pentachoron", &Component<4>::pentachoron,
-            return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Component<4>, 4, size_t>)
+            pybind11::return_value_policy::reference)
+        .def("face", &regina::python::face<Component<4>, 4, size_t,
+            pybind11::return_value_policy::reference>)
         .def("tetrahedron", &Component<4>::tetrahedron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("triangle", &Component<4>::triangle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("edge", &Component<4>::edge,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("vertex", &Component<4>::vertex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Component<4>::boundaryComponent,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isIdeal", &Component<4>::isIdeal)
         .def("isValid", &Component<4>::isValid)
         .def("isOrientable", &Component<4>::isOrientable)
@@ -98,10 +89,10 @@ void addComponent4() {
         .def("hasBoundaryTetrahedra", &Component<4>::hasBoundaryTetrahedra)
         .def("countBoundaryFacets", &Component<4>::countBoundaryFacets)
         .def("countBoundaryTetrahedra", &Component<4>::countBoundaryTetrahedra)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("Dim4Component") = scope().attr("Component4");
+    m.attr("Dim4Component") = m.attr("Component4");
 }
 

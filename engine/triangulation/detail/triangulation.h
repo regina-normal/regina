@@ -46,7 +46,7 @@
 #include <string>
 #include <vector>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
 #include "maths/matrix.h"
@@ -482,8 +482,7 @@ class TriangulationBase :
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
-        public alias::FacesOfTriangulation<TriangulationBase<dim>, dim>,
-        public boost::noncopyable {
+        public alias::FacesOfTriangulation<TriangulationBase<dim>, dim> {
     static_assert(dim >= 2, "Triangulation requires dimension >= 2.");
 
     public:
@@ -1762,8 +1761,8 @@ class TriangulationBase :
          * minor dimension-specific adjustments.
          *
          * \ifacespython The isomorphism argument is not present.
-         * Instead there are two routines: fromIsoSig(), which returns a
-         * string only, and fromIsoSigDetail(), which returns a pair
+         * Instead there are two routines: isoSig(), which returns a
+         * string only, and isoSigDetail(), which returns a pair
          * (\a signature, \a relabelling).
          *
          * \pre If \a relabelling is non-null, then this triangulation
@@ -1893,6 +1892,9 @@ class TriangulationBase :
         static size_t isoSigComponentSize(const std::string& sig);
 
         /*@}*/
+
+        // Make this class non-assignable.
+        TriangulationBase& operator = (const TriangulationBase&) = delete;
 
     protected:
         /**

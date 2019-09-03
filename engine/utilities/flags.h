@@ -91,8 +91,7 @@ class Flags {
          *
          * @param init the flag set to clone.
          */
-        inline Flags(const Flags<T>& init) : value_(init.value_) {
-        }
+        inline Flags(const Flags<T>& init) = default;
 
         /**
          * Returns the integer representation of this set.
@@ -210,10 +209,7 @@ class Flags {
          * @param rhs the new value of this flag set.
          * @return a reference to this flag set.
          */
-        inline Flags<T>& operator = (const Flags<T>& rhs) {
-            value_ = rhs.value_;
-            return *this;
-        }
+        inline Flags<T>& operator = (const Flags<T>& rhs) = default;
 
         /**
          * Changes this flag set by taking a bitwise OR with the given
@@ -383,9 +379,6 @@ class Flags {
          *
          * \pre Both \a default_ and \a other are each single-bit flags.
          *
-         * \ifacespython Not present, even for flag types that are
-         * exposed to Python.
-         *
          * @param default_ the flag that will be set if any adjustments
          * need to be made.
          * @param other the flag that will be cleared if any adjustments
@@ -407,9 +400,6 @@ class Flags {
          * \e earlier in the argument list for this routine will be used.
          *
          * \pre Each of the given flags is single-bit.
-         *
-         * \ifacespython Not present, even for flag types that are
-         * exposed to Python.
          *
          * @param default_ the highest-priority flag.
          * @param second the second-highest-priority flag.
@@ -434,9 +424,6 @@ class Flags {
          * \e earlier in the argument list for this routine will be used.
          *
          * \pre Each of the given flags is single-bit.
-         *
-         * \ifacespython Not present, even for flag types that are
-         * exposed to Python.
          *
          * @param default_ the highest-priority flag.
          * @param second the second-highest-priority flag.

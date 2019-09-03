@@ -30,127 +30,111 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "maths/integer.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::LargeInteger;
 
-namespace {
-    LargeInteger& (LargeInteger::*divByExact_large)(const LargeInteger&) =
-        &LargeInteger::divByExact;
-    LargeInteger& (LargeInteger::*divByExact_long)(long) =
-        &LargeInteger::divByExact;
-    LargeInteger (LargeInteger::*divExact_large)(const LargeInteger&) const =
-        &LargeInteger::divExact;
-    LargeInteger (LargeInteger::*divExact_long)(long) const =
-        &LargeInteger::divExact;
+void addLargeInteger(pybind11::module& m) {
+    auto c = pybind11::class_<LargeInteger>(m, "LargeInteger")
+        .def(pybind11::init<>())
+        .def(pybind11::init<long>())
+        .def(pybind11::init<const LargeInteger&>())
+        .def(pybind11::init<const regina::Integer&>())
+        .def(pybind11::init<double>())
+        .def(pybind11::init<const char*, int>(),
+            pybind11::arg(), pybind11::arg("base") = 10)
+        .def(pybind11::init([](pybind11::int_ l){
+            return new LargeInteger(pybind11::cast<std::string>(
+                pybind11::str(l)));
+        }))
+        .def("isNative", &LargeInteger::isNative)
+        .def("isZero", &LargeInteger::isZero)
+        .def("sign", &LargeInteger::sign)
+        .def("isInfinite", &LargeInteger::isInfinite)
+        .def("makeInfinite", &LargeInteger::makeInfinite)
+        .def("longValue", &LargeInteger::longValue)
+        .def("stringValue", &LargeInteger::stringValue,
+            pybind11::arg("base") = 10)
+        .def("swap", &LargeInteger::swap)
+        .def(pybind11::self == long())
+        .def(pybind11::self == regina::Integer())
+        .def(pybind11::self != long())
+        .def(pybind11::self != regina::Integer())
+        .def(pybind11::self < pybind11::self)
+        .def(pybind11::self < long())
+        .def(pybind11::self > pybind11::self)
+        .def(pybind11::self > long())
+        .def(pybind11::self <= pybind11::self)
+        .def(pybind11::self <= long())
+        .def(pybind11::self >= pybind11::self)
+        .def(pybind11::self >= long())
+        .def(pybind11::self + pybind11::self)
+        .def(pybind11::self + long())
+        .def(pybind11::self - pybind11::self)
+        .def(pybind11::self - long())
+        .def(pybind11::self * pybind11::self)
+        .def(pybind11::self * long())
+        .def(pybind11::self / pybind11::self)
+        .def(pybind11::self / long())
+        .def("divExact", overload_cast<const LargeInteger&>(
+            &LargeInteger::divExact, pybind11::const_))
+        .def("divExact", overload_cast<long>(
+            &LargeInteger::divExact, pybind11::const_))
+        .def(pybind11::self % pybind11::self)
+        .def(pybind11::self % long())
+        .def("divisionAlg", [](const LargeInteger& n,
+                const LargeInteger& divisor) {
+            LargeInteger remainder;
+            LargeInteger quotient = n.divisionAlg(divisor, remainder);
+            return pybind11::make_tuple(quotient, remainder);
+        })
+        .def(- pybind11::self)
+        .def(pybind11::self += pybind11::self)
+        .def(pybind11::self += long())
+        .def(pybind11::self -= pybind11::self)
+        .def(pybind11::self -= long())
+        .def(pybind11::self *= pybind11::self)
+        .def(pybind11::self *= long())
+        .def(pybind11::self /= pybind11::self)
+        .def(pybind11::self /= long())
+        .def("divByExact", overload_cast<const LargeInteger&>(
+            &LargeInteger::divByExact),
+            pybind11::return_value_policy::reference_internal)
+        .def("divByExact", overload_cast<long>(
+            &LargeInteger::divByExact),
+            pybind11::return_value_policy::reference_internal)
+        .def(pybind11::self %= pybind11::self)
+        .def(pybind11::self %= long())
+        .def("negate", &LargeInteger::negate)
+        .def("raiseToPower", &LargeInteger::raiseToPower)
+        .def("abs", &LargeInteger::abs)
+        .def("gcdWith", &LargeInteger::gcdWith)
+        .def("gcd", &LargeInteger::gcd)
+        .def("lcmWith", &LargeInteger::lcmWith)
+        .def("lcm", &LargeInteger::lcm)
+        .def("gcdWithCoeffs", &LargeInteger::gcdWithCoeffs)
+        .def("legendre", &LargeInteger::legendre)
+        .def("randomBoundedByThis", &LargeInteger::randomBoundedByThis)
+        .def_static("randomBinary", &LargeInteger::randomBinary)
+        .def_static("randomCornerBinary", &LargeInteger::randomCornerBinary)
+        .def("makeLarge", &LargeInteger::makeLarge)
+        .def("tryReduce", &LargeInteger::tryReduce)
+        .def(long() + pybind11::self)
+        .def(long() * pybind11::self)
+        .def_readonly_static("zero", &LargeInteger::zero)
+        .def_readonly_static("one", &LargeInteger::one)
+        .def_readonly_static("infinity", &LargeInteger::infinity)
+    ;
+    regina::python::add_eq_operators(c);
+    regina::python::add_output_ostream(c, true /* __repr__ */);
 
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_stringValue,
-        LargeInteger::stringValue, 0, 1);
+    pybind11::implicitly_convertible<long, LargeInteger>();
+    pybind11::implicitly_convertible<std::string, LargeInteger>();
 
-    LargeInteger* fromPyLong(boost::python::long_ l) {
-        return new LargeInteger(boost::python::extract<std::string>(
-            boost::python::str(l)));
-    }
-
-    boost::python::tuple divisionAlg(const LargeInteger& n,
-            const LargeInteger& divisor) {
-        LargeInteger remainder;
-        LargeInteger quotient = n.divisionAlg(divisor, remainder);
-        return boost::python::make_tuple(quotient, remainder);
-    }
-}
-
-void addLargeInteger() {
-    {
-        scope s = class_<LargeInteger>("LargeInteger")
-            .def(init<long>())
-            .def(init<const LargeInteger&>())
-            .def(init<const regina::Integer&>())
-            .def(init<double>())
-            .def(init<const char*, optional<int> >())
-            .def("__init__", make_constructor(fromPyLong))
-            .def("isNative", &LargeInteger::isNative)
-            .def("isZero", &LargeInteger::isZero)
-            .def("sign", &LargeInteger::sign)
-            .def("isInfinite", &LargeInteger::isInfinite)
-            .def("makeInfinite", &LargeInteger::makeInfinite)
-            .def("longValue", &LargeInteger::longValue)
-            .def("stringValue", &LargeInteger::stringValue, OL_stringValue())
-            .def("swap", &LargeInteger::swap)
-            .def(self == long())
-            .def(self == regina::Integer())
-            .def(self != long())
-            .def(self != regina::Integer())
-            .def(self < self)
-            .def(self < long())
-            .def(self > self)
-            .def(self > long())
-            .def(self <= self)
-            .def(self <= long())
-            .def(self >= self)
-            .def(self >= long())
-            .def(self + self)
-            .def(self + long())
-            .def(self - self)
-            .def(self - long())
-            .def(self * self)
-            .def(self * long())
-            .def(self / self)
-            .def(self / long())
-            .def("divExact", divExact_large)
-            .def("divExact", divExact_long)
-            .def(self % self)
-            .def(self % long())
-            .def("divisionAlg", divisionAlg)
-            .def(- self)
-            .def(self += self)
-            .def(self += long())
-            .def(self -= self)
-            .def(self -= long())
-            .def(self *= self)
-            .def(self *= long())
-            .def(self /= self)
-            .def(self /= long())
-            .def("divByExact", divByExact_large, return_internal_reference<>())
-            .def("divByExact", divByExact_long, return_internal_reference<>())
-            .def(self %= self)
-            .def(self %= long())
-            .def("negate", &LargeInteger::negate)
-            .def("raiseToPower", &LargeInteger::raiseToPower)
-            .def("abs", &LargeInteger::abs)
-            .def("gcdWith", &LargeInteger::gcdWith)
-            .def("gcd", &LargeInteger::gcd)
-            .def("lcmWith", &LargeInteger::lcmWith)
-            .def("lcm", &LargeInteger::lcm)
-            .def("gcdWithCoeffs", &LargeInteger::gcdWithCoeffs)
-            .def("legendre", &LargeInteger::legendre)
-            .def("randomBoundedByThis", &LargeInteger::randomBoundedByThis)
-            .def("randomBinary", &LargeInteger::randomBinary)
-            .def("randomCornerBinary", &LargeInteger::randomCornerBinary)
-            .def("makeLarge", &LargeInteger::makeLarge)
-            .def("tryReduce", &LargeInteger::tryReduce)
-            .def(long() + self)
-            .def(long() * self)
-            .def(self_ns::str(self))
-            .def(self_ns::repr(self))
-            .def(regina::python::add_eq_operators())
-            .staticmethod("randomBinary")
-            .staticmethod("randomCornerBinary")
-        ;
-
-        // Apparently there is no way in python to make a module attribute
-        // read-only.
-        s.attr("zero") = LargeInteger::zero;
-        s.attr("one") = LargeInteger::one;
-        s.attr("infinity") = LargeInteger::infinity;
-    }
-
-    boost::python::implicitly_convertible<long, LargeInteger>();
-    boost::python::implicitly_convertible<std::string, LargeInteger>();
-
-    scope().attr("NLargeInteger") = scope().attr("LargeInteger");
+    m.attr("NLargeInteger") = m.attr("LargeInteger");
 }
 

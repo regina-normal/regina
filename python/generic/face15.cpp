@@ -32,33 +32,33 @@
 
 #include "face-bindings.h"
 
-void addFace15() {
-    addFace<15, 0>("Face15_0", "FaceEmbedding15_0");
-    addFace<15, 1>("Face15_1", "FaceEmbedding15_1");
-    addFace<15, 2>("Face15_2", "FaceEmbedding15_2");
-    addFace<15, 3>("Face15_3", "FaceEmbedding15_3");
-    addFace<15, 4>("Face15_4", "FaceEmbedding15_4");
-    addFace<15, 5>("Face15_5", "FaceEmbedding15_5");
-    addFace<15, 6>("Face15_6", "FaceEmbedding15_6");
-    addFace<15, 7>("Face15_7", "FaceEmbedding15_7");
-    addFace<15, 8>("Face15_8", "FaceEmbedding15_8");
-    addFace<15, 9>("Face15_9", "FaceEmbedding15_9");
-    addFace<15, 10>("Face15_10", "FaceEmbedding15_10");
-    addFace<15, 11>("Face15_11", "FaceEmbedding15_11");
-    addFace<15, 12>("Face15_12", "FaceEmbedding15_12");
-    addFace<15, 13>("Face15_13", "FaceEmbedding15_13");
-    addFace<15, 14>("Face15_14", "FaceEmbedding15_14");
+void addFace15(pybind11::module& m) {
+    addFace<15, 0>(m, "Face15_0", "FaceEmbedding15_0");
+    addFace<15, 1>(m, "Face15_1", "FaceEmbedding15_1");
+    addFace<15, 2>(m, "Face15_2", "FaceEmbedding15_2");
+    addFace<15, 3>(m, "Face15_3", "FaceEmbedding15_3");
+    addFace<15, 4>(m, "Face15_4", "FaceEmbedding15_4");
+    addFace<15, 5>(m, "Face15_5", "FaceEmbedding15_5");
+    addFace<15, 6>(m, "Face15_6", "FaceEmbedding15_6");
+    addFace<15, 7>(m, "Face15_7", "FaceEmbedding15_7");
+    addFace<15, 8>(m, "Face15_8", "FaceEmbedding15_8");
+    addFace<15, 9>(m, "Face15_9", "FaceEmbedding15_9");
+    addFace<15, 10>(m, "Face15_10", "FaceEmbedding15_10");
+    addFace<15, 11>(m, "Face15_11", "FaceEmbedding15_11");
+    addFace<15, 12>(m, "Face15_12", "FaceEmbedding15_12");
+    addFace<15, 13>(m, "Face15_13", "FaceEmbedding15_13");
+    addFace<15, 14>(m, "Face15_14", "FaceEmbedding15_14");
 
-    scope().attr("VertexEmbedding15") = scope().attr("FaceEmbedding15_0");
-    scope().attr("EdgeEmbedding15") = scope().attr("FaceEmbedding15_1");
-    scope().attr("TriangleEmbedding15") = scope().attr("FaceEmbedding15_2");
-    scope().attr("TetrahedronEmbedding15") = scope().attr("FaceEmbedding15_3");
-    scope().attr("PentachoronEmbedding15") = scope().attr("FaceEmbedding15_4");
+    m.attr("VertexEmbedding15") = m.attr("FaceEmbedding15_0");
+    m.attr("EdgeEmbedding15") = m.attr("FaceEmbedding15_1");
+    m.attr("TriangleEmbedding15") = m.attr("FaceEmbedding15_2");
+    m.attr("TetrahedronEmbedding15") = m.attr("FaceEmbedding15_3");
+    m.attr("PentachoronEmbedding15") = m.attr("FaceEmbedding15_4");
 
-    scope().attr("Vertex15") = scope().attr("Face15_0");
-    scope().attr("Edge15") = scope().attr("Face15_1");
-    scope().attr("Triangle15") = scope().attr("Face15_2");
-    scope().attr("Tetrahedron15") = scope().attr("Face15_3");
-    scope().attr("Pentachoron15") = scope().attr("Face15_4");
+    m.attr("Vertex15") = m.attr("Face15_0");
+    m.attr("Edge15") = m.attr("Face15_1");
+    m.attr("Triangle15") = m.attr("Face15_2");
+    m.attr("Tetrahedron15") = m.attr("Face15_3");
+    m.attr("Pentachoron15") = m.attr("Face15_4");
 }
 

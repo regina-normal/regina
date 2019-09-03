@@ -46,15 +46,15 @@
 #include <set>
 
 #include "regina-core.h"
-#include "output.h"
-#include "packet/packetlistener.h"
+#include "core/output.h"
 #include "packet/packettype.h"
 #include "utilities/safepointeebase.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
+class Packet;
 class PacketChildren;
+class PacketDescendants;
 class PacketListener;
 class SubtreeIterator;
 class XMLPacketReader;
@@ -115,10 +115,10 @@ struct PacketInfo;
 #define REGINA_PACKET(class_, id) \
     public: \
         static constexpr const PacketType typeID = id; \
-        inline virtual PacketType type() const { \
+        inline virtual PacketType type() const override { \
             return id; \
         } \
-        inline virtual std::string typeName() const { \
+        inline virtual std::string typeName() const override { \
             return PacketInfo<id>::name(); \
         }
 
@@ -147,10 +147,10 @@ struct PacketInfo;
 #define REGINA_PACKET_FROM(class_, helper) \
     public: \
         static constexpr const PacketType typeID = helper::typeID; \
-        inline virtual PacketType type() const { \
+        inline virtual PacketType type() const override { \
             return helper::typeID; \
         } \
-        inline virtual std::string typeName() const { \
+        inline virtual std::string typeName() const override { \
             return helper::name(); \
         }
 
@@ -192,13 +192,33 @@ struct PacketInfo;
  * when packets are changed or about to be destroyed.  See the
  * PacketListener class notes for details.
  *
+ * Packets are able to work with SafePtr smart pointers under fluid ownership
+ * rules: they may be owned either by this C++ engine or by external
+ * safe pointers at different times during the packet's lifespan.
+ * The general things to remember are:
+ *
+ * - The C++ engine itself does not use SafePtr at all, and it incurs
+ *   essentially no overhead from the safe pointer machinery.
+ *
+ * - If you are passing packets to an external interface that \e does use
+ *   SafePtr to store them, then you must be careful when deleting packets
+ *   from within C++ code.  If you are at risk of destroying a packet
+ *   that the external interface holds a safe pointer to, you should call
+ *   Packet::safeDelete() instead of just \c delete.  This will test for the
+ *   existence of safe pointers, and if there are any then it will preserve
+ *   the packet (but remove it from the packet tree), thereby leaving the
+ *   safe pointers in the external interface to manage its lifespan.
+ *   Examples of such situations are when the user manually deletes a packet
+ *   within a GUI, or where a child packet is deleted as a result of its parent
+ *   packet being destroyed.  (The Packet destructor calls safeDelete() instead
+ *   of \c delete on its child packets for exactly this reason.)
+ *
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
  */
 class REGINA_API Packet :
         public Output<Packet>,
-        public SafePointeeBase<Packet>,
-        public boost::noncopyable {
+        public SafePointeeBase<Packet> {
     private:
         std::string label_;
             /**< The label for this individual packet of information. */
@@ -251,8 +271,41 @@ class REGINA_API Packet :
         /**
          * Destructor that also orphans this packet and destroys
          * all of its descendants.
+         *
+         * This destructor calls safeDelete() on its descendants.
+         * Therefore, if any descendants have safe pointers that reference
+         * them, those descendants will remain orphaned but alive
+         * (and their lifespans will now be managed by SafePtr instead).
+         * See safeDelete() for details.
          */
         virtual ~Packet();
+
+        /**
+         * Either destroys or orphans the given packet, according to
+         * whether it has safe pointers that currently reference it.
+         *
+         * In this context, a "safe pointer" is either SafePtr<Packet> or a
+         * subclass; such pointers are (for instance) used to hold packets
+         * in regina's python bindings.
+         *
+         * If there are no safe pointers currently pointing to \a p,
+         * then this routine simply deletes \a p.  If there are one or
+         * more safe pointers currently pointing to \a p, then this routine
+         * orphans \a p in the packet tree and does nothing more; the safe
+         * pointers are left to manage the lifespan of \a p from here onwards.
+         *
+         * C++ code should call safeDelete() instead of \c delete when it
+         * wishes to delete a packet, but there is a possibility that some
+         * external body (such as a python interpreter) still holds a
+         * reference to \a p and might still try to access it.
+         *
+         * \ifacespython Not present, since when called from python there will
+         * always be a safe pointer, and so this is equivalent to makeOrphan().
+         *
+         * @param p the packet to delete or orphan.  It is safe to pass \c null
+         * (in which case this routine does nothing).
+         */
+        static void safeDelete(Packet* p);
 
         /*@}*/
         /**
@@ -446,7 +499,7 @@ class REGINA_API Packet :
          * must be distinct, i.e., a particular tag cannot be associated
          * more than once with the same packet.
          *
-         * \ifacespython This routine returns a python list of strings.
+         * \ifacespython This routine returns a python set.
          *
          * @return the set of all tags associated with this packet.
          */
@@ -463,8 +516,6 @@ class REGINA_API Packet :
          * this packet.  See the PacketListener class notes for
          * details.
          *
-         * \ifacespython Not present.
-         *
          * @param listener the listener to register.
          * @return \c true if the given listener was successfully registered,
          * or \c false if the given listener was already registered
@@ -476,8 +527,6 @@ class REGINA_API Packet :
          * listening for events on this packet.  See the PacketListener
          * class notes for details.
          *
-         * \ifacespython Not present.
-         *
          * @param listener the listener to search for.
          * @return \c true if the given listener is currently registered
          * with this packet, or \c false otherwise.
@@ -487,8 +536,6 @@ class REGINA_API Packet :
          * Unregisters the given packet listener so that it no longer
          * listens for events on this packet.  See the PacketListener
          * class notes for details.
-         *
-         * \ifacespython Not present.
          *
          * @param listener the listener to unregister.
          * @return \c true if the given listener was successfully unregistered,
@@ -612,11 +659,11 @@ class REGINA_API Packet :
          */
         size_t countChildren() const;
         /**
-         * Returns the total number of descendants of this packet.  This
-         * includes children, grandchildren and so on.  This packet is not
-         * included in the count.
+         * Returns the total number of strict descendants of this packet.
+         * This includes children, grandchildren and so on.  This packet is
+         * not included in the count.
          *
-         * @return the total number of descendants.
+         * @return the total number of strict descendants.
          */
         size_t countDescendants() const;
         /**
@@ -845,14 +892,28 @@ class REGINA_API Packet :
          * for (Packet* p : *subtree) { ... }
          * \endcode
          *
+         * In Python, each packet can be treated as an iterable object, again
+         * iterating through the corresponding subtree:
+         *
+         * \code{.py}
+         * subtree = ...
+         * for p in subtree:
+         *     ...
+         * \endcode
+         *
+         * See also descendants() for iterating through just the strict
+         * descendants in the subtree (i.e., excluding this packet itself),
+         * and children() for iterating just through the immediate children
+         * of this packet (not the full subtree).
+         *
          * \note This routine is non-const because \e dereferencing
          * a SubtreeIterator returns a non-const packet pointer.
          *
-         * \ifacespython Not present.  However, Regina does supply two
-         * Python generators for iterating over subtrees:
-         * <tt>Packet.subtree()</tt> which (just like these iterators)
-         * includes the root of the subtree itself, and
-         * <tt>Packet.descendants()</tt> which does not.
+         * \ifacespython As well as treating each packet as an iterable
+         * object, Regina supplies a member function <tt>Packet.subtree()</tt>
+         * which returns an iterable object.  Iterating over a packet directly
+         * is exactly the same as iterating over <tt>Packet.subtree()</tt>;
+         * the latter is offered because it may be clearer for readers.
          *
          * @return an iterator at the beginning of this subtree.
          */
@@ -862,29 +923,59 @@ class REGINA_API Packet :
          * Returns an iterator beyond the end of the range of packets
          * in the subtree rooted at this packet.
          *
-         * The begin() and end() routines allow you to iterate through
-         * an entire packet subtree using C++11 range-based \c for loops:
+         * In C++, the begin() and end() routines allow you to iterate through
+         * an entire packet subtree using C++11 range-based \c for loops.
+         * In Python, each packet can be treated as an iterable object.
          *
-         * \code{.cpp}
-         * Packet* subtree = ...;
-         * for (Packet* p : *subtree) { ... }
-         * \endcode
+         * See the begin() documentation for further details.
          *
-         * See also children() for iterating just through the immediate
-         * children of this packet, as opposed to the entire subtree.
-         *
-         * \note This routine is non-const because \e dereferencing
-         * a SubtreeIterator returns a non-const packet pointer.
-         *
-         * \ifacespython Not present.  However, Regina does supply two
-         * Python generators for iterating over subtrees:
-         * <tt>Packet.subtree()</tt> which (just like these iterators)
-         * includes the root of the subtree itself, and
-         * <tt>Packet.descendants()</tt> which does not.
+         * \ifacespython Again, see the begin() documentation for the iterable
+         * objects that Regina provides for Python users.
          *
          * @return an iterator beyond the end of this subtree.
          */
         SubtreeIterator end();
+
+        /**
+         * Returns a lightweight object for iterating through all
+         * strict descendants of this packet in the packet tree.
+         *
+         * The order of iteration is exactly the same as when iterating
+         * over the full subtree rooted at this packet (as offered by
+         * Packet::begin() and Packet::end()), except that the iteration
+         * \e excludes this packet itself.  In particular, the iteration is
+         * depth-first, and each packet in the subtree is processed
+         * before its own descendants.
+         *
+         * This routine allows you to iterate through all strict descendants
+         * of a given packet using C++11 range-based \c for loops:
+         *
+         * \code{.cpp}
+         * Packet* parent = ...;
+         * for (Packet* desc : parent->descendants()) { ... }
+         * \endcode
+         *
+         * In Python, this routine returns an iterable object:
+         *
+         * \code{.py}
+         * parent = ...
+         * for desc in parent.descendants():
+         *     ...
+         * \endcode
+         *
+         * This function returns a lightweight object in the sense that it does
+         * not generate a full list of descendants in advance, but instead just
+         * returns a small iterator that visits each descendant as required.
+         * In particular, this routine has small constant time and memory.
+         *
+         * See also begin() and end() for iterating through the entire
+         * subtree \e including this packet, and children() for iterating
+         * over just this packet's immediate children.
+         *
+         * @return an object for iterating through the strict descendants
+         * of this packet.
+         */
+        PacketDescendants descendants() const;
 
         /**
          * Returns a lightweight object for iterating through the
@@ -898,16 +989,22 @@ class REGINA_API Packet :
          * for (Packet* child : parent->children()) { ... }
          * \endcode
          *
-         * This function returns a lightweight object in the sense that
-         * it does not generate a full list of children, but instead
-         * just works with iterators.  In particular, this routine has
-         * small constant time and memory.
+         * In Python, this routine returns an iterable object:
          *
-         * See also begin() and end() for iterating through the entire
-         * subtree rooted at this packet, not just the immediate children.
+         * \code{.py}
+         * parent = ...
+         * for child in parent.children():
+         *     ...
+         * \endcode
          *
-         * \ifacespython This function does not return an object of
-         * class PacketChildren; instead it acts as a Python generator.
+         * This function returns a lightweight object in the sense that it
+         * does not generate a full list of children in advance, but instead
+         * just returns a small iterator that visits each child as required.
+         * In particular, this routine has small constant time and memory.
+         *
+         * See begin() and end(), as well as descendants(), for iterating
+         * through the subtree rooted at this packet (not just the immediate
+         * children).
          *
          * @return an object for iterating through the children of this packet.
          */
@@ -1229,6 +1326,10 @@ class REGINA_API Packet :
             XMLTreeResolver& resolver);
         #endif
 
+        // Make this class non-copyable.
+        Packet(const Packet&) = delete;
+        Packet& operator = (const Packet&) = delete;
+
         /**
          * An object that facilitates firing packetToBeChanged() and
          * packetWasChanged() events.
@@ -1257,7 +1358,7 @@ class REGINA_API Packet :
          * entire change set, instead of many events representing each
          * individual modification.
          */
-        class ChangeEventSpan : public boost::noncopyable {
+        class ChangeEventSpan {
             private:
                 Packet* packet_;
                     /**< The packet for which change events are fired. */
@@ -1285,6 +1386,10 @@ class REGINA_API Packet :
                  * registered listeners for the given packet.
                  */
                 ~ChangeEventSpan();
+
+                // Make this class non-copyable.
+                ChangeEventSpan(const ChangeEventSpan&) = delete;
+                ChangeEventSpan& operator = (const ChangeEventSpan&) = delete;
         };
 
     protected:
@@ -1379,7 +1484,7 @@ class REGINA_API Packet :
         /**
          * Calls the given PacketListener event for all registered
          * packet listeners.  The first argument to the event function
-         * will be this packet
+         * will be this packet, unless \a makeMeNull is \c true.
          *
          * Calling this routine is better than iterating through listeners
          * manually, since it behaves correctly even if listeners unregister
@@ -1388,10 +1493,11 @@ class REGINA_API Packet :
          * @param event the member function of PacketListener to be called
          * for each listener.
          * @param arg2 the second argument to pass to the event function.
-         * @param arg3 the third argument to pass to the event function.
+         * @param makeMeNull if \c true, then the first argument to the
+         * event function will be \c null instead of \c this.
          */
-        void fireEvent(void (PacketListener::*event)(Packet*, Packet*, bool),
-            Packet* arg2, bool arg3);
+        void fireEvent(void (PacketListener::*event)(Packet*, Packet*),
+            Packet* arg2, bool makeMeNull);
 
         /**
          * Calls PacketListener::packetToBeDestroyed() for all registered
@@ -1503,6 +1609,14 @@ REGINA_API Packet* open(std::istream& in);
  * given packet.
  *
  * This header also specialises std::iterator_traits for this iterator class.
+ *
+ * \ifacespython Instead of the C++ interface described here, in Python
+ * the classes PacketChildren and ChildIterator together implement the
+ * Python iterable/iterator interface.  The class PacketChildren has just
+ * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
+ * then ChildIterator implements <tt>next()</tt>, which either returns
+ * the next child packet in the iteration or else throws a
+ * <tt>StopException</tt> if there are no more children to return.
  */
 class REGINA_API ChildIterator {
     private:
@@ -1513,14 +1627,23 @@ class REGINA_API ChildIterator {
     public:
         /**
          * Creates a past-the-end iterator.
+         *
+         * \ifacespython Not present.  The only way to create a ChildIterator
+         * is via Packet::children().
          */
         ChildIterator();
         /**
          * Default copy constructor.
+         *
+         * \ifacespython Not present.  The only way to create a ChildIterator
+         * is via Packet::children().
          */
         ChildIterator(const ChildIterator&) = default;
         /**
          * Creates a new iterator pointing to the given child packet.
+         *
+         * \ifacespython Not present.  The only way to create a ChildIterator
+         * is via Packet::children().
          *
          * @param current the child packet that the new iterator should
          * point to, or 0 if the new iterator should be past-the-end.
@@ -1548,18 +1671,33 @@ class REGINA_API ChildIterator {
         /**
          * Preincrement operator.
          *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current child packet and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is past-the-end.
+         *
          * @return a reference to this iterator.
          */
         ChildIterator& operator ++ ();
         /**
          * Postincrement operator.
          *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current child packet and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is past-the-end.
+         *
          * @return a a copy of this iterator before it was incremented.
          */
         ChildIterator operator ++ (int);
 
         /**
-         * Returns the packet that this operator is currently pointing to.
+         * Returns the packet that this iterator is currently pointing to.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current child packet and
+         * increments the iterator, or else throws a <tt>StopIteration</tt>
+         * exception if the iterator is past-the-end.
          *
          * @return the current packet.
          */
@@ -1574,10 +1712,17 @@ class REGINA_API ChildIterator {
  * processed before its descendants.
  *
  * This header also specialises std::iterator_traits for this iterator class.
+ *
+ * \ifacespython Instead of the C++ interface described here, in Python
+ * this class implements the Python iterable/iterator interface.  It implements
+ * the function <tt>__iter__()</tt>, which returns the iterator object itself;
+ * it also implements <tt>next()</tt>, which either returns the next packet
+ * in the subtree iteration or else throws a <tt>StopException</tt> if there
+ * are no more packets to return.
  */
 class REGINA_API SubtreeIterator {
     private:
-        Packet* subtree_;
+        const Packet* subtree_;
             /**< The root of the packet subtree that we are iterating over. */
         Packet* current_;
             /**< The packet that this iterator is pointing to, or
@@ -1586,16 +1731,28 @@ class REGINA_API SubtreeIterator {
     public:
         /**
          * Creates a past-the-end iterator.
+         *
+         * \ifacespython Not present.  The only way to create a SubtreeIterator
+         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * over a Packet itself.
          */
         SubtreeIterator();
         /**
          * Default copy constructor.
+         *
+         * \ifacespython Not present.  The only way to create a SubtreeIterator
+         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * over a Packet itself.
          */
         SubtreeIterator(const SubtreeIterator&) = default;
         /**
          * Creates a new iterator pointing to the first packet within
          * the given subtree.  Dereferencing this iterator will return
          * \a subtree itself.
+         *
+         * \ifacespython Not present.  The only way to create a SubtreeIterator
+         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * over a Packet itself.
          *
          * @param subtree the packet subtree that we are iterating through.
          * This does not need to be the root of the overall packet tree
@@ -1606,6 +1763,10 @@ class REGINA_API SubtreeIterator {
          * Creates a new iterator pointing to the given packet within
          * the given subtree.
          *
+         * \ifacespython Not present.  The only way to create a SubtreeIterator
+         * is via Packet::subtree() or Packet::descendants(), or by iterating
+         * over a Packet itself.
+         *
          * @param subtree the packet subtree that we are iterating through.
          * This does not need to be the root of the overall packet tree
          * (i.e., \a subtree is allowed to have a non-null parent).
@@ -1614,7 +1775,7 @@ class REGINA_API SubtreeIterator {
          * If \a current is not null, then it must be equal to or a
          * descendant of \a subtree.
          */
-        SubtreeIterator(Packet* subtree, Packet* current);
+        SubtreeIterator(const Packet* subtree, Packet* current);
 
         /**
          * Default copy assignment operator.
@@ -1645,18 +1806,33 @@ class REGINA_API SubtreeIterator {
         /**
          * Preincrement operator.
          *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current packet in the
+         * subtree and increments the iterator, or else throws a
+         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         *
          * @return a reference to this iterator.
          */
         SubtreeIterator& operator ++ ();
         /**
          * Postincrement operator.
          *
-         * @return a a copy of this iterator before it was incremented.
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current packet in the
+         * subtree and increments the iterator, or else throws a
+         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
+         *
+         * @return a copy of this iterator before it was incremented.
          */
         SubtreeIterator operator ++ (int);
 
         /**
-         * Returns the packet that this operator is currently pointing to.
+         * Returns the packet that this iterator is currently pointing to.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>next()</tt>, which either returns the current packet in the
+         * subtree and increments the iterator, or else throws a
+         * <tt>StopIteration</tt> exception if the iterator is past-the-end.
          *
          * @return the current packet.
          */
@@ -1675,7 +1851,21 @@ class REGINA_API SubtreeIterator {
  * for (Packet* child : parent->children()) { ... }
  * \endcode
  *
- * \ifacespython Not present.
+ * In Python, PacketChildren is an iterable object:
+ *
+ * \code{.py}
+ * parent = ...
+ * for child in parent.children():
+ *     ...
+ * \endcode
+ *
+ * \ifacespython Instead of the C++ interface described here, in Python
+ * the classes PacketChildren and ChildIterator together implement the
+ * Python iterable/iterator interface.  The class PacketChildren has just
+ * the single function <tt>__iter__()</tt>, which returns a ChildIterator;
+ * then ChildIterator implements <tt>next()</tt>, which either returns
+ * the next child packet in the iteration or else throws a
+ * <tt>StopException</tt> if there are no more children to return.
  */
 class REGINA_API PacketChildren {
     private:
@@ -1685,11 +1875,15 @@ class REGINA_API PacketChildren {
     public:
         /**
          * Default copy constructor.
+         *
+         * \ifacespython Not present.
          */
         PacketChildren(const PacketChildren&) = default;
         /**
          * Creates a new object for iterating through the immediate
          * children of the given packet.
+         *
+         * \ifacespython Not present.
          *
          * @param parent the packet whose children we will iterate through.
          */
@@ -1697,11 +1891,16 @@ class REGINA_API PacketChildren {
 
         /**
          * Default copy assignment operator.
+         *
+         * \ifacespython Not present.
          */
         PacketChildren& operator = (const PacketChildren&) = default;
 
         /**
          * Returns an iterator at the beginning of the range of children.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>__iter__()</tt>, as described in the class notes.
          *
          * @return the beginning iterator.
          */
@@ -1709,10 +1908,583 @@ class REGINA_API PacketChildren {
         /**
          * Returns an iterator at the end of the range of children.
          *
+         * \ifacespython Not present; instead this class implements
+         * <tt>__iter__()</tt>, as described in the class notes.
+         *
          * @return the past-the-end iterator.
          */
         ChildIterator end() const;
 };
+
+/**
+ * A lightweight object that gives access to all strict descendants of a
+ * given packet.
+ *
+ * The purpose of this class is to support iteration through all strict
+ * descendants of a packet \a p using C++11 range-based \c for loops:
+ *
+ * \code{.cpp}
+ * Packet* parent = ...;
+ * for (Packet* desc : parent->descendants()) { ... }
+ * \endcode
+ *
+ * In Python, PacketDescendants is an iterable object:
+ *
+ * \code{.py}
+ * parent = ...
+ * for desc in parent.descendants():
+ *     ...
+ * \endcode
+ *
+ * \ifacespython Instead of the C++ interface described here, in Python
+ * the classes PacketDescendants and SubtreeIterator together implement the
+ * Python iterable/iterator interface.  The class PacketDescendants has just
+ * the single function <tt>__iter__()</tt>, which returns a SubtreeIterator;
+ * then SubtreeIterator implements <tt>next()</tt>, which either returns
+ * the next descendant packet in the iteration or else throws a
+ * <tt>StopException</tt> if there are no more children to return.
+ */
+class REGINA_API PacketDescendants {
+    private:
+        const Packet* subtree_;
+            /**< The packet whose strict descendants we are iterating over. */
+
+    public:
+        /**
+         * Default copy constructor.
+         *
+         * \ifacespython Not present.
+         */
+        PacketDescendants(const PacketDescendants&) = default;
+        /**
+         * Creates a new object for iterating through the strict descendants
+         * of the given packet.
+         *
+         * \ifacespython Not present.
+         *
+         * @param subtree the packet whose strict descendants we will iterate
+         * through.
+         */
+        PacketDescendants(const Packet* subtree);
+
+        /**
+         * Default copy assignment operator.
+         *
+         * \ifacespython Not present.
+         */
+        PacketDescendants& operator = (const PacketDescendants&) = default;
+
+        /**
+         * Returns an iterator at the beginning of the range of strict
+         * descendants.  This will point to the first child packet (if
+         * one exists) of the packet whose descendants we are iterating over.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>__iter__()</tt>, as described in the class notes.
+         *
+         * @return the beginning iterator.
+         */
+        SubtreeIterator begin() const;
+        /**
+         * Returns an iterator at the end of the range of strict descendants.
+         *
+         * \ifacespython Not present; instead this class implements
+         * <tt>__iter__()</tt>, as described in the class notes.
+         *
+         * @return the past-the-end iterator.
+         */
+        SubtreeIterator end() const;
+};
+
+/**
+ * Gives access to the final remains of a packet that is in the process
+ * of being destroyed.  The main use of this class is to pass packet details
+ * to the callback function PacketListener::packetToBeDestroyed().
+ *
+ * All functions in this class mirror the corresponding Packet functions,
+ * and are safe to call during PacketListener::packetToBeDestroyed().
+ *
+ * This is a lightweight class, and objects may be safely passed by value.
+ */
+class REGINA_API PacketShell {
+    private:
+        const Packet* packet_;
+            /**< The raw pointer to the packet being destroyed. */
+
+    public:
+        /**
+         * Creates a new shell referring to the given packet.
+         *
+         * @param packet the packet to refer to.
+         */
+        PacketShell(const Packet* packet);
+
+        /**
+         * Creates a copy of the given shell.  Both shells will refer to
+         * the same underlying packet.
+         *
+         * @param shell the shell to clone.
+         */
+        PacketShell(const PacketShell& shell) = default;
+
+        /**
+         * Sets this to be a copy of the given shell.  Both shells will refer
+         * to the same underlying packet.
+         *
+         * @param shell the shell to clone.
+         */
+        PacketShell& operator = (const PacketShell& shell) = default;
+
+        /**
+         * Identifies if this and the given shell refer to the same
+         * underlying packet.
+         *
+         * @param shell the shell to compare with this.
+         * @return \c true if and only if both shells refer to the same packet.
+         */
+        bool operator == (const PacketShell& shell) const;
+
+        /**
+         * Identifies if this shell refers to the given packet.
+         *
+         * This test is also available the other way around (with PacketShell
+         * on the right); this reversed test is defined as a global function.
+         *
+         * @param packet the packet to test against; this may be \c null.
+         * @return \c true if and only if this shell refers to the given packet.
+         */
+        bool operator == (const Packet* packet) const;
+
+        /**
+         * Identifies if this and the given shell refer to different
+         * underlying packets.
+         *
+         * @param shell the shell to compare with this.
+         * @return \c true if and only if both shells refer to different
+         * packets.
+         */
+        bool operator != (const PacketShell& shell) const;
+
+        /**
+         * Identifies if this shell does not refer to the given packet.
+         *
+         * This test is also available the other way around (with PacketShell
+         * on the right); this reversed test is defined as a global function.
+         *
+         * @param packet the packet to test against; this may be \c null.
+         * @return \c true if and only if this shell does not refer to the
+         * given packet.
+         */
+        bool operator != (const Packet* packet) const;
+
+        /**
+         * Returns the label associated with this individual packet.
+         *
+         * See Packet::label() and Packet::humanLabel() for further details
+         * on packet labels.
+         *
+         * The reference that is returned should be only used as a
+         * temporary, since the underlying packet (and therefore the
+         * string that is referenced) is in the process of being destroyed.
+         *
+         * @return this individual packet's label.
+         */
+        const std::string& label() const;
+
+        /**
+         * Returns the label associated with this individual packet,
+         * adjusted if necessary for human-readable output.
+         *
+         * See Packet::label() and Packet::humanLabel() for further details
+         * on packet labels.
+         *
+         * @return this individual packet's label.
+         */
+        std::string humanLabel() const;
+
+        /**
+         * Determines whether this packet has the given associated tag.
+         *
+         * See Packet::tags() for further details on packet tags.
+         *
+         * @param tag the tag to search for.
+         * @return \c true if the given tag is found, \c false otherwise.
+         */
+        bool hasTag(const std::string& tag) const;
+
+        /**
+         * Determines whether this packet has any associated tags at all.
+         *
+         * See Packet::tags() for further details on packet tags.
+         *
+         * @return \c true if this packet has any tags, \c false otherwise.
+         */
+        bool hasTags() const;
+
+        /**
+         * Returns the set of all tags associated with this packet.
+         *
+         * See Packet::tags() for further details on packet tags.
+         *
+         * The reference that is returned should be only used as a
+         * temporary, since the underlying packet (and therefore the
+         * set that is referenced) is in the process of being destroyed.
+         *
+         * \ifacespython This routine returns a python set.
+         *
+         * @return the set of all tags associated with this packet.
+         */
+        const std::set<std::string>& tags() const;
+
+        /**
+         * Returns a unique string ID that identifies this packet.
+         *
+         * The user has no control over this ID and it is not human readable,
+         * but it is guaranteed to be unique to this packet, and to remain
+         * fixed throughout the lifetime of the program for this packet.
+         *
+         * See Packet::internalID() for further details.
+         *
+         * @return a unique ID that identifies this packet.
+         */
+        std::string internalID() const;
+};
+
+/**
+ * Identifies if the given shell refers to the given packet.
+ *
+ * This test is also available the other way around (with PacketShell on
+ * the left); this reversed test is defined as a member function of PacketShell.
+ *
+ * @param packet the packet to test against; this may be \c null.
+ * @param shell the packet shell to test against.
+ * @return \c true if and only if the given shell refers to the given packet.
+ */
+REGINA_API bool operator == (const Packet* packet, PacketShell shell);
+
+/**
+ * Identifies if the given shell does not refer to the given packet.
+ *
+ * This test is also available the other way around (with PacketShell on
+ * the left); this reversed test is defined as a member function of PacketShell.
+ *
+ * @param packet the packet to test against; this may be \c null.
+ * @param shell the packet shell to test against.
+ * @return \c true if and only if the given shell does not refer to the
+ * given packet.
+ */
+REGINA_API bool operator != (const Packet* packet, PacketShell shell);
+
+/**
+ * An object that can be registered to listen for packet events.
+ *
+ * A packet listener can be registered to listen for events on a
+ * packet by calling Packet::listen().
+ *
+ * Each time that one of the events listed in this class occurs,
+ * the packet will call the appropriate routine for all registered
+ * packet listeners.
+ *
+ * These events come in future/past pairs: packetToBeChanged() and
+ * packetWasChanged(), childToBeAdded() and childWasAdded(), and so on.
+ * These event pairs are mutually exclusive: any event will
+ * cause at most one pair of routines to be called for each
+ * (packet, listener) pair.  For instance, if a packet is renamed then
+ * packetToBeRenamed() and packetWasRenamed() will be called but
+ * packetToBeChanged() and packetWasChanged() will not.
+ *
+ * As a special case, when a packet is destroyed there is only the future
+ * event packetToBeDestroyed() with no matching "past" event, since \e after
+ * the packet has been destroyed the set of listeners is no longer available.
+ *
+ * No guarantees are made as to the order in which the different packet
+ * listeners are notified of an event.
+ *
+ * When a listener is destroyed, it is automatically unregistered
+ * from any packets to which it is currently listening.  Similarly, when
+ * a packet is destroyed all listeners are automatically unregistered.
+ *
+ * \warning At the time of writing (admittedly long ago now), Qt has only
+ * limited support for multithreading.  When working with an existing packet
+ * tree in a new thread (not the main thread), the \e only modification that
+ * you may make is to insert new packets.  Modifications of any other type
+ * (such as changing, renaming, deleting or reordering existing packets)
+ * could lead to a crash within Qt or Xlib when running the GUI.
+ * Of course, a new thread may create, modify and delete its own temporary
+ * packet trees as it chooses (and it may in fact insert them into a
+ * pre-existing packet tree once all modifications are completed).
+ * Assuming these restrictions are respected, packet listeners may assume
+ * that no routines other than childWasAdded() will be called from a non-main
+ * thread.
+ *
+ * \ifacespython You can happily make a pure Python subclass of PacketListener,
+ * and packets will call whichever functions you override when events occur,
+ * just as they would for a native C++ subclass.
+ */
+class REGINA_API PacketListener {
+    private:
+        std::set<Packet*> packets;
+            /**< The set of packets upon which this object is currently
+                 listening. */
+
+    public:
+        /**
+         * \name Constructors and Destructors
+         */
+        /*@{*/
+
+        /**
+         * Destroys this listener.  This listener will be unregistered
+         * from any packets to which it is currently listening.
+         */
+        virtual ~PacketListener();
+
+        /*@}*/
+        /**
+         * \name Packet Listener Interface
+         */
+        /*@{*/
+
+        /**
+         * Unregisters this listener from any packets to which it is
+         * currently listening.
+         */
+        void unregisterFromAllPackets();
+
+        /**
+         * Called before the contents of the packet are to be changed.
+         * Once the contents are changed, packetWasChanged() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         */
+        virtual void packetToBeChanged(Packet* packet);
+        /**
+         * Called after the contents of the packet have been changed.
+         * Before the contents are changed, packetToBeChanged() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         */
+        virtual void packetWasChanged(Packet* packet);
+        /**
+         * Called before the packet label or tags are to be changed.
+         * Once the label or tags are changed, packetWasRenamed() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @see childToBeRenamed()
+         */
+        virtual void packetToBeRenamed(Packet* packet);
+        /**
+         * Called after the packet label or tags have been changed.
+         * Before the label or tags are changed, packetToBeRenamed() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @see childWasRenamed()
+         */
+        virtual void packetWasRenamed(Packet* packet);
+        /**
+         * Called before the packet is about to be destroyed.  Note that
+         * there is no matching function called \e after the
+         * packet is destroyed, since the set of listeners will no
+         * longer be available at that stage.
+         *
+         * When an entire packet subtree is to be destroyed, child packets
+         * will notify their listeners of the impending destruction
+         * before parent packets will.
+         *
+         * Note that the packet will forcibly unregister this listener
+         * immediately \e before packetToBeDestroyed() is called, to avoid
+         * any unpleasant consequences if this listener should also try to
+         * unregister itself.  This means that, by the time this routine is
+         * called, this listener will no longer be registered with the
+         * packet in question (and any attempt to unregister it again
+         * will be harmless).
+         *
+         * By the time this function is called, we are already inside the
+         * Packet destructor, and so most Packet member functions are no
+         * longer safe to call.  Therefore the argument that is passed to this
+         * routine is a PacketShell, which exposes only those member functions
+         * of Packet that are still safe to call at this time.  Importantly,
+         * you can safely compare a PacketShell against a Packet pointer,
+         * in case you need to identify which particular packet is being
+         * destroyed.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet gives access to the packet being listened to.
+         */
+        virtual void packetToBeDestroyed(PacketShell packet);
+        /**
+         * Called before a child packet is to be inserted directly beneath
+         * the packet.
+         * Once the child is inserted, childWasAdded() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @param child the child packet to be added.
+         */
+        virtual void childToBeAdded(Packet* packet, Packet* child);
+        /**
+         * Called after a child packet has been inserted directly beneath
+         * the packet.
+         * Before this child is added, childToBeAdded() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @param child the child packet that was added.
+         */
+        virtual void childWasAdded(Packet* packet, Packet* child);
+        /**
+         * Called before a child packet is to be removed from directly beneath
+         * the packet.
+         *
+         * Once the child is removed, childWasRemoved() will be called also.
+         *
+         * Be warned: we could already be inside either this packet's or
+         * the child packet's destructor:
+         *
+         * - If this packet is being destroyed, then it will orphan all of its
+         *   children, and then (unless they are being mananged by SafePtr
+         *   safe pointers) it will delete these children also.  In such a
+         *   situation, both listener functions childToBeRemoved() and
+         *   childWasRemoved() will be called \e before the child is destroyed.
+         *   For both functions, \a packet will be passed as \c null (since
+         *   the parent packet is already well into its destruction process).
+         *
+         * - If the child packet is being destroyed (but the parent is not),
+         *   then it will be orphaned as part of its destructor.  In such a
+         *   situation, both listener functions childToBeRemoved() and
+         *   childWasRemoved() will be called from within the child destructor,
+         *   and \a child will be passed as \c null to both functions.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to, or \c null if
+         * this routine is being called from within this packet's destructor.
+         * @param child the child packet to be removed, or \c null if
+         * this routine is being called from within the child's destructor.
+         */
+        virtual void childToBeRemoved(Packet* packet, Packet* child);
+        /**
+         * Called after a child packet has been removed from directly beneath
+         * the packet.
+         *
+         * Before the child is removed, childToBeRemoved() will be called also.
+         *
+         * Be warned: we could already be inside either this packet's or
+         * the child packet's destructor:
+         *
+         * - If this packet is being destroyed, then it will orphan all of its
+         *   children, and then (unless they are being mananged by SafePtr
+         *   safe pointers) it will delete these children also.  In such a
+         *   situation, both listener functions childToBeRemoved() and
+         *   childWasRemoved() will be called \e before the child is destroyed.
+         *   For both functions, \a packet will be passed as \c null (since
+         *   the parent packet is already well into its destruction process).
+         *
+         * - If the child packet is being destroyed (but the parent is not),
+         *   then it will be orphaned as part of its destructor.  In such a
+         *   situation, both listener functions childToBeRemoved() and
+         *   childWasRemoved() will be called from within the child destructor,
+         *   and \a child will be passed as \c null to both functions.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to, or \c null if
+         * this routine is being called from within this packet's destructor.
+         * @param child the child packet that was removed, or \c null if
+         * this routine is being called from within the child's destructor.
+         */
+        virtual void childWasRemoved(Packet* packet, Packet* child);
+        /**
+         * Called before the child packets directly beneath the packet
+         * are to be reordered.
+         * Once the reordering is done, childrenWereReordered() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         */
+        virtual void childrenToBeReordered(Packet* packet);
+
+        /**
+         * Called after the child packets directly beneath the packet
+         * have been reordered.
+         * Before this reordering is done, childrenToBeReordered() will be
+         * called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         */
+        virtual void childrenWereReordered(Packet* packet);
+        /**
+         * Called before one of this packet's immediate children has its
+         * label or tags changed.
+         * Before this change, childToBeRenamed() will be called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @param child the child packet to be renamed.
+         * @see packetToBeRenamed()
+         */
+        virtual void childToBeRenamed(Packet* packet, Packet* child);
+        /**
+         * Called after one of this packet's immediate children has its
+         * label or tags changed.
+         * Before this change, childToBeRenamed() will be called also.
+         *
+         * The default implementation of this routine is to do nothing.
+         *
+         * @param packet the packet being listened to.
+         * @param child the child packet that was renamed.
+         * @see packetWasRenamed()
+         */
+        virtual void childWasRenamed(Packet* packet, Packet* child);
+
+        /*@}*/
+
+        // Make this class non-copyable.
+        PacketListener(const PacketListener&) = delete;
+        PacketListener& operator = (const PacketListener&) = delete;
+
+    protected:
+        /**
+         * A default constructor that does nothing.
+         */
+        PacketListener() = default;
+
+    /**
+     * Allow packets to automatically deregister listeners as they are
+     * destroyed.
+     */
+    friend class Packet;
+};
+
+/**
+ * Deprecated typedef for backward compatibility.  This typedef will
+ * be removed in a future release of Regina.
+ *
+ * \deprecated The class NPacketListener has now been renamed to PacketListener.
+ */
+[[deprecated]] typedef PacketListener NPacketListener;
 
 } // namespace regina
 
@@ -1750,11 +2522,15 @@ inline SubtreeIterator::SubtreeIterator(Packet* subtree) :
         subtree_(subtree), current_(subtree) {
 }
 
-inline SubtreeIterator::SubtreeIterator(Packet* subtree, Packet* current) :
-        subtree_(subtree), current_(current) {
+inline SubtreeIterator::SubtreeIterator(const Packet* subtree,
+        Packet* current) : subtree_(subtree), current_(current) {
 }
 
 inline PacketChildren::PacketChildren(const Packet* parent) : parent_(parent) {
+}
+
+inline PacketDescendants::PacketDescendants(const Packet* subtree) :
+        subtree_(subtree) {
 }
 
 // Inline functions for Packet
@@ -1848,6 +2624,10 @@ inline SubtreeIterator Packet::end() {
     return SubtreeIterator(this, nullptr);
 }
 
+inline PacketDescendants Packet::descendants() const {
+    return PacketDescendants(this);
+}
+
 inline PacketChildren Packet::children() const {
     return PacketChildren(this);
 }
@@ -1938,7 +2718,108 @@ inline ChildIterator PacketChildren::end() const {
     return ChildIterator(nullptr);
 }
 
+inline SubtreeIterator PacketDescendants::begin() const {
+    return SubtreeIterator(subtree_, subtree_->firstChild());
+}
+
+inline SubtreeIterator PacketDescendants::end() const {
+    return SubtreeIterator(subtree_, nullptr);
+}
+
+// Inline functions for PacketShell
+
+inline PacketShell::PacketShell(const Packet* packet) : packet_(packet) {
+}
+
+inline bool PacketShell::operator == (const PacketShell& shell) const {
+    return (packet_ == shell.packet_);
+}
+
+inline bool PacketShell::operator == (const Packet* packet) const {
+    return (packet_ == packet);
+}
+
+inline bool PacketShell::operator != (const PacketShell& shell) const {
+    return (packet_ != shell.packet_);
+}
+
+inline bool PacketShell::operator != (const Packet* packet) const {
+    return (packet_ != packet);
+}
+
+inline const std::string& PacketShell::label() const {
+    return packet_->label();
+}
+
+inline std::string PacketShell::humanLabel() const {
+    return packet_->humanLabel();
+}
+
+inline bool PacketShell::hasTag(const std::string& tag) const {
+    return packet_->hasTag(tag);
+}
+
+inline bool PacketShell::hasTags() const {
+    return packet_->hasTags();
+}
+
+inline const std::set<std::string>& PacketShell::tags() const {
+    return packet_->tags();
+}
+
+inline std::string PacketShell::internalID() const {
+    return packet_->internalID();
+}
+
+inline bool operator == (const Packet* packet, PacketShell shell) {
+    return (shell == packet);
+}
+
+inline bool operator != (const Packet* packet, PacketShell shell) {
+    return (shell != packet);
+}
+
+// Inline functions for PacketListener
+
+inline void PacketListener::packetToBeChanged(Packet*) {
+}
+
+inline void PacketListener::packetWasChanged(Packet*) {
+}
+
+inline void PacketListener::packetToBeRenamed(Packet*) {
+}
+
+inline void PacketListener::packetWasRenamed(Packet*) {
+}
+
+inline void PacketListener::packetToBeDestroyed(PacketShell) {
+}
+
+inline void PacketListener::childToBeAdded(Packet*, Packet*) {
+}
+
+inline void PacketListener::childWasAdded(Packet*, Packet*) {
+}
+
+inline void PacketListener::childToBeRemoved(Packet*, Packet*) {
+}
+
+inline void PacketListener::childWasRemoved(Packet*, Packet*) {
+}
+
+inline void PacketListener::childrenToBeReordered(Packet*) {
+}
+
+inline void PacketListener::childrenWereReordered(Packet*) {
+}
+
+inline void PacketListener::childToBeRenamed(Packet*, Packet*) {
+}
+
+inline void PacketListener::childWasRenamed(Packet*, Packet*) {
+}
+
 } // namespace regina
 
 #endif
-

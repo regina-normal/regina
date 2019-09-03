@@ -40,11 +40,10 @@
  *  triangulations.
  */
 
-#include <boost/noncopyable.hpp>
 #include <iostream>
 #include <list>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "triangulation/facetspec.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
@@ -74,9 +73,7 @@ namespace detail {
  * This must be between 2 and 15 inclusive.
  */
 template <int dim>
-class FacetPairingBase :
-        public ShortOutput<FacetPairingBase<dim>>,
-        public boost::noncopyable {
+class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
     static_assert(dim >= 2, "FacetPairing requires dimension >= 2.");
 
     public:
@@ -541,6 +538,9 @@ class FacetPairingBase :
          */
         static void findAllPairings(size_t nSimplices,
             BoolSet boundary, int nBdryFacets, Use use, void* useArgs = 0);
+
+        // Make this class non-assignable.
+        FacetPairingBase& operator = (const FacetPairingBase&) = delete;
 
     protected:
         /**

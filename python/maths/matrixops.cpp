@@ -30,124 +30,24 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "maths/matrixops.h"
-#include <boost/python/detail/api_placeholder.hpp> // For len().
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::MatrixInt;
 
-namespace {
-    void (*SNF_nobasis)(MatrixInt&) = regina::smithNormalForm;
-    void (*SNF_basis)(MatrixInt&, MatrixInt&, MatrixInt&,
-        MatrixInt&, MatrixInt&) = regina::smithNormalForm;
-
-    void columnEchelonForm_list(MatrixInt& m, MatrixInt& r,
-            MatrixInt& rInv, boost::python::list rowList) {
-        std::vector<unsigned> rowListVector;
-
-        long len = boost::python::len(rowList);
-        for (long i = 0; i < len; i++) {
-            extract<long> x_long(rowList[i]);
-
-            // Better make sure we can actually convert to an unsigned int.
-            if (x_long() < 0) {
-                PyErr_SetString(PyExc_IndexError,
-                    "Row indices may not be negative.");
-                boost::python::throw_error_already_set();
-            }
-
-            rowListVector.push_back(x_long());
-        }
-
-        regina::columnEchelonForm(m, r, rInv, rowListVector);
-    }
-
-    std::unique_ptr<MatrixInt> preImageOfLattice_list(const MatrixInt& m,
-            boost::python::list l) {
-        if (boost::python::len(l) != m.rows()) {
-            PyErr_SetString(PyExc_IndexError,
-                "Sublattice vector does not contain the expected number "
-                "of elements.");
-            boost::python::throw_error_already_set();
-        }
-
-        std::vector<regina::Integer> lVector;
-
-        for (unsigned long i = 0; i < m.rows(); ++i) {
-            // Accept any type that we know how to convert to a large integer.
-            extract<regina::Integer&> x_large(l[i]);
-            if (x_large.check()) {
-                lVector.push_back(x_large());
-                continue;
-            }
-
-            extract<long> x_long(l[i]);
-            if (x_long.check()) {
-                lVector.push_back(x_long());
-                continue;
-            }
-
-            extract<const char*> x_str(l[i]);
-            if (x_str.check()) {
-                lVector.push_back(x_str());
-                continue;
-            }
-
-            // Throw an exception.
-            x_large();
-        }
-
-        return regina::preImageOfLattice(m, lVector);
-    }
-
-    std::unique_ptr<MatrixInt> torsionAutInverse_list(const MatrixInt& m,
-            boost::python::list l) {
-        if (boost::python::len(l) != m.rows()) {
-            PyErr_SetString(PyExc_IndexError,
-                "The vector invF does not contain the expected number "
-                "of elements.");
-            boost::python::throw_error_already_set();
-        }
-
-        std::vector<regina::Integer> lVector;
-
-        for (unsigned long i = 0; i < m.rows(); ++i) {
-            // Accept any type that we know how to convert to a large integer.
-            extract<regina::Integer&> x_large(l[i]);
-            if (x_large.check()) {
-                lVector.push_back(x_large());
-                continue;
-            }
-
-            extract<long> x_long(l[i]);
-            if (x_long.check()) {
-                lVector.push_back(x_long());
-                continue;
-            }
-
-            extract<const char*> x_str(l[i]);
-            if (x_str.check()) {
-                lVector.push_back(x_str());
-                continue;
-            }
-
-            // Throw an exception.
-            x_large();
-        }
-
-        return regina::torsionAutInverse(m, lVector);
-    }
-}
-
-void addMatrixOps() {
-    def("smithNormalForm", SNF_nobasis);
-    def("smithNormalForm", SNF_basis);
-    def("metricalSmithNormalForm", regina::metricalSmithNormalForm);
-    def("rowBasis", regina::rowBasis);
-    def("rowBasisAndOrthComp", regina::rowBasisAndOrthComp);
-    def("columnEchelonForm", columnEchelonForm_list);
-    def("preImageOfLattice", preImageOfLattice_list);
-    def("torsionAutInverse", torsionAutInverse_list);
+void addMatrixOps(pybind11::module& m) {
+    m.def("smithNormalForm", overload_cast<MatrixInt&>(
+        &regina::smithNormalForm));
+    m.def("smithNormalForm", overload_cast<MatrixInt&, MatrixInt&,
+            MatrixInt&, MatrixInt&, MatrixInt&>(
+        &regina::smithNormalForm));
+    m.def("metricalSmithNormalForm", &regina::metricalSmithNormalForm);
+    m.def("rowBasis", &regina::rowBasis);
+    m.def("rowBasisAndOrthComp", &regina::rowBasisAndOrthComp);
+    m.def("columnEchelonForm", &regina::columnEchelonForm);
+    m.def("preImageOfLattice", &regina::preImageOfLattice);
+    m.def("torsionAutInverse", &regina::torsionAutInverse);
 }
 

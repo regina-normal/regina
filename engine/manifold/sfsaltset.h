@@ -231,6 +231,10 @@ class REGINA_API SFSAltSet {
          * used.
          */
         bool reflected(unsigned which) const;
+
+        // Make this class non-copyable.
+        SFSAltSet(const SFSAltSet&) = delete;
+        SFSAltSet& operator = (const SFSAltSet&) = delete;
 };
 
 /**

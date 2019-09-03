@@ -30,37 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "packet/pdf.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using regina::python::SafeHeldType;
+using pybind11::overload_cast;
 using regina::PDF;
 
-namespace {
-    void (PDF::*reset_empty)() = &PDF::reset;
-}
-
-void addPDF() {
-    class_<PDF, bases<regina::Packet>,
-            SafeHeldType<PDF>, boost::noncopyable>("PDF", init<>())
-        .def(init<const char*>())
+void addPDF(pybind11::module& m) {
+    pybind11::class_<PDF, regina::Packet, regina::SafePtr<PDF>>(m, "PDF")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const char*>())
         .def("isNull", &PDF::isNull)
         .def("size", &PDF::size)
-        .def("reset", reset_empty)
+        .def("reset", overload_cast<>(&PDF::reset))
         .def("savePDF", &PDF::savePDF)
-        .attr("typeID") = regina::PACKET_PDF
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return PDF::typeID;
+        })
     ;
 
-    implicitly_convertible<SafeHeldType<PDF>,
-        SafeHeldType<regina::Packet> >();
-
-    FIX_REGINA_BOOST_CONVERTERS(PDF);
-
-    scope().attr("NPDF") = scope().attr("PDF");
+    m.attr("NPDF") = m.attr("PDF");
 }
 

@@ -30,27 +30,97 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
+
+namespace pybind11 { namespace detail {
+
+/**
+ * Tell pybind11 how to convert a C++ list of triangulation faces into a
+ * Python list.  This allows pybind11 to automagically convert the return
+ * values for functions such as vertices(), edges(), faces(subdim), etc.,
+ * within the C++ classes Triangulation<dim> and Component<dim>.
+ */
+template <int dim, int subdim>
+struct type_caster<regina::FaceList<dim, subdim>> {
+    private:
+        typedef regina::FaceList<dim, subdim> FaceListType;
+
+    public:
+        PYBIND11_TYPE_CASTER(FaceListType, _("FaceList"));
+
+        bool load(handle, bool) {
+            // Never allow conversion from Python to a C++ FaceList.
+            return false;
+        }
+
+        static handle cast(const FaceListType& src, return_value_policy policy,
+                handle parent) {
+            // Conversion from C++ to Python:
+            pybind11::list ans;
+            for (auto f : src)
+                ans.append(pybind11::cast(f, policy, parent));
+            return ans.release();
+        }
+};
+
+} } // namespace pybind11::detail
 
 namespace regina {
 namespace python {
 
 /**
- * A generic function that iterates through <tt>t.faces<subdim>()</tt>
- * and returns the corresponding faces as a Python list.
+ * A helper class used to enforce return value policies for member functions
+ * that return C++ pointers, when the return value has already been converted
+ * to a pybind11 object.
  *
- * This is used as the Python binding for T.vertices(), T.edges() and so on,
- * for several types T.
+ * The object passed to the constructor is the object whose member
+ * function we are calling (i.e., "this" in C++).
+ *
+ * Once the function has been called and the return value converted to a
+ * pybind11 object, the function addNurse() should be called to enforce
+ * the corresponding policy.  If the return value is a python container
+ * (e.g., a pybind11::list), then addNurse() should be called on each
+ * element of the container.
+ *
+ * Why have this class at all?  Some functions (such as Triangulation::face()
+ * and Triangulation::faces()) do not have a well-defined C++ return type, and
+ * therefore must cast the return value to a pybind11 object as part of the
+ * C++ function call (in order to ensure a consistent return type).  If this
+ * cast is done by calling pybind11::cast() on a C++ pointer, it always uses
+ * the policy pybind11::return_value_policy::reference.  We therefore use
+ * this class to adjust the return value policy if necessary afterwards.
  */
-template <class T, int dim, int subdim>
-boost::python::list faces_list(const T& t) {
-    boost::python::list ans;
-    for (auto f : t.template faces<subdim>())
-        ans.append(boost::python::ptr(f));
-    return ans;
-}
+template <pybind11::return_value_policy policy>
+class PatientManager;
+
+template <>
+class PatientManager<pybind11::return_value_policy::reference> {
+    // Nothing to do, since pybind11::cast() already uses this policy
+    // when given a C++ pointer.
+    public:
+        template <typename T>
+        PatientManager(const T& patient) {}
+
+        void addNurse(pybind11::handle nurse) {}
+};
+
+template <>
+class PatientManager<pybind11::return_value_policy::reference_internal> {
+    // This policy requires us to add an extra keep_alive for each nurse.
+    private:
+        pybind11::handle patient_;
+
+    public:
+        template <typename T>
+        PatientManager(const T& patient) {
+            patient_ = pybind11::cast(patient);
+        }
+        void addNurse(pybind11::handle nurse) {
+            pybind11::detail::keep_alive_impl(nurse, patient_);
+        }
+};
 
 /**
  * Implementation details for Python bindings of template member functions.
@@ -63,7 +133,15 @@ boost::python::list faces_list(const T& t) {
  *
  * Note that some of these C++ functions return different types depending on
  * the argument \a subdim; we resolve this by converting return values
- * to \a PyObject pointers here, instead of letting Boost.Python do it later.
+ * to python objects here, instead of letting pybind11 do it later.
+ * The cost of returning a pybind11::object is that we circumvent pybind11's
+ * normal casting mechanism, and so we do not get the lifespan relationships
+ * that we would normally get from return_value_policy::reference_internal
+ * (as we do get, for instance, through fixed-subdimension routines such
+ * as vertex() or vertices()).
+ *
+ * Note: when given a pointer, pybind11::cast() and pybind11::list::append()
+ * both default to a return value policy of reference, not take_ownership.
  */
 template <class T, int dim, int subdim>
 struct FaceHelper {
@@ -75,27 +153,32 @@ struct FaceHelper {
         return FaceHelper<T, dim, subdim - 1>::countFacesFrom(t, subdimArg);
     }
 
-    template <typename Index>
-    static PyObject* faceFrom(const T& t, int subdimArg, Index f) {
-        // TODO: Make this work with return_internal_reference.
-        // That is, ensure a lifespan dependency between t and the result.
+    template <typename Index, pybind11::return_value_policy policy>
+    static pybind11::object faceFrom(const T& t, int subdimArg, Index f) {
         if (subdimArg == subdim) {
-            boost::python::to_python_indirect<regina::Face<dim, subdim>&,
-                boost::python::detail::make_reference_holder> convert;
-            return convert(t.template face<subdim>(f));
+            PatientManager<policy> patient(t);
+            auto ans = pybind11::cast(t.template face<subdim>(f));
+            patient.addNurse(ans);
+            return ans;
         }
-        return FaceHelper<T, dim, subdim - 1>::template faceFrom<Index>(
+        return FaceHelper<T, dim, subdim - 1>::template faceFrom<Index, policy>(
             t, subdimArg, f);
     }
 
-    static boost::python::list facesFrom(const T& t, int subdimArg) {
+    template <pybind11::return_value_policy policy>
+    static pybind11::object facesFrom(const T& t, int subdimArg) {
         if (subdimArg == subdim) {
-            boost::python::list ans;
-            for (auto f : t.template faces<subdim>())
-                ans.append(boost::python::ptr(f));
+            PatientManager<policy> patient(t);
+            pybind11::list ans;
+            for (auto f : t.template faces<subdim>()) {
+                auto elt = pybind11::cast(f);
+                patient.addNurse(elt);
+                ans.append(elt);
+            }
             return ans;
         }
-        return FaceHelper<T, dim, subdim - 1>::facesFrom(t, subdimArg);
+        return FaceHelper<T, dim, subdim - 1>::template facesFrom<policy>(
+            t, subdimArg);
     }
 
     template <int permSize>
@@ -120,19 +203,23 @@ struct FaceHelper<T, dim, 0> {
         return t.template countFaces<0>();
     }
 
-    template <typename Index>
-    static PyObject* faceFrom(const T& t, int, Index f) {
-        // TODO: Make this work with return_internal_reference.
-        // That is, ensure a lifespan dependency between t and the result.
-        boost::python::to_python_indirect<regina::Face<dim, 0>&,
-            boost::python::detail::make_reference_holder> convert;
-        return convert(t.template face<0>(f));
+    template <typename Index, pybind11::return_value_policy policy>
+    static pybind11::object faceFrom(const T& t, int, Index f) {
+        PatientManager<policy> patient(t);
+        auto ans = pybind11::cast(t.template face<0>(f));
+        patient.addNurse(ans);
+        return ans;
     }
 
-    static boost::python::list facesFrom(const T& t, int) {
-        boost::python::list ans;
-        for (auto f : t.template faces<0>())
-            ans.append(boost::python::ptr(f));
+    template <pybind11::return_value_policy policy>
+    static pybind11::object facesFrom(const T& t, int) {
+        PatientManager<policy> patient(t);
+        pybind11::list ans;
+        for (auto f : t.template faces<0>()) {
+            auto elt = pybind11::cast(f);
+            patient.addNurse(elt);
+            ans.append(elt);
+        }
         return ans;
     }
 
@@ -156,12 +243,13 @@ struct FaceHelper<T, dim, -1> {
         throw -1;
     }
 
-    template <typename Index>
-    static PyObject* faceFrom(const T&, int, Index) {
+    template <typename Index, pybind11::return_value_policy policy>
+    static pybind11::object faceFrom(const T&, int, Index) {
         throw -1;
     }
 
-    static boost::python::list facesFrom(const T&, int) {
+    template <pybind11::return_value_policy policy>
+    static pybind11::object facesFrom(const T&, int) {
         throw -1;
     }
 
@@ -196,11 +284,12 @@ size_t countFaces(const T& t, int subdimArg) {
  * T::face<subdimArg>(f), where the valid range for the C++ template
  * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
  */
-template <class T, int dim, typename Index>
-PyObject* face(const T& t, int subdimArg, Index f) {
+template <class T, int dim, typename Index,
+        pybind11::return_value_policy policy>
+pybind11::object face(const T& t, int subdimArg, Index f) {
     if (subdimArg < 0 || subdimArg >= dim)
         invalidFaceDimension("face", dim);
-    return FaceHelper<T, dim, dim - 1>::template faceFrom<Index>(
+    return FaceHelper<T, dim, dim - 1>::template faceFrom<Index, policy>(
         t, subdimArg, f);
 }
 
@@ -209,11 +298,12 @@ PyObject* face(const T& t, int subdimArg, Index f) {
  * T::faces<subdimArg>(), where the valid range for the C++ template
  * parameter \a subdimArg is 0, ..., <i>dim</i>-1.
  */
-template <class T, int dim>
-boost::python::list faces(const T& t, int subdimArg) {
+template <class T, int dim, pybind11::return_value_policy policy>
+pybind11::object faces(const T& t, int subdimArg) {
     if (subdimArg < 0 || subdimArg >= dim)
         invalidFaceDimension("faces", dim);
-    return FaceHelper<T, dim, dim - 1>::facesFrom(t, subdimArg);
+    return FaceHelper<T, dim, dim - 1>::template facesFrom<policy>(
+        t, subdimArg);
 }
 
 /**

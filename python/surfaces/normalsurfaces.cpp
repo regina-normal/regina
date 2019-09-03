@@ -30,54 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
 using regina::NormalSurfaces;
 
-namespace {
-    void writeAllSurfaces_stdio(const NormalSurfaces& s) {
-        s.writeAllSurfaces(std::cout);
-    }
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_saveCSVStandard,
-        NormalSurfaces::saveCSVStandard, 1, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_saveCSVEdgeWeight,
-        NormalSurfaces::saveCSVEdgeWeight, 1, 2);
-
-    // Write manual overload wrappers since these are static member functions.
-    NormalSurfaces* unified_2(regina::Triangulation<3>* owner,
-            regina::NormalCoords coords) {
-        return NormalSurfaces::enumerate(owner, coords);
-    }
-    NormalSurfaces* unified_3(regina::Triangulation<3>* owner,
-            regina::NormalCoords coords, regina::NormalList which) {
-        return NormalSurfaces::enumerate(owner, coords, which);
-    }
-    NormalSurfaces* unified_4(regina::Triangulation<3>* owner,
-            regina::NormalCoords coords, regina::NormalList which,
-            regina::NormalAlg algHints) {
-        return NormalSurfaces::enumerate(owner, coords, which, algHints);
-    }
-    NormalSurfaces* unified_5(regina::Triangulation<3>* owner,
-            regina::NormalCoords coords, regina::NormalList which,
-            regina::NormalAlg algHints, regina::ProgressTracker* tracker) {
-        return NormalSurfaces::enumerate(owner, coords, which, algHints,
-            tracker);
-    }
-}
-
-void addNormalSurfaces() {
-    enum_<regina::SurfaceExportFields>("SurfaceExportFields")
+void addNormalSurfaces(pybind11::module& m) {
+    pybind11::enum_<regina::SurfaceExportFields>(m, "SurfaceExportFields")
         .value("surfaceExportName", regina::surfaceExportName)
         .value("surfaceExportEuler", regina::surfaceExportEuler)
         .value("surfaceExportOrient", regina::surfaceExportOrient)
@@ -88,15 +52,13 @@ void addNormalSurfaces() {
         .value("surfaceExportNone", regina::surfaceExportNone)
         .value("surfaceExportAllButName", regina::surfaceExportAllButName)
         .value("surfaceExportAll", regina::surfaceExportAll)
+        .export_values()
     ;
 
-    def("makeMatchingEquations",
-        regina::makeMatchingEquations,
-        return_value_policy<manage_new_object>());
+    m.def("makeMatchingEquations", regina::makeMatchingEquations);
 
-    class_<NormalSurfaces, bases<regina::Packet>,
-            SafeHeldType<NormalSurfaces>, boost::noncopyable>
-            ("NormalSurfaces", no_init)
+    pybind11::class_<NormalSurfaces, regina::Packet,
+            regina::SafePtr<NormalSurfaces>>(m, "NormalSurfaces")
         .def("coords", &NormalSurfaces::coords)
         .def("which", &NormalSurfaces::which)
         .def("algorithm", &NormalSurfaces::algorithm)
@@ -104,53 +66,42 @@ void addNormalSurfaces() {
         .def("allowsSpun", &NormalSurfaces::allowsSpun)
         .def("allowsOriented", &NormalSurfaces::allowsOriented)
         .def("isEmbeddedOnly", &NormalSurfaces::isEmbeddedOnly)
-        .def("triangulation", &NormalSurfaces::triangulation,
-            return_value_policy<to_held_type<> >())
+        .def("triangulation", &NormalSurfaces::triangulation)
         .def("size", &NormalSurfaces::size)
         .def("surface", &NormalSurfaces::surface,
-            return_internal_reference<>())
-        .def("writeAllSurfaces", writeAllSurfaces_stdio)
-        .def("enumerate", unified_2,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", unified_3,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", unified_4,
-            return_value_policy<to_held_type<> >())
-        .def("enumerate", unified_5,
-            return_value_policy<to_held_type<> >())
-        .def("quadToStandard", &NormalSurfaces::quadToStandard,
-            return_value_policy<to_held_type<> >())
-        .def("quadOctToStandardAN", &NormalSurfaces::quadOctToStandardAN,
-            return_value_policy<to_held_type<> >())
-        .def("standardToQuad", &NormalSurfaces::standardToQuad,
-            return_value_policy<to_held_type<> >())
-        .def("standardANToQuadOct", &NormalSurfaces::standardANToQuadOct,
-            return_value_policy<to_held_type<> >())
+            pybind11::return_value_policy::reference_internal)
+        .def("writeAllSurfaces", [](const NormalSurfaces& s) {
+            s.writeAllSurfaces(std::cout);
+        })
+        .def_static("enumerate", &NormalSurfaces::enumerate,
+            pybind11::arg(), pybind11::arg(),
+            pybind11::arg("which") = regina::NS_LIST_DEFAULT,
+            pybind11::arg("algHints") = regina::NS_ALG_DEFAULT,
+            pybind11::arg("tracker") = nullptr)
+        .def("quadToStandard", &NormalSurfaces::quadToStandard)
+        .def("quadOctToStandardAN", &NormalSurfaces::quadOctToStandardAN)
+        .def("standardToQuad", &NormalSurfaces::standardToQuad)
+        .def("standardANToQuadOct", &NormalSurfaces::standardANToQuadOct)
         .def("filterForLocallyCompatiblePairs",
-            &NormalSurfaces::filterForLocallyCompatiblePairs,
-            return_value_policy<to_held_type<> >())
+            &NormalSurfaces::filterForLocallyCompatiblePairs)
         .def("filterForDisjointPairs",
-            &NormalSurfaces::filterForDisjointPairs,
-            return_value_policy<to_held_type<> >())
+            &NormalSurfaces::filterForDisjointPairs)
         .def("filterForPotentiallyIncompressible",
-            &NormalSurfaces::filterForPotentiallyIncompressible,
-            return_value_policy<to_held_type<> >())
+            &NormalSurfaces::filterForPotentiallyIncompressible)
         .def("recreateMatchingEquations",
-            &NormalSurfaces::recreateMatchingEquations,
-            return_value_policy<manage_new_object>())
+            &NormalSurfaces::recreateMatchingEquations)
         .def("saveCSVStandard", &NormalSurfaces::saveCSVStandard,
-            OL_saveCSVStandard())
+            pybind11::arg(),
+            pybind11::arg("additionalFields") = regina::surfaceExportAll)
         .def("saveCSVEdgeWeight", &NormalSurfaces::saveCSVEdgeWeight,
-            OL_saveCSVEdgeWeight())
-        .staticmethod("enumerate")
-        .attr("typeID") = regina::PACKET_NORMALSURFACES;
+            pybind11::arg(),
+            pybind11::arg("additionalFields") = regina::surfaceExportAll)
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return NormalSurfaces::typeID;
+        })
     ;
 
-    implicitly_convertible<SafeHeldType<NormalSurfaces>,
-        SafeHeldType<regina::Packet> >();
-
-    FIX_REGINA_BOOST_CONVERTERS(NormalSurfaces);
-
-    scope().attr("NNormalSurfaceList") = scope().attr("NormalSurfaces");
+    m.attr("NNormalSurfaceList") = m.attr("NormalSurfaces");
 }
 

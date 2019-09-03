@@ -166,11 +166,6 @@ class ExampleBase : public ExampleFromLowDim<dim, (dim > 2)> {
         /*@{*/
 
         /**
-         * Explicitly disable the default constructor.
-         */
-        ExampleBase() = delete;
-
-        /**
          * Returns a two-simplex triangulation of the <i>dim</i>-sphere.
          *
          * @return a newly constructed triangulation, which must be
@@ -242,6 +237,9 @@ class ExampleBase : public ExampleFromLowDim<dim, (dim > 2)> {
         static Triangulation<dim>* twistedBallBundle();
 
         /*@}*/
+
+        // Make this class non-constructible.
+        ExampleBase() = delete;
 };
 
 /*@}*/

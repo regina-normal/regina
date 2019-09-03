@@ -123,7 +123,7 @@ class REGINA_API TorusBundle : public Manifold {
          *
          * @param cloneMe the torus bundle to clone.
          */
-        TorusBundle(const TorusBundle& cloneMe);
+        TorusBundle(const TorusBundle& cloneMe) = default;
         /**
          * Returns the monodromy describing how the upper and lower
          * torus boundaries are identified.  See the class notes for
@@ -133,10 +133,17 @@ class REGINA_API TorusBundle : public Manifold {
          */
         const Matrix2& monodromy() const;
 
-        AbelianGroup* homology() const;
-        bool isHyperbolic() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        /**
+         * Sets this to be a clone of the given torus bundle.
+         *
+         * @param cloneMe the torus bundle to clone.
+         */
+        TorusBundle& operator = (const TorusBundle& cloneMe) = default;
+
+        AbelianGroup* homology() const override;
+        bool isHyperbolic() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 
     private:
         /**
@@ -236,10 +243,6 @@ inline TorusBundle::TorusBundle(const Matrix2& newMonodromy) :
 inline TorusBundle::TorusBundle(long mon00, long mon01, long mon10,
         long mon11) : monodromy_(mon00, mon01, mon10, mon11) {
     reduce();
-}
-
-inline TorusBundle::TorusBundle(const TorusBundle& cloneMe) :
-        Manifold(), monodromy_(cloneMe.monodromy_) {
 }
 
 inline const Matrix2& TorusBundle::monodromy() const {

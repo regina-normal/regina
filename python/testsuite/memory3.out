@@ -1,0 +1,92 @@
+Vertices of triangulation: vertices()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of triangulation: edges()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of triangulation: vertex()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of triangulation: edge()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of triangulation: faces<0>()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of triangulation: faces<1>()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of triangulation: face<0>()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of triangulation: face<1>()
+Step 1
+Step 2
+Step 3
+Step 4
+Destroying: t
+Step 5
+Vertices of simplex
+Step 1
+Step 2
+Step 3
+Step 4
+Step 5
+Destroying: t
+Step 6
+Step 7
+Vertices of face
+Step 1
+Step 2
+Step 3
+Step 4
+Step 5
+Destroying: t
+Step 6
+Step 7
+Vertices of component
+Step 1
+Step 2
+Step 3
+Step 4
+Step 5
+Destroying: t
+Step 6
+Step 7
+Vertices of boundary component
+Step 1
+Step 2
+Step 3
+Step 4
+Step 5
+Destroying: t
+Step 6
+Step 7

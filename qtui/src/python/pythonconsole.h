@@ -38,18 +38,25 @@
 #ifndef __PYTHONCONSOLE_H
 #define __PYTHONCONSOLE_H
 
-#include "pythonoutputstream.h"
 #include "../reginaprefset.h"
+#include "../python/gui/pythonoutputstream.h"
 
 #include <packet/packet.h>
 #include <QMainWindow>
 
 class CommandEdit;
-class PythonInterpreter;
 class PythonManager;
 class QCompleter;
 class QLabel;
 class QTextEdit;
+
+namespace regina {
+    class Script;
+
+    namespace python {
+        class PythonInterpreter;
+    }
+}
 
 /**
  * A top-level window containing an embedded python interpreter.
@@ -61,7 +68,7 @@ class QTextEdit;
 class PythonConsole : public QMainWindow {
     Q_OBJECT
 
-    friend class PythonOutputStream;
+    friend class regina::python::PythonOutputStream;
     friend class CommandEdit;
     private:
         /**
@@ -75,8 +82,8 @@ class PythonConsole : public QMainWindow {
         QTextEdit* session;
         QLabel* prompt;
         CommandEdit* input;
-        PythonOutputStream* output;
-        PythonOutputStream* error;
+        regina::python::PythonOutputStream* output;
+        regina::python::PythonOutputStream* error;
 
         /**
          * Actions
@@ -88,7 +95,7 @@ class PythonConsole : public QMainWindow {
         /**
          * Python components
          */
-        PythonInterpreter* interpreter;
+        regina::python::PythonInterpreter* interpreter;
         PythonManager* manager;
 
         /**
@@ -140,13 +147,7 @@ class PythonConsole : public QMainWindow {
         void executeLine(const QString& line);
         void executeLine(const std::string& line);
         void executeLine(const char* line);
-
-        /**
-         * Compile or run user scripts.
-         */
-        bool compileScript(const QString& script);
-        void executeScript(const QString& script,
-        const QString& scriptName = QString::null);
+        void runScript(regina::Script* script);
 
     public slots:
         /**
@@ -200,40 +201,11 @@ class PythonConsole : public QMainWindow {
          * Qt overrides.
          */
          virtual QSize sizeHint() const;
-        
-        /**
-         * Track who is getting output from python. 
-         */
-        bool outputToTabCompletion;
-        /**
-         * The list of possible completions. 
-         */
-        QStringList* completions;
-        /**
-         * Track what index into the completions has
-         * been returned by the python.
-         */
-        int nextCompletion;
+
         /**
          * A completer object to handle python tab completion.
          */
         QCompleter* completer;
-        /**
-         * Tab completion results are in, display them.
-         */
-        void completionsFinished();
-        /**
-         * Reqest another completion. Needs to be a function
-         * that the output stream can call, to emit a signal so
-         * the request isn't blocking.
-         */
-        void requestNextCompletion(); 
-
-    signals:
-        /**
-         * The signal sent when requesting another completion.
-         */
-        void doNextCompletion();
 
     private:
         /**
@@ -263,20 +235,17 @@ class PythonConsole : public QMainWindow {
         void clipboardChanged();
 
         /**
-         * Process tab completion on the partial line. 
+         * Process tab completion on the partial line.
+         * The arguments indicate the range of selected text, or if
+         * nothing is selected, the current cursor position.
          **/
-        void processCompletion();
-        /**
-         * Request the next tab completion option from pythons readline
-         */
-        void getNextCompletion(); 
-        
+        void processCompletion(int start, int end);
 
     private:
         /**
          * An output stream that writes data using addOutput().
          */
-        class OutputStream : public PythonOutputStream {
+        class OutputStream : public regina::python::PythonOutputStream {
             private:
                 PythonConsole* console_;
 
@@ -290,7 +259,7 @@ class PythonConsole : public QMainWindow {
         /**
          * An output stream that writes data using addError().
          */
-        class ErrorStream : public PythonOutputStream {
+        class ErrorStream : public regina::python::PythonOutputStream {
             private:
                 PythonConsole* console_;
 

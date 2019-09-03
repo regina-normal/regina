@@ -30,70 +30,59 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/dim4.h"
-#include "../globalarray.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
-using namespace boost::python;
-using namespace regina::python;
 using regina::Tetrahedron;
 using regina::TetrahedronEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
-using regina::python::GlobalArray;
 
-namespace {
-    boost::python::list Tetrahedron4_embeddings_list(
-            const Tetrahedron<4>* t) {
-        boost::python::list ans;
-        for (auto& emb : *t)
-            ans.append(emb);
-        return ans;
-    }
-}
-
-void addTetrahedron4() {
-    class_<FaceEmbedding<4, 3>>("FaceEmbedding4_3",
-            init<regina::Pentachoron<4>*, int>())
-        .def(init<const TetrahedronEmbedding<4>&>())
+void addTetrahedron4(pybind11::module& m) {
+    auto e = pybind11::class_<FaceEmbedding<4, 3>>(m, "FaceEmbedding4_3")
+        .def(pybind11::init<regina::Pentachoron<4>*, int>())
+        .def(pybind11::init<const TetrahedronEmbedding<4>&>())
         .def("simplex", &TetrahedronEmbedding<4>::simplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("pentachoron", &TetrahedronEmbedding<4>::pentachoron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("face", &TetrahedronEmbedding<4>::face)
         .def("tetrahedron", &TetrahedronEmbedding<4>::tetrahedron)
         .def("vertices", &TetrahedronEmbedding<4>::vertices)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(e);
+    regina::python::add_eq_operators(e);
 
-    class_<Face<4, 3>, std::auto_ptr<Face<4, 3>>,
-            boost::noncopyable>("Face4_3", no_init)
+    auto c = pybind11::class_<Face<4, 3>>(m, "Face4_3")
         .def("index", &Tetrahedron<4>::index)
         .def("degree", &Tetrahedron<4>::degree)
-        .def("embeddings", Tetrahedron4_embeddings_list)
+        .def("embeddings", [](const Tetrahedron<4>& t) {
+            pybind11::list ans;
+            for (const auto& emb : t)
+                ans.append(emb);
+            return ans;
+        })
         .def("embedding", &Tetrahedron<4>::embedding,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("front", &Tetrahedron<4>::front,
-            return_internal_reference<>())
+            pybind11::return_value_policy::reference_internal)
         .def("back", &Tetrahedron<4>::back,
-            return_internal_reference<>())
-        .def("triangulation", &Tetrahedron<4>::triangulation,
-            return_value_policy<to_held_type<>>())
+            pybind11::return_value_policy::reference_internal)
+        .def("triangulation", &Tetrahedron<4>::triangulation)
         .def("component", &Tetrahedron<4>::component,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Tetrahedron<4>::boundaryComponent,
-            return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Tetrahedron<4>, 3, int>)
+            pybind11::return_value_policy::reference)
+        .def("face", &regina::python::face<Tetrahedron<4>, 3, int,
+            pybind11::return_value_policy::reference>)
         .def("vertex", &Tetrahedron<4>::vertex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("edge", &Tetrahedron<4>::edge,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("triangle", &Tetrahedron<4>::triangle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Tetrahedron<4>, 3, 5>)
         .def("vertexMapping", &Tetrahedron<4>::vertexMapping)
         .def("edgeMapping", &Tetrahedron<4>::edgeMapping)
@@ -102,19 +91,16 @@ void addTetrahedron4() {
         .def("isLinkOrientable", &Tetrahedron<4>::isLinkOrientable)
         .def("isBoundary", &Tetrahedron<4>::isBoundary)
         .def("inMaximalForest", &Tetrahedron<4>::inMaximalForest)
-        .def("ordering", &Tetrahedron<4>::ordering)
-        .def("faceNumber", &Tetrahedron<4>::faceNumber)
-        .def("containsVertex", &Tetrahedron<4>::containsVertex)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("ordering")
-        .staticmethod("faceNumber")
-        .staticmethod("containsVertex")
+        .def_static("ordering", &Tetrahedron<4>::ordering)
+        .def_static("faceNumber", &Tetrahedron<4>::faceNumber)
+        .def_static("containsVertex", &Tetrahedron<4>::containsVertex)
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("Dim4TetrahedronEmbedding") = scope().attr("FaceEmbedding4_3");
-    scope().attr("TetrahedronEmbedding4") = scope().attr("FaceEmbedding4_3");
-    scope().attr("Dim4Tetrahedron") = scope().attr("Face4_3");
-    scope().attr("Tetrahedron4") = scope().attr("Face4_3");
+    m.attr("Dim4TetrahedronEmbedding") = m.attr("FaceEmbedding4_3");
+    m.attr("TetrahedronEmbedding4") = m.attr("FaceEmbedding4_3");
+    m.attr("Dim4Tetrahedron") = m.attr("Face4_3");
+    m.attr("Tetrahedron4") = m.attr("Face4_3");
 }
 

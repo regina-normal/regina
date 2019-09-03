@@ -34,7 +34,6 @@
 #include <sstream>
 #include "census/gluingpermsearcher4.h"
 #include "triangulation/dim4.h"
-#include "utilities/memutils.h"
 
 // If this symbol is uncommented, then the algorithm will become fairly
 // brute-force, with no fast union-find code at all.  The only reason for
@@ -277,8 +276,8 @@ GluingPermSearcher<4>::~GluingPermSearcher() {
         // delete them.
         FacetPairing<4>::IsoList* autos =
             const_cast<FacetPairing<4>::IsoList*>(autos_);
-        std::for_each(autos->begin(), autos->end(),
-            FuncDelete<Isomorphism<4>>());
+        for (auto a : *autos)
+            delete a;
         delete autos;
     }
 }

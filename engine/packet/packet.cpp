@@ -32,17 +32,13 @@
 
 #include <set>
 #include <fstream>
-#include <sstream>
-#include <boost/iostreams/device/file.hpp>
-#include <boost/iostreams/filtering_stream.hpp>
-#include <boost/iostreams/filter/gzip.hpp>
-#include "engine.h"
+#include "core/engine.h"
 #include "packet/packet.h"
-#include "packet/packetlistener.h"
 #include "packet/script.h"
 #include "utilities/base64.h"
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
+#include "utilities/zstr.h"
 
 namespace regina {
 
@@ -54,16 +50,68 @@ Packet::~Packet() {
     // might in turn involve tree traversal.  It can't be good for
     // anyone to start querying packets whose destructors are already
     // being carried out.
-    if (treeParent_)
-        makeOrphan();
+    if (treeParent_) {
+        // Instead of calling makeOrphan(), we reimplement it here so that
+        // the PacketListener callbacks pass null instead of the child packet.
+        treeParent_->fireEvent(&PacketListener::childToBeRemoved,
+            nullptr /* child already being destroyed */, false);
+
+        if (treeParent_->firstTreeChild_ == this)
+            treeParent_->firstTreeChild_ = nextTreeSibling_;
+        else
+            prevTreeSibling_->nextTreeSibling_ = nextTreeSibling_;
+
+        if (treeParent_->lastTreeChild_ == this)
+            treeParent_->lastTreeChild_ = prevTreeSibling_;
+        else
+            nextTreeSibling_->prevTreeSibling_ = prevTreeSibling_;
+
+        Packet* oldParent = treeParent_;
+        treeParent_ = nullptr;
+
+        oldParent->fireEvent(&PacketListener::childWasRemoved,
+            nullptr /* child already being destroyed */, false);
+    }
 
     // Destroy all descendants.
-    // Note that the Packet destructor now orphans the packet as well.
-    while(firstTreeChild_)
-        delete firstTreeChild_;
+    while(firstTreeChild_) {
+        Packet* tmp = firstTreeChild_;
+
+        // Cleanly orphan the packet and fire all remove-child events
+        // *before* we destroy the child.
+        fireEvent(&PacketListener::childToBeRemoved, tmp, true);
+
+        if (tmp->nextTreeSibling_) {
+            firstTreeChild_ = tmp->nextTreeSibling_;
+            firstTreeChild_->prevTreeSibling_ = nullptr;
+        } else {
+            firstTreeChild_ = lastTreeChild_ = nullptr;
+        }
+        tmp->treeParent_ = nullptr;
+
+        fireEvent(&PacketListener::childWasRemoved, tmp, true);
+
+        // Now we can destroy the child.
+        // We would normally call safeDelete(tmp) here, but since the
+        // old child packet is already known to be non-null and orphaned,
+        // we can reimplement a more streamlined version of safeDelete():
+        if (! tmp->hasSafePtr())
+            delete tmp;
+    }
 
     // Fire a packet event and unregister all listeners.
     fireDestructionEvent();
+}
+
+void Packet::safeDelete(Packet* p) {
+    if (! p)
+        return;
+    if (p->hasSafePtr()) {
+        // Leave it to the safe pointer(s) to delete p when they are
+        // finished with it.
+        p->makeOrphan();
+    } else
+        delete p;
 }
 
 std::string Packet::fullName() const {
@@ -586,10 +634,14 @@ bool Packet::save(std::ostream& s, bool compressed) const {
         return false;
 
     if (compressed) {
-        ::boost::iostreams::filtering_ostream out;
-        out.push(::boost::iostreams::gzip_compressor());
-        out.push(s);
-        writeXMLFile(out);
+        try {
+            zstr::ostream out(s);
+            writeXMLFile(out);
+        } catch (const zstr::Exception& e) {
+            std::cerr << "ERROR: Could not save with compression: "
+                << e.what() << std::endl;
+            return false;
+        }
     } else {
         writeXMLFile(s);
     }
@@ -686,12 +738,12 @@ void Packet::fireEvent(void (PacketListener::*event)(Packet*, Packet*),
     }
 }
 
-void Packet::fireEvent(void (PacketListener::*event)(Packet*,
-        Packet*, bool), Packet* arg2, bool arg3) {
+void Packet::fireEvent(void (PacketListener::*event)(Packet*, Packet*),
+        Packet* arg2, bool makeMeNull) {
     if (listeners_.get()) {
         std::set<PacketListener*>::const_iterator it = listeners_->begin();
         while (it != listeners_->end())
-            ((*it++)->*event)(this, arg2, arg3);
+            ((*it++)->*event)((makeMeNull ? nullptr : this), arg2);
     }
 }
 
@@ -765,6 +817,31 @@ std::string Packet::internalID() const {
     std::string ans = id;
     delete[] id;
     return ans;
+}
+
+PacketListener::~PacketListener() {
+    unregisterFromAllPackets();
+}
+
+void PacketListener::unregisterFromAllPackets() {
+    std::set<Packet*>::iterator it, next;
+
+    it = packets.begin();
+    next = it;
+    while (it != packets.end()) {
+        // INV: next == it.
+
+        // Step forwards before we actually deregister (*it), since
+        // the deregistration will remove (*it) from the set and
+        // invalidate the iterator.
+        next++;
+
+        // This deregistration removes (*it) from the set, but other
+        // iterators (i.e., next) are not invalidated.
+        (*it)->unlisten(this);
+
+        it = next;
+    }
 }
 
 } // namespace regina

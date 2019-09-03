@@ -30,66 +30,54 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "maths/cyclotomic.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::Cyclotomic;
 
-namespace {
-    const regina::Rational& getItem(const Cyclotomic& c, int exp) {
-        return c[exp];
-    }
-    void setItem(Cyclotomic& c, int exp, const regina::Rational& value) {
-        c[exp] = value;
-    }
-    regina::Polynomial<regina::Rational>* cyclotomic(size_t n) {
-        return new regina::Polynomial<regina::Rational>(
-            Cyclotomic::cyclotomic(n));
-    }
-
-    std::string (Cyclotomic::*str_variable)(const char*) const =
-        &Cyclotomic::str;
-    std::string (Cyclotomic::*utf8_variable)(const char*) const =
-        &Cyclotomic::utf8;
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_evaluate,
-        Cyclotomic::evaluate, 0, 1);
-}
-
-void addCyclotomic() {
-    class_<Cyclotomic, std::auto_ptr<Cyclotomic> >("Cyclotomic")
-        .def(init<size_t>())
-        .def(init<size_t, int>())
-        .def(init<size_t, const regina::Rational&>())
-        .def(init<const Cyclotomic&>())
+void addCyclotomic(pybind11::module& m) {
+    auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic")
+        .def(pybind11::init<>())
+        .def(pybind11::init<size_t>())
+        .def(pybind11::init<size_t, int>())
+        .def(pybind11::init<size_t, const regina::Rational&>())
+        .def(pybind11::init<const Cyclotomic&>())
         .def("init", &Cyclotomic::init)
         .def("field", &Cyclotomic::field)
         .def("degree", &Cyclotomic::degree)
-        .def("__getitem__", getItem, return_internal_reference<>())
-        .def("__setitem__", setItem)
-        .def("polynomial", &Cyclotomic::polynomial,
-            return_value_policy<manage_new_object>())
-        .def("evaluate", &Cyclotomic::evaluate, OL_evaluate())
+        .def("__getitem__", [](const Cyclotomic& c, int exp) {
+            return c[exp];
+        }, pybind11::return_value_policy::reference_internal)
+        .def("__setitem__", [](Cyclotomic& c, int exp,
+                const regina::Rational& value) {
+            c[exp] = value;
+        })
+        .def("polynomial", &Cyclotomic::polynomial)
+        .def("evaluate", &Cyclotomic::evaluate,
+            pybind11::arg("whichRoot") = 1)
         .def("negate", &Cyclotomic::invert)
         .def("invert", &Cyclotomic::invert)
-        .def(self *= regina::Rational())
-        .def(self /= regina::Rational())
-        .def(self += self)
-        .def(self -= self)
-        .def(self *= self)
-        .def(self /= self)
-        .def("cyclotomic", &cyclotomic,
-            return_value_policy<manage_new_object>())
-        .def("str", str_variable)
-        .def("utf8", utf8_variable)
-        .def(regina::python::add_output())
-        .def(self_ns::repr(self)) // add_output only gives __str__
-        .def(regina::python::add_eq_operators())
-        .staticmethod("cyclotomic")
+        .def(pybind11::self *= regina::Rational())
+        .def(pybind11::self /= regina::Rational())
+        .def(pybind11::self += pybind11::self)
+        .def(pybind11::self -= pybind11::self)
+        .def(pybind11::self *= pybind11::self)
+        .def(pybind11::self /= pybind11::self)
+        .def_static("cyclotomic", [](size_t n) {
+            return new regina::Polynomial<regina::Rational>(
+                Cyclotomic::cyclotomic(n));
+        })
+        .def("str", overload_cast<const char*>(
+            &Cyclotomic::str, pybind11::const_))
+        .def("utf8", overload_cast<const char*>(
+            &Cyclotomic::utf8, pybind11::const_))
     ;
+    regina::python::add_output(c, true /* __repr__ */);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NCyclotomic") = scope().attr("Cyclotomic");
+    m.attr("NCyclotomic") = m.attr("Cyclotomic");
 }
 

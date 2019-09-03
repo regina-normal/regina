@@ -30,103 +30,77 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "link/modellinkgraph.h"
-#include "../safeheldtype.h"
-
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
 #include "../helpers.h"
 
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::ModelLinkGraphNode;
 using regina::ModelLinkGraphArc;
 using regina::ModelLinkGraph;
 using regina::ModelLinkGraphCells;
 
-namespace {
-    ModelLinkGraph* (ModelLinkGraph::*flype1)(const ModelLinkGraphArc&) const =
-        &ModelLinkGraph::flype;
-    ModelLinkGraph* (ModelLinkGraph::*flype3)(const ModelLinkGraphArc&,
-        const ModelLinkGraphArc&, const ModelLinkGraphArc&) const =
-        &ModelLinkGraph::flype;
-
-    void arc_inc_operator(ModelLinkGraphArc& a) {
-       ++a;
-    }
-
-    void arc_dec_operator(ModelLinkGraphArc& a) {
-       --a;
-    }
-
-    boost::python::tuple findFlype_tuple(const ModelLinkGraph& g,
-            const ModelLinkGraphArc& a) {
-        auto ans = g.findFlype(a);
-        return boost::python::make_tuple(ans.first, ans.second);
-    }
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_canonicalPlantri,
-        ModelLinkGraph::canonicalPlantri, 0, 2);
-}
-
-void addModelLinkGraph() {
-    class_<ModelLinkGraphArc>("ModelLinkGraphArc", init<>())
-        .def(init<ModelLinkGraphNode*, int>())
-        .def(init<const ModelLinkGraphArc&>())
+void addModelLinkGraph(pybind11::module& m) {
+    auto a = pybind11::class_<ModelLinkGraphArc>(m, "ModelLinkGraphArc")
+        .def(pybind11::init<>())
+        .def(pybind11::init<ModelLinkGraphNode*, int>())
+        .def(pybind11::init<const ModelLinkGraphArc&>())
         .def("node", &ModelLinkGraphArc::node,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("arc", &ModelLinkGraphArc::arc)
         .def("opposite", &ModelLinkGraphArc::opposite)
         .def("traverse", &ModelLinkGraphArc::traverse)
         .def("next", &ModelLinkGraphArc::next)
         .def("prev", &ModelLinkGraphArc::prev)
-        .def("inc", arc_inc_operator)
-        .def("dec", arc_dec_operator)
-        .def(self_ns::str(self))
-        .def(self_ns::repr(self))
-        .def(regina::python::add_eq_operators())
+        .def("inc", [](ModelLinkGraphArc& a) {
+           return a++;
+        })
+        .def("dec", [](ModelLinkGraphArc& a) {
+           return a--;
+        })
     ;
+    regina::python::add_output_ostream(a, true /* __repr__ */);
+    regina::python::add_eq_operators(a);
 
-    class_<ModelLinkGraphNode, std::auto_ptr<ModelLinkGraphNode>,
-            boost::noncopyable>("ModelLinkGraphNode", no_init)
+    auto n = pybind11::class_<ModelLinkGraphNode>(m, "ModelLinkGraphNode")
         .def("index", &ModelLinkGraphNode::index)
         .def("arc", &ModelLinkGraphNode::arc)
-        .def("adj", &ModelLinkGraphNode::adj,
-            return_value_policy<return_by_value>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
+        .def("adj", &ModelLinkGraphNode::adj)
     ;
+    regina::python::add_output(n);
+    regina::python::add_eq_operators(n);
 
-    class_<ModelLinkGraph, std::auto_ptr<ModelLinkGraph>,
-            boost::noncopyable>("ModelLinkGraph", init<>())
-        .def(init<const ModelLinkGraph&>())
+    auto g = pybind11::class_<ModelLinkGraph>(m, "ModelLinkGraph")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const ModelLinkGraph&>())
         .def("size", &ModelLinkGraph::size)
-        .def("node", &ModelLinkGraph::node, return_internal_reference<>())
+        .def("node", &ModelLinkGraph::node,
+            pybind11::return_value_policy::reference_internal)
         .def("swapContents", &ModelLinkGraph::swapContents)
         .def("reflect", &ModelLinkGraph::reflect)
-        .def("findFlype", findFlype_tuple)
-        .def("flype", flype3, return_value_policy<manage_new_object>())
-        .def("flype", flype1, return_value_policy<manage_new_object>())
+        .def("findFlype", &ModelLinkGraph::findFlype)
+        .def("flype", overload_cast<const ModelLinkGraphArc&,
+                const ModelLinkGraphArc&, const ModelLinkGraphArc&>(
+            &ModelLinkGraph::flype, pybind11::const_))
+        .def("flype", overload_cast<const ModelLinkGraphArc&>(
+            &ModelLinkGraph::flype, pybind11::const_))
         .def("plantri", &ModelLinkGraph::plantri)
         .def("canonicalPlantri", &ModelLinkGraph::canonicalPlantri,
-            OL_canonicalPlantri())
-        .def("fromPlantri", &ModelLinkGraph::fromPlantri,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("fromPlantri")
+            pybind11::arg("useReflection") = true,
+            pybind11::arg("tight") = false)
+        .def_static("fromPlantri", &ModelLinkGraph::fromPlantri)
     ;
+    regina::python::add_output(g);
+    regina::python::add_eq_operators(g);
 
-    class_<ModelLinkGraphCells, std::auto_ptr<ModelLinkGraphCells>,
-            boost::noncopyable>("ModelLinkGraphCells", no_init)
+    auto c = pybind11::class_<ModelLinkGraphCells>(m, "ModelLinkGraphCells")
         .def("isValid", &ModelLinkGraphCells::isValid)
         .def("countCells", &ModelLinkGraphCells::countCells)
         .def("size", &ModelLinkGraphCells::size)
-        .def("arc", &ModelLinkGraphNode::arc,
-            return_value_policy<return_by_value>())
+        .def("arc", &ModelLinkGraphCells::arc)
         .def("cell", &ModelLinkGraphCells::cell)
         .def("cellPos", &ModelLinkGraphCells::cellPos)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 }

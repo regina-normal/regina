@@ -37,7 +37,7 @@
 #ifndef __PACKETCHOOSER_H
 #define __PACKETCHOOSER_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #include <QDialog>
 #include <QComboBox>
@@ -172,8 +172,8 @@ class PacketChooser : public QComboBox, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasRenamed(regina::Packet* packet);
-        void packetToBeDestroyed(regina::Packet* packet);
+        void packetWasRenamed(regina::Packet* packet) override;
+        void packetToBeDestroyed(regina::PacketShell packet) override;
 
     public slots:
         /**

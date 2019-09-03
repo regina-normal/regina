@@ -34,7 +34,6 @@
 #include <vector>
 
 #include "triangulation/dim3.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -215,9 +214,9 @@ bool Triangulation<3>::idealToFinite() {
                 tetList.push_back(emb.tetrahedron());
 
     // Now remove the tetrahedra.
-    // For each tetrahedron, remove it and delete it.
-    for_each(tetList.begin(), tetList.end(),
-        std::bind1st(std::mem_fun(&Triangulation<3>::removeTetrahedron), this));
+    // Note: removeTetrahedron() automatically deletes the tetrahedron also.
+    for (auto t : tetList)
+        removeTetrahedron(t);
 
     delete[] newTet;
     return true;

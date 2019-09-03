@@ -4478,6 +4478,7 @@ void Cone<Integer>::setFaceCodimBound(long bound){
     f_vector.clear();
 }
 
+#if 0
 bool executable(string command){
 //n check whether "command --version" cam be executed
 
@@ -4525,6 +4526,7 @@ string command(const string& original_call, const string& to_replace, const stri
         return test_path;
     return ""; // no executable found
 }
+#endif
 
 //---------------------------------------------------------------------------
 template<typename Integer>

@@ -75,10 +75,21 @@ namespace regina {
  *
  * This class requires that the order \a n is strictly positive.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Functions that take or return objects by value are designed to be just as
+ * efficient as working with references or pointers, and long chains of
+ * operators such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
+ *
  * Although this class makes use of global data in its implementation, all
  * of its methods are thread-safe.
  */
 class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
+    public:
+        typedef Rational Coefficient;
+            /**< The type of each coefficient of the polynomial that is
+                 used to store a field element. */
+
     private:
         size_t field_;
             /**< The order \a n of the underlying cyclotomic field.
@@ -141,9 +152,20 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * Creates a copy of the given field element, within the
          * same cyclotomic field.
          *
+         * This constructor induces a deep copy of \a value.
+         *
          * @param value the field element to copy.
          */
         Cyclotomic(const Cyclotomic& value);
+        /**
+         * Moves the contents of the given field element to this new
+         * field element.  This is a fast (constant time) operation.
+         *
+         * The element that was passed (\a value) will no longer be usable.
+         *
+         * @param value the field element to move.
+         */
+        Cyclotomic(Cyclotomic&& value) noexcept;
         /**
          * Destroys this field element.
          *
@@ -349,10 +371,31 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * be safely discarded.  If \a value is uninitialised then this
          * field element will become uninitialised also.
          *
+         * This operator induces a deep copy of \a value.
+         *
          * @param value the new value to assign to this field element.
          * @return a reference to this field element.
          */
         Cyclotomic& operator = (const Cyclotomic& value);
+
+        /**
+         * Moves the contents of the given field element to this
+         * field element.  This is a fast (constant time) operation.
+         *
+         * This assignment operator is safe even if this and \a value belong
+         * to different cyclotomic fields, or if this and/or \a value has not
+         * yet been initialised.  The underlying field for this element will
+         * simply be changed to match the underlying field for \a value,
+         * and all old information stored for this element (if any) will
+         * be safely discarded.  If \a value is uninitialised then this
+         * field element will become uninitialised also.
+         *
+         * The element that was passed (\a value) will no longer be usable.
+         *
+         * @param value the field element to move.
+         * @return a reference to this field element.
+         */
+        Cyclotomic& operator = (Cyclotomic&& value) noexcept;
 
         /**
          * Sets this field element to the given rational.
@@ -371,11 +414,13 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
 
         /**
          * Negates this field element.
+         * This field element is changed directly.
          */
         void negate();
 
         /**
          * Inverts this field element.
+         * This field element is changed directly.
          *
          * \pre This field element has already been initialised (and so
          * it already has specified an underlying cyclotomic field).
@@ -383,6 +428,17 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * \pre This field element is non-zero.
          */
         void invert();
+
+        /**
+         * Returns the inverse of this field element.
+         * This field element is not changed.
+         *
+         * \pre This field element has already been initialised (and so
+         * it already has specified an underlying cyclotomic field).
+         *
+         * \pre This field element is non-zero.
+         */
+        Cyclotomic inverse() const;
 
         /**
          * Multiplies this field element by the given rational.
@@ -498,7 +554,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * will be used.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
-            const char* variable = 0) const;
+            const char* variable = nullptr) const;
 
         /**
          * Returns this field element as a human-readable string, using the
@@ -544,7 +600,112 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * string.
          */
         std::string utf8(const char* variable) const;
+
+    private:
+        /**
+         * Constructs a new field element with the given data.
+         *
+         * The data members \a field_, \a degree_ and \a coeff_ will be
+         * set to the given values; in particular, the new object will
+         * take ownership of the coefficient array.
+         */
+        Cyclotomic(size_t field, size_t degree, Rational* coeff);
+
+    friend Cyclotomic operator + (const Cyclotomic&, const Cyclotomic&);
+    friend Cyclotomic operator * (const Cyclotomic&, const Cyclotomic&);
 };
+
+/**
+ * Multiplies the given field element by the given rational.
+ *
+ * @param elt the field element to multiply by.
+ * @param scalar the rational to multiply by.
+ * @return the product of the given field element and rational.
+ */
+Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
+
+/**
+ * Multiplies the given field element by the given rational.
+ *
+ * @param scalar the rational to multiply by.
+ * @param elt the field element to multiply by.
+ * @return the product of the given field element and rational.
+ */
+Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
+
+/**
+ * Divides the given field element by the given rational.
+ *
+ * \pre The argument \a scalar is non-zero.
+ *
+ * @param elt the field element to divide by the given rational.
+ * @param scalar the rational to divide by.
+ * @return the quotient of the given field element by the given rational.
+ */
+Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
+
+/**
+ * Adds the two given cyclotomic field elements.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to add.
+ * @param rhs the second field element to add.
+ * @return the sum of both field elements.
+ */
+Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
+
+/**
+ * Adds the two given cyclotomic field elements.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to add.
+ * @param rhs the second field element to add.
+ * @return the sum of both field elements.
+ */
+Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
+
+/**
+ * Adds the two given cyclotomic field elements.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to add.
+ * @param rhs the second field element to add.
+ * @return the sum of both field elements.
+ */
+Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
+
+/**
+ * Adds the two given cyclotomic field elements.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to add.
+ * @param rhs the second field element to add.
+ * @return the sum of both field elements.
+ */
+Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
+
+/**
+ * Returns the negative of the given field element.
+ *
+ * @param arg the field element to negate.
+ * @return the negative of \a arg.
+ */
+Cyclotomic operator - (Cyclotomic arg);
+
+/**
+ * Multiplies the two given cyclotomic field elements.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the first field element to multiply.
+ * @param rhs the second field element to multiply.
+ * @return the product of both field elements.
+ */
+Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -558,7 +719,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
 
 // Inline functions for Cyclotomic
 
-inline Cyclotomic::Cyclotomic() : field_(0), degree_(0), coeff_(0) {
+inline Cyclotomic::Cyclotomic() : field_(0), degree_(0), coeff_(nullptr) {
 }
 
 inline Cyclotomic::Cyclotomic(size_t field) :
@@ -586,6 +747,15 @@ inline Cyclotomic::Cyclotomic(const Cyclotomic& value) :
         coeff_(new Rational[value.degree_]) {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] = value.coeff_[i];
+}
+
+inline Cyclotomic::Cyclotomic(Cyclotomic&& value) noexcept :
+        field_(value.field_), degree_(value.degree_), coeff_(value.coeff_) {
+    value.coeff_ = nullptr;
+}
+
+inline Cyclotomic::Cyclotomic(size_t field, size_t degree, Rational* coeff) :
+        field_(field), degree_(degree), coeff_(coeff) {
 }
 
 inline Cyclotomic::~Cyclotomic() {
@@ -650,6 +820,15 @@ inline Cyclotomic& Cyclotomic::operator = (const Cyclotomic& other) {
     return *this;
 }
 
+inline Cyclotomic& Cyclotomic::operator = (Cyclotomic&& other) noexcept {
+    // Strictly speaking we could just assign field_ and degree_.
+    std::swap(field_, other.field_);
+    std::swap(degree_, other.degree_);
+    // Let other dispose of the original contents in its own destructor.
+    std::swap(coeff_, other.coeff_);
+    return *this;
+}
+
 inline Cyclotomic& Cyclotomic::operator = (const Rational& scalar) {
     coeff_[0] = scalar;
     for (size_t i = 1; i < degree_; ++i)
@@ -707,6 +886,51 @@ inline std::string Cyclotomic::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();
+}
+
+inline Cyclotomic operator * (Cyclotomic elt, const Rational& scalar) {
+    // When the argument elt is an lvalue reference, we perform a deep copy
+    // due to pass-by-value.  If scalar == 0 then we don't need this deep copy,
+    // since the argument can be ignored.  This special-case optimisation
+    // would require two different lvalue/rvalue implementations of *, and
+    // so we leave it for now.
+    elt *= scalar;
+    return elt;
+}
+
+inline Cyclotomic operator * (const Rational& scalar, Cyclotomic elt) {
+    // See the notes above on a possible optimisation for scalar == 0.
+    elt *= scalar;
+    return elt;
+}
+
+inline Cyclotomic operator / (Cyclotomic elt, const Rational& scalar) {
+    elt /= scalar;
+    return elt;
+}
+
+inline Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs) {
+    Rational* coeff = new Rational[lhs.degree_];
+    for (size_t i = 0; i < lhs.degree_; ++i)
+        coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
+    return Cyclotomic(lhs.field_, lhs.degree_, coeff);
+}
+
+inline Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs) {
+    return std::move(lhs += rhs);
+}
+
+inline Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs) {
+    return std::move(rhs += lhs);
+}
+
+inline Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs) {
+    return std::move(lhs += rhs);
+}
+
+inline Cyclotomic operator - (Cyclotomic arg) {
+    arg.negate();
+    return arg;
 }
 
 } // namespace regina

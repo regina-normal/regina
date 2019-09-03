@@ -176,8 +176,8 @@ Packet* NormalHypersurfaces::internalClonePacket(Packet* /* parent */)
         const {
     NormalHypersurfaces* ans = new NormalHypersurfaces(
         coords_, which_, algorithm_);
-    transform(surfaces_.begin(), surfaces_.end(), back_inserter(ans->surfaces_),
-        FuncNewClonePtr<NormalHypersurface>());
+    for (auto s : surfaces_)
+        ans->surfaces_.push_back(static_cast<NormalHypersurface*>(s->clone()));
     return ans;
 }
 

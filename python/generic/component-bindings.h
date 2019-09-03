@@ -30,53 +30,34 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::Component;
 
-namespace {
-    template <int dim>
-    struct PyComponentHelper {
-        boost::python::list simplices_list(Component<dim>& t) {
-            boost::python::list ans;
-            for (auto it = t.simplices().begin();
-                    it != t.simplices().end(); ++it)
-                ans.append(boost::python::ptr(*it));
-            return ans;
-        }
-
-        boost::python::list bc_list(Component<dim>& t) {
-            boost::python::list ans;
-            for (auto s : t.boundaryComponents())
-                ans.append(boost::python::ptr(s));
-            return ans;
-        }
-    };
-}
-
 template <int dim>
-void addComponent(const char* name) {
-    class_<Component<dim>, std::auto_ptr<Component<dim>>, boost::noncopyable>
-            (name, no_init)
+void addComponent(pybind11::module& m, const char* name) {
+    auto c = pybind11::class_<Component<dim>>(m, name)
         .def("index", &Component<dim>::index)
         .def("size", &Component<dim>::size)
         .def("countBoundaryComponents",
             &Component<dim>::countBoundaryComponents)
-        .def("simplices", &PyComponentHelper<dim>::simplices_list)
+        .def("simplices", &Component<dim>::simplices,
+            pybind11::return_value_policy::reference)
         .def("simplex", &Component<dim>::simplex,
-            return_value_policy<reference_existing_object>())
-        .def("boundaryComponents", &PyComponentHelper<dim>::bc_list)
+            pybind11::return_value_policy::reference)
+        .def("boundaryComponents", &Component<dim>::boundaryComponents,
+            pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Component<dim>::boundaryComponent,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isValid", &Component<dim>::isValid)
         .def("isOrientable", &Component<dim>::isOrientable)
         .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets)
         .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 }
 

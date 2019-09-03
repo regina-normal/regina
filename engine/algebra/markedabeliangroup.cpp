@@ -78,7 +78,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
     TORLoc = rankOM; // to keep mod-p calculations happy. 
 
     // construct the internal presentation matrix.
-    std::unique_ptr<MatrixRing<Integer> > prod=OMRi*ON;
+    MatrixInt prod=OMRi*ON;
     MatrixInt ORN(N.rows()-rankOM, N.columns());
     ornR.reset( new MatrixInt( ORN.columns(), ORN.columns() ) );
     ornRi.reset(new MatrixInt( ORN.columns(), ORN.columns() ) );
@@ -87,7 +87,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
 
     for (unsigned long i=0;i<ORN.rows();i++) 
         for (unsigned long j=0;j<ORN.columns();j++)
-        ORN.entry(i,j) = prod->entry(i+rankOM,j);
+        ORN.entry(i,j) = prod.entry(i+rankOM,j);
 
     // put the presentation matrix in Smith normal form, and
     // build the list of invariant factors and their row indexes
@@ -152,18 +152,18 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
     // starting by computing the trunc[OMRi*N] matrix and padding with 
     // a diagonal p matrix
 
-    std::unique_ptr<MatrixRing<Integer> > OMRiN = OMRi*ON;
+    MatrixInt OMRiN = OMRi*ON;
 
     // hmm, if we're using p == 0 coefficients, lets keep it simple
     if (coeff > 0)
     {
-     MatrixInt tensorPres( OMRiN->rows() - rankOM, 
-                OMRiN->columns() + OMRiN->rows() - rankOM );
-     for (unsigned long i=0; i<tensorPres.rows(); i++) 
-     for (unsigned long j=0; j<OMRiN->columns(); j++)
-          tensorPres.entry(i,j) = OMRiN->entry(i+rankOM, j);
-     for (unsigned long i=0; i< OMRiN->rows() - rankOM; i++)
-          tensorPres.entry(i, OMRiN->columns() + i) = coeff;
+     MatrixInt tensorPres( OMRiN.rows() - rankOM,
+                OMRiN.columns() + OMRiN.rows() - rankOM );
+     for (unsigned long i=0; i<tensorPres.rows(); i++)
+     for (unsigned long j=0; j<OMRiN.columns(); j++)
+          tensorPres.entry(i,j) = OMRiN.entry(i+rankOM, j);
+     for (unsigned long i=0; i< OMRiN.rows() - rankOM; i++)
+          tensorPres.entry(i, OMRiN.columns() + i) = coeff;
 
      // initialize coordinate-change matrices for the SNF computation. 
      otR.reset(new  MatrixInt(tensorPres.columns(), tensorPres.columns() ));
@@ -214,29 +214,29 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
     }
     else
     { // coeff == p == 0 case
-     MatrixInt tensorPres( OMRiN->rows() - rankOM, OMRiN->columns() );
-     for (unsigned long i=0; i<tensorPres.rows(); i++) 
-      for (unsigned long j=0; j<OMRiN->columns(); j++)
-          tensorPres.entry(i,j) = OMRiN->entry(i+rankOM, j);
+     MatrixInt tensorPres( OMRiN.rows() - rankOM, OMRiN.columns() );
+     for (unsigned long i=0; i<tensorPres.rows(); i++)
+      for (unsigned long j=0; j<OMRiN.columns(); j++)
+          tensorPres.entry(i,j) = OMRiN.entry(i+rankOM, j);
 
-     // initialize coordinate-change matrices for the SNF computation. 
+     // initialize coordinate-change matrices for the SNF computation.
      ornR.reset(new  MatrixInt(tensorPres.columns(), tensorPres.columns() ));
      ornRi.reset(new MatrixInt(tensorPres.columns(), tensorPres.columns() ));
      ornC.reset(new  MatrixInt(tensorPres.rows(), tensorPres.rows() ));
      ornCi.reset(new MatrixInt(tensorPres.rows(), tensorPres.rows() ));
 
-     metricalSmithNormalForm(tensorPres, &(*ornR), &(*ornRi), 
+     metricalSmithNormalForm(tensorPres, &(*ornR), &(*ornRi),
         &(*ornC), &(*ornCi));
 
-     for (unsigned long i=0; ( (i<tensorPres.rows()) && 
+     for (unsigned long i=0; ( (i<tensorPres.rows()) &&
          (i<tensorPres.columns()) ); i++)
       {
        if (tensorPres.entry(i,i) == 1) ifLoc++; else
-         if (tensorPres.entry(i,i) > 1) 
-           InvFacList.push_back(tensorPres.entry(i,i)); 
+         if (tensorPres.entry(i,i) > 1)
+           InvFacList.push_back(tensorPres.entry(i,i));
       }
      snffreeindex = ifLoc + InvFacList.size();
-     ifNum = InvFacList.size(); 
+     ifNum = InvFacList.size();
      snfrank = tensorPres.rows() - ifLoc - ifNum;
     }
 }
@@ -244,11 +244,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
 bool MarkedAbelianGroup::isChainComplex() const
 {
     if (OM.columns() != ON.rows()) return false;
-    std::unique_ptr<MatrixRing<Integer> > prod = OM*ON;
-    for (unsigned long i=0; i<prod->rows(); i++) 
-      for (unsigned long j=0; j<prod->columns(); j++)
-        if (prod->entry(i,j) != 0) return false;
-    return true;
+    return (OM*ON).isZero();
 }
 
 unsigned long MarkedAbelianGroup::torsionRank(const Integer& degree)
@@ -986,13 +982,8 @@ void HomMarkedAbelianGroup::computeImage() {
 std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::operator * (const 
       HomMarkedAbelianGroup &X) const
 {
-    std::unique_ptr<MatrixRing<Integer> > prod=matrix*X.matrix;
-    MatrixInt compMat(matrix.rows(), X.matrix.columns() );
-    for (unsigned long i=0;i<prod->rows();i++) 
-      for (unsigned long j=0;j<prod->columns();j++)
-        compMat.entry(i,j) = prod->entry(i, j);
     return std::unique_ptr<HomMarkedAbelianGroup>(new 
-        HomMarkedAbelianGroup(X.domain_, range_, compMat));
+        HomMarkedAbelianGroup(X.domain_, range_, matrix*X.matrix));
 }
 
 std::vector<Integer> HomMarkedAbelianGroup::evalCC(
@@ -1138,11 +1129,9 @@ bool HomMarkedAbelianGroup::isChainMap(
     ) return false;
  if ( (range().M() != other.range().N()) ||
       (domain().M() != other.domain().N()) ) return false;
- std::unique_ptr< MatrixRing<Integer> >
-    prodLU = range_.M() * definingMatrix();
- std::unique_ptr< MatrixRing<Integer> >
-    prodBR = other.definingMatrix() * domain_.M();
- if ( (*prodLU) != (*prodBR) ) return false;
+ MatrixInt prodLU = range_.M() * definingMatrix();
+ MatrixInt prodBR = other.definingMatrix() * domain_.M();
+ if ( prodLU != prodBR ) return false;
  return true;
 }
 

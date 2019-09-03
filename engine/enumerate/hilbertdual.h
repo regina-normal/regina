@@ -77,7 +77,6 @@
 
 namespace regina {
 
-class EnumConstraints;
 class ProgressTracker;
 
 /**
@@ -166,6 +165,9 @@ class HilbertDual {
             const MatrixInt& subspace, const EnumConstraints* constraints,
             ProgressTracker* tracker = 0, unsigned initialRows = 0);
 
+        // Mark this class as non-constructible.
+        HilbertDual() = delete;
+
     private:
         /**
          * A helper class for Hilbert basis enumeration, describing a
@@ -227,7 +229,14 @@ class HilbertDual {
                  *
                  * @param other the vector to clone.
                  */
-                inline VecSpec(const VecSpec& other);
+                inline VecSpec(const VecSpec& other) = default;
+
+                /**
+                 * Sets this to be a clone of the given vector.
+                 *
+                 * @param other the vector to clone.
+                 */
+                inline VecSpec& operator = (const VecSpec& other) = default;
 
                 /**
                  * Updates the \a nextHyp_ member to reflect the dot
@@ -342,12 +351,6 @@ class HilbertDual {
             ProgressTracker* tracker, unsigned initialRows);
 
         /**
-         * Private constructor to ensure that objects of this class are
-         * never created.
-         */
-        HilbertDual();
-
-        /**
          * Test whether the vector \a vec can be reduced using
          * any of the candidate basis vectors in \a against.
          *
@@ -452,11 +455,6 @@ class HilbertDual {
 
 /*@}*/
 
-// Inline functions for HilbertDual
-
-inline HilbertDual::HilbertDual() {
-}
-
 // Inline functions for HilbertDual::VecSpec
 
 template <class BitmaskType>
@@ -473,17 +471,6 @@ inline HilbertDual::VecSpec<BitmaskType>::VecSpec(size_t pos, size_t dim) :
     // the LargeInteger constructor.
     setElement(pos, LargeInteger::one);
     mask_.set(pos, true);
-}
-
-template <class BitmaskType>
-inline HilbertDual::VecSpec<BitmaskType>::VecSpec(
-        const HilbertDual::VecSpec<BitmaskType>& other) :
-        Ray(other),
-        nextHyp_(other.nextHyp_),
-#ifdef __REGINA_HILBERT_DUAL_OPT_BI16D
-        srcNextHyp_(other.srcNextHyp_),
-#endif
-        mask_(other.mask_) {
 }
 
 template <class BitmaskType>

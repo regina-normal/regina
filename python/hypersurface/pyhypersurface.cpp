@@ -30,15 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-void addHyperCoords();
-void addHyperFlags();
-void addNormalHypersurface();
-void addNormalHypersurfaces();
+namespace pybind11 { class module; }
 
-void addHypersurfaceClasses() {
-    addHyperCoords();
-    addHyperFlags();
-    addNormalHypersurface();
-    addNormalHypersurfaces();
+void addHyperCoords(pybind11::module& m);
+void addHyperFlags(pybind11::module& m);
+void addNormalHypersurface(pybind11::module& m);
+void addNormalHypersurfaces(pybind11::module& m);
+
+void addHypersurfaceClasses(pybind11::module& m) {
+    addHyperCoords(m);
+    addHyperFlags(m);
+    addNormalHypersurface(m);
+    addNormalHypersurfaces(m);
 }
 

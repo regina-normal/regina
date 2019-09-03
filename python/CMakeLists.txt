@@ -1,8 +1,4 @@
-IF(REGINA_BOOST_DO_NOT_FIX_CONVERTERS)
-  SET (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -DREGINA_BOOST_DO_NOT_FIX_CONVERTERS")
-ENDIF(REGINA_BOOST_DO_NOT_FIX_CONVERTERS)
-
-SET ( SOURCES globalarray safeheldtype modulemain )
+SET ( SOURCES globalarray modulemain )
 ADD_SUBDIRECTORY("algebra")
 ADD_SUBDIRECTORY("angle")
 ADD_SUBDIRECTORY("census")
@@ -25,7 +21,9 @@ ADD_SUBDIRECTORY("subcomplex")
 ADD_SUBDIRECTORY("surfaces")
 ADD_SUBDIRECTORY("treewidth")
 ADD_SUBDIRECTORY("utilities")
+
 ADD_SUBDIRECTORY("testsuite")
+ADD_SUBDIRECTORY("sage")
 
 # The module itself is built in the regina/ subdirectory, so that we can
 # import the module directly from the source tree if we like.

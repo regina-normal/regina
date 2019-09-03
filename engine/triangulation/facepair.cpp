@@ -57,7 +57,7 @@ FacePair FacePair::complement() const {
         return FacePair(1, 2);
 }
 
-void FacePair::operator ++ (int) {
+FacePair& FacePair::operator ++ () {
     if (second_ < 3)
         second_++;
     else if (first_ < 3) {
@@ -65,9 +65,10 @@ void FacePair::operator ++ (int) {
         if (first_ < 3)
             second_ = first_ + 1;
     }
+    return *this;
 }
 
-void FacePair::operator -- (int) {
+FacePair& FacePair::operator -- () {
     if (second_ > first_ + 1)
         second_--;
     else if (first_ > 0) {
@@ -75,6 +76,7 @@ void FacePair::operator -- (int) {
         second_ = 3;
     } else
         second_ = 0;
+    return *this;
 }
 
 } // namespace regina

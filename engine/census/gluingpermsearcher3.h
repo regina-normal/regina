@@ -421,7 +421,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
         void dumpTaggedData(std::ostream& out) const;
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const;
+        virtual void dumpData(std::ostream& out) const override;
 
         /**
          * The main entry routine for running a search for all gluing
@@ -511,6 +511,10 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          */
         static GluingPermSearcher<3>* readTaggedData(std::istream& in,
                 GluingPermSearcher<3>::Use use, void* useArgs = 0);
+
+        // Make this class non-copyable.
+        // The base class GluingPerms already makes it non-assignable.
+        GluingPermSearcher(const GluingPermSearcher&) = delete;
 
     protected:
         /**
@@ -852,6 +856,10 @@ class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned long nStates);
+
+            // Mark this class as non-copyable.
+            TetVertexState(const TetVertexState&) = delete;
+            TetVertexState& operator = (const TetVertexState&) = delete;
         };
 
         /**
@@ -992,6 +1000,10 @@ class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned nTets);
+
+            // Mark this class as non-copyable.
+            TetEdgeState(const TetEdgeState&) = delete;
+            TetEdgeState& operator = (const TetEdgeState&) = delete;
         };
 
     public:
@@ -1123,12 +1135,12 @@ class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
         virtual ~EulerSearcher();
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const;
-        virtual void runSearch(long maxDepth = -1);
+        virtual void dumpData(std::ostream& out) const override;
+        virtual void runSearch(long maxDepth = -1) override;
 
     protected:
         // Overridden methods:
-        virtual char dataTag() const;
+        virtual char dataTag() const override;
 
     protected:
         /**
@@ -1656,6 +1668,10 @@ class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned long nStates);
+
+            // Mark this class as non-copyable.
+            TetVertexState(const TetVertexState&) = delete;
+            TetVertexState& operator = (const TetVertexState&) = delete;
         };
 
         /**
@@ -1796,6 +1812,10 @@ class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
              * reading, or \c true otherwise.
              */
             bool readData(std::istream& in, unsigned nTets);
+
+            // Mark this class as non-copyable.
+            TetEdgeState(const TetEdgeState&) = delete;
+            TetEdgeState& operator = (const TetEdgeState&) = delete;
         };
 
     public:
@@ -1908,12 +1928,12 @@ class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
         virtual ~CompactSearcher();
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const;
-        virtual void runSearch(long maxDepth = -1);
+        virtual void dumpData(std::ostream& out) const override;
+        virtual void runSearch(long maxDepth = -1) override;
 
     protected:
         // Overridden methods:
-        virtual char dataTag() const;
+        virtual char dataTag() const override;
 
     protected:
         /**
@@ -2425,12 +2445,12 @@ class REGINA_API ClosedPrimeMinSearcher : public CompactSearcher {
         virtual ~ClosedPrimeMinSearcher();
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const;
-        virtual void runSearch(long maxDepth = -1);
+        virtual void dumpData(std::ostream& out) const override;
+        virtual void runSearch(long maxDepth = -1) override;
 
     protected:
         // Overridden methods:
-        virtual char dataTag() const;
+        virtual char dataTag() const override;
 
     private:
         /**
@@ -2561,12 +2581,12 @@ class REGINA_API HyperbolicMinSearcher : public EulerSearcher {
             GluingPermSearcher<3>::Use use, void* useArgs = 0);
 
         // Overridden methods:
-        virtual void dumpData(std::ostream& out) const;
-        virtual void runSearch(long maxDepth = -1);
+        virtual void dumpData(std::ostream& out) const override;
+        virtual void runSearch(long maxDepth = -1) override;
 
     protected:
         // Overridden methods:
-        virtual char dataTag() const;
+        virtual char dataTag() const override;
 
     private:
         /**

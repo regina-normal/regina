@@ -30,36 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/snappedball.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::SnappedBall;
 
-void addSnappedBall() {
-    class_<SnappedBall, bases<regina::StandardTriangulation>,
-            std::auto_ptr<SnappedBall>, boost::noncopyable>
-            ("SnappedBall", no_init)
-        .def("clone", &SnappedBall::clone,
-            return_value_policy<manage_new_object>())
+void addSnappedBall(pybind11::module& m) {
+    pybind11::class_<SnappedBall, regina::StandardTriangulation>
+            (m, "SnappedBall")
+        .def("clone", &SnappedBall::clone)
         .def("tetrahedron", &SnappedBall::tetrahedron,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("boundaryFace", &SnappedBall::boundaryFace)
         .def("internalFace", &SnappedBall::internalFace)
         .def("equatorEdge", &SnappedBall::equatorEdge)
         .def("internalEdge", &SnappedBall::internalEdge)
-        .def("formsSnappedBall", &SnappedBall::formsSnappedBall,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("formsSnappedBall")
+        .def_static("formsSnappedBall", &SnappedBall::formsSnappedBall)
     ;
 
-    implicitly_convertible<std::auto_ptr<SnappedBall>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NSnappedBall") = scope().attr("SnappedBall");
-
+    m.attr("NSnappedBall") = m.attr("SnappedBall");
 }
 

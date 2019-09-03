@@ -91,7 +91,7 @@ class REGINA_API BoolSet {
          *
          * @param cloneMe the set upon which we will base the new set.
          */
-        BoolSet(const BoolSet& cloneMe);
+        BoolSet(const BoolSet& cloneMe) = default;
         /**
          * Creates a set specifying whether \c true and/or \c false
          * should be a member.
@@ -209,7 +209,7 @@ class REGINA_API BoolSet {
          * @param cloneMe the set whose value this set will take.
          * @return a reference to this set.
          */
-        BoolSet& operator = (const BoolSet& cloneMe);
+        BoolSet& operator = (const BoolSet& cloneMe) = default;
         /**
          * Sets this set to the single member set containing the given
          * element.
@@ -360,9 +360,6 @@ inline BoolSet::BoolSet() : elements(0) {
 inline BoolSet::BoolSet(bool member) :
         elements(member ? eltTrue : eltFalse) {
 }
-inline BoolSet::BoolSet(const BoolSet& cloneMe) :
-        elements(cloneMe.elements) {
-}
 inline BoolSet::BoolSet(bool insertTrue, bool insertFalse) : elements(0) {
     if (insertTrue)
         elements = static_cast<unsigned char>(elements | eltTrue);
@@ -420,10 +417,6 @@ inline bool BoolSet::operator >= (const BoolSet& other) const {
     return ((elements & other.elements) == other.elements);
 }
 
-inline BoolSet& BoolSet::operator = (const BoolSet& cloneMe) {
-    elements = cloneMe.elements;
-    return *this;
-}
 inline BoolSet& BoolSet::operator = (bool member) {
     elements = (member ? eltTrue : eltFalse);
     return *this;

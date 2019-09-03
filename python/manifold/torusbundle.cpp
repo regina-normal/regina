@@ -30,29 +30,24 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "algebra/abeliangroup.h"
 #include "manifold/torusbundle.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::Matrix2;
 using regina::TorusBundle;
 
-void addTorusBundle() {
-    class_<TorusBundle, bases<regina::Manifold>,
-            std::auto_ptr<TorusBundle> >("TorusBundle")
-        .def(init<const Matrix2&>())
-        .def(init<long, long, long, long>())
-        .def(init<const TorusBundle&>())
+void addTorusBundle(pybind11::module& m) {
+    pybind11::class_<TorusBundle, regina::Manifold>(m, "TorusBundle")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const Matrix2&>())
+        .def(pybind11::init<long, long, long, long>())
+        .def(pybind11::init<const TorusBundle&>())
         .def("monodromy", &TorusBundle::monodromy,
-            return_internal_reference<>())
-        .def(regina::python::add_eq_operators())
+            pybind11::return_value_policy::reference_internal)
     ;
 
-    implicitly_convertible<std::auto_ptr<TorusBundle>,
-        std::auto_ptr<regina::Manifold> >();
-
-    scope().attr("NTorusBundle") = scope().attr("TorusBundle");
+    m.attr("NTorusBundle") = m.attr("TorusBundle");
 }
 

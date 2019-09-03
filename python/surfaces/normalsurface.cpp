@@ -30,18 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "maths/matrix.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h" // for makeZeroVector()
 #include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
 using regina::NormalSurface;
 using regina::Triangulation;
 using regina::python::GlobalArray;
@@ -63,72 +59,32 @@ namespace {
     GlobalArray2D<regina::Perm<4>> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
     GlobalArray2D<regina::Perm<4>> quadDiscArcs_arr(regina::__quadDiscArcs, 3, 4);
     GlobalArray2D<regina::Perm<4>> octDiscArcs_arr(regina::__octDiscArcs, 3, 8);
-
-    /**
-     * A python-only constructor that lets users build a normal surface
-     * from a hand-crafted list of integers.
-     */
-    NormalSurface* fromCoordinates(Triangulation<3>* t,
-            regina::NormalCoords coords, boost::python::list values) {
-        regina::NormalSurfaceVector* v = regina::makeZeroVector(t, coords);
-
-        long len = boost::python::len(values);
-        if (len != v->size()) {
-            delete v;
-
-            PyErr_SetString(PyExc_ValueError,
-                "Incorrect number of normal coordinates");
-            ::boost::python::throw_error_already_set();
-        }
-
-        for (long i = 0; i < len; i++) {
-            // Accept any type that we know how to convert to a large
-            // integer.
-            extract<regina::LargeInteger&> x_large(values[i]);
-            if (x_large.check()) {
-                v->setElement(i, x_large());
-                continue;
-            }
-            extract<long> x_long(values[i]);
-            if (x_long.check()) {
-                v->setElement(i, x_long());
-                continue;
-            }
-            extract<const char*> x_str(values[i]);
-            if (x_str.check()) {
-                v->setElement(i, x_str());
-                continue;
-            }
-
-            // Throw an exception.
-            x_large();
-        }
-
-        return new NormalSurface(t, v);
-    }
-
-    void writeRawVector_stdio(const NormalSurface& s) {
-        s.writeRawVector(std::cout);
-    }
-    boost::python::tuple isThinEdgeLink_tuple(const NormalSurface& s) {
-        std::pair<const regina::Edge<3>*, const regina::Edge<3>*> ans =
-            s.isThinEdgeLink();
-        return boost::python::make_tuple(boost::python::ptr(ans.first),
-            boost::python::ptr(ans.second));
-    }
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_isCompressingDisc,
-        NormalSurface::isCompressingDisc, 0, 1);
 }
 
-void addNormalSurface() {
-    class_<NormalSurface, std::auto_ptr<NormalSurface>, boost::noncopyable>
-            ("NormalSurface", no_init)
-        .def("__init__", make_constructor(fromCoordinates))
-        .def("clone", &NormalSurface::clone,
-            return_value_policy<manage_new_object>())
-        .def("doubleSurface", &NormalSurface::doubleSurface,
-            return_value_policy<manage_new_object>())
+void addNormalSurface(pybind11::module& m) {
+    auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
+        .def(pybind11::init([](Triangulation<3>* t, regina::NormalCoords coords,
+                pybind11::list values) {
+            regina::NormalSurfaceVector* v = regina::makeZeroVector(t, coords);
+            if (values.size() != v->size()) {
+                delete v;
+                throw pybind11::index_error(
+                    "Incorrect number of normal coordinates");
+            }
+            try {
+                // Accept any types that we know how to convert to a large
+                // integer.
+                for (size_t i = 0; i < v->size(); ++i)
+                    v->setElement(i, values[i].cast<regina::LargeInteger>());
+            } catch (pybind11::cast_error const &) {
+                delete v;
+                throw std::invalid_argument(
+                    "List element not convertible to LargeInteger");
+            }
+            return new NormalSurface(t, v);
+        }))
+        .def("clone", &NormalSurface::clone)
+        .def("doubleSurface", &NormalSurface::doubleSurface)
         .def("triangles", &NormalSurface::triangles)
         .def("orientedTriangles", &NormalSurface::orientedTriangles)
         .def("quads", &NormalSurface::quads)
@@ -138,12 +94,12 @@ void addNormalSurface() {
         .def("arcs", &NormalSurface::arcs)
         .def("octPosition", &NormalSurface::octPosition)
         .def("countCoords", &NormalSurface::countCoords)
-        .def("triangulation", &NormalSurface::triangulation,
-            return_value_policy<to_held_type<> >())
-        .def("name", &NormalSurface::name,
-            return_value_policy<return_by_value>())
+        .def("triangulation", &NormalSurface::triangulation)
+        .def("name", &NormalSurface::name)
         .def("setName", &NormalSurface::setName)
-        .def("writeRawVector", writeRawVector_stdio)
+        .def("writeRawVector", [](const NormalSurface& s) {
+            s.writeRawVector(std::cout);
+        })
         .def("isEmpty", &NormalSurface::isEmpty)
         .def("isCompact", &NormalSurface::isCompact)
         .def("eulerChar", &NormalSurface::eulerChar)
@@ -153,42 +109,41 @@ void addNormalSurface() {
         .def("hasRealBoundary", &NormalSurface::hasRealBoundary)
         .def("isVertexLinking", &NormalSurface::isVertexLinking)
         .def("isVertexLink", &NormalSurface::isVertexLink,
-            return_value_policy<reference_existing_object>())
-        .def("isThinEdgeLink", isThinEdgeLink_tuple)
+            pybind11::return_value_policy::reference)
+        .def("isThinEdgeLink", &NormalSurface::isThinEdgeLink,
+            pybind11::return_value_policy::reference)
         .def("isSplitting", &NormalSurface::isSplitting)
         .def("isCentral", &NormalSurface::isCentral)
+        .def("countBoundaries", &NormalSurface::countBoundaries)
         .def("isCompressingDisc", &NormalSurface::isCompressingDisc,
-            OL_isCompressingDisc())
+            pybind11::arg("knownConnected") = false)
         .def("isIncompressible", &NormalSurface::isIncompressible)
-        .def("cutAlong", &NormalSurface::cutAlong,
-            return_value_policy<to_held_type<> >())
-        .def("crush", &NormalSurface::crush,
-            return_value_policy<to_held_type<> >())
+        .def("cutAlong", &NormalSurface::cutAlong)
+        .def("crush", &NormalSurface::crush)
         .def("sameSurface", &NormalSurface::sameSurface)
         .def("normal", &NormalSurface::normal)
         .def("embedded", &NormalSurface::embedded)
         .def("locallyCompatible", &NormalSurface::locallyCompatible)
         .def("disjoint", &NormalSurface::disjoint)
-        .def("boundaryIntersections", &NormalSurface::boundaryIntersections,
-            return_value_policy<manage_new_object>())
+        .def("boundaryIntersections", &NormalSurface::boundaryIntersections)
         .def("systemAllowsAlmostNormal",
             &NormalSurface::systemAllowsAlmostNormal)
         .def("systemAllowsSpun", &NormalSurface::systemAllowsSpun)
         .def("systemAllowsOriented", &NormalSurface::systemAllowsOriented)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
     // Global arrays:
-    scope().attr("quadSeparating") = &quadSeparating_arr;
-    scope().attr("quadMeeting") = &quadMeeting_arr;
-    scope().attr("quadDefn") = &quadDefn_arr;
-    scope().attr("quadPartner") = &quadPartner_arr;
-    scope().attr("quadString") = &quadString_arr;
-    scope().attr("triDiscArcs") = &triDiscArcs_arr;
-    scope().attr("quadDiscArcs") = &quadDiscArcs_arr;
-    scope().attr("octDiscArcs") = &octDiscArcs_arr;
+    m.attr("quadSeparating") = &quadSeparating_arr;
+    m.attr("quadMeeting") = &quadMeeting_arr;
+    m.attr("quadDefn") = &quadDefn_arr;
+    m.attr("quadPartner") = &quadPartner_arr;
+    m.attr("quadString") = &quadString_arr;
+    m.attr("triDiscArcs") = &triDiscArcs_arr;
+    m.attr("quadDiscArcs") = &quadDiscArcs_arr;
+    m.attr("octDiscArcs") = &octDiscArcs_arr;
 
-    scope().attr("NNormalSurface") = scope().attr("NormalSurface");
+    m.attr("NNormalSurface") = m.attr("NormalSurface");
 }
 

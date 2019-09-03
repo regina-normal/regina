@@ -253,25 +253,25 @@ class MatrixOpsTest : public CppUnit::TestFixture {
 
             regina::smithNormalForm(snfBasis, R, invR, C, invC);
 
-            if (! (R * invR)->isIdentity()) {
+            if (! (R * invR).isIdentity()) {
                 CPPUNIT_FAIL(std::string("In smithNormalForm(") +
                     name + "), rowSpaceBasis and rowSpaceBasisInv are "
                     "not inverses.");
             }
 
-            if (! (C * invC)->isIdentity()) {
+            if (! (C * invC).isIdentity()) {
                 CPPUNIT_FAIL(std::string("In smithNormalForm(") +
                     name + "), colSpaceBasis and colSpaceBasisInv are "
                     "not inverses.");
             }
 
-            if (*(C * *(m * R)) != snfBasis) {
+            if (C * m * R != snfBasis) {
                 CPPUNIT_FAIL(std::string("In smithNormalForm(") +
                     name + "), colSpaceBasis and rowSpaceBasis do not "
                     "satisfy the required relationship.");
             }
 
-            if (*(invC * *(snfBasis * invR)) != m) {
+            if (invC * snfBasis * invR != m) {
                 CPPUNIT_FAIL(std::string("In smithNormalForm(") +
                     name + "), colSpaceBasisInv and rowSpaceBasisInv do "
                     "not satisfy the required relationship.");
@@ -311,25 +311,25 @@ class MatrixOpsTest : public CppUnit::TestFixture {
 
             regina::metricalSmithNormalForm(snfBasis, &R, &invR, &C, &invC);
 
-            if (! (R * invR)->isIdentity()) {
+            if (! (R * invR).isIdentity()) {
                 CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +
                     name + "), rowSpaceBasis and rowSpaceBasisInv are "
                     "not inverses.");
             }
 
-            if (! (C * invC)->isIdentity()) {
+            if (! (C * invC).isIdentity()) {
                 CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +
                     name + "), colSpaceBasis and colSpaceBasisInv are "
                     "not inverses.");
             }
 
-            if (*(C * *(m * R)) != snfBasis) {
+            if (C * m * R != snfBasis) {
                 CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +
                     name + "), colSpaceBasis and rowSpaceBasis do not "
                     "satisfy the required relationship.");
             }
 
-            if (*(invC * *(snfBasis * invR)) != m) {
+            if (invC * snfBasis * invR != m) {
                 CPPUNIT_FAIL(std::string("In metricalSmithNormalForm(") +
                     name + "), colSpaceBasisInv and rowSpaceBasisInv do "
                     "not satisfy the required relationship.");

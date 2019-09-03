@@ -59,10 +59,15 @@ class CommandEdit : public QLineEdit {
         QString newLine;
             /**< Remembers the new partially-typed command whilst
                  browsing through history. */
+
         QString tabReplacement;
             /**< The set of spaces to insert for each TAB keypress. */
+
         QString lineStart;
             /**< The start of the line when a completion is attempted. */
+        QString lineEnd;
+            /**< The start of the line when a completion is attempted. */
+
         PythonConsole* console;
             /**< The associated python console. */
         QColor *oldColor;
@@ -74,9 +79,10 @@ class CommandEdit : public QLineEdit {
                  colour. */
 
     signals:
-        void completionRequested();
-            /**< Emitted when tab completion is requested. 
-             */
+        void completionRequested(int start, int end);
+            /**< Emitted when tab completion is requested.
+                 The arguments indicate the range of selected text, or
+                 if nothing is selected, the cursor position. */
 
     private slots:
         void complete(QString);
@@ -105,7 +111,7 @@ class CommandEdit : public QLineEdit {
          * Stores the part of the line that should not change when
          * a completion is attempted mid-line.
          */
-        void setCompletionLineStart(QString start);
+        void setCompletionSurrounds(QString start, QString end);
 
     protected:
         /**

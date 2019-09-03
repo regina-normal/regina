@@ -650,6 +650,8 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
 
             if (! tracker->isCancelled())
                 setPropertiesFromBracket(ans);
+            else
+                delete ans; // in case the user cancelled *after* returning ans
 
             tracker->setFinished();
         }).detach();

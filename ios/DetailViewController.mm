@@ -318,7 +318,7 @@
         self.title = [NSString stringWithUTF8String:packet->label().c_str()];
 }
 
-- (void)packetToBeDestroyed:(regina::Packet *)packet
+- (void)packetToBeDestroyed:(regina::PacketShell)packet
 {
     // TODO: Check that this works via python.
     if (packet == self.packet)
@@ -338,7 +338,7 @@
     }
 }
 
-- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child inParentDestructor:(bool)d
+- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child
 {
     if (packet == self.packet) {
         bool newEditability = packet->isPacketEditable();

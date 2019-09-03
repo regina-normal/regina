@@ -70,7 +70,8 @@ EXCLUDE = \
     @PROJECT_SOURCE_DIR@/engine/libnormaliz \
     @PROJECT_SOURCE_DIR@/engine/foreign/casson.h \
     @PROJECT_SOURCE_DIR@/engine/snappea/kernel \
-    @PROJECT_SOURCE_DIR@/engine/syntax
+    @PROJECT_SOURCE_DIR@/engine/syntax \
+    @PROJECT_SOURCE_DIR@/engine/utilities/zstr.h
 EXCLUDE_PATTERNS = *-impl.h
 
 IMAGE_PATH           =
@@ -105,7 +106,12 @@ GENERATE_MAN         = NO
 ENABLE_PREPROCESSING = YES
 MACRO_EXPANSION      = YES
 EXPAND_ONLY_PREDEF   = YES
-PREDEFINED           = __DOXYGEN REGINA_API=
+PREDEFINED           = \
+    __DOXYGEN \
+    REGINA_API= \
+    REGINA_ENABLE_FOR_RING(returnType)=returnType \
+    REGINA_ENABLE_FOR_INTDOMAIN(returnType)=returnType \
+    "REGINA_ENABLE_FOR_RING_DEPRECATED(returnType)=[[deprecated]] returnType"
 
 SEARCH_INCLUDES      = YES
 INCLUDE_PATH         = @PROJECT_SOURCE_DIR@/engine

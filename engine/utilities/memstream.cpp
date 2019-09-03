@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 2019, Ben Burton                                        *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,34 +30,52 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/packet.h"
-#include "packet/packetlistener.h"
+#include <cstring>
+#include "utilities/memstream.h"
 
 namespace regina {
 
-PacketListener::~PacketListener() {
-    unregisterFromAllPackets();
+std::streamsize mem_streambuf::xsgetn(char* s, std::streamsize n) {
+    if (current_ + n > end_)
+        n = end_ - current_;
+
+    std::memcpy(s, current_, n);
+    current_ += n;
+    return n;
 }
 
-void PacketListener::unregisterFromAllPackets() {
-    std::set<Packet*>::iterator it, next;
+mem_streambuf::pos_type mem_streambuf::seekpos(
+        pos_type pos, std::ios_base::openmode which) {
+    if ((which & std::ios_base::in) && begin_ + pos <= end_) {
+        current_ = begin_ + pos;
+        return pos;
+    } else
+        return pos_type(off_type(-1));
+}
 
-    it = packets.begin();
-    next = it;
-    while (it != packets.end()) {
-        // INV: next == it.
+mem_streambuf::pos_type mem_streambuf::seekoff(off_type off,
+        std::ios_base::seekdir dir, std::ios_base::openmode which) {
+    if (! (which & std::ios_base::in))
+        return pos_type(off_type(-1));
 
-        // Step forwards before we actually deregister (*it), since
-        // the deregistration will remove (*it) from the set and
-        // invalidate the iterator.
-        next++;
-
-        // This deregistration removes (*it) from the set, but other
-        // iterators (i.e., next) are not invalidated.
-        (*it)->unlisten(this);
-
-        it = next;
+    if (off == std::ios_base::beg) {
+        if (off >= 0 && begin_ + off <= end_) {
+            current_ = begin_ + off;
+            return off;
+        }
+    } else if (off == std::ios_base::cur) {
+        if (current_ + off >= begin_ && current_ + off <= end_) {
+            current_ += off;
+            return (current_ - begin_);
+        }
+    } else if (off == std::ios_base::end) {
+        if (off <= 0 && end_ + off >= begin_) {
+            current_ = end_ + off;
+            return (current_ - begin_);
+        }
     }
+
+    return pos_type(off_type(-1));
 }
 
 } // namespace regina

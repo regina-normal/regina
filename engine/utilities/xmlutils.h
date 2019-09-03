@@ -97,6 +97,10 @@ class REGINA_API XMLPropertyDict : private std::map<std::string, std::string> {
         using std::map<std::string, std::string>::find;
         using std::map<std::string, std::string>::operator [];
 
+        // Make this class non-copyable.
+        XMLPropertyDict(const XMLPropertyDict&) = delete;
+        XMLPropertyDict& operator = (const XMLPropertyDict&) = delete;
+
     private:
         static const std::string empty_;
             /**< An empty string that we can pass by reference. */
@@ -245,6 +249,10 @@ class REGINA_API XMLParser {
          */
         static void parse_stream(XMLParserCallback& callback,
             std::istream& file, unsigned chunkSize = 1024);
+
+        // Make this class non-copyable.
+        XMLParser(const XMLParser&) = delete;
+        XMLParser& operator = (const XMLParser&) = delete;
 
     private:
         /**

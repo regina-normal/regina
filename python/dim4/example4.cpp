@@ -30,78 +30,38 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/example4.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
 using namespace regina::python;
 using regina::Example;
 
-void addExample4() {
-    class_<Example<4>>("Example4", no_init)
-        .def("sphere", &Example<4>::sphere,
-            return_value_policy<to_held_type<> >())
-        .def("simplicialSphere", &Example<4>::simplicialSphere,
-            return_value_policy<to_held_type<> >())
-        .def("sphereBundle", &Example<4>::sphereBundle,
-            return_value_policy<to_held_type<> >())
-        .def("twistedSphereBundle", &Example<4>::twistedSphereBundle,
-            return_value_policy<to_held_type<> >())
-        .def("ball", &Example<4>::ball,
-            return_value_policy<to_held_type<> >())
-        .def("ballBundle", &Example<4>::ballBundle,
-            return_value_policy<to_held_type<> >())
-        .def("twistedBallBundle", &Example<4>::twistedBallBundle,
-            return_value_policy<to_held_type<> >())
-        .def("doubleCone", &Example<4>::doubleCone,
-            return_value_policy<to_held_type<>>())
-        .def("singleCone", &Example<4>::singleCone,
-            return_value_policy<to_held_type<>>())
-        .def("fourSphere", &Example<4>::fourSphere,
-            return_value_policy<to_held_type<>>())
-        .def("simplicialFourSphere",
-            &Example<4>::simplicialFourSphere,
-            return_value_policy<to_held_type<>>())
-        .def("rp4", &Example<4>::rp4,
-            return_value_policy<to_held_type<>>())
-        .def("s3xs1", &Example<4>::s3xs1,
-            return_value_policy<to_held_type<>>())
-        .def("s3xs1Twisted", &Example<4>::s3xs1Twisted,
-            return_value_policy<to_held_type<>>())
-        .def("cappellShaneson", &Example<4>::cappellShaneson,
-            return_value_policy<to_held_type<>>())
-        .def("iBundle", &Example<4>::iBundle,
-            return_value_policy<to_held_type<>>())
-        .def("s1Bundle", &Example<4>::s1Bundle,
-            return_value_policy<to_held_type<>>())
-        .def("bundleWithMonodromy",
-            &Example<4>::bundleWithMonodromy,
-            return_value_policy<to_held_type<>>())
-        .def(regina::python::no_eq_operators())
-        .staticmethod("sphere")
-        .staticmethod("simplicialSphere")
-        .staticmethod("sphereBundle")
-        .staticmethod("twistedSphereBundle")
-        .staticmethod("ball")
-        .staticmethod("ballBundle")
-        .staticmethod("twistedBallBundle")
-        .staticmethod("doubleCone")
-        .staticmethod("singleCone")
-        .staticmethod("fourSphere")
-        .staticmethod("simplicialFourSphere")
-        .staticmethod("rp4")
-        .staticmethod("s3xs1")
-        .staticmethod("s3xs1Twisted")
-        .staticmethod("cappellShaneson")
-        .staticmethod("iBundle")
-        .staticmethod("s1Bundle")
-        .staticmethod("bundleWithMonodromy")
+void addExample4(pybind11::module& m) {
+    auto c = pybind11::class_<Example<4>>(m, "Example4")
+        .def_static("sphere", &Example<4>::sphere)
+        .def_static("simplicialSphere", &Example<4>::simplicialSphere)
+        .def_static("sphereBundle", &Example<4>::sphereBundle)
+        .def_static("twistedSphereBundle", &Example<4>::twistedSphereBundle)
+        .def_static("ball", &Example<4>::ball)
+        .def_static("ballBundle", &Example<4>::ballBundle)
+        .def_static("twistedBallBundle", &Example<4>::twistedBallBundle)
+        .def_static("doubleCone", &Example<4>::doubleCone)
+        .def_static("singleCone", &Example<4>::singleCone)
+        .def_static("fourSphere", &Example<4>::fourSphere)
+        .def_static("simplicialFourSphere", &Example<4>::simplicialFourSphere)
+        .def_static("rp4", &Example<4>::rp4)
+        .def_static("s3xs1", &Example<4>::s3xs1)
+        .def_static("s3xs1Twisted", &Example<4>::s3xs1Twisted)
+        .def_static("cappellShaneson", &Example<4>::cappellShaneson)
+        .def_static("iBundle", &Example<4>::iBundle)
+        .def_static("s1Bundle", &Example<4>::s1Bundle)
+        .def_static("bundleWithMonodromy", &Example<4>::bundleWithMonodromy)
     ;
+    regina::python::no_eq_operators(c);
 
-    scope().attr("Dim4ExampleTriangulation") = scope().attr("Example4");
+    m.attr("Dim4ExampleTriangulation") = m.attr("Example4");
 }
 

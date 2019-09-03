@@ -41,10 +41,9 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "maths/perm.h"
 #include "triangulation/forward.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -68,9 +67,7 @@ namespace regina {
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class REGINA_API PillowTwoSphere :
-        public ShortOutput<PillowTwoSphere>,
-        public boost::noncopyable {
+class REGINA_API PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
     private:
         Triangle<3>* triangle_[2];
             /**< The two triangles whose edges are joined. */
@@ -133,6 +130,10 @@ class REGINA_API PillowTwoSphere :
          * @param out the output stream to which to write.
          */
         void writeTextShort(std::ostream& out) const;
+
+        // Make this class non-copyable.
+        PillowTwoSphere(const PillowTwoSphere&) = delete;
+        PillowTwoSphere& operator = (const PillowTwoSphere&) = delete;
 
     private:
         /**

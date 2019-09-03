@@ -237,7 +237,7 @@ class Perm {
          *
          * @param cloneMe the permutation to clone.
          */
-        Perm(const Perm<n>& cloneMe);
+        Perm(const Perm<n>& cloneMe) = default;
 
         /**
          * Returns the internal code representing this permutation.
@@ -292,7 +292,7 @@ class Perm {
          * to this permutation.
          * @return a reference to this permutation.
          */
-        Perm& operator = (const Perm& cloneMe);
+        Perm& operator = (const Perm& cloneMe) = default;
 
         /**
          * Returns the composition of this permutation with the given
@@ -613,10 +613,6 @@ inline Perm<n>::Perm(const int* a, const int* b) {
 }
 
 template <int n>
-inline Perm<n>::Perm(const Perm<n>& cloneMe) : code_(cloneMe.code_) {
-}
-
-template <int n>
 inline Perm<n>::Perm(Code code) : code_(code) {
 }
 
@@ -641,12 +637,6 @@ bool Perm<n>::isPermCode(Code code) {
     for (int i = 0; i < n; ++i)
         mask |= (1 << ((code >> (imageBits * i)) & imageMask_));
     return (mask + 1 == (1 << n));
-}
-
-template <int n>
-inline Perm<n>& Perm<n>::operator = (const Perm& cloneMe) {
-    code_ = cloneMe.code_;
-    return *this;
 }
 
 template <int n>

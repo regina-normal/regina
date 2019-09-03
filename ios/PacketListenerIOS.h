@@ -31,10 +31,7 @@
  **************************************************************************/
 
 #import <Foundation/Foundation.h>
-
-namespace regina {
-    class Packet;
-}
+#import "packet/packet.h"
 
 /**
  * A protocol that mirrors Regina's C++ PacketListener interface.
@@ -48,11 +45,11 @@ namespace regina {
 - (void)packetWasChanged:(regina::Packet*)packet;
 - (void)packetToBeRenamed:(regina::Packet*)packet;
 - (void)packetWasRenamed:(regina::Packet*)packet;
-- (void)packetToBeDestroyed:(regina::Packet*)packet;
+- (void)packetToBeDestroyed:(regina::PacketShell)packet;
 - (void)childToBeAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
 - (void)childWasAddedTo:(regina::Packet*)packet child:(regina::Packet*)child;
-- (void)childToBeRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child inParentDestructor:(bool)d;
-- (void)childWasRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child inParentDestructor:(bool)d;
+- (void)childToBeRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child;
+- (void)childWasRemovedFrom:(regina::Packet*)packet child:(regina::Packet*)child;
 - (void)childrenToBeReordered:(regina::Packet*)packet;
 - (void)childrenWereReordered:(regina::Packet*)packet;
 - (void)childToBeRenamed:(regina::Packet*)packet child:(regina::Packet*)child;

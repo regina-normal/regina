@@ -32,7 +32,7 @@
 
 #include "isomorphism-bindings.h"
 
-void addIsomorphism6() {
-    addIsomorphism<6>("Isomorphism6");
+void addIsomorphism6(pybind11::module& m) {
+    addIsomorphism<6>(m, "Isomorphism6");
 }
 

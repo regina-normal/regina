@@ -60,7 +60,6 @@
 #include <memory>
 #include <string>
 #include <vector>
-#include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
 namespace regina {
@@ -69,7 +68,7 @@ namespace syntax {
 class Definition;
 class Repository;
 
-class REGINA_API DefinitionData : boost::noncopyable
+class REGINA_API DefinitionData
 {
 public:
     DefinitionData();
@@ -114,6 +113,10 @@ public:
     std::string license;
     bool caseSensitive;
     int version;
+
+    // Make this class non-copyable.
+    DefinitionData(const DefinitionData&) = delete;
+    DefinitionData& operator = (const DefinitionData&) = delete;
 };
 
 } } // namespace regina::syntax

@@ -117,9 +117,8 @@ void ContainerUI::childWasAdded(Packet*, Packet*) {
     refresh();
 }
 
-void ContainerUI::childWasRemoved(Packet*, Packet*,
-        bool inParentDestructor) {
-    if (! inParentDestructor)
+void ContainerUI::childWasRemoved(Packet* packet, Packet*) {
+    if (packet) // not in packet's destructor
         refresh();
 }
 

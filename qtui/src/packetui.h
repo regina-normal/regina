@@ -37,7 +37,7 @@
 #ifndef __PACKETUI_H
 #define __PACKETUI_H
 
-#include "packet/packetlistener.h"
+#include "packet/packet.h"
 
 #include <QLinkedList>
 #include <QWidget>
@@ -372,12 +372,13 @@ class PacketPane : public QWidget, public regina::PacketListener {
         /**
          * PacketListener overrides.
          */
-        void packetWasChanged(regina::Packet* packet);
-        void packetWasRenamed(regina::Packet* packet);
-        void packetToBeDestroyed(regina::Packet* packet);
-        void childWasAdded(regina::Packet* packet, regina::Packet* child);
-        void childWasRemoved(regina::Packet* packet, regina::Packet* child,
-            bool inParentDestructor);
+        void packetWasChanged(regina::Packet* packet) override;
+        void packetWasRenamed(regina::Packet* packet) override;
+        void packetToBeDestroyed(regina::PacketShell packet) override;
+        void childWasAdded(regina::Packet* packet, regina::Packet* child)
+            override;
+        void childWasRemoved(regina::Packet* packet, regina::Packet* child)
+            override;
 
     public slots:
         /**
@@ -417,7 +418,7 @@ class PacketPane : public QWidget, public regina::PacketListener {
         /**
          * Allow GUI updates from within a non-GUI thread.
          */
-        void customEvent(QEvent* evt);
+        void customEvent(QEvent* evt) override;
 };
 
 /**

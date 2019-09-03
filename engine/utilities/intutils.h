@@ -44,11 +44,33 @@
 #include "regina-config.h"
 #include <stdint.h>
 
-#if defined(USE_BOOST_INT128)
-#include <boost/config.hpp>
-#endif
-
 namespace regina {
+
+template <bool supportInfinity>
+class IntegerBase;
+
+template <int bytes>
+class NativeInteger;
+
+/**
+ * Determines if the type \a T is one of Regina's own integer types.
+ *
+ * This is true precisely when \a T is one of the classes Integer,
+ * LargeInteger, or NativeInteger<...>.
+ *
+ * The result will be available through the compile-time boolean constant
+ * IsReginaInteger<T>::value.
+ */
+template <typename T>
+struct IsReginaInteger : public std::false_type {};
+
+#ifndef __DOXYGEN
+template <bool supportInfinity>
+struct IsReginaInteger<IntegerBase<supportInfinity>> : public std::true_type {};
+
+template <int bytes>
+struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
+#endif // __DOXYGEN
 
 /**
  * Returns the number of bits required to store integers in the range
@@ -197,22 +219,13 @@ struct IntOfSize<8> {
     typedef uint64_t utype;
 };
 
-#if defined(USE_BOOST_INT128)
-    #if defined(BOOST_HAS_INT128)
-        #define INT128_AVAILABLE
-        template <>
-        struct IntOfSize<16> {
-            typedef boost::int128_type type;
-            typedef boost::uint128_type utype;
-        };
-    #else
-        #undef INT128_AVAILABLE
-        template <>
-        struct IntOfSize<16> {
-            typedef void type;
-            typedef void utype;
-        };
-    #endif
+#if defined(INTERNAL___INT128_FOUND)
+    #define INT128_AVAILABLE
+    template <>
+    struct IntOfSize<16> {
+        typedef __int128 type;
+        typedef __uint128 utype;
+    };
 #elif defined(INTERNAL___INT128_T_FOUND)
     #define INT128_AVAILABLE
     template <>

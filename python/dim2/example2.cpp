@@ -30,73 +30,35 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
 #include "triangulation/example2.h"
 #include "triangulation/dim2.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
 using regina::Example;
 
-void addExample2() {
-    class_<Example<2>>("Example2", no_init)
-        .def("sphere", &Example<2>::sphere,
-            return_value_policy<to_held_type<> >())
-        .def("simplicialSphere", &Example<2>::simplicialSphere,
-            return_value_policy<to_held_type<> >())
-        .def("sphereBundle", &Example<2>::sphereBundle,
-            return_value_policy<to_held_type<> >())
-        .def("twistedSphereBundle", &Example<2>::twistedSphereBundle,
-            return_value_policy<to_held_type<> >())
-        .def("ball", &Example<2>::ball,
-            return_value_policy<to_held_type<> >())
-        .def("ballBundle", &Example<2>::ballBundle,
-            return_value_policy<to_held_type<> >())
-        .def("twistedBallBundle", &Example<2>::twistedBallBundle,
-            return_value_policy<to_held_type<> >())
-        .def("orientable", &Example<2>::orientable,
-            return_value_policy<to_held_type<> >())
-        .def("nonOrientable", &Example<2>::nonOrientable,
-            return_value_policy<to_held_type<> >())
-        .def("sphereTetrahedron", &Example<2>::sphereTetrahedron,
-            return_value_policy<to_held_type<> >())
-        .def("sphereOctahedron", &Example<2>::sphereOctahedron,
-            return_value_policy<to_held_type<> >())
-        .def("disc", &Example<2>::disc,
-            return_value_policy<to_held_type<> >())
-        .def("annulus", &Example<2>::annulus,
-            return_value_policy<to_held_type<> >())
-        .def("mobius", &Example<2>::mobius,
-            return_value_policy<to_held_type<> >())
-        .def("torus", &Example<2>::torus,
-            return_value_policy<to_held_type<> >())
-        .def("rp2", &Example<2>::rp2,
-            return_value_policy<to_held_type<> >())
-        .def("kb", &Example<2>::kb,
-            return_value_policy<to_held_type<> >())
-        .def(regina::python::no_eq_operators())
-        .staticmethod("sphere")
-        .staticmethod("simplicialSphere")
-        .staticmethod("sphereBundle")
-        .staticmethod("twistedSphereBundle")
-        .staticmethod("ball")
-        .staticmethod("ballBundle")
-        .staticmethod("twistedBallBundle")
-        .staticmethod("orientable")
-        .staticmethod("nonOrientable")
-        .staticmethod("sphereTetrahedron")
-        .staticmethod("sphereOctahedron")
-        .staticmethod("disc")
-        .staticmethod("annulus")
-        .staticmethod("mobius")
-        .staticmethod("torus")
-        .staticmethod("rp2")
-        .staticmethod("kb")
+void addExample2(pybind11::module& m) {
+    auto c = pybind11::class_<Example<2>>(m, "Example2")
+        .def_static("sphere", &Example<2>::sphere)
+        .def_static("simplicialSphere", &Example<2>::simplicialSphere)
+        .def_static("sphereBundle", &Example<2>::sphereBundle)
+        .def_static("twistedSphereBundle", &Example<2>::twistedSphereBundle)
+        .def_static("ball", &Example<2>::ball)
+        .def_static("ballBundle", &Example<2>::ballBundle)
+        .def_static("twistedBallBundle", &Example<2>::twistedBallBundle)
+        .def_static("orientable", &Example<2>::orientable)
+        .def_static("nonOrientable", &Example<2>::nonOrientable)
+        .def_static("sphereTetrahedron", &Example<2>::sphereTetrahedron)
+        .def_static("sphereOctahedron", &Example<2>::sphereOctahedron)
+        .def_static("disc", &Example<2>::disc)
+        .def_static("annulus", &Example<2>::annulus)
+        .def_static("mobius", &Example<2>::mobius)
+        .def_static("torus", &Example<2>::torus)
+        .def_static("rp2", &Example<2>::rp2)
+        .def_static("kb", &Example<2>::kb)
     ;
+    regina::python::no_eq_operators(c);
 
-    scope().attr("Dim2ExampleTriangulation") = scope().attr("Example2");
+    m.attr("Dim2ExampleTriangulation") = m.attr("Example2");
 }
 

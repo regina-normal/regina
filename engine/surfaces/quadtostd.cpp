@@ -397,7 +397,6 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
     BitmaskType* constraintsBegin = new BitmaskType[constraints->size()];
     BitmaskType* constraintsEnd = constraintsBegin;
 
-    EnumConstraints::const_iterator cit;
     for (EnumConstraints::const_iterator cit = constraints->begin();
             cit != constraints->end(); ++cit, ++constraintsEnd) {
         constraintsEnd->reset(slen);

@@ -41,10 +41,9 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "subcomplex/satblock.h"
 #include <vector>
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -113,6 +112,10 @@ struct REGINA_API SatBlockSpec {
      */
     SatBlockSpec(SatBlock* useBlock, bool useRefVert, bool useRefHoriz);
     /**
+     * Creates a new structure that is a clone of the given structure.
+     */
+    SatBlockSpec(const SatBlockSpec&) = default;
+    /**
      * Determines whether this and the given structure contain identical
      * information.  In particular, their \a block pointers must be
      * identical (not pointing to different blocks with the same contents).
@@ -133,6 +136,10 @@ struct REGINA_API SatBlockSpec {
      * different information.
      */
     bool operator != (const SatBlockSpec& other) const;
+    /**
+     * Sets this to be a clone of the given structure.
+     */
+    SatBlockSpec& operator = (const SatBlockSpec&) = default;
 };
 
 /**
@@ -198,9 +205,7 @@ struct REGINA_API SatBlockSpec {
  * with annuli grouped and oriented according to the region boundaries (as
  * opposed to individual block boundaries).
  */
-class REGINA_API SatRegion :
-        public Output<SatRegion>,
-        public boost::noncopyable {
+class REGINA_API SatRegion : public Output<SatRegion> {
     private:
         typedef std::vector<SatBlockSpec> BlockSet;
             /**< The data structure used to store the list of
@@ -593,6 +598,10 @@ class REGINA_API SatRegion :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
+
+        // Mark this class as non-copyable.
+        SatRegion(const SatRegion&) = delete;
+        SatRegion& operator = (const SatRegion&) = delete;
 
     private:
         /**

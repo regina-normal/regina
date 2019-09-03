@@ -31,13 +31,23 @@
  **************************************************************************/
 
 #import "PythonConsoleController.h"
-#import "PythonInterpreter.h"
+#import "ReginaHelper.h"
 #import "TextHelper.h"
 #import "packet/script.h"
+#import "utilities/i18nutils.h"
+#import "../python/gui/pythoninterpreter.h"
+#import "../python/gui/pythonoutputstream.h"
 
 // Information is displayed in dark goldenrod:
 static UIColor* infoColour = [UIColor colorWithRed:(0xB8 / 256.0) green:(0x86 / 256.0) blue:(0x0B / 256.0) alpha:1.0];
 static UIColor* errorColour = [UIColor colorWithRed:0.6 green:0.0 blue:0.0 alpha:1.0];
+
+// Python console fonts are created on demand.
+static UIFont* promptFont = nil;
+static UIFont* inputFont = nil;
+static UIFont* outputFont = nil;
+static UIFont* entryFont = nil;
+static UIFont* keyboardFont = nil;
 
 #define KEY_PYTHON_ACCEPTED @"PythonAccepted"
 
@@ -52,21 +62,72 @@ enum HistoryStyle {
     HistoryError
 };
 
+#pragma mark - Output streams
+
+/**
+ * A protocol for objects that can act as Python output streams
+ * sys.stdout and/or sys.stderr.
+ */
+@protocol PythonOutputStream <NSObject>
+@required
+/**
+ * Process a chunk of data that was sent to this output stream.
+ * This routine might for instance display the data to the user
+ * or write it to a log file.
+ *
+ * You should assume that \a data is encoded in UTF-8.
+ */
+- (void)processOutput:(const char*)data;
+@end
+
+/**
+ * A C++ wrapper around an objective-C PythonOutputStream.
+ */
+class PythonOutputStreamObjC : public regina::python::PythonOutputStream {
+private:
+    void* _object;
+        /**< The Objective-C delegate that implements processOutput:. */
+    
+public:
+    PythonOutputStreamObjC(void* object) : _object(object) {
+    }
+    
+    virtual void processOutput(const std::string& data) {
+        [(__bridge id)_object processOutput:data.c_str()];
+    }
+};
+
+/**
+ * An output stream that writes data in a plain font to an iOS python console.
+ */
 @interface PythonConsoleStdout : NSObject<PythonOutputStream>
 @property (weak, nonatomic) PythonConsoleController* console;
 @end
 
+/**
+ * An output stream that writes data in an alert font to an iOS python console.
+ */
 @interface PythonConsoleStderr : NSObject<PythonOutputStream>
 @property (weak, nonatomic) PythonConsoleController* console;
 @end
 
+#pragma mark - Keyboard Buttons
+
+@interface KeyboardButton : UIButton
+@property (strong, nonatomic) NSString *toInsert;
+- (id)initWithLabel:(nonnull NSString*)label
+            fgColor:(nonnull UIColor*)fgColor
+          fgPressed:(nullable UIColor*)fgPressed
+         fgDisabled:(nullable UIColor *)fgDisabled
+            bgColor:(nonnull UIColor*)bgColor
+          bgPressed:(nonnull UIColor*)bgPressed;
+@end
+
+#pragma mark - Python Console
+
 @interface PythonConsoleController () <UITextFieldDelegate> {
-    PythonInterpreter* python;
     PythonConsoleStdout* outputStream;
     PythonConsoleStderr* errorStream;
-    UIFont* outputFont;
-    UIFont* inputFont;
-    UIFont* entryFont;
     bool primaryPrompt;
     NSString* lastIndent;
     CGFloat kbOffset;
@@ -85,7 +146,15 @@ enum HistoryStyle {
 
 - (void)appendHistory:(NSString*)text style:(HistoryStyle)style;
 
+- (UIBarButtonItem*)textButton:(NSString*)text;
+- (UIBarButtonItem*)tabButton;
+- (UIBarButtonItem*)historyButton:(BOOL)past;
++ (UIBarButtonItem*)smallGap;
++ (UIBarButtonItem*)largeGap;
+
 @end
+
+#pragma mark - Implementation Details
 
 @implementation PythonConsoleStdout
 - (void)processOutput:(const char *)data
@@ -101,7 +170,74 @@ enum HistoryStyle {
 }
 @end
 
-@implementation PythonConsoleController
+@implementation KeyboardButton {
+    UIColor* _background;
+    UIColor* _pressedBackground;
+}
+
+- (id)initWithLabel:(NSString *)label
+            fgColor:(UIColor *)fgColor
+          fgPressed:(UIColor *)fgPressed
+         fgDisabled:(UIColor *)fgDisabled
+            bgColor:(UIColor *)bgColor
+          bgPressed:(UIColor *)bgPressed {
+    self = [super initWithFrame:CGRectZero];
+    if (self) {
+        _background = bgColor;
+        _pressedBackground = bgPressed;
+        self.backgroundColor = _background;
+        
+        self.layer.cornerRadius = 5.0;
+        self.layer.shadowOffset = CGSizeMake(0, 1.0);
+        self.layer.shadowRadius = 0.2;
+        self.layer.shadowOpacity = 0.5;
+        
+        // I don't think we need to set frame or masksToBounds.
+        
+        [self setAttributedTitle:[[NSAttributedString alloc]
+                                  initWithString:label
+                                  attributes:@{NSFontAttributeName: keyboardFont,
+                                               NSForegroundColorAttributeName: fgColor}]
+                        forState:UIControlStateNormal];
+        if (fgPressed)
+            [self setAttributedTitle:[[NSAttributedString alloc]
+                                      initWithString:label
+                                      attributes:@{NSFontAttributeName: keyboardFont,
+                                                   NSForegroundColorAttributeName: fgPressed}]
+                            forState:UIControlStateHighlighted];
+        if (fgDisabled)
+            [self setAttributedTitle:[[NSAttributedString alloc]
+                                      initWithString:label
+                                      attributes:@{NSFontAttributeName: keyboardFont,
+                                                   NSForegroundColorAttributeName: fgDisabled}]
+                            forState:UIControlStateDisabled];
+    }
+    return self;
+}
+
+- (void)setHighlighted:(BOOL)highlighted {
+    if (highlighted)
+        self.backgroundColor = _pressedBackground;
+    else
+        self.backgroundColor = _background;
+    
+    return [super setHighlighted:highlighted];
+}
+
+@end
+
+@implementation PythonConsoleController {
+    PythonOutputStreamObjC* _outCpp;
+    PythonOutputStreamObjC* _errCpp;
+    
+    NSMutableArray<NSString*>* _cmdHistory;
+    NSUInteger _cmdHistoryPos;
+    NSString* _currentLine;
+    UIBarButtonItem* _pastButton;
+    UIBarButtonItem* _futureButton;
+    
+    regina::python::PythonInterpreter* _interpreter;
+}
 
 + (void)openConsoleFromViewController:(UIViewController *)c root:(regina::Packet *)root item:(regina::Packet *)item script:(regina::Script *)script
 {
@@ -126,6 +262,63 @@ enum HistoryStyle {
     [c presentViewController:sheet animated:YES completion:nil];
 }
 
++ (void)setupFonts {
+    promptFont = [UIFont fontWithName:@"Menlo" size:14];
+    outputFont = [UIFont fontWithName:@"Menlo" size:12];
+    inputFont = [UIFont fontWithName:@"Menlo-Bold" size:12];
+    entryFont = outputFont;
+    keyboardFont = [UIFont fontWithName:@"Menlo" size:18];
+}
+
+- (void)viewDidLoad
+{
+    [super viewDidLoad];
+    
+    if (! promptFont)
+        [PythonConsoleController setupFonts];
+    
+    _cmdHistory = [[NSMutableArray<NSString*> alloc] init];
+    _cmdHistoryPos = 0;
+    _currentLine = [NSString string];
+    
+    // Give an extra row on the keyboard containing buttons useful for programmers.
+    _pastButton = [self historyButton:YES];
+    _futureButton = [self historyButton:NO];
+    _pastButton.enabled = NO;
+    _futureButton.enabled = NO;
+
+    UIToolbar* bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
+    bar.barStyle = UIBarStyleDefault;
+    bar.translucent = YES;
+    bar.items = @[[self tabButton], [PythonConsoleController largeGap],
+
+                  [self textButton:@"2"], [PythonConsoleController smallGap],
+                  [self textButton:@"3"], [PythonConsoleController smallGap],
+                  [self textButton:@"4"], [PythonConsoleController largeGap],
+                  
+                  [self textButton:@"("], [PythonConsoleController smallGap],
+                  [self textButton:@")"], [PythonConsoleController smallGap],
+                  [self textButton:@"["], [PythonConsoleController smallGap],
+                  [self textButton:@"]"], [PythonConsoleController smallGap],
+                  [self textButton:@"<"], [PythonConsoleController smallGap],
+                  [self textButton:@">"], [PythonConsoleController largeGap],
+                  
+                  [self textButton:@"+"], [PythonConsoleController smallGap],
+                  [self textButton:@"-"], [PythonConsoleController smallGap],
+                  [self textButton:@"*"], [PythonConsoleController smallGap],
+                  [self textButton:@"/"], [PythonConsoleController smallGap],
+                  [self textButton:@"="], [PythonConsoleController largeGap],
+
+                  [self textButton:@":"], [PythonConsoleController smallGap],
+                  [self textButton:@";"], [PythonConsoleController smallGap],
+                  [self textButton:@"\""], [PythonConsoleController largeGap],
+                  
+                  _pastButton, [PythonConsoleController smallGap], _futureButton];
+    
+    [bar sizeToFit];
+    self.input.inputAccessoryView = bar;
+}
+
 - (void)viewWillAppear:(BOOL)animated
 {
     primaryPrompt = true;
@@ -134,12 +327,13 @@ enum HistoryStyle {
 
     // Make the prompt use a fixed-width font, so that when the prompt
     // changes we do not have to worry about redoing the toolbar layout.
-    [self.prompt setTitleTextAttributes:@{NSFontAttributeName: [UIFont fontWithName:@"Menlo" size:14]} forState:UIControlStateNormal];
+    [self.prompt setTitleTextAttributes:@{NSFontAttributeName: promptFont} forState:UIControlStateNormal];
 
-    outputFont = [UIFont fontWithName:@"Menlo" size:12];
-    inputFont = [UIFont fontWithName:@"Menlo-Bold" size:12];
-    entryFont = [UIFont fontWithName:@"Menlo" size:12];
-
+    // Remove the suggestions bar above the keyboard, which will be empty anyway.
+    UITextInputAssistantItem* item = [self inputAssistantItem];
+    item.leadingBarButtonGroups = @[];
+    item.trailingBarButtonGroups = @[];
+    
     outputStream = [[PythonConsoleStdout alloc] init];
     errorStream = [[PythonConsoleStderr alloc] init];
     outputStream.console = errorStream.console = self;
@@ -152,20 +346,23 @@ enum HistoryStyle {
     [nc addObserver:self selector:@selector(keyboardWillShow:) name:UIKeyboardWillShowNotification object:nil];
     [nc addObserver:self selector:@selector(keyboardWillHide:) name:UIKeyboardWillHideNotification object:nil];
 
-    python = [[PythonInterpreter alloc] initWithOut:outputStream err:errorStream];
-    [python importRegina];
-    [python runCode:"from regina import *; print regina.welcome()\n"];
+    _outCpp = new PythonOutputStreamObjC((__bridge void*)outputStream);
+    _errCpp = new PythonOutputStreamObjC((__bridge void*)errorStream);
+    
+    _interpreter = new regina::python::PythonInterpreter(*_outCpp, *_errCpp);
+
+    _interpreter->importRegina();
+    _interpreter->executeLine("from regina import *; print(regina.welcome())\n");
     [self processOutput:"\n"];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (self.script) {
             [self appendHistory:@"Running script...\n" style:HistoryInfo];
-            [python runScript:self.script];
-            [python flush];
+            _interpreter->runScript(self.script);
         }
 
         if (self.root) {
-            if ([python setVar:"root" value:self.root]) {
+            if (_interpreter->setVar("root", self.root)) {
                 if (self.root)
                     [self appendHistory:@"The (invisible) root of the packet tree is in the variable [root].\n" style:HistoryInfo];
             } else
@@ -173,7 +370,7 @@ enum HistoryStyle {
         }
 
         if (self.item) {
-            if ([python setVar:"item" value:self.item]) {
+            if (_interpreter->setVar("item", self.item)) {
                 if (self.item)
                     [self appendHistory:[NSString stringWithFormat:@"The selected packet (%@) is in the variable [item].\n",
                                          [NSString stringWithUTF8String:self.item->label().c_str()]] style:HistoryInfo];
@@ -196,6 +393,16 @@ enum HistoryStyle {
     NSNotificationCenter* nc = [NSNotificationCenter defaultCenter];
     [nc removeObserver:self name:UIKeyboardWillShowNotification object:nil];
     [nc removeObserver:self name:UIKeyboardWillHideNotification object:nil];
+}
+
+- (void)dealloc
+{
+    NSLog(@"Python interpreter being deallocated");
+    
+    // Delete C++ resources that are not managed by ARC.
+    delete _interpreter;
+    delete _outCpp;
+    delete _errCpp;
 }
 
 - (void)viewWillTransitionToSize:(CGSize)size withTransitionCoordinator:(id<UIViewControllerTransitionCoordinator>)coordinator
@@ -231,14 +438,19 @@ enum HistoryStyle {
 - (IBAction)execute:(id)sender
 {
     // Must be called from the main thread.
+    [_cmdHistory addObject:self.input.text];
+    _cmdHistoryPos = _cmdHistory.count;
+    _pastButton.enabled = YES;
+    _futureButton.enabled = NO;
+    
     NSString* toRun = [NSString stringWithString:self.input.text];
     NSString* toLog = [NSString stringWithFormat:@"%@ %@\n", self.prompt.title, self.input.text];
     self.working = true;
     [self appendHistory:toLog style:HistoryInput];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        bool done = [python executeLine:[toRun UTF8String]];
-        [python flush];
+        bool done = _interpreter->executeLine([toRun UTF8String]);
+        _interpreter->flush();
 
         dispatch_async(dispatch_get_main_queue(), ^{
             if (done) {
@@ -269,6 +481,114 @@ enum HistoryStyle {
     // Must be called from the main thread.
     if (! self.working)
         [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (NSString*)tabCompletion:(NSString*)textToComplete {
+    // We only send the last "word", where a word starts with a character or
+    // underscore, and only contains letters, numbers, underscores and the dot.
+    NSRegularExpression* re = [[NSRegularExpression alloc]
+                               initWithPattern:@"[\\p{Ll}\\p{Lu}\\p{Lt}\\p{Lo}_][\\w_.]*$"
+                               options:0
+                               error:nil];
+    NSTextCheckingResult* match = [re firstMatchInString:textToComplete
+                                                 options:0
+                                                   range:NSMakeRange(0, textToComplete.length)];
+    
+    if (match.numberOfRanges == 0) {
+        // Nothing to complete.
+        return nil;
+    }
+    
+    NSString* word = [textToComplete substringWithRange:match.range];
+
+    regina::python::PrefixCompleter comp;
+    int ans = _interpreter->complete(word.UTF8String, comp);
+    if (ans < 0) {
+        NSLog(@"ERROR: Completion failed");
+        return nil;
+    } else if (ans == 0) {
+        // No completions for this word.
+        return nil;
+    } else {
+        // Note: PrefixCompleter does understand unicode, and computes the
+        // longest common prefix in terms of UTF-8 unicode characters.
+        NSString* completion = [NSString stringWithUTF8String:comp.prefix().c_str()];
+        
+        // When returning the completion, ignore the initial word that was matched.
+        if (completion.length >= word.length)
+            return [completion substringFromIndex:word.length];
+        else {
+            // Something broke: we did not even get the initial matching word.
+            NSLog(@"ERROR: Completion does not include original matched word");
+            return nil;
+        }
+    }
+}
+
+- (IBAction)tabPressed {
+    // If the cursor is sitting immediately after non-whitespace, attempt tab completion.
+    // First fetch the substring up to and including the cursor.
+    UITextRange* selection = [self.input selectedTextRange];
+    if (! selection) {
+        NSLog(@"ERROR: Cannot fetch cursor position");
+        // Pretend the cursor is at the end of the input.
+        selection = [self.input textRangeFromPosition:self.input.endOfDocument toPosition:self.input.endOfDocument];
+    }
+
+    // Fetch everything *before* the cursor.
+    // We will try to tab complete at the end of this block.
+    UITextRange* prefixRange = [self.input textRangeFromPosition:self.input.beginningOfDocument toPosition:selection.start];
+    NSString* prefix = [self.input textInRange:prefixRange];
+    
+    NSUInteger len = prefix.length;
+    if (len > 0) {
+        unichar last = [self.input.text characterAtIndex:(len - 1)];
+        if (! [[NSCharacterSet whitespaceCharacterSet] characterIsMember:last]) {
+            // Try to tab complete the prefix.
+            NSString* completion = [self tabCompletion:prefix];
+            if (completion)
+                [self.input replaceRange:selection withText:completion];
+            return;
+        }
+    }
+    
+    // Just insert an actual tab (but using spaces).
+    [self.input replaceRange:selection withText:@"    "];
+}
+
+- (IBAction)historyPast {
+    if (_cmdHistoryPos == _cmdHistory.count)
+        _currentLine = self.input.text;
+    if (_cmdHistoryPos == 0) {
+        // Do nothing.
+        // The enabled status of the button should stop us from ever reaching here.
+    } else {
+        --_cmdHistoryPos;
+        self.input.text = _cmdHistory[_cmdHistoryPos];
+        // Setting the text seems to move the cursor to the end-of-line automatically.
+        _futureButton.enabled = YES;
+        if (_cmdHistoryPos == 0)
+            _pastButton.enabled = NO;
+    }
+}
+
+- (IBAction)historyFuture {
+    if (_cmdHistoryPos == _cmdHistory.count) {
+        // Do nothing.
+        // The enabled status of the button should stop us from ever reaching here.
+    } else {
+        ++_cmdHistoryPos;
+        if (_cmdHistoryPos == _cmdHistory.count) {
+            self.input.text = _currentLine;
+            _futureButton.enabled = NO;
+        } else
+            self.input.text = _cmdHistory[_cmdHistoryPos];
+        _pastButton.enabled = YES;
+    }
+}
+
+- (IBAction)inputFromButton:(id)sender {
+    [self.input insertText:((KeyboardButton*)sender).toInsert];
 }
 
 - (void)appendHistory:(NSString*)text style:(HistoryStyle)style
@@ -360,6 +680,64 @@ enum HistoryStyle {
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
     return (! self.working);
+}
+
+- (UIBarButtonItem*)textButton:(NSString *)text {
+    KeyboardButton *view = [[KeyboardButton alloc] initWithLabel:text
+                                                         fgColor:[UIColor blackColor]
+                                                       fgPressed:nil
+                                                      fgDisabled:nil
+                                                         bgColor:[UIColor whiteColor]
+                                                       bgPressed:[UIColor lightGrayColor]];
+    view.toInsert = text;
+    [view addTarget:self action:@selector(inputFromButton:) forControlEvents:UIControlEventPrimaryActionTriggered];
+    
+    return [[UIBarButtonItem alloc] initWithCustomView:view];
+}
+
+- (UIBarButtonItem*)tabButton {
+    KeyboardButton *view = [[KeyboardButton alloc] initWithLabel:@" Tab "
+                                                         fgColor:[UIColor blackColor]
+                                                       fgPressed:nil
+                                                      fgDisabled:nil
+                                                         bgColor:[UIColor lightGrayColor]
+                                                       bgPressed:[UIColor whiteColor]];
+    [view addTarget:self action:@selector(tabPressed) forControlEvents:UIControlEventPrimaryActionTriggered];
+    
+    return [[UIBarButtonItem alloc] initWithCustomView:view];
+}
+
+- (UIBarButtonItem*)historyButton:(BOOL)past {
+    KeyboardButton* view;
+    if (past) {
+        view = [[KeyboardButton alloc] initWithLabel:@"⬆︎"
+                                             fgColor:[UIColor blackColor]
+                                           fgPressed:nil
+                                          fgDisabled:[UIColor grayColor]
+                                             bgColor:[UIColor lightGrayColor]
+                                           bgPressed:[UIColor whiteColor]];
+        [view addTarget:self action:@selector(historyPast) forControlEvents:UIControlEventPrimaryActionTriggered];
+    } else {
+        view = [[KeyboardButton alloc] initWithLabel:@"⬇︎"
+                                             fgColor:[UIColor blackColor]
+                                           fgPressed:nil
+                                          fgDisabled:[UIColor grayColor]
+                                             bgColor:[UIColor lightGrayColor]
+                                           bgPressed:[UIColor whiteColor]];
+        [view addTarget:self action:@selector(historyFuture) forControlEvents:UIControlEventPrimaryActionTriggered];
+    }
+    
+    return [[UIBarButtonItem alloc] initWithCustomView:view];
+}
+
++ (UIBarButtonItem *)smallGap {
+    UIBarButtonItem* item = [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFixedSpace target:nil action:nil];
+    item.width = 5;
+    return item;
+}
+
++ (UIBarButtonItem *)largeGap {
+    return [[UIBarButtonItem alloc] initWithBarButtonSystemItem:UIBarButtonSystemItemFlexibleSpace target:nil action:nil];
 }
 
 @end

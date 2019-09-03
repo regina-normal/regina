@@ -246,13 +246,10 @@ class REGINA_API Primes {
         static std::vector<std::pair<Integer, unsigned long> >
             primePowerDecomp(const Integer& n);
 
-    private:
-        /**
-         * Private constructor.  No instance of this class is allowed,
-         * since everything of interest is static.
-         */
-        Primes();
+        // Make this class non-constructible.
+        Primes() = delete;
 
+    private:
         /**
          * Adds the given number of primes (or suspected primes) to the
          * list already stored.
@@ -277,9 +274,6 @@ class REGINA_API Primes {
 /*@}*/
 
 // Inline functions for Primes
-
-inline Primes::Primes() {
-}
 
 inline unsigned long Primes::size() {
     std::lock_guard<std::mutex> lock(largeMutex);

@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Module Initialisation
 #
-# Copyright (c) 2003-2018, Ben Burton
+# Copyright (c) 2003-2019, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This program is free software; you can redistribute it and/or
@@ -26,17 +26,45 @@
 # MA 02110-1301, USA.
 #
 
+try:
+    # SageRegina has some weirdness where "import engine" gives
+    # an error if not preceeded by "import sage.all"
+    # Needs some investigation, doing this as work-around for now.
+    import sage.all
+    _within_sage = True
+except:
+    _within_sage = False
+
 import sys, os
 from . import engine
 from .engine import *
 
-# Typing "from regina import *" is not supposed to import "open".
-# To achieve this, we skip it in __all__.
-__all__ = (
-    [ name for name in engine.__dict__.keys()
-      if name != 'open' and not name.startswith('_') ] +
-    [ 'reginaSetup' ])
-    
+if _within_sage:
+    # Typing "from regina import *" should not override certain
+    # names. This always applies to the built-in "open".
+    #
+    # Also: the Sage preparser adds "Integer" and relies on the name
+    # being bound to a Sage integer. If we override it, Sage
+    # breaks in multiple ways.
+    #
+    # We skip names_to_avoid in __all__.
+    names_to_avoid = set(['open', 'Integer'])
+    __all__ = (
+        [ name for name in engine.__dict__.keys()
+          if not name in names_to_avoid and not name.startswith('_') ] +
+        [ 'reginaSetup' ])
+
+    # All additional sage-related setup should be placed within sageSetup.py.
+    from . import sageSetup
+    del sageSetup
+else:
+    # Typing "from regina import *" is not supposed to override the
+    # built-in "open".  To achieve this, we skip it in __all__.
+    __all__ = (
+        [ name for name in engine.__dict__.keys()
+          if name != 'open' and not name.startswith('_') ] +
+        [ 'reginaSetup' ])
+
 # Adds some additional pure Python methods to some of Regina's classes.
 from . import purePyMethods
 del purePyMethods
@@ -156,10 +184,10 @@ def __execScript(namespace = None):
     except:
         pass
 
-    script = sys.argv[1]
+    script = __builtins__['open'](sys.argv[1]).read()
     sys.argv = sys.argv[1:]
     if namespace:
-        execfile(script, namespace)
+        exec(script, namespace)
     else:
-        execfile(script)
+        exec(script)
 

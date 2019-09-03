@@ -117,9 +117,10 @@ class XMLSimplexReader : public XMLElementReader {
         XMLSimplexReader(Triangulation<dim>* tri, size_t whichSimplex);
 
         virtual void startElement(const std::string&,
-                const regina::xml::XMLPropertyDict& props, XMLElementReader*);
+                const regina::xml::XMLPropertyDict& props, XMLElementReader*)
+                override;
 
-        virtual void initialChars(const std::string& chars);
+        virtual void initialChars(const std::string& chars) override;
 };
 
 /**
@@ -159,11 +160,12 @@ class XMLSimplicesReader : public XMLElementReader {
         XMLSimplicesReader(Triangulation<dim>* tri);
 
         virtual void startElement(const std::string&,
-                const regina::xml::XMLPropertyDict& props, XMLElementReader*);
+                const regina::xml::XMLPropertyDict& props, XMLElementReader*)
+                override;
 
         virtual XMLElementReader* startSubElement(
                 const std::string& subTagName,
-                const regina::xml::XMLPropertyDict&);
+                const regina::xml::XMLPropertyDict&) override;
 };
 
 /**
@@ -226,10 +228,10 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
 
                 virtual XMLElementReader* startSubElement(
                     const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&);
+                    const regina::xml::XMLPropertyDict&) override;
 
                 virtual void endSubElement(const std::string& subTagName,
-                    XMLElementReader* subReader);
+                    XMLElementReader* subReader) override;
         };
 
         /**
@@ -256,10 +258,10 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
 
                 virtual XMLElementReader* startSubElement(
                     const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict&);
+                    const regina::xml::XMLPropertyDict&) override;
 
                 virtual void endSubElement(const std::string& subTagName,
-                    XMLElementReader* subReader);
+                    XMLElementReader* subReader) override;
         };
 
         /**

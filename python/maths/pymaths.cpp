@@ -30,43 +30,45 @@
  *                                                                        *
  **************************************************************************/
 
-void addBinom();
-void addMatrixOps();
-void addCyclotomic();
-void addInteger();
-void addLargeInteger();
-void addLaurent();
-void addLaurent2();
-void addMatrix2();
-void addMatrixInt();
-void addPerm2();
-void addPerm3();
-void addPerm4();
-void addPerm5();
-void addPerm();
-void addPolynomial();
-void addPrimes();
-void addRational();
-void addNumberTheory();
+namespace pybind11 { class module; }
 
-void addMathsClasses() {
-    addBinom();
-    addMatrixOps();
-    addCyclotomic();
-    addInteger();
-    addLargeInteger();
-    addLaurent();
-    addLaurent2();
-    addMatrix2();
-    addMatrixInt();
-    addPerm2();
-    addPerm3();
-    addPerm4();
-    addPerm5();
-    addPerm();
-    addPolynomial();
-    addPrimes();
-    addRational();
-    addNumberTheory();
+void addBinom(pybind11::module& m);
+void addMatrixOps(pybind11::module& m);
+void addCyclotomic(pybind11::module& m);
+void addInteger(pybind11::module& m);
+void addLargeInteger(pybind11::module& m);
+void addLaurent(pybind11::module& m);
+void addLaurent2(pybind11::module& m);
+void addMatrix2(pybind11::module& m);
+void addMatrixInt(pybind11::module& m);
+void addPerm2(pybind11::module& m);
+void addPerm3(pybind11::module& m);
+void addPerm4(pybind11::module& m);
+void addPerm5(pybind11::module& m);
+void addPerm(pybind11::module& m);
+void addPolynomial(pybind11::module& m);
+void addPrimes(pybind11::module& m);
+void addRational(pybind11::module& m);
+void addNumberTheory(pybind11::module& m);
+
+void addMathsClasses(pybind11::module& m) {
+    addBinom(m);
+    addMatrixOps(m);
+    addCyclotomic(m);
+    addInteger(m);
+    addLargeInteger(m);
+    addLaurent(m);
+    addLaurent2(m);
+    addMatrix2(m);
+    addMatrixInt(m);
+    addPerm2(m);
+    addPerm3(m);
+    addPerm4(m);
+    addPerm5(m);
+    addPerm(m);
+    addPolynomial(m);
+    addPrimes(m);
+    addRational(m);
+    addNumberTheory(m);
 }
 

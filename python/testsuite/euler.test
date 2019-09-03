@@ -31,17 +31,19 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+from __future__ import print_function
+
 def printEuler(t, name):
-	print t.eulerCharTri(), t.eulerCharManifold(), \
-		'---', name
+	print(t.eulerCharTri(), t.eulerCharManifold(), \
+		'---', name)
 
 	# Consistency check, while we're here.
 	eHom = regina.HomologicalData(t).eulerChar()
 	if eHom != t.eulerCharManifold():
-		print 'ERROR: Triangulation3::eulerCharManifold() and'
-		print '       HomologicalData.eulerChar() disagree!'
+		print('ERROR: Triangulation3::eulerCharManifold() and')
+		print('       HomologicalData.eulerChar() disagree!')
 
-print 'Euler characteristics for triangulation vs compact manifold:'
+print('Euler characteristics for triangulation vs compact manifold:')
 
 # Empty:
 printEuler(regina.Triangulation3(), "Empty triangulation")

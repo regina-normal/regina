@@ -30,38 +30,24 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "snappea/examplesnappea.h"
 #include "snappea/snappeatriangulation.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
 using namespace regina::python;
 using regina::ExampleSnapPea;
 
-void addExampleSnapPea() {
-    class_<ExampleSnapPea>("ExampleSnapPea",
-            no_init)
-        .def("figureEight", &ExampleSnapPea::figureEight,
-            return_value_policy<to_held_type<>>())
-        .def("trefoil", &ExampleSnapPea::trefoil,
-            return_value_policy<to_held_type<>>())
-        .def("whiteheadLink", &ExampleSnapPea::whiteheadLink,
-            return_value_policy<to_held_type<>>())
-        .def("gieseking", &ExampleSnapPea::gieseking,
-            return_value_policy<to_held_type<>>())
-        .def("x101", &ExampleSnapPea::x101,
-            return_value_policy<to_held_type<>>())
-        .def(regina::python::no_eq_operators())
-        .staticmethod("figureEight")
-        .staticmethod("trefoil")
-        .staticmethod("whiteheadLink")
-        .staticmethod("gieseking")
-        .staticmethod("x101")
+void addExampleSnapPea(pybind11::module& m) {
+    auto c = pybind11::class_<ExampleSnapPea>(m, "ExampleSnapPea")
+        .def_static("figureEight", &ExampleSnapPea::figureEight)
+        .def_static("trefoil", &ExampleSnapPea::trefoil)
+        .def_static("whiteheadLink", &ExampleSnapPea::whiteheadLink)
+        .def_static("gieseking", &ExampleSnapPea::gieseking)
+        .def_static("x101", &ExampleSnapPea::x101)
     ;
+    regina::python::no_eq_operators(c);
 
-    scope().attr("NExampleSnapPeaTriangulation") =
-        scope().attr("ExampleSnapPea");
+    m.attr("NExampleSnapPeaTriangulation") = m.attr("ExampleSnapPea");
 }
 

@@ -36,7 +36,6 @@
 #include "triangulation/facepair.h"
 #include "triangulation/facetpairing3.h"
 #include "triangulation/dim3.h"
-#include "utilities/memutils.h"
 #include "utilities/stringutils.h"
 
 namespace regina {

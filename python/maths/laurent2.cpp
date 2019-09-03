@@ -30,81 +30,50 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "maths/integer.h"
 #include "maths/laurent2.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::Laurent2;
 
-namespace {
-    const regina::Integer& getItem(const Laurent2<regina::Integer>& p,
-            boost::python::tuple exponents) {
-        if (boost::python::len(exponents) != 2) {
-            PyErr_SetString(PyExc_ValueError,
-                "Argument to [...] must be a pair of exponents.");
-            boost::python::throw_error_already_set();
-        }
-
-        extract<long> x(exponents[0]);
-        extract<long> y(exponents[1]);
-        return p(x(), y());
-    }
-
-    void setItem(Laurent2<regina::Integer>& p, boost::python::tuple exponents,
-            const regina::Integer& value) {
-        if (boost::python::len(exponents) != 2) {
-            PyErr_SetString(PyExc_ValueError,
-                "Argument to [...] must be a pair of exponents.");
-            boost::python::throw_error_already_set();
-        }
-
-        extract<long> x(exponents[0]);
-        extract<long> y(exponents[1]);
-        p.set(x(), y(), value);
-    }
-
-    void (Laurent2<regina::Integer>::*init_void)() =
-        &Laurent2<regina::Integer>::init;
-    void (Laurent2<regina::Integer>::*init_degrees)(long, long) =
-        &Laurent2<regina::Integer>::init;
-    std::string (Laurent2<regina::Integer>::*str_variables)(const char*, const char*)
-        const = &Laurent2<regina::Integer>::str;
-    std::string (Laurent2<regina::Integer>::*utf8_variables)(const char*, const char*)
-        const = &Laurent2<regina::Integer>::utf8;
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_str_variables,
-        Laurent2<regina::Integer>::str, 1, 2);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_utf8_variables,
-        Laurent2<regina::Integer>::utf8, 1, 2);
-}
-
-void addLaurent2() {
-    scope s = class_<Laurent2<regina::Integer>,
-            std::auto_ptr<Laurent2<regina::Integer> >,
-            boost::noncopyable>("Laurent2")
-        .def(init<long, long>())
-        .def(init<const Laurent2<regina::Integer>&>())
-        .def(init<const Laurent2<regina::Integer>&, long, long>())
-        .def("init", init_void)
-        .def("init", init_degrees)
+void addLaurent2(pybind11::module& m) {
+    auto c = pybind11::class_<Laurent2<regina::Integer>>(m, "Laurent2")
+        .def(pybind11::init<>())
+        .def(pybind11::init<long, long>())
+        .def(pybind11::init<const Laurent2<regina::Integer>&>())
+        .def(pybind11::init<const Laurent2<regina::Integer>&, long, long>())
+        .def("init", overload_cast<>(
+            &Laurent2<regina::Integer>::init))
+        .def("init", overload_cast<long, long>(
+            &Laurent2<regina::Integer>::init))
         .def("isZero", &Laurent2<regina::Integer>::isZero)
         .def("set", &Laurent2<regina::Integer>::set)
         .def("swap", &Laurent2<regina::Integer>::swap)
         .def("negate", &Laurent2<regina::Integer>::negate)
-        .def("str", str_variables, OL_str_variables())
-        .def("utf8", utf8_variables, OL_utf8_variables())
-        .def("__getitem__", getItem, return_internal_reference<>())
-        .def("__setitem__", setItem)
-        .def(self *= regina::Integer())
-        .def(self /= regina::Integer())
-        .def(self += self)
-        .def(self -= self)
-        .def(self *= self)
-        .def(regina::python::add_output())
-        .def(self_ns::repr(self)) // add_output only gives __str__
-        .def(regina::python::add_eq_operators())
+        .def("str", overload_cast<const char*, const char*>(
+            &Laurent2<regina::Integer>::str, pybind11::const_),
+            pybind11::arg(), pybind11::arg("varY") = nullptr)
+        .def("utf8", overload_cast<const char*, const char*>(
+            &Laurent2<regina::Integer>::utf8, pybind11::const_),
+            pybind11::arg(), pybind11::arg("varY") = nullptr)
+        .def("__getitem__", [](const Laurent2<regina::Integer>& p,
+                std::pair<long, long> exponents) {
+            return p(exponents.first, exponents.second);
+        }, pybind11::return_value_policy::reference_internal)
+        .def("__setitem__", [](Laurent2<regina::Integer>& p,
+                std::pair<long, long> exponents, const regina::Integer& value) {
+            p.set(exponents.first, exponents.second, value);
+        })
+        .def(pybind11::self *= regina::Integer())
+        .def(pybind11::self /= regina::Integer())
+        .def(pybind11::self += pybind11::self)
+        .def(pybind11::self -= pybind11::self)
+        .def(pybind11::self *= pybind11::self)
     ;
+    regina::python::add_output(c, true /* __repr__ */);
+    regina::python::add_eq_operators(c);
 }
 

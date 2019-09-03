@@ -42,7 +42,7 @@
 
 #include <utility>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "maths/perm.h"
 #include "maths/ray.h"
 #include "surfaces/disctype.h"
@@ -50,7 +50,6 @@
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
 #include "utilities/property.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -202,10 +201,8 @@ REGINA_API extern const Perm<4> __octDiscArcs[24];
 #define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
 #endif
 
-class EnumConstraints;
-
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
+template <typename, bool> class Matrix;
+typedef Matrix<Integer, true> MatrixInt;
 
 /**
  * A template that stores information about a particular
@@ -274,16 +271,16 @@ struct NormalInfo;
         static constexpr const NormalCoords coordsID = id; \
         inline class_(const class_& cloneMe) : \
                 superclass(cloneMe.coords()) {} \
-        inline virtual NormalSurfaceVector* clone() const { \
+        inline virtual NormalSurfaceVector* clone() const override { \
             return new class_(*this); \
         } \
-        inline virtual bool allowsAlmostNormal() const { \
+        inline virtual bool allowsAlmostNormal() const override { \
             return Info::almostNormal; \
         } \
-        inline virtual bool allowsSpun() const { \
+        inline virtual bool allowsSpun() const override { \
             return Info::spun; \
         } \
-        inline virtual bool allowsOriented() const { \
+        inline virtual bool allowsOriented() const override { \
             return Info::oriented; \
         }
 
@@ -350,7 +347,7 @@ struct NormalInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NormalSurfaceVector : public boost::noncopyable {
+class REGINA_API NormalSurfaceVector {
     protected:
         Ray coords_;
             /**< The raw vector of normal coordinates. */
@@ -788,6 +785,10 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
             static EnumConstraints* makeEmbeddedConstraints(
                 const Triangulation<3>* triangulation);
         #endif
+
+        // Make this class non-assignable, since we do not want to
+        // accidentally change coordinate systems.
+        NormalSurfaceVector& operator = (const NormalSurfaceVector&) = delete;
 };
 
 /**
@@ -810,9 +811,7 @@ class REGINA_API NormalSurfaceVector : public boost::noncopyable {
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  */
-class REGINA_API NormalSurface :
-        public ShortOutput<NormalSurface>,
-        public boost::noncopyable {
+class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
     protected:
         NormalSurfaceVector* vector;
             /**< Contains the coordinates of the normal surface in whichever
@@ -830,6 +829,8 @@ class REGINA_API NormalSurface :
                  between 0 and 2 inclusive. */
         mutable Property<LargeInteger> eulerChar_;
             /**< The Euler characteristic of this surface. */
+        mutable Property<size_t> boundaries_;
+            /**< The number of disjoint boundary curves on this surface. */
         mutable Property<bool> orientable;
             /**< Is this surface orientable? */
         mutable Property<bool> twoSided;
@@ -1350,6 +1351,28 @@ class REGINA_API NormalSurface :
         LargeInteger isCentral() const;
 
         /**
+         * Returns the number of disjoint boundary curves on this surface.
+         *
+         * This routine caches its results, which means that once it has
+         * been called for a particular surface, subsequent calls return
+         * the answer immediately.
+         *
+         * \pre This normal surface is embedded (not singular or immersed).
+         * \pre This normal surface is compact (has finitely many discs).
+         *
+         * \warning This routine explicitly builds the normal arcs on
+         * the boundary.  If the normal coordinates are extremely large,
+         * (in particular, of a similar order of magnitude as the
+         * largest possible long integer), then the behaviour of this
+         * routine is undefined.
+         *
+         * @author Alex He
+         *
+         * @return the number of disjoint boundary curves.
+         */
+        size_t countBoundaries() const;
+
+        /**
          * Determines whether this surface represents a compressing disc
          * in the underlying 3-manifold.
          *
@@ -1711,6 +1734,10 @@ class REGINA_API NormalSurface :
          */
         bool systemAllowsOriented() const;
 
+        // Make this class non-copyable.
+        NormalSurface(const NormalSurface&) = delete;
+        NormalSurface& operator = (const NormalSurface&) = delete;
+
     protected:
         /**
          * Calculates the position of the first non-zero octagon
@@ -1738,6 +1765,11 @@ class REGINA_API NormalSurface :
          * stores the result as a property.
          */
         void calculateRealBoundary() const;
+        /**
+         * Computes the number of disjoint boundary curves and stores the
+         * result as a property.
+         */
+        void calculateBoundaries() const;
 
     friend class XMLNormalSurfaceReader;
 };
@@ -1893,6 +1925,12 @@ inline bool NormalSurface::hasRealBoundary() const {
     if (! realBoundary.known())
         calculateRealBoundary();
     return realBoundary.value();
+}
+
+inline size_t NormalSurface::countBoundaries() const {
+    if (! boundaries_.known())
+        calculateBoundaries();
+    return boundaries_.value();
 }
 
 inline bool NormalSurface::isVertexLinking() const {

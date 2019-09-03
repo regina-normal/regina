@@ -52,7 +52,7 @@ namespace {
             PlainFilterReader() : filter_(new SurfaceFilter()) {
             }
 
-            virtual SurfaceFilter* filter() {
+            virtual SurfaceFilter* filter() override {
                 return filter_;
             }
     };
@@ -68,12 +68,12 @@ namespace {
             CombinationReader() : filter_(0) {
             }
 
-            virtual SurfaceFilter* filter() {
+            virtual SurfaceFilter* filter() override {
                 return filter_;
             }
 
             XMLElementReader* startSubElement(const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict& props) {
+                    const regina::xml::XMLPropertyDict& props) override {
                 if (! filter_)
                     if (subTagName == "op") {
                         std::string type = props.lookup("type");
@@ -100,12 +100,12 @@ namespace {
             PropertiesReader() : filter_(new SurfaceFilterProperties()) {
             }
 
-            virtual SurfaceFilter* filter() {
+            virtual SurfaceFilter* filter() override {
                 return filter_;
             }
 
             XMLElementReader* startSubElement(const std::string& subTagName,
-                    const regina::xml::XMLPropertyDict& props) {
+                    const regina::xml::XMLPropertyDict& props) override {
                 if (subTagName == "euler") {
                     return new XMLCharsReader();
                 } else if (subTagName == "orbl") {
@@ -126,7 +126,7 @@ namespace {
 
             void endSubElement(
                     const std::string& subTagName,
-                    XMLElementReader* subReader) {
+                    XMLElementReader* subReader) override {
                 if (subTagName == "euler") {
                     std::list<std::string> tokens;
                     basicTokenise(back_inserter(tokens),

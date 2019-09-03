@@ -30,130 +30,108 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "triangulation/generic.h"
 #include "../helpers.h"
-#include "../safeheldtype.h"
 #include "../generic/facehelper.h"
 
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::Simplex;
 
 namespace {
     template <int dim, int maxsubdim>
-    struct face_aliases :
-            boost::python::def_visitor<face_aliases<dim, maxsubdim>> {
-        friend class boost::python::def_visitor_access;
-
+    struct face_aliases {
         template <typename Class>
-        void visit(Class& c) const {
-            c.def(face_aliases<dim, maxsubdim - 1>());
+        static void add(Class& c) {
+            face_aliases<dim, maxsubdim - 1>::add(c);
         }
     };
 
     template <int dim>
-    struct face_aliases<dim, 0> :
-            boost::python::def_visitor<face_aliases<dim, 0>> {
-        friend class boost::python::def_visitor_access;
-
+    struct face_aliases<dim, 0> {
         template <typename Class>
-        void visit(Class& c) const {
+        static void add(Class& c) {
             c.def("vertex", &Simplex<dim>::vertex,
-                return_value_policy<reference_existing_object>());
+                pybind11::return_value_policy::reference);
             c.def("vertexMapping", &Simplex<dim>::vertexMapping);
         }
     };
 
     template <int dim>
-    struct face_aliases<dim, 1> :
-            boost::python::def_visitor<face_aliases<dim, 1>> {
-        friend class boost::python::def_visitor_access;
-
+    struct face_aliases<dim, 1> {
         template <typename Class>
-        void visit(Class& c) const {
-            c.def("edge", (regina::Edge<dim>* (Simplex<dim>::*)(int) const)(
-                    &Simplex<dim>::edge),
-                return_value_policy<reference_existing_object>());
+        static void add(Class& c) {
+            c.def("edge",
+                overload_cast<int>(&Simplex<dim>::edge, pybind11::const_),
+                pybind11::return_value_policy::reference);
             c.def("edgeMapping", &Simplex<dim>::edgeMapping);
-            c.def(face_aliases<dim, 0>());
+            face_aliases<dim, 0>::add(c);
         }
     };
 
     template <int dim>
-    struct face_aliases<dim, 2> :
-            boost::python::def_visitor<face_aliases<dim, 2>> {
-        friend class boost::python::def_visitor_access;
-
+    struct face_aliases<dim, 2> {
         template <typename Class>
-        void visit(Class& c) const {
+        static void add(Class& c) {
             c.def("triangle", &Simplex<dim>::triangle,
-                return_value_policy<reference_existing_object>());
+                pybind11::return_value_policy::reference);
             c.def("triangleMapping", &Simplex<dim>::triangleMapping);
-            c.def(face_aliases<dim, 1>());
+            face_aliases<dim, 1>::add(c);
         }
     };
 
     template <int dim>
-    struct face_aliases<dim, 3> :
-            boost::python::def_visitor<face_aliases<dim, 3>> {
-        friend class boost::python::def_visitor_access;
-
+    struct face_aliases<dim, 3> {
         template <typename Class>
-        void visit(Class& c) const {
+        static void add(Class& c) {
             c.def("tetrahedron", &Simplex<dim>::tetrahedron,
-                return_value_policy<reference_existing_object>());
+                pybind11::return_value_policy::reference);
             c.def("tetrahedronMapping", &Simplex<dim>::tetrahedronMapping);
-            c.def(face_aliases<dim, 2>());
+            face_aliases<dim, 2>::add(c);
         }
     };
 
     template <int dim>
-    struct face_aliases<dim, 4> :
-            boost::python::def_visitor<face_aliases<dim, 4>> {
-        friend class boost::python::def_visitor_access;
-
+    struct face_aliases<dim, 4> {
         template <typename Class>
-        void visit(Class& c) const {
+        static void add(Class& c) {
             c.def("pentachoron", &Simplex<dim>::pentachoron,
-                return_value_policy<reference_existing_object>());
+                pybind11::return_value_policy::reference);
             c.def("pentachoronMapping", &Simplex<dim>::pentachoronMapping);
-            c.def(face_aliases<dim, 3>());
+            face_aliases<dim, 3>::add(c);
         }
     };
 }
 
 template <int dim>
-void addSimplex(const char* name) {
-    class_<regina::Simplex<dim>, std::auto_ptr<regina::Simplex<dim>>,
-            boost::noncopyable>(name, no_init)
-        .def("description", &Simplex<dim>::description,
-            return_value_policy<return_by_value>())
+void addSimplex(pybind11::module& m, const char* name) {
+    auto c = pybind11::class_<regina::Simplex<dim>>(m, name)
+        .def("description", &Simplex<dim>::description)
         .def("setDescription", &Simplex<dim>::setDescription)
         .def("index", &Simplex<dim>::index)
         .def("adjacentSimplex", &Simplex<dim>::adjacentSimplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("adjacentGluing", &Simplex<dim>::adjacentGluing)
         .def("adjacentFacet", &Simplex<dim>::adjacentFacet)
         .def("hasBoundary", &Simplex<dim>::hasBoundary)
         .def("join", &Simplex<dim>::join)
         .def("unjoin", &Simplex<dim>::unjoin,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isolate", &Simplex<dim>::isolate)
-        .def("triangulation", &Simplex<dim>::triangulation,
-            return_value_policy<to_held_type<>>())
+        .def("triangulation", &Simplex<dim>::triangulation)
         .def("component", &Simplex<dim>::component,
-            return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Simplex<dim>, dim, int>)
-        .def("edge", (regina::Edge<dim>* (Simplex<dim>::*)(int, int) const)(
-                &Simplex<dim>::edge),
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
+        .def("face", &regina::python::face<Simplex<dim>, dim, int,
+            pybind11::return_value_policy::reference>)
+        .def("edge",
+            overload_cast<int, int>(&Simplex<dim>::edge, pybind11::const_),
+            pybind11::return_value_policy::reference)
         .def("faceMapping", &regina::python::faceMapping<Simplex<dim>, dim>)
-        .def(face_aliases<dim, dim - 1>())
         .def("orientation", &Simplex<dim>::orientation)
         .def("facetInMaximalForest", &Simplex<dim>::facetInMaximalForest)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
+    face_aliases<dim, dim - 1>::add(c);
 }
 

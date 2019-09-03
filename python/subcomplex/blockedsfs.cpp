@@ -30,39 +30,26 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "subcomplex/blockedsfs.h"
 #include "subcomplex/satregion.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 
-using namespace boost::python;
 using regina::BlockedSFS;
 
-namespace {
-    boost::python::tuple isPluggedIBundle_tuple(const BlockedSFS& b) {
-        std::string name;
-        bool ans = b.isPluggedIBundle(name);
-        return boost::python::make_tuple(ans, name);
-    }
-}
-
-void addBlockedSFS() {
-    class_<BlockedSFS, bases<regina::StandardTriangulation>,
-            std::auto_ptr<BlockedSFS>, boost::noncopyable>
-            ("BlockedSFS", no_init)
+void addBlockedSFS(pybind11::module& m) {
+    pybind11::class_<BlockedSFS, regina::StandardTriangulation>(m, "BlockedSFS")
         .def("region", &BlockedSFS::region,
-            return_internal_reference<>())
-        .def("isPluggedIBundle", isPluggedIBundle_tuple)
-        .def("isBlockedSFS", &BlockedSFS::isBlockedSFS,
-            return_value_policy<manage_new_object>())
-        .def(regina::python::add_eq_operators())
-        .staticmethod("isBlockedSFS")
+            pybind11::return_value_policy::reference_internal)
+        .def("isPluggedIBundle", [](const BlockedSFS& b) {
+            std::string name;
+            bool ans = b.isPluggedIBundle(name);
+            return pybind11::make_tuple(ans, name);
+        })
+        .def_static("isBlockedSFS", &BlockedSFS::isBlockedSFS)
     ;
 
-    implicitly_convertible<std::auto_ptr<BlockedSFS>,
-        std::auto_ptr<regina::StandardTriangulation> >();
-
-    scope().attr("NBlockedSFS") = scope().attr("BlockedSFS");
+    m.attr("NBlockedSFS") = m.attr("BlockedSFS");
 }
 

@@ -32,29 +32,29 @@
 
 #include "face-bindings.h"
 
-void addFace11() {
-    addFace<11, 0>("Face11_0", "FaceEmbedding11_0");
-    addFace<11, 1>("Face11_1", "FaceEmbedding11_1");
-    addFace<11, 2>("Face11_2", "FaceEmbedding11_2");
-    addFace<11, 3>("Face11_3", "FaceEmbedding11_3");
-    addFace<11, 4>("Face11_4", "FaceEmbedding11_4");
-    addFace<11, 5>("Face11_5", "FaceEmbedding11_5");
-    addFace<11, 6>("Face11_6", "FaceEmbedding11_6");
-    addFace<11, 7>("Face11_7", "FaceEmbedding11_7");
-    addFace<11, 8>("Face11_8", "FaceEmbedding11_8");
-    addFace<11, 9>("Face11_9", "FaceEmbedding11_9");
-    addFace<11, 10>("Face11_10", "FaceEmbedding11_10");
+void addFace11(pybind11::module& m) {
+    addFace<11, 0>(m, "Face11_0", "FaceEmbedding11_0");
+    addFace<11, 1>(m, "Face11_1", "FaceEmbedding11_1");
+    addFace<11, 2>(m, "Face11_2", "FaceEmbedding11_2");
+    addFace<11, 3>(m, "Face11_3", "FaceEmbedding11_3");
+    addFace<11, 4>(m, "Face11_4", "FaceEmbedding11_4");
+    addFace<11, 5>(m, "Face11_5", "FaceEmbedding11_5");
+    addFace<11, 6>(m, "Face11_6", "FaceEmbedding11_6");
+    addFace<11, 7>(m, "Face11_7", "FaceEmbedding11_7");
+    addFace<11, 8>(m, "Face11_8", "FaceEmbedding11_8");
+    addFace<11, 9>(m, "Face11_9", "FaceEmbedding11_9");
+    addFace<11, 10>(m, "Face11_10", "FaceEmbedding11_10");
 
-    scope().attr("VertexEmbedding11") = scope().attr("FaceEmbedding11_0");
-    scope().attr("EdgeEmbedding11") = scope().attr("FaceEmbedding11_1");
-    scope().attr("TriangleEmbedding11") = scope().attr("FaceEmbedding11_2");
-    scope().attr("TetrahedronEmbedding11") = scope().attr("FaceEmbedding11_3");
-    scope().attr("PentachoronEmbedding11") = scope().attr("FaceEmbedding11_4");
+    m.attr("VertexEmbedding11") = m.attr("FaceEmbedding11_0");
+    m.attr("EdgeEmbedding11") = m.attr("FaceEmbedding11_1");
+    m.attr("TriangleEmbedding11") = m.attr("FaceEmbedding11_2");
+    m.attr("TetrahedronEmbedding11") = m.attr("FaceEmbedding11_3");
+    m.attr("PentachoronEmbedding11") = m.attr("FaceEmbedding11_4");
 
-    scope().attr("Vertex11") = scope().attr("Face11_0");
-    scope().attr("Edge11") = scope().attr("Face11_1");
-    scope().attr("Triangle11") = scope().attr("Face11_2");
-    scope().attr("Tetrahedron11") = scope().attr("Face11_3");
-    scope().attr("Pentachoron11") = scope().attr("Face11_4");
+    m.attr("Vertex11") = m.attr("Face11_0");
+    m.attr("Edge11") = m.attr("Face11_1");
+    m.attr("Triangle11") = m.attr("Face11_2");
+    m.attr("Tetrahedron11") = m.attr("Face11_3");
+    m.attr("Pentachoron11") = m.attr("Face11_4");
 }
 

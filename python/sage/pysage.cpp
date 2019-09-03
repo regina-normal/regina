@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-#include "face-bindings.h"
+namespace pybind11 { class module; }
 
-void addFace() {
-    // Nothing here for now.
+void addRegisterIntFromPyIndex(pybind11::module& m);
 
-    // The bindings for dim >= 5 are in separate files, one per dimension.
-    // This is to help avoid excessive memory consumption by the compiler.
+void addSageHacks() {
+    // TODO: Re-enable this once it's ported from boost.python to pybind11.
+    // addRegisterIntFromPyIndex();
 }
 

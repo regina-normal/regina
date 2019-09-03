@@ -160,11 +160,6 @@
             [_packets addPointer:p];
     }
 
-    // This messes things up a little in iOS8: for example, when a child packet
-    // is deleted through python, then the refreshed table view fails to display
-    // the detail (i.e., # subpackets) for some cells.
-    // This appears to work correctly in iOS9, and since iOS8 is getting quite
-    // old now (Apple is up to iOS10 at the time of writing), we will just leave this be.
     [self.tableView reloadData];
 }
 
@@ -374,8 +369,8 @@
      */
 }
 
-- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child inParentDestructor:(bool)destructor {
-    if (destructor)
+- (void)childWasRemovedFrom:(regina::Packet *)packet child:(regina::Packet *)child {
+    if (! packet) // are we in the parent's destructor?
         return;
 
     if (packet == self.node) {
@@ -404,7 +399,7 @@
     [[ReginaHelper document] setDirty];
 }
 
-- (void)packetToBeDestroyed:(regina::Packet *)packet {
+- (void)packetToBeDestroyed:(regina::PacketShell)packet {
     if (packet == _node) {
         _node = 0;
         _listener = nil;
@@ -495,7 +490,9 @@
                               withRowAnimation:UITableViewRowAnimationFade];
     }
 
-    delete packet;
+    // Call safeDelete() instead of delete, since there might be a
+    // python interpreter still holding a reference to the packet.
+    regina::Packet::safeDelete(packet);
 
     _changingChildren = false;
 }

@@ -44,7 +44,6 @@ static UINavigationController* masterNav;
 static UINavigationController* detailNav;
 static MasterViewController* master;
 static DetailViewController* detail;
-BOOL ios9;
 
 @implementation ReginaHelper
 
@@ -157,11 +156,6 @@ BOOL ios9;
     });
 }
 
-+ (BOOL)ios9
-{
-    return ios9;
-}
-
 + (void)initWithApp:(AppDelegate *)app
 {
     if (UI_USER_INTERFACE_IDIOM() == UIUserInterfaceIdiomPad) {
@@ -180,12 +174,6 @@ BOOL ios9;
         detail = nil;
         masterNav = detailNav = nil;
     }
-
-    ios9 = ([[[UIDevice currentDevice] systemVersion] compare:@"9.0" options:NSNumericSearch] != NSOrderedAscending);
-    if (ios9)
-        NSLog(@"Running on >= iOS 9");
-    else
-        NSLog(@"Running on iOS 8");
 }
 
 @end

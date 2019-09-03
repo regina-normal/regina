@@ -30,17 +30,19 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "utilities/i18nutils.h"
 #include "../helpers.h"
 
-using namespace boost::python;
-
-void addLocale() {
-    scope s = class_<regina::i18n::Locale>("Locale", ::boost::python::no_init)
-        .def("codeset", &regina::i18n::Locale::codeset)
-        .def(regina::python::no_eq_operators())
-        .staticmethod("codeset")
+void addLocale(pybind11::module& m) {
+    auto c = pybind11::class_<regina::i18n::Locale>(m, "Locale")
+        .def_static("codeset", &regina::i18n::Locale::codeset)
     ;
+    regina::python::no_eq_operators(c);
+
+    m.def("utf8ValidTo", [](const char* s) {
+        const char* ans = regina::i18n::utf8ValidTo(s);
+        return (ans - s);
+    });
 }
 

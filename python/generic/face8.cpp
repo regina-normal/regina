@@ -32,26 +32,26 @@
 
 #include "face-bindings.h"
 
-void addFace8() {
-    addFace<8, 0>("Face8_0", "FaceEmbedding8_0");
-    addFace<8, 1>("Face8_1", "FaceEmbedding8_1");
-    addFace<8, 2>("Face8_2", "FaceEmbedding8_2");
-    addFace<8, 3>("Face8_3", "FaceEmbedding8_3");
-    addFace<8, 4>("Face8_4", "FaceEmbedding8_4");
-    addFace<8, 5>("Face8_5", "FaceEmbedding8_5");
-    addFace<8, 6>("Face8_6", "FaceEmbedding8_6");
-    addFace<8, 7>("Face8_7", "FaceEmbedding8_7");
+void addFace8(pybind11::module& m) {
+    addFace<8, 0>(m, "Face8_0", "FaceEmbedding8_0");
+    addFace<8, 1>(m, "Face8_1", "FaceEmbedding8_1");
+    addFace<8, 2>(m, "Face8_2", "FaceEmbedding8_2");
+    addFace<8, 3>(m, "Face8_3", "FaceEmbedding8_3");
+    addFace<8, 4>(m, "Face8_4", "FaceEmbedding8_4");
+    addFace<8, 5>(m, "Face8_5", "FaceEmbedding8_5");
+    addFace<8, 6>(m, "Face8_6", "FaceEmbedding8_6");
+    addFace<8, 7>(m, "Face8_7", "FaceEmbedding8_7");
 
-    scope().attr("VertexEmbedding8") = scope().attr("FaceEmbedding8_0");
-    scope().attr("EdgeEmbedding8") = scope().attr("FaceEmbedding8_1");
-    scope().attr("TriangleEmbedding8") = scope().attr("FaceEmbedding8_2");
-    scope().attr("TetrahedronEmbedding8") = scope().attr("FaceEmbedding8_3");
-    scope().attr("PentachoronEmbedding8") = scope().attr("FaceEmbedding8_4");
+    m.attr("VertexEmbedding8") = m.attr("FaceEmbedding8_0");
+    m.attr("EdgeEmbedding8") = m.attr("FaceEmbedding8_1");
+    m.attr("TriangleEmbedding8") = m.attr("FaceEmbedding8_2");
+    m.attr("TetrahedronEmbedding8") = m.attr("FaceEmbedding8_3");
+    m.attr("PentachoronEmbedding8") = m.attr("FaceEmbedding8_4");
 
-    scope().attr("Vertex8") = scope().attr("Face8_0");
-    scope().attr("Edge8") = scope().attr("Face8_1");
-    scope().attr("Triangle8") = scope().attr("Face8_2");
-    scope().attr("Tetrahedron8") = scope().attr("Face8_3");
-    scope().attr("Pentachoron8") = scope().attr("Face8_4");
+    m.attr("Vertex8") = m.attr("Face8_0");
+    m.attr("Edge8") = m.attr("Face8_1");
+    m.attr("Triangle8") = m.attr("Face8_2");
+    m.attr("Tetrahedron8") = m.attr("Face8_3");
+    m.attr("Pentachoron8") = m.attr("Face8_4");
 }
 

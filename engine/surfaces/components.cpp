@@ -196,9 +196,9 @@ namespace {
                 ans[i] = new NSVectorANStandard(
                     10 * tri->size());
 
-            for (it.init(components); ! it.done(); ++it) {
-                vec = ans[components.data(*it).id];
-                coord = 10 * (*it).tetIndex + (*it).type;
+            for (const auto& disc : components) {
+                vec = ans[components.data(disc).id];
+                coord = 10 * disc.tetIndex + disc.type;
                 vec->setElement(coord, (*vec)[coord] + 1);
             }
         } else {
@@ -206,9 +206,9 @@ namespace {
                 ans[i] = new NSVectorStandard(
                     7 * tri->size());
 
-            for (it.init(components); ! it.done(); ++it) {
-                vec = ans[components.data(*it).id];
-                coord = 7 * (*it).tetIndex + (*it).type;
+            for (const auto& disc : components) {
+                vec = ans[components.data(disc).id];
+                coord = 7 * disc.tetIndex + disc.type;
                 vec->setElement(coord, (*vec)[coord] + 1);
             }
         }
@@ -254,8 +254,8 @@ bool NormalSurface::disjoint(const NormalSurface& other) const {
                 break;
             }
 
-    for (CompVector::iterator it = bits.begin(); it != bits.end(); ++it)
-        delete *it;
+    for (auto s : bits)
+        delete s;
     delete sum;
 
     return ans;

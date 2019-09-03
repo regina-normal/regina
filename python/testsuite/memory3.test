@@ -1,0 +1,216 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015-2019, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests the independence and lifespans of engine-generated packets.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+class Watcher(PacketListener):
+    def __init__(self, packet, label):
+        PacketListener.__init__(self)
+        packet.setLabel(label)
+        packet.listen(self)
+    def packetToBeDestroyed(self, packet):
+        print('Destroying: ' + packet.label())
+
+
+print('Vertices of triangulation: vertices()')
+print('Step 1')
+t = Example2.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+v = t.vertices() # v keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+v = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: edges()')
+print('Step 1')
+t = Example3.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+e = t.edges() # e keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+e = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: vertex()')
+print('Step 1')
+t = Example4.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+v = t.vertex(0) # v keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+v = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: edge()')
+print('Step 1')
+t = Example5.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+e = t.edge(0) # e keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+e = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: faces<0>()')
+print('Step 1')
+t = Example5.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+v = t.faces(0) # v keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+v = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: faces<1>()')
+print('Step 1')
+t = Example4.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+e = t.faces(1) # e keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+e = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: face<0>()')
+print('Step 1')
+t = Example3.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+v = t.face(0, 0) # v keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+v = None # destroys t
+print('Step 5')
+
+print('Vertices of triangulation: face<1>()')
+print('Step 1')
+t = Example2.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+e = t.face(1, 0) # e keeps t alive
+print('Step 3')
+t = None
+print('Step 4')
+e = None # destroys t
+print('Step 5')
+
+print('Vertices of simplex')
+print('Step 1')
+t = Example3.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+s = t.simplex(0) # s keeps t alive
+print('Step 3')
+# None of these keep t alive
+f1 = s.vertex(0)
+f2 = s.edge(0)
+f3 = s.face(0, 0)
+f4 = s.face(1, 0)
+print('Step 4')
+t = None
+print('Step 5')
+s = None # destroys t
+print('Step 6')
+f1 = None; f2 = None; f3 = None; f4 = None
+print('Step 7')
+
+print('Vertices of face')
+print('Step 1')
+t = Example4.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+f = t.triangle(0) # f keeps t alive
+print('Step 3')
+# None of these keep t alive
+f1 = f.vertex(0)
+f2 = f.edge(0)
+f3 = f.face(0, 0)
+f4 = f.face(1, 0)
+print('Step 4')
+t = None
+print('Step 5')
+f = None # destroys t
+print('Step 6')
+f1 = None; f2 = None; f3 = None; f4 = None
+print('Step 7')
+
+print('Vertices of component')
+print('Step 1')
+t = Example2.sphere(); tw = Watcher(t, 't')
+print('Step 2')
+c = t.component(0) # c keeps t alive
+print('Step 3')
+# None of these keep t alive
+f1 = c.vertices()
+f2 = c.vertex(0)
+f3 = c.edges()
+f4 = c.edge(0)
+f5 = c.faces(0)
+f6 = c.face(0, 0)
+f7 = c.faces(1)
+f8 = c.face(1, 0)
+print('Step 4')
+t = None
+print('Step 5')
+c = None # destroys t
+print('Step 6')
+f1 = None; f2 = None; f3 = None; f4 = None
+f5 = None; f6 = None; f7 = None; f8 = None
+print('Step 7')
+
+print('Vertices of boundary component')
+print('Step 1')
+t = Example4.ball(); tw = Watcher(t, 't')
+print('Step 2')
+b = t.boundaryComponent(0) # b keeps t alive
+print('Step 3')
+# None of these keep t alive
+f1 = b.vertices()
+f2 = b.vertex(0)
+f3 = b.edges()
+f4 = b.edge(0)
+f5 = b.faces(0)
+f6 = b.face(0, 0)
+f7 = b.faces(1)
+f8 = b.face(1, 0)
+print('Step 4')
+t = None
+print('Step 5')
+b = None # destroys t
+print('Step 6')
+f1 = None; f2 = None; f3 = None; f4 = None
+f5 = None; f6 = None; f7 = None; f8 = None
+print('Step 7')
+

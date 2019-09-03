@@ -30,33 +30,16 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "triangulation/dim2.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 
-using namespace boost::python;
 using regina::Component;
 
-namespace {
-    boost::python::list triangles_list(Component<2>& t) {
-        boost::python::list ans;
-        for (auto s : t.triangles())
-            ans.append(boost::python::ptr(s));
-        return ans;
-    }
-
-    boost::python::list bc_list(Component<2>& t) {
-        boost::python::list ans;
-        for (auto s : t.boundaryComponents())
-            ans.append(boost::python::ptr(s));
-        return ans;
-    }
-}
-
-void addComponent2() {
-    class_<Component<2>, std::auto_ptr<Component<2>>, boost::noncopyable>
-            ("Component2", no_init)
+void addComponent2(pybind11::module& m) {
+    auto c = pybind11::class_<Component<2>>(m, "Component2")
         .def("index", &Component<2>::index)
         .def("size", &Component<2>::size)
         .def("countTriangles", &Component<2>::countTriangles)
@@ -64,23 +47,30 @@ void addComponent2() {
         .def("countEdges", &Component<2>::countEdges)
         .def("countVertices", &Component<2>::countVertices)
         .def("countBoundaryComponents", &Component<2>::countBoundaryComponents)
-        .def("simplices", triangles_list)
-        .def("triangles", triangles_list)
-        .def("faces", &regina::python::faces<Component<2>, 2>)
-        .def("edges", regina::python::faces_list<Component<2>, 2, 1>)
-        .def("vertices", regina::python::faces_list<Component<2>, 2, 0>)
-        .def("boundaryComponents", bc_list)
+        .def("simplices", &Component<2>::simplices,
+            pybind11::return_value_policy::reference)
+        .def("triangles", &Component<2>::triangles,
+            pybind11::return_value_policy::reference)
+        .def("faces", &regina::python::faces<Component<2>, 2,
+            pybind11::return_value_policy::reference>)
+        .def("vertices", &Component<2>::vertices,
+            pybind11::return_value_policy::reference)
+        .def("edges", &Component<2>::edges,
+            pybind11::return_value_policy::reference)
+        .def("boundaryComponents", &Component<2>::boundaryComponents,
+            pybind11::return_value_policy::reference)
         .def("triangle", &Component<2>::triangle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("simplex", &Component<2>::simplex,
-            return_value_policy<reference_existing_object>())
-        .def("face", &regina::python::face<Component<2>, 2, size_t>)
+            pybind11::return_value_policy::reference)
+        .def("face", &regina::python::face<Component<2>, 2, size_t,
+            pybind11::return_value_policy::reference>)
         .def("edge", &Component<2>::edge,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("vertex", &Component<2>::vertex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Component<2>::boundaryComponent,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isValid", &Component<2>::isValid)
         .def("isOrientable", &Component<2>::isOrientable)
         .def("isClosed", &Component<2>::isClosed)
@@ -88,10 +78,10 @@ void addComponent2() {
         .def("hasBoundaryEdges", &Component<2>::hasBoundaryEdges)
         .def("countBoundaryFacets", &Component<2>::countBoundaryFacets)
         .def("countBoundaryEdges", &Component<2>::countBoundaryEdges)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("Dim2Component") = scope().attr("Component2");
+    m.attr("Dim2Component") = m.attr("Component2");
 }
 

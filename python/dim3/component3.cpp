@@ -30,34 +30,16 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/stl.h"
 #include "triangulation/dim3.h"
 #include "../helpers.h"
 #include "../generic/facehelper.h"
 
-using namespace boost::python;
 using regina::Component;
 
-namespace {
-    boost::python::list simplices_list(Component<3>& t) {
-        boost::python::list ans;
-        for (std::vector<regina::Simplex<3>*>::const_iterator it =
-                t.simplices().begin(); it != t.simplices().end(); ++it)
-            ans.append(boost::python::ptr(*it));
-        return ans;
-    }
-
-    boost::python::list bc_list(Component<3>& t) {
-        boost::python::list ans;
-        for (auto s : t.boundaryComponents())
-            ans.append(boost::python::ptr(s));
-        return ans;
-    }
-}
-
-void addComponent3() {
-    class_<Component<3>, std::auto_ptr<Component<3>>, boost::noncopyable>
-            ("Component3", no_init)
+void addComponent3(pybind11::module& m) {
+    auto c = pybind11::class_<Component<3>>(m, "Component3")
         .def("index", &Component<3>::index)
         .def("size", &Component<3>::size)
         .def("countTetrahedra", &Component<3>::countTetrahedra)
@@ -66,26 +48,34 @@ void addComponent3() {
         .def("countEdges", &Component<3>::countEdges)
         .def("countVertices", &Component<3>::countVertices)
         .def("countBoundaryComponents", &Component<3>::countBoundaryComponents)
-        .def("simplices", simplices_list)
-        .def("tetrahedra", simplices_list)
+        .def("simplices", &Component<3>::simplices,
+            pybind11::return_value_policy::reference)
+        .def("tetrahedra", &Component<3>::tetrahedra,
+            pybind11::return_value_policy::reference)
         .def("simplex", &Component<3>::simplex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("tetrahedron", &Component<3>::tetrahedron,
-            return_value_policy<reference_existing_object>())
-        .def("faces", &regina::python::faces<Component<3>, 3>)
-        .def("triangles", regina::python::faces_list<Component<3>, 3, 2>)
-        .def("edges", regina::python::faces_list<Component<3>, 3, 1>)
-        .def("vertices", regina::python::faces_list<Component<3>, 3, 0>)
-        .def("boundaryComponents", bc_list)
-        .def("face", &regina::python::face<Component<3>, 3, size_t>)
+            pybind11::return_value_policy::reference)
+        .def("faces", &regina::python::faces<Component<3>, 3,
+            pybind11::return_value_policy::reference>)
+        .def("vertices", &Component<3>::vertices,
+            pybind11::return_value_policy::reference)
+        .def("edges", &Component<3>::edges,
+            pybind11::return_value_policy::reference)
+        .def("triangles", &Component<3>::triangles,
+            pybind11::return_value_policy::reference)
+        .def("boundaryComponents", &Component<3>::boundaryComponents,
+            pybind11::return_value_policy::reference)
+        .def("face", &regina::python::face<Component<3>, 3, size_t,
+            pybind11::return_value_policy::reference>)
         .def("triangle", &Component<3>::triangle,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("edge", &Component<3>::edge,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("vertex", &Component<3>::vertex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("boundaryComponent", &Component<3>::boundaryComponent,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("isIdeal", &Component<3>::isIdeal)
         .def("isValid", &Component<3>::isValid)
         .def("isOrientable", &Component<3>::isOrientable)
@@ -94,10 +84,10 @@ void addComponent3() {
         .def("hasBoundaryTriangles", &Component<3>::hasBoundaryTriangles)
         .def("countBoundaryFacets", &Component<3>::countBoundaryFacets)
         .def("countBoundaryTriangles", &Component<3>::countBoundaryTriangles)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
 
-    scope().attr("NComponent") = scope().attr("Component3");
+    m.attr("NComponent") = m.attr("Component3");
 }
 

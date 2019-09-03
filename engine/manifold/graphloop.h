@@ -42,11 +42,10 @@
 
 #include "regina-core.h"
 #include "manifold/manifold.h"
+#include "manifold/sfs.h"
 #include "maths/matrix2.h"
 
 namespace regina {
-
-class SFSpace;
 
 /**
  * \weakgroup manifold
@@ -152,6 +151,12 @@ class REGINA_API GraphLoop : public Manifold {
          */
         GraphLoop(SFSpace* sfs, const Matrix2& matchingReln);
         /**
+         * Creates a clone of the given graph manifold.
+         *
+         * @param cloneMe the manifold to clone.
+         */
+        GraphLoop(const GraphLoop& cloneMe);
+        /**
          * Destroys this structure along with the bounded Seifert
          * fibred space and the matching matrix.
          */
@@ -194,10 +199,17 @@ class REGINA_API GraphLoop : public Manifold {
          */
         bool operator < (const GraphLoop& compare) const;
 
-        AbelianGroup* homology() const;
-        bool isHyperbolic() const;
-        std::ostream& writeName(std::ostream& out) const;
-        std::ostream& writeTeXName(std::ostream& out) const;
+        /**
+         * Sets this to be a clone of the given graph manifold.
+         *
+         * @param cloneMe the manifold to clone.
+         */
+        GraphLoop& operator = (const GraphLoop& cloneMe);
+
+        AbelianGroup* homology() const override;
+        bool isHyperbolic() const override;
+        std::ostream& writeName(std::ostream& out) const override;
+        std::ostream& writeTeXName(std::ostream& out) const override;
 
     private:
         /**
@@ -249,6 +261,16 @@ inline GraphLoop::GraphLoop(SFSpace* sfs,
 inline GraphLoop::GraphLoop(SFSpace* sfs, const Matrix2& matchingReln) :
         sfs_(sfs), matchingReln_(matchingReln) {
     reduce();
+}
+
+inline GraphLoop::GraphLoop(const GraphLoop& cloneMe) :
+        sfs_(new SFSpace(*cloneMe.sfs_)), matchingReln_(cloneMe.matchingReln_) {
+}
+
+inline GraphLoop& GraphLoop::operator = (const GraphLoop& cloneMe) {
+    *sfs_ = *cloneMe.sfs_;
+    matchingReln_ = cloneMe.matchingReln_;
+    return *this;
 }
 
 inline const SFSpace& GraphLoop::sfs() const {

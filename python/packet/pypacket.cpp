@@ -30,21 +30,23 @@
  *                                                                        *
  **************************************************************************/
 
-void addContainer();
-void addPacket();
-void addPDF();
-void addScript();
-void addText();
-void addPacketType();
+namespace pybind11 { class module; }
 
-void addPacketClasses() {
-    // Enums must come first.
-    addPacketType();
+void addContainer(pybind11::module& m);
+void addPacket(pybind11::module& m);
+void addPacketListener(pybind11::module& m);
+void addPDF(pybind11::module& m);
+void addScript(pybind11::module& m);
+void addText(pybind11::module& m);
+void addPacketType(pybind11::module& m);
 
-    addPacket();
-    addContainer();
-    addPDF();
-    addScript();
-    addText();
+void addPacketClasses(pybind11::module& m) {
+    addPacketType(m);
+    addPacket(m);
+    addPacketListener(m);
+    addContainer(m);
+    addPDF(m);
+    addScript(m);
+    addText(m);
 }
 

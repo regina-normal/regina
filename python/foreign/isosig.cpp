@@ -30,21 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
 #include "foreign/isosig.h"
 #include "packet/container.h"
-#include "../safeheldtype.h"
 
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 
-namespace {
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_readIsoSigList,
-        regina::readIsoSigList, 1, 5);
-}
-
-void addForeignIsoSig() {
-    def("readIsoSigList", regina::readIsoSigList,
-        OL_readIsoSigList()[return_value_policy<to_held_type<> >()]);
+void addForeignIsoSig(pybind11::module& m) {
+    m.def("readIsoSigList", regina::readIsoSigList,
+        pybind11::arg(),
+        pybind11::arg("dimension") = 3,
+        pybind11::arg("colSigs") = 0,
+        pybind11::arg("colLabels") = -1,
+        pybind11::arg("ignoreLines") = 0);
 }
 

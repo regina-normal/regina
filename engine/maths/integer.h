@@ -171,11 +171,11 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
                  representations, or if this integer is infinity, then this
                  native integer is ignored (and may be set to anything). */
         mpz_ptr large_;
-            /**< 0 if we are using native representations, or a pointer to the
-                 full GMP large integer if we are now using these instead.
+            /**< \c null if we are using native representations, or a pointer to
+                 the full GMP large integer if we are now using these instead.
                  We require that, whenever this pointer is non-null, the
                  corresponding GMP large integer is initialised.
-                 If this integer is infinity then large_ must be null. */
+                 If this integer is infinity then large_ must be \c null. */
 
     public:
         /**
@@ -311,7 +311,7 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * will be set to \c true if the entire given string was a valid
          * large integer representation and \c false otherwise.
          */
-        IntegerBase(const char* value, int base = 10, bool* valid = 0);
+        IntegerBase(const char* value, int base = 10, bool* valid = nullptr);
         /**
          * Initialises this integer to the given value which is
          * represented as a string of digits in a given base.
@@ -347,7 +347,7 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * large integer representation and \c false otherwise.
          */
         IntegerBase(const std::string& value, int base = 10,
-                bool* valid = 0);
+                bool* valid = nullptr);
         /**
          * Destroys this integer.
          */
@@ -2310,12 +2310,12 @@ using NNativeInteger [[deprecated]] = NativeInteger<bytes>;
 
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase() :
-        small_(0), large_(0) {
+        small_(0), large_(nullptr) {
 }
 
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(int value) :
-        small_(value), large_(0) {
+        small_(value), large_(nullptr) {
 }
 
 template <bool supportInfinity>
@@ -2326,12 +2326,12 @@ inline IntegerBase<supportInfinity>::IntegerBase(unsigned value) :
         large_ = new __mpz_struct[1];
         mpz_init_set_ui(large_, value);
     } else
-        large_ = 0;
+        large_ = nullptr;
 }
 
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(long value) :
-        small_(value), large_(0) {
+        small_(value), large_(nullptr) {
 }
 
 template <bool supportInfinity>
@@ -2342,21 +2342,21 @@ inline IntegerBase<supportInfinity>::IntegerBase(unsigned long value) :
         large_ = new __mpz_struct[1];
         mpz_init_set_ui(large_, value);
     } else
-        large_ = 0;
+        large_ = nullptr;
 }
 
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(
         const IntegerBase<supportInfinity>& value) {
     if (value.isInfinite()) {
-        large_ = 0;
+        large_ = nullptr;
         makeInfinite();
     } else if (value.large_) {
         large_ = new __mpz_struct[1];
         mpz_init_set(large_, value.large_);
     } else {
         small_ = value.small_;
-        large_ = 0;
+        large_ = nullptr;
     }
 }
 
@@ -2370,7 +2370,7 @@ inline IntegerBase<supportInfinity>::IntegerBase(
         mpz_init_set(large_, value.large_);
     } else {
         small_ = value.small_;
-        large_ = 0;
+        large_ = nullptr;
     }
 }
 
@@ -2378,7 +2378,7 @@ template <bool supportInfinity>
 template <int bytes>
 inline IntegerBase<supportInfinity>::IntegerBase(
         const NativeInteger<bytes>& value) :
-        small_(value.nativeValue()), large_(0) {
+        small_(value.nativeValue()), large_(nullptr) {
     static_assert(bytes % sizeof(long) == 0,
         "IntegerBase native constructor: native integer must partition exactly into long integers.");
     if (sizeof(long) < bytes && value.nativeValue() != static_cast<typename IntOfSize<bytes>::type>(small_)) {
@@ -2397,7 +2397,7 @@ inline IntegerBase<supportInfinity>::IntegerBase(
 
 template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(double value) :
-        small_(value), large_(0) {
+        small_(value), large_(nullptr) {
     // We start with a large representation, since we want to use GMP's
     // double-to-integer conversion.
     large_ = new __mpz_struct[1];
@@ -3232,7 +3232,7 @@ template <bool supportInfinity>
 inline void IntegerBase<supportInfinity>::clearLarge() {
     mpz_clear(large_);
     delete[] large_;
-    large_ = 0;
+    large_ = nullptr;
 }
 
 template <bool supportInfinity>
@@ -3240,7 +3240,7 @@ inline void IntegerBase<supportInfinity>::forceReduce() {
     small_ = mpz_get_si(large_);
     mpz_clear(large_);
     delete[] large_;
-    large_ = 0;
+    large_ = nullptr;
 }
 
 template <>
@@ -3257,7 +3257,7 @@ inline void IntegerBase<false>::makeFinite() {
 // This definition must come *after* the definition of makeInfinite()
 // to keep the compiler happy.
 template <>
-inline IntegerBase<true>::IntegerBase(bool, bool) : large_(0) {
+inline IntegerBase<true>::IntegerBase(bool, bool) : large_(nullptr) {
     // The infinity constructor.
     makeInfinite();
 }

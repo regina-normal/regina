@@ -10,12 +10,20 @@ Regina - A Normal Surface Theory Calculator
 Version 5.2  [ 29 September, 2017 ]
 
     GENERAL:
-        - Now requires C++14 (not C++11).  However, the only feature of C++14
-          that is currently used is the [[deprecated]] attribute, which means
-          that partially compliant compilers (such as gcc4.9) should be fine.
+        - Now requires C++14 (not C++11).
+        - Now supports Python 3 (and continues support for Python 2).
+        - For Python 2, there is now a minimum requirement of Python >= 2.6.
         - Now builds under gcc7 and gcc8.
         - Updated the bundled copy of Normaliz to version 3.7.2 (17 Apr 2019).
+        - Now requires Boost in header form only, and only at build time:
+          Regina no longer links against any of Boost's shared libraries.
+        - Now uses pybind11 instead of Boost.Python to create python bindings.
+        - Removed the cmake option USE_BOOST_INT128, since the boost 128-bit
+          integer detection does not know more than the cmake tests can provide.
+        - Now requires CMake version >= 3.1.
     ENGINE:
+        Class AbelianGroup:
+            - Added assignment operator.
         Class BitManipulator, GenericBitManipulator:
             - BitManipulator has a new routine nextPermutation() to
               iterate through bitmasks with a fixed number of true bits.
@@ -23,22 +31,116 @@ Version 5.2  [ 29 September, 2017 ]
               instead size is always taken to be sizeof(T).
             - The internal structure of BitManipulator has changed; in
               particular, the old GenericBitManipulator no longer exists.
+        Class BoundaryComponent<3>:
+            - Routine eulerChar() now requires no invalid vertices on the
+              boundary component as a precondition.  This is to avoid having
+              to define what Regina actually computes in such a scenario,
+              which is well-defined but not topologically meaningful.
+        Class CensusDB:
+            - Added copy and move constructors and assignment operators.
+        Class CensusHits, CensusHitIterator:
+            - Routine CensusHits::first() now returns a const pointer.
+            - You can now iterate over a CensusHits object using C++11
+              range-based for loops, thanks to the new CensusHitIterator
+              class.  In Python, CensusHits is now an iterable object.
+        Class Cyclotomic:
+            - Added move constructor and assignment operator.
+            - Added inverse().
+            - Added operators +, *, -, / in several variants.
+        Class DegreeLessThan, DegreeGreaterThan:
+            - Added copy constructors.
+        Class DiscSetSurface:
+            - Now supports C++11 range-based for loops to iterate over all
+              normal discs.  In particular, there are new begin() and end()
+              functions.
+            - In Python, DiscSetSurface is now an iterable object.
+        Class DiscSpecIterator:
+            - Updated to fit the standard C++ forward iterator concept.
+              In particular, increment operators now have return values.
+            - Now specialises std::iterator_traits for this iterator type.
+        Class EnumConstraints:
+            - Now just a typedef for std::vector<std::set<unsigned long>>,
+              instead of being a derived class with no extra functionality.
+        Class FacePair:
+            - Added an output stream operator.
+            - Replaced naive ++/-- operators with pairs of proper pre/post
+              increment/decrement operators, to match usual ++/-- behaviour.
+        Class FacetSpec:
+            - Added output stream operators.
+            - Preincrement and predecrement operators now return a reference
+              instead of a clone, to match usual ++/-- behaviour.
+        Class FileInfo:
+            - Added copy constructor and assignment operator.
+        Class GraphLoop, GraphPair, GraphTriple:
+            - New copy constructors and assignment operators.
         Class GroupPresentation:
             - New Python-only sage() routine that converts a Regina
               group presentation to a mathematical object native to Sage.
+        Class Handlebody:
+            - New assignment operator.
         Class Isomorphism<dim>:
+            - Added (fast) move constructors and move assignment operators,
+              and a (slow) copy assignment operator.
             - The random() function now takes an optional argument to enforce
               orientation-preserving isomorphisms only.
+            - Static routines random() and identity() now return an
+              Isomorphism, not a std::unique_ptr<Isomorphism>.  Now that
+              Isomorphism has a move constructor and assignment operator,
+              this should not be inducing unwanted deep copies.
+        Class IsReginaInteger:
+            - New type trait to identify Regina's own integer types.
+        Class Laurent:
+            - Added move constructor and assignment operator.
+            - Added operators +, *, -, / in several variants.
         Class Laurent2:
+            - Added move constructor and assignment operator.
+            - Added operators +, *, -, / in several variants.
             - New constuctor that shifts a given polynomial by x^e y^e.
+        Class LensSpace:
+            - New assignment operator.
         Class LightweightSequence:
             - New copy constructor and assignment operator for deep copies.
+            - Added move constructors and move assignment operators.
             - Constructor by size is now marked as explicit.
+            - The inner type SubsequenceCompareFirstPtr's constructor now
+              references (instead of cloning) the C-style array that is passed,
+              and the caller is responsible for keeping that array alive
+              while the SubsequenceCompareFirstPtr object is in use.
+              This is a backward-incompatible change in behaviour.
         Class Link, Crossing, StrandRef, Tangle:
             - New classes to support knots and links, plus other additional
               classes and methods to interface with the Boost Graph Library.
+        Class Manifold:
+            - All manifold subclasses now have copy constructors and
+              assignment operators.
+            - Added some protected default constructors and operators so
+              that base classes can use default implementations.
         Class MarkedAbelianGroup:
             - New routine isZ().
+        Class MarkedVector:
+            - Added a move constructor and move assignment.
+        Class Matrix, MatrixRing, MatrixIntDomain:
+            - These classes have now been merged into a single Matrix class.
+              There is a new template argument to indicate whether the ring
+              functions should be made available, and the integral domain
+              functions are available only for Regina's own integer classes.
+              The old class names MatrixRing and MatrixIntDomain are still
+              available as deprecated typedefs.
+            - Added (fast) move constructors and move assignment operators,
+              and a (slow) copy assignment operator.
+            - New static routine identity().
+            - The multiplication operator and the multiplyAs() routines now
+              return a Matrix, not a std::unique_ptr<Matrix>.  Now that
+              Matrix has a move constructor and assignment operator, this
+              should not be inducing unwanted deep copies.
+            - The routine multiplyAs is now deprecated (since there is no
+              longer a Matrix class hierarchy), and it ignores its template
+              arguments (instead always returning a matrix of the same class).
+              You should just call the multiplication operator instead.
+            - The constants zero and one are now deprecated.  Just use 0 and 1
+              instead.
+        Class mem_istream, mem_streambuf:
+            - New classes to support input streams that read from memory.
         Class NormalHypersurfaces:
             - New routine sort() to sort hypersurfaces by arbitrary criteria.
             - The postconditions for enumerate() and makeMatchingEquations()
@@ -52,6 +154,7 @@ Version 5.2  [ 29 September, 2017 ]
               Currently NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED are the only
               coordinate systems where this can happen.
         Class NormalSurface:
+            - New routine countBoundaries(), thanks to Alex He.
             - Explicitly added preconditions to isOrientable(),
               isConnected() and isTwoSided() that the surface must be embedded.
               These preconditions were always required by the code, but
@@ -62,25 +165,76 @@ Version 5.2  [ 29 September, 2017 ]
             - New normal surface coordinate class to implement
               NS_AN_QUAD_OCT_CLOSED (thanks to Nathan Dunfield).
         Class Packet, PacketChildren, ChildIterator, SubtreeIterator:
-            - Supports iterating through packets using range-based for loops:
+            - Supports iterating over packets using range-based for loops:
                 + Packet has new routines begin() and end() for iterating
                   through the entire subtree rooted at a given packet.
-                + Packet has a new routine children() for iterating through
-                  immediate children of a given packet.
-                + New lightweight classes PacketChildren, ChildIterator and
-                  SubtreeIterator to support this functionality.
-                + In Python, Packet has new generators children(), subtree()
-                  and descendants() (thanks to Matthias Goerner).
+                  In Python, Packet is now an iterable object.
+                + Packet has new routines children() and descendants() for
+                  iterating through immediate children and strict
+                  descendants respectively of a given packet.
+                + New lightweight classes PacketChildren, PacketDescendants,
+                  ChildIterator and SubtreeIterator to support this iteration.
+                + For Python only, Packet has an additional new member function
+                  subtree() that also returns an iterable object.
+            - In python, tags() now returns a python set (not a python list).
+        Class PacketListener, PacketShell:
+            - Several backward incompatible changes to PacketListener, to make
+              it difficult for listeners to call unsafe functions on packets
+              that are already in the process of being destroyed:
+                + PacketListener::packetToBeDestroyed() now takes a PacketShell,
+                  not a full Packet*.  This severely limits the Packet member
+                  functions that can be called.
+                + PacketListener::childToBeRemoved() and childWasRemoved()
+                  no longer take a third boolean argument (inParentDestructor).
+                  Instead, when these are called from the parent destructor,
+                  the first argument (representing the parent) will be null.
+                  Likewise, when they are called from the child destructor,
+                  the second argument (representing the child) will be null.
+            - This class is now available for overriding in python!
+            - PacketListener is now explicitly non-copyable, since copying the
+              set of packets being listened to is not a lightweight operatation.
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.
+        Class Polynomial:
+            - Added move constructor and assignment operator.
+            - Added negate().
+            - Added operators +, *, -, / in several variants.
+            - Fixed a bug when using /= to divide a lower-degree polynomial by
+              a higher-degree polynomial.  This should set the LHS to zero;
+              instead it did nothing if LHS was a constant, and crashed if LHS
+              had positive degree.  The bad code path was unreachable in
+              Regina's own code, so users would only have experienced the bug
+              if they were using Regina's Polynomial class in their own code.
+        Class PosOrder:
+            - Added copy constructor.
+        Class Property:
+            - Added a copy constructor, though (like the assignment operator)
+              this cannot be used with the StoreManagedPtr storage policy.
+            - The assignment operator now returns a non-const reference
+              (not a const reference).
+        Class SafePointeeBase:
+            - Added hasSafePtr() to test whether safe pointers are being used.
+        Class SatBlockSpec:
+            - Added copy constructor and assignment operator.
+        Class SFSpace:
+            - Assignment operator now returns a reference (not void).
+        Class SimpleSurfaceBundle:
+            - New assignment operator.
         Class Simplex<dim>:
             - New convenience routine edge(i,j) that returns the edge
               between two given vertices.
+        Class SnapPeaCensusManifold:
+            - New assignment operator.
         Class SnapPeaTriangulation:
             - Fixed a problem (present in Regina 5.0 and 5.1) in which SnapPea
               would sometimes retriangulate unexpectedly during the
               SnapPeaTriangulation(const Triangulation<3>&) constructor.
+        Class SurfaceFilterProperties:
+            - In python, eulerChars() now returns a python set (not a python
+              list).
+        Class TorusBundle:
+            - New assignment operator.
         Class TreeDecomposition:
             - New copy constructor.
             - New constructor that takes a Link.
@@ -95,8 +249,6 @@ Version 5.2  [ 29 September, 2017 ]
               graph of a triangulation can be accessed seamlessly through the
               BGL by using the triangulation itself as the graph data structure.
             - New routine reflect().
-            - New Python constructor that accepts a snappy.Manifold or a
-              SnapPy.Triangulation (thanks to Matthias Goerner).
             - New pachner() routines to support Pachner moves of all types
               in all dimensions.  In dimensions 2-4, the old names
               (e.g., oneFourMove(), threeThreeMove(), etc.) are deprecated,
@@ -122,10 +274,16 @@ Version 5.2  [ 29 September, 2017 ]
               vastly fewer tetrahedra.
             - New routine fillTorus() to fill 2-triangle torus boundary
               components.
+            - New Python constructor that accepts a snappy.Manifold or a
+              SnapPy.Triangulation (thanks to Matthias Goerner).
             - New routines longitude() and meridianLongitude() to deduce
               boundary curves for knot complements.
             - New deprecated routine fourOneMove(), added for completeness.
               Use the new pachner() routines instead.
+            - When retriangulation() or simplifyExhaustive() is given a
+              negative height, it now puts no limit on the number of
+              additional tetrahedra (instead of doing nothing).
+              This is a backward-incompatible change in behaviour.
         Class Triangulation<2>:
             - New deprecated routines threeOneMove() and twoTwoMove(),
               added for completeness.  Use the new pachner() routines instead.
@@ -147,17 +305,34 @@ Version 5.2  [ 29 September, 2017 ]
             - Moved to maths/binom.h.
         Routine binomMedium():
             - New linear-time routine to compute (n choose k) for n <= 29.
+        Routine gcdWithCoeffs():
+            - The python version now takes (a, b) and returns (gcd, u, v).
         Routine politeThreads():
             - New routine to help user interfaces choose an appropriate
               level of parallelisation.
+        Routine utf8ValidTo():
+            - New routine to validate UTF-8 strings.
+        Headers engine.h, output.h:
+            - Moved into the core/ subdirectory, to help avoid naming conflicts
+              with other software packages.  The original headers have
+              been kept but are now deprecated.
+        Header packetlistener.h:
+            - Deprecated; please include packet.h instead.
     PYTHON:
         - Now "from regina import *" does not clobber the global open().
           Thanks to Matthias Goerner.
+        - Packets no longer "expire" when they are deleted by the calculation
+          engine.  They are merely orphaned in the packet tree, and will remain
+          in existence for as long as python holds a reference to them.
         - Now constructs regina's arbitrary-precision Integer and LargeInteger
           objects correctly when given a python arbitrary-precision long as an
           argument.  Previously, when the argument was outside the usual
           32/64-bit native C++ long integer range, the automatic conversion
           went via floating-point arithmetic, resulting in a loss of precision.
+    USER INTERFACES:
+        - The iPad python environment is much more pleasant to work with.
+        - Python tab completion in all user interfaces is more natural and now
+          supports unicode.
     UTILITIES:
         retriangulate:
             - New utility that exhaustively retriangulates a given manifold.

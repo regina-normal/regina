@@ -30,18 +30,20 @@
  *                                                                        *
  **************************************************************************/
 
-#include <boost/python.hpp>
+#include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "triangulation/facetspec.h"
 #include "../helpers.h"
 
-using namespace boost::python;
+using pybind11::overload_cast;
 using regina::FacetSpec;
 
 template <int dim>
-void addFacetSpec(const char* name) {
-    class_<FacetSpec<dim>>(name)
-        .def(init<int, int>())
-        .def(init<const FacetSpec<dim>&>())
+void addFacetSpec(pybind11::module& m, const char* name) {
+    auto c = pybind11::class_<FacetSpec<dim>>(m, name)
+        .def(pybind11::init<>())
+        .def(pybind11::init<int, int>())
+        .def(pybind11::init<const FacetSpec<dim>&>())
         .def_readwrite("simp", &FacetSpec<dim>::simp)
         .def_readwrite("facet", &FacetSpec<dim>::facet)
         .def("isBoundary", &FacetSpec<dim>::isBoundary)
@@ -51,36 +53,39 @@ void addFacetSpec(const char* name) {
         .def("setBoundary", &FacetSpec<dim>::setBoundary)
         .def("setBeforeStart", &FacetSpec<dim>::setBeforeStart)
         .def("setPastEnd", &FacetSpec<dim>::setPastEnd)
-        .def("inc", static_cast<FacetSpec<dim> (FacetSpec<dim>::*)(int)>(
-            &FacetSpec<dim>::operator++))
-        .def("dec", static_cast<FacetSpec<dim> (FacetSpec<dim>::*)(int)>(
-            &FacetSpec<dim>::operator--))
-        .def(self < self)
-        .def(self <= self)
-        .def(regina::python::add_eq_operators())
+        .def("inc", [](FacetSpec<dim>& s) {
+            return s++;
+        })
+        .def("dec", [](FacetSpec<dim>& s) {
+            return s--;
+        })
+        .def(pybind11::self < pybind11::self)
+        .def(pybind11::self <= pybind11::self)
     ;
+    regina::python::add_output_ostream(c, true /* __repr__ */);
+    regina::python::add_eq_operators(c);
 }
 
-void addFacetSpec() {
-    addFacetSpec<2>("FacetSpec2");
-    addFacetSpec<3>("FacetSpec3");
-    addFacetSpec<4>("FacetSpec4");
+void addFacetSpec(pybind11::module& m) {
+    addFacetSpec<2>(m, "FacetSpec2");
+    addFacetSpec<3>(m, "FacetSpec3");
+    addFacetSpec<4>(m, "FacetSpec4");
 #ifndef REGINA_LOWDIMONLY
-    addFacetSpec<5>("FacetSpec5");
-    addFacetSpec<6>("FacetSpec6");
-    addFacetSpec<7>("FacetSpec7");
-    addFacetSpec<8>("FacetSpec8");
-    addFacetSpec<9>("FacetSpec9");
-    addFacetSpec<10>("FacetSpec10");
-    addFacetSpec<11>("FacetSpec11");
-    addFacetSpec<12>("FacetSpec12");
-    addFacetSpec<13>("FacetSpec13");
-    addFacetSpec<14>("FacetSpec14");
-    addFacetSpec<15>("FacetSpec15");
+    addFacetSpec<5>(m, "FacetSpec5");
+    addFacetSpec<6>(m, "FacetSpec6");
+    addFacetSpec<7>(m, "FacetSpec7");
+    addFacetSpec<8>(m, "FacetSpec8");
+    addFacetSpec<9>(m, "FacetSpec9");
+    addFacetSpec<10>(m, "FacetSpec10");
+    addFacetSpec<11>(m, "FacetSpec11");
+    addFacetSpec<12>(m, "FacetSpec12");
+    addFacetSpec<13>(m, "FacetSpec13");
+    addFacetSpec<14>(m, "FacetSpec14");
+    addFacetSpec<15>(m, "FacetSpec15");
 #endif
 
-    scope().attr("Dim2TriangleEdge") = scope().attr("FacetSpec2");
-    scope().attr("NTetFace") = scope().attr("FacetSpec3");
-    scope().attr("Dim4PentFacet") = scope().attr("FacetSpec4");
+    m.attr("Dim2TriangleEdge") = m.attr("FacetSpec2");
+    m.attr("NTetFace") = m.attr("FacetSpec3");
+    m.attr("Dim4PentFacet") = m.attr("FacetSpec4");
 }
 

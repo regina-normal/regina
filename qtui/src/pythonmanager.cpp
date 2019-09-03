@@ -72,7 +72,7 @@ void PythonManager::openPythonReference(QWidget* topLevelWindow) {
     }
 }
 
-#ifdef BOOST_PYTHON_FOUND
+#ifdef BUILD_PYTHON_BINDINGS
 
 #include "python/pythonconsole.h"
 
@@ -93,7 +93,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
     // Initialise the python interpreter.
     if (ans->importRegina()) {
-        ans->executeLine("print");
+        ans->addOutput(parent->QObject::tr("\n"));
         ans->setRootPacket(tree);
         ans->setSelectedPacket(selectedPacket);
     }
@@ -105,7 +105,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 }
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        const QString& script, const PythonVariableList& initialVars) {
+        regina::Script* script) {
     PythonConsole* ans = new PythonConsole(parent, this);
 
     ans->blockInput(parent->QObject::tr("Initialising..."));
@@ -114,41 +114,23 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->show();
     QCoreApplication::instance()->processEvents();
 
-    // First set up completion
+    // First set up completion.
     ans->executeLine("import rlcompleter");
     ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
 
     // Initialise the python interpreter.
     if (ans->importRegina())
-        ans->executeLine("print");
-    for (PythonVariableList::const_iterator it = initialVars.begin();
-            it != initialVars.end(); it++)
-        ans->setVar((*it).name, (*it).value);
-    ans->executeScript(script, parent->QObject::tr("user script"));
+        ans->addOutput(parent->QObject::tr("\n"));
+
+    // Run the given script.
+    ans->addInfo("Running script...");
+
+    ans->runScript(script);
 
     // All ready!
     ans->addInfo(parent->QObject::tr("\nReady."));
     ans->allowInput();
     return ans;
-}
-
-PythonConsole* PythonManager::compileScript(QWidget* parent,
-        const QString& script) {
-    PythonConsole* ans = new PythonConsole(parent, this);
-
-    ans->blockInput(parent->QObject::tr("Initialising..."));
-
-    // Try to compile the script.
-    if (ans->compileScript(script)) {
-        delete ans;
-        return 0;
-    } else {
-        // The compile failed; show the details to the user.
-        ans->show();
-        ans->addOutput(parent->QObject::tr("Compile failed."));
-        ans->allowInput();
-        return ans;
-    }
 }
 
 void PythonManager::closeAllConsoles() {
@@ -179,7 +161,7 @@ namespace {
         ReginaSupport::warn(parent,
             QObject::tr("Python scripting has been "
             "disabled in your build of Regina."),
-            QObject::tr("<qt>This is because no boost.python installation "
+            QObject::tr("<qt>This is because no Python installation "
             "could be found when Regina was compiled.  "
             "Watch the output of <b>cmake</b> at compile time "
             "for a more detailed explanation, or "
@@ -196,10 +178,6 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
         const QString&, const PythonVariableList&) {
-    return scriptingDisabled(parent);
-}
-
-PythonConsole* PythonManager::compileScript(QWidget* parent, const QString&) {
     return scriptingDisabled(parent);
 }
 

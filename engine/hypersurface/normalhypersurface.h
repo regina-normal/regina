@@ -42,14 +42,13 @@
 
 #include <utility>
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
 #include "maths/ray.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
 #include "utilities/property.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
@@ -59,10 +58,8 @@ namespace regina {
  * @{
  */
 
-class EnumConstraints;
-
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
+template <typename, bool> class Matrix;
+typedef Matrix<Integer, true> MatrixInt;
 
 /**
  * A template that stores information about a particular
@@ -121,7 +118,7 @@ struct HyperInfo;
         static constexpr const HyperCoords coordsID = id; \
         inline class_(const class_& cloneMe) : \
                 superclass(cloneMe.coords()) {} \
-        inline virtual NormalHypersurfaceVector* clone() const { \
+        inline virtual NormalHypersurfaceVector* clone() const override { \
             return new class_(*this); \
         }
 
@@ -180,7 +177,7 @@ struct HyperInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
+class REGINA_API NormalHypersurfaceVector {
     protected:
         Ray coords_;
             /**< The raw vector of normal coordinates. */
@@ -443,6 +440,11 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
             static EnumConstraints* makeEmbeddedConstraints(
                 const Triangulation<4>* triangulation);
         #endif
+
+        // Make this class non-assignable, since we do not want to
+        // accidentally change coordinate systems.
+        NormalHypersurfaceVector& operator = (
+            const NormalHypersurfaceVector&) = delete;
 };
 
 /**
@@ -459,9 +461,7 @@ class REGINA_API NormalHypersurfaceVector : public boost::noncopyable {
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * will return LargeInteger::infinity where appropriate.
  */
-class REGINA_API NormalHypersurface :
-        public ShortOutput<NormalHypersurface>,
-        public boost::noncopyable {
+class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
     protected:
         NormalHypersurfaceVector* vector_;
             /**< Contains the coordinates of the normal hypersurface in
@@ -928,6 +928,10 @@ class REGINA_API NormalHypersurface :
          * @return the underlying raw vector.
          */
         const Ray& rawVector() const;
+
+        // Make this class non-copyable.
+        NormalHypersurface(const NormalHypersurface&) = delete;
+        NormalHypersurface& operator = (const NormalHypersurface&) = delete;
 
     protected:
         /**

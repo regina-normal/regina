@@ -30,125 +30,98 @@
  *                                                                        *
  **************************************************************************/
 
+#include "../pybind11/pybind11.h"
+#include "../pybind11/complex.h"
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
-#include "../safeheldtype.h"
+#include "utilities/safeptr.h"
 #include "../helpers.h"
 
-// Held type must be declared before boost/python.hpp
-#include <boost/python.hpp>
-
-using namespace boost::python;
-using namespace regina::python;
+using pybind11::overload_cast;
 using regina::Cusp;
 using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
-namespace {
-    double (SnapPeaTriangulation::*volume_void)() const =
-        &SnapPeaTriangulation::volume;
-    Triangulation<3>* (SnapPeaTriangulation::*filledTriangulation_void)() const =
-        &SnapPeaTriangulation::filledTriangulation;
-    Triangulation<3>* (SnapPeaTriangulation::*filledTriangulation_unsigned)
-        (unsigned) const = &SnapPeaTriangulation::filledTriangulation;
-
-    boost::python::tuple volume_precision(const SnapPeaTriangulation& t) {
-        int precision;
-        double volume = t.volume(precision);
-        return boost::python::make_tuple(volume, precision);
-    }
-
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fundamentalGroupFilled,
-        SnapPeaTriangulation::fundamentalGroupFilled, 0, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_cusp,
-        SnapPeaTriangulation::cusp, 0, 1);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_fill,
-        SnapPeaTriangulation::fill, 2, 3);
-    BOOST_PYTHON_MEMBER_FUNCTION_OVERLOADS(OL_unfill,
-        SnapPeaTriangulation::unfill, 0, 1);
-
-    BOOST_PYTHON_FUNCTION_OVERLOADS(OL_enableKernelMessages,
-        SnapPeaTriangulation::enableKernelMessages, 0, 1);
-}
-
-void addSnapPeaTriangulation() {
-    class_<Cusp, std::auto_ptr<Cusp>, boost::noncopyable>("Cusp", no_init)
+void addSnapPeaTriangulation(pybind11::module& m) {
+    auto c1 = pybind11::class_<Cusp>(m, "Cusp")
         .def("vertex", &Cusp::vertex,
-            return_value_policy<reference_existing_object>())
+            pybind11::return_value_policy::reference)
         .def("complete", &Cusp::complete)
         .def("m", &Cusp::m)
         .def("l", &Cusp::l)
-        .def(regina::python::add_output())
-        .def(regina::python::add_eq_operators())
     ;
+    regina::python::add_output(c1);
+    regina::python::add_eq_operators(c1);
 
-    class_<SnapPeaTriangulation, bases<regina::Triangulation<3>>,
-            SafeHeldType<SnapPeaTriangulation>, boost::noncopyable>
-            ("SnapPeaTriangulation", init<>())
-        .def(init<const std::string&>())
-        .def(init<const SnapPeaTriangulation&>())
-        .def(init<const Triangulation<3>&, optional<bool> >())
+    auto c2 = pybind11::class_<SnapPeaTriangulation, regina::Triangulation<3>,
+            regina::SafePtr<SnapPeaTriangulation>>(m, "SnapPeaTriangulation")
+        .def(pybind11::init<>())
+        .def(pybind11::init<const std::string&>())
+        .def(pybind11::init<const SnapPeaTriangulation&>())
+        .def(pybind11::init<const Triangulation<3>&, bool>(),
+            pybind11::arg(), pybind11::arg("ignored") = false)
         .def("isNull", &SnapPeaTriangulation::isNull)
         .def("name", &SnapPeaTriangulation::name)
         .def("solutionType", &SnapPeaTriangulation::solutionType)
-        .def("volume", volume_void)
-        .def("volumeWithPrecision", volume_precision)
+        .def("volume", overload_cast<>(
+            &SnapPeaTriangulation::volume, pybind11::const_))
+        .def("volumeWithPrecision", [](const SnapPeaTriangulation& t) {
+            int precision;
+            double volume = t.volume(precision);
+            return pybind11::make_tuple(volume, precision);
+        })
         .def("volumeZero", &SnapPeaTriangulation::volumeZero)
-        .def("shape", &SnapPeaTriangulation::shape,
-            return_value_policy<copy_const_reference>())
+        .def("shape", &SnapPeaTriangulation::shape)
         .def("minImaginaryShape", &SnapPeaTriangulation::minImaginaryShape)
-        .def("gluingEquations", &SnapPeaTriangulation::gluingEquations,
-            return_value_policy<manage_new_object>())
+        .def("gluingEquations", &SnapPeaTriangulation::gluingEquations)
         .def("gluingEquationsRect",
-            &SnapPeaTriangulation::gluingEquationsRect,
-            return_value_policy<manage_new_object>())
+            &SnapPeaTriangulation::gluingEquationsRect)
         .def("countCusps", &SnapPeaTriangulation::countCusps)
         .def("countCompleteCusps",
             &SnapPeaTriangulation::countCompleteCusps)
         .def("countFilledCusps", &SnapPeaTriangulation::countFilledCusps)
-        .def("cusp", &SnapPeaTriangulation::cusp, OL_cusp()[
-            return_internal_reference<>()])
-        .def("fill", &SnapPeaTriangulation::fill, OL_fill())
-        .def("unfill", &SnapPeaTriangulation::unfill, OL_unfill())
-        .def("filledTriangulation", filledTriangulation_void,
-            return_value_policy<to_held_type<> >())
-        .def("filledTriangulation", filledTriangulation_unsigned,
-            return_value_policy<to_held_type<> >())
-        .def("slopeEquations", &SnapPeaTriangulation::slopeEquations,
-            return_value_policy<manage_new_object>())
+        .def("cusp", &SnapPeaTriangulation::cusp,
+            pybind11::return_value_policy::reference_internal,
+            pybind11::arg("whichCusp") = 0)
+        .def("fill", &SnapPeaTriangulation::fill,
+            pybind11::arg(), pybind11::arg(), pybind11::arg("whichCusp")= 0)
+        .def("unfill", &SnapPeaTriangulation::unfill,
+            pybind11::arg("whichCusp")= 0)
+        .def("filledTriangulation", overload_cast<>(
+            &SnapPeaTriangulation::filledTriangulation, pybind11::const_))
+        .def("filledTriangulation", overload_cast<unsigned>(
+            &SnapPeaTriangulation::filledTriangulation, pybind11::const_))
+        .def("slopeEquations", &SnapPeaTriangulation::slopeEquations)
         .def("fundamentalGroupFilled",
             &SnapPeaTriangulation::fundamentalGroupFilled,
-            OL_fundamentalGroupFilled(args(
-                "simplify_presentation",
-                "fillings_may_affect_generators",
-                "minimize_number_of_generators"))
-            [return_internal_reference<>()])
+            pybind11::arg("simplifyPresentation") = true,
+            pybind11::arg("fillingsMayAffectGenerators") = true,
+            pybind11::arg("minimiseNumberOfGenerators") = true,
+            pybind11::arg("tryHardToShortenRelators") = true,
+            pybind11::return_value_policy::reference_internal)
         .def("homologyFilled", &SnapPeaTriangulation::homologyFilled,
-            return_internal_reference<>())
-        .def("protoCanonize", &SnapPeaTriangulation::protoCanonize,
-            return_value_policy<to_held_type<> >())
-        .def("protoCanonise", &SnapPeaTriangulation::protoCanonise,
-            return_value_policy<to_held_type<> >())
-        .def("canonize", &SnapPeaTriangulation::canonize,
-            return_value_policy<to_held_type<> >())
-        .def("canonise", &SnapPeaTriangulation::canonise,
-            return_value_policy<to_held_type<> >())
+            pybind11::return_value_policy::reference_internal)
+        .def("protoCanonize", &SnapPeaTriangulation::protoCanonize)
+        .def("protoCanonise", &SnapPeaTriangulation::protoCanonise)
+        .def("canonize", &SnapPeaTriangulation::canonize)
+        .def("canonise", &SnapPeaTriangulation::canonise)
         .def("randomize", &SnapPeaTriangulation::randomize)
         .def("randomise", &SnapPeaTriangulation::randomise)
-        .def("kernelMessagesEnabled",
+        .def_static("kernelMessagesEnabled",
             &SnapPeaTriangulation::kernelMessagesEnabled)
-        .def("enableKernelMessages",
+        .def_static("enableKernelMessages",
             &SnapPeaTriangulation::enableKernelMessages,
-            OL_enableKernelMessages())
-        .def("disableKernelMessages",
+            pybind11::arg("enabled") = true)
+        .def_static("disableKernelMessages",
             &SnapPeaTriangulation::disableKernelMessages)
-        .staticmethod("kernelMessagesEnabled")
-        .staticmethod("enableKernelMessages")
-        .staticmethod("disableKernelMessages")
-        .attr("typeID") = regina::PACKET_SNAPPEATRIANGULATION
+        .def_property_readonly_static("typeID", [](pybind11::object) {
+            // We cannot take the address of typeID, so use a getter function.
+            return SnapPeaTriangulation::typeID;
+        })
     ;
 
-    enum_<SnapPeaTriangulation::SolutionType>("SolutionType")
+    auto st = pybind11::enum_<SnapPeaTriangulation::SolutionType>(
+            c2, "SolutionType")
         .value("not_attempted", SnapPeaTriangulation::not_attempted)
         .value("geometric_solution",
             SnapPeaTriangulation::geometric_solution)
@@ -161,15 +134,13 @@ void addSnapPeaTriangulation() {
         .value("no_solution", SnapPeaTriangulation::no_solution)
         .value("externally_computed",
             SnapPeaTriangulation::externally_computed)
+        .export_values()
     ;
 
-    implicitly_convertible<SafeHeldType<SnapPeaTriangulation>,
-        SafeHeldType<regina::Triangulation<3>> >();
+    m.attr("NCusp") = m.attr("Cusp");
+    m.attr("NSnapPeaTriangulation") = m.attr("SnapPeaTriangulation");
 
-    FIX_REGINA_BOOST_CONVERTERS(SnapPeaTriangulation);
-
-    scope().attr("NCusp") = scope().attr("Cusp");
-    scope().attr("NSnapPeaTriangulation") =
-        scope().attr("SnapPeaTriangulation");
+    // For backward compatibility with the old boost.python bindings:
+    m.attr("SolutionType") = st;
 }
 

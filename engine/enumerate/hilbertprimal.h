@@ -46,7 +46,6 @@
 
 namespace regina {
 
-class EnumConstraints;
 class ProgressTracker;
 class Ray;
 
@@ -143,6 +142,9 @@ class HilbertPrimal {
             const EnumConstraints* constraints,
             ProgressTracker* tracker = 0);
 
+        // Mark this class as non-constructible.
+        HilbertPrimal() = delete;
+
     private:
         /**
          * Identical to the public routine enumerateHilbertBasis(),
@@ -182,12 +184,6 @@ class HilbertPrimal {
          */
         template <class BitmaskType>
         static bool inFace(const Ray& ray, const BitmaskType& face);
-
-        /**
-         * Private constructor to ensure that objects of this class are
-         * never created.
-         */
-        HilbertPrimal();
 };
 
 /**
@@ -199,11 +195,6 @@ class HilbertPrimal {
 [[deprecated]] typedef HilbertPrimal NHilbertPrimal;
 
 /*@}*/
-
-// Inline functions for HilbertPrimal
-
-inline HilbertPrimal::HilbertPrimal() {
-}
 
 } // namespace regina
 

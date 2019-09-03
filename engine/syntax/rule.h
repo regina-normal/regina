@@ -61,13 +61,12 @@
 
 #include <memory>
 #include <vector>
-#include <boost/noncopyable.hpp>
 #include <libxml/xmlreader.h>
 
 namespace regina {
 namespace syntax {
 
-class REGINA_API Rule : public boost::noncopyable
+class REGINA_API Rule
 {
 public:
     Rule();
@@ -90,6 +89,10 @@ public:
     MatchResult match(Matcher& m, int offset);
 
     static Rule::Ptr create(const std::string& name);
+
+    // Make this class non-copyable.
+    Rule(const Rule&) = delete;
+    Rule& operator = (const Rule&) = delete;
 
 protected:
     virtual bool doLoad(xmlTextReaderPtr reader);

@@ -39,7 +39,7 @@
 #define __GLOBALARRAY_H
 #endif
 
-#include <boost/python.hpp>
+#include "pybind11/pybind11.h"
 #include "helpers.h"
 
 namespace regina {
@@ -50,10 +50,10 @@ namespace regina {
  */
 namespace python {
 
-template <typename T, class ReturnValuePolicy>
+template <typename T, pybind11::return_value_policy rvp>
 class GlobalArray2D;
 
-template <typename T, class ReturnValuePolicy>
+template <typename T, pybind11::return_value_policy rvp>
 class GlobalArray3D;
 
 /**
@@ -65,25 +65,24 @@ class GlobalArray3D;
  * elements of the array.  Range checking is performed on any index that is
  * passed.
  *
- * The \a ReturnValuePolicy template argument specifies the return value
- * policy for element lookup.
+ * The \a rvp template argument specifies the return value policy for element
+ * lookup.
  *
  * For each different set of template parameters, the corresponding
  * GlobalArray class must be wrapped in Python before the first object of
- * this class is constructed.  This wrapping is performed by calling
- * wrapClass().
+ * this class is wrapped.  This wrapping is performed by calling wrapClass().
  *
  * Note that elements of this array can only be inspected, not modified.
  *
  * \pre The output operator &lt;&lt; is defined for type \a T.
  */
-template <typename T, class ReturnValuePolicy =
-    ::boost::python::return_by_value>
+template <typename T, pybind11::return_value_policy rvp =
+    pybind11::return_value_policy::copy>
 class GlobalArray {
     private:
-        const T* data;
+        const T* data_;
             /**< The underlying constant C++ array. */
-        size_t nElements;
+        size_t size_;
             /**< The number of elements in the underlying C++ array. */
 
     public:
@@ -93,11 +92,10 @@ class GlobalArray {
          * \pre This class has already been wrapped in Python by calling
          * wrapClass().
          *
-         * @param newData the constant C++ array that is to be wrapped.
-         * @param newSize the number of elements in this C++ array.
+         * @param data the constant C++ array that is to be wrapped.
+         * @param size the number of elements in this C++ array.
          */
-        GlobalArray(const T newData[], size_t newSize) : data(newData),
-                nElements(newSize) {
+        GlobalArray(const T data[], size_t size) : data_(data), size_(size) {
         }
 
         /**
@@ -108,8 +106,8 @@ class GlobalArray {
          *
          * @param cloneMe the wrapper object to clone.
          */
-        GlobalArray(const GlobalArray<T, ReturnValuePolicy>& cloneMe) :
-                data(cloneMe.data), nElements(cloneMe.nElements) {
+        GlobalArray(const GlobalArray<T, rvp>& cloneMe) :
+                data_(cloneMe.data_), size_(cloneMe.size_) {
         }
 
         /**
@@ -118,7 +116,7 @@ class GlobalArray {
          * @return the number of elements.
          */
         size_t size() const {
-            return nElements;
+            return size_;
         }
 
         /**
@@ -129,23 +127,9 @@ class GlobalArray {
          * @return the element at the given index.
          */
         const T& getItem(size_t index) const {
-            if (index >= nElements) {
-                PyErr_SetString(PyExc_IndexError,
-                    "global array index out of range");
-                ::boost::python::throw_error_already_set();
-            }
-            return data[index];
-        }
-
-        /**
-         * Returns the array element at the given index.
-         * If the index is out of range, a Python error will be thrown.
-         *
-         * @param index the given array index.
-         * @return the element at the given index.
-         */
-        const T& operator [] (size_t index) const {
-            return getItem(index);
+            if (index >= size_)
+                throw pybind11::index_error("Global array index out of range");
+            return data_[index];
         }
 
         /**
@@ -157,32 +141,29 @@ class GlobalArray {
          */
         std::ostream& writeText(std::ostream& out) const {
             out << "[ ";
-            for (size_t i = 0; i < nElements; i++)
-                out << data[i] << ' ';
+            for (size_t i = 0; i < size_; i++)
+                out << data_[i] << ' ';
             out << "]";
             return out;
         }
 
         /**
-         * Constructs a Boost.Python wrapper for this class.
+         * Constructs a Python wrapper for this class.
          *
          * This routine must be called for each set of template
-         * parameters before the first object of this class is
-         * constructed.
+         * parameters before the first object of this class is wrapped.
          *
          * @param className the name that will be assigned to this
          * class in Python.
          */
-        static void wrapClass(const char* className) {
-            ::boost::python::class_<GlobalArray<T, ReturnValuePolicy> >
-                    (className, ::boost::python::no_init)
-                .def("__getitem__",
-                    &GlobalArray<T, ReturnValuePolicy>::getItem,
-                    ::boost::python::return_value_policy<ReturnValuePolicy>())
-                .def("__len__", &GlobalArray<T, ReturnValuePolicy>::size)
-                .def(::boost::python::self_ns::str(::boost::python::self))
-                .def(regina::python::add_eq_operators())
+        static void wrapClass(pybind11::module& m, const char* className) {
+            auto c = pybind11::class_<GlobalArray<T, rvp>>(m, className)
+                .def("__getitem__", &GlobalArray<T, rvp>::getItem,
+                    rvp)
+                .def("__len__", &GlobalArray<T, rvp>::size)
             ;
+            regina::python::add_output_ostream(c);
+            regina::python::add_eq_operators(c);
         }
 
     private:
@@ -193,22 +174,22 @@ class GlobalArray {
          * \pre This class has already been wrapped in Python by calling
          * wrapClass().
          */
-        GlobalArray() : data(0), nElements(0) {
+        GlobalArray() : data_(0), size_(0) {
         }
 
         /**
          * Initialises this wrapper to reference the given C++ array.
          *
-         * @param newData the constant C++ array that is to be wrapped.
-         * @param newSize the number of elements in this C++ array, for
+         * @param data the constant C++ array that is to be wrapped.
+         * @param size the number of elements in this C++ array, for
          * the purposes of range checking during element retrieval.
          */
-        void init(const T* newData, size_t newSize) {
-            data = newData;
-            nElements = newSize;
+        void init(const T* data, size_t size) {
+            data_ = data;
+            size_ = size;
         }
 
-    friend class GlobalArray2D<T, ReturnValuePolicy>;
+    friend class GlobalArray2D<T, rvp>;
 };
 
 /**
@@ -219,9 +200,9 @@ class GlobalArray {
  * @param arr the array whose contents are to be written.
  * @return the given output stream.
  */
-template <typename T, class ReturnValuePolicy>
+template <typename T, pybind11::return_value_policy rvp>
 std::ostream& operator << (std::ostream& out,
-        const GlobalArray<T, ReturnValuePolicy>& arr) {
+        const GlobalArray<T, rvp>& arr) {
     return arr.writeText(out);
 }
 
@@ -234,29 +215,28 @@ std::ostream& operator << (std::ostream& out,
  * elements of the array.  Range checking is performed on any indices that
  * are passed.
  *
- * The \a ReturnValuePolicy template argument specifies the return value
- * policy for element lookup.
+ * The \a rvp template argument specifies the return value policy for element
+ * lookup.
  *
  * For each different set of template parameters, the corresponding
  * GlobalArray2D class must be wrapped in Python before the first object of
- * this class is constructed.  This wrapping is performed by calling
- * wrapClass().
+ * this class is wrapped.  This wrapping is performed by calling wrapClass().
  *
  * Note that elements of this array can only be inspected, not modified.
  *
  * \pre The output operator &lt;&lt; is defined for type \a T.
  */
-template <typename T, class ReturnValuePolicy =
-    ::boost::python::return_by_value>
+template <typename T, pybind11::return_value_policy rvp =
+    pybind11::return_value_policy::copy>
 class GlobalArray2D {
     public:
-        typedef GlobalArray<T, ReturnValuePolicy> Row;
+        typedef GlobalArray<T, rvp> Row;
             /**< A wrapper class for each row of this array. */
 
     private:
-        Row* data;
+        Row* data_;
             /**< The individual rows of the underlying C++ array. */
-        size_t nRows;
+        size_t nRows_;
             /**< The number of rows in the underlying C++ array. */
 
     public:
@@ -268,20 +248,20 @@ class GlobalArray2D {
          * wrapClass().
          * \pre The number of rows is strictly positive.
          *
-         * @param newData the constant 2-dimensional C++ array that is to
+         * @param data the constant 2-dimensional C++ array that is to
          * be wrapped.
-         * @param newRows the number of rows in this C++ array, i.e.,
+         * @param nRows the number of rows in this C++ array, i.e.,
          * the first array dimension.
-         * @tparam newCols the number of columns in this C++ array, i.e.,
+         * @tparam nCols the number of columns in this C++ array, i.e.,
          * the second array dimension.  This must be a compile-time constant.
          */
-        template<size_t newCols>
-        GlobalArray2D(const T newData[][newCols], size_t newRows) :
-                data(new Row[newRows]), nRows(newRows) {
-            static_assert(newCols > 0,
-                "GlobalArray2D: newCols must be positive.");
-            for (size_t i = 0; i < nRows; i++)
-                data[i].init(newData[i], newCols);
+        template <size_t nCols>
+        GlobalArray2D(const T data[][nCols], size_t nRows) :
+                data_(new Row[nRows]), nRows_(nRows) {
+            static_assert(nCols > 0,
+                "GlobalArray2D: nCols must be positive.");
+            for (size_t i = 0; i < nRows_; i++)
+                data_[i].init(data[i], nCols);
         }
 
         /**
@@ -296,17 +276,17 @@ class GlobalArray2D {
          * wrapClass().
          * \pre The numbers of rows and columns are both strictly positive.
          *
-         * @param newData the constant 1-dimensional C++ array that is to
+         * @param data the constant 1-dimensional C++ array that is to
          * be wrapped.
-         * @param newRows the number of rows in the corresponding
+         * @param nRows the number of rows in the corresponding
          * 2-dimensional array, i.e., the first array dimension.
-         * @param newCols the number of columns in the corresponding
+         * @param nCols the number of columns in the corresponding
          * 2-dimensional array, i.e., the second array dimension.
          */
-        GlobalArray2D(const T newData[], size_t newRows, size_t newCols) :
-                data(new Row[newRows]), nRows(newRows) {
-            for (size_t i = 0; i < nRows; i++)
-                data[i].init(newData + (newCols * i), newCols);
+        GlobalArray2D(const T data[], size_t nRows, size_t nCols) :
+                data_(new Row[nRows]), nRows_(nRows) {
+            for (size_t i = 0; i < nRows_; i++)
+                data_[i].init(data + (nCols * i), nCols);
         }
 
         /**
@@ -317,10 +297,10 @@ class GlobalArray2D {
          *
          * @param cloneMe the wrapper object to clone.
          */
-        GlobalArray2D(const GlobalArray2D<T, ReturnValuePolicy>& cloneMe) :
-                data(new Row[cloneMe.nRows]), nRows(cloneMe.nRows) {
-            for (size_t i = 0; i < nRows; i++)
-                data[i].init(cloneMe.data[i].data, cloneMe.cols());
+        GlobalArray2D(const GlobalArray2D<T, rvp>& cloneMe) :
+                data_(new Row[cloneMe.nRows_]), nRows_(cloneMe.nRows_) {
+            for (size_t i = 0; i < nRows_; i++)
+                data_[i].init(cloneMe.data_[i].data_, cloneMe.cols());
         }
 
         /**
@@ -329,7 +309,7 @@ class GlobalArray2D {
          * All of the internal row wrappers are destroyed.
          */
         ~GlobalArray2D() {
-            delete[] data;
+            delete[] data_;
         }
 
         /**
@@ -338,7 +318,7 @@ class GlobalArray2D {
          * @return the number of rows.
          */
         size_t rows() const {
-            return nRows;
+            return nRows_;
         }
 
         /**
@@ -347,7 +327,7 @@ class GlobalArray2D {
          * @return the number of columns.
          */
         size_t cols() const {
-            return data[0].size();
+            return data_[0].size();
         }
 
         /**
@@ -358,23 +338,9 @@ class GlobalArray2D {
          * @return the row at the given index.
          */
         const Row& getItem(size_t index) const {
-            if (index >= nRows) {
-                PyErr_SetString(PyExc_IndexError,
-                    "global array index out of range");
-                ::boost::python::throw_error_already_set();
-            }
-            return data[index];
-        }
-
-        /**
-         * Returns the requested row of the array.
-         * If the row index is out of range, a Python error will be thrown.
-         *
-         * @param index the index of the requested row.
-         * @return the row at the given index.
-         */
-        const Row& operator [] (size_t index) const {
-            return getItem(index);
+            if (index >= nRows_)
+                throw pybind11::index_error("Global array index out of range");
+            return data_[index];
         }
 
         /**
@@ -386,32 +352,29 @@ class GlobalArray2D {
          */
         std::ostream& writeText(std::ostream& out) const {
             out << "[ ";
-            for (size_t i = 0; i < nRows; i++)
-                out << data[i] << ' ';
+            for (size_t i = 0; i < nRows_; i++)
+                out << data_[i] << ' ';
             out << "]";
             return out;
         }
 
         /**
-         * Constructs a Boost.Python wrapper for this class.
+         * Constructs a Python wrapper for this class.
          *
          * This routine must be called for each set of template
-         * parameters before the first object of this class is
-         * constructed.
+         * parameters before the first object of this class is wrapped.
          *
          * @param className the name that will be assigned to this
          * class in Python.
          */
-        static void wrapClass(const char* className) {
-            ::boost::python::class_<GlobalArray2D<T, ReturnValuePolicy> >
-                    (className, ::boost::python::no_init)
-                .def("__getitem__",
-                    &GlobalArray2D<T, ReturnValuePolicy>::getItem,
-                    ::boost::python::return_internal_reference<>())
-                .def("__len__", &GlobalArray2D<T, ReturnValuePolicy>::rows)
-                .def(::boost::python::self_ns::str(::boost::python::self))
-                .def(regina::python::add_eq_operators())
+        static void wrapClass(pybind11::module& m, const char* className) {
+            auto c = pybind11::class_<GlobalArray2D<T, rvp>>(m, className)
+                .def("__getitem__", &GlobalArray2D<T, rvp>::getItem,
+                    pybind11::return_value_policy::reference_internal)
+                .def("__len__", &GlobalArray2D<T, rvp>::rows)
             ;
+            regina::python::add_output_ostream(c);
+            regina::python::add_eq_operators(c);
         }
 
     private:
@@ -422,7 +385,7 @@ class GlobalArray2D {
          * \pre This class has already been wrapped in Python by calling
          * wrapClass().
          */
-        GlobalArray2D() : data(0), nRows(0) {
+        GlobalArray2D() : data_(0), nRows_(0) {
         }
 
         /**
@@ -431,21 +394,21 @@ class GlobalArray2D {
          *
          * \pre The number of rows is strictly positive.
          *
-         * @param newData the constant 2-dimensional C++ array that is to
+         * @param data the constant 2-dimensional C++ array that is to
          * be wrapped.
-         * @param newRows the number of rows in this C++ array, i.e.,
+         * @param nRows the number of rows in this C++ array, i.e.,
          * the first array dimension.
-         * @param newCols the number of columns in this C++ array, i.e.,
+         * @param nCols the number of columns in this C++ array, i.e.,
          * the second array dimension.  This must be a compile-time constant.
          */
-        template<size_t newCols>
-        void init(const T newData[][newCols], size_t newRows) {
-            static_assert(newCols > 0,
-                "GlobalArray2D: newCols must be positive.");
-            data = new Row[newRows];
-            nRows = newRows;
-            for (size_t i = 0; i < nRows; i++)
-                data[i].init(newData[i], newCols);
+        template <size_t nCols>
+        void init(const T data[][nCols], size_t nRows) {
+            static_assert(nCols > 0,
+                "GlobalArray2D: nCols must be positive.");
+            data_ = new Row[nRows];
+            nRows_ = nRows;
+            for (size_t i = 0; i < nRows_; i++)
+                data_[i].init(data[i], nCols);
         }
 
         /**
@@ -454,14 +417,14 @@ class GlobalArray2D {
          *
          * @param cloneMe the wrapper object to clone.
          */
-        void init(const GlobalArray2D<T, ReturnValuePolicy>& cloneMe) {
-            data = new Row[cloneMe.nRows];
-            nRows = cloneMe.nRows;
-            for (size_t i = 0; i < nRows; i++)
-                data[i].init(cloneMe.data[i].data, cloneMe.cols());
+        void init(const GlobalArray2D<T, rvp>& cloneMe) {
+            data_ = new Row[cloneMe.nRows_];
+            nRows_ = cloneMe.nRows_;
+            for (size_t i = 0; i < nRows_; i++)
+                data_[i].init(cloneMe.data_[i].data_, cloneMe.cols());
         }
 
-    friend class GlobalArray3D<T, ReturnValuePolicy>;
+    friend class GlobalArray3D<T, rvp>;
 };
 
 /**
@@ -472,9 +435,9 @@ class GlobalArray2D {
  * @param arr the array whose contents are to be written.
  * @return the given output stream.
  */
-template <typename T, class ReturnValuePolicy>
+template <typename T, pybind11::return_value_policy rvp>
 std::ostream& operator << (std::ostream& out,
-        const GlobalArray2D<T, ReturnValuePolicy>& arr) {
+        const GlobalArray2D<T, rvp>& arr) {
     return arr.writeText(out);
 }
 
@@ -487,29 +450,28 @@ std::ostream& operator << (std::ostream& out,
  * elements of the array.  Range checking is performed on any indices that
  * are passed.
  *
- * The \a ReturnValuePolicy template argument specifies the return value
- * policy for element lookup.
+ * The \a rvp template argument specifies the return value policy for element
+ * lookup.
  *
  * For each different set of template parameters, the corresponding
  * GlobalArray3D class must be wrapped in Python before the first object of
- * this class is constructed.  This wrapping is performed by calling
- * wrapClass().
+ * this class is wrapped.  This wrapping is performed by calling wrapClass().
  *
  * Note that elements of this array can only be inspected, not modified.
  *
  * \pre The output operator &lt;&lt; is defined for type \a T.
  */
-template <typename T, class ReturnValuePolicy =
-    ::boost::python::return_by_value>
+template <typename T, pybind11::return_value_policy rvp =
+    pybind11::return_value_policy::copy>
 class GlobalArray3D {
     public:
-        typedef GlobalArray2D<T, ReturnValuePolicy> Subarray;
+        typedef GlobalArray2D<T, rvp> Subarray;
             /**< A wrapper class for each two-dimensional subarray. */
 
     private:
-        Subarray* data;
+        Subarray* data_;
             /**< The individual two-dimensional subarrays. */
-        size_t nSubarrays;
+        size_t nSubarrays_;
             /**< The number of two-dimensional subarrays. */
 
     public:
@@ -521,23 +483,23 @@ class GlobalArray3D {
          * wrapClass().
          * \pre The first dimension is strictly positive.
          *
-         * @param newData the constant 3-dimensional C++ array that is to
+         * @param data the constant 3-dimensional C++ array that is to
          * be wrapped.
-         * @param newDim1 the first array dimension of this C++ array.
-         * @tparam newDim2 the second array dimension of this C++ array.
+         * @param dim1 the first array dimension of this C++ array.
+         * @tparam dim2 the second array dimension of this C++ array.
          * This must be a compile-time constant.
-         * @tparam newDim3 the third array dimension of this C++ array.
+         * @tparam dim3 the third array dimension of this C++ array.
          * This must be a compile-time constant.
          */
-        template<size_t newDim2, size_t newDim3>
-        GlobalArray3D(const T newData[][newDim2][newDim3], size_t newDim1) :
-                data(new Subarray[newDim1]), nSubarrays(newDim1) {
-            static_assert(newDim2 > 0,
-                "GlobalArray3D: newDim2 must be positive.");
-            static_assert(newDim3 > 0,
-                "GlobalArray3D: newDim3 must be positive.");
-            for (size_t i = 0; i < newDim1; i++)
-                data[i].init(newData[i], newDim2);
+        template<size_t dim2, size_t dim3>
+        GlobalArray3D(const T data[][dim2][dim3], size_t dim1) :
+                data_(new Subarray[dim1]), nSubarrays_(dim1) {
+            static_assert(dim2 > 0,
+                "GlobalArray3D: dim2 must be positive.");
+            static_assert(dim3 > 0,
+                "GlobalArray3D: dim3 must be positive.");
+            for (size_t i = 0; i < dim1; i++)
+                data_[i].init(data[i], dim2);
         }
 
         /**
@@ -548,11 +510,11 @@ class GlobalArray3D {
          *
          * @param cloneMe the wrapper object to clone.
          */
-        GlobalArray3D(const GlobalArray3D<T, ReturnValuePolicy>& cloneMe) :
-                data(new Subarray[cloneMe.nSubarrays]),
-                nSubarrays(cloneMe.nSubarrays) {
-            for (size_t i = 0; i < nSubarrays; i++)
-                data[i].init(cloneMe.data[i]);
+        GlobalArray3D(const GlobalArray3D<T, rvp>& cloneMe) :
+                data_(new Subarray[cloneMe.nSubarrays_]),
+                nSubarrays_(cloneMe.nSubarrays_) {
+            for (size_t i = 0; i < nSubarrays_; i++)
+                data_[i].init(cloneMe.data_[i]);
         }
 
         /**
@@ -561,7 +523,7 @@ class GlobalArray3D {
          * All of the internal subarray wrappers are destroyed.
          */
         ~GlobalArray3D() {
-            delete[] data;
+            delete[] data_;
         }
 
         /**
@@ -570,7 +532,7 @@ class GlobalArray3D {
          * @return the first dimension.
          */
         size_t dim1() const {
-            return nSubarrays;
+            return nSubarrays_;
         }
 
         /**
@@ -579,7 +541,7 @@ class GlobalArray3D {
          * @return the second dimension.
          */
         size_t dim2() const {
-            return data[0].rows();
+            return data_[0].rows();
         }
 
         /**
@@ -588,7 +550,7 @@ class GlobalArray3D {
          * @return the third dimension.
          */
         size_t dim3() const {
-            return data[0].cols();
+            return data_[0].cols();
         }
 
         /**
@@ -600,24 +562,9 @@ class GlobalArray3D {
          * @return the top-dimensional subarray at the given index.
          */
         const Subarray& getItem(size_t index) const {
-            if (index >= nSubarrays) {
-                PyErr_SetString(PyExc_IndexError,
-                    "global array index out of range");
-                ::boost::python::throw_error_already_set();
-            }
-            return data[index];
-        }
-
-        /**
-         * Returns the requested top-dimensional subarray of the array.
-         * If the subarray index is out of range, a Python error will
-         * be thrown.
-         *
-         * @param index the index of the requested subarray.
-         * @return the top-dimensional subarray at the given index.
-         */
-        const Subarray& operator [] (size_t index) const {
-            return getItem(index);
+            if (index >= nSubarrays_)
+                throw pybind11::index_error("Global array index out of range");
+            return data_[index];
         }
 
         /**
@@ -629,33 +576,29 @@ class GlobalArray3D {
          */
         std::ostream& writeText(std::ostream& out) const {
             out << "[ ";
-            for (size_t i = 0; i < nSubarrays; i++)
-                out << data[i] << ' ';
+            for (size_t i = 0; i < nSubarrays_; i++)
+                out << data_[i] << ' ';
             out << "]";
             return out;
         }
 
         /**
-         * Constructs a Boost.Python wrapper for this class.
+         * Constructs a Python wrapper for this class.
          *
          * This routine must be called for each set of template
-         * parameters before the first object of this class is
-         * constructed.
+         * parameters before the first object of this class is wrapped.
          *
          * @param className the name that will be assigned to this
          * class in Python.
          */
-        static void wrapClass(const char* className) {
-            ::boost::python::class_<GlobalArray3D<T, ReturnValuePolicy> >
-                    (className, ::boost::python::no_init)
-                .def("__getitem__",
-                    &GlobalArray3D<T, ReturnValuePolicy>::getItem,
-                    ::boost::python::return_internal_reference<>())
-                .def("__len__",
-                    &GlobalArray3D<T, ReturnValuePolicy>::dim1)
-                .def(::boost::python::self_ns::str(::boost::python::self))
-                .def(regina::python::add_eq_operators())
+        static void wrapClass(pybind11::module& m, const char* className) {
+            auto c = pybind11::class_<GlobalArray3D<T, rvp>>(m, className)
+                .def("__getitem__", &GlobalArray3D<T, rvp>::getItem,
+                    pybind11::return_value_policy::reference_internal)
+                .def("__len__", &GlobalArray3D<T, rvp>::dim1)
             ;
+            regina::python::add_output_ostream(c);
+            regina::python::add_eq_operators(c);
         }
 };
 
@@ -667,9 +610,9 @@ class GlobalArray3D {
  * @param arr the array whose contents are to be written.
  * @return the given output stream.
  */
-template <typename T, class ReturnValuePolicy>
+template <typename T, pybind11::return_value_policy rvp>
 std::ostream& operator << (std::ostream& out,
-        const GlobalArray3D<T, ReturnValuePolicy>& arr) {
+        const GlobalArray3D<T, rvp>& arr) {
     return arr.writeText(out);
 }
 

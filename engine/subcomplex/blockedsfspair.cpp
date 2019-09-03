@@ -64,7 +64,7 @@ struct BlockedSFSPairSearcher : public SatBlockStarterSearcher {
     }
 
     protected:
-        bool useStarterBlock(SatBlock* starter);
+        bool useStarterBlock(SatBlock* starter) override;
 };
 
 BlockedSFSPair::~BlockedSFSPair() {

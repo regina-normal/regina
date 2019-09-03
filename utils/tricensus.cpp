@@ -634,7 +634,6 @@ int runCensus() {
                     pairingList += pairingRep;
                     pairingList += '\n';
                 } else {
-                    std::cout << pairing->str() << std::endl;
                     // TODO: Explicitly generate automorphisms here.
                     foundFacePairing<dim>(pairing, 0, census);
                     pairingList += pairing->str();

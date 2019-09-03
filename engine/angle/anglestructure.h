@@ -40,18 +40,17 @@
 #endif
 
 #include "regina-core.h"
-#include "output.h"
+#include "core/output.h"
 #include "maths/rational.h"
 #include "maths/ray.h"
 #include "triangulation/forward.h"
-#include <boost/noncopyable.hpp>
 
 namespace regina {
 
 class XMLAngleStructureReader;
 
-template <typename> class MatrixIntDomain;
-typedef MatrixIntDomain<Integer> MatrixInt;
+template <typename, bool> class Matrix;
+typedef Matrix<Integer, true> MatrixInt;
 
 /**
  * \addtogroup angle Angle Structures
@@ -128,8 +127,7 @@ class REGINA_API AngleStructureVector : public Ray {
  * is no longer valid.
  */
 class REGINA_API AngleStructure :
-        public ShortOutput<AngleStructure>,
-        public boost::noncopyable {
+        public ShortOutput<AngleStructure> {
     private:
         AngleStructureVector* vector;
             /**< Stores (indirectly) the individual angles in this angle
@@ -296,6 +294,10 @@ class REGINA_API AngleStructure :
          * @param out the output stream to which the XML should be written.
          */
         void writeXMLData(std::ostream& out) const;
+
+        // Make this class non-copyable.
+        AngleStructure(const AngleStructure&) = delete;
+        AngleStructure& operator = (const AngleStructure&) = delete;
 
     protected:
         /**
