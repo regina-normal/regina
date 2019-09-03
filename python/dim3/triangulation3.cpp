@@ -314,7 +314,9 @@ void addTriangulation3(pybind11::module& m) {
         .def("idealToFinite", &Triangulation<3>::idealToFinite)
         .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal)
         .def("barycentricSubdivision", &Triangulation<3>::barycentricSubdivision)
-        .def("drillEdge", &Triangulation<3>::drillEdge)
+        .def("drillEdge", &Triangulation<3>::drillEdge,
+            pybind11::arg(),
+            pybind11::arg("simplify") = true)
         .def("puncture", &Triangulation<3>::puncture,
             pybind11::arg("tet") = nullptr)
         .def("layerOn", &Triangulation<3>::layerOn,
