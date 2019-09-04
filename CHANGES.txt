@@ -266,7 +266,7 @@ Version 5.2  [ 29 September, 2017 ]
               Use the new pachner() routines instead.
         Class Triangulation<3>:
             - New routine pinchEdge() to collapse an edge, which can be
-              performed on any edge, but which adds two tetrahedra.
+              performed on any internal edge, but which adds two tetrahedra.
             - Added an optional argument to drillEdge() that inhibits
               simplification.
             - Deprecated drillEdge(), since in all cases that matter,

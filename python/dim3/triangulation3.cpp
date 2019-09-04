@@ -277,10 +277,6 @@ void addTriangulation3(pybind11::module& m) {
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
-        .def("pinchEdge", &Triangulation<3>::pinchEdge,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
         .def("reorderTetrahedraBFS", &Triangulation<3>::reorderTetrahedraBFS,
             pybind11::arg("reverse") = false)
         .def("orient", &Triangulation<3>::orient)
@@ -314,6 +310,7 @@ void addTriangulation3(pybind11::module& m) {
         .def("idealToFinite", &Triangulation<3>::idealToFinite)
         .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal)
         .def("barycentricSubdivision", &Triangulation<3>::barycentricSubdivision)
+        .def("pinchEdge", &Triangulation<3>::pinchEdge)
         .def("drillEdge", &Triangulation<3>::drillEdge,
             pybind11::arg(),
             pybind11::arg("simplify") = true)

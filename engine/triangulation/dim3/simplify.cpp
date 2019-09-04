@@ -831,7 +831,11 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
 }
 
 void Triangulation<3>::pinchEdge(Edge<3>* e) {
-    // Find a triangular face containing e (this will be face 012 of open).
+    if (e->isBoundary())
+        return; // Precondition fails.
+
+    // Find a triangular face containing e (this will be the face that
+    // connects e->front() with e->back()).
     // Our plan is to insert two tetrahedra in its place.
     Tetrahedron<3>* open = e->front().tetrahedron();
     Perm<4> vertices = e->front().vertices();
@@ -854,11 +858,9 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     // joined by a connected sum.
 
     Tetrahedron<3>* adj = open->adjacentTetrahedron(vertices[3]);
-    if (adj) {
-        Perm<4> glue = open->adjacentGluing(vertices[3]);
-        open->unjoin(vertices[3]);
-        t0->join(1, adj, glue * vertices * Perm<4>(0, 3, 1, 2));
-    }
+    Perm<4> glue = open->adjacentGluing(vertices[3]);
+    open->unjoin(vertices[3]);
+    t0->join(1, adj, glue * vertices * Perm<4>(0, 3, 1, 2));
     t0->join(2, open, vertices * Perm<4>(2, 3));
 }
 

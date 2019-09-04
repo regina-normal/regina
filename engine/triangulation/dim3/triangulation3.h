@@ -1692,21 +1692,27 @@ class REGINA_API Triangulation<3> :
                 bool check = true, bool perform = true);
         /**
          * Checks the eligibility of and/or performs a collapse of an edge
-         * between two distinct vertices, so that the topology of the
-         * manifold does not change and the number of vertices decreases by one.
+         * between two distinct vertices.  This operation (when it is allowed)
+         * does not change the topology of the manifold, decreases the
+         * number of vertices by one, and also decreases the number of
+         * tetrahedra.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
          * If you are trying to reduce the number of vertices without changing
-         * the topology, you should consider which of collapseEdge() or
-         * pinchEdge() is more appropriate for your situation.
-         * The advantage of collapseEdge() is that it decreases the
-         * number of tetrahedra, whereas pinchEdge() increases this
-         * number (but only by a small constant).  The disadvantage of
-         * collapseEdge() is that it cannot always be performed (and
-         * also requires non-trivial validity tests), whereas pinchEdge()
-         * can be safely called on any edge.
+         * the topology, and if \a e is an edge connecting an internal vertex
+         * with some different vertex, then either collapseEdge() or pinchEdge()
+         * may be more appropriate for your situation.
+         *
+         * - The advantage of collapseEdge() is that it decreases the
+         *   number of tetrahedra, whereas pinchEdge() increases this
+         *   number (but only by two).
+         *
+         * - The disadvantages of collapseEdge() are that it cannot always be
+         *   performed, and its validity tests are expensive; pinchEdge() on
+         *   the other hand can always be used for edges \a e of the
+         *   type described above.
          *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
@@ -1732,45 +1738,6 @@ class REGINA_API Triangulation<3> :
          * is \c false, the function simply returns \c true.
          */
         bool collapseEdge(Edge<3>* e, bool check = true, bool perform = true);
-
-        /**
-         * Collapses the given edge to a point in a way that has no further
-         * topological side-effects, and that increases the number of
-         * tetrahedra by two.
-         *
-         * Two useful cases for this routine are:
-         *
-         * - If the edge joins an internal vertex with some different vertex
-         *   (which may be internal, boundary, ideal or invalid), then
-         *   this move does not change the topology of the manifold at all,
-         *   and it reduces the total number of vertices by one.  In
-         *   this sense, it acts as an alternative to collapseEdge() which
-         *   can \e always be performed.
-         *
-         * - If the edge runs from an internal vertex back to itself,
-         *   then this move effectively drills out the edge, leaving
-         *   an ideal torus or Klein bottle boundary component.
-         *
-         * If you are trying to reduce the number of vertices without changing
-         * the topology, you should consider which of collapseEdge() or
-         * pinchEdge() is more appropriate for your situation.
-         * The advantage of collapseEdge() is that it decreases the
-         * number of tetrahedra, whereas pinchEdge() increases this
-         * number (but only by a small constant).  The disadvantage of
-         * collapseEdge() is that it cannot always be performed (and
-         * also requires non-trivial validity tests), whereas pinchEdge()
-         * can be safely called on any edge.
-         *
-         * Note that after performing this move, all skeletal objects
-         * (triangles, components, etc.) will be reconstructed, which means
-         * any pointers to old skeletal objects (such as the argument \a e)
-         * can no longer be used.
-         *
-         * \pre The given edge is an edge of this triangulation.
-         *
-         * @param e the edge to collapse.
-         */
-        void pinchEdge(Edge<3>* e);
 
         /**
          * Reorders the tetrahedra of this triangulation using a
@@ -2334,6 +2301,59 @@ class REGINA_API Triangulation<3> :
          * @author David Letscher
          */
         bool idealToFinite();
+
+        /**
+         * Pinches an internal edge to a point.  Topologically, this collapses
+         * the edge to a point with no further side-effects, and it increases
+         * the number of tetrahedra by two.
+         *
+         * This operation can be performed on \e any internal edge,
+         * without further constraints.  Two particularly useful settings are:
+         *
+         * - If the edge joins an internal vertex with some different vertex
+         *   (which may be internal, boundary, ideal or invalid), then
+         *   this move does not change the topology of the manifold at all,
+         *   and it reduces the total number of vertices by one.  In
+         *   this sense, it acts as an alternative to collapseEdge(),
+         *   and unlike collapseEdge() it can \e always be performed.
+         *
+         * - If the edge runs from an internal vertex back to itself,
+         *   then this move effectively drills out the edge, leaving
+         *   an ideal torus or Klein bottle boundary component.
+         *
+         * We do not allow \a e to lie entirely on the triangulation boundary,
+         * because the implementation actually collapses an internal curve
+         * \e parallel to \a e, not the edge \a e itself (and so if \a e is a
+         * boundary edge then the topological effect would not be as intended).
+         * We do allow \a e to be an internal edge with both endpoints on the
+         * boundary, but note that in this case the resulting topological
+         * operation would render the triangulation invalid.
+         *
+         * If you are trying to reduce the number of vertices without changing
+         * the topology, and if \a e is an edge connecting an internal vertex
+         * with some different vertex, then either collapseEdge() or pinchEdge()
+         * may be more appropriate for your situation.
+         *
+         * - The advantage of collapseEdge() is that it decreases the
+         *   number of tetrahedra, whereas pinchEdge() increases this
+         *   number (but only by two).
+         *
+         * - The disadvantages of collapseEdge() are that it cannot always be
+         *   performed, and its validity tests are expensive; pinchEdge() on
+         *   the other hand can always be used for edges \a e of the
+         *   type described above.
+         *
+         * Note that after performing this move, all skeletal objects
+         * (triangles, components, etc.) will be reconstructed, which means
+         * any pointers to old skeletal objects (such as the argument \a e)
+         * can no longer be used.
+         *
+         * \pre The given edge is an internal edge of this triangulation
+         * (that is, \a e does not lie entirely within the boundary).
+         *
+         * @param e the edge to collapse.
+         */
+        void pinchEdge(Edge<3>* e);
 
         /**
          * Deprecated routine that drills out a regular neighbourhood of the
