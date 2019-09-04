@@ -2376,7 +2376,7 @@ class REGINA_API Triangulation<3> :
          * as described above.  This is highly recommended, due to the second
          * barycentric subdivision.
          */
-        void drillEdge(Edge<3>* e, bool simplify = true);
+        [[deprecated]] void drillEdge(Edge<3>* e, bool simplify = true);
 
         /**
          * Punctures this manifold by removing a 3-ball from the interior of
