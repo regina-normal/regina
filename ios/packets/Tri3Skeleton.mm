@@ -191,16 +191,95 @@
         return;
     }
     
-    regina::Triangulation<3>* ans = new regina::Triangulation<3>(*self.packet);
-    [ReginaHelper runWithHUD:@"Drilling…"
-                        code:^{
-                            ans->drillEdge(ans->edge(seln.row - 1));
-                            ans->setLabel(self.packet->adornedLabel("Drilled #" + std::to_string(seln.row - 1)));
-                        }
-                     cleanup:^{
-                         self.packet->insertChildLast(ans);
-                         [ReginaHelper viewPacket:ans];
-                     }];
+    regina::Edge<3>* e = self.packet->edge(seln.row - 1);
+    if (e->isBoundary()) {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Cannot Drill Boundary Edge"
+                                                        message:@"Drilling an edge that lies entirely within the boundary has no topological effect."
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    regina::Triangulation<3>* ans = nullptr;
+    
+    // Avoid drillEdge() where possible, since that creates too
+    // many tetrahedra.
+    if ((e->vertex(0)->isBoundary() && e->vertex(0)->boundaryComponent()->isReal()) ||
+            (e->vertex(1)->isBoundary() && e->vertex(1)->boundaryComponent()->isReal())) {
+        // We already connect with real boundary, so we must not
+        // combine this with new ideal boundary.
+        if (e->vertex(0)->link() == regina::Vertex<3>::SPHERE ||
+                e->vertex(1)->link() == regina::Vertex<3>::SPHERE) {
+            // We are drilling an edge that joins real boundary
+            // with an internal vertex.
+            // Topologically, this does nothing at all.
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Drilling Has No Effect"
+                                                            message:@"This edge runs from a real boundary component to an internal vertex, and so drilling it has no topological effect."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            return;
+        } else {
+            // We are drilling an edge between two boundaries,
+            // at least one of which is real.  Therefore we
+            // cannot use pinchEdge(), which would create a
+            // mixed real-ideal boundary.  Use drillEdge() instead.
+            //
+            // Since drillEdge() can be slow, we run within a HUD.
+            ans = new regina::Triangulation<3>(*self.packet);
+            [ReginaHelper runWithHUD:@"Drilling…"
+                                code:^{
+                                    ans->drillEdge(ans->edge(seln.row - 1));
+                                    ans->setLabel(self.packet->adornedLabel("Drilled #" + std::to_string(seln.row - 1)));
+                                }
+                             cleanup:^{
+                                 self.packet->insertChildLast(ans);
+                                 [ReginaHelper viewPacket:ans];
+                             }];
+            return;
+        }
+    } else {
+        // The edge does not connect with any real boundary.
+        if (e->vertex(0) != e->vertex(1) &&
+                e->vertex(0)->link() == regina::Vertex<3>::SPHERE &&
+                e->vertex(1)->link() == regina::Vertex<3>::SPHERE) {
+            // We are drilling an edge between two internal vertices.
+            // Topologically, this is just a puncture.
+            // Make sure that we puncture a tetrahedron that
+            // belongs to the correct connected component.
+            ans = new regina::Triangulation<3>(*self.packet);
+            ans->puncture(ans->tetrahedron(e->front().tetrahedron()->index()));
+        } else if (e->vertex(0) != e->vertex(1) &&
+                (e->vertex(0)->link() == regina::Vertex<3>::SPHERE ||
+                 e->vertex(1)->link() == regina::Vertex<3>::SPHERE)) {
+            // We are drilling an edge between an internal
+            // vertex and an ideal vertex.  Topologically, this
+            // does nothing.
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"Drilling Has No Effect"
+                                                            message:@"This edge runs from an ideal vertex to an internal vertex, and so drilling it has no topological effect."
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"Close"
+                                                  otherButtonTitles:nil];
+            [alert show];
+            return;
+        } else {
+            // We are either drilling a loop at an internal or
+            // ideal vertex, or we are drilling an edge between
+            // two distinct ideal vertices.
+            // In both cases, pinchEdge() does what we want.
+            ans = new regina::Triangulation<3>(*self.packet);
+            ans->pinchEdge(ans->edge(seln.row - 1));
+        }
+    }
+    
+    if (ans) {
+        ans->setLabel(self.packet->adornedLabel("Drilled #" + std::to_string(seln.row - 1)));
+        self.packet->insertChildLast(ans);
+        [ReginaHelper viewPacket:ans];
+    }
 }
 
 #pragma mark - Table view

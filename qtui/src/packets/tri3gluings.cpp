@@ -916,27 +916,103 @@ void Tri3GluingsUI::puncture() {
 void Tri3GluingsUI::drillEdge() {
     endEdit();
 
+    bool hasInternal = false;
+    for (auto e : tri->edges())
+        if (! e->isBoundary()) {
+            hasInternal = true;
+            break;
+        }
+
     if (tri->countEdges() == 0)
         ReginaSupport::sorry(ui,
             tr("This triangulation does not have any edges."));
+    else if (! hasInternal)
+        ReginaSupport::sorry(ui,
+            tr("This triangulation has no internal edges."),
+            tr("I cannot drill edges that lie entirely within the "
+                "triangulation boundary."));
     else {
-        regina::Edge<3>* chosen =
-            FaceDialog<3, 1>::choose(ui, tri, 0 /* filter */,
+        regina::Edge<3>* e = FaceDialog<3, 1>::choose(ui, tri,
+            [](regina::Edge<3>* e) { return (! e->isBoundary()); },
             tr("Drill Edge"),
             tr("Drill out a regular neighbourhood of which edge?"),
             tr("Regina will drill out a regular neighbourhood around whichever "
                 "edge you choose."));
-        if (chosen) {
-            std::unique_ptr<PatienceDialog> dlg(PatienceDialog::warn(tr(
-                "Drilling requires multiple subdivisions, and\n"
-                "can be quite slow for larger triangulations.\n\n"
-                "Please be patient."), ui));
+        if (e) {
+            regina::Triangulation<3>* ans = nullptr;
 
-            regina::Triangulation<3>* ans = new regina::Triangulation<3>(*tri);
-            ans->drillEdge(ans->edge(chosen->index()));
-            ans->setLabel(tri->adornedLabel("Drilled"));
-            tri->insertChildLast(ans);
-            enclosingPane->getMainWindow()->packetView(ans, true, true);
+            // Avoid drillEdge() where possible, since that creates too
+            // many tetrahedra.
+            if ((e->vertex(0)->isBoundary() &&
+                        e->vertex(0)->boundaryComponent()->isReal()) ||
+                    (e->vertex(1)->isBoundary() &&
+                        e->vertex(1)->boundaryComponent()->isReal())) {
+                // We already connect with real boundary, so we must not
+                // combine this with new ideal boundary.
+                if (e->vertex(0)->link() == regina::Vertex<3>::SPHERE ||
+                        e->vertex(1)->link() == regina::Vertex<3>::SPHERE) {
+                    // We are drilling an edge that joins real boundary
+                    // with an internal vertex.
+                    // Topologically, this does nothing at all.
+                    ReginaSupport::info(ui,
+                        tr("Drilling this edge has no effect."),
+                        tr("This edge runs from a real boundary component "
+                            "to an internal vertex, and so drilling it "
+                            "has no topological effect."));
+                    return;
+                } else {
+                    // We are drilling an edge between two boundaries,
+                    // at least one of which is real.  Therefore we
+                    // cannot use pinchEdge(), which would create a
+                    // mixed real-ideal boundary.  Use drillEdge() instead.
+                    std::unique_ptr<PatienceDialog> dlg(
+                        PatienceDialog::warn(tr(
+                            "Drilling between boundary components requires\n"
+                            "multiple subdivisions, and can be quite slow\n"
+                            "for larger triangulations.\n\n"
+                            "Please be patient."), ui));
+
+                    ans = new regina::Triangulation<3>(*tri);
+                    ans->drillEdge(ans->edge(e->index()));
+                }
+            } else {
+                // The edge does not connect with any real boundary.
+                if (e->vertex(0) != e->vertex(1) &&
+                        e->vertex(0)->link() == regina::Vertex<3>::SPHERE &&
+                        e->vertex(1)->link() == regina::Vertex<3>::SPHERE) {
+                    // We are drilling an edge between two internal vertices.
+                    // Topologically, this is just a puncture.
+                    // Make sure that we puncture a tetrahedron that
+                    // belongs to the correct connected component.
+                    ans = new regina::Triangulation<3>(*tri);
+                    ans->puncture(ans->tetrahedron(
+                        e->front().tetrahedron()->index()));
+                } else if (e->vertex(0) != e->vertex(1) &&
+                        (e->vertex(0)->link() == regina::Vertex<3>::SPHERE ||
+                         e->vertex(1)->link() == regina::Vertex<3>::SPHERE)) {
+                    // We are drilling an edge between an internal
+                    // vertex and an ideal vertex.  Topologically, this
+                    // does nothing.
+                    ReginaSupport::info(ui,
+                        tr("Drilling this edge has no effect."),
+                        tr("This edge runs from an ideal vertex "
+                            "to an internal vertex, and so drilling it "
+                            "has no topological effect."));
+                    return;
+                } else {
+                    // We are either drilling a loop at an internal or
+                    // ideal vertex, or we are drilling an edge between
+                    // two distinct ideal vertices.
+                    // In both cases, pinchEdge() does what we want.
+                    ans = new regina::Triangulation<3>(*tri);
+                    ans->pinchEdge(ans->edge(e->index()));
+                }
+            }
+            if (ans) {
+                ans->setLabel(tri->adornedLabel("Drilled"));
+                tri->insertChildLast(ans);
+                enclosingPane->getMainWindow()->packetView(ans, true, true);
+            }
         }
     }
 }
