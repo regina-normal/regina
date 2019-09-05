@@ -574,12 +574,9 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "a 2-manifold triangulation from its boundary triangles.  "
         "If you select an ideal boundary component, this will construct "
         "a 2-manifold triangulation from the corresponding vertex link.</qt>"));
-    /*
-    // TODO: Wait until it's actually implemented.
     triActionList.append(actBoundaryComponents);
     connect(actBoundaryComponents, SIGNAL(triggered()), this,
         SLOT(boundaryComponents()));
-    */
 
     QAction* actVertexLinks = new QAction(this);
     actVertexLinks->setText(tr("&Vertex Links..."));
@@ -979,9 +976,12 @@ void Tri3GluingsUI::boundaryComponents() {
                 "construct a 2-manifold triangulation from the "
                 "corresponding vertex link.</qt>"));
         if (chosen) {
-            // TODO!
-            ReginaSupport::sorry(ui,
-                tr("This feature has yet to be implemented."));
+            regina::Triangulation<2>* ans = new regina::Triangulation<2>(
+                *chosen->build());
+            ans->setLabel(tr("Boundary component %1").arg(
+                chosen->index()).toUtf8().constData());
+            tri->insertChildLast(ans);
+            enclosingPane->getMainWindow()->packetView(ans, true, true);
         }
     }
 }

@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch.iPad" propertyAccessControl="none" useAutolayout="YES" colorMatched="YES">
     <device id="ipad9_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -358,7 +358,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="kDB-i0-fke">
-                                                    <rect key="frame" x="8" y="11.5" width="391.5" height="20.5"/>
+                                                    <rect key="frame" x="8" y="11.5" width="712" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -409,7 +409,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Identified tetrahedron vertices" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lVI-6b-BPK">
-                                                    <rect key="frame" x="252" y="13" width="147.5" height="18"/>
+                                                    <rect key="frame" x="252" y="13" width="468" height="18"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -472,7 +472,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="M7Y-qR-tvT">
-                                                    <rect key="frame" x="252" y="11.5" width="147.5" height="20.5"/>
+                                                    <rect key="frame" x="252" y="11.5" width="468" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -532,7 +532,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Identified tetrahedron edges" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="VP5-dG-mnt">
-                                                    <rect key="frame" x="202" y="13" width="197.5" height="18"/>
+                                                    <rect key="frame" x="202" y="13" width="518" height="18"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -595,7 +595,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Qou-wg-u72">
-                                                    <rect key="frame" x="202" y="11.5" width="197.5" height="20.5"/>
+                                                    <rect key="frame" x="202" y="11.5" width="518" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -655,7 +655,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Identified tetrahedron faces" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="gkU-vc-52Y">
-                                                    <rect key="frame" x="252" y="13" width="147.5" height="18"/>
+                                                    <rect key="frame" x="252" y="13" width="468" height="18"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -718,7 +718,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="BwG-z0-AUw">
-                                                    <rect key="frame" x="252" y="11.5" width="147.5" height="20.5"/>
+                                                    <rect key="frame" x="252" y="11.5" width="468" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -751,7 +751,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" verticalCompressionResistancePriority="250" text="To add, remove or edit tetrahedra, visit the Gluings tab." textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="lBe-Np-fw4">
-                                                    <rect key="frame" x="0.0" y="6" width="378" height="23.5"/>
+                                                    <rect key="frame" x="0.0" y="6" width="728" height="23.5"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -784,7 +784,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="1000" text="Triangle # (012, 013, 023, 123)" lineBreakMode="tailTruncation" numberOfLines="2" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ej5-uQ-mla">
-                                                    <rect key="frame" x="452" y="41.5" width="136.5" height="38"/>
+                                                    <rect key="frame" x="452" y="41.5" width="268" height="38"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -902,7 +902,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Formed from tetrahedra" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XJz-MB-xIO">
-                                                    <rect key="frame" x="342" y="13" width="57.5" height="18"/>
+                                                    <rect key="frame" x="342" y="13" width="378" height="18"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -974,7 +974,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="twl-vK-lxB">
-                                                    <rect key="frame" x="342" y="11.5" width="57.5" height="20.5"/>
+                                                    <rect key="frame" x="342" y="11.5" width="378" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1025,7 +1025,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Formed from tetrahedron faces / vertices" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="r6O-pm-Va9">
-                                                    <rect key="frame" x="222" y="13" width="177.5" height="18"/>
+                                                    <rect key="frame" x="222" y="13" width="498" height="18"/>
                                                     <fontDescription key="fontDescription" style="UICTFontTextStyleSubhead"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1088,7 +1088,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="TLb-VQ-Euq">
-                                                    <rect key="frame" x="222" y="11.5" width="177.5" height="20.5"/>
+                                                    <rect key="frame" x="222" y="11.5" width="498" height="20.5"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                                     <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <nil key="highlightedColor"/>
@@ -1125,7 +1125,7 @@
                                 </prototypes>
                             </tableView>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="FiG-MS-TkT">
-                                <rect key="frame" x="197" y="924" width="151" height="30"/>
+                                <rect key="frame" x="111.5" y="924" width="151" height="30"/>
                                 <state key="normal" title="Triangulate vertex link">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -1134,7 +1134,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="laj-j4-dZQ">
-                                <rect key="frame" x="157" y="923" width="32" height="32"/>
+                                <rect key="frame" x="71.5" y="923" width="32" height="32"/>
                                 <state key="normal" image="Action-VtxLinks">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -1143,7 +1143,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="NCC-o2-G3y">
-                                <rect key="frame" x="545" y="924" width="66" height="30"/>
+                                <rect key="frame" x="373.5" y="924" width="66" height="30"/>
                                 <state key="normal" title="Drill edge">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -1152,7 +1152,7 @@
                                 </connections>
                             </button>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="A4U-Fo-8sS">
-                                <rect key="frame" x="505" y="923" width="32" height="32"/>
+                                <rect key="frame" x="333.5" y="923" width="32" height="32"/>
                                 <state key="normal" image="Action-DrillEdge">
                                     <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 </state>
@@ -1161,21 +1161,21 @@
                                 </connections>
                             </button>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="9ec-gd-ljy">
-                                <rect key="frame" x="611" y="929" width="157" height="20"/>
+                                <rect key="frame" x="439.5" y="929" width="71.5" height="20"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="qlE-Xi-xhf"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="btH-oa-soj">
-                                <rect key="frame" x="348" y="929" width="157" height="20"/>
+                                <rect key="frame" x="262.5" y="929" width="71" height="20"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="fHE-be-pLn"/>
                                 </constraints>
                             </view>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="EPv-3v-JiV">
-                                <rect key="frame" x="0.0" y="929" width="157" height="20"/>
+                                <rect key="frame" x="0.0" y="929" width="71.5" height="20"/>
                                 <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="20" id="37g-R1-0Wb"/>
@@ -1192,44 +1192,74 @@
                                     </segue>
                                 </connections>
                             </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wzz-I0-XTq">
+                                <rect key="frame" x="511" y="923" width="32" height="32"/>
+                                <state key="normal" image="Action-Boundaries"/>
+                                <connections>
+                                    <action selector="buildBoundary:" destination="e7R-Ek-ug0" eventType="touchUpInside" id="UEV-Ti-9Nc"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AuM-da-hmE">
+                                <rect key="frame" x="551" y="924" width="146" height="30"/>
+                                <state key="normal" title="Triangulate boundary"/>
+                                <connections>
+                                    <action selector="buildBoundary:" destination="e7R-Ek-ug0" eventType="touchUpInside" id="aPN-PD-7Ef"/>
+                                </connections>
+                            </button>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="7Pl-ps-fiC">
+                                <rect key="frame" x="697" y="929" width="71" height="20"/>
+                                <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="20" id="BO0-xA-Wy9"/>
+                                </constraints>
+                            </view>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <constraints>
                             <constraint firstItem="EPv-3v-JiV" firstAttribute="centerY" secondItem="laj-j4-dZQ" secondAttribute="centerY" id="0NG-KW-mPL"/>
                             <constraint firstItem="FiG-MS-TkT" firstAttribute="leading" secondItem="laj-j4-dZQ" secondAttribute="trailing" constant="8" id="2DH-3K-mW2"/>
+                            <constraint firstItem="AuM-da-hmE" firstAttribute="leading" secondItem="Wzz-I0-XTq" secondAttribute="trailing" constant="8" id="2pV-cI-OVI"/>
                             <constraint firstItem="3G1-uR-eUS" firstAttribute="leading" secondItem="fgO-oH-ChF" secondAttribute="leading" constant="20" id="3aW-M4-rsY"/>
                             <constraint firstItem="A4U-Fo-8sS" firstAttribute="centerY" secondItem="NCC-o2-G3y" secondAttribute="centerY" id="3gI-RD-L8r"/>
                             <constraint firstAttribute="trailing" secondItem="IgP-EH-MsF" secondAttribute="trailing" constant="20" id="4zW-ts-VTu"/>
                             <constraint firstItem="9ec-gd-ljy" firstAttribute="leading" secondItem="NCC-o2-G3y" secondAttribute="trailing" id="6eE-pf-P3g"/>
                             <constraint firstItem="A9u-iX-1Zk" firstAttribute="top" secondItem="FiG-MS-TkT" secondAttribute="bottom" constant="20" id="74p-gF-wci"/>
+                            <constraint firstItem="7Pl-ps-fiC" firstAttribute="centerY" secondItem="A4U-Fo-8sS" secondAttribute="centerY" id="8mw-fT-D69"/>
                             <constraint firstItem="EPv-3v-JiV" firstAttribute="width" secondItem="btH-oa-soj" secondAttribute="width" id="AWw-72-EEu"/>
                             <constraint firstItem="A4U-Fo-8sS" firstAttribute="centerY" secondItem="btH-oa-soj" secondAttribute="centerY" id="BbB-Uv-jTS"/>
                             <constraint firstItem="btH-oa-soj" firstAttribute="leading" secondItem="FiG-MS-TkT" secondAttribute="trailing" id="DRR-QF-epl"/>
                             <constraint firstItem="NCC-o2-G3y" firstAttribute="leading" secondItem="A4U-Fo-8sS" secondAttribute="trailing" constant="8" id="EZa-b5-OEn"/>
                             <constraint firstItem="EPv-3v-JiV" firstAttribute="leading" secondItem="fgO-oH-ChF" secondAttribute="leading" id="Ecc-Ye-eSq"/>
+                            <constraint firstItem="Wzz-I0-XTq" firstAttribute="leading" secondItem="9ec-gd-ljy" secondAttribute="trailing" id="GJf-Jb-J8c"/>
                             <constraint firstItem="A4U-Fo-8sS" firstAttribute="leading" secondItem="btH-oa-soj" secondAttribute="trailing" id="GeZ-86-Y3L"/>
                             <constraint firstAttribute="trailing" secondItem="ufZ-sU-afz" secondAttribute="trailing" constant="20" id="HZ2-VQ-q50"/>
                             <constraint firstAttribute="centerX" secondItem="7fA-ls-oAs" secondAttribute="centerX" id="JNa-bt-Oki"/>
                             <constraint firstItem="3iC-77-lBR" firstAttribute="top" secondItem="fgO-oH-ChF" secondAttribute="top" constant="20" symbolic="YES" id="MtI-9g-wbZ"/>
                             <constraint firstItem="laj-j4-dZQ" firstAttribute="centerY" secondItem="FiG-MS-TkT" secondAttribute="centerY" id="NXd-tj-WrZ"/>
-                            <constraint firstAttribute="trailing" secondItem="9ec-gd-ljy" secondAttribute="trailing" id="O0K-VA-JXQ"/>
+                            <constraint firstItem="Wzz-I0-XTq" firstAttribute="centerY" secondItem="NCC-o2-G3y" secondAttribute="centerY" id="RVc-Hz-S1J"/>
                             <constraint firstItem="laj-j4-dZQ" firstAttribute="leading" secondItem="EPv-3v-JiV" secondAttribute="trailing" id="Un1-If-sm3"/>
                             <constraint firstAttribute="trailing" secondItem="3iC-77-lBR" secondAttribute="trailing" constant="20" id="Us6-cA-uTk"/>
+                            <constraint firstAttribute="trailing" secondItem="7Pl-ps-fiC" secondAttribute="trailing" id="Wdm-sk-7Bf"/>
                             <constraint firstItem="EPv-3v-JiV" firstAttribute="width" secondItem="9ec-gd-ljy" secondAttribute="width" id="XSF-QV-gTf"/>
                             <constraint firstItem="FiG-MS-TkT" firstAttribute="top" secondItem="3G1-uR-eUS" secondAttribute="bottom" constant="20" id="XfO-nM-dca"/>
                             <constraint firstItem="7fA-ls-oAs" firstAttribute="top" secondItem="IgP-EH-MsF" secondAttribute="bottom" constant="20" id="b4z-Y6-zge"/>
+                            <constraint firstItem="7Pl-ps-fiC" firstAttribute="width" secondItem="btH-oa-soj" secondAttribute="width" id="bHF-Ov-QHH"/>
                             <constraint firstItem="NCC-o2-G3y" firstAttribute="centerY" secondItem="9ec-gd-ljy" secondAttribute="centerY" id="i45-Yc-Gxb"/>
                             <constraint firstItem="3G1-uR-eUS" firstAttribute="top" secondItem="7fA-ls-oAs" secondAttribute="bottom" constant="20" id="jF8-d2-p4p"/>
                             <constraint firstItem="IgP-EH-MsF" firstAttribute="leading" secondItem="fgO-oH-ChF" secondAttribute="leading" constant="20" id="k70-DV-A9D"/>
                             <constraint firstAttribute="trailing" secondItem="3G1-uR-eUS" secondAttribute="trailing" constant="20" id="nXY-ME-p4n"/>
                             <constraint firstItem="NCC-o2-G3y" firstAttribute="centerY" secondItem="FiG-MS-TkT" secondAttribute="centerY" id="oSO-iM-zD6"/>
+                            <constraint firstItem="AuM-da-hmE" firstAttribute="centerY" secondItem="A4U-Fo-8sS" secondAttribute="centerY" id="pFO-4s-aog"/>
                             <constraint firstItem="IgP-EH-MsF" firstAttribute="top" secondItem="3iC-77-lBR" secondAttribute="bottom" constant="20" id="r2k-1m-MI2"/>
                             <constraint firstItem="3iC-77-lBR" firstAttribute="centerY" secondItem="ufZ-sU-afz" secondAttribute="centerY" id="xLm-X8-eG4"/>
                             <constraint firstItem="3iC-77-lBR" firstAttribute="leading" secondItem="fgO-oH-ChF" secondAttribute="leading" constant="20" id="yie-Lp-9Tm"/>
+                            <constraint firstItem="7Pl-ps-fiC" firstAttribute="leading" secondItem="AuM-da-hmE" secondAttribute="trailing" id="z18-F2-WnY"/>
                         </constraints>
                     </view>
                     <tabBarItem key="tabBarItem" title="Skeleton" image="Tab-Skeleton" id="Na2-IE-ra7"/>
                     <connections>
+                        <outlet property="buildBoundaryButton" destination="AuM-da-hmE" id="VR6-S5-ZVb"/>
+                        <outlet property="buildBoundaryIcon" destination="Wzz-I0-XTq" id="3Cb-tT-Fv5"/>
                         <outlet property="details" destination="3G1-uR-eUS" id="HLH-5b-lou"/>
                         <outlet property="drillEdgeButton" destination="NCC-o2-G3y" id="cpy-VT-l8l"/>
                         <outlet property="drillEdgeIcon" destination="A4U-Fo-8sS" id="d0d-mz-dqX"/>
@@ -1407,7 +1437,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="k9z-go-h7c">
-                                                    <rect key="frame" x="125.5" y="7" width="157" height="30"/>
+                                                    <rect key="frame" x="285.5" y="7" width="157" height="30"/>
                                                     <state key="normal" title="Add a new tetrahedron">
                                                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
@@ -2050,7 +2080,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Z8S-gE-olS">
-                                                    <rect key="frame" x="14" y="12" width="200" height="20.5"/>
+                                                    <rect key="frame" x="174" y="12" width="200" height="20.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="200" id="cfs-qW-FMD"/>
                                                     </constraints>
@@ -2059,7 +2089,7 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text=" " lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ftt-GN-jO6">
-                                                    <rect key="frame" x="222" y="12" width="100" height="20.5"/>
+                                                    <rect key="frame" x="382" y="12" width="100" height="20.5"/>
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="100" id="FEC-Z2-PXd"/>
                                                     </constraints>
@@ -2068,20 +2098,20 @@
                                                     <nil key="highlightedColor"/>
                                                 </label>
                                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="wV3-ae-aye">
-                                                    <rect key="frame" x="330" y="7.5" width="64" height="30"/>
+                                                    <rect key="frame" x="490" y="7.5" width="64" height="30"/>
                                                     <state key="normal" title="Calculate">
                                                         <color key="titleShadowColor" red="0.5" green="0.5" blue="0.5" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     </state>
                                                 </button>
                                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="66F-BC-NFN">
-                                                    <rect key="frame" x="402" y="17" width="5.5" height="10"/>
+                                                    <rect key="frame" x="562" y="17" width="166" height="10"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="10" id="Ep8-R9-7jv"/>
                                                     </constraints>
                                                 </view>
                                                 <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="ki3-W7-lBi">
-                                                    <rect key="frame" x="0.0" y="21" width="6" height="2"/>
+                                                    <rect key="frame" x="0.0" y="21" width="166" height="2"/>
                                                     <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="2" id="djo-yR-I8W"/>
@@ -2968,6 +2998,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Action-Boundaries" width="32" height="32"/>
         <image name="Action-ConnectedSum" width="32" height="32"/>
         <image name="Action-DrillEdge" width="32" height="32"/>
         <image name="Action-Orient" width="32" height="32"/>
@@ -2975,13 +3006,13 @@
         <image name="Action-VtxLinks" width="32" height="32"/>
         <image name="Lock" width="32" height="32"/>
         <image name="SnapPea" width="32" height="32"/>
-        <image name="Tab-Algebra" width="50" height="50"/>
-        <image name="Tab-Composition" width="50" height="50"/>
-        <image name="Tab-Gluings" width="50" height="50"/>
-        <image name="Tab-Graph" width="54" height="54"/>
-        <image name="Tab-Recognition" width="50" height="50"/>
-        <image name="Tab-Skeleton" width="50" height="50"/>
-        <image name="Tab-SnapPea" width="50" height="50"/>
+        <image name="Tab-Algebra" width="25" height="25"/>
+        <image name="Tab-Composition" width="25" height="25"/>
+        <image name="Tab-Gluings" width="25" height="25"/>
+        <image name="Tab-Graph" width="27" height="27"/>
+        <image name="Tab-Recognition" width="25" height="25"/>
+        <image name="Tab-Skeleton" width="25" height="25"/>
+        <image name="Tab-SnapPea" width="25" height="25"/>
     </resources>
     <inferredMetricsTieBreakers>
         <segue reference="eDD-DS-lIr"/>

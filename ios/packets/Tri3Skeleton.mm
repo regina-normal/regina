@@ -55,6 +55,8 @@
 @property (weak, nonatomic) IBOutlet UIButton *vtxLinksIcon;
 @property (weak, nonatomic) IBOutlet UIButton *drillEdgeButton;
 @property (weak, nonatomic) IBOutlet UIButton *drillEdgeIcon;
+@property (weak, nonatomic) IBOutlet UIButton *buildBoundaryButton;
+@property (weak, nonatomic) IBOutlet UIButton *buildBoundaryIcon;
 
 @property (assign, nonatomic) regina::Triangulation<3>* packet;
 @end
@@ -121,6 +123,15 @@
             enable = YES;
     }
     self.drillEdgeButton.enabled = self.drillEdgeIcon.enabled = enable;
+    
+    // Triangulate boundary:
+    enable = NO;
+    if (self.viewWhich.selectedSegmentIndex == 5) {
+        NSIndexPath* seln = self.details.indexPathForSelectedRow;
+        if (seln && seln.row > 0 && seln.row <= self.packet->countBoundaryComponents())
+            enable = YES;
+    }
+    self.buildBoundaryButton.enabled = self.buildBoundaryIcon.enabled = enable;
 }
 
 - (IBAction)vertexLinks:(id)sender {
@@ -140,6 +151,27 @@
     
     regina::Triangulation<2>* ans = new regina::Triangulation<2>(*self.packet->vertex(seln.row - 1)->buildLink());
     ans->setLabel([NSString stringWithFormat:@"Link of vertex %zd", seln.row - 1].UTF8String);
+    self.packet->insertChildLast(ans);
+    [ReginaHelper viewPacket:ans];
+}
+
+- (IBAction)buildBoundary:(id)sender {
+    if (self.viewWhich.selectedSegmentIndex != 5)
+        return;
+    
+    NSIndexPath* seln = self.details.indexPathForSelectedRow;
+    if ((! seln) || seln.row <= 0 || seln.row > self.packet->countBoundaryComponents()) {
+        UIAlertView* alert = [[UIAlertView alloc] initWithTitle:@"Please Select a Boundary Component"
+                                                        message:nil
+                                                       delegate:nil
+                                              cancelButtonTitle:@"Close"
+                                              otherButtonTitles:nil];
+        [alert show];
+        return;
+    }
+    
+    regina::Triangulation<2>* ans = new regina::Triangulation<2>(*self.packet->boundaryComponent(seln.row - 1)->build());
+    ans->setLabel([NSString stringWithFormat:@"Boundary component %zd", seln.row - 1].UTF8String);
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
