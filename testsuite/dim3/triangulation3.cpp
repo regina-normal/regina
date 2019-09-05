@@ -103,6 +103,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(idealToFinite);
     CPPUNIT_TEST(finiteToIdeal);
+    CPPUNIT_TEST(pinchEdge);
     CPPUNIT_TEST(drillEdge);
     CPPUNIT_TEST(puncture);
     CPPUNIT_TEST(connectedSumWithSelf);
@@ -3314,6 +3315,82 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         void finiteToIdeal() {
             testManualAll(verifyFiniteToIdeal);
+        }
+
+        void pinchEdge() {
+            // Start with the snapped 1-tetrahedron triangulation of the
+            // 3-sphere.  Edges 0 and 2 make a Hopf link, and edge 1 is
+            // just an interval.
+            {
+                Triangulation<3> snap;
+                Tetrahedron<3>* tet = snap.newTetrahedron();
+                tet->join(0, tet, Perm<4>(0, 1));
+                tet->join(2, tet, Perm<4>(2, 3));
+
+                Triangulation<3> tmp0(snap);
+                tmp0.pinchEdge(tmp0.edge(0));
+                if (! tmp0.isSolidTorus())
+                    CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 0 "
+                        "does not give a solid torus.");
+
+                Triangulation<3> tmp1(snap);
+                tmp1.pinchEdge(tmp1.edge(1));
+                if (! tmp1.isThreeSphere())
+                    CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 1 "
+                        "does not give a 3-sphere.");
+
+                Triangulation<3> tmp2(snap);
+                tmp2.pinchEdge(tmp2.edge(2));
+                if (! tmp2.isSolidTorus())
+                    CPPUNIT_FAIL("Snapped 3-sphere: pinching edge 2 "
+                        "does not give a solid torus.");
+            }
+
+            // Move on to the layered 1-tetrahedron triangulation of the
+            // 3-sphere.
+            // Edge 0 forms a trefoil, and edge 1 is unknotted.
+            {
+                Triangulation<3> layer;
+                Tetrahedron<3>* tet = layer.newTetrahedron();
+                tet->join(0, tet, Perm<4>(1, 2, 3, 0));
+                tet->join(2, tet, Perm<4>(2, 3));
+
+                Triangulation<3> tmp0(layer);
+                tmp0.pinchEdge(tmp0.edge(0));
+                if (! (tmp0.isValid() && tmp0.isIdeal() &&
+                        (tmp0.countBoundaryComponents() == 1) &&
+                        (tmp0.homology().isZ()) &&
+                        (tmp0.boundaryComponent(0)->isOrientable()) &&
+                        (tmp0.boundaryComponent(0)->eulerChar() == 0) &&
+                        (! tmp0.isSolidTorus())))
+                    CPPUNIT_FAIL("Layered 3-sphere: pinching edge 0 "
+                        "does not give a non-trivial knot complement.");
+
+                Triangulation<3> tmp1(layer);
+                tmp1.pinchEdge(tmp1.edge(1));
+                if (! tmp1.isSolidTorus())
+                    CPPUNIT_FAIL("Layered 3-sphere: pinching edge 1 "
+                        "does not give a solid torus.");
+            }
+
+            // Now try a 2-tetrahedron ball, where we pinch the internal edge
+            // between the two tetrahedra and then truncate the resulting
+            // invalid vertex.  The result should be a solid torus.
+            {
+                Triangulation<3> ball;
+                Tetrahedron<3>* a = ball.newTetrahedron();
+                Tetrahedron<3>* b = ball.newTetrahedron();
+                a->join(0, b, Perm<4>());
+                a->join(1, b, Perm<4>());
+
+                // The internal edge joins vertices 2-3.
+                Triangulation<3> tmp(ball);
+                tmp.pinchEdge(tmp.tetrahedron(0)->edge(5));
+                tmp.idealToFinite();
+                if (! tmp.isSolidTorus())
+                    CPPUNIT_FAIL("2-tetrahedron ball: pinching the "
+                        "internal edge does not give a solid torus.");
+            }
         }
 
         void drillEdge() {
