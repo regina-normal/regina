@@ -471,9 +471,12 @@ static NSArray* nonEmbProps = @[@PROP_EULER, @PROP_BDRY, @PROP_LINK];
                     cell.textLabel.attributedText = [TextHelper markedString:bdry];
                 } else
                     cell.textLabel.attributedText = [TextHelper markedString:@"Spun"];
-            } else if (s->hasRealBoundary())
-                cell.textLabel.attributedText = [TextHelper yesNoString:@"Real" yesNo:NO];
-            else
+            } else if (s->hasRealBoundary()) {
+                if (self.packet->isEmbeddedOnly())
+                    cell.textLabel.attributedText = [TextHelper yesNoString:[NSString stringWithFormat:@"%ld", s->countBoundaries()] yesNo:NO];
+                else
+                    cell.textLabel.attributedText = [TextHelper yesNoString:@"Real" yesNo:NO];
+            } else
                 cell.textLabel.attributedText = [TextHelper yesNoString:@"—" yesNo:YES];
             cell.textLabel.textAlignment = NSTextAlignmentLeft;
             return cell;

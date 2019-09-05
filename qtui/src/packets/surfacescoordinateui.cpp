@@ -174,9 +174,12 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     return ans;
                 } else
                     return tr("Spun");
-            } else if (s->hasRealBoundary())
-                return tr("Real");
-            else
+            } else if (s->hasRealBoundary()) {
+                if (surfaces_->isEmbeddedOnly())
+                    return QString::number(s->countBoundaries());
+                else
+                    return tr("Real");
+            } else
                 return QString(QChar(0x2014 /* emdash */));
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 6) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 4)) {
