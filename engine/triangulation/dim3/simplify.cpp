@@ -846,6 +846,24 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
 
     ChangeEventSpan span(this);
 
+    // The two tetrahedra that we insert together form a pinched ball.
+    // By a "pinched ball", this means a 3-ball in which some internal curve
+    // joining two distinct boundary points is collapsed to a point, whose
+    // link then becomes an annulus.
+    //
+    // Combinatorially, the boundary of this pinched ball is isomorphic to the
+    // boundary of a triangular pillow: two of the vertices of the pillow
+    // correspond to opposite sides of the pinch point, and the third vertex
+    // of the pillow is some other vertex on the boundary of the pinched ball.
+    //
+    // We insert this pillow into the opened-up triangular face, so that
+    // the two endpoints of edge e get glued into the opposite sides of the
+    // pinch point.  The result, topologically, is that we have (1) created
+    // a new internal curve c which is parallel to e and whose endpoints are
+    // the same as e's, and then (2) collapsed this curve c to a point.
+    // Since e is an internal edge (a precondition of this routine),
+    // this is topologically the same as collapsing e itself.
+
     Tetrahedron<3>* t0 = newTetrahedron();
     Tetrahedron<3>* t1 = newTetrahedron();
     t0->join(0, t1, Perm<4>(1, 2));
