@@ -2450,16 +2450,17 @@
   </sect2>
 
   <sect2 id="tri-tribdry">
-   <title>Triangulating Boundary Components (4-D)</title>
+   <title>Triangulating Boundary Components (3-D and 4-D)</title>
    <para>
-    Likewise, if you wish to study a boundary component of a 4-manifold
-    in detail, you can explicitly construct it by selecting
+    Likewise, if you wish to study a boundary component of a 3-manifold
+    or 4-manifold in detail, you can explicitly construct it by selecting
     <menuchoice>
-     <guimenu>4-D&nbsp;Triangulation</guimenu>
+     <guimenu>Triangulation</guimenu>
      <guimenuitem>Boundary Components</guimenuitem>
     </menuchoice>.
+    from the menu.
     This will build the selected boundary component
-    as a new 3-manifold triangulation.
+    as a new 2-manifold or 3-manifold triangulation respectively.
    </para>
    <para>
     <inlinemediaobject>
@@ -2472,15 +2473,17 @@
     You will be asked which boundary component you wish to construct,
     as illustrated below.
     You can triangulate both real boundary components (formed from
-    boundary tetrahedra) and ideal boundary components (represented by
-    vertices whose links are closed 3-manifolds but not spheres).
+    boundary triangles or tetrahedra)
+    and ideal boundary components (represented by
+    vertices whose links are closed 2-manifolds or 3-manifolds
+    other than spheres).
    </para>
    <para>
     In the drop-down list, boundary components will be listed
     using their boundary component numbers, as seen in the
     <link linkend="tri-bdrycomponents">skeleton viewer</link>.
     In addition, each real boundary component will include details
-    of its constituent boundary tetrahedra, and each ideal boundary
+    of its constituent boundary triangles or tetrahedra, and each ideal boundary
     component will include details of the ideal vertex whose
     link it represents.
    </para>
@@ -2492,8 +2495,10 @@
     </inlinemediaobject>
    </para>
    <para>
-    Once the boundary component is constructed, the resulting 3-manifold
-    trianguation will appear beneath the original 4-manifold triangulation
+    Once the boundary component is constructed, the resulting 2-manifold
+    or 3-manifold
+    trianguation will appear beneath the original 3-manifold or
+    4-manifold triangulation
     in the packet tree.
    </para>
    <para>
@@ -3171,7 +3176,8 @@
     For each available edge, the drop-down list shows the edge number
     (as seen in the <link linkend="tri-faces">skeleton viewer</link>),
     along with details of the individual tetrahedron edges that combine to
-    form that edge of the triangulation.
+    form that edge of the triangulation.  Boundary edges will not appear
+    in this list, since drilling a boundary edge has no topological effect.
    </para>
    <para>
     <inlinemediaobject>
@@ -3179,6 +3185,36 @@
       <imagedata fileref="tri-drilledgebox.png"/>
      </imageobject>
     </inlinemediaobject>
+   </para>
+   <para>
+    How &regina; drills the edge will depend on the type of edge that
+    you select:
+    <itemizedlist>
+     <listitem>
+      <para>
+       Where possible, &regina; will produce an ideal
+       triangulation (so the new boundary component produced by the drilling
+       becomes an ideal vertex in the resulting triangulation).
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If necessary, &regina; will create real boundary components
+       (formed from unglued triangular faces of tetrahedra).
+       This happens, for instance, when the edge runs between two
+       distinct internal vertices (so the drilling produces a sphere boundary),
+       or when the edge touches a pre-existing real boundary component.
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If drilling would have no topological effect at all, then
+       &regina; will do nothing, and instead show a message explaining why.
+       This happens, for example, if the chosen edge connects an
+       internal vertex to a boundary component (either real or ideal).
+      </para>
+     </listitem>
+    </itemizedlist>
    </para>
   </sect2>
 

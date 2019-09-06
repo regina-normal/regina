@@ -583,11 +583,37 @@
          </glossentry>
          <glossentry>
           <glossterm><guilabel>Real</guilabel></glossterm>
-          <glossdef><para>
-           Indicates a compact (hyper)surface with boundary; that is,
-           with finitely many normal pieces, some of which meet the
-           boundary of the triangulation.
-          </para></glossdef>
+          <glossdef>
+           <para>
+            Indicates a compact (hyper)surface with boundary; that is,
+            with finitely many normal pieces, some of which meet the
+            boundary of the triangulation.
+           </para>
+           <para>
+            The word <guilabel>Real</guilabel> (as opposed to a precise
+            number) indicates that &regina; does not know the exact number
+            of boundary components.  Currently &regina; does not count
+            boundary components for normal hypersurfaces in 4-manifolds,
+            or when enumerating immersed/singular normal surfaces in
+            3-manifolds.
+           </para>
+          </glossdef>
+         </glossentry>
+         <glossentry>
+          <glossterm><guilabel>1, 2, 3, &hellip;</guilabel></glossterm>
+          <glossdef>
+           <para>
+            As with <guilabel>Real</guilabel>, this indicates a compact
+            (hyper)surface with boundary, but moreover it indicates the
+            precise number of boundary components.
+           </para>
+           <para>
+            Currently &regina; will only count boundary components if
+            you enumerate embedded normal surfaces in 3-manifold
+            triangulations, and only for those resulting surfaces that
+            are compact.
+           </para>
+          </glossdef>
          </glossentry>
          <glossentry id="surfaces-spun">
           <glossterm><guilabel>Spun</guilabel> (3-manifolds only)</glossterm>
