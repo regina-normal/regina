@@ -49,7 +49,9 @@ void addNormalFlags(pybind11::module& m) {
         .value("NS_FUNDAMENTAL", regina::NS_FUNDAMENTAL)
         .value("NS_LEGACY", regina::NS_LEGACY)
         .value("NS_CUSTOM", regina::NS_CUSTOM)
-        .export_values();
+        .export_values()
+        .def("__or__", [](const NormalListFlags& lhs, const NormalListFlags& rhs){
+                return NormalList(lhs) | rhs;});
 
     auto l = pybind11::class_<NormalList>(m, "NormalList")
         .def(pybind11::init<>())
@@ -93,7 +95,9 @@ void addNormalFlags(pybind11::module& m) {
         .value("NS_HILBERT_FULLCONE", regina::NS_HILBERT_FULLCONE)
         .value("NS_ALG_LEGACY", regina::NS_ALG_LEGACY)
         .value("NS_ALG_CUSTOM", regina::NS_ALG_CUSTOM)
-        .export_values();
+        .export_values()
+        .def("__or__", [](const NormalAlgFlags& lhs, const NormalAlgFlags& rhs){
+                return NormalAlg(lhs) | rhs;});
 
     auto a = pybind11::class_<NormalAlg>(m, "NormalAlg")
         .def(pybind11::init<>())
