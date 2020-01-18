@@ -721,15 +721,6 @@ class REGINA_API SatBlock : public Output<SatBlock> {
             Tetrahedron<3>* other2, Tetrahedron<3>* other3, Tetrahedron<3>* other4);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSatBlock has now been renamed to
- * SatBlock.
- */
-[[deprecated]] typedef SatBlock NSatBlock;
-
 /*@}*/
 
 // Inline functions for SatBlock

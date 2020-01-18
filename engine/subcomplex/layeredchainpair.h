@@ -130,15 +130,6 @@ class REGINA_API LayeredChainPair : public StandardTriangulation {
         LayeredChainPair();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NLayeredChainPair has now been renamed to
- * LayeredChainPair.
- */
-[[deprecated]] typedef LayeredChainPair NLayeredChainPair;
-
 /*@}*/
 
 // Inline functions for LayeredChainPair

@@ -149,15 +149,6 @@ class REGINA_API SnappedBall : public StandardTriangulation {
         SnappedBall();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSnappedBall has now been renamed to
- * SnappedBall.
- */
-[[deprecated]] typedef SnappedBall NSnappedBall;
-
 /*@}*/
 
 // Inline functions for SnappedBall

@@ -221,15 +221,6 @@ class REGINA_API PlugTriSolidTorus : public StandardTriangulation {
         PlugTriSolidTorus();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPlugTriSolidTorus has now been renamed to
- * PlugTriSolidTorus.
- */
-[[deprecated]] typedef PlugTriSolidTorus NPlugTriSolidTorus;
-
 /*@}*/
 
 // Inline functions for PlugTriSolidTorus

@@ -143,15 +143,6 @@ struct REGINA_API SatBlockSpec {
 };
 
 /**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSatBlockSpec has now been renamed to
- * SatBlockSpec.
- */
-[[deprecated]] typedef SatBlockSpec NSatBlockSpec;
-
-/**
  * A large saturated region in a Seifert fibred space formed by joining
  * together saturated blocks.
  *
@@ -629,15 +620,6 @@ class REGINA_API SatRegion : public Output<SatRegion> {
          */
         void countBoundaries(unsigned& untwisted, unsigned& twisted) const;
 };
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSatRegion has now been renamed to
- * SatRegion.
- */
-[[deprecated]] typedef SatRegion NSatRegion;
 
 /*@}*/
 

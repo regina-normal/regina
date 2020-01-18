@@ -298,15 +298,6 @@ class REGINA_API StandardTriangulation : public Output<StandardTriangulation> {
         StandardTriangulation(const StandardTriangulation&) = default;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NStandardTriangulation has now been renamed to
- * StandardTriangulation.
- */
-[[deprecated]] typedef StandardTriangulation NStandardTriangulation;
-
 /*@}*/
 
 // Inline functions for StandardTriangulation

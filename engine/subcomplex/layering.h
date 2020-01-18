@@ -408,14 +408,6 @@ class REGINA_API Layering {
         Layering& operator = (const Layering&) = delete;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NLayering has now been renamed to * Layering.
- */
-[[deprecated]] typedef Layering NLayering;
-
 /*@}*/
 
 // Inline functions for Layering

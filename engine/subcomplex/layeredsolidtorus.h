@@ -397,15 +397,6 @@ class REGINA_API LayeredSolidTorus : public StandardTriangulation {
         void followEdge(int destGroup, int sourceGroup);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NLayeredSolidTorus has now been renamed to
- * LayeredSolidTorus.
- */
-[[deprecated]] typedef LayeredSolidTorus NLayeredSolidTorus;
-
 /*@}*/
 
 // Inline functions for LayeredSolidTorus

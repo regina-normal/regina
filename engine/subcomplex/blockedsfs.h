@@ -194,15 +194,6 @@ class REGINA_API BlockedSFS : public StandardTriangulation {
             const SatBlock* torus1, bool horiz1);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NBlockedSFS has now been renamed to
- * BlockedSFS.
- */
-[[deprecated]] typedef BlockedSFS NBlockedSFS;
-
 /*@}*/
 
 // Inline functions for BlockedSFS

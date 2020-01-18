@@ -160,15 +160,6 @@ class REGINA_API LayeredLensSpace : public StandardTriangulation {
         LayeredLensSpace();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NLayeredLensSpace has now been renamed to
- * LayeredLensSpace.
- */
-[[deprecated]] typedef LayeredLensSpace NLayeredLensSpace;
-
 /*@}*/
 
 // Inline functions for LayeredLensSpace
