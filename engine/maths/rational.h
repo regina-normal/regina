@@ -467,14 +467,6 @@ class REGINA_API Rational {
  */
 REGINA_API std::ostream& operator << (std::ostream& out, const Rational& rat);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NRational has now been renamed to Rational.
- */
-[[deprecated]] typedef Rational NRational;
-
 /*@}*/
 
 // Inline functions for Rational

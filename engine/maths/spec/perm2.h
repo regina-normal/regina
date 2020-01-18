@@ -554,14 +554,6 @@ class REGINA_API Perm<2> {
         Perm<2>(Code code);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPerm2 has now been renamed to Perm<2>.
- */
-[[deprecated]] typedef Perm<2> NPerm2;
-
 /*@}*/
 
 // Inline functions for Perm<2>

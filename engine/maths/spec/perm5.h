@@ -696,14 +696,6 @@ class REGINA_API Perm<5> {
         int imageOf(int source) const;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPerm5 has now been renamed to Perm<5>.
- */
-[[deprecated]] typedef Perm<5> NPerm5;
-
 /*@}*/
 
 // Inline functions for Perm<5>

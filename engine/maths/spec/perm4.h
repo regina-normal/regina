@@ -786,14 +786,6 @@ class REGINA_API Perm<4> {
         static int S4Index(int a, int b, int c, int d);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPerm4 has now been renamed to Perm<4>.
- */
-[[deprecated]] typedef Perm<4> NPerm4;
-
 // Routines for constructing the permutations associated to
 // triangles and edges of the triangulation
 

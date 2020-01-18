@@ -549,15 +549,6 @@ template <> class Perm<3>;
 template <> class Perm<4>;
 template <> class Perm<5>;
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPerm has now been renamed to Perm.
- */
-template <int n>
-using NPerm [[deprecated]] = Perm<n>;
-
 /*@}*/
 
 // Static constants for Perm

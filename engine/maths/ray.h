@@ -109,14 +109,6 @@ class REGINA_API Ray : public Vector<LargeInteger> {
         inline void negate();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NRay has now been renamed to Ray.
- */
-[[deprecated]] typedef Ray NRay;
-
 /*@}*/
 
 // Inline functions for Ray

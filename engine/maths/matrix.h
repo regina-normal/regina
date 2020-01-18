@@ -82,19 +82,6 @@
     template <typename... Args, typename Return = returnType> \
     static std::enable_if_t<ring, Return>
 /**
- * Use this as the return type for a deprecated Matrix member function that is
- * only available when working with matrices over rings.
- *
- * Equivalent to <tt>[[deprecated]] returnType</tt> if the Matrix template
- * argument \a ring is \c true, and removes the member function completey
- * otherwise.
- *
- * This macro cannot be used with templated member functions.
- */
-#define REGINA_ENABLE_FOR_RING_DEPRECATED(returnType) \
-    template <typename... Args, typename Return = returnType> \
-    [[deprecated]] std::enable_if_t<ring, Return>
-/**
  * Use this as the return type for a Matrix member function that is only
  * available when working with matrices over Regina's own integer classes.
  *
@@ -117,30 +104,6 @@ class Rational;
  * \weakgroup maths
  * @{
  */
-
-/**
- * Provides additive and multiplicative identity constants for the Matrix class.
- *
- * \deprecated These constants are deprecated, and will be removed in a future
- * release of Regina.  You should simply use the integers 0 and 1 instead.
- *
- * \tparam T the underlying type, which represents an element of a ring.
- * \tparam ring \c true if the constants \c zero and \c one should be defined.
- * If \a ring is \c false, then this class will be empty.
- */
-template <typename T, bool ring>
-struct MatrixRingIdentities {
-    [[deprecated]] static const T zero;
-        /**< The additive identity in the underlying ring. */
-    [[deprecated]] static const T one;
-        /**< The multiplicative identity in the underlying ring. */
-};
-
-#ifndef __DOXYGEN
-template <typename T>
-struct MatrixRingIdentities<T, false> {
-};
-#endif
 
 /**
  * Represents a matrix of elements of the given type \a T.
@@ -204,7 +167,7 @@ struct MatrixRingIdentities<T, false> {
 template <class T, bool ring =
         ((std::is_integral<T>::value && ! std::is_same<T, bool>::value) ||
         IsReginaInteger<T>::value || std::is_same<T, Rational>::value)>
-class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
+class Matrix : public Output<Matrix<T>> {
     static_assert(ring || ! IsReginaInteger<T>::value,
         "Using Matrix with Regina's own integer types requires ring=true.");
 
@@ -777,38 +740,6 @@ class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
         }
 
         /**
-         * Deprecated alias for the multiplication operator.
-         * Multiplies this by the given matrix, and returns a new matrix
-         * (of this same class) as a result.  This matrix is not changed.
-         *
-         * As of Regina 5.3, the template parameter \a MatrixClass has been
-         * removed, since Regina's old matrix class hierarchy has been replaced
-         * with a single Matrix class.  It is harmless if you still pass a
-         * template parameter, but your parameter will be ignored.
-         *
-         * This routine is only available when the template argument \a ring
-         * is \c true.
-         *
-         * \pre The number of columns in this matrix equals the number
-         * of rows in the given matrix.
-         *
-         * \deprecated Simply use the multiplication operator (which is now
-         * identical to this routine).  This routine multiplyAs() dated back
-         * to when Matrix had a hierarchy of subclasses that offered different
-         * capabilities according to the underlying type \a T.  Now that there
-         * is just a single class Matrix, this routine is no longer required.
-         *
-         * \ifacespython Not present.
-         *
-         * @param other the other matrix to multiply this matrix by.
-         * @return the product matrix <tt>this * other</tt>.
-         */
-        REGINA_ENABLE_FOR_RING_DEPRECATED(Matrix) multiplyAs(
-                const Matrix& other) const {
-            return (*this * other);
-        }
-
-        /**
          * Evaluates the determinant of the matrix.
          *
          * This algorithm has quartic complexity, and uses the dynamic
@@ -1025,69 +956,7 @@ class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
  */
 typedef Matrix<Integer> MatrixInt;
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class MatrixRing has now been absorbed into the main
- * Matrix class.  The old MatrixRing functionality is made available to
- * Matrix when the template parameter \a ring is \c true.
- */
-template <class T>
-using MatrixRing [[deprecated]] = Matrix<T, true>;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class MatrixIntDomain has now been absorbed into the main
- * Matrix class.  The old MatrixIntDomain functionality is made available to
- * Matrix only when \a T is one of Regina's own integer classes (Integer,
- * LargeInteger, or NativeInteger).
- *
- * \pre T is one of Regina's own integer classes (Integer, LargeInteger,
- * or NativeInteger).
- */
-template <class T>
-using MatrixIntDomain [[deprecated]] = Matrix<T, true>;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NMatrix has now been renamed to Matrix.
- */
-template <class T>
-using NMatrix [[deprecated]] = Matrix<T, false>;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NMatrixRing was long ago renamed to MatrixRing,
- * and has now been absorbed into the main Matrix class.  You should set the
- * extra template parameter \a ring for the Matrix class to \c true.
- */
-template <class T>
-using NMatrixRing [[deprecated]] = Matrix<T, true>;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NMatrixInt has now been renamed to MatrixInt.
- */
-[[deprecated]] typedef MatrixInt NMatrixInt;
-
 /*@}*/
-
-// Constants for MatrixRingIdentities:
-
-template <typename T, bool ring>
-const T MatrixRingIdentities<T, ring>::zero(0);
-
-template <typename T, bool ring>
-const T MatrixRingIdentities<T, ring>::one(1);
 
 } // namespace regina
 

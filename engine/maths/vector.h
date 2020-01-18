@@ -397,15 +397,6 @@ T Vector<T>::minusOne(-1L);
      *   some compilers don't like this.  It should never be
      *   modified! */
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NVector has now been renamed to Vector.
- */
-template <class T>
-using NVector [[deprecated]] = Vector<T>;
-
 /*@}*/
 
 } // namespace regina

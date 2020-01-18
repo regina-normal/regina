@@ -711,15 +711,6 @@ Polynomial<T> operator - (Polynomial<T> arg);
 template <typename T>
 Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPolynomial has now been renamed to Polynomial.
- */
-template <typename T>
-using NPolynomial [[deprecated]] = Polynomial<T>;
-
 /*@}*/
 
 template <typename T>

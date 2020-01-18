@@ -2279,31 +2279,6 @@ std::ostream& operator << (std::ostream& out, const NativeInteger<bytes>& i);
  */
 typedef NativeInteger<sizeof(long)> NNativeLong;
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NInteger has now been renamed to Integer.
- */
-[[deprecated]] typedef Integer NInteger;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NLargeInteger has now been renamed to LargeInteger.
- */
-[[deprecated]] typedef LargeInteger NLargeInteger;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNativeInteger has now been renamed to NativeInteger.
- */
-template <int bytes>
-using NNativeInteger [[deprecated]] = NativeInteger<bytes>;
-
 /*@}*/
 
 // Inline functions for IntegerBase

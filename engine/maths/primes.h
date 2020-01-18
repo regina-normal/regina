@@ -263,14 +263,6 @@ class REGINA_API Primes {
         static void growPrimeList(unsigned long extras = 1);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPrimes has now been renamed to Primes.
- */
-[[deprecated]] typedef Primes NPrimes;
-
 /*@}*/
 
 // Inline functions for Primes

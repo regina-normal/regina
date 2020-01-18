@@ -333,14 +333,6 @@ REGINA_API bool simpler(const Matrix2& m1, const Matrix2& m2);
 REGINA_API bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
         const Matrix2& pair2first, const Matrix2& pair2second);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NMatrix2 has now been renamed to Matrix2.
- */
-[[deprecated]] typedef Matrix2 NMatrix2;
-
 /*@}*/
 
 // Inline functions for Matrix2

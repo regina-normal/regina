@@ -707,14 +707,6 @@ Cyclotomic operator - (Cyclotomic arg);
  */
 Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NCyclotomic has now been renamed to Cyclotomic.
- */
-[[deprecated]] typedef Cyclotomic NCyclotomic;
-
 /*@}*/
 
 // Inline functions for Cyclotomic
