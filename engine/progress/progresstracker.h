@@ -466,33 +466,6 @@ class REGINA_API ProgressTrackerOpen : public ProgressTrackerBase {
         void setFinished();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NProgressTrackerBase has now been renamed to
- * ProgressTrackerBase.
- */
-[[deprecated]] typedef ProgressTrackerBase NProgressTrackerBase;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NProgressTracker has now been renamed to
- * ProgressTracker.
- */
-[[deprecated]] typedef ProgressTracker NProgressTracker;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NProgressTrackerOpen has now been renamed to
- * ProgressTrackerOpen.
- */
-[[deprecated]] typedef ProgressTrackerOpen NProgressTrackerOpen;
-
 /*@}*/
 
 // Inline functions for ProgressTrackerBase
