@@ -368,15 +368,6 @@ class REGINA_API HomGroupPresentation :
         HomGroupPresentation& operator = (const HomGroupPresentation&) = delete;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NHomGroupPresentation has now been renamed to
- * HomGroupPresentation.
- */
-[[deprecated]] typedef HomGroupPresentation NHomGroupPresentation;
-
 /*@}*/
 
 inline HomGroupPresentation::HomGroupPresentation(

@@ -656,15 +656,6 @@ class REGINA_API MarkedAbelianGroup :
 };
 
 /**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NMarkedAbelianGroup has now been renamed to
- * MarkedAbelianGroup.
- */
-[[deprecated]] typedef MarkedAbelianGroup NMarkedAbelianGroup;
-
-/**
  * Represents a homomorphism of finitely generated abelian groups.
  *
  * One initializes such a homomorphism by providing:
@@ -1042,15 +1033,6 @@ class REGINA_API HomMarkedAbelianGroup :
                 const MarkedAbelianGroup &dom, 
                 const MarkedAbelianGroup &ran);
 };
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NHomMarkedAbelianGroup has now been renamed to
- * HomMarkedAbelianGroup.
- */
-[[deprecated]] typedef HomMarkedAbelianGroup NHomMarkedAbelianGroup;
 
 /*@}*/
 
