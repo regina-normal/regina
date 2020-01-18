@@ -111,15 +111,6 @@ class REGINA_API HSVectorStandard : public NormalHypersurfaceVector {
             const Triangulation<4>* triangulation);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalHypersurfaceVectorStandard has now been
- * renamed to HSVectorStandard.
- */
-[[deprecated]] typedef HSVectorStandard NNormalHypersurfaceVectorStandard;
-
 /*@}*/
 
 // Inline functions for HSVectorStandard

@@ -948,24 +948,6 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
     friend class XMLNormalHypersurfaceReader;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalHypersurfaceVector has now been renamed to
- * NormalHypersurfaceVector.
- */
-[[deprecated]] typedef NormalHypersurfaceVector NNormalHypersurfaceVector;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalHypersurface has now been renamed to
- * NormalHypersurface.
- */
-[[deprecated]] typedef NormalHypersurface NNormalHypersurface;
-
 /*@}*/
 
 // Inline functions for NormalHypersurfaceVector

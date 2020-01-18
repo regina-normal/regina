@@ -26,9 +26,6 @@ if (${REGINA_INSTALL_DEV})
     hsvectorstandard.h
     hypercoords.h
     hyperflags.h
-    nhsstandard.h
-    nnormalhypersurface.h
-    nnormalhypersurfacelist.h
     normalhypersurface.h
     normalhypersurfaces.h
     xmlhypersurfacereader.h
