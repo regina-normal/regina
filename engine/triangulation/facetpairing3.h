@@ -507,15 +507,6 @@ class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
     friend class detail::FacetPairingBase<3>;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NFacePairing, you should use
- * the full class name FacetPairing<3>.
- */
-[[deprecated]] typedef FacetPairing<3> NFacePairing;
-
 /*@}*/
 
 // Inline functions for FacetPairing<3>

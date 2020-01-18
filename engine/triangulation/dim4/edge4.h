@@ -197,25 +197,6 @@ class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1> {
     friend class detail::TriangulationBase<4>;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4EdgeEmbedding, you should
- * use either the new alias EdgeEmbedding<4>, or the full class name
- * FaceEmbedding<4, 1>.
- */
-[[deprecated]] typedef FaceEmbedding<4, 1> Dim4EdgeEmbedding;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4Edge, you should use
- * either the new alias Edge<4>, or the full class name Face<4, 1>.
- */
-[[deprecated]] typedef Face<4, 1> Dim4Edge;
-
 /*@}*/
 
 // Inline functions for Edge<4>

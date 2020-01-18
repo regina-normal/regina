@@ -1041,55 +1041,6 @@ class REGINA_API Triangulation<4> :
     friend class regina::XMLTriangulationReader<4>;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4Triangulation, you should use
- * the templated class name Triangulation<4>.
- */
-[[deprecated]] typedef Triangulation<4> Dim4Triangulation;
-
-// Additional face typedefs that do not have their own headers:
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4TriangleEmbedding, you should
- * use either the new alias TriangleEmbedding<4>, or the full class name
- * FaceEmbedding<4, 2>.
- */
-[[deprecated]] typedef FaceEmbedding<4, 2> Dim4TriangleEmbedding;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4TetrahedronEmbedding, you should
- * use either the new alias TetrahedronEmbedding<4>, or the full class name
- * FaceEmbedding<4, 3>.
- */
-[[deprecated]] typedef FaceEmbedding<4, 3> Dim4TetrahedronEmbedding;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4Triangle, you should use
- * either the new alias Triangle<4>, or the full class name Face<4, 2>.
- */
-[[deprecated]] typedef Face<4, 2> Dim4Triangle;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4Tetrahedron, you should use
- * either the new alias Tetrahedron<4>, or the full class name Face<4, 3>.
- */
-[[deprecated]] typedef Face<4, 3> Dim4Tetrahedron;
-
 /*@}*/
 
 } // namespace regina
@@ -1098,7 +1049,6 @@ class REGINA_API Triangulation<4> :
 #include "triangulation/dim4/edge4.h"
 #include "triangulation/dim4/vertex4.h"
 #include "triangulation/dim4/component4.h"
-#include "triangulation/dim4/boundarycomponent4.h"
 namespace regina {
 
 // Inline functions for Triangulation<4>

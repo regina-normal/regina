@@ -174,25 +174,6 @@ class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2> {
     friend class detail::TriangulationBase<3>;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NTriangleEmbedding, you should
- * use either the new alias TriangleEmbedding<3>, or the full class name
- * FaceEmbedding<3, 2>.
- */
-[[deprecated]] typedef FaceEmbedding<3, 2> NTriangleEmbedding;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NTriangle, you should use
- * either the new alias Triangle<3>, or the full class name Face<3, 2>.
- */
-[[deprecated]] typedef Face<3, 2> NTriangle;
-
 /*@}*/
 
 // Inline functions for Triangle<3>

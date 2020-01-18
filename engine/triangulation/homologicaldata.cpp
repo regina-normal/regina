@@ -1267,7 +1267,7 @@ void HomologicalData::computeTorsionLinkingForm() {
 
     // step 4: intersect, construct matrix.
 
-    MatrixRing<Rational> torsionLinkingFormPresentationMat(
+    Matrix<Rational> torsionLinkingFormPresentationMat(
         pvList.size(), pvList.size() );
 
     Integer tN,tD,tR;
@@ -1326,7 +1326,7 @@ void HomologicalData::computeTorsionLinkingForm() {
         for (j=0; j<it1->second.size(); j++)
             h1PrimePowerDecomp[i].second[j] = it1->second[j].first;
 
-        linkingFormPD[i] = new MatrixRing<Rational>(it1->second.size(),
+        linkingFormPD[i] = new Matrix<Rational>(it1->second.size(),
                 it1->second.size() );
         for (j=0; j<it1->second.size(); j++)
             for (k=0; k<it1->second.size(); k++)
@@ -1519,7 +1519,7 @@ void HomologicalData::computeTorsionLinkingForm() {
         }
 
     // step 3: Seifert odd p-torsion legendre symbol invariant (done)
-    //           to do this I need to add a determinant to MatrixRing class
+    //           to do this I need to add a determinant to Matrix class
     //           this invariant will be expressed as a
     //           std::vector< std::pair< Integer, std::vector< int > > >
     //           storing the odd prime, list of Legendre symbols -1, 0, 1.
@@ -1627,7 +1627,7 @@ void HomologicalData::computeTorsionLinkingForm() {
         // std::vector< std::pair< Integer,
         //     std::vector<unsigned long> > > h1PrimePowerDecomp;
         // stored as list { (2, (1, 1, 2)), (3, (1, 2, 2, 3)), (5, (1, 1, 2)) }
-        //std::vector< MatrixRing<Rational>* > linkingFormPD;
+        //std::vector< Matrix<Rational>* > linkingFormPD;
         for (i=0; i<h1PrimePowerDecomp[0].second.size(); i++) {
             // run down diagonal of linkingFormPD[0], for each (i,i) entry
             // multiply it by 2^{h1PrimePowerDecomp[0].second[i]-1} check if

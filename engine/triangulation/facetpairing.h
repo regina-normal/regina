@@ -43,27 +43,5 @@
 
 #include "triangulation/generic/facetpairing.h"
 
-namespace regina {
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim2EdgePairing, you should use
- * the full class name FacetPairing<2>.
- */
-[[deprecated]] typedef FacetPairing<2> Dim2EdgePairing;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4FacetPairing, you should use
- * the full class name FacetPairing<4>.
- */
-[[deprecated]] typedef FacetPairing<4> Dim4FacetPairing;
-
-} // namespace regina
-
 #endif
 

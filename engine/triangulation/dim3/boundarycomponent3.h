@@ -97,15 +97,6 @@ class BoundaryComponent<3>: public detail::BoundaryComponentBase<3> {
     friend class detail::TriangulationBase<3>;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NBoundaryComponent, you should use
- * the real class name BoundaryComponent<3>.
- */
-[[deprecated]] typedef BoundaryComponent<3> NBoundaryComponent;
-
 /*@}*/
 
 // Inline functions for BoundaryComponent<3>

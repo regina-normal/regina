@@ -146,15 +146,6 @@ class REGINA_API Component<2> : public detail::ComponentBase<2>,
     friend class detail::TriangulationBase<2>;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim2Component, you should use
- * the real class name Component<2>.
- */
-[[deprecated]] typedef Component<2> Dim2Component;
-
 /*@}*/
 
 // Inline functions for Component<2>

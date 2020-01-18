@@ -3161,36 +3161,6 @@ class REGINA_API Triangulation<3> :
     friend class regina::XMLTriangulationReader<3>;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NTriangulation, you should use
- * the templated class name Triangulation<3>.
- */
-[[deprecated]] typedef Triangulation<3> NTriangulation;
-
-// Additional face typedefs that do not have their own headers:
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NEdgeEmbedding, you should
- * use either the new alias EdgeEmbedding<3>, or the full class name
- * FaceEmbedding<3, 1>.
- */
-[[deprecated]] typedef FaceEmbedding<3, 1> NEdgeEmbedding;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NEdge, you should use
- * either the new alias Edge<3>, or the full class name Face<3, 1>.
- */
-[[deprecated]] typedef Face<3, 1> NEdge;
-
 /*@}*/
 
 } // namespace regina

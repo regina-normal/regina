@@ -240,15 +240,6 @@ class REGINA_API Example<4> : public detail::ExampleBase<4> {
          */
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4ExampleTriangulation, you should
- * use the full class name Example<4>.
- */
-[[deprecated]] typedef Example<4> Dim4ExampleTriangulation;
-
 /*@}*/
 
 inline Triangulation<4>* Example<4>::fourSphere() {

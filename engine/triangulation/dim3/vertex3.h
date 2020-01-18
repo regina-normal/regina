@@ -294,25 +294,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0> {
     friend class detail::TriangulationBase<3>;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NVertexEmbedding, you should
- * use either the new alias VertexEmbedding<3>, or the full class name
- * FaceEmbedding<3, 0>.
- */
-[[deprecated]] typedef FaceEmbedding<3, 0> NVertexEmbedding;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NVertex, you should use
- * either the new alias Vertex<3>, or the full class name Face<3, 0>.
- */
-[[deprecated]] typedef Face<3, 0> NVertex;
-
 /*@}*/
 
 // Inline functions for Vertex<3>

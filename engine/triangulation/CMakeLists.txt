@@ -48,18 +48,6 @@ if (${REGINA_INSTALL_DEV})
     generic.h
     graph.h
     homologicaldata.h
-    nboundarycomponent.h
-    ncomponent.h
-    nedge.h
-    nexampletriangulation.h
-    nfacepair.h
-    nfacepairing.h
-    nhomologicaldata.h
-    nisomorphism.h
-    ntetrahedron.h
-    ntriangle.h
-    ntriangulation.h
-    nvertex.h
     pachner.h
     xmltrireader.h
     xmltrireader2.h

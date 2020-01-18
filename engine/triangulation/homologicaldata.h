@@ -422,7 +422,7 @@ private:
         h1PrimePowerDecomp;
     /** p-primary decomposition of the torsion linking form as needed to
      ** construct the Kawauchi-Kojima invariants. */
-    std::vector< MatrixRing<Rational>* > linkingFormPD;
+    std::vector< Matrix<Rational>* > linkingFormPD;
 
     /** True if torsion linking form is `hyperbolic'.   */
     bool torsionLinkingFormIsHyperbolic;
@@ -759,15 +759,6 @@ public:
     HomologicalData& operator = (const HomologicalData&) = delete;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NHomologicalData has now been renamed to
- * HomologicalData.
- */
-[[deprecated]] typedef HomologicalData NHomologicalData;
-
 /*@}*/
 
 // Inline functions for HomologicalData
@@ -857,7 +848,7 @@ inline HomologicalData::HomologicalData(const HomologicalData& g) :
         h1PrimePowerDecomp = g.h1PrimePowerDecomp;
         linkingFormPD.resize( g.linkingFormPD.size(), 0 );
         for (unsigned long i=0; i<linkingFormPD.size(); i++)
-            linkingFormPD[i] = new MatrixRing<Rational> (*g.linkingFormPD[i]);
+            linkingFormPD[i] = new Matrix<Rational> (*g.linkingFormPD[i]);
         torsionLinkingFormIsHyperbolic = g.torsionLinkingFormIsHyperbolic;
         torsionLinkingFormIsSplit = g.torsionLinkingFormIsSplit;
         torsionLinkingFormSatisfiesKKtwoTorCondition =

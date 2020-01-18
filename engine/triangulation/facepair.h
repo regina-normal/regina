@@ -261,16 +261,6 @@ class REGINA_API FacePair {
  */
 std::ostream& operator << (std::ostream& out, const FacePair& pair);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NFacePair has now been renamed to FacePair.
- */
-[[deprecated]] typedef FacePair NFacePair;
-
-/*@}*/
-
 // Inline functions for FacePair
 
 inline FacePair::FacePair() : first_(0), second_(1) {

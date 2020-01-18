@@ -277,33 +277,6 @@ struct FacetSpec {
 template <int dim>
 std::ostream& operator << (std::ostream& out, const FacetSpec<dim>& spec);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim2TriangleEdge, you should
- * use the real class name FacetSpec<2>.
- */
-[[deprecated]] typedef FacetSpec<2> Dim2TriangleEdge;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NTetFace, you should
- * use the real class name FacetSpec<3>.
- */
-[[deprecated]] typedef FacetSpec<3> NTetFace;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4PentFacet, you should
- * use the real class name FacetSpec<4>.
- */
-[[deprecated]] typedef FacetSpec<4> Dim4PentFacet;
-
 /*@}*/
 
 // Inline functions for FacetSpec

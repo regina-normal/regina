@@ -297,15 +297,6 @@ class REGINA_API Example<3> : public detail::ExampleBase<3> {
         /*@}*/
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NExampleTriangulation, you should
- * use the full class name Example<3>.
- */
-[[deprecated]] typedef Example<3> NExampleTriangulation;
-
 inline Triangulation<3>* Example<3>::s2xs1() {
     return sphereBundle();
 }

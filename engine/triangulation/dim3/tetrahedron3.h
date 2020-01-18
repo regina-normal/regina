@@ -108,15 +108,6 @@ class REGINA_API Face<3, 3> : public detail::SimplexBase<3> {
         /**< Allow access to private members. */
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NTetrahedron, you should use
- * the new alias Simplex<3> (or, if you prefer, the full class name Face<3, 3>).
- */
-[[deprecated]] typedef Simplex<3> NTetrahedron;
-
 // Specialisations to improve upon generic implementations from SimplexBase:
 
 template <>

@@ -44,18 +44,5 @@
 
 #include "triangulation/dim3/triangulation3.h"
 
-namespace regina {
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NIsomorphism, you should use
- * the full class name Isomorphism<3>.
- */
-[[deprecated]] typedef Isomorphism<3> NIsomorphism;
-
-} // namespace regina
-
 #endif
 

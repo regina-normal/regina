@@ -171,15 +171,6 @@ class REGINA_API Example<2> : public detail::ExampleBase<2> {
         static Triangulation<2>* kb();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim2ExampleTriangulation, you should
- * use the full class name Example<2>.
- */
-[[deprecated]] typedef Example<2> Dim2ExampleTriangulation;
-
 /*@}*/
 
 } // namespace regina

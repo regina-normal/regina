@@ -44,18 +44,5 @@
 
 #include "triangulation/dim4/triangulation4.h"
 
-namespace regina {
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4Isomorphism, you should use
- * the full class name Isomorphism<4>.
- */
-[[deprecated]] typedef Isomorphism<4> Dim4Isomorphism;
-
-} // namespace regina
-
 #endif
 

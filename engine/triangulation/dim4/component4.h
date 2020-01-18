@@ -169,15 +169,6 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
         /**< Allow access to private members. */
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4Component, you should use
- * the real class name Component<4>.
- */
-[[deprecated]] typedef Component<4> Dim4Component;
-
 /*@}*/
 
 // Inline functions for Component<4>
