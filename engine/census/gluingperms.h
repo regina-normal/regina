@@ -434,43 +434,6 @@ class GluingPerms {
             const;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old type alias NGenericGluingPerms<dim>,
- * you should use the new class name GluingPerms<dim>.
- */
-template <int dim>
-using NGenericGluingPerms [[deprecated]] = GluingPerms<dim>;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim2GluingPerms, you should use
- * the full class name GluingPerms<2>.
- */
-[[deprecated]] typedef GluingPerms<2> Dim2GluingPerms;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NGluingPerms, you should use
- * the full class name GluingPerms<3>.
- */
-[[deprecated]] typedef GluingPerms<3> NGluingPerms;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4GluingPerms, you should use
- * the full class name GluingPerms<4>.
- */
-[[deprecated]] typedef GluingPerms<4> Dim4GluingPerms;
-
 /*@}*/
 
 // Indicate which templates we explicitly instantiate in the shared library.

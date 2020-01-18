@@ -1117,24 +1117,6 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
         void edgeBdryDump(std::ostream& out);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim4GluingPermSearcher, you should
- * use the full class name GluingPermSearcher<4>.
- */
-[[deprecated]] typedef GluingPermSearcher<4> Dim4GluingPermSearcher;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef UseDim4GluingPerms, you should use
- * the new type name GluingPermSearcher<4>::Use.
- */
-[[deprecated]] typedef GluingPermSearcher<4>::Use UseDim4GluingPerms;
-
 /*@}*/
 
 // Inline functions for GluingPermSearcher<4>

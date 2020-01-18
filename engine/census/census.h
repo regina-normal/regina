@@ -567,38 +567,6 @@ class REGINA_API Census {
         static CensusDB* standardDB(const char* filename, const char* desc);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NCensusDB has now been renamed to CensusDB.
- */
-[[deprecated]] typedef CensusDB NCensusDB;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NCensusHit has now been renamed to CensusHit.
- */
-[[deprecated]] typedef CensusHit NCensusHit;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NCensusHits has now been renamed to CensusHits.
- */
-[[deprecated]] typedef CensusHits NCensusHits;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NCensus has now been renamed to Census.
- */
-[[deprecated]] typedef Census NCensus;
-
 } // namespace regina
 
 /*@}*/

@@ -419,24 +419,6 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
         virtual char dataTag() const;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef Dim2GluingPermSearcher, you should
- * use the full class name GluingPermSearcher<2>.
- */
-[[deprecated]] typedef GluingPermSearcher<2> Dim2GluingPermSearcher;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef UseDim2GluingPerms, you should use
- * the new type name GluingPermSearcher<2>::Use.
- */
-[[deprecated]] typedef GluingPermSearcher<2>::Use UseDim2GluingPerms;
-
 /*@}*/
 
 // Inline functions for GluingPermSearcher<2>

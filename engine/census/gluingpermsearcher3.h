@@ -2629,59 +2629,6 @@ class REGINA_API HyperbolicMinSearcher : public EulerSearcher {
         void splitEdgeClasses();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef NGluingPermSearcher, you should use
- * the full class name GluingPermSearcher<3>.
- */
-[[deprecated]] typedef GluingPermSearcher<3> NGluingPermSearcher;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated Instead of the old typedef UseGluingPerms, you should use
- * the new type name GluingPermSearcher<3>::Use.
- */
-[[deprecated]] typedef GluingPermSearcher<3>::Use UseGluingPerms;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NEulerSearcher has now been renamed to EulerSearcher.
- */
-[[deprecated]] typedef EulerSearcher NEulerSearcher;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NCompactSearcher has now been renamed to
- * CompactSearcher.
- */
-[[deprecated]] typedef CompactSearcher NCompactSearcher;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NClosedPrimeMinSearcher has now been renamed to
- * ClosedPrimeMinSearcher.
- */
-[[deprecated]] typedef ClosedPrimeMinSearcher NClosedPrimeMinSearcher;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NHyperbolicMinSearcher has now been renamed to
- * HyperbolicMinSearcher.
- */
-[[deprecated]] typedef HyperbolicMinSearcher NHyperbolicMinSearcher;
-
 /*@}*/
 
 // Inline functions for GluingPermSearcher<3>
