@@ -129,11 +129,6 @@ void AngleStructure::writeXMLData(std::ostream& out) const {
             out << i << ' ' << entry << ' ';
     }
 
-    // Write properties.
-    /** Flags in data files are deprecated as of Regina 4.93.
-    out << regina::xml::xmlValueTag("flags", flags);
-    */
-
     // Write the closing tag.
     out << "</struct>\n";
 }
