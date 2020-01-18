@@ -1421,23 +1421,6 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
     friend class regina::XMLSnapPeaReader;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NCusp has now been renamed to Cusp.
- */
-[[deprecated]] typedef Cusp NCusp;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSnapPeaTriangulation has now been renamed to
- * SnapPeaTriangulation.
- */
-[[deprecated]] typedef SnapPeaTriangulation NSnapPeaTriangulation;
-
 /*@}*/
 
 // Inline functions for SnapPeaFatalError

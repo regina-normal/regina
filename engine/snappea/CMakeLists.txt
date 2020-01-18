@@ -26,8 +26,6 @@ SET(SOURCES_C_AS_CPP ${SOURCES_C_AS_CPP} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     examplesnappea.h
-    nexamplesnappeatriangulation.h
-    nsnappeatriangulation.h
     snappeatriangulation.h
     xmlsnappeareader.h
     DESTINATION ${INCLUDEDIR}/snappea COMPONENT Development)

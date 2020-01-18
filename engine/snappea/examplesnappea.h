@@ -105,15 +105,6 @@ class REGINA_API ExampleSnapPea {
         ExampleSnapPea() = delete;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NExampleSnapPeaTriangulation has now been renamed to
- * ExampleSnapPea.
- */
-[[deprecated]] typedef ExampleSnapPea NExampleSnapPeaTriangulation;
-
 /*@}*/
 
 } // namespace regina
