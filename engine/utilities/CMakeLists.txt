@@ -33,7 +33,6 @@ if (${REGINA_INSTALL_DEV})
     markedvector.h
     memstream.h
     memutils.h
-    nbooleans.h
     osutils.h
     property.h
     ptrutils.h

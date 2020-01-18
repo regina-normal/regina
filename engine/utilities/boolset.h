@@ -343,14 +343,6 @@ class REGINA_API BoolSet {
  */
 REGINA_API std::ostream& operator << (std::ostream& out, const BoolSet& set);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NBoolSet has now been renamed to BoolSet.
- */
-[[deprecated]] typedef BoolSet NBoolSet;
-
 /*@}*/
 
 // Inline functions for BoolSet
