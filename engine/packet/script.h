@@ -281,14 +281,6 @@ class REGINA_API Script : public Packet, public PacketListener {
         virtual void writeXMLPacketData(std::ostream& out) const override;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NScript has now been renamed to Script.
- */
-[[deprecated]] typedef Script NScript;
-
 /*@}*/
 
 // Inline functions for Script

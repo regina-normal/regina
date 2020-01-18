@@ -123,14 +123,6 @@ class REGINA_API Text : public Packet {
         virtual void writeXMLPacketData(std::ostream& out) const override;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NText has now been renamed to Text.
- */
-[[deprecated]] typedef Text NText;
-
 /*@}*/
 
 // Inline functions for Text

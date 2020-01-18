@@ -22,14 +22,7 @@ SET(SOURCES ${SOURCES} PARENT_SCOPE)
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     container.h
-    ncontainer.h
-    npacket.h
-    npacketlistener.h
-    npdf.h
-    nscript.h
-    ntext.h
     packet.h
-    packetlistener.h
     pdf.h
     xmlpacketreader.h
     xmlpacketreaders.h

@@ -259,14 +259,6 @@ class REGINA_API PDF : public Packet {
         virtual void writeXMLPacketData(std::ostream& out) const override;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPDF has now been renamed to PDF.
- */
-[[deprecated]] typedef PDF NPDF;
-
 /*@}*/
 
 // Inline functions for PDF

@@ -157,43 +157,6 @@ enum PacketType {
 #endif /* ! REGINA_LOWDIMONLY */
 };
 
-/**
- * Deprecated alias for PACKET_TRIANGULATION3.
- *
- * \deprecated This constant has been renamed to PACKET_TRIANGULATION3.
- */
-[[deprecated]] constexpr PacketType PACKET_TRIANGULATION = PACKET_TRIANGULATION3;
-/**
- * Deprecated alias for PACKET_NORMALSURFACES.
- *
- * \deprecated This constant has been renamed to PACKET_NORMALSURFACES.
- */
-[[deprecated]] constexpr PacketType PACKET_NORMALSURFACELIST = PACKET_NORMALSURFACES;
-/**
- * Deprecated alias for PACKET_ANGLESTRUCTURES.
- *
- * \deprecated This constant has been renamed to PACKET_ANGLESTRUCTURES.
- */
-[[deprecated]] constexpr PacketType PACKET_ANGLESTRUCTURELIST = PACKET_ANGLESTRUCTURES;
-/**
- * Deprecated alias for PACKET_TRIANGULATION4.
- *
- * \deprecated This constant has been renamed to PACKET_TRIANGULATION4.
- */
-[[deprecated]] constexpr PacketType PACKET_DIM4TRIANGULATION = PACKET_TRIANGULATION4;
-/**
- * Deprecated alias for PACKET_NORMALHYPERSURFACES.
- *
- * \deprecated This constant has been renamed to PACKET_NORMALHYPERSURFACES.
- */
-[[deprecated]] constexpr PacketType PACKET_NORMALHYPERSURFACELIST = PACKET_NORMALHYPERSURFACES;
-/**
- * Deprecated alias for PACKET_TRIANGULATION2.
- *
- * \deprecated This constant has been renamed to PACKET_TRIANGULATION2.
- */
-[[deprecated]] constexpr PacketType PACKET_DIM2TRIANGULATION = PACKET_TRIANGULATION2;
-
 /*@}*/
 
 } // namespace regina

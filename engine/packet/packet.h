@@ -1597,14 +1597,6 @@ REGINA_API Packet* open(const char* filename);
 REGINA_API Packet* open(std::istream& in);
 
 /**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPacket has now been renamed to Packet.
- */
-[[deprecated]] typedef Packet NPacket;
-
-/**
  * A forward iterator for iterating through all immediate children of a
  * given packet.
  *
@@ -2477,14 +2469,6 @@ class REGINA_API PacketListener {
      */
     friend class Packet;
 };
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPacketListener has now been renamed to PacketListener.
- */
-[[deprecated]] typedef PacketListener NPacketListener;
 
 } // namespace regina
 

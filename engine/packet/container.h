@@ -97,14 +97,6 @@ class REGINA_API Container : public Packet {
         virtual void writeXMLPacketData(std::ostream& out) const override;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NContainer has now been renamed to Container.
- */
-[[deprecated]] typedef Container NContainer;
-
 /*@}*/
 
 // Inline functions for Container
