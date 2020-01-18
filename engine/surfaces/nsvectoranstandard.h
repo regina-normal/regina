@@ -125,15 +125,6 @@ class REGINA_API NSVectorANStandard : public NormalSurfaceVector {
             const Triangulation<3>* triangulation);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurfaceVectorANStandard has now been
- * renamed to NSVectorANStandard.
- */
-[[deprecated]] typedef NSVectorANStandard NNormalSurfaceVectorANStandard;
-
 /*@}*/
 
 // Inline functions for NSVectorANStandard

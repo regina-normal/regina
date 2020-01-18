@@ -46,24 +46,11 @@ if (${REGINA_INSTALL_DEV})
     disctype.h
     filterregistry.h
     filterregistry-impl.h
-    ndisc.h
-    ndisctype.h
-    nnormalsurface.h
-    nnormalsurfacelist.h
     normalcoords.h
     normalflags.h
     normalspec-impl.h
     normalsurface.h
     normalsurfaces.h
-    nprism.h
-    nsanstandard.h
-    nsmirrored.h
-    nsoriented.h
-    nsorientedquad.h
-    nsquad.h
-    nsquadoct.h
-    nsstandard.h
-    nsurfacefilter.h
     nsvectoranstandard.h
     nsvectormirrored.h
     nsvectororiented.h
@@ -74,8 +61,6 @@ if (${REGINA_INSTALL_DEV})
     nsvectorquadoctclosed.h
     nsvectorstandard.h
     prism.h
-    sfcombination.h
-    sfproperties.h
     surfacefilter.h
     surfacefiltertype.h
     xmlfilterreader.h

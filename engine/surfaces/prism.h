@@ -131,14 +131,6 @@ struct REGINA_API PrismSpec {
 REGINA_API std::ostream& operator << (std::ostream& out,
     const PrismSpec& spec);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPrismSpec has now been renamed to PrismSpec.
- */
-[[deprecated]] typedef PrismSpec NPrismSpec;
-
 /*@}*/
 
 // Inline functions for PrismSpec

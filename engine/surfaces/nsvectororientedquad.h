@@ -129,15 +129,6 @@ class REGINA_API NSVectorOrientedQuad : public NSVectorMirrored {
             const Triangulation<3>* triangulation);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurfaceVectorOrientedQuad has now been
- * renamed to NSVectorOrientedQuad.
- */
-[[deprecated]] typedef NSVectorOrientedQuad NNormalSurfaceVectorOrientedQuad;
-
 /*@}*/
 
 // Inline functions for NSVectorOrientedQuad

@@ -1774,23 +1774,6 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
     friend class XMLNormalSurfaceReader;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurfaceVector has now been renamed to
- * NormalSurfaceVector.
- */
-[[deprecated]] typedef NormalSurfaceVector NNormalSurfaceVector;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurface has now been renamed to NormalSurface.
- */
-[[deprecated]] typedef NormalSurface NNormalSurface;
-
 /*@}*/
 
 // Inline functions for NormalSurfaceVector

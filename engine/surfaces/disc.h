@@ -846,49 +846,6 @@ class REGINA_API DiscSpecIterator {
     friend class DiscSetSurface;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NDiscSpec has now been renamed to DiscSpec.
- */
-[[deprecated]] typedef DiscSpec NDiscSpec;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NDiscSetTet has now been renamed to DiscSetTet.
- */
-[[deprecated]] typedef DiscSetTet NDiscSetTet;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NDiscSetTetData has now been renamed to DiscSetTetData.
- */
-template <class T>
-using NDiscSetTetData [[deprecated]] = DiscSetTetData<T>;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NDiscSetSurface has now been renamed to DiscSetSurface.
- */
-[[deprecated]] typedef DiscSetSurface NDiscSetSurface;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NDiscSetSurfaceData has now been renamed to
- * DiscSetSurfaceData.
- */
-template <class T>
-using NDiscSetSurfaceData [[deprecated]] = DiscSetSurfaceData<T>;
-
 } // namespace regina
 
 /*@}*/

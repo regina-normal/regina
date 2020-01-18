@@ -1499,15 +1499,6 @@ REGINA_API MatrixInt* makeMatchingEquations(
 REGINA_API EnumConstraints* makeEmbeddedConstraints(
     const Triangulation<3>* triangulation, NormalCoords coords);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurfaceList has now been renamed to
- * NormalSurfaces.
- */
-[[deprecated]] typedef NormalSurfaces NNormalSurfaceList;
-
 /*@}*/
 
 // Inline functions for NormalSurfaces

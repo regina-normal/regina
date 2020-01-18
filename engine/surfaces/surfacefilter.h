@@ -499,33 +499,6 @@ class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
         virtual void writeXMLFilterData(std::ostream& out) const override;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSurfaceFilter has now been renamed to
- * SurfaceFilter.
- */
-[[deprecated]] typedef SurfaceFilter NSurfaceFilter;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSurfaceFilterCombination has now been renamed to
- * SurfaceFilterCombination.
- */
-[[deprecated]] typedef SurfaceFilterCombination NSurfaceFilterCombination;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSurfaceFilterProperties has now been renamed to
- * SurfaceFilterProperties.
- */
-[[deprecated]] typedef SurfaceFilterProperties NSurfaceFilterProperties;
-
 /*@}*/
 
 // Inline functions for SurfaceFilter

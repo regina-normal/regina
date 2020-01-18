@@ -167,15 +167,6 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
             int triVertex, const Triangulation<3>* triang) const override;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurfaceVectorMirrored has now been renamed to
- * NSVectorMirrored.
- */
-[[deprecated]] typedef NSVectorMirrored NNormalSurfaceVectorMirrored;
-
 /*@}*/
 
 // Inline functions for NSVectorMirrored

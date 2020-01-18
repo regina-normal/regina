@@ -130,15 +130,6 @@ class REGINA_API NSVectorOriented : public NormalSurfaceVector {
             const Triangulation<3>* triangulation);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurfaceVectorOriented has now been
- * renamed to NSVectorOriented.
- */
-[[deprecated]] typedef NSVectorOriented NNormalSurfaceVectorOriented;
-
 /*@}*/
 
 // Inline functions for NSVectorOriented

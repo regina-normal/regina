@@ -118,15 +118,6 @@ class REGINA_API NSVectorQuadOct : public NSVectorMirrored {
             const Triangulation<3>* triangulation);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NNormalSurfaceVectorQuadOct has now been
- * renamed to NSVectorQuadOct.
- */
-[[deprecated]] typedef NSVectorQuadOct NNormalSurfaceVectorQuadOct;
-
 /*@}*/
 
 // Inline functions for NSVectorQuadOct

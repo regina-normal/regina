@@ -154,14 +154,6 @@ struct REGINA_API DiscType {
  */
 REGINA_API std::ostream& operator << (std::ostream& out, const DiscType& type);
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NDiscType has now been renamed to DiscType.
- */
-[[deprecated]] typedef DiscType NDiscType;
-
 /*@}*/
 
 // Inline functions for DiscType
