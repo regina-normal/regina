@@ -57,8 +57,6 @@ void addGluingPermSearcher3(pybind11::module& m) {
             regina::GluingPermSearcher<3>::PURGE_P2_REDUCIBLE)
         .export_values();
 
-    m.attr("NGluingPermSearcher") = m.attr("GluingPermSearcher3");
-
     // For backward compatibility with the old boost.python bindings:
     m.attr("PURGE_NONE") =
         GluingPermSearcher<3>::PURGE_NONE;

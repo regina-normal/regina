@@ -102,10 +102,5 @@ void addCensus(pybind11::module& m) {
             overload_cast<const std::string&>(&Census::lookup))
     ;
     regina::python::no_eq_operators(c);
-
-    m.attr("NCensusDB") = m.attr("CensusDB");
-    m.attr("NCensusHit") = m.attr("CensusHit");
-    m.attr("NCensusHits") = m.attr("CensusHits");
-    m.attr("NCensus") = m.attr("Census");
 }
 
