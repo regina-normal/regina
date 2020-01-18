@@ -185,14 +185,6 @@ class REGINA_API FileInfo : public Output<FileInfo> {
         FileInfo();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NFileInfo has now been renamed to FileInfo.
- */
-[[deprecated]] typedef FileInfo NFileInfo;
-
 /*@}*/
 
 // Inline functions for FileInfo

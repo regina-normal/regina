@@ -249,14 +249,6 @@ class REGINA_API GlobalDirs {
                  census data files. */
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NGlobalDirs has now been renamed to GlobalDirs.
- */
-[[deprecated]] typedef GlobalDirs NGlobalDirs;
-
 /*@}*/
 
 // Inline functions for GlobalDirs:
