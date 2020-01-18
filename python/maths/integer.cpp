@@ -129,7 +129,5 @@ void addInteger(pybind11::module& m) {
 
     pybind11::implicitly_convertible<long, Integer>();
     pybind11::implicitly_convertible<std::string, Integer>();
-
-    m.attr("NInteger") = m.attr("Integer");
 }
 

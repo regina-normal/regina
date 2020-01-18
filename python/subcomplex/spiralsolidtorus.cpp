@@ -52,7 +52,5 @@ void addSpiralSolidTorus(pybind11::module& m) {
         .def_static("formsSpiralSolidTorus",
             &SpiralSolidTorus::formsSpiralSolidTorus)
     ;
-
-    m.attr("NSpiralSolidTorus") = m.attr("SpiralSolidTorus");
 }
 

@@ -50,7 +50,5 @@ void addLayeredLensSpace(pybind11::module& m) {
         .def("isTwisted", &LayeredLensSpace::isTwisted)
         .def_static("isLayeredLensSpace", &LayeredLensSpace::isLayeredLensSpace)
     ;
-
-    m.attr("NLayeredLensSpace") = m.attr("LayeredLensSpace");
 }
 

@@ -55,7 +55,5 @@ void addPlugTriSolidTorus(pybind11::module& m) {
         .def_readonly_static("EQUATOR_MAJOR", &PlugTriSolidTorus::EQUATOR_MAJOR)
         .def_readonly_static("EQUATOR_MINOR", &PlugTriSolidTorus::EQUATOR_MINOR)
     ;
-
-    m.attr("NPlugTriSolidTorus") = m.attr("PlugTriSolidTorus");
 }
 

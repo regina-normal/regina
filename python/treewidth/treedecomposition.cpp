@@ -190,8 +190,5 @@ void addTreeDecomposition(pybind11::module& m) {
     ;
     regina::python::add_output(td);
     regina::python::add_eq_operators(td);
-
-    m.attr("NTreeBag") = m.attr("TreeBag");
-    m.attr("NTreeDecomposition") = m.attr("TreeDecomposition");
 }
 

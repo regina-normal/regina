@@ -92,9 +92,7 @@ void addEdge2(pybind11::module& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.attr("Dim2EdgeEmbedding") = m.attr("FaceEmbedding2_1");
     m.attr("EdgeEmbedding2") = m.attr("FaceEmbedding2_1");
-    m.attr("Dim2Edge") = m.attr("Face2_1");
     m.attr("Edge2") = m.attr("Face2_1");
 }
 

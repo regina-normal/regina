@@ -84,9 +84,7 @@ void addVertex2(pybind11::module& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.attr("Dim2VertexEmbedding") = m.attr("FaceEmbedding2_0");
     m.attr("VertexEmbedding2") = m.attr("FaceEmbedding2_0");
-    m.attr("Dim2Vertex") = m.attr("Face2_0");
     m.attr("Vertex2") = m.attr("Face2_0");
 }
 

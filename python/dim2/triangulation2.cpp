@@ -200,7 +200,5 @@ void addTriangulation2(pybind11::module& m) {
             return 2;
         })
     ;
-
-    m.attr("Dim2Triangulation") = m.attr("Triangulation2");
 }
 

@@ -133,7 +133,5 @@ void addPacketListener(pybind11::module& m) {
         .def("childWasRenamed", &PacketListener::childWasRenamed)
         ;
     regina::python::add_eq_operators(l);
-
-    m.attr("NPacketListener") = m.attr("PacketListener");
 }
 

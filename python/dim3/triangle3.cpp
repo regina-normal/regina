@@ -113,9 +113,7 @@ void addTriangle3(pybind11::module& m) {
         .value("L31", regina::Triangle<3>::L31)
         .export_values();
 
-    m.attr("NTriangleEmbedding") = m.attr("FaceEmbedding3_2");
     m.attr("TriangleEmbedding3") = m.attr("FaceEmbedding3_2");
-    m.attr("NTriangle") = m.attr("Face3_2");
     m.attr("Triangle3") = m.attr("Face3_2");
 }
 

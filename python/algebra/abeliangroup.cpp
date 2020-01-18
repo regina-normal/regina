@@ -96,7 +96,5 @@ void addAbelianGroup(pybind11::module& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-
-    m.attr("NAbelianGroup") = m.attr("AbelianGroup");
 }
 

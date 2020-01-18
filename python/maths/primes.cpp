@@ -62,7 +62,5 @@ void addPrimes(pybind11::module& m) {
         })
     ;
     regina::python::no_eq_operators(c);
-
-    m.attr("NPrimes") = m.attr("Primes");
 }
 

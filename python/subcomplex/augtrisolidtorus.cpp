@@ -56,7 +56,5 @@ void addAugTriSolidTorus(pybind11::module& m) {
         .def_readonly_static("CHAIN_MAJOR", &AugTriSolidTorus::CHAIN_MAJOR)
         .def_readonly_static("CHAIN_AXIS", &AugTriSolidTorus::CHAIN_AXIS)
     ;
-
-    m.attr("NAugTriSolidTorus") = m.attr("AugTriSolidTorus");
 }
 

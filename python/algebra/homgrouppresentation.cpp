@@ -75,6 +75,5 @@ void addHomGroupPresentation(pybind11::module& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-    m.attr("NHomGroupPresentation") = m.attr("HomGroupPresentation");
 }
 

@@ -82,7 +82,6 @@ void addPentachoron4(pybind11::module& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.attr("Dim4Pentachoron") = m.attr("Simplex4");
     m.attr("Pentachoron4") = m.attr("Simplex4");
     m.attr("Face4_4") = m.attr("Simplex4");
 }

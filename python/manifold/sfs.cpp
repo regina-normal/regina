@@ -118,8 +118,5 @@ void addSFSpace(pybind11::module& m) {
         .value("bn3", SFSpace::bn3)
         .export_values()
         ;
-
-    m.attr("NSFSFibre") = m.attr("SFSFibre");
-    m.attr("NSFSpace") = m.attr("SFSpace");
 }
 

@@ -47,7 +47,5 @@ void addExampleSnapPea(pybind11::module& m) {
         .def_static("x101", &ExampleSnapPea::x101)
     ;
     regina::python::no_eq_operators(c);
-
-    m.attr("NExampleSnapPeaTriangulation") = m.attr("ExampleSnapPea");
 }
 

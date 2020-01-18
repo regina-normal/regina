@@ -83,9 +83,5 @@ void addFacetSpec(pybind11::module& m) {
     addFacetSpec<14>(m, "FacetSpec14");
     addFacetSpec<15>(m, "FacetSpec15");
 #endif
-
-    m.attr("Dim2TriangleEdge") = m.attr("FacetSpec2");
-    m.attr("NTetFace") = m.attr("FacetSpec3");
-    m.attr("Dim4PentFacet") = m.attr("FacetSpec4");
 }
 

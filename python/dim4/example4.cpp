@@ -61,7 +61,5 @@ void addExample4(pybind11::module& m) {
         .def_static("bundleWithMonodromy", &Example<4>::bundleWithMonodromy)
     ;
     regina::python::no_eq_operators(c);
-
-    m.attr("Dim4ExampleTriangulation") = m.attr("Example4");
 }
 

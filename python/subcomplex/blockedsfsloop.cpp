@@ -47,7 +47,5 @@ void addBlockedSFSLoop(pybind11::module& m) {
             pybind11::return_value_policy::reference_internal)
         .def_static("isBlockedSFSLoop", &BlockedSFSLoop::isBlockedSFSLoop)
     ;
-
-    m.attr("NBlockedSFSLoop") = m.attr("BlockedSFSLoop");
 }
 

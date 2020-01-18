@@ -74,7 +74,5 @@ void addHomologicalData(pybind11::module& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-
-    m.attr("NHomologicalData") = m.attr("HomologicalData");
 }
 

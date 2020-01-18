@@ -56,7 +56,5 @@ void addGraphTriple(pybind11::module& m) {
         .def("matchingReln", &GraphTriple::matchingReln,
             pybind11::return_value_policy::reference_internal)
     ;
-
-    m.attr("NGraphTriple") = m.attr("GraphTriple");
 }
 

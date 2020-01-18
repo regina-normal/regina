@@ -95,7 +95,5 @@ void addBoundaryComponent3(pybind11::module& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-
-    m.attr("NBoundaryComponent") = m.attr("BoundaryComponent3");
 }
 

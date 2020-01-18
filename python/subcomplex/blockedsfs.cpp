@@ -49,7 +49,5 @@ void addBlockedSFS(pybind11::module& m) {
         })
         .def_static("isBlockedSFS", &BlockedSFS::isBlockedSFS)
     ;
-
-    m.attr("NBlockedSFS") = m.attr("BlockedSFS");
 }
 

@@ -276,7 +276,5 @@ void addTriangulation4(pybind11::module& m) {
             return 4;
         })
     ;
-
-    m.attr("Dim4Triangulation") = m.attr("Triangulation4");
 }
 

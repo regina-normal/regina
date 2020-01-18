@@ -378,7 +378,6 @@ void addTriangulation3(pybind11::module& m) {
         })
     ;
 
-    m.attr("NTriangulation") = m.attr("Triangulation3");
     m.attr("TuraevViroAlg") = m.attr("Algorithm");
 }
 

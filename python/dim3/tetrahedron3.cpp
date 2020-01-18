@@ -80,7 +80,6 @@ void addTetrahedron3(pybind11::module& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.attr("NTetrahedron") = m.attr("Simplex3");
     m.attr("Tetrahedron3") = m.attr("Simplex3");
     m.attr("Face3_3") = m.attr("Simplex3");
 }

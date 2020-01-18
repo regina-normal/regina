@@ -53,7 +53,5 @@ void addGlobalDirs(pybind11::module& m) {
             pybind11::arg("censusDir") = std::string())
     ;
     regina::python::no_eq_operators(c);
-
-    m.attr("NGlobalDirs") = m.attr("GlobalDirs");
 }
 

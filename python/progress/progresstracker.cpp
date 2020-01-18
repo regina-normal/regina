@@ -79,8 +79,5 @@ void addProgressTracker(pybind11::module& m) {
         .def("setFinished", &ProgressTrackerOpen::setFinished)
     ;
     regina::python::add_eq_operators(c2);
-
-    m.attr("NProgressTracker") = m.attr("ProgressTracker");
-    m.attr("NProgressTrackerOpen") = m.attr("ProgressTrackerOpen");
 }
 

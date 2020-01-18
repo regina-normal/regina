@@ -101,7 +101,5 @@ void addNormalSurfaces(pybind11::module& m) {
             return NormalSurfaces::typeID;
         })
     ;
-
-    m.attr("NNormalSurfaceList") = m.attr("NormalSurfaces");
 }
 

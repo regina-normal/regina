@@ -47,7 +47,5 @@ void addBlockedSFSPair(pybind11::module& m) {
             pybind11::return_value_policy::reference_internal)
         .def_static("isBlockedSFSPair", &BlockedSFSPair::isBlockedSFSPair)
     ;
-
-    m.attr("NBlockedSFSPair") = m.attr("BlockedSFSPair");
 }
 

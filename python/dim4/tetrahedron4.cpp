@@ -98,9 +98,7 @@ void addTetrahedron4(pybind11::module& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.attr("Dim4TetrahedronEmbedding") = m.attr("FaceEmbedding4_3");
     m.attr("TetrahedronEmbedding4") = m.attr("FaceEmbedding4_3");
-    m.attr("Dim4Tetrahedron") = m.attr("Face4_3");
     m.attr("Tetrahedron4") = m.attr("Face4_3");
 }
 

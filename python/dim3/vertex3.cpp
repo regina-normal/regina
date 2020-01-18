@@ -116,9 +116,7 @@ void addVertex3(pybind11::module& m) {
         .value("INVALID", regina::Vertex<3>::INVALID)
         .export_values();
 
-    m.attr("NVertexEmbedding") = m.attr("FaceEmbedding3_0");
     m.attr("VertexEmbedding3") = m.attr("FaceEmbedding3_0");
-    m.attr("NVertex") = m.attr("Face3_0");
     m.attr("Vertex3") = m.attr("Face3_0");
 }
 

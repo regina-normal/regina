@@ -90,10 +90,5 @@ void addDisc(pybind11::module& m) {
         .def("__next__", nextDiscSpec) // for python 3
     ;
     regina::python::add_eq_operators(it);
-
-    m.attr("NDiscSpec") = m.attr("DiscSpec");
-    m.attr("NDiscSetTet") = m.attr("DiscSetTet");
-    m.attr("NDiscSetSurface") = m.attr("DiscSetSurface");
-    m.attr("NDiscSpecIterator") = m.attr("DiscSpecIterator");
 }
 

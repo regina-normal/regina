@@ -106,9 +106,7 @@ void addTriangle4(pybind11::module& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.attr("Dim4TriangleEmbedding") = m.attr("FaceEmbedding4_2");
     m.attr("TriangleEmbedding4") = m.attr("FaceEmbedding4_2");
-    m.attr("Dim4Triangle") = m.attr("Face4_2");
     m.attr("Triangle4") = m.attr("Face4_2");
 }
 

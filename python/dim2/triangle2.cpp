@@ -77,7 +77,6 @@ void addTriangle2(pybind11::module& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.attr("Dim2Triangle") = m.attr("Simplex2");
     m.attr("Triangle2") = m.attr("Simplex2");
     m.attr("Face2_2") = m.attr("Simplex2");
 }

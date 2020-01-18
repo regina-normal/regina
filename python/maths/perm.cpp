@@ -144,17 +144,5 @@ void addPerm(pybind11::module& m) {
     addPerm<14>(m, "Perm14");
     addPerm<15>(m, "Perm15");
     addPerm<16>(m, "Perm16");
-
-    m.attr("NPerm6") = m.attr("Perm6");
-    m.attr("NPerm7") = m.attr("Perm7");
-    m.attr("NPerm8") = m.attr("Perm8");
-    m.attr("NPerm9") = m.attr("Perm9");
-    m.attr("NPerm10") = m.attr("Perm10");
-    m.attr("NPerm11") = m.attr("Perm11");
-    m.attr("NPerm12") = m.attr("Perm12");
-    m.attr("NPerm13") = m.attr("Perm13");
-    m.attr("NPerm14") = m.attr("Perm14");
-    m.attr("NPerm15") = m.attr("Perm15");
-    m.attr("NPerm16") = m.attr("Perm16");
 }
 

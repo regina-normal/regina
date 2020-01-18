@@ -66,7 +66,5 @@ void addNormalHypersurfaces(pybind11::module& m) {
             return NormalHypersurfaces::typeID;
         })
     ;
-
-    m.attr("NNormalHypersurfaceList") = m.attr("NormalHypersurfaces");
 }
 

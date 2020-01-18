@@ -47,7 +47,5 @@ void addLayeredLoop(pybind11::module& m) {
             pybind11::return_value_policy::reference)
         .def_static("isLayeredLoop", &LayeredLoop::isLayeredLoop)
     ;
-
-    m.attr("NLayeredLoop") = m.attr("LayeredLoop");
 }
 

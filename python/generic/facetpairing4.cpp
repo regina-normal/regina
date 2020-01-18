@@ -34,6 +34,5 @@
 
 void addFacetPairing4(pybind11::module& m) {
     addFacetPairing<4>(m, "FacetPairing4");
-    m.attr("Dim4FacetPairing") = m.attr("FacetPairing4");
 }
 

@@ -57,7 +57,5 @@ void addLayering(pybind11::module& m) {
         .def("matchesTop", &Layering::matchesTop)
     ;
     regina::python::add_eq_operators(c);
-
-    m.attr("NLayering") = m.attr("Layering");
 }
 

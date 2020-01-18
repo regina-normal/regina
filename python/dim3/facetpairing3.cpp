@@ -97,7 +97,5 @@ void addFacetPairing3(pybind11::module& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-
-    m.attr("NFacePairing") = m.attr("FacetPairing3");
 }
 

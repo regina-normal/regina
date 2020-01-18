@@ -93,9 +93,5 @@ void addSurfaceFilter(pybind11::module& m) {
             return SurfaceFilterProperties::filterTypeID;
         })
     ;
-
-    m.attr("NSurfaceFilter") = m.attr("SurfaceFilter");
-    m.attr("NSurfaceFilterCombination") = m.attr("SurfaceFilterCombination");
-    m.attr("NSurfaceFilterProperties") = m.attr("SurfaceFilterProperties");
 }
 

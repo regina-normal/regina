@@ -62,7 +62,5 @@ void addLayeredSolidTorus(pybind11::module& m) {
         .def_static("isLayeredSolidTorus",
             &LayeredSolidTorus::isLayeredSolidTorus)
     ;
-
-    m.attr("NLayeredSolidTorus") = m.attr("LayeredSolidTorus");
 }
 
