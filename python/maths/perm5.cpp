@@ -120,7 +120,5 @@ void addPerm5(pybind11::module& m) {
     Perm5_contract<6>::add_bindings(c);
     regina::python::add_output_basic(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
-
-    m.attr("NPerm5") = m.attr("Perm5");
 }
 

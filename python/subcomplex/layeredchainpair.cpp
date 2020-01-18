@@ -45,7 +45,5 @@ void addLayeredChainPair(pybind11::module& m) {
             pybind11::return_value_policy::reference_internal)
         .def_static("isLayeredChainPair", &LayeredChainPair::isLayeredChainPair)
     ;
-
-    m.attr("NLayeredChainPair") = m.attr("LayeredChainPair");
 }
 

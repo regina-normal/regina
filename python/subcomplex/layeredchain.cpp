@@ -55,7 +55,5 @@ void addLayeredChain(pybind11::module& m) {
         .def("reverse", &LayeredChain::reverse)
         .def("invert", &LayeredChain::invert)
     ;
-
-    m.attr("NLayeredChain") = m.attr("LayeredChain");
 }
 

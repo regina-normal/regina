@@ -45,7 +45,5 @@ void addL31Pillow(pybind11::module& m) {
         .def("interiorVertex", &L31Pillow::interiorVertex)
         .def_static("isL31Pillow", &L31Pillow::isL31Pillow)
     ;
-
-    m.attr("NL31Pillow") = m.attr("L31Pillow");
 }
 

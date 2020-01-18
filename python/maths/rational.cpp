@@ -92,7 +92,5 @@ void addRational(pybind11::module& m) {
     pybind11::implicitly_convertible<Integer, Rational>();
     pybind11::implicitly_convertible<LargeInteger, Rational>();
     pybind11::implicitly_convertible<long, Rational>();
-
-    m.attr("NRational") = m.attr("Rational");
 }
 

@@ -51,7 +51,5 @@ void addText(pybind11::module& m) {
             return Text::typeID;
         })
     ;
-
-    m.attr("NText") = m.attr("Text");
 }
 

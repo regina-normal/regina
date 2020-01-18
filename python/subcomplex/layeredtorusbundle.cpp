@@ -49,7 +49,5 @@ void addLayeredTorusBundle(pybind11::module& m) {
         .def_static("isLayeredTorusBundle",
             &LayeredTorusBundle::isLayeredTorusBundle)
     ;
-
-    m.attr("NLayeredTorusBundle") = m.attr("LayeredTorusBundle");
 }
 

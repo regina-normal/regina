@@ -46,7 +46,5 @@ void addContainer(pybind11::module& m) {
             return Container::typeID;
         })
     ;
-
-    m.attr("NContainer") = m.attr("Container");
 }
 

@@ -106,7 +106,5 @@ void addPerm3(pybind11::module& m) {
     Perm3_contract<4>::add_bindings(c);
     regina::python::add_output_basic(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
-
-    m.attr("NPerm3") = m.attr("Perm3");
 }
 

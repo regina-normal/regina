@@ -97,7 +97,6 @@ void addMarkedAbelianGroup(pybind11::module& m) {
     ;
     regina::python::add_output(c1);
     regina::python::add_eq_operators(c1);
-    m.attr("NMarkedAbelianGroup") = m.attr("MarkedAbelianGroup");
 
     auto c2 = pybind11::class_<HomMarkedAbelianGroup>(m,
             "HomMarkedAbelianGroup")
@@ -136,6 +135,5 @@ void addMarkedAbelianGroup(pybind11::module& m) {
     ;
     regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);
-    m.attr("NHomMarkedAbelianGroup") = m.attr("HomMarkedAbelianGroup");
 }
 

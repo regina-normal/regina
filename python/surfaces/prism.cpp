@@ -47,7 +47,5 @@ void addPrism(pybind11::module& m) {
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);
-
-    m.attr("NPrismSpec") = m.attr("PrismSpec");
 }
 

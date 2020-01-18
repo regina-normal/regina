@@ -170,7 +170,5 @@ void addPacket(pybind11::module& m) {
     regina::python::add_eq_operators(c);
 
     m.def("open", (Packet* (*)(const char*)) &regina::open);
-
-    m.attr("NPacket") = m.attr("Packet");
 }
 

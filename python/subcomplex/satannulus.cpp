@@ -80,7 +80,5 @@ void addSatAnnulus(pybind11::module& m) {
         .def("attachLST", &SatAnnulus::attachLST)
     ;
     regina::python::add_eq_operators(c);
-
-    m.attr("NSatAnnulus") = m.attr("SatAnnulus");
 }
 

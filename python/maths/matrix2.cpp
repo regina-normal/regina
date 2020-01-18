@@ -127,8 +127,5 @@ void addMatrix2(pybind11::module& m) {
     m.def("simpler", overload_cast<const Matrix2&, const Matrix2&,
             const Matrix2&, const Matrix2&>(
         &regina::simpler));
-
-    m.attr("NMatrix2Row") = m.attr("Matrix2Row");
-    m.attr("NMatrix2") = m.attr("Matrix2");
 }
 

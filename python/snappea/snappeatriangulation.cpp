@@ -137,9 +137,6 @@ void addSnapPeaTriangulation(pybind11::module& m) {
         .export_values()
     ;
 
-    m.attr("NCusp") = m.attr("Cusp");
-    m.attr("NSnapPeaTriangulation") = m.attr("SnapPeaTriangulation");
-
     // For backward compatibility with the old boost.python bindings:
     m.attr("SolutionType") = st;
 }

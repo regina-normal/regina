@@ -47,7 +47,5 @@ void addTorusBundle(pybind11::module& m) {
         .def("monodromy", &TorusBundle::monodromy,
             pybind11::return_value_policy::reference_internal)
     ;
-
-    m.attr("NTorusBundle") = m.attr("TorusBundle");
 }
 

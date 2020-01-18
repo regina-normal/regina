@@ -55,7 +55,5 @@ void addSnapPeaCensusTri(pybind11::module& m) {
     // we should override the compare-by-pointer test that we inherit from
     // StandardTriangulation.
     regina::python::add_eq_operators(c);
-
-    m.attr("NSnapPeaCensusTri") = m.attr("SnapPeaCensusTri");
 }
 

@@ -51,7 +51,5 @@ void addPDF(pybind11::module& m) {
             return PDF::typeID;
         })
     ;
-
-    m.attr("NPDF") = m.attr("PDF");
 }
 

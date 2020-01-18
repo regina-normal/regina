@@ -61,7 +61,5 @@ void addAngleStructures(pybind11::module& m) {
             return AngleStructures::typeID;
         })
     ;
-
-    m.attr("NAngleStructureList") = m.attr("AngleStructures");
 }
 

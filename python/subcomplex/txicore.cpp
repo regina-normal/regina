@@ -64,20 +64,14 @@ void addTxICore(pybind11::module& m) {
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
 
-    m.attr("NTxICore") = m.attr("TxICore");
-
     pybind11::class_<TxIDiagonalCore, regina::TxICore>(m, "TxIDiagonalCore")
         .def(pybind11::init<unsigned long, unsigned long>())
         .def("size", &TxIDiagonalCore::size)
         .def("k", &TxIDiagonalCore::k)
     ;
 
-    m.attr("NTxIDiagonalCore") = m.attr("TxIDiagonalCore");
-
     pybind11::class_<TxIParallelCore, regina::TxICore>(m, "TxIParallelCore")
         .def(pybind11::init<>())
     ;
-
-    m.attr("NTxIParallelCore") = m.attr("TxIParallelCore");
 }
 

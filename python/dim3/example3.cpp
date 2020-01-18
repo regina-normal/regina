@@ -74,7 +74,5 @@ void addExample3(pybind11::module& m) {
             &Example<3>::cuspedGenusTwoTorus)
     ;
     regina::python::no_eq_operators(c);
-
-    m.attr("NExampleTriangulation") = m.attr("Example3");
 }
 

@@ -117,7 +117,5 @@ void addPerm4(pybind11::module& m) {
     Perm4_contract<5>::add_bindings(c);
     regina::python::add_output_basic(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
-
-    m.attr("NPerm4") = m.attr("Perm4");
 }
 

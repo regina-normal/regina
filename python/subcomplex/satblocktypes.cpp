@@ -55,8 +55,6 @@ void addSatBlockTypes(pybind11::module& m) {
         })
     ;
 
-    m.attr("NSatMobius") = m.attr("SatMobius");
-
 
     pybind11::class_<SatLST, regina::SatBlock>(m, "SatLST")
         .def(pybind11::init<const SatLST&>())
@@ -69,8 +67,6 @@ void addSatBlockTypes(pybind11::module& m) {
         })
     ;
 
-    m.attr("NSatLST") = m.attr("SatLST");
-
 
     pybind11::class_<SatTriPrism, regina::SatBlock>(m, "SatTriPrism")
         .def(pybind11::init<const SatTriPrism&>())
@@ -82,8 +78,6 @@ void addSatBlockTypes(pybind11::module& m) {
         .def_static("insertBlock", &SatTriPrism::insertBlock)
     ;
 
-    m.attr("NSatTriPrism") = m.attr("SatTriPrism");
-
 
     pybind11::class_<SatCube, regina::SatBlock>(m, "SatCube")
         .def(pybind11::init<const SatCube&>())
@@ -93,8 +87,6 @@ void addSatBlockTypes(pybind11::module& m) {
         })
         .def_static("insertBlock", &SatCube::insertBlock)
     ;
-
-    m.attr("NSatCube") = m.attr("SatCube");
 
 
     pybind11::class_<SatReflectorStrip, regina::SatBlock>(
@@ -107,8 +99,6 @@ void addSatBlockTypes(pybind11::module& m) {
         .def_static("insertBlock", &SatReflectorStrip::insertBlock)
     ;
 
-    m.attr("NSatReflectorStrip") = m.attr("SatReflectorStrip");
-
 
     pybind11::class_<SatLayering, regina::SatBlock>(m, "SatLayering")
         .def(pybind11::init<const SatLayering&>())
@@ -118,7 +108,5 @@ void addSatBlockTypes(pybind11::module& m) {
             return SatLayering::isBlockLayering(a, avoidTets);
         })
     ;
-
-    m.attr("NSatLayering") = m.attr("SatLayering");
 }
 

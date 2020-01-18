@@ -53,7 +53,5 @@ void addPluggedTorusBundle(pybind11::module& m) {
         .def_static("isPluggedTorusBundle",
             &PluggedTorusBundle::isPluggedTorusBundle)
     ;
-
-    m.attr("NPluggedTorusBundle") = m.attr("PluggedTorusBundle");
 }
 

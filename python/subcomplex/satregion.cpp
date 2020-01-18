@@ -54,8 +54,6 @@ void addSatRegion(pybind11::module& m) {
     ;
     regina::python::add_eq_operators(s);
 
-    m.attr("NSatBlockSpec") = m.attr("SatBlockSpec");
-
     auto r = pybind11::class_<SatRegion>(m, "SatRegion")
         .def(pybind11::init<SatBlock*>())
         .def("numberOfBlocks", &SatRegion::numberOfBlocks)
@@ -87,8 +85,6 @@ void addSatRegion(pybind11::module& m) {
     ;
     regina::python::add_output(r);
     regina::python::add_eq_operators(r);
-
-    m.attr("NSatRegion") = m.attr("SatRegion");
 
 }
 

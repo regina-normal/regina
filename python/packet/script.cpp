@@ -66,7 +66,5 @@ void addScript(pybind11::module& m) {
             return Script::typeID;
         })
     ;
-
-    m.attr("NScript") = m.attr("Script");
 }
 

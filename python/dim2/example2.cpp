@@ -58,7 +58,5 @@ void addExample2(pybind11::module& m) {
         .def_static("kb", &Example<2>::kb)
     ;
     regina::python::no_eq_operators(c);
-
-    m.attr("Dim2ExampleTriangulation") = m.attr("Example2");
 }
 

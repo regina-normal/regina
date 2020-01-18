@@ -49,7 +49,5 @@ void addSnappedBall(pybind11::module& m) {
         .def("internalEdge", &SnappedBall::internalEdge)
         .def_static("formsSnappedBall", &SnappedBall::formsSnappedBall)
     ;
-
-    m.attr("NSnappedBall") = m.attr("SnappedBall");
 }
 

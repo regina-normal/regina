@@ -143,7 +143,5 @@ void addNormalSurface(pybind11::module& m) {
     m.attr("triDiscArcs") = &triDiscArcs_arr;
     m.attr("quadDiscArcs") = &quadDiscArcs_arr;
     m.attr("octDiscArcs") = &octDiscArcs_arr;
-
-    m.attr("NNormalSurface") = m.attr("NormalSurface");
 }
 

@@ -125,7 +125,5 @@ void addPolynomial(pybind11::module& m) {
     ;
     regina::python::add_output(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
-
-    m.attr("NPolynomial") = m.attr("Polynomial");
 }
 

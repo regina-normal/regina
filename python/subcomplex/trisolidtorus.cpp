@@ -50,7 +50,5 @@ void addTriSolidTorus(pybind11::module& m) {
         .def("areAnnuliLinkedAxis", &TriSolidTorus::areAnnuliLinkedAxis)
         .def_static("formsTriSolidTorus", &TriSolidTorus::formsTriSolidTorus)
     ;
-
-    m.attr("NTriSolidTorus") = m.attr("TriSolidTorus");
 }
 

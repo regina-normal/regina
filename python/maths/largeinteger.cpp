@@ -134,7 +134,5 @@ void addLargeInteger(pybind11::module& m) {
 
     pybind11::implicitly_convertible<long, LargeInteger>();
     pybind11::implicitly_convertible<std::string, LargeInteger>();
-
-    m.attr("NLargeInteger") = m.attr("LargeInteger");
 }
 

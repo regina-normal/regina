@@ -50,7 +50,5 @@ void addTrivialTri(pybind11::module& m) {
         .def_readonly_static("N3_1", &TrivialTri::N3_1)
         .def_readonly_static("N3_2", &TrivialTri::N3_2)
     ;
-
-    m.attr("NTrivialTri") = m.attr("TrivialTri");
 }
 

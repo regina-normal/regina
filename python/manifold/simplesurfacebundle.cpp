@@ -50,7 +50,5 @@ void addSimpleSurfaceBundle(pybind11::module& m) {
     // The SimpleSurfaceBundle subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.
     regina::python::add_eq_operators(c);
-
-    m.attr("NSimpleSurfaceBundle") = m.attr("SimpleSurfaceBundle");
 }
 

@@ -49,7 +49,5 @@ void addBlockedSFSTriple(pybind11::module& m) {
             pybind11::return_value_policy::reference_internal)
         .def_static("isBlockedSFSTriple", &BlockedSFSTriple::isBlockedSFSTriple)
     ;
-
-    m.attr("NBlockedSFSTriple") = m.attr("BlockedSFSTriple");
 }
 

@@ -131,12 +131,8 @@ void addMatrixInt(pybind11::module& m) {
         .def("__mul__", [](const MatrixInt& m1, const MatrixInt& m2){
             return m1 * m2;
         })
-        .def_readonly_static("zero", &MatrixInt::zero)
-        .def_readonly_static("one", &MatrixInt::one)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-
-    m.attr("NMatrixInt") = m.attr("MatrixInt");
 }
 

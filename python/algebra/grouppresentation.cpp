@@ -57,7 +57,6 @@ void addGroupPresentation(pybind11::module& m) {
     ;
     regina::python::add_output_ostream(c1);
     regina::python::add_eq_operators(c1);
-    m.attr("NGroupExpressionTerm") = m.attr("GroupExpressionTerm");
 
     auto c2 = pybind11::class_<GroupExpression>(m, "GroupExpression")
         .def(pybind11::init<>())
@@ -106,7 +105,6 @@ void addGroupPresentation(pybind11::module& m) {
     ;
     regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);
-    m.attr("NGroupExpression") = m.attr("GroupExpression");
 
     auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation")
         .def(pybind11::init<>())
@@ -164,6 +162,5 @@ void addGroupPresentation(pybind11::module& m) {
     ;
     regina::python::add_output(c3);
     regina::python::add_eq_operators(c3);
-    m.attr("NGroupPresentation") = m.attr("GroupPresentation");
 }
 

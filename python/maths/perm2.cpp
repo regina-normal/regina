@@ -102,7 +102,5 @@ void addPerm2(pybind11::module& m) {
     Perm2_contract<3>::add_bindings(c);
     regina::python::add_output_basic(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
-
-    m.attr("NPerm2") = m.attr("Perm2");
 }
 
