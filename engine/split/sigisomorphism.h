@@ -243,15 +243,6 @@ class REGINA_API SigPartialIsomorphism {
     friend class regina::SigCensus;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSigPartialIsomorphism has now been renamed to
- * SigPartialIsomorphism.
- */
-[[deprecated]] typedef SigPartialIsomorphism NSigPartialIsomorphism;
-
 /*@}*/
 
 // Inline functions for SigPartialIsomorphism

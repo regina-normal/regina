@@ -278,14 +278,6 @@ class REGINA_API Signature :
     friend class regina::SigCensus;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSignature has now been renamed to Signature.
- */
-[[deprecated]] typedef Signature NSignature;
-
 /*@}*/
 
 // Inline functions for Signature

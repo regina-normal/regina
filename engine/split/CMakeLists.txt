@@ -17,9 +17,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    nsigcensus.h
-    nsigisomorphism.h
-    nsignature.h
     sigcensus.h
     sigisomorphism.h
     signature.h
