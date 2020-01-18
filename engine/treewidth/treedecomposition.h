@@ -1307,23 +1307,6 @@ class REGINA_API TreeDecomposition : public Output<TreeDecomposition> {
         void reindex();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NTreeBag has now been renamed to TreeBag.
- */
-[[deprecated]] typedef TreeBag NTreeBag;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NTreeDecomposition has now been renamed to
- * TreeDecomposition.
- */
-[[deprecated]] typedef TreeDecomposition NTreeDecomposition;
-
 /*@}*/
 
 // Help the compiler by noting which explicit instantiations we offer.
