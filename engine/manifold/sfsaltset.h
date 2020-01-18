@@ -237,15 +237,6 @@ class REGINA_API SFSAltSet {
         SFSAltSet& operator = (const SFSAltSet&) = delete;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSFSAltSet has now been renamed to
- * SFSAltSet.
- */
-[[deprecated]] typedef SFSAltSet NSFSAltSet;
-
 /*@}*/
 
 // Inline functions for SFSAltSet

@@ -281,15 +281,6 @@ class REGINA_API Manifold : public Output<Manifold> {
         Manifold& operator = (const Manifold&) = default;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NManifold has now been renamed to
- * Manifold.
- */
-[[deprecated]] typedef Manifold NManifold;
-
 /*@}*/
 
 // Inline functions for Manifold

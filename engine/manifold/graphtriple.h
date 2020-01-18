@@ -297,15 +297,6 @@ class REGINA_API GraphTriple : public Manifold {
 
 /*@}*/
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NGraphTriple has now been renamed to
- * GraphTriple.
- */
-[[deprecated]] typedef GraphTriple NGraphTriple;
-
 // Inline functions for GraphTriple
 
 inline GraphTriple::GraphTriple(SFSpace* end0, SFSpace* centre,

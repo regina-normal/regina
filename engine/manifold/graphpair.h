@@ -233,15 +233,6 @@ class REGINA_API GraphPair : public Manifold {
         static void reduceSign(Matrix2& reln);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NGraphPair has now been renamed to
- * GraphPair.
- */
-[[deprecated]] typedef GraphPair NGraphPair;
-
 /*@}*/
 
 // Inline functions for GraphPair

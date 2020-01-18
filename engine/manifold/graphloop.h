@@ -239,15 +239,6 @@ class REGINA_API GraphLoop : public Manifold {
         static void reduceBasis(Matrix2& reln);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NGraphLoop has now been renamed to
- * GraphLoop.
- */
-[[deprecated]] typedef GraphLoop NGraphLoop;
-
 /*@}*/
 
 // Inline functions for GraphLoop

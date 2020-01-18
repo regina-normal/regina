@@ -140,15 +140,6 @@ struct REGINA_API SFSFibre {
 };
 
 /**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSFSFibre has now been renamed to
- * SFSFibre.
- */
-[[deprecated]] typedef SFSFibre NSFSFibre;
-
-/**
  * Writes the given fibre in human-readable format to the given output
  * stream.  The fibre will be written in the format
  * <tt>(alpha,beta)</tt> with no newline appended.
@@ -839,15 +830,6 @@ class REGINA_API SFSpace : public Manifold {
          */
         std::ostream& writeCommonName(std::ostream& out, bool tex) const;
 };
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NSFSpace has now been renamed to
- * SFSpace.
- */
-[[deprecated]] typedef SFSpace NSFSpace;
 
 /*@}*/
 

@@ -127,15 +127,6 @@ class REGINA_API Handlebody : public Manifold {
         std::ostream& writeTeXName(std::ostream& out) const override;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NHandlebody has now been renamed to
- * Handlebody.
- */
-[[deprecated]] typedef Handlebody NHandlebody;
-
 /*@}*/
 
 // Inline functions for Handlebody
