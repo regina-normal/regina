@@ -28,23 +28,6 @@ if (${REGINA_INSTALL_DEV})
     hilbertprimal-impl.h
     maxadmissible.h
     maxadmissible-impl.h
-    nenumconstraint.h
-    ndoubledescription.h
-    ndoubledescription-impl.h
-    nhilbertcd.h
-    nhilbertcd-impl.h
-    nhilbertdual.h
-    nhilbertdual-impl.h
-    nhilbertprimal.h
-    nhilbertprimal-impl.h
-    nmaxadmissible.h
-    nmaxadmissible-impl.h
-    ntreeconstraint.h
-    ntreelp.h
-    ntreelp-impl.h
-    ntreetraversal.h
-    ntreetraversal-impl.h
-    ntypetrie.h
     ordering.h
     treeconstraint.h
     treelp.h

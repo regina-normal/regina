@@ -186,14 +186,6 @@ class HilbertPrimal {
         static bool inFace(const Ray& ray, const BitmaskType& face);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NHilbertPrimal has now been renamed to HilbertPrimal.
- */
-[[deprecated]] typedef HilbertPrimal NHilbertPrimal;
-
 /*@}*/
 
 } // namespace regina

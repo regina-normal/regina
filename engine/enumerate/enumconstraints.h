@@ -89,15 +89,6 @@ namespace regina {
  */
 typedef std::vector<std::set<unsigned long>> EnumConstraints;
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NEnumConstraintList has now been renamed to
- * EnumConstraints.
- */
-[[deprecated]] typedef EnumConstraints NEnumConstraintList;
-
 /*@}*/
 
 } // namespace regina

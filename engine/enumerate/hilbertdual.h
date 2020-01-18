@@ -445,14 +445,6 @@ class HilbertDual {
             const BitmaskType* constraintsEnd);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NHilbertDual has now been renamed to HilbertDual.
- */
-[[deprecated]] typedef HilbertDual NHilbertDual;
-
 /*@}*/
 
 // Inline functions for HilbertDual::VecSpec

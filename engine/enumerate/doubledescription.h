@@ -385,15 +385,6 @@ class REGINA_API DoubleDescription {
             ProgressTracker* tracker);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NDoubleDescription has now been renamed to
- * DoubleDescription.
- */
-[[deprecated]] typedef DoubleDescription NDoubleDescription;
-
 /*@}*/
 
 // Inline functions for DoubleDescription::RaySpec

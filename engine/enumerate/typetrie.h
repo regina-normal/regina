@@ -155,15 +155,6 @@ class TypeTrie {
         TypeTrie& operator = (const TypeTrie&) = delete;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NTypeTrie has now been renamed to TypeTrie.
- */
-template <int nTypes>
-using NTypeTrie [[deprecated]] = TypeTrie<nTypes>;
-
 /*@}*/
 
 // Help the compiler by noting which explicit instantiations we offer.

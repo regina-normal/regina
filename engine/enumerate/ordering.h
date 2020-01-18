@@ -110,14 +110,6 @@ class PosOrder {
         PosOrder& operator = (const PosOrder&) = delete;
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NPosOrder has now been renamed to PosOrder.
- */
-[[deprecated]] typedef PosOrder NPosOrder;
-
 /*@}*/
 
 // Inline functions for PosOrder

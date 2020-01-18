@@ -194,14 +194,6 @@ class HilbertCD {
             const MatrixInt& subspace, const EnumConstraints* constraints);
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NHilbertCD has now been renamed to HilbertCD.
- */
-[[deprecated]] typedef HilbertCD NHilbertCD;
-
 /*@}*/
 
 // Inline functions for HilbertCD::VecSpec

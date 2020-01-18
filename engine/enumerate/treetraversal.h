@@ -1412,54 +1412,6 @@ class TreeSingleSoln :
         bool cancelled();
 };
 
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NTreeTraversal has now been renamed to TreeTraversal.
- */
-template <class LPConstraint, typename BanConstraint, typename IntType>
-using NTreeTraversal [[deprecated]] =
-    TreeTraversal<LPConstraint, BanConstraint, IntType>;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NTreeEnumeration has now been renamed to
- * TreeEnumeration.
- */
-template <class LPConstraint = LPConstraintNone,
-          typename BanConstraint = BanNone,
-          typename IntType = Integer>
-using NTreeEnumeration [[deprecated]] =
-    TreeEnumeration<LPConstraint, BanConstraint, IntType>;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NTautEnumeration has now been renamed to
- * TautEnumeration.
- */
-template <class LPConstraint = LPConstraintNone,
-          typename BanConstraint = BanNone,
-          typename IntType = Integer>
-using NTautEnumeration [[deprecated]] =
-    TautEnumeration<LPConstraint, BanConstraint, IntType>;
-
-/**
- * Deprecated typedef for backward compatibility.  This typedef will
- * be removed in a future release of Regina.
- *
- * \deprecated The class NTreeSingleSoln has now been renamed to TreeSingleSoln.
- */
-template <class LPConstraint = LPConstraintNone,
-          typename BanConstraint = BanNone,
-          typename IntType = Integer>
-using NTreeSingleSoln [[deprecated]] =
-    TreeSingleSoln<LPConstraint, BanConstraint, IntType>;
-
 /*@}*/
 
 // Help the compiler by noting which explicit instantiations we offer.
