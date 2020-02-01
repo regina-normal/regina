@@ -20,8 +20,4 @@ foreach(UTIL ${UTILS})
   target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${POPT_LIBRARY})
 endforeach(UTIL)
 
-if(MPI_FOUND)
-  add_subdirectory(mpi)
-endif(MPI_FOUND)
-
 install(TARGETS ${UTILS} DESTINATION ${BINDIR} COMPONENT Runtime)

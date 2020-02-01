@@ -97,28 +97,15 @@ ENDIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
 # Give packagers a way of insisting that every optional component is found.
 # Set PACKAGING_MODE=1 to make every component compulsory.
-# Set PACKAGING_MODE=1 and PACKAGING_NO_MPI=1 to make every component
-# compulsory except for the MPI utilities.
 IF(NOT PACKAGING_MODE)
   SET (PACKAGING_MODE OFF CACHE STRING
     "Makes all optional components mandatory, so that cmake will fail if any optional component is not found."
     FORCE)
 ENDIF(NOT PACKAGING_MODE)
-IF(NOT PACKAGING_NO_MPI)
-  SET (PACKAGING_NO_MPI OFF CACHE STRING
-    "Leaves MPI as an optional component, even if PACKAGING_MODE is ON."
-    FORCE)
-ENDIF(NOT PACKAGING_NO_MPI)
 IF(PACKAGING_MODE)
   SET(REGINA_MANDATORY TRUE)
-  IF(PACKAGING_NO_MPI)
-    SET(REGINA_MANDATORY_MPI FALSE)
-  ELSE(PACKAGING_NO_MPI)
-    SET(REGINA_MANDATORY_MPI TRUE)
-  ENDIF(PACKAGING_NO_MPI)
 ELSE(PACKAGING_MODE)
   SET(REGINA_MANDATORY FALSE)
-  SET(REGINA_MANDATORY_MPI FALSE)
 ENDIF(PACKAGING_MODE)
 
 # Options that indicate how python is shipped.
@@ -398,15 +385,6 @@ MACRO_LOG_FEATURE(POPT_FOUND
   TRUE)
 
 # Optionals
-IF(NOT DISABLE_MPI)
-  FIND_PACKAGE(MPI)
-  MACRO_LOG_FEATURE(MPI_FOUND
-    "MPI"
-    "Build command-line tools for high-performance computing"
-    "http://www.open-mpi.org/"
-    REGINA_MANDATORY_MPI)
-ENDIF(NOT DISABLE_MPI)
-
 FIND_PACKAGE(Doxygen)
 MACRO_LOG_FEATURE(DOXYGEN_FOUND
   "Doxygen"
