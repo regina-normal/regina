@@ -7,6 +7,13 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 6.0 (Pre-release)  [ 01 February, 2020 ]
+    GENERAL:
+        - All deprecated headers from before version 5.1 have been removed.
+        - MPI helper programs have been removed. To parallelise the generation
+          of a census, we recommend splitting up the input pairing files into
+          chunks, and using typical queue systems (such as PBS) to parallelise.
+
 Version 5.2  [ 29 September, 2017 ]
 
     GENERAL:
