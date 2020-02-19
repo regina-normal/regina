@@ -53,6 +53,11 @@
  */
 // #define REGINA_NOOPT_REORDER_COLUMNS
 
+/**
+ * Diagnostic output flags:
+ */
+// #define REGINA_COUNT_PIVOTS
+
 #include "angle/anglestructure.h"
 #include "enumerate/treelp.h"
 #include "maths/matrixops.h"
@@ -1112,6 +1117,10 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
     unsigned long nPivots = 0;
 
     while (true) {
+#ifdef REGINA_COUNT_PIVOTS
+        if (nPivots % 1000 == 0)
+            std::cerr << "Pivots: " << nPivots << std::endl;
+#endif
         // Locate a variable in the basis with negative value.
         // If there are many, choose the variable with largest 
         // magnitude negative value.
@@ -1186,7 +1195,15 @@ void LPData<LPConstraint, IntType>::makeFeasible() {
 template <class LPConstraint, typename IntType>
 void LPData<LPConstraint, IntType>::makeFeasibleAntiCycling() {
     int r, c, outCol;
+#ifdef REGINA_COUNT_PIVOTS
+    unsigned nPivots = 0;
+#endif
     while (true) {
+#ifdef REGINA_COUNT_PIVOTS
+        if (nPivots % 1000 == 0)
+            std::cerr << "Pivots: " << nPivots << std::endl;
+        ++nPivots;
+#endif
         // Locate a variable in the basis with negative value.
         // If there are many, choose the one with largest index.
         outCol = -1;
