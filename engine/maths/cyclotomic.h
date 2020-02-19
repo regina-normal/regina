@@ -957,6 +957,7 @@ inline Cyclotomic operator / (Cyclotomic elt, const Rational& scalar) {
 }
 
 inline Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs) {
+    // std::cerr << "Cyclotomic: deep copy (+)" << std::endl;
     Rational* coeff = new Rational[lhs.degree_];
     for (size_t i = 0; i < lhs.degree_; ++i)
         coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
@@ -981,6 +982,7 @@ inline Cyclotomic operator - (Cyclotomic arg) {
 }
 
 inline Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs) {
+    // std::cerr << "Cyclotomic: deep copy (-)" << std::endl;
     Rational* coeff = new Rational[lhs.degree_];
     for (size_t i = 0; i < lhs.degree_; ++i)
         coeff[i] = lhs.coeff_[i] - rhs.coeff_[i];
