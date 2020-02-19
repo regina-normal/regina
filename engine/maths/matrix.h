@@ -189,9 +189,10 @@ struct MatrixRingIdentities<T, false> {
  * work with the specific class Matrix<Integer>.
  *
  * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment,
- * and long chains of operators such as <tt>a = b * c * d</tt> should not
- * perform any deep copies at all.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Functions that take or return objects by value are designed to be just as
+ * efficient as working with references or pointers, and long chains of
+ * operators such as <tt>a = b * c * d</tt> do not make unwanted deep copies.
  *
  * \ifacespython Not present in general, although the specific type
  * Matrix<Integer> is available under the name MatrixInt.
