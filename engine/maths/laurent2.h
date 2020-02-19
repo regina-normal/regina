@@ -608,6 +608,8 @@ inline Laurent2<T>::Laurent2(long xExp, long yExp) {
 template <typename T>
 inline Laurent2<T>::Laurent2(const Laurent2<T>& value) :
         coeff_(value.coeff_) {
+    // TODO: Use default implementation.
+    // std::cerr << "Laurent2: deep copy (init)" << std::endl;
 }
 
 template <typename T>
@@ -622,6 +624,7 @@ template <typename T>
 template <typename U>
 inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
         coeff_(value.coeff_) {
+    // std::cerr << "Laurent2: deep copy (init)" << std::endl;
 }
 
 template <typename T>
@@ -672,6 +675,8 @@ inline bool Laurent2<T>::operator != (const Laurent2<T>& rhs) const {
 
 template <typename T>
 inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
+    // TODO: Use default implementation.
+    // std::cerr << "Laurent2: deep copy (=)" << std::endl;
     coeff_ = other.coeff_;
     return *this;
 }
@@ -679,6 +684,7 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
 template <typename T>
 template <typename U>
 inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
+    // std::cerr << "Laurent2: deep copy (=)" << std::endl;
     coeff_ = other.coeff_;
     return *this;
 }

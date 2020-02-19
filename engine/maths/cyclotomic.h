@@ -790,6 +790,7 @@ inline Cyclotomic::Cyclotomic(size_t field, const Rational& value) :
 inline Cyclotomic::Cyclotomic(const Cyclotomic& value) :
         field_(value.field_), degree_(value.degree_),
         coeff_(new Rational[value.degree_]) {
+    // std::cerr << "Cyclotomic: deep copy (init)" << std::endl;
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i] = value.coeff_[i];
 }
@@ -854,6 +855,7 @@ inline bool Cyclotomic::operator != (const Cyclotomic& rhs) const {
 }
 
 inline Cyclotomic& Cyclotomic::operator = (const Cyclotomic& other) {
+    // std::cerr << "Cyclotomic: deep copy (=)" << std::endl;
     if (degree_ < other.degree_) {
         delete[] coeff_;
         coeff_ = new Rational[other.degree_];
