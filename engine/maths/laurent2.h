@@ -536,6 +536,54 @@ template <typename T>
 Laurent2<T> operator - (Laurent2<T> arg);
 
 /**
+ * Subtracts the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the polynomial to subtract from.
+ * @param rhs the polynomial to subtract.
+ * @return the first polynomial minus the second.
+ */
+template <typename T>
+Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
+
+/**
+ * Subtracts the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the polynomial to subtract from.
+ * @param rhs the polynomial to subtract.
+ * @return the first polynomial minus the second.
+ */
+template <typename T>
+Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
+
+/**
+ * Subtracts the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the polynomial to subtract from.
+ * @param rhs the polynomial to subtract.
+ * @return the first polynomial minus the second.
+ */
+template <typename T>
+Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
+
+/**
+ * Subtracts the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the polynomial to subtract from.
+ * @param rhs the polynomial to subtract.
+ * @return the first polynomial minus the second.
+ */
+template <typename T>
+Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
+
+/**
  * Multiplies the two given polynomials.
  *
  * The two polynomials need not have the same range of non-zero coefficients.
@@ -875,6 +923,28 @@ template <typename T>
 inline Laurent2<T> operator - (Laurent2<T> arg) {
     arg.negate();
     return arg;
+}
+
+template <typename T>
+inline Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
+    // We have to make a deep copy since both arguments are read-only.
+    return std::move(Laurent2<T>(lhs) -= rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
+    return std::move(lhs -= rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
+    rhs.negate();
+    return std::move(rhs += lhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
+    return std::move(lhs -= rhs);
 }
 
 template <typename T>

@@ -612,6 +612,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
         Cyclotomic(size_t field, size_t degree, Rational* coeff);
 
     friend Cyclotomic operator + (const Cyclotomic&, const Cyclotomic&);
+    friend Cyclotomic operator - (const Cyclotomic&, const Cyclotomic&);
     friend Cyclotomic operator * (const Cyclotomic&, const Cyclotomic&);
 };
 
@@ -695,6 +696,50 @@ Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
  * @return the negative of \a arg.
  */
 Cyclotomic operator - (Cyclotomic arg);
+
+/**
+ * Subtracts the two given cyclotomic field elements.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the field element to subtract from.
+ * @param rhs the field element to subtract.
+ * @return the first field element minus the second.
+ */
+Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
+
+/**
+ * Subtracts the two given cyclotomic field elements.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the field element to subtract from.
+ * @param rhs the field element to subtract.
+ * @return the first field element minus the second.
+ */
+Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
+
+/**
+ * Subtracts the two given cyclotomic field elements.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the field element to subtract from.
+ * @param rhs the field element to subtract.
+ * @return the first field element minus the second.
+ */
+Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
+
+/**
+ * Subtracts the two given cyclotomic field elements.
+ *
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the field element to subtract from.
+ * @param rhs the field element to subtract.
+ * @return the first field element minus the second.
+ */
+Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
 
 /**
  * Multiplies the two given cyclotomic field elements.
@@ -931,6 +976,26 @@ inline Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs) {
 inline Cyclotomic operator - (Cyclotomic arg) {
     arg.negate();
     return arg;
+}
+
+inline Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs) {
+    Rational* coeff = new Rational[lhs.degree_];
+    for (size_t i = 0; i < lhs.degree_; ++i)
+        coeff[i] = lhs.coeff_[i] - rhs.coeff_[i];
+    return Cyclotomic(lhs.field_, lhs.degree_, coeff);
+}
+
+inline Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs) {
+    return std::move(lhs -= rhs);
+}
+
+inline Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs) {
+    rhs.negate();
+    return std::move(rhs += lhs);
+}
+
+inline Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs) {
+    return std::move(lhs -= rhs);
 }
 
 } // namespace regina
