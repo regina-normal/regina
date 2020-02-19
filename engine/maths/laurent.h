@@ -722,6 +722,7 @@ template <typename T>
 inline Laurent<T>::Laurent(const Laurent<T>& value) :
         minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.minExp_),
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
+    // std::cerr << "Laurent: deep copy (init)" << std::endl;
     for (size_t i = 0; i <= maxExp_ - minExp_; ++i)
         coeff_[i] = value.coeff_[i + value.minExp_ - value.base_];
 }
@@ -731,6 +732,7 @@ template <typename U>
 inline Laurent<T>::Laurent(const Laurent<U>& value) :
         minExp_(value.minExp_), maxExp_(value.maxExp_), base_(value.minExp_),
         coeff_(new T[value.maxExp_ - value.minExp_ + 1]) {
+    // std::cerr << "Laurent: deep copy (init)" << std::endl;
     for (size_t i = 0; i <= maxExp_ - minExp_; ++i)
         coeff_[i] = value.coeff_[i + value.minExp_ - value.base_];
 }
@@ -911,6 +913,7 @@ Laurent<T>& Laurent<T>::operator = (const Laurent<T>& other) {
     if (&other == this)
         return *this;
 
+    // std::cerr << "Laurent: deep copy (=)" << std::endl;
     if (maxExp_ - base_ < other.maxExp_ - other.minExp_) {
         delete[] coeff_;
         coeff_ = new T[other.maxExp_ - other.minExp_ + 1];
@@ -930,6 +933,7 @@ Laurent<T>& Laurent<T>::operator = (const Laurent<U>& other) {
     if (&other == this)
         return *this;
 
+    // std::cerr << "Laurent: deep copy (=)" << std::endl;
     if (maxExp_ - base_ < other.maxExp_ - other.minExp_) {
         delete[] coeff_;
         coeff_ = new T[other.maxExp_ - other.minExp_ + 1];
@@ -1196,6 +1200,7 @@ void Laurent<T>::reallocateForRange(long newMin, long newMax) {
     long exp;
     if (base_ > newMin) {
         // We must reallocate.
+        // std::cerr << "Laurent: deep copy (reallocate)" << std::endl;
         if (maxExp_ < newMax) {
             // newMin < base_ <= minExp_ <= maxExp_ < newMax
             T* newCoeff = new T[newMax - newMin + 1];
@@ -1218,6 +1223,7 @@ void Laurent<T>::reallocateForRange(long newMin, long newMax) {
         }
     } else if (maxExp_ < newMax) {
         // Still, we must reallocate.
+        // std::cerr << "Laurent: deep copy (reallocate)" << std::endl;
         // (Actually, if base_ is far enough below minExp_ then we might not
         // have to reallocate, but we'll do it for now anyway.)
         if (minExp_ <= newMin) {

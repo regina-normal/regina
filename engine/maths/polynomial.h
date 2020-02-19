@@ -742,6 +742,7 @@ inline Polynomial<T>::Polynomial(iterator begin, iterator end) : coeff_(0) {
 template <typename T>
 inline Polynomial<T>::Polynomial(const Polynomial<T>& value) :
         degree_(value.degree()), coeff_(new T[value.degree() + 1]) {
+    // std::cerr << "Polynomial: deep copy (init)" << std::endl;
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] = value[i];
 }
@@ -750,6 +751,7 @@ template <typename T>
 template <typename U>
 inline Polynomial<T>::Polynomial(const Polynomial<U>& value) :
         degree_(value.degree()), coeff_(new T[value.degree() + 1]) {
+    // std::cerr << "Polynomial: deep copy (init)" << std::endl;
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] = value[i];
 }
@@ -883,6 +885,7 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<T>& value) {
         delete[] coeff_;
         coeff_ = new T[value.degree_ + 1];
     }
+    // std::cerr << "Polynomial: deep copy (=)" << std::endl;
     degree_ = value.degree_;
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] = value.coeff_[i];
@@ -898,6 +901,7 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
         delete[] coeff_;
         coeff_ = new T[value.degree() + 1];
     }
+    // std::cerr << "Polynomial: deep copy (=)" << std::endl;
     degree_ = value.degree();
     for (size_t i = 0; i <= degree_; ++i)
         coeff_[i] = value[i];
@@ -955,6 +959,7 @@ Polynomial<T>& Polynomial<T>::operator += (const Polynomial<T>& other) {
     // the degrees are equal.
     size_t i;
     if (degree_ < other.degree_) {
+        // std::cerr << "Polynomial: deep copy (+=)" << std::endl;
         T* copy = new T[other.degree_ + 1];
         for (i = 0; i <= degree_; ++i)
             copy[i] = coeff_[i];
