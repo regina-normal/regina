@@ -72,8 +72,11 @@ const AngleStructure* Triangulation<3>::findStrictAngleStructure() const {
 
     // Set all angles to be strictly positive.
     unsigned i;
-    for (i = 0; i < eqns.columns(); ++i)
+    for (i = 0; i < eqns.columns(); ++i) {
+        // std::cerr << "Constraining +ve: "
+        //     << i << " / " << eqns.columns() << std::endl;
         lp.constrainPositive(i);
+    }
 
     // Test for a solution!
     if (! lp.isFeasible())
