@@ -117,8 +117,12 @@ PythonInterpreter::PythonInterpreter(
         std::string newPath("PYTHONPATH=");
         newPath += regina::GlobalDirs::pythonModule();
         #if defined(REGINA_INSTALL_WINDOWS)
+            newPath += ";";
+            newPath += regina::GlobalDirs::pythonModule();
             newPath += "/python" REGINA_PY_VERSION ".zip;";
         #else
+            newPath += ":";
+            newPath += regina::GlobalDirs::pythonModule();
             newPath += "/python" REGINA_PY_VERSION ".zip:";
         #endif
 
