@@ -9,8 +9,6 @@ SET(man1_files
   regfiletype.1
   sigcensus.1
   tricensus.1
-  tricensus-mpi.1
-  tricensus-mpi-status.1
   trisetcmp.1
   regina-gui.1
   regina-python.1
