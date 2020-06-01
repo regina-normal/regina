@@ -50,6 +50,10 @@ void addNormalFlags(pybind11::module& m) {
         .value("NS_LEGACY", regina::NS_LEGACY)
         .value("NS_CUSTOM", regina::NS_CUSTOM)
         .export_values()
+        // This __or__ promotes the argument from a flags enum to a
+        // "combination of flags" object.  It must come *after* export_values,
+        // since it returns a pybind11::class and not a pybind11::enum,
+        // which means a subsequent export_values() would fail.
         .def("__or__", [](const NormalListFlags& lhs, const NormalListFlags& rhs){
                 return NormalList(lhs) | rhs;});
 
@@ -96,6 +100,10 @@ void addNormalFlags(pybind11::module& m) {
         .value("NS_ALG_LEGACY", regina::NS_ALG_LEGACY)
         .value("NS_ALG_CUSTOM", regina::NS_ALG_CUSTOM)
         .export_values()
+        // This __or__ promotes the argument from a flags enum to a
+        // "combination of flags" object.  It must come *after* export_values,
+        // since it returns a pybind11::class and not a pybind11::enum,
+        // which means a subsequent export_values() would fail.
         .def("__or__", [](const NormalAlgFlags& lhs, const NormalAlgFlags& rhs){
                 return NormalAlg(lhs) | rhs;});
 
