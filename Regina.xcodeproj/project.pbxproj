@@ -383,6 +383,16 @@
 		05249F801DBC174E001FE29E /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */; };
 		052774141C55744300140918 /* hypercreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052774101C55743E00140918 /* hypercreator.cpp */; };
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
+		052790B224BE5DB100ACDF03 /* jansson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E81DF0D6860018AB24 /* jansson.framework */; };
+		052790B324BE5DB100ACDF03 /* jansson.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E81DF0D6860018AB24 /* jansson.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		052790B524BE5DB900ACDF03 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99C1C41DAC100FA81D3 /* cppunit.framework */; };
+		052790B624BE5DB900ACDF03 /* cppunit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99C1C41DAC100FA81D3 /* cppunit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		052790B724BE5DC000ACDF03 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */; };
+		052790B824BE5DC000ACDF03 /* libtokyocabinet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		052790B924BE5DC200ACDF03 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; };
+		052790BA24BE5DC200ACDF03 /* libgmpxx.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		052790BB24BE5DC400ACDF03 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; };
+		052790BC24BE5DC400ACDF03 /* libgmp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD31DD295F3004DD4B6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
@@ -956,7 +966,6 @@
 		054208E41DF0D2F30018AB24 /* qtmatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208D71DF0D2E50018AB24 /* qtmatcher.cpp */; };
 		054208E51DF0D2F70018AB24 /* syntaxhighlighter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208DA1DF0D2E50018AB24 /* syntaxhighlighter.cpp */; };
 		054208E71DF0D65A0018AB24 /* jansson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E61DF0D6590018AB24 /* jansson.framework */; };
-		054208E91DF0D6870018AB24 /* jansson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E81DF0D6860018AB24 /* jansson.framework */; };
 		054208FE1DF0DA450018AB24 /* graphloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208EA1DF0DA390018AB24 /* graphloop.cpp */; };
 		054208FF1DF0DA450018AB24 /* graphpair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208EB1DF0DA390018AB24 /* graphpair.cpp */; };
 		054209001DF0DA450018AB24 /* graphtriple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208EC1DF0DA390018AB24 /* graphtriple.cpp */; };
@@ -1334,15 +1343,11 @@
 		056AA9981C41DA4800FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
 		056AA99A1C41DA6A00FA81D3 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9991C41DA6900FA81D3 /* cppunit.framework */; };
 		056AA99B1C41DAA300FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
-		056AA99D1C41DAC300FA81D3 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99C1C41DAC100FA81D3 /* cppunit.framework */; };
-		056AA99F1C41DACB00FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */; };
 		056AA9A11C41DDF500FA81D3 /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A01C41DDF400FA81D3 /* graphviz.framework */; };
 		056AA9A41C41DE8700FA81D3 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A21C41DE8600FA81D3 /* libgmp.framework */; };
 		056AA9A51C41DE8700FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */; };
 		056AA9A61C41DE9100FA81D3 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A21C41DE8600FA81D3 /* libgmp.framework */; };
 		056AA9A71C41DE9100FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */; };
-		056AA9AA1C41DE9E00FA81D3 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; };
-		056AA9AB1C41DE9E00FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; };
 		056E071F1F994D9000DF136B /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 056E071E1F994D9000DF136B /* graph.h */; };
 		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
 		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
@@ -2180,6 +2185,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*/docs.conf.in";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/engine-docs",
@@ -2191,6 +2198,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.h";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
@@ -2202,6 +2211,8 @@
 			compilerSpec = com.apple.compilers.proxy.script;
 			filePatterns = "*.in";
 			fileType = pattern.proxy;
+			inputFiles = (
+			);
 			isEditable = 1;
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
@@ -2313,6 +2324,21 @@
 				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
 			);
 			name = "Copy Engine and Utilities";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		052790B424BE5DB100ACDF03 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				052790B624BE5DB900ACDF03 /* cppunit.framework in Embed Frameworks */,
+				052790BA24BE5DC200ACDF03 /* libgmpxx.framework in Embed Frameworks */,
+				052790B824BE5DC000ACDF03 /* libtokyocabinet.framework in Embed Frameworks */,
+				052790BC24BE5DC400ACDF03 /* libgmp.framework in Embed Frameworks */,
+				052790B324BE5DB100ACDF03 /* jansson.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
@@ -4618,20 +4644,20 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				052790B224BE5DB100ACDF03 /* jansson.framework in Frameworks */,
 				0569F93219B3658200051091 /* libbz2.dylib in Frameworks */,
+				052790B524BE5DB900ACDF03 /* cppunit.framework in Frameworks */,
 				057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */,
 				057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */,
 				057FA754180615F6008E25F6 /* libz.dylib in Frameworks */,
 				05249EA01DBB8D89001FE29E /* libsqlite3.tbd in Frameworks */,
-				056AA99D1C41DAC300FA81D3 /* cppunit.framework in Frameworks */,
 				056AA9A11C41DDF500FA81D3 /* graphviz.framework in Frameworks */,
-				054208E91DF0D6870018AB24 /* jansson.framework in Frameworks */,
-				056AA9AA1C41DE9E00FA81D3 /* libgmp.framework in Frameworks */,
-				056AA9AB1C41DE9E00FA81D3 /* libgmpxx.framework in Frameworks */,
-				056AA99F1C41DACB00FA81D3 /* libtokyocabinet.framework in Frameworks */,
+				052790BB24BE5DC400ACDF03 /* libgmp.framework in Frameworks */,
 				052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */,
+				052790B924BE5DC200ACDF03 /* libgmpxx.framework in Frameworks */,
 				057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */,
 				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
+				052790B724BE5DC000ACDF03 /* libtokyocabinet.framework in Frameworks */,
 				05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -8377,6 +8403,7 @@
 				05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */,
 				05B4D2A5229F31F100B7B11C /* Copy Python core */,
 				054209181DF17EB70018AB24 /* CopyFiles */,
+				052790B424BE5DB100ACDF03 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -10922,6 +10949,7 @@
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Python2.7,
@@ -10969,6 +10997,7 @@
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Python2.7,
@@ -12300,6 +12329,7 @@
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				OTHER_LDFLAGS = (
 					"-framework",
 					Python3.6,
