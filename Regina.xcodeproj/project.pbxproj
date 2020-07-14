@@ -393,6 +393,8 @@
 		052790BA24BE5DC200ACDF03 /* libgmpxx.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		052790BB24BE5DC400ACDF03 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; };
 		052790BC24BE5DC400ACDF03 /* libgmp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		052790BD24BE5EA200ACDF03 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
+		052790BE24BE5EA200ACDF03 /* libtokyocabinet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD31DD295F3004DD4B6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
@@ -1340,7 +1342,6 @@
 		0568743020C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0568743120C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
-		056AA9981C41DA4800FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
 		056AA99A1C41DA6A00FA81D3 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9991C41DA6900FA81D3 /* cppunit.framework */; };
 		056AA99B1C41DAA300FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
 		056AA9A11C41DDF500FA81D3 /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A01C41DDF400FA81D3 /* graphviz.framework */; };
@@ -2337,6 +2338,17 @@
 				052790B824BE5DC000ACDF03 /* libtokyocabinet.framework in Embed Frameworks */,
 				052790BC24BE5DC400ACDF03 /* libgmp.framework in Embed Frameworks */,
 				052790B324BE5DB100ACDF03 /* jansson.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		052790BF24BE5EA200ACDF03 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				052790BE24BE5EA200ACDF03 /* libtokyocabinet.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -4796,8 +4808,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */,
+				052790BD24BE5EA200ACDF03 /* libtokyocabinet.framework in Frameworks */,
 				05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */,
-				056AA9981C41DA4800FA81D3 /* libtokyocabinet.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8628,6 +8640,7 @@
 			buildPhases = (
 				05B14E9F19B423A0002138C0 /* Sources */,
 				05B14EA019B423A0002138C0 /* Frameworks */,
+				052790BF24BE5EA200ACDF03 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -12036,6 +12049,7 @@
 					/usr/include/libxml2,
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = mkcensusdb;
 				SKIP_INSTALL = YES;
@@ -12063,6 +12077,7 @@
 					/usr/include/libxml2,
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = mkcensusdb;
 				SKIP_INSTALL = YES;
@@ -12367,6 +12382,7 @@
 					/usr/include/libxml2,
 					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				MACOSX_DEPLOYMENT_TARGET = "";
 				PRODUCT_NAME = mkcensusdb;
 				SKIP_INSTALL = YES;
