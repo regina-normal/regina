@@ -358,11 +358,11 @@ public:
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (self.script) {
             [self appendHistory:@"Running script...\n" style:HistoryInfo];
-            _interpreter->runScript(self.script);
+            self->_interpreter->runScript(self.script);
         }
 
         if (self.root) {
-            if (_interpreter->setVar("root", self.root)) {
+            if (self->_interpreter->setVar("root", self.root)) {
                 if (self.root)
                     [self appendHistory:@"The (invisible) root of the packet tree is in the variable [root].\n" style:HistoryInfo];
             } else
@@ -370,7 +370,7 @@ public:
         }
 
         if (self.item) {
-            if (_interpreter->setVar("item", self.item)) {
+            if (self->_interpreter->setVar("item", self.item)) {
                 if (self.item)
                     [self appendHistory:[NSString stringWithFormat:@"The selected packet (%@) is in the variable [item].\n",
                                          [NSString stringWithUTF8String:self.item->label().c_str()]] style:HistoryInfo];
@@ -449,15 +449,15 @@ public:
     [self appendHistory:toLog style:HistoryInput];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        bool done = _interpreter->executeLine([toRun UTF8String]);
-        _interpreter->flush();
+        bool done = self->_interpreter->executeLine([toRun UTF8String]);
+        self->_interpreter->flush();
 
         dispatch_async(dispatch_get_main_queue(), ^{
             if (done) {
-                primaryPrompt = true;
-                lastIndent = @"";
+                self->primaryPrompt = true;
+                self->lastIndent = @"";
             } else {
-                primaryPrompt = false;
+                self->primaryPrompt = false;
 
                 // Extract the indentation.
                 NSUInteger i = 0;
@@ -465,9 +465,9 @@ public:
                     ++i;
                 if (i == toRun.length) {
                     // The entire line is whitespace.  Use no indent.
-                    lastIndent = @"";
+                    self->lastIndent = @"";
                 } else
-                    lastIndent = [toRun substringToIndex:i];
+                    self->lastIndent = [toRun substringToIndex:i];
             }
 
             self.working = false;
@@ -641,11 +641,11 @@ public:
                           delay:0
                         options:UIViewAnimationOptions(animationCurve << 16)
                      animations:^{
-                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + kbOffset - kbSize.height);
+                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + self->              kbOffset - kbSize.height);
                          if (endWasVisible && ! endWillBeVisible)
                              self.history.contentOffset = CGPointMake(self.history.contentOffset.x, self.history.contentSize.height - newHistoryHeight);
                          [self.view layoutIfNeeded]; // Ensures that the frame change is actually animated.
-                         kbOffset = kbSize.height;
+                         self->kbOffset = kbSize.height;
                      }
                      completion:^(BOOL finished){}];
 }
@@ -659,9 +659,9 @@ public:
                           delay:0
                         options:UIViewAnimationOptions(animationCurve << 16)
                      animations:^{
-                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + kbOffset);
+                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + self->kbOffset);
                          [self.view layoutIfNeeded]; // Ensures that the frame change is actually animated.
-                         kbOffset = 0;
+                         self->kbOffset = 0;
                      }
                      completion:^(BOOL finished){}];
 }
