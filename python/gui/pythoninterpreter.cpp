@@ -95,6 +95,7 @@ PyThreadState* mainState;
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
         regina::python::PythonOutputStream& pyStdErr) :
+        caughtSystemExit(false),
         output(pyStdOut), errors(pyStdErr),
         completer(nullptr), completerFunc(nullptr) {
     std::lock_guard<std::mutex> lock(globalMutex);
@@ -265,7 +266,14 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         if (ans)
             Py_DECREF(ans);
         else {
-            PyErr_Print();
+            // If the user called exit(), this will have thrown a SystemExit
+            // exception, which would cause PyErr_Print() to terminate *this*
+            // process (the Regina GUI).
+            if(PyErr_ExceptionMatches(PyExc_SystemExit)) {
+                caughtSystemExit = true;
+            } else {
+                PyErr_Print();
+            }
             PyErr_Clear();
         }
 
@@ -478,7 +486,14 @@ bool PythonInterpreter::runCode(const char* code) {
         state = PyEval_SaveThread();
         return true;
     } else {
-        PyErr_Print();
+        // If the user called exit(), this will have thrown a SystemExit
+        // exception, which would cause PyErr_Print() to terminate *this*
+        // process (the Regina GUI).
+        if(PyErr_ExceptionMatches(PyExc_SystemExit)) {
+            caughtSystemExit = true;
+        } else {
+            PyErr_Print();
+        }
         PyErr_Clear();
         state = PyEval_SaveThread();
         return false;

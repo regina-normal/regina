@@ -383,6 +383,11 @@ public:
 
         dispatch_async(dispatch_get_main_queue(), ^{
             self.working = false;
+            
+            if (self->_interpreter->exitAttempted())
+                [self close:nil];
+            else
+                [self.input becomeFirstResponder];
         });
     });
 }
@@ -472,7 +477,11 @@ public:
             }
 
             self.working = false;
-            [self.input becomeFirstResponder];
+            
+            if (self->_interpreter->exitAttempted())
+                [self close:nil];
+            else
+                [self.input becomeFirstResponder];
         });
     });
 }

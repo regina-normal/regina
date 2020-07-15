@@ -152,6 +152,9 @@ class PythonInterpreter {
             /**< Any previous statements (such as loop openings) that are
                  waiting to be completed. */
 
+        bool caughtSystemExit;
+            /**< Has the interpreter thrown a SystemExit exception? */
+
         PythonOutputStream& output;
             /**< The stream that we are using for sys.stdout. */
         PythonOutputStream& errors;
@@ -172,6 +175,8 @@ class PythonInterpreter {
          * \c false if the interpreter is waiting on further lines of code.
          *
          * This is intended for use in an interactive Python session.
+         *
+         * You should always test exitAttempted() after executing user code.
          */
         bool executeLine(const std::string& command);
 
@@ -194,6 +199,8 @@ class PythonInterpreter {
          * the script code itself.
          *
          * This routine flushes standard output and standard error.
+         *
+         * You should always test exitAttempted() after executing user code.
          */
         bool runScript(const regina::Script* script);
 
@@ -201,6 +208,20 @@ class PythonInterpreter {
          * Flushes the standard output and error streams.
          */
         void flush();
+
+        /**
+         * Has the subinterpreter attempted to exit?
+         *
+         * Specifically, this tests whether a \c SystemExit exception
+         * has been thrown (typically by calling a Python function such as
+         * exit(), quit(), or sys.quit()).  In a command-line python
+         * session, such a function would exit the python * session; here it
+         * just sets this flag so the enclosing GUI can clean up nicely.
+         *
+         * This does \e not capture os._exit(), which will instead
+         * immediately terminate the parent process (i.e., the enclosing GUI).
+         */
+        bool exitAttempted() const;
 
         /**
          * Attempts to complete the given Python string.
@@ -271,6 +292,10 @@ inline PrefixCompleter::PrefixCompleter() : initialised_(false) {
 
 inline const std::string& PrefixCompleter::prefix() const {
     return prefix_;
+}
+
+inline bool PythonInterpreter::exitAttempted() const {
+    return caughtSystemExit;
 }
 
 } } // namespace regina::python
