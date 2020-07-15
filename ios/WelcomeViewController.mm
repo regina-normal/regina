@@ -126,8 +126,10 @@ public:
         
         runner.run("", false, false, false);
         
-        [self finished];
-        [UIApplication sharedApplication].idleTimerDisabled = NO;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self finished];
+            [UIApplication sharedApplication].idleTimerDisabled = NO;
+        });
     });
 }
 
