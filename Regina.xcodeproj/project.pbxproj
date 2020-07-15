@@ -8382,9 +8382,9 @@
 			productReference = 052FA0C11806072900FAE4DF /* regtestsuite */;
 			productType = "com.apple.product-type.tool";
 		};
-		052FA1271806102F00FAE4DF /* iOS */ = {
+		052FA1271806102F00FAE4DF /* Regina for iOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 052FA15D1806103000FAE4DF /* Build configuration list for PBXNativeTarget "iOS" */;
+			buildConfigurationList = 052FA15D1806103000FAE4DF /* Build configuration list for PBXNativeTarget "Regina for iOS" */;
 			buildPhases = (
 				052FA1241806102F00FAE4DF /* Sources */,
 				052FA1251806102F00FAE4DF /* Frameworks */,
@@ -8402,7 +8402,7 @@
 			dependencies = (
 				05DADB14219272C800DC80E1 /* PBXTargetDependency */,
 			);
-			name = iOS;
+			name = "Regina for iOS";
 			productName = Regina;
 			productReference = 052FA1281806102F00FAE4DF /* Regina.app */;
 			productType = "com.apple.product-type.application";
@@ -8722,7 +8722,7 @@
 				05DADB04219256ED00DC80E1 /* Databases */,
 				05DADAFE2192535F00DC80E1 /* Handbook */,
 				0564A1DE1811D6F8002CC2AE /* Qt */,
-				052FA1271806102F00FAE4DF /* iOS */,
+				052FA1271806102F00FAE4DF /* Regina for iOS */,
 				05B14EA219B423A0002138C0 /* Census Tools */,
 				05617B001D9DC51600B1E33B /* Utils - CensusLookup */,
 				05617B0B1D9DC52200B1E33B /* Utils - RegConcat */,
@@ -12811,7 +12811,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		052FA15D1806103000FAE4DF /* Build configuration list for PBXNativeTarget "iOS" */ = {
+		052FA15D1806103000FAE4DF /* Build configuration list for PBXNativeTarget "Regina for iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				052FA1591806103000FAE4DF /* Debug */,
