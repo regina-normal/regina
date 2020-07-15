@@ -236,6 +236,8 @@ public:
     UIBarButtonItem* _pastButton;
     UIBarButtonItem* _futureButton;
     
+    NSArray<UIKeyCommand*>* _keyCommands;
+    
     regina::python::PythonInterpreter* _interpreter;
 }
 
@@ -287,6 +289,22 @@ public:
     _futureButton = [self historyButton:NO];
     _pastButton.enabled = NO;
     _futureButton.enabled = NO;
+    
+    _keyCommands = @[[UIKeyCommand keyCommandWithInput:@"\t"
+                                         modifierFlags:0
+                                                action:@selector(tabPressed)],
+                     [UIKeyCommand keyCommandWithInput:UIKeyInputUpArrow
+                                         modifierFlags:0
+                                                action:@selector(historyPast)],
+                     [UIKeyCommand keyCommandWithInput:UIKeyInputDownArrow
+                                         modifierFlags:0
+                                                action:@selector(historyFuture)],
+                     [UIKeyCommand keyCommandWithInput:@"d"
+                                         modifierFlags:UIKeyModifierControl
+                                                action:@selector(close:)],
+                     [UIKeyCommand keyCommandWithInput:@"w"
+                                         modifierFlags:UIKeyModifierCommand
+                                                action:@selector(close:)]];
 
     UIToolbar* bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
     bar.barStyle = UIBarStyleDefault;
@@ -491,6 +509,10 @@ public:
     // Must be called from the main thread.
     if (! self.working)
         [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+    return _keyCommands;
 }
 
 - (NSString*)tabCompletion:(NSString*)textToComplete {
