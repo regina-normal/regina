@@ -259,6 +259,7 @@ public:
     sheet.root = root;
     sheet.item = item;
     sheet.script = script;
+    sheet.modalPresentationStyle = UIModalPresentationFullScreen;
     [c presentViewController:sheet animated:YES completion:nil];
 }
 
