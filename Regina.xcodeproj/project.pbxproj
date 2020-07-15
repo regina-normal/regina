@@ -384,15 +384,10 @@
 		052774141C55744300140918 /* hypercreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052774101C55743E00140918 /* hypercreator.cpp */; };
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
 		052790B224BE5DB100ACDF03 /* jansson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E81DF0D6860018AB24 /* jansson.framework */; };
-		052790B324BE5DB100ACDF03 /* jansson.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E81DF0D6860018AB24 /* jansson.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		052790B524BE5DB900ACDF03 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99C1C41DAC100FA81D3 /* cppunit.framework */; };
-		052790B624BE5DB900ACDF03 /* cppunit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99C1C41DAC100FA81D3 /* cppunit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		052790B724BE5DC000ACDF03 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */; };
-		052790B824BE5DC000ACDF03 /* libtokyocabinet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		052790B924BE5DC200ACDF03 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; };
-		052790BA24BE5DC200ACDF03 /* libgmpxx.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		052790BB24BE5DC400ACDF03 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; };
-		052790BC24BE5DC400ACDF03 /* libgmp.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		052790BD24BE5EA200ACDF03 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
 		052790BE24BE5EA200ACDF03 /* libtokyocabinet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
@@ -2325,21 +2320,6 @@
 				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
 			);
 			name = "Copy Engine and Utilities";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		052790B424BE5DB100ACDF03 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				052790B624BE5DB900ACDF03 /* cppunit.framework in Embed Frameworks */,
-				052790BA24BE5DC200ACDF03 /* libgmpxx.framework in Embed Frameworks */,
-				052790B824BE5DC000ACDF03 /* libtokyocabinet.framework in Embed Frameworks */,
-				052790BC24BE5DC400ACDF03 /* libgmp.framework in Embed Frameworks */,
-				052790B324BE5DB100ACDF03 /* jansson.framework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		052790BF24BE5EA200ACDF03 /* Embed Frameworks */ = {
@@ -8415,7 +8395,7 @@
 				05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */,
 				05B4D2A5229F31F100B7B11C /* Copy Python core */,
 				054209181DF17EB70018AB24 /* CopyFiles */,
-				052790B424BE5DB100ACDF03 /* Embed Frameworks */,
+				051B531724BEA9F600A25B75 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -8826,6 +8806,34 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
+		};
+		051B531724BEA9F600A25B75 /* Embed Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 12;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				/Users/bab/Library/Frameworks/ios/cppunit.framework,
+				/Users/bab/Library/Frameworks/ios/jansson.framework,
+				/Users/bab/Library/Frameworks/ios/libgmp.framework,
+				/Users/bab/Library/Frameworks/ios/libgmpxx.framework,
+				/Users/bab/Library/Frameworks/ios/libtokyocabinet.framework,
+			);
+			name = "Embed Frameworks";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/cppunit.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/jansson.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libgmp.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libgmpxx.framework",
+				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libtokyocabinet.framework",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# This step requires you to have Carthage installed:\n# https://github.com/Carthage/Carthage\n#\n# Its main purpose is to strip out x86_64/i386 slices from\n# all hand-rolled embedded frameworks. For more detail:\n# http://www.openradar.me/radar?id=6409498411401216\n#\n/usr/local/bin/carthage copy-frameworks\n";
 		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
