@@ -4,22 +4,22 @@
 <dict>
 	<key>SchemeUserState</key>
 	<dict>
-		<key>Databases.xcscheme</key>
+		<key>Databases.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>7</integer>
 		</dict>
-		<key>Handbook.xcscheme</key>
+		<key>Handbook.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>8</integer>
 		</dict>
-		<key>Python.xcscheme</key>
+		<key>Python.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>6</integer>
 		</dict>
-		<key>Test suite.xcscheme</key>
+		<key>Test suite.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>5</integer>
@@ -87,27 +87,27 @@
 			<key>orderHint</key>
 			<integer>16</integer>
 		</dict>
-		<key>iOS debug.xcscheme</key>
+		<key>iOS debug.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>0</integer>
 		</dict>
-		<key>iOS python 3.xcscheme</key>
+		<key>iOS python 3.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>2</integer>
 		</dict>
-		<key>iOS release.xcscheme</key>
+		<key>iOS release.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>macOS python 3.xcscheme</key>
+		<key>macOS python 3.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>4</integer>
 		</dict>
-		<key>macOS.xcscheme</key>
+		<key>macOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
 			<integer>3</integer>

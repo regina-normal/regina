@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "05DADB04219256ED00DC80E1"
-               BuildableName = "Databases"
-               BlueprintName = "Databases"
+               BlueprintIdentifier = "050F5CDC1B9BAAAA00C1F681"
+               BuildableName = "engine.so"
+               BlueprintName = "Python"
                ReferencedContainer = "container:Regina.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -29,8 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -45,14 +43,12 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "05DADB04219256ED00DC80E1"
-            BuildableName = "Databases"
-            BlueprintName = "Databases"
+            BlueprintIdentifier = "050F5CDC1B9BAAAA00C1F681"
+            BuildableName = "engine.so"
+            BlueprintName = "Python"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -63,9 +59,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "05DADB04219256ED00DC80E1"
-            BuildableName = "Databases"
-            BlueprintName = "Databases"
+            BlueprintIdentifier = "050F5CDC1B9BAAAA00C1F681"
+            BuildableName = "engine.so"
+            BlueprintName = "Python"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
