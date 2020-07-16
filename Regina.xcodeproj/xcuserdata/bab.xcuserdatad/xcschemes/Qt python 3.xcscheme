@@ -16,7 +16,7 @@
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "0564A1DE1811D6F8002CC2AE"
                BuildableName = "Regina.app"
-               BlueprintName = "Qt"
+               BlueprintName = "Regina for macOS"
                ReferencedContainer = "container:Regina.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -27,6 +27,15 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "0564A1DE1811D6F8002CC2AE"
+            BuildableName = "Regina.app"
+            BlueprintName = "Regina for macOS"
+            ReferencedContainer = "container:Regina.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
          <TestableReference
             skipped = "NO">
@@ -39,17 +48,6 @@
             </BuildableReference>
          </TestableReference>
       </Testables>
-      <MacroExpansion>
-         <BuildableReference
-            BuildableIdentifier = "primary"
-            BlueprintIdentifier = "0564A1DE1811D6F8002CC2AE"
-            BuildableName = "Regina.app"
-            BlueprintName = "Qt"
-            ReferencedContainer = "container:Regina.xcodeproj">
-         </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Python 3 Release"
@@ -67,12 +65,10 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0564A1DE1811D6F8002CC2AE"
             BuildableName = "Regina.app"
-            BlueprintName = "Qt"
+            BlueprintName = "Regina for macOS"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Python 3 Release"
@@ -86,7 +82,7 @@
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "0564A1DE1811D6F8002CC2AE"
             BuildableName = "Regina.app"
-            BlueprintName = "Qt"
+            BlueprintName = "Regina for macOS"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

@@ -8535,9 +8535,9 @@
 			productReference = 05617B431D9DC55B00B1E33B /* trisetcmp */;
 			productType = "com.apple.product-type.tool";
 		};
-		0564A1DE1811D6F8002CC2AE /* Qt */ = {
+		0564A1DE1811D6F8002CC2AE /* Regina for macOS */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Qt" */;
+			buildConfigurationList = 0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Regina for macOS" */;
 			buildPhases = (
 				051B54301D9DD60F00A2DC82 /* Fix Library Paths */,
 				0564A1DB1811D6F8002CC2AE /* Sources */,
@@ -8575,7 +8575,7 @@
 				05617B711D9DC70E00B1E33B /* PBXTargetDependency */,
 				05617AF71D9DC0E000B1E33B /* PBXTargetDependency */,
 			);
-			name = Qt;
+			name = "Regina for macOS";
 			productName = Qt;
 			productReference = 0564A1DF1811D6F8002CC2AE /* Regina.app */;
 			productType = "com.apple.product-type.application";
@@ -8721,7 +8721,7 @@
 				052FA0C01806072900FAE4DF /* Test Suite */,
 				05DADB04219256ED00DC80E1 /* Databases */,
 				05DADAFE2192535F00DC80E1 /* Handbook */,
-				0564A1DE1811D6F8002CC2AE /* Qt */,
+				0564A1DE1811D6F8002CC2AE /* Regina for macOS */,
 				052FA1271806102F00FAE4DF /* Regina for iOS */,
 				05B14EA219B423A0002138C0 /* Census Tools */,
 				05617B001D9DC51600B1E33B /* Utils - CensusLookup */,
@@ -12901,7 +12901,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Qt" */ = {
+		0564A2131811D6FA002CC2AE /* Build configuration list for PBXNativeTarget "Regina for macOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				0564A20F1811D6FA002CC2AE /* Debug */,
