@@ -347,6 +347,11 @@ public:
     // Make the prompt use a fixed-width font, so that when the prompt
     // changes we do not have to worry about redoing the toolbar layout.
     [self.prompt setTitleTextAttributes:@{NSFontAttributeName: promptFont} forState:UIControlStateNormal];
+    // The prompt should really have all interaction disabled.
+    // Until we work out how to do this properly, at least make sure it keeps
+    // the fixed-width font when the user presses it (on iOS 13 this makes it
+    // go grey).
+    [self.prompt setTitleTextAttributes:@{NSFontAttributeName: promptFont} forState:UIControlStateHighlighted];
 
     // Remove the suggestions bar above the keyboard, which will be empty anyway.
     UITextInputAssistantItem* item = [self inputAssistantItem];
