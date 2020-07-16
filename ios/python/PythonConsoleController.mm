@@ -563,16 +563,18 @@ public:
 }
 
 - (IBAction)tabPressed {
-    // If the cursor is sitting immediately after non-whitespace, attempt tab completion.
-    // First fetch the substring up to and including the cursor.
     UITextRange* selection = [self.input selectedTextRange];
     if (! selection) {
         NSLog(@"ERROR: Cannot fetch cursor position");
         // Pretend the cursor is at the end of the input.
         selection = [self.input textRangeFromPosition:self.input.endOfDocument toPosition:self.input.endOfDocument];
     }
+    [self tabPressedOnRange:selection];
+}
 
-    // Fetch everything *before* the cursor.
+- (void)tabPressedOnRange:(UITextRange*)selection {
+    // If the cursor is sitting immediately after non-whitespace, attempt tab completion.
+    // First fetch everything *before* the cursor.
     // We will try to tab complete at the end of this block.
     UITextRange* prefixRange = [self.input textRangeFromPosition:self.input.beginningOfDocument toPosition:selection.start];
     NSString* prefix = [self.input textInRange:prefixRange];
@@ -716,7 +718,19 @@ public:
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    return (! self.working);
+    if (self.working)
+        return NO;
+    
+    if ([string isEqualToString:@"\t"]) {
+        // Intercept tab presses.
+        // Here we rereoute them to either tab completion or
+        // inserting a sequence of spaces, depending on context.
+        UITextPosition* from = [textField positionFromPosition:textField.beginningOfDocument offset:range.location];
+        UITextPosition* to = [textField positionFromPosition:from offset:range.length];
+        [self tabPressedOnRange:[textField textRangeFromPosition:from toPosition:to]];
+        return NO;
+    }
+    return YES;
 }
 
 - (UIBarButtonItem*)textButton:(NSString *)text {
