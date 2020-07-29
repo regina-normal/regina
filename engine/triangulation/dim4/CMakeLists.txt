@@ -21,7 +21,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    boundarycomponent4.h
     component4.h
     edge4.h
     pentachoron4.h

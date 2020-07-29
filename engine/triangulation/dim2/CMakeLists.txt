@@ -14,7 +14,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    boundarycomponent2.h
     component2.h
     triangle2.h
     triangulation2.h

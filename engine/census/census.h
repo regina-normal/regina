@@ -478,7 +478,7 @@ class REGINA_API Census {
             /**< The census of cusped hyperbolic non-orientable 3-manifold
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
-        static CensusDB* hypKnotLink_;
+        static CensusDB* knotLink_;
             /**< The census of cusped hyperbolic knot and link complements
                  that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
