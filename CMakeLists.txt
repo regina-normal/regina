@@ -318,8 +318,13 @@ MACRO_LOG_FEATURE(Boost_FOUND
 
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
-  FIND_PACKAGE(PythonInterp)
-  FIND_PACKAGE(PythonLibs)
+  IF (REQUIRE_PYTHON3)
+    FIND_PACKAGE(PythonInterp 3 REQUIRED)
+    FIND_PACKAGE(PythonLibs 3 REQUIRED)
+  ELSE()
+    FIND_PACKAGE(PythonInterp)
+    FIND_PACKAGE(PythonLibs)
+  ENDIF(REQUIRE_PYTHON3)
 
   IF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
     # Check the python versions.
