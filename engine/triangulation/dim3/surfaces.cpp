@@ -257,13 +257,10 @@ bool Triangulation<3>::hasSplittingSurface() {
     for (unsigned long i = 0; i < nSurfaces; i++) {
         s = surfaces->surface(i);
 
-        if (! splittingSurface_.known())
-            if (s->isSplitting())
-                splittingSurface_ = true;
-
-        // See if there is no use running through the rest of the list.
-        if (splittingSurface_.known())
+        if (s->isSplitting()){
+            splittingSurface_ = true;
             break;
+        }
     }
 
     // Done!
