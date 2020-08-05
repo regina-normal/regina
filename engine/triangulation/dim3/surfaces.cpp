@@ -237,6 +237,8 @@ bool Triangulation<3>::isZeroEfficient() {
 }
 
 bool Triangulation<3>::hasSplittingSurface() {
+    if (isEmpty()) splittingSurface_ = false;
+        
     if (splittingSurface_.known())
         return splittingSurface_.value();
 
@@ -248,6 +250,7 @@ bool Triangulation<3>::hasSplittingSurface() {
             if (!static_cast<Triangulation<3>*>(child)->hasSplittingSurface()) return false;
         return true;
     }
+
     // Now we can assume the triangulation is connected.
         
     // We keep track of whether an edge has been assumed to be disjoint or not from a putative splitting surface.
@@ -256,24 +259,25 @@ bool Triangulation<3>::hasSplittingSurface() {
 
     // We also keep track of each edge e that is not yet assumed disjoint but that is a candidate for this assumption.
     std::list<Edge<3>*> candidate_disjoint;
-    Tetrahedron<3>* tet = simplex(0);
-        
+
     // At the outset, we may regard any edge as a candidate.
-    // We will do so for each of the three edges in tet incident to vertex 3.
+    // We will do so for each of the three edges in a triangle of the triangulation.
     // The triangulation is connected.
     // So these exhaust the possibilities for a splitting surface.
+    auto tri = triangle(0);
 
+    splittingSurface_ = false;
+    
     for (int i = 0; i < 3; i++){
         candidate_disjoint.clear();
         disjoint.clear();
         intersecting.clear();
 
         // Outset
-        Edge<3>* ei3 = tet->edge(i,3);
-        candidate_disjoint.push_front(ei3);
-        bool obstructed = false;
+        auto ei = tri->edge(i);
+        candidate_disjoint.push_front(ei);
 
-        // Main loop
+        // Main inner loop
         while (!candidate_disjoint.empty()){
             Edge<3>* e = candidate_disjoint.back();
             for (auto& emb : *e){
@@ -305,17 +309,18 @@ bool Triangulation<3>::hasSplittingSurface() {
                     if (!disjoint.count(opp)) candidate_disjoint.push_front(opp);
                 }
             }
-        }
-        if (candidate_disjoint.empty())
-            // We didn't break without removing an edge.
+        } // End main inner loop
+
+        if (candidate_disjoint.empty()){
+            // We didn't break the main inner loop without removing an edge.
             // So we must have partitioned the edges into disjoint and intersecting.
             // Thus there is a splitting surface.
-            return true;
-    }
+            splittingSurface_ = true;
 
-    // We didn't return the existence of a splitting surface for any of the three edges.
-    // So there is no splitting surface.
-    splittingSurface_ = false;
+            // We can omit the searches starting at the remaining edges of the triangle.
+            break;
+        }
+    } // End search for splitting surfaces along each edge of tri.
 
     // The stack will clean things up for us automatically.
     return splittingSurface_.value();
