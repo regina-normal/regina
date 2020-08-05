@@ -237,13 +237,14 @@ bool Triangulation<3>::isZeroEfficient() {
 }
 
 bool Triangulation<3>::hasSplittingSurface() {
-    if (isEmpty()) splittingSurface_ = false;
+    if (isEmpty()){
+        splittingSurface_ = false;
+        // The stack will clean things up for us automatically when returning like this.
+        return splittingSurface_.value();
+    }
         
     if (splittingSurface_.known())
         return splittingSurface_.value();
-
-    // Until we know otherwise, we'll assume there's no splitting surface.
-    splittingSurface_ = false;
 
     // In the main loop of this procedure, we assume the triangulation is connected.
     // If it isn't connected, we see instead if each component has a splitting surface.
@@ -251,8 +252,10 @@ bool Triangulation<3>::hasSplittingSurface() {
     if (!isConnected()) {
         splitIntoComponents();
         for (Packet* child = firstChild(); child; child = child->nextSibling())
-            if (!static_cast<Triangulation<3>*>(child)->hasSplittingSurface())
-                return splittingSurface_.value(); // splittingSurface_ is false
+            if (!static_cast<Triangulation<3>*>(child)->hasSplittingSurface()){
+                splittingSurface_ = false;
+                return splittingSurface_.value();
+            }
         // All the components have splitting surfaces.
         splittingSurface_ = true;
         return splittingSurface_.value();
@@ -265,6 +268,7 @@ bool Triangulation<3>::hasSplittingSurface() {
     std::set<Edge<3>*> intersecting;
 
     // We also keep track of each edge e that is not yet assumed disjoint but that is a candidate for this assumption.
+    // We keep track of them in a queue.
     std::list<Edge<3>*> candidate_disjoint;
 
     // At the outset, we may regard any edge as a candidate.
@@ -289,7 +293,7 @@ bool Triangulation<3>::hasSplittingSurface() {
                 Tetrahedron<3>* tet_e = emb.simplex();
                 Perm<4> v_perm = emb.vertices();
 
-                // The splitting surface should intersect the other edges of the candidate edge in the given embedding meeting the candidate edge---``lateral'' edges.
+                // The splitting surface should intersect the other edges of the candidate edge in the given embedding meeting the candidate edge---lateral edges.
                 Edge<3>* lat02 = tet_e->edge(v_perm[0],v_perm[2]);
                 Edge<3>* lat03 = tet_e->edge(v_perm[0],v_perm[3]);
                 Edge<3>* lat12 = tet_e->edge(v_perm[1],v_perm[2]);
@@ -318,16 +322,15 @@ bool Triangulation<3>::hasSplittingSurface() {
 
         if (candidate_disjoint.empty()){
             // We didn't break the main inner loop without removing an edge.
-            // So we must have partitioned the edges into disjoint and intersecting.
+            // So we must have partitioned the edges into disjoint and intersecting, with two opposite disjoint edges per tetrahedron.
             // Thus there is a splitting surface.
             splittingSurface_ = true;
-
-            // We can omit the searches starting at the remaining edges of the triangle.
-            break;
+            return splittingSurface_.value();
         }
     } // End search for splitting surfaces along each edge of tri.
 
-    // The stack will clean things up for us automatically.
+    // We found no splitting surfaces; there is none.
+    splittingSurface_ = false;
     return splittingSurface_.value();
 }
 
