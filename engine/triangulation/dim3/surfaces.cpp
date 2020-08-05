@@ -242,13 +242,20 @@ bool Triangulation<3>::hasSplittingSurface() {
     if (splittingSurface_.known())
         return splittingSurface_.value();
 
-    // In the main loop of this procedure, we will assume the triangulation is connected.
-    // If it isn't, we see if each component has a splitting surface.
+    // Until we know otherwise, we'll assume there's no splitting surface.
+    splittingSurface_ = false;
+
+    // In the main loop of this procedure, we assume the triangulation is connected.
+    // If it isn't connected, we see instead if each component has a splitting surface.
+
     if (!isConnected()) {
         splitIntoComponents();
         for (Packet* child = firstChild(); child; child = child->nextSibling())
-            if (!static_cast<Triangulation<3>*>(child)->hasSplittingSurface()) return false;
-        return true;
+            if (!static_cast<Triangulation<3>*>(child)->hasSplittingSurface())
+                return splittingSurface_.value(); // splittingSurface_ is false
+        // All the components have splitting surfaces.
+        splittingSurface_ = true;
+        return splittingSurface_.value();
     }
 
     // Now we can assume the triangulation is connected.
@@ -266,8 +273,6 @@ bool Triangulation<3>::hasSplittingSurface() {
     // So these exhaust the possibilities for a splitting surface.
     auto tri = triangle(0);
 
-    splittingSurface_ = false;
-    
     for (int i = 0; i < 3; i++){
         candidate_disjoint.clear();
         disjoint.clear();
@@ -284,7 +289,7 @@ bool Triangulation<3>::hasSplittingSurface() {
                 Tetrahedron<3>* tet_e = emb.simplex();
                 Perm<4> v_perm = emb.vertices();
 
-                // The splitting surface should intersect the lateral edges of the candidate edge in the given embedding.
+                // The splitting surface should intersect the other edges of the candidate edge in the given embedding meeting the candidate edge---``lateral'' edges.
                 Edge<3>* lat02 = tet_e->edge(v_perm[0],v_perm[2]);
                 Edge<3>* lat03 = tet_e->edge(v_perm[0],v_perm[3]);
                 Edge<3>* lat12 = tet_e->edge(v_perm[1],v_perm[2]);
