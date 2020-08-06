@@ -252,7 +252,7 @@ bool Triangulation<3>::hasSplittingSurface() {
     if (!isConnected()) {
         splitIntoComponents();
         for (Packet* child = firstChild(); child; child = child->nextSibling())
-            if (!static_cast<Triangulation<3>*>(child)->hasSplittingSurface()){
+            if (!static_cast<Triangulation<3>*>(child)->hasSplittingSurface()) {
                 splittingSurface_ = false;
                 return splittingSurface_.value();
             }
@@ -263,11 +263,12 @@ bool Triangulation<3>::hasSplittingSurface() {
 
     // Now we can assume the triangulation is connected.
         
-    // We keep track of whether an edge has been assumed to be disjoint or not from a putative splitting surface.
+    // An edge is either disjoint or not from a putative splitting surface.
+    // We keep track of which we have assumed is the case.
     std::set<Edge<3>*> disjoint;
     std::set<Edge<3>*> intersecting;
 
-    // We also keep track of each edge e that is not yet assumed disjoint but that is a candidate for this assumption.
+    // Some edges will be candidates for being assumed disjoint later.
     // We keep track of them in a queue.
     std::list<Edge<3>*> candidate_disjoint;
 
@@ -277,7 +278,7 @@ bool Triangulation<3>::hasSplittingSurface() {
     // So these exhaust the possibilities for a splitting surface.
     auto tri = triangle(0);
 
-    for (int i = 0; i < 3; i++){
+    for (int i = 0; i < 3; i++) {
         candidate_disjoint.clear();
         disjoint.clear();
         intersecting.clear();
@@ -287,13 +288,15 @@ bool Triangulation<3>::hasSplittingSurface() {
         candidate_disjoint.push_front(ei);
 
         // Main inner loop
-        while (!candidate_disjoint.empty()){
+        while (!candidate_disjoint.empty()) {
             Edge<3>* e = candidate_disjoint.back();
-            for (auto& emb : *e){
+            for (auto& emb : *e) {
                 Tetrahedron<3>* tet_e = emb.simplex();
                 Perm<4> v_perm = emb.vertices();
 
-                // The splitting surface should intersect the other edges of the candidate edge in the given embedding meeting the candidate edge---lateral edges.
+                // Suppose e is an edge in a tetrahedron (as we have with emb and tet_e).
+                // Say the "lateral edges of e" are the other edges not opposite e.
+                // A splitting surface disjoint from e intersects the lateral edges.
                 Edge<3>* lat02 = tet_e->edge(v_perm[0],v_perm[2]);
                 Edge<3>* lat03 = tet_e->edge(v_perm[0],v_perm[3]);
                 Edge<3>* lat12 = tet_e->edge(v_perm[1],v_perm[2]);
@@ -310,8 +313,11 @@ bool Triangulation<3>::hasSplittingSurface() {
             else {
                 candidate_disjoint.pop_back(); // remove e
                 disjoint.insert(e);
-                // Regard the edges opposite e as candidates if they're not already assumed disjoint.
-                for (auto& emb : *e){
+
+                // Suppose S were a splitting surface disjoint from e.
+                // An edge opposite e in any embedding would also be disjoint from S.
+                // Such edges should be regarded as candidates for being assumed disjoint.
+                for (auto& emb : *e) {
                     Tetrahedron<3>* tet_e = emb.simplex();
                     Perm<4> v_perm = emb.vertices();
                     Edge<3>* opp = tet_e->edge(v_perm[2],v_perm[3]);
@@ -320,9 +326,10 @@ bool Triangulation<3>::hasSplittingSurface() {
             }
         } // End main inner loop
 
-        if (candidate_disjoint.empty()){
+        if (candidate_disjoint.empty()) {
             // We didn't break the main inner loop without removing an edge.
-            // So we must have partitioned the edges into disjoint and intersecting, with two opposite disjoint edges per tetrahedron.
+            // So we must have partitioned the edges into disjoint and intersecting.
+            // There are two opposite disjoint edges per tetrahedron.
             // Thus there is a splitting surface.
             splittingSurface_ = true;
             return splittingSurface_.value();
