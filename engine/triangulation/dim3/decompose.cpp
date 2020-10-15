@@ -561,7 +561,6 @@ bool Triangulation<3>::isSolidTorus() const {
         delete crushed;
     }
 }
-
 bool Triangulation<3>::knowsSolidTorus() const {
     if (solidTorus_.known())
         return true;
@@ -585,6 +584,27 @@ bool Triangulation<3>::knowsSolidTorus() const {
 
     // More work is required.
     return false;
+}
+
+bool Triangulation<3>::isTorusXInterval() const {
+    // If it's not a homology T2xI, we're done.
+    if (!isConnected())
+        return false;
+    else {
+        // Raise stupid error
+        int x = 1/0;
+        return false;
+    }
+}
+
+bool Triangulation<3>::knowsTorusXInterval() const {
+    if (solidTorus_.known())
+        return solidTorus_.value();
+    else {
+        // Raise stupid error
+        int x = 1/0;
+        return false;
+    }
 }
 
 Packet* Triangulation<3>::makeZeroEfficient() {

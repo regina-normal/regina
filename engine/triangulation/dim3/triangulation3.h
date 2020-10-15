@@ -2036,6 +2036,15 @@ class REGINA_API Triangulation<3> :
          */
         bool knowsSolidTorus() const;
 
+         /**
+         * Determines whether or not the underlying 3-manifold is
+         * the product of a torus with an interval.
+         * 
+         * \warning This algorithm ultimately relies on isSolidTorus(),
+         * which might run slowly for large triangulations.
+         */
+        bool isTorusXInterval() const;
+
         /**
          * Determines whether the underlying 3-manifold (which must be
          * closed) is irreducible.  In other words, this routine determines
