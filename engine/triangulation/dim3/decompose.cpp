@@ -39,6 +39,9 @@
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
+#include "triangulation/generic/boundarycomponent.h"
+#include "triangulation/generic/face.h"
+#include "triangulation/homologicaldata.h"
 
 namespace regina {
 
@@ -561,7 +564,7 @@ bool Triangulation<3>::isSolidTorus() const {
         delete crushed;
     }
 }
-
+    
 bool Triangulation<3>::knowsSolidTorus() const {
     if (solidTorus_.known())
         return true;
@@ -585,6 +588,129 @@ bool Triangulation<3>::knowsSolidTorus() const {
 
     // More work is required.
     return false;
+}
+
+
+Edge<3>* Triangulation<3>::getEmbeddedBoundaryEdge() {
+    for (BoundaryComponent<3> *k : boundaryComponents())
+        for (Edge<3> *e : k->edges())
+            if (e->vertex(0) != e->vertex(1))
+                return e;
+    return (Edge<3>*) 0;
+}
+
+Edge <3>* Triangulation<3>::getClosableBoundaryEdge() {
+    for (BoundaryComponent<3> *k : boundaryComponents())
+        for (Edge<3> *e : k->edges())
+            if (closeBook(e,true,false))
+                return e;
+    return (Edge<3>*) 0;
+}
+    
+bool Triangulation<3>::isTorusXInterval() const {
+    if (knowsTorusXInterval()){
+        return torusXInterval_.value();
+    }
+    
+    Triangulation<3>* working = new Triangulation<3>(*this, false);
+    working->intelligentSimplify();
+    working->idealToFinite();
+    working->intelligentSimplify();
+
+    // If it's not a homology T2xI, we're done.
+    if (!working->isConnected()
+        || working->countBoundaryComponents() != 2
+        || working->homology().str() != "2 Z"
+        || working->homologyRel().str() != "Z"
+        || working->homologyBdry().str() != "4 Z"){
+        delete working;
+        return (torusXInterval_ = false);
+    }
+
+    // Crushing will not introduce new boundary faces.
+    // T2xI is irreducible, so we should be able to crush to a 0-efficient triangulation.
+
+    int surfs = 0;
+    for (NormalSurface* round = working->hasNonTrivialSphereOrDisc();
+         round;
+         round = working->hasNonTrivialSphereOrDisc()){
+
+        Triangulation<3>* crushed = round->crush();
+        delete round;
+        delete working;
+        working = 0;
+        
+        int n = crushed->splitIntoComponents();
+        if (n == 0){
+            // A round surface crushed everything away; we don't have T2xI.
+            delete crushed;
+            return (torusXInterval_ = false);
+        }
+        
+        bool gotNewTriangulation = false;
+        for (Packet* p = crushed->firstChild(); p; p->nextSibling()){
+            working = static_cast<Triangulation<3>*>(p);
+            // If it's a homology T2xI, use it.
+            // (We can't have two such components,
+            //  since then the original triangulation would not have been a homology T2xI.)
+            if (working->isConnected()
+                && working->countBoundaryComponents() == 2
+                && working->homology().str() == "2 Z"
+                && working->homologyRel().str() == "Z"
+                && working->homologyBdry().str() == "4 Z"){
+                // Save our work into a new triangulation before cleaning up crushed.
+                working = new Triangulation<3>(*working, false);
+                delete crushed;
+                // The above deletion presumably deletes crushing's descendants too,
+                // such as p and working's former value.
+                // See similar code in isSolidTorus.
+                gotNewTriangulation = true;
+                break;
+            }
+        }
+
+        if (!gotNewTriangulation){
+            // None of the components of the crushing was a homology T2xI.
+            if (working)
+                delete working;
+            return (torusXInterval_ = false);
+        }
+    }
+    
+    // At this point we should already have boundary components with one vertex each.
+    // But out of an abundance of caution, we ensure this is the case.
+    Edge<3>* emb = working->getEmbeddedBoundaryEdge();
+    while (emb != 0){
+        working->layerOn(emb);
+        Edge<3>* cls = working->getClosableBoundaryEdge();
+        while (cls != 0){
+            working->closeBook(cls,false,true);
+            cls = working->getClosableBoundaryEdge();
+        }
+        emb = working->getEmbeddedBoundaryEdge();
+    }
+
+    // We have a 0-efficient homology T2xI.
+    // So we should move on to the meat of the algorithm, testing Dehn fillings.
+    
+    BoundaryComponent<3>* k = working->boundaryComponent(0);
+    bool isT2xI = true;
+    for (Edge<3>* e : k->edges()){
+        Triangulation<3>* filled = new Triangulation<3>(*working, false);
+        Edge<3>* cls = filled->edge(e->index());
+        filled->closeBook(cls, false, true);
+        isT2xI = isT2xI && filled->isSolidTorus();
+        delete filled;
+        if (!isT2xI) {
+            break;
+        }
+    }
+    delete working;
+    return (torusXInterval_ = isT2xI);
+}
+
+bool Triangulation<3>::knowsTorusXInterval() const {
+    return torusXInterval_.known();
 }
 
 Packet* Triangulation<3>::makeZeroEfficient() {
