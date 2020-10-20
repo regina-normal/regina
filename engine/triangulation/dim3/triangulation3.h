@@ -163,6 +163,8 @@ class REGINA_API Triangulation<3> :
             /**< Is this a triangulation of a 3-dimensional ball? */
         mutable Property<bool> solidTorus_;
             /**< Is this a triangulation of the solid torus? */
+        mutable Property<bool> torusXInterval_;
+            /**< Is this a triangulation of the solid torus? */
         mutable Property<bool> irreducible_;
             /**< Is this 3-manifold irreducible? */
         mutable Property<bool> compressingDisc_;
@@ -2036,6 +2038,39 @@ class REGINA_API Triangulation<3> :
          */
         bool knowsSolidTorus() const;
 
+        /**
+         * Return a pointer to an embedded boundary edge.
+         */
+
+        Edge<3> *getEmbeddedBoundaryEdge();
+
+        /**
+         * Return a pointer to a closable boundary edge.
+         */
+
+        Edge<3> *getClosableBoundaryEdge();
+        
+        /**
+        * Determines whether or not the underlying 3-manifold is
+        * the product of a torus with an interval,
+        * using the algorithm from
+        * https://journals.carleton.ca/jocg/index.php/jocg/article/view/433
+        * (also available as arXiv:1410.7115).
+        *
+        * \warning This algorithm ultimately relies on isSolidTorus(),
+        * which might run slowly for large triangulations.
+        *
+        * \pre This triangulation induces one-vertex triangulations
+        * on its boundary components.
+        */
+        bool isTorusXInterval() const;
+
+        /**
+         * Determines whether or not the value of isTorusXInterval is known,
+         * not the value itself.
+         */
+        bool knowsTorusXInterval() const;
+        
         /**
          * Determines whether the underlying 3-manifold (which must be
          * closed) is irreducible.  In other words, this routine determines
