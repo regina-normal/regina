@@ -159,6 +159,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     // Surfaces:
     sets.insert(std::make_pair("normalsurfaces", &addNormalSurfaces));
     sets.insert(std::make_pair("incompressible", &addIncompressible));
+    sets.insert(std::make_pair("faultfinding",   &addFaultFinding));
 
     // Angle structures:
     sets.insert(std::make_pair("anglestructures", &addAngleStructures));
