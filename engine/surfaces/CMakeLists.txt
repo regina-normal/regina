@@ -10,6 +10,7 @@ SET ( FILES
   disctype
   enumerator
   enumfilter
+  fault
   links
   normalsurface
   normalsurfaces

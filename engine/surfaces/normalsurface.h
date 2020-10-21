@@ -1444,6 +1444,23 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
         bool isIncompressible() const;
 
         /**
+         * Determines whether or not cutting along the surface
+         * yields a new component.
+         */
+        bool separates() const;
+
+        bool isEssentialSphere() const;
+
+        bool isEssentialTorus() const;
+
+        /**
+         * Determines whether or not this surface is an annulus
+         * cutting along which yields two solid tori.
+         * This is easier to check than whether or not the annulus is essential.
+         */
+        bool isSolidTorusAnnulus() const;
+        
+        /**
          * Cuts the associated triangulation along this surface and
          * returns a newly created resulting triangulation.
          * The original triangulation is not changed.

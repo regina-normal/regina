@@ -2,10 +2,10 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Test Suite                                                            *
+ *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
- *  For further details contact Ben Burton (bab@debian.org).              *
+ *  This file: Copyright (c) 2020, Robert C. Haraway, III                 *
+ *  For further details contact Robert (bobbycyiii@fastmail.com).         *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
  *  modify it under the terms of the GNU General Public License as        *
@@ -30,19 +30,30 @@
  *                                                                        *
  **************************************************************************/
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
 
-#include <cppunit/ui/text/TestRunner.h>
+#include "surfaces/normalsurface.h"
+#include "triangulation/dim3.h"
 
-void addNormalSurfaces(CppUnit::TextUi::TestRunner& runner);
-void addIncompressible(CppUnit::TextUi::TestRunner& runner);
-void addFaultFinding(CppUnit::TextUi::TestRunner& runner);
+namespace regina {
+    bool NormalSurface::separates() const{
+        int tri_cpts = this->triangulation()->countComponents();
+        Triangulation<3>* cut_up = this->cutAlong();
+        cut_up->intelligentSimplify();
+        int new_cpts = cut_up->countComponents();
+        delete cut_up;
+        return tri_cpts < new_cpts;
+    }
 
+    bool NormalSurface::isEssentialSphere() const{
+        return false;
+    }
+
+    bool NormalSurface::isEssentialTorus() const{
+        return false;
+    }
+
+    bool NormalSurface::isSolidTorusAnnulus() const{
+        return false;
+    }
+
+}
