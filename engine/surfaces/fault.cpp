@@ -45,6 +45,37 @@ namespace regina {
     }
 
     bool NormalSurface::isEssentialSphere() const{
+        if (!(isConnected()
+              && isCompact()
+              && eulerChar() == 2))
+            return false;
+              
+        int tri_cpts = triangulation()->countComponents();
+        Triangulation<3>* cut_up = cutAlong();
+        cut_up->intelligentSimplify();
+        int new_cpts = cut_up->countComponents();
+        if (tri_cpts >= new_cpts){
+            delete cut_up;
+            return true;
+        }
+
+        // Cap sphere boundary components.
+        cut_up->finiteToIdeal();
+        cut_up->intelligentSimplify();
+        cut_up->idealToFinite();
+        cut_up->intelligentSimplify();
+
+        cut_up->splitIntoComponents();
+        Triangulation<3>* L = (Triangulation<3>*) cut_up->firstChild();
+        Triangulation<3>* R = (Triangulation<3>*) L->nextSibling();
+        bool essential = !(L->isThreeSphere() || R->isThreeSphere());
+        delete L;
+        delete R;
+        delete cut_up;
+        return essential;
+    }
+
+    bool NormalSurface::isEssentialKleinBottle() const{
         return false;
     }
 
