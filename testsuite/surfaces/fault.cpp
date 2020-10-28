@@ -31,6 +31,9 @@
  **************************************************************************/
 
 #include <cppunit/extensions/HelperMacros.h>
+#include <sstream>
+#include "surfaces/normalcoords.h"
+#include "surfaces/normalflags.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
@@ -39,8 +42,17 @@
 
 
 using regina::Example;
+using regina::NormalListFlags;
 using regina::NormalSurfaces;
+using regina::NS_EMBEDDED_ONLY;
+using regina::NS_FUNDAMENTAL;
+using regina::NS_QUAD;
+using regina::NS_VERTEX;
 using regina::Triangulation;
+
+using std::ostringstream;
+
+NormalListFlags NS_VERTEX_EMBEDDED = (NormalListFlags)(NS_VERTEX & NS_EMBEDDED_ONLY);
 
 class FaultTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(FaultTest);
@@ -59,10 +71,11 @@ public:
     void tearDown() {
     }
 
-    Triangulation<3>* verifyAllSeparating(Triangulation<3>* tri, 
+    
+    Triangulation<3>* verifyAllVertexSeparating(Triangulation<3>* tri, 
             const std::string& triName) {
         NormalSurfaces* s = NormalSurfaces::enumerate(
-            tri, regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
         bool nonseparating_known = false;
         for (unsigned i = 0; i < s->size(); ++i)
             if (!(s->surface(i)->separates())){
@@ -76,10 +89,10 @@ public:
         return tri;
     }
 
-    Triangulation<3>* verifyHasNonSeparating(Triangulation<3>* tri, 
+    Triangulation<3>* verifyHasVertexNonSeparating(Triangulation<3>* tri, 
             const std::string& triName){
         NormalSurfaces* s = NormalSurfaces::enumerate(
-            tri, regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
         bool all_known_surfaces_separating = true;
         for (unsigned i = 0; i < s->size(); ++i)
             if (!(s->surface(i)->separates())){
@@ -93,96 +106,159 @@ public:
         return tri;
     }
 
+    /*
+    Triangulation<3>* verifyAllFundamentalSeparating(Triangulation<3>* tri,
+            const std::string& triName) {
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+        bool nonseparating_known = false;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (!(s->surface(i)->separates())){
+                nonseparating_known = true;
+                break;
+            }
+        delete s;
+        if (nonseparating_known)
+            CPPUNIT_FAIL(("A surface in " + triName +
+                          " is computed to be nonseparating.").c_str());
+        return tri;
+    }
+    */
+
+    Triangulation<3>* verifyHasFundamentalNonSeparating(Triangulation<3>* tri, 
+            const std::string& triName){
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_FUNDAMENTAL);
+        bool all_known_surfaces_separating = true;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (!(s->surface(i)->separates())){
+                all_known_surfaces_separating = false;
+                break;
+            }
+        delete s;
+        if (all_known_surfaces_separating)
+            CPPUNIT_FAIL(("No surfaces in " + triName +
+                          " were computed to be nonseparating.").c_str());
+        return tri;
+    }
+
+    /**
+     * All we can conclude from S not being a vertex surface
+     * is that there is some equation of the form
+     *
+     *     nS + T = X + Y
+     *
+     * for some natural n > 0, trivial surface T, and normal surfaces X, Y.
+     * Even if there is a nonseparating surface,
+     * we cannot conclude that some vertex of its support is also nonseparating,
+     * because the above n might be even, in which case nS is separating.
+     * So if there is a nonseparating surface in a triangulation,
+     * nevertheless there might not be a nonseparating vertex-normal such surface.
+     *
+     * For example, L(34,13) has H_2(L(34,13),Z_2) = Z_2.
+     * So L(34,13) admits a nonseparating surface.
+     * But fLAMcbcbdeehxwqhr = L(34,13) has no nonseparating quad-vertex surface.
+     *
+     * However, there must be a nonseparating fundamental normal such surface.
+     * For instance, in fLAMcbcbdeehxwqhr there is a fundamental P2#P2#P2.
+     *
+     * Thus we should have backup tests for manifolds
+     * with no Z second homology but with Z_2 second homology.
+     */
+    
     void separates() {
         Triangulation<3>* tri;
 
         // Manifolds without nonseparating surfaces
 
         tri = Example<3>::threeSphere();
-        delete verifyAllSeparating(tri, "Minimal 3-sphere");
+        delete verifyAllVertexSeparating(tri, "Minimal 3-sphere");
 
         tri = Example<3>::simplicialSphere();
-        delete verifyAllSeparating(tri, "Pentachoron boundary 3-sphere");
+        delete verifyAllVertexSeparating(tri, "Pentachoron boundary 3-sphere");
 
         tri = Example<3>::ball();
-        delete verifyAllSeparating(tri, "One-tetrahedron ball");
+        delete verifyAllVertexSeparating(tri, "One-tetrahedron ball");
 
         int p = 3;
         int q = 2;
-        while (p < 1000){
+        while (p <= 34){
             if (p % 2 != 0){
                 tri = Example<3>::lens(p,q);
-                delete verifyAllSeparating(tri, "Lens space with odd p");
+                ostringstream oss;
+                oss << "L(" << p << "," << q << ")" ;
+                delete verifyAllVertexSeparating(tri, oss.str());
             }
             p = p + q;
             q = p - q;
         }
         
         tri = Example<3>::poincareHomologySphere();
-        delete verifyAllSeparating(tri, "Poincare homology sphere");
+        delete verifyAllVertexSeparating(tri, "Poincare homology sphere");
 
         tri = Example<3>::weeks();
-        delete verifyAllSeparating(tri, "Weeks-Matveev-Fomenko manifold");
-
+        delete verifyAllVertexSeparating(tri, "Weeks-Matveev-Fomenko manifold");
 
         // Manifolds with nonseparating surfaces
         
         tri = Example<3>::s2xs1();
-        delete verifyHasNonSeparating(tri, "S2xS1");
+        delete verifyHasVertexNonSeparating(tri, "S2xS1");
 
         tri = Example<3>::rp2xs1();
-        delete verifyHasNonSeparating(tri, "RP2xS1");
+        delete verifyHasVertexNonSeparating(tri, "RP2xS1");
 
         tri = Example<3>::rp3rp3();
-        delete verifyHasNonSeparating(tri, "RP3#RP3");
+        delete verifyHasVertexNonSeparating(tri, "RP3#RP3");
 
         tri = Example<3>::smallClosedNonOrblHyperbolic();
-        delete verifyHasNonSeparating(tri, "Smallest known closed nonorientable hyperbolic");
+        delete verifyHasVertexNonSeparating(tri, "Smallest known closed nonorientable hyperbolic");
         
         p = 3;
         q = 2;
-        while (p < 1000){
+        while (p <= 34){
             tri = Example<3>::lst(p,q);
-            delete verifyHasNonSeparating(tri, "Solid torus");
+            delete verifyHasVertexNonSeparating(tri, "Solid torus");
             if (p % 2 == 0){
                 tri = Example<3>::lens(p,q);
-                delete verifyHasNonSeparating(tri, "Lens space with even p");
+                ostringstream oss;
+                oss << "L(" << p << "," << q << ")" ;
+                delete verifyHasFundamentalNonSeparating(tri, oss.str());
             }
             p = p + q;
             q = p - q;
         }
 
         tri = Example<3>::solidKleinBottle();
-        delete verifyHasNonSeparating(tri, "Solid Klein bottle");
+        delete verifyHasVertexNonSeparating(tri, "Solid Klein bottle");
 
         tri = Example<3>::figureEight();
         tri->idealToFinite();
         tri->intelligentSimplify();
-        delete verifyHasNonSeparating(tri, "Figure eight");
+        delete verifyHasVertexNonSeparating(tri, "Figure eight");
 
         tri = Example<3>::trefoil();
         tri->idealToFinite();
         tri->intelligentSimplify();
-        delete verifyHasNonSeparating(tri, "Trefoil");
+        delete verifyHasVertexNonSeparating(tri, "Trefoil");
 
         tri = Example<3>::whiteheadLink();
         tri->idealToFinite();
         tri->intelligentSimplify();
-        delete verifyHasNonSeparating(tri, "Whitehead link");
+        delete verifyHasVertexNonSeparating(tri, "Whitehead link");
         
         tri = Example<3>::gieseking();
         tri->idealToFinite();
         tri->intelligentSimplify();
-        delete verifyHasNonSeparating(tri, "Gieseking manifold");
+        delete verifyHasVertexNonSeparating(tri, "Gieseking manifold");
 
         tri = Example<3>::cuspedGenusTwoTorus();
         tri->idealToFinite();
         tri->intelligentSimplify();
-        delete verifyHasNonSeparating(tri, "Genus two surface x I");
+        delete verifyHasVertexNonSeparating(tri, "Genus two surface x I");
     }
-
+    
     void isEssentialSphere() {
-        CPPUNIT_FAIL("Not implemented yet");
+            CPPUNIT_FAIL("Not implemented yet");
     }
 
     void isEssentialTorus() {
