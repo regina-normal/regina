@@ -49,15 +49,12 @@ namespace regina {
               && isCompact()
               && eulerChar() == 2))
             return false;
-              
-        int tri_cpts = triangulation()->countComponents();
+
+        if (!separates())
+            return true;
+        
         Triangulation<3>* cut_up = cutAlong();
         cut_up->intelligentSimplify();
-        int new_cpts = cut_up->countComponents();
-        if (tri_cpts >= new_cpts){
-            delete cut_up;
-            return true;
-        }
 
         // Cap sphere boundary components.
         cut_up->finiteToIdeal();
@@ -76,7 +73,30 @@ namespace regina {
     }
 
     bool NormalSurface::isEssentialKleinBottle() const{
-        return false;
+        if (!(isConnected()
+              && isCompact()
+              && !isOrientable()
+              && !hasRealBoundary()
+              && eulerChar() == 0))
+            return false;
+
+        if (!isIncompressible())
+            return false;
+
+        if (!separates())
+            return true;
+
+        Triangulation<3>* cut_up = cutAlong();
+        cut_up->splitIntoComponents();
+        Triangulation<3>* L = (Triangulation<3>*) cut_up->firstChild();
+        Triangulation<3>* R = (Triangulation<3>*) L->nextSibling();
+        L->makeDoubleCover();
+        R->makeDoubleCover();
+        bool boundary_parallel = L->isTorusXInterval() || R->isTorusXInterval();
+        delete L;
+        delete R;
+        delete cut_up;
+        return !boundary_parallel;
     }
 
     bool NormalSurface::isEssentialTorus() const{
