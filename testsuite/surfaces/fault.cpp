@@ -454,12 +454,17 @@ public:
         int p = 3;
         int q = 2;
         while (p <= 34){
-            if (p % 2 != 0){
-                tri = Example<3>::lens(p,q);
-                ostringstream oss;
-                oss << "L(" << p << "," << q << ")" ;
-                delete verifyAllVertexKleinBottlesInessential(tri, oss.str());
-            }
+            tri = Example<3>::lst(p,q);
+            delete verifyAllVertexKleinBottlesInessential(tri, "Solid torus");
+
+            tri = Example<3>::lens(p,q);
+            ostringstream oss;
+            oss << "L(" << p << "," << q << ")" ;
+            delete verifyAllVertexKleinBottlesInessential(tri, oss.str());
+
+            tri = smallSFS(2,1,2,1,p,-q);
+            delete verifyAllVertexKleinBottlesInessential(tri, oss.str() );
+            
             p = p + q;
             q = p - q;
         }
@@ -481,21 +486,6 @@ public:
 
         tri = Example<3>::smallClosedNonOrblHyperbolic();
         delete verifyAllVertexKleinBottlesInessential(tri, "Smallest known closed nonorientable hyperbolic");
-        
-        p = 3;
-        q = 2;
-        while (p <= 34){
-            tri = Example<3>::lst(p,q);
-            delete verifyAllVertexKleinBottlesInessential(tri, "Solid torus");
-            if (p % 2 == 0){
-                tri = Example<3>::lens(p,q);
-                ostringstream oss;
-                oss << "L(" << p << "," << q << ")" ;
-                delete verifyAllVertexKleinBottlesInessential(tri, oss.str());
-            }
-            p = p + q;
-            q = p - q;
-        }
 
         tri = Example<3>::solidKleinBottle();
         delete verifyAllVertexKleinBottlesInessential(tri, "Solid Klein bottle");
@@ -533,7 +523,7 @@ public:
         tri = new Triangulation<3>("oLLLAAzLMQccefffggjlmnmmnnkkwawpwwjraakru");
         delete verifyHasVertexEssentialKleinBottle(tri, "Doubled Gieseking manifold");
     }
-
+    
     void isEssentialTorus() {
         CPPUNIT_FAIL("Not implemented yet");
     }
