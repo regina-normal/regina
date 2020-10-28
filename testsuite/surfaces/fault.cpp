@@ -32,6 +32,7 @@
 
 #include <cppunit/extensions/HelperMacros.h>
 #include <sstream>
+#include "manifold/sfs.h"
 #include "surfaces/normalcoords.h"
 #include "surfaces/normalflags.h"
 #include "surfaces/normalsurface.h"
@@ -48,6 +49,8 @@ using regina::NS_EMBEDDED_ONLY;
 using regina::NS_FUNDAMENTAL;
 using regina::NS_QUAD;
 using regina::NS_VERTEX;
+using regina::SFSFibre;
+using regina::SFSpace;
 using regina::Triangulation;
 
 using std::ostringstream;
@@ -59,6 +62,7 @@ class FaultTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(separates);
     CPPUNIT_TEST(isEssentialSphere);
+    CPPUNIT_TEST(isEssentialKleinBottle);
     CPPUNIT_TEST(isEssentialTorus);
     CPPUNIT_TEST(isSolidTorusAnnulus);
     
@@ -377,6 +381,157 @@ public:
             p = p + q;
             q = p - q;
         }
+    }
+    
+    Triangulation<3>* verifyAllVertexKleinBottlesInessential(Triangulation<3>* tri, 
+            const std::string& triName){
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+        bool found_essential_klein_bottle = false;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (s->surface(i)->isEssentialKleinBottle()){
+                found_essential_klein_bottle = true;
+                break;
+            }
+        delete s;
+        if (found_essential_klein_bottle)
+            CPPUNIT_FAIL((triName +
+                          " has an \"essential Klein bottle.\"").c_str());
+        return tri;
+    }
+    
+    Triangulation<3>* verifyHasVertexEssentialKleinBottle(Triangulation<3>* tri, 
+            const std::string& triName){
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+        bool found_essential_klein_bottle = false;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (s->surface(i)->isEssentialKleinBottle()){
+                found_essential_klein_bottle = true;
+                break;
+            }
+        delete s;
+        if (!found_essential_klein_bottle)
+            CPPUNIT_FAIL(("No vertex essential Klein bottle found in "
+                          + triName + ".").c_str());
+        return tri;
+    }
+
+    
+    Triangulation<3>* smallSFS(long alpha0, long beta0,
+                   long alpha1, long beta1,
+                   long alpha2, long beta2){
+        const SFSFibre* fiber0 = new SFSFibre(alpha0, beta0);
+        const SFSFibre* fiber1 = new SFSFibre(alpha1, beta1);
+        const SFSFibre* fiber2 = new SFSFibre(alpha2, beta2);
+        SFSpace* sfs = new SFSpace(
+            SFSpace::o1, 0, 0, 0, 0, 0);
+        sfs->insertFibre(*fiber0);
+        sfs->insertFibre(*fiber1);
+        sfs->insertFibre(*fiber2);
+        Triangulation<3>* sfs_tri = sfs->construct();
+        delete sfs;
+        delete fiber0;
+        delete fiber1;
+        delete fiber2;
+        return sfs_tri;
+    }
+
+    void isEssentialKleinBottle() {
+        Triangulation<3>* tri;
+
+        // Manifolds with no essential Klein bottles
+        
+        tri = Example<3>::threeSphere();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Minimal 3-sphere");
+
+        tri = Example<3>::simplicialSphere();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Pentachoron boundary 3-sphere");
+
+        tri = Example<3>::ball();
+        delete verifyAllVertexKleinBottlesInessential(tri, "One-tetrahedron ball");
+
+        int p = 3;
+        int q = 2;
+        while (p <= 34){
+            if (p % 2 != 0){
+                tri = Example<3>::lens(p,q);
+                ostringstream oss;
+                oss << "L(" << p << "," << q << ")" ;
+                delete verifyAllVertexKleinBottlesInessential(tri, oss.str());
+            }
+            p = p + q;
+            q = p - q;
+        }
+        
+        tri = Example<3>::poincareHomologySphere();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Poincare homology sphere");
+
+        tri = Example<3>::weeks();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Weeks-Matveev-Fomenko manifold");
+
+        tri = Example<3>::s2xs1();
+        delete verifyAllVertexKleinBottlesInessential(tri, "S2xS1");
+
+        tri = Example<3>::rp2xs1();
+        delete verifyAllVertexKleinBottlesInessential(tri, "RP2xS1");
+
+        tri = Example<3>::rp3rp3();
+        delete verifyAllVertexKleinBottlesInessential(tri, "RP3#RP3");
+
+        tri = Example<3>::smallClosedNonOrblHyperbolic();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Smallest known closed nonorientable hyperbolic");
+        
+        p = 3;
+        q = 2;
+        while (p <= 34){
+            tri = Example<3>::lst(p,q);
+            delete verifyAllVertexKleinBottlesInessential(tri, "Solid torus");
+            if (p % 2 == 0){
+                tri = Example<3>::lens(p,q);
+                ostringstream oss;
+                oss << "L(" << p << "," << q << ")" ;
+                delete verifyAllVertexKleinBottlesInessential(tri, oss.str());
+            }
+            p = p + q;
+            q = p - q;
+        }
+
+        tri = Example<3>::solidKleinBottle();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Solid Klein bottle");
+
+        tri = Example<3>::figureEight();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Figure eight");
+
+        tri = Example<3>::trefoil();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Trefoil");
+
+        tri = Example<3>::whiteheadLink();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Whitehead link");
+        
+        tri = Example<3>::gieseking();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Gieseking manifold");
+
+        tri = Example<3>::cuspedGenusTwoTorus();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexKleinBottlesInessential(tri, "Genus two surface x I");
+
+        // Manifolds with essential Klein bottles
+
+        tri = new Triangulation<3>("gLALQbcceffflpkktua");
+        delete verifyHasVertexEssentialKleinBottle(tri, "Doubled twisted I-bundle over K2");
+
+        tri = new Triangulation<3>("oLLLAAzLMQccefffggjlmnmmnnkkwawpwwjraakru");
+        delete verifyHasVertexEssentialKleinBottle(tri, "Doubled Gieseking manifold");
     }
 
     void isEssentialTorus() {
