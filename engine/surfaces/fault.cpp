@@ -100,7 +100,28 @@ namespace regina {
     }
 
     bool NormalSurface::isEssentialTorus() const{
-        return false;
+        if (!(isConnected()
+              && isCompact()
+              && isOrientable()
+              && !hasRealBoundary()
+              && eulerChar() == 0))
+            return false;
+
+        if (!isIncompressible())
+            return false;
+
+        if (!separates())
+            return true;
+        
+        Triangulation<3>* cut_up = cutAlong();
+        cut_up->splitIntoComponents();
+        Triangulation<3>* L = (Triangulation<3>*) cut_up->firstChild();
+        Triangulation<3>* R = (Triangulation<3>*) L->nextSibling();
+        bool boundary_parallel = L->isTorusXInterval() || R->isTorusXInterval();
+        delete L;
+        delete R;
+        delete cut_up;
+        return !boundary_parallel;        
     }
 
     bool NormalSurface::isSolidTorusAnnulus() const{
