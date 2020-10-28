@@ -1451,6 +1451,8 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
 
         bool isEssentialSphere() const;
 
+        bool isEssentialKleinBottle() const;
+
         bool isEssentialTorus() const;
 
         /**
