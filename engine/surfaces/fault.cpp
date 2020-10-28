@@ -36,8 +36,8 @@
 
 namespace regina {
     bool NormalSurface::separates() const{
-        int tri_cpts = this->triangulation()->countComponents();
-        Triangulation<3>* cut_up = this->cutAlong();
+        int tri_cpts = triangulation()->countComponents();
+        Triangulation<3>* cut_up = cutAlong();
         cut_up->intelligentSimplify();
         int new_cpts = cut_up->countComponents();
         delete cut_up;
