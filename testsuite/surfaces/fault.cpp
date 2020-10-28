@@ -524,8 +524,180 @@ public:
         delete verifyHasVertexEssentialKleinBottle(tri, "Doubled Gieseking manifold");
     }
     
+    Triangulation<3>* verifyAllVertexToriInessential(Triangulation<3>* tri, 
+            const std::string& triName){
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+        bool found_essential_torus = false;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (s->surface(i)->isEssentialTorus()){
+                found_essential_torus = true;
+                break;
+            }
+        delete s;
+        if (found_essential_torus)
+            CPPUNIT_FAIL(("The atoroidal manifold " + triName +
+                          " was computed to have an essential torus.").c_str());
+        return tri;
+    }
+
+    Triangulation<3>* verifyHasVertexEssentialTorus(Triangulation<3>* tri, 
+            const std::string& triName){
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+        bool found_essential_torus = false;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (s->surface(i)->isEssentialTorus()){
+                found_essential_torus = true;
+                break;
+            }
+        delete s;
+        if (!found_essential_torus)
+            CPPUNIT_FAIL(("No essential tori were found in the toroidal manifold " +
+                          triName + ".").c_str());
+        return tri;
+    }
+    
     void isEssentialTorus() {
-        CPPUNIT_FAIL("Not implemented yet");
+        Triangulation<3>* tri;
+
+        // Simple closed atoroidal manifolds
+        tri = Example<3>::threeSphere();
+        delete verifyAllVertexToriInessential(tri, "Minimal 3-sphere");
+        tri = Example<3>::simplicialSphere();
+        delete verifyAllVertexToriInessential(tri, "Pentachoron boundary 3-sphere");
+        tri = Example<3>::poincareHomologySphere();
+        delete verifyAllVertexToriInessential(tri, "Poincare homology sphere");
+        tri = Example<3>::weeks();
+        delete verifyAllVertexToriInessential(tri, "Weeks-Matveev-Fomenko manifold");
+        int p = 3;
+        int q = 2;
+        while (p < 1000){
+            tri = Example<3>::lens(p,q);
+            delete verifyAllVertexToriInessential(tri, "Fibonacci lens space");
+            tri = smallSFS(2,1,2,1,p,-q);
+            ostringstream oss;
+            oss << "SFS [S2: (2,1)(2,1)(" << p << "," << -q << ")]";
+            delete verifyAllVertexToriInessential(tri, oss.str());
+            p = p + q;
+            q = p - q;
+        }
+
+        // Small Seifert fibered spaces...
+#define VERIFY_SMALL_SFS_ATOROIDAL(a0,b0,a1,b1,a2,b2) \
+        tri = smallSFS(a0,b0,a1,b1,a2,b2);           \
+        tri->intelligentSimplify();               \
+        delete verifyAllVertexToriInessential(tri, "SFS [S2: (a0,b0) (a1,b1) (a2,b2)]")
+
+        // ... of positive orbifold Euler characteristic ...
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,3,-2);
+        
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,3,-1);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,4,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,5,-4);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,3,-1);
+
+        /*
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,3,1);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,3,2);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,4,-1);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,5,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,5,-2);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,3,2);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,4,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,4,-1);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,5,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,5,-2);
+        */
+
+        // ...and of negative orbifold Euler characteristic....
+        /*
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,7,-6);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,7,-5);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,7,-5);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,7,-4);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,7,-2);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,8,-5);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,1,8,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,7,-5);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,7,-4);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,7,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,7,-2);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,8,-5);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,8,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,3,2,8,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,4,1,5,-4);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,4,1,5,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,4,1,5,-2);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,4,3,5,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,4,3,5,-2);
+        */
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,5,2,5,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,5,2,5,-2);
+        VERIFY_SMALL_SFS_ATOROIDAL(2,1,5,3,5,-2);
+
+        VERIFY_SMALL_SFS_ATOROIDAL(3,1,3,1,4,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,1,3,1,4,-1);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,1,3,1,5,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,1,3,1,5,-2);
+        /*
+        VERIFY_SMALL_SFS_ATOROIDAL(3,1,3,2,4,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,1,3,2,4,-1);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,1,3,2,5,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,1,3,2,5,-2);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,2,3,2,4,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,2,3,2,4,-1);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,2,3,2,5,-3);
+        VERIFY_SMALL_SFS_ATOROIDAL(3,2,3,2,5,-2);
+        */
+        
+        // Bounded atoroidal manifolds
+        tri = Example<3>::ball();
+        delete verifyAllVertexToriInessential(tri, "One tetrahedron ball");
+        tri = Example<3>::cuspedGenusTwoTorus();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexToriInessential(
+            tri, "Trivial I-bundle over genus two surface");
+        tri = Example<3>::figureEight();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexToriInessential(tri, "Figure eight knot exterior");
+        tri = Example<3>::trefoil();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexToriInessential(tri, "Trefoil knot exterior");
+        tri = Example<3>::whiteheadLink();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexToriInessential(tri, "Whitehead link exterior");
+        tri = Example<3>::gieseking();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexToriInessential(tri, "Gieseking manifold");
+        tri = Example<3>::solidKleinBottle();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexToriInessential(tri, "Solid Klein bottle");
+        p = 3;
+        q = 2;
+        while (p < 1000){
+            tri = Example<3>::lst(p,q);
+            delete verifyAllVertexToriInessential(tri, "Solid torus");
+            p = p + q;
+            q = p - q;
+        }
+
+        // Toroidal manifolds
+        tri = new Triangulation<3>("uLLvPAPAzzvQPQccdeghiihjjlmqspstrstthshgbvrndhakecbcqvndm");
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyHasVertexEssentialTorus(tri, "Doubled figure eight knot exterior");
+
+        tri = new Triangulation<3>("iLALzQcbccefhgghlpkkucjjs");
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyHasVertexEssentialTorus(tri, "Doubled trefoil knot exterior");
     }
 
     void isSolidTorusAnnulus() {
