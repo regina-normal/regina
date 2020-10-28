@@ -256,9 +256,127 @@ public:
         tri->intelligentSimplify();
         delete verifyHasVertexNonSeparating(tri, "Genus two surface x I");
     }
+
+    
+    Triangulation<3>* verifyAllVertexSpheresTrivial(Triangulation<3>* tri, 
+            const std::string& triName){
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+        bool found_essential_sphere = false;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (s->surface(i)->isEssentialSphere()){
+                found_essential_sphere = true;
+                break;
+            }
+        delete s;
+        if (found_essential_sphere)
+            CPPUNIT_FAIL(("The irreducible manifold " + triName +
+                          " was computed to have an essential sphere.").c_str());
+        return tri;
+    }
+
+    Triangulation<3>* verifyHasVertexEssentialSphere(Triangulation<3>* tri, 
+            const std::string& triName){
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+        bool found_essential_sphere = false;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (s->surface(i)->isEssentialSphere()){
+                found_essential_sphere = true;
+                break;
+            }
+        delete s;
+        if (!found_essential_sphere)
+            CPPUNIT_FAIL(("No vertex essential spheres were found in " +
+                          triName + ".").c_str());
+        return tri;
+    }
+
     
     void isEssentialSphere() {
-            CPPUNIT_FAIL("Not implemented yet");
+        Triangulation<3>* tri;
+
+        // Closed irreducible manifolds
+        tri = Example<3>::threeSphere();
+        delete verifyAllVertexSpheresTrivial(tri, "Minimal 3-sphere");
+        tri = Example<3>::simplicialSphere();
+        delete verifyAllVertexSpheresTrivial(tri, "Pentachoron boundary 3-sphere");
+        tri = Example<3>::poincareHomologySphere();
+        delete verifyAllVertexSpheresTrivial(tri, "Poincare homology sphere");
+        tri = Example<3>::weeks();
+        delete verifyAllVertexSpheresTrivial(tri, "Weeks-Matveev-Fomenko manifold");
+        int p = 3;
+        int q = 2;
+        while (p < 1000){
+            tri = Example<3>::lens(p,q);
+            ostringstream oss;
+            oss << "L(" << p << "," << q << ")";
+            delete verifyAllVertexSpheresTrivial(tri, oss.str());
+            p = p + q;
+            q = p - q;
+        }
+
+        // Bounded irreducible manifolds
+        tri = Example<3>::ball();
+        delete verifyAllVertexSpheresTrivial(tri, "One tetrahedron ball");
+        tri = Example<3>::cuspedGenusTwoTorus();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexSpheresTrivial(
+            tri, "Trivial I-bundle over genus two surface");
+        tri = Example<3>::figureEight();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexSpheresTrivial(tri, "Figure eight knot exterior");
+        tri = Example<3>::trefoil();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexSpheresTrivial(tri, "Trefoil knot exterior");
+        tri = Example<3>::whiteheadLink();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexSpheresTrivial(tri, "Whitehead link exterior");
+        tri = Example<3>::gieseking();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexSpheresTrivial(tri, "Gieseking manifold");
+        tri = Example<3>::solidKleinBottle();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyAllVertexSpheresTrivial(tri, "Solid Klein bottle");
+        p = 3;
+        q = 2;
+        while (p < 1000){
+            tri = Example<3>::lst(p,q);
+            delete verifyAllVertexSpheresTrivial(tri, "Solid torus");
+            p = p + q;
+            q = p - q;
+        }
+
+        // The prime reducible manifold S^2 x S^1
+        tri = Example<3>::s2xs1();
+        delete verifyHasVertexEssentialSphere(tri, "S2xS1");
+        
+        // RP3#RP3 has a reducing sphere,
+        // but in the given triangulation, there is no fundamental reducing sphere.
+        // Instead, there are two fundamental embedded one-sided RP2s
+        // that double to reducing spheres.
+
+        tri = Example<3>::rp3rp3();
+        delete verifyAllVertexSpheresTrivial(tri, "RP3#RP3");
+        
+        p = 3;
+        q = 2;
+        while (p < 100){
+            tri = Example<3>::lens(p,q);
+            tri->connectedSumWith(*tri);
+            tri->intelligentSimplify();
+            ostringstream oss;
+            oss << "L(" << p << "," << q << ")";
+            delete verifyHasVertexEssentialSphere(tri, oss.str() + " # " + oss.str());
+            p = p + q;
+            q = p - q;
+        }
     }
 
     void isEssentialTorus() {
