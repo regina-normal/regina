@@ -865,22 +865,24 @@ public:
         tri->intelligentSimplify();
         delete verifyNoVertexSolidTorusAnnulus(tri, "Gieseking manifold");
 
-        tri = Example<3>::solidKleinBottle();
-        tri->idealToFinite();
-        tri->intelligentSimplify();
-        delete verifyNoVertexSolidTorusAnnulus(tri, "Solid Klein bottle");
-        
+        // Manifolds with solid torus annuli
+
         p = 3;
         q = 2;
         while (p < 1000){
             tri = Example<3>::lst(p,q);
-            delete verifyNoVertexSolidTorusAnnulus(tri, "Solid torus");
+            ostringstream oss;
+            oss << "Layered solid torus (" << p << "," << q << ")";
+            delete verifyHasVertexSolidTorusAnnulus(tri, oss.str());
             p = p + q;
             q = p - q;
         }
-
-        // Manifolds with solid torus annuli
         
+        tri = Example<3>::solidKleinBottle();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyHasVertexSolidTorusAnnulus(tri, "Solid Klein bottle");
+
         // Although the trefoil knot does admit a solid torus annulus,
         // this annulus double covers a Mobius band.
         // So it is possible for there not to be a vertex such annulus.

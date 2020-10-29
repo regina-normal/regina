@@ -161,7 +161,29 @@ namespace regina {
     }
 
     bool NormalSurface::isSolidTorusAnnulus() const{
-        return false;
+        if (!(isConnected()
+              && isCompact()
+              && isOrientable()
+              && hasRealBoundary()
+              && eulerChar() == 0))
+            return false;
+
+        Triangulation<3>* cut_up = cutAlong();
+        cut_up->intelligentSimplify();
+            
+        bool solid_torus;
+        if (cut_up->isConnected())
+            solid_torus = cut_up->isSolidTorus();
+        else {
+            cut_up->splitIntoComponents();
+            Triangulation<3>* L = (Triangulation<3>*)(cut_up->firstChild());
+            Triangulation<3>* R = (Triangulation<3>*)(L->nextSibling());
+            solid_torus = L->isSolidTorus() && R->isSolidTorus();
+            delete L;
+            delete R;
+        }
+        delete cut_up;
+        return solid_torus;
     }
 
 }
