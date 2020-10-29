@@ -44,6 +44,7 @@
 
 using regina::Example;
 using regina::NormalListFlags;
+using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::NS_EMBEDDED_ONLY;
 using regina::NS_FUNDAMENTAL;
@@ -385,14 +386,18 @@ public:
     
     Triangulation<3>* verifyAllVertexKleinBottlesInessential(Triangulation<3>* tri, 
             const std::string& triName){
+        Triangulation<3>* working = new Triangulation<3>(tri->isoSig());
         NormalSurfaces* s = NormalSurfaces::enumerate(
-            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+            working, NS_QUAD, NS_VERTEX_EMBEDDED);
         bool found_essential_klein_bottle = false;
-        for (unsigned i = 0; i < s->size(); ++i)
-            if (s->surface(i)->isEssentialKleinBottle()){
+        unsigned i = 0;
+        for (; i < s->size(); ++i){
+            const NormalSurface* surf = s->surface(i);
+            if (surf->isEssentialKleinBottle()){
                 found_essential_klein_bottle = true;
                 break;
             }
+        }
         delete s;
         if (found_essential_klein_bottle)
             CPPUNIT_FAIL((triName +
@@ -453,18 +458,23 @@ public:
 
         int p = 3;
         int q = 2;
+        ostringstream oss;
         while (p <= 34){
             tri = Example<3>::lst(p,q);
             delete verifyAllVertexKleinBottlesInessential(tri, "Solid torus");
 
             tri = Example<3>::lens(p,q);
-            ostringstream oss;
             oss << "L(" << p << "," << q << ")" ;
             delete verifyAllVertexKleinBottlesInessential(tri, oss.str());
+            oss.clear();
+            oss.str("");
 
             tri = smallSFS(2,1,2,1,p,-q);
+            oss << "SFS [S2, (2,1,2,1," << p << "," << q << ")]";
             delete verifyAllVertexKleinBottlesInessential(tri, oss.str() );
-            
+            oss.clear();
+            oss.str("");
+
             p = p + q;
             q = p - q;
         }

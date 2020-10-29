@@ -52,24 +52,30 @@ namespace regina {
 
         if (!separates())
             return true;
-        
+
         Triangulation<3>* cut_up = cutAlong();
         cut_up->intelligentSimplify();
 
         // Cap sphere boundary components.
+        // Since the original triangulation has no sphere boundary components,
+        // this caps the sides of this sphere.
+        // That is, this undoes a (possibly trivial) connect-sum.
         cut_up->finiteToIdeal();
         cut_up->intelligentSimplify();
         cut_up->idealToFinite();
         cut_up->intelligentSimplify();
 
+        // There are two components,
+        // since the original triangulation was connected,
+        // and this surface is separating.
         cut_up->splitIntoComponents();
         Triangulation<3>* L = (Triangulation<3>*) cut_up->firstChild();
         Triangulation<3>* R = (Triangulation<3>*) L->nextSibling();
-        bool essential = !(L->isThreeSphere() || R->isThreeSphere());
+        bool bounds_ball = L->isThreeSphere() || R->isThreeSphere();
         delete L;
         delete R;
         delete cut_up;
-        return essential;
+        return !bounds_ball;
     }
 
     bool NormalSurface::isEssentialKleinBottle() const{
@@ -77,26 +83,44 @@ namespace regina {
               && isCompact()
               && !isOrientable()
               && !hasRealBoundary()
-              && eulerChar() == 0))
+              && eulerChar() == 0)){
             return false;
+        }
 
+        if (!separates()){
+            Triangulation<3>* cut_up = cutAlong();
+            bool compressible = cut_up->hasCompressingDisc();
+            delete cut_up;
+            return !compressible;
+        }
+        
+        /*
         if (!isIncompressible())
             return false;
-
-        if (!separates())
-            return true;
-
+        */
+        // is what we would like to write here,
+        // but presently `isIncompressible` requires closed triangulations.
+        
+        // There are two components,
+        // since the original triangulation was connected,
+        // and this surface is separating.
         Triangulation<3>* cut_up = cutAlong();
         cut_up->splitIntoComponents();
         Triangulation<3>* L = (Triangulation<3>*) cut_up->firstChild();
         Triangulation<3>* R = (Triangulation<3>*) L->nextSibling();
-        L->makeDoubleCover();
-        R->makeDoubleCover();
-        bool boundary_parallel = L->isTorusXInterval() || R->isTorusXInterval();
+
+        bool compressible = true;
+        bool boundary_parallel = false;
+        compressible = L->hasCompressingDisc() || R->hasCompressingDisc();
+        if (!compressible){
+            L->makeDoubleCover();
+            R->makeDoubleCover();
+            boundary_parallel = L->isTorusXInterval() || R->isTorusXInterval();
+        }
         delete L;
         delete R;
         delete cut_up;
-        return !boundary_parallel;
+        return !(compressible || boundary_parallel);
     }
 
     bool NormalSurface::isEssentialTorus() const{
@@ -107,21 +131,33 @@ namespace regina {
               && eulerChar() == 0))
             return false;
 
-        if (!isIncompressible())
-            return false;
-
         if (!separates())
             return true;
+        /*
+          if (!isIncompressible())
+          return false;
+        */
+        // is what we would like to write here,
+        // but presently `isIncompressible` requires closed triangulations.
         
+        // There are two components,
+        // since the original triangulation was connected,
+        // and this surface is separating.
         Triangulation<3>* cut_up = cutAlong();
         cut_up->splitIntoComponents();
         Triangulation<3>* L = (Triangulation<3>*) cut_up->firstChild();
         Triangulation<3>* R = (Triangulation<3>*) L->nextSibling();
-        bool boundary_parallel = L->isTorusXInterval() || R->isTorusXInterval();
+
+        bool compressible = true;
+        bool boundary_parallel = false;
+        compressible = L->hasCompressingDisc() || R->hasCompressingDisc();
+        if (!compressible){
+            boundary_parallel = L->isTorusXInterval() || R->isTorusXInterval();    
+        }
         delete L;
         delete R;
         delete cut_up;
-        return !boundary_parallel;        
+        return !(compressible || boundary_parallel);
     }
 
     bool NormalSurface::isSolidTorusAnnulus() const{
