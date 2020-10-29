@@ -710,10 +710,196 @@ public:
         delete verifyHasVertexEssentialTorus(tri, "Doubled trefoil knot exterior");
     }
 
-    void isSolidTorusAnnulus() {
-        CPPUNIT_FAIL("Not implemented yet");
+        
+    Triangulation<3>* verifyNoVertexSolidTorusAnnulus(Triangulation<3>* tri, 
+            const std::string& triName){
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+        bool found_solid_torus_annulus = false;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (s->surface(i)->isSolidTorusAnnulus()){
+                found_solid_torus_annulus = true;
+                break;
+            }
+        delete s;
+        if (found_solid_torus_annulus)
+            CPPUNIT_FAIL((triName +
+                          " has a \"solid torus annulus.\"").c_str());
+        return tri;
     }
 
+    Triangulation<3>* verifyHasVertexSolidTorusAnnulus(Triangulation<3>* tri, 
+            const std::string& triName){
+        NormalSurfaces* s = NormalSurfaces::enumerate(
+            tri, NS_QUAD, NS_VERTEX_EMBEDDED);
+        bool found_solid_torus_annulus = false;
+        for (unsigned i = 0; i < s->size(); ++i)
+            if (s->surface(i)->isSolidTorusAnnulus()){
+                found_solid_torus_annulus = true;
+                break;
+            }
+        delete s;
+        if (!found_solid_torus_annulus)
+            CPPUNIT_FAIL(("No solid torus annulus found in " +
+                          triName + ".").c_str());
+        return tri;
+    }
+    
+    void isSolidTorusAnnulus() {
+        Triangulation<3>* tri;
+
+        // Closed manifolds
+        tri = Example<3>::threeSphere();
+        delete verifyNoVertexSolidTorusAnnulus(tri, "Minimal 3-sphere");
+        tri = Example<3>::simplicialSphere();
+        delete verifyNoVertexSolidTorusAnnulus(tri, "Pentachoron boundary 3-sphere");
+        tri = Example<3>::poincareHomologySphere();
+        delete verifyNoVertexSolidTorusAnnulus(tri, "Poincare homology sphere");
+        tri = Example<3>::weeks();
+        delete verifyNoVertexSolidTorusAnnulus(tri, "Weeks-Matveev-Fomenko manifold");
+        int p = 3;
+        int q = 2;
+        while (p < 1000){
+            tri = Example<3>::lens(p,q);
+            delete verifyNoVertexSolidTorusAnnulus(tri, "Fibonacci lens space");
+            tri = smallSFS(2,1,2,1,p,-q);
+            ostringstream oss;
+            oss << "SFS [S2: (2,1)(2,1)(" << p << "," << -q << ")]";
+            delete verifyNoVertexSolidTorusAnnulus(tri, oss.str());
+            p = p + q;
+            q = p - q;
+        }
+
+        // Small Seifert fibered spaces...
+#define VERIFY_SMALL_SFS_ANANNULAR(a0,b0,a1,b1,a2,b2) \
+        tri = smallSFS(a0,b0,a1,b1,a2,b2);           \
+        tri->intelligentSimplify();               \
+        delete verifyNoVertexSolidTorusAnnulus(tri, "SFS [S2: (a0,b0) (a1,b1) (a2,b2)]")
+
+        // ... of positive orbifold Euler characteristic ...
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,3,-2);
+        
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,3,-1);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,4,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,5,-4);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,3,-1);
+
+        /*
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,3,1);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,3,2);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,4,-1);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,5,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,5,-2);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,3,2);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,4,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,4,-1);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,5,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,5,-2);
+        */
+
+        // ...and of negative orbifold Euler characteristic....
+        /*
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,7,-6);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,7,-5);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,7,-5);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,7,-4);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,7,-2);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,8,-5);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,1,8,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,7,-5);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,7,-4);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,7,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,7,-2);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,8,-5);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,8,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,3,2,8,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,4,1,5,-4);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,4,1,5,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,4,1,5,-2);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,4,3,5,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,4,3,5,-2);
+        */
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,5,2,5,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,5,2,5,-2);
+        VERIFY_SMALL_SFS_ANANNULAR(2,1,5,3,5,-2);
+
+        VERIFY_SMALL_SFS_ANANNULAR(3,1,3,1,4,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(3,1,3,1,4,-1);
+        VERIFY_SMALL_SFS_ANANNULAR(3,1,3,1,5,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(3,1,3,1,5,-2);
+        /*
+        VERIFY_SMALL_SFS_ANANNULAR(3,1,3,2,4,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(3,1,3,2,4,-1);
+        VERIFY_SMALL_SFS_ANANNULAR(3,1,3,2,5,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(3,1,3,2,5,-2);
+        VERIFY_SMALL_SFS_ANANNULAR(3,2,3,2,4,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(3,2,3,2,4,-1);
+        VERIFY_SMALL_SFS_ANANNULAR(3,2,3,2,5,-3);
+        VERIFY_SMALL_SFS_ANANNULAR(3,2,3,2,5,-2);
+        */
+        
+        // Bounded manifolds
+        
+        tri = Example<3>::ball();
+        delete verifyNoVertexSolidTorusAnnulus(tri, "One tetrahedron ball");
+
+        // The following is not anannular,
+        // but it does not decompose along an annulus into solid tori.
+        tri = Example<3>::cuspedGenusTwoTorus();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyNoVertexSolidTorusAnnulus(
+            tri, "Trivial I-bundle over genus two surface");
+        
+        tri = Example<3>::figureEight();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyNoVertexSolidTorusAnnulus(tri, "Figure eight knot exterior");
+
+        tri = Example<3>::whiteheadLink();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyNoVertexSolidTorusAnnulus(tri, "Whitehead link exterior");
+        tri = Example<3>::gieseking();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyNoVertexSolidTorusAnnulus(tri, "Gieseking manifold");
+
+        tri = Example<3>::solidKleinBottle();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        delete verifyNoVertexSolidTorusAnnulus(tri, "Solid Klein bottle");
+        
+        p = 3;
+        q = 2;
+        while (p < 1000){
+            tri = Example<3>::lst(p,q);
+            delete verifyNoVertexSolidTorusAnnulus(tri, "Solid torus");
+            p = p + q;
+            q = p - q;
+        }
+
+        // Manifolds with solid torus annuli
+        
+        // Although the trefoil knot does admit a solid torus annulus,
+        // this annulus double covers a Mobius band.
+        // So it is possible for there not to be a vertex such annulus.
+        // Even so, the following triangulation does have such an annulus.
+        /*
+        tri = Example<3>::trefoil();
+        tri->idealToFinite();
+        tri->intelligentSimplify();
+        */
+        // For consistency we remove the call to intelligentSimplify.
+        tri = new Triangulation<3>("fLHPccdeeeqcieh");
+        delete verifyHasVertexSolidTorusAnnulus(tri, "Trefoil knot exterior");
+        
+        tri = new Triangulation<3>("gLKjMcacdeffjkxnqs");
+        delete verifyHasVertexSolidTorusAnnulus(tri, "SFS D: (3,1) (5,-2)");
+        
+        tri = new Triangulation<3>("mHLyMzMzMcbcdefghijklldwuxhqxhqxhw");
+        delete verifyHasVertexSolidTorusAnnulus(tri, "SFS D: (2,1) (144,-89)");
+    }
 };
 
 void addFaultFinding(CppUnit::TextUi::TestRunner& runner) {
