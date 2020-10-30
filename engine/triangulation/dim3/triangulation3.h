@@ -2230,18 +2230,6 @@ class REGINA_API Triangulation<3> :
         bool knowsHaken() const;
 
         /**
-         * Determines whether or not this manifold satisfies the preconditions
-         * for Thurston's hyperbolization theorem.
-         */
-        bool isHyperbolicHaken() const;
-
-        /**
-         * Is it known whether or not this manifold satisfies the preconditions
-         * for Thurston's hyperbolization theorem?
-         */
-        bool knowsHyperbolicHaken() const;
-        
-        /**
          * Searches for a "simple" compressing disc inside this
          * triangulation.
          *

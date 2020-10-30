@@ -1244,13 +1244,5 @@ bool Triangulation<3>::knowsHaken() const {
     return haken_.known();
 }
 
-bool Triangulation<3>::isHyperbolicHaken() const {
-    return false;
-}
-
-bool Triangulation<3>::knowsHyperbolicHaken() const {
-    return false;
-}
-
 } // namespace regina
 
