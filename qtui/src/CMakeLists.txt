@@ -110,14 +110,14 @@ if (WIN32)
   set(SOURCES ${SOURCES} regina.rc)
 endif (WIN32)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   # Install XDG application icons.
   set (XDGSIZES 16 22 24 32 48 64 128 256)
   foreach (IMG_SIZE ${XDGSIZES})
     INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps RENAME regina.png)
     INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/x-regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes RENAME application-x-regina.png)
   endforeach (IMG_SIZE ${XDGSIZES})
-endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
 if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   set(REGINA_BUNDLE_DEST .)
@@ -199,14 +199,14 @@ if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
     " COMPONENT Runtime)
 endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   # Install desktop files and mimetype handling.
   install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR}
     COMPONENT Runtime)
   install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR}
     COMPONENT Runtime)
   update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
-endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
 if (WIN32)
   # Install Windows icons for mimetype handling.

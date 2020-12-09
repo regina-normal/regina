@@ -544,7 +544,7 @@ ELSE(DISABLE_GUI)
     "http://graphviz.org/"
     REGINA_MANDATORY)
 
-  if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
     set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
     find_package(SharedMimeInfo)
     MACRO_LOG_FEATURE(SHARED_MIME_INFO_FOUND
@@ -552,7 +552,7 @@ ELSE(DISABLE_GUI)
       "Required for Regina's graphical user interface"
       "http://freedesktop.org/wiki/Software/shared-mime-info"
       TRUE "0.30")
-  endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
   if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
     include(BundleUtilities)
