@@ -143,12 +143,6 @@ my $os = "@CMAKE_SYSTEM_NAME@";
 
 # --- Set up the environment.
 
-# On OSX, python ships as a universal binary for several architectures.
-# We need to make sure we are using the right one.
-if (@OSX_PYTHON_32@) {
-    $ENV{'VERSIONER_PYTHON_PREFER_32_BIT'} = 'yes';
-}
-
 # On Windows, we need to make sure all our DLLs are on the path.
 if ($install_type eq 'Windows') {
     &extendEnvVar('PATH', $prog_dir);
