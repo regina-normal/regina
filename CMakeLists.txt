@@ -483,10 +483,11 @@ ELSE(DISABLE_GUI)
     # with a single Graphviz framework, instead of the full suite of
     # Graphviz libraries and plugins.
     #
-    # This framework should be called graphviz.framework, and should provide
-    # all the necessary Graphviz components in just *one* library.  The
-    # GRAPHVIZ_FRAMEWORK_PATH setting should be the directory *containing*
-    # this framework (not the full path to the framework itself).
+    # This framework should be called either graphviz.framework or
+    # graphviz.xcframework, and should provide all the necessary Graphviz
+    # components in just *one* library.  The GRAPHVIZ_FRAMEWORK_PATH setting
+    # should be the directory *containing* this framework (not the full path
+    # to the framework itself).
     #
     # It is expected that nobody except the Regina developer(s) will use
     # this option.
