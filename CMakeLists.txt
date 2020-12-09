@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 3.1)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.12)
 PROJECT (regina)
 
 # Let the user override the package name.
@@ -332,33 +332,21 @@ MACRO_LOG_FEATURE(Boost_FOUND
 
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
-  FIND_PACKAGE(PythonInterp)
-  FIND_PACKAGE(PythonLibs)
+  FIND_PACKAGE(Python COMPONENTS Interpreter Development REQUIRED)
 
-  IF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
-    # Check the python versions.
-    MESSAGE (STATUS "Python interpreter: ${PYTHON_VERSION_STRING}")
-    MESSAGE (STATUS "Python libraries: ${PYTHONLIBS_VERSION_STRING}")
-
-    string(FIND ${PYTHONLIBS_VERSION_STRING}
-      "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH}"
-      _python_version_match)
-    IF (NOT "${_python_version_match}" EQUAL 0)
-      MESSAGE(FATAL_ERROR "Python version mismatch.")
-    ENDIF ()
-
-    IF (${PYTHON_VERSION_MAJOR} EQUAL 2)
-      IF (${PYTHON_VERSION_MINOR} LESS 6)
+  IF (Python_FOUND)
+    IF (${Python_VERSION_MAJOR} EQUAL 2)
+      IF (${Python_VERSION_MINOR} LESS 6)
         MESSAGE(FATAL_ERROR "For Python 2.x, Regina needs Python >= 2.6.")
       ENDIF ()
-    ELSEIF (${PYTHON_VERSION_MAJOR} EQUAL 3)
-      IF (${PYTHON_VERSION_MINOR} LESS 1)
+    ELSEIF (${Python_VERSION_MAJOR} EQUAL 3)
+      IF (${Python_VERSION_MINOR} LESS 1)
         MESSAGE(FATAL_ERROR "For Python 3.x, Regina needs Python >= 3.1.")
       ENDIF ()
     ELSE ()
-      MESSAGE(FATAL_ERROR "Unknown Python major version: ${PYTHON_VERSION_MAJOR}")
+      MESSAGE(FATAL_ERROR "Unknown Python major version: ${Python_VERSION_MAJOR}")
     ENDIF ()
-  ENDIF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+  ENDIF (Python_FOUND)
 ENDIF (NOT DISABLE_PYTHON)
 
 FIND_PACKAGE(PkgConfig)
@@ -450,35 +438,21 @@ else ()
   SET (REGINA_PYTHON_EXTENSION_NONSTANDARD FALSE)
 endif ()
 
-IF(PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+IF(Python_FOUND)
   # We can support python.
 
   # Find the site-packages location in which the XDG build needs to put
   # the python module.
-  EXECUTE_PROCESS(COMMAND
-    "${PYTHON_EXECUTABLE}" -c "import distutils.sysconfig; print(distutils.sysconfig.get_python_lib(True))"
-    OUTPUT_VARIABLE SITE_PACKAGES
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    RESULT_VARIABLE DISTUTILS_RESULT)
-  IF ((NOT DISTUTILS_RESULT) AND IS_DIRECTORY "${SITE_PACKAGES}")
-    MESSAGE(STATUS "Python site-packages directory: ${SITE_PACKAGES}")
-  ELSE ()
-    MESSAGE(FATAL_ERROR "Could not query the python site-packages directory.  Please either set the correct python interpreter (-DPYTHON_EXECUTABLE=...), or else disable python bindings (-DDISABLE_PYTHON).")
-  ENDIF ()
+  MESSAGE(STATUS "Python site-packages directory: ${Python_SITELIB}")
 
   ADD_SUBDIRECTORY(python)
   SET(BUILD_PYTHON_BINDINGS TRUE)
 
   MESSAGE(STATUS "Python bindings enabled")
-ELSEIF(PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+ELSEIF(Python_FOUND)
   MESSAGE(WARNING "Could not find Python interpreter and/or development files: Python bindings disabled.")
 ENDIF()
-MACRO_LOG_FEATURE(PYTHONINTERP_FOUND
-  "Python interpreter"
-  "Build Python bindings for Regina"
-  "http://www.python.org/"
-  REGINA_MANDATORY)
-MACRO_LOG_FEATURE(PYTHONLIBS_FOUND
+MACRO_LOG_FEATURE(Python_FOUND
   "Python development files"
   "Build Python bindings for Regina"
   "http://www.python.org/"

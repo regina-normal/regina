@@ -121,7 +121,7 @@ if ($interactive and not $script) {
 # In the absence of any user-specified options, use the python
 # command that corresponds to the original build environment.
 
-my $python_cmd = "@PYTHON_EXECUTABLE@";
+my $python_cmd = "@Python_EXECUTABLE@";
 if (not -e $python_cmd) {
     &warn("W: The python command used during the build was: $python_cmd.\n");
     &warn("W: This command does not appear to be available now in the runtime environment.\n");
