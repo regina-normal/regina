@@ -349,11 +349,6 @@ IF (NOT DISABLE_PYTHON)
   ENDIF (Python_FOUND)
 ENDIF (NOT DISABLE_PYTHON)
 
-FIND_PACKAGE(PkgConfig)
-IF(NOT PKG_CONFIG_FOUND)
-  MESSAGE(FATAL_ERROR "Regina requires pkgconfig.")
-ENDIF(NOT PKG_CONFIG_FOUND)
-
 FIND_PACKAGE(TokyoCabinet)
 MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
   ${TOKYOCABINET_DISPLAYNAME}
@@ -504,6 +499,11 @@ ELSE(DISABLE_GUI)
     PKG_CHECK_MODULES(LIBGVC libgvc)
     IF(LIBGVC_FOUND)
       SET(GRAPHVIZ_TYPE Library)
+
+      FIND_PACKAGE(PkgConfig)
+      IF(NOT PKG_CONFIG_FOUND)
+        MESSAGE(FATAL_ERROR "Regina requires pkgconfig.")
+      ENDIF(NOT PKG_CONFIG_FOUND)
 
       IF(WIN32)
         # FindPkgConfig has a nasty habit of converting paths like
