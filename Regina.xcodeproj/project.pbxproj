@@ -2191,6 +2191,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/engine-docs",
 			);
+			runOncePerArchitecture = 0;
 			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/../..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" > \"${conf}\"\n\n/usr/local/bin/doxygen \"${conf}\" 2>/dev/null\nmkdir -p \"${output}\"\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
 		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
@@ -2204,6 +2205,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
+			runOncePerArchitecture = 0;
 			script = "~/Qt/5.15.2-macos/bin/moc \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtCore.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtGui.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtSvg.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
 		};
 		05617AD71D9D3CBD00B1E33B /* PBXBuildRule */ = {
@@ -2217,7 +2219,8 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
 			);
-			script = "case \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyexec=/sw/bin/python3.7\n    ;;\n  *)\n    pyexec=/usr/bin/python2.7\n    ;;\nesac\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#@PYTHON_EXECUTABLE@#$pyexec#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@OSX_PYTHON_32@#0#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
+			runOncePerArchitecture = 0;
+			script = "case \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyexec=/usr/bin/python3\n    ;;\n  *)\n    pyexec=/usr/bin/python2.7\n    ;;\nesac\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#@PYTHON_EXECUTABLE@#$pyexec#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
 		};
 /* End PBXBuildRule section */
 
