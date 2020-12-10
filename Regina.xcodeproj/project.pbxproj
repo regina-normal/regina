@@ -1428,6 +1428,12 @@
 		057EDAF52581D965004F0068 /* libqcocoa.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 057EDAF42581D95B004F0068 /* libqcocoa.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		057EDAF62581D965004F0068 /* libqminimal.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 057EDAF22581D95B004F0068 /* libqminimal.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		057EDAF72581D965004F0068 /* libqoffscreen.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 057EDAF32581D95B004F0068 /* libqoffscreen.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDBAD2581EA83004F0068 /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
+		057EDBAE2581EA83004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDBBF2581EA9D004F0068 /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
+		057EDBC02581EA9D004F0068 /* libgmpxx.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDBD12581EAA4004F0068 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
+		057EDBD22581EAA4004F0068 /* jansson.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EE4351C6009A700C4D155 /* perm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* perm-impl.h */; };
 		057EE4561C6009F300C4D155 /* component5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4371C6009E600C4D155 /* component5.cpp */; };
 		057EE4571C6009F300C4D155 /* component6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4381C6009E600C4D155 /* component6.cpp */; };
@@ -2393,10 +2399,13 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
+				057EDBC02581EA9D004F0068 /* libgmpxx.xcframework in Embed Frameworks */,
 				057EDA032581BC16004F0068 /* libgmp.xcframework in Embed Frameworks */,
 				057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */,
 				057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */,
+				057EDBD22581EAA4004F0068 /* jansson.xcframework in Embed Frameworks */,
 				057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */,
+				057EDBAE2581EA83004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */,
 				057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */,
 				057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */,
 				057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */,
@@ -4724,13 +4733,16 @@
 			files = (
 				057EDA022581BC16004F0068 /* libgmp.xcframework in Frameworks */,
 				057ED8F02581B49E004F0068 /* QtCore.framework in Frameworks */,
+				057EDBD12581EAA4004F0068 /* jansson.xcframework in Frameworks */,
 				057ED8F22581B49E004F0068 /* QtPrintSupport.framework in Frameworks */,
+				057EDBAD2581EA83004F0068 /* libtokyocabinet.xcframework in Frameworks */,
 				057ED9C42581BAAE004F0068 /* graphviz.xcframework in Frameworks */,
 				057ED8F62581B49E004F0068 /* QtDBus.framework in Frameworks */,
 				057ED8FA2581B49E004F0068 /* QtWidgets.framework in Frameworks */,
 				057ED8F82581B49E004F0068 /* QtGui.framework in Frameworks */,
 				0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */,
 				057ED8EE2581B49E004F0068 /* QtSvg.framework in Frameworks */,
+				057EDBBF2581EA9D004F0068 /* libgmpxx.xcframework in Frameworks */,
 				05CAFB561C4D904A0001C253 /* libz.dylib in Frameworks */,
 				0591E8591C4F832B00793A9C /* libxml2.dylib in Frameworks */,
 				057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */,
