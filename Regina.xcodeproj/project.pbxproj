@@ -1434,6 +1434,15 @@
 		057EDBC02581EA9D004F0068 /* libgmpxx.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EDBD12581EAA4004F0068 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
 		057EDBD22581EAA4004F0068 /* jansson.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDC332581EEE5004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDC852581F0C2004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDCA72581F0CA004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDCC92581F109004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDCCC2581F10D004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDCCF2581F114004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDCE22581F11D004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDD042581F123004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDD262581F12A004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EE4351C6009A700C4D155 /* perm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* perm-impl.h */; };
 		057EE4561C6009F300C4D155 /* component5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4371C6009E600C4D155 /* component5.cpp */; };
 		057EE4571C6009F300C4D155 /* component6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4381C6009E600C4D155 /* component6.cpp */; };
@@ -4650,6 +4659,7 @@
 				0567B5912581ACF10022EA5D /* popt.xcframework in Frameworks */,
 				05617AFA1D9DC26A00B1E33B /* libiconv.dylib in Frameworks */,
 				05617AFB1D9DC27900B1E33B /* libxml2.dylib in Frameworks */,
+				057EDC332581EEE5004F0068 /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4661,6 +4671,7 @@
 				0567B66D2581AD200022EA5D /* popt.xcframework in Frameworks */,
 				05617B641D9DC5DF00B1E33B /* libiconv.dylib in Frameworks */,
 				05617B651D9DC5DF00B1E33B /* libxml2.dylib in Frameworks */,
+				057EDCC92581F109004F0068 /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4672,6 +4683,7 @@
 				0567B65E2581AD1D0022EA5D /* popt.xcframework in Frameworks */,
 				05617B611D9DC5DC00B1E33B /* libiconv.dylib in Frameworks */,
 				05617B621D9DC5DC00B1E33B /* libxml2.dylib in Frameworks */,
+				057EDCCC2581F10D004F0068 /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4683,6 +4695,7 @@
 				0567B64E2581AD1A0022EA5D /* popt.xcframework in Frameworks */,
 				05617B5E1D9DC5D900B1E33B /* libiconv.dylib in Frameworks */,
 				05617B5F1D9DC5D900B1E33B /* libxml2.dylib in Frameworks */,
+				057EDCCF2581F114004F0068 /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4694,6 +4707,7 @@
 				0567B63D2581AD170022EA5D /* popt.xcframework in Frameworks */,
 				05617B5B1D9DC5D500B1E33B /* libiconv.dylib in Frameworks */,
 				05617B5C1D9DC5D500B1E33B /* libxml2.dylib in Frameworks */,
+				057EDCE22581F11D004F0068 /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4705,6 +4719,7 @@
 				0567B60E2581AD0D0022EA5D /* popt.xcframework in Frameworks */,
 				05617B581D9DC5D200B1E33B /* libiconv.dylib in Frameworks */,
 				05617B591D9DC5D200B1E33B /* libxml2.dylib in Frameworks */,
+				057EDD042581F123004F0068 /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4716,6 +4731,7 @@
 				0567B5C02581ACFA0022EA5D /* popt.xcframework in Frameworks */,
 				05617B551D9DC5CD00B1E33B /* libiconv.dylib in Frameworks */,
 				05617B561D9DC5CD00B1E33B /* libxml2.dylib in Frameworks */,
+				057EDCA72581F0CA004F0068 /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4727,6 +4743,7 @@
 				0567B5712581ACE50022EA5D /* popt.xcframework in Frameworks */,
 				05617B521D9DC5C900B1E33B /* libiconv.dylib in Frameworks */,
 				05617B531D9DC5C900B1E33B /* libxml2.dylib in Frameworks */,
+				057EDD262581F12A004F0068 /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4775,6 +4792,7 @@
 				0567B5E02581AD050022EA5D /* popt.xcframework in Frameworks */,
 				058FC86D1FE188A0006D04B4 /* libiconv.dylib in Frameworks */,
 				058FC86E1FE188A0006D04B4 /* libxml2.dylib in Frameworks */,
+				057EDC852581F0C2004F0068 /* libgmp.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -11029,7 +11047,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11065,7 +11086,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11437,7 +11461,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11473,7 +11500,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11843,7 +11873,10 @@
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11880,7 +11913,10 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12433,7 +12469,10 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12465,7 +12504,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12497,7 +12539,10 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(USER_LIBRARY_DIR)/Frameworks",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
