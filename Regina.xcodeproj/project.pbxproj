@@ -205,7 +205,6 @@
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
 		051CEA941F98995D00971F25 /* Link.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA961F98995D00971F25 /* Link.storyboard */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
-		05249EA01DBB8D89001FE29E /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */; };
 		05249EA51DBC169D001FE29E /* globalarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */; };
 		05249EA81DBC16A6001FE29E /* modulemain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D3D1B9BAB9C00C1F681 /* modulemain.cpp */; };
 		05249EAD1DBC16B3001FE29E /* pyalgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D061B9BAB9C00C1F681 /* pyalgebra.cpp */; };
@@ -383,11 +382,6 @@
 		05249F801DBC174E001FE29E /* stringutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */; };
 		052774141C55744300140918 /* hypercreator.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052774101C55743E00140918 /* hypercreator.cpp */; };
 		052774191C55761D00140918 /* NewHypersurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052774161C55760B00140918 /* NewHypersurfacesController.mm */; };
-		052790B224BE5DB100ACDF03 /* jansson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E81DF0D6860018AB24 /* jansson.framework */; };
-		052790B524BE5DB900ACDF03 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99C1C41DAC100FA81D3 /* cppunit.framework */; };
-		052790B724BE5DC000ACDF03 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */; };
-		052790B924BE5DC200ACDF03 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; };
-		052790BB24BE5DC400ACDF03 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; };
 		0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */; };
@@ -720,8 +714,6 @@
 		052FA11D1806088B00FAE4DF /* base64.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA0FF1806088B00FAE4DF /* base64.cpp */; };
 		052FA11E1806088B00FAE4DF /* bitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1011806088B00FAE4DF /* bitmask.cpp */; };
 		052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
-		052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA1291806102F00FAE4DF /* Foundation.framework */; };
-		052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA12B1806102F00FAE4DF /* CoreGraphics.framework */; };
 		052FA1341806102F00FAE4DF /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 052FA1321806102F00FAE4DF /* InfoPlist.strings */; };
 		052FA1361806103000FAE4DF /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1351806102F00FAE4DF /* main.m */; };
 		052FA13A1806103000FAE4DF /* AppDelegate.mm in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1391806103000FAE4DF /* AppDelegate.mm */; };
@@ -1319,8 +1311,6 @@
 		0568742E20C5D86B001C435B /* pass.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742420C5D86B001C435B /* pass.cpp */; };
 		0568743020C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0568743120C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
-		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
-		056AA9A11C41DDF500FA81D3 /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A01C41DDF400FA81D3 /* graphviz.framework */; };
 		056E071F1F994D9000DF136B /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 056E071E1F994D9000DF136B /* graph.h */; };
 		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
 		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
@@ -1439,6 +1429,25 @@
 		057EDE7A2581F557004F0068 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD792581F27D004F0068 /* libz.tbd */; };
 		057EDE8B2581F5B3004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDE9C2581F5C1004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
+		057EDEAD2582363B004F0068 /* cppunit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; };
+		057EDEAE2582363B004F0068 /* cppunit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDEAF2582363B004F0068 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
+		057EDEB12582363B004F0068 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
+		057EDEB22582363B004F0068 /* jansson.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDEB32582363B004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDEB42582363B004F0068 /* libgmp.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDEB52582363B004F0068 /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
+		057EDEB62582363B004F0068 /* libgmpxx.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDEB72582363B004F0068 /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
+		057EDEB82582363B004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDEF92582370B004F0068 /* Python.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDEF82582370B004F0068 /* Python.xcframework */; };
+		057EDF1A25823779004F0068 /* XZ.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDF1925823779004F0068 /* XZ.xcframework */; };
+		057EDF1B25823779004F0068 /* XZ.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDF1925823779004F0068 /* XZ.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDFDC25824124004F0068 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDFCA258240F8004F0068 /* libbz2.tbd */; };
+		057EDFEC2582412E004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDFCC258240F8004F0068 /* libxml2.tbd */; };
+		057EDFFC25824130004F0068 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDFCB258240F8004F0068 /* libsqlite3.tbd */; };
+		057EE00C25824134004F0068 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDFC9258240F8004F0068 /* libz.tbd */; };
+		057EE01D2582416B004F0068 /* DBChooser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EE01C2582416B004F0068 /* DBChooser.framework */; };
 		057EE4351C6009A700C4D155 /* perm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* perm-impl.h */; };
 		057EE4561C6009F300C4D155 /* component5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4371C6009E600C4D155 /* component5.cpp */; };
 		057EE4571C6009F300C4D155 /* component6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4381C6009E600C4D155 /* component6.cpp */; };
@@ -1498,10 +1507,6 @@
 		057EE4E91C600A3600C4D155 /* facetpairing14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE46C1C600A1B00C4D155 /* facetpairing14.cpp */; };
 		057EE4EA1C600A3600C4D155 /* facetpairing15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE46D1C600A1B00C4D155 /* facetpairing15.cpp */; };
 		057F317419B8935800D30520 /* Example.mm in Sources */ = {isa = PBXBuildFile; fileRef = 057F317319B8935800D30520 /* Example.mm */; };
-		057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA74F180615F5008E25F6 /* libiconv.dylib */; };
-		057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA750180615F5008E25F6 /* libxml2.dylib */; };
-		057FA754180615F6008E25F6 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA751180615F5008E25F6 /* libz.dylib */; };
-		057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057FA7551806184A008E25F6 /* UIKit.framework */; };
 		0583656218DB8876008B08D9 /* double_SnapPy.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583655E18DB8876008B08D9 /* double_SnapPy.h */; };
 		0583656318DB8876008B08D9 /* end_namespace.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583655F18DB8876008B08D9 /* end_namespace.h */; };
 		0583656518DB8876008B08D9 /* real_type.h in Headers */ = {isa = PBXBuildFile; fileRef = 0583656118DB8876008B08D9 /* real_type.h */; };
@@ -2138,7 +2143,6 @@
 		05F23E1319C1305A005B53B5 /* NewAnglesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1219C1305A005B53B5 /* NewAnglesController.mm */; };
 		05F23E1619C13432005B53B5 /* NewFilterController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1519C13432005B53B5 /* NewFilterController.mm */; };
 		05F23E1919C1418A005B53B5 /* NewSnapPeaController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */; };
-		05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05F4947B19BDDD5D00CD887C /* DBChooser.framework */; };
 		05F6D3B91C52CD5F007307F0 /* NewTri4Controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F6D3B61C52CB9B007307F0 /* NewTri4Controller.mm */; };
 		05F904531F97F9F800893670 /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F904511F97F9F300893670 /* graph.cpp */; };
 		05F904541F97F9F900893670 /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F904511F97F9F300893670 /* graph.cpp */; };
@@ -2412,6 +2416,22 @@
 				057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */,
 				057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */,
 				057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		057EDEB92582363B004F0068 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				057EDEB62582363B004F0068 /* libgmpxx.xcframework in Embed Frameworks */,
+				057EDEB82582363B004F0068 /* libtokyocabinet.xcframework in Embed Frameworks */,
+				057EDEB42582363B004F0068 /* libgmp.xcframework in Embed Frameworks */,
+				057EDEAE2582363B004F0068 /* cppunit.xcframework in Embed Frameworks */,
+				057EDEB22582363B004F0068 /* jansson.xcframework in Embed Frameworks */,
+				057EDF1B25823779004F0068 /* XZ.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2743,7 +2763,6 @@
 		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
-		05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.0.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
 		052774101C55743E00140918 /* hypercreator.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hypercreator.cpp; sourceTree = "<group>"; };
 		052774111C55743E00140918 /* hypercreator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hypercreator.h; sourceTree = "<group>"; };
 		052774151C55760B00140918 /* NewHypersurfacesController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewHypersurfacesController.h; sourceTree = "<group>"; };
@@ -3158,8 +3177,6 @@
 		052FA1011806088B00FAE4DF /* bitmask.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = bitmask.cpp; sourceTree = "<group>"; };
 		052FA1021806088B00FAE4DF /* testutilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testutilities.h; sourceTree = "<group>"; };
 		052FA1281806102F00FAE4DF /* Regina.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Regina.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		052FA1291806102F00FAE4DF /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		052FA12B1806102F00FAE4DF /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		052FA1311806102F00FAE4DF /* Regina-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Regina-Info.plist"; sourceTree = "<group>"; };
 		052FA1331806102F00FAE4DF /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		052FA1351806102F00FAE4DF /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -3269,7 +3286,6 @@
 		054208D81DF0D2E50018AB24 /* qtmatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qtmatcher.h; sourceTree = "<group>"; };
 		054208DA1DF0D2E50018AB24 /* syntaxhighlighter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = syntaxhighlighter.cpp; sourceTree = "<group>"; };
 		054208DB1DF0D2E50018AB24 /* syntaxhighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = syntaxhighlighter.h; sourceTree = "<group>"; };
-		054208E81DF0D6860018AB24 /* jansson.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = jansson.framework; path = ../../Library/Frameworks/ios/jansson.framework; sourceTree = "<group>"; };
 		054208EA1DF0DA390018AB24 /* graphloop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphloop.cpp; sourceTree = "<group>"; };
 		054208EB1DF0DA390018AB24 /* graphpair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphpair.cpp; sourceTree = "<group>"; };
 		054208EC1DF0DA390018AB24 /* graphtriple.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphtriple.cpp; sourceTree = "<group>"; };
@@ -3811,12 +3827,6 @@
 		0568742320C5D86A001C435B /* reidemeister-tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = "reidemeister-tangle.cpp"; sourceTree = "<group>"; };
 		0568742420C5D86B001C435B /* pass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pass.cpp; sourceTree = "<group>"; };
 		0568742F20C5D8D3001C435B /* tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tangle.cpp; sourceTree = "<group>"; };
-		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
-		056AA99C1C41DAC100FA81D3 /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/ios/cppunit.framework; sourceTree = "<group>"; };
-		056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/ios/libtokyocabinet.framework; sourceTree = "<group>"; };
-		056AA9A01C41DDF400FA81D3 /* graphviz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = graphviz.framework; path = ../../Library/Frameworks/ios/graphviz.framework; sourceTree = "<group>"; };
-		056AA9A81C41DE9D00FA81D3 /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/ios/libgmp.framework; sourceTree = "<group>"; };
-		056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/ios/libgmpxx.framework; sourceTree = "<group>"; };
 		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
 		057118B119B308F8009FEDC5 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		057118B219B308F8009FEDC5 /* create-snappea-census-data.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = "create-snappea-census-data.py"; sourceTree = "<group>"; };
@@ -3940,6 +3950,13 @@
 		057EDD792581F27D004F0068 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		057EDD9B2581F2FB004F0068 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
 		057EDDCE2581F336004F0068 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		057EDEF82582370B004F0068 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = ../../Library/Frameworks/Python.xcframework; sourceTree = "<group>"; };
+		057EDF1925823779004F0068 /* XZ.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = XZ.xcframework; path = ../../Library/Frameworks/XZ.xcframework; sourceTree = "<group>"; };
+		057EDFC9258240F8004F0068 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.2.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		057EDFCA258240F8004F0068 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.2.sdk/usr/lib/libbz2.tbd; sourceTree = DEVELOPER_DIR; };
+		057EDFCB258240F8004F0068 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.2.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
+		057EDFCC258240F8004F0068 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.2.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
+		057EE01C2582416B004F0068 /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
 		057EE4341C6009A700C4D155 /* perm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-impl.h"; sourceTree = "<group>"; };
 		057EE4361C6009E600C4D155 /* component-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
 		057EE4371C6009E600C4D155 /* component5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component5.cpp; sourceTree = "<group>"; };
@@ -4005,10 +4022,6 @@
 		057EE4A61C600A3000C4D155 /* triangulation15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation15.cpp; sourceTree = "<group>"; };
 		057F317219B8935800D30520 /* Example.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Example.h; sourceTree = "<group>"; };
 		057F317319B8935800D30520 /* Example.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Example.mm; sourceTree = "<group>"; };
-		057FA74F180615F5008E25F6 /* libiconv.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libiconv.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libiconv.dylib; sourceTree = DEVELOPER_DIR; };
-		057FA750180615F5008E25F6 /* libxml2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libxml2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libxml2.dylib; sourceTree = DEVELOPER_DIR; };
-		057FA751180615F5008E25F6 /* libz.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libz.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/usr/lib/libz.dylib; sourceTree = DEVELOPER_DIR; };
-		057FA7551806184A008E25F6 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.0.sdk/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		0583655E18DB8876008B08D9 /* double_SnapPy.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = double_SnapPy.h; sourceTree = "<group>"; };
 		0583655F18DB8876008B08D9 /* end_namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = end_namespace.h; sourceTree = "<group>"; };
 		0583656018DB8876008B08D9 /* kernel_namespace.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = kernel_namespace.h; sourceTree = "<group>"; };
@@ -4561,7 +4574,6 @@
 		05F23E1519C13432005B53B5 /* NewFilterController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewFilterController.mm; sourceTree = "<group>"; };
 		05F23E1719C1418A005B53B5 /* NewSnapPeaController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewSnapPeaController.h; sourceTree = "<group>"; };
 		05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewSnapPeaController.mm; sourceTree = "<group>"; };
-		05F4947B19BDDD5D00CD887C /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
 		05F6D3B51C52CB9B007307F0 /* NewTri4Controller.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewTri4Controller.h; sourceTree = "<group>"; };
 		05F6D3B61C52CB9B007307F0 /* NewTri4Controller.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewTri4Controller.mm; sourceTree = "<group>"; };
 		05F904511F97F9F300893670 /* graph.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graph.cpp; sourceTree = "<group>"; };
@@ -4623,21 +4635,19 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				052790B224BE5DB100ACDF03 /* jansson.framework in Frameworks */,
-				0569F93219B3658200051091 /* libbz2.dylib in Frameworks */,
-				052790B524BE5DB900ACDF03 /* cppunit.framework in Frameworks */,
-				057FA752180615F6008E25F6 /* libiconv.dylib in Frameworks */,
-				057FA753180615F6008E25F6 /* libxml2.dylib in Frameworks */,
-				057FA754180615F6008E25F6 /* libz.dylib in Frameworks */,
-				05249EA01DBB8D89001FE29E /* libsqlite3.tbd in Frameworks */,
-				056AA9A11C41DDF500FA81D3 /* graphviz.framework in Frameworks */,
-				052790BB24BE5DC400ACDF03 /* libgmp.framework in Frameworks */,
-				052FA12C1806102F00FAE4DF /* CoreGraphics.framework in Frameworks */,
-				052790B924BE5DC200ACDF03 /* libgmpxx.framework in Frameworks */,
-				057FA7561806184B008E25F6 /* UIKit.framework in Frameworks */,
-				052FA12A1806102F00FAE4DF /* Foundation.framework in Frameworks */,
-				052790B724BE5DC000ACDF03 /* libtokyocabinet.framework in Frameworks */,
-				05F4947C19BDDD5E00CD887C /* DBChooser.framework in Frameworks */,
+				057EDEF92582370B004F0068 /* Python.xcframework in Frameworks */,
+				057EE01D2582416B004F0068 /* DBChooser.framework in Frameworks */,
+				057EDEB72582363B004F0068 /* libtokyocabinet.xcframework in Frameworks */,
+				057EDEB32582363B004F0068 /* libgmp.xcframework in Frameworks */,
+				057EDEB12582363B004F0068 /* jansson.xcframework in Frameworks */,
+				057EDEAF2582363B004F0068 /* graphviz.xcframework in Frameworks */,
+				057EDEB52582363B004F0068 /* libgmpxx.xcframework in Frameworks */,
+				057EDEAD2582363B004F0068 /* cppunit.xcframework in Frameworks */,
+				057EDF1A25823779004F0068 /* XZ.xcframework in Frameworks */,
+				057EDFDC25824124004F0068 /* libbz2.tbd in Frameworks */,
+				057EDFFC25824130004F0068 /* libsqlite3.tbd in Frameworks */,
+				057EDFEC2582412E004F0068 /* libxml2.tbd in Frameworks */,
+				057EE00C25824134004F0068 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6263,6 +6273,7 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				057EE01C2582416B004F0068 /* DBChooser.framework */,
 				057EDDCE2581F336004F0068 /* libiconv.tbd */,
 				057EDD9B2581F2FB004F0068 /* libxml2.tbd */,
 				057EDD792581F27D004F0068 /* libz.tbd */,
@@ -6273,6 +6284,8 @@
 				0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */,
 				0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */,
 				0567B5702581ACE50022EA5D /* popt.xcframework */,
+				057EDEF82582370B004F0068 /* Python.xcframework */,
+				057EDF1925823779004F0068 /* XZ.xcframework */,
 				057ED8E82581B49E004F0068 /* QtCore.framework */,
 				057ED8EB2581B49E004F0068 /* QtDBus.framework */,
 				057ED8EC2581B49E004F0068 /* QtGui.framework */,
@@ -7718,21 +7731,10 @@
 		05C65E771D9C7B0B00877233 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
-				056AA99C1C41DAC100FA81D3 /* cppunit.framework */,
-				056AA9A01C41DDF400FA81D3 /* graphviz.framework */,
-				054208E81DF0D6860018AB24 /* jansson.framework */,
-				056AA9A81C41DE9D00FA81D3 /* libgmp.framework */,
-				056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */,
-				056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */,
-				05F4947B19BDDD5D00CD887C /* DBChooser.framework */,
-				0569F93119B3658200051091 /* libbz2.dylib */,
-				057FA74F180615F5008E25F6 /* libiconv.dylib */,
-				05249E9F1DBB8D88001FE29E /* libsqlite3.tbd */,
-				057FA750180615F5008E25F6 /* libxml2.dylib */,
-				057FA751180615F5008E25F6 /* libz.dylib */,
-				052FA12B1806102F00FAE4DF /* CoreGraphics.framework */,
-				052FA1291806102F00FAE4DF /* Foundation.framework */,
-				057FA7551806184A008E25F6 /* UIKit.framework */,
+				057EDFCA258240F8004F0068 /* libbz2.tbd */,
+				057EDFCC258240F8004F0068 /* libxml2.tbd */,
+				057EDFCB258240F8004F0068 /* libsqlite3.tbd */,
+				057EDFC9258240F8004F0068 /* libz.tbd */,
 			);
 			name = iOS;
 			sourceTree = "<group>";
@@ -8380,7 +8382,7 @@
 				05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */,
 				05B4D2A5229F31F100B7B11C /* Copy Python core */,
 				054209181DF17EB70018AB24 /* CopyFiles */,
-				051B531724BEA9F600A25B75 /* Embed Frameworks */,
+				057EDEB92582363B004F0068 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -8791,34 +8793,6 @@
 			shellPath = /bin/sh;
 			shellScript = "# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Apple Development:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
-		051B531724BEA9F600A25B75 /* Embed Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 12;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				/Users/bab/Library/Frameworks/ios/cppunit.framework,
-				/Users/bab/Library/Frameworks/ios/jansson.framework,
-				/Users/bab/Library/Frameworks/ios/libgmp.framework,
-				/Users/bab/Library/Frameworks/ios/libgmpxx.framework,
-				/Users/bab/Library/Frameworks/ios/libtokyocabinet.framework,
-			);
-			name = "Embed Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/cppunit.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/jansson.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libgmp.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libgmpxx.framework",
-				"$(BUILT_PRODUCTS_DIR)/$(FRAMEWORKS_FOLDER_PATH)/libtokyocabinet.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "# This step requires you to have Carthage installed:\n# https://github.com/Carthage/Carthage\n#\n# Its main purpose is to strip out x86_64/i386 slices from\n# all hand-rolled embedded frameworks. For more detail:\n# http://www.openradar.me/radar?id=6409498411401216\n#\n/usr/local/bin/carthage copy-frameworks\n";
-		};
 		051B54301D9DD60F00A2DC82 /* Fix Library Paths */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -8877,7 +8851,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyframework=Python3.6\n    pyzip=python36.zip\n    ;;\n  *)\n    pyframework=Python2.7\n    pyzip=python27.zip\n    ;;\nesac\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/ios/\"$pyframework\".framework/Resources/lib/\"$pyzip\" \"$resdir\"/python\n";
+			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\n# We do not support python2 on iOS any more.\npyzip=python38.zip\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/\"$pyzip\" \"$resdir\"/python\n";
 		};
 		05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8895,7 +8869,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "src=\"${PROJECT_DIR}/examples/ios\"\ndest=\"${CONFIGURATION_BUILD_DIR}/Regina.app/examples\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    suffix=\"-py3.rga\"\n    ;;\n  *)\n    suffix=\"-py2.rga\"\n    ;;\nesac\n\nfor i in sample; do\n  cp \"$src/$i$suffix\" \"$dest/${i}.rga\"\ndone\n";
+			shellScript = "src=\"${PROJECT_DIR}/examples/ios\"\ndest=\"${CONFIGURATION_BUILD_DIR}/Regina.app/examples\"\n\n# We do not support python2 on iOS any more.\nsuffix=\"-py3.rga\"\n\nfor i in sample; do\n  cp \"$src/$i$suffix\" \"$dest/${i}.rga\"\ndone\n";
 		};
 		05B4D2E622A08FDD00B7B11C /* Copy Python 2/3 Examples */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10919,7 +10893,6 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
@@ -10934,12 +10907,6 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/jansson.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/libtokyocabinet.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/graphviz.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python2.7.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -10948,10 +10915,6 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 5.9;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Python2.7,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
@@ -10976,7 +10939,6 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
@@ -10987,12 +10949,6 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/jansson.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/libtokyocabinet.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/graphviz.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python2.7.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -11001,10 +10957,6 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 5.9;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Python2.7,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
@@ -12207,7 +12159,6 @@
 					"$(inherited)",
 					"$(DEVELOPER_FRAMEWORKS_DIR)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios",
 				);
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
@@ -12218,12 +12169,6 @@
 					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/jansson.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/libtokyocabinet.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/graphviz.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/ios/Python3.6.framework/Headers",
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
@@ -12232,12 +12177,6 @@
 					"@executable_path/Frameworks",
 				);
 				MARKETING_VERSION = 5.9;
-				OTHER_LDFLAGS = (
-					"-framework",
-					Python3.6,
-					"-framework",
-					XZ,
-				);
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
