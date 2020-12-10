@@ -1412,23 +1412,7 @@
 		057EDCE22581F11D004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDD042581F123004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		057EDD262581F12A004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
-		057EDD8A2581F2AB004F0068 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD792581F27D004F0068 /* libz.tbd */; };
-		057EDD9C2581F319004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDDBD2581F329004F0068 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD792581F27D004F0068 /* libz.tbd */; };
-		057EDDCF2581F336004F0068 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDDCE2581F336004F0068 /* libiconv.tbd */; };
-		057EDE102581F4EE004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE212581F4F4004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE322581F4FA004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE432581F502004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE542581F51A004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE552581F51E004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE562581F525004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE572581F52A004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE582581F531004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE692581F552004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
-		057EDE7A2581F557004F0068 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD792581F27D004F0068 /* libz.tbd */; };
 		057EDE8B2581F5B3004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
-		057EDE9C2581F5C1004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDD9B2581F2FB004F0068 /* libxml2.tbd */; };
 		057EDEAD2582363B004F0068 /* cppunit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; };
 		057EDEAE2582363B004F0068 /* cppunit.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		057EDEAF2582363B004F0068 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
@@ -2054,6 +2038,22 @@
 		05DC13851FEB942B00171D66 /* nsvectorquadoctclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13831FEB942900171D66 /* nsvectorquadoctclosed.cpp */; };
 		05DC13861FEB942B00171D66 /* nsvectorquadoctclosed.h in Headers */ = {isa = PBXBuildFile; fileRef = 05DC13841FEB942A00171D66 /* nsvectorquadoctclosed.h */; };
 		05DC13871FEB942E00171D66 /* nsvectorquadoctclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05DC13831FEB942900171D66 /* nsvectorquadoctclosed.cpp */; };
+		05E0EFFE2582420A00965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F01D2582421200965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F03C2582421900965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F05B2582422100965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F07A2582422800965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F0992582423A00965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F0B82582424000965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F0D72582424500965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F0F62582424B00965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F1432582426100965440 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEE258241E100965440 /* libz.tbd */; };
+		05E0F1532582426400965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F1722582427000965440 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEE258241E100965440 /* libz.tbd */; };
+		05E0F1912582427600965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F1CE2582428800965440 /* libiconv.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEC258241E100965440 /* libiconv.tbd */; };
+		05E0F1DE2582428C00965440 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		05E0F1EE2582429000965440 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEE258241E100965440 /* libz.tbd */; };
 		05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */; };
 		05E49D251DA38C7D00B55E31 /* ncyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D241DA38C7D00B55E31 /* ncyclotomic.h */; };
 		05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMoves3.mm */; };
@@ -3947,9 +3947,6 @@
 		057EDAF22581D95B004F0068 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqminimal.dylib"; sourceTree = "<group>"; };
 		057EDAF32581D95B004F0068 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqoffscreen.dylib"; sourceTree = "<group>"; };
 		057EDAF42581D95B004F0068 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqcocoa.dylib"; sourceTree = "<group>"; };
-		057EDD792581F27D004F0068 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
-		057EDD9B2581F2FB004F0068 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
-		057EDDCE2581F336004F0068 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
 		057EDEF82582370B004F0068 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = ../../Library/Frameworks/Python.xcframework; sourceTree = "<group>"; };
 		057EDF1925823779004F0068 /* XZ.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = XZ.xcframework; path = ../../Library/Frameworks/XZ.xcframework; sourceTree = "<group>"; };
 		057EDFC9258240F8004F0068 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.2.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
@@ -4506,6 +4503,9 @@
 		05DC13801FEB86E900171D66 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
 		05DC13831FEB942900171D66 /* nsvectorquadoctclosed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectorquadoctclosed.cpp; sourceTree = "<group>"; };
 		05DC13841FEB942A00171D66 /* nsvectorquadoctclosed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorquadoctclosed.h; sourceTree = "<group>"; };
+		05E0EFEC258241E100965440 /* libiconv.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libiconv.tbd; path = usr/lib/libiconv.tbd; sourceTree = SDKROOT; };
+		05E0EFED258241E100965440 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = usr/lib/libxml2.tbd; sourceTree = SDKROOT; };
+		05E0EFEE258241E100965440 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nnormalsurfacelist.h; sourceTree = "<group>"; };
 		05E49D241DA38C7D00B55E31 /* ncyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ncyclotomic.h; sourceTree = "<group>"; };
 		05E5312E1C53C48600ECEB72 /* simplexchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = simplexchooser.h; sourceTree = "<group>"; };
@@ -4627,7 +4627,7 @@
 				052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */,
 				057EDA322581BC98004F0068 /* cppunit.xcframework in Frameworks */,
 				057EDE8B2581F5B3004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE9C2581F5C1004F0068 /* libxml2.tbd in Frameworks */,
+				05E0F1912582427600965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4658,7 +4658,7 @@
 				05617AF51D9DC09500B1E33B /* libregina-engine.dylib in Frameworks */,
 				0567B5912581ACF10022EA5D /* popt.xcframework in Frameworks */,
 				057EDC332581EEE5004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE212581F4F4004F0068 /* libxml2.tbd in Frameworks */,
+				05E0F01D2582421200965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4669,7 +4669,7 @@
 				05617B501D9DC5A800B1E33B /* libregina-engine.dylib in Frameworks */,
 				0567B66D2581AD200022EA5D /* popt.xcframework in Frameworks */,
 				057EDCC92581F109004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE582581F531004F0068 /* libxml2.tbd in Frameworks */,
+				05E0F0F62582424B00965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4680,7 +4680,7 @@
 				05617B4F1D9DC5A500B1E33B /* libregina-engine.dylib in Frameworks */,
 				0567B65E2581AD1D0022EA5D /* popt.xcframework in Frameworks */,
 				057EDCCC2581F10D004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE572581F52A004F0068 /* libxml2.tbd in Frameworks */,
+				05E0F0D72582424500965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4691,7 +4691,7 @@
 				05617B4E1D9DC5A200B1E33B /* libregina-engine.dylib in Frameworks */,
 				0567B64E2581AD1A0022EA5D /* popt.xcframework in Frameworks */,
 				057EDCCF2581F114004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE562581F525004F0068 /* libxml2.tbd in Frameworks */,
+				05E0F0B82582424000965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4702,7 +4702,7 @@
 				05617B4D1D9DC59E00B1E33B /* libregina-engine.dylib in Frameworks */,
 				0567B63D2581AD170022EA5D /* popt.xcframework in Frameworks */,
 				057EDCE22581F11D004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE552581F51E004F0068 /* libxml2.tbd in Frameworks */,
+				05E0F0992582423A00965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4713,7 +4713,7 @@
 				05617B4C1D9DC59B00B1E33B /* libregina-engine.dylib in Frameworks */,
 				0567B60E2581AD0D0022EA5D /* popt.xcframework in Frameworks */,
 				057EDD042581F123004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE542581F51A004F0068 /* libxml2.tbd in Frameworks */,
+				05E0F07A2582422800965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4724,7 +4724,7 @@
 				05617B4B1D9DC59700B1E33B /* libregina-engine.dylib in Frameworks */,
 				0567B5C02581ACFA0022EA5D /* popt.xcframework in Frameworks */,
 				057EDCA72581F0CA004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE322581F4FA004F0068 /* libxml2.tbd in Frameworks */,
+				05E0F03C2582421900965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4735,7 +4735,7 @@
 				05617B4A1D9DC59200B1E33B /* libregina-engine.dylib in Frameworks */,
 				0567B5712581ACE50022EA5D /* popt.xcframework in Frameworks */,
 				057EDD262581F12A004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE102581F4EE004F0068 /* libxml2.tbd in Frameworks */,
+				05E0EFFE2582420A00965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4756,8 +4756,8 @@
 				057ED8EE2581B49E004F0068 /* QtSvg.framework in Frameworks */,
 				057EDBBF2581EA9D004F0068 /* libgmpxx.xcframework in Frameworks */,
 				057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */,
-				057EDE692581F552004F0068 /* libxml2.tbd in Frameworks */,
-				057EDE7A2581F557004F0068 /* libz.tbd in Frameworks */,
+				05E0F1532582426400965440 /* libxml2.tbd in Frameworks */,
+				05E0F1432582426100965440 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4769,9 +4769,9 @@
 				0567B4AD2581ABA20022EA5D /* libgmp.xcframework in Frameworks */,
 				0567B4BE2581ABA60022EA5D /* libgmpxx.xcframework in Frameworks */,
 				0567B49B2581AB9A0022EA5D /* jansson.xcframework in Frameworks */,
-				057EDDCF2581F336004F0068 /* libiconv.tbd in Frameworks */,
-				057EDD9C2581F319004F0068 /* libxml2.tbd in Frameworks */,
-				057EDDBD2581F329004F0068 /* libz.tbd in Frameworks */,
+				05E0F1CE2582428800965440 /* libiconv.tbd in Frameworks */,
+				05E0F1DE2582428C00965440 /* libxml2.tbd in Frameworks */,
+				05E0F1EE2582429000965440 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4782,7 +4782,7 @@
 				058FC86B1FE188A0006D04B4 /* libregina-engine.dylib in Frameworks */,
 				0567B5E02581AD050022EA5D /* popt.xcframework in Frameworks */,
 				057EDC852581F0C2004F0068 /* libgmp.xcframework in Frameworks */,
-				057EDE432581F502004F0068 /* libxml2.tbd in Frameworks */,
+				05E0F05B2582422100965440 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4791,7 +4791,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				0567B4FE2581AC070022EA5D /* libtokyocabinet.xcframework in Frameworks */,
-				057EDD8A2581F2AB004F0068 /* libz.tbd in Frameworks */,
+				05E0F1722582427000965440 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6273,10 +6273,6 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				057EE01C2582416B004F0068 /* DBChooser.framework */,
-				057EDDCE2581F336004F0068 /* libiconv.tbd */,
-				057EDD9B2581F2FB004F0068 /* libxml2.tbd */,
-				057EDD792581F27D004F0068 /* libz.tbd */,
 				057EDA312581BC97004F0068 /* cppunit.xcframework */,
 				057ED9C32581BAAE004F0068 /* graphviz.xcframework */,
 				0567B49A2581AB9A0022EA5D /* jansson.xcframework */,
@@ -6293,6 +6289,7 @@
 				057ED8E92581B49E004F0068 /* QtPrintSupport.framework */,
 				057ED8E72581B49E004F0068 /* QtSvg.framework */,
 				057ED8ED2581B49E004F0068 /* QtWidgets.framework */,
+				057EE01C2582416B004F0068 /* DBChooser.framework */,
 				05C65E771D9C7B0B00877233 /* iOS */,
 				05C65E781D9C7B1200877233 /* OSX */,
 			);
@@ -7742,6 +7739,9 @@
 		05C65E781D9C7B1200877233 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
+				05E0EFEC258241E100965440 /* libiconv.tbd */,
+				05E0EFED258241E100965440 /* libxml2.tbd */,
+				05E0EFEE258241E100965440 /* libz.tbd */,
 			);
 			name = OSX;
 			sourceTree = "<group>";
