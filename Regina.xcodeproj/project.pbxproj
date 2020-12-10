@@ -1319,7 +1319,6 @@
 		0567B4DF2581ABF00022EA5D /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		0567B4EF2581ABF20022EA5D /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
 		0567B4FE2581AC070022EA5D /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
-		0567B4FF2581AC070022EA5D /* libtokyocabinet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		0567B5712581ACE50022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
 		0567B5912581ACF10022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
 		0567B5C02581ACFA0022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
@@ -2319,17 +2318,6 @@
 				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
 			);
 			name = "Copy Engine and Utilities";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		052790BF24BE5EA200ACDF03 /* Embed Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				0567B4FF2581AC070022EA5D /* libtokyocabinet.xcframework in Embed Frameworks */,
-			);
-			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		052FA0BF1806072900FAE4DF /* CopyFiles */ = {
@@ -8606,7 +8594,6 @@
 			buildPhases = (
 				05B14E9F19B423A0002138C0 /* Sources */,
 				05B14EA019B423A0002138C0 /* Frameworks */,
-				052790BF24BE5EA200ACDF03 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
