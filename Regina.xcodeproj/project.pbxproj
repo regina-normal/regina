@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXAggregateTarget section */
@@ -388,8 +388,6 @@
 		052790B724BE5DC000ACDF03 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */; };
 		052790B924BE5DC200ACDF03 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */; };
 		052790BB24BE5DC400ACDF03 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A81C41DE9D00FA81D3 /* libgmp.framework */; };
-		052790BD24BE5EA200ACDF03 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
-		052790BE24BE5EA200ACDF03 /* libtokyocabinet.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		0528DBD31DD295F3004DD4B6 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
@@ -962,7 +960,6 @@
 		054208D11DF0D2A60018AB24 /* torusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208AF1DF0D2740018AB24 /* torusbundle.cpp */; };
 		054208E41DF0D2F30018AB24 /* qtmatcher.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208D71DF0D2E50018AB24 /* qtmatcher.cpp */; };
 		054208E51DF0D2F70018AB24 /* syntaxhighlighter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208DA1DF0D2E50018AB24 /* syntaxhighlighter.cpp */; };
-		054208E71DF0D65A0018AB24 /* jansson.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 054208E61DF0D6590018AB24 /* jansson.framework */; };
 		054208FE1DF0DA450018AB24 /* graphloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208EA1DF0DA390018AB24 /* graphloop.cpp */; };
 		054208FF1DF0DA450018AB24 /* graphpair.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208EB1DF0DA390018AB24 /* graphpair.cpp */; };
 		054209001DF0DA450018AB24 /* graphtriple.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054208EC1DF0DA390018AB24 /* graphtriple.cpp */; };
@@ -1110,7 +1107,6 @@
 		054535BC19D90C3A00BED767 /* Skeleton.mm in Sources */ = {isa = PBXBuildFile; fileRef = 054535BB19D90C3A00BED767 /* Skeleton.mm */; };
 		054739E01D9AAE7100C7B56F /* clickablelabel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054739DC1D9AAE5D00C7B56F /* clickablelabel.cpp */; };
 		054739E11D9B176200C7B56F /* clickablelabel.h in Sources */ = {isa = PBXBuildFile; fileRef = 054739DD1D9AAE5D00C7B56F /* clickablelabel.h */; };
-		054739E31D9B188000C7B56F /* libqmacjp2.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 054739E21D9B187F00C7B56F /* libqmacjp2.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		0547FCB51C4F60A200BF1AD9 /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0547FCB41C4F60A100BF1AD9 /* xmltrireader.h */; };
 		054C6A661DCC1FF3005373F0 /* example5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A4F1DCC1FE7005373F0 /* example5.cpp */; };
 		054C6A671DCC1FF3005373F0 /* example6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 054C6A501DCC1FE7005373F0 /* example6.cpp */; };
@@ -1195,7 +1191,6 @@
 		05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */ = {isa = PBXBuildFile; fileRef = 05617AD51D9D3C5400B1E33B /* regina-python.in */; };
 		05617AF41D9DC03C00B1E33B /* tricensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05617AEA1D9DC02900B1E33B /* tricensus.cpp */; };
 		05617AF51D9DC09500B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
-		05617AF91D9DC16900B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617AFA1D9DC26A00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617AFB1D9DC27900B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
 		05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617ADD1D9DBFBE00B1E33B /* tricensus */; };
@@ -1206,25 +1201,18 @@
 		05617B4E1D9DC5A200B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		05617B4F1D9DC5A500B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
 		05617B501D9DC5A800B1E33B /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
-		05617B511D9DC5C900B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B521D9DC5C900B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B531D9DC5C900B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617B541D9DC5CD00B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B551D9DC5CD00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B561D9DC5CD00B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617B571D9DC5D200B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B581D9DC5D200B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B591D9DC5D200B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617B5A1D9DC5D500B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B5B1D9DC5D500B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B5C1D9DC5D500B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617B5D1D9DC5D900B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B5E1D9DC5D900B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B5F1D9DC5D900B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617B601D9DC5DC00B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B611D9DC5DC00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B621D9DC5DC00B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
-		05617B631D9DC5DF00B1E33B /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		05617B641D9DC5DF00B1E33B /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		05617B651D9DC5DF00B1E33B /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
 		05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B381D9DC55000B1E33B /* sigcensus */; };
@@ -1324,6 +1312,23 @@
 		05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D931DCB0E9A00C870C6 /* facetpairing3.h */; };
 		05669D971DCB0EA200C870C6 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */; };
 		0566DC901F9893E60068ACAD /* Surfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 0566DC921F9893E60068ACAD /* Surfaces.storyboard */; };
+		0567B49B2581AB9A0022EA5D /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
+		0567B4AD2581ABA20022EA5D /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		0567B4BE2581ABA60022EA5D /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
+		0567B4CF2581ABAA0022EA5D /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
+		0567B4DF2581ABF00022EA5D /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		0567B4EF2581ABF20022EA5D /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
+		0567B4FE2581AC070022EA5D /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
+		0567B4FF2581AC070022EA5D /* libtokyocabinet.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		0567B5712581ACE50022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
+		0567B5912581ACF10022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
+		0567B5C02581ACFA0022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
+		0567B5E02581AD050022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
+		0567B60E2581AD0D0022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
+		0567B63D2581AD170022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
+		0567B64E2581AD1A0022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
+		0567B65E2581AD1D0022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
+		0567B66D2581AD200022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
 		0568742520C5D86B001C435B /* tangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 0568741F20C5D868001C435B /* tangle.h */; };
 		0568742620C5D86B001C435B /* algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742020C5D868001C435B /* algebra.cpp */; };
 		0568742720C5D86B001C435B /* algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742020C5D868001C435B /* algebra.cpp */; };
@@ -1337,13 +1342,7 @@
 		0568743020C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0568743120C5D8D3001C435B /* tangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742F20C5D8D3001C435B /* tangle.cpp */; };
 		0569F93219B3658200051091 /* libbz2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0569F93119B3658200051091 /* libbz2.dylib */; };
-		056AA99A1C41DA6A00FA81D3 /* cppunit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9991C41DA6900FA81D3 /* cppunit.framework */; };
-		056AA99B1C41DAA300FA81D3 /* libtokyocabinet.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */; };
 		056AA9A11C41DDF500FA81D3 /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A01C41DDF400FA81D3 /* graphviz.framework */; };
-		056AA9A41C41DE8700FA81D3 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A21C41DE8600FA81D3 /* libgmp.framework */; };
-		056AA9A51C41DE8700FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */; };
-		056AA9A61C41DE9100FA81D3 /* libgmp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A21C41DE8600FA81D3 /* libgmp.framework */; };
-		056AA9A71C41DE9100FA81D3 /* libgmpxx.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */; };
 		056E071F1F994D9000DF136B /* graph.h in Headers */ = {isa = PBXBuildFile; fileRef = 056E071E1F994D9000DF136B /* graph.h */; };
 		057118CA19B30A2D009FEDC5 /* snappea-census-sec5.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B319B308F8009FEDC5 /* snappea-census-sec5.dat */; };
 		057118CB19B30A2D009FEDC5 /* snappea-census-sec6n.dat in Copy SnapPea Census Data */ = {isa = PBXBuildFile; fileRef = 057118B419B308F8009FEDC5 /* snappea-census-sec6n.dat */; };
@@ -1402,6 +1401,34 @@
 		0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6EF1F9709C700CBDF15 /* nsignature.h */; };
 		0577E6F31F9709CA00CBDF15 /* nsigisomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6F01F9709C800CBDF15 /* nsigisomorphism.h */; };
 		0577E6F41F9709CA00CBDF15 /* nsigcensus.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6F11F9709CA00CBDF15 /* nsigcensus.h */; };
+		057ED8EE2581B49E004F0068 /* QtSvg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; };
+		057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E72581B49E004F0068 /* QtSvg.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F02581B49E004F0068 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E82581B49E004F0068 /* QtCore.framework */; };
+		057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E82581B49E004F0068 /* QtCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F22581B49E004F0068 /* QtPrintSupport.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E92581B49E004F0068 /* QtPrintSupport.framework */; };
+		057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8E92581B49E004F0068 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EA2581B49E004F0068 /* QtNetwork.framework */; };
+		057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EA2581B49E004F0068 /* QtNetwork.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F62581B49E004F0068 /* QtDBus.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EB2581B49E004F0068 /* QtDBus.framework */; };
+		057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EB2581B49E004F0068 /* QtDBus.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8F82581B49E004F0068 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EC2581B49E004F0068 /* QtGui.framework */; };
+		057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8EC2581B49E004F0068 /* QtGui.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED8FA2581B49E004F0068 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8ED2581B49E004F0068 /* QtWidgets.framework */; };
+		057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED8ED2581B49E004F0068 /* QtWidgets.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		057ED9C42581BAAE004F0068 /* graphviz.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057ED9C32581BAAE004F0068 /* graphviz.xcframework */; };
+		057EDA022581BC16004F0068 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		057EDA032581BC16004F0068 /* libgmp.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		057EDA322581BC98004F0068 /* cppunit.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDA312581BC97004F0068 /* cppunit.xcframework */; };
+		057EDAE52581D83D004F0068 /* libqtuiotouchplugin.dylib in Copy Qt Plugins (generic) */ = {isa = PBXBuildFile; fileRef = 057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDAE72581D884004F0068 /* libqsvgicon.dylib in Copy Qt Plugins (iconengines) */ = {isa = PBXBuildFile; fileRef = 057EDAE62581D877004F0068 /* libqsvgicon.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDAEC2581D8DF004F0068 /* libqgif.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 057EDAE82581D8BA004F0068 /* libqgif.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDAED2581D8DF004F0068 /* libqico.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 057EDAEA2581D8BA004F0068 /* libqico.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDAEE2581D8DF004F0068 /* libqjpeg.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 057EDAE92581D8BA004F0068 /* libqjpeg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDAEF2581D8DF004F0068 /* libqsvg.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 057EDAEB2581D8BA004F0068 /* libqsvg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDAF12581D932004F0068 /* libqmacstyle.dylib in Copy Qt plugins (styles) */ = {isa = PBXBuildFile; fileRef = 057EDAF02581D92E004F0068 /* libqmacstyle.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDAF52581D965004F0068 /* libqcocoa.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 057EDAF42581D95B004F0068 /* libqcocoa.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDAF62581D965004F0068 /* libqminimal.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 057EDAF22581D95B004F0068 /* libqminimal.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
+		057EDAF72581D965004F0068 /* libqoffscreen.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 057EDAF32581D95B004F0068 /* libqoffscreen.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		057EE4351C6009A700C4D155 /* perm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* perm-impl.h */; };
 		057EE4561C6009F300C4D155 /* component5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4371C6009E600C4D155 /* component5.cpp */; };
 		057EE4571C6009F300C4D155 /* component6.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4381C6009E600C4D155 /* component6.cpp */; };
@@ -1506,12 +1533,10 @@
 		058FADC319D508070001B5B5 /* SurfacesSummary.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADC219D508070001B5B5 /* SurfacesSummary.mm */; };
 		058FADC619D50DA10001B5B5 /* Coordinates.mm in Sources */ = {isa = PBXBuildFile; fileRef = 058FADC519D50DA10001B5B5 /* Coordinates.mm */; };
 		058FC86B1FE188A0006D04B4 /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
-		058FC86C1FE188A0006D04B4 /* popt.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05617AF81D9DC16900B1E33B /* popt.framework */; };
 		058FC86D1FE188A0006D04B4 /* libiconv.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7317181D7F2400449D14 /* libiconv.dylib */; };
 		058FC86E1FE188A0006D04B4 /* libxml2.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 055B7319181D7F2B00449D14 /* libxml2.dylib */; };
 		058FC8731FE188E0006D04B4 /* retriangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 058FC8651FE18826006D04B4 /* retriangulate.cpp */; };
 		058FC8761FE18943006D04B4 /* retriangulate in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 058FC8721FE188A0006D04B4 /* retriangulate */; };
-		0590E04C2074B4B700C11EF6 /* libqmacstyle.dylib in Copy Qt plugins (styles) */ = {isa = PBXBuildFile; fileRef = 0590E04A2074B46600C11EF6 /* libqmacstyle.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
 		059101151812F349000A8D16 /* DetailViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 059101141812F349000A8D16 /* DetailViewController.mm */; };
 		0591011B1813230A000A8D16 /* NewPacketMenu.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011A1813230A000A8D16 /* NewPacketMenu.mm */; };
 		0591011E181364BB000A8D16 /* NewSurfacesController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0591011D181364BB000A8D16 /* NewSurfacesController.mm */; };
@@ -1820,33 +1845,8 @@
 		05A73CE619B2F9DC0099C617 /* snappeaui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC919B2F1AB0099C617 /* snappeaui.h */; };
 		05AA71EE1FB17E0100186E30 /* flype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AA71ED1FB17DFF00186E30 /* flype.cpp */; };
 		05AA71EF1FB17E0600186E30 /* flype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AA71ED1FB17DFF00186E30 /* flype.cpp */; };
-		05AB5ECF1B8ED9FA007034C8 /* QtCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */; };
-		05AB5ED01B8ED9FA007034C8 /* QtGui.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */; };
-		05AB5ED11B8ED9FA007034C8 /* QtWidgets.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */; };
-		05AB5ED31B8EDC27007034C8 /* QtSvg.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ED21B8EDC27007034C8 /* QtSvg.framework */; };
 		05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
 		05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
-		05AB5ED91B9423A8007034C8 /* QtCore.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5EDA1B9423A8007034C8 /* QtGui.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5EDB1B9423A8007034C8 /* QtSvg.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ED21B8EDC27007034C8 /* QtSvg.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5EDC1B9423A8007034C8 /* QtWidgets.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5EE21B94285C007034C8 /* libqcocoa.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EE31B94285C007034C8 /* libqminimal.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 05AB5EE01B94285B007034C8 /* libqminimal.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EE41B94285C007034C8 /* libqoffscreen.dylib in Copy Qt Plugins (platforms) */ = {isa = PBXBuildFile; fileRef = 05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF31B9428B3007034C8 /* libqgif.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE71B9428B0007034C8 /* libqgif.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF41B9428B3007034C8 /* libqicns.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE81B9428B1007034C8 /* libqicns.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF51B9428B3007034C8 /* libqico.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EE91B9428B1007034C8 /* libqico.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF71B9428B3007034C8 /* libqjpeg.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EF91B9428B3007034C8 /* libqsvg.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EED1B9428B2007034C8 /* libqsvg.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EFA1B9428B3007034C8 /* libqtga.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EEE1B9428B2007034C8 /* libqtga.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EFB1B9428B3007034C8 /* libqtiff.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EFC1B9428B3007034C8 /* libqwbmp.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EF01B9428B3007034C8 /* libqwbmp.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5EFD1B9428B3007034C8 /* libqwebp.dylib in Copy Qt Plugins (imageformats) */ = {isa = PBXBuildFile; fileRef = 05AB5EF11B9428B3007034C8 /* libqwebp.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5F001B9428DC007034C8 /* libqsvgicon.dylib in Copy Qt Plugins (iconengines) */ = {isa = PBXBuildFile; fileRef = 05AB5EFF1B9428DC007034C8 /* libqsvgicon.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5F031B9428FE007034C8 /* libqtuiotouchplugin.dylib in Copy Qt Plugins (generic) */ = {isa = PBXBuildFile; fileRef = 05AB5F021B9428FD007034C8 /* libqtuiotouchplugin.dylib */; settings = {ATTRIBUTES = (CodeSignOnCopy, ); }; };
-		05AB5F081B9429BB007034C8 /* QtDBus.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F051B9429BA007034C8 /* QtDBus.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5F091B9429BB007034C8 /* QtNetwork.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F061B9429BB007034C8 /* QtNetwork.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in Copy Frameworks */ = {isa = PBXBuildFile; fileRef = 05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
 		05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */; };
 		05AC685E1DFE729900FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
@@ -1985,7 +1985,6 @@
 		05CAFB511C4CEA160001C253 /* face13.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB441C4CEA020001C253 /* face13.cpp */; };
 		05CAFB521C4CEA160001C253 /* face14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB451C4CEA020001C253 /* face14.cpp */; };
 		05CAFB531C4CEA160001C253 /* face15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB461C4CEA020001C253 /* face15.cpp */; };
-		05CAFB551C4D8FCF0001C253 /* graphviz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05CAFB541C4D8FCE0001C253 /* graphviz.framework */; };
 		05CAFB561C4D904A0001C253 /* libz.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 052FA0A51806047E00FAE4DF /* libz.dylib */; };
 		05CB9FF01F9AD7D5002ECB18 /* LinkCodes.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */; };
 		05CB9FF51F9B890F002ECB18 /* LinkCrossings.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FF11F9B8905002ECB18 /* LinkCrossings.mm */; };
@@ -2187,7 +2186,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/engine-docs",
 			);
-			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/../..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" > \"${conf}\"\n\n/sw/bin/doxygen \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
+			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/../..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" > \"${conf}\"\n\n/usr/local/bin/doxygen \"${conf}\" 2>/dev/null\nmkdir -p \"${output}\"\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
 		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2200,7 +2199,7 @@
 			outputFiles = (
 				"$(DERIVED_FILE_DIR)/$(INPUT_FILE_BASE)_moc.cxx",
 			);
-			script = "~/Qt5.12.3/5.12.3/clang_64/bin/moc \\\n-I${HOME}/Library/Frameworks/osx/QtCore.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtGui.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtSvg.framework/Headers \\\n-I${HOME}/Library/Frameworks/osx/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
+			script = "~/Qt/5.15.2-macos/bin/moc \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtCore.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtGui.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtSvg.framework/Headers \\\n-I${HOME}/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers \\\n-DQT_GUI_LIB -DQT_CORE_LIB \\\n-o \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}_moc.cxx\" \"${INPUT_FILE_PATH}\"\n";
 		};
 		05617AD71D9D3CBD00B1E33B /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -2328,7 +2327,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				052790BE24BE5EA200ACDF03 /* libtokyocabinet.framework in Embed Frameworks */,
+				0567B4FF2581AC070022EA5D /* libtokyocabinet.xcframework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2400,32 +2399,33 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		057ED8FC2581B49E004F0068 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				057EDA032581BC16004F0068 /* libgmp.xcframework in Embed Frameworks */,
+				057ED8F12581B49E004F0068 /* QtCore.framework in Embed Frameworks */,
+				057ED8F72581B49E004F0068 /* QtDBus.framework in Embed Frameworks */,
+				057ED8F32581B49E004F0068 /* QtPrintSupport.framework in Embed Frameworks */,
+				057ED8FB2581B49E004F0068 /* QtWidgets.framework in Embed Frameworks */,
+				057ED8F52581B49E004F0068 /* QtNetwork.framework in Embed Frameworks */,
+				057ED8EF2581B49E004F0068 /* QtSvg.framework in Embed Frameworks */,
+				057ED8F92581B49E004F0068 /* QtGui.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		0590E04B2074B48600C11EF6 /* Copy Qt plugins (styles) */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = styles;
 			dstSubfolderSpec = 13;
 			files = (
-				0590E04C2074B4B700C11EF6 /* libqmacstyle.dylib in Copy Qt plugins (styles) */,
+				057EDAF12581D932004F0068 /* libqmacstyle.dylib in Copy Qt plugins (styles) */,
 			);
 			name = "Copy Qt plugins (styles)";
-			runOnlyForDeploymentPostprocessing = 0;
-		};
-		05AB5ED81B942354007034C8 /* Copy Frameworks */ = {
-			isa = PBXCopyFilesBuildPhase;
-			buildActionMask = 2147483647;
-			dstPath = "";
-			dstSubfolderSpec = 10;
-			files = (
-				05AB5F081B9429BB007034C8 /* QtDBus.framework in Copy Frameworks */,
-				05AB5F091B9429BB007034C8 /* QtNetwork.framework in Copy Frameworks */,
-				05AB5F0A1B9429BB007034C8 /* QtPrintSupport.framework in Copy Frameworks */,
-				05AB5ED91B9423A8007034C8 /* QtCore.framework in Copy Frameworks */,
-				05AB5EDA1B9423A8007034C8 /* QtGui.framework in Copy Frameworks */,
-				05AB5EDB1B9423A8007034C8 /* QtSvg.framework in Copy Frameworks */,
-				05AB5EDC1B9423A8007034C8 /* QtWidgets.framework in Copy Frameworks */,
-			);
-			name = "Copy Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 		05AB5EDE1B942813007034C8 /* Copy Qt Plugins (platforms) */ = {
@@ -2434,9 +2434,9 @@
 			dstPath = platforms;
 			dstSubfolderSpec = 13;
 			files = (
-				05AB5EE21B94285C007034C8 /* libqcocoa.dylib in Copy Qt Plugins (platforms) */,
-				05AB5EE31B94285C007034C8 /* libqminimal.dylib in Copy Qt Plugins (platforms) */,
-				05AB5EE41B94285C007034C8 /* libqoffscreen.dylib in Copy Qt Plugins (platforms) */,
+				057EDAF52581D965004F0068 /* libqcocoa.dylib in Copy Qt Plugins (platforms) */,
+				057EDAF62581D965004F0068 /* libqminimal.dylib in Copy Qt Plugins (platforms) */,
+				057EDAF72581D965004F0068 /* libqoffscreen.dylib in Copy Qt Plugins (platforms) */,
 			);
 			name = "Copy Qt Plugins (platforms)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2447,16 +2447,10 @@
 			dstPath = imageformats;
 			dstSubfolderSpec = 13;
 			files = (
-				054739E31D9B188000C7B56F /* libqmacjp2.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EF31B9428B3007034C8 /* libqgif.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EF41B9428B3007034C8 /* libqicns.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EF51B9428B3007034C8 /* libqico.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EF71B9428B3007034C8 /* libqjpeg.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EF91B9428B3007034C8 /* libqsvg.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EFA1B9428B3007034C8 /* libqtga.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EFB1B9428B3007034C8 /* libqtiff.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EFC1B9428B3007034C8 /* libqwbmp.dylib in Copy Qt Plugins (imageformats) */,
-				05AB5EFD1B9428B3007034C8 /* libqwebp.dylib in Copy Qt Plugins (imageformats) */,
+				057EDAEC2581D8DF004F0068 /* libqgif.dylib in Copy Qt Plugins (imageformats) */,
+				057EDAED2581D8DF004F0068 /* libqico.dylib in Copy Qt Plugins (imageformats) */,
+				057EDAEE2581D8DF004F0068 /* libqjpeg.dylib in Copy Qt Plugins (imageformats) */,
+				057EDAEF2581D8DF004F0068 /* libqsvg.dylib in Copy Qt Plugins (imageformats) */,
 			);
 			name = "Copy Qt Plugins (imageformats)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2467,7 +2461,7 @@
 			dstPath = iconengines;
 			dstSubfolderSpec = 13;
 			files = (
-				05AB5F001B9428DC007034C8 /* libqsvgicon.dylib in Copy Qt Plugins (iconengines) */,
+				057EDAE72581D884004F0068 /* libqsvgicon.dylib in Copy Qt Plugins (iconengines) */,
 			);
 			name = "Copy Qt Plugins (iconengines)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2478,7 +2472,7 @@
 			dstPath = generic;
 			dstSubfolderSpec = 13;
 			files = (
-				05AB5F031B9428FE007034C8 /* libqtuiotouchplugin.dylib in Copy Qt Plugins (generic) */,
+				057EDAE52581D83D004F0068 /* libqtuiotouchplugin.dylib in Copy Qt Plugins (generic) */,
 			);
 			name = "Copy Qt Plugins (generic)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -3278,7 +3272,6 @@
 		054208D81DF0D2E50018AB24 /* qtmatcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qtmatcher.h; sourceTree = "<group>"; };
 		054208DA1DF0D2E50018AB24 /* syntaxhighlighter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = syntaxhighlighter.cpp; sourceTree = "<group>"; };
 		054208DB1DF0D2E50018AB24 /* syntaxhighlighter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = syntaxhighlighter.h; sourceTree = "<group>"; };
-		054208E61DF0D6590018AB24 /* jansson.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = jansson.framework; path = ../../Library/Frameworks/osx/jansson.framework; sourceTree = "<group>"; };
 		054208E81DF0D6860018AB24 /* jansson.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = jansson.framework; path = ../../Library/Frameworks/ios/jansson.framework; sourceTree = "<group>"; };
 		054208EA1DF0DA390018AB24 /* graphloop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphloop.cpp; sourceTree = "<group>"; };
 		054208EB1DF0DA390018AB24 /* graphpair.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = graphpair.cpp; sourceTree = "<group>"; };
@@ -3395,7 +3388,6 @@
 		054535BB19D90C3A00BED767 /* Skeleton.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Skeleton.mm; sourceTree = "<group>"; };
 		054739DC1D9AAE5D00C7B56F /* clickablelabel.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = clickablelabel.cpp; sourceTree = "<group>"; };
 		054739DD1D9AAE5D00C7B56F /* clickablelabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = clickablelabel.h; sourceTree = "<group>"; };
-		054739E21D9B187F00C7B56F /* libqmacjp2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacjp2.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqmacjp2.dylib; sourceTree = "<group>"; };
 		0547FCB41C4F60A100BF1AD9 /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
 		054C6A4E1DCC1FE7005373F0 /* example-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "example-bindings.h"; sourceTree = "<group>"; };
 		054C6A4F1DCC1FE7005373F0 /* example5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example5.cpp; sourceTree = "<group>"; };
@@ -3487,7 +3479,6 @@
 		05617AE91D9DC02900B1E33B /* sigcensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = sigcensus.cpp; sourceTree = "<group>"; };
 		05617AEA1D9DC02900B1E33B /* tricensus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tricensus.cpp; sourceTree = "<group>"; };
 		05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = trisetcmp.cpp; sourceTree = "<group>"; };
-		05617AF81D9DC16900B1E33B /* popt.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = popt.framework; path = ../../Library/Frameworks/osx/popt.framework; sourceTree = "<group>"; };
 		05617B011D9DC51600B1E33B /* censuslookup */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = censuslookup; sourceTree = BUILT_PRODUCTS_DIR; };
 		05617B0C1D9DC52200B1E33B /* regconcat */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regconcat; sourceTree = BUILT_PRODUCTS_DIR; };
 		05617B171D9DC52B00B1E33B /* regconvert */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = regconvert; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -3682,6 +3673,11 @@
 		05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
 		0566DC911F9893E60068ACAD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Surfaces.storyboard; sourceTree = "<group>"; };
+		0567B49A2581AB9A0022EA5D /* jansson.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = jansson.xcframework; path = ../../Library/Frameworks/jansson.xcframework; sourceTree = "<group>"; };
+		0567B4AC2581ABA20022EA5D /* libgmp.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmp.xcframework; path = ../../Library/Frameworks/libgmp.xcframework; sourceTree = "<group>"; };
+		0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libgmpxx.xcframework; path = ../../Library/Frameworks/libgmpxx.xcframework; sourceTree = "<group>"; };
+		0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = libtokyocabinet.xcframework; path = ../../Library/Frameworks/libtokyocabinet.xcframework; sourceTree = "<group>"; };
+		0567B5702581ACE50022EA5D /* popt.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = popt.xcframework; path = ../../Library/Frameworks/popt.xcframework; sourceTree = "<group>"; };
 		05685F661F970E6100085B44 /* cmakelint.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = cmakelint.pl; sourceTree = "<group>"; };
 		05685F671F970E6200085B44 /* distcheck */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = distcheck; sourceTree = "<group>"; };
 		05685F6A1F970E6400085B44 /* replacetabs */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = replacetabs; sourceTree = "<group>"; };
@@ -3821,13 +3817,9 @@
 		0568742420C5D86B001C435B /* pass.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pass.cpp; sourceTree = "<group>"; };
 		0568742F20C5D8D3001C435B /* tangle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = tangle.cpp; sourceTree = "<group>"; };
 		0569F93119B3658200051091 /* libbz2.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libbz2.dylib; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS7.1.sdk/usr/lib/libbz2.dylib; sourceTree = DEVELOPER_DIR; };
-		056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/osx/libtokyocabinet.framework; sourceTree = "<group>"; };
-		056AA9991C41DA6900FA81D3 /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/osx/cppunit.framework; sourceTree = "<group>"; };
 		056AA99C1C41DAC100FA81D3 /* cppunit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = cppunit.framework; path = ../../Library/Frameworks/ios/cppunit.framework; sourceTree = "<group>"; };
 		056AA99E1C41DACA00FA81D3 /* libtokyocabinet.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libtokyocabinet.framework; path = ../../Library/Frameworks/ios/libtokyocabinet.framework; sourceTree = "<group>"; };
 		056AA9A01C41DDF400FA81D3 /* graphviz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = graphviz.framework; path = ../../Library/Frameworks/ios/graphviz.framework; sourceTree = "<group>"; };
-		056AA9A21C41DE8600FA81D3 /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/osx/libgmp.framework; sourceTree = "<group>"; };
-		056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/osx/libgmpxx.framework; sourceTree = "<group>"; };
 		056AA9A81C41DE9D00FA81D3 /* libgmp.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmp.framework; path = ../../Library/Frameworks/ios/libgmp.framework; sourceTree = "<group>"; };
 		056AA9A91C41DE9E00FA81D3 /* libgmpxx.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = libgmpxx.framework; path = ../../Library/Frameworks/ios/libgmpxx.framework; sourceTree = "<group>"; };
 		056E071E1F994D9000DF136B /* graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = graph.h; sourceTree = "<group>"; };
@@ -3931,6 +3923,25 @@
 		0577E71E1F970D4600CBDF15 /* LICENSE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = LICENSE.txt; sourceTree = "<group>"; };
 		0577E71F1F970D6800CBDF15 /* CMakeLists.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0577E7201F970D6800CBDF15 /* findtext */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = findtext; sourceTree = "<group>"; };
+		057ED8E72581B49E004F0068 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = "../../Qt/5.15.2-macos/lib/QtSvg.framework"; sourceTree = "<group>"; };
+		057ED8E82581B49E004F0068 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../Qt/5.15.2-macos/lib/QtCore.framework"; sourceTree = "<group>"; };
+		057ED8E92581B49E004F0068 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = "../../Qt/5.15.2-macos/lib/QtPrintSupport.framework"; sourceTree = "<group>"; };
+		057ED8EA2581B49E004F0068 /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = "../../Qt/5.15.2-macos/lib/QtNetwork.framework"; sourceTree = "<group>"; };
+		057ED8EB2581B49E004F0068 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtDBus.framework; path = "../../Qt/5.15.2-macos/lib/QtDBus.framework"; sourceTree = "<group>"; };
+		057ED8EC2581B49E004F0068 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = "../../Qt/5.15.2-macos/lib/QtGui.framework"; sourceTree = "<group>"; };
+		057ED8ED2581B49E004F0068 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = "../../Qt/5.15.2-macos/lib/QtWidgets.framework"; sourceTree = "<group>"; };
+		057ED9C32581BAAE004F0068 /* graphviz.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = graphviz.xcframework; path = ../../Library/Frameworks/graphviz.xcframework; sourceTree = "<group>"; };
+		057EDA312581BC97004F0068 /* cppunit.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = cppunit.xcframework; path = ../../Library/Frameworks/cppunit.xcframework; sourceTree = "<group>"; };
+		057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtuiotouchplugin.dylib; path = "../../Qt/5.15.2-macos/plugins/generic/libqtuiotouchplugin.dylib"; sourceTree = "<group>"; };
+		057EDAE62581D877004F0068 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvgicon.dylib; path = "../../Qt/5.15.2-macos/plugins/iconengines/libqsvgicon.dylib"; sourceTree = "<group>"; };
+		057EDAE82581D8BA004F0068 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqgif.dylib"; sourceTree = "<group>"; };
+		057EDAE92581D8BA004F0068 /* libqjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjpeg.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqjpeg.dylib"; sourceTree = "<group>"; };
+		057EDAEA2581D8BA004F0068 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqico.dylib"; sourceTree = "<group>"; };
+		057EDAEB2581D8BA004F0068 /* libqsvg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvg.dylib; path = "../../Qt/5.15.2-macos/plugins/imageformats/libqsvg.dylib"; sourceTree = "<group>"; };
+		057EDAF02581D92E004F0068 /* libqmacstyle.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacstyle.dylib; path = "../../Qt/5.15.2-macos/plugins/styles/libqmacstyle.dylib"; sourceTree = "<group>"; };
+		057EDAF22581D95B004F0068 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqminimal.dylib"; sourceTree = "<group>"; };
+		057EDAF32581D95B004F0068 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqoffscreen.dylib"; sourceTree = "<group>"; };
+		057EDAF42581D95B004F0068 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqcocoa.dylib"; sourceTree = "<group>"; };
 		057EE4341C6009A700C4D155 /* perm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-impl.h"; sourceTree = "<group>"; };
 		057EE4361C6009E600C4D155 /* component-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
 		057EE4371C6009E600C4D155 /* component5.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = component5.cpp; sourceTree = "<group>"; };
@@ -4054,7 +4065,6 @@
 		058FADC519D50DA10001B5B5 /* Coordinates.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Coordinates.mm; sourceTree = "<group>"; };
 		058FC8651FE18826006D04B4 /* retriangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = retriangulate.cpp; sourceTree = "<group>"; };
 		058FC8721FE188A0006D04B4 /* retriangulate */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = retriangulate; sourceTree = BUILT_PRODUCTS_DIR; };
-		0590E04A2074B46600C11EF6 /* libqmacstyle.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqmacstyle.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/styles/libqmacstyle.dylib; sourceTree = "<group>"; };
 		059101131812F349000A8D16 /* DetailViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DetailViewController.h; sourceTree = "<group>"; };
 		059101141812F349000A8D16 /* DetailViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DetailViewController.mm; sourceTree = "<group>"; };
 		059101191813230A000A8D16 /* NewPacketMenu.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewPacketMenu.h; sourceTree = "<group>"; };
@@ -4315,27 +4325,6 @@
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
 		05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
 		05AA71ED1FB17DFF00186E30 /* flype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flype.cpp; sourceTree = "<group>"; };
-		05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = ../../Library/Frameworks/osx/QtCore.framework; sourceTree = "<group>"; };
-		05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtGui.framework; path = ../../Library/Frameworks/osx/QtGui.framework; sourceTree = "<group>"; };
-		05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtWidgets.framework; path = ../../Library/Frameworks/osx/QtWidgets.framework; sourceTree = "<group>"; };
-		05AB5ED21B8EDC27007034C8 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = ../../Library/Frameworks/osx/QtSvg.framework; sourceTree = "<group>"; };
-		05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/platforms/libqcocoa.dylib; sourceTree = "<group>"; };
-		05AB5EE01B94285B007034C8 /* libqminimal.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqminimal.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/platforms/libqminimal.dylib; sourceTree = "<group>"; };
-		05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqoffscreen.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/platforms/libqoffscreen.dylib; sourceTree = "<group>"; };
-		05AB5EE71B9428B0007034C8 /* libqgif.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqgif.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqgif.dylib; sourceTree = "<group>"; };
-		05AB5EE81B9428B1007034C8 /* libqicns.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqicns.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqicns.dylib; sourceTree = "<group>"; };
-		05AB5EE91B9428B1007034C8 /* libqico.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqico.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqico.dylib; sourceTree = "<group>"; };
-		05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqjpeg.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqjpeg.dylib; sourceTree = "<group>"; };
-		05AB5EED1B9428B2007034C8 /* libqsvg.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvg.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqsvg.dylib; sourceTree = "<group>"; };
-		05AB5EEE1B9428B2007034C8 /* libqtga.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtga.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqtga.dylib; sourceTree = "<group>"; };
-		05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtiff.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqtiff.dylib; sourceTree = "<group>"; };
-		05AB5EF01B9428B3007034C8 /* libqwbmp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqwbmp.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqwbmp.dylib; sourceTree = "<group>"; };
-		05AB5EF11B9428B3007034C8 /* libqwebp.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqwebp.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/imageformats/libqwebp.dylib; sourceTree = "<group>"; };
-		05AB5EFF1B9428DC007034C8 /* libqsvgicon.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqsvgicon.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/iconengines/libqsvgicon.dylib; sourceTree = "<group>"; };
-		05AB5F021B9428FD007034C8 /* libqtuiotouchplugin.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqtuiotouchplugin.dylib; path = ../../Library/Frameworks/osx/Qt/plugins/generic/libqtuiotouchplugin.dylib; sourceTree = "<group>"; };
-		05AB5F051B9429BA007034C8 /* QtDBus.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtDBus.framework; path = ../../Library/Frameworks/osx/QtDBus.framework; sourceTree = "<group>"; };
-		05AB5F061B9429BB007034C8 /* QtNetwork.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtNetwork.framework; path = ../../Library/Frameworks/osx/QtNetwork.framework; sourceTree = "<group>"; };
-		05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = ../../Library/Frameworks/osx/QtPrintSupport.framework; sourceTree = "<group>"; };
 		05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredtorusbundle.cpp; sourceTree = "<group>"; };
 		05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredtorusbundle.h; sourceTree = "<group>"; };
 		05B14EA319B423A0002138C0 /* mkcensusdb */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = mkcensusdb; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -4468,7 +4457,6 @@
 		05CAFB441C4CEA020001C253 /* face13.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face13.cpp; sourceTree = "<group>"; };
 		05CAFB451C4CEA020001C253 /* face14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face14.cpp; sourceTree = "<group>"; };
 		05CAFB461C4CEA020001C253 /* face15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face15.cpp; sourceTree = "<group>"; };
-		05CAFB541C4D8FCE0001C253 /* graphviz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = graphviz.framework; path = ../../Library/Frameworks/osx/graphviz.framework; sourceTree = "<group>"; };
 		05CB9FEC1F9AD7C6002ECB18 /* LinkCodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkCodes.h; sourceTree = "<group>"; };
 		05CB9FED1F9AD7CA002ECB18 /* LinkCodes.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkCodes.mm; sourceTree = "<group>"; };
 		05CB9FF11F9B8905002ECB18 /* LinkCrossings.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkCrossings.mm; sourceTree = "<group>"; };
@@ -4616,9 +4604,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0567B4EF2581ABF20022EA5D /* libgmpxx.xcframework in Frameworks */,
+				0567B4DF2581ABF00022EA5D /* libgmp.xcframework in Frameworks */,
 				050F5E621B9BAC5200C1F681 /* libregina-engine.dylib in Frameworks */,
-				056AA9A61C41DE9100FA81D3 /* libgmp.framework in Frameworks */,
-				056AA9A71C41DE9100FA81D3 /* libgmpxx.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4628,7 +4616,7 @@
 			files = (
 				052FA11F18060A4C00FAE4DF /* libregina-engine.dylib in Frameworks */,
 				0528DBD31DD295F3004DD4B6 /* libxml2.dylib in Frameworks */,
-				056AA99A1C41DA6A00FA81D3 /* cppunit.framework in Frameworks */,
+				057EDA322581BC98004F0068 /* cppunit.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4659,7 +4647,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617AF51D9DC09500B1E33B /* libregina-engine.dylib in Frameworks */,
-				05617AF91D9DC16900B1E33B /* popt.framework in Frameworks */,
+				0567B5912581ACF10022EA5D /* popt.xcframework in Frameworks */,
 				05617AFA1D9DC26A00B1E33B /* libiconv.dylib in Frameworks */,
 				05617AFB1D9DC27900B1E33B /* libxml2.dylib in Frameworks */,
 			);
@@ -4670,7 +4658,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B501D9DC5A800B1E33B /* libregina-engine.dylib in Frameworks */,
-				05617B631D9DC5DF00B1E33B /* popt.framework in Frameworks */,
+				0567B66D2581AD200022EA5D /* popt.xcframework in Frameworks */,
 				05617B641D9DC5DF00B1E33B /* libiconv.dylib in Frameworks */,
 				05617B651D9DC5DF00B1E33B /* libxml2.dylib in Frameworks */,
 			);
@@ -4681,7 +4669,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4F1D9DC5A500B1E33B /* libregina-engine.dylib in Frameworks */,
-				05617B601D9DC5DC00B1E33B /* popt.framework in Frameworks */,
+				0567B65E2581AD1D0022EA5D /* popt.xcframework in Frameworks */,
 				05617B611D9DC5DC00B1E33B /* libiconv.dylib in Frameworks */,
 				05617B621D9DC5DC00B1E33B /* libxml2.dylib in Frameworks */,
 			);
@@ -4692,7 +4680,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4E1D9DC5A200B1E33B /* libregina-engine.dylib in Frameworks */,
-				05617B5D1D9DC5D900B1E33B /* popt.framework in Frameworks */,
+				0567B64E2581AD1A0022EA5D /* popt.xcframework in Frameworks */,
 				05617B5E1D9DC5D900B1E33B /* libiconv.dylib in Frameworks */,
 				05617B5F1D9DC5D900B1E33B /* libxml2.dylib in Frameworks */,
 			);
@@ -4703,7 +4691,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4D1D9DC59E00B1E33B /* libregina-engine.dylib in Frameworks */,
-				05617B5A1D9DC5D500B1E33B /* popt.framework in Frameworks */,
+				0567B63D2581AD170022EA5D /* popt.xcframework in Frameworks */,
 				05617B5B1D9DC5D500B1E33B /* libiconv.dylib in Frameworks */,
 				05617B5C1D9DC5D500B1E33B /* libxml2.dylib in Frameworks */,
 			);
@@ -4714,7 +4702,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4C1D9DC59B00B1E33B /* libregina-engine.dylib in Frameworks */,
-				05617B571D9DC5D200B1E33B /* popt.framework in Frameworks */,
+				0567B60E2581AD0D0022EA5D /* popt.xcframework in Frameworks */,
 				05617B581D9DC5D200B1E33B /* libiconv.dylib in Frameworks */,
 				05617B591D9DC5D200B1E33B /* libxml2.dylib in Frameworks */,
 			);
@@ -4725,7 +4713,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4B1D9DC59700B1E33B /* libregina-engine.dylib in Frameworks */,
-				05617B541D9DC5CD00B1E33B /* popt.framework in Frameworks */,
+				0567B5C02581ACFA0022EA5D /* popt.xcframework in Frameworks */,
 				05617B551D9DC5CD00B1E33B /* libiconv.dylib in Frameworks */,
 				05617B561D9DC5CD00B1E33B /* libxml2.dylib in Frameworks */,
 			);
@@ -4736,7 +4724,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4A1D9DC59200B1E33B /* libregina-engine.dylib in Frameworks */,
-				05617B511D9DC5C900B1E33B /* popt.framework in Frameworks */,
+				0567B5712581ACE50022EA5D /* popt.xcframework in Frameworks */,
 				05617B521D9DC5C900B1E33B /* libiconv.dylib in Frameworks */,
 				05617B531D9DC5C900B1E33B /* libxml2.dylib in Frameworks */,
 			);
@@ -4746,14 +4734,18 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				057EDA022581BC16004F0068 /* libgmp.xcframework in Frameworks */,
+				057ED8F02581B49E004F0068 /* QtCore.framework in Frameworks */,
+				057ED8F22581B49E004F0068 /* QtPrintSupport.framework in Frameworks */,
+				057ED9C42581BAAE004F0068 /* graphviz.xcframework in Frameworks */,
+				057ED8F62581B49E004F0068 /* QtDBus.framework in Frameworks */,
+				057ED8FA2581B49E004F0068 /* QtWidgets.framework in Frameworks */,
+				057ED8F82581B49E004F0068 /* QtGui.framework in Frameworks */,
 				0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */,
-				05AB5ECF1B8ED9FA007034C8 /* QtCore.framework in Frameworks */,
-				05AB5ED01B8ED9FA007034C8 /* QtGui.framework in Frameworks */,
-				05AB5ED31B8EDC27007034C8 /* QtSvg.framework in Frameworks */,
-				05AB5ED11B8ED9FA007034C8 /* QtWidgets.framework in Frameworks */,
+				057ED8EE2581B49E004F0068 /* QtSvg.framework in Frameworks */,
 				05CAFB561C4D904A0001C253 /* libz.dylib in Frameworks */,
 				0591E8591C4F832B00793A9C /* libxml2.dylib in Frameworks */,
-				05CAFB551C4D8FCF0001C253 /* graphviz.framework in Frameworks */,
+				057ED8F42581B49E004F0068 /* QtNetwork.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4762,13 +4754,13 @@
 			buildActionMask = 2147483647;
 			files = (
 				053E5B5619B3D79200166778 /* libbz2.dylib in Frameworks */,
+				0567B4CF2581ABAA0022EA5D /* libtokyocabinet.xcframework in Frameworks */,
 				055B7318181D7F2500449D14 /* libiconv.dylib in Frameworks */,
 				055B731A181D7F2C00449D14 /* libxml2.dylib in Frameworks */,
 				052FA0A61806047E00FAE4DF /* libz.dylib in Frameworks */,
-				054208E71DF0D65A0018AB24 /* jansson.framework in Frameworks */,
-				056AA9A41C41DE8700FA81D3 /* libgmp.framework in Frameworks */,
-				056AA9A51C41DE8700FA81D3 /* libgmpxx.framework in Frameworks */,
-				056AA99B1C41DAA300FA81D3 /* libtokyocabinet.framework in Frameworks */,
+				0567B4AD2581ABA20022EA5D /* libgmp.xcframework in Frameworks */,
+				0567B4BE2581ABA60022EA5D /* libgmpxx.xcframework in Frameworks */,
+				0567B49B2581AB9A0022EA5D /* jansson.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4777,7 +4769,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				058FC86B1FE188A0006D04B4 /* libregina-engine.dylib in Frameworks */,
-				058FC86C1FE188A0006D04B4 /* popt.framework in Frameworks */,
+				0567B5E02581AD050022EA5D /* popt.xcframework in Frameworks */,
 				058FC86D1FE188A0006D04B4 /* libiconv.dylib in Frameworks */,
 				058FC86E1FE188A0006D04B4 /* libxml2.dylib in Frameworks */,
 			);
@@ -4788,7 +4780,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05B14EB919B424F9002138C0 /* libbz2.dylib in Frameworks */,
-				052790BD24BE5EA200ACDF03 /* libtokyocabinet.framework in Frameworks */,
+				0567B4FE2581AC070022EA5D /* libtokyocabinet.xcframework in Frameworks */,
 				05B14EB719B424D8002138C0 /* libz.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -6271,6 +6263,20 @@
 		052FA0AF180604A900FAE4DF /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				057EDA312581BC97004F0068 /* cppunit.xcframework */,
+				057ED9C32581BAAE004F0068 /* graphviz.xcframework */,
+				0567B49A2581AB9A0022EA5D /* jansson.xcframework */,
+				0567B4AC2581ABA20022EA5D /* libgmp.xcframework */,
+				0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */,
+				0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */,
+				0567B5702581ACE50022EA5D /* popt.xcframework */,
+				057ED8E82581B49E004F0068 /* QtCore.framework */,
+				057ED8EB2581B49E004F0068 /* QtDBus.framework */,
+				057ED8EC2581B49E004F0068 /* QtGui.framework */,
+				057ED8EA2581B49E004F0068 /* QtNetwork.framework */,
+				057ED8E92581B49E004F0068 /* QtPrintSupport.framework */,
+				057ED8E72581B49E004F0068 /* QtSvg.framework */,
+				057ED8ED2581B49E004F0068 /* QtWidgets.framework */,
 				05C65E771D9C7B0B00877233 /* iOS */,
 				05C65E781D9C7B1200877233 /* OSX */,
 			);
@@ -7598,22 +7604,16 @@
 		05AB5F041B942903007034C8 /* Plugins */ = {
 			isa = PBXGroup;
 			children = (
-				05AB5F021B9428FD007034C8 /* libqtuiotouchplugin.dylib */,
-				05AB5EFF1B9428DC007034C8 /* libqsvgicon.dylib */,
-				05AB5EE71B9428B0007034C8 /* libqgif.dylib */,
-				05AB5EE81B9428B1007034C8 /* libqicns.dylib */,
-				05AB5EE91B9428B1007034C8 /* libqico.dylib */,
-				05AB5EEB1B9428B1007034C8 /* libqjpeg.dylib */,
-				054739E21D9B187F00C7B56F /* libqmacjp2.dylib */,
-				05AB5EED1B9428B2007034C8 /* libqsvg.dylib */,
-				05AB5EEE1B9428B2007034C8 /* libqtga.dylib */,
-				05AB5EEF1B9428B3007034C8 /* libqtiff.dylib */,
-				05AB5EF01B9428B3007034C8 /* libqwbmp.dylib */,
-				05AB5EF11B9428B3007034C8 /* libqwebp.dylib */,
-				05AB5EDF1B94285B007034C8 /* libqcocoa.dylib */,
-				05AB5EE01B94285B007034C8 /* libqminimal.dylib */,
-				05AB5EE11B94285B007034C8 /* libqoffscreen.dylib */,
-				0590E04A2074B46600C11EF6 /* libqmacstyle.dylib */,
+				057EDAE42581D83A004F0068 /* libqtuiotouchplugin.dylib */,
+				057EDAE62581D877004F0068 /* libqsvgicon.dylib */,
+				057EDAE82581D8BA004F0068 /* libqgif.dylib */,
+				057EDAEA2581D8BA004F0068 /* libqico.dylib */,
+				057EDAE92581D8BA004F0068 /* libqjpeg.dylib */,
+				057EDAEB2581D8BA004F0068 /* libqsvg.dylib */,
+				057EDAF42581D95B004F0068 /* libqcocoa.dylib */,
+				057EDAF22581D95B004F0068 /* libqminimal.dylib */,
+				057EDAF32581D95B004F0068 /* libqoffscreen.dylib */,
+				057EDAF02581D92E004F0068 /* libqmacstyle.dylib */,
 			);
 			name = Plugins;
 			sourceTree = "<group>";
@@ -7737,20 +7737,6 @@
 		05C65E781D9C7B1200877233 /* OSX */ = {
 			isa = PBXGroup;
 			children = (
-				056AA9991C41DA6900FA81D3 /* cppunit.framework */,
-				05CAFB541C4D8FCE0001C253 /* graphviz.framework */,
-				054208E61DF0D6590018AB24 /* jansson.framework */,
-				056AA9A21C41DE8600FA81D3 /* libgmp.framework */,
-				056AA9A31C41DE8600FA81D3 /* libgmpxx.framework */,
-				056AA9971C41DA4700FA81D3 /* libtokyocabinet.framework */,
-				05617AF81D9DC16900B1E33B /* popt.framework */,
-				05AB5ECC1B8ED9F9007034C8 /* QtCore.framework */,
-				05AB5F051B9429BA007034C8 /* QtDBus.framework */,
-				05AB5ECD1B8ED9F9007034C8 /* QtGui.framework */,
-				05AB5F061B9429BB007034C8 /* QtNetwork.framework */,
-				05AB5F071B9429BB007034C8 /* QtPrintSupport.framework */,
-				05AB5ED21B8EDC27007034C8 /* QtSvg.framework */,
-				05AB5ECE1B8ED9FA007034C8 /* QtWidgets.framework */,
 				053E5B5519B3D79100166778 /* libbz2.dylib */,
 				055B7317181D7F2400449D14 /* libiconv.dylib */,
 				055B7319181D7F2B00449D14 /* libxml2.dylib */,
@@ -8548,8 +8534,6 @@
 				05B4D2E622A08FDD00B7B11C /* Copy Python 2/3 Examples */,
 				057118C919B30A13009FEDC5 /* Copy SnapPea Census Data */,
 				054208951DF0D1460018AB24 /* Copy Syntax Highlighting */,
-				05AB5ED81B942354007034C8 /* Copy Frameworks */,
-				0514CAE31D9C9A5800EDB2E6 /* Sign Frameworks */,
 				05AB5EDE1B942813007034C8 /* Copy Qt Plugins (platforms) */,
 				05AB5EE51B942884007034C8 /* Copy Qt Plugins (imageformats) */,
 				05AB5EFE1B9428BD007034C8 /* Copy Qt Plugins (iconengines) */,
@@ -8559,8 +8543,10 @@
 				050BEA351D9C8B3700B96DB8 /* Copy Python Scripts */,
 				050BEA371D9C8B7E00B96DB8 /* Symlink Scripts */,
 				050F5E701B9BD50C00C1F681 /* Copy Engine and Utilities */,
-				052DB59E1D9E587C00EDEA68 /* Sign Utilities */,
 				052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */,
+				057ED8FC2581B49E004F0068 /* Embed Frameworks */,
+				052DB59E1D9E587C00EDEA68 /* Sign Utilities */,
+				0514CAE31D9C9A5800EDB2E6 /* Sign Frameworks */,
 			);
 			buildRules = (
 				0514CAF01D9CE54A00EDB2E6 /* PBXBuildRule */,
@@ -8805,7 +8791,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Mac Developer:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
+			shellScript = "# Qt was copied normally, but Xcode's code-sign-on-copy wants to sign Versions/A, not Versions/5.\n# Therefore we do the signing \"manually\" here in a script instead.\n\n/usr/bin/codesign --force --sign 'Apple Development:' --preserve-metadata=identifier,entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/Qt*.framework/Versions/5\n";
 		};
 		051B531724BEA9F600A25B75 /* Embed Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8861,7 +8847,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in retriangulate sigcensus tricensus; do\n/usr/bin/codesign --force --sign 'Mac Developer:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in retriangulate sigcensus tricensus; do\n/usr/bin/codesign --force --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8875,7 +8861,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# These will break codesign.\nrm -f ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/python/regina/*.pyc";
+			shellScript = "# These will break codesign.\nrm -f ${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS/python/regina/*.pyc\n";
 		};
 		05B4D2A5229F31F100B7B11C /* Copy Python core */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8971,7 +8957,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "custom=\"${SRCROOT}\"/qtui/doc/ksgmltools2/customization\ndtd=\"${custom}\"/dtd\nsheet=\"${custom}\"/regina.xsl\n\nfor i in regina regina-xml; do\n  input=\"${SRCROOT}\"/qtui/doc/$i\n  output=\"${BUILD_DIR}\"/docs-$i\n  /sw/bin/xsltproc --path \"$dtd\" -o \"${output}\"/ \"$sheet\" \"${input}\"/index.docbook\n  cp \"${input}\"/*.{css,png} \"${output}\"\ndone\n";
+			shellScript = "custom=\"${SRCROOT}\"/qtui/doc/ksgmltools2/customization\ndtd=\"${custom}\"/dtd\nsheet=\"${custom}\"/regina.xsl\n\nfor i in regina regina-xml; do\n  input=\"${SRCROOT}\"/qtui/doc/$i\n  output=\"${BUILD_DIR}\"/docs-$i\n  /usr/bin/xsltproc --path \"$dtd\" -o \"${output}\"/ \"$sheet\" \"${input}\"/index.docbook\n  cp \"${input}\"/*.{css,png} \"${output}\"\ndone\n";
 		};
 		05DADB082192573400DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10794,7 +10780,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
@@ -10812,10 +10797,6 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/jansson.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 					/usr/include/python2.7,
 				);
 				MACH_O_TYPE = mh_bundle;
@@ -10846,7 +10827,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
@@ -10860,10 +10840,6 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/jansson.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 					/usr/include/python2.7,
 				);
 				MACH_O_TYPE = mh_bundle;
@@ -10885,7 +10861,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = (
@@ -10899,7 +10874,6 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)\"",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = regtestsuite;
@@ -10914,7 +10888,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = "TESTSUITE_CENSUS_DIR='\"${CONFIGURATION_TEMP_DIR}/Engine.build/DerivedSources\"'";
@@ -10925,7 +10898,6 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)\"",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = regtestsuite;
@@ -10971,7 +10943,10 @@
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 5.9;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -11021,7 +10996,10 @@
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 5.9;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -11047,10 +11025,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11063,9 +11038,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11089,10 +11061,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11101,9 +11070,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11127,10 +11093,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11143,9 +11106,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11169,10 +11129,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11181,9 +11138,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11207,10 +11161,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11223,9 +11174,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11249,10 +11197,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11261,9 +11206,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11287,10 +11229,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11303,9 +11242,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11329,10 +11265,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11341,9 +11274,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11367,10 +11297,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11383,9 +11310,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11409,10 +11333,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11421,9 +11342,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11447,10 +11365,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11463,9 +11378,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11489,10 +11401,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11501,9 +11410,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11527,10 +11433,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11543,9 +11446,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11569,10 +11469,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11581,9 +11478,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11607,10 +11501,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11623,9 +11514,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -11649,10 +11537,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -11661,9 +11546,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -11692,7 +11574,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+					"$(HOME)/Qt/5.15.2-macos/lib",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11710,13 +11592,10 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Library/Frameworks/osx/QtCore.framework/Headers",
-					"$(HOME)/Library/Frameworks/osx/QtGui.framework/Headers",
-					"$(HOME)/Library/Frameworks/osx/QtSvg.framework/Headers",
-					"$(HOME)/Library/Frameworks/osx/QtWidgets.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/graphviz.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
 					/usr/include/python2.7,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
@@ -11747,7 +11626,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+					"$(HOME)/Qt/5.15.2-macos/lib",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -11763,13 +11642,10 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Library/Frameworks/osx/QtCore.framework/Headers",
-					"$(HOME)/Library/Frameworks/osx/QtGui.framework/Headers",
-					"$(HOME)/Library/Frameworks/osx/QtSvg.framework/Headers",
-					"$(HOME)/Library/Frameworks/osx/QtWidgets.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/graphviz.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
 					/usr/include/python2.7,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
@@ -11837,7 +11713,7 @@
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = macosx;
 			};
@@ -11889,7 +11765,7 @@
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				SDKROOT = macosx;
 			};
 			name = Release;
@@ -11905,7 +11781,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				HEADER_SEARCH_PATHS = (
@@ -11915,10 +11790,6 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/jansson.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "regina-engine";
@@ -11937,7 +11808,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				HEADER_SEARCH_PATHS = (
@@ -11947,10 +11817,6 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/jansson.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "regina-engine";
@@ -11969,10 +11835,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				DEBUG_INFORMATION_FORMAT = dwarf;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					"REGINA_XCODE_BUNDLE=1",
@@ -11985,9 +11848,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
@@ -12012,10 +11872,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12024,9 +11881,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12050,7 +11904,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -12064,7 +11917,6 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				MACOSX_DEPLOYMENT_TARGET = "";
@@ -12083,7 +11935,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12093,7 +11944,6 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				MACOSX_DEPLOYMENT_TARGET = "";
@@ -12148,7 +11998,7 @@
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
 				);
-				MACOSX_DEPLOYMENT_TARGET = 10.11;
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
 				SDKROOT = macosx;
 			};
 			name = "Python 3 Release";
@@ -12164,7 +12014,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				HEADER_SEARCH_PATHS = (
@@ -12174,10 +12023,6 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/jansson.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = "regina-engine";
@@ -12202,7 +12047,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_ENABLE_CPP_EXCEPTIONS = YES;
 				GCC_ENABLE_CPP_RTTI = YES;
@@ -12216,10 +12060,6 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/jansson.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 					/sw/include/python3.7m,
 				);
 				MACH_O_TYPE = mh_bundle;
@@ -12241,7 +12081,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PREPROCESSOR_DEFINITIONS = "TESTSUITE_CENSUS_DIR='\"${CONFIGURATION_TEMP_DIR}/Engine.build/DerivedSources\"'";
@@ -12252,7 +12091,6 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)\"",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
 				);
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				PRODUCT_NAME = regtestsuite;
@@ -12292,7 +12130,7 @@
 					"$(inherited)",
 					"$(LOCAL_LIBRARY_DIR)/Frameworks",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
+					"$(HOME)/Qt/5.15.2-macos/lib",
 				);
 				GCC_C_LANGUAGE_STANDARD = "compiler-default";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -12308,13 +12146,10 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Library/Frameworks/osx/QtCore.framework/Headers",
-					"$(HOME)/Library/Frameworks/osx/QtGui.framework/Headers",
-					"$(HOME)/Library/Frameworks/osx/QtSvg.framework/Headers",
-					"$(HOME)/Library/Frameworks/osx/QtWidgets.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/graphviz.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtCore.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
+					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
 					/sw/include/python3.7m,
 				);
 				INFOPLIST_FILE = qtui/src/regina.plist;
@@ -12365,7 +12200,10 @@
 				);
 				INFOPLIST_FILE = "ios/Regina-Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				MARKETING_VERSION = 5.9;
 				OTHER_LDFLAGS = (
 					"-framework",
@@ -12393,7 +12231,6 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
 				);
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12403,7 +12240,6 @@
 					"\"$(SRCROOT)/engine\"",
 					"\"$(SRCROOT)\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libtokyocabinet.framework/Headers",
 				);
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
 				MACOSX_DEPLOYMENT_TARGET = "";
@@ -12422,10 +12258,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12434,9 +12267,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12460,10 +12290,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12472,9 +12299,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12498,10 +12322,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12510,9 +12331,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12536,10 +12354,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12548,9 +12363,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12574,10 +12386,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12586,9 +12395,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12613,10 +12419,7 @@
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12625,9 +12428,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12651,10 +12451,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12663,9 +12460,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12689,10 +12483,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12701,9 +12492,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
@@ -12727,10 +12515,7 @@
 				CLANG_WARN_SUSPICIOUS_MOVES = YES;
 				CODE_SIGN_IDENTITY = "-";
 				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				HEADER_SEARCH_PATHS = (
@@ -12739,9 +12524,6 @@
 					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmp.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/libgmpxx.framework/Headers",
-					"$(USER_LIBRARY_DIR)/Frameworks/osx/popt.framework/Headers",
 				);
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
