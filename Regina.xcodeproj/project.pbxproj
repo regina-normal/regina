@@ -1427,10 +1427,6 @@
 		057EDEF92582370B004F0068 /* Python.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDEF82582370B004F0068 /* Python.xcframework */; };
 		057EDF1A25823779004F0068 /* XZ.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDF1925823779004F0068 /* XZ.xcframework */; };
 		057EDF1B25823779004F0068 /* XZ.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDF1925823779004F0068 /* XZ.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		057EDFDC25824124004F0068 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDFCA258240F8004F0068 /* libbz2.tbd */; };
-		057EDFEC2582412E004F0068 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDFCC258240F8004F0068 /* libxml2.tbd */; };
-		057EDFFC25824130004F0068 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDFCB258240F8004F0068 /* libsqlite3.tbd */; };
-		057EE00C25824134004F0068 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EDFC9258240F8004F0068 /* libz.tbd */; };
 		057EE01D2582416B004F0068 /* DBChooser.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 057EE01C2582416B004F0068 /* DBChooser.framework */; };
 		057EE4351C6009A700C4D155 /* perm-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 057EE4341C6009A700C4D155 /* perm-impl.h */; };
 		057EE4561C6009F300C4D155 /* component5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 057EE4371C6009E600C4D155 /* component5.cpp */; };
@@ -1651,6 +1647,10 @@
 		059BC6941DC7F7A300AB4206 /* boundarycomponent13.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059BC6721DC7F79600AB4206 /* boundarycomponent13.cpp */; };
 		059BC6951DC7F7A300AB4206 /* boundarycomponent14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059BC6731DC7F79600AB4206 /* boundarycomponent14.cpp */; };
 		059BC6961DC7F7A300AB4206 /* boundarycomponent15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059BC6741DC7F79600AB4206 /* boundarycomponent15.cpp */; };
+		059D612A258865B00011E905 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEE258241E100965440 /* libz.tbd */; };
+		059D6149258865BD0011E905 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		059D6197258866640011E905 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 059D6168258866370011E905 /* libbz2.tbd */; };
+		059D61A7258866670011E905 /* libsqlite3.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 059D61692588663B0011E905 /* libsqlite3.tbd */; };
 		05A066961DFA67D40047872E /* augtrisolidtorus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0665E1DFA67CB0047872E /* augtrisolidtorus.cpp */; };
 		05A066971DFA67D40047872E /* blockedsfs.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0665F1DFA67CB0047872E /* blockedsfs.cpp */; };
 		05A066981DFA67D40047872E /* blockedsfsloop.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A066601DFA67CB0047872E /* blockedsfsloop.cpp */; };
@@ -3949,10 +3949,6 @@
 		057EDAF42581D95B004F0068 /* libqcocoa.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libqcocoa.dylib; path = "../../Qt/5.15.2-macos/plugins/platforms/libqcocoa.dylib"; sourceTree = "<group>"; };
 		057EDEF82582370B004F0068 /* Python.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = Python.xcframework; path = ../../Library/Frameworks/Python.xcframework; sourceTree = "<group>"; };
 		057EDF1925823779004F0068 /* XZ.xcframework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcframework; name = XZ.xcframework; path = ../../Library/Frameworks/XZ.xcframework; sourceTree = "<group>"; };
-		057EDFC9258240F8004F0068 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.2.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
-		057EDFCA258240F8004F0068 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.2.sdk/usr/lib/libbz2.tbd; sourceTree = DEVELOPER_DIR; };
-		057EDFCB258240F8004F0068 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.2.sdk/usr/lib/libsqlite3.tbd; sourceTree = DEVELOPER_DIR; };
-		057EDFCC258240F8004F0068 /* libxml2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libxml2.tbd; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS14.2.sdk/usr/lib/libxml2.tbd; sourceTree = DEVELOPER_DIR; };
 		057EE01C2582416B004F0068 /* DBChooser.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DBChooser.framework; path = ../../Library/Frameworks/DBChooser.framework; sourceTree = "<group>"; };
 		057EE4341C6009A700C4D155 /* perm-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "perm-impl.h"; sourceTree = "<group>"; };
 		057EE4361C6009E600C4D155 /* component-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "component-bindings.h"; sourceTree = "<group>"; };
@@ -4193,6 +4189,8 @@
 		059BC6721DC7F79600AB4206 /* boundarycomponent13.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponent13.cpp; sourceTree = "<group>"; };
 		059BC6731DC7F79600AB4206 /* boundarycomponent14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponent14.cpp; sourceTree = "<group>"; };
 		059BC6741DC7F79600AB4206 /* boundarycomponent15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponent15.cpp; sourceTree = "<group>"; };
+		059D6168258866370011E905 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
+		059D61692588663B0011E905 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		05A0665E1DFA67CB0047872E /* augtrisolidtorus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = augtrisolidtorus.cpp; sourceTree = "<group>"; };
 		05A0665F1DFA67CB0047872E /* blockedsfs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blockedsfs.cpp; sourceTree = "<group>"; };
 		05A066601DFA67CB0047872E /* blockedsfsloop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blockedsfsloop.cpp; sourceTree = "<group>"; };
@@ -4644,10 +4642,10 @@
 				057EDEB52582363B004F0068 /* libgmpxx.xcframework in Frameworks */,
 				057EDEAD2582363B004F0068 /* cppunit.xcframework in Frameworks */,
 				057EDF1A25823779004F0068 /* XZ.xcframework in Frameworks */,
-				057EDFDC25824124004F0068 /* libbz2.tbd in Frameworks */,
-				057EDFFC25824130004F0068 /* libsqlite3.tbd in Frameworks */,
-				057EDFEC2582412E004F0068 /* libxml2.tbd in Frameworks */,
-				057EE00C25824134004F0068 /* libz.tbd in Frameworks */,
+				059D6197258866640011E905 /* libbz2.tbd in Frameworks */,
+				059D61A7258866670011E905 /* libsqlite3.tbd in Frameworks */,
+				059D6149258865BD0011E905 /* libxml2.tbd in Frameworks */,
+				059D612A258865B00011E905 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6290,8 +6288,7 @@
 				057ED8E72581B49E004F0068 /* QtSvg.framework */,
 				057ED8ED2581B49E004F0068 /* QtWidgets.framework */,
 				057EE01C2582416B004F0068 /* DBChooser.framework */,
-				05C65E771D9C7B0B00877233 /* iOS */,
-				05C65E781D9C7B1200877233 /* OSX */,
+				05C65E781D9C7B1200877233 /* System */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -7725,25 +7722,16 @@
 			path = explicit;
 			sourceTree = "<group>";
 		};
-		05C65E771D9C7B0B00877233 /* iOS */ = {
+		05C65E781D9C7B1200877233 /* System */ = {
 			isa = PBXGroup;
 			children = (
-				057EDFCA258240F8004F0068 /* libbz2.tbd */,
-				057EDFCC258240F8004F0068 /* libxml2.tbd */,
-				057EDFCB258240F8004F0068 /* libsqlite3.tbd */,
-				057EDFC9258240F8004F0068 /* libz.tbd */,
-			);
-			name = iOS;
-			sourceTree = "<group>";
-		};
-		05C65E781D9C7B1200877233 /* OSX */ = {
-			isa = PBXGroup;
-			children = (
+				059D6168258866370011E905 /* libbz2.tbd */,
 				05E0EFEC258241E100965440 /* libiconv.tbd */,
+				059D61692588663B0011E905 /* libsqlite3.tbd */,
 				05E0EFED258241E100965440 /* libxml2.tbd */,
 				05E0EFEE258241E100965440 /* libz.tbd */,
 			);
-			name = OSX;
+			name = System;
 			sourceTree = "<group>";
 		};
 		05F09FC21DBF018400117BFC /* dim2 */ = {
