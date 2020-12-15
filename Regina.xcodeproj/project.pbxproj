@@ -8851,7 +8851,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "resdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\n# We do not support python2 on iOS any more.\npyzip=python38.zip\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/\"$pyzip\" \"$resdir\"/python\n";
+			shellScript = "PYVER=38\nresdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app\"\n\n# We need to pick a single arch for pythonXY.zip.\ncase \"${PLATFORM_NAME}\" in\n  iphonesimulator|iPhoneSimulator)\n    # Use the arch we will be running the simulator on.\n    # We do not use $PLATFORM_PREFERRED_ARCH because for iphonesimulator\n    # this gives x86_64 when building (and thus running) the simulator\n    # on an arm64 machine.\n    usearch=\"${NATIVE_ARCH}\"\n    ;;\n  *)\n    usearch=\"${PLATFORM_PREFERRED_ARCH}\"\n    ;;\nesac\n\nmkdir -p \"$resdir\"/python\ncp ~/Library/Frameworks/python${PYVER}-${PLATFORM_NAME}-${usearch}.zip \"$resdir\"/python/python${PYVER}.zip\n";
 		};
 		05B4D2E222A028DC00B7B11C /* Copy Python 2/3 examples */ = {
 			isa = PBXShellScriptBuildPhase;
