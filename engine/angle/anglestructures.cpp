@@ -257,8 +257,13 @@ void AngleStructures::calculateSpanStrict() const {
 }
 
 void AngleStructures::calculateSpanTaut() const {
-    doesSpanTaut = (find_if(structures.begin(), structures.end(),
-        std::mem_fun(&AngleStructure::isTaut)) != structures.end());
+    for (const AngleStructure* s : structures) {
+        if (s->isTaut()) {
+            doesSpanTaut = true;
+            return;
+        }
+    }
+    doesSpanTaut = false;
 }
 
 } // namespace regina
