@@ -60,12 +60,21 @@ void addCyclotomic(pybind11::module& m) {
             pybind11::arg("whichRoot") = 1)
         .def("negate", &Cyclotomic::invert)
         .def("invert", &Cyclotomic::invert)
+        .def("inverse", &Cyclotomic::inverse)
         .def(pybind11::self *= regina::Rational())
         .def(pybind11::self /= regina::Rational())
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self -= pybind11::self)
         .def(pybind11::self *= pybind11::self)
         .def(pybind11::self /= pybind11::self)
+        .def(pybind11::self * regina::Rational())
+        .def(regina::Rational() * pybind11::self)
+        .def(pybind11::self / regina::Rational())
+        .def(pybind11::self + pybind11::self)
+        .def(pybind11::self - pybind11::self)
+        .def(pybind11::self * pybind11::self)
+        .def(pybind11::self / pybind11::self)
+        .def(- pybind11::self)
         .def_static("cyclotomic", [](size_t n) {
             return new regina::Polynomial<regina::Rational>(
                 Cyclotomic::cyclotomic(n));

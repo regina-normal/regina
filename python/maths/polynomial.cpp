@@ -101,6 +101,7 @@ void addPolynomial(pybind11::module& m) {
         })
         .def("set", &Polynomial<Rational>::set)
         .def("swap", &Polynomial<Rational>::swap)
+        .def("negate", &Polynomial<Rational>::negate)
         .def("str", overload_cast<const char*>(
             &Polynomial<Rational>::str, pybind11::const_))
         .def("utf8", overload_cast<const char*>(
@@ -111,8 +112,14 @@ void addPolynomial(pybind11::module& m) {
         .def(pybind11::self -= pybind11::self)
         .def(pybind11::self *= pybind11::self)
         .def(pybind11::self /= pybind11::self)
+        .def(pybind11::self * regina::Rational())
+        .def(regina::Rational() * pybind11::self)
+        .def(pybind11::self / regina::Rational())
         .def(pybind11::self + pybind11::self)
+        .def(pybind11::self - pybind11::self)
         .def(pybind11::self * pybind11::self)
+        .def(pybind11::self / pybind11::self)
+        .def(- pybind11::self)
         .def("divisionAlg", [](const Polynomial<Rational>& p,
                 const Polynomial<Rational>& divisor) {
             std::unique_ptr<Polynomial<Rational>> q(new Polynomial<Rational>);

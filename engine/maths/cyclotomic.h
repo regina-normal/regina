@@ -753,6 +753,18 @@ Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
 Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
 /**
+ * Divides the two given cyclotomic field elements.
+ *
+ * \pre The second argument \a rhs is non-zero.
+ * \pre Both arguments belong to the same cyclotomic field.
+ *
+ * @param lhs the field element to divide by \a rhs.
+ * @param rhs the field element to divide \a lhs by.
+ * @return the result of dividing \a lhs by \a rhs.
+ */
+Cyclotomic operator / (const Cyclotomic& lhs, const Cyclotomic& rhs);
+
+/**
  * Deprecated typedef for backward compatibility.  This typedef will
  * be removed in a future release of Regina.
  *
@@ -913,9 +925,7 @@ inline Cyclotomic& Cyclotomic::operator -= (const Cyclotomic& other) {
 }
 
 inline Cyclotomic& Cyclotomic::operator /= (const Cyclotomic& other) {
-    Cyclotomic tmp(other);
-    tmp.invert();
-    return (*this) *= tmp;
+    return (*this) *= other.inverse();
 }
 
 inline std::string Cyclotomic::str(const char* variable) const {
@@ -957,7 +967,7 @@ inline Cyclotomic operator / (Cyclotomic elt, const Rational& scalar) {
 }
 
 inline Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs) {
-    // std::cerr << "Cyclotomic: deep copy (+)" << std::endl;
+    // std::cerr << "Cyclotomic: deep copy (const +)" << std::endl;
     Rational* coeff = new Rational[lhs.degree_];
     for (size_t i = 0; i < lhs.degree_; ++i)
         coeff[i] = lhs.coeff_[i] + rhs.coeff_[i];
@@ -982,7 +992,7 @@ inline Cyclotomic operator - (Cyclotomic arg) {
 }
 
 inline Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs) {
-    // std::cerr << "Cyclotomic: deep copy (-)" << std::endl;
+    // std::cerr << "Cyclotomic: deep copy (const -)" << std::endl;
     Rational* coeff = new Rational[lhs.degree_];
     for (size_t i = 0; i < lhs.degree_; ++i)
         coeff[i] = lhs.coeff_[i] - rhs.coeff_[i];
@@ -1000,6 +1010,10 @@ inline Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs) {
 
 inline Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs) {
     return std::move(lhs -= rhs);
+}
+
+inline Cyclotomic operator / (const Cyclotomic& lhs, const Cyclotomic& rhs) {
+    return lhs * rhs.inverse();
 }
 
 } // namespace regina

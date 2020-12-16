@@ -587,8 +587,31 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          */
         Polynomial(size_t degree, T* coeff);
 
+        /**
+         * Replaces the contents of this polynomial with \a other - \a this.
+         *
+         * This is equivalent to calling the -= operator and then negating.
+         *
+         * The given polynomial need not have the same degree as this.
+         * Note that the degree of this polynomial might change as a
+         * result of this operation.
+         *
+         * @param other the polynomial to subtract this from.
+         * @return a reference to this polynomial.
+         */
+        Polynomial& subtractFrom(const Polynomial<T>& other);
+
     template <typename U>
     friend Polynomial<U> operator +(const Polynomial<U>&, const Polynomial<U>&);
+
+    template <typename U>
+    friend Polynomial<U> operator -(const Polynomial<U>&, const Polynomial<U>&);
+
+    template <typename U>
+    friend Polynomial<U> operator -(const Polynomial<U>&, Polynomial<U>&&);
+
+    template <typename U>
+    friend Polynomial<U> operator -(Polynomial<U>&&, Polynomial<U>&&);
 
     template <typename U>
     friend Polynomial<U> operator *(const Polynomial<U>&, const Polynomial<U>&);
@@ -702,6 +725,58 @@ template <typename T>
 Polynomial<T> operator - (Polynomial<T> arg);
 
 /**
+ * Subtracts the two given polynomials.
+ *
+ * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the polynomial to sutract \a rhs from.
+ * @param rhs the polynomial to subtract from \a lhs.
+ * @return the difference of the two given polynomials.
+ */
+template <typename T>
+Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
+
+/**
+ * Subtracts the two given polynomials.
+ *
+ * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the polynomial to sutract \a rhs from.
+ * @param rhs the polynomial to subtract from \a lhs.
+ * @return the difference of the two given polynomials.
+ */
+template <typename T>
+Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs);
+
+/**
+ * Subtracts the two given polynomials.
+ *
+ * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the polynomial to sutract \a rhs from.
+ * @param rhs the polynomial to subtract from \a lhs.
+ * @return the difference of the two given polynomials.
+ */
+template <typename T>
+Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs);
+
+/**
+ * Subtracts the two given polynomials.
+ *
+ * This operator <tt>-</tt> is sometimes faster than using <tt>-=</tt>,
+ * since it has more flexibility to avoid an internal deep copy.
+ *
+ * @param lhs the polynomial to sutract \a rhs from.
+ * @param rhs the polynomial to subtract from \a lhs.
+ * @return the difference of the two given polynomials.
+ */
+template <typename T>
+Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs);
+
+/**
  * Multiplies the two given polynomials.
  *
  * @param lhs the first polynomial to multiply.
@@ -710,6 +785,39 @@ Polynomial<T> operator - (Polynomial<T> arg);
  */
 template <typename T>
 Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs);
+
+/**
+ * Divides the two given polynomials.
+ *
+ * More precisely: suppose there exist polynomials \a q and \a r with
+ * coefficients of type \a T for which <tt>lhs = q.rhs + r</tt>,
+ * and where \a r has smaller degree than \a rhs.  Then we call
+ * \a q the \e quotient, and \a r the \e remainder.
+ *
+ * This routine returns the quotient \a q, and discards the remainder.
+ * If you need to keep the remainder also, then call Polynomial::divisionAlg()
+ * instead.
+ *
+ * Coefficients are divided using the operator /= on type \a T.
+ *
+ * If your coefficient type \a T is not a field (e.g., if \a T
+ * is Integer), you must be sure to know in advance that the
+ * quotient exists (see the precondition below).  Otherwise the
+ * behaviour of this routine is undefined.
+ *
+ * \pre The second polynomial \a rhs is non-zero.
+ *
+ * \pre The quotient as defined above exists.  If \a T is a field
+ * type (e.g., if \a T is Rational) then this is true automatically.
+ * If not (e.g., if \a T is Integer) then this requires some
+ * prior knowledge about the arguments.
+ *
+ * @param lhs the polynomial to divide by \a rhs.
+ * @param rhs the polynomial that we will divide \a lhs by.
+ * @return the quotient, as described above.
+ */
+template <typename T>
+Polynomial<T> operator / (Polynomial<T> lhs, const Polynomial<T>& rhs);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
@@ -983,6 +1091,7 @@ Polynomial<T>& Polynomial<T>::operator -= (const Polynomial<T>& other) {
     // the degrees are equal.
     size_t i;
     if (degree_ < other.degree_) {
+        // std::cerr << "Polynomial: deep copy (-=)" << std::endl;
         T* copy = new T[other.degree_ + 1];
         for (i = 0; i <= degree_; ++i)
             copy[i] = coeff_[i];
@@ -1011,6 +1120,7 @@ Polynomial<T>& Polynomial<T>::operator *= (const Polynomial<T>& other) {
 
     // The following code works even if &other == this, since we construct the
     // coefficients of the product in a separate section of memory.
+    // std::cerr << "Polynomial: deep copy (*=)" << std::endl;
     size_t i, j;
     T* ans = new T[degree_ + other.degree_ + 1];
     for (i = 0; i <= degree_; ++i)
@@ -1049,6 +1159,7 @@ Polynomial<T>& Polynomial<T>::operator /= (const Polynomial<T>& other) {
     }
 
     // We now have 0 < deg(other) <= deg(this).
+    // std::cerr << "Polynomial: deep copy (/=)" << std::endl;
     T* remainder = coeff_;
     coeff_ = new T[degree_ - other.degree_ + 1];
     for (i = degree_; i >= other.degree_; --i) {
@@ -1095,6 +1206,7 @@ void Polynomial<T>::divisionAlg(const Polynomial<T>& divisor,
 
     quotient.degree_ = degree_ - divisor.degree_;
     delete[] quotient.coeff_;
+    // std::cerr << "Polynomial: deep copy (const divisionAlg)" << std::endl;
     quotient.coeff_ = new T[quotient.degree_ + 1];
 
     remainder = *this;
@@ -1278,6 +1390,43 @@ inline Polynomial<T>::Polynomial(size_t degree, T* coeff) :
 }
 
 template <typename T>
+inline Polynomial<T>& Polynomial<T>::subtractFrom(const Polynomial<T>& other) {
+    // This works even if &other == this, since we don't reallocate if
+    // the degrees are equal.
+    size_t i;
+    if (degree_ < other.degree_) {
+        // std::cerr << "Polynomial: deep copy (subtractFrom)" << std::endl;
+        T* copy = new T[other.degree_ + 1];
+        for (i = 0; i <= degree_; ++i)
+            if (coeff_[i] == 0)
+                copy[i] = other.coeff_[i];
+            else
+                copy[i] = other.coeff_[i] - coeff_[i];
+        for ( ; i <= other.degree_; ++i)
+            copy[i] = other.coeff_[i];
+        delete[] coeff_;
+        coeff_ = copy;
+        degree_ = other.degree_;
+    } else {
+        // No need to reallocate.
+        for (i = 0; i <= other.degree_; ++i)
+            if (coeff_[i] == 0)
+                coeff_[i] = other.coeff_[i];
+            else
+                coeff_[i] = other.coeff_[i] - coeff_[i];
+        for ( ; i <= degree_; ++i)
+            if (coeff_[i] != 0)
+                coeff_[i] = -coeff_[i];
+    }
+
+    // We might have zeroed out the leading coefficient.
+    while (degree_ > 0 && coeff_[degree_] == 0)
+        --degree_;
+
+    return *this;
+}
+
+template <typename T>
 inline Polynomial<T> operator * (Polynomial<T> poly,
         const typename Polynomial<T>::Coefficient& scalar) {
     // When the argument poly is an lvalue reference, we perform a deep copy
@@ -1306,6 +1455,7 @@ inline Polynomial<T> operator / (Polynomial<T> poly,
 
 template <typename T>
 Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
+    // std::cerr << "Polynomial: deep copy (const +)" << std::endl;
     if (lhs.degree_ >= rhs.degree_) {
         T* coeff = new T[lhs.degree_ + 1];
 
@@ -1357,10 +1507,63 @@ inline Polynomial<T> operator - (Polynomial<T> arg) {
 }
 
 template <typename T>
+Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
+    // std::cerr << "Polynomial: deep copy (const -)" << std::endl;
+    if (lhs.degree_ >= rhs.degree_) {
+        T* coeff = new T[lhs.degree_ + 1];
+
+        for (size_t i = 0 ; i <= rhs.degree_; ++i)
+            if (rhs.coeff_[i] == 0)
+                coeff[i] = lhs.coeff_[i];
+            else
+                coeff[i] = lhs.coeff_[i] - rhs.coeff_[i];
+        std::copy(lhs.coeff_ + rhs.degree_ + 1, lhs.coeff_ + lhs.degree_ + 1,
+            coeff + rhs.degree_ + 1);
+
+        return Polynomial<T>(lhs.degree_, coeff);
+    } else {
+        T* coeff = new T[rhs.degree_ + 1];
+
+        size_t i;
+        for (i = 0 ; i <= lhs.degree_; ++i)
+            if (rhs.coeff_[i] == 0)
+                coeff[i] = lhs.coeff_[i];
+            else
+                coeff[i] = lhs.coeff_[i] - rhs.coeff_[i];
+        for ( ; i <= rhs.degree_; ++i)
+            if (rhs.coeff_[i] != 0)
+                coeff[i] = - rhs.coeff_[i];
+
+        return Polynomial<T>(rhs.degree_, coeff);
+    }
+}
+
+template <typename T>
+Polynomial<T> operator - (Polynomial<T>&& lhs, const Polynomial<T>& rhs) {
+    return std::move(lhs -= rhs);
+}
+
+template <typename T>
+Polynomial<T> operator - (const Polynomial<T>& lhs, Polynomial<T>&& rhs) {
+    return std::move(rhs.subtractFrom(lhs));
+}
+
+template <typename T>
+Polynomial<T> operator - (Polynomial<T>&& lhs, Polynomial<T>&& rhs) {
+    // Choose a direction for the subtraction that avoids a
+    // deep copy within -= / subtractFrom.
+    if (lhs.degree_ < rhs.degree_)
+        return std::move(rhs.subtractFrom(lhs));
+    else
+        return std::move(lhs -= rhs);
+}
+
+template <typename T>
 Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
     if (lhs.isZero() || rhs.isZero())
         return Polynomial<T>();
 
+    // std::cerr << "Polynomial: deep copy (const *)" << std::endl;
     size_t i, j;
     T* coeff = new T[lhs.degree_ + rhs.degree_ + 1];
     for (i = 0; i <= lhs.degree_; ++i)
@@ -1369,6 +1572,11 @@ Polynomial<T> operator * (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
 
     // Both leading coefficients are non-zero, so the degree is correct.
     return Polynomial<T>(lhs.degree_ + rhs.degree_, coeff);
+}
+
+template <typename T>
+inline Polynomial<T> operator / (Polynomial<T> lhs, const Polynomial<T>& rhs) {
+    return std::move(lhs /= rhs);
 }
 
 } // namespace regina
