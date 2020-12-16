@@ -1793,6 +1793,8 @@
 		05A0675E1DFA68470047872E /* txicore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A067061DFA68190047872E /* txicore.cpp */; };
 		05A067611DFA69220047872E /* standardtriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0675F1DFA691D0047872E /* standardtriangulation.cpp */; };
 		05A067621DFA69230047872E /* standardtriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A0675F1DFA691D0047872E /* standardtriangulation.cpp */; };
+		05A6A66D258AD0FB00A05E70 /* polynomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A6A66C258AD0FB00A05E70 /* polynomial.cpp */; };
+		05A6A66E258AD0FB00A05E70 /* polynomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A6A66C258AD0FB00A05E70 /* polynomial.cpp */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7A19B2EDFC0099C617 /* xmlcallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */; };
@@ -4282,6 +4284,7 @@
 		05A47F9B1809CB7600F86BFD /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05A47F9C1809CB7600F86BFD /* gap-tests.rga */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = "gap-tests.rga"; sourceTree = "<group>"; };
 		05A47FA01809CB7600F86BFD /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		05A6A66C258AD0FB00A05E70 /* polynomial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = polynomial.cpp; sourceTree = "<group>"; };
 		05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hyperbolic.cpp; path = engine/census/hyperbolic.cpp; sourceTree = SOURCE_ROOT; };
 		05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlcallback.cpp; sourceTree = "<group>"; };
 		05A73C7819B2EDFC0099C617 /* xmlcallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlcallback.h; sourceTree = "<group>"; };
@@ -6358,6 +6361,7 @@
 				052FA0DE1806088B00FAE4DF /* perm4.cpp */,
 				052FA0DF1806088B00FAE4DF /* perm5.cpp */,
 				052FA0E31806088B00FAE4DF /* permconv.cpp */,
+				05A6A66C258AD0FB00A05E70 /* polynomial.cpp */,
 				052FA0E01806088B00FAE4DF /* primes.cpp */,
 				052FA0E11806088B00FAE4DF /* rational.cpp */,
 				052FA0E41806088B00FAE4DF /* testmaths.h */,
@@ -9311,6 +9315,7 @@
 				05431F9F1C40F543009BC072 /* facenumbering.cpp in Sources */,
 				052FA1101806088B00FAE4DF /* numbertheory.cpp in Sources */,
 				052FA10E1806088B00FAE4DF /* primes.cpp in Sources */,
+				05A6A66D258AD0FB00A05E70 /* polynomial.cpp in Sources */,
 				0591E8501C4F777100793A9C /* facetpairing4.cpp in Sources */,
 				05431F971C40F527009BC072 /* perm.cpp in Sources */,
 				052FA1061806088B00FAE4DF /* census3.cpp in Sources */,
@@ -9342,6 +9347,7 @@
 				05C1BEBA1DCA7CB3007C946B /* boundary4.cpp in Sources */,
 				05249EDF1DBC16E4001FE29E /* face9.cpp in Sources */,
 				058FADA719D388920001B5B5 /* Tri2ViewController.mm in Sources */,
+				05A6A66E258AD0FB00A05E70 /* polynomial.cpp in Sources */,
 				05A066B51DFA67D50047872E /* blockedsfspair.cpp in Sources */,
 				05249EC31DBC16CA001FE29E /* tetrahedron4.cpp in Sources */,
 				058FADB119D3C37D0001B5B5 /* Tri2Skeleton.mm in Sources */,
