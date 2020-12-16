@@ -606,6 +606,13 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial(size_t degree, T* coeff);
 
         /**
+         * Decreases \a degree_ to ensure that the leading coefficient
+         * is non-zero.  If this is the zero polynomial then \a degree_
+         * will be set to zero.
+         */
+        void fixDegree();
+
+        /**
          * Replaces the contents of this polynomial with \a other - \a this.
          *
          * This is equivalent to calling the -= operator and then negating.
@@ -935,8 +942,7 @@ void Polynomial<T>::init(iterator begin, iterator end) {
         coeff_[i++] = *begin++;
 
     // The leading coefficient might be zero.
-    while (degree_ > 0 && coeff_[degree_] == 0)
-        --degree_;
+    fixDegree();
 }
 
 template <typename T>
@@ -969,12 +975,12 @@ void Polynomial<T>::set(size_t exp, const T& value) {
     if (exp < degree_) {
         coeff_[exp] = value;
     } else if (exp == degree_) {
+        coeff_[exp] = value;
         if (value == 0) {
-            --degree_;
-            while (degree_ > 0 && coeff_[degree_] == 0)
+            if (degree_ > 0) {
                 --degree_;
-        } else {
-            coeff_[exp] = value;
+                fixDegree();
+            }
         }
     } else if (! (value == 0)) {
         // The degree will increase.
@@ -1080,8 +1086,7 @@ inline Polynomial<T>& Polynomial<T>::operator /= (const T& scalar) {
         coeff_[i] /= scalar;
 
     // For integer division, we could have zeroed out some coefficients.
-    while (degree_ > 0 && coeff_[degree_] == 0)
-        --degree_;
+    fixDegree();
 
     return *this;
 }
@@ -1104,8 +1109,7 @@ Polynomial<T>& Polynomial<T>::operator += (const Polynomial<T>& other) {
         coeff_[i] += other.coeff_[i];
 
     // We might have zeroed out the leading coefficient.
-    while (degree_ > 0 && coeff_[degree_] == 0)
-        --degree_;
+    fixDegree();
 
     return *this;
 }
@@ -1128,8 +1132,7 @@ Polynomial<T>& Polynomial<T>::operator -= (const Polynomial<T>& other) {
         coeff_[i] -= other.coeff_[i];
 
     // We might have zeroed out the leading coefficient.
-    while (degree_ > 0 && coeff_[degree_] == 0)
-        --degree_;
+    fixDegree();
 
     return *this;
 }
@@ -1415,6 +1418,13 @@ inline Polynomial<T>::Polynomial(size_t degree, T* coeff) :
 }
 
 template <typename T>
+inline void Polynomial<T>::fixDegree() {
+    // The leading coefficient might be zero.
+    while (degree_ > 0 && coeff_[degree_] == 0)
+        --degree_;
+}
+
+template <typename T>
 inline Polynomial<T>& Polynomial<T>::subtractFrom(const Polynomial<T>& other) {
     // This works even if &other == this, since we don't reallocate if
     // the degrees are equal.
@@ -1445,8 +1455,7 @@ inline Polynomial<T>& Polynomial<T>::subtractFrom(const Polynomial<T>& other) {
     }
 
     // We might have zeroed out the leading coefficient.
-    while (degree_ > 0 && coeff_[degree_] == 0)
-        --degree_;
+    fixDegree();
 
     return *this;
 }
