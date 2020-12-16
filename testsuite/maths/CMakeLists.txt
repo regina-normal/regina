@@ -11,6 +11,7 @@ SET ( FILES
   perm4
   perm5
   permconv
+  polynomial
   primes
   rational
   )
