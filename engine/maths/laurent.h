@@ -188,6 +188,27 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
         Laurent(long minExp, iterator begin, iterator end);
 
         /**
+         * Creates a new polynomial from a hard-coded sequence of coefficients.
+         *
+         * This constructor takes a C++11 initialiser list, which should
+         * contain the coefficients in order from the smallest exponent
+         * term to the largest.  The first coefficient in the sequence
+         * will be associated with the exponent \a minExp.
+         *
+         * There is no problem if the first and/or last coefficient in
+         * the sequence is zero.
+         * An empty sequence will be treated as the zero polynomial.
+         *
+         * \ifacespython Not available, but there is a Python constructor
+         * that takes a list of coefficients (which need not be constant).
+         *
+         * @param minExp the exponent corresponding to the first
+         * coefficient in the sequence.
+         * @param coefficients the full sequence of coefficients.
+         */
+        Laurent(long minExp, std::initializer_list<T> coefficients);
+
+        /**
          * Destroys this polynomial.
          */
         ~Laurent();
@@ -787,6 +808,12 @@ template <typename iterator>
 inline Laurent<T>::Laurent(long minExp, iterator begin, iterator end) :
         coeff_(nullptr) {
     init(minExp, begin, end);
+}
+
+template <typename T>
+inline Laurent<T>::Laurent(long minExp, std::initializer_list<T> coefficients) :
+        coeff_(nullptr) {
+    init(minExp, coefficients.begin(), coefficients.end());
 }
 
 template <typename T>

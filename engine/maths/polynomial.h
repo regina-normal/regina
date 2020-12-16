@@ -170,6 +170,24 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
         Polynomial(iterator begin, iterator end);
 
         /**
+         * Creates a new polynomial from a hard-coded sequence of coefficients.
+         *
+         * This constructor takes a C++11 initialiser list, which should
+         * contain the coefficients in order from the constant coefficient
+         * to the leading coefficient.
+         *
+         * There is no problem if the leading coefficient (i.e., the
+         * last coefficient in the sequence) is zero.
+         * An empty sequence will be treated as the zero polynomial.
+         *
+         * \ifacespython Not available, but there is a Python constructor
+         * that takes a list of coefficients (which need not be constant).
+         *
+         * @param coefficients the full sequence of coefficients.
+         */
+        Polynomial(std::initializer_list<T> coefficients);
+
+        /**
          * Destroys this polynomial.
          */
         ~Polynomial();
@@ -843,8 +861,15 @@ inline Polynomial<T>::Polynomial(size_t degree) :
 
 template <typename T>
 template <typename iterator>
-inline Polynomial<T>::Polynomial(iterator begin, iterator end) : coeff_(0) {
+inline Polynomial<T>::Polynomial(iterator begin, iterator end) :
+        coeff_(nullptr) {
     init(begin, end);
+}
+
+template <typename T>
+inline Polynomial<T>::Polynomial(std::initializer_list<T> coefficients) :
+        coeff_(nullptr) {
+    init(coefficients.begin(), coefficients.end());
 }
 
 template <typename T>
