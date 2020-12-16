@@ -1498,7 +1498,11 @@ Polynomial<T> operator + (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
         std::copy(lhs.coeff_ + rhs.degree_ + 1, lhs.coeff_ + lhs.degree_ + 1,
             coeff + rhs.degree_ + 1);
 
-        return Polynomial<T>(lhs.degree_, coeff);
+        // We might have zeroed out the leading coefficient.
+        size_t degree = lhs.degree_;
+        while (degree > 0 && coeff[degree] == 0)
+            --degree;
+        return Polynomial<T>(degree, coeff);
     } else {
         T* coeff = new T[rhs.degree_ + 1];
 
@@ -1554,7 +1558,11 @@ Polynomial<T> operator - (const Polynomial<T>& lhs, const Polynomial<T>& rhs) {
         std::copy(lhs.coeff_ + rhs.degree_ + 1, lhs.coeff_ + lhs.degree_ + 1,
             coeff + rhs.degree_ + 1);
 
-        return Polynomial<T>(lhs.degree_, coeff);
+        // We might have zeroed out the leading coefficient.
+        size_t degree = lhs.degree_;
+        while (degree > 0 && coeff[degree] == 0)
+            --degree;
+        return Polynomial<T>(degree, coeff);
     } else {
         T* coeff = new T[rhs.degree_ + 1];
 
