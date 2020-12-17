@@ -132,6 +132,7 @@ Version 5.2  [ 29 September, 2017 ]
             - Added (fast) move constructors and move assignment operators,
               and a (slow) copy assignment operator.
             - New static routine identity().
+            - New typedef Coefficient representing the type of each entry.
             - The multiplication operator and the multiplyAs() routines now
               return a Matrix, not a std::unique_ptr<Matrix>.  Now that
               Matrix has a move constructor and assignment operator, this

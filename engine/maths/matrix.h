@@ -209,6 +209,10 @@ class Matrix : public Output<Matrix<T>>, public MatrixRingIdentities<T, ring> {
     static_assert(ring || ! IsReginaInteger<T>::value,
         "Using Matrix with Regina's own integer types requires ring=true.");
 
+    public:
+        typedef T Coefficient;
+            /**< The type of each entry in the matrix. */
+
     private:
         unsigned long rows_;
             /**< The number of rows in the matrix. */
