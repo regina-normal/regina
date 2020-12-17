@@ -560,8 +560,12 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * set to the given values, and \a base_ will be set to \a minExp.
          * In particular, the new object will take ownership of the
          * coefficient array.
+         *
+         * The coefficient array may have leading or trailing zeroes,
+         * but if this is a possibility then you \e must pass
+         * \a checkZeroes as \c true.
          */
-        Laurent(long minExp, long maxExp, T* coeff);
+        Laurent(long minExp, long maxExp, T* coeff, bool checkZeroes = false);
 
         /**
          * Expands the array of coefficients if necessary so that
@@ -843,8 +847,11 @@ inline Laurent<T>::Laurent(Laurent<T>&& value) noexcept :
 }
 
 template <typename T>
-inline Laurent<T>::Laurent(long minExp, long maxExp, T* coeff) :
+inline Laurent<T>::Laurent(long minExp, long maxExp, T* coeff,
+        bool checkZeroes) :
         minExp_(minExp), maxExp_(maxExp), base_(minExp), coeff_(coeff) {
+    if (checkZeroes)
+        fixDegrees();
 }
 
 template <typename T>
@@ -1165,8 +1172,13 @@ inline Laurent<T>& Laurent<T>::operator /= (const T& scalar) {
 
 template <typename T>
 inline Laurent<T>& Laurent<T>::operator += (const Laurent<T>& other) {
-    // This works even if &other == this, since in this case we do not
+    // This routine works even if &other == this, since in this case we do not
     // reallocate.
+
+    // Handle zero separately, since we do not care about ranges in this case.
+    if (other.isZero())
+        return *this;
+
     reallocateForRange(other.minExp_, other.maxExp_);
 
     for (long exp = other.minExp_; exp <= other.maxExp_; ++exp)
@@ -1179,8 +1191,13 @@ inline Laurent<T>& Laurent<T>::operator += (const Laurent<T>& other) {
 
 template <typename T>
 inline Laurent<T>& Laurent<T>::operator -= (const Laurent<T>& other) {
-    // This works even if &other == this, since in this case we do not
+    // This routine works even if &other == this, since in this case we do not
     // reallocate.
+
+    // Handle zero separately, since we do not care about ranges in this case.
+    if (other.isZero())
+        return *this;
+
     reallocateForRange(other.minExp_, other.maxExp_);
 
     for (long exp = other.minExp_; exp <= other.maxExp_; ++exp)
@@ -1374,8 +1391,15 @@ void Laurent<T>::fixDegrees() {
 
 template <typename T>
 inline Laurent<T>& Laurent<T>::subtractFrom(const Laurent<T>& other) {
-    // This works even if &other == this, since in this case we do not
+    // This routine works even if &other == this, since in this case we do not
     // reallocate.
+
+    // Handle zero separately, since we do not care about ranges in this case.
+    if (other.isZero()) {
+        negate();
+        return *this;
+    }
+
     reallocateForRange(other.minExp_, other.maxExp_);
 
     long exp = (minExp_ < other.minExp_ ? minExp_ : other.minExp_);
@@ -1426,6 +1450,37 @@ inline Laurent<T> operator / (Laurent<T> poly,
 
 template <typename T>
 Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
+    // Handle zero polynomials separately, since their ranges do not
+    // actually contain any coefficients and so should be ignored.
+    if (lhs.isZero())
+        return rhs;
+    if (rhs.isZero())
+        return lhs;
+
+    // If the two ranges do not overlap, just copy them separately;
+    // this avoids having to worry about jumping over the gap between
+    // them in the code that follows.
+    if (lhs.maxExp_ < rhs.minExp_) {
+        T* coeff = new T[rhs.maxExp_ - lhs.minExp_ + 1];
+        std::copy(lhs.coeff_ + lhs.minExp_ - lhs.base_,
+            lhs.coeff_ + lhs.maxExp_ + 1 - lhs.base_,
+            coeff);
+        std::copy(rhs.coeff_ + rhs.minExp_ - rhs.base_,
+            rhs.coeff_ + rhs.maxExp_ + 1 - rhs.base_,
+            coeff + rhs.minExp_ - lhs.minExp_);
+        return Laurent<T>(lhs.minExp_, rhs.maxExp_, coeff);
+    } else if (rhs.maxExp_ < lhs.minExp_) {
+        T* coeff = new T[lhs.maxExp_ - rhs.minExp_ + 1];
+        std::copy(rhs.coeff_ + rhs.minExp_ - rhs.base_,
+            rhs.coeff_ + rhs.maxExp_ + 1 - rhs.base_,
+            coeff);
+        std::copy(lhs.coeff_ + lhs.minExp_ - lhs.base_,
+            lhs.coeff_ + lhs.maxExp_ + 1 - lhs.base_,
+            coeff + lhs.minExp_ - rhs.minExp_);
+        return Laurent<T>(rhs.minExp_, lhs.maxExp_, coeff);
+    }
+
+    // We are guaranteed from here on that the two ranges overlap.
     long minExp = std::min(lhs.minExp_, rhs.minExp_);
     long maxExp = std::max(lhs.maxExp_, rhs.maxExp_);
     // std::cerr << "Laurent: deep copy (const +)" << std::endl;
@@ -1460,7 +1515,7 @@ Laurent<T> operator + (const Laurent<T>& lhs, const Laurent<T>& rhs) {
             rhs.coeff_ + rhs.maxExp_ + 1 - rhs.base_, coeff + idx);
     }
 
-    return Laurent<T>(minExp, maxExp, coeff);
+    return Laurent<T>(minExp, maxExp, coeff, true);
 }
 
 template <typename T>
@@ -1495,6 +1550,44 @@ inline Laurent<T> operator - (Laurent<T> arg) {
 
 template <typename T>
 Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs) {
+    // Handle zero polynomials separately, since their ranges do not
+    // actually contain any coefficients and so should be ignored.
+    if (rhs.isZero())
+        return lhs;
+    if (lhs.isZero())
+        return -rhs;
+
+    // If the two ranges do not overlap, just copy them separately;
+    // this avoids having to worry about jumping over the gap between
+    // them in the code that follows.
+    if (lhs.maxExp_ < rhs.minExp_) {
+        T* coeff = new T[rhs.maxExp_ - lhs.minExp_ + 1];
+        std::copy(lhs.coeff_ + lhs.minExp_ - lhs.base_,
+            lhs.coeff_ + lhs.maxExp_ + 1 - lhs.base_,
+            coeff);
+        T *rit, *cit;
+        for (rit = rhs.coeff_ + rhs.minExp_ - rhs.base_,
+                    cit = coeff + rhs.minExp_ - lhs.minExp_;
+                rit != rhs.coeff_ + rhs.maxExp_ + 1 - rhs.base_;
+                ++rit, ++cit)
+            if (*rit != 0)
+                *cit = -(*rit);
+        return Laurent<T>(lhs.minExp_, rhs.maxExp_, coeff);
+    } else if (rhs.maxExp_ < lhs.minExp_) {
+        T* coeff = new T[lhs.maxExp_ - rhs.minExp_ + 1];
+        T *rit, *cit;
+        for (rit = rhs.coeff_ + rhs.minExp_ - rhs.base_, cit = coeff;
+                rit != rhs.coeff_ + rhs.maxExp_ + 1 - rhs.base_;
+                ++rit, ++cit)
+            if (*rit != 0)
+                *cit = -(*rit);
+        std::copy(lhs.coeff_ + lhs.minExp_ - lhs.base_,
+            lhs.coeff_ + lhs.maxExp_ + 1 - lhs.base_,
+            coeff + lhs.minExp_ - rhs.minExp_);
+        return Laurent<T>(rhs.minExp_, lhs.maxExp_, coeff);
+    }
+
+    // We are guaranteed from here on that the two ranges overlap.
     long minExp = std::min(lhs.minExp_, rhs.minExp_);
     long maxExp = std::max(lhs.maxExp_, rhs.maxExp_);
     // std::cerr << "Laurent: deep copy (const -)" << std::endl;
@@ -1537,7 +1630,7 @@ Laurent<T> operator - (const Laurent<T>& lhs, const Laurent<T>& rhs) {
                 *cit = -(*rit);
     }
 
-    return Laurent<T>(minExp, maxExp, coeff);
+    return Laurent<T>(minExp, maxExp, coeff, true);
 }
 
 template <typename T>
