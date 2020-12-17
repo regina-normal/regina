@@ -463,9 +463,13 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
         for (auto& emb : *owner->vertex(vtx)) {
             // Update the state of progress and test for cancellation.
             if (tracker && ! tracker->setPercent(25.0 * slices++ / n)) {
-                for (it = list[workingList].begin();
-                        it != list[workingList].end(); ++it)
-                    delete *it;
+                for (auto r : list[workingList])
+                    delete r;
+                delete linkSpec;
+                for (++vtx; vtx < llen; ++vtx)
+                    delete link[vtx];
+                delete[] link;
+                delete[] constraintsBegin;
                 return;
             }
 
@@ -494,11 +498,15 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
                     if (tracker && ++iterations == 100) {
                         iterations = 0;
                         if (tracker->isCancelled()) {
-                            for (it = list[1 - workingList].begin();
-                                    it != list[1 - workingList].end(); ++it)
-                                delete *it;
-                            for (it = neg.begin(); it != neg.end(); ++it)
-                                delete *it;
+                            for (auto r : list[1 - workingList])
+                                delete r;
+                            for (auto r : neg)
+                                delete r;
+                            delete linkSpec;
+                            for (++vtx; vtx < llen; ++vtx)
+                                delete link[vtx];
+                            delete[] link;
+                            delete[] constraintsBegin;
                             return;
                         }
                     }
