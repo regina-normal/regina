@@ -738,8 +738,14 @@ inline void Laurent2<T>::negate() {
 
 template <typename T>
 inline Laurent2<T>& Laurent2<T>::operator *= (const T& scalar) {
-    for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
-        it->second *= scalar;
+    if (scalar == 0) {
+        // All coefficients become zero.
+        coeff_.clear();
+    } else {
+        // No coefficients become zero that were not zero already.
+        for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
+            it->second *= scalar;
+    }
     return *this;
 }
 
