@@ -282,6 +282,7 @@ class PolynomialTest : public CppUnit::TestFixture {
 
             verifyMinus<Integer>(zero, zero, {});
             verifyMinus<Integer>(a, zero, {1, -1, 1});
+            verifyMinus<Integer>(zero, a, {-1, 1, -1});
             verifyMinus<Integer>(a, b, {1, -2, 2, -1});
             verifyMinus<Integer>(b, d, {-1, 2, -2, 2, -1});
             verifyMinus<Integer>(c, d, {-1, 1});

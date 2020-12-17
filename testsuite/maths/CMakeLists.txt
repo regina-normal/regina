@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   integer
+  laurent
   matrixops
   numbertheory
   perm

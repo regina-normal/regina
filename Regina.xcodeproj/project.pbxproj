@@ -186,6 +186,8 @@
 		050F5E7E1B9BD6F400C1F681 /* pythonconsole.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */; };
 		050F5E8A1B9BD9C100C1F681 /* commandedit.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E751B9BD6F400C1F681 /* commandedit.h */; };
 		050F5E8B1B9BD9C100C1F681 /* pythonconsole.h in Sources */ = {isa = PBXBuildFile; fileRef = 050F5E771B9BD6F400C1F681 /* pythonconsole.h */; };
+		051324F5258AF3FA001014F0 /* laurent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051324F4258AF3FA001014F0 /* laurent.cpp */; };
+		051324F6258AF3FA001014F0 /* laurent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051324F4258AF3FA001014F0 /* laurent.cpp */; };
 		0513753D1809B8D3002E525B /* coordregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753B1809B8D2002E525B /* coordregistry-impl.h */; };
 		0513753E1809B8D3002E525B /* coordregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 0513753C1809B8D2002E525B /* coordregistry.h */; };
 		0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */ = {isa = PBXBuildFile; fileRef = 052F9C50180600FA00FAE4DF /* docs.conf.in */; };
@@ -2743,6 +2745,7 @@
 		050F5E751B9BD6F400C1F681 /* commandedit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = commandedit.h; sourceTree = "<group>"; };
 		050F5E761B9BD6F400C1F681 /* pythonconsole.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pythonconsole.cpp; sourceTree = "<group>"; };
 		050F5E771B9BD6F400C1F681 /* pythonconsole.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pythonconsole.h; sourceTree = "<group>"; };
+		051324F4258AF3FA001014F0 /* laurent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent.cpp; sourceTree = "<group>"; };
 		0513753B1809B8D2002E525B /* coordregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "coordregistry-impl.h"; sourceTree = "<group>"; };
 		0513753C1809B8D2002E525B /* coordregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = coordregistry.h; sourceTree = "<group>"; };
 		0514CAE71D9CD4B500EDB2E6 /* index.docbook */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xml; path = index.docbook; sourceTree = "<group>"; };
@@ -6353,6 +6356,7 @@
 			children = (
 				052FA0DA1806088B00FAE4DF /* CMakeLists.txt */,
 				052FA0DC1806088B00FAE4DF /* integer.cpp */,
+				051324F4258AF3FA001014F0 /* laurent.cpp */,
 				052FA0DB1806088B00FAE4DF /* matrixops.cpp */,
 				052FA0E21806088B00FAE4DF /* numbertheory.cpp */,
 				05431F931C40F51C009BC072 /* perm.cpp */,
@@ -9281,6 +9285,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				05721F1A1F97165E00A83FFC /* graph.cpp in Sources */,
+				051324F5258AF3FA001014F0 /* laurent.cpp in Sources */,
 				05F904531F97F9F800893670 /* graph.cpp in Sources */,
 				052FA11C1806088B00FAE4DF /* triangulation3.cpp in Sources */,
 				052FA10B1806088B00FAE4DF /* perm3.cpp in Sources */,
@@ -9919,6 +9924,7 @@
 				05249F121DBC16FA001FE29E /* triangulation11.cpp in Sources */,
 				05249EC21DBC16CA001FE29E /* pentachoron4.cpp in Sources */,
 				05721F141F97162600A83FFC /* link.cpp in Sources */,
+				051324F6258AF3FA001014F0 /* laurent.cpp in Sources */,
 				05C1BEC01DCA7CB3007C946B /* boundary10.cpp in Sources */,
 				052FA1AB1806129B00FAE4DF /* text.cpp in Sources */,
 				05B9EC1C18245F2100DCACF3 /* euler.cpp in Sources */,
