@@ -1366,6 +1366,8 @@
 		05721F1B1F97165E00A83FFC /* link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F191F97165000A83FFC /* link.cpp */; };
 		05721F1C1F97165E00A83FFC /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F171F97165000A83FFC /* graph.cpp */; };
 		05721F1D1F97165E00A83FFC /* link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F191F97165000A83FFC /* link.cpp */; };
+		05754CC2258B38C100236ED7 /* laurent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CC1258B38C100236ED7 /* laurent2.cpp */; };
+		05754CC3258B38C100236ED7 /* laurent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CC1258B38C100236ED7 /* laurent2.cpp */; };
 		0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7D91DCE8B700027CE31 /* nfacepair.h */; };
 		0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */; };
 		0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6EF1F9709C700CBDF15 /* nsignature.h */; };
@@ -3870,6 +3872,7 @@
 		05721F171F97165000A83FFC /* graph.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = graph.cpp; sourceTree = "<group>"; };
 		05721F181F97165000A83FFC /* testlink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testlink.h; sourceTree = "<group>"; };
 		05721F191F97165000A83FFC /* link.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = link.cpp; sourceTree = "<group>"; };
+		05754CC1258B38C100236ED7 /* laurent2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent2.cpp; sourceTree = "<group>"; };
 		0575A7D91DCE8B700027CE31 /* nfacepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepair.h; sourceTree = "<group>"; };
 		0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhomologicaldata.h; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6357,6 +6360,7 @@
 				052FA0DA1806088B00FAE4DF /* CMakeLists.txt */,
 				052FA0DC1806088B00FAE4DF /* integer.cpp */,
 				051324F4258AF3FA001014F0 /* laurent.cpp */,
+				05754CC1258B38C100236ED7 /* laurent2.cpp */,
 				052FA0DB1806088B00FAE4DF /* matrixops.cpp */,
 				052FA0E21806088B00FAE4DF /* numbertheory.cpp */,
 				05431F931C40F51C009BC072 /* perm.cpp */,
@@ -9306,6 +9310,7 @@
 				052FA11A1806088B00FAE4DF /* homologicaldata.cpp in Sources */,
 				05431F981C40F527009BC072 /* perm2.cpp in Sources */,
 				052FA11E1806088B00FAE4DF /* bitmask.cpp in Sources */,
+				05754CC2258B38C100236ED7 /* laurent2.cpp in Sources */,
 				0528DBD11DD28CAF004DD4B6 /* generictriangulation.cpp in Sources */,
 				052FA11D1806088B00FAE4DF /* base64.cpp in Sources */,
 				052FA1051806088B00FAE4DF /* facetpairing2.cpp in Sources */,
@@ -9897,6 +9902,7 @@
 				05D1173D19EE0197003BEC55 /* perm5.cpp in Sources */,
 				05249F151DBC16FA001FE29E /* triangulation14.cpp in Sources */,
 				05A73C7B19B2EDFC0099C617 /* xmlcallback.cpp in Sources */,
+				05754CC3258B38C100236ED7 /* laurent2.cpp in Sources */,
 				05A066C51DFA67D50047872E /* satregion.cpp in Sources */,
 				05A067561DFA68470047872E /* satregion.cpp in Sources */,
 				05A067541DFA68470047872E /* satblockstarter.cpp in Sources */,
