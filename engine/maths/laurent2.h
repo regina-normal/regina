@@ -168,6 +168,34 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         Laurent2(const Laurent2<U>& value);
 
         /**
+         * Creates a new polynomial from a hard-coded collection of
+         * non-zero coefficients.
+         *
+         * This constructor takes a C++11 initialiser list, which should
+         * contain a collection of tuples of the form (\a d, \a e, \a v)
+         * each representing a term of the form <tt>v x^d y^e</tt>.
+         *
+         * The tuples may be given in any order.
+         * An empty sequence will be treated as the zero polynomial.
+         *
+         * In practice, this means you can create a hard-coded
+         * polynomial using syntax such as:
+         *
+         * \pre
+         * Laurent2<Integer> p = { { 0, 0, 3 }, { 1, -1, 2 } };
+         * \endpre
+         *
+         * \pre Each tuple has a non-zero value \a v, and no two tuples
+         * share the same pair of exponents (\a d, \a e).
+         *
+         * \ifacespython Not available.
+         *
+         * @param coefficients the set of all non-zero coefficients, as
+         * outlined above.
+         */
+        Laurent2(std::initializer_list<std::tuple<long, long, T>> coefficients);
+
+        /**
          * Sets this to become the zero polynomial.
          */
         void init();
@@ -625,6 +653,14 @@ template <typename U>
 inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
         coeff_(value.coeff_) {
     // std::cerr << "Laurent2: deep copy (init)" << std::endl;
+}
+
+template <typename T>
+inline Laurent2<T>::Laurent2(
+        std::initializer_list<std::tuple<long, long, T>> coefficients) {
+    for (const auto& c : coefficients)
+        coeff_.emplace(Exponents(std::get<0>(c), std::get<1>(c)),
+            std::get<2>(c));
 }
 
 template <typename T>

@@ -94,6 +94,7 @@ Version 5.2  [ 29 September, 2017 ]
             - Added move constructor and assignment operator.
             - Added operators +, *, -, / in several variants.
         Class Laurent2:
+            - New constructor that takes a C++11 initialiser list.
             - Added move constructor and assignment operator.
             - Added operators +, *, -, / in several variants.
             - New constuctor that shifts a given polynomial by x^e y^e.
