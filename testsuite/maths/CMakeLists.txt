@@ -4,6 +4,7 @@
 SET ( FILES
   integer
   laurent
+  laurent2
   matrixops
   numbertheory
   perm
