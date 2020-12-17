@@ -37,6 +37,8 @@
 #include "utilities/sequence.h"
 #include <thread>
 
+// #define DUMP_STAGES
+
 // When tracking progress, try to give much more weight to larger bags.
 // (Of course, this should *really* be exponential, but it's nice to see
 // some visual progress for smaller bags, so we try not to completely
@@ -296,9 +298,10 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
 
     for (bag = d.first(); bag; bag = bag->next()) {
         index = bag->index();
-        // if (! tracker)
-        //     std::cerr << "Bag " << index << " [" << bag->size() << "] ";
-
+#ifdef DUMP_STAGES
+        if (! tracker)
+            std::cerr << "Bag " << index << " [" << bag->size() << "] ";
+#endif
         if (bag->isLeaf()) {
             // Leaf bag.
 
@@ -310,9 +313,10 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                         '/' + std::to_string(nBags) + ')',
                     0.05 / nEasyBags);
             }
-            // else
-            //     std::cerr << "LEAF" << std::endl;
-
+#ifdef DUMP_STAGES
+            else
+                std::cerr << "LEAF" << std::endl;
+#endif
             partial[index] = new SolnSet;
 
             Key* k = new Key(nStrands);
@@ -331,9 +335,10 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                         '/' + std::to_string(nBags) + ')',
                     0.05 / nEasyBags);
             }
-            // else
-            //     std::cerr << "INTRODUCE" << std::endl;
-
+#ifdef DUMP_STAGES
+            else
+                std::cerr << "INTRODUCE" << std::endl;
+#endif
             // When introducing a new crossing, all of its arcs must
             // lead to unseen crossings or crossings already in the bag.
             // Therefore the keys and values remain unchanged.
@@ -358,10 +363,11 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                 else
                     increment = 100.0 / partial[child->index()]->size();
             }
-            // else
-            //     std::cerr << "FORGET -> 2 x " <<
-            //         partial[child->index()]->size() << std::endl;
-
+#ifdef DUMP_STAGES
+            else
+                std::cerr << "FORGET -> 2 x " <<
+                    partial[child->index()]->size() << std::endl;
+#endif
             Crossing* forget = crossings_[child->element(bag->subtype())];
 
             // The A resolution connects strands conn[0][0][0-1], and
@@ -529,11 +535,12 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                 else
                     increment = 100.0 / partial[child->index()]->size();
             }
-            // else
-            //     std::cerr << "JOIN -> " <<
-            //         partial[child->index()]->size() << " x " <<
-            //         partial[sibling->index()]->size() << std::endl;
-
+#ifdef DUMP_STAGES
+            else
+                std::cerr << "JOIN -> " <<
+                    partial[child->index()]->size() << " x " <<
+                    partial[sibling->index()]->size() << std::endl;
+#endif
             partial[index] = new SolnSet;
 
             const Key *k1, *k2;
@@ -607,8 +614,10 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
     }
 
     // Collect the final answer from partial[nBags - 1].
-    // if (! tracker)
-    //     std::cerr << "FINISH" << std::endl;
+#ifdef DUMP_STAGES
+    if (! tracker)
+        std::cerr << "FINISH" << std::endl;
+#endif
     Value* ans = partial[nBags - 1]->begin()->second;
 
     for (auto& soln : *(partial[nBags - 1])) {

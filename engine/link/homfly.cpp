@@ -39,6 +39,7 @@
 #include <thread>
 
 // #define DUMP_STATES
+// #define DUMP_STAGES
 // #define IDENTIFY_NONVIABLE_KEYS
 
 // When tracking progress for Kauffman's algorithm, we update our
@@ -1327,12 +1328,14 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
 
     for (bag = d.first(); bag; bag = bag->next()) {
         index = bag->index();
-        // std::cerr << "Bag " << index << " [" << bag->size() << "] ";
-
+#ifdef DUMP_STAGES
+        std::cerr << "Bag " << index << " [" << bag->size() << "] ";
+#endif
         if (bag->isLeaf()) {
             // Leaf bag.
-            // std::cerr << "LEAF" << std::endl;
-
+#ifdef DUMP_STAGES
+            std::cerr << "LEAF" << std::endl;
+#endif
             if (tracker) {
                 if (tracker->isCancelled())
                     break;
@@ -1347,8 +1350,9 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
         } else if (bag->type() == NICE_INTRODUCE) {
             // Introduce bag.
             child = bag->children();
-            // std::cerr << "INTRODUCE" << std::endl;
-
+#ifdef DUMP_STAGES
+            std::cerr << "INTRODUCE" << std::endl;
+#endif
             if (tracker) {
                 if (tracker->isCancelled())
                     break;
@@ -1367,9 +1371,10 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
         } else if (bag->type() == NICE_FORGET) {
             // Forget bag.
             child = bag->children();
-            // std::cerr << "FORGET -> " <<
-            //    partial[child->index()]->size() << std::endl;
-
+#ifdef DUMP_STAGES
+            std::cerr << "FORGET -> " <<
+                partial[child->index()]->size() << std::endl;
+#endif
             if (tracker) {
                 if (tracker->isCancelled())
                     break;
@@ -2997,10 +3002,12 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
             int pairs2 = partial[sibling->index()]->begin()->first->size()/2;
             int pairs = pairs1 + pairs2;
 
-            // std::cerr << "JOIN -> " <<
-            //     partial[child->index()]->size() << " x " <<
-            //     partial[sibling->index()]->size() << " : #pairs = " <<
-            //     pairs1 << " / " << pairs2 << std::endl;
+#ifdef DUMP_STAGES
+            std::cerr << "JOIN -> " <<
+                partial[child->index()]->size() << " x " <<
+                partial[sibling->index()]->size() << " : #pairs = " <<
+                pairs1 << " / " << pairs2 << std::endl;
+#endif
 
             if (pairs1 == 0) {
                 // The keys are exactly the keys from the second child,
@@ -3203,7 +3210,9 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
     }
 
     // Collect the final answer from partial[nBags - 1].
-    // std::cerr << "FINISH" << std::endl;
+#ifdef DUMP_STAGES
+    std::cerr << "FINISH" << std::endl;
+#endif
     Value* ans = partial[nBags - 1]->begin()->second;
 
     for (auto& soln : *(partial[nBags - 1])) {
