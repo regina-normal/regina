@@ -42,6 +42,7 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
+void addCyclotomic(CppUnit::TextUi::TestRunner& runner);
 void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
 void addInteger(CppUnit::TextUi::TestRunner& runner);
 void addLaurent(CppUnit::TextUi::TestRunner& runner);

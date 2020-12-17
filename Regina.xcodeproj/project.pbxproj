@@ -1368,6 +1368,8 @@
 		05721F1D1F97165E00A83FFC /* link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F191F97165000A83FFC /* link.cpp */; };
 		05754CC2258B38C100236ED7 /* laurent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CC1258B38C100236ED7 /* laurent2.cpp */; };
 		05754CC3258B38C100236ED7 /* laurent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CC1258B38C100236ED7 /* laurent2.cpp */; };
+		05754CD4258B814D00236ED7 /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CD3258B814D00236ED7 /* cyclotomic.cpp */; };
+		05754CD5258B814D00236ED7 /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CD3258B814D00236ED7 /* cyclotomic.cpp */; };
 		0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7D91DCE8B700027CE31 /* nfacepair.h */; };
 		0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */; };
 		0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6EF1F9709C700CBDF15 /* nsignature.h */; };
@@ -3873,6 +3875,7 @@
 		05721F181F97165000A83FFC /* testlink.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = testlink.h; sourceTree = "<group>"; };
 		05721F191F97165000A83FFC /* link.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = link.cpp; sourceTree = "<group>"; };
 		05754CC1258B38C100236ED7 /* laurent2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent2.cpp; sourceTree = "<group>"; };
+		05754CD3258B814D00236ED7 /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		0575A7D91DCE8B700027CE31 /* nfacepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepair.h; sourceTree = "<group>"; };
 		0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhomologicaldata.h; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6358,6 +6361,7 @@
 			isa = PBXGroup;
 			children = (
 				052FA0DA1806088B00FAE4DF /* CMakeLists.txt */,
+				05754CD3258B814D00236ED7 /* cyclotomic.cpp */,
 				052FA0DC1806088B00FAE4DF /* integer.cpp */,
 				051324F4258AF3FA001014F0 /* laurent.cpp */,
 				05754CC1258B38C100236ED7 /* laurent2.cpp */,
@@ -9317,6 +9321,7 @@
 				052FA1081806088B00FAE4DF /* exhaustive.cpp in Sources */,
 				052FA10F1806088B00FAE4DF /* rational.cpp in Sources */,
 				052FA1091806088B00FAE4DF /* matrixops.cpp in Sources */,
+				05754CD4258B814D00236ED7 /* cyclotomic.cpp in Sources */,
 				052FA10D1806088B00FAE4DF /* perm5.cpp in Sources */,
 				0591E84F1C4F777100793A9C /* census4.cpp in Sources */,
 				0591E8571C4F77A400793A9C /* triangulation4.cpp in Sources */,
@@ -9857,6 +9862,7 @@
 				057F317419B8935800D30520 /* Example.mm in Sources */,
 				052FA1991806129B00FAE4DF /* order.cpp in Sources */,
 				054C6A771DCC1FF4005373F0 /* example11.cpp in Sources */,
+				05754CD5258B814D00236ED7 /* cyclotomic.cpp in Sources */,
 				05CB9FF01F9AD7D5002ECB18 /* LinkCodes.mm in Sources */,
 				05D1174119EE0197003BEC55 /* permconv.cpp in Sources */,
 				05249EBA1DBC16C4001FE29E /* triangulation2.cpp in Sources */,

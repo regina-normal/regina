@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  cyclotomic
   integer
   laurent
   laurent2
