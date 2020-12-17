@@ -167,6 +167,29 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          */
         Cyclotomic(Cyclotomic&& value) noexcept;
         /**
+         * Creates a new field element from a hard-coded sequence of
+         * coefficients.
+         *
+         * This constructor takes a C++11 initialiser list, which should
+         * contain the coefficients of the field element's polynomial
+         * representation, in order from the constant coefficient
+         * upwards.  See operator[] for details on what this polynomial
+         * representation means.
+         *
+         * There should be at most <tt>deg(Φ_n) = φ(n)</tt> coefficients in
+         * the list, where \a n is the given order of the underlying field;
+         * any missing coefficients are assumed to be zero.  In particular,
+         * an empty sequence is allowed (and represents the zero field element).
+         *
+         * \ifacespython Not available.
+         *
+         * @param field the order of the underlying cyclotomic field;
+         * this must be strictly positive.
+         * @param coefficients a sequence of at most <tt>φ(n)</tt>
+         * coefficients, as described above.
+         */
+        Cyclotomic(size_t field, std::initializer_list<Rational> coefficients);
+        /**
          * Destroys this field element.
          *
          * This is safe even if the field element was never initialised.
@@ -814,6 +837,13 @@ inline Cyclotomic::Cyclotomic(Cyclotomic&& value) noexcept :
 
 inline Cyclotomic::Cyclotomic(size_t field, size_t degree, Rational* coeff) :
         field_(field), degree_(degree), coeff_(coeff) {
+}
+
+inline Cyclotomic::Cyclotomic(size_t field,
+        std::initializer_list<Rational> coefficients) :
+        field_(field), degree_(cyclotomic(field).degree()),
+        coeff_(new Rational[degree_]) {
+    std::copy(coefficients.begin(), coefficients.end(), coeff_);
 }
 
 inline Cyclotomic::~Cyclotomic() {

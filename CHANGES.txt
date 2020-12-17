@@ -44,6 +44,7 @@ Version 5.2  [ 29 September, 2017 ]
               range-based for loops, thanks to the new CensusHitIterator
               class.  In Python, CensusHits is now an iterable object.
         Class Cyclotomic:
+            - New constructor that takes a C++11 initialiser list.
             - Added move constructor and assignment operator.
             - Added inverse().
             - Added operators +, *, -, / in several variants.
