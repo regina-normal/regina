@@ -192,6 +192,11 @@ class PolynomialTest : public CppUnit::TestFixture {
             }
 
             verifyPlus(a, -b, coeffs);
+            {
+                Polynomial<T> x(b);
+                x.negate();
+                verifyPlus(a, x, coeffs);
+            }
         }
 
         template <typename T>

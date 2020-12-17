@@ -211,6 +211,11 @@ class LaurentTest : public CppUnit::TestFixture {
             }
 
             verifyPlus(a, -b, minExp, coeffs);
+            {
+                Laurent<T> x(b);
+                x.negate();
+                verifyPlus(a, x, minExp, coeffs);
+            }
         }
 
         template <typename T>
