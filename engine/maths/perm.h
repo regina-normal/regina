@@ -44,6 +44,7 @@
 #endif
 
 #include <cstdlib>
+#include <random>
 #include <string>
 #include "regina-core.h"
 #include "utilities/intutils.h"
@@ -122,8 +123,8 @@ inline constexpr int64_t factorial(int n) {
  */
 template <int n>
 class Perm {
-    static_assert(n >= 5 && n <= 16,
-        "The generic Perm<n> template is only available for 5 <= n <= 16.");
+    static_assert(n >= 6 && n <= 16,
+        "The generic Perm<n> template is only available for 6 <= n <= 16.");
     public:
         /**
          * Indicates the number of bits used by the permutation code
@@ -424,8 +425,9 @@ class Perm {
          * Returns a random permutation on \a n elements.
          * All permutations are returned with equal probability.
          *
-         * The implementation uses the C standard ::rand() function for its
-         * random number generation.
+         * \warning This routine is not thread-safe, since it uses the
+         * C standard ::rand() function.  For a thread-safe version, you should
+         * call the version of rand() that takes a uniform bit random generator.
          *
          * @param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -433,6 +435,30 @@ class Perm {
          * @return a random permutation.
          */
         static Perm rand(bool even = false);
+
+        /**
+         * Returns a random permutation on \a n elements, using the
+         * given uniform random bit generator.
+         * All permutations are returned with equal probability.
+         *
+         * The thread safety of this routine is of course dependent on
+         * the thread safety of your uniform random bit generator \a gen,
+         *
+         * \tparam URBG A type which, once any references are removed, must
+         * adhere to the C++ \a UniformRandomBitGenerator concept.
+         *
+         * \ifacespython Not present, though the non-thread-safe variant
+         * without the \a gen argument is available.
+         *
+         * @param gen the source of randomness to use (e.g., one of the
+         * many options provided in the C++ standard <random> header).
+         * @param even if \c true, then the resulting permutation is
+         * guaranteed to be even (and again all even permutations are
+         * returned with equal probability).
+         * @return a random permutation.
+         */
+        template <class URBG>
+        static Perm rand(URBG&& gen, bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -767,6 +793,31 @@ Perm<n> Perm<n>::rand(bool even) {
         return Perm<n>(image);
     } else
         return Perm<n>(image);
+}
+
+template <int n>
+template <class URBG>
+Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
+    // Note: This generic implementation of Perm covers 6 <= n <= 16.
+    // The corresponding index types require 16, 32 or 64 bits.
+    //
+    // A slight messiness here is that std::uniform_int_distribution
+    // requires the type argument to be one of short, int, long or long long.
+    static_assert(sizeof(Index) <= sizeof(long long),
+        "Permutation index cannot fit inside a long long");
+    typedef typename std::conditional<sizeof(Index) <= sizeof(short), short,
+        typename std::conditional<sizeof(Index) <= sizeof(int), int,
+        typename std::conditional<sizeof(Index) <= sizeof(long), long,
+        long long>::type>::type>::type Arg;
+
+    std::uniform_int_distribution<Arg> d(0, nPerms - 1);
+    if (even) {
+        Perm<n> result = atIndex(d(gen));
+        if (result.sign() < 0)
+            result *= Perm<n>(0, 1);
+        return result;
+    } else
+        return atIndex(d(gen));
 }
 
 template <int n>

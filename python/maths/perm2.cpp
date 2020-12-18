@@ -81,7 +81,7 @@ void addPerm2(pybind11::module_& m) {
         .def("isIdentity", &Perm<2>::isIdentity)
         .def_static("atIndex", &Perm<2>::atIndex)
         .def("index", &Perm<2>::index)
-        .def_static("rand", &Perm<2>::rand,
+        .def_static("rand", (Perm<2> (*)(bool))(&Perm<2>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<2>::trunc)
         .def("clear", &Perm<2>::clear)

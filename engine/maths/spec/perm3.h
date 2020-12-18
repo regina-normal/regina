@@ -471,8 +471,9 @@ class REGINA_API Perm<3> {
          * Returns a random permutation on three elements.
          * All permutations are returned with equal probability.
          *
-         * The implementation uses the C standard ::rand() function for its
-         * random number generation.
+         * \warning This routine is not thread-safe, since it uses the
+         * C standard ::rand() function.  For a thread-safe version, you should
+         * call the version of rand() that takes a uniform bit random generator.
          *
          * @param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -480,6 +481,30 @@ class REGINA_API Perm<3> {
          * @return a random permutation.
          */
         static Perm rand(bool even = false);
+
+        /**
+         * Returns a random permutation on three elements, using the
+         * given uniform random bit generator.
+         * All permutations are returned with equal probability.
+         *
+         * The thread safety of this routine is of course dependent on
+         * the thread safety of your uniform random bit generator \a gen,
+         *
+         * \tparam URBG A type which, once any references are removed, must
+         * adhere to the C++ \a UniformRandomBitGenerator concept.
+         *
+         * \ifacespython Not present, though the non-thread-safe variant
+         * without the \a gen argument is available.
+         *
+         * @param gen the source of randomness to use (e.g., one of the
+         * many options provided in the C++ standard <random> header).
+         * @param even if \c true, then the resulting permutation is
+         * guaranteed to be even (and again all even permutations are
+         * returned with equal probability).
+         * @return a random permutation.
+         */
+        template <class URBG>
+        static Perm rand(URBG&& gen, bool even = false);
 
         /**
          * Returns the lexicographical index of this permutation.  This
@@ -780,6 +805,17 @@ inline Perm<3> Perm<3>::rand(bool even) {
         return S3[2 * (::rand() % 3)];
     else
         return S3[::rand() % 6];
+}
+
+template <class URBG>
+inline Perm<3> Perm<3>::rand(URBG&& gen, bool even) {
+    if (even) {
+        std::uniform_int_distribution<short> d(0, 2);
+        return S3[2 * d(gen)];
+    } else {
+        std::uniform_int_distribution<short> d(0, 5);
+        return S3[d(gen)];
+    }
 }
 
 inline int Perm<3>::S3Index() const {
