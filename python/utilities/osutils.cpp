@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "utilities/osutils.h"
 
-void addOSUtils(pybind11::module& m) {
+void addOSUtils(pybind11::module_& m) {
     m.def("writeResUsage", []{
         regina::writeResUsage(std::cout);
     });

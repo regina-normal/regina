@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addProgressTracker(pybind11::module& m);
+void addProgressTracker(pybind11::module_& m);
 
-void addProgressClasses(pybind11::module& m) {
+void addProgressClasses(pybind11::module_& m) {
     addProgressTracker(m);
 }
 

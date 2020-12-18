@@ -65,7 +65,7 @@ namespace {
     };
 }
 
-void addPerm4(pybind11::module& m) {
+void addPerm4(pybind11::module_& m) {
     auto c = pybind11::class_<Perm<4>>(m, "Perm4")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

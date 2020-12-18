@@ -40,7 +40,7 @@ using regina::TetrahedronEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
-void addTetrahedron4(pybind11::module& m) {
+void addTetrahedron4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 3>>(m, "FaceEmbedding4_3")
         .def(pybind11::init<regina::Pentachoron<4>*, int>())
         .def(pybind11::init<const TetrahedronEmbedding<4>&>())

@@ -40,7 +40,7 @@
 using namespace regina::python;
 using regina::AngleStructures;
 
-void addAngleStructures(pybind11::module& m) {
+void addAngleStructures(pybind11::module_& m) {
     m.def("makeAngleEquations", regina::makeAngleEquations);
 
     pybind11::class_<AngleStructures, regina::Packet,

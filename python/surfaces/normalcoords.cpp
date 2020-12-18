@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "surfaces/normalcoords.h"
 
-void addNormalCoords(pybind11::module& m) {
+void addNormalCoords(pybind11::module_& m) {
     pybind11::enum_<regina::NormalCoords>(m, "NormalCoords")
         .value("NS_STANDARD", regina::NS_STANDARD)
         .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)

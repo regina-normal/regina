@@ -37,7 +37,7 @@
 using pybind11::overload_cast;
 using regina::Isomorphism;
 
-void addIsomorphism2(pybind11::module& m) {
+void addIsomorphism2(pybind11::module_& m) {
     auto c = pybind11::class_<Isomorphism<2>>(m, "Isomorphism2")
         .def(pybind11::init<const Isomorphism<2>&>())
         .def("size", &Isomorphism<2>::size)

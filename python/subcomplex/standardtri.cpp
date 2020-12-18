@@ -40,7 +40,7 @@
 using pybind11::overload_cast;
 using regina::StandardTriangulation;
 
-void addStandardTriangulation(pybind11::module& m) {
+void addStandardTriangulation(pybind11::module_& m) {
     auto c = pybind11::class_<StandardTriangulation>(m, "StandardTriangulation")
         .def("name", &StandardTriangulation::name)
         .def("TeXName", &StandardTriangulation::TeXName)

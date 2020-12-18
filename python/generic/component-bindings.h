@@ -38,7 +38,7 @@
 using regina::Component;
 
 template <int dim>
-void addComponent(pybind11::module& m, const char* name) {
+void addComponent(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Component<dim>>(m, name)
         .def("index", &Component<dim>::index)
         .def("size", &Component<dim>::size)

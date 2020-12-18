@@ -39,7 +39,7 @@ using pybind11::overload_cast;
 using regina::FacetSpec;
 
 template <int dim>
-void addFacetSpec(pybind11::module& m, const char* name) {
+void addFacetSpec(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<FacetSpec<dim>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
@@ -66,7 +66,7 @@ void addFacetSpec(pybind11::module& m, const char* name) {
     regina::python::add_eq_operators(c);
 }
 
-void addFacetSpec(pybind11::module& m) {
+void addFacetSpec(pybind11::module_& m) {
     addFacetSpec<2>(m, "FacetSpec2");
     addFacetSpec<3>(m, "FacetSpec3");
     addFacetSpec<4>(m, "FacetSpec4");

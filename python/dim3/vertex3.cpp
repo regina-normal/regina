@@ -41,7 +41,7 @@ using regina::FaceEmbedding;
 using regina::Vertex;
 using regina::VertexEmbedding;
 
-void addVertex3(pybind11::module& m) {
+void addVertex3(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<3, 0>>(m, "FaceEmbedding3_0")
         .def(pybind11::init<regina::Tetrahedron<3>* ,int>())
         .def(pybind11::init<const VertexEmbedding<3>&>())

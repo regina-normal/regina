@@ -37,7 +37,7 @@
 
 using regina::PrismSpec;
 
-void addPrism(pybind11::module& m) {
+void addPrism(pybind11::module_& m) {
     auto c = pybind11::class_<PrismSpec>(m, "PrismSpec")
         .def(pybind11::init<>())
         .def(pybind11::init<unsigned long, int>())

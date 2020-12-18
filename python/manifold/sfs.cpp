@@ -41,7 +41,7 @@ using pybind11::overload_cast;
 using regina::SFSFibre;
 using regina::SFSpace;
 
-void addSFSpace(pybind11::module& m) {
+void addSFSpace(pybind11::module_& m) {
     auto f = pybind11::class_<SFSFibre>(m, "SFSFibre")
         .def(pybind11::init<>())
         .def(pybind11::init<long, long>())

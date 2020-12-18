@@ -39,7 +39,7 @@ using regina::Integer;
 using regina::LargeInteger;
 using regina::Rational;
 
-void addRational(pybind11::module& m) {
+void addRational(pybind11::module_& m) {
     auto c = pybind11::class_<Rational>(m, "Rational")
         .def(pybind11::init<>())
         .def(pybind11::init<const Rational&>())

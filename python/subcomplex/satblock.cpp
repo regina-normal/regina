@@ -40,7 +40,7 @@
 using regina::SatAnnulus;
 using regina::SatBlock;
 
-void addSatBlock(pybind11::module& m) {
+void addSatBlock(pybind11::module_& m) {
     auto c = pybind11::class_<SatBlock>(m, "SatBlock")
         .def("clone", &SatBlock::clone)
         .def("nAnnuli", &SatBlock::nAnnuli)

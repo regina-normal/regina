@@ -33,6 +33,6 @@
 #include "boundarycomponent-bindings.h"
 #include "triangulation/dim4.h" // for build()
 
-void addBoundaryComponent5(pybind11::module& m) {
+void addBoundaryComponent5(pybind11::module_& m) {
     addBoundaryComponent<5>(m, "BoundaryComponent5");
 }

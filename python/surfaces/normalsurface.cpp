@@ -61,7 +61,7 @@ namespace {
     GlobalArray2D<regina::Perm<4>> octDiscArcs_arr(regina::__octDiscArcs, 3, 8);
 }
 
-void addNormalSurface(pybind11::module& m) {
+void addNormalSurface(pybind11::module_& m) {
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
         .def(pybind11::init([](Triangulation<3>* t, regina::NormalCoords coords,
                 pybind11::list values) {

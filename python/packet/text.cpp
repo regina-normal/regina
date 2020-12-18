@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::Text;
 
-void addText(pybind11::module& m) {
+void addText(pybind11::module_& m) {
     pybind11::class_<Text, regina::Packet, regina::SafePtr<Text>>(m, "Text")
         .def(pybind11::init<>())
         .def(pybind11::init<const std::string&>())

@@ -41,7 +41,7 @@ using regina::SurfaceFilter;
 using regina::SurfaceFilterCombination;
 using regina::SurfaceFilterProperties;
 
-void addSurfaceFilter(pybind11::module& m) {
+void addSurfaceFilter(pybind11::module_& m) {
     pybind11::class_<SurfaceFilter, regina::Packet,
             regina::SafePtr<SurfaceFilter>>(m, "SurfaceFilter")
         .def(pybind11::init<>())

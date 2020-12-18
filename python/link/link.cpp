@@ -44,7 +44,7 @@ using regina::Crossing;
 using regina::StrandRef;
 using regina::Link;
 
-void addLink(pybind11::module& m) {
+void addLink(pybind11::module_& m) {
     pybind11::enum_<regina::Framing>(m, "Framing")
         .value("FRAMING_SEIFERT", regina::FRAMING_SEIFERT)
         .value("FRAMING_BLACKBOARD", regina::FRAMING_BLACKBOARD)

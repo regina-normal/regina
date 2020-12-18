@@ -36,7 +36,7 @@
 
 using regina::FileInfo;
 
-void addFileInfo(pybind11::module& m) {
+void addFileInfo(pybind11::module_& m) {
     auto c = pybind11::class_<FileInfo>(m, "FileInfo")
         .def(pybind11::init<const FileInfo&>())
         .def("pathname", &FileInfo::pathname)

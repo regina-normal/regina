@@ -39,7 +39,7 @@
 using pybind11::overload_cast;
 using regina::SnappedTwoSphere;
 
-void addSnappedTwoSphere(pybind11::module& m) {
+void addSnappedTwoSphere(pybind11::module_& m) {
     auto c = pybind11::class_<SnappedTwoSphere>(m, "SnappedTwoSphere")
         .def("clone", &SnappedTwoSphere::clone)
         .def("snappedBall", &SnappedTwoSphere::snappedBall,

@@ -34,7 +34,7 @@
 #include "surfaces/surfacefiltertype.h"
 #include "../helpers.h"
 
-void addSurfaceFilterType(pybind11::module& m) {
+void addSurfaceFilterType(pybind11::module_& m) {
     pybind11::enum_<regina::SurfaceFilterType>(m, "SurfaceFilterType")
         .value("NS_FILTER_DEFAULT", regina::NS_FILTER_DEFAULT)
         .value("NS_FILTER_PROPERTIES", regina::NS_FILTER_PROPERTIES)

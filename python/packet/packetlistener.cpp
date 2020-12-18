@@ -41,60 +41,60 @@ using regina::PacketShell;
 class PyPacketListener : public PacketListener {
     public:
         void packetToBeChanged(Packet* packet) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 packetToBeChanged, packet);
         }
         void packetWasChanged(Packet* packet) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 packetWasChanged, packet);
         }
         void packetToBeRenamed(Packet* packet) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 packetToBeRenamed, packet);
         }
         void packetWasRenamed(Packet* packet) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 packetWasRenamed, packet);
         }
         void packetToBeDestroyed(PacketShell packet) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 packetToBeDestroyed, packet);
         }
         void childToBeAdded(Packet* packet, Packet* child) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 childToBeAdded, packet, child);
         }
         void childWasAdded(Packet* packet, Packet* child) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 childWasAdded, packet, child);
         }
         void childToBeRemoved(Packet* packet, Packet* child) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 childToBeRemoved, packet, child);
         }
         void childWasRemoved(Packet* packet, Packet* child) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 childWasRemoved, packet, child);
         }
         void childrenToBeReordered(Packet* packet) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 childrenToBeReordered, packet);
         }
         void childrenWereReordered(Packet* packet) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 childrenWereReordered, packet);
         }
         void childToBeRenamed(Packet* packet, Packet* child) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 childToBeRenamed, packet, child);
         }
         void childWasRenamed(Packet* packet, Packet* child) override {
-            PYBIND11_OVERLOAD(void, PacketListener,
+            PYBIND11_OVERRIDE(void, PacketListener,
                 childWasRenamed, packet, child);
         }
 };
 
-void addPacketListener(pybind11::module& m) {
+void addPacketListener(pybind11::module_& m) {
     auto s = pybind11::class_<PacketShell>(m, "PacketShell")
         .def(pybind11::init<const Packet*>())
         .def(pybind11::init<const PacketShell&>())

@@ -37,7 +37,7 @@
 
 using regina::Signature;
 
-void addSignature(pybind11::module& m) {
+void addSignature(pybind11::module_& m) {
     auto c = pybind11::class_<Signature>(m, "Signature")
         .def(pybind11::init<const Signature&>())
         .def("order", &Signature::order)

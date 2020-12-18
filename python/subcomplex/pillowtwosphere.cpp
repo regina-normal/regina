@@ -37,7 +37,7 @@
 
 using regina::PillowTwoSphere;
 
-void addPillowTwoSphere(pybind11::module& m) {
+void addPillowTwoSphere(pybind11::module_& m) {
     auto c = pybind11::class_<PillowTwoSphere>(m, "PillowTwoSphere")
         .def("clone", &PillowTwoSphere::clone)
         .def("triangle", &PillowTwoSphere::triangle,

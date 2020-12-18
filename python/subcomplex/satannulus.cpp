@@ -40,7 +40,7 @@ using regina::Perm;
 using regina::SatAnnulus;
 using regina::Tetrahedron;
 
-void addSatAnnulus(pybind11::module& m) {
+void addSatAnnulus(pybind11::module_& m) {
     auto c = pybind11::class_<SatAnnulus>(m, "SatAnnulus")
         .def(pybind11::init<>())
         .def(pybind11::init<const SatAnnulus&>())

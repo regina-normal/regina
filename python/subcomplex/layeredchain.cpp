@@ -37,7 +37,7 @@
 
 using regina::LayeredChain;
 
-void addLayeredChain(pybind11::module& m) {
+void addLayeredChain(pybind11::module_& m) {
     pybind11::class_<LayeredChain, regina::StandardTriangulation>
             (m, "LayeredChain")
         .def(pybind11::init<regina::Tetrahedron<3>*, regina::Perm<4>>())

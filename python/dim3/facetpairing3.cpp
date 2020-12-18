@@ -41,7 +41,7 @@ using regina::FacetPairing;
 using regina::FacetSpec;
 using regina::Triangulation;
 
-void addFacetPairing3(pybind11::module& m) {
+void addFacetPairing3(pybind11::module_& m) {
     auto c = pybind11::class_<FacetPairing<3>>(m, "FacetPairing3")
         .def(pybind11::init<const FacetPairing<3>&>())
         .def(pybind11::init<const Triangulation<3>&>())

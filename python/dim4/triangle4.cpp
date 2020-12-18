@@ -48,7 +48,7 @@ namespace {
         Triangle<4>::triangleVertex, 10);
 }
 
-void addTriangle4(pybind11::module& m) {
+void addTriangle4(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<4, 2>>(m, "FaceEmbedding4_2")
         .def(pybind11::init<regina::Pentachoron<4>*, int>())
         .def(pybind11::init<const TriangleEmbedding<4>&>())

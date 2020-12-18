@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::Script;
 
-void addScript(pybind11::module& m) {
+void addScript(pybind11::module_& m) {
     pybind11::class_<Script, regina::Packet, regina::SafePtr<Script>>(
             m, "Script")
         .def(pybind11::init<>())

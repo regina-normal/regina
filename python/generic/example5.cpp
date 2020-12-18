@@ -33,6 +33,6 @@
 #include "triangulation/dim4.h"
 #include "example-bindings.h"
 
-void addExample5(pybind11::module& m) {
+void addExample5(pybind11::module_& m) {
     addExample<5>(m, "Example5");
 }

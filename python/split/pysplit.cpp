@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addSignature(pybind11::module& m);
+void addSignature(pybind11::module_& m);
 
-void addSplitClasses(pybind11::module& m) {
+void addSplitClasses(pybind11::module_& m) {
     addSignature(m);
 }
 

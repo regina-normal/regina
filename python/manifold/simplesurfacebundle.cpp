@@ -36,7 +36,7 @@
 
 using regina::SimpleSurfaceBundle;
 
-void addSimpleSurfaceBundle(pybind11::module& m) {
+void addSimpleSurfaceBundle(pybind11::module_& m) {
     auto c = pybind11::class_<SimpleSurfaceBundle, regina::Manifold>
             (m, "SimpleSurfaceBundle")
         .def(pybind11::init<int>())

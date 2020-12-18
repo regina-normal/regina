@@ -37,7 +37,7 @@
 
 using regina::FacePair;
 
-void addFacePair(pybind11::module& m) {
+void addFacePair(pybind11::module_& m) {
     auto c = pybind11::class_<FacePair>(m, "FacePair")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

@@ -38,7 +38,7 @@
 using namespace regina::python;
 using regina::ExampleSnapPea;
 
-void addExampleSnapPea(pybind11::module& m) {
+void addExampleSnapPea(pybind11::module_& m) {
     auto c = pybind11::class_<ExampleSnapPea>(m, "ExampleSnapPea")
         .def_static("figureEight", &ExampleSnapPea::figureEight)
         .def_static("trefoil", &ExampleSnapPea::trefoil)

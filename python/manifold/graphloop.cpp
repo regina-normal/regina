@@ -39,7 +39,7 @@ using regina::GraphLoop;
 using regina::Matrix2;
 using regina::SFSpace;
 
-void addGraphLoop(pybind11::module& m) {
+void addGraphLoop(pybind11::module_& m) {
     pybind11::class_<GraphLoop, regina::Manifold>(m, "GraphLoop")
         .def(pybind11::init([](const SFSpace& s,
                 long a, long b, long c, long d) {

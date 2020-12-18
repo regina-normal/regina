@@ -37,7 +37,7 @@
 
 using regina::LayeredTorusBundle;
 
-void addLayeredTorusBundle(pybind11::module& m) {
+void addLayeredTorusBundle(pybind11::module_& m) {
     pybind11::class_<LayeredTorusBundle, regina::StandardTriangulation>
             (m, "LayeredTorusBundle")
         .def("core", &LayeredTorusBundle::core,

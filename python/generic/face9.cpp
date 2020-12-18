@@ -32,7 +32,7 @@
 
 #include "face-bindings.h"
 
-void addFace9(pybind11::module& m) {
+void addFace9(pybind11::module_& m) {
     addFace<9, 0>(m, "Face9_0", "FaceEmbedding9_0");
     addFace<9, 1>(m, "Face9_1", "FaceEmbedding9_1");
     addFace<9, 2>(m, "Face9_2", "FaceEmbedding9_2");

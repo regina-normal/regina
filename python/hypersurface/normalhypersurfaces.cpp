@@ -41,7 +41,7 @@
 using regina::HyperCoords;
 using regina::NormalHypersurfaces;
 
-void addNormalHypersurfaces(pybind11::module& m) {
+void addNormalHypersurfaces(pybind11::module_& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
 
     pybind11::class_<NormalHypersurfaces, regina::Packet,

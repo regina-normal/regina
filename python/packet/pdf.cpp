@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::PDF;
 
-void addPDF(pybind11::module& m) {
+void addPDF(pybind11::module_& m) {
     pybind11::class_<PDF, regina::Packet, regina::SafePtr<PDF>>(m, "PDF")
         .def(pybind11::init<>())
         .def(pybind11::init<const char*>())

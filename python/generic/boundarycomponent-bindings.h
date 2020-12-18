@@ -38,7 +38,7 @@
 using regina::BoundaryComponent;
 
 template <int dim>
-void addBoundaryComponent(pybind11::module& m, const char* name) {
+void addBoundaryComponent(pybind11::module_& m, const char* name) {
     // In higher dimensions:
     // - we do not store lower-dimensional faces;
     // - we do not recognise ideal or invalid vertices;

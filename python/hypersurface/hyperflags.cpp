@@ -41,7 +41,7 @@ using regina::HyperAlgFlags;
 using regina::HyperList;
 using regina::HyperListFlags;
 
-void addHyperFlags(pybind11::module& m) {
+void addHyperFlags(pybind11::module_& m) {
     pybind11::enum_<HyperListFlags>(m, "HyperListFlags")
         .value("HS_EMBEDDED_ONLY", regina::HS_EMBEDDED_ONLY)
         .value("HS_IMMERSED_SINGULAR", regina::HS_IMMERSED_SINGULAR)

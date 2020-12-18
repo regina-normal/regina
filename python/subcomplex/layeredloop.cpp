@@ -37,7 +37,7 @@
 
 using regina::LayeredLoop;
 
-void addLayeredLoop(pybind11::module& m) {
+void addLayeredLoop(pybind11::module_& m) {
     pybind11::class_<LayeredLoop, regina::StandardTriangulation>
             (m, "LayeredLoop")
         .def("clone", &LayeredLoop::clone)

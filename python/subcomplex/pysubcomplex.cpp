@@ -30,38 +30,38 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addAugTriSolidTorus(pybind11::module& m);
-void addBlockedSFS(pybind11::module& m);
-void addBlockedSFSLoop(pybind11::module& m);
-void addBlockedSFSPair(pybind11::module& m);
-void addBlockedSFSTriple(pybind11::module& m);
-void addL31Pillow(pybind11::module& m);
-void addLayeredChain(pybind11::module& m);
-void addLayeredChainPair(pybind11::module& m);
-void addLayeredLensSpace(pybind11::module& m);
-void addLayeredLoop(pybind11::module& m);
-void addLayeredSolidTorus(pybind11::module& m);
-void addLayeredTorusBundle(pybind11::module& m);
-void addLayering(pybind11::module& m);
-void addPillowTwoSphere(pybind11::module& m);
-void addPluggedTorusBundle(pybind11::module& m);
-void addPlugTriSolidTorus(pybind11::module& m);
-void addSatAnnulus(pybind11::module& m);
-void addSatBlock(pybind11::module& m);
-void addSatBlockTypes(pybind11::module& m);
-void addSatRegion(pybind11::module& m);
-void addSnapPeaCensusTri(pybind11::module& m);
-void addSnappedBall(pybind11::module& m);
-void addSnappedTwoSphere(pybind11::module& m);
-void addSpiralSolidTorus(pybind11::module& m);
-void addStandardTriangulation(pybind11::module& m);
-void addTriSolidTorus(pybind11::module& m);
-void addTrivialTri(pybind11::module& m);
-void addTxICore(pybind11::module& m);
+void addAugTriSolidTorus(pybind11::module_& m);
+void addBlockedSFS(pybind11::module_& m);
+void addBlockedSFSLoop(pybind11::module_& m);
+void addBlockedSFSPair(pybind11::module_& m);
+void addBlockedSFSTriple(pybind11::module_& m);
+void addL31Pillow(pybind11::module_& m);
+void addLayeredChain(pybind11::module_& m);
+void addLayeredChainPair(pybind11::module_& m);
+void addLayeredLensSpace(pybind11::module_& m);
+void addLayeredLoop(pybind11::module_& m);
+void addLayeredSolidTorus(pybind11::module_& m);
+void addLayeredTorusBundle(pybind11::module_& m);
+void addLayering(pybind11::module_& m);
+void addPillowTwoSphere(pybind11::module_& m);
+void addPluggedTorusBundle(pybind11::module_& m);
+void addPlugTriSolidTorus(pybind11::module_& m);
+void addSatAnnulus(pybind11::module_& m);
+void addSatBlock(pybind11::module_& m);
+void addSatBlockTypes(pybind11::module_& m);
+void addSatRegion(pybind11::module_& m);
+void addSnapPeaCensusTri(pybind11::module_& m);
+void addSnappedBall(pybind11::module_& m);
+void addSnappedTwoSphere(pybind11::module_& m);
+void addSpiralSolidTorus(pybind11::module_& m);
+void addStandardTriangulation(pybind11::module_& m);
+void addTriSolidTorus(pybind11::module_& m);
+void addTrivialTri(pybind11::module_& m);
+void addTxICore(pybind11::module_& m);
 
-void addSubcomplexClasses(pybind11::module& m) {
+void addSubcomplexClasses(pybind11::module_& m) {
     addStandardTriangulation(m);
     addAugTriSolidTorus(m);
     addL31Pillow(m);

@@ -38,7 +38,7 @@
 
 using regina::BlockedSFSLoop;
 
-void addBlockedSFSLoop(pybind11::module& m) {
+void addBlockedSFSLoop(pybind11::module_& m) {
     pybind11::class_<BlockedSFSLoop, regina::StandardTriangulation>(
             m, "BlockedSFSLoop")
         .def("region", &BlockedSFSLoop::region,

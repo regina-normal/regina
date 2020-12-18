@@ -32,6 +32,6 @@
 
 #include "component-bindings.h"
 
-void addComponent9(pybind11::module& m) {
+void addComponent9(pybind11::module_& m) {
     addComponent<9>(m, "Component9");
 }

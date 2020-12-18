@@ -36,7 +36,7 @@
 
 using pybind11::overload_cast;
 
-void addForeignIsoSig(pybind11::module& m) {
+void addForeignIsoSig(pybind11::module_& m) {
     m.def("readIsoSigList", regina::readIsoSigList,
         pybind11::arg(),
         pybind11::arg("dimension") = 3,

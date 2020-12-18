@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "maths/numbertheory.h"
 
-void addNumberTheory(pybind11::module& m) {
+void addNumberTheory(pybind11::module_& m) {
     m.def("reducedMod", regina::reducedMod);
     m.def("gcd", regina::gcd);
     m.def("gcdWithCoeffs", [](long a, long b){

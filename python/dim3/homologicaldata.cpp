@@ -38,7 +38,7 @@
 using regina::HomologicalData;
 using regina::Triangulation;
 
-void addHomologicalData(pybind11::module& m) {
+void addHomologicalData(pybind11::module_& m) {
     auto c = pybind11::class_<HomologicalData>(m, "HomologicalData")
         .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const HomologicalData&>())

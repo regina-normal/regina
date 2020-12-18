@@ -38,7 +38,7 @@
 using regina::Matrix2;
 using regina::TorusBundle;
 
-void addTorusBundle(pybind11::module& m) {
+void addTorusBundle(pybind11::module_& m) {
     pybind11::class_<TorusBundle, regina::Manifold>(m, "TorusBundle")
         .def(pybind11::init<>())
         .def(pybind11::init<const Matrix2&>())

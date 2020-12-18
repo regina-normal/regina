@@ -41,7 +41,7 @@ using regina::FaceEmbedding;
 using regina::Triangle;
 using regina::TriangleEmbedding;
 
-void addTriangle3(pybind11::module& m) {
+void addTriangle3(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<3, 2>>(m, "FaceEmbedding3_2")
         .def(pybind11::init<regina::Tetrahedron<3>*, int>())
         .def(pybind11::init<const TriangleEmbedding<3>&>())

@@ -36,7 +36,7 @@
 
 using regina::SnapPeaCensusManifold;
 
-void addSnapPeaCensusManifold(pybind11::module& m) {
+void addSnapPeaCensusManifold(pybind11::module_& m) {
     auto c = pybind11::class_<SnapPeaCensusManifold, regina::Manifold>
             (m, "SnapPeaCensusManifold")
         .def(pybind11::init<char, unsigned long>())

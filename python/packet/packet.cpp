@@ -55,7 +55,7 @@ namespace {
     }
 }
 
-void addPacket(pybind11::module& m) {
+void addPacket(pybind11::module_& m) {
     auto c1 = pybind11::class_<regina::PacketChildren>(m, "PacketChildren")
         .def("__iter__", [](regina::PacketChildren c) {
             return c.begin();

@@ -39,7 +39,7 @@
 
 using regina::BoundaryComponent;
 
-void addBoundaryComponent3(pybind11::module& m) {
+void addBoundaryComponent3(pybind11::module_& m) {
     auto c = pybind11::class_<BoundaryComponent<3>>(m, "BoundaryComponent3")
         .def("index", &BoundaryComponent<3>::index)
         .def("size", &BoundaryComponent<3>::size)

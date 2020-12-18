@@ -66,7 +66,7 @@ namespace {
 }
 
 template <int dim>
-void addTriangulation(pybind11::module& m, const char* name) {
+void addTriangulation(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Triangulation<dim>, regina::Packet,
             regina::SafePtr<Triangulation<dim>>>(m, name)
         .def(pybind11::init<>())

@@ -37,7 +37,7 @@
 
 using regina::SnappedBall;
 
-void addSnappedBall(pybind11::module& m) {
+void addSnappedBall(pybind11::module_& m) {
     pybind11::class_<SnappedBall, regina::StandardTriangulation>
             (m, "SnappedBall")
         .def("clone", &SnappedBall::clone)

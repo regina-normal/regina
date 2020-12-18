@@ -38,7 +38,7 @@
 using regina::Example;
 
 template <int dim>
-void addExample(pybind11::module& m, const char* name) {
+void addExample(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Example<dim>>(m, name)
         .def_static("sphere", &Example<dim>::sphere)
         .def_static("simplicialSphere", &Example<dim>::simplicialSphere)

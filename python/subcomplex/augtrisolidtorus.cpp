@@ -38,7 +38,7 @@
 
 using regina::AugTriSolidTorus;
 
-void addAugTriSolidTorus(pybind11::module& m) {
+void addAugTriSolidTorus(pybind11::module_& m) {
     pybind11::class_<AugTriSolidTorus, regina::StandardTriangulation>
             (m, "AugTriSolidTorus")
         .def("clone", &AugTriSolidTorus::clone)

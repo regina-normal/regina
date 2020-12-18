@@ -38,7 +38,7 @@
 
 using regina::Component;
 
-void addComponent4(pybind11::module& m) {
+void addComponent4(pybind11::module_& m) {
     auto c = pybind11::class_<Component<4>>(m, "Component4")
         .def("index", &Component<4>::index)
         .def("size", &Component<4>::size)

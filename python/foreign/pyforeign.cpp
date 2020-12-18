@@ -30,13 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addForeignDehydration(pybind11::module& m);
-void addForeignIsoSig(pybind11::module& m);
-void addForeignOrb(pybind11::module& m);
+void addForeignDehydration(pybind11::module_& m);
+void addForeignIsoSig(pybind11::module_& m);
+void addForeignOrb(pybind11::module_& m);
 
-void addForeignClasses(pybind11::module& m) {
+void addForeignClasses(pybind11::module_& m) {
     addForeignDehydration(m);
     addForeignIsoSig(m);
     addForeignOrb(m);

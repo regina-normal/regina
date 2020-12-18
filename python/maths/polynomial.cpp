@@ -64,7 +64,7 @@ namespace {
     }
 }
 
-void addPolynomial(pybind11::module& m) {
+void addPolynomial(pybind11::module_& m) {
     auto c = pybind11::class_<Polynomial<Rational>>(m, "Polynomial")
         .def(pybind11::init<>())
         .def(pybind11::init<size_t>())

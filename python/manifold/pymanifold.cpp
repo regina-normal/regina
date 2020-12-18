@@ -30,20 +30,20 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addGraphLoop(pybind11::module& m);
-void addGraphPair(pybind11::module& m);
-void addGraphTriple(pybind11::module& m);
-void addHandlebody(pybind11::module& m);
-void addManifold(pybind11::module& m);
-void addLensSpace(pybind11::module& m);
-void addSFSpace(pybind11::module& m);
-void addSimpleSurfaceBundle(pybind11::module& m);
-void addSnapPeaCensusManifold(pybind11::module& m);
-void addTorusBundle(pybind11::module& m);
+void addGraphLoop(pybind11::module_& m);
+void addGraphPair(pybind11::module_& m);
+void addGraphTriple(pybind11::module_& m);
+void addHandlebody(pybind11::module_& m);
+void addManifold(pybind11::module_& m);
+void addLensSpace(pybind11::module_& m);
+void addSFSpace(pybind11::module_& m);
+void addSimpleSurfaceBundle(pybind11::module_& m);
+void addSnapPeaCensusManifold(pybind11::module_& m);
+void addTorusBundle(pybind11::module_& m);
 
-void addManifoldClasses(pybind11::module& m) {
+void addManifoldClasses(pybind11::module_& m) {
     addManifold(m);
     addHandlebody(m);
     addLensSpace(m);

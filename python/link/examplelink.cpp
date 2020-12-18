@@ -37,7 +37,7 @@
 
 using regina::ExampleLink;
 
-void addExampleLink(pybind11::module& m) {
+void addExampleLink(pybind11::module_& m) {
     auto c = pybind11::class_<ExampleLink>(m, "ExampleLink")
         .def_static("unknot", &ExampleLink::unknot)
         .def_static("gordian", &ExampleLink::gordian)

@@ -61,7 +61,7 @@ namespace {
     }
 }
 
-void addAbelianGroup(pybind11::module& m) {
+void addAbelianGroup(pybind11::module_& m) {
     auto c = pybind11::class_<AbelianGroup>(m, "AbelianGroup")
         .def(pybind11::init<>())
         .def(pybind11::init<const AbelianGroup&>())

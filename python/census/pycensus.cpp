@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addGluingPermSearcher3(pybind11::module& m);
-void addCensus(pybind11::module& m);
+void addGluingPermSearcher3(pybind11::module_& m);
+void addCensus(pybind11::module_& m);
 
-void addCensusClasses(pybind11::module& m) {
+void addCensusClasses(pybind11::module_& m) {
     addGluingPermSearcher3(m);
     addCensus(m);
 }

@@ -36,7 +36,7 @@
 
 using pybind11::overload_cast;
 
-void addForeignDehydration(pybind11::module& m) {
+void addForeignDehydration(pybind11::module_& m) {
     m.def("readDehydrationList", regina::readDehydrationList,
         pybind11::arg(),
         pybind11::arg("colDehydrations") = 0,

@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "maths/binom.h"
 
-void addBinom(pybind11::module& m) {
+void addBinom(pybind11::module_& m) {
     m.def("binomSmall", regina::binomSmall);
     m.def("binomMedium", regina::binomMedium);
 }

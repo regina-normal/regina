@@ -49,7 +49,7 @@ namespace {
             throw pybind11::stop_iteration();
     }
 }
-void addDisc(pybind11::module& m) {
+void addDisc(pybind11::module_& m) {
     auto d = pybind11::class_<DiscSpec>(m, "DiscSpec")
         .def(pybind11::init<>())
         .def(pybind11::init<unsigned long, int, unsigned long>())

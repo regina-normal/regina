@@ -38,7 +38,7 @@
 
 using regina::BlockedSFSTriple;
 
-void addBlockedSFSTriple(pybind11::module& m) {
+void addBlockedSFSTriple(pybind11::module_& m) {
     pybind11::class_<BlockedSFSTriple, regina::StandardTriangulation>
             (m, "BlockedSFSTriple")
         .def("end", &BlockedSFSTriple::end,

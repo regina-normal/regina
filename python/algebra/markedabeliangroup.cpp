@@ -43,7 +43,7 @@ using regina::MarkedAbelianGroup;
 using regina::MatrixInt;
 using regina::Integer;
 
-void addMarkedAbelianGroup(pybind11::module& m) {
+void addMarkedAbelianGroup(pybind11::module_& m) {
     auto c1 = pybind11::class_<MarkedAbelianGroup>(m, "MarkedAbelianGroup")
         .def(pybind11::init<const MatrixInt&, const MatrixInt&>())
         .def(pybind11::init<const MarkedAbelianGroup&>())

@@ -82,7 +82,7 @@ namespace {
 }
 
 template <int n>
-void addPerm(pybind11::module& m, const char* name) {
+void addPerm(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Perm<n>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
@@ -129,7 +129,7 @@ void addPerm(pybind11::module& m, const char* name) {
     regina::python::add_eq_operators(c);
 }
 
-void addPerm(pybind11::module& m) {
+void addPerm(pybind11::module_& m) {
     m.def("digit", regina::digit);
     m.def("factorial", regina::factorial);
 

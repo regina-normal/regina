@@ -32,6 +32,6 @@
 
 #include "example-bindings.h"
 
-void addExample6(pybind11::module& m) {
+void addExample6(pybind11::module_& m) {
     addExample<6>(m, "Example6");
 }

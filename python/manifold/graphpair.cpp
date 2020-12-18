@@ -39,7 +39,7 @@ using regina::GraphPair;
 using regina::Matrix2;
 using regina::SFSpace;
 
-void addGraphPair(pybind11::module& m) {
+void addGraphPair(pybind11::module_& m) {
     pybind11::class_<GraphPair, regina::Manifold>(m, "GraphPair")
         .def(pybind11::init([](const SFSpace& s1, const SFSpace& s2,
                 long a, long b, long c, long d) {

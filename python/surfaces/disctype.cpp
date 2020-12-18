@@ -37,7 +37,7 @@
 
 using regina::DiscType;
 
-void addDiscType(pybind11::module& m) {
+void addDiscType(pybind11::module_& m) {
     auto c = pybind11::class_<DiscType>(m, "DiscType")
         .def(pybind11::init<>())
         .def(pybind11::init<unsigned long, int>())

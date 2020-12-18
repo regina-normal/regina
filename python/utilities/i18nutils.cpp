@@ -34,7 +34,7 @@
 #include "utilities/i18nutils.h"
 #include "../helpers.h"
 
-void addLocale(pybind11::module& m) {
+void addLocale(pybind11::module_& m) {
     auto c = pybind11::class_<regina::i18n::Locale>(m, "Locale")
         .def_static("codeset", &regina::i18n::Locale::codeset)
     ;

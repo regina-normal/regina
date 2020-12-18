@@ -32,7 +32,7 @@
 
 #include "simplex-bindings.h"
 
-void addSimplex9(pybind11::module& m) {
+void addSimplex9(pybind11::module_& m) {
     addSimplex<9>(m, "Simplex9");
     m.attr("Face9_9") = m.attr("Simplex9");
 }

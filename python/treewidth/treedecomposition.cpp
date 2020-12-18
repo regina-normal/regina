@@ -44,7 +44,7 @@ using pybind11::overload_cast;
 using regina::TreeBag;
 using regina::TreeDecomposition;
 
-void addTreeDecomposition(pybind11::module& m) {
+void addTreeDecomposition(pybind11::module_& m) {
     pybind11::enum_<regina::TreeDecompositionAlg>(m, "TreeDecompositionAlg")
         .value("TD_UPPER", regina::TD_UPPER)
         .value("TD_UPPER_GREEDY_FILL_IN", regina::TD_UPPER_GREEDY_FILL_IN)

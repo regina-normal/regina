@@ -37,7 +37,7 @@
 
 using regina::TrivialTri;
 
-void addTrivialTri(pybind11::module& m) {
+void addTrivialTri(pybind11::module_& m) {
     pybind11::class_<TrivialTri, regina::StandardTriangulation>(m, "TrivialTri")
         .def("clone", &TrivialTri::clone)
         .def("type", &TrivialTri::type)

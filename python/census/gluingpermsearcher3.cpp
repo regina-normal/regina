@@ -37,7 +37,7 @@
 
 using regina::GluingPermSearcher;
 
-void addGluingPermSearcher3(pybind11::module& m) {
+void addGluingPermSearcher3(pybind11::module_& m) {
     auto c = pybind11::class_<GluingPermSearcher<3>>(m, "GluingPermSearcher3")
         ;
     regina::python::add_eq_operators(c);

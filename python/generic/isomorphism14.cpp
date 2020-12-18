@@ -32,7 +32,7 @@
 
 #include "isomorphism-bindings.h"
 
-void addIsomorphism14(pybind11::module& m) {
+void addIsomorphism14(pybind11::module_& m) {
     addIsomorphism<14>(m, "Isomorphism14");
 }
 

@@ -32,7 +32,7 @@
 
 #include "facetpairing-bindings.h"
 
-void addFacetPairing7(pybind11::module& m) {
+void addFacetPairing7(pybind11::module_& m) {
     addFacetPairing<7>(m, "FacetPairing7");
 }
 

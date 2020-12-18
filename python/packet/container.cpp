@@ -36,7 +36,7 @@
 
 using regina::Container;
 
-void addContainer(pybind11::module& m) {
+void addContainer(pybind11::module_& m) {
     pybind11::class_<Container, regina::Packet, regina::SafePtr<Container>>(
             m, "Container")
         .def(pybind11::init<>())

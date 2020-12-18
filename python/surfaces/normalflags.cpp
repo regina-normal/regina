@@ -41,7 +41,7 @@ using regina::NormalAlgFlags;
 using regina::NormalList;
 using regina::NormalListFlags;
 
-void addNormalFlags(pybind11::module& m) {
+void addNormalFlags(pybind11::module_& m) {
     pybind11::enum_<NormalListFlags>(m, "NormalListFlags")
         .value("NS_EMBEDDED_ONLY", regina::NS_EMBEDDED_ONLY)
         .value("NS_IMMERSED_SINGULAR", regina::NS_IMMERSED_SINGULAR)

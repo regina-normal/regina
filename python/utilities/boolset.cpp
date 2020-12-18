@@ -37,7 +37,7 @@
 
 using regina::BoolSet;
 
-void addBoolSet(pybind11::module& m) {
+void addBoolSet(pybind11::module_& m) {
     auto c = pybind11::class_<BoolSet>(m, "BoolSet")
         .def(pybind11::init<>())
         .def(pybind11::init<bool>())

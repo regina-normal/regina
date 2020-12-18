@@ -40,7 +40,7 @@ using regina::Crossing;
 using regina::StrandRef;
 using regina::Tangle;
 
-void addTangle(pybind11::module& m) {
+void addTangle(pybind11::module_& m) {
     auto c = pybind11::class_<Tangle>(m, "Tangle")
         .def(pybind11::init<int>())
         .def(pybind11::init<int, int>())

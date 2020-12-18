@@ -39,7 +39,7 @@ using regina::Layering;
 using regina::Perm;
 using regina::Tetrahedron;
 
-void addLayering(pybind11::module& m) {
+void addLayering(pybind11::module_& m) {
     auto c = pybind11::class_<Layering>(m, "Layering")
         .def(pybind11::init<Tetrahedron<3>*, Perm<4>,
             Tetrahedron<3>*, Perm<4>>())

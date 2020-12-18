@@ -40,7 +40,7 @@
 
 using regina::NormalSurfaces;
 
-void addNormalSurfaces(pybind11::module& m) {
+void addNormalSurfaces(pybind11::module_& m) {
     pybind11::enum_<regina::SurfaceExportFields>(m, "SurfaceExportFields")
         .value("surfaceExportName", regina::surfaceExportName)
         .value("surfaceExportEuler", regina::surfaceExportEuler)

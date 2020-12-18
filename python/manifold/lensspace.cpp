@@ -36,7 +36,7 @@
 
 using regina::LensSpace;
 
-void addLensSpace(pybind11::module& m) {
+void addLensSpace(pybind11::module_& m) {
     auto c = pybind11::class_<LensSpace, regina::Manifold>(m, "LensSpace")
         .def(pybind11::init<unsigned long, unsigned long>())
         .def(pybind11::init<const LensSpace&>())

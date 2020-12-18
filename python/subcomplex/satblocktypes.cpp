@@ -45,7 +45,7 @@ using regina::SatMobius;
 using regina::SatReflectorStrip;
 using regina::SatTriPrism;
 
-void addSatBlockTypes(pybind11::module& m) {
+void addSatBlockTypes(pybind11::module_& m) {
     pybind11::class_<SatMobius, regina::SatBlock>(m, "SatMobius")
         .def(pybind11::init<const SatMobius&>())
         .def("position", &SatMobius::position)

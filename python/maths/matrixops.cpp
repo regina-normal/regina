@@ -37,7 +37,7 @@
 using pybind11::overload_cast;
 using regina::MatrixInt;
 
-void addMatrixOps(pybind11::module& m) {
+void addMatrixOps(pybind11::module_& m) {
     m.def("smithNormalForm", overload_cast<MatrixInt&>(
         &regina::smithNormalForm));
     m.def("smithNormalForm", overload_cast<MatrixInt&, MatrixInt&,

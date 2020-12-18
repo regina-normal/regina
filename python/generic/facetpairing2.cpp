@@ -32,7 +32,7 @@
 
 #include "facetpairing-bindings.h"
 
-void addFacetPairing2(pybind11::module& m) {
+void addFacetPairing2(pybind11::module_& m) {
     addFacetPairing<2>(m, "FacetPairing2");
     m.attr("Dim2EdgePairing") = m.attr("FacetPairing2");
 }

@@ -63,7 +63,7 @@ namespace {
     }
 }
 
-void addLaurent(pybind11::module& m) {
+void addLaurent(pybind11::module_& m) {
     auto c = pybind11::class_<Laurent<regina::Integer>>(m, "Laurent")
         .def(pybind11::init<>())
         .def(pybind11::init<long>())

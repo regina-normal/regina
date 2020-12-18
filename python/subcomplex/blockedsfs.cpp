@@ -38,7 +38,7 @@
 
 using regina::BlockedSFS;
 
-void addBlockedSFS(pybind11::module& m) {
+void addBlockedSFS(pybind11::module_& m) {
     pybind11::class_<BlockedSFS, regina::StandardTriangulation>(m, "BlockedSFS")
         .def("region", &BlockedSFS::region,
             pybind11::return_value_policy::reference_internal)

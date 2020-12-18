@@ -37,7 +37,7 @@
 using pybind11::overload_cast;
 using regina::GlobalDirs;
 
-void addGlobalDirs(pybind11::module& m) {
+void addGlobalDirs(pybind11::module_& m) {
     auto c = pybind11::class_<GlobalDirs>(m, "GlobalDirs")
         .def_static("home", &GlobalDirs::home)
         .def_static("pythonModule", &GlobalDirs::pythonModule)

@@ -33,7 +33,7 @@
 #include "maths/perm.h"
 #include "globalarray.h"
 
-void addGlobalArray(pybind11::module& m) {
+void addGlobalArray(pybind11::module_& m) {
     regina::python::GlobalArray<int>::wrapClass(m, "GlobalArray_int");
     regina::python::GlobalArray2D<int>::wrapClass(m, "GlobalArray2D_int");
     regina::python::GlobalArray3D<int>::wrapClass(m, "GlobalArray3D_int");

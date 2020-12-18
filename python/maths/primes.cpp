@@ -38,7 +38,7 @@
 using regina::Integer;
 using regina::Primes;
 
-void addPrimes(pybind11::module& m) {
+void addPrimes(pybind11::module_& m) {
     auto c = pybind11::class_<Primes>(m, "Primes")
         .def_static("size", &Primes::size)
         .def_static("prime", &Primes::prime,

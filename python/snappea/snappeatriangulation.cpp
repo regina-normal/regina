@@ -42,7 +42,7 @@ using regina::Cusp;
 using regina::SnapPeaTriangulation;
 using regina::Triangulation;
 
-void addSnapPeaTriangulation(pybind11::module& m) {
+void addSnapPeaTriangulation(pybind11::module_& m) {
     auto c1 = pybind11::class_<Cusp>(m, "Cusp")
         .def("vertex", &Cusp::vertex,
             pybind11::return_value_policy::reference)

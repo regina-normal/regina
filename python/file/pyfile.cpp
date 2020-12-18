@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addFileInfo(pybind11::module& m);
-void addGlobalDirs(pybind11::module& m);
+void addFileInfo(pybind11::module_& m);
+void addGlobalDirs(pybind11::module_& m);
 
-void addFileClasses(pybind11::module& m) {
+void addFileClasses(pybind11::module_& m) {
     addFileInfo(m);
     addGlobalDirs(m);
 }

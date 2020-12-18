@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "packet/packettype.h"
 
-void addPacketType(pybind11::module& m) {
+void addPacketType(pybind11::module_& m) {
     pybind11::enum_<regina::PacketType>(m, "PacketType")
         .value("PACKET_CONTAINER", regina::PACKET_CONTAINER)
         .value("PACKET_TEXT", regina::PACKET_TEXT)

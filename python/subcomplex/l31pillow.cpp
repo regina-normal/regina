@@ -37,7 +37,7 @@
 
 using regina::L31Pillow;
 
-void addL31Pillow(pybind11::module& m) {
+void addL31Pillow(pybind11::module_& m) {
     pybind11::class_<L31Pillow, regina::StandardTriangulation>(m, "L31Pillow")
         .def("clone", &L31Pillow::clone)
         .def("tetrahedron", &L31Pillow::tetrahedron,

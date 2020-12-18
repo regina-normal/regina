@@ -39,7 +39,7 @@
 
 using regina::Manifold;
 
-void addManifold(pybind11::module& m) {
+void addManifold(pybind11::module_& m) {
     auto c = pybind11::class_<Manifold>(m, "Manifold")
         .def("name", &Manifold::name)
         .def("TeXName", &Manifold::TeXName)

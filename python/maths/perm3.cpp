@@ -63,7 +63,7 @@ namespace {
     };
 }
 
-void addPerm3(pybind11::module& m) {
+void addPerm3(pybind11::module_& m) {
     auto c = pybind11::class_<Perm<3>>(m, "Perm3")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

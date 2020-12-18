@@ -104,7 +104,7 @@ namespace {
 }
 
 template <int dim>
-void addSimplex(pybind11::module& m, const char* name) {
+void addSimplex(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<regina::Simplex<dim>>(m, name)
         .def("description", &Simplex<dim>::description)
         .def("setDescription", &Simplex<dim>::setDescription)

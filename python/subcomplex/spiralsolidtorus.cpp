@@ -37,7 +37,7 @@
 
 using regina::SpiralSolidTorus;
 
-void addSpiralSolidTorus(pybind11::module& m) {
+void addSpiralSolidTorus(pybind11::module_& m) {
     pybind11::class_<SpiralSolidTorus, regina::StandardTriangulation>
             (m, "SpiralSolidTorus")
         .def("clone", &SpiralSolidTorus::clone)

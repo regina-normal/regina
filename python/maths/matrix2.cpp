@@ -79,7 +79,7 @@ namespace regina {
 using regina::Matrix2;
 using regina::Matrix2Row;
 
-void addMatrix2(pybind11::module& m) {
+void addMatrix2(pybind11::module_& m) {
     auto c1 = pybind11::class_<Matrix2Row>(m, "Matrix2Row")
         .def("__getitem__", &Matrix2Row::getItem)
         .def("__setitem__", &Matrix2Row::setItem)

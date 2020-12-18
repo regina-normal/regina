@@ -39,7 +39,7 @@
 
 using regina::PluggedTorusBundle;
 
-void addPluggedTorusBundle(pybind11::module& m) {
+void addPluggedTorusBundle(pybind11::module_& m) {
     pybind11::class_<PluggedTorusBundle, regina::StandardTriangulation>
             (m, "PluggedTorusBundle")
         .def("bundle", &PluggedTorusBundle::bundle,

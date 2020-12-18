@@ -42,7 +42,7 @@ using regina::GroupExpression;
 using regina::GroupPresentation;
 using regina::HomGroupPresentation;
 
-void addHomGroupPresentation(pybind11::module& m) {
+void addHomGroupPresentation(pybind11::module_& m) {
     auto c = pybind11::class_<HomGroupPresentation>(m, "HomGroupPresentation")
         .def(pybind11::init<const HomGroupPresentation&>())
         .def(pybind11::init<const GroupPresentation&>())

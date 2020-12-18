@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::Tetrahedron;
 
-void addTetrahedron3(pybind11::module& m) {
+void addTetrahedron3(pybind11::module_& m) {
     auto c = pybind11::class_<regina::Simplex<3>>(m, "Simplex3")
         .def("description", &Tetrahedron<3>::description)
         .def("setDescription", &Tetrahedron<3>::setDescription)

@@ -37,7 +37,7 @@
 
 using regina::LayeredChainPair;
 
-void addLayeredChainPair(pybind11::module& m) {
+void addLayeredChainPair(pybind11::module_& m) {
     pybind11::class_<LayeredChainPair, regina::StandardTriangulation>
             (m, "LayeredChainPair")
         .def("clone", &LayeredChainPair::clone)

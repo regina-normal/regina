@@ -53,7 +53,7 @@ namespace {
     }
 }
 
-void addCensus(pybind11::module& m) {
+void addCensus(pybind11::module_& m) {
     auto db = pybind11::class_<CensusDB>(m, "CensusDB")
         .def(pybind11::init<const std::string&, const std::string&>())
         .def(pybind11::init<const CensusDB&>())

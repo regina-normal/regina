@@ -38,7 +38,7 @@ using regina::TxICore;
 using regina::TxIDiagonalCore;
 using regina::TxIParallelCore;
 
-void addTxICore(pybind11::module& m) {
+void addTxICore(pybind11::module_& m) {
     auto c = pybind11::class_<TxICore>(m, "TxICore")
         .def("core", [](const TxICore& c) {
             // Return a fresh clone.  This is because we are using a custom

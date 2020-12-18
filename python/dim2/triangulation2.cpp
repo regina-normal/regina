@@ -41,7 +41,7 @@ using pybind11::overload_cast;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
-void addTriangulation2(pybind11::module& m) {
+void addTriangulation2(pybind11::module_& m) {
     auto c = pybind11::class_<Triangulation<2>, regina::Packet,
             regina::SafePtr<Triangulation<2>>>(m, "Triangulation2")
         .def(pybind11::init<>())

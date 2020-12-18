@@ -40,7 +40,7 @@
 using regina::NormalHypersurface;
 using regina::Triangulation;
 
-void addNormalHypersurface(pybind11::module& m) {
+void addNormalHypersurface(pybind11::module_& m) {
     auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface")
         .def(pybind11::init([](Triangulation<4>* t, regina::HyperCoords coords,
                 pybind11::list values) {

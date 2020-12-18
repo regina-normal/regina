@@ -192,7 +192,7 @@ PythonInterpreter::PythonInterpreter(
 
     // Set up a completer if we can.
     try {
-        pybind11::object c = pybind11::module::import("rlcompleter")
+        pybind11::object c = pybind11::module_::import("rlcompleter")
             .attr("Completer")();
         pybind11::object f = c.attr("complete");
 

@@ -36,7 +36,7 @@
 
 using regina::Handlebody;
 
-void addHandlebody(pybind11::module& m) {
+void addHandlebody(pybind11::module_& m) {
     auto c = pybind11::class_<Handlebody, regina::Manifold>(m, "Handlebody")
         .def(pybind11::init<unsigned long, bool>())
         .def(pybind11::init<const Handlebody&>())

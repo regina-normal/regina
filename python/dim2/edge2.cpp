@@ -40,7 +40,7 @@ using regina::EdgeEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
-void addEdge2(pybind11::module& m) {
+void addEdge2(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<2, 1>>(m, "FaceEmbedding2_1")
         .def(pybind11::init<regina::Triangle<2>*, int>())
         .def(pybind11::init<const EdgeEmbedding<2>&>())

@@ -37,7 +37,7 @@
 
 using regina::LayeredSolidTorus;
 
-void addLayeredSolidTorus(pybind11::module& m) {
+void addLayeredSolidTorus(pybind11::module_& m) {
     pybind11::class_<LayeredSolidTorus, regina::StandardTriangulation>
             (m, "LayeredSolidTorus")
         .def("clone", &LayeredSolidTorus::clone)

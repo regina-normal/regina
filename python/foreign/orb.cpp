@@ -34,7 +34,7 @@
 #include "foreign/orb.h"
 #include "triangulation/dim3.h"
 
-void addForeignOrb(pybind11::module& m) {
+void addForeignOrb(pybind11::module_& m) {
     m.def("readOrb", regina::readOrb);
 }
 

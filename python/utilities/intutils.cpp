@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "utilities/intutils.h"
 
-void addIntUtils(pybind11::module& m) {
+void addIntUtils(pybind11::module_& m) {
     m.def("bitsRequired", regina::bitsRequired<long>);
     m.def("nextPowerOfTwo", regina::nextPowerOfTwo<long>);
 }

@@ -37,7 +37,7 @@
 
 using regina::SnapPeaCensusTri;
 
-void addSnapPeaCensusTri(pybind11::module& m) {
+void addSnapPeaCensusTri(pybind11::module_& m) {
     auto c = pybind11::class_<SnapPeaCensusTri, regina::StandardTriangulation>
             (m, "SnapPeaCensusTri")
         .def("clone", &SnapPeaCensusTri::clone)

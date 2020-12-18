@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::Integer;
 
-void addInteger(pybind11::module& m) {
+void addInteger(pybind11::module_& m) {
     auto c = pybind11::class_<Integer>(m, "Integer")
         .def(pybind11::init<>())
         .def(pybind11::init<long>())

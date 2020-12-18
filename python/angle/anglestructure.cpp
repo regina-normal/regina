@@ -38,7 +38,7 @@
 using namespace regina::python;
 using regina::AngleStructure;
 
-void addAngleStructure(pybind11::module& m) {
+void addAngleStructure(pybind11::module_& m) {
     auto c = pybind11::class_<AngleStructure>(m, "AngleStructure")
         .def("clone", &AngleStructure::clone)
         .def("angle", &AngleStructure::angle)

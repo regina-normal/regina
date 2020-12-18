@@ -30,18 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addBoundaryComponent2(pybind11::module& m);
-void addComponent2(pybind11::module& m);
-void addEdge2(pybind11::module& m);
-void addExample2(pybind11::module& m);
-void addIsomorphism2(pybind11::module& m);
-void addTriangle2(pybind11::module& m);
-void addTriangulation2(pybind11::module& m);
-void addVertex2(pybind11::module& m);
+void addBoundaryComponent2(pybind11::module_& m);
+void addComponent2(pybind11::module_& m);
+void addEdge2(pybind11::module_& m);
+void addExample2(pybind11::module_& m);
+void addIsomorphism2(pybind11::module_& m);
+void addTriangle2(pybind11::module_& m);
+void addTriangulation2(pybind11::module_& m);
+void addVertex2(pybind11::module_& m);
 
-void addDim2Classes(pybind11::module& m) {
+void addDim2Classes(pybind11::module_& m) {
     addBoundaryComponent2(m);
     addComponent2(m);
     addEdge2(m);

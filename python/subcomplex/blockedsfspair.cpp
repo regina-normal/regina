@@ -38,7 +38,7 @@
 
 using regina::BlockedSFSPair;
 
-void addBlockedSFSPair(pybind11::module& m) {
+void addBlockedSFSPair(pybind11::module_& m) {
     pybind11::class_<BlockedSFSPair, regina::StandardTriangulation>
             (m, "BlockedSFSPair")
         .def("region", &BlockedSFSPair::region,

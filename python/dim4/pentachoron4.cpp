@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::Pentachoron;
 
-void addPentachoron4(pybind11::module& m) {
+void addPentachoron4(pybind11::module_& m) {
     auto c = pybind11::class_<regina::Simplex<4>>(m, "Simplex4")
         .def("description", &Pentachoron<4>::description)
         .def("setDescription", &Pentachoron<4>::setDescription)

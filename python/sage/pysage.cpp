@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addRegisterIntFromPyIndex(pybind11::module& m);
+void addRegisterIntFromPyIndex(pybind11::module_& m);
 
 void addSageHacks() {
     // TODO: Re-enable this once it's ported from boost.python to pybind11.
