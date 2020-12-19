@@ -44,10 +44,10 @@
 #endif
 
 #include <cstdlib>
-#include <random>
 #include <string>
 #include "regina-core.h"
 #include "utilities/intutils.h"
+#include "utilities/randutils.h"
 
 namespace regina {
 
@@ -425,9 +425,14 @@ class Perm {
          * Returns a random permutation on \a n elements.
          * All permutations are returned with equal probability.
          *
-         * \warning This routine is not thread-safe, since it uses the
-         * C standard ::rand() function.  For a thread-safe version, you should
-         * call the version of rand() that takes a uniform bit random generator.
+         * This routine is thread-safe, and uses RandomEngine for its
+         * random number generation.
+         *
+         * \warning This routine is expensive, since it locks and unlocks
+         * the mutex protecting Regina's global uniform random bit generator.
+         * If you are calling this many times in quick succession, consider
+         * creating a single RandomEngine object yourself and then calling
+         * <tt>rand(randomEngine.engine(), even)</tt>.
          *
          * @param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -442,7 +447,7 @@ class Perm {
          * All permutations are returned with equal probability.
          *
          * The thread safety of this routine is of course dependent on
-         * the thread safety of your uniform random bit generator \a gen,
+         * the thread safety of your uniform random bit generator \a gen.
          *
          * \tparam URBG A type which, once any references are removed, must
          * adhere to the C++ \a UniformRandomBitGenerator concept.
@@ -775,24 +780,8 @@ typename Perm<n>::Index Perm<n>::index() const {
 
 template <int n>
 Perm<n> Perm<n>::rand(bool even) {
-    // We can't just call atIndex(rand() % nPerms), since nPerms might
-    // be too large to fit into an int (which is what rand() returns).
-    int image[n];
-    int p, q;
-    for (p = 0; p < n; ++p)
-        image[n - p - 1] = ::rand() % (p + 1);
-    for (p = n - 1; p >= 0; --p)
-        for (q = p + 1; q < n; ++q)
-            if (image[q] >= image[p])
-                ++image[q];
-    if (even) {
-        Perm<n> result(image);
-        if (result.sign() > 0)
-            return result;
-        std::swap(image[0], image[1]);
-        return Perm<n>(image);
-    } else
-        return Perm<n>(image);
+    RandomEngine engine;
+    return rand(engine.engine(), even);
 }
 
 template <int n>
@@ -813,9 +802,10 @@ Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
     std::uniform_int_distribution<Arg> d(0, nPerms - 1);
     if (even) {
         Perm<n> result = atIndex(d(gen));
-        if (result.sign() < 0)
-            result *= Perm<n>(0, 1);
-        return result;
+        if (result.sign() > 0)
+            return result;
+        else
+            return result * Perm<n>(0, 1);
     } else
         return atIndex(d(gen));
 }

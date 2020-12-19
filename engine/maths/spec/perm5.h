@@ -522,9 +522,14 @@ class REGINA_API Perm<5> {
          * Returns a random permutation on five elements.
          * All permutations are returned with equal probability.
          *
-         * \warning This routine is not thread-safe, since it uses the
-         * C standard ::rand() function.  For a thread-safe version, you should
-         * call the version of rand() that takes a uniform bit random generator.
+         * This routine is thread-safe, and uses RandomEngine for its
+         * random number generation.
+         *
+         * \warning This routine is expensive, since it locks and unlocks
+         * the mutex protecting Regina's global uniform random bit generator.
+         * If you are calling this many times in quick succession, consider
+         * creating a single RandomEngine object yourself and then calling
+         * <tt>rand(randomEngine.engine(), even)</tt>.
          *
          * @param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -539,7 +544,7 @@ class REGINA_API Perm<5> {
          * All permutations are returned with equal probability.
          *
          * The thread safety of this routine is of course dependent on
-         * the thread safety of your uniform random bit generator \a gen,
+         * the thread safety of your uniform random bit generator \a gen.
          *
          * \tparam URBG A type which, once any references are removed, must
          * adhere to the C++ \a UniformRandomBitGenerator concept.
@@ -842,10 +847,8 @@ inline Perm<5>::Index Perm<5>::index() const {
 }
 
 inline Perm<5> Perm<5>::rand(bool even) {
-    if (even)
-        return S5[2 * (::rand() % 60)];
-    else
-        return S5[::rand() % 120];
+    RandomEngine engine;
+    return rand(engine.engine(), even);
 }
 
 template <class URBG>

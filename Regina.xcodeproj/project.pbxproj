@@ -1370,6 +1370,9 @@
 		05754CC3258B38C100236ED7 /* laurent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CC1258B38C100236ED7 /* laurent2.cpp */; };
 		05754CD4258B814D00236ED7 /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CD3258B814D00236ED7 /* cyclotomic.cpp */; };
 		05754CD5258B814D00236ED7 /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CD3258B814D00236ED7 /* cyclotomic.cpp */; };
+		05754CE7258D7D6400236ED7 /* randutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05754CE5258D7D6400236ED7 /* randutils.h */; };
+		05754CE8258D7D6400236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CE6258D7D6400236ED7 /* randutils.cpp */; };
+		05754CF8258D7D6F00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CE6258D7D6400236ED7 /* randutils.cpp */; };
 		0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7D91DCE8B700027CE31 /* nfacepair.h */; };
 		0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */; };
 		0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6EF1F9709C700CBDF15 /* nsignature.h */; };
@@ -3876,6 +3879,8 @@
 		05721F191F97165000A83FFC /* link.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = link.cpp; sourceTree = "<group>"; };
 		05754CC1258B38C100236ED7 /* laurent2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = laurent2.cpp; sourceTree = "<group>"; };
 		05754CD3258B814D00236ED7 /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
+		05754CE5258D7D6400236ED7 /* randutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = randutils.h; sourceTree = "<group>"; };
+		05754CE6258D7D6400236ED7 /* randutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = randutils.cpp; sourceTree = "<group>"; };
 		0575A7D91DCE8B700027CE31 /* nfacepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepair.h; sourceTree = "<group>"; };
 		0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhomologicaldata.h; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6260,6 +6265,8 @@
 				052F9E70180600FB00FAE4DF /* property.h */,
 				052F9E79180600FB00FAE4DF /* ptrutils.h */,
 				052F9E71180600FB00FAE4DF /* qitmask.h */,
+				05754CE6258D7D6400236ED7 /* randutils.cpp */,
+				05754CE5258D7D6400236ED7 /* randutils.h */,
 				05CA99E518078465006161DC /* registryutils.h */,
 				052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */,
 				052942CF1C5CDC8B0011C1E6 /* safeptr.h */,
@@ -8212,6 +8219,7 @@
 				054208781DF0D0B50018AB24 /* format_p.h in Headers */,
 				0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */,
 				050C64B61DA32B1400C9420F /* ndoubledescription-impl.h in Headers */,
+				05754CE7258D7D6400236ED7 /* randutils.h in Headers */,
 				0591E7B11C4F74C400793A9C /* dim4vertex.h in Headers */,
 				05431F131C40F257009BC072 /* facenumber.h in Headers */,
 				0588F1181808D43B006BDC79 /* packetregistry-impl.h in Headers */,
@@ -9987,6 +9995,7 @@
 				050AFC5319DCB90E00835ED6 /* SnapPeaCusps.mm in Sources */,
 				05A067501DFA68470047872E /* pluggedtorusbundle.cpp in Sources */,
 				05249F431DBC1729001FE29E /* signature.cpp in Sources */,
+				05754CF8258D7D6F00236ED7 /* randutils.cpp in Sources */,
 				05D1173619EE018A003BEC55 /* normalsurfaces.cpp in Sources */,
 				058FADBA19D506160001B5B5 /* Tri3Algebra.mm in Sources */,
 				05F0A0611DBF0B7000117BFC /* subdivide.cpp in Sources */,
@@ -10363,6 +10372,7 @@
 				052F9F39180600FB00FAE4DF /* matrixops.cpp in Sources */,
 				052FA021180600FB00FAE4DF /* crushandcut.cpp in Sources */,
 				052F9F76180600FB00FAE4DF /* core_geodesics.c in Sources */,
+				05754CE8258D7D6400236ED7 /* randutils.cpp in Sources */,
 				0591E7F31C4F75C300793A9C /* gluingpermsearcher4.cpp in Sources */,
 				054208B91DF0D2740018AB24 /* lensspace.cpp in Sources */,
 				052F9F7C180600FB00FAE4DF /* cusps.c in Sources */,

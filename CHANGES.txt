@@ -199,8 +199,10 @@ Version 5.2  [ 29 September, 2017 ]
               set of packets being listened to is not a lightweight operatation.
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
-              even permutations only, and offers a second thread-safe variant
-              where the user can pass their own uniform random bit generator.
+              even permutations only.
+            - The rand() function is now thread-safe out of the box, and also
+              offers an alternate variant where you can pass your own
+              uniform random bit generator.
         Class Polynomial:
             - New constructor that takes a C++11 initialiser list.
             - Added move constructor and assignment operator.
@@ -219,6 +221,8 @@ Version 5.2  [ 29 September, 2017 ]
               this cannot be used with the StoreManagedPtr storage policy.
             - The assignment operator now returns a non-const reference
               (not a const reference).
+        Class RandomEngine:
+            - New class for threadsafe random number generation.
         Class SafePointeeBase:
             - Added hasSafePtr() to test whether safe pointers are being used.
         Class SatBlockSpec:
