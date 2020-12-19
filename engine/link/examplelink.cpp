@@ -146,13 +146,11 @@ Link* ExampleLink::gordian() {
     return ans;
 }
 
-/*
 Link* ExampleLink::torus(int p, int q) {
-    // TODO: Implement
-    Link* ans = 0;
+    Link* ans = new Link;
+    ans->insertTorusLink(p, q);
     return ans;
 }
-*/
 
 Link* ExampleLink::gst() {
     Link* ans = Link::fromData(

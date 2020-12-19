@@ -51,9 +51,7 @@ void addExampleLink(pybind11::module_& m) {
         .def_static("monster", &ExampleLink::monster)
         .def_static("conway", &ExampleLink::conway)
         .def_static("kinoshitaTerasaka", &ExampleLink::kinoshitaTerasaka)
-        /*
         .def_static("torus", &ExampleLink::torus)
-        */
         .def_static("gst", &ExampleLink::gst)
     ;
     regina::python::no_eq_operators(c);

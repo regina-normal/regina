@@ -2724,6 +2724,30 @@ class REGINA_API Link : public Packet {
         /*@{*/
 
         /**
+         * Inserts a new (\a p, \a q) torus link into this link.
+         *
+         * The parameters \a p and \a q must be non-negative, but they do
+         * not need to be coprime.
+         *
+         * All of the crossings in the new torus link component(s) will be
+         * positive if the argument \a positive is \c true, or negative
+         * otherwise.
+         *
+         * The new crossings and components will be inserted at the
+         * end of the respective lists in this link.
+         *
+         * If your aim is to create a new torus link (as opposed to
+         * inserting one into an existing link), it is simpler to just call
+         * ExampleLink::torus().
+         *
+         * @param p the first parameter of the new torus link; this must be
+         * non-negative.
+         * @param q the second parameter of the new torus link; this must
+         * also be non-negative.
+         */
+        void insertTorusLink(int p, int q, bool positive = true);
+
+        /**
          * Creates a new link from hard-coded information about its
          * crossings and components.
          *

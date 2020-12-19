@@ -177,16 +177,18 @@ class REGINA_API ExampleLink {
         /**
          * Returns the (\a p,\a q) torus link.
          *
-         * The parameters \a p and \a q must be positive, but they do
+         * The parameters \a p and \a q must be non-negative, but they do
          * not need to be coprime.
          *
+         * All of the crossings in the resulting link will be positive.
+         *
          * @param p the first parameter of the torus link; this must be
-         * strictly positive.
+         * strictly non-negative.
          * @param q the second parameter of the torus link; this must
-         * also be strictly positive.
+         * also be strictly non-negative.
          * @return the (\a p, \a q) torus link.
          */
-        // static Link* torus(int p, int q);
+        static Link* torus(int p, int q);
 
         /**
          * Returns a 48-crossing potential counterexample to the

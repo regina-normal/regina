@@ -230,6 +230,10 @@ void addLink(pybind11::module_& m) {
              pybind11::arg("height") = 1,
              pybind11::arg("nThreads") = 1,
              pybind11::arg("tracker") = nullptr)
+        .def("insertTorusLink", &Link::insertTorusLink,
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("positive") = true)
         .def_readonly_static("jonesVar", Link::jonesVar)
         .def_readonly_static("homflyVarX", Link::homflyVarX)
         .def_readonly_static("homflyVarY", Link::homflyVarY)
