@@ -3268,11 +3268,12 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
         std::thread([=]{
             Laurent2<Integer>* ans;
             switch (alg) {
-                case ALG_TREEWIDTH:
-                    ans = homflyTreewidth(tracker);
+                case ALG_NAIVE:
+                case ALG_BACKTRACK:
+                    ans = homflyKauffman(tracker);
                     break;
                 default:
-                    ans = homflyKauffman(tracker);
+                    ans = homflyTreewidth(tracker);
                     break;
             }
 
@@ -3290,11 +3291,12 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
         return noResult;
     } else {
         switch (alg) {
-            case ALG_TREEWIDTH:
-                homflyAZ_ = homflyTreewidth(nullptr);
+            case ALG_NAIVE:
+            case ALG_BACKTRACK:
+                homflyAZ_ = homflyKauffman(nullptr);
                 break;
             default:
-                homflyAZ_ = homflyKauffman(nullptr);
+                homflyAZ_ = homflyTreewidth(nullptr);
                 break;
         }
         return *homflyAZ_.value();
