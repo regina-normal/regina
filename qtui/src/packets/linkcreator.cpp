@@ -70,6 +70,7 @@ namespace {
         EXAMPLE_BORROMEAN,
         EXAMPLE_CONWAY,
         EXAMPLE_FIGURE_EIGHT,
+        EXAMPLE_GST,
         EXAMPLE_HOPF,
         EXAMPLE_KT,
         EXAMPLE_TREFOIL_LEFT,
@@ -181,17 +182,18 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
-    exampleWhich->insertItem(0, QObject::tr("Borromean rings"));
-    exampleWhich->insertItem(1, QObject::tr("Conway knot"));
-    exampleWhich->insertItem(2, QObject::tr("Figure eight knot"));
-    exampleWhich->insertItem(3, QObject::tr("Hopf link"));
-    exampleWhich->insertItem(4, QObject::tr("Kinoshita-Terasaka knot"));
-    exampleWhich->insertItem(5, QObject::tr("Trefoil (left)"));
-    exampleWhich->insertItem(6, QObject::tr("Trefoil (right)"));
-    exampleWhich->insertItem(7, QObject::tr("Unknot (no crossings)"));
-    exampleWhich->insertItem(8, QObject::tr("Unknot (10-crossing monster)"));
-    exampleWhich->insertItem(9, QObject::tr("Unknot (141-crossing Gordian)"));
-    exampleWhich->insertItem(10, QObject::tr("Whitehead link"));
+    exampleWhich->addItem(QObject::tr("Borromean rings"));
+    exampleWhich->addItem(QObject::tr("Conway knot"));
+    exampleWhich->addItem(QObject::tr("Figure eight knot"));
+    exampleWhich->addItem(QObject::tr("Gompf-Scharlemann-Thompson"));
+    exampleWhich->addItem(QObject::tr("Hopf link"));
+    exampleWhich->addItem(QObject::tr("Kinoshita-Terasaka knot"));
+    exampleWhich->addItem(QObject::tr("Trefoil (left)"));
+    exampleWhich->addItem(QObject::tr("Trefoil (right)"));
+    exampleWhich->addItem(QObject::tr("Unknot (no crossings)"));
+    exampleWhich->addItem(QObject::tr("Unknot (10-crossing monster)"));
+    exampleWhich->addItem(QObject::tr("Unknot (141-crossing Gordian)"));
+    exampleWhich->addItem(QObject::tr("Whitehead link"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -248,6 +250,8 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 return ExampleLink::conway();
             case EXAMPLE_FIGURE_EIGHT:
                 return ExampleLink::figureEight();
+            case EXAMPLE_GST:
+                return ExampleLink::gst();
             case EXAMPLE_HOPF:
                 return ExampleLink::hopf();
             case EXAMPLE_KT:
