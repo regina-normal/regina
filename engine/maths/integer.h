@@ -1292,6 +1292,10 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is uniformly
          * distributed in the interval [0,*this).
          *
+         * The random number generation here does \e not use Regina's
+         * own RandomEngine class, but instead uses a separate random
+         * number generator provided by GMP.
+         *
          * \pre This integer is strictly positive.
          *
          * \warning Even if this integer is small, this routine is still
@@ -1308,6 +1312,10 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is uniformly
          * distributed in the interval [0,2^n).
          *
+         * The random number generation here does \e not use Regina's
+         * own RandomEngine class, but instead uses a separate random
+         * number generator provided by GMP.
+         *
          * @param n the maximum number of bits in the pseudo-random
          * integer.
          * @return a pseudo-random integer.
@@ -1318,6 +1326,10 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is distributed in the
          * interval [0,2^n), with a tendency to have long strings of 0s
          * and 1s in its binary expansion.
+         *
+         * The random number generation here does \e not use Regina's
+         * own RandomEngine class, but instead uses a separate random
+         * number generator provided by GMP.
          *
          * @param n the maximum number of bits in the pseudo-random integer.
          * @return a pseudo-random integer.
