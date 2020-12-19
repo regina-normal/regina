@@ -388,7 +388,6 @@
 		0528DBD21DD28CB0004DD4B6 /* generictriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */; };
 		052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */; };
 		052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942CF1C5CDC8B0011C1E6 /* safeptr.h */; };
-		052942D41C5CDC8B0011C1E6 /* saferemnant.h in Headers */ = {isa = PBXBuildFile; fileRef = 052942D01C5CDC8B0011C1E6 /* saferemnant.h */; };
 		052942DA1C5CDFBE0011C1E6 /* snappeaalgebra.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBF19B2F1AB0099C617 /* snappeaalgebra.h */; };
 		052AB7101C6304A800C44D54 /* facetspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 052AB70F1C6304A800C44D54 /* facetspec.h */; };
 		052AB7131C6304C900C44D54 /* facetspec.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052AB7111C6304C500C44D54 /* facetspec.cpp */; };
@@ -2782,7 +2781,6 @@
 		0528DBCF1DD28CA9004DD4B6 /* generictriangulation.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriangulation.cpp; sourceTree = "<group>"; };
 		052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safepointeebase.h; sourceTree = "<group>"; };
 		052942CF1C5CDC8B0011C1E6 /* safeptr.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = safeptr.h; sourceTree = "<group>"; };
-		052942D01C5CDC8B0011C1E6 /* saferemnant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = saferemnant.h; sourceTree = "<group>"; };
 		052AB70F1C6304A800C44D54 /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
 		052AB7111C6304C500C44D54 /* facetspec.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetspec.cpp; sourceTree = "<group>"; };
 		052F9BFF180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
@@ -6270,7 +6268,6 @@
 				05CA99E518078465006161DC /* registryutils.h */,
 				052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */,
 				052942CF1C5CDC8B0011C1E6 /* safeptr.h */,
-				052942D01C5CDC8B0011C1E6 /* saferemnant.h */,
 				0541AF511B8BE386002E166B /* sequence.h */,
 				052F9E7B180600FB00FAE4DF /* stringutils-impl.h */,
 				052F9E7C180600FB00FAE4DF /* stringutils.cpp */,
@@ -8256,7 +8253,6 @@
 				052F9FDA180600FB00FAE4DF /* winged_edge.h in Headers */,
 				05A067271DFA68190047872E /* plugtrisolidtorus.h in Headers */,
 				05A0672B1DFA68190047872E /* satblock.h in Headers */,
-				052942D41C5CDC8B0011C1E6 /* saferemnant.h in Headers */,
 				052FA097180600FB00FAE4DF /* trieset.h in Headers */,
 				05A067391DFA68190047872E /* spiralsolidtorus.h in Headers */,
 				052FA007180600FB00FAE4DF /* nsatannulus.h in Headers */,
