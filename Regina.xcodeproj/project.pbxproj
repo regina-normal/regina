@@ -1372,6 +1372,8 @@
 		05754CE7258D7D6400236ED7 /* randutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05754CE5258D7D6400236ED7 /* randutils.h */; };
 		05754CE8258D7D6400236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CE6258D7D6400236ED7 /* randutils.cpp */; };
 		05754CF8258D7D6F00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CE6258D7D6400236ED7 /* randutils.cpp */; };
+		05754D18258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
+		05754D19258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
 		0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7D91DCE8B700027CE31 /* nfacepair.h */; };
 		0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */; };
 		0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6EF1F9709C700CBDF15 /* nsignature.h */; };
@@ -3879,6 +3881,7 @@
 		05754CD3258B814D00236ED7 /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		05754CE5258D7D6400236ED7 /* randutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = randutils.h; sourceTree = "<group>"; };
 		05754CE6258D7D6400236ED7 /* randutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = randutils.cpp; sourceTree = "<group>"; };
+		05754D17258D834E00236ED7 /* randutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = randutils.cpp; sourceTree = "<group>"; };
 		0575A7D91DCE8B700027CE31 /* nfacepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepair.h; sourceTree = "<group>"; };
 		0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhomologicaldata.h; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -5283,6 +5286,7 @@
 				05431FCD1C40F65D009BC072 /* intutils.cpp */,
 				050F5DBD1B9BAB9C00C1F681 /* osutils.cpp */,
 				050F5DBE1B9BAB9C00C1F681 /* pyutilities.cpp */,
+				05754D17258D834E00236ED7 /* randutils.cpp */,
 				050F5DBF1B9BAB9C00C1F681 /* stringutils.cpp */,
 			);
 			path = utilities;
@@ -9180,6 +9184,7 @@
 				057EE4E11C600A3600C4D155 /* facetpairing6.cpp in Sources */,
 				0550010C1C4D9EF900501C24 /* face8.cpp in Sources */,
 				05431FC11C40F5D4009BC072 /* facehelper.cpp in Sources */,
+				05754D18258D834E00236ED7 /* randutils.cpp in Sources */,
 				05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */,
 				059BC6891DC7F7A200AB4206 /* boundarycomponent13.cpp in Sources */,
 				0591E81D1C4F763B00793A9C /* pydim4.cpp in Sources */,
@@ -9830,6 +9835,7 @@
 				052FA225180612DD00FAE4DF /* gcd.c in Sources */,
 				05249F271DBC1711001FE29E /* cyclotomic.cpp in Sources */,
 				05249F441DBC1729001FE29E /* pysplit.cpp in Sources */,
+				05754D19258D834E00236ED7 /* randutils.cpp in Sources */,
 				052FA226180612DD00FAE4DF /* gluing_equations.c in Sources */,
 				05A066C11DFA67D50047872E /* plugtrisolidtorus.cpp in Sources */,
 				05249EDE1DBC16E4001FE29E /* face8.cpp in Sources */,

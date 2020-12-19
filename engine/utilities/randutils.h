@@ -82,6 +82,10 @@ namespace regina {
  * reseedWithHardware().  If you wish to re-seed the random engine with
  * its default value (to behave as though the process had just started),
  * you can call reseedWithDefault().
+ *
+ * \ifacespython Python users only have access to the static member
+ * functions in this class (which still supports basic random number
+ * generation as well as reseeding).
  */
 class REGINA_API RandomEngine : std::lock_guard<std::mutex> {
     private:
@@ -94,6 +98,8 @@ class REGINA_API RandomEngine : std::lock_guard<std::mutex> {
         /**
          * Constructor that locks the internal mutex.
          * The mutex will be unlocked when this object is destroyed.
+         *
+         * \ifacespython Not present.
          */
         RandomEngine();
 
@@ -105,9 +111,27 @@ class REGINA_API RandomEngine : std::lock_guard<std::mutex> {
          * directly to other random number generation functions as you
          * use them, and not store a reference to it for later use.
          *
+         * \ifacespython Not present.
+         *
          * @return a reference to the global URBG.
          */
         std::default_random_engine& engine();
+
+        /**
+         * A convenience function that returns a random integer modulo
+         * \a range, in a thread-safe manner.  The result will be
+         * between 0 and (\a range - 1) inclusive, and all such integers
+         * should be returned with equal probability.
+         *
+         * This is expensive because it locks and unlocks the internal mutex.
+         * If you need to create many random numbers in quick succession,
+         * consider creating a single RandomEngine object and accessing
+         * engine() directly using the standard C++ randomness functions.
+         *
+         * @param range the size of the range of possible results.
+         * @return a random integer between 0 and (\a range - 1) inclusive.
+         */
+        static size_t rand(size_t range);
 
         /**
          * Reseeds the global uniform random bit generator using

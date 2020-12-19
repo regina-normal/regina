@@ -30,21 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "utilities/randutils.h"
+#include "../helpers.h"
 
-void addIntUtils(pybind11::module_& m);
-void addLocale(pybind11::module_& m);
-void addBoolSet(pybind11::module_& m);
-void addOSUtils(pybind11::module_& m);
-void addRandUtils(pybind11::module_& m);
-void addStringUtils(pybind11::module_& m);
+using regina::RandomEngine;
 
-void addUtilitiesClasses(pybind11::module_& m) {
-    addIntUtils(m);
-    addLocale(m);
-    addBoolSet(m);
-    addOSUtils(m);
-    addRandUtils(m);
-    addStringUtils(m);
+void addRandUtils(pybind11::module_& m) {
+    auto c = pybind11::class_<RandomEngine>(m, "RandomEngine")
+        .def_static("rand", &RandomEngine::rand)
+        .def_static("reseedWithHardware", &RandomEngine::reseedWithHardware)
+        .def_static("reseedWithDefault", &RandomEngine::reseedWithDefault)
+    ;
+    regina::python::no_eq_operators(c);
 }
 
