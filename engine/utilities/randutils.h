@@ -41,6 +41,7 @@
 
 #include <mutex>
 #include <random>
+#include <type_traits>
 #include "regina-core.h"
 
 namespace regina {
@@ -128,10 +129,18 @@ class REGINA_API RandomEngine : std::lock_guard<std::mutex> {
          * consider creating a single RandomEngine object and accessing
          * engine() directly using the standard C++ randomness functions.
          *
-         * @param range the size of the range of possible results.
+         * \ifacespython The integer type \a Int will be treated as \c long.
+         *
+         * \tparam Int a native integer type (e.g., \c int, \c long,
+         * \c size_t, <tt>long long</tt>, etc.); this may be either
+         * signed or unsigned.
+         *
+         * @param range the size of the range of possible results;
+         * this must be strictly positive.
          * @return a random integer between 0 and (\a range - 1) inclusive.
          */
-        static size_t rand(size_t range);
+        template <typename Int>
+        static Int rand(Int range);
 
         /**
          * Reseeds the global uniform random bit generator using
@@ -173,6 +182,31 @@ inline RandomEngine::RandomEngine() : std::lock_guard<std::mutex>(mutex_) {
 
 inline std::default_random_engine& RandomEngine::engine() {
     return engine_;
+}
+
+template <typename Int>
+Int RandomEngine::rand(Int range) {
+    // A slight messiness here is that std::uniform_int_distribution
+    // requires the type argument to be one of short, int, long or long long
+    // (either signed or unsigned).
+    static_assert(std::is_integral<Int>::value,
+        "RandomEngine::rand() requires a native integer type");
+    static_assert(sizeof(Int) <= sizeof(long long),
+        "RandomEngine::rand() requires a type that can fit inside a long long");
+
+    typedef typename std::conditional<std::is_signed<Int>::value,
+        typename std::conditional<sizeof(Int) <= sizeof(short), short,
+        typename std::conditional<sizeof(Int) <= sizeof(int), int,
+        typename std::conditional<sizeof(Int) <= sizeof(long), long,
+        long long>::type>::type>::type,
+        typename std::conditional<sizeof(Int) <= sizeof(short), unsigned short,
+        typename std::conditional<sizeof(Int) <= sizeof(int), unsigned int,
+        typename std::conditional<sizeof(Int) <= sizeof(long), unsigned long,
+        unsigned long long>::type>::type>::type>::type Arg;
+
+    std::uniform_int_distribution<Arg> d(0, range - 1);
+    std::lock_guard<std::mutex> lock(mutex_);
+    return d(engine_);
 }
 
 } // namespace regina

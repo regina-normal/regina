@@ -38,7 +38,7 @@ using regina::RandomEngine;
 
 void addRandUtils(pybind11::module_& m) {
     auto c = pybind11::class_<RandomEngine>(m, "RandomEngine")
-        .def_static("rand", &RandomEngine::rand)
+        .def_static("rand", &RandomEngine::rand<long>)
         .def_static("reseedWithHardware", &RandomEngine::reseedWithHardware)
         .def_static("reseedWithDefault", &RandomEngine::reseedWithDefault)
     ;

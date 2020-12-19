@@ -37,22 +37,6 @@ namespace regina {
 std::default_random_engine RandomEngine::engine_;
 std::mutex RandomEngine::mutex_;
 
-size_t RandomEngine::rand(size_t range) {
-    // A slight messiness here is that std::uniform_int_distribution
-    // requires the type argument to be one of short, int, long or long long
-    // (though unsigned is okay).
-    static_assert(sizeof(size_t) <= sizeof(long long),
-        "size_t cannot fit inside a long long");
-    typedef
-        typename std::conditional<sizeof(size_t) <= sizeof(int), unsigned int,
-        typename std::conditional<sizeof(size_t) <= sizeof(long), unsigned long,
-        unsigned long long>::type>::type Arg;
-
-    std::uniform_int_distribution<Arg> d(0, range - 1);
-    std::lock_guard<std::mutex> lock(mutex_);
-    return d(engine_);
-}
-
 void RandomEngine::reseedWithHardware() {
     std::random_device rd;
     std::lock_guard<std::mutex> lock(mutex_);
