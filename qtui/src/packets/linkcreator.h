@@ -63,6 +63,7 @@ class LinkCreator : public PacketCreator {
          * Details for specific link types
          */
         QLineEdit* code;
+        QLineEdit* torusParams;
         QComboBox* exampleWhich;
 
     public:

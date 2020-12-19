@@ -59,6 +59,7 @@ namespace {
      */
     enum {
         LINK_CODE,
+        LINK_TORUS,
         LINK_EXAMPLE
     };
 
@@ -80,6 +81,11 @@ namespace {
         EXAMPLE_GORDIAN,
         EXAMPLE_WHITEHEAD
     };
+
+    /**
+     * Regular expressions describing different sets of parameters.
+     */
+    QRegExp reTorusParams("^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
 }
 
 LinkCreator::LinkCreator(ReginaMain* mainWindow) {
@@ -109,7 +115,7 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     QWidget* area;
     QBoxLayout* subLayout;
 
-    type->insertItem(LINK_CODE, QObject::tr("From text code"));
+    type->addItem(QObject::tr("From text code"));
     area = new QWidget();
     subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
@@ -167,8 +173,25 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     subLayout->addWidget(label, 1);
     details->addWidget(area);//, LINK_CODE);
 
+    type->addItem(QObject::tr("Torus link"));
+    area = new QWidget();
+    subLayout = new QHBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    expln = QObject::tr("<qt>The (<i>p</i>,<i>q</i>) parameters of the new "
+        "torus knot/link.  These must be non-negative, but do not need to be "
+        "relatively prime.  Example parameters are <i>6,4</i>, which "
+        "will produce a pair of interlinked trefoils.</qt>");
+    label = new QLabel(QObject::tr("<qt>Parameters (<i>p</i>,<i>q</i>):</qt>"));
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    torusParams = new QLineEdit();
+    torusParams->setValidator(new QRegExpValidator(reTorusParams, area));
+    torusParams->setWhatsThis(expln);
+    subLayout->addWidget(torusParams, 1);
+    details->addWidget(area);//, LINK_TORUS);
 
-    type->insertItem(type->count(),QObject::tr("Example knot/link"));
+    type->addItem(QObject::tr("Example knot/link"));
     area = new QWidget();
     subLayout = new QHBoxLayout();
     subLayout->setAlignment(Qt::AlignTop);
@@ -242,6 +265,21 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 "For more information on what each type of code means, "
                 "see the Regina Handbook.</qt>"));
         return nullptr;
+    } else if (typeId == LINK_TORUS) {
+        if (! reTorusParams.exactMatch(torusParams->text())) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("<qt>The torus link "
+                "parameters (<i>p</i>,<i>q</i>) "
+                "must be non-negative integers."),
+                QObject::tr("<qt>Example parameters are "
+                "<i>7,5</i>.</qt>"));
+            return 0;
+        }
+
+        unsigned long p = reTorusParams.cap(1).toULong();
+        unsigned long q = reTorusParams.cap(2).toULong();
+
+        return ExampleLink::torus(p, q);
     } else if (typeId == LINK_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_BORROMEAN:
