@@ -268,12 +268,16 @@ Version 5.2  [ 29 September, 2017 ]
             - Relaxed the preconditions for connectedSumWith().
             - Now preserves computed properties of the underlying manifold
               when the manifold is retriangulated.
+            - Routine intelligentSimplify() is now thread-safe in the
+              way that it uses random number generation.
         Class Triangulation<4>:
             - New routines retriangulate() and simplifyExhaustive().
             - Now supports 2-0 moves on vertices of degree two (in addition to
               the pre-existing 2-0 moves on edges and triangles).
             - New deprecated routine fiveOneMove(), added for completeness.
               Use the new pachner() routines instead.
+            - Routine intelligentSimplify() is now thread-safe in the
+              way that it uses random number generation.
         Class Triangulation<3>:
             - New routine pinchEdge() to collapse an edge, which can be
               performed on any internal edge, but which adds two tetrahedra.

@@ -32,6 +32,7 @@
 
 #include <cstdlib>
 #include "triangulation/dim3.h"
+#include "utilities/randutils.h"
 
 // Affects the number of random 4-4 moves attempted during simplification.
 #define COEFF_4_4 5
@@ -102,7 +103,7 @@ bool Triangulation<3>::intelligentSimplify() {
 
                 // Perform a random 4-4 move on the clone.
                 fourFourChoice = fourFourAvailable[
-                    static_cast<unsigned>(rand()) % fourFourAvailable.size()];
+                    RandomEngine::rand(fourFourAvailable.size())];
                 use->fourFourMove(fourFourChoice.first, fourFourChoice.second,
                     false, true);
 
