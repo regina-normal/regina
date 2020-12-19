@@ -82,8 +82,8 @@ Version 5.2  [ 29 September, 2017 ]
         Class Isomorphism<dim>:
             - Added (fast) move constructors and move assignment operators,
               and a (slow) copy assignment operator.
-            - The random() function now takes an optional argument to enforce
-              orientation-preserving isomorphisms only.
+            - The random() function is now thread-safe, and takes an optional
+              argument to enforce orientation-preserving isomorphisms only.
             - Static routines random() and identity() now return an
               Isomorphism, not a std::unique_ptr<Isomorphism>.  Now that
               Isomorphism has a move constructor and assignment operator,
