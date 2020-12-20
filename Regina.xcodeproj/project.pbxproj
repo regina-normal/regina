@@ -1375,6 +1375,7 @@
 		05754D18258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
 		05754D19258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
 		05754D78258EF09C00236ED7 /* libpython2.7.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05754D77258EF07600236ED7 /* libpython2.7.tbd */; };
+		05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05754E73258F92CA00236ED7 /* Assets.xcassets */; };
 		0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7D91DCE8B700027CE31 /* nfacepair.h */; };
 		0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */; };
 		0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6EF1F9709C700CBDF15 /* nsignature.h */; };
@@ -1854,7 +1855,6 @@
 		05A73CE619B2F9DC0099C617 /* snappeaui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC919B2F1AB0099C617 /* snappeaui.h */; };
 		05AA71EE1FB17E0100186E30 /* flype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AA71ED1FB17DFF00186E30 /* flype.cpp */; };
 		05AA71EF1FB17E0600186E30 /* flype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AA71ED1FB17DFF00186E30 /* flype.cpp */; };
-		05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D181811F27A00FD6E2E /* regina.icns */; };
 		05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
 		05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
 		05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */; };
@@ -3884,6 +3884,7 @@
 		05754CE6258D7D6400236ED7 /* randutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = randutils.cpp; sourceTree = "<group>"; };
 		05754D17258D834E00236ED7 /* randutils.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = randutils.cpp; sourceTree = "<group>"; };
 		05754D77258EF07600236ED7 /* libpython2.7.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libpython2.7.tbd; path = usr/lib/libpython2.7.tbd; sourceTree = SDKROOT; };
+		05754E73258F92CA00236ED7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		0575A7D91DCE8B700027CE31 /* nfacepair.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nfacepair.h; sourceTree = "<group>"; };
 		0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nhomologicaldata.h; sourceTree = "<group>"; };
 		0575E6591805F36D009E3FC4 /* libregina-engine.dylib */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = "libregina-engine.dylib"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -6874,6 +6875,7 @@
 				05561D181811F27A00FD6E2E /* regina.icns */,
 				05561D191811F27A00FD6E2E /* x-regina.icns */,
 				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
+				05754E73258F92CA00236ED7 /* Assets.xcassets */,
 				051806D5181202E0008EBB01 /* examples */,
 				051806D3181202BD008EBB01 /* icons */,
 			);
@@ -8773,7 +8775,7 @@
 				0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */,
 				051806D4181202BD008EBB01 /* icons in Resources */,
 				05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */,
-				05AB5ED61B8EDFBF007034C8 /* regina.icns in Resources */,
+				05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */,
 				05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -11554,7 +11556,7 @@
 		0564A20F1811D6FA002CC2AE /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
@@ -11606,7 +11608,7 @@
 		0564A2101811D6FA002CC2AE /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
 				CLANG_CXX_LIBRARY = "compiler-default";
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
