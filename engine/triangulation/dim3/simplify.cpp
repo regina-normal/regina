@@ -34,6 +34,8 @@
 #include <set>
 #include "triangulation/dim3.h"
 
+// #define SIMPLIFY_DUMP_MOVES
+
 namespace regina {
 
 namespace {
@@ -93,7 +95,7 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing 4-4 move\n";
     #endif
 
@@ -164,7 +166,7 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing 2-0 move about edge\n";
     #endif
 
@@ -251,7 +253,7 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing 2-0 move about vertex\n";
     #endif
 
@@ -341,7 +343,7 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing 2-1 move\n";
     #endif
 
@@ -455,7 +457,7 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing open book move\n";
     #endif
 
@@ -502,7 +504,7 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing close book move\n";
     #endif
 
@@ -561,7 +563,7 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing shell boundary move\n";
     #endif
 
@@ -788,7 +790,7 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing edge collapse move\n";
     #endif
 
@@ -840,7 +842,7 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     Tetrahedron<3>* open = e->front().tetrahedron();
     Perm<4> vertices = e->front().vertices();
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing edge pinch move\n";
     #endif
 
