@@ -69,10 +69,8 @@ SurfacesCompatibilityUI::SurfacesCompatibilityUI(
     QLabel* label = new QLabel(tr("Display matrix:"), ui);
     hdrLayout->addWidget(label);
     chooseMatrix = new QComboBox(ui);
-    chooseMatrix->insertItem(chooseMatrix->count(),
-        tr("Local compatibility (quads and octagons)"));
-    chooseMatrix->insertItem(chooseMatrix->count(),
-        tr("Global compatibility (disjoint surfaces)"));
+    chooseMatrix->addItem(tr("Local compatibility (quads and octagons)"));
+    chooseMatrix->addItem(tr("Global compatibility (disjoint surfaces)"));
     connect(chooseMatrix, SIGNAL(activated(int)), this, SLOT(changeLayer(int)));
     hdrLayout->addWidget(chooseMatrix);
     QString msg = tr("<qt>Allows you to switch between local and "

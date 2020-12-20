@@ -111,10 +111,10 @@ Tri2Creator::Tri2Creator() {
     // of this file.
     QWidget* hArea;
 
-    type->insertItem(TRI_EMPTY,QObject::tr("Empty"));
+    type->addItem(QObject::tr("Empty"));
     details->addWidget(new QWidget());
 
-    type->insertItem(TRI_OR,QObject::tr("Orientable surface"));
+    type->addItem(QObject::tr("Orientable surface"));
     hArea = new QWidget();
     QBoxLayout* hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -143,7 +143,7 @@ Tri2Creator::Tri2Creator() {
     hLayout->addWidget(orPunctures, 1);
     details->addWidget(hArea);//, TRI_OR);
 
-    type->insertItem(TRI_NOR,QObject::tr("Non-orientable surface"));
+    type->addItem(QObject::tr("Non-orientable surface"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -172,7 +172,7 @@ Tri2Creator::Tri2Creator() {
     hLayout->addWidget(norPunctures, 1);
     details->addWidget(hArea);//, TRI_NOR);
 
-    type->insertItem(TRI_ISOSIG,QObject::tr("From isomorphism signature"));
+    type->addItem(QObject::tr("From isomorphism signature"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -197,7 +197,7 @@ Tri2Creator::Tri2Creator() {
     hLayout->addWidget(isoSig, 1);
     details->addWidget(hArea);//, TRI_ISOSIG);
 
-    type->insertItem(type->count(),QObject::tr("Example triangulation"));
+    type->addItem(QObject::tr("Example triangulation"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -211,7 +211,7 @@ Tri2Creator::Tri2Creator() {
     hLayout->addWidget(label);
     exampleWhich = new QComboBox(hArea);
     for (size_t i = 0; i < examples.size(); ++i)
-        exampleWhich->insertItem(i, examples[i].name());
+        exampleWhich->addItem(examples[i].name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);

@@ -255,8 +255,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
         "Selecting <i>Pictures</i> will show a visual representation "
         "of each crossing, and selecting <i>Text</i> will give a "
         "sequence of strands and crossing signs."));
-    type->insertItem(0, tr("Pictures"));
-    type->insertItem(1, tr("Text"));
+    type->addItem(tr("Pictures"));
+    type->addItem(tr("Text"));
     switch (ReginaPrefSet::global().linkCrossingsStyle) {
         case ReginaPrefSet::TextCrossings:
             type->setCurrentIndex(1); break;

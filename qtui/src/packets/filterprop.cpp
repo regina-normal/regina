@@ -110,16 +110,16 @@ FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,
     // Set up the boolean options.
     // We always have TRUE then FALSE in each combo box.
     optOrient = new QComboBox(ui);
-    optOrient->insertItem(optOrient->count(),tr("Orientable only"));
-    optOrient->insertItem(optOrient->count(),tr("Non-orientable only"));
+    optOrient->addItem(tr("Orientable only"));
+    optOrient->addItem(tr("Non-orientable only"));
     optOrient->setWhatsThis(tr("Choose whether the filter should "
         "only display orientable surfaces or whether it should only "
         "display non-orientable surfaces."));
     layout->addWidget(optOrient, 1, 2);
 
     optCompact = new QComboBox(ui);
-    optCompact->insertItem(optCompact->count(),tr("Compact only"));
-    optCompact->insertItem(optCompact->count(),tr("Spun only"));
+    optCompact->addItem(tr("Compact only"));
+    optCompact->addItem(tr("Spun only"));
     optCompact->setWhatsThis(tr("<qt>Choose whether the filter should "
         "only display compact surfaces or whether it should only display "
         "spun (non-compact) surfaces.<p>"
@@ -130,8 +130,8 @@ FilterPropUI::FilterPropUI(SurfaceFilterProperties* packet,
     layout->addWidget(optCompact, 2, 2);
 
     optBdry = new QComboBox(ui);
-    optBdry->insertItem(optBdry->count(),tr("With real boundary only"));
-    optBdry->insertItem(optBdry->count(),tr("No real boundary only"));
+    optBdry->addItem(tr("With real boundary only"));
+    optBdry->addItem(tr("No real boundary only"));
     optBdry->setWhatsThis(tr("<qt>Choose whether the filter should "
         "only display surfaces with real boundary or whether it should "
         "only display surfaces with no real boundary.<p>"

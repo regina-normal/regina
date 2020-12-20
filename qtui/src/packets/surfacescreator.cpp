@@ -92,8 +92,8 @@ SurfacesCreator::SurfacesCreator() {
     basis = new QComboBox(ui);
     // These insertions MUST happen in the same order in which the
     // BASIS_... constants are defined at the top of this file.
-    basis->insertItem(BASIS_VERTEX, ui->tr("Vertex surfaces"));
-    basis->insertItem(BASIS_FUND, ui->tr("Fundamental surfaces"));
+    basis->addItem(ui->tr("Vertex surfaces"));
+    basis->addItem(ui->tr("Fundamental surfaces"));
     basis->setCurrentIndex(ReginaPrefSet::global().surfacesCreationList.has(
         regina::NS_FUNDAMENTAL) ? BASIS_FUND : BASIS_VERTEX);
     basis->setWhatsThis(expln);

@@ -104,8 +104,7 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     QWidget* area;
     QBoxLayout* subLayout;
 
-    type->insertItem(TRI_FILE,
-        QObject::tr("Paste a SnapPea file"));
+    type->addItem(QObject::tr("Paste a SnapPea file"));
     area = new QWidget();
     subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
@@ -124,8 +123,7 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     subLayout->addWidget(fileContents, 1);
     details->addWidget(area);//, TRI_FILE);
 
-    type->insertItem(TRI_CONVERT,
-        QObject::tr("Convert a Regina triangulation"));
+    type->addItem(QObject::tr("Convert a Regina triangulation"));
     area = new QWidget();
     subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
@@ -153,7 +151,7 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     subLayout->addWidget(label);
     details->addWidget(area);//, TRI_CONVERT);
 
-    type->insertItem(type->count(),QObject::tr("Example triangulation"));
+    type->addItem(QObject::tr("Example triangulation"));
     area = new QWidget();
     subLayout = new QHBoxLayout();
     subLayout->setAlignment(Qt::AlignTop);
@@ -167,11 +165,11 @@ SnapPeaTriangulationCreator::SnapPeaTriangulationCreator(
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
-    exampleWhich->insertItem(0, QObject::tr("Gieseking manifold"));
-    exampleWhich->insertItem(1, QObject::tr("Figure 8 knot complement"));
-    exampleWhich->insertItem(2, QObject::tr("Trefoil knot complement"));
-    exampleWhich->insertItem(3, QObject::tr("Whitehead link complement"));
-    exampleWhich->insertItem(4, QObject::tr("Census manifold x101"));
+    exampleWhich->addItem(QObject::tr("Gieseking manifold"));
+    exampleWhich->addItem(QObject::tr("Figure 8 knot complement"));
+    exampleWhich->addItem(QObject::tr("Trefoil knot complement"));
+    exampleWhich->addItem(QObject::tr("Whitehead link complement"));
+    exampleWhich->addItem(QObject::tr("Census manifold x101"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);

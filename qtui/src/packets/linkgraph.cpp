@@ -89,8 +89,8 @@ LinkGraphUI::LinkGraphUI(regina::Link* useLink,
     QLabel* label = new QLabel(tr("Display graph:"), ui);
     hdrLayout->addWidget(label);
     chooseType = new QComboBox(ui);
-    chooseType->insertItem(0, tr("Tree decomposition"));
-    chooseType->insertItem(1, tr("Nice tree decomposition"));
+    chooseType->addItem(tr("Tree decomposition"));
+    chooseType->addItem(tr("Nice tree decomposition"));
     connect(chooseType, SIGNAL(activated(int)), this, SLOT(changeType(int)));
     hdrLayout->addWidget(chooseType);
     QString msg = tr("<qt>Allows you to switch between different graphs.<p>"

@@ -68,8 +68,7 @@ HyperCompatibilityUI::HyperCompatibilityUI(
     QLabel* label = new QLabel(tr("Display matrix:"), ui);
     hdrLayout->addWidget(label);
     chooseMatrix = new QComboBox(ui);
-    chooseMatrix->insertItem(chooseMatrix->count(),
-        tr("Local compatibility (prism types)"));
+    chooseMatrix->addItem(tr("Local compatibility (prism types)"));
     connect(chooseMatrix, SIGNAL(activated(int)), this, SLOT(changeLayer(int)));
     hdrLayout->addWidget(chooseMatrix);
     QString msg = tr("<qt>Allows you to switch between different types of "
