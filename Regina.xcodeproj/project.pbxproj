@@ -1376,6 +1376,7 @@
 		05754D19258D834E00236ED7 /* randutils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754D17258D834E00236ED7 /* randutils.cpp */; };
 		05754D78258EF09C00236ED7 /* libpython2.7.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05754D77258EF07600236ED7 /* libpython2.7.tbd */; };
 		05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05754E73258F92CA00236ED7 /* Assets.xcassets */; };
+		05754ECF25900DBA00236ED7 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
 		0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7D91DCE8B700027CE31 /* nfacepair.h */; };
 		0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */; };
 		0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6EF1F9709C700CBDF15 /* nsignature.h */; };
@@ -1855,7 +1856,6 @@
 		05A73CE619B2F9DC0099C617 /* snappeaui.h in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CC919B2F1AB0099C617 /* snappeaui.h */; };
 		05AA71EE1FB17E0100186E30 /* flype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AA71ED1FB17DFF00186E30 /* flype.cpp */; };
 		05AA71EF1FB17E0600186E30 /* flype.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AA71ED1FB17DFF00186E30 /* flype.cpp */; };
-		05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
 		05AC685C1DFE729100FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
 		05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */ = {isa = PBXBuildFile; fileRef = 05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */; };
 		05AC685E1DFE729900FF1A4C /* layeredtorusbundle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */; };
@@ -8774,9 +8774,9 @@
 			files = (
 				0514CAEF1D9CE54200EDB2E6 /* docs.conf.in in Resources */,
 				051806D4181202BD008EBB01 /* icons in Resources */,
+				05754ECF25900DBA00236ED7 /* x-regina.icns in Resources */,
 				05617AD61D9D3C5A00B1E33B /* regina-python.in in Resources */,
 				05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */,
-				05AB5ED71B8EDFBF007034C8 /* x-regina.icns in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
