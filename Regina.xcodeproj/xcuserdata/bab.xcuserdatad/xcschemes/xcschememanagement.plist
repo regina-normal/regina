@@ -97,11 +97,6 @@
 			<key>orderHint</key>
 			<integer>1</integer>
 		</dict>
-		<key>macOS python 3.xcscheme_^#shared#^_</key>
-		<dict>
-			<key>orderHint</key>
-			<integer>4</integer>
-		</dict>
 		<key>macOS.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>

@@ -11952,591 +11952,6 @@
 			};
 			name = Release;
 		};
-		05B4D293229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++0x";
-				CLANG_CXX_LIBRARY = "libc++";
-				CLANG_ENABLE_OBJC_ARC = YES;
-				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
-				CLANG_WARN_BOOL_CONVERSION = YES;
-				CLANG_WARN_COMMA = YES;
-				CLANG_WARN_CONSTANT_CONVERSION = YES;
-				CLANG_WARN_DEPRECATED_OBJC_IMPLEMENTATIONS = YES;
-				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
-				CLANG_WARN_EMPTY_BODY = YES;
-				CLANG_WARN_ENUM_CONVERSION = YES;
-				CLANG_WARN_INFINITE_RECURSION = YES;
-				CLANG_WARN_INT_CONVERSION = YES;
-				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
-				CLANG_WARN_OBJC_IMPLICIT_RETAIN_SELF = YES;
-				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
-				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
-				CLANG_WARN_QUOTED_INCLUDE_IN_FRAMEWORK_HEADER = YES;
-				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
-				CLANG_WARN_STRICT_PROTOTYPES = YES;
-				CLANG_WARN_SUSPICIOUS_MOVE = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
-				COPY_PHASE_STRIP = YES;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				ENABLE_NS_ASSERTIONS = NO;
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_EXCEPTIONS = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
-				GCC_WARN_UNDECLARED_SELECTOR = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES;
-				GCC_WARN_UNUSED_FUNCTION = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
-				);
-				MACOSX_DEPLOYMENT_TARGET = 10.13;
-				SDKROOT = macosx;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D294229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "compiler-default";
-				COMBINE_HIDPI_IMAGES = YES;
-				DYLIB_INSTALL_NAME_BASE = "@loader_path";
-				EXECUTABLE_PREFIX = lib;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
-				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_NAME = "regina-engine";
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D295229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "compiler-default";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_UNREACHABLE_CODE = YES;
-				COMBINE_HIDPI_IMAGES = YES;
-				COPY_PHASE_STRIP = NO;
-				DYLIB_COMPATIBILITY_VERSION = "";
-				DYLIB_CURRENT_VERSION = "";
-				ENABLE_STRICT_OBJC_MSGSEND = YES;
-				EXECUTABLE_EXTENSION = so;
-				EXECUTABLE_PREFIX = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_ENABLE_CPP_EXCEPTIONS = YES;
-				GCC_ENABLE_CPP_RTTI = YES;
-				GCC_NO_COMMON_BLOCKS = YES;
-				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
-					/sw/include/python3.7m,
-				);
-				MACH_O_TYPE = mh_bundle;
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-undefined",
-					dynamic_lookup,
-				);
-				PRODUCT_NAME = engine;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D296229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_IDENTITY = "-";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				GCC_PREPROCESSOR_DEFINITIONS = "TESTSUITE_CENSUS_DIR='\"${CONFIGURATION_TEMP_DIR}/Engine.build/DerivedSources\"'";
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-					"\"$(SRCROOT)\"",
-				);
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				PRODUCT_NAME = regtestsuite;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D297229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = "Python 3 Release";
-		};
-		05B4D298229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				PRODUCT_NAME = "$(TARGET_NAME)";
-			};
-			name = "Python 3 Release";
-		};
-		05B4D299229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = "";
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "compiler-default";
-				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
-				CODE_SIGN_IDENTITY = "Mac Developer";
-				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5.9.0;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				ENABLE_HARDENED_RUNTIME = YES;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(LOCAL_LIBRARY_DIR)/Frameworks",
-					"$(USER_LIBRARY_DIR)/Frameworks",
-					"$(HOME)/Qt/5.15.2-macos/lib",
-				);
-				GCC_C_LANGUAGE_STANDARD = "compiler-default";
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "";
-				GCC_PREPROCESSOR_DEFINITIONS = (
-					"NO_SRCHILITE=1",
-					"REGINA_XCODE_BUNDLE=1",
-				);
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-					"\"$(SRCROOT)/qtui/src\"",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtCore.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtGui.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtSvg.framework/Headers",
-					"$(HOME)/Qt/5.15.2-macos/lib/QtWidgets.framework/Headers",
-					/sw/include/python3.7m,
-				);
-				INFOPLIST_FILE = qtui/src/regina.plist;
-				INFOPLIST_PREFIX_HEADER = "preconfig/osx-xcode5/regina-config.h";
-				INFOPLIST_PREPROCESS = YES;
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 5.9;
-				OTHER_LDFLAGS = "-lpython3.7";
-				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
-				PRODUCT_NAME = Regina;
-				WRAPPER_EXTENSION = app;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D29A229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "compiler-default";
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "iPhone Developer";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 5.9.0;
-				ENABLE_BITCODE = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(DEVELOPER_FRAMEWORKS_DIR)",
-					"$(USER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "ios/Regina-Prefix.pch";
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_LINK_MODULE_INTO_EXECUTABLE=1";
-				HEADER_SEARCH_PATHS = (
-					"\"$(SRCROOT)/preconfig/ios-xcode5\"",
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				INFOPLIST_FILE = "ios/Regina-Info.plist";
-				IPHONEOS_DEPLOYMENT_TARGET = 12.0;
-				LD_RUNPATH_SEARCH_PATHS = (
-					"$(inherited)",
-					"@executable_path/Frameworks",
-				);
-				MARKETING_VERSION = 5.9;
-				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
-				PRODUCT_NAME = Regina;
-				PROVISIONING_PROFILE = "";
-				SDKROOT = iphoneos;
-				TARGETED_DEVICE_FAMILY = 2;
-				VALIDATE_PRODUCT = YES;
-				WRAPPER_EXTENSION = app;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D29B229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_CXX_LIBRARY = "compiler-default";
-				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				DEBUG_INFORMATION_FORMAT = dwarf;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					"\"$(SRCROOT)\"",
-					/usr/include/libxml2,
-				);
-				LD_RUNPATH_SEARCH_PATHS = "@executable_path";
-				MACOSX_DEPLOYMENT_TARGET = "";
-				PRODUCT_NAME = mkcensusdb;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D29C229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/censuslookup.plist",
-				);
-				PRODUCT_NAME = censuslookup;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D29D229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/regconcat.plist",
-				);
-				PRODUCT_NAME = regconcat;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D29E229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/regconvert.plist",
-				);
-				PRODUCT_NAME = regconvert;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D29F229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/regfiledump.plist",
-				);
-				PRODUCT_NAME = regfiledump;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D2A0229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/regfiletype.plist",
-				);
-				PRODUCT_NAME = regfiletype;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D2A1229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 67JTSH67LZ;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/retriangulate.plist",
-				);
-				PRODUCT_NAME = retriangulate;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D2A2229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/sigcensus.plist",
-				);
-				PRODUCT_NAME = sigcensus;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D2A3229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(USER_LIBRARY_DIR)/Frameworks",
-				);
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/tricensus.plist",
-				);
-				PRODUCT_NAME = tricensus;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
-		05B4D2A4229F2BE000B7B11C /* Python 3 Release */ = {
-			isa = XCBuildConfiguration;
-			buildSettings = {
-				CLANG_ANALYZER_NONNULL = YES;
-				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
-				CLANG_ENABLE_MODULES = YES;
-				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
-				CLANG_WARN_SUSPICIOUS_MOVES = YES;
-				CODE_SIGN_IDENTITY = "-";
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
-				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
-				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
-				HEADER_SEARCH_PATHS = (
-					"$(inherited)",
-					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
-					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
-					"\"$(SRCROOT)/engine\"",
-					/usr/include/libxml2,
-				);
-				MTL_ENABLE_DEBUG_INFO = NO;
-				OTHER_LDFLAGS = (
-					"-sectcreate",
-					__TEXT,
-					__info_plist,
-					"$(SRCROOT)/utils/bundle/trisetcmp.plist",
-				);
-				PRODUCT_NAME = trisetcmp;
-				SKIP_INSTALL = YES;
-			};
-			name = "Python 3 Release";
-		};
 		05DADB002192535F00DC80E1 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -12581,7 +11996,6 @@
 			buildConfigurations = (
 				050F5CE51B9BAAAB00C1F681 /* Debug */,
 				050F5CE61B9BAAAB00C1F681 /* Release */,
-				05B4D295229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12591,7 +12005,6 @@
 			buildConfigurations = (
 				052FA0C71806072900FAE4DF /* Debug */,
 				052FA0C81806072900FAE4DF /* Release */,
-				05B4D296229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12601,7 +12014,6 @@
 			buildConfigurations = (
 				052FA1591806103000FAE4DF /* Debug */,
 				052FA15A1806103000FAE4DF /* Release */,
-				05B4D29A229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12611,7 +12023,6 @@
 			buildConfigurations = (
 				05617AE21D9DBFBF00B1E33B /* Debug */,
 				05617AE31D9DBFBF00B1E33B /* Release */,
-				05B4D2A3229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12621,7 +12032,6 @@
 			buildConfigurations = (
 				05617B061D9DC51700B1E33B /* Debug */,
 				05617B071D9DC51700B1E33B /* Release */,
-				05B4D29C229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12631,7 +12041,6 @@
 			buildConfigurations = (
 				05617B111D9DC52300B1E33B /* Debug */,
 				05617B121D9DC52300B1E33B /* Release */,
-				05B4D29D229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12641,7 +12050,6 @@
 			buildConfigurations = (
 				05617B1C1D9DC52B00B1E33B /* Debug */,
 				05617B1D1D9DC52B00B1E33B /* Release */,
-				05B4D29E229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12651,7 +12059,6 @@
 			buildConfigurations = (
 				05617B271D9DC53500B1E33B /* Debug */,
 				05617B281D9DC53500B1E33B /* Release */,
-				05B4D29F229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12661,7 +12068,6 @@
 			buildConfigurations = (
 				05617B321D9DC54600B1E33B /* Debug */,
 				05617B331D9DC54600B1E33B /* Release */,
-				05B4D2A0229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12671,7 +12077,6 @@
 			buildConfigurations = (
 				05617B3D1D9DC55100B1E33B /* Debug */,
 				05617B3E1D9DC55100B1E33B /* Release */,
-				05B4D2A2229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12681,7 +12086,6 @@
 			buildConfigurations = (
 				05617B481D9DC55C00B1E33B /* Debug */,
 				05617B491D9DC55C00B1E33B /* Release */,
-				05B4D2A4229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12691,7 +12095,6 @@
 			buildConfigurations = (
 				0564A20F1811D6FA002CC2AE /* Debug */,
 				0564A2101811D6FA002CC2AE /* Release */,
-				05B4D299229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12701,7 +12104,6 @@
 			buildConfigurations = (
 				0575E65B1805F36D009E3FC4 /* Debug */,
 				0575E65C1805F36D009E3FC4 /* Release */,
-				05B4D293229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12711,7 +12113,6 @@
 			buildConfigurations = (
 				0575E65E1805F36D009E3FC4 /* Debug */,
 				0575E65F1805F36D009E3FC4 /* Release */,
-				05B4D294229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12721,7 +12122,6 @@
 			buildConfigurations = (
 				058FC8701FE188A0006D04B4 /* Debug */,
 				058FC8711FE188A0006D04B4 /* Release */,
-				05B4D2A1229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12731,7 +12131,6 @@
 			buildConfigurations = (
 				05B14EA919B423A0002138C0 /* Debug */,
 				05B14EAA19B423A0002138C0 /* Release */,
-				05B4D29B229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12741,7 +12140,6 @@
 			buildConfigurations = (
 				05DADB002192535F00DC80E1 /* Debug */,
 				05DADB012192535F00DC80E1 /* Release */,
-				05B4D298229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
@@ -12751,7 +12149,6 @@
 			buildConfigurations = (
 				05DADB06219256ED00DC80E1 /* Debug */,
 				05DADB07219256ED00DC80E1 /* Release */,
-				05B4D297229F2BE000B7B11C /* Python 3 Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
