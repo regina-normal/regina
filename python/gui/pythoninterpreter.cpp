@@ -45,6 +45,7 @@
 
 // Python includes:
 #include "../python/pybind11/pybind11.h"
+#include "../python/pybind11/embed.h"
 #include <compile.h>
 #include <eval.h>
 #include <sysmodule.h>
@@ -91,6 +92,7 @@ static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
 PyThreadState* mainState;
+pybind11::scoped_interpreter* mainInterpreter;
 
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
@@ -144,11 +146,15 @@ PythonInterpreter::PythonInterpreter(
         }
 #endif
 
-        Py_Initialize();
-        PyEval_InitThreads();
-        mainState = PyThreadState_Get();
+        // We create a pybind11::scoped_interpreter instead of calling
+        // Py_Initialize() directly, since this allows pybind11 to set up some
+        // of its own internal structures also.  This interpreter must exist
+        // for the lifetime of the program, so we just set-and-forget here.
+        mainInterpreter = new pybind11::scoped_interpreter;
 
-#if PY_MAJOR_VERSION >= 3
+        // We do not call PyEval_InitThreads(), since this is done
+        // via pybind11's internals in the code below.
+
         // Subinterpreters are supposed to share extension modules
         // without repeatedly calling the modules' init functions.
         // In python 3, this seems to fail if all subinterpreters are
@@ -167,7 +173,8 @@ PythonInterpreter::PythonInterpreter(
         // Note: the temporary packet that we create here will be
         // destroyed with the pybind11::object destructor.
         pybind11::cast(new regina::Container());
-#endif
+
+        mainState = PyThreadState_Get();
     }
 
     // Create the new interpreter.
