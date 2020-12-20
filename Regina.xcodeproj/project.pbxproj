@@ -3472,8 +3472,7 @@
 		055114FB1DCDF63000EC753C /* triangulation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulation.h; sourceTree = "<group>"; };
 		0554CA761C5983730053461B /* generictriui.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = generictriui.cpp; sourceTree = "<group>"; };
 		0554CA771C5983730053461B /* generictriui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = generictriui.h; sourceTree = "<group>"; };
-		05561D181811F27A00FD6E2E /* regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = regina.icns; path = src/regina.icns; sourceTree = "<group>"; };
-		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/x-regina.icns"; sourceTree = "<group>"; };
+		05561D191811F27A00FD6E2E /* x-regina.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = "x-regina.icns"; path = "src/macos-icons/x-regina.icns"; sourceTree = "<group>"; };
 		05583A6019B8041F00076187 /* ReginaDocument.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ReginaDocument.h; sourceTree = "<group>"; };
 		05583A6119B8041F00076187 /* ReginaDocument.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = ReginaDocument.mm; sourceTree = "<group>"; };
 		055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census-full.zsig"; sourceTree = "<group>"; };
@@ -6872,7 +6871,6 @@
 				0564A4081811D91E002CC2AE /* src */,
 				0514CAE41D9CD42D00EDB2E6 /* doc */,
 				0564A6181811D921002CC2AE /* TODO.txt */,
-				05561D181811F27A00FD6E2E /* regina.icns */,
 				05561D191811F27A00FD6E2E /* x-regina.icns */,
 				0543AEC71811E2AD002758F8 /* Regina.entitlements */,
 				05754E73258F92CA00236ED7 /* Assets.xcassets */,
