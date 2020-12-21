@@ -1377,6 +1377,8 @@
 		05754D78258EF09C00236ED7 /* libpython2.7.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05754D77258EF07600236ED7 /* libpython2.7.tbd */; };
 		05754E74258F92CA00236ED7 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 05754E73258F92CA00236ED7 /* Assets.xcassets */; };
 		05754ECF25900DBA00236ED7 /* x-regina.icns in Resources */ = {isa = PBXBuildFile; fileRef = 05561D191811F27A00FD6E2E /* x-regina.icns */; };
+		05754F662590F0A400236ED7 /* jansson.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B49A2581AB9A0022EA5D /* jansson.xcframework */; };
+		05754F762590F0A700236ED7 /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
 		0575A7DB1DCE8B700027CE31 /* nfacepair.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7D91DCE8B700027CE31 /* nfacepair.h */; };
 		0575A7DC1DCE8B700027CE31 /* nhomologicaldata.h in Headers */ = {isa = PBXBuildFile; fileRef = 0575A7DA1DCE8B700027CE31 /* nhomologicaldata.h */; };
 		0577E6F21F9709CA00CBDF15 /* nsignature.h in Headers */ = {isa = PBXBuildFile; fileRef = 0577E6EF1F9709C700CBDF15 /* nsignature.h */; };
@@ -4633,6 +4635,8 @@
 				0567B4EF2581ABF20022EA5D /* libgmpxx.xcframework in Frameworks */,
 				0567B4DF2581ABF00022EA5D /* libgmp.xcframework in Frameworks */,
 				050F5E621B9BAC5200C1F681 /* libregina-engine.dylib in Frameworks */,
+				05754F662590F0A400236ED7 /* jansson.xcframework in Frameworks */,
+				05754F762590F0A700236ED7 /* libtokyocabinet.xcframework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -8809,7 +8813,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "module=\"${BUILT_PRODUCTS_DIR}\"/engine.so\n\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib \"${module}\"\n";
+			shellScript = "module=\"${BUILT_PRODUCTS_DIR}\"/engine.so\n\ninstall_name_tool -change @rpath/libgmp.dylib @loader_path/../../../Frameworks/libgmp.dylib \"${module}\"\ninstall_name_tool -change @rpath/libgmpxx.dylib @loader_path/../../../Frameworks/libgmpxx.dylib \"${module}\"\ninstall_name_tool -change @rpath/libjansson.dylib @loader_path/../../../Frameworks/libjansson.dylib \"${module}\"\ninstall_name_tool -change @rpath/libtokyocabinet.dylib @loader_path/../../../Frameworks/libtokyocabinet.dylib \"${module}\"\n\ninstall_name_tool -change @loader_path/libregina-engine.dylib @loader_path/../../libregina-engine.dylib \"${module}\"\n";
 		};
 		052DB59E1D9E587C00EDEA68 /* Sign Utilities */ = {
 			isa = PBXShellScriptBuildPhase;
