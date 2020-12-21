@@ -228,8 +228,11 @@ PythonInterpreter::~PythonInterpreter() {
     Py_XDECREF(completerFunc);
     Py_EndInterpreter(state);
 
-    // Release the global interpreter lock.
-    PyEval_ReleaseLock();
+    // Return to the main thread and release the global interpreter lock.
+    // Note: Just calling PyEval_ReleaseLock() crashes python3.9 on debian
+    // (and PyEval_ReleaseLock() is now deprecated anyway).
+    PyThreadState_Swap(mainState);
+    PyEval_ReleaseThread(mainState);
 }
 
 bool PythonInterpreter::executeLine(const std::string& command) {
