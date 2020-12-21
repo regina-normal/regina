@@ -7,6 +7,7 @@ SET(man1_files
   regconvert.1
   regfiledump.1
   regfiletype.1
+  retriangulate.1
   sigcensus.1
   tricensus.1
   trisetcmp.1
