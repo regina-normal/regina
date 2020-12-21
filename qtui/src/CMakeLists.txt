@@ -99,9 +99,12 @@ if (APPLE)
   set(REGINA_APP_NAME Regina)
 
   # Add application and mimetype icons to the app bundle.
-  set(REGINA_ICNS ${CMAKE_CURRENT_SOURCE_DIR}/regina.icns ${CMAKE_CURRENT_SOURCE_DIR}/x-regina.icns)
-  set_source_files_properties(${REGINA_ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set(SOURCES ${SOURCES} ${REGINA_ICNS})
+  set(REGINA_MACOS_ICONS
+    ${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/Assets.car
+    ${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/AppIcon.icns
+    ${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/x-regina.icns)
+  set_source_files_properties(${REGINA_MACOS_ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  set(SOURCES ${SOURCES} ${REGINA_MACOS_ICONS})
 else (APPLE)
   set(REGINA_APP_NAME regina-gui)
 endif (APPLE)

@@ -13,18 +13,26 @@
 			</array>
 			<key>CFBundleTypeIconFile</key>
 			<string>x-regina.icns</string>
+			<key>CFBundleTypeIconSystemGenerated</key>
+			<integer>1</integer>
 			<key>CFBundleTypeName</key>
 			<string>Regina Data File</string>
 			<key>CFBundleTypeRole</key>
 			<string>Editor</string>
 			<key>LSHandlerRank</key>
 			<string>Owner</string>
+			<key>LSItemContentTypes</key>
+			<array>
+				<string>org.computop.regina-data</string>
+			</array>
 		</dict>
 	</array>
 	<key>CFBundleExecutable</key>
 	<string>Regina</string>
 	<key>CFBundleIconFile</key>
-	<string>regina.icns</string>
+	<string>AppIcon</string>
+	<key>CFBundleIconName</key>
+	<string>AppIcon</string>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -53,5 +61,39 @@
 	<string>NSApplication</string>
 	<key>NSRequiresAquaSystemAppearance</key>
 	<true/>
+	<key>UTExportedTypeDeclarations</key>
+	<array>
+		<dict>
+			<key>UTTypeConformsTo</key>
+			<array>
+				<string>public.data</string>
+				<string>public.content</string>
+			</array>
+			<key>UTTypeDescription</key>
+			<string>Regina Data File</string>
+			<key>UTTypeIconFile</key>
+			<string>x-regina.icns</string>
+			<key>UTTypeIcons</key>
+			<dict>
+				<key>UTTypeIconBadgeName</key>
+				<string>DocCentre</string>
+				<key>UTTypeIconText</key>
+				<string>Regina</string>
+			</dict>
+			<key>UTTypeIdentifier</key>
+			<string>org.computop.regina-data</string>
+			<key>UTTypeTagSpecification</key>
+			<dict>
+				<key>public.filename-extension</key>
+				<array>
+					<string>rga</string>
+				</array>
+				<key>public.mime-type</key>
+				<array>
+					<string>application/x-regina</string>
+				</array>
+			</dict>
+		</dict>
+	</array>
 </dict>
 </plist>
