@@ -40,11 +40,7 @@ to standard output.  Once the census is complete, the full census will
 be saved to the given output file.
 .PP
 You can use the options \fB--genpairs\fR and
-\fB--usepairs\fR to split a census into smaller
-pieces.  See also
-\fBtricensus-mpi\fR,
-a more powerful tool that allows you to distribute a census
-across a high-performance computing cluster.
+\fB--usepairs\fR to split a census into smaller pieces.
 .sp
 .RS
 .B "Caution:"
@@ -241,10 +237,7 @@ Facet pairing generation consumes a very small fraction of the
 total census runtime, and effectively divides the census into
 multiple pieces.  This option allows you to quickly generate
 a complete list of possible facet pairings, so that you can feed subsets
-of this list to different machines to work on simultaneously.  You
-can coordinate this manually, or you can use
-\fBtricensus-mpi\fR
-to coordinate it for you on a high-performance cluster.
+of this list to different machines to work on simultaneously.
 
 The list of all facet pairings will be written to the given output
 file in text format (though you may omit the output file from the
@@ -256,8 +249,7 @@ from a subset of these facet pairings.
 
 Options for orientability, finiteness or minimality cannot be
 used with \fB--genpairs\fR; instead you should use them
-later with \fB--usepairs\fR, or pass them to
-\fBtricensus-mpi\fR\&.
+later with \fB--usepairs\fR\&.
 
 This option does not come with progress reporting, though
 typically it runs fast enough that this does not matter.
@@ -278,11 +270,7 @@ They should be listed in the format produced by the option
 
 This option effectively lets you run a subset of a larger census.
 See \fB--genpairs\fR for further details on how to split
-a census into subsets that can run simultaneously on different machines,
-or
-\fBtricensus-mpi\fR
-which can coordinate this process using MPI on a
-high-performance cluster.
+a census into subsets that can run simultaneously on different machines.
 
 Options for the number of top-dimensional simplices
 (i.e., \fB--tetrahedra\fR) or boundary facets
@@ -381,7 +369,6 @@ c:\\Program\~Files\\Regina\\Regina\~5.95\\bin\\tricensus.exe\&.
 .PP
 censuslookup,
 sigcensus,
-tricensus-mpi,
 regina-gui\&.
 .SH "AUTHOR"
 .PP

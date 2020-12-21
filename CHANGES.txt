@@ -350,6 +350,8 @@ Version 5.95  [ 24 December, 2020 ]
     UTILITIES:
         retriangulate:
             - New utility that exhaustively retriangulates a given manifold.
+        tricensus-mpi, tricensus-mpi-status:
+            - Officially retired; these have now been removed from Regina.
     TEST SUITE:
         - The test suite executable now takes optional arguments that,
           if present, indicate a subset of tests to perform.

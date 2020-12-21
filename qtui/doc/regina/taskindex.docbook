@@ -238,8 +238,6 @@
    triangulations (command-line)</link></secondaryie>
   <secondaryie><link linkend="tri-census-creation">creating a census of
    triangulations (&gui;)</link></secondaryie>
-  <secondaryie><link linkend="man-tricensus-mpi">distributing census
-   creation across several machines</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation across the census databases (&gui;)</link></secondaryie>
   <secondaryie><link linkend="man-censuslookup">searching for a
@@ -929,11 +927,6 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="man-tricensus-mpi-status">log files,
-   summarising (&mpi;)</link></primaryie>
- </indexentry>
-
- <indexentry>
   <primaryie>look up</primaryie>
   <seeie>See: search</seeie>
  </indexentry>
@@ -1136,12 +1129,6 @@
   <primaryie>padlock</primaryie>
   <secondaryie><link linkend="packet-uneditable">in the packet
    tree</link></secondaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie>parallel processing</primaryie>
-  <secondaryie><link linkend="man-tricensus-mpi">census
-   creation</link></secondaryie>
  </indexentry>
 
  <indexentry>
