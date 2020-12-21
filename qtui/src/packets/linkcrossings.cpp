@@ -383,6 +383,16 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     enableWhenWritable.append(actReverse);
     connect(actReverse, SIGNAL(triggered()), this, SLOT(reverse()));
 
+    QAction* actParallel = new QAction(this);
+    actParallel->setText(tr("Parallel Ca&bles..."));
+    actParallel->setIcon(ReginaSupport::regIcon("parallel"));
+    actParallel->setToolTip(tr("Create parallel cables of this link"));
+    actParallel->setWhatsThis(tr("Creates a new link that represents "
+        "several cables of this link, all parallel using a chosen framing.  "
+        "This link will not be modified."));
+    actionList.append(actParallel);
+    connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
+
     QAction* actComposeWith = new QAction(this);
     actComposeWith->setText(tr("Com&pose With..."));
     actComposeWith->setIcon(ReginaSupport::regIcon("connectedsumwith"));
