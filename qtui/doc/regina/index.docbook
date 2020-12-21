@@ -220,7 +220,7 @@
   <abstract>
    &regabstract;
    <para>
-    <!--This handbook is current as of &regina;&nbsp;&regversion;.>
+    <!-- This handbook is current as of &regina;&nbsp;&regversion;. -->
     The current version of &regina; is 5.95 (the first prerelease before
     version&nbsp;6.0). This handbook is still being updated for
     version&nbsp;6.0, and most of the material here is from the (much
