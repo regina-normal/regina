@@ -74,10 +74,10 @@
 #define REGINA_DB_EXT "tdb"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "Regina 5.2"
+#define PACKAGE_STRING "Regina 5.95"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "5.2"
+#define PACKAGE_VERSION "5.95"
 
 /* Major version number of the package. */
 #define PACKAGE_VERSION_MAJOR 5

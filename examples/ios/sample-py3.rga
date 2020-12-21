@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<reginadata engine="5.2">
+<reginadata engine="5.95">
 <packet label="Sample Data File"
 	type="Container" typeid="1"
 	parent="">

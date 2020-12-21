@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 5.2  [ 29 September, 2017 ]
+Version 5.95  [ 24 December, 2020 ]
 
     GENERAL:
         - Now requires C++14 (not C++11).
@@ -20,7 +20,7 @@ Version 5.2  [ 29 September, 2017 ]
         - Now uses pybind11 instead of Boost.Python to create python bindings.
         - Removed the cmake option USE_BOOST_INT128, since the boost 128-bit
           integer detection does not know more than the cmake tests can provide.
-        - Now requires CMake version >= 3.1.
+        - Now requires CMake version >= 3.12.
     ENGINE:
         Class AbelianGroup:
             - Added assignment operator.

@@ -1,6 +1,6 @@
 
                Regina - Software for low-dimensional topology
-            Copyright (c) 1999-2018, The Regina development team
+            Copyright (c) 1999-2020, The Regina development team
 
 
 CITATION:
