@@ -44,6 +44,7 @@
 
 #include <vector>
 #include <QAbstractItemModel>
+#include <QDialog>
 #include <QStyledItemDelegate>
 
 class EditTableView;
@@ -212,6 +213,38 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          * Notify that preferences have changed.
          */
         void updatePreferences();
+};
+
+/**
+ * A dialog used to select parameters for constructing parallel cables
+ * of a link.
+ *
+ * This is for internal use by LinkCrossingsUI, but appears here in the
+ * header so that automoc can find it.
+ */
+class ParallelDialog : public QDialog {
+    Q_OBJECT
+
+    private:
+        regina::Link* link_;
+
+        /**
+         * Internal components
+         */
+        QLineEdit* nCables;
+        QComboBox* framing;
+
+    public:
+        /**
+         * Constructor.
+         */
+        ParallelDialog(QWidget* parent, regina::Link* link);
+
+    protected slots:
+        /**
+         * Ok has been clicked.
+         */
+        void slotOk();
 };
 
 inline const regina::StrandRef& CrossingModel::strandAt(
