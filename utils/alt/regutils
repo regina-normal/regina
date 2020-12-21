@@ -46,7 +46,7 @@ def globalUsage(error):
     sys.exit(1)
 
 try:
-    sys.path = [ appDir + '/python' ] + sys.path
+    sys.path = [ os.path.abspath(appDir) + '/python' ] + sys.path
     import regina
 except:
     globalUsage('Could not import the regina module.')
