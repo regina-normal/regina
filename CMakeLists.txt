@@ -618,6 +618,7 @@ set(CPACK_SOURCE_GENERATOR TGZ)
 set(CPACK_SOURCE_IGNORE_FILES
   "~$"
   "^${PROJECT_BINARY_DIR}/"
+  "^${PROJECT_SOURCE_DIR}/Regina.xcodeproj/"
   "^${PROJECT_SOURCE_DIR}/engine/snappea/kernel/unused/"
   "^${PROJECT_SOURCE_DIR}/packaging/"
   "^${PROJECT_SOURCE_DIR}/utils/local/"

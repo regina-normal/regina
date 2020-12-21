@@ -136,6 +136,7 @@ if ! find "$gittree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^sfdist\(/\|$\)' | \
     grep -v '^utils/local\(/\|$\)' | \
     grep -v '^utils/snappea\(/\|$\)' | \
+    grep -v '^Regina.xcodeproj' | \
     sort > "$gitlist" ; then
   echo "The contents of the git source tree could not be listed."
   exit 1
