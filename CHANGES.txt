@@ -7,7 +7,7 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 5.95  [ 24 December, 2020 ]
+Version 5.96  [ 24 December, 2020 ]
 
     GENERAL:
         - Now requires C++14 (not C++11).
@@ -79,6 +79,9 @@ Version 5.95  [ 24 December, 2020 ]
               group presentation to a mathematical object native to Sage.
         Class Handlebody:
             - New assignment operator.
+        Class Integer, LargeInteger:
+            - Fixed a bug in nativeValue() when converting negative numbers
+              from large (GMP) representation to 128-bit integers.
         Class Isomorphism<dim>:
             - Added (fast) move constructors and move assignment operators,
               and a (slow) copy assignment operator.
