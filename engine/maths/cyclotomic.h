@@ -646,7 +646,7 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
  * @param scalar the rational to multiply by.
  * @return the product of the given field element and rational.
  */
-Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
+REGINA_API Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
 
 /**
  * Multiplies the given field element by the given rational.
@@ -655,7 +655,7 @@ Cyclotomic operator * (Cyclotomic elt, const Rational& scalar);
  * @param elt the field element to multiply by.
  * @return the product of the given field element and rational.
  */
-Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
+REGINA_API Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
 
 /**
  * Divides the given field element by the given rational.
@@ -666,7 +666,7 @@ Cyclotomic operator * (const Rational& scalar, Cyclotomic elt);
  * @param scalar the rational to divide by.
  * @return the quotient of the given field element by the given rational.
  */
-Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
+REGINA_API Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
 
 /**
  * Adds the two given cyclotomic field elements.
@@ -677,7 +677,7 @@ Cyclotomic operator / (Cyclotomic elt, const Rational& scalar);
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
  */
-Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
+REGINA_API Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
 /**
  * Adds the two given cyclotomic field elements.
@@ -688,7 +688,7 @@ Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
  */
-Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
+REGINA_API Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
 
 /**
  * Adds the two given cyclotomic field elements.
@@ -699,7 +699,7 @@ Cyclotomic operator + (Cyclotomic&& lhs, const Cyclotomic& rhs);
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
  */
-Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
+REGINA_API Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
 
 /**
  * Adds the two given cyclotomic field elements.
@@ -710,7 +710,7 @@ Cyclotomic operator + (const Cyclotomic& lhs, Cyclotomic&& rhs);
  * @param rhs the second field element to add.
  * @return the sum of both field elements.
  */
-Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
+REGINA_API Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
 
 /**
  * Returns the negative of the given field element.
@@ -718,7 +718,7 @@ Cyclotomic operator + (Cyclotomic&& lhs, Cyclotomic&& rhs);
  * @param arg the field element to negate.
  * @return the negative of \a arg.
  */
-Cyclotomic operator - (Cyclotomic arg);
+REGINA_API Cyclotomic operator - (Cyclotomic arg);
 
 /**
  * Subtracts the two given cyclotomic field elements.
@@ -729,7 +729,7 @@ Cyclotomic operator - (Cyclotomic arg);
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
  */
-Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
+REGINA_API Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
 /**
  * Subtracts the two given cyclotomic field elements.
@@ -740,7 +740,7 @@ Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
  */
-Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
+REGINA_API Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
 
 /**
  * Subtracts the two given cyclotomic field elements.
@@ -751,7 +751,7 @@ Cyclotomic operator - (Cyclotomic&& lhs, const Cyclotomic& rhs);
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
  */
-Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
+REGINA_API Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
 
 /**
  * Subtracts the two given cyclotomic field elements.
@@ -762,7 +762,7 @@ Cyclotomic operator - (const Cyclotomic& lhs, Cyclotomic&& rhs);
  * @param rhs the field element to subtract.
  * @return the first field element minus the second.
  */
-Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
+REGINA_API Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
 
 /**
  * Multiplies the two given cyclotomic field elements.
@@ -773,7 +773,7 @@ Cyclotomic operator - (Cyclotomic&& lhs, Cyclotomic&& rhs);
  * @param rhs the second field element to multiply.
  * @return the product of both field elements.
  */
-Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
+REGINA_API Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
 /**
  * Divides the two given cyclotomic field elements.
@@ -785,7 +785,7 @@ Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
  * @param rhs the field element to divide \a lhs by.
  * @return the result of dividing \a lhs by \a rhs.
  */
-Cyclotomic operator / (const Cyclotomic& lhs, const Cyclotomic& rhs);
+REGINA_API Cyclotomic operator / (const Cyclotomic& lhs, const Cyclotomic& rhs);
 
 /**
  * Deprecated typedef for backward compatibility.  This typedef will
