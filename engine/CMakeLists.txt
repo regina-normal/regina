@@ -11,7 +11,7 @@ INCLUDE_DIRECTORIES(${CMAKE_BINARY_DIR}/engine)
 # The tokyocabinet library is only used internally by the engine (i.e., it
 # never appears in the engine headers, only the .cpp sources).
 # Therefore we include it only here within engine/, not globally.
-INCLUDE_DIRECTORIES(${TOKYOCABINET_INCLUDE_DIR})
+INCLUDE_DIRECTORIES(${TOKYOCABINET_INCLUDEDIR})
 LINK_DIRECTORIES(${TOKYOCABINET_LIBRARY_DIRS})
 
 SET ( SOURCES )
