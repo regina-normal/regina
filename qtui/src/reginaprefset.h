@@ -220,7 +220,7 @@ class ReginaPrefSet : public QObject {
 
         QSize windowMainSize;
             /**< The initial size of a new main topology data window.
-                 Note: as of Regina 5.95 (the first prerelease for Regina 6.0),
+                 Note: as of Regina 5.96 (the first prerelease for Regina 6.0),
                  the key for this option in the configuration file has changed
                  from \c MainSizeV3 to \c MainSizeV4 (since another packet type
                  was added, and so the window needs to be a little wider). */

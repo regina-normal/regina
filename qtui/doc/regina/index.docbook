@@ -3,7 +3,7 @@
   <!ENTITY regina "<application>Regina</application>">
   <!ENTITY kappname "&regina;">
 
-  <!ENTITY regversion "5.95">
+  <!ENTITY regversion "5.96">
   <!ENTITY regdate "2020-12-24">
   <!ENTITY copyrightyears "1999&ndash;2020">
   <!ENTITY copyrightholder "The Regina development team">
@@ -221,7 +221,7 @@
    &regabstract;
    <para>
     <!-- This handbook is current as of &regina;&nbsp;&regversion;. -->
-    The current version of &regina; is 5.95 (the first prerelease before
+    The current version of &regina; is 5.96 (the first prerelease before
     version&nbsp;6.0). This handbook is still being updated for
     version&nbsp;6.0, and most of the material here is from the (much
     older) version&nbsp;5.1.

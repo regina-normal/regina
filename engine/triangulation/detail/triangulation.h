@@ -1226,9 +1226,9 @@ class TriangulationBase :
          *
          * \warning For the case \a k = \a dim in Regina's
          * \ref stddim "standard dimensions", the labelling of the belt face
-         * has changed as of Regina 5.95 (the first prerelease for Regina 6.0).
+         * has changed as of Regina 5.96 (the first prerelease for Regina 6.0).
          * In versions 5.1 and earlier, the belt face was
-         * <tt>simplices().back()->vertex(dim)</tt>, and as of version 5.95
+         * <tt>simplices().back()->vertex(dim)</tt>, and as of version 5.96
          * it is now <tt>simplices().back()->vertex(0)</tt>.
          * The deprecated routines Triangulation<2>::oneThreeMove(),
          * Triangulation<3>::oneFourMove() and Triangulation<4>::oneFiveMove()

@@ -237,7 +237,7 @@
  <sect2 id="features-links">
   <title>Knots and Links</title>
   <para>
-   Since version&nbsp;5.95 (the first prerelease for version&nbsp;6.0),
+   Since version&nbsp;5.96 (the first prerelease for version&nbsp;6.0),
    &regina; now offers native support for knots and links.
   </para>
   <para>
