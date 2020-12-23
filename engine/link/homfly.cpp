@@ -949,6 +949,7 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
 
         // We will start a traversal backwards from here.
         c = s;
+        steps = 0;
         do {
             if (s.strand() == 0) {
                 steps = 0;
