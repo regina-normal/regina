@@ -82,6 +82,9 @@ Version 5.96  [ 24 December, 2020 ]
         Class Integer, LargeInteger:
             - Fixed a bug in nativeValue() when converting negative numbers
               from large (GMP) representation to 128-bit integers.
+              A thorough code audit shows this bug should have been harmless:
+              Regina never created the conditions for the bug in its own code,
+              and the routine has never been available to python users.
         Class Isomorphism<dim>:
             - Added (fast) move constructors and move assignment operators,
               and a (slow) copy assignment operator.
