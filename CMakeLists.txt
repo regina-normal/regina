@@ -47,18 +47,15 @@ ENDIF (WIN32)
 
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
-# Bundle = self-contained app bundle for MacOS that users can drag and drop.
 # Windows = self-contained movable install directory for MS Windows.
 if (NOT REGINA_INSTALL_TYPE)
-  if (APPLE)
-    SET (REGINA_DEFAULT_INSTALL_TYPE Bundle)
-  elseif (WIN32)
+  if (WIN32)
     SET (REGINA_DEFAULT_INSTALL_TYPE Windows)
   else ()
     SET (REGINA_DEFAULT_INSTALL_TYPE XDG)
   endif ()
   SET (REGINA_INSTALL_TYPE ${REGINA_DEFAULT_INSTALL_TYPE} CACHE STRING
-    "Choose how Regina installs itself.  Options are: XDG Bundle Windows."
+    "Choose how Regina installs itself.  Options are: XDG Windows."
     FORCE)
 ENDIF (NOT REGINA_INSTALL_TYPE)
 MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
@@ -66,17 +63,13 @@ MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
 # Sanity check the installation type, and set the boolean install type flags
 # that will appear in regina-config.h:
 SET(REGINA_INSTALL_XDG FALSE)
-SET(REGINA_INSTALL_BUNDLE FALSE)
 SET(REGINA_INSTALL_WINDOWS FALSE)
 IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # No sanity checking needed here (yet).
   SET(REGINA_INSTALL_XDG TRUE)
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  IF (NOT APPLE)
-    MESSAGE(FATAL_ERROR
-      "REGINA_INSTALL_TYPE=Bundle is only supported on MacOSX.")
-  ENDIF (NOT APPLE)
-  SET(REGINA_INSTALL_BUNDLE TRUE)
+  MESSAGE(FATAL_ERROR
+    "REGINA_INSTALL_TYPE=Bundle is no longer supported. These CMake build scripts will give a unix-style installation in a fixed location; for a standalone macOS app bundle please use Xcode instead.")
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   IF (NOT WIN32)
     MESSAGE(FATAL_ERROR
@@ -85,15 +78,11 @@ ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   SET(REGINA_INSTALL_WINDOWS TRUE)
 ELSE()
   MESSAGE(FATAL_ERROR
-    "REGINA_INSTALL_TYPE must be one of: XDG Bundle Windows.")
+    "REGINA_INSTALL_TYPE must be either XDG or Windows.")
 ENDIF()
 
 # Are we installing development files?
-IF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  SET (REGINA_INSTALL_DEV OFF)
-ELSE (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  SET (REGINA_INSTALL_DEV ON)
-ENDIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+SET (REGINA_INSTALL_DEV ON)
 
 # Give packagers a way of insisting that every optional component is found.
 # Set PACKAGING_MODE=1 to make every component compulsory.
@@ -160,21 +149,7 @@ INCLUDE( ReginaMacros )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Installation directories
-if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  # MacOSX app bundle.
-  SET (APPDIR ${CMAKE_INSTALL_PREFIX})
-  SET (BUNDLEDIR ${APPDIR}/Regina.app)
-  SET (BUNDLEDIR_ESCAPED "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/Regina.app")
-  SET (PLUGINSDIR ${BUNDLEDIR}/Contents/Plugins)
-  SET (PLUGINSDIR_ESCAPED "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/Regina.app/Contents/Plugins")
-  SET (RESOURCEDIR ${BUNDLEDIR}/Contents/Resources)
-  SET (BINDIR ${BUNDLEDIR}/Contents/MacOS)
-  SET (LIBDIR ${BINDIR})
-  SET (DATADIR ${RESOURCEDIR})
-  SET (INCLUDEDIR ${RESOURCEDIR}/include)
-  SET (PKGDATADIR ${DATADIR})
-  SET (PYLIBDIR ${LIBDIR}/python)
-elseif (${REGINA_INSTALL_TYPE} STREQUAL Windows)
+if (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   # MS Windows install.
   SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
   SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
@@ -531,10 +506,6 @@ ELSE(DISABLE_GUI)
       "http://freedesktop.org/wiki/Software/shared-mime-info"
       TRUE "0.30")
   endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
-
-  if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-    include(BundleUtilities)
-  endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
   # This must come after SharedMimeInfo is included, since the qtui/
   # makefiles use SharedMimeInfo macros.
