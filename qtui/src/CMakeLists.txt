@@ -123,11 +123,7 @@ if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   endforeach (IMG_SIZE ${XDGSIZES})
 endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  set(REGINA_BUNDLE_DEST .)
-else (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  set(REGINA_BUNDLE_DEST bin)
-endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+set(REGINA_BUNDLE_DEST bin)
 
 ADD_EXECUTABLE(${REGINA_APP_NAME} MACOSX_BUNDLE WIN32 ${SOURCES})
 
@@ -156,52 +152,6 @@ endif ()
 INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION ${APPDIR} COMPONENT Runtime)
 
 # TODO: Use COMPONENT Runtime/Development throughout all install targets.
-
-if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  # Extra steps for building self-contained MacOSX bundles.
-
-  IF (BUILD_PYTHON_BINDINGS)
-    set (ALL_PLUGINS "${BUNDLEDIR_ESCAPED}/Contents/MacOS/python/regina/engine.so")
-  ELSE (BUILD_PYTHON_BINDINGS)
-    set (ALL_PLUGINS)
-  ENDIF (BUILD_PYTHON_BINDINGS)
-
-  foreach (module Core Gui Widgets Svg)
-    foreach (plugin ${Qt5${module}_PLUGINS})
-      get_target_property(plugin_location ${plugin} LOCATION_Release)
-      get_filename_component(plugin_filename "${plugin_location}" NAME)
-
-      # Work out the correct plugins subdirectory.
-      get_filename_component(plugin_path "${plugin_location}" PATH)
-      get_filename_component(plugin_dirname "${plugin_path}" NAME)
-      INSTALL (FILES ${plugin_location}
-        DESTINATION ${PLUGINSDIR}/${plugin_dirname}
-        COMPONENT Runtime)
-
-      LIST (APPEND ALL_PLUGINS "${PLUGINSDIR_ESCAPED}/${plugin_dirname}/${plugin_filename}")
-    endforeach (plugin)
-  endforeach (module)
-
-  # Ensure that the bundle is self-contained for linking purposes.
-  INSTALL(CODE "
-    include(BundleUtilities)
-    fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"${ALL_PLUGINS}\" \"\")
-    " COMPONENT Runtime)
-
-  SET(FIX_BUNDLE_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/fix-bundle-paths)
-  INSTALL(CODE "
-    execute_process(COMMAND
-      \"${FIX_BUNDLE_PATHS}\" \"${BUNDLEDIR_ESCAPED}\")
-    " COMPONENT Runtime)
-
-  # On MacOSX we need a qt.conf file in our bundle; otherwise the system
-  # may load both the bundle and system Qt libraries and give unpredictable
-  # results.
-  set(BUNDLE_QT_CONF "${BUNDLEDIR_ESCAPED}/Contents/Resources/qt.conf")
-  INSTALL(CODE "
-    file(WRITE \"${BUNDLE_QT_CONF}\" \"\")
-    " COMPONENT Runtime)
-endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
 
 if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   # Install desktop files and mimetype handling.
