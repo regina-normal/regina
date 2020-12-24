@@ -11015,6 +11015,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11051,6 +11052,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11088,6 +11090,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11121,6 +11124,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11158,6 +11162,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11191,6 +11196,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11228,6 +11234,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11261,6 +11268,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11298,6 +11306,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11331,6 +11340,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11368,6 +11378,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11401,6 +11412,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11441,6 +11453,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11477,6 +11490,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11514,6 +11528,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11547,6 +11562,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11855,6 +11871,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
@@ -11892,6 +11909,7 @@
 					"\"$(SRCROOT)/engine\"",
 					/usr/include/libxml2,
 				);
+				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
 				OTHER_LDFLAGS = (
 					"-sectcreate",
