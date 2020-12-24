@@ -61,8 +61,11 @@ ENDIF (NOT REGINA_INSTALL_TYPE)
 MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
 
 # Sanity check the installation type, and set the boolean install type flags
-# that will appear in regina-config.h:
+# that will appear in regina-config.h.
+# Note: even though Bundle is not supported in CMake, we must keep the flag
+# here because the Xcode build uses it (via the corresponding #define).
 SET(REGINA_INSTALL_XDG FALSE)
+SET(REGINA_INSTALL_BUNDLE FALSE)
 SET(REGINA_INSTALL_WINDOWS FALSE)
 IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # No sanity checking needed here (yet).
