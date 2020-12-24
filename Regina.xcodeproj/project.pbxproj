@@ -2238,7 +2238,7 @@
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
 			);
 			runOncePerArchitecture = 0;
-			script = "case \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyexec=/usr/bin/python3\n    ;;\n  *)\n    pyexec=/usr/bin/python2.7\n    ;;\nesac\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#@PYTHON_EXECUTABLE@#$pyexec#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
+			script = "# Currently we are hard-coding the Xcode build to the system python2.\npyexec=/usr/bin/python2.7\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#@Python_EXECUTABLE@#$pyexec#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
 		};
 /* End PBXBuildRule section */
 
@@ -8916,7 +8916,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\ncase \"${CONFIGURATION}\" in\n  \"Python 3\"*)\n    pyx=\"-py3\"\n    ;;\n  *)\n    pyx=\"-py2\"\n    ;;\nesac\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.{py,session}; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
+			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\n# Currently we are hard-coding the Xcode build to python2.\npyx=\"-py2\"\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.{py,session}; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
 		};
 		05DADB022192543B00DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
