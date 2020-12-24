@@ -319,6 +319,19 @@ MACRO_LOG_FEATURE(Boost_FOUND
 
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
+
+  # Some basic sanity testing on the user's python settings.
+  IF (PYTHON_EXECUTABLE)
+    UNSET(PYTHON_EXECUTABLE CACHE)
+    MESSAGE(FATAL_ERROR "Regina now uses a different method for finding Python. The old PYTHON_EXECUTABLE setting is no longer recognised. Please set Python_EXECUTABLE instead.")
+  ENDIF (PYTHON_EXECUTABLE)
+  IF (Python_EXECUTABLE)
+    IF(${CMAKE_VERSION} VERSION_LESS "3.16.0")
+      UNSET(Python_EXECUTABLE CACHE)
+      MESSAGE(FATAL_ERROR "The Python_EXECUTABLE setting only works with CMake 3.16 and above. For now please either upgrade your CMake, or else remove (or temporarily hide) any conflicting Python installations so that the automated tools can find the correct Python without assistance.")
+    ENDIF(${CMAKE_VERSION} VERSION_LESS "3.16.0")
+  ENDIF (Python_EXECUTABLE)
+
   FIND_PACKAGE(Python COMPONENTS Interpreter Development REQUIRED)
 
   IF (Python_FOUND)
