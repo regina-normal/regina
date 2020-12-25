@@ -134,31 +134,6 @@
    </qandaentry>
   </qandadiv>
 
-  <qandadiv id="trouble-gui"><title>The User Interface</title>
-   <qandaentry id="trouble-gui-shortcuts">
-    <question><para>
-     On &ubuntu;, none of the keyboard shortcuts work.
-    </para></question>
-    <answer>
-     <para>
-      This is due to a
-      <ulink url="https://bugs.launchpad.net/appmenu-qt5/+bug/1380702">larger
-      bug in &ubuntu;</ulink> that affects not just &regina; but all
-      programs that use the &qt; libraries.
-      It is not clear if/when &ubuntu; will fix this problem.
-     </para>
-     <para>
-      In the meantime, if it bothers you greatly then you can try
-      uninstalling the <literal>appmenu-qt5</literal> package.
-      This will fix the keyboard shortcuts, but at a cost: all
-      &qt;-based applications will lose
-      the unified menu bar at the top of the screen, and
-      instead will put their menus inside their own windows.
-     </para>
-    </answer>
-   </qandaentry>
-  </qandadiv>
-
   <qandadiv id="trouble-python"><title>&python; Scripting</title>
    <qandaentry id="trouble-python-disabled">
     <question><para>
