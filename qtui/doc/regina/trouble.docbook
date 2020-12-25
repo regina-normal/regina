@@ -157,35 +157,6 @@
      </para>
     </answer>
    </qandaentry>
-
-   <qandaentry id="trouble-gui-whatsthis">
-    <question><para>
-     On &ubuntu;, the &ldquo;What&rsquo;s this?&rdquo; help
-     just gives me an empty yellow box.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="ubuntu-whatsthis.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para></question>
-    <answer>
-     <para>
-      If you look closely, you might see that the box is full of
-      white text on a bright yellow background (which of course is
-      impossible to read).
-     </para>
-     <para>
-      Unfortunately this is another
-      <ulink url="https://bugs.launchpad.net/ubuntu/+source/qt4-x11/+bug/877236">long-standing
-      bug in &ubuntu;</ulink>, which
-      affects not only &regina; but all &qt;-based applications.
-      It is not clear how &regina; can work around this problem;
-      hopefully &ubuntu; will fix this issue soon.
-     </para>
-    </answer>
-   </qandaentry>
   </qandadiv>
 
   <qandadiv id="trouble-python"><title>&python; Scripting</title>
