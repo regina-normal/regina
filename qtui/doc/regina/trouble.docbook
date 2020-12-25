@@ -186,32 +186,6 @@
      </para>
     </answer>
    </qandaentry>
-
-   <qandaentry id="trouble-gui-crashonexit">
-    <question><para>
-     On &ubuntu;, I sometimes receive a crash report when I exit &regina;.
-    </para></question>
-    <answer>
-     <para>
-      The problem itself is harmless (but annoying), and you can simply
-      ignore it.  Any tasks you asked &regina; to perform (such as
-      saving your data files) will still be completed successfully.
-     </para>
-     <para>
-      It is not clear if/how this problem can be fixed, since it seems to be a
-      <ulink url="https://bugreports.qt.io/browse/QTBUG-52988">wider problem
-      with the &qt; toolkit</ulink> (in particular, the version of
-      &qt; that ships with some recent versions of &ubuntu;).
-     </para>
-     <para>
-      This most likely affects other &linux; distributions as well;
-      you will simply notice it on &ubuntu; because &ubuntu; comes with
-      a crash handler that notifies the user of such events.
-      In other distributions the problem is invisible (and harmless)
-      because the crash only occurs when you are exiting &regina; anyway.
-     </para>
-    </answer>
-   </qandaentry>
   </qandadiv>
 
   <qandadiv id="trouble-python"><title>&python; Scripting</title>
