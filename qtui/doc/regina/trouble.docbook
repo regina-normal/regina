@@ -186,48 +186,6 @@
     </answer>
    </qandaentry>
 
-   <qandaentry id="trouble-python-root">
-    <question><para>
-     &python; scripting does not work on &macosx;.
-     Instead I get a <exceptionname>TypeError</exceptionname>
-     saying &ldquo;No &python; class registered for &cpp; class
-     <classname>regina::Packet</classname>&rdquo;, and/or a
-     message that &regina; &ldquo;could not set the
-     root variable&rdquo;.
-    </para>
-    <para>
-     <inlinemediaobject>
-      <imageobject>
-       <imagedata fileref="trouble-python-root.png"/>
-      </imageobject>
-     </inlinemediaobject>
-    </para></question>
-    <answer>
-     <para>
-      In older versions of &regina; (version&nbsp;5.0 or earlier),
-      if you have a second, hand-built version of &regina; installed on your
-      system then this can conflict with the standalone app that you
-      download from &regina;'s website.
-     </para>
-     <para>
-      Look for a second copy of &regina;'s &python; module on your
-      system.  It will be a directory called <filename>regina</filename>,
-      containing the files <filename>engine.so</filename> and
-      <filename>__init__.py</filename>.  On a modern &macosx; system using
-      the standard system &python;, a hand-built version of &regina;
-      will typically install this module in
-      <filename>/Library/Python/2.7/site-packages/regina</filename>.
-     </para>
-     <para>
-      &regina; version&nbsp;5.1 or later should allow two
-      such installations to work happily side-by-side.  If you are
-      running &regina;&nbsp;5.0 or earlier,
-      you can fix the problem by manually removing the hand-built &python;
-      module that you found.
-     </para>
-    </answer>
-   </qandaentry>
-
    <qandaentry id="trouble-python-snappy">
     <question><para>
      &snappy; has stopped working in the graphical user interface.
