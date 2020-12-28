@@ -7,6 +7,12 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 5.97  [ TODO ]
+
+    PYTHON:
+        - Fixed a deadlock that occurred with Python 3 on some systems when
+          starting new python consoles in the GUI.
+
 Version 5.96  [ 24 December, 2020 ]
 
     GENERAL:
