@@ -86,11 +86,6 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->show();
     QCoreApplication::instance()->processEvents();
 
-
-    // First set up completion
-    ans->executeLine("import rlcompleter");
-    ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
-
     // Initialise the python interpreter.
     if (ans->importRegina()) {
         ans->addOutput(parent->QObject::tr("\n"));
@@ -113,10 +108,6 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     // Show us what's going on.
     ans->show();
     QCoreApplication::instance()->processEvents();
-
-    // First set up completion.
-    ans->executeLine("import rlcompleter");
-    ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
 
     // Initialise the python interpreter.
     if (ans->importRegina())

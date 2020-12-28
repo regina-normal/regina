@@ -142,7 +142,7 @@ class PythonInterpreter {
         PyObject* mainNamespace;
             /**< The global namespace. */
         PyObject* completer;
-            /**< The current rlcompleter::Completer object, or \c null
+            /**< The current plainCompleter::Completer object, or \c null
                  if one could not be created. */
         PyObject* completerFunc;
             /**< The method completer.complete(), or \c null if this reference
@@ -181,15 +181,20 @@ class PythonInterpreter {
         bool executeLine(const std::string& command);
 
         /**
-         * Configuration of the subinterpreter.
-         * Each of these routines returns \c true on success and
-         * \c false on failure.
+         * Imports Regina's python module.
+         *
+         * This function also sets up a completer object, for use with
+         * complete().
+         *
+         * Returns \c true on success or \c false on failure.
          */
         bool importRegina();
 
         /**
          * Set the given variable in Python's main namespace to
          * represent the given Regina packet.
+         *
+         * Returns \c true on success or \c false on failure.
          */
         bool setVar(const char* name, regina::Packet* value);
 
@@ -201,6 +206,8 @@ class PythonInterpreter {
          * This routine flushes standard output and standard error.
          *
          * You should always test exitAttempted() after executing user code.
+         *
+         * Returns \c true on success or \c false on failure.
          */
         bool runScript(const regina::Script* script);
 
@@ -226,8 +233,11 @@ class PythonInterpreter {
         /**
          * Attempts to complete the given Python string.
          *
-         * The completion process uses the Python \c rlcompleter
-         * module; see the corresponding Python documentation for what
+         * The completion process uses Regina's \c plainCompleter Python
+         * module, which is a copy of Python's own \c rlcompleter module
+         * with all \c readline interaction disabled (since \c readline does
+         * not play well with subinterpreters and may produce deadlocks).
+         * See the Python documentation for \c rlcompleter for what
          * text can be completed and how completion works.
          *
          * Each completion that is found will be passed to \a completer
@@ -239,7 +249,7 @@ class PythonInterpreter {
          * @param completer the callback object that will receive the
          * resulting completions (if any).
          * @return the number of completions that were passed to \a completer,
-         * or -1 if the completion process failed (e.g., if the \c rlcompleter
+         * or -1 if the completion process failed (e.g., the \c plainCompleter
          * Python module could not be imported).  In particular, if the
          * completion process ran succesfully and determined that the given
          * text has no completions at all, this routine will return 0.

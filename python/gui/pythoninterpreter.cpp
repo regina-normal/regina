@@ -197,20 +197,6 @@ PythonInterpreter::PythonInterpreter(
         pyStdErr.flush();
     }
 
-    // Set up a completer if we can.
-    try {
-        pybind11::object c = pybind11::module_::import("rlcompleter")
-            .attr("Completer")();
-        pybind11::object f = c.attr("complete");
-
-        if (c.ptr() && f.ptr()) {
-            // Keep references to both until we destroy the interpreter.
-            Py_INCREF(completer = c.ptr());
-            Py_INCREF(completerFunc = f.ptr());
-        }
-    } catch (std::runtime_error&) {
-    }
-
     pythonInitialised = true;
 
     // Release the global interpreter lock.
@@ -426,7 +412,22 @@ bool PythonInterpreter::importRegina() {
     PyEval_RestoreThread(state);
 
     bool ok = importReginaIntoNamespace(mainNamespace);
-    if (! ok) {
+
+    // Also set up a completer if we can, but if not then just fail silently.
+    if (ok) {
+        try {
+            pybind11::object c = pybind11::module_::import(
+                "regina.plainCompleter").attr("Completer")();
+            pybind11::object f = c.attr("complete");
+
+            if (c.ptr() && f.ptr()) {
+                // Keep references to both until we destroy the interpreter.
+                Py_INCREF(completer = c.ptr());
+                Py_INCREF(completerFunc = f.ptr());
+            }
+        } catch (std::runtime_error&) {
+        }
+    } else {
         PyErr_Print();
         PyErr_Clear();
     }

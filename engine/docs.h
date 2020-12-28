@@ -143,6 +143,14 @@
  *  Wenzel Jakob, and is distributed under a BSD-style license that is shipped
  *  with Regina's source code in the file python/pybind11/LICENSE.
  *
+ *  <h3>Python rlcompleter module</h3>
+ *
+ *  Regina includes a modified copy of the Python rlcompleter module,
+ *  which it uses for tab completion in the graphical user interface.  The
+ *  original rlcompleter module was distributed under the Python Software
+ *  Foundation License Version 2; the full license and copyright notice are
+ *  shipped with Regina's source code in the file python/regina/LICENSE.
+ *
  *  <h3>Orb Kernel</h3>
  *
  *  Regina includes snippets of code from Orb, for use in importing and
