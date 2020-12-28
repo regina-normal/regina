@@ -1999,6 +1999,7 @@
 		05CB9FFA1F9EA3CF002ECB18 /* LinkMoves.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05CB9FF71F9E9FDE002ECB18 /* LinkMoves.mm */; };
 		05D046C62599F0F300FA2B3E /* Python3.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 05D046B52599F08C00FA2B3E /* Python3.framework */; };
 		05D046C72599F0F300FA2B3E /* Python3.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 05D046B52599F08C00FA2B3E /* Python3.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		05D047062599F5AE00FA2B3E /* plainCompleter.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 05D046E62599F58A00FA2B3E /* plainCompleter.py */; };
 		05D0A1101812F0BE005ED097 /* Tri3ViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */; };
 		05D1172919EDF43F003BEC55 /* WelcomeViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D1172819EDF43F003BEC55 /* WelcomeViewController.mm */; };
 		05D1172B19EE0166003BEC55 /* bitmask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052FA1011806088B00FAE4DF /* bitmask.cpp */; };
@@ -2319,6 +2320,7 @@
 			files = (
 				053CAB4F1DACA75900A92F98 /* regutils in Copy Python Scripts */,
 				050BEA361D9C8B6700B96DB8 /* __init__.py in Copy Python Scripts */,
+				05D047062599F5AE00FA2B3E /* plainCompleter.py in Copy Python Scripts */,
 				05D322DF1FA606E200E5F9B8 /* purePyMethods.py in Copy Python Scripts */,
 			);
 			name = "Copy Python Scripts";
@@ -4493,6 +4495,7 @@
 		05CB9FF61F9E9FD8002ECB18 /* LinkMoves.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LinkMoves.h; sourceTree = "<group>"; };
 		05CB9FF71F9E9FDE002ECB18 /* LinkMoves.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = LinkMoves.mm; sourceTree = "<group>"; };
 		05D046B52599F08C00FA2B3E /* Python3.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Python3.framework; path = Library/Frameworks/Python3.framework; sourceTree = DEVELOPER_DIR; };
+		05D046E62599F58A00FA2B3E /* plainCompleter.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = plainCompleter.py; path = regina/plainCompleter.py; sourceTree = "<group>"; };
 		05D0A10E1812F0BE005ED097 /* Tri3ViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3ViewController.h; sourceTree = "<group>"; };
 		05D0A10F1812F0BE005ED097 /* Tri3ViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = Tri3ViewController.mm; sourceTree = "<group>"; };
 		05D1172719EDF43F003BEC55 /* WelcomeViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WelcomeViewController.h; sourceTree = "<group>"; };
@@ -4946,6 +4949,7 @@
 				05431FA11C40F56E009BC072 /* CMakeLists.txt */,
 				05431FA31C40F56E009BC072 /* README.txt */,
 				050F5E6B1B9BD30700C1F681 /* __init__.py */,
+				05D046E62599F58A00FA2B3E /* plainCompleter.py */,
 				05D322DE1FA606D100E5F9B8 /* purePyMethods.py */,
 				05617AD51D9D3C5400B1E33B /* regina-python.in */,
 				050F5D001B9BAB9C00C1F681 /* algebra */,
@@ -8789,7 +8793,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\nln -f -s ../../../Resources/python/__init__.py \"${macosdir}\"/python/regina/__init__.py\nln -f -s ../../../Resources/python/purePyMethods.py \"${macosdir}\"/python/regina/purePyMethods.py\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype trisetcmp; do\n    ln -f -s ../Resources/python/regutils \"${macosdir}\"/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py purePyMethods.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype trisetcmp; do\n    ln -f -s ../Resources/python/regutils \"${macosdir}\"/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
 		};
 		0514CAE31D9C9A5800EDB2E6 /* Sign Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
