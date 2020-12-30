@@ -402,6 +402,10 @@ else ()
   SET (REGINA_PYTHON_EXTENSION_NONSTANDARD FALSE)
 endif ()
 
+# This option is always empty for CMake.
+# It is present because the Xcode build sometimes adds -I for sandboxing.
+SET (PYTHON_EXTRA_ARGS "")
+
 IF(Python_FOUND)
   # We can support python.
 

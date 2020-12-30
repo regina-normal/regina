@@ -122,6 +122,7 @@ if ($interactive and not $script) {
 # command that corresponds to the original build environment.
 
 my $python_cmd = "@Python_EXECUTABLE@";
+my $python_cmd_args = "@PYTHON_EXTRA_ARGS@";
 if (not -e $python_cmd) {
     &warn("W: The python command used during the build was: $python_cmd.\n");
     &warn("W: This command does not appear to be available now in the runtime environment.\n");
@@ -245,10 +246,6 @@ if (! $python_lib_dir) {
 
 # --- Go ahead and run the application. ---
 
-if ($python_lib_dir) {
-    &extendEnvVar('PYTHONPATH', $python_lib_dir);
-}
-
 if ($install_type eq 'Source') {
     # Since we're running from the source tree, we need to ensure that
     # the calculation engine library can be found.
@@ -267,30 +264,39 @@ if ($install_type eq 'Source') {
     &extendEnvVar('PATH', $prog_dir);
 }
 
+# Do not use PYTHONPATH, since we might be running python in isolation mode.
+# Instead edit the sys.path in code.
+$python_lib_dir =~ s/\\/\\\\/g;
+$python_lib_dir =~ s/'/\\'/g;
+my $cmd = ($python_lib_dir ? "import sys; sys.path = ['$python_lib_dir'] + sys.path; " : '');
+$cmd .= 'import regina; ';
+$autoImport and $cmd .= 'from regina import *; ';
+
 if ($script) {
     if (! -e $script) {
         &usage("E: The script $script could not be found.");
     }
 
-    my $cmd = 'import regina; ';
-    $autoImport and $cmd .= 'from regina import *; ';
     $cmd .= 'regina.reginaSetup(banner=False';
     $interactive and $cmd .= ', readline=True';
     $quiet and $cmd .= ', quiet=True';
     $cmd .= ', namespace=globals()); regina.__execScript(globals())';
 
     my @fullCommandLine = ($python_cmd);
+    $python_cmd_args and push @fullCommandLine, $python_cmd_args;
     $interactive and push @fullCommandLine, '-i';
     push @fullCommandLine, ('-c', $cmd, $script);
     push @fullCommandLine, @script_args;
     exec @fullCommandLine or &execError();
 } else {
-    my $cmd = 'import regina; ';
-    $autoImport and $cmd .= 'from regina import *; ';
     $cmd .= 'regina.reginaSetup(banner=True, readline=True';
     $quiet and $cmd .= ', quiet=True';
     $cmd .= ', namespace=globals())';
-    exec ($python_cmd, '-i', '-c', $cmd) or &execError();
+
+    my @fullCommandLine = ($python_cmd);
+    $python_cmd_args and push @fullCommandLine, $python_cmd_args;
+    push @fullCommandLine, ('-i', '-c', $cmd);
+    exec @fullCommandLine or &execError();
 }
 
 # --- Helper routines. ---
@@ -316,6 +322,7 @@ sub setVerbosity() {
 sub setPythonCmd() {
     &info("I: Setting python command to $_[0].\n");
     $python_cmd = $_[0];
+    $python_cmd_args = '';
 }
 sub setPythonLibDir() {
     &info("I: Setting python module directory to $_[0].\n");
