@@ -866,7 +866,7 @@
 		053CAB4B1DAC479300A92F98 /* ndisc.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB481DAC479300A92F98 /* ndisc.h */; };
 		053CAB4C1DAC479300A92F98 /* ndisctype.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB491DAC479300A92F98 /* ndisctype.h */; };
 		053CAB4D1DAC479300A92F98 /* nprism.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB4A1DAC479300A92F98 /* nprism.h */; };
-		053CAB4F1DACA75900A92F98 /* regutils in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 053CAB4E1DACA74A00A92F98 /* regutils */; };
+		053CAB4F1DACA75900A92F98 /* regutils.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 053CAB4E1DACA74A00A92F98 /* regutils.py */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* cyclotomic.cpp */; };
@@ -1280,6 +1280,7 @@
 		0564A9851811D921002CC2AE /* shortrunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F51811D920002CC2AE /* shortrunner.cpp */; };
 		0564A99B1811D921002CC2AE /* treenav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A6161811D921002CC2AE /* treenav.cpp */; };
 		0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		0565A6E6259CCC8A00BFA49F /* regutils-launch in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 0565A6E5259CCC7500BFA49F /* regutils-launch */; };
 		05669D941DCB0E9A00C870C6 /* facetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D911DCB0E9A00C870C6 /* facetpairing.h */; };
 		05669D951DCB0E9A00C870C6 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */; };
 		05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D931DCB0E9A00C870C6 /* facetpairing3.h */; };
@@ -2317,7 +2318,8 @@
 			dstPath = python;
 			dstSubfolderSpec = 7;
 			files = (
-				053CAB4F1DACA75900A92F98 /* regutils in Copy Python Scripts */,
+				053CAB4F1DACA75900A92F98 /* regutils.py in Copy Python Scripts */,
+				0565A6E6259CCC8A00BFA49F /* regutils-launch in Copy Python Scripts */,
 				050BEA361D9C8B6700B96DB8 /* __init__.py in Copy Python Scripts */,
 				05D047062599F5AE00FA2B3E /* plainCompleter.py in Copy Python Scripts */,
 				05D322DF1FA606E200E5F9B8 /* purePyMethods.py in Copy Python Scripts */,
@@ -3236,7 +3238,7 @@
 		053CAB481DAC479300A92F98 /* ndisc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndisc.h; sourceTree = "<group>"; };
 		053CAB491DAC479300A92F98 /* ndisctype.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ndisctype.h; sourceTree = "<group>"; };
 		053CAB4A1DAC479300A92F98 /* nprism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nprism.h; sourceTree = "<group>"; };
-		053CAB4E1DACA74A00A92F98 /* regutils */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = regutils; sourceTree = "<group>"; };
+		053CAB4E1DACA74A00A92F98 /* regutils.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = regutils.py; sourceTree = "<group>"; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		0541AF491B8BE2F5002E166B /* cyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclotomic.h; sourceTree = "<group>"; };
@@ -3696,6 +3698,7 @@
 		0564A6161811D921002CC2AE /* treenav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treenav.cpp; sourceTree = "<group>"; };
 		0564A6171811D921002CC2AE /* x-regina.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = "x-regina.ico"; sourceTree = "<group>"; };
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
+		0565A6E5259CCC7500BFA49F /* regutils-launch */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "regutils-launch"; sourceTree = "<group>"; };
 		05669D911DCB0E9A00C870C6 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
 		05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
@@ -5474,7 +5477,8 @@
 		052DB5C01D9F1FF100EDEA68 /* alt */ = {
 			isa = PBXGroup;
 			children = (
-				053CAB4E1DACA74A00A92F98 /* regutils */,
+				053CAB4E1DACA74A00A92F98 /* regutils.py */,
+				0565A6E5259CCC7500BFA49F /* regutils-launch */,
 			);
 			path = alt;
 			sourceTree = "<group>";
@@ -8796,7 +8800,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py purePyMethods.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype trisetcmp; do\n    ln -f -s ../Resources/python/regutils \"${macosdir}\"/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py purePyMethods.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype trisetcmp; do\n    ln -f -s ../Resources/python/regutils-launch \"${macosdir}\"/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
 		};
 		0514CAE31D9C9A5800EDB2E6 /* Sign Qt */ = {
 			isa = PBXShellScriptBuildPhase;
