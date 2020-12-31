@@ -2241,7 +2241,7 @@
 				"$(DERIVED_FILE_DIR)/${INPUT_FILE_BASE}",
 			);
 			runOncePerArchitecture = 0;
-			script = "# Currently we are hard-coding the Xcode build to the system python2.\npyexec=/usr/bin/python2.7\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#@Python_EXECUTABLE@#$pyexec#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
+			script = "if [ \"x${REGINA_PYTHON_FRAMEWORK}\" = x ]; then\n  # Use the system python2.\n  pyexec=/usr/bin/python\n  pyargs=\nelse\n  # Use the bundled python3 framework.\n  # Also, if sandboxed, use isolation mode; otherwise python\n  # imports readline, which accesses /dev/tty... and deadlocks.\n  pyexec='$prog_dir'/../Frameworks/\"${REGINA_PYTHON_FRAMEWORK}\".framework/Resources/Python.app/Contents/MacOS/Python\n  if ( grep sandbox \"${SRCROOT}\"/utils/bundle/Utils.entitlements >/dev/null ); then\n    pyargs='-I'\n  else\n    pyargs=\n  fi\nfi\n\ncat \"${INPUT_FILE_PATH}\" | sed \\\n  -e \"s#@Python_EXECUTABLE@#$pyexec#\" \\\n  -e \"s#@PYTHON_EXTRA_ARGS@#$pyargs#\" \\\n  -e \"s#@REGINA_INSTALL_TYPE@#Bundle#\" \\\n  -e \"s#@CMAKE_SYSTEM_NAME@#Darwin#\" \\\n  -e \"s#@CMAKE_INSTALL_PREFIX@##\" \\\n  -e \"s#@PKGDATADIR@##\" \\\n  -e \"s#@LIBDIR@##\" \\\n  -e \"s#@PACKAGE_NAME@#regina#\" \\\n  -e \"s#@CMAKE_SOURCE_DIR@##\" \\\n> \"${DERIVED_FILE_DIR}/${INPUT_FILE_BASE}\"\n";
 		};
 /* End PBXBuildRule section */
 
@@ -8930,8 +8930,8 @@
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/examples/triangulation.session",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\n# Currently we are hard-coding the Xcode build to python2.\npyx=\"-py2\"\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.{py,session}; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
+			shellPath = /bin/bash;
+			shellScript = "src=\"${PROJECT_DIR}/examples\"\ndest=\"${TARGET_BUILD_DIR}/Regina.app/Contents/Resources/examples\"\n\nif [ -n \"${REGINA_PYTHON_FRAMEWORK}\" ]; then\n  # Assume we are bundled our own python3.\n  pyx=\"-py3\"\nelse\n  # We are working with the system python, which\n  # we assume is python2.\n  pyx=\"-py2\"\nfi\n\nfor i in sample-pyx.rga {progress,tree,triangulation}-pyx.{py,session}; do\n  cp \"$src/${i/-pyx/$pyx}\" \"$dest/${i/-pyx/}\"\ndone\n";
 		};
 		05B9295C259C148700A4503B /* Prepare and Sign Python */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8949,7 +8949,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "# See if we have bundled our own copy of Python.\nfwName=\nfor i in Python Python3; do\n  fwDir=\"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/$i.framework\n  if [ -d \"$fwDir\" ]; then\n    fwName=$i\n    break\n  fi\ndone\n\nif [ -n \"$fwName\" ]; then\n  versionPath=`find \"$fwDir\"/Versions -type d -depth 1`\n  version=`basename \"$versionPath\"`\n  \n  # Remove the broken symlink to headers that Xcode removed.\n  if [ -d \"$versionPath\"/include ]; then\n    rm \"$versionPath\"/include/python$version\n    rmdir \"$versionPath\"/include\n  fi\n  \n  # Change the Python bundle IDs to be specific to Regina.\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Info.plist\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Python.app/Contents/Info.plist\n  \n  # From here on we re-sign *everything* with our own signature,\n  # inside-out, one file at a time.\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/$fwName\n\n  # Executables need hardened runtime (for website distribution)\n  # and sandboxing (for App Store distribution).\n  for i in bin/python$version Resources/Python.app/Contents/MacOS/Python; do\n    file=\"$versionPath\"/$i\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --prefix net.sourceforge.regina.py. \\\n      --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements \\\n      --options runtime \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  for file in \"$versionPath\"/lib/python$version/lib-dynload/*.so; do\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --preserve-metadata=identifier,entitlements \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  # If we are sandboxed then .../bin/pythonX.Y will crash.\n  # We don't need it anyway, and we shouldn't pretend to offer\n  # a generic python to the user that is sandboxed.\n  # Just remove it.\n  if ( grep sandbox \"${SRCROOT}\"/utils/bundle/Utils.entitlements >/dev/null ); then\n      if [ -d \"$versionPath\"/bin ]; then\n        rm \"$versionPath\"/bin/python*\n        rm \"$versionPath\"/bin/pydoc*\n        rm \"$versionPath\"/bin/2to3*\n        rmdir \"$versionPath\"/bin\n      fi\n  fi\n\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --options runtime \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/Resources/Python.app\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"\nfi\n";
+			shellScript = "# We have work to do if we bundle our own copy of Python.\nif [ -n \"${REGINA_PYTHON_FRAMEWORK}\" ]; then\n  fwDir=\"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/${REGINA_PYTHON_FRAMEWORK}.framework\n  versionPath=`find \"$fwDir\"/Versions -type d -depth 1`\n  version=`basename \"$versionPath\"`\n  \n  # Remove the broken symlink to headers that Xcode removed.\n  if [ -d \"$versionPath\"/include ]; then\n    rm \"$versionPath\"/include/python$version\n    rmdir \"$versionPath\"/include\n  fi\n  \n  # Change the Python bundle IDs to be specific to Regina.\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Info.plist\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Python.app/Contents/Info.plist\n  \n  # From here on we re-sign *everything* with our own signature,\n  # inside-out, one file at a time.\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/${REGINA_PYTHON_FRAMEWORK}\n\n  # Executables need hardened runtime (for website distribution)\n  # and sandboxing (for App Store distribution).\n  for i in bin/python$version Resources/Python.app/Contents/MacOS/Python; do\n    file=\"$versionPath\"/$i\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --prefix net.sourceforge.regina.py. \\\n      --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements \\\n      --options runtime \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  for file in \"$versionPath\"/lib/python$version/lib-dynload/*.so; do\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --preserve-metadata=identifier,entitlements \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  # If we are sandboxed then .../bin/pythonX.Y will crash.\n  # We don't need it anyway, and we shouldn't pretend to offer\n  # a generic python to the user that is sandboxed.\n  # Just remove it.\n  if ( grep sandbox \"${SRCROOT}\"/utils/bundle/Utils.entitlements >/dev/null ); then\n      if [ -d \"$versionPath\"/bin ]; then\n        rm \"$versionPath\"/bin/python*\n        rm \"$versionPath\"/bin/pydoc*\n        rm \"$versionPath\"/bin/2to3*\n        rmdir \"$versionPath\"/bin\n      fi\n  fi\n\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --options runtime \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/Resources/Python.app\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"\nfi\n";
 		};
 		05DADB022192543B00DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -11656,6 +11656,7 @@
 				MARKETING_VERSION = 5.96;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
+				REGINA_PYTHON_FRAMEWORK = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -11706,6 +11707,7 @@
 				MARKETING_VERSION = 5.96;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
+				REGINA_PYTHON_FRAMEWORK = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
