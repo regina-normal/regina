@@ -866,7 +866,6 @@
 		053CAB4B1DAC479300A92F98 /* ndisc.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB481DAC479300A92F98 /* ndisc.h */; };
 		053CAB4C1DAC479300A92F98 /* ndisctype.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB491DAC479300A92F98 /* ndisctype.h */; };
 		053CAB4D1DAC479300A92F98 /* nprism.h in Headers */ = {isa = PBXBuildFile; fileRef = 053CAB4A1DAC479300A92F98 /* nprism.h */; };
-		053CAB4F1DACA75900A92F98 /* regutils.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 053CAB4E1DACA74A00A92F98 /* regutils.py */; };
 		053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		053ED8131D8B837500628652 /* snappy_get_gluing_equations.c in Sources */ = {isa = PBXBuildFile; fileRef = 053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */; };
 		0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0541AF481B8BE2F5002E166B /* cyclotomic.cpp */; };
@@ -1280,7 +1279,6 @@
 		0564A9851811D921002CC2AE /* shortrunner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A5F51811D920002CC2AE /* shortrunner.cpp */; };
 		0564A99B1811D921002CC2AE /* treenav.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A6161811D921002CC2AE /* treenav.cpp */; };
 		0564A9A21811DB2F002CC2AE /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
-		0565A6E6259CCC8A00BFA49F /* regutils-launch in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 0565A6E5259CCC7500BFA49F /* regutils-launch */; };
 		05669D941DCB0E9A00C870C6 /* facetpairing.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D911DCB0E9A00C870C6 /* facetpairing.h */; };
 		05669D951DCB0E9A00C870C6 /* facetpairing3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */; };
 		05669D961DCB0E9A00C870C6 /* facetpairing3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05669D931DCB0E9A00C870C6 /* facetpairing3.h */; };
@@ -1293,15 +1291,8 @@
 		0567B4DF2581ABF00022EA5D /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
 		0567B4EF2581ABF20022EA5D /* libgmpxx.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4BD2581ABA60022EA5D /* libgmpxx.xcframework */; };
 		0567B4FE2581AC070022EA5D /* libtokyocabinet.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4CE2581ABAA0022EA5D /* libtokyocabinet.xcframework */; };
-		0567B5712581ACE50022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
 		0567B5912581ACF10022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
-		0567B5C02581ACFA0022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
 		0567B5E02581AD050022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
-		0567B60E2581AD0D0022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
-		0567B63D2581AD170022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
-		0567B64E2581AD1A0022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
-		0567B65E2581AD1D0022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
-		0567B66D2581AD200022EA5D /* popt.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; };
 		0568742520C5D86B001C435B /* tangle.h in Headers */ = {isa = PBXBuildFile; fileRef = 0568741F20C5D868001C435B /* tangle.h */; };
 		0568742620C5D86B001C435B /* algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742020C5D868001C435B /* algebra.cpp */; };
 		0568742720C5D86B001C435B /* algebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0568742020C5D868001C435B /* algebra.cpp */; };
@@ -2075,6 +2066,12 @@
 		05E49D231DA34A5600B55E31 /* nnormalsurfacelist.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D221DA34A5600B55E31 /* nnormalsurfacelist.h */; };
 		05E49D251DA38C7D00B55E31 /* ncyclotomic.h in Headers */ = {isa = PBXBuildFile; fileRef = 05E49D241DA38C7D00B55E31 /* ncyclotomic.h */; };
 		05EA195719F30A0100D37501 /* EltMoves3.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05EA195619F30A0100D37501 /* EltMoves3.mm */; };
+		05EBB418259DB49A00362FA5 /* censuslookup in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B011D9DC51600B1E33B /* censuslookup */; };
+		05EBB419259DB49E00362FA5 /* regconcat in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B0C1D9DC52200B1E33B /* regconcat */; };
+		05EBB41A259DB4A100362FA5 /* regconvert in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B171D9DC52B00B1E33B /* regconvert */; };
+		05EBB41B259DB4A400362FA5 /* regfiledump in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B221D9DC53400B1E33B /* regfiledump */; };
+		05EBB41C259DB4A700362FA5 /* regfiletype in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B2D1D9DC54500B1E33B /* regfiletype */; };
+		05EBB41D259DB4AC00362FA5 /* trisetcmp in Copy Engine and Utilities */ = {isa = PBXBuildFile; fileRef = 05617B431D9DC55B00B1E33B /* trisetcmp */; };
 		05F09FBF1DBEF01800117BFC /* dim2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBC1DBEF01800117BFC /* dim2.h */; };
 		05F09FC01DBEF01800117BFC /* dim3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBD1DBEF01800117BFC /* dim3.h */; };
 		05F09FC11DBEF01800117BFC /* dim4.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F09FBE1DBEF01800117BFC /* dim4.h */; };
@@ -2309,6 +2306,48 @@
 			remoteGlobalIDString = 05DADB04219256ED00DC80E1;
 			remoteInfo = Databases;
 		};
+		05EBB42D259DB56700362FA5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B001D9DC51600B1E33B;
+			remoteInfo = "Utils - CensusLookup";
+		};
+		05EBB42F259DB57100362FA5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B0B1D9DC52200B1E33B;
+			remoteInfo = "Utils - RegConcat";
+		};
+		05EBB431259DB57100362FA5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B161D9DC52B00B1E33B;
+			remoteInfo = "Utils - RegConvert";
+		};
+		05EBB433259DB57100362FA5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B211D9DC53400B1E33B;
+			remoteInfo = "Utils - RegFileDump";
+		};
+		05EBB435259DB57100362FA5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B2C1D9DC54500B1E33B;
+			remoteInfo = "Utils - RegFileType";
+		};
+		05EBB437259DB57100362FA5 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 0575E6511805F36D009E3FC4 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 05617B421D9DC55B00B1E33B;
+			remoteInfo = "Utils - TriSetCmp";
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -2318,8 +2357,6 @@
 			dstPath = python;
 			dstSubfolderSpec = 7;
 			files = (
-				053CAB4F1DACA75900A92F98 /* regutils.py in Copy Python Scripts */,
-				0565A6E6259CCC8A00BFA49F /* regutils-launch in Copy Python Scripts */,
 				050BEA361D9C8B6700B96DB8 /* __init__.py in Copy Python Scripts */,
 				05D047062599F5AE00FA2B3E /* plainCompleter.py in Copy Python Scripts */,
 				05D322DF1FA606E200E5F9B8 /* purePyMethods.py in Copy Python Scripts */,
@@ -2344,9 +2381,15 @@
 			dstPath = "";
 			dstSubfolderSpec = 6;
 			files = (
+				05EBB418259DB49A00362FA5 /* censuslookup in Copy Engine and Utilities */,
+				05EBB419259DB49E00362FA5 /* regconcat in Copy Engine and Utilities */,
+				05EBB41A259DB4A100362FA5 /* regconvert in Copy Engine and Utilities */,
+				05EBB41B259DB4A400362FA5 /* regfiledump in Copy Engine and Utilities */,
+				05EBB41C259DB4A700362FA5 /* regfiletype in Copy Engine and Utilities */,
 				058FC8761FE18943006D04B4 /* retriangulate in Copy Engine and Utilities */,
 				05617B791D9DC72F00B1E33B /* sigcensus in Copy Engine and Utilities */,
 				05617AFC1D9DC33700B1E33B /* tricensus in Copy Engine and Utilities */,
+				05EBB41D259DB4AC00362FA5 /* trisetcmp in Copy Engine and Utilities */,
 				050F5E711B9BD51B00C1F681 /* libregina-engine.dylib in Copy Engine and Utilities */,
 			);
 			name = "Copy Engine and Utilities";
@@ -4697,7 +4740,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B501D9DC5A800B1E33B /* libregina-engine.dylib in Frameworks */,
-				0567B66D2581AD200022EA5D /* popt.xcframework in Frameworks */,
 				057EDCC92581F109004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F0F62582424B00965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -4708,7 +4750,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4F1D9DC5A500B1E33B /* libregina-engine.dylib in Frameworks */,
-				0567B65E2581AD1D0022EA5D /* popt.xcframework in Frameworks */,
 				057EDCCC2581F10D004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F0D72582424500965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -4719,7 +4760,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4E1D9DC5A200B1E33B /* libregina-engine.dylib in Frameworks */,
-				0567B64E2581AD1A0022EA5D /* popt.xcframework in Frameworks */,
 				057EDCCF2581F114004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F0B82582424000965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -4730,7 +4770,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4D1D9DC59E00B1E33B /* libregina-engine.dylib in Frameworks */,
-				0567B63D2581AD170022EA5D /* popt.xcframework in Frameworks */,
 				057EDCE22581F11D004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F0992582423A00965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -4741,7 +4780,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4C1D9DC59B00B1E33B /* libregina-engine.dylib in Frameworks */,
-				0567B60E2581AD0D0022EA5D /* popt.xcframework in Frameworks */,
 				057EDD042581F123004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F07A2582422800965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -4752,7 +4790,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4B1D9DC59700B1E33B /* libregina-engine.dylib in Frameworks */,
-				0567B5C02581ACFA0022EA5D /* popt.xcframework in Frameworks */,
 				057EDCA72581F0CA004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F03C2582421900965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -4763,7 +4800,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				05617B4A1D9DC59200B1E33B /* libregina-engine.dylib in Frameworks */,
-				0567B5712581ACE50022EA5D /* popt.xcframework in Frameworks */,
 				057EDD262581F12A004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0EFFE2582420A00965440 /* libxml2.tbd in Frameworks */,
 			);
@@ -8581,9 +8617,15 @@
 				05DADB0C2192599600DC80E1 /* PBXTargetDependency */,
 				05DADB0E2192599A00DC80E1 /* PBXTargetDependency */,
 				050F5E6F1B9BD3A000C1F681 /* PBXTargetDependency */,
+				05EBB42E259DB56700362FA5 /* PBXTargetDependency */,
+				05EBB430259DB57100362FA5 /* PBXTargetDependency */,
+				05EBB432259DB57100362FA5 /* PBXTargetDependency */,
+				05EBB434259DB57100362FA5 /* PBXTargetDependency */,
+				05EBB436259DB57100362FA5 /* PBXTargetDependency */,
 				058FC8751FE18904006D04B4 /* PBXTargetDependency */,
 				05617B711D9DC70E00B1E33B /* PBXTargetDependency */,
 				05617AF71D9DC0E000B1E33B /* PBXTargetDependency */,
+				05EBB438259DB57100362FA5 /* PBXTargetDependency */,
 			);
 			name = "Regina for macOS";
 			productName = Qt;
@@ -8800,7 +8842,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py purePyMethods.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype trisetcmp; do\n    ln -f -s ../Resources/python/regutils-launch \"${macosdir}\"/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py purePyMethods.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
 		};
 		0514CAE31D9C9A5800EDB2E6 /* Sign Qt */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -8842,7 +8884,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in retriangulate sigcensus tricensus; do\n/usr/bin/codesign --force --options runtime --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
+			shellScript = "# We need to sign the utilities with entitlements.\n\nfor i in censuslookup regconcat regconvert regfiledump regfiletype retriangulate sigcensus tricensus trisetcmp; do\n/usr/bin/codesign --force --options runtime --sign 'Apple Development:' --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements --timestamp=none \"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/MacOS/$i\ndone\n";
 		};
 		052DB5C31D9F22D900EDEA68 /* Clean out *.pyc */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10709,6 +10751,36 @@
 			isa = PBXTargetDependency;
 			target = 05DADB04219256ED00DC80E1 /* Databases */;
 			targetProxy = 05DADB13219272C800DC80E1 /* PBXContainerItemProxy */;
+		};
+		05EBB42E259DB56700362FA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B001D9DC51600B1E33B /* Utils - CensusLookup */;
+			targetProxy = 05EBB42D259DB56700362FA5 /* PBXContainerItemProxy */;
+		};
+		05EBB430259DB57100362FA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B0B1D9DC52200B1E33B /* Utils - RegConcat */;
+			targetProxy = 05EBB42F259DB57100362FA5 /* PBXContainerItemProxy */;
+		};
+		05EBB432259DB57100362FA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B161D9DC52B00B1E33B /* Utils - RegConvert */;
+			targetProxy = 05EBB431259DB57100362FA5 /* PBXContainerItemProxy */;
+		};
+		05EBB434259DB57100362FA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B211D9DC53400B1E33B /* Utils - RegFileDump */;
+			targetProxy = 05EBB433259DB57100362FA5 /* PBXContainerItemProxy */;
+		};
+		05EBB436259DB57100362FA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B2C1D9DC54500B1E33B /* Utils - RegFileType */;
+			targetProxy = 05EBB435259DB57100362FA5 /* PBXContainerItemProxy */;
+		};
+		05EBB438259DB57100362FA5 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 05617B421D9DC55B00B1E33B /* Utils - TriSetCmp */;
+			targetProxy = 05EBB437259DB57100362FA5 /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
