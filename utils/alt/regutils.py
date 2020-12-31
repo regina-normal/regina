@@ -36,12 +36,12 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# In regfiletype we use print(..., end=''), which is a python3ism.
+from __future__ import print_function
+
 import os
 import sys
 import string
-
-# In regfiletype we use print(..., end=''), which is a python3ism.
-from __future__ import print_function
 
 appName = sys.argv[1]
 appDir = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../..')
