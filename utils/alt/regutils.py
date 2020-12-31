@@ -40,6 +40,9 @@ import os
 import sys
 import string
 
+# In regfiletype we use print(..., end=''), which is a python3ism.
+from __future__ import print_function
+
 appName = sys.argv[1]
 appDir = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../..')
 
@@ -245,7 +248,7 @@ elif appName == 'regfiledump':
         else:
             print('* Parent: (none)')
         if p.hasTags():
-            print('* Tags:', string.join(p.tags(), ', '))
+            print('* Tags:', ', '.join(p.tags()))
         print('*')
         print(separator)
 
@@ -338,7 +341,7 @@ elif appName == 'regfiletype':
 
         info = regina.FileInfo.identify(f)
         if info:
-            print(info.detail(), end=' ')
+            print(info.detail(), end='')
         else:
             print('Unknown file format or file could not be opened.')
 
