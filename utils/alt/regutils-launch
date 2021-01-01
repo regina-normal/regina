@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Alternate implementations of command-line utilities for the MacOS app bundle
 #
-# Copyright (c) 2002-2020, Ben Burton
+# Copyright (c) 2002-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This script simply launches regutils with the correct python runtime.

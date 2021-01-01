@@ -6,7 +6,7 @@
 #  TOKYOCABINET_LIBRARIES - Libraries needed to use Tokyo Cabinet
 
 # Copyright (c) 2006, Laurent Montel, <montel@kde.org>
-# Copyright (c) 2020, Ben Burton <bab@debian.org>
+# Copyright (c) 2020-2021, Ben Burton <bab@debian.org>
 #
 # Redistribution and use is allowed according to the terms of the BSD license.
 # For details see the accompanying COPYING-CMAKE-SCRIPTS file.
