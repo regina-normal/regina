@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Alternate implementations of command-line utilities for the MacOS app bundle
 #
-# Copyright (c) 2002-2018, Ben Burton
+# Copyright (c) 2002-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This implementation is designed for the Xcode bundle only - it hard-codes
