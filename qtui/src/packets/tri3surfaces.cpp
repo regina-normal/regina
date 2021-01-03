@@ -390,27 +390,21 @@ void Tri3SurfacesUI::refresh() {
             btnZeroEff->setEnabled(true);
         }
 
-        if (tri->knowsSplittingSurface() ||
-                tri->size() <= autoCalcThreshold) {
-            if (tri->hasSplittingSurface()) {
-                splitting->setText(tr("True"));
-                QPalette pal = splitting->palette();
-                pal.setColor(splitting->foregroundRole(), Qt::darkGreen);
-                splitting->setPalette(pal);
-            } else {
-                splitting->setText(tr("False"));
-                QPalette pal = splitting->palette();
-                pal.setColor(splitting->foregroundRole(), Qt::darkRed);
-                splitting->setPalette(pal);
-            }
-            btnSplitting->setEnabled(false);
-        } else {
-            splitting->setText(tr("Unknown"));
+        // Now that hasSplittingSurface() is fast, we will always compute it.
+        // Eventually we should get rid of the Calculate button, which
+        // will now be forever disabled.
+        if (tri->hasSplittingSurface()) {
+            splitting->setText(tr("True"));
             QPalette pal = splitting->palette();
-            pal.setColor(splitting->foregroundRole(), Qt::darkGray);
+            pal.setColor(splitting->foregroundRole(), Qt::darkGreen);
             splitting->setPalette(pal);
-            btnSplitting->setEnabled(true);
+        } else {
+            splitting->setText(tr("False"));
+            QPalette pal = splitting->palette();
+            pal.setColor(splitting->foregroundRole(), Qt::darkRed);
+            splitting->setPalette(pal);
         }
+        btnSplitting->setEnabled(false);
     } else {
         titleZeroEff->setVisible(false);
         zeroEff->setVisible(false);

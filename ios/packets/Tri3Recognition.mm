@@ -279,9 +279,10 @@
                 return [TextHelper yesNoString:self.packet->isZeroEfficient() yes:@"Yes" no:@"No"];
             return nil;
         case PROP_SPLITTING:
-            if (self.packet->knowsSplittingSurface() || self.packet->size() <= 6)
-                return [TextHelper yesNoString:self.packet->hasSplittingSurface() yes:@"Yes" no:@"No"];
-            return nil;
+            // Now that hasSplittingSurface() is fast, we always compute it.
+            // Eventually we should get rid of the Calculate button, which
+            // will now be forever disabled.
+            return [TextHelper yesNoString:self.packet->hasSplittingSurface() yes:@"Yes" no:@"No"];
         case PROP_IRREDUCIBLE:
             if (self.packet->knowsIrreducible())
                 return [TextHelper yesNoString:self.packet->isIrreducible() yes:@"Yes" no:@"No"];
