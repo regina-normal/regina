@@ -841,14 +841,17 @@ class REGINA_API Triangulation<3> :
          * surface.  See NormalSurface::isSplitting() for details
          * regarding normal splitting surfaces.
          *
-         * \pre This triangulation is connected.  If the triangulation
-         * is not connected, this routine will still return a result but
-         * that result will be unreliable.
+         * In the special case where this is the empty triangulation,
+         * this routine returns \c false.
+         *
+         * As of Regina 5.97, this routine is now fast (small polynomial
+         * time), and works even for triangulations with more than one
+         * connected component.  Thanks to Robert Haraway.
          *
          * @return \c true if and only if this triangulation has a
          * normal splitting surface.
          */
-        bool hasSplittingSurface();
+        bool hasSplittingSurface() const;
         /**
          * Is it already known whether or not this triangulation has a
          * splitting surface?
@@ -862,9 +865,14 @@ class REGINA_API Triangulation<3> :
          * this triangulation has a splitting surface; it merely tells you
          * whether the answer has already been computed.
          *
+         * \deprecated Since hasSplittingSurface() now uses a fast (small
+         * polynomial time) algorithm, there is no need to pre-query whether
+         * the property is already known.  Just call hasSplittingSurface()
+         * directly.
+         *
          * @return \c true if and only if this property is already known.
          */
-        bool knowsSplittingSurface() const;
+        [[deprecated]] bool knowsSplittingSurface() const;
         /**
          * Searches for a non-vertex-linking normal sphere or disc
          * within this triangulation.  If such a surface exists within

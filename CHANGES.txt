@@ -9,6 +9,14 @@ Regina - A Normal Surface Theory Calculator
 
 Version 5.97  [ TODO ]
 
+    ENGINE:
+        Class Triangulation<3>:
+            - Routine hasSplittingSurface() is now fast (small polynomial
+              time), works even for triangulations with more than one
+              connected component; thanks to Robert C. Haraway III.
+              This routine is now also explicitly marked as const.
+            - As a consequence, routine knowsSplittingSurface() is no longer
+              relevant, and so is now deprecated.
     PYTHON:
         - Fixed a deadlock that occurred with Python 3 on some systems when
           starting new python consoles in the GUI.
