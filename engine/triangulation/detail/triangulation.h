@@ -983,6 +983,10 @@ class TriangulationBase :
         /**
          * Determines if this triangulation is connected.
          *
+         * This routine returns \c false only if there is more than one
+         * connected component.  In particular, it returns \c true for
+         * the empty triangulation.
+         *
          * @return \c true if and only if this triangulation is connected.
          */
         bool isConnected() const;
