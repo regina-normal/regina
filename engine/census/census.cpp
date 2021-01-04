@@ -56,7 +56,7 @@ CensusDB* Census::closedNor_ = 0;
 CensusDB* Census::closedHyp_ = 0;
 CensusDB* Census::cuspedHypOr_ = 0;
 CensusDB* Census::cuspedHypNor_ = 0;
-CensusDB* Census::hypKnotLink_ = 0;
+CensusDB* Census::christy_ = 0;
 bool Census::dbInit_ = false;
 
 bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
@@ -118,7 +118,7 @@ CensusHits* Census::lookup(const std::string& isoSig) {
             "Cusped hyperbolic census (orientable)");
         cuspedHypNor_ = standardDB("cusped-hyp-nor-census-9." REGINA_DB_EXT,
             "Cusped hyperbolic census (non-orientable)");
-        hypKnotLink_ = standardDB("christy-knots-links." REGINA_DB_EXT,
+        christy_ = standardDB("christy-knots-links." REGINA_DB_EXT,
             "Christy's collection of knot/link complements");
         dbInit_ = true;
     }
@@ -130,7 +130,7 @@ CensusHits* Census::lookup(const std::string& isoSig) {
     closedHyp_->lookup(isoSig, hits);
     cuspedHypOr_->lookup(isoSig, hits);
     cuspedHypNor_->lookup(isoSig, hits);
-    hypKnotLink_->lookup(isoSig, hits);
+    christy_->lookup(isoSig, hits);
 
     return hits;
 }
