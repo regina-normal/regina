@@ -40,7 +40,7 @@ static NSArray* _census = [NSArray arrayWithObjects:
                            [Example exampleWithFile:@"cusped-hyp-or-census.rga" desc:@"Cusped hyperbolic census (orientable)"],
                            [Example exampleWithFile:@"cusped-hyp-nor-census.rga" desc:@"Cusped hyperbolic census (non-orientable)"],
                            [Example exampleWithFile:@"closed-hyp-census.rga" desc:@"Hodgson-Weeks closed hyperbolic census"],
-                           [Example exampleWithFile:@"knot-census.rga" desc:@"Prime knots (≤ 14 crossings)"],
+                           [Example exampleWithFile:@"knot-census.rga" desc:@"Prime knots"],
                            nil];
 
 @implementation Example
