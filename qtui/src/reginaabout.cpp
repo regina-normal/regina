@@ -164,7 +164,11 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     // Credits:
     thanksCode << "Matthias Goerner";
+    thanksCode << "Adam Gowty";
+    thanksCode << "Robert C. Haraway, III";
+    thanksCode << "Alex He";
     thanksCode << "David Letscher";
+    thanksCode << "Kevin Zhang";
     thanksCode << "Winfried Bruns, Bogdan Ichim and Christof Soeger "
         "(for the Normaliz library)";
     thanksCode << "Marc Culler, Nathan Dunfield and Jeff Weeks "
