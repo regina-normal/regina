@@ -3525,7 +3525,7 @@
 		055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census-11.zsig"; sourceTree = "<group>"; };
 		055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census-9.zsig"; sourceTree = "<group>"; };
 		055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census-9.zsig"; sourceTree = "<group>"; };
-		055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.zsig"; sourceTree = "<group>"; };
+		055ABEA319B499DC00044C1B /* christy-knots-links.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "christy-knots-links.zsig"; sourceTree = "<group>"; };
 		055ABEA419B499DC00044C1B /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		055D6C6519B6F10F0062F001 /* TempFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TempFile.h; sourceTree = "<group>"; };
 		055D6C6619B6F10F0062F001 /* TempFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TempFile.m; sourceTree = "<group>"; };
@@ -7698,7 +7698,7 @@
 				05B14EB019B4240D002138C0 /* CMakeLists.txt */,
 				055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */,
 				055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */,
-				055ABEA319B499DC00044C1B /* hyp-knot-link-census.zsig */,
+				055ABEA319B499DC00044C1B /* christy-knots-links.zsig */,
 				05B14EB419B4240D002138C0 /* mkcensusdb.cpp */,
 				055ABEA419B499DC00044C1B /* README.txt */,
 			);
@@ -9019,7 +9019,7 @@
 				"$(SRCROOT)/engine/data/census/closed-or-census-11.zsig",
 				"$(SRCROOT)/engine/data/census/cusped-hyp-nor-census-9.zsig",
 				"$(SRCROOT)/engine/data/census/cusped-hyp-or-census-9.zsig",
-				"$(SRCROOT)/engine/data/census/hyp-knot-link-census.zsig",
+				"$(SRCROOT)/engine/data/census/christy-knots-links.zsig",
 			);
 			outputFileListPaths = (
 			);
@@ -9029,11 +9029,11 @@
 				"$(BUILD_DIR)/closed-or-census-11.tdb",
 				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
 				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
-				"$(BUILD_DIR)/hyp-knot-link-census.tdb",
+				"$(BUILD_DIR)/christy-knots-links.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${BUILD_DIR}\"\n\nmkdir -p \"$output\"\n\n# The rpath points to the executable directory, but\n# the executable may be a symlink which means that\n# libtokyocabinet cannot be found.\n#\n# This issue is (in particular) seen when creating an archive.\n#\n# Put libtokyocabinet explicitly on the LD_LIBRARY_PATH.\nexport LD_LIBRARY_PATH=\"${BUILT_PRODUCTS_DIR}\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.zsig \"$output\"/$i.tdb\ndone\n";
+			shellScript = "set -e\n\ninput=\"${SRCROOT}\"/engine/data/census\noutput=\"${BUILD_DIR}\"\n\nmkdir -p \"$output\"\n\n# The rpath points to the executable directory, but\n# the executable may be a symlink which means that\n# libtokyocabinet cannot be found.\n#\n# This issue is (in particular) seen when creating an archive.\n#\n# Put libtokyocabinet explicitly on the LD_LIBRARY_PATH.\nexport LD_LIBRARY_PATH=\"${BUILT_PRODUCTS_DIR}\"\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  \"${BUILT_PRODUCTS_DIR}\"/mkcensusdb \"$input\"/$i.zsig \"$output\"/$i.tdb\ndone\n";
 		};
 		05DADB1021926A2300DC80E1 /* Copy Databases and Handbook */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9050,7 +9050,7 @@
 				"$(BUILD_DIR)/closed-or-census-11.tdb",
 				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
 				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
-				"$(BUILD_DIR)/hyp-knot-link-census.tdb",
+				"$(BUILD_DIR)/christy-knots-links.tdb",
 			);
 			name = "Copy Databases and Handbook";
 			outputFileListPaths = (
@@ -9063,11 +9063,11 @@
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-or-census-11.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-nor-census-9.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-or-census-9.tdb",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/hyp-knot-link-census.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/christy-knots-links.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nfor i in regina regina-xml; do\n  cp -pr \"${BUILD_DIR}\"/docs-$i \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n";
+			shellScript = "set -e\n\nfor i in regina regina-xml; do\n  cp -pr \"${BUILD_DIR}\"/docs-$i \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app/Contents/Resources\ndone\n";
 		};
 		05DADB1521927AEE00DC80E1 /* Copy Databases */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -9082,7 +9082,7 @@
 				"$(BUILD_DIR)/closed-or-census-11.tdb",
 				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
 				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
-				"$(BUILD_DIR)/hyp-knot-link-census.tdb",
+				"$(BUILD_DIR)/christy-knots-links.tdb",
 			);
 			name = "Copy Databases";
 			outputFileListPaths = (
@@ -9093,11 +9093,11 @@
 				"$(TARGET_BUILD_DIR)/Regina.app/closed-or-census-11.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/cusped-hyp-nor-census-9.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/cusped-hyp-or-census-9.tdb",
-				"$(TARGET_BUILD_DIR)/Regina.app/hyp-knot-link-census.tdb",
+				"$(TARGET_BUILD_DIR)/Regina.app/christy-knots-links.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "set -e\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 hyp-knot-link-census; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app\ndone\n";
+			shellScript = "set -e\n\nfor i in closed-hyp-census-full closed-{or,nor}-census-11 cusped-hyp-{or,nor}-census-9 christy-knots-links; do\n  cp -p \"${BUILD_DIR}\"/$i.tdb \"${TARGET_BUILD_DIR}\"/Regina.app\ndone\n";
 		};
 /* End PBXShellScriptBuildPhase section */
 

@@ -118,8 +118,8 @@ CensusHits* Census::lookup(const std::string& isoSig) {
             "Cusped hyperbolic census (orientable)");
         cuspedHypNor_ = standardDB("cusped-hyp-nor-census-9." REGINA_DB_EXT,
             "Cusped hyperbolic census (non-orientable)");
-        hypKnotLink_ = standardDB("hyp-knot-link-census." REGINA_DB_EXT,
-            "Hyperbolic knot and link complements");
+        hypKnotLink_ = standardDB("christy-knots-links." REGINA_DB_EXT,
+            "Christy's collection of knot/link complements");
         dbInit_ = true;
     }
 
