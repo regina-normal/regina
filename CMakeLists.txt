@@ -354,7 +354,7 @@ MACRO_LOG_FEATURE(DOXYGEN_FOUND
   "Doxygen"
   "Generate C++/Python API docs"
   "http://www.doxygen.org/"
-  REGINA_MANDATORY)
+  ${REGINA_MANDATORY})
 
 IF (REGINA_DOCS)
   get_filename_component(REGINA_DOCS_FILE "${REGINA_DOCS}" ABSOLUTE)
@@ -374,7 +374,7 @@ IF (REGINA_DOCS)
     "unzip"
     "Extract the user handbook"
     "http://www.info-zip.org/pub/infozip/"
-    REGINA_MANDATORY)
+    ${REGINA_MANDATORY})
 ELSE (REGINA_DOCS)
   SET (REGINA_DOCS "" CACHE STRING
     "Extract handbooks from the given pre-built zip file instead of building them manually."
@@ -389,7 +389,7 @@ ELSE (REGINA_DOCS)
     "xsltproc"
     "Generate the user handbook"
     "http://xmlsoft.org/XSLT/"
-    REGINA_MANDATORY)
+    ${REGINA_MANDATORY})
 ENDIF (REGINA_DOCS)
 
 # Test suite
@@ -431,7 +431,7 @@ MACRO_LOG_FEATURE(Python_FOUND
   "Python development files"
   "Build Python bindings for Regina"
   "http://www.python.org/"
-  REGINA_MANDATORY)
+  ${REGINA_MANDATORY})
 
 # The Qt GUI
 IF(NOT DISABLE_GUI)
@@ -521,7 +521,7 @@ ELSE(DISABLE_GUI)
     "GraphViz libraries"
     "Visualising graphs"
     "http://graphviz.org/"
-    REGINA_MANDATORY)
+    ${REGINA_MANDATORY})
 
   if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
     set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
@@ -547,7 +547,7 @@ MACRO_LOG_FEATURE(QT5_FOUND
   "Qt5"
   "Required for Regina's graphical user interface"
   "http://qt-project.org/"
-  GUI_REQUIRED ""
+  ${GUI_REQUIRED} ""
   "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 
 # Test suite, continued
@@ -564,7 +564,7 @@ MACRO_LOG_FEATURE(CPPUNIT_FOUND
   "CppUnit"
   "Build the full test suite for Regina"
   "http://sourceforge.net/projects/cppunit/"
-  REGINA_MANDATORY)
+  ${REGINA_MANDATORY})
 
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(timing)
