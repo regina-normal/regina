@@ -31,15 +31,15 @@ IF(LIBGVC_FOUND)
     INCLUDE_DIRECTORIES("${GRAPHVIZ_PATH}/Headers")
     SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} ${GRAPHVIZ_PATH}/libgraphviz.a)
   ELSE (${GRAPHVIZ_TYPE} STREQUAL Framework)
+    INCLUDE_DIRECTORIES("${LIBGVC_INCLUDEDIR}")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBGVC_LDFLAGS_OTHER}")
+
     # Alas, the pkg-config files shipped with Graphviz under windows are wrong.
     # They give the wrong library directory, and even worse they give the
     # wrong library *names* (graph.dll instead of cgraph.dll).
     # For now, we hard-code fixes for these errors in the WIN32 code below.
-    INCLUDE_DIRECTORIES("${LIBGVC_INCLUDEDIR}")
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
-    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBGVC_LDFLAGS_OTHER}")
     IF(WIN32)
-      # We do some hard-coding to fix the pkg-config errors described above.
       # Note that, under windows, Graphviz ships its plugins in the same
       # directory as its core library DLLs.
       SET(LINK_LIBS ${LINK_LIBS} gvc cgraph cdt)

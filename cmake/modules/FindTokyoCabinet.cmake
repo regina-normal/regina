@@ -36,6 +36,9 @@ ENDIF (QDBM)
 PKG_CHECK_MODULES(TOKYOCABINET ${TOKYOCABINET_LIBNAME})
 
 IF (NOT TOKYOCABINET_FOUND)
+  # This includes the case where pkg-config could not find tokyocabinet,
+  # and also the case where pkg-config itself could not be found.
+
   if (TOKYOCABINET_INCLUDE_DIRS AND TOKYOCABINET_LIBRARIES)
     # Already in cache, be silent
     set(TOKYOCABINET_FIND_QUIETLY TRUE)
