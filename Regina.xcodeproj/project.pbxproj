@@ -1630,7 +1630,6 @@
 		05998ED419F9362D00855238 /* closed-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECD19F9360200855238 /* closed-or-census.rga */; };
 		05998ED519F9362D00855238 /* cusped-hyp-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */; };
 		05998ED619F9362D00855238 /* cusped-hyp-or-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */; };
-		05998ED719F9362D00855238 /* hyp-knot-link-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ED019F9360200855238 /* hyp-knot-link-census.rga */; };
 		059BC6661DC7F76E00AB4206 /* boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 059BC6651DC7F76E00AB4206 /* boundarycomponent.h */; };
 		059BC6681DC7F77F00AB4206 /* boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 059BC6671DC7F77F00AB4206 /* boundarycomponent.h */; };
 		059BC6811DC7F7A200AB4206 /* boundarycomponent5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059BC66A1DC7F79600AB4206 /* boundarycomponent5.cpp */; };
@@ -1898,7 +1897,6 @@
 		05B4D2EA22A092FC00B7B11C /* closed-or-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A47F9A1809CB7600F86BFD /* closed-or-census.rga */; };
 		05B4D2EB22A092FE00B7B11C /* cusped-hyp-nor-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */; };
 		05B4D2EC22A0930300B7B11C /* cusped-hyp-or-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */; };
-		05B4D2ED22A0930E00B7B11C /* hyp-knot-link-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */; };
 		05B4D2EE22A0931400B7B11C /* gap-tests.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A47F9C1809CB7600F86BFD /* gap-tests.rga */; };
 		05B4D2EF22A0931D00B7B11C /* README.txt in Copy Examples */ = {isa = PBXBuildFile; fileRef = 05A47FA01809CB7600F86BFD /* README.txt */; };
 		05B62166180B9D7300CCB90B /* title.png in Resources */ = {isa = PBXBuildFile; fileRef = 05B62165180B9D7300CCB90B /* title.png */; };
@@ -2572,7 +2570,6 @@
 				05B4D2EB22A092FE00B7B11C /* cusped-hyp-nor-census.rga in Copy Examples */,
 				05B4D2EC22A0930300B7B11C /* cusped-hyp-or-census.rga in Copy Examples */,
 				05B4D2EE22A0931400B7B11C /* gap-tests.rga in Copy Examples */,
-				05B4D2ED22A0930E00B7B11C /* hyp-knot-link-census.rga in Copy Examples */,
 				05B4D2EF22A0931D00B7B11C /* README.txt in Copy Examples */,
 			);
 			name = "Copy Examples";
@@ -2589,7 +2586,6 @@
 				05998ED419F9362D00855238 /* closed-or-census.rga in CopyFiles */,
 				05998ED519F9362D00855238 /* cusped-hyp-nor-census.rga in CopyFiles */,
 				05998ED619F9362D00855238 /* cusped-hyp-or-census.rga in CopyFiles */,
-				05998ED719F9362D00855238 /* hyp-knot-link-census.rga in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -4241,7 +4237,6 @@
 		05998ECD19F9360200855238 /* closed-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-or-census.rga"; sourceTree = "<group>"; };
 		05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
-		05998ED019F9360200855238 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
 		059AF9881C53BE4000FB1A14 /* facechooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facechooser.h; sourceTree = "<group>"; };
 		059AF9891C53BE4000FB1A14 /* facename.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facename.h; sourceTree = "<group>"; };
 		059BC6651DC7F76E00AB4206 /* boundarycomponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundarycomponent.h; sourceTree = "<group>"; };
@@ -4399,7 +4394,6 @@
 		05A73CD719B2F2180099C617 /* cuspchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cuspchooser.h; sourceTree = "<group>"; };
 		05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
-		05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "hyp-knot-link-census.rga"; sourceTree = "<group>"; };
 		05AA71ED1FB17DFF00186E30 /* flype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flype.cpp; sourceTree = "<group>"; };
 		05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredtorusbundle.cpp; sourceTree = "<group>"; };
 		05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredtorusbundle.h; sourceTree = "<group>"; };
@@ -7620,7 +7614,6 @@
 				05998ECD19F9360200855238 /* closed-or-census.rga */,
 				05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */,
 				05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */,
-				05998ED019F9360200855238 /* hyp-knot-link-census.rga */,
 				05B4D2E322A02B0A00B7B11C /* sample-py2.rga */,
 				05B4D2E422A02B0A00B7B11C /* sample-py3.rga */,
 			);
@@ -7637,7 +7630,6 @@
 				05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */,
 				05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */,
 				05A47F9C1809CB7600F86BFD /* gap-tests.rga */,
-				05A73CDB19B2F24A0099C617 /* hyp-knot-link-census.rga */,
 				05B4D2FD22A095E100B7B11C /* progress-py2.py */,
 				05B4D2F122A095DA00B7B11C /* progress-py3.py */,
 				05B4D2F822A095DE00B7B11C /* progress-py2.session */,

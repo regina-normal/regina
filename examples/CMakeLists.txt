@@ -8,7 +8,6 @@ SET(examples_files
   closed-nor-census.rga
   cusped-hyp-or-census.rga
   cusped-hyp-nor-census.rga
-  hyp-knot-link-census.rga
   )
 INSTALL(FILES ${examples_files} DESTINATION ${examplesdir})
 
