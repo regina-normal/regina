@@ -472,6 +472,8 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     if (check) {
         if (! e->isBoundary())
             return false;
+        if (e->boundaryComponent()->countTriangles() <= 2)
+            return false;
     }
 
     // Find the two triangles on either side of edge e.
@@ -484,20 +486,10 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     Perm<4> p1 = back.vertices();
 
     if (check) {
-        if (t0->triangle(p0[3]) == t1->triangle(p1[2]))
-            return false;
         if (t0->vertex(p0[2]) == t1->vertex(p1[3]))
             return false;
         if (t0->vertex(p0[2])->link() != Vertex<3>::DISC ||
                t1->vertex(p1[3])->link() != Vertex<3>::DISC)
-            return false;
-
-        Edge<3>* e1 = t0->edge(Edge<3>::edgeNumber[p0[0]][p0[2]]);
-        Edge<3>* e2 = t0->edge(Edge<3>::edgeNumber[p0[1]][p0[2]]);
-        Edge<3>* f1 = t1->edge(Edge<3>::edgeNumber[p1[0]][p1[3]]);
-        Edge<3>* f2 = t1->edge(Edge<3>::edgeNumber[p1[1]][p1[3]]);
-
-        if (e1 == e2 && f1 == f2)
             return false;
     }
 

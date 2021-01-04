@@ -1616,19 +1616,15 @@ class REGINA_API Triangulation<3> :
          *
          * - the edge \a e is a boundary edge;
          *
-         * - the two boundary triangles that it joins are distinct;
+         * - the two vertices opposite \a e in the boundary triangles
+         *   that contain \a e are valid and distinct;
          *
-         * - the two vertices opposite \a e in each of these boundary triangles
-         *   are valid and distinct;
+         * - the boundary component containing \a e contains more than
+         *   two triangles.
          *
-         * - if edges \a e1 and \a e2 of one boundary triangle are to be
-         *   folded onto edges \a f1 and \a f2 of the other boundary
-         *   triangle respectively, then we do not have both \a e1 = \a e2
-         *   and \a f1 = \a f2.
-         *
-         * There are in fact several other "distinctness" conditions on
-         * the edges \a e1, \a e2, \a f1 and \a f2, but they follow
-         * automatically from the "distinct vertices" condition above.
+         * There are in fact several other distinctness conditions on
+         * the nearby edges and triangles, but they follow automatically
+         * from the conditions above.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
