@@ -239,6 +239,12 @@ CHECK_CXX_SOURCE_COMPILES("
   NUMERIC_64_LL_FOUND)
 
 # Dependencies used by all components of Regina
+
+# Note that pkg-config is optional, but it does help us find some libraries
+# that we could perhaps not have found otherwise.
+# In particular, most build environments will need it to locate Graphviz.
+FIND_PACKAGE(PkgConfig)
+
 FIND_PACKAGE(ZLIB)
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
 MACRO_LOG_FEATURE(ZLIB_FOUND
@@ -474,11 +480,6 @@ ELSE(DISABLE_GUI)
     IF(LIBGVC_FOUND)
       SET(GRAPHVIZ_TYPE Library)
 
-      FIND_PACKAGE(PkgConfig)
-      IF(NOT PKG_CONFIG_FOUND)
-        MESSAGE(FATAL_ERROR "Regina requires pkgconfig.")
-      ENDIF(NOT PKG_CONFIG_FOUND)
-
       IF(WIN32)
         # FindPkgConfig has a nasty habit of converting paths like
         # "Program Files" into lists like "Program;Files".
@@ -509,6 +510,10 @@ ELSE(DISABLE_GUI)
         set(LIBGVC_LIBDIR "${_TMP_STR}" CACHE INTERNAL "")
       ENDIF(WIN32)
     ELSE(LIBGVC_FOUND)
+      IF(NOT PKG_CONFIG_FOUND)
+        MESSAGE(WARNING "Could not locate the Graphviz libraries, because pkg-config is not installed.")
+      ENDIF(NOT PKG_CONFIG_FOUND)
+
       SET(GRAPHVIZ_TYPE None)
     ENDIF(LIBGVC_FOUND)
   ENDIF(APPLE AND GRAPHVIZ_FRAMEWORK_PATH)
