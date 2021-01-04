@@ -100,6 +100,8 @@
 		050C64D01DA3327300C9420F /* ntypetrie.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64CF1DA3327300C9420F /* ntypetrie.h */; };
 		050C64D31DA335DE00C9420F /* ntreetraversal-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64D11DA335DE00C9420F /* ntreetraversal-impl.h */; };
 		050C64D41DA335DE00C9420F /* ntreetraversal.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64D21DA335DE00C9420F /* ntreetraversal.h */; };
+		050EA57A25A2BDD1000E94F5 /* knot-census.rga in Copy Examples */ = {isa = PBXBuildFile; fileRef = 050EA57925A2BDBC000E94F5 /* knot-census.rga */; };
+		050EA59A25A2BE08000E94F5 /* knot-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 050EA59925A2BDF2000E94F5 /* knot-census.rga */; };
 		050F5DD71B9BAB9C00C1F681 /* pyalgebra.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D061B9BAB9C00C1F681 /* pyalgebra.cpp */; };
 		050F5DDA1B9BAB9C00C1F681 /* pyangle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0B1B9BAB9C00C1F681 /* pyangle.cpp */; };
 		050F5DDB1B9BAB9C00C1F681 /* boundarycomponent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D0E1B9BAB9C00C1F681 /* boundarycomponent2.cpp */; };
@@ -2570,6 +2572,7 @@
 				05B4D2EB22A092FE00B7B11C /* cusped-hyp-nor-census.rga in Copy Examples */,
 				05B4D2EC22A0930300B7B11C /* cusped-hyp-or-census.rga in Copy Examples */,
 				05B4D2EE22A0931400B7B11C /* gap-tests.rga in Copy Examples */,
+				050EA57A25A2BDD1000E94F5 /* knot-census.rga in Copy Examples */,
 				05B4D2EF22A0931D00B7B11C /* README.txt in Copy Examples */,
 			);
 			name = "Copy Examples";
@@ -2586,6 +2589,7 @@
 				05998ED419F9362D00855238 /* closed-or-census.rga in CopyFiles */,
 				05998ED519F9362D00855238 /* cusped-hyp-nor-census.rga in CopyFiles */,
 				05998ED619F9362D00855238 /* cusped-hyp-or-census.rga in CopyFiles */,
+				050EA59A25A2BE08000E94F5 /* knot-census.rga in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2662,6 +2666,8 @@
 		050C64CF1DA3327300C9420F /* ntypetrie.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntypetrie.h; sourceTree = "<group>"; };
 		050C64D11DA335DE00C9420F /* ntreetraversal-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ntreetraversal-impl.h"; sourceTree = "<group>"; };
 		050C64D21DA335DE00C9420F /* ntreetraversal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ntreetraversal.h; sourceTree = "<group>"; };
+		050EA57925A2BDBC000E94F5 /* knot-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "knot-census.rga"; sourceTree = "<group>"; };
+		050EA59925A2BDF2000E94F5 /* knot-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "knot-census.rga"; sourceTree = "<group>"; };
 		050F5CDD1B9BAAAA00C1F681 /* engine.so */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.dylib"; includeInIndex = 0; path = engine.so; sourceTree = BUILT_PRODUCTS_DIR; };
 		050F5D011B9BAB9C00C1F681 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		050F5D061B9BAB9C00C1F681 /* pyalgebra.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pyalgebra.cpp; sourceTree = "<group>"; };
@@ -7614,6 +7620,7 @@
 				05998ECD19F9360200855238 /* closed-or-census.rga */,
 				05998ECE19F9360200855238 /* cusped-hyp-nor-census.rga */,
 				05998ECF19F9360200855238 /* cusped-hyp-or-census.rga */,
+				050EA59925A2BDF2000E94F5 /* knot-census.rga */,
 				05B4D2E322A02B0A00B7B11C /* sample-py2.rga */,
 				05B4D2E422A02B0A00B7B11C /* sample-py3.rga */,
 			);
@@ -7630,6 +7637,7 @@
 				05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */,
 				05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */,
 				05A47F9C1809CB7600F86BFD /* gap-tests.rga */,
+				050EA57925A2BDBC000E94F5 /* knot-census.rga */,
 				05B4D2FD22A095E100B7B11C /* progress-py2.py */,
 				05B4D2F122A095DA00B7B11C /* progress-py3.py */,
 				05B4D2F822A095DE00B7B11C /* progress-py2.session */,

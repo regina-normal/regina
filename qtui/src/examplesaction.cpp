@@ -94,5 +94,7 @@ void ExamplesAction::fillStandard() {
         tr("Cusped Hyperbolic Census (Non-Orientable)"));
     addUrl("closed-hyp-census.rga",
         tr("Hodgson-Weeks Closed Hyperbolic Census"));
+    addUrl("knot-census.rga",
+        trUtf8("Prime Knots (≤ 14 Crossings)"));
 }
 
