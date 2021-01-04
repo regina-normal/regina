@@ -7692,13 +7692,13 @@
 		05B14EAC19B4240D002138C0 /* census */ = {
 			isa = PBXGroup;
 			children = (
+				055ABEA319B499DC00044C1B /* christy-knots-links.zsig */,
 				055ABE9E19B499DC00044C1B /* closed-hyp-census-full.zsig */,
 				055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */,
 				055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */,
 				05B14EB019B4240D002138C0 /* CMakeLists.txt */,
 				055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */,
 				055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */,
-				055ABEA319B499DC00044C1B /* christy-knots-links.zsig */,
 				05B14EB419B4240D002138C0 /* mkcensusdb.cpp */,
 				055ABEA419B499DC00044C1B /* README.txt */,
 			);
@@ -9014,22 +9014,22 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(SRCROOT)/engine/data/census/christy-knots-links.zsig",
 				"$(SRCROOT)/engine/data/census/closed-hyp-census-full.zsig",
 				"$(SRCROOT)/engine/data/census/closed-nor-census-11.zsig",
 				"$(SRCROOT)/engine/data/census/closed-or-census-11.zsig",
 				"$(SRCROOT)/engine/data/census/cusped-hyp-nor-census-9.zsig",
 				"$(SRCROOT)/engine/data/census/cusped-hyp-or-census-9.zsig",
-				"$(SRCROOT)/engine/data/census/christy-knots-links.zsig",
 			);
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(BUILD_DIR)/christy-knots-links.tdb",
 				"$(BUILD_DIR)/closed-hyp-census-full.tdb",
 				"$(BUILD_DIR)/closed-nor-census-11.tdb",
 				"$(BUILD_DIR)/closed-or-census-11.tdb",
 				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
 				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
-				"$(BUILD_DIR)/christy-knots-links.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -9045,12 +9045,12 @@
 			inputPaths = (
 				"$(BUILD_DIR)/docs-regina/index.html",
 				"$(BUILD_DIR)/docs-regina-xml/index.html",
+				"$(BUILD_DIR)/christy-knots-links.tdb",
 				"$(BUILD_DIR)/closed-hyp-census-full.tdb",
 				"$(BUILD_DIR)/closed-nor-census-11.tdb",
 				"$(BUILD_DIR)/closed-or-census-11.tdb",
 				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
 				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
-				"$(BUILD_DIR)/christy-knots-links.tdb",
 			);
 			name = "Copy Databases and Handbook";
 			outputFileListPaths = (
@@ -9058,12 +9058,12 @@
 			outputPaths = (
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/docs-regina/index.html",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/docs-regina-xml/index.html",
+				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/christy-knots-links.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-hyp-census-full.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-nor-census-11.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/closed-or-census-11.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-nor-census-9.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/cusped-hyp-or-census-9.tdb",
-				"$(TARGET_BUILD_DIR)/Regina.app/Contents/Resources/christy-knots-links.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -9077,23 +9077,23 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
+				"$(BUILD_DIR)/christy-knots-links.tdb",
 				"$(BUILD_DIR)/closed-hyp-census-full.tdb",
 				"$(BUILD_DIR)/closed-nor-census-11.tdb",
 				"$(BUILD_DIR)/closed-or-census-11.tdb",
 				"$(BUILD_DIR)/cusped-hyp-nor-census-9.tdb",
 				"$(BUILD_DIR)/cusped-hyp-or-census-9.tdb",
-				"$(BUILD_DIR)/christy-knots-links.tdb",
 			);
 			name = "Copy Databases";
 			outputFileListPaths = (
 			);
 			outputPaths = (
+				"$(TARGET_BUILD_DIR)/Regina.app/christy-knots-links.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/closed-hyp-census-full.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/closed-nor-census-11.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/closed-or-census-11.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/cusped-hyp-nor-census-9.tdb",
 				"$(TARGET_BUILD_DIR)/Regina.app/cusped-hyp-or-census-9.tdb",
-				"$(TARGET_BUILD_DIR)/Regina.app/christy-knots-links.tdb",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
