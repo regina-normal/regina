@@ -65,6 +65,10 @@ XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
         bool b;
         if (valueOf(props.lookup("value"), b))
             tri_->solidTorus_ = b;
+    } else if (subTagName == "txi") {
+        bool b;
+        if (valueOf(props.lookup("value"), b))
+            tri_->TxI_ = b;
     } else if (subTagName == "irreducible") {
         bool b;
         if (valueOf(props.lookup("value"), b))

@@ -74,6 +74,7 @@
 <!ENTITY data-triangle SYSTEM "data-triangle.docbook">
 <!ENTITY data-turaevviro SYSTEM "data-turaevviro.docbook">
 <!ENTITY data-twosided SYSTEM "data-twosided.docbook">
+<!ENTITY data-txi SYSTEM "data-txi.docbook">
 <!ENTITY data-var SYSTEM "data-var.docbook">
 <!ENTITY data-zeroeff SYSTEM "data-zeroeff.docbook">
 
@@ -221,6 +222,8 @@
  '<link linkend="data-turaevviro"><sgmltag>turaevviro</sgmltag></link>'>
 <!ENTITY xml-twosided
  '<link linkend="data-twosided"><sgmltag>twosided</sgmltag></link>'>
+<!ENTITY xml-txi
+ '<link linkend="data-txi"><sgmltag>txi</sgmltag></link>'>
 <!ENTITY xml-var
  '<link linkend="data-var"><sgmltag>var</sgmltag></link>'>
 <!ENTITY xml-zeroeff
