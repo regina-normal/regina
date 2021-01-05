@@ -600,9 +600,7 @@ bool Triangulation<3>::isTxI() const {
     working.intelligentSimplify();
 
     // If it's not a homology T2xI, we're done.
-    if ((! working.homology().isFree(2)) ||
-            (! working.homologyRel().isZ()) ||
-            (! working.homologyBdry().isFree(4))) {
+    if ((! working.homology().isFree(2)) || (! working.homologyRel().isZ())) {
         return (TxI_ = false);
     }
 
@@ -614,14 +612,33 @@ bool Triangulation<3>::isTxI() const {
     // We have a homology T2xI with a pair of two-triangle boundaries.
     // So we should move on to the meat of the algorithm, testing Dehn fillings.
 
-    BoundaryComponent<3>* k = working.boundaryComponents().front();
-    for (Edge<3>* e : k->edges()) {
-        Triangulation<3> filled(working, false);
-        Edge<3>* cls = filled.edge(e->index());
-        filled.closeBook(cls, false, true);
-        if (! filled.isSolidTorus())
+    // First we collect a boundary edge, which lets us fetch the two triangles
+    // on either side along with permutations that show how they glue together.
+    BoundaryComponent<3>* bc = working.boundaryComponents().front();
+    Edge<3>* e = bc->edge(0);
+    const FaceEmbedding<3, 1>& front = e->embedding(0);
+    const FaceEmbedding<3, 1>& back = e->embedding(e->degree() - 1);
+    Tetrahedron<3>* t0 = front.tetrahedron();
+    Tetrahedron<3>* t1 = back.tetrahedron();
+    Perm<4> p0 = front.vertices();
+    Perm<4> p1 = back.vertices();
+    p1 = p1 * Perm<4>(1, 0, 3, 2);
+
+    // Now p0, p1 map {0,1,2} to the vertices of t0, t1 in a symmetric way.
+    // Each boundary edge is the image of (i,j) on t0 and (j,i) on t1 for
+    // distinct i,j in {0,1,2}.
+    //
+    // To do the three fillings, we fold the two triangles together in each
+    // of the three possible ways (each of which involves swapping one of the
+    // pairs 01, 12, 20 in the preimage of permutations p0, p1).
+    for (int i = 0; i < 3; ++i) {
+        t0->join(p0[3], t1, p1 * Perm<4>(i, (i+1) % 3) * p0.inverse());
+        if (! working.isSolidTorus())
             return (TxI_ = false);
+        t0->unjoin(p0[3]);
     }
+
+    // All three fillings give a solid torus!
     return (TxI_ = true);
 }
 
