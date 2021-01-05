@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,7 +44,7 @@ using pybind11::overload_cast;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
-void addTriangulation3(pybind11::module& m) {
+void addTriangulation3(pybind11::module_& m) {
     auto c = pybind11::class_<Triangulation<3>, regina::Packet,
             regina::SafePtr<Triangulation<3>>>(m, "Triangulation3")
         .def(pybind11::init<>())
@@ -207,6 +207,8 @@ void addTriangulation3(pybind11::module& m) {
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
             pybind11::arg("tracker") = nullptr)
+        .def("minimiseBoundary", &Triangulation<3>::minimiseBoundary)
+        .def("minimizeBoundary", &Triangulation<3>::minimizeBoundary)
         .def("pachner", &Triangulation<3>::pachner<3>,
             pybind11::arg(),
             pybind11::arg("check") = true,
@@ -296,6 +298,8 @@ void addTriangulation3(pybind11::module& m) {
         .def("knowsBall", &Triangulation<3>::knowsBall)
         .def("isSolidTorus", &Triangulation<3>::isSolidTorus)
         .def("knowsSolidTorus", &Triangulation<3>::knowsSolidTorus)
+        .def("isTxI", &Triangulation<3>::isTxI)
+        .def("knowsTxI", &Triangulation<3>::knowsTxI)
         .def("isIrreducible", &Triangulation<3>::isIrreducible)
         .def("knowsIrreducible", &Triangulation<3>::knowsIrreducible)
         .def("hasCompressingDisc", &Triangulation<3>::hasCompressingDisc)

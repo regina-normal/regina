@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -68,8 +68,7 @@ HyperCompatibilityUI::HyperCompatibilityUI(
     QLabel* label = new QLabel(tr("Display matrix:"), ui);
     hdrLayout->addWidget(label);
     chooseMatrix = new QComboBox(ui);
-    chooseMatrix->insertItem(chooseMatrix->count(),
-        tr("Local compatibility (prism types)"));
+    chooseMatrix->addItem(tr("Local compatibility (prism types)"));
     connect(chooseMatrix, SIGNAL(activated(int)), this, SLOT(changeLayer(int)));
     hdrLayout->addWidget(chooseMatrix);
     QString msg = tr("<qt>Allows you to switch between different types of "

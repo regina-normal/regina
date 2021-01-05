@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,7 @@ using pybind11::overload_cast;
 using regina::ProgressTracker;
 using regina::ProgressTrackerOpen;
 
-void addProgressTracker(pybind11::module& m) {
+void addProgressTracker(pybind11::module_& m) {
     auto c1 = pybind11::class_<ProgressTracker>(m, "ProgressTracker")
         .def(pybind11::init<>())
         .def("isFinished", &ProgressTracker::isFinished)

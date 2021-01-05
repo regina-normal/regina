@@ -3,7 +3,7 @@
 # Regina - Software for low-dimensional topology
 # Command-Line Utilities Test Suite
 #
-# Copyright (c) 2016-2018, Ben Burton
+# Copyright (c) 2016-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Ad-hoc usage only (for now)
@@ -21,7 +21,7 @@
 #
 # - This has only been tested on MacOS, and may (or may not) rely on
 #   features specific to that operating system.  (The main culprit, if any,
-#   is likely to be "zcat -f".)
+#   is likely to be "gzcat -f".)
 #
 # For these reasons, this script is (for now) intended for developer use only.
 #
@@ -124,14 +124,14 @@ function testutil {
     echo "Exit code: $exitcode"
     if [ -e "$testout" ]; then
         echo "--------------------"
-        raw=`cat "$testout" | md5sum`
-        uncompressed=`zcat -f "$testout" | md5sum`
+        raw=`cat "$testout" | shasum`
+        uncompressed=`gzcat -f "$testout" | shasum`
         if [ "$raw" = "$uncompressed" ]; then
             echo "Output:"
             cat "$testout"
         else
             echo "Output (compressed):"
-            zcat "$testout"
+            gzcat "$testout"
         fi
     fi
 }

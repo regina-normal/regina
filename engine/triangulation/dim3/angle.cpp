@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -72,8 +72,11 @@ const AngleStructure* Triangulation<3>::findStrictAngleStructure() const {
 
     // Set all angles to be strictly positive.
     unsigned i;
-    for (i = 0; i < eqns.columns(); ++i)
+    for (i = 0; i < eqns.columns(); ++i) {
+        // std::cerr << "Constraining +ve: "
+        //     << i << " / " << eqns.columns() << std::endl;
         lp.constrainPositive(i);
+    }
 
     // Test for a solution!
     if (! lp.isFeasible())

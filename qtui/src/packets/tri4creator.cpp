@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -116,10 +116,10 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     QWidget* area;
     QBoxLayout* subLayout;
 
-    type->insertItem(type->count(), QObject::tr("Empty"));
+    type->addItem(QObject::tr("Empty"));
     details->addWidget(new QWidget());
 
-    type->insertItem(TRI_IBUNDLE, QObject::tr("I-bundle"));
+    type->addItem(QObject::tr("I-bundle"));
     area = new QWidget();
     subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
@@ -139,7 +139,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     subLayout->addWidget(iBundleFrom, 1);
     details->addWidget(area);
 
-    type->insertItem(TRI_S1BUNDLE, QObject::trUtf8("S¹-bundle"));
+    type->addItem(QObject::trUtf8("S¹-bundle"));
     area = new QWidget();
     subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
@@ -159,7 +159,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     subLayout->addWidget(s1BundleFrom, 1);
     details->addWidget(area);
 
-    type->insertItem(TRI_ISOSIG, QObject::tr("From isomorphism signature"));
+    type->addItem(QObject::tr("From isomorphism signature"));
     area = new QWidget();
     subLayout = new QHBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
@@ -184,7 +184,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     subLayout->addWidget(isoSig, 1);
     details->addWidget(area);
 
-    type->insertItem(type->count(), QObject::tr("Example triangulation"));
+    type->addItem(QObject::tr("Example triangulation"));
     area = new QWidget();
     subLayout = new QHBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
@@ -198,7 +198,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
     for (size_t i = 0; i < examples.size(); ++i)
-        exampleWhich->insertItem(i, examples[i].name());
+        exampleWhich->addItem(examples[i].name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);

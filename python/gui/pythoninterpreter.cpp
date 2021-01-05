@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -45,6 +45,7 @@
 
 // Python includes:
 #include "../python/pybind11/pybind11.h"
+#include "../python/pybind11/embed.h"
 #include <compile.h>
 #include <eval.h>
 #include <sysmodule.h>
@@ -91,10 +92,12 @@ static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 std::mutex PythonInterpreter::globalMutex;
 bool PythonInterpreter::pythonInitialised = false;
 PyThreadState* mainState;
+pybind11::scoped_interpreter* mainInterpreter;
 
 PythonInterpreter::PythonInterpreter(
         regina::python::PythonOutputStream& pyStdOut,
         regina::python::PythonOutputStream& pyStdErr) :
+        caughtSystemExit(false),
         output(pyStdOut), errors(pyStdErr),
         completer(nullptr), completerFunc(nullptr) {
     std::lock_guard<std::mutex> lock(globalMutex);
@@ -117,8 +120,12 @@ PythonInterpreter::PythonInterpreter(
         std::string newPath("PYTHONPATH=");
         newPath += regina::GlobalDirs::pythonModule();
         #if defined(REGINA_INSTALL_WINDOWS)
+            newPath += ";";
+            newPath += regina::GlobalDirs::pythonModule();
             newPath += "/python" REGINA_PY_VERSION ".zip;";
         #else
+            newPath += ":";
+            newPath += regina::GlobalDirs::pythonModule();
             newPath += "/python" REGINA_PY_VERSION ".zip:";
         #endif
 
@@ -139,11 +146,15 @@ PythonInterpreter::PythonInterpreter(
         }
 #endif
 
-        Py_Initialize();
-        PyEval_InitThreads();
-        mainState = PyThreadState_Get();
+        // We create a pybind11::scoped_interpreter instead of calling
+        // Py_Initialize() directly, since this allows pybind11 to set up some
+        // of its own internal structures also.  This interpreter must exist
+        // for the lifetime of the program, so we just set-and-forget here.
+        mainInterpreter = new pybind11::scoped_interpreter;
 
-#if PY_MAJOR_VERSION >= 3
+        // We do not call PyEval_InitThreads(), since this is done
+        // via pybind11's internals in the code below.
+
         // Subinterpreters are supposed to share extension modules
         // without repeatedly calling the modules' init functions.
         // In python 3, this seems to fail if all subinterpreters are
@@ -162,7 +173,8 @@ PythonInterpreter::PythonInterpreter(
         // Note: the temporary packet that we create here will be
         // destroyed with the pybind11::object destructor.
         pybind11::cast(new regina::Container());
-#endif
+
+        mainState = PyThreadState_Get();
     }
 
     // Create the new interpreter.
@@ -185,20 +197,6 @@ PythonInterpreter::PythonInterpreter(
         pyStdErr.flush();
     }
 
-    // Set up a completer if we can.
-    try {
-        pybind11::object c = pybind11::module::import("rlcompleter")
-            .attr("Completer")();
-        pybind11::object f = c.attr("complete");
-
-        if (c.ptr() && f.ptr()) {
-            // Keep references to both until we destroy the interpreter.
-            Py_INCREF(completer = c.ptr());
-            Py_INCREF(completerFunc = f.ptr());
-        }
-    } catch (std::runtime_error&) {
-    }
-
     pythonInitialised = true;
 
     // Release the global interpreter lock.
@@ -216,8 +214,11 @@ PythonInterpreter::~PythonInterpreter() {
     Py_XDECREF(completerFunc);
     Py_EndInterpreter(state);
 
-    // Release the global interpreter lock.
-    PyEval_ReleaseLock();
+    // Return to the main thread and release the global interpreter lock.
+    // Note: Just calling PyEval_ReleaseLock() crashes python3.9 on debian
+    // (and PyEval_ReleaseLock() is now deprecated anyway).
+    PyThreadState_Swap(mainState);
+    PyEval_ReleaseThread(mainState);
 }
 
 bool PythonInterpreter::executeLine(const std::string& command) {
@@ -261,7 +262,14 @@ bool PythonInterpreter::executeLine(const std::string& command) {
         if (ans)
             Py_DECREF(ans);
         else {
-            PyErr_Print();
+            // If the user called exit(), this will have thrown a SystemExit
+            // exception, which would cause PyErr_Print() to terminate *this*
+            // process (the Regina GUI).
+            if(PyErr_ExceptionMatches(PyExc_SystemExit)) {
+                caughtSystemExit = true;
+            } else {
+                PyErr_Print();
+            }
             PyErr_Clear();
         }
 
@@ -404,7 +412,22 @@ bool PythonInterpreter::importRegina() {
     PyEval_RestoreThread(state);
 
     bool ok = importReginaIntoNamespace(mainNamespace);
-    if (! ok) {
+
+    // Also set up a completer if we can, but if not then just fail silently.
+    if (ok) {
+        try {
+            pybind11::object c = pybind11::module_::import(
+                "regina.plainCompleter").attr("Completer")();
+            pybind11::object f = c.attr("complete");
+
+            if (c.ptr() && f.ptr()) {
+                // Keep references to both until we destroy the interpreter.
+                Py_INCREF(completer = c.ptr());
+                Py_INCREF(completerFunc = f.ptr());
+            }
+        } catch (std::runtime_error&) {
+        }
+    } else {
         PyErr_Print();
         PyErr_Clear();
     }
@@ -474,7 +497,14 @@ bool PythonInterpreter::runCode(const char* code) {
         state = PyEval_SaveThread();
         return true;
     } else {
-        PyErr_Print();
+        // If the user called exit(), this will have thrown a SystemExit
+        // exception, which would cause PyErr_Print() to terminate *this*
+        // process (the Regina GUI).
+        if(PyErr_ExceptionMatches(PyExc_SystemExit)) {
+            caughtSystemExit = true;
+        } else {
+            PyErr_Print();
+        }
         PyErr_Clear();
         state = PyEval_SaveThread();
         return false;

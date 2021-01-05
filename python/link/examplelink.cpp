@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -37,7 +37,7 @@
 
 using regina::ExampleLink;
 
-void addExampleLink(pybind11::module& m) {
+void addExampleLink(pybind11::module_& m) {
     auto c = pybind11::class_<ExampleLink>(m, "ExampleLink")
         .def_static("unknot", &ExampleLink::unknot)
         .def_static("gordian", &ExampleLink::gordian)
@@ -51,9 +51,7 @@ void addExampleLink(pybind11::module& m) {
         .def_static("monster", &ExampleLink::monster)
         .def_static("conway", &ExampleLink::conway)
         .def_static("kinoshitaTerasaka", &ExampleLink::kinoshitaTerasaka)
-        /*
         .def_static("torus", &ExampleLink::torus)
-        */
         .def_static("gst", &ExampleLink::gst)
     ;
     regina::python::no_eq_operators(c);

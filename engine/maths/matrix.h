@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -152,9 +152,10 @@ class Rational;
  * work with the specific class Matrix<Integer>.
  *
  * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment,
- * and long chains of operators such as <tt>a = b * c * d</tt> should not
- * perform any deep copies at all.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Functions that take or return objects by value are designed to be just as
+ * efficient as working with references or pointers, and long chains of
+ * operators such as <tt>a = b * c * d</tt> do not make unwanted deep copies.
  *
  * \ifacespython Not present in general, although the specific type
  * Matrix<Integer> is available under the name MatrixInt.
@@ -170,6 +171,10 @@ template <class T, bool ring =
 class Matrix : public Output<Matrix<T>> {
     static_assert(ring || ! IsReginaInteger<T>::value,
         "Using Matrix with Regina's own integer types requires ring=true.");
+
+    public:
+        typedef T Coefficient;
+            /**< The type of each entry in the matrix. */
 
     private:
         unsigned long rows_;

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::Cyclotomic;
 
-void addCyclotomic(pybind11::module& m) {
+void addCyclotomic(pybind11::module_& m) {
     auto c = pybind11::class_<Cyclotomic>(m, "Cyclotomic")
         .def(pybind11::init<>())
         .def(pybind11::init<size_t>())
@@ -60,12 +60,21 @@ void addCyclotomic(pybind11::module& m) {
             pybind11::arg("whichRoot") = 1)
         .def("negate", &Cyclotomic::invert)
         .def("invert", &Cyclotomic::invert)
+        .def("inverse", &Cyclotomic::inverse)
         .def(pybind11::self *= regina::Rational())
         .def(pybind11::self /= regina::Rational())
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self -= pybind11::self)
         .def(pybind11::self *= pybind11::self)
         .def(pybind11::self /= pybind11::self)
+        .def(pybind11::self * regina::Rational())
+        .def(regina::Rational() * pybind11::self)
+        .def(pybind11::self / regina::Rational())
+        .def(pybind11::self + pybind11::self)
+        .def(pybind11::self - pybind11::self)
+        .def(pybind11::self * pybind11::self)
+        .def(pybind11::self / pybind11::self)
+        .def(- pybind11::self)
         .def_static("cyclotomic", [](size_t n) {
             return new regina::Polynomial<regina::Rational>(
                 Cyclotomic::cyclotomic(n));

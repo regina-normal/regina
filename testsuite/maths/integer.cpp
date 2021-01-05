@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1098,6 +1098,17 @@ class IntegerTest : public CppUnit::TestFixture {
                 IntType(string).template nativeValue<16>()));
             test128Value<IntType>(native, regina::NativeInteger<16>(
                 IntType(native).template nativeValue<16>()));
+
+            // Make sure large-to-native conversion works even for
+            // numbers that do not enter the highest order long-sized
+            // block. For most machines this means the integers fit into
+            // a single long, so here we force them into a large (GMP)
+            // representation regardless.
+            IntType large(string);
+            large.makeLarge();
+            test128Value<IntType>(native, regina::NativeInteger<16>(large));
+            test128Value<IntType>(native,
+                regina::NativeInteger<16>(large.template nativeValue<16>()));
         }
 
         template <typename IntType>
@@ -1128,6 +1139,11 @@ class IntegerTest : public CppUnit::TestFixture {
             pos127 = pos126 * 2; // Should overflow to -2^127
             neg127 = neg126 * 2;
 
+            regina::NativeInteger<16> pos126_62 = pos126 + pos62;
+            regina::NativeInteger<16> pos126_63 = pos126 + pos63;
+            regina::NativeInteger<16> neg126_62 = neg126 + neg62;
+            regina::NativeInteger<16> neg126_63 = neg126 + neg63;
+
             testNative128<IntType>(pos62, "4611686018427387904");
             testNative128<IntType>(neg62, "-4611686018427387904");
             testNative128<IntType>(pos63, "9223372036854775808");
@@ -1138,6 +1154,14 @@ class IntegerTest : public CppUnit::TestFixture {
                 "85070591730234615865843651857942052864");
             testNative128<IntType>(neg126,
                 "-85070591730234615865843651857942052864");
+            testNative128<IntType>(pos126_62,
+                "85070591730234615870455337876369440768");
+            testNative128<IntType>(neg126_62,
+                "-85070591730234615870455337876369440768");
+            testNative128<IntType>(pos126_63,
+                "85070591730234615875067023894796828672");
+            testNative128<IntType>(neg126_63,
+                "-85070591730234615875067023894796828672");
             // Recall that pos127 overflows.
             testNative128<IntType>(pos127,
                 "-170141183460469231731687303715884105728");

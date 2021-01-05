@@ -3,7 +3,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Source Distribution Verification
 #
-# Copyright (c) 2003-2018, Ben Burton
+# Copyright (c) 2003-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # Usage: distcheck <dist-tarball>
@@ -136,6 +136,8 @@ if ! find "$gittree" | sed -e 's%^[^/]*/%%' | \
     grep -v '^sfdist\(/\|$\)' | \
     grep -v '^utils/local\(/\|$\)' | \
     grep -v '^utils/snappea\(/\|$\)' | \
+    grep -v '^ios' | \
+    grep -v '^Regina.xcodeproj' | \
     sort > "$gitlist" ; then
   echo "The contents of the git source tree could not be listed."
   exit 1

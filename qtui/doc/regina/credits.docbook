@@ -19,7 +19,10 @@
    <itemizedlist>
     <listitem><para>Matthias Goerner</para></listitem>
     <listitem><para>Adam Gowty</para></listitem>
+    <listitem><para>Robert C. Haraway, III</para></listitem>
+    <listitem><para>Alex He</para></listitem>
     <listitem><para>David Letscher</para></listitem>
+    <listitem><para>Kevin Zhang</para></listitem>
     <listitem><para>Winfried Bruns, Bogdan Ichim and Christof Soeger
      (for the &normaliz; library)</para></listitem>
     <listitem><para>Marc Culler, Nathan Dunfield and Jeff Weeks
@@ -149,7 +152,7 @@
      or any later version, as published by the Free Software Foundation.
     </para>
    </sect3>
- 
+
    <sect3 id="license-normaliz">
     <title>&normaliz; Library</title>
     <para>
@@ -167,12 +170,24 @@
     <para>
      &regina; includes a copy of &pybind11;, which it uses to generate &python;
      bindings for Regina's native &cpp; code.  The &pybind11; library was
-     written by Wenzel Jakob, and is distributed under a &BSD;-style license
+     written by Wenzel Jakob, and is distributed under a &bsd;-style license
      that is shipped with Regina's source code in the file
      <filename>python/pybind11/LICENSE</filename>.
     </para>
    </sect3>
- 
+
+   <sect3 id="license-rlcompleter">
+    <title>&python; rlcompleter module</title>
+    <para>
+     &regina; includes a modified copy of the &python; rlcompleter module,
+     which it uses for tab completion in the graphical user interface.
+     The original rlcompleter module was distributed under the
+     Python Software Foundation License Version&nbsp;2; the full license and
+     copyright notice are shipped with Regina's source code in the file
+     <filename>python/regina/LICENSE</filename>.
+    </para>
+   </sect3>
+
    <sect3 id="license-orb">
     <title>Orb Kernel</title>
     <para>
@@ -183,7 +198,7 @@
      &gnu; General Public License.
     </para>
    </sect3>
- 
+
    <sect3 id="license-highlight">
     <title>Syntax Highlighting</title>
     <para>
@@ -194,7 +209,7 @@
      as published by the Free Software Foundation.
     </para>
    </sect3>
- 
+
    <sect3 id="license-icons">
     <title>Icons</title>
     <para>

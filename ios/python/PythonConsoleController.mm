@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -236,6 +236,8 @@ public:
     UIBarButtonItem* _pastButton;
     UIBarButtonItem* _futureButton;
     
+    NSArray<UIKeyCommand*>* _keyCommands;
+    
     regina::python::PythonInterpreter* _interpreter;
 }
 
@@ -259,6 +261,7 @@ public:
     sheet.root = root;
     sheet.item = item;
     sheet.script = script;
+    sheet.modalPresentationStyle = UIModalPresentationFullScreen;
     [c presentViewController:sheet animated:YES completion:nil];
 }
 
@@ -286,6 +289,22 @@ public:
     _futureButton = [self historyButton:NO];
     _pastButton.enabled = NO;
     _futureButton.enabled = NO;
+    
+    _keyCommands = @[[UIKeyCommand keyCommandWithInput:@"\t"
+                                         modifierFlags:0
+                                                action:@selector(tabPressed)],
+                     [UIKeyCommand keyCommandWithInput:UIKeyInputUpArrow
+                                         modifierFlags:0
+                                                action:@selector(historyPast)],
+                     [UIKeyCommand keyCommandWithInput:UIKeyInputDownArrow
+                                         modifierFlags:0
+                                                action:@selector(historyFuture)],
+                     [UIKeyCommand keyCommandWithInput:@"d"
+                                         modifierFlags:UIKeyModifierControl
+                                                action:@selector(close:)],
+                     [UIKeyCommand keyCommandWithInput:@"w"
+                                         modifierFlags:UIKeyModifierCommand
+                                                action:@selector(close:)]];
 
     UIToolbar* bar = [[UIToolbar alloc] initWithFrame:CGRectMake(0, 0, self.view.frame.size.width, 50)];
     bar.barStyle = UIBarStyleDefault;
@@ -328,6 +347,11 @@ public:
     // Make the prompt use a fixed-width font, so that when the prompt
     // changes we do not have to worry about redoing the toolbar layout.
     [self.prompt setTitleTextAttributes:@{NSFontAttributeName: promptFont} forState:UIControlStateNormal];
+    // The prompt should really have all interaction disabled.
+    // Until we work out how to do this properly, at least make sure it keeps
+    // the fixed-width font when the user presses it (on iOS 13 this makes it
+    // go grey).
+    [self.prompt setTitleTextAttributes:@{NSFontAttributeName: promptFont} forState:UIControlStateHighlighted];
 
     // Remove the suggestions bar above the keyboard, which will be empty anyway.
     UITextInputAssistantItem* item = [self inputAssistantItem];
@@ -358,11 +382,11 @@ public:
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
         if (self.script) {
             [self appendHistory:@"Running script...\n" style:HistoryInfo];
-            _interpreter->runScript(self.script);
+            self->_interpreter->runScript(self.script);
         }
 
         if (self.root) {
-            if (_interpreter->setVar("root", self.root)) {
+            if (self->_interpreter->setVar("root", self.root)) {
                 if (self.root)
                     [self appendHistory:@"The (invisible) root of the packet tree is in the variable [root].\n" style:HistoryInfo];
             } else
@@ -370,7 +394,7 @@ public:
         }
 
         if (self.item) {
-            if (_interpreter->setVar("item", self.item)) {
+            if (self->_interpreter->setVar("item", self.item)) {
                 if (self.item)
                     [self appendHistory:[NSString stringWithFormat:@"The selected packet (%@) is in the variable [item].\n",
                                          [NSString stringWithUTF8String:self.item->label().c_str()]] style:HistoryInfo];
@@ -382,6 +406,11 @@ public:
 
         dispatch_async(dispatch_get_main_queue(), ^{
             self.working = false;
+            
+            if (self->_interpreter->exitAttempted())
+                [self close:nil];
+            else
+                [self.input becomeFirstResponder];
         });
     });
 }
@@ -449,15 +478,15 @@ public:
     [self appendHistory:toLog style:HistoryInput];
 
     dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
-        bool done = _interpreter->executeLine([toRun UTF8String]);
-        _interpreter->flush();
+        bool done = self->_interpreter->executeLine([toRun UTF8String]);
+        self->_interpreter->flush();
 
         dispatch_async(dispatch_get_main_queue(), ^{
             if (done) {
-                primaryPrompt = true;
-                lastIndent = @"";
+                self->primaryPrompt = true;
+                self->lastIndent = @"";
             } else {
-                primaryPrompt = false;
+                self->primaryPrompt = false;
 
                 // Extract the indentation.
                 NSUInteger i = 0;
@@ -465,13 +494,17 @@ public:
                     ++i;
                 if (i == toRun.length) {
                     // The entire line is whitespace.  Use no indent.
-                    lastIndent = @"";
+                    self->lastIndent = @"";
                 } else
-                    lastIndent = [toRun substringToIndex:i];
+                    self->lastIndent = [toRun substringToIndex:i];
             }
 
             self.working = false;
-            [self.input becomeFirstResponder];
+            
+            if (self->_interpreter->exitAttempted())
+                [self close:nil];
+            else
+                [self.input becomeFirstResponder];
         });
     });
 }
@@ -481,6 +514,10 @@ public:
     // Must be called from the main thread.
     if (! self.working)
         [self dismissViewControllerAnimated:YES completion:nil];
+}
+
+- (NSArray<UIKeyCommand *> *)keyCommands {
+    return _keyCommands;
 }
 
 - (NSString*)tabCompletion:(NSString*)textToComplete {
@@ -526,16 +563,18 @@ public:
 }
 
 - (IBAction)tabPressed {
-    // If the cursor is sitting immediately after non-whitespace, attempt tab completion.
-    // First fetch the substring up to and including the cursor.
     UITextRange* selection = [self.input selectedTextRange];
     if (! selection) {
         NSLog(@"ERROR: Cannot fetch cursor position");
         // Pretend the cursor is at the end of the input.
         selection = [self.input textRangeFromPosition:self.input.endOfDocument toPosition:self.input.endOfDocument];
     }
+    [self tabPressedOnRange:selection];
+}
 
-    // Fetch everything *before* the cursor.
+- (void)tabPressedOnRange:(UITextRange*)selection {
+    // If the cursor is sitting immediately after non-whitespace, attempt tab completion.
+    // First fetch everything *before* the cursor.
     // We will try to tab complete at the end of this block.
     UITextRange* prefixRange = [self.input textRangeFromPosition:self.input.beginningOfDocument toPosition:selection.start];
     NSString* prefix = [self.input textInRange:prefixRange];
@@ -641,11 +680,11 @@ public:
                           delay:0
                         options:UIViewAnimationOptions(animationCurve << 16)
                      animations:^{
-                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + kbOffset - kbSize.height);
+                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + self->              kbOffset - kbSize.height);
                          if (endWasVisible && ! endWillBeVisible)
                              self.history.contentOffset = CGPointMake(self.history.contentOffset.x, self.history.contentSize.height - newHistoryHeight);
                          [self.view layoutIfNeeded]; // Ensures that the frame change is actually animated.
-                         kbOffset = kbSize.height;
+                         self->kbOffset = kbSize.height;
                      }
                      completion:^(BOOL finished){}];
 }
@@ -659,9 +698,9 @@ public:
                           delay:0
                         options:UIViewAnimationOptions(animationCurve << 16)
                      animations:^{
-                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + kbOffset);
+                         self.view.frame = CGRectMake(0, 0, self.view.frame.size.width, self.view.frame.size.height + self->kbOffset);
                          [self.view layoutIfNeeded]; // Ensures that the frame change is actually animated.
-                         kbOffset = 0;
+                         self->kbOffset = 0;
                      }
                      completion:^(BOOL finished){}];
 }
@@ -679,7 +718,19 @@ public:
 
 - (BOOL)textField:(UITextField *)textField shouldChangeCharactersInRange:(NSRange)range replacementString:(NSString *)string
 {
-    return (! self.working);
+    if (self.working)
+        return NO;
+    
+    if ([string isEqualToString:@"\t"]) {
+        // Intercept tab presses.
+        // Here we rereoute them to either tab completion or
+        // inserting a sequence of spaces, depending on context.
+        UITextPosition* from = [textField positionFromPosition:textField.beginningOfDocument offset:range.location];
+        UITextPosition* to = [textField positionFromPosition:from offset:range.length];
+        [self tabPressedOnRange:[textField textRangeFromPosition:from toPosition:to]];
+        return NO;
+    }
+    return YES;
 }
 
 - (UIBarButtonItem*)textButton:(NSString *)text {

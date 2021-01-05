@@ -1,4 +1,4 @@
-CMAKE_MINIMUM_REQUIRED (VERSION 3.1)
+CMAKE_MINIMUM_REQUIRED (VERSION 3.12)
 PROJECT (regina)
 
 # Let the user override the package name.
@@ -13,7 +13,7 @@ SET (PACKAGE_PRETTY_NAME Regina)
 SET(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake/modules")
 
 # Version
-SET (PACKAGE_VERSION 5.2)
+SET (PACKAGE_VERSION 5.96)
 SET (SNAPPY_VERSION 2.4)
 SET (PACKAGE_STRING "${PACKAGE_PRETTY_NAME} ${PACKAGE_VERSION}")
 
@@ -47,24 +47,23 @@ ENDIF (WIN32)
 
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
-# Bundle = self-contained app bundle for MacOS that users can drag and drop.
 # Windows = self-contained movable install directory for MS Windows.
 if (NOT REGINA_INSTALL_TYPE)
-  if (APPLE)
-    SET (REGINA_DEFAULT_INSTALL_TYPE Bundle)
-  elseif (WIN32)
+  if (WIN32)
     SET (REGINA_DEFAULT_INSTALL_TYPE Windows)
   else ()
     SET (REGINA_DEFAULT_INSTALL_TYPE XDG)
   endif ()
   SET (REGINA_INSTALL_TYPE ${REGINA_DEFAULT_INSTALL_TYPE} CACHE STRING
-    "Choose how Regina installs itself.  Options are: XDG Bundle Windows."
+    "Choose how Regina installs itself.  Options are: XDG Windows."
     FORCE)
 ENDIF (NOT REGINA_INSTALL_TYPE)
 MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
 
 # Sanity check the installation type, and set the boolean install type flags
-# that will appear in regina-config.h:
+# that will appear in regina-config.h.
+# Note: even though Bundle is not supported in CMake, we must keep the flag
+# here because the Xcode build uses it (via the corresponding #define).
 SET(REGINA_INSTALL_XDG FALSE)
 SET(REGINA_INSTALL_BUNDLE FALSE)
 SET(REGINA_INSTALL_WINDOWS FALSE)
@@ -72,11 +71,8 @@ IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # No sanity checking needed here (yet).
   SET(REGINA_INSTALL_XDG TRUE)
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  IF (NOT APPLE)
-    MESSAGE(FATAL_ERROR
-      "REGINA_INSTALL_TYPE=Bundle is only supported on MacOSX.")
-  ENDIF (NOT APPLE)
-  SET(REGINA_INSTALL_BUNDLE TRUE)
+  MESSAGE(FATAL_ERROR
+    "REGINA_INSTALL_TYPE=Bundle is no longer supported. These CMake build scripts will give a unix-style installation in a fixed location; for a standalone macOS app bundle please use Xcode instead.")
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   IF (NOT WIN32)
     MESSAGE(FATAL_ERROR
@@ -85,15 +81,11 @@ ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   SET(REGINA_INSTALL_WINDOWS TRUE)
 ELSE()
   MESSAGE(FATAL_ERROR
-    "REGINA_INSTALL_TYPE must be one of: XDG Bundle Windows.")
+    "REGINA_INSTALL_TYPE must be either XDG or Windows.")
 ENDIF()
 
 # Are we installing development files?
-IF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  SET (REGINA_INSTALL_DEV OFF)
-ELSE (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  SET (REGINA_INSTALL_DEV ON)
-ENDIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+SET (REGINA_INSTALL_DEV ON)
 
 # Give packagers a way of insisting that every optional component is found.
 # Set PACKAGING_MODE=1 to make every component compulsory.
@@ -160,21 +152,7 @@ INCLUDE( ReginaMacros )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Installation directories
-if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  # MacOSX app bundle.
-  SET (APPDIR ${CMAKE_INSTALL_PREFIX})
-  SET (BUNDLEDIR ${APPDIR}/Regina.app)
-  SET (BUNDLEDIR_ESCAPED "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/Regina.app")
-  SET (PLUGINSDIR ${BUNDLEDIR}/Contents/Plugins)
-  SET (PLUGINSDIR_ESCAPED "\$ENV{DESTDIR}\${CMAKE_INSTALL_PREFIX}/Regina.app/Contents/Plugins")
-  SET (RESOURCEDIR ${BUNDLEDIR}/Contents/Resources)
-  SET (BINDIR ${BUNDLEDIR}/Contents/MacOS)
-  SET (LIBDIR ${BINDIR})
-  SET (DATADIR ${RESOURCEDIR})
-  SET (INCLUDEDIR ${RESOURCEDIR}/include)
-  SET (PKGDATADIR ${DATADIR})
-  SET (PYLIBDIR ${LIBDIR}/python)
-elseif (${REGINA_INSTALL_TYPE} STREQUAL Windows)
+if (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   # MS Windows install.
   SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
   SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
@@ -212,6 +190,7 @@ ENDIF (NOT DISABLE_RPATH)
 IF (NOT DISABLE_RPATH)
   if (APPLE)
     set(CMAKE_INSTALL_NAME_DIR ${LIBDIR})
+    set(CMAKE_INSTALL_RPATH_USE_LINK_PATH TRUE)
   else (APPLE)
     set(CMAKE_INSTALL_RPATH ${LIBDIR} )
     set(CMAKE_SKIP_BUILD_RPATH FALSE)
@@ -260,6 +239,12 @@ CHECK_CXX_SOURCE_COMPILES("
   NUMERIC_64_LL_FOUND)
 
 # Dependencies used by all components of Regina
+
+# Note that pkg-config is optional, but it does help us find some libraries
+# that we could perhaps not have found otherwise.
+# In particular, most build environments will need it to locate Graphviz.
+FIND_PACKAGE(PkgConfig)
+
 FIND_PACKAGE(ZLIB)
 INCLUDE_DIRECTORIES(${ZLIB_INCLUDE_DIR})
 MACRO_LOG_FEATURE(ZLIB_FOUND
@@ -318,63 +303,42 @@ MACRO_LOG_FEATURE(Boost_FOUND
 
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
-  FIND_PACKAGE(PythonInterp)
-  FIND_PACKAGE(PythonLibs)
 
-  IF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
-    # Check the python versions.
-    MESSAGE (STATUS "Python interpreter: ${PYTHON_VERSION_STRING}")
-    MESSAGE (STATUS "Python libraries: ${PYTHONLIBS_VERSION_STRING}")
+  # Some basic sanity testing on the user's python settings.
+  IF (PYTHON_EXECUTABLE)
+    UNSET(PYTHON_EXECUTABLE CACHE)
+    MESSAGE(FATAL_ERROR "Regina now uses a different method for finding Python. The old PYTHON_EXECUTABLE setting is no longer recognised. Please set Python_EXECUTABLE instead.")
+  ENDIF (PYTHON_EXECUTABLE)
+  IF (Python_EXECUTABLE)
+    IF(${CMAKE_VERSION} VERSION_LESS "3.16.0")
+      UNSET(Python_EXECUTABLE CACHE)
+      MESSAGE(FATAL_ERROR "The Python_EXECUTABLE setting only works with CMake 3.16 and above. For now please either upgrade your CMake, or else remove (or temporarily hide) any conflicting Python installations so that the automated tools can find the correct Python without assistance.")
+    ENDIF(${CMAKE_VERSION} VERSION_LESS "3.16.0")
+  ENDIF (Python_EXECUTABLE)
 
-    string(FIND ${PYTHONLIBS_VERSION_STRING}
-      "${PYTHON_VERSION_MAJOR}.${PYTHON_VERSION_MINOR}.${PYTHON_VERSION_PATCH}"
-      _python_version_match)
-    IF (NOT "${_python_version_match}" EQUAL 0)
-      MESSAGE(FATAL_ERROR "Python version mismatch.")
-    ENDIF ()
+  FIND_PACKAGE(Python COMPONENTS Interpreter Development REQUIRED)
 
-    IF (${PYTHON_VERSION_MAJOR} EQUAL 2)
-      IF (${PYTHON_VERSION_MINOR} LESS 6)
+  IF (Python_FOUND)
+    IF (${Python_VERSION_MAJOR} EQUAL 2)
+      IF (${Python_VERSION_MINOR} LESS 6)
         MESSAGE(FATAL_ERROR "For Python 2.x, Regina needs Python >= 2.6.")
       ENDIF ()
-    ELSEIF (${PYTHON_VERSION_MAJOR} EQUAL 3)
-      IF (${PYTHON_VERSION_MINOR} LESS 1)
+    ELSEIF (${Python_VERSION_MAJOR} EQUAL 3)
+      IF (${Python_VERSION_MINOR} LESS 1)
         MESSAGE(FATAL_ERROR "For Python 3.x, Regina needs Python >= 3.1.")
       ENDIF ()
     ELSE ()
-      MESSAGE(FATAL_ERROR "Unknown Python major version: ${PYTHON_VERSION_MAJOR}")
+      MESSAGE(FATAL_ERROR "Unknown Python major version: ${Python_VERSION_MAJOR}")
     ENDIF ()
-  ENDIF (PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+  ENDIF (Python_FOUND)
 ENDIF (NOT DISABLE_PYTHON)
 
-FIND_PACKAGE(PkgConfig)
-IF(NOT PKG_CONFIG_FOUND)
-  MESSAGE(FATAL_ERROR "Regina requires pkgconfig.")
-ENDIF(NOT PKG_CONFIG_FOUND)
-
-IF(NOT QDBM)
-  SET (QDBM OFF CACHE STRING
-    "Makes Regina build against the older QDBM library, instead of the newer Tokyo Cabinet.  This should only be used on systems (e.g., MinGW) to which Tokyo Cabinet cannot be reliably ported."
-    FORCE)
-ENDIF(NOT QDBM)
-IF (QDBM)
-  PKG_CHECK_MODULES(TOKYOCABINET qdbm)
-  MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
-    "QDBM"
-    "Essential: lightweight database library for census data"
-    "http://fallabs.com/qdbm/"
-    TRUE)
-  SET (QDBM_AS_TOKYOCABINET TRUE)
-  SET (DB_EXT "qdb")
-ELSE (QDBM)
-  PKG_CHECK_MODULES(TOKYOCABINET tokyocabinet)
-  MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
-    "Tokyo Cabinet"
-    "Essential: lightweight database library for census data"
-    "http://fallabs.com/tokyocabinet/"
-    TRUE)
-  SET (DB_EXT "tdb")
-ENDIF (QDBM)
+FIND_PACKAGE(TokyoCabinet)
+MACRO_LOG_FEATURE(TOKYOCABINET_FOUND
+  ${TOKYOCABINET_DISPLAYNAME}
+  "Essential: lightweight database library for census data"
+  ${TOKYOCABINET_DISPLAYURL}
+  TRUE)
 
 # Dependencies used by only some components of Regina
 FIND_PACKAGE(POPT)
@@ -390,7 +354,7 @@ MACRO_LOG_FEATURE(DOXYGEN_FOUND
   "Doxygen"
   "Generate C++/Python API docs"
   "http://www.doxygen.org/"
-  REGINA_MANDATORY)
+  ${REGINA_MANDATORY})
 
 IF (REGINA_DOCS)
   get_filename_component(REGINA_DOCS_FILE "${REGINA_DOCS}" ABSOLUTE)
@@ -410,7 +374,7 @@ IF (REGINA_DOCS)
     "unzip"
     "Extract the user handbook"
     "http://www.info-zip.org/pub/infozip/"
-    REGINA_MANDATORY)
+    ${REGINA_MANDATORY})
 ELSE (REGINA_DOCS)
   SET (REGINA_DOCS "" CACHE STRING
     "Extract handbooks from the given pre-built zip file instead of building them manually."
@@ -425,7 +389,7 @@ ELSE (REGINA_DOCS)
     "xsltproc"
     "Generate the user handbook"
     "http://xmlsoft.org/XSLT/"
-    REGINA_MANDATORY)
+    ${REGINA_MANDATORY})
 ENDIF (REGINA_DOCS)
 
 # Test suite
@@ -444,39 +408,30 @@ else ()
   SET (REGINA_PYTHON_EXTENSION_NONSTANDARD FALSE)
 endif ()
 
-IF(PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+# This option must be 0 or 1 (it needs to be readable as a bool in perl).
+# It is always 0 for CMake builds.
+# (The option is present because some Xcode builds need sandboxing.)
+SET (PYTHON_SANDBOXED 0)
+
+IF(Python_FOUND)
   # We can support python.
 
   # Find the site-packages location in which the XDG build needs to put
   # the python module.
-  EXECUTE_PROCESS(COMMAND
-    "${PYTHON_EXECUTABLE}" -c "import distutils.sysconfig; print(distutils.sysconfig.get_python_lib(True))"
-    OUTPUT_VARIABLE SITE_PACKAGES
-    OUTPUT_STRIP_TRAILING_WHITESPACE
-    RESULT_VARIABLE DISTUTILS_RESULT)
-  IF ((NOT DISTUTILS_RESULT) AND IS_DIRECTORY "${SITE_PACKAGES}")
-    MESSAGE(STATUS "Python site-packages directory: ${SITE_PACKAGES}")
-  ELSE ()
-    MESSAGE(FATAL_ERROR "Could not query the python site-packages directory.  Please either set the correct python interpreter (-DPYTHON_EXECUTABLE=...), or else disable python bindings (-DDISABLE_PYTHON).")
-  ENDIF ()
+  MESSAGE(STATUS "Python site-packages directory: ${Python_SITELIB}")
 
   ADD_SUBDIRECTORY(python)
   SET(BUILD_PYTHON_BINDINGS TRUE)
 
   MESSAGE(STATUS "Python bindings enabled")
-ELSEIF(PYTHONINTERP_FOUND AND PYTHONLIBS_FOUND)
+ELSEIF(Python_FOUND)
   MESSAGE(WARNING "Could not find Python interpreter and/or development files: Python bindings disabled.")
 ENDIF()
-MACRO_LOG_FEATURE(PYTHONINTERP_FOUND
-  "Python interpreter"
-  "Build Python bindings for Regina"
-  "http://www.python.org/"
-  REGINA_MANDATORY)
-MACRO_LOG_FEATURE(PYTHONLIBS_FOUND
+MACRO_LOG_FEATURE(Python_FOUND
   "Python development files"
   "Build Python bindings for Regina"
   "http://www.python.org/"
-  REGINA_MANDATORY)
+  ${REGINA_MANDATORY})
 
 # The Qt GUI
 IF(NOT DISABLE_GUI)
@@ -503,10 +458,11 @@ ELSE(DISABLE_GUI)
     # with a single Graphviz framework, instead of the full suite of
     # Graphviz libraries and plugins.
     #
-    # This framework should be called graphviz.framework, and should provide
-    # all the necessary Graphviz components in just *one* library.  The
-    # GRAPHVIZ_FRAMEWORK_PATH setting should be the directory *containing*
-    # this framework (not the full path to the framework itself).
+    # This framework should be called either graphviz.framework or
+    # graphviz.xcframework, and should provide all the necessary Graphviz
+    # components in just *one* library.  The GRAPHVIZ_FRAMEWORK_PATH setting
+    # should be the directory *containing* this framework (not the full path
+    # to the framework itself).
     #
     # It is expected that nobody except the Regina developer(s) will use
     # this option.
@@ -554,6 +510,10 @@ ELSE(DISABLE_GUI)
         set(LIBGVC_LIBDIR "${_TMP_STR}" CACHE INTERNAL "")
       ENDIF(WIN32)
     ELSE(LIBGVC_FOUND)
+      IF(NOT PKG_CONFIG_FOUND)
+        MESSAGE(WARNING "Could not locate the Graphviz libraries, because pkg-config is not installed.")
+      ENDIF(NOT PKG_CONFIG_FOUND)
+
       SET(GRAPHVIZ_TYPE None)
     ENDIF(LIBGVC_FOUND)
   ENDIF(APPLE AND GRAPHVIZ_FRAMEWORK_PATH)
@@ -561,9 +521,9 @@ ELSE(DISABLE_GUI)
     "GraphViz libraries"
     "Visualising graphs"
     "http://graphviz.org/"
-    REGINA_MANDATORY)
+    ${REGINA_MANDATORY})
 
-  if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+  if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
     set(SHARED_MIME_INFO_MINIMUM_VERSION "0.30")
     find_package(SharedMimeInfo)
     MACRO_LOG_FEATURE(SHARED_MIME_INFO_FOUND
@@ -571,11 +531,7 @@ ELSE(DISABLE_GUI)
       "Required for Regina's graphical user interface"
       "http://freedesktop.org/wiki/Software/shared-mime-info"
       TRUE "0.30")
-  endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
-
-  if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-    include(BundleUtilities)
-  endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+  endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
   # This must come after SharedMimeInfo is included, since the qtui/
   # makefiles use SharedMimeInfo macros.
@@ -591,7 +547,7 @@ MACRO_LOG_FEATURE(QT5_FOUND
   "Qt5"
   "Required for Regina's graphical user interface"
   "http://qt-project.org/"
-  GUI_REQUIRED ""
+  ${GUI_REQUIRED} ""
   "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 
 # Test suite, continued
@@ -608,7 +564,7 @@ MACRO_LOG_FEATURE(CPPUNIT_FOUND
   "CppUnit"
   "Build the full test suite for Regina"
   "http://sourceforge.net/projects/cppunit/"
-  REGINA_MANDATORY)
+  ${REGINA_MANDATORY})
 
 # Miscellaneous subdirectories
 ADD_SUBDIRECTORY(timing)
@@ -637,7 +593,9 @@ set(CPACK_SOURCE_GENERATOR TGZ)
 set(CPACK_SOURCE_IGNORE_FILES
   "~$"
   "^${PROJECT_BINARY_DIR}/"
+  "^${PROJECT_SOURCE_DIR}/Regina.xcodeproj/"
   "^${PROJECT_SOURCE_DIR}/engine/snappea/kernel/unused/"
+  "^${PROJECT_SOURCE_DIR}/ios/"
   "^${PROJECT_SOURCE_DIR}/packaging/"
   "^${PROJECT_SOURCE_DIR}/utils/local/"
   "^${PROJECT_SOURCE_DIR}/utils/snappea/"

@@ -1,0 +1,332 @@
+#!/usr/bin/perl -w
+#
+# Regina - A Normal Surface Theory Calculator
+# View a concise summary of events in a tricensus-mpi log file
+#
+# Copyright (c) 2005-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Usage: tricensus-mpi-status <log-file>
+#
+# See the manpage or users' handbook for full usage instructions.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+
+use File::stat;
+use IO::Uncompress::AnyUncompress qw(anyuncompress $AnyUncompressError);
+use strict;
+
+my $deprecated_warning = <<ENDOFWARNING;
+WARNING: The MPI utilities in Regina are deprecated, and will be removed from
+Regina in a future release.
+If you wish to parallelise the generation of a census, we recommend splitting up
+the input pairing files into chunks, and using typical queue systems (such as
+PBS) to parallelise.)
+ENDOFWARNING
+print STDERR $deprecated_warning;
+
+
+my $LOG;
+
+# Display basic usage information.
+#
+sub usage {
+    print STDERR "Usage: $0 <log-file>\n";
+    exit(1);
+}
+
+# Quit with the given error message(s).
+# Assumes that the log file is currently open (and closes it).
+#
+sub bail {
+    foreach (@_) {
+        print STDERR "ERROR: $_\n";
+    }
+    close($LOG);
+    exit(1);
+}
+
+# --- Parse the command-line options. ---
+
+usage unless @ARGV;
+my $logFile = pop @ARGV;
+usage if @ARGV;
+
+$LOG = new IO::Uncompress::AnyUncompress $logFile;
+if (! $LOG) {
+    print STDERR "ERROR: Could not read the log file $logFile.\n";
+    print STDERR "       ($AnyUncompressError)\n";
+    exit(1);
+}
+
+# nPairings:
+#   Total number of face pairings farmed out.
+my $nPairings = 0;
+
+# nTris:
+#   Total number of triangulations found.
+my $nTris = 0;
+
+# searchType:
+#   0     : not yet known
+#   -1    : one pairing at a time
+#   +1    : pairings split into subsearches
+my $searchType = 0;
+
+# pairingStatus:
+#   undef : no such pairing
+#   -1    : pairing processed on its own, still running
+#   -2    : pairing processed on its own, finished
+#   +1    : pairing split into subsearches, splitting still continuing
+#   +2    : pairing split into subsearches, final # subsearches is known
+my %pairingStatus = ();
+
+# pairingSize:
+#   undef : no such pairing
+#   -1    : pairing processed on its own
+#   >=0   : # subsearches currently farmed out
+my %pairingSize = ();
+
+# pairingDone:
+#   undef : no such pairing
+#   -1    : pairing processed on its own
+#   >=0   : # subsearches finished
+my %pairingDone = ();
+
+# pairingProcHash:
+#   Lists of precise subsearches that are currently being processed for
+#   each face pairing (only relevant if subsearches are used).
+my %pairingProcHash = ();
+
+# pairingTris:
+#   Total number of triangulations found for each face pairing.
+my %pairingTris = ();
+
+# donePairings:
+#   Have we received a final pairings count?
+my $donePairings = 0;
+
+# doneTris:
+#   Have we received a final triangulations count?
+my $doneTris = 0;
+
+my $lastDate = undef;
+my $ref;
+while (<$LOG>) {
+    # Strip off the date and newline.
+    chomp;
+    s/^([A-Za-z0-9:\. ]{19} \d\d\d\d)  // and $lastDate = $1;
+
+    if (/^Farmed pairing (\d+) -->/ or /^#(\d+): -->/) {
+        $searchType > 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = -1;
+
+        exists $pairingStatus{$1} and
+            bail("Irregularity in farming order (pairing $1).");
+        $1 == $nPairings + 1 or
+            bail("Irregularity in farming order (pairing $1).");
+
+        $pairingStatus{$1} = -1;
+        $pairingSize{$1} = -1;
+        $pairingDone{$1} = -1;
+        $pairingTris{$1} = 0;
+        $nPairings++;
+    } elsif (/^Farmed subsearch (\d+)-(\d+) /) {
+        $searchType < 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = 1;
+
+        if (! exists $pairingStatus{$1}) {
+            # First time we've seen this face pairing.
+
+            $1 == $nPairings + 1 or
+                bail("Irregularity in farming order ($1-$2).");
+            $2 == 1 or
+                bail("Irregularity in subsearch order ($1-$2).");
+
+            $pairingStatus{$1} = 1;
+            $pairingSize{$1} = 1;
+            $pairingDone{$1} = 0;
+            $pairingProcHash{$1} = { $2 => 1 };
+            $pairingTris{$1} = 0;
+            $nPairings++;
+        } else {
+            # A new subsearch for the face pairing that is currently being
+            # processed.
+
+            $1 == $nPairings or
+                bail("Irregularity in farming order ($1-$2).");
+            $2 == $pairingSize{$1} + 1 or
+                bail("Irregularity in subsearch order ($1-$2).");
+            $pairingStatus{$1} > 0 or
+                bail("Subsearch farmed for standalone pairing ($1-$2).");
+            $pairingStatus{$1} == 1 or
+                bail("Subsearch farmed after pairing finalised ($1-$2).");
+
+            $pairingSize{$1}++;
+            $ref = $pairingProcHash{$1};
+            $$ref{$2} = 1;
+        }
+    } elsif (/^Task \[(\d+) .+ (\d+) found/ or /^#(\d+): (\d+) triangulation/) {
+        $searchType > 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = -1;
+
+        exists $pairingStatus{$1} or
+            bail("Results received for previously unseen pairing ($1).");
+        $pairingStatus{$1} < 0 or
+            bail("Results received for non-standalone pairing ($1).");
+        $pairingStatus{$1} == -1 or
+            bail("Results received after pairing finished ($1).");
+        $pairingTris{$1} and
+            bail("Unexpected triangulations already stored for pairing ($1).");
+
+        $pairingStatus{$1} = -2;
+        $pairingTris{$1} = $2;
+        $nTris += $2;
+    } elsif (/^Task \[(\d+)-(\d+) .+ (\d+) found/) {
+        $searchType < 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = 1;
+
+        exists $pairingStatus{$1} or
+            bail("Subsearch received for previously unseen pairing ($1-$2).");
+        $pairingStatus{$1} > 0 or
+            bail("Subsearch received for standalone pairing ($1-$2).");
+        $ref = $pairingProcHash{$1};
+        # print join(' ', keys(%$ref))."\n";
+        exists $$ref{$2} or
+            bail("Subsearch received but not farmed ($1-$2).");
+        delete $$ref{$2};
+
+        $pairingDone{$1}++;
+        $pairingTris{$1} += $3;
+        $nTris += $3;
+    } elsif (/^Pairing (\d+): Farmed (\d+) subsearch/) {
+        $searchType < 0 and
+            bail("Both subsearch and pairing-at-once search styles are used.");
+        $searchType = 1;
+
+        if (! exists $pairingStatus{$1}) {
+            # First time we've seen this pairing.  There must have been
+            # no subsearches.
+            $1 == $nPairings + 1 or
+                bail("Irregularity in farming order (pairing $1).");
+
+            $pairingSize{$1} = 0;
+            $pairingDone{$1} = 0;
+            $pairingProcHash{$1} = { };
+            $pairingTris{$1} = 0;
+            $nPairings++;
+        } elsif ($pairingStatus{$1} < 0) {
+            bail("Final subsearch count received for standalone pairing ($1).");
+        } elsif ($pairingStatus{$1} != 1) {
+            bail("Pairing $1 finalised more than once.");
+        }
+        $pairingSize{$1} == $2 or
+            bail("Mismatched subsearch count for pairing $1.");
+
+        $pairingStatus{$1} = 2;
+    } elsif (/^Slave \d+ stopped/) {
+        # Winding to a close.  Ignore this line.
+    } elsif (/^(Done:|\s+-) (\d+) pairing.* read$/) {
+        # End of file.
+        $donePairings and
+            bail("Final pairing count appears more than once.");
+        ($2 == $nPairings) or
+            bail("Mismatched final pairing count ($2 != $nPairings).");
+        $donePairings = 1;
+    } elsif (/^(Done:|\s+-) (\d+) triangulation.* found$/) {
+        # End of file.
+        $doneTris and
+            bail("Final triangulation count appears more than once.");
+        ($2 == $nTris) or
+            bail("Mismatched final triangulation count ($2 != $nTris).");
+        $doneTris = 1;
+    } elsif (/^Done:$/) {
+        # Support for legacy log format.  Ignore this line.
+    } else {
+        bail('Unparseable line in log file:', $_);
+    }
+}
+
+my $nDonePairings = 0;
+my $hashRef;
+for (my $i = 1; $i <= $nPairings; $i++) {
+    print "Pairing $i: ";
+
+    if ($pairingStatus{$i} == -1) {
+        print "running";
+    } elsif ($pairingStatus{$i} == -2) {
+        print "done";
+        $nDonePairings++;
+    } elsif ($pairingStatus{$i} == 1) {
+        print "$pairingDone{$i} / ($pairingSize{$i} + ...) done";
+    } elsif ($pairingStatus{$i} == 2 and $pairingDone{$i} == $pairingSize{$i}) {
+        print "all $pairingSize{$i} done";
+        $nDonePairings++;
+    } elsif ($pairingStatus{$i} == 2) {
+        print "$pairingDone{$i} / $pairingSize{$i} done";
+    } else {
+        bail("Unknown status for pairing $i.");
+    }
+
+    print ", $pairingTris{$i} found" unless $pairingStatus{$i} == -1;
+    print "\n";
+
+    # More sanity checking.
+    if ($pairingStatus{$i} > 0) {
+        $hashRef = $pairingProcHash{$i};
+        (scalar keys %$hashRef) == $pairingSize{$i} - $pairingDone{$i} or
+            bail("Mismatched count of current subsearches for pairing $i.");
+    }
+}
+
+if ($donePairings and $doneTris) {
+    $nPairings == $nDonePairings or
+        bail("Log finished but some pairings incomplete ".
+            "($nDonePairings != $nPairings).");
+
+    print "All done: $nPairings pairing(s), $nTris triangulation(s).\n";
+} else {
+    ($donePairings or $doneTris) and bail('Final tallies incomplete.');
+
+    print "Still running, $nTris found";
+    if ($lastDate) {
+        print ", last activity: $lastDate";
+    } else {
+        # See when the log was last modified.
+        my $st = stat($logFile);
+        if ($st) {
+            print ", log last updated: " . scalar localtime $st->mtime;
+        } else {
+            print ", no update time available.";
+        }
+    }
+    print "\n";
+}
+
+close($LOG);
+exit(0);
+

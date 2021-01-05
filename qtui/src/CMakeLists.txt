@@ -1,4 +1,4 @@
-INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS} ${ENGINE_INCLUDES} ${PROJECT_BINARY_DIR}/engine)
+INCLUDE_DIRECTORIES(${Python_INCLUDE_DIRS} ${ENGINE_INCLUDES} ${PROJECT_BINARY_DIR}/engine)
 
 SET(LINK_LIBS ${ENGINE_LIBRARY} Qt5::Widgets Qt5::Svg)
 
@@ -10,24 +10,36 @@ ADD_SUBDIRECTORY(syntax)
 
 IF(BUILD_PYTHON_BINDINGS)
   ADD_SUBDIRECTORY(python)
-  SET(LINK_LIBS ${LINK_LIBS} ${PYTHON_LIBRARIES})
-  INCLUDE_DIRECTORIES(${PYTHON_INCLUDE_DIRS})
+  SET(LINK_LIBS ${LINK_LIBS} ${Python_LIBRARIES})
+  ADD_LINK_OPTIONS(${Python_LINK_OPTIONS})
+  INCLUDE_DIRECTORIES(${Python_INCLUDE_DIRS})
 ENDIF(BUILD_PYTHON_BINDINGS)
 
 IF(LIBGVC_FOUND)
   IF(${GRAPHVIZ_TYPE} STREQUAL Framework)
-    INCLUDE_DIRECTORIES("${GRAPHVIZ_FRAMEWORK}/Headers")
-    SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} ${GRAPHVIZ_FRAMEWORK})
+    IF(GRAPHVIZ_FRAMEWORK MATCHES "xcframework/macos-")
+      # An xcframework.
+      GET_FILENAME_COMPONENT(GRAPHVIZ_FRAMEWORK_DIR "${GRAPHVIZ_FRAMEWORK}" DIRECTORY)
+      INCLUDE_DIRECTORIES("${GRAPHVIZ_FRAMEWORK_DIR}/Headers")
+      SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} ${GRAPHVIZ_FRAMEWORK})
+    ELSE(GRAPHVIZ_FRAMEWORK MATCHES "xcframework/macos-")
+      # An ordinary framework.
+      INCLUDE_DIRECTORIES("${GRAPHVIZ_FRAMEWORK}/Headers")
+      SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} ${GRAPHVIZ_FRAMEWORK})
+    ENDIF(GRAPHVIZ_FRAMEWORK MATCHES "xcframework/macos-")
+  ELSEIF(${GRAPHVIZ_TYPE} STREQUAL XCFramework)
+    INCLUDE_DIRECTORIES("${GRAPHVIZ_PATH}/Headers")
+    SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} ${GRAPHVIZ_PATH}/libgraphviz.a)
   ELSE (${GRAPHVIZ_TYPE} STREQUAL Framework)
+    INCLUDE_DIRECTORIES("${LIBGVC_INCLUDEDIR}")
+    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
+    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBGVC_LDFLAGS_OTHER}")
+
     # Alas, the pkg-config files shipped with Graphviz under windows are wrong.
     # They give the wrong library directory, and even worse they give the
     # wrong library *names* (graph.dll instead of cgraph.dll).
     # For now, we hard-code fixes for these errors in the WIN32 code below.
-    INCLUDE_DIRECTORIES("${LIBGVC_INCLUDEDIR}")
-    SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
-    SET(CMAKE_EXE_LINKER_FLAGS "${CMAKE_EXE_LINKER_FLAGS} ${LIBGVC_LDFLAGS_OTHER}")
     IF(WIN32)
-      # We do some hard-coding to fix the pkg-config errors described above.
       # Note that, under windows, Graphviz ships its plugins in the same
       # directory as its core library DLLs.
       SET(LINK_LIBS ${LINK_LIBS} gvc cgraph cdt)
@@ -87,9 +99,12 @@ if (APPLE)
   set(REGINA_APP_NAME Regina)
 
   # Add application and mimetype icons to the app bundle.
-  set(REGINA_ICNS ${CMAKE_CURRENT_SOURCE_DIR}/regina.icns ${CMAKE_CURRENT_SOURCE_DIR}/x-regina.icns)
-  set_source_files_properties(${REGINA_ICNS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
-  set(SOURCES ${SOURCES} ${REGINA_ICNS})
+  set(REGINA_MACOS_ICONS
+    ${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/Assets.car
+    ${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/AppIcon.icns
+    ${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/x-regina.icns)
+  set_source_files_properties(${REGINA_MACOS_ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
+  set(SOURCES ${SOURCES} ${REGINA_MACOS_ICONS})
 else (APPLE)
   set(REGINA_APP_NAME regina-gui)
 endif (APPLE)
@@ -99,20 +114,16 @@ if (WIN32)
   set(SOURCES ${SOURCES} regina.rc)
 endif (WIN32)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   # Install XDG application icons.
   set (XDGSIZES 16 22 24 32 48 64 128 256)
   foreach (IMG_SIZE ${XDGSIZES})
     INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps RENAME regina.png)
     INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/x-regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes RENAME application-x-regina.png)
   endforeach (IMG_SIZE ${XDGSIZES})
-endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
-if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  set(REGINA_BUNDLE_DEST .)
-else (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  set(REGINA_BUNDLE_DEST bin)
-endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
+set(REGINA_BUNDLE_DEST bin)
 
 ADD_EXECUTABLE(${REGINA_APP_NAME} MACOSX_BUNDLE WIN32 ${SOURCES})
 
@@ -142,60 +153,14 @@ INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION ${APPDIR} COMPONENT Runtime)
 
 # TODO: Use COMPONENT Runtime/Development throughout all install targets.
 
-if (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-  # Extra steps for building self-contained MacOSX bundles.
-
-  IF (BUILD_PYTHON_BINDINGS)
-    set (ALL_PLUGINS "${BUNDLEDIR_ESCAPED}/Contents/MacOS/python/regina/engine.so")
-  ELSE (BUILD_PYTHON_BINDINGS)
-    set (ALL_PLUGINS)
-  ENDIF (BUILD_PYTHON_BINDINGS)
-
-  foreach (module Core Gui Widgets Svg)
-    foreach (plugin ${Qt5${module}_PLUGINS})
-      get_target_property(plugin_location ${plugin} LOCATION_Release)
-      get_filename_component(plugin_filename "${plugin_location}" NAME)
-
-      # Work out the correct plugins subdirectory.
-      get_filename_component(plugin_path "${plugin_location}" PATH)
-      get_filename_component(plugin_dirname "${plugin_path}" NAME)
-      INSTALL (FILES ${plugin_location}
-        DESTINATION ${PLUGINSDIR}/${plugin_dirname}
-        COMPONENT Runtime)
-
-      LIST (APPEND ALL_PLUGINS "${PLUGINSDIR_ESCAPED}/${plugin_dirname}/${plugin_filename}")
-    endforeach (plugin)
-  endforeach (module)
-
-  # Ensure that the bundle is self-contained for linking purposes.
-  INSTALL(CODE "
-    include(BundleUtilities)
-    fixup_bundle(\"${BUNDLEDIR_ESCAPED}\" \"${ALL_PLUGINS}\" \"\")
-    " COMPONENT Runtime)
-
-  SET(FIX_BUNDLE_PATHS ${CMAKE_CURRENT_SOURCE_DIR}/fix-bundle-paths)
-  INSTALL(CODE "
-    execute_process(COMMAND
-      \"${FIX_BUNDLE_PATHS}\" \"${BUNDLEDIR_ESCAPED}\")
-    " COMPONENT Runtime)
-
-  # On MacOSX we need a qt.conf file in our bundle; otherwise the system
-  # may load both the bundle and system Qt libraries and give unpredictable
-  # results.
-  set(BUNDLE_QT_CONF "${BUNDLEDIR_ESCAPED}/Contents/Resources/qt.conf")
-  INSTALL(CODE "
-    file(WRITE \"${BUNDLE_QT_CONF}\" \"\")
-    " COMPONENT Runtime)
-endif (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
-
-if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   # Install desktop files and mimetype handling.
   install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR}
     COMPONENT Runtime)
   install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR}
     COMPONENT Runtime)
   update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
-endif (${REGINA_INSTALL_TYPE} STREQUAL XDG)
+endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
 if (WIN32)
   # Install Windows icons for mimetype handling.

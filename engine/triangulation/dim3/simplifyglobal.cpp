@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,6 +32,7 @@
 
 #include <cstdlib>
 #include "triangulation/dim3.h"
+#include "utilities/randutils.h"
 
 // Affects the number of random 4-4 moves attempted during simplification.
 #define COEFF_4_4 5
@@ -45,6 +46,94 @@
 // #define PINCH_NOT_COLLAPSE
 
 namespace regina {
+
+bool Triangulation<3>::minimiseBoundary() {
+    // Regina doesn't usually check preconditions, but this one is trivial.
+    if (! isValid()) {
+        std::cerr << "ERROR: Calling minimiseBoundary() on an "
+            "invalid triangulation." << std::endl;
+        return false;
+    }
+
+    TopologyLock lock(this);
+    ChangeEventSpan span(this);
+
+    bool changed = false;
+
+    // Apologies for the use of goto, but this seems cleaner than
+    // juggling breaks and continues with nested loops.
+startAgain:
+
+    // Find a boundary component to operate on.
+    for (auto bc : boundaryComponents()) {
+        if (bc->countTriangles() <= 2 || bc->countVertices() <= 1)
+            continue;
+
+        // This boundary component needs to be reduced in size.
+        changed = true;
+
+        // First try to use a close book move, which does not
+        // increase the number of tetrahedra.
+        for (auto e : bc->edges()) {
+            if (closeBook(e, true, true)) {
+                // We have changed the triangulation, which means
+                // all edges and boundary components have been destroyed.
+                // Start over.
+                goto startAgain;
+            }
+        }
+
+        // We could not find ourselves a close book move.
+        // Instead locate a boundary edge e that joins two distinct
+        // vertices and operate on this.
+        for (auto e : bc->edges())
+            if (e->vertex(0) != e->vertex(1)) {
+                // Our plan is to layer over e, and then do a close book
+                // move on the opposite edge of the layering tetrahedron.
+                //
+                // This would be illegal if both triangles adjacent to e
+                // on the boundary were the same, but in that scenario
+                // there would be a close book move on the third edge of
+                // this common triangle, and so we would not have reached
+                // this point in the code.
+                //
+                // The layer-and-close-book combination is identical to
+                // attaching a snapped 3-ball to the triangles on either
+                // side of e.  Here the boundary of our snapped ball will be
+                // faces 012 and 013, with vertices 01 attaching to edge e.
+
+                Tetrahedron<3>* tet1 = e->front().tetrahedron();
+                Tetrahedron<3>* tet2 = e->back().tetrahedron();
+                Perm<4> roles1 = e->front().vertices();
+                Perm<4> roles2 = e->back().vertices();
+
+                // At this stage, roles1 maps (0,1,2) to the tet1 tetrahedron
+                // vertices for the first boundary triangle, and roles2 maps
+                // (0,1,3) to the tet2 tetrahedron vertices for the second
+                // boundary triangle.  In each case, (0,1) maps to the
+                // endpoints of edge e.
+
+                Tetrahedron<3>* snap = newTetrahedron();
+
+                // At this point, all edges and boundary components have
+                // been destroyed (so we cannot access edge->...).
+                snap->join(0, snap, Perm<4>(0, 1));
+                snap->join(3, tet1, roles1);
+                snap->join(2, tet2, roles2);
+
+                goto startAgain;
+            }
+
+        // We should never reach this point.
+        std::cerr << "ERROR: minimiseBoundary() could not continue."
+            << std::endl;
+        break;
+    }
+
+    // If we fell out of the boundary component loop then all boundary
+    // components are minimal, which means we are done.
+    return changed;
+}
 
 bool Triangulation<3>::intelligentSimplify() {
     bool changed;
@@ -102,7 +191,7 @@ bool Triangulation<3>::intelligentSimplify() {
 
                 // Perform a random 4-4 move on the clone.
                 fourFourChoice = fourFourAvailable[
-                    static_cast<unsigned>(rand()) % fourFourAvailable.size()];
+                    RandomEngine::rand(fourFourAvailable.size())];
                 use->fourFourMove(fourFourChoice.first, fourFourChoice.second,
                     false, true);
 

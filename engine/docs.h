@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@
  *  <center><b>
  *  Regina<br>
  *  Software for low-dimensional topology<br>
- *  Copyright &copy; 1999-2018, The Regina development team
+ *  Copyright &copy; 1999-2021, The Regina development team
  *  </b></center>
  *
  *  This documentation describes the functions, classes and related
@@ -65,7 +65,7 @@
  *
  *  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
  *  "Regina: Software for low-dimensional topology",
- *  http://regina-normal.github.io/ , 1999-2018.
+ *  http://regina-normal.github.io/ , 1999-2021.
  *
  *  <h3>Authors</h3>
  *
@@ -142,6 +142,14 @@
  *  bindings for Regina's native C++ code.  The pybind11 library was written by
  *  Wenzel Jakob, and is distributed under a BSD-style license that is shipped
  *  with Regina's source code in the file python/pybind11/LICENSE.
+ *
+ *  <h3>Python rlcompleter module</h3>
+ *
+ *  Regina includes a modified copy of the Python rlcompleter module,
+ *  which it uses for tab completion in the graphical user interface.  The
+ *  original rlcompleter module was distributed under the Python Software
+ *  Foundation License Version 2; the full license and copyright notice are
+ *  shipped with Regina's source code in the file python/regina/LICENSE.
  *
  *  <h3>Orb Kernel</h3>
  *

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@ static NSArray* _census = [NSArray arrayWithObjects:
                            [Example exampleWithFile:@"cusped-hyp-or-census.rga" desc:@"Cusped hyperbolic census (orientable)"],
                            [Example exampleWithFile:@"cusped-hyp-nor-census.rga" desc:@"Cusped hyperbolic census (non-orientable)"],
                            [Example exampleWithFile:@"closed-hyp-census.rga" desc:@"Hodgson-Weeks closed hyperbolic census"],
-                           [Example exampleWithFile:@"hyp-knot-link-census.rga" desc:@"Hyperbolic knot / link complements"],
+                           [Example exampleWithFile:@"knot-census.rga" desc:@"Prime knots"],
                            nil];
 
 @implementation Example

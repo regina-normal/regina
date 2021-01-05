@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -111,8 +111,11 @@ int main(int argc, char **argv) {
     // Load preferences from file.
     ReginaPrefSet::read();
 
+#ifndef Q_OS_MACX
     // Set a window icon for platforms that support it.
+    // Not on macOS though, since that sets icons via Info.plist.
     QApplication::setWindowIcon(IconCache::icon(IconCache::regina));
+#endif
 
     // No session management with the Qt GUI; just start up normally.
     QStringList args = app->arguments();

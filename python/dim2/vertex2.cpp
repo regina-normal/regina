@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@ using regina::VertexEmbedding;
 using regina::Face;
 using regina::FaceEmbedding;
 
-void addVertex2(pybind11::module& m) {
+void addVertex2(pybind11::module_& m) {
     auto e = pybind11::class_<FaceEmbedding<2, 0>>(m, "FaceEmbedding2_0")
         .def(pybind11::init<regina::Triangle<2>*, int>())
         .def(pybind11::init<const VertexEmbedding<2>&>())

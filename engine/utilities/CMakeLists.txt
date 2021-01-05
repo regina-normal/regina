@@ -7,6 +7,7 @@ SET ( FILES
   i18nutils
   memstream
   osutils
+  randutils
   stringutils
   xmlcallback
   xmlutils
@@ -37,6 +38,7 @@ if (${REGINA_INSTALL_DEV})
     property.h
     ptrutils.h
     qitmask.h
+    randutils.h
     registryutils.h
     safepointeebase.h
     safeptr.h

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,6 +33,6 @@
 #include "triangulation/dim4.h"
 #include "example-bindings.h"
 
-void addExample5(pybind11::module& m) {
+void addExample5(pybind11::module_& m) {
     addExample<5>(m, "Example5");
 }

@@ -1,6 +1,6 @@
 
                Regina - Software for low-dimensional topology
-            Copyright (c) 1999-2018, The Regina development team
+            Copyright (c) 1999-2021, The Regina development team
 
 
 CITATION:
@@ -10,7 +10,7 @@ you would any other paper that you use.  A suggested form of reference is:
 
   Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,
   "Regina: Software for low-dimensional topology",
-  http://regina-normal.github.io/, 1999-2018.
+  http://regina-normal.github.io/, 1999-2021.
 
 
 AUTHORS:
@@ -89,6 +89,15 @@ Regina includes a copy of pybind11, which it uses to generate python bindings
 for Regina's native C++ code.  The pybind11 library was written by
 Wenzel Jakob, and is distributed under a BSD-style license that is shipped
 with Regina's source code in the file python/pybind11/LICENSE.
+
+
+PYTHON RLCOMPLETER MODULE:
+
+Regina includes a modified copy of the Python rlcompleter module, which it
+uses for tab completion in the graphical user interface.  The original
+rlcompleter module was distributed under the Python Software Foundation
+License Version 2; the full license and copyright notice are shipped with
+Regina's source code in the file python/regina/LICENSE.
 
 
 ORB KERNEL:

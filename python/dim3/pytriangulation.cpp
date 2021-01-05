@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,22 +30,22 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addBoundaryComponent3(pybind11::module& m);
-void addComponent3(pybind11::module& m);
-void addEdge3(pybind11::module& m);
-void addExample3(pybind11::module& m);
-void addFacePair(pybind11::module& m);
-void addFacetPairing3(pybind11::module& m);
-void addHomologicalData(pybind11::module& m);
-void addIsomorphism3(pybind11::module& m);
-void addTetrahedron3(pybind11::module& m);
-void addTriangle3(pybind11::module& m);
-void addTriangulation3(pybind11::module& m);
-void addVertex3(pybind11::module& m);
+void addBoundaryComponent3(pybind11::module_& m);
+void addComponent3(pybind11::module_& m);
+void addEdge3(pybind11::module_& m);
+void addExample3(pybind11::module_& m);
+void addFacePair(pybind11::module_& m);
+void addFacetPairing3(pybind11::module_& m);
+void addHomologicalData(pybind11::module_& m);
+void addIsomorphism3(pybind11::module_& m);
+void addTetrahedron3(pybind11::module_& m);
+void addTriangle3(pybind11::module_& m);
+void addTriangulation3(pybind11::module_& m);
+void addVertex3(pybind11::module_& m);
 
-void addTriangulationClasses(pybind11::module& m) {
+void addTriangulationClasses(pybind11::module_& m) {
     addBoundaryComponent3(m);
     addComponent3(m);
     addEdge3(m);

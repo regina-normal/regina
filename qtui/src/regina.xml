@@ -3,5 +3,6 @@
   <mime-type type="application/x-regina">
     <comment>Regina topology data</comment>
     <glob pattern="*.rga"/>
+    <generic-icon name="x-regina"/>
   </mime-type>
 </mime-info>

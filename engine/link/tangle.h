@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -155,7 +155,7 @@ class REGINA_API Tangle : public Output<Tangle> {
          * the starting strand as returned by <tt>knot.component(0)</tt>.
          *
          * The two resulting endpoints that appear just before the
-         * starting strand will form the top-left and top-right
+         * starting strand will form the top-left and bottom-left
          * endpoints of this tangle, and the endpoints on the other side
          * of the break (which will be just after the parallel copies of the
          * final strand <tt>knot.component(0).prev()</tt>) will form the

@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -76,6 +76,8 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         QLabel* titleThreeBall;
         QLabel* solidTorus;
         QLabel* titleSolidTorus;
+        QLabel* TxI;
+        QLabel* titleTxI;
         QLabel* irreducible;
         QLabel* titleIrreducible;
         QLabel* haken;
@@ -89,6 +91,7 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         QAbstractButton* btnThreeSphere;
         QAbstractButton* btnThreeBall;
         QAbstractButton* btnSolidTorus;
+        QAbstractButton* btnTxI;
         QAbstractButton* btnIrreducible;
         QAbstractButton* btnHaken;
         QAbstractButton* btnStrict;
@@ -118,6 +121,7 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
         void calculateThreeSphere();
         void calculateThreeBall();
         void calculateSolidTorus();
+        void calculateTxI();
         void calculateIrreducible();
         void calculateHaken();
         void calculateStrict();
@@ -126,7 +130,7 @@ class Tri3SurfacesUI : public QObject, public PacketViewerTab {
          * Notify that preferences have changed.
          */
         void updatePreferences();
-    
+
         /**
          * Support clipboard actions.
          */

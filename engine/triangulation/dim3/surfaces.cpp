@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,8 +31,9 @@
  **************************************************************************/
 
 #include "enumerate/treetraversal.h"
-#include "triangulation/dim3.h"
+#include "packet/container.h"
 #include "surfaces/normalsurfaces.h"
+#include "triangulation/dim3.h"
 
 namespace regina {
 
@@ -236,42 +237,117 @@ bool Triangulation<3>::isZeroEfficient() {
     return zeroEfficient_.value();
 }
 
-bool Triangulation<3>::hasSplittingSurface() {
-    // Splitting surfaces must unfortunately be calculated using
-    // tri-quad coordinates.
+bool Triangulation<3>::hasSplittingSurface() const {
     if (splittingSurface_.known())
         return splittingSurface_.value();
 
-    // Create a normal surface list.
-    //
-    // Work on a clone of this triangulation so we don't trigger any
-    // changes to the packet tree.
-    Triangulation<3> working(*this, false);
-    NormalSurfaces* surfaces = NormalSurfaces::enumerate(&working,
-        NS_STANDARD);
+    if (isEmpty())
+        return splittingSurface_ = false;
 
-    // Run through all vertex surfaces.
-    unsigned long nSurfaces = surfaces->size();
-    const NormalSurface* s;
-    LargeInteger chi;
-    for (unsigned long i = 0; i < nSurfaces; i++) {
-        s = surfaces->surface(i);
+    // In the main loop of this procedure, we assume the triangulation is
+    // connected.  If it isn't connected, we see instead if each component
+    // has a splitting surface.
 
-        if (! splittingSurface_.known())
-            if (s->isSplitting())
-                splittingSurface_ = true;
-
-        // See if there is no use running through the rest of the list.
-        if (splittingSurface_.known())
-            break;
+    if (!isConnected()) {
+        Container c;
+        // The call to splitIntoComponents() will not change this triangulation,
+        // since we pass a different parent packet (c).
+        // Therefore it is safe to cast away the const here.
+        const_cast<Triangulation<3>*>(this)->splitIntoComponents(&c);
+        for (Packet* child : c.children())
+            if (! static_cast<Triangulation<3>*>(child)->hasSplittingSurface())
+                return splittingSurface_ = false;
+        // All the components have splitting surfaces.
+        return splittingSurface_ = true;
     }
 
-    // Done!
-    if (! splittingSurface_.known())
-        splittingSurface_ = false;
+    // Now we can assume the triangulation is connected.
 
-    // The stack will clean things up for us automatically.
-    return splittingSurface_.value();
+    // We keep track of whether an edge has been assumed to be disjoint
+    // or not from a putative splitting surface.
+    enum EdgeState {
+        EDGE_UNKNOWN = 0,
+        EDGE_DISJOINT = 1,
+        EDGE_INTERSECTING = 2
+    };
+    EdgeState* state = new EdgeState[countEdges()];
+
+    // We also keep track of each edge e that is not yet assumed disjoint but
+    // that is a candidate for this assumption.
+    std::deque<Edge<3>*> candidate_disjoint;
+
+    // At the outset, we may regard any edge as a candidate.
+    // We will do so for each of the three edges in a triangle of the
+    // triangulation.
+    // The triangulation is connected.
+    // So these exhaust the possibilities for a splitting surface.
+    auto tri = triangle(0);
+
+    for (int i = 0; i < 3; i++){
+        candidate_disjoint.clear();
+        std::fill(state, state + countEdges(), EDGE_UNKNOWN);
+
+        // Outset
+        candidate_disjoint.push_back(tri->edge(i));
+
+        // Main inner loop
+        bool broken = false;
+        while (!candidate_disjoint.empty()){
+            Edge<3>* e = candidate_disjoint.front();
+            candidate_disjoint.pop_front();
+
+            for (auto& emb : *e){
+                Tetrahedron<3>* tet_e = emb.simplex();
+                Perm<4> v_perm = emb.vertices();
+
+                // The splitting surface should intersect the other edges
+                // of the candidate edge in the given embedding meeting
+                // the candidate edge---lateral edges.
+                Edge<3>* lat02 = tet_e->edge(v_perm[0],v_perm[2]);
+                Edge<3>* lat03 = tet_e->edge(v_perm[0],v_perm[3]);
+                Edge<3>* lat12 = tet_e->edge(v_perm[1],v_perm[2]);
+                Edge<3>* lat13 = tet_e->edge(v_perm[1],v_perm[3]);
+                state[lat02->index()] = EDGE_INTERSECTING;
+                state[lat03->index()] = EDGE_INTERSECTING;
+                state[lat12->index()] = EDGE_INTERSECTING;
+                state[lat13->index()] = EDGE_INTERSECTING;
+            }
+
+            // Now we check for a local obstruction to a splitting surface
+            // opposite e.
+            if (state[e->index()] == EDGE_INTERSECTING) {
+                broken = true;
+                break;
+            } else {
+                state[e->index()] = EDGE_DISJOINT;
+                // Regard the edges opposite e as candidates if they're not
+                // already assumed disjoint.
+                for (auto& emb : *e) {
+                    Tetrahedron<3>* tet_e = emb.simplex();
+                    Perm<4> v_perm = emb.vertices();
+                    Edge<3>* opp = tet_e->edge(v_perm[2],v_perm[3]);
+                    if (state[opp->index()] == EDGE_INTERSECTING) {
+                        broken = true;
+                        break;
+                    }
+                    if (state[opp->index()] != EDGE_DISJOINT)
+                        candidate_disjoint.push_back(opp);
+                }
+            }
+        } // End main inner loop
+
+        if (! broken) {
+            // We partitioned the edges into disjoint and intersecting,
+            // with two opposite disjoint edges per tetrahedron.
+            // Thus there is a splitting surface.
+            delete[] state;
+            return splittingSurface_ = true;
+        }
+    } // End search for splitting surfaces along each edge of tri.
+
+    // We found no splitting surfaces; there is none.
+    delete[] state;
+    return splittingSurface_ = false;
 }
 
 } // namespace regina

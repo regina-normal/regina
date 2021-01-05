@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@
 using regina::SatAnnulus;
 using regina::SatBlock;
 
-void addSatBlock(pybind11::module& m) {
+void addSatBlock(pybind11::module_& m) {
     auto c = pybind11::class_<SatBlock>(m, "SatBlock")
         .def("clone", &SatBlock::clone)
         .def("nAnnuli", &SatBlock::nAnnuli)

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 2019, Ben Burton                                        *
+ *  Copyright (c) 2019-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -100,19 +100,10 @@ class REGINA_API mem_streambuf : public std::streambuf {
          * @end a pointer past-the-end of the array to read.
          */
         mem_streambuf(const char *begin, const char *end);
-        /**
-         * Makes a new clone of the given stream buffer.
-         * This buffer will refer to the same array of characters, and
-         * will have the same current position as \a rhs.
-         */
-        mem_streambuf(const mem_streambuf& rhs) = default;
 
-        /**
-         * Sets this to be a clone of the given stream buffer.
-         * This buffer will refer to the same array of characters, and
-         * will have the same current position as \a rhs.
-         */
-        mem_streambuf& operator = (const mem_streambuf& rhs) = default;
+        // Make this class non-copyable.
+        mem_streambuf(const mem_streambuf&) = delete;
+        mem_streambuf& operator = (const mem_streambuf&) = delete;
 
     protected:
         int_type underflow() override;

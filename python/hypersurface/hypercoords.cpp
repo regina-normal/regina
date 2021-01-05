@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "hypersurface/hypercoords.h"
 
-void addHyperCoords(pybind11::module& m) {
+void addHyperCoords(pybind11::module_& m) {
     pybind11::enum_<regina::HyperCoords>(m, "HyperCoords")
         .value("HS_STANDARD", regina::HS_STANDARD)
         .value("HS_EDGE_WEIGHT", regina::HS_EDGE_WEIGHT)

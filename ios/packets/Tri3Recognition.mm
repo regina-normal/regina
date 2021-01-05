@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  iOS User Interface                                                    *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -279,9 +279,10 @@
                 return [TextHelper yesNoString:self.packet->isZeroEfficient() yes:@"Yes" no:@"No"];
             return nil;
         case PROP_SPLITTING:
-            if (self.packet->knowsSplittingSurface() || self.packet->size() <= 6)
-                return [TextHelper yesNoString:self.packet->hasSplittingSurface() yes:@"Yes" no:@"No"];
-            return nil;
+            // Now that hasSplittingSurface() is fast, we always compute it.
+            // Eventually we should get rid of the Calculate button, which
+            // will now be forever disabled.
+            return [TextHelper yesNoString:self.packet->hasSplittingSurface() yes:@"Yes" no:@"No"];
         case PROP_IRREDUCIBLE:
             if (self.packet->knowsIrreducible())
                 return [TextHelper yesNoString:self.packet->isIrreducible() yes:@"Yes" no:@"No"];

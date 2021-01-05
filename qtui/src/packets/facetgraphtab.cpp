@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -96,9 +96,9 @@ FacetGraphTab::FacetGraphTab(FacetGraphData* useData,
     QLabel* label = new QLabel(tr("Display graph:"), ui);
     hdrLayout->addWidget(label);
     chooseType = new QComboBox(ui);
-    chooseType->insertItem(0, tr("Dual graph"));
-    chooseType->insertItem(1, tr("Tree decomposition"));
-    chooseType->insertItem(2, tr("Nice tree decomposition"));
+    chooseType->addItem(tr("Dual graph"));
+    chooseType->addItem(tr("Tree decomposition"));
+    chooseType->addItem(tr("Nice tree decomposition"));
     connect(chooseType, SIGNAL(activated(int)), this, SLOT(changeType(int)));
     hdrLayout->addWidget(chooseType);
     QString msg = tr("<qt>Allows you to switch between different graphs.<p>"

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -123,6 +123,10 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("perm4", &addPerm4));
     sets.insert(std::make_pair("perm5", &addPerm5));
     sets.insert(std::make_pair("perm", &addPerm));
+    sets.insert(std::make_pair("polynomial", &addPolynomial));
+    sets.insert(std::make_pair("cyclotomic", &addCyclotomic));
+    sets.insert(std::make_pair("laurent", &addLaurent));
+    sets.insert(std::make_pair("laurent2", &addLaurent2));
     sets.insert(std::make_pair("primes", &addPrimes));
     sets.insert(std::make_pair("numbertheory", &addNumberTheory));
     sets.insert(std::make_pair("matrixops", &addMatrixOps));

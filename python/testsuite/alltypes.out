@@ -1433,6 +1433,9 @@ Equality type : EqualityType.BY_REFERENCE
 ProgressTrackerOpen : class
 Equality type : EqualityType.BY_REFERENCE
 
+RandomEngine : class
+Equality type : EqualityType.NEVER_INSTANTIATED
+
 Rational : class
 Equality type : EqualityType.BY_VALUE
 

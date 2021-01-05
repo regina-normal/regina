@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -51,9 +51,9 @@ namespace regina {
  */
 
 /**
- * A fast class for storing a ray rooted at the origin whose
- * coordinates are rational.  Such a ray is a half-line beginning at
- * the origin and is represented by an integer point that it passes through.
+ * A fast class for storing a ray rooted at the origin that passes
+ * through an integer point.  Such a ray is a half-line beginning at
+ * the origin, and is represented by some integer point that it passes through.
  * Positive scalar multiples of a ray are considered to represent the same ray.
  *
  * This class is intended for serious computation, and as a result it

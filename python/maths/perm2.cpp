@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -62,7 +62,7 @@ namespace {
     };
 }
 
-void addPerm2(pybind11::module& m) {
+void addPerm2(pybind11::module_& m) {
     auto c = pybind11::class_<Perm<2>>(m, "Perm2")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
@@ -81,7 +81,7 @@ void addPerm2(pybind11::module& m) {
         .def("isIdentity", &Perm<2>::isIdentity)
         .def_static("atIndex", &Perm<2>::atIndex)
         .def("index", &Perm<2>::index)
-        .def_static("rand", &Perm<2>::rand,
+        .def_static("rand", (Perm<2> (*)(bool))(&Perm<2>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<2>::trunc)
         .def("clear", &Perm<2>::clear)

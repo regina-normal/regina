@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -299,6 +299,14 @@ class REGINA_API AbelianGroup :
          */
         bool isZ() const;
         /**
+         * Determines whether this is the free abelian group of the given rank.
+         *
+         * @param r the rank of the free abelian group that we are testing for.
+         * @return \c true if and only if this is the free abelian group
+         * of rank \a r.
+         */
+        bool isFree(unsigned r) const;
+        /**
          * Determines whether this is the non-trivial cyclic group on
          * the given number of elements.
          *
@@ -419,6 +427,10 @@ inline bool AbelianGroup::isTrivial() const {
 
 inline bool AbelianGroup::isZ() const {
     return (rank_ == 1 && invariantFactors.empty());
+}
+
+inline bool AbelianGroup::isFree(unsigned r) const {
+    return (rank_ == r && invariantFactors.empty());
 }
 
 inline bool AbelianGroup::isZn(unsigned long n) const {

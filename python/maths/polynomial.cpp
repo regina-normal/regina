@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -64,7 +64,7 @@ namespace {
     }
 }
 
-void addPolynomial(pybind11::module& m) {
+void addPolynomial(pybind11::module_& m) {
     auto c = pybind11::class_<Polynomial<Rational>>(m, "Polynomial")
         .def(pybind11::init<>())
         .def(pybind11::init<size_t>())
@@ -101,6 +101,7 @@ void addPolynomial(pybind11::module& m) {
         })
         .def("set", &Polynomial<Rational>::set)
         .def("swap", &Polynomial<Rational>::swap)
+        .def("negate", &Polynomial<Rational>::negate)
         .def("str", overload_cast<const char*>(
             &Polynomial<Rational>::str, pybind11::const_))
         .def("utf8", overload_cast<const char*>(
@@ -111,8 +112,14 @@ void addPolynomial(pybind11::module& m) {
         .def(pybind11::self -= pybind11::self)
         .def(pybind11::self *= pybind11::self)
         .def(pybind11::self /= pybind11::self)
+        .def(pybind11::self * regina::Rational())
+        .def(regina::Rational() * pybind11::self)
+        .def(pybind11::self / regina::Rational())
         .def(pybind11::self + pybind11::self)
+        .def(pybind11::self - pybind11::self)
         .def(pybind11::self * pybind11::self)
+        .def(pybind11::self / pybind11::self)
+        .def(- pybind11::self)
         .def("divisionAlg", [](const Polynomial<Rational>& p,
                 const Polynomial<Rational>& divisor) {
             std::unique_ptr<Polynomial<Rational>> q(new Polynomial<Rational>);

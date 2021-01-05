@@ -446,9 +446,6 @@
     satisfying a variety of different constraints.  The best way to
     do this is through the command-line tool
     <link linkend="man-tricensus"><command>tricensus</command></link>.
-    For very long calculations,
-    <link linkend="man-tricensus-mpi"><command>tricensus-mpi</command></link>
-    may be used to distribute the computation across a cluster of machines.
    </para>
   </sect2>
  </sect1>

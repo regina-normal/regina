@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@ using regina::Layering;
 using regina::Perm;
 using regina::Tetrahedron;
 
-void addLayering(pybind11::module& m) {
+void addLayering(pybind11::module_& m) {
     auto c = pybind11::class_<Layering>(m, "Layering")
         .def(pybind11::init<Tetrahedron<3>*, Perm<4>,
             Tetrahedron<3>*, Perm<4>>())

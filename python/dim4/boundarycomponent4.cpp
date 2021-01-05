@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@
 
 using regina::BoundaryComponent;
 
-void addBoundaryComponent4(pybind11::module& m) {
+void addBoundaryComponent4(pybind11::module_& m) {
     auto c = pybind11::class_<BoundaryComponent<4>>(m, "BoundaryComponent4")
         .def("index", &BoundaryComponent<4>::index)
         .def("size", &BoundaryComponent<4>::size)

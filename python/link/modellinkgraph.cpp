@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@ using regina::ModelLinkGraphArc;
 using regina::ModelLinkGraph;
 using regina::ModelLinkGraphCells;
 
-void addModelLinkGraph(pybind11::module& m) {
+void addModelLinkGraph(pybind11::module_& m) {
     auto a = pybind11::class_<ModelLinkGraphArc>(m, "ModelLinkGraphArc")
         .def(pybind11::init<>())
         .def(pybind11::init<ModelLinkGraphNode*, int>())

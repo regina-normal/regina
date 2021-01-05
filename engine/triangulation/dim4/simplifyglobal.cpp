@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,6 +32,7 @@
 
 #include <cstdlib>
 #include "triangulation/dim4.h"
+#include "utilities/randutils.h"
 
 // Affects the number of random 3-3 moves attempted during simplification.
 #define COEFF_3_3 10
@@ -92,7 +93,7 @@ bool Triangulation<4>::intelligentSimplify() {
 
                 // Perform a random 3-3 move on the clone.
                 threeThreeChoice = threeThreeAvailable[
-                    static_cast<unsigned>(rand()) % threeThreeAvailable.size()];
+                    RandomEngine::rand(threeThreeAvailable.size())];
                 use->pachner(threeThreeChoice, false, true);
 
                 // See if we can simplify now.

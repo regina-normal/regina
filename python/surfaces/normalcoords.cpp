@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "surfaces/normalcoords.h"
 
-void addNormalCoords(pybind11::module& m) {
+void addNormalCoords(pybind11::module_& m) {
     pybind11::enum_<regina::NormalCoords>(m, "NormalCoords")
         .value("NS_STANDARD", regina::NS_STANDARD)
         .value("NS_AN_STANDARD", regina::NS_AN_STANDARD)

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,7 +42,7 @@ using regina::GroupExpression;
 using regina::GroupPresentation;
 using regina::HomGroupPresentation;
 
-void addHomGroupPresentation(pybind11::module& m) {
+void addHomGroupPresentation(pybind11::module_& m) {
     auto c = pybind11::class_<HomGroupPresentation>(m, "HomGroupPresentation")
         .def(pybind11::init<const HomGroupPresentation&>())
         .def(pybind11::init<const GroupPresentation&>())

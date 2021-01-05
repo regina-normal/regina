@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,7 +41,7 @@
 using regina::HyperCoords;
 using regina::NormalHypersurfaces;
 
-void addNormalHypersurfaces(pybind11::module& m) {
+void addNormalHypersurfaces(pybind11::module_& m) {
     m.def("makeMatchingEquations", regina::makeMatchingEquations);
 
     pybind11::class_<NormalHypersurfaces, regina::Packet,

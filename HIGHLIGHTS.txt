@@ -6,7 +6,30 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
-Version 5.2  [ 29 September, 2017 ]
+Version 5.96  [ 24 December, 2020 ]
+
+    Overview:
+        - This is the first prerelease for Regina 6.0.  The main material
+          still to be added is user documentation (i.e., the handbook),
+          which needs to be updated to talk through the many new features.
+        - Regina now uses the C++14 standard, and no longer links against
+          the boost libraries (it just uses the boost headers).
+        - At least something good has come from the year 2020.
+    Features:
+        - Regina now offers native support for knots and links!
+          Take a look around the introductory examples file.
+        - New quad closed coordinates for normal surfaces.
+        - New command-line utility to retriangulate a given manifold.
+        - Many, many other additions: see the full changelog for details.
+    Python and C++:
+        - Now supports Python 3 as well as Python 2.  Regina's ready-made
+          packages will be built against the default python on your system.
+        - The Python bindings have been completely overhauled.
+        - Large mathematical objects (e.g., polynomials) now support C++11 move
+          assignment and move constructors, which allow for more natural syntax
+          in arithmetical expressions without the unwanted cost of deep copies.
+        - Several collection objects (e.g., packets and surface lists)
+          now allow iteration over members using C++11 range-based for loops.
 
 Version 5.1  [ 19 December, 2016 ]
 

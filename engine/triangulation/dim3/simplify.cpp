@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,6 +33,8 @@
 #include <algorithm>
 #include <set>
 #include "triangulation/dim3.h"
+
+// #define SIMPLIFY_DUMP_MOVES
 
 namespace regina {
 
@@ -93,7 +95,7 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing 4-4 move\n";
     #endif
 
@@ -164,7 +166,7 @@ bool Triangulation<3>::twoZeroMove(Edge<3>* e, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing 2-0 move about edge\n";
     #endif
 
@@ -251,7 +253,7 @@ bool Triangulation<3>::twoZeroMove(Vertex<3>* v, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing 2-0 move about vertex\n";
     #endif
 
@@ -341,7 +343,7 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing 2-1 move\n";
     #endif
 
@@ -455,7 +457,7 @@ bool Triangulation<3>::openBook(Triangle<3>* f, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing open book move\n";
     #endif
 
@@ -470,6 +472,8 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     if (check) {
         if (! e->isBoundary())
             return false;
+        if (e->boundaryComponent()->countTriangles() <= 2)
+            return false;
     }
 
     // Find the two triangles on either side of edge e.
@@ -482,27 +486,17 @@ bool Triangulation<3>::closeBook(Edge<3>* e, bool check, bool perform) {
     Perm<4> p1 = back.vertices();
 
     if (check) {
-        if (t0->triangle(p0[3]) == t1->triangle(p1[2]))
-            return false;
         if (t0->vertex(p0[2]) == t1->vertex(p1[3]))
             return false;
         if (t0->vertex(p0[2])->link() != Vertex<3>::DISC ||
                t1->vertex(p1[3])->link() != Vertex<3>::DISC)
-            return false;
-
-        Edge<3>* e1 = t0->edge(Edge<3>::edgeNumber[p0[0]][p0[2]]);
-        Edge<3>* e2 = t0->edge(Edge<3>::edgeNumber[p0[1]][p0[2]]);
-        Edge<3>* f1 = t1->edge(Edge<3>::edgeNumber[p1[0]][p1[3]]);
-        Edge<3>* f2 = t1->edge(Edge<3>::edgeNumber[p1[1]][p1[3]]);
-
-        if (e1 == e2 && f1 == f2)
             return false;
     }
 
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing close book move\n";
     #endif
 
@@ -561,7 +555,7 @@ bool Triangulation<3>::shellBoundary(Tetrahedron<3>* t,
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing shell boundary move\n";
     #endif
 
@@ -788,7 +782,7 @@ bool Triangulation<3>::collapseEdge(Edge<3>* e, bool check, bool perform) {
     if (! perform)
         return true;
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing edge collapse move\n";
     #endif
 
@@ -840,7 +834,7 @@ void Triangulation<3>::pinchEdge(Edge<3>* e) {
     Tetrahedron<3>* open = e->front().tetrahedron();
     Perm<4> vertices = e->front().vertices();
 
-    #ifdef DEBUG
+    #ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing edge pinch move\n";
     #endif
 

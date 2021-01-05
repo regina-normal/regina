@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -99,6 +99,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(threeSphereRecognitionLarge);
     CPPUNIT_TEST(threeBallRecognition);
     CPPUNIT_TEST(solidTorusRecognition);
+    CPPUNIT_TEST(torusXIntervalRecognition);
     CPPUNIT_TEST(turaevViro);
     CPPUNIT_TEST(barycentricSubdivision);
     CPPUNIT_TEST(idealToFinite);
@@ -116,6 +117,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(pachner<1>);
     CPPUNIT_TEST(pachner<2>);
     CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(minimiseBoundary);
     CPPUNIT_TEST(fillTorus);
     CPPUNIT_TEST(meridianLongitude);
 
@@ -2866,6 +2868,145 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllBounded(&testSolidTorus4);
         }
 
+        Triangulation<3>* verifyTxI(Triangulation<3>* tri,
+                const char* triName = 0) {
+            if (triName)
+                tri->setLabel(triName);
+
+            Triangulation<3> bounded(*tri);
+            if (bounded.isIdeal())
+                bounded.idealToFinite();
+            clearProperties(bounded);
+
+            Triangulation<3> ideal(*tri);
+            if (ideal.hasBoundaryTriangles())
+                ideal.finiteToIdeal();
+            clearProperties(ideal);
+
+            Triangulation<3> boundedBig(bounded);
+            boundedBig.barycentricSubdivision();
+            clearProperties(boundedBig);
+
+            Triangulation<3> idealBig(ideal);
+            idealBig.barycentricSubdivision();
+            clearProperties(idealBig);
+
+            if (! bounded.isTxI()) {
+                CPPUNIT_FAIL(("The real T^2xI " +
+                    tri->label() + " is not recognised as such.").c_str());
+            }
+            if (! ideal.isTxI()) {
+                CPPUNIT_FAIL(("The ideal T^2xI " +
+                    tri->label() + " is not recognised as such.").c_str());
+            }
+            if (! boundedBig.isTxI()) {
+                CPPUNIT_FAIL(("The subdivided real T^2xI " +
+                    tri->label() + " is not recognised as such.").c_str());
+            }
+            if (! idealBig.isTxI()) {
+                CPPUNIT_FAIL(("The subdivided ideal T^2xI " +
+                    tri->label() + " is not recognised as such.").c_str());
+            }
+
+            return tri;
+        }
+
+        Triangulation<3>* verifyNotTxI(Triangulation<3>* tri,
+                const char* triName = 0) {
+            if (triName)
+                tri->setLabel(triName);
+
+            Triangulation<3> bounded(*tri);
+            if (bounded.isIdeal())
+                bounded.idealToFinite();
+            clearProperties(bounded);
+
+            Triangulation<3> ideal(*tri);
+            if (ideal.hasBoundaryTriangles())
+                ideal.finiteToIdeal();
+            clearProperties(ideal);
+
+            Triangulation<3> boundedBig(bounded);
+            boundedBig.barycentricSubdivision();
+            clearProperties(boundedBig);
+
+            Triangulation<3> idealBig(ideal);
+            idealBig.barycentricSubdivision();
+            clearProperties(idealBig);
+
+            if (bounded.isTxI()) {
+                CPPUNIT_FAIL(("The real non-T^2xI " +
+                    tri->label() + " is recognised as a T^2xI.").c_str());
+            }
+            if (ideal.isTxI()) {
+                CPPUNIT_FAIL(("The ideal non-T^2xI " +
+                    tri->label() + " is recognised as a T^2xI.").c_str());
+            }
+            if (boundedBig.isTxI()) {
+                CPPUNIT_FAIL(("The subdivided real non-T^2xI " +
+                    tri->label() + " is recognised as a T^2xI.").c_str());
+            }
+            if (idealBig.isTxI()) {
+                CPPUNIT_FAIL(("The subdivided ideal non-T^2xI " +
+                    tri->label() + " is recognised as a T^2xI.").c_str());
+            }
+
+            return tri;
+        }
+
+        void verifyIsoSigTxI(const std::string& sigStr) {
+            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
+            t->setLabel(sigStr);
+            delete verifyTxI(t);
+        }
+
+        void verifyIsoSigNotTxI(const std::string& sigStr) {
+            Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
+            t->setLabel(sigStr);
+            delete verifyNotTxI(t);
+        }
+
+        void torusXIntervalRecognition() {
+            Triangulation<3>* tri;
+
+            tri = Triangulation<3>::fromIsoSig("eLAkbbcddadbdb");
+            delete verifyTxI(tri, "Ideal T2xI eLAkbbcddadbdb");
+
+            tri = new Triangulation<3>();
+            delete verifyNotTxI(tri, "Empty triangulation");
+
+            tri = new Triangulation<3>();
+            tri->newTetrahedron();
+            delete verifyNotTxI(tri, "Single tetrahedron");
+
+            tri = new Triangulation<3>();
+            Tetrahedron<3>* tet = tri->newTetrahedron();
+            tet->join(0, tet, Perm<4>(3, 1, 2, 0));
+            delete verifyNotTxI(tri, "Snapped tetrahedron");
+
+            // Now we check some homology-T2xI manifolds.
+
+            // Some links from 4^2_1 thru 7^2_8
+            // in Bailey and Roth's tables from Rolfsen's *Knots and links.*
+            // (5^2_1 and 7^2_8 have the same exterior.)
+
+            verifyIsoSigNotTxI("eLPkbdcddabgbg");
+            verifyIsoSigNotTxI("eLPkbdcddhgggb");
+            verifyIsoSigNotTxI("eLMkbcdddaeeda");
+            verifyIsoSigNotTxI("eLMkbcddddedde");
+            // verifyIsoSigNotTxI("gLLMQbcdefffmvftaog");
+            // verifyIsoSigNotTxI("fLLQcbecdeepuwsua");
+            // verifyIsoSigNotTxI("hLLAPkbcdefgggtsfxjjgb");
+            // verifyIsoSigNotTxI("hLLMPkbcdfggfgmvfafwkf");
+            // verifyIsoSigNotTxI("hLLzQkcdegffgguvuqpgvk");
+            // verifyIsoSigNotTxI("iLLLAQccdegfhhghdcltautwa");
+            // verifyIsoSigNotTxI("kLLLALQkceffehijjijiiealshealf");
+            verifyIsoSigNotTxI("eLPkbdcddabobv");
+
+            // Finally, the connected sum of the Poincare homology sphere and T2xI:
+            // verifyIsoSigNotTxI("pLvwwLuPIIIkaddkomnjlllonobabtlqinfjwjnw");
+        }
+
         void verifyTV3(Triangulation<3>& t, const std::string& triName) {
             // Verify the Turaev-Viro invariants for r=3.
             // The expected values are described in the paper of Turaev
@@ -4107,6 +4248,109 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllBounded(verifyPachner<k>, true);
             runCensusAllIdeal(verifyPachner<k>, true);
             verifyPachnerSimplicial<k>();
+        }
+
+        static void verifyMinimiseBoundaryDoesNothing(Triangulation<3>* tri) {
+            Triangulation<3> copy(*tri);
+            if (copy.minimiseBoundary()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "reported changes when it should not.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! copy.isIsomorphicTo(*tri)) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "made changes when it should not.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static bool hasMinimalBoundary(const Triangulation<3>* tri) {
+            for (auto b : tri->boundaryComponents())
+                if (b->countTriangles() > 2 && b->countVertices() > 1)
+                    return false;
+            return true;
+        }
+
+        static void verifyMinimiseBoundary(Triangulation<3>* tri) {
+            if (hasMinimalBoundary(tri)) {
+                verifyMinimiseBoundaryDoesNothing(tri);
+                return;
+            }
+
+            Triangulation<3> copy(*tri);
+            if (! copy.minimiseBoundary()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "reported no changes when it should.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (copy.isIsomorphicTo(*tri)) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "made no changes when it should.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! hasMinimalBoundary(&copy)) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "did not minimise boundary.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->eulerCharTri() != copy.eulerCharTri()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() changed "
+                    "Euler characteristic (triangulation).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->eulerCharManifold() != copy.eulerCharManifold()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() changed "
+                    "Euler characteristic (manifold).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->homology() != copy.homology()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() changed "
+                    "homology.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NormalSurface* origSurface = tri->hasNonTrivialSphereOrDisc();
+            NormalSurface* postSurface = copy.hasNonTrivialSphereOrDisc();
+            bool isOrig0eff = ! origSurface;
+            bool isPost0eff = ! postSurface;
+            delete origSurface;
+            delete postSurface;
+
+            if (isOrig0eff && ! isPost0eff) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() broke "
+                    "0-efficiency.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void minimiseBoundary() {
+            runCensusAllClosed(verifyMinimiseBoundaryDoesNothing);
+            runCensusAllIdeal(verifyMinimiseBoundaryDoesNothing);
+            runCensusAllBounded(verifyMinimiseBoundary);
+
+            // The cone of a 6-triangle torus whose boundary has no
+            // close-book moves at the beginning (so a layering is required).
+            {
+                Triangulation<3>* tri = Triangulation<3>::fromIsoSig(
+                    "gffjQafeefaaaa");
+                verifyMinimiseBoundary(tri);
+                delete tri;
+            }
         }
 
         void verifyFillTorus(unsigned long p1, unsigned long q1,

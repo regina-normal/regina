@@ -1,0 +1,64 @@
+#!/bin/bash
+#
+# Regina - A Normal Surface Theory Calculator
+# Alternate implementations of command-line utilities for the MacOS app bundle
+#
+# Copyright (c) 2002-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# This script simply launches regutils with the correct python runtime.
+# See regutils for further information.
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+#
+set -e
+
+appName=`basename "$0"`
+appDir=`dirname "$0"`
+
+if [ ! -e "$appDir"/tricensus ]; then
+  echo "ERROR: Please call this script through the symlinks provided in the MacOS directory."
+  exit 1
+fi
+
+python=
+pythonArgs=
+for fw in Python Python3 Python2; do
+  if [ -x "$appDir"/../Frameworks/"$fw".framework ]; then
+    python="$appDir"/../Frameworks/"$fw".framework/Resources/Python.app/Contents/MacOS/Python
+    # If we are shipping our own python, we should assume it is sandboxed.
+    pythonArgs=-I
+    break
+  fi
+done
+
+if [ -z "$python" ]; then
+  python=/usr/bin/python
+fi
+
+if [ ! -x "$python" ]; then
+  echo "ERROR: Could not find python runtime: $python"
+  exit 1
+fi
+
+"$python" $pythonArgs "$appDir"/../Resources/python/regutils.py "$appName" "$@"
+

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -163,6 +163,8 @@ class REGINA_API Triangulation<3> :
             /**< Is this a triangulation of a 3-dimensional ball? */
         mutable Property<bool> solidTorus_;
             /**< Is this a triangulation of the solid torus? */
+        mutable Property<bool> TxI_;
+            /**< Is this a triangulation of the product TxI? */
         mutable Property<bool> irreducible_;
             /**< Is this 3-manifold irreducible? */
         mutable Property<bool> compressingDisc_;
@@ -841,14 +843,17 @@ class REGINA_API Triangulation<3> :
          * surface.  See NormalSurface::isSplitting() for details
          * regarding normal splitting surfaces.
          *
-         * \pre This triangulation is connected.  If the triangulation
-         * is not connected, this routine will still return a result but
-         * that result will be unreliable.
+         * In the special case where this is the empty triangulation,
+         * this routine returns \c false.
+         *
+         * As of Regina 5.97, this routine is now fast (small polynomial
+         * time), and works even for triangulations with more than one
+         * connected component.  Thanks to Robert Haraway.
          *
          * @return \c true if and only if this triangulation has a
          * normal splitting surface.
          */
-        bool hasSplittingSurface();
+        bool hasSplittingSurface() const;
         /**
          * Is it already known whether or not this triangulation has a
          * splitting surface?
@@ -862,9 +867,14 @@ class REGINA_API Triangulation<3> :
          * this triangulation has a splitting surface; it merely tells you
          * whether the answer has already been computed.
          *
+         * \deprecated Since hasSplittingSurface() now uses a fast (small
+         * polynomial time) algorithm, there is no need to pre-query whether
+         * the property is already known.  Just call hasSplittingSurface()
+         * directly.
+         *
          * @return \c true if and only if this property is already known.
          */
-        bool knowsSplittingSurface() const;
+        [[deprecated]] bool knowsSplittingSurface() const;
         /**
          * Searches for a non-vertex-linking normal sphere or disc
          * within this triangulation.  If such a surface exists within
@@ -1261,6 +1271,52 @@ class REGINA_API Triangulation<3> :
             Action&& action, Args&&... args) const;
 
         /**
+         * Ensures that the boundary contains the smallest possible
+         * number of triangles, potentially adding tetrahedra to do this.
+         *
+         * This routine is for use with algorithms that require minimal
+         * boundaries (e.g., torus boundaries must contain exactly two
+         * triangles).  As noted above, it may in fact increase the
+         * total number of tetrahedra in the triangulation (though the
+         * implementation does make efforts not to do this).
+         *
+         * Once this routine is finished, every boundary component will
+         * have exactly one vertex, except for sphere and projective
+         * plane boundaries which will have exactly two triangles
+         * (but three and two vertices respectively).
+         *
+         * The changes that this routine performs can always be
+         * expressed using only close book moves and/or layerings.
+         * In particular, this routine never creates new vertices,
+         * and it never creates a non-vertex-linking normal disc or sphere
+         * if there was not one before.
+         *
+         * Although this routine only modifies real boundary components,
+         * it is fine if the triangulation also contains ideal boundary
+         * components (and these simply will be left alone).
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return \c true if the triangulation was changed, or \c false if
+         * every boundary component was already minimal to begin with.
+         */
+        bool minimiseBoundary();
+
+        /**
+         * A synonym for minimiseBoundary().
+         * This ensures that the boundary contains the smallest possible
+         * number of triangles, potentially adding tetrahedra to do this.
+         *
+         * See minimiseBoundary() for further details.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return \c true if the triangulation was changed, or \c false if
+         * every boundary component was already minimal to begin with.
+         */
+        bool minimizeBoundary();
+
+        /**
          * Deprecated function that checks the eligibility of and/or
          * performs a 4-1 Pachner move upon the given vertex.
          *
@@ -1608,19 +1664,15 @@ class REGINA_API Triangulation<3> :
          *
          * - the edge \a e is a boundary edge;
          *
-         * - the two boundary triangles that it joins are distinct;
+         * - the two vertices opposite \a e in the boundary triangles
+         *   that contain \a e are valid and distinct;
          *
-         * - the two vertices opposite \a e in each of these boundary triangles
-         *   are valid and distinct;
+         * - the boundary component containing \a e contains more than
+         *   two triangles.
          *
-         * - if edges \a e1 and \a e2 of one boundary triangle are to be
-         *   folded onto edges \a f1 and \a f2 of the other boundary
-         *   triangle respectively, then we do not have both \a e1 = \a e2
-         *   and \a f1 = \a f2.
-         *
-         * There are in fact several other "distinctness" conditions on
-         * the edges \a e1, \a e2, \a f1 and \a f2, but they follow
-         * automatically from the "distinct vertices" condition above.
+         * There are in fact several other distinctness conditions on
+         * the nearby edges and triangles, but they follow automatically
+         * from the conditions above.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
@@ -2035,6 +2087,54 @@ class REGINA_API Triangulation<3> :
          * or trivial to calculate.
          */
         bool knowsSolidTorus() const;
+
+        /**
+         * Determines whether or not the underlying 3-manifold is
+         * the product of a torus with an interval.
+         *
+         * This routine can be used on a triangulation with real boundary
+         * triangles, or ideal boundary components, or a mix of both.
+         * If there are any ideal vertices, they will be treated as though
+         * they were truncated.
+         *
+         * The underlying algorithm is due to Robert C. Haraway, III; see
+         * https://journals.carleton.ca/jocg/index.php/jocg/article/view/433
+         * for details.
+         *
+         * \warning This algorithm ultimately relies on isSolidTorus(),
+         * which might run slowly for large triangulations.
+         *
+         * @return \c true if and only if this is a triangulation (either
+         * real, ideal or a combination) of the product of the torus with an
+         * interval.
+         */
+        bool isTxI() const;
+
+        /**
+         * Is it already known (or trivial to determine) whether or not this
+         * is a triangulation of a the product of a torus with an interval?
+         * See isTxI() for further details.
+         *
+         * If this property is indeed already known, future calls to
+         * isTxI() will be very fast (simply returning the precalculated value).
+         *
+         * If this property is not already known, this routine will
+         * nevertheless run some very fast preliminary tests to see if the
+         * answer is obviously no.  If so, it will store \c false as the
+         * precalculated value for isTxI() and this routine will return \c true.
+         *
+         * Otherwise a call to isTxI() may potentially require more
+         * significant work, and so this routine will return \c false.
+         *
+         * \warning This routine does not actually tell you \e whether
+         * this triangulation forms the product of the torus with an interval;
+         * it merely tells you whether the answer has already been computed
+         * (or is very easily computed).
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
+         */
+        bool knowsTxI() const;
 
         /**
          * Determines whether the underlying 3-manifold (which must be
@@ -3268,6 +3368,10 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return retriangulateInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
+}
+
+inline bool Triangulation<3>::minimizeBoundary() {
+    return minimiseBoundary();
 }
 
 inline bool Triangulation<3>::oneFourMove(

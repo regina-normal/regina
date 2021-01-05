@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -59,6 +59,7 @@ namespace {
      */
     enum {
         LINK_CODE,
+        LINK_TORUS,
         LINK_EXAMPLE
     };
 
@@ -70,6 +71,7 @@ namespace {
         EXAMPLE_BORROMEAN,
         EXAMPLE_CONWAY,
         EXAMPLE_FIGURE_EIGHT,
+        EXAMPLE_GST,
         EXAMPLE_HOPF,
         EXAMPLE_KT,
         EXAMPLE_TREFOIL_LEFT,
@@ -79,6 +81,11 @@ namespace {
         EXAMPLE_GORDIAN,
         EXAMPLE_WHITEHEAD
     };
+
+    /**
+     * Regular expressions describing different sets of parameters.
+     */
+    QRegExp reTorusParams("^[^0-9\\-]*(\\d+)[^0-9\\-]+(\\d+)[^0-9\\-]*$");
 }
 
 LinkCreator::LinkCreator(ReginaMain* mainWindow) {
@@ -108,7 +115,7 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     QWidget* area;
     QBoxLayout* subLayout;
 
-    type->insertItem(LINK_CODE, QObject::tr("From text code"));
+    type->addItem(QObject::tr("From text code"));
     area = new QWidget();
     subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
@@ -166,8 +173,25 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     subLayout->addWidget(label, 1);
     details->addWidget(area);//, LINK_CODE);
 
+    type->addItem(QObject::tr("Torus link"));
+    area = new QWidget();
+    subLayout = new QHBoxLayout();
+    subLayout->setContentsMargins(0, 0, 0, 0);
+    area->setLayout(subLayout);
+    expln = QObject::tr("<qt>The (<i>p</i>,<i>q</i>) parameters of the new "
+        "torus knot/link.  These must be non-negative, but do not need to be "
+        "relatively prime.  Example parameters are <i>6,4</i>, which "
+        "will produce a pair of interlinked trefoils.</qt>");
+    label = new QLabel(QObject::tr("<qt>Parameters (<i>p</i>,<i>q</i>):</qt>"));
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    torusParams = new QLineEdit();
+    torusParams->setValidator(new QRegExpValidator(reTorusParams, area));
+    torusParams->setWhatsThis(expln);
+    subLayout->addWidget(torusParams, 1);
+    details->addWidget(area);//, LINK_TORUS);
 
-    type->insertItem(type->count(),QObject::tr("Example knot/link"));
+    type->addItem(QObject::tr("Example knot/link"));
     area = new QWidget();
     subLayout = new QHBoxLayout();
     subLayout->setAlignment(Qt::AlignTop);
@@ -181,17 +205,18 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
     exampleWhich = new QComboBox(area);
-    exampleWhich->insertItem(0, QObject::tr("Borromean rings"));
-    exampleWhich->insertItem(1, QObject::tr("Conway knot"));
-    exampleWhich->insertItem(2, QObject::tr("Figure eight knot"));
-    exampleWhich->insertItem(3, QObject::tr("Hopf link"));
-    exampleWhich->insertItem(4, QObject::tr("Kinoshita-Terasaka knot"));
-    exampleWhich->insertItem(5, QObject::tr("Trefoil (left)"));
-    exampleWhich->insertItem(6, QObject::tr("Trefoil (right)"));
-    exampleWhich->insertItem(7, QObject::tr("Unknot (no crossings)"));
-    exampleWhich->insertItem(8, QObject::tr("Unknot (10-crossing monster)"));
-    exampleWhich->insertItem(9, QObject::tr("Unknot (141-crossing Gordian)"));
-    exampleWhich->insertItem(10, QObject::tr("Whitehead link"));
+    exampleWhich->addItem(QObject::tr("Borromean rings"));
+    exampleWhich->addItem(QObject::tr("Conway knot"));
+    exampleWhich->addItem(QObject::tr("Figure eight knot"));
+    exampleWhich->addItem(QObject::tr("Gompf-Scharlemann-Thompson"));
+    exampleWhich->addItem(QObject::tr("Hopf link"));
+    exampleWhich->addItem(QObject::tr("Kinoshita-Terasaka knot"));
+    exampleWhich->addItem(QObject::tr("Trefoil (left)"));
+    exampleWhich->addItem(QObject::tr("Trefoil (right)"));
+    exampleWhich->addItem(QObject::tr("Unknot (no crossings)"));
+    exampleWhich->addItem(QObject::tr("Unknot (10-crossing monster)"));
+    exampleWhich->addItem(QObject::tr("Unknot (141-crossing Gordian)"));
+    exampleWhich->addItem(QObject::tr("Whitehead link"));
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     subLayout->addWidget(exampleWhich, 1);
@@ -240,6 +265,21 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 "For more information on what each type of code means, "
                 "see the Regina Handbook.</qt>"));
         return nullptr;
+    } else if (typeId == LINK_TORUS) {
+        if (! reTorusParams.exactMatch(torusParams->text())) {
+            ReginaSupport::sorry(parentWidget,
+                QObject::tr("<qt>The torus link "
+                "parameters (<i>p</i>,<i>q</i>) "
+                "must be non-negative integers."),
+                QObject::tr("<qt>Example parameters are "
+                "<i>7,5</i>.</qt>"));
+            return 0;
+        }
+
+        unsigned long p = reTorusParams.cap(1).toULong();
+        unsigned long q = reTorusParams.cap(2).toULong();
+
+        return ExampleLink::torus(p, q);
     } else if (typeId == LINK_EXAMPLE) {
         switch (exampleWhich->currentIndex()) {
             case EXAMPLE_BORROMEAN:
@@ -248,6 +288,8 @@ regina::Packet* LinkCreator::createPacket(regina::Packet*,
                 return ExampleLink::conway();
             case EXAMPLE_FIGURE_EIGHT:
                 return ExampleLink::figureEight();
+            case EXAMPLE_GST:
+                return ExampleLink::gst();
             case EXAMPLE_HOPF:
                 return ExampleLink::hopf();
             case EXAMPLE_KT:

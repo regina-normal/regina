@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -580,6 +580,88 @@ bool Triangulation<3>::knowsSolidTorus() const {
     if (boundaryComponents().front()->eulerChar() != 0 ||
             (! boundaryComponents().front()->isOrientable())) {
         solidTorus_ = false;
+        return true;
+    }
+
+    // More work is required.
+    return false;
+}
+
+
+bool Triangulation<3>::isTxI() const {
+    // This call to knowsTxI checks basic things including validity and also
+    // the number topology of the boundary components.
+    if (knowsTxI())
+        return TxI_.value();
+
+    Triangulation<3> working(*this, false);
+    working.intelligentSimplify();
+    working.idealToFinite();
+    working.intelligentSimplify();
+
+    // If it's not a homology T2xI, we're done.
+    if ((! working.homology().isFree(2)) || (! working.homologyRel().isZ())) {
+        return (TxI_ = false);
+    }
+
+    // At this point we should already have boundary components with
+    // one vertex each.
+    // But out of an abundance of caution, we ensure this is the case.
+    working.minimiseBoundary();
+
+    // We have a homology T2xI with a pair of two-triangle boundaries.
+    // So we should move on to the meat of the algorithm, testing Dehn fillings.
+
+    // First we collect a boundary edge, which lets us fetch the two triangles
+    // on either side along with permutations that show how they glue together.
+    BoundaryComponent<3>* bc = working.boundaryComponents().front();
+    Edge<3>* e = bc->edge(0);
+    const FaceEmbedding<3, 1>& front = e->embedding(0);
+    const FaceEmbedding<3, 1>& back = e->embedding(e->degree() - 1);
+    Tetrahedron<3>* t0 = front.tetrahedron();
+    Tetrahedron<3>* t1 = back.tetrahedron();
+    Perm<4> p0 = front.vertices();
+    Perm<4> p1 = back.vertices();
+    p1 = p1 * Perm<4>(1, 0, 3, 2);
+
+    // Now p0, p1 map {0,1,2} to the vertices of t0, t1 in a symmetric way.
+    // Each boundary edge is the image of (i,j) on t0 and (j,i) on t1 for
+    // distinct i,j in {0,1,2}.
+    //
+    // To do the three fillings, we fold the two triangles together in each
+    // of the three possible ways (each of which involves swapping one of the
+    // pairs 01, 12, 20 in the preimage of permutations p0, p1).
+    for (int i = 0; i < 3; ++i) {
+        t0->join(p0[3], t1, p1 * Perm<4>(i, (i+1) % 3) * p0.inverse());
+        if (! working.isSolidTorus())
+            return (TxI_ = false);
+        t0->unjoin(p0[3]);
+    }
+
+    // All three fillings give a solid torus!
+    return (TxI_ = true);
+}
+
+bool Triangulation<3>::knowsTxI() const {
+    if (TxI_.known())
+        return true;
+
+    // Run some very fast prelimiary tests before we give up and say no.
+    if (! (isValid() && isOrientable() && isConnected())) {
+        TxI_ = false;
+        return true;
+    }
+
+    if (countBoundaryComponents() != 2) {
+        TxI_ = false;
+        return true;
+    }
+
+    if (boundaryComponents().front()->eulerChar() != 0 ||
+            (! boundaryComponents().front()->isOrientable()) ||
+            boundaryComponents().back()->eulerChar() != 0 ||
+            (! boundaryComponents().back()->isOrientable())) {
+        TxI_ = false;
         return true;
     }
 

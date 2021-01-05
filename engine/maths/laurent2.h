@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -166,6 +166,34 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          */
         template <typename U>
         Laurent2(const Laurent2<U>& value);
+
+        /**
+         * Creates a new polynomial from a hard-coded collection of
+         * non-zero coefficients.
+         *
+         * This constructor takes a C++11 initialiser list, which should
+         * contain a collection of tuples of the form (\a d, \a e, \a v)
+         * each representing a term of the form <tt>v x^d y^e</tt>.
+         *
+         * The tuples may be given in any order.
+         * An empty sequence will be treated as the zero polynomial.
+         *
+         * In practice, this means you can create a hard-coded
+         * polynomial using syntax such as:
+         *
+         * \pre
+         * Laurent2<Integer> p = { { 0, 0, 3 }, { 1, -1, 2 } };
+         * \endpre
+         *
+         * \pre Each tuple has a non-zero value \a v, and no two tuples
+         * share the same pair of exponents (\a d, \a e).
+         *
+         * \ifacespython Not available.
+         *
+         * @param coefficients the set of all non-zero coefficients, as
+         * outlined above.
+         */
+        Laurent2(std::initializer_list<std::tuple<long, long, T>> coefficients);
 
         /**
          * Sets this to become the zero polynomial.
@@ -536,6 +564,54 @@ template <typename T>
 Laurent2<T> operator - (Laurent2<T> arg);
 
 /**
+ * Subtracts the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the polynomial to subtract from.
+ * @param rhs the polynomial to subtract.
+ * @return the first polynomial minus the second.
+ */
+template <typename T>
+Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs);
+
+/**
+ * Subtracts the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the polynomial to subtract from.
+ * @param rhs the polynomial to subtract.
+ * @return the first polynomial minus the second.
+ */
+template <typename T>
+Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs);
+
+/**
+ * Subtracts the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the polynomial to subtract from.
+ * @param rhs the polynomial to subtract.
+ * @return the first polynomial minus the second.
+ */
+template <typename T>
+Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs);
+
+/**
+ * Subtracts the two given polynomials.
+ *
+ * The two polynomials need not have the same range of non-zero coefficients.
+ *
+ * @param lhs the polynomial to subtract from.
+ * @param rhs the polynomial to subtract.
+ * @return the first polynomial minus the second.
+ */
+template <typename T>
+Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs);
+
+/**
  * Multiplies the two given polynomials.
  *
  * The two polynomials need not have the same range of non-zero coefficients.
@@ -560,6 +636,8 @@ inline Laurent2<T>::Laurent2(long xExp, long yExp) {
 template <typename T>
 inline Laurent2<T>::Laurent2(const Laurent2<T>& value) :
         coeff_(value.coeff_) {
+    // TODO: Use default implementation.
+    // std::cerr << "Laurent2: deep copy (init)" << std::endl;
 }
 
 template <typename T>
@@ -574,6 +652,15 @@ template <typename T>
 template <typename U>
 inline Laurent2<T>::Laurent2(const Laurent2<U>& value) :
         coeff_(value.coeff_) {
+    // std::cerr << "Laurent2: deep copy (init)" << std::endl;
+}
+
+template <typename T>
+inline Laurent2<T>::Laurent2(
+        std::initializer_list<std::tuple<long, long, T>> coefficients) {
+    for (const auto& c : coefficients)
+        coeff_.emplace(Exponents(std::get<0>(c), std::get<1>(c)),
+            std::get<2>(c));
 }
 
 template <typename T>
@@ -624,6 +711,8 @@ inline bool Laurent2<T>::operator != (const Laurent2<T>& rhs) const {
 
 template <typename T>
 inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
+    // TODO: Use default implementation.
+    // std::cerr << "Laurent2: deep copy (=)" << std::endl;
     coeff_ = other.coeff_;
     return *this;
 }
@@ -631,6 +720,7 @@ inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<T>& other) {
 template <typename T>
 template <typename U>
 inline Laurent2<T>& Laurent2<T>::operator = (const Laurent2<U>& other) {
+    // std::cerr << "Laurent2: deep copy (=)" << std::endl;
     coeff_ = other.coeff_;
     return *this;
 }
@@ -648,8 +738,14 @@ inline void Laurent2<T>::negate() {
 
 template <typename T>
 inline Laurent2<T>& Laurent2<T>::operator *= (const T& scalar) {
-    for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
-        it->second *= scalar;
+    if (scalar == 0) {
+        // All coefficients become zero.
+        coeff_.clear();
+    } else {
+        // No coefficients become zero that were not zero already.
+        for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
+            it->second *= scalar;
+    }
     return *this;
 }
 
@@ -875,6 +971,28 @@ template <typename T>
 inline Laurent2<T> operator - (Laurent2<T> arg) {
     arg.negate();
     return arg;
+}
+
+template <typename T>
+inline Laurent2<T> operator - (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
+    // We have to make a deep copy since both arguments are read-only.
+    return std::move(Laurent2<T>(lhs) -= rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator - (Laurent2<T>&& lhs, const Laurent2<T>& rhs) {
+    return std::move(lhs -= rhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator - (const Laurent2<T>& lhs, Laurent2<T>&& rhs) {
+    rhs.negate();
+    return std::move(rhs += lhs);
+}
+
+template <typename T>
+inline Laurent2<T> operator - (Laurent2<T>&& lhs, Laurent2<T>&& rhs) {
+    return std::move(lhs -= rhs);
 }
 
 template <typename T>

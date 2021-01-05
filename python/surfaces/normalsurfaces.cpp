@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -40,7 +40,7 @@
 
 using regina::NormalSurfaces;
 
-void addNormalSurfaces(pybind11::module& m) {
+void addNormalSurfaces(pybind11::module_& m) {
     pybind11::enum_<regina::SurfaceExportFields>(m, "SurfaceExportFields")
         .value("surfaceExportName", regina::surfaceExportName)
         .value("surfaceExportEuler", regina::surfaceExportEuler)

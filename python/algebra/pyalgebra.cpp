@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,14 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addAbelianGroup(pybind11::module& m);
-void addGroupPresentation(pybind11::module& m);
-void addHomGroupPresentation(pybind11::module& m);
-void addMarkedAbelianGroup(pybind11::module& m);
+void addAbelianGroup(pybind11::module_& m);
+void addGroupPresentation(pybind11::module_& m);
+void addHomGroupPresentation(pybind11::module_& m);
+void addMarkedAbelianGroup(pybind11::module_& m);
 
-void addAlgebraClasses(pybind11::module& m) {
+void addAlgebraClasses(pybind11::module_& m) {
     addAbelianGroup(m);
     addGroupPresentation(m);
     addHomGroupPresentation(m);

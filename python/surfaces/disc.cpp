@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -49,7 +49,7 @@ namespace {
             throw pybind11::stop_iteration();
     }
 }
-void addDisc(pybind11::module& m) {
+void addDisc(pybind11::module_& m) {
     auto d = pybind11::class_<DiscSpec>(m, "DiscSpec")
         .def(pybind11::init<>())
         .def(pybind11::init<unsigned long, int, unsigned long>())

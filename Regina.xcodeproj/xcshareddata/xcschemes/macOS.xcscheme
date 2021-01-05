@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1010"
+   LastUpgradeVersion = "1220"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "05DADAFE2192535F00DC80E1"
-               BuildableName = "Handbook"
-               BlueprintName = "Handbook"
+               BlueprintIdentifier = "0564A1DE1811D6F8002CC2AE"
+               BuildableName = "Regina.app"
+               BlueprintName = "Regina for macOS"
                ReferencedContainer = "container:Regina.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -27,10 +27,27 @@
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       shouldUseLaunchSchemeArgsEnv = "YES">
+      <MacroExpansion>
+         <BuildableReference
+            BuildableIdentifier = "primary"
+            BlueprintIdentifier = "0564A1DE1811D6F8002CC2AE"
+            BuildableName = "Regina.app"
+            BlueprintName = "Regina for macOS"
+            ReferencedContainer = "container:Regina.xcodeproj">
+         </BuildableReference>
+      </MacroExpansion>
       <Testables>
+         <TestableReference
+            skipped = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "0564A2001811D6F9002CC2AE"
+               BuildableName = "QtTests.xctest"
+               BlueprintName = "QtTests"
+               ReferencedContainer = "container:Regina.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -39,20 +56,19 @@
       launchStyle = "0"
       useCustomWorkingDirectory = "NO"
       ignoresPersistentStateOnLaunch = "NO"
-      debugDocumentVersioning = "YES"
+      debugDocumentVersioning = "NO"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "05DADAFE2192535F00DC80E1"
-            BuildableName = "Handbook"
-            BlueprintName = "Handbook"
+            BlueprintIdentifier = "0564A1DE1811D6F8002CC2AE"
+            BuildableName = "Regina.app"
+            BlueprintName = "Regina for macOS"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      </BuildableProductRunnable>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -60,21 +76,23 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <MacroExpansion>
+      <BuildableProductRunnable
+         runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "05DADAFE2192535F00DC80E1"
-            BuildableName = "Handbook"
-            BlueprintName = "Handbook"
+            BlueprintIdentifier = "0564A1DE1811D6F8002CC2AE"
+            BuildableName = "Regina.app"
+            BlueprintName = "Regina for macOS"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
-      </MacroExpansion>
+      </BuildableProductRunnable>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
    </AnalyzeAction>
    <ArchiveAction
       buildConfiguration = "Release"
+      customArchiveName = "Regina"
       revealArchiveInOrganizer = "YES">
    </ArchiveAction>
 </Scheme>

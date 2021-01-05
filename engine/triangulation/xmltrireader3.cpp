@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -65,6 +65,10 @@ XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
         bool b;
         if (valueOf(props.lookup("value"), b))
             tri_->solidTorus_ = b;
+    } else if (subTagName == "txi") {
+        bool b;
+        if (valueOf(props.lookup("value"), b))
+            tri_->TxI_ = b;
     } else if (subTagName == "irreducible") {
         bool b;
         if (valueOf(props.lookup("value"), b))

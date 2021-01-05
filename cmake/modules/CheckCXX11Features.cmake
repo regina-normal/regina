@@ -20,7 +20,7 @@
 # Modifications by Andreas Weis
 # Further modifications by William Pettersson and Ben Burton
 #
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
+# CMAKE_MINIMUM_REQUIRED(VERSION 2.8.3)
 
 SET(CHECK_CXX11_OLD_CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS})
 IF(CMAKE_COMPILER_IS_GNUCXX) # G++ uses gnu++0x on older versions.

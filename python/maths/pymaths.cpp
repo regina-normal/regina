@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,28 +30,28 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addBinom(pybind11::module& m);
-void addMatrixOps(pybind11::module& m);
-void addCyclotomic(pybind11::module& m);
-void addInteger(pybind11::module& m);
-void addLargeInteger(pybind11::module& m);
-void addLaurent(pybind11::module& m);
-void addLaurent2(pybind11::module& m);
-void addMatrix2(pybind11::module& m);
-void addMatrixInt(pybind11::module& m);
-void addPerm2(pybind11::module& m);
-void addPerm3(pybind11::module& m);
-void addPerm4(pybind11::module& m);
-void addPerm5(pybind11::module& m);
-void addPerm(pybind11::module& m);
-void addPolynomial(pybind11::module& m);
-void addPrimes(pybind11::module& m);
-void addRational(pybind11::module& m);
-void addNumberTheory(pybind11::module& m);
+void addBinom(pybind11::module_& m);
+void addMatrixOps(pybind11::module_& m);
+void addCyclotomic(pybind11::module_& m);
+void addInteger(pybind11::module_& m);
+void addLargeInteger(pybind11::module_& m);
+void addLaurent(pybind11::module_& m);
+void addLaurent2(pybind11::module_& m);
+void addMatrix2(pybind11::module_& m);
+void addMatrixInt(pybind11::module_& m);
+void addPerm2(pybind11::module_& m);
+void addPerm3(pybind11::module_& m);
+void addPerm4(pybind11::module_& m);
+void addPerm5(pybind11::module_& m);
+void addPerm(pybind11::module_& m);
+void addPolynomial(pybind11::module_& m);
+void addPrimes(pybind11::module_& m);
+void addRational(pybind11::module_& m);
+void addNumberTheory(pybind11::module_& m);
 
-void addMathsClasses(pybind11::module& m) {
+void addMathsClasses(pybind11::module_& m) {
     addBinom(m);
     addMatrixOps(m);
     addCyclotomic(m);

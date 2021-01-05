@@ -7,7 +7,32 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 5.2  [ 29 September, 2017 ]
+Version 5.97  [ TODO ]
+
+    ENGINE:
+        Class AbelianGroup:
+            - New routine isFree() to quickly test for the free abelian
+              group of the given rank.
+        Class Triangulation<3>:
+            - New routines isTxI() and knowsTxI() to test whether the
+              manifold is the product of the torus with an interval.
+              Thanks to Robert C. Haraway, III.
+            - New routine minimiseBoundary() / minimizeBoundary() to
+              ensure that each real boundary component uses the fewest
+              posible triangles.
+            - Routine hasSplittingSurface() is now fast (small polynomial
+              time), works even for triangulations with more than one
+              connected component; thanks to Robert C. Haraway III.
+              This routine is now also explicitly marked as const.
+            - As a consequence, routine knowsSplittingSurface() is no longer
+              relevant, and so is now deprecated.
+            - Changed the preconditions for closeBook() to something
+              logically equivalent but simpler to explain and test.
+    PYTHON:
+        - Fixed a deadlock that occurred with Python 3 on some systems when
+          starting new python consoles in the GUI.
+
+Version 5.96  [ 24 December, 2020 ]
 
     GENERAL:
         - Now requires C++14 (not C++11).
@@ -20,7 +45,7 @@ Version 5.2  [ 29 September, 2017 ]
         - Now uses pybind11 instead of Boost.Python to create python bindings.
         - Removed the cmake option USE_BOOST_INT128, since the boost 128-bit
           integer detection does not know more than the cmake tests can provide.
-        - Now requires CMake version >= 3.1.
+        - Now requires CMake version >= 3.12.
     ENGINE:
         Class AbelianGroup:
             - Added assignment operator.
@@ -44,6 +69,7 @@ Version 5.2  [ 29 September, 2017 ]
               range-based for loops, thanks to the new CensusHitIterator
               class.  In Python, CensusHits is now an iterable object.
         Class Cyclotomic:
+            - New constructor that takes a C++11 initialiser list.
             - Added move constructor and assignment operator.
             - Added inverse().
             - Added operators +, *, -, / in several variants.
@@ -78,11 +104,17 @@ Version 5.2  [ 29 September, 2017 ]
               group presentation to a mathematical object native to Sage.
         Class Handlebody:
             - New assignment operator.
+        Class Integer, LargeInteger:
+            - Fixed a bug in nativeValue() when converting negative numbers
+              from large (GMP) representation to 128-bit integers.
+              A thorough code audit shows this bug should have been harmless:
+              Regina never created the conditions for the bug in its own code,
+              and the routine has never been available to python users.
         Class Isomorphism<dim>:
             - Added (fast) move constructors and move assignment operators,
               and a (slow) copy assignment operator.
-            - The random() function now takes an optional argument to enforce
-              orientation-preserving isomorphisms only.
+            - The random() function is now thread-safe, and takes an optional
+              argument to enforce orientation-preserving isomorphisms only.
             - Static routines random() and identity() now return an
               Isomorphism, not a std::unique_ptr<Isomorphism>.  Now that
               Isomorphism has a move constructor and assignment operator,
@@ -90,9 +122,11 @@ Version 5.2  [ 29 September, 2017 ]
         Class IsReginaInteger:
             - New type trait to identify Regina's own integer types.
         Class Laurent:
+            - New constructor that takes a C++11 initialiser list.
             - Added move constructor and assignment operator.
             - Added operators +, *, -, / in several variants.
         Class Laurent2:
+            - New constructor that takes a C++11 initialiser list.
             - Added move constructor and assignment operator.
             - Added operators +, *, -, / in several variants.
             - New constuctor that shifts a given polynomial by x^e y^e.
@@ -129,6 +163,7 @@ Version 5.2  [ 29 September, 2017 ]
             - Added (fast) move constructors and move assignment operators,
               and a (slow) copy assignment operator.
             - New static routine identity().
+            - New typedef Coefficient representing the type of each entry.
             - The multiplication operator and the multiplyAs() routines now
               return a Matrix, not a std::unique_ptr<Matrix>.  Now that
               Matrix has a move constructor and assignment operator, this
@@ -196,7 +231,11 @@ Version 5.2  [ 29 September, 2017 ]
         Class Perm<n>:
             - The rand() function now takes an optional argument to enforce
               even permutations only.
+            - The rand() function is now thread-safe out of the box, and also
+              offers an alternate variant where you can pass your own
+              uniform random bit generator.
         Class Polynomial:
+            - New constructor that takes a C++11 initialiser list.
             - Added move constructor and assignment operator.
             - Added negate().
             - Added operators +, *, -, / in several variants.
@@ -213,6 +252,8 @@ Version 5.2  [ 29 September, 2017 ]
               this cannot be used with the StoreManagedPtr storage policy.
             - The assignment operator now returns a non-const reference
               (not a const reference).
+        Class RandomEngine:
+            - New class for threadsafe random number generation.
         Class SafePointeeBase:
             - Added hasSafePtr() to test whether safe pointers are being used.
         Class SatBlockSpec:
@@ -258,12 +299,16 @@ Version 5.2  [ 29 September, 2017 ]
             - Relaxed the preconditions for connectedSumWith().
             - Now preserves computed properties of the underlying manifold
               when the manifold is retriangulated.
+            - Routine intelligentSimplify() is now thread-safe in the
+              way that it uses random number generation.
         Class Triangulation<4>:
             - New routines retriangulate() and simplifyExhaustive().
             - Now supports 2-0 moves on vertices of degree two (in addition to
               the pre-existing 2-0 moves on edges and triangles).
             - New deprecated routine fiveOneMove(), added for completeness.
               Use the new pachner() routines instead.
+            - Routine intelligentSimplify() is now thread-safe in the
+              way that it uses random number generation.
         Class Triangulation<3>:
             - New routine pinchEdge() to collapse an edge, which can be
               performed on any internal edge, but which adds two tetrahedra.
@@ -336,6 +381,8 @@ Version 5.2  [ 29 September, 2017 ]
     UTILITIES:
         retriangulate:
             - New utility that exhaustively retriangulates a given manifold.
+        tricensus-mpi, tricensus-mpi-status:
+            - Officially retired; these have now been removed from Regina.
     TEST SUITE:
         - The test suite executable now takes optional arguments that,
           if present, indicate a subset of tests to perform.

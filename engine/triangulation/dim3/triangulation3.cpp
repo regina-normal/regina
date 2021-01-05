@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -79,6 +79,7 @@ void Triangulation<3>::clearAllProperties() {
         threeSphere_.clear();
         threeBall_.clear();
         solidTorus_.clear();
+        TxI_.clear();
         irreducible_.clear();
         compressingDisc_.clear();
         haken_.clear();
@@ -108,6 +109,7 @@ void Triangulation<3>::swapAllProperties(Triangulation<3>& other) {
     threeSphere_.swap(other.threeSphere_);
     threeBall_.swap(other.threeBall_);
     solidTorus_.swap(other.solidTorus_);
+    TxI_.swap(other.TxI_);
     irreducible_.swap(other.irreducible_);
     compressingDisc_.swap(other.compressingDisc_);
     haken_.swap(other.haken_);
@@ -261,6 +263,8 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
         out << "  " << xmlValueTag("threeball", threeBall_.value()) << '\n';
     if (solidTorus_.known())
         out << "  " << xmlValueTag("solidtorus", solidTorus_.value()) << '\n';
+    if (TxI_.known())
+        out << "  " << xmlValueTag("txi", TxI_.value()) << '\n';
     if (irreducible_.known())
         out << "  " << xmlValueTag("irreducible", irreducible_.value())
             << '\n';
@@ -415,6 +419,7 @@ Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
     threeSphere_ = X.threeSphere_;
     threeBall_ = X.threeBall_;
     solidTorus_ = X.solidTorus_;
+    TxI_ = X.TxI_;
     irreducible_ = X.irreducible_;
     compressingDisc_ = X.compressingDisc_;
     haken_ = X.haken_;

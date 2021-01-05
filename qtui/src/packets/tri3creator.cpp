@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -144,10 +144,10 @@ Tri3Creator::Tri3Creator() {
     QWidget* hArea;
     QBoxLayout* hLayout;
 
-    type->insertItem(TRI_EMPTY,QObject::tr("Empty"));
+    type->addItem(QObject::tr("Empty"));
     details->addWidget(new QWidget());
 
-    type->insertItem(TRI_LAYERED_LENS_SPACE,QObject::tr("Layered lens space"));
+    type->addItem(QObject::tr("Layered lens space"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -164,7 +164,7 @@ Tri3Creator::Tri3Creator() {
     hLayout->addWidget(lensParams, 1);
     details->addWidget(hArea);//, TRI_LAYERED_LENS_SPACE);
 
-    type->insertItem(TRI_SFS_SPHERE,QObject::tr("Seifert fibred space over 2-sphere"));
+    type->addItem(QObject::tr("Seifert fibred space over 2-sphere"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -198,7 +198,7 @@ Tri3Creator::Tri3Creator() {
     hLayout->addWidget(sfsParams, 1);
     details->addWidget(hArea);//, TRI_SFS_SPHERE);
 
-    type->insertItem(TRI_LAYERED_SOLID_TORUS,QObject::tr("Layered solid torus"));
+    type->addItem(QObject::tr("Layered solid torus"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -217,7 +217,7 @@ Tri3Creator::Tri3Creator() {
     hLayout->addWidget(lstParams, 1);
     details->addWidget(hArea);//, TRI_LAYERED_SOLID_TORUS);
 
-    type->insertItem(TRI_ISOSIG,QObject::tr("From isomorphism signature"));
+    type->addItem(QObject::tr("From isomorphism signature"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -239,7 +239,7 @@ Tri3Creator::Tri3Creator() {
     hLayout->addWidget(isoSig, 1);
     details->addWidget(hArea);//, TRI_ISOSIG);
 
-    type->insertItem(TRI_DEHYDRATION,QObject::tr("From dehydration"));
+    type->addItem(QObject::tr("From dehydration"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -260,7 +260,7 @@ Tri3Creator::Tri3Creator() {
     hLayout->addWidget(dehydrationString, 1);
     details->addWidget(hArea);//, TRI_DEHYDRATION);
 
-    type->insertItem(TRI_SPLITTING_SURFACE,QObject::tr("From splitting surface"));
+    type->addItem(QObject::tr("From splitting surface"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -280,7 +280,7 @@ Tri3Creator::Tri3Creator() {
     hLayout->addWidget(splittingSignature, 1);
     details->addWidget(hArea);//, TRI_SPLITTING_SURFACE);
 
-    type->insertItem(type->count(),QObject::tr("Example triangulation"));
+    type->addItem(QObject::tr("Example triangulation"));
     hArea = new QWidget();
     hLayout = new QHBoxLayout();
     hLayout->setContentsMargins(0, 0, 0, 0);
@@ -294,7 +294,7 @@ Tri3Creator::Tri3Creator() {
     hLayout->addWidget(label);
     exampleWhich = new QComboBox(hArea);
     for (size_t i = 0; i < examples.size(); ++i)
-        exampleWhich->insertItem(i, examples[i].name());
+        exampleWhich->addItem(examples[i].name());
     exampleWhich->setCurrentIndex(0);
     exampleWhich->setWhatsThis(expln);
     hLayout->addWidget(exampleWhich, 1);

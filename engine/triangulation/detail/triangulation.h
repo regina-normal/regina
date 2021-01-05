@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -983,6 +983,10 @@ class TriangulationBase :
         /**
          * Determines if this triangulation is connected.
          *
+         * This routine returns \c false only if there is more than one
+         * connected component.  In particular, it returns \c true for
+         * the empty triangulation.
+         *
          * @return \c true if and only if this triangulation is connected.
          */
         bool isConnected() const;
@@ -1226,9 +1230,10 @@ class TriangulationBase :
          *
          * \warning For the case \a k = \a dim in Regina's
          * \ref stddim "standard dimensions", the labelling of the belt face
-         * has changed as of Regina 5.2.  In versions 5.1 and earlier, the
-         * belt face was <tt>simplices().back()->vertex(dim)</tt>, and
-         * as of version 5.2 it is now <tt>simplices().back()->vertex(0)</tt>.
+         * has changed as of Regina 5.96 (the first prerelease for Regina 6.0).
+         * In versions 5.1 and earlier, the belt face was
+         * <tt>simplices().back()->vertex(dim)</tt>, and as of version 5.96
+         * it is now <tt>simplices().back()->vertex(0)</tt>.
          * The deprecated routines Triangulation<2>::oneThreeMove(),
          * Triangulation<3>::oneFourMove() and Triangulation<4>::oneFiveMove()
          * maintain the old behaviour if you need it.

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,7 +32,7 @@
 
 #include "face-bindings.h"
 
-void addFace15(pybind11::module& m) {
+void addFace15(pybind11::module_& m) {
     addFace<15, 0>(m, "Face15_0", "FaceEmbedding15_0");
     addFace<15, 1>(m, "Face15_1", "FaceEmbedding15_1");
     addFace<15, 2>(m, "Face15_2", "FaceEmbedding15_2");

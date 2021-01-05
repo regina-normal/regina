@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "packet/packettype.h"
 
-void addPacketType(pybind11::module& m) {
+void addPacketType(pybind11::module_& m) {
     pybind11::enum_<regina::PacketType>(m, "PacketType")
         .value("PACKET_CONTAINER", regina::PACKET_CONTAINER)
         .value("PACKET_TEXT", regina::PACKET_TEXT)

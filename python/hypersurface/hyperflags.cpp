@@ -4,7 +4,7 @@
  *  Regina - A Hyper Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -41,7 +41,7 @@ using regina::HyperAlgFlags;
 using regina::HyperList;
 using regina::HyperListFlags;
 
-void addHyperFlags(pybind11::module& m) {
+void addHyperFlags(pybind11::module_& m) {
     pybind11::enum_<HyperListFlags>(m, "HyperListFlags")
         .value("HS_EMBEDDED_ONLY", regina::HS_EMBEDDED_ONLY)
         .value("HS_IMMERSED_SINGULAR", regina::HS_IMMERSED_SINGULAR)
@@ -50,6 +50,12 @@ void addHyperFlags(pybind11::module& m) {
         .value("HS_LEGACY", regina::HS_LEGACY)
         .value("HS_CUSTOM", regina::HS_CUSTOM)
         .export_values()
+        // This __or__ promotes the argument from a flags enum to a
+        // "combination of flags" object.  It must come *after* export_values,
+        // since it returns a pybind11::class and not a pybind11::enum,
+        // which means a subsequent export_values() would fail.
+        .def("__or__", [](const HyperListFlags& lhs, const HyperListFlags& rhs){
+                return HyperList(lhs) | rhs;})
         ;
 
     auto l = pybind11::class_<HyperList>(m, "HyperList")
@@ -90,6 +96,12 @@ void addHyperFlags(pybind11::module& m) {
         .value("HS_ALG_LEGACY", regina::HS_ALG_LEGACY)
         .value("HS_ALG_CUSTOM", regina::HS_ALG_CUSTOM)
         .export_values()
+        // This __or__ promotes the argument from a flags enum to a
+        // "combination of flags" object.  It must come *after* export_values,
+        // since it returns a pybind11::class and not a pybind11::enum,
+        // which means a subsequent export_values() would fail.
+        .def("__or__", [](const HyperAlgFlags& lhs, const HyperAlgFlags& rhs){
+                return HyperAlg(lhs) | rhs;})
         ;
 
     auto a = pybind11::class_<HyperAlg>(m, "HyperAlg")

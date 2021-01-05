@@ -1,7 +1,7 @@
 # Regina - A Normal Surface Theory Calculator
 # Python Module Initialisation
 #
-# Copyright (c) 2003-2019, Ben Burton
+# Copyright (c) 2003-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This program is free software; you can redistribute it and/or
@@ -126,7 +126,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
     if snappyPath:
         # For the time being, only find SnapPy on MacOS.
         if sys.platform == 'darwin':
-            if sys.version_info[:2] == (2, 7):
+            if sys.version_info[:2] == (3, 8):
                 # Ask MacOS where SnapPy lives.
                 import subprocess
                 try:
@@ -139,11 +139,14 @@ def reginaSetup(quiet = False, readline = True, banner = False,
 
                 if not app:
                     app = '/Applications/SnapPy.app'
-                snappyLib = app + '/Contents/Resources/lib/python2.7'
+                snappyLib = app + '/Contents/Resources/lib/python3.8'
+                snappyZip = app + '/Contents/Resources/lib/python38.zip'
                 if os.path.exists(snappyLib):
                     sys.path.append(snappyLib)
                     sys.path.append(snappyLib + '/site-packages.zip')
                     sys.path.append(snappyLib + '/lib-dynload')
+                if os.path.exists(snappyZip):
+                    sys.path.append(snappyZip)
 
     if banner:
         print(engine.welcome())

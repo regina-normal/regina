@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -66,7 +66,7 @@ namespace {
 }
 
 template <int dim>
-void addTriangulation(pybind11::module& m, const char* name) {
+void addTriangulation(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Triangulation<dim>, regina::Packet,
             regina::SafePtr<Triangulation<dim>>>(m, name)
         .def(pybind11::init<>())

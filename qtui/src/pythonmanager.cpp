@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Qt User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -86,11 +86,6 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     ans->show();
     QCoreApplication::instance()->processEvents();
 
-
-    // First set up completion
-    ans->executeLine("import rlcompleter");
-    ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
-
     // Initialise the python interpreter.
     if (ans->importRegina()) {
         ans->addOutput(parent->QObject::tr("\n"));
@@ -113,10 +108,6 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
     // Show us what's going on.
     ans->show();
     QCoreApplication::instance()->processEvents();
-
-    // First set up completion.
-    ans->executeLine("import rlcompleter");
-    ans->executeLine("__regina_tab_completion = rlcompleter.Completer()");
 
     // Initialise the python interpreter.
     if (ans->importRegina())
@@ -177,7 +168,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 }
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        const QString&, const PythonVariableList&) {
+        regina::Script*) {
     return scriptingDisabled(parent);
 }
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -46,6 +46,7 @@
 #include "triangulation/alias/isomorphism.h"
 #include "triangulation/forward.h"
 #include "maths/perm.h"
+#include "utilities/randutils.h"
 #include <algorithm>
 
 namespace regina {
@@ -348,10 +349,11 @@ class IsomorphismBase :
          * each simplex a random permutation of its (\a dim + 1) vertices
          * will be selected.
          *
-         * Note that both the STL random number generator and the
-         * standard C function rand() are used in this routine.  All
-         * possible isomorphisms for the given number of simplices are
+         * All possible isomorphisms for the given number of simplices are
          * equally likely.
+         *
+         * This routine is thread-safe, and uses RandomEngine for its
+         * random number generation.
          *
          * @param nSimplices the number of simplices that the new
          * isomorphism should operate upon.
@@ -555,15 +557,21 @@ template <int dim>
 Isomorphism<dim> IsomorphismBase<dim>::random(unsigned nSimplices, bool even) {
     Isomorphism<dim> ans(nSimplices);
 
-    // Randomly choose the destination simplices.
+    // Prepare the destination simplices.
     unsigned i;
     for (i = 0; i < nSimplices; ++i)
         ans.simpImage_[i] = i;
-    std::random_shuffle(ans.simpImage_, ans.simpImage_ + nSimplices);
+
+    // Construct the RandomEngine as late as possible, because it grabs
+    // a mutex lock.
+    RandomEngine engine;
+
+    // Randomly choose the destination simplices.
+    std::shuffle(ans.simpImage_, ans.simpImage_ + nSimplices, engine.engine());
 
     // Randomly choose the individual permutations.
     for (i = 0; i < nSimplices; ++i)
-        ans.facetPerm_[i] = Perm<dim+1>::rand(even);
+        ans.facetPerm_[i] = Perm<dim+1>::rand(engine.engine(), even);
 
     return ans;
 }

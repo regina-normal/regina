@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -39,7 +39,7 @@ using regina::GraphTriple;
 using regina::Matrix2;
 using regina::SFSpace;
 
-void addGraphTriple(pybind11::module& m) {
+void addGraphTriple(pybind11::module_& m) {
     pybind11::class_<GraphTriple, regina::Manifold>(m, "GraphTriple")
         .def(pybind11::init([](const SFSpace& s1,
                 const SFSpace& s2, const SFSpace& s3,

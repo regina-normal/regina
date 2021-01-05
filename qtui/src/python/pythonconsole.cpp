@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -434,6 +434,9 @@ void PythonConsole::executeLine(const char* line) {
 
 void PythonConsole::runScript(regina::Script* script) {
     interpreter->runScript(script);
+    
+    if (interpreter->exitAttempted())
+        close();
 }
 
 void PythonConsole::saveLog() {
@@ -526,9 +529,11 @@ void PythonConsole::processCommand() {
 
     // Finish the output.
     interpreter->flush();
-
+    
     // Prepare for a new command.
-    if (ReginaPrefSet::global().pythonAutoIndent) {
+    if (interpreter->exitAttempted()) {
+        close();
+    } else if (ReginaPrefSet::global().pythonAutoIndent) {
         // Only use auto-indent if we are waiting on more text.
         if (done)
             allowInput(true);

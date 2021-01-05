@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -32,7 +32,7 @@
 
 #include "simplex-bindings.h"
 
-void addSimplex15(pybind11::module& m) {
+void addSimplex15(pybind11::module_& m) {
     addSimplex<15>(m, "Simplex15");
     m.attr("Face15_15") = m.attr("Simplex15");
 }

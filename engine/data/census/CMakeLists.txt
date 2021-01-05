@@ -11,7 +11,7 @@ SET(censusdata_DATA
   closed-or-census-11.${DB_EXT}
   cusped-hyp-nor-census-9.${DB_EXT}
   cusped-hyp-or-census-9.${DB_EXT}
-  hyp-knot-link-census.${DB_EXT}
+  christy-knots-links.${DB_EXT}
   )
 
 FOREACH(db ${censusdata_DATA})

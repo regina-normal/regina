@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,11 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addTreeDecomposition(pybind11::module& m);
+void addTreeDecomposition(pybind11::module_& m);
 
-void addTreewidthClasses(pybind11::module& m) {
+void addTreewidthClasses(pybind11::module_& m) {
     addTreeDecomposition(m);
 }
 

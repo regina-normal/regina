@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -36,31 +36,31 @@
 #include "core/engine.h"
 #include "helpers.h"
 
-void addGlobalArray(pybind11::module& m);
+void addGlobalArray(pybind11::module_& m);
 
-void addAlgebraClasses(pybind11::module& m);
-void addAngleClasses(pybind11::module& m);
-void addCensusClasses(pybind11::module& m);
-void addDim2Classes(pybind11::module& m);
-void addDim4Classes(pybind11::module& m);
-void addFileClasses(pybind11::module& m);
-void addForeignClasses(pybind11::module& m);
+void addAlgebraClasses(pybind11::module_& m);
+void addAngleClasses(pybind11::module_& m);
+void addCensusClasses(pybind11::module_& m);
+void addDim2Classes(pybind11::module_& m);
+void addDim4Classes(pybind11::module_& m);
+void addFileClasses(pybind11::module_& m);
+void addForeignClasses(pybind11::module_& m);
 #ifndef REGINA_LOWDIMONLY
-void addGenericClasses(pybind11::module& m);
+void addGenericClasses(pybind11::module_& m);
 #endif
-void addHypersurfaceClasses(pybind11::module& m);
-void addLinkClasses(pybind11::module& m);
-void addManifoldClasses(pybind11::module& m);
-void addMathsClasses(pybind11::module& m);
-void addPacketClasses(pybind11::module& m);
-void addProgressClasses(pybind11::module& m);
-void addSnapPeaClasses(pybind11::module& m);
-void addSplitClasses(pybind11::module& m);
-void addSubcomplexClasses(pybind11::module& m);
-void addSurfacesClasses(pybind11::module& m);
-void addTreewidthClasses(pybind11::module& m);
-void addTriangulationClasses(pybind11::module& m);
-void addUtilitiesClasses(pybind11::module& m);
+void addHypersurfaceClasses(pybind11::module_& m);
+void addLinkClasses(pybind11::module_& m);
+void addManifoldClasses(pybind11::module_& m);
+void addMathsClasses(pybind11::module_& m);
+void addPacketClasses(pybind11::module_& m);
+void addProgressClasses(pybind11::module_& m);
+void addSnapPeaClasses(pybind11::module_& m);
+void addSplitClasses(pybind11::module_& m);
+void addSubcomplexClasses(pybind11::module_& m);
+void addSurfacesClasses(pybind11::module_& m);
+void addTreewidthClasses(pybind11::module_& m);
+void addTriangulationClasses(pybind11::module_& m);
+void addUtilitiesClasses(pybind11::module_& m);
 
 void addSageHacks();
 
@@ -68,7 +68,7 @@ namespace {
     std::string welcome() {
         return std::string(PACKAGE_STRING) +
             "\nSoftware for low-dimensional topology" +
-            "\nCopyright (c) 1999-2018, The Regina development team";
+            "\nCopyright (c) 1999-2021, The Regina development team";
     }
 }
 

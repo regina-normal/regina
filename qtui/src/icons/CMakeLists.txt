@@ -51,6 +51,7 @@ set (IMGS
   packet_triangulation14
   packet_triangulation15
   packet_view
+  parallel
   puncture
   randomise
   reflect

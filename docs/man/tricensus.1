@@ -3,7 +3,7 @@
 .\" <http://shell.ipoline.com/~elmert/comp/docbook2X/> 
 .\" Please send any bug reports, improvements, comments, patches, 
 .\" etc. to Steve Cheng <steve@ggi-project.org>.
-.TH "TRICENSUS" "1" "06 April 2018" "" "The Regina Handbook"
+.TH "TRICENSUS" "1" "22 December 2020" "" "The Regina Handbook"
 
 .SH NAME
 tricensus \- Form a census of triangulations
@@ -40,11 +40,7 @@ to standard output.  Once the census is complete, the full census will
 be saved to the given output file.
 .PP
 You can use the options \fB--genpairs\fR and
-\fB--usepairs\fR to split a census into smaller
-pieces.  See also
-\fBtricensus-mpi\fR,
-a more powerful tool that allows you to distribute a census
-across a high-performance computing cluster.
+\fB--usepairs\fR to split a census into smaller pieces.
 .sp
 .RS
 .B "Caution:"
@@ -241,10 +237,7 @@ Facet pairing generation consumes a very small fraction of the
 total census runtime, and effectively divides the census into
 multiple pieces.  This option allows you to quickly generate
 a complete list of possible facet pairings, so that you can feed subsets
-of this list to different machines to work on simultaneously.  You
-can coordinate this manually, or you can use
-\fBtricensus-mpi\fR
-to coordinate it for you on a high-performance cluster.
+of this list to different machines to work on simultaneously.
 
 The list of all facet pairings will be written to the given output
 file in text format (though you may omit the output file from the
@@ -256,8 +249,7 @@ from a subset of these facet pairings.
 
 Options for orientability, finiteness or minimality cannot be
 used with \fB--genpairs\fR; instead you should use them
-later with \fB--usepairs\fR, or pass them to
-\fBtricensus-mpi\fR\&.
+later with \fB--usepairs\fR\&.
 
 This option does not come with progress reporting, though
 typically it runs fast enough that this does not matter.
@@ -372,12 +364,11 @@ The command-line utilities are installed beneath the
 machines this directory is called
 \fIProgram\~Files\~(x86)\fR\&.
 You can start this utility by running
-c:\\Program\~Files\\Regina\\Regina\~5.2\\bin\\tricensus.exe\&.
+c:\\Program\~Files\\Regina\\Regina\~5.96\\bin\\tricensus.exe\&.
 .SH "SEE ALSO"
 .PP
 censuslookup,
 sigcensus,
-tricensus-mpi,
 regina-gui\&.
 .SH "AUTHOR"
 .PP

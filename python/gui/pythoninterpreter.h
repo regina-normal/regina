@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -142,7 +142,7 @@ class PythonInterpreter {
         PyObject* mainNamespace;
             /**< The global namespace. */
         PyObject* completer;
-            /**< The current rlcompleter::Completer object, or \c null
+            /**< The current plainCompleter::Completer object, or \c null
                  if one could not be created. */
         PyObject* completerFunc;
             /**< The method completer.complete(), or \c null if this reference
@@ -151,6 +151,9 @@ class PythonInterpreter {
         std::string currentCode;
             /**< Any previous statements (such as loop openings) that are
                  waiting to be completed. */
+
+        bool caughtSystemExit;
+            /**< Has the interpreter thrown a SystemExit exception? */
 
         PythonOutputStream& output;
             /**< The stream that we are using for sys.stdout. */
@@ -172,19 +175,26 @@ class PythonInterpreter {
          * \c false if the interpreter is waiting on further lines of code.
          *
          * This is intended for use in an interactive Python session.
+         *
+         * You should always test exitAttempted() after executing user code.
          */
         bool executeLine(const std::string& command);
 
         /**
-         * Configuration of the subinterpreter.
-         * Each of these routines returns \c true on success and
-         * \c false on failure.
+         * Imports Regina's python module.
+         *
+         * This function also sets up a completer object, for use with
+         * complete().
+         *
+         * Returns \c true on success or \c false on failure.
          */
         bool importRegina();
 
         /**
          * Set the given variable in Python's main namespace to
          * represent the given Regina packet.
+         *
+         * Returns \c true on success or \c false on failure.
          */
         bool setVar(const char* name, regina::Packet* value);
 
@@ -194,6 +204,10 @@ class PythonInterpreter {
          * the script code itself.
          *
          * This routine flushes standard output and standard error.
+         *
+         * You should always test exitAttempted() after executing user code.
+         *
+         * Returns \c true on success or \c false on failure.
          */
         bool runScript(const regina::Script* script);
 
@@ -203,10 +217,27 @@ class PythonInterpreter {
         void flush();
 
         /**
+         * Has the subinterpreter attempted to exit?
+         *
+         * Specifically, this tests whether a \c SystemExit exception
+         * has been thrown (typically by calling a Python function such as
+         * exit(), quit(), or sys.quit()).  In a command-line python
+         * session, such a function would exit the python * session; here it
+         * just sets this flag so the enclosing GUI can clean up nicely.
+         *
+         * This does \e not capture os._exit(), which will instead
+         * immediately terminate the parent process (i.e., the enclosing GUI).
+         */
+        bool exitAttempted() const;
+
+        /**
          * Attempts to complete the given Python string.
          *
-         * The completion process uses the Python \c rlcompleter
-         * module; see the corresponding Python documentation for what
+         * The completion process uses Regina's \c plainCompleter Python
+         * module, which is a copy of Python's own \c rlcompleter module
+         * with all \c readline interaction disabled (since \c readline does
+         * not play well with subinterpreters and may produce deadlocks).
+         * See the Python documentation for \c rlcompleter for what
          * text can be completed and how completion works.
          *
          * Each completion that is found will be passed to \a completer
@@ -218,7 +249,7 @@ class PythonInterpreter {
          * @param completer the callback object that will receive the
          * resulting completions (if any).
          * @return the number of completions that were passed to \a completer,
-         * or -1 if the completion process failed (e.g., if the \c rlcompleter
+         * or -1 if the completion process failed (e.g., the \c plainCompleter
          * Python module could not be imported).  In particular, if the
          * completion process ran succesfully and determined that the given
          * text has no completions at all, this routine will return 0.
@@ -271,6 +302,10 @@ inline PrefixCompleter::PrefixCompleter() : initialised_(false) {
 
 inline const std::string& PrefixCompleter::prefix() const {
     return prefix_;
+}
+
+inline bool PythonInterpreter::exitAttempted() const {
+    return caughtSystemExit;
 }
 
 } } // namespace regina::python

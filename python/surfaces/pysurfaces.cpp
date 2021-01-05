@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,19 +30,19 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addDisc(pybind11::module& m);
-void addDiscType(pybind11::module& m);
-void addNormalSurface(pybind11::module& m);
-void addNormalSurfaces(pybind11::module& m);
-void addNormalCoords(pybind11::module& m);
-void addNormalFlags(pybind11::module& m);
-void addPrism(pybind11::module& m);
-void addSurfaceFilter(pybind11::module& m);
-void addSurfaceFilterType(pybind11::module& m);
+void addDisc(pybind11::module_& m);
+void addDiscType(pybind11::module_& m);
+void addNormalSurface(pybind11::module_& m);
+void addNormalSurfaces(pybind11::module_& m);
+void addNormalCoords(pybind11::module_& m);
+void addNormalFlags(pybind11::module_& m);
+void addPrism(pybind11::module_& m);
+void addSurfaceFilter(pybind11::module_& m);
+void addSurfaceFilterType(pybind11::module_& m);
 
-void addSurfacesClasses(pybind11::module& m) {
+void addSurfacesClasses(pybind11::module_& m) {
     // Enum types must go first.
     addNormalCoords(m);
     addSurfaceFilterType(m);

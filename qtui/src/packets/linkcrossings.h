@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,6 +44,7 @@
 
 #include <vector>
 #include <QAbstractItemModel>
+#include <QDialog>
 #include <QStyledItemDelegate>
 
 class EditTableView;
@@ -197,6 +198,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         void reverse();
         void moves();
         void complement();
+        void parallel();
         void composeWith();
 
         /**
@@ -211,6 +213,38 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          * Notify that preferences have changed.
          */
         void updatePreferences();
+};
+
+/**
+ * A dialog used to select parameters for constructing parallel cables
+ * of a link.
+ *
+ * This is for internal use by LinkCrossingsUI, but appears here in the
+ * header so that automoc can find it.
+ */
+class ParallelDialog : public QDialog {
+    Q_OBJECT
+
+    private:
+        regina::Link* link_;
+
+        /**
+         * Internal components
+         */
+        QLineEdit* nCables;
+        QComboBox* framing;
+
+    public:
+        /**
+         * Constructor.
+         */
+        ParallelDialog(QWidget* parent, regina::Link* link);
+
+    protected slots:
+        /**
+         * Ok has been clicked.
+         */
+        void slotOk();
 };
 
 inline const regina::StrandRef& CrossingModel::strandAt(

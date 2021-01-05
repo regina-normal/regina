@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -55,24 +55,24 @@
 #define NMZ_VERSION_STRING REGINA_XSTR(NMZ_VERSION)
 
 const QString ReginaAbout::regCopyright(
-    tr("Copyright (c) 1999-2018, The Regina development team"));
+    tr("Copyright (c) 1999-2021, The Regina development team"));
 
 const QString ReginaAbout::regDescription(
     tr("Software for low-dimensional topology"));
 
 const QString ReginaAbout::regReleased(
-    tr("Released %1").arg(QDate(2016, 12, 19).toString(Qt::TextDate)));
+    tr("Released %1").arg(QDate(2020, 12, 24).toString(Qt::TextDate)));
 
 const QString ReginaAbout::regWebsite("http://regina-normal.github.io/");
 
 const QString ReginaAbout::regLicense( tr( 
-    "Copyright (c) 1999-2018, The Regina development team\n\n"
+    "Copyright (c) 1999-2021, The Regina development team\n\n"
     "CITATION:\n\n"
     "If you find Regina useful in your research, please consider citing it as\n"
     "you would any other paper that you use.  A suggested form of reference is:\n\n"
     "  Benjamin A. Burton, Ryan Budney, William Pettersson, et al.,\n"
     "  \"Regina: Software for low-dimensional topology\",\n"
-    "  http://regina-normal.github.io/, 1999-2018.\n\n"
+    "  http://regina-normal.github.io/, 1999-2021.\n\n"
     "COPYING AND MODIFICATION:\n\n"
     "This program is free software; you can redistribute it and/or modify it\n"
     "under the terms of the GNU General Public License as published by the\n"
@@ -120,6 +120,12 @@ const QString ReginaAbout::regLicense( tr(
     "bindings for Regina's native C++ code.  The pybind11 library was written\n"
     "by Wenzel Jakob, and is distributed under a BSD-style license that is\n"
     "shipped with Regina's source code in the file python/pybind11/LICENSE.\n\n"
+    "PYTHON RLCOMPLETER MODULE:\n\n"
+    "Regina includes a modified copy of the Python rlcompleter module, which\n"
+    "it uses for tab completion in the graphical user interface.  The original\n"
+    "rlcompleter module was distributed under the Python Software Foundation\n"
+    "License Version 2; the full license and copyright notice are shipped with\n"
+    "Regina's source code in the file python/regina/LICENSE.\n\n"
     "ORB KERNEL:\n\n"
     "Regina includes snippets of code from Orb, for use in importing and\n"
     "exporting files in Orb / Casson format.  Orb is based on SnapPea\n"
@@ -158,7 +164,11 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
 
     // Credits:
     thanksCode << "Matthias Goerner";
+    thanksCode << "Adam Gowty";
+    thanksCode << "Robert C. Haraway, III";
+    thanksCode << "Alex He";
     thanksCode << "David Letscher";
+    thanksCode << "Kevin Zhang";
     thanksCode << "Winfried Bruns, Bogdan Ichim and Christof Soeger "
         "(for the Normaliz library)";
     thanksCode << "Marc Culler, Nathan Dunfield and Jeff Weeks "

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,6 +33,6 @@
 #include "boundarycomponent-bindings.h"
 #include "triangulation/dim4.h" // for build()
 
-void addBoundaryComponent5(pybind11::module& m) {
+void addBoundaryComponent5(pybind11::module_& m) {
     addBoundaryComponent<5>(m, "BoundaryComponent5");
 }

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -257,8 +257,13 @@ void AngleStructures::calculateSpanStrict() const {
 }
 
 void AngleStructures::calculateSpanTaut() const {
-    doesSpanTaut = (find_if(structures.begin(), structures.end(),
-        std::mem_fun(&AngleStructure::isTaut)) != structures.end());
+    for (const AngleStructure* s : structures) {
+        if (s->isTaut()) {
+            doesSpanTaut = true;
+            return;
+        }
+    }
+    doesSpanTaut = false;
 }
 
 } // namespace regina

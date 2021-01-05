@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -156,7 +156,7 @@ class GlobalArray {
          * @param className the name that will be assigned to this
          * class in Python.
          */
-        static void wrapClass(pybind11::module& m, const char* className) {
+        static void wrapClass(pybind11::module_& m, const char* className) {
             auto c = pybind11::class_<GlobalArray<T, rvp>>(m, className)
                 .def("__getitem__", &GlobalArray<T, rvp>::getItem,
                     rvp)
@@ -367,7 +367,7 @@ class GlobalArray2D {
          * @param className the name that will be assigned to this
          * class in Python.
          */
-        static void wrapClass(pybind11::module& m, const char* className) {
+        static void wrapClass(pybind11::module_& m, const char* className) {
             auto c = pybind11::class_<GlobalArray2D<T, rvp>>(m, className)
                 .def("__getitem__", &GlobalArray2D<T, rvp>::getItem,
                     pybind11::return_value_policy::reference_internal)
@@ -591,7 +591,7 @@ class GlobalArray3D {
          * @param className the name that will be assigned to this
          * class in Python.
          */
-        static void wrapClass(pybind11::module& m, const char* className) {
+        static void wrapClass(pybind11::module_& m, const char* className) {
             auto c = pybind11::class_<GlobalArray3D<T, rvp>>(m, className)
                 .def("__getitem__", &GlobalArray3D<T, rvp>::getItem,
                     pybind11::return_value_policy::reference_internal)

@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,13 +47,16 @@
 
 #include <QAction>
 #include <QComboBox>
+#include <QDialogButtonBox>
 #include <QLabel>
 #include <QLayout>
+#include <QLineEdit>
 #include <QListView>
 #include <QMenu>
 #include <QMessageBox>
 #include <QPainter>
 #include <QPushButton>
+#include <QRegExp>
 #include <QToolBar>
 
 #define NEG_COLOUR QColor(0xb8, 0x86, 0x0b, 0xff)
@@ -63,6 +66,8 @@
 #define POS_COLOUR_HTML "#0071bc"
 #define OPP_COLOUR_HTML "#808080"
 
+#define MAX_CABLES 50
+
 using regina::Link;
 using regina::Packet;
 
@@ -70,6 +75,10 @@ QPixmap* CrossingModel::icon_ = nullptr;
 
 QString LinkCrossingsUI::explnText;
 QString LinkCrossingsUI::explnPictorial;
+
+namespace {
+    QRegExp reCables("^\\s*(\\d+)\\s*$");
+}
 
 inline CrossingModel::CrossingModel(bool pictorial, regina::Link* link,
         int component) : pictorial_(pictorial), maxIndex_(0) {
@@ -255,8 +264,8 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
         "Selecting <i>Pictures</i> will show a visual representation "
         "of each crossing, and selecting <i>Text</i> will give a "
         "sequence of strands and crossing signs."));
-    type->insertItem(0, tr("Pictures"));
-    type->insertItem(1, tr("Text"));
+    type->addItem(tr("Pictures"));
+    type->addItem(tr("Text"));
     switch (ReginaPrefSet::global().linkCrossingsStyle) {
         case ReginaPrefSet::TextCrossings:
             type->setCurrentIndex(1); break;
@@ -382,6 +391,18 @@ LinkCrossingsUI::LinkCrossingsUI(regina::Link* packet,
     actionList.append(actReverse);
     enableWhenWritable.append(actReverse);
     connect(actReverse, SIGNAL(triggered()), this, SLOT(reverse()));
+
+    QAction* actParallel = new QAction(this);
+    actParallel->setText(tr("Parallel Ca&bles..."));
+    actParallel->setIcon(ReginaSupport::regIcon("parallel"));
+    actParallel->setToolTip(tr("Expand into parallel cables"));
+    actParallel->setEnabled(readWrite);
+    actParallel->setWhatsThis(tr("Expands this link into many cables, "
+        "all of which will be parallel according to a chosen framing.  "
+        "This link will be modified directly."));
+    actionList.append(actParallel);
+    enableWhenWritable.append(actParallel);
+    connect(actParallel, SIGNAL(triggered()), this, SLOT(parallel()));
 
     QAction* actComposeWith = new QAction(this);
     actComposeWith->setText(tr("Com&pose With..."));
@@ -668,6 +689,11 @@ void LinkCrossingsUI::reverse() {
     link->reverse();
 }
 
+void LinkCrossingsUI::parallel() {
+    ParallelDialog dlg(ui, link);
+    dlg.exec();
+}
+
 void LinkCrossingsUI::composeWith() {
     regina::Link* other = static_cast<regina::Link*>(
         PacketDialog::choose(ui,
@@ -753,5 +779,90 @@ void LinkCrossingsUI::resolveCrossing() {
 void LinkCrossingsUI::updatePreferences() {
     // This should be enough to trigger a re-layout:
     typeChanged(1);
+}
+
+ParallelDialog::ParallelDialog(QWidget* parent, regina::Link* link) :
+        QDialog(parent), link_(link) {
+    setWindowTitle(tr("Parallel Cables"));
+    setWhatsThis(tr("This will construct a new link that represents "
+        "several cables of the link that you are viewing., all parallel using a chosen framing.  "
+        "This link will not be modified."));
+    QVBoxLayout* layout = new QVBoxLayout(this);
+
+    QHBoxLayout* subLayout = new QHBoxLayout();
+    layout->addLayout(subLayout);
+    QString expln = tr("Choose the number of parallel cables to create.  "
+        "This must be a positive integer.");
+    QLabel* label = new QLabel(tr("Number of cables:"), this);
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    nCables = new QLineEdit(this);
+    nCables->setValidator(new QRegExpValidator(reCables, this));
+    nCables->setWhatsThis(expln);
+    subLayout->addWidget(nCables, 1);
+
+    layout->addSpacing(5);
+
+    subLayout = new QHBoxLayout();
+    layout->addLayout(subLayout);
+    expln = tr("Choose the framing in which the cables will be parallel.");
+    label = new QLabel(tr("Framing:"), this);
+    label->setWhatsThis(expln);
+    subLayout->addWidget(label);
+    framing = new QComboBox(this);
+    framing->addItem(tr("Seifert framing"));
+    framing->addItem(tr("Blackboard framing"));
+    framing->setCurrentIndex(0);
+    framing->setWhatsThis(expln);
+    subLayout->addWidget(framing, 1);
+
+    QDialogButtonBox* buttonBox = new QDialogButtonBox(
+        QDialogButtonBox::Ok | QDialogButtonBox::Cancel);
+    layout->addWidget(buttonBox);
+
+    connect(buttonBox, SIGNAL(accepted()), this, SLOT(slotOk()));
+    connect(buttonBox, SIGNAL(rejected()), this, SLOT(reject()));
+}
+
+void ParallelDialog::slotOk() {
+    if (! reCables.exactMatch(nCables->text())) {
+        ReginaSupport::sorry(this,
+            tr("Please enter a positive integer number of cables."));
+        return;
+    }
+
+    unsigned long n = reCables.cap(1).toULong();
+    if (n < 1) {
+        ReginaSupport::sorry(this,
+            tr("The number of cables should be positive."));
+        return;
+    }
+    if (n == 1) {
+        ReginaSupport::sorry(this,
+            tr("If there is only one cable then the link will not change."));
+        return;
+    }
+    if (n > MAX_CABLES) {
+        ReginaSupport::sorry(this,
+            tr("I am not brave enough to create more than %1 cables.")
+                .arg(MAX_CABLES));
+        return;
+    }
+
+    regina::Framing f;
+    switch (framing->currentIndex()) {
+        case 1:
+            f = regina::FRAMING_BLACKBOARD;
+            break;
+        default:
+            f = regina::FRAMING_SEIFERT;
+            break;
+    }
+
+    regina::Link* ans = link_->parallel(n, f);
+    link_->swapContents(*ans);
+    delete ans;
+
+    accept();
 }
 

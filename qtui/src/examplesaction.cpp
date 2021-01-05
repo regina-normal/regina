@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -94,7 +94,7 @@ void ExamplesAction::fillStandard() {
         tr("Cusped Hyperbolic Census (Non-Orientable)"));
     addUrl("closed-hyp-census.rga",
         tr("Hodgson-Weeks Closed Hyperbolic Census"));
-    addUrl("hyp-knot-link-census.rga",
-        tr("Hyperbolic Knot / Link Complements"));
+    addUrl("knot-census.rga",
+        tr("Prime Knots"));
 }
 

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 #include "maths/perm.h"
 #include "globalarray.h"
 
-void addGlobalArray(pybind11::module& m) {
+void addGlobalArray(pybind11::module_& m) {
     regina::python::GlobalArray<int>::wrapClass(m, "GlobalArray_int");
     regina::python::GlobalArray2D<int>::wrapClass(m, "GlobalArray2D_int");
     regina::python::GlobalArray3D<int>::wrapClass(m, "GlobalArray3D_int");

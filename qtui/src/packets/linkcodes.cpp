@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -71,10 +71,10 @@ LinkCodesUI::LinkCodesUI(regina::Link* packet,
     label->setWhatsThis(msg);
     sublayout->addWidget(label);
     type = new QComboBox();
-    type->insertItem(0, tr("Gauss codes"));
-    type->insertItem(1, tr("Dowker-Thistlethwaite notation"));
-    type->insertItem(2, tr("Knot signature"));
-    type->insertItem(3, tr("Jenkins format"));
+    type->addItem(tr("Gauss codes"));
+    type->addItem(tr("Dowker-Thistlethwaite notation"));
+    type->addItem(tr("Knot signature"));
+    type->addItem(tr("Jenkins format"));
     type->setWhatsThis(msg);
     switch (ReginaPrefSet::global().linkCodeType) {
         case ReginaPrefSet::DowkerThistlethwaite:

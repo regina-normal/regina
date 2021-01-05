@@ -29,15 +29,6 @@ ADD_SUBDIRECTORY("sage")
 # import the module directly from the source tree if we like.
 ADD_SUBDIRECTORY("regina")
 
-# regina-python needs special environment variables when running on a
-# 64-bit mac with a 32-bit build.
-SET (OSX_PYTHON_32 0)
-IF (APPLE)
-  IF (CMAKE_OSX_ARCHITECTURES STREQUAL "i386")
-    SET (OSX_PYTHON_32 1)
-  ENDIF (CMAKE_OSX_ARCHITECTURES STREQUAL "i386")
-ENDIF (APPLE)
-
 # The startup script for users:
 CONFIGURE_FILE (
   "${PROJECT_SOURCE_DIR}/python/regina-python.in"

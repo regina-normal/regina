@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,7 @@
 using regina::Matrix2;
 using regina::TorusBundle;
 
-void addTorusBundle(pybind11::module& m) {
+void addTorusBundle(pybind11::module_& m) {
     pybind11::class_<TorusBundle, regina::Manifold>(m, "TorusBundle")
         .def(pybind11::init<>())
         .def(pybind11::init<const Matrix2&>())

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -424,8 +424,14 @@ class REGINA_API Perm<2> {
          * Returns a random permutation on two elements.
          * All permutations are returned with equal probability.
          *
-         * The implementation uses the C standard ::rand() function for its
+         * This routine is thread-safe, and uses RandomEngine for its
          * random number generation.
+         *
+         * \warning This routine is expensive, since it locks and unlocks
+         * the mutex protecting Regina's global uniform random bit generator.
+         * If you are calling this many times in quick succession, consider
+         * creating a single RandomEngine object yourself and then calling
+         * <tt>rand(randomEngine.engine(), even)</tt>.
          *
          * @param even if \c true, then the resulting permutation is
          * guaranteed to be even (which means, for a permutation on two
@@ -433,6 +439,30 @@ class REGINA_API Perm<2> {
          * @return a random permutation.
          */
         static Perm rand(bool even = false);
+
+        /**
+         * Returns a random permutation on two elements, using the
+         * given uniform random bit generator.
+         * All permutations are returned with equal probability.
+         *
+         * The thread safety of this routine is of course dependent on
+         * the thread safety of your uniform random bit generator \a gen.
+         *
+         * \tparam URBG A type which, once any references are removed, must
+         * adhere to the C++ \a UniformRandomBitGenerator concept.
+         *
+         * \ifacespython Not present, though the non-thread-safe variant
+         * without the \a gen argument is available.
+         *
+         * @param gen the source of randomness to use (e.g., one of the
+         * many options provided in the C++ standard <random> header).
+         * @param even if \c true, then the resulting permutation is
+         * guaranteed to be even (which means, for a permutation on two
+         * elements, the resulting permutation must be the identity).
+         * @return a random permutation.
+         */
+        template <class URBG>
+        static Perm rand(URBG&& gen, bool even = false);
 
         /**
          * Returns the lexicographical index of this permutation.  This
@@ -644,10 +674,18 @@ inline Perm<2>::Index Perm<2>::index() const {
 }
 
 inline Perm<2> Perm<2>::rand(bool even) {
+    RandomEngine engine;
+    return rand(engine.engine(), even);
+}
+
+template <class URBG>
+inline Perm<2> Perm<2>::rand(URBG&& gen, bool even) {
     if (even)
         return Perm<2>();
-    else
-        return Perm<2>(static_cast<Code>(::rand() % 2));
+    else {
+        std::uniform_int_distribution<short> d(0, 1);
+        return Perm<2>(static_cast<Code>(d(gen)));
+    }
 }
 
 inline std::string Perm<2>::str() const {

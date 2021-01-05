@@ -2,7 +2,10 @@
 
 # Files to compile
 SET ( FILES
+  cyclotomic
   integer
+  laurent
+  laurent2
   matrixops
   numbertheory
   perm
@@ -11,6 +14,7 @@ SET ( FILES
   perm4
   perm5
   permconv
+  polynomial
   primes
   rational
   )

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -78,8 +78,8 @@ const GroupExpressionTerm& GroupExpression::term(size_t index) const {
 
 GroupExpression* GroupExpression::inverse() const {
     GroupExpression* ans = new GroupExpression();
-    transform(terms_.begin(), terms_.end(), front_inserter(ans->terms_),
-        std::mem_fun_ref(&GroupExpressionTerm::inverse));
+    for (const GroupExpressionTerm& t : terms_)
+        ans->terms_.push_front(t.inverse());
     return ans;
 }
 
@@ -101,8 +101,8 @@ GroupExpression* GroupExpression::power(long exponent) const {
             ans->terms_.insert(ans->terms_.end(), terms_.begin(), terms_.end());
     else
         for (i = 0; i > exponent; i--)
-            transform(terms_.begin(), terms_.end(), front_inserter(ans->terms_),
-                std::mem_fun_ref(&GroupExpressionTerm::inverse));
+            for (const GroupExpressionTerm& t : terms_)
+                ans->terms_.push_front(t.inverse());
     return ans;
 }
 

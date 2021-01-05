@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,7 @@
 using pybind11::overload_cast;
 using regina::Triangle;
 
-void addTriangle2(pybind11::module& m) {
+void addTriangle2(pybind11::module_& m) {
     auto c = pybind11::class_<regina::Simplex<2>>(m, "Simplex2")
         .def("description", &Triangle<2>::description)
         .def("setDescription", &Triangle<2>::setDescription)

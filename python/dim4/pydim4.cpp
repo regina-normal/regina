@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,20 +30,20 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addBoundaryComponent4(pybind11::module& m);
-void addComponent4(pybind11::module& m);
-void addEdge4(pybind11::module& m);
-void addExample4(pybind11::module& m);
-void addIsomorphism4(pybind11::module& m);
-void addPentachoron4(pybind11::module& m);
-void addTetrahedron4(pybind11::module& m);
-void addTriangle4(pybind11::module& m);
-void addTriangulation4(pybind11::module& m);
-void addVertex4(pybind11::module& m);
+void addBoundaryComponent4(pybind11::module_& m);
+void addComponent4(pybind11::module_& m);
+void addEdge4(pybind11::module_& m);
+void addExample4(pybind11::module_& m);
+void addIsomorphism4(pybind11::module_& m);
+void addPentachoron4(pybind11::module_& m);
+void addTetrahedron4(pybind11::module_& m);
+void addTriangle4(pybind11::module_& m);
+void addTriangulation4(pybind11::module_& m);
+void addVertex4(pybind11::module_& m);
 
-void addDim4Classes(pybind11::module& m) {
+void addDim4Classes(pybind11::module_& m) {
     addBoundaryComponent4(m);
     addComponent4(m);
     addEdge4(m);

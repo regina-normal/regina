@@ -2,9 +2,9 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  KDE User Interface                                                    *
+ *  Qt User Interface                                                     *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -93,8 +93,8 @@ HyperCreator::HyperCreator() {
     basis = new QComboBox(ui);
     // These insertions MUST happen in the same order in which the
     // BASIS_... constants are defined at the top of this file.
-    basis->insertItem(BASIS_VERTEX, ui->tr("Vertex hypersurfaces"));
-    basis->insertItem(BASIS_FUND, ui->tr("Fundamental hypersurfaces"));
+    basis->addItem(ui->tr("Vertex hypersurfaces"));
+    basis->addItem(ui->tr("Fundamental hypersurfaces"));
     basis->setCurrentIndex(
         ReginaPrefSet::global().hypersurfacesCreationList.has(
         regina::HS_FUNDAMENTAL) ? BASIS_FUND : BASIS_VERTEX);

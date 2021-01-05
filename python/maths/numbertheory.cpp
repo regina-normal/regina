@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -33,7 +33,7 @@
 #include "../pybind11/pybind11.h"
 #include "maths/numbertheory.h"
 
-void addNumberTheory(pybind11::module& m) {
+void addNumberTheory(pybind11::module_& m) {
     m.def("reducedMod", regina::reducedMod);
     m.def("gcd", regina::gcd);
     m.def("gcdWithCoeffs", [](long a, long b){

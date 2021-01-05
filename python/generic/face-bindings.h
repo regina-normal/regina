@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -189,7 +189,7 @@ namespace {
 }
 
 template <int dim, int subdim>
-void addFace(pybind11::module& m, const char* name, const char* embName) {
+void addFace(pybind11::module_& m, const char* name, const char* embName) {
     auto e = pybind11::class_<FaceEmbedding<dim, subdim>>(m, embName)
         .def(pybind11::init<regina::Simplex<dim>*, int>())
         .def(pybind11::init<const FaceEmbedding<dim, subdim>&>())

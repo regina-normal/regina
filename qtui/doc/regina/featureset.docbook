@@ -237,8 +237,8 @@
  <sect2 id="features-links">
   <title>Knots and Links</title>
   <para>
-   Since version&nbsp;5.2, &regina; now offers
-   native support for knots and links.
+   Since version&nbsp;5.96 (the first prerelease for version&nbsp;6.0),
+   &regina; now offers native support for knots and links.
   </para>
   <para>
    You can create knots and links from Gauss or Dowker-Thistlethwaite codes,

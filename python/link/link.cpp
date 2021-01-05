@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -44,7 +44,7 @@ using regina::Crossing;
 using regina::StrandRef;
 using regina::Link;
 
-void addLink(pybind11::module& m) {
+void addLink(pybind11::module_& m) {
     pybind11::enum_<regina::Framing>(m, "Framing")
         .value("FRAMING_SEIFERT", regina::FRAMING_SEIFERT)
         .value("FRAMING_BLACKBOARD", regina::FRAMING_BLACKBOARD)
@@ -230,6 +230,10 @@ void addLink(pybind11::module& m) {
              pybind11::arg("height") = 1,
              pybind11::arg("nThreads") = 1,
              pybind11::arg("tracker") = nullptr)
+        .def("insertTorusLink", &Link::insertTorusLink,
+            pybind11::arg(),
+            pybind11::arg(),
+            pybind11::arg("positive") = true)
         .def_readonly_static("jonesVar", Link::jonesVar)
         .def_readonly_static("homflyVarX", Link::homflyVarX)
         .def_readonly_static("homflyVarY", Link::homflyVarY)

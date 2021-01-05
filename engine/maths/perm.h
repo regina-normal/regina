@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -47,6 +47,7 @@
 #include <string>
 #include "regina-core.h"
 #include "utilities/intutils.h"
+#include "utilities/randutils.h"
 
 namespace regina {
 
@@ -122,8 +123,8 @@ inline constexpr int64_t factorial(int n) {
  */
 template <int n>
 class Perm {
-    static_assert(n >= 5 && n <= 16,
-        "The generic Perm<n> template is only available for 5 <= n <= 16.");
+    static_assert(n >= 6 && n <= 16,
+        "The generic Perm<n> template is only available for 6 <= n <= 16.");
     public:
         /**
          * Indicates the number of bits used by the permutation code
@@ -424,8 +425,14 @@ class Perm {
          * Returns a random permutation on \a n elements.
          * All permutations are returned with equal probability.
          *
-         * The implementation uses the C standard ::rand() function for its
+         * This routine is thread-safe, and uses RandomEngine for its
          * random number generation.
+         *
+         * \warning This routine is expensive, since it locks and unlocks
+         * the mutex protecting Regina's global uniform random bit generator.
+         * If you are calling this many times in quick succession, consider
+         * creating a single RandomEngine object yourself and then calling
+         * <tt>rand(randomEngine.engine(), even)</tt>.
          *
          * @param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
@@ -433,6 +440,30 @@ class Perm {
          * @return a random permutation.
          */
         static Perm rand(bool even = false);
+
+        /**
+         * Returns a random permutation on \a n elements, using the
+         * given uniform random bit generator.
+         * All permutations are returned with equal probability.
+         *
+         * The thread safety of this routine is of course dependent on
+         * the thread safety of your uniform random bit generator \a gen.
+         *
+         * \tparam URBG A type which, once any references are removed, must
+         * adhere to the C++ \a UniformRandomBitGenerator concept.
+         *
+         * \ifacespython Not present, though the non-thread-safe variant
+         * without the \a gen argument is available.
+         *
+         * @param gen the source of randomness to use (e.g., one of the
+         * many options provided in the C++ standard <random> header).
+         * @param even if \c true, then the resulting permutation is
+         * guaranteed to be even (and again all even permutations are
+         * returned with equal probability).
+         * @return a random permutation.
+         */
+        template <class URBG>
+        static Perm rand(URBG&& gen, bool even = false);
 
         /**
          * Returns a string representation of this permutation.
@@ -740,24 +771,34 @@ typename Perm<n>::Index Perm<n>::index() const {
 
 template <int n>
 Perm<n> Perm<n>::rand(bool even) {
-    // We can't just call atIndex(rand() % nPerms), since nPerms might
-    // be too large to fit into an int (which is what rand() returns).
-    int image[n];
-    int p, q;
-    for (p = 0; p < n; ++p)
-        image[n - p - 1] = ::rand() % (p + 1);
-    for (p = n - 1; p >= 0; --p)
-        for (q = p + 1; q < n; ++q)
-            if (image[q] >= image[p])
-                ++image[q];
+    RandomEngine engine;
+    return rand(engine.engine(), even);
+}
+
+template <int n>
+template <class URBG>
+Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
+    // Note: This generic implementation of Perm covers 6 <= n <= 16.
+    // The corresponding index types require 16, 32 or 64 bits.
+    //
+    // A slight messiness here is that std::uniform_int_distribution
+    // requires the type argument to be one of short, int, long or long long.
+    static_assert(sizeof(Index) <= sizeof(long long),
+        "Permutation index cannot fit inside a long long");
+    typedef typename std::conditional<sizeof(Index) <= sizeof(short), short,
+        typename std::conditional<sizeof(Index) <= sizeof(int), int,
+        typename std::conditional<sizeof(Index) <= sizeof(long), long,
+        long long>::type>::type>::type Arg;
+
+    std::uniform_int_distribution<Arg> d(0, nPerms - 1);
     if (even) {
-        Perm<n> result(image);
+        Perm<n> result = atIndex(d(gen));
         if (result.sign() > 0)
             return result;
-        std::swap(image[0], image[1]);
-        return Perm<n>(image);
+        else
+            return result * Perm<n>(0, 1);
     } else
-        return Perm<n>(image);
+        return atIndex(d(gen));
 }
 
 template <int n>

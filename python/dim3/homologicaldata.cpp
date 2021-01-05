@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -38,7 +38,7 @@
 using regina::HomologicalData;
 using regina::Triangulation;
 
-void addHomologicalData(pybind11::module& m) {
+void addHomologicalData(pybind11::module_& m) {
     auto c = pybind11::class_<HomologicalData>(m, "HomologicalData")
         .def(pybind11::init<const Triangulation<3>&>())
         .def(pybind11::init<const HomologicalData&>())

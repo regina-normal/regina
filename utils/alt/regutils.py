@@ -3,13 +3,17 @@
 # Regina - A Normal Surface Theory Calculator
 # Alternate implementations of command-line utilities for the MacOS app bundle
 #
-# Copyright (c) 2002-2018, Ben Burton
+# Copyright (c) 2002-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
 # This implementation is designed for the Xcode bundle only - it hard-codes
 # paths to the census databases that are specific to the bundle layout.
 # In all other settings, you should use the standard implementations
 # of these utilities from the utils/ directory of Regina's source tree.
+#
+# This script should not be called directly.  Instead use the symlinks
+# within the MacOS folder in the app bundle (which call regutils-launch,
+# which then runs this script in the correct python runtime).
 #
 # This program is free software; you can redistribute it and/or
 # modify it under the terms of the GNU General Public License as
@@ -32,12 +36,15 @@
 # Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
 # MA 02110-1301, USA.
 
+# In regfiletype we use print(..., end=''), which is a python3ism.
+from __future__ import print_function
+
 import os
 import sys
 import string
 
-appName = os.path.basename(sys.argv[0])
-appDir = os.path.dirname(sys.argv[0])
+appName = sys.argv[1]
+appDir = os.path.abspath(os.path.dirname(sys.argv[0]) + '/../..')
 
 def globalUsage(error):
     if error:
@@ -46,12 +53,12 @@ def globalUsage(error):
     sys.exit(1)
 
 try:
-    sys.path = [ appDir + '/python' ] + sys.path
+    sys.path = [ appDir + '/MacOS/python' ] + sys.path
     import regina
 except:
     globalUsage('Could not import the regina module.')
 
-regina.GlobalDirs.setDirs('', '', appDir + '/../Resources')
+regina.GlobalDirs.setDirs('', '', appDir + '/Resources')
 
 if appName == 'censuslookup':
     def usage(error):
@@ -59,27 +66,27 @@ if appName == 'censuslookup':
             sys.stderr.write(error + '\n\n')
 
         sys.stderr.write('Usage:\n')
-        sys.stderr.write('    ' + sys.argv[0] + ' <isosig> ...\n')
+        sys.stderr.write('    ' + sys.argv[1] + ' <isosig> ...\n')
         sys.exit(1)
 
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         usage('Please specify one or more isomorphism signatures.')
 
-    for sig in sys.argv[1:]:
+    for sig in sys.argv[2:]:
         hits = regina.Census.lookup(sig)
 
         n = hits.count()
         if n == 1:
-            print sig + ': 1 hit'
+            print(sig + ': 1 hit')
         else:
-            print sig + ':', n, 'hits'
+            print(sig + ':', n, 'hits')
 
         hit = hits.first()
         while hit:
-            print '    ' + hit.name() + ' -- ' + hit.db().desc()
+            print('    ' + hit.name() + ' -- ' + hit.db().desc())
             hit = hit.next()
 
-        print
+        print()
 
 elif appName == 'regconcat':
     def usage(error):
@@ -87,7 +94,7 @@ elif appName == 'regconcat':
             sys.stderr.write(error + '\n\n')
 
         sys.stderr.write('Usage:\n')
-        sys.stderr.write('    ' + sys.argv[0] + \
+        sys.stderr.write('    ' + sys.argv[1] + \
             ' [ -o <output-file> ] <data-file> ...\n\n')
         sys.stderr.write('    -o <output-file> : Write to the given data file (otherwise standard\n')
         sys.stderr.write('                       output is used)\n')
@@ -97,7 +104,7 @@ elif appName == 'regconcat':
     files = []
     outputFile = None
 
-    i = 1
+    i = 2
     while i < len(sys.argv):
         if sys.argv[i] == '-o':
             if i == len(sys.argv) - 1:
@@ -147,7 +154,7 @@ elif appName == 'regconvert':
             sys.stderr.write(error + '\n\n')
 
         sys.stderr.write('Usage:\n')
-        sys.stderr.write('    ' + sys.argv[0] + ' [ -x | -u ] <old-file> [ <new-file> ]\n\n')
+        sys.stderr.write('    ' + sys.argv[1] + ' [ -x | -u ] <old-file> [ <new-file> ]\n\n')
         sys.stderr.write('    -x : Convert to compressed XML (default)\n')
         sys.stderr.write('    -u : Convert to uncompressed XML\n\n')
         sys.stderr.write('    <new-file> may be the same as <old-file>.\n')
@@ -158,7 +165,7 @@ elif appName == 'regconvert':
     newFile = None
     typeOpt = None
 
-    for arg in sys.argv[1:]:
+    for arg in sys.argv[2:]:
         if arg == '-u' or arg == '-x':
             if typeOpt:
                 usage('More than one file type has been specified.')
@@ -207,7 +214,7 @@ elif appName == 'regfiledump':
             sys.stderr.write(error + '\n\n')
 
         sys.stderr.write('Usage:\n')
-        sys.stderr.write('    ' + sys.argv[0] + ' [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]\n\n')
+        sys.stderr.write('    ' + sys.argv[1] + ' [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]\n\n')
         sys.stderr.write('    -f : Display full packet details (default)\n')
         sys.stderr.write('    -l : Only display packet labels and types\n')
         sys.stderr.write("    -n : Don't display packets at all (implies -c)\n")
@@ -221,38 +228,38 @@ elif appName == 'regfiledump':
 
     def dumpNoPacket(label, opt):
         if opt == 'l':
-            print 'ERROR:', label, '-- No such packet.'
+            print('ERROR:', label, '-- No such packet.')
         elif opt == 'f':
-            print separator
-            print '*'
-            print '* ERROR:', label
-            print '*        No such packet.'
-            print '*'
-            print separator
-            print
+            print(separator)
+            print('*')
+            print('* ERROR:', label)
+            print('*        No such packet.')
+            print('*')
+            print(separator)
+            print()
 
     def dumpPacketHeader(p):
-        print separator
-        print '*'
-        print '* Label:', p.humanLabel()
-        print '* Type:', p.typeName()
+        print(separator)
+        print('*')
+        print('* Label:', p.humanLabel())
+        print('* Type:', p.typeName())
         if p.parent():
-            print '* Parent:', p.parent().humanLabel()
+            print('* Parent:', p.parent().humanLabel())
         else:
-            print '* Parent: (none)'
+            print('* Parent: (none)')
         if p.hasTags():
-            print '* Tags:', string.join(p.tags(), ', ')
-        print '*'
-        print separator
+            print('* Tags:', ', '.join(p.tags()))
+        print('*')
+        print(separator)
 
     def dumpPacket(p, opt):
         if opt == 'l':
-            print p.fullName()
+            print(p.fullName())
         elif opt == 'f':
             dumpPacketHeader(p)
-            print
-            print p.detail()
-            print
+            print()
+            print(p.detail())
+            print()
 
     filename = None
     packets = []
@@ -260,7 +267,7 @@ elif appName == 'regfiledump':
     count = False
 
     # Parse command line.
-    for arg in sys.argv[1:]:
+    for arg in sys.argv[2:]:
         if arg == '-c':
             count = True
         elif arg == '-f' or arg == '-l' or arg == '-n':
@@ -313,8 +320,8 @@ elif appName == 'regfiledump':
 
     if count:
         if opt != 'n':
-            print
-        print tree.totalTreeSize(), 'total packets in file.'
+            print()
+        print(tree.totalTreeSize(), 'total packets in file.')
 
 elif appName == 'regfiletype':
     def usage(error):
@@ -322,24 +329,24 @@ elif appName == 'regfiletype':
             sys.stderr.write(error + '\n\n')
 
         sys.stderr.write('Usage:\n')
-        sys.stderr.write('    ' + sys.argv[0] + ' <file> ...\n')
+        sys.stderr.write('    ' + sys.argv[1] + ' <file> ...\n')
         sys.exit(1)
 
-    if len(sys.argv) < 2:
+    if len(sys.argv) < 3:
         usage('Please specify one or more files.')
 
-    for f in sys.argv[1:]:
-        if len(sys.argv) > 2:
-            print '[', f, ']'
+    for f in sys.argv[2:]:
+        if len(sys.argv) > 3:
+            print('[', f, ']')
 
         info = regina.FileInfo.identify(f)
         if info:
-            print info.detail(),
+            print(info.detail(), end='')
         else:
-            print 'Unknown file format or file could not be opened.'
+            print('Unknown file format or file could not be opened.')
 
-        if len(sys.argv) > 2:
-            print
+        if len(sys.argv) > 3:
+            print()
 
 elif appName == 'trisetcmp':
     def usage(error):
@@ -347,7 +354,7 @@ elif appName == 'trisetcmp':
             sys.stderr.write(error + '\n\n')
 
         sys.stderr.write('Usage:\n')
-        sys.stderr.write('    ' + sys.argv[0] + ' [ -m | -n ] [ -s ] <file1.rga> <file2.rga>\n\n')
+        sys.stderr.write('    ' + sys.argv[1] + ' [ -m | -n ] [ -s ] <file1.rga> <file2.rga>\n\n')
         sys.stderr.write('    -m : List matches, i.e., triangulations contained in both files (default)\n')
         sys.stderr.write('    -n : List non-matches, i.e., triangulations in one file but not the other\n')
         sys.stderr.write('    -s : Allow triangulations from file1.rga to be subcomplexes of\n')
@@ -368,12 +375,12 @@ elif appName == 'trisetcmp':
 
     def runMatches(tree1, tree2):
         if subcomplexTesting:
-            print 'Matching (isomorphic subcomplex) triangulations:'
+            print('Matching (isomorphic subcomplex) triangulations:')
             op = '<='
         else:
-            print 'Matching (isomorphic) triangulations:'
+            print('Matching (isomorphic) triangulations:')
             op = '=='
-        print
+        print()
 
         nMatches = 0
 
@@ -384,24 +391,24 @@ elif appName == 'trisetcmp':
                 while p2:
                     if p2.type() == p1.type():
                         if compare(p1, p2):
-                            print '    ' + p1.humanLabel() + '  ' + op + \
-                                '  ' + p2.humanLabel()
+                            print('    ' + p1.humanLabel() + '  ' + op + \
+                                '  ' + p2.humanLabel())
                             nMatches = nMatches + 1
                     p2 = p2.nextTreePacket()
             p1 = p1.nextTreePacket()
 
         if nMatches == 0:
-            print 'No matches found.'
+            print('No matches found.')
         elif nMatches == 1:
-            print
-            print '1 match.'
+            print()
+            print('1 match.')
         else:
-            print
-            print nMatches, 'matches.'
+            print()
+            print(nMatches, 'matches.')
 
     def runNonMatches(file1, tree1, file2, tree2):
-        print 'Triangulations in ' + file1 + ' but not ' + file2 + ':'
-        print
+        print('Triangulations in ' + file1 + ' but not ' + file2 + ':')
+        print()
 
         nMissing = 0
 
@@ -416,18 +423,18 @@ elif appName == 'trisetcmp':
                             matched = True
                     p2 = p2.nextTreePacket()
                 if not matched:
-                    print '    ' + p1.humanLabel()
+                    print('    ' + p1.humanLabel())
                     nMissing = nMissing + 1
             p1 = p1.nextTreePacket()
 
         if nMissing == 0:
-            print 'All triangulations matched.'
+            print('All triangulations matched.')
         elif nMissing == 1:
-            print
-            print '1 non-match.'
+            print()
+            print('1 non-match.')
         else:
-            print
-            print nMissing, 'non-matches.'
+            print()
+            print(nMissing, 'non-matches.')
 
     # Parse command line.
     listMatches = False
@@ -436,7 +443,7 @@ elif appName == 'trisetcmp':
     file1 = None
     file2 = None
 
-    for arg in sys.argv[1:]:
+    for arg in sys.argv[2:]:
         if not noMoreOpts:
             if arg == '-m':
                 listMatches = True
@@ -494,9 +501,9 @@ elif appName == 'trisetcmp':
     else:
         runNonMatches(file1, tree1, file2, tree2)
         if not subcomplexTesting:
-            print
-            print '--------------------'
-            print
+            print()
+            print('--------------------')
+            print()
             runNonMatches(file2, tree2, file1, tree1)
 
 else:

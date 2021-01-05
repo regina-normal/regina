@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "link.h"
+#include "maths/numbertheory.h"
 #include <algorithm>
 #include <sstream>
 
@@ -922,6 +923,66 @@ void Link::prepareTreeDecomposition(TreeDecomposition& td) const {
     td.makeNice(upperSteps);
 
     delete[] upperSteps;
+}
+
+void Link::insertTorusLink(int p, int q, bool positive) {
+    if (p < q)
+        std::swap(p, q);
+
+    // We have p >= q.
+    if (q == 0) {
+        ChangeEventSpan span(this);
+        if (p == 0) {
+            // Insert a single unknot.
+            components_.push_back({});
+        } else {
+            // Insert p disjoint unknots.
+            for (int i = 0; i < p; ++i)
+                components_.push_back({});
+        }
+        clearAllProperties();
+        return;
+    }
+    if (q == 1) {
+        // Insert a single unknot.
+        ChangeEventSpan span(this);
+        components_.push_back({});
+        clearAllProperties();
+        return;
+    }
+
+    // We now have 1 < q <= p.
+    // Use the standard diagram with p(q-1) crossings.
+
+    int n = p * (q - 1);
+    int nComp = regina::gcd(p, q);
+
+    ChangeEventSpan span(this);
+
+    Crossing** c = new Crossing*[n];
+    int i;
+    for (i = 0; i < n; ++i) {
+        c[i] = new Crossing(positive ? 1 : -1);
+        crossings_.push_back(c[i]);
+    }
+
+    int sliceIdx, nextIdx;
+    for (int slice = 0; slice < p; ++slice) {
+        sliceIdx = slice * (q - 1);
+        nextIdx = ((slice == p - 1) ? 0 : (sliceIdx + q - 1));
+        join({c[sliceIdx], 0}, {c[nextIdx], 1});
+        for (i = 0; i < q - 2; ++i) {
+            join({c[sliceIdx + i], 1}, {c[sliceIdx + i + 1], 1});
+            join({c[sliceIdx + i + 1], 0}, {c[nextIdx + i], 0});
+        }
+        join({c[sliceIdx + q - 2], 1}, {c[nextIdx + q - 2], 0});
+
+        if (slice < nComp)
+            components_.push_back({c[sliceIdx], 1});
+    }
+
+    delete[] c;
+    clearAllProperties();
 }
 
 } // namespace regina

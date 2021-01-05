@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -478,9 +478,9 @@ class REGINA_API Census {
             /**< The census of cusped hyperbolic non-orientable 3-manifold
                  triangulations that are shipped with Regina.
                  This will only be initialised when lookup() is first called. */
-        static CensusDB* hypKnotLink_;
-            /**< The census of cusped hyperbolic knot and link complements
-                 that are shipped with Regina.
+        static CensusDB* christy_;
+            /**< Joe Christy's collection of knot and link complements,
+                 which were shipped as a Regina sample file until version 5.96.
                  This will only be initialised when lookup() is first called. */
         static bool dbInit_;
             /**< Have the census databases been initialised yet? */

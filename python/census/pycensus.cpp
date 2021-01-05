@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Python Interface                                                      *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -30,12 +30,12 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module; }
+namespace pybind11 { class module_; }
 
-void addGluingPermSearcher3(pybind11::module& m);
-void addCensus(pybind11::module& m);
+void addGluingPermSearcher3(pybind11::module_& m);
+void addCensus(pybind11::module_& m);
 
-void addCensusClasses(pybind11::module& m) {
+void addCensusClasses(pybind11::module_& m) {
     addGluingPermSearcher3(m);
     addCensus(m);
 }

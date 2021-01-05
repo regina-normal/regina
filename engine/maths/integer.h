@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -1292,6 +1292,10 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is uniformly
          * distributed in the interval [0,*this).
          *
+         * The random number generation here does \e not use Regina's
+         * own RandomEngine class, but instead uses a separate random
+         * number generator provided by GMP.
+         *
          * \pre This integer is strictly positive.
          *
          * \warning Even if this integer is small, this routine is still
@@ -1308,6 +1312,10 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is uniformly
          * distributed in the interval [0,2^n).
          *
+         * The random number generation here does \e not use Regina's
+         * own RandomEngine class, but instead uses a separate random
+         * number generator provided by GMP.
+         *
          * @param n the maximum number of bits in the pseudo-random
          * integer.
          * @return a pseudo-random integer.
@@ -1318,6 +1326,10 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * Generate a pseudo-random integer that is distributed in the
          * interval [0,2^n), with a tendency to have long strings of 0s
          * and 1s in its binary expansion.
+         *
+         * The random number generation here does \e not use Regina's
+         * own RandomEngine class, but instead uses a separate random
+         * number generator provided by GMP.
          *
          * @param n the maximum number of bits in the pseudo-random integer.
          * @return a pseudo-random integer.
@@ -2384,7 +2396,7 @@ inline IntegerBase<supportInfinity>::IntegerBase(double value) :
 
 template <bool supportInfinity>
 template <int bytes>
-inline typename IntOfSize<bytes>::type
+typename IntOfSize<bytes>::type
         IntegerBase<supportInfinity>::nativeValue() const {
     typedef typename IntOfSize<bytes>::type Native;
     typedef typename IntOfSize<bytes>::utype UNative;
@@ -2401,18 +2413,38 @@ inline typename IntOfSize<bytes>::type
     }
     // From here: this is a GMP integer, and the return type is too
     // large for a long.  Take one long-sized chunk at a time.
+    //
+    // We treat positive and negative numbers differently,
+    // because mpz_get_ui() *ignores* sign.  Gulp.
+    int sign = mpz_sgn(large_);
+    if (sign == 0)
+        return 0;
+
     Native ans = 0;
     unsigned blocks = bytes / sizeof(long);
 
     mpz_t tmp;
     mpz_init_set(tmp, large_);
-    for (unsigned i = 0; i < blocks - 1; ++i) {
-        ans += (static_cast<UNative>(mpz_get_ui(tmp))
-            << (i * 8 * sizeof(long)));
-        mpz_fdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
+
+    if (sign > 0) {
+        // The positive case.
+        for (unsigned i = 0; i < blocks - 1; ++i) {
+            ans += (static_cast<UNative>(mpz_get_ui(tmp))
+                << (i * 8 * sizeof(long)));
+            mpz_fdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
+        }
+        ans += (static_cast<Native>(mpz_get_ui(tmp))
+            << ((blocks - 1) * 8 * sizeof(long)));
+    } else {
+        // The negative case.
+        for (unsigned i = 0; i < blocks - 1; ++i) {
+            ans -= (static_cast<UNative>(mpz_get_ui(tmp))
+                << (i * 8 * sizeof(long)));
+            mpz_tdiv_q_2exp(tmp, tmp, 8 * sizeof(long));
+        }
+        ans += (static_cast<Native>(mpz_get_si(tmp))
+            << ((blocks - 1) * 8 * sizeof(long)));
     }
-    ans += (static_cast<Native>(mpz_get_si(tmp))
-        << ((blocks - 1) * 8 * sizeof(long)));
 
     mpz_clear(tmp);
     return ans;

@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Test Suite                                                            *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -42,13 +42,17 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
+void addCyclotomic(CppUnit::TextUi::TestRunner& runner);
 void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
 void addInteger(CppUnit::TextUi::TestRunner& runner);
+void addLaurent(CppUnit::TextUi::TestRunner& runner);
+void addLaurent2(CppUnit::TextUi::TestRunner& runner);
 void addPerm(CppUnit::TextUi::TestRunner& runner);
 void addPerm2(CppUnit::TextUi::TestRunner& runner);
 void addPerm3(CppUnit::TextUi::TestRunner& runner);
 void addPerm4(CppUnit::TextUi::TestRunner& runner);
 void addPerm5(CppUnit::TextUi::TestRunner& runner);
+void addPolynomial(CppUnit::TextUi::TestRunner& runner);
 void addPrimes(CppUnit::TextUi::TestRunner& runner);
 void addRational(CppUnit::TextUi::TestRunner& runner);
 void addNumberTheory(CppUnit::TextUi::TestRunner& runner);

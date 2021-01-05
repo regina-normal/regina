@@ -4,7 +4,7 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Computational Engine                                                  *
  *                                                                        *
- *  Copyright (c) 1999-2018, Ben Burton                                   *
+ *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
  *  This program is free software; you can redistribute it and/or         *
@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "link/tangle.h"
+#include "utilities/randutils.h"
 
 // Affects the number of random type III moves attempted during simplification.
 #define COEFF_TYPE_3 20
@@ -84,7 +85,7 @@ bool Link::intelligentSimplify() {
 
                 // Perform a random type III move on the clone.
                 type3Choice = type3Available[
-                    static_cast<unsigned>(rand()) % type3Available.size()];
+                    RandomEngine::rand(type3Available.size())];
                 use->r3(type3Choice.first, type3Choice.second, false, true);
 
                 // See if we can simplify now.

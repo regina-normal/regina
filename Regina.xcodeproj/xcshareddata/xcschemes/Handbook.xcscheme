@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Scheme
-   LastUpgradeVersion = "1010"
+   LastUpgradeVersion = "1220"
    version = "1.3">
    <BuildAction
       parallelizeBuildables = "YES"
@@ -14,23 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "0575E6581805F36D009E3FC4"
-               BuildableName = "libregina-engine.dylib"
-               BlueprintName = "Engine"
-               ReferencedContainer = "container:Regina.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "YES"
-            buildForRunning = "YES"
-            buildForProfiling = "YES"
-            buildForArchiving = "YES"
-            buildForAnalyzing = "YES">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "052FA0C01806072900FAE4DF"
-               BuildableName = "regtestsuite"
-               BlueprintName = "Test Suite"
+               BlueprintIdentifier = "05DADAFE2192535F00DC80E1"
+               BuildableName = "Handbook"
+               BlueprintName = "Handbook"
                ReferencedContainer = "container:Regina.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -43,8 +29,6 @@
       shouldUseLaunchSchemeArgsEnv = "YES">
       <Testables>
       </Testables>
-      <AdditionalOptions>
-      </AdditionalOptions>
    </TestAction>
    <LaunchAction
       buildConfiguration = "Debug"
@@ -56,18 +40,15 @@
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
       allowLocationSimulation = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "052FA0C01806072900FAE4DF"
-            BuildableName = "regtestsuite"
-            BlueprintName = "Test Suite"
+            BlueprintIdentifier = "05DADAFE2192535F00DC80E1"
+            BuildableName = "Handbook"
+            BlueprintName = "Handbook"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
-      <AdditionalOptions>
-      </AdditionalOptions>
+      </MacroExpansion>
    </LaunchAction>
    <ProfileAction
       buildConfiguration = "Release"
@@ -75,16 +56,15 @@
       savedToolIdentifier = ""
       useCustomWorkingDirectory = "NO"
       debugDocumentVersioning = "YES">
-      <BuildableProductRunnable
-         runnableDebuggingMode = "0">
+      <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "052FA0C01806072900FAE4DF"
-            BuildableName = "regtestsuite"
-            BlueprintName = "Test Suite"
+            BlueprintIdentifier = "05DADAFE2192535F00DC80E1"
+            BuildableName = "Handbook"
+            BlueprintName = "Handbook"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
-      </BuildableProductRunnable>
+      </MacroExpansion>
    </ProfileAction>
    <AnalyzeAction
       buildConfiguration = "Debug">
