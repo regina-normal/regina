@@ -1269,6 +1269,52 @@ class REGINA_API Triangulation<3> :
             Action&& action, Args&&... args) const;
 
         /**
+         * Ensures that the boundary contains the smallest possible
+         * number of triangles, potentially adding tetrahedra to do this.
+         *
+         * This routine is for use with algorithms that require minimal
+         * boundaries (e.g., torus boundaries must contain exactly two
+         * triangles).  As noted above, it may in fact increase the
+         * total number of tetrahedra in the triangulation (though the
+         * implementation does make efforts not to do this).
+         *
+         * Once this routine is finished, every boundary component will
+         * have exactly one vertex, except for sphere and projective
+         * plane boundaries which will have exactly two triangles
+         * (but three and two vertices respectively).
+         *
+         * The changes that this routine performs can always be
+         * expressed using only close book moves and/or layerings.
+         * In particular, this routine never creates new vertices,
+         * and it never creates a non-vertex-linking normal disc or sphere
+         * if there was not one before.
+         *
+         * Although this routine only modifies real boundary components,
+         * it is fine if the triangulation also contains ideal boundary
+         * components (and these simply will be left alone).
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return \c true if the triangulation was changed, or \c false if
+         * every boundary component was already minimal to begin with.
+         */
+        bool minimiseBoundary();
+
+        /**
+         * A synonym for minimiseBoundary().
+         * This ensures that the boundary contains the smallest possible
+         * number of triangles, potentially adding tetrahedra to do this.
+         *
+         * See minimiseBoundary() for further details.
+         *
+         * \pre This triangulation is valid.
+         *
+         * @return \c true if the triangulation was changed, or \c false if
+         * every boundary component was already minimal to begin with.
+         */
+        bool minimizeBoundary();
+
+        /**
          * Deprecated function that checks the eligibility of and/or
          * performs a 4-1 Pachner move upon the given vertex.
          *
@@ -3302,6 +3348,10 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     return retriangulateInternal(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
+}
+
+inline bool Triangulation<3>::minimizeBoundary() {
+    return minimiseBoundary();
 }
 
 inline bool Triangulation<3>::oneFourMove(

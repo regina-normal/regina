@@ -207,6 +207,8 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
             pybind11::arg("tracker") = nullptr)
+        .def("minimiseBoundary", &Triangulation<3>::minimiseBoundary)
+        .def("minimizeBoundary", &Triangulation<3>::minimizeBoundary)
         .def("pachner", &Triangulation<3>::pachner<3>,
             pybind11::arg(),
             pybind11::arg("check") = true,

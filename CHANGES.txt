@@ -11,6 +11,9 @@ Version 5.97  [ TODO ]
 
     ENGINE:
         Class Triangulation<3>:
+            - New routine minimiseBoundary() / minimizeBoundary() to
+              ensure that each real boundary component uses the fewest
+              posible triangles.
             - Routine hasSplittingSurface() is now fast (small polynomial
               time), works even for triangulations with more than one
               connected component; thanks to Robert C. Haraway III.

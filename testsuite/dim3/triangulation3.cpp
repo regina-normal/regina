@@ -116,6 +116,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(pachner<1>);
     CPPUNIT_TEST(pachner<2>);
     CPPUNIT_TEST(pachner<3>);
+    CPPUNIT_TEST(minimiseBoundary);
     CPPUNIT_TEST(fillTorus);
     CPPUNIT_TEST(meridianLongitude);
 
@@ -4107,6 +4108,109 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllBounded(verifyPachner<k>, true);
             runCensusAllIdeal(verifyPachner<k>, true);
             verifyPachnerSimplicial<k>();
+        }
+
+        static void verifyMinimiseBoundaryDoesNothing(Triangulation<3>* tri) {
+            Triangulation<3> copy(*tri);
+            if (copy.minimiseBoundary()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "reported changes when it should not.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! copy.isIsomorphicTo(*tri)) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "made changes when it should not.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        static bool hasMinimalBoundary(const Triangulation<3>* tri) {
+            for (auto b : tri->boundaryComponents())
+                if (b->countTriangles() > 2 && b->countVertices() > 1)
+                    return false;
+            return true;
+        }
+
+        static void verifyMinimiseBoundary(Triangulation<3>* tri) {
+            if (hasMinimalBoundary(tri)) {
+                verifyMinimiseBoundaryDoesNothing(tri);
+                return;
+            }
+
+            Triangulation<3> copy(*tri);
+            if (! copy.minimiseBoundary()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "reported no changes when it should.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (copy.isIsomorphicTo(*tri)) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "made no changes when it should.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (! hasMinimalBoundary(&copy)) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() "
+                    "did not minimise boundary.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->eulerCharTri() != copy.eulerCharTri()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() changed "
+                    "Euler characteristic (triangulation).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->eulerCharManifold() != copy.eulerCharManifold()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() changed "
+                    "Euler characteristic (manifold).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->homology() != copy.homology()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() changed "
+                    "homology.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            NormalSurface* origSurface = tri->hasNonTrivialSphereOrDisc();
+            NormalSurface* postSurface = copy.hasNonTrivialSphereOrDisc();
+            bool isOrig0eff = ! origSurface;
+            bool isPost0eff = ! postSurface;
+            delete origSurface;
+            delete postSurface;
+
+            if (isOrig0eff && ! isPost0eff) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() broke "
+                    "0-efficiency.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void minimiseBoundary() {
+            runCensusAllClosed(verifyMinimiseBoundaryDoesNothing);
+            runCensusAllIdeal(verifyMinimiseBoundaryDoesNothing);
+            runCensusAllBounded(verifyMinimiseBoundary);
+
+            // The cone of a 6-triangle torus whose boundary has no
+            // close-book moves at the beginning (so a layering is required).
+            {
+                Triangulation<3>* tri = Triangulation<3>::fromIsoSig(
+                    "gffjQafeefaaaa");
+                verifyMinimiseBoundary(tri);
+                delete tri;
+            }
         }
 
         void verifyFillTorus(unsigned long p1, unsigned long q1,
