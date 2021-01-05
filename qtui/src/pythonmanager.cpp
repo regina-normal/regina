@@ -168,7 +168,7 @@ PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
 }
 
 PythonConsole* PythonManager::launchPythonConsole(QWidget* parent,
-        const QString&, const PythonVariableList&) {
+        regina::Script*) {
     return scriptingDisabled(parent);
 }
 

@@ -25,9 +25,9 @@ SET(py23_files
   )
 
 IF (Python_FOUND)
-  IF (${Python_VERSION_MAJOR} EQUAL 3)
+  IF ("${Python_VERSION_MAJOR}" EQUAL 3)
     SET (PYX py3)
-  ELSEIF (${Python_VERSION_MAJOR} EQUAL 2)
+  ELSEIF ("${Python_VERSION_MAJOR}" EQUAL 2)
     SET (PYX py2)
   ELSE ()
     MESSAGE(FATAL_ERROR "Unknown Python version: ${Python_VERSION_MAJOR}")
