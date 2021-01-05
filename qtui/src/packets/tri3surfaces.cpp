@@ -116,10 +116,19 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     titleSolidTorus->setWhatsThis(msg);
     solidTorus->setWhatsThis(msg);
 
+    titleTxI = new QLabel(tr("T x I?"), ui);
+    grid->addWidget(titleTxI, 3, 1);
+    TxI = new QLabel(ui);
+    grid->addWidget(TxI, 3, 3);
+    msg = tr("Is this a triangulation of the product of the torus "
+        "with an interval?");
+    titleTxI->setWhatsThis(msg);
+    TxI->setWhatsThis(msg);
+
     titleZeroEff = new QLabel(tr("Zero-efficient?"), ui);
-    grid->addWidget(titleZeroEff, 3, 1);
+    grid->addWidget(titleZeroEff, 4, 1);
     zeroEff = new QLabel(ui);
-    grid->addWidget(zeroEff, 3, 3);
+    grid->addWidget(zeroEff, 4, 3);
     msg = tr("<qt>Is this a 0-efficient triangulation?  "
         "A <i>0-efficient triangulation</i> is one whose only normal "
         "spheres or discs are vertex linking, and which has no 2-sphere "
@@ -128,9 +137,9 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     zeroEff->setWhatsThis(msg);
 
     titleSplitting = new QLabel(tr("Splitting surface?"), ui);
-    grid->addWidget(titleSplitting, 4, 1);
+    grid->addWidget(titleSplitting, 5, 1);
     splitting = new QLabel(ui);
-    grid->addWidget(splitting, 4, 3);
+    grid->addWidget(splitting, 5, 3);
     msg = tr("<qt>Does this triangulation contain a splitting surface?  "
         "A <i>splitting surface</i> is a normal surface containing precisely "
         "one quadrilateral per tetrahedron and no other normal (or "
@@ -139,9 +148,9 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     splitting->setWhatsThis(msg);
 
     titleIrreducible = new QLabel(tr("Irreducible?"), ui);
-    grid->addWidget(titleIrreducible, 5, 1);
+    grid->addWidget(titleIrreducible, 6, 1);
     irreducible = new QLabel(ui);
-    grid->addWidget(irreducible, 5, 3);
+    grid->addWidget(irreducible, 6, 3);
     msg = tr("<qt>Does this triangulation represent an "
         "irreducible 3-manifold?  A closed orientable 3-manifold is "
         "<i>irreducible</i> if every embedded sphere bounds a ball.</qt>");
@@ -149,9 +158,9 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     irreducible->setWhatsThis(msg);
 
     titleHaken = new QLabel(tr("Haken?"), ui);
-    grid->addWidget(titleHaken, 6, 1);
+    grid->addWidget(titleHaken, 7, 1);
     haken = new QLabel(ui);
-    grid->addWidget(haken, 6, 3);
+    grid->addWidget(haken, 7, 3);
     msg = tr("<qt>Does this triangulation represent a Haken 3-manifold?  "
         "A closed orientable irreducible 3-manifold is "
         "<i>Haken</i> if it contains an embedded closed two-sided "
@@ -162,9 +171,9 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     haken->setWhatsThis(msg);
 
     titleStrict = new QLabel(tr("Strict angle structure?"), ui);
-    grid->addWidget(titleStrict, 7, 1);
+    grid->addWidget(titleStrict, 8, 1);
     strict = new QLabel(ui);
-    grid->addWidget(strict, 7, 3);
+    grid->addWidget(strict, 8, 3);
     msg = tr("<qt>Does this triangulation support a strict angle structure?  "
         "A <i>strict</i> angle structure is one in which all angles "
         "are strictly positive.</qt>");
@@ -172,9 +181,9 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     strict->setWhatsThis(msg);
 
     titleHyperbolic = new QLabel(tr("Hyperbolic?"), ui);
-    grid->addWidget(titleHyperbolic, 8, 1);
+    grid->addWidget(titleHyperbolic, 9, 1);
     hyperbolic = new QLabel(ui);
-    grid->addWidget(hyperbolic, 8, 3);
+    grid->addWidget(hyperbolic, 9, 3);
     msg = tr("<qt>Does this triangulation "
         "represent a finite-volume hyperbolic 3-manifold?<p>"
         "Any answer shown here will be rigorously certified.</qt>");
@@ -221,6 +230,21 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
     connect(btnSolidTorus, SIGNAL(clicked()), this,
         SLOT(calculateSolidTorus()));
 
+    btnTxI = new QPushButton(ReginaSupport::themeIcon("system-run"),
+        tr("Calculate"), ui);
+    btnTxI->setToolTip(tr("Calculate whether this is the product of the "
+        "torus with an interval"));
+    btnTxI->setWhatsThis(tr("<qt>Calculate whether this "
+        "is a triangulation of the product of the torus with an interval.  "
+        "The triangulation may have real boundary triangles "
+        "and/or ideal vertices (which I will treated as though they were "
+        "truncated).<p>"
+        "<b>Warning:</b> This calculation is occasionally quite slow for "
+        "larger triangulations (which is why this recognition is not "
+        "always run automatically).</qt>"));
+    grid->addWidget(btnTxI, 3, 5);
+    connect(btnTxI, SIGNAL(clicked()), this, SLOT(calculateTxI()));
+
     btnZeroEff = new QPushButton(ReginaSupport::themeIcon("system-run"),
         tr("Calculate"), ui);
     btnZeroEff->setToolTip(tr("Calculate 0-efficiency"));
@@ -229,7 +253,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
         "<b>Warning:</b> This calculation can be quite slow for larger "
         "triangulations (which is why 0-efficiency is not always "
         "calculated automatically).</qt>"));
-    grid->addWidget(btnZeroEff, 3, 5);
+    grid->addWidget(btnZeroEff, 4, 5);
     connect(btnZeroEff, SIGNAL(clicked()), this, SLOT(calculateZeroEff()));
 
     btnSplitting = new QPushButton(ReginaSupport::themeIcon("system-run"),
@@ -241,7 +265,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
         "<b>Warning:</b> This calculation can be quite slow for larger "
         "triangulations (which is why the existence of a splitting "
         "surface is not always determined automatically).</qt>"));
-    grid->addWidget(btnSplitting, 4, 5);
+    grid->addWidget(btnSplitting, 5, 5);
     connect(btnSplitting, SIGNAL(clicked()), this, SLOT(calculateSplitting()));
 
     btnIrreducible = new QPushButton(ReginaSupport::themeIcon("system-run"),
@@ -253,7 +277,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
         "<b>Warning:</b> This calculation can be quite slow for larger "
         "triangulations (which is why irreducibility is not always "
         "tested automatically).</qt>"));
-    grid->addWidget(btnIrreducible, 5, 5);
+    grid->addWidget(btnIrreducible, 6, 5);
     connect(btnIrreducible, SIGNAL(clicked()), this,
         SLOT(calculateIrreducible()));
 
@@ -266,7 +290,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
         "<b>Warning:</b> This calculation can be quite slow for larger "
         "triangulations (which is why Hakenness is not always "
         "tested automatically).</qt>"));
-    grid->addWidget(btnHaken, 6, 5);
+    grid->addWidget(btnHaken, 7, 5);
     connect(btnHaken, SIGNAL(clicked()), this, SLOT(calculateHaken()));
 
     btnStrict = new QPushButton(ReginaSupport::themeIcon("system-run"),
@@ -279,7 +303,7 @@ Tri3SurfacesUI::Tri3SurfacesUI(regina::Triangulation<3>* packet,
         "triangulations, but can become slow if the triangulation "
         "is extremely large (which is why this property is not always "
         "tested automatically).</qt>"));
-    grid->addWidget(btnStrict, 7, 5);
+    grid->addWidget(btnStrict, 8, 5);
     connect(btnStrict, SIGNAL(clicked()), this, SLOT(calculateStrict()));
 
     layout->addStretch(1);
@@ -492,8 +516,11 @@ void Tri3SurfacesUI::refresh() {
         solidTorus->setVisible(true);
         btnSolidTorus->setVisible(true);
 
-        if (tri->knowsSolidTorus() ||
-                tri->size() <= autoCalcThreshold) {
+        titleTxI->setVisible(true);
+        TxI->setVisible(true);
+        btnTxI->setVisible(true);
+
+        if (tri->knowsSolidTorus() || tri->size() <= autoCalcThreshold) {
             if (tri->isSolidTorus()) {
                 solidTorus->setText(tr("True"));
                 QPalette pal = solidTorus->palette();
@@ -517,10 +544,39 @@ void Tri3SurfacesUI::refresh() {
             solidTorus->setPalette(pal);
             btnSolidTorus->setEnabled(true);
         }
+
+        if (tri->knowsTxI() || tri->size() <= autoCalcThreshold) {
+            if (tri->isTxI()) {
+                TxI->setText(tr("True"));
+                QPalette pal = TxI->palette();
+                pal.setColor(TxI->foregroundRole(), Qt::darkGreen);
+                TxI->setPalette(pal);
+
+                isHyp = false;
+                if (name.empty())
+                    name = "T x I";
+            } else {
+                TxI->setText(tr("False"));
+                QPalette pal = TxI->palette();
+                pal.setColor(TxI->foregroundRole(), Qt::darkRed);
+                TxI->setPalette(pal);
+            }
+            btnTxI->setEnabled(false);
+        } else {
+            TxI->setText(tr("Unknown"));
+            QPalette pal = TxI->palette();
+            pal.setColor(TxI->foregroundRole(), Qt::darkGray);
+            TxI->setPalette(pal);
+            btnTxI->setEnabled(true);
+        }
     } else {
         titleSolidTorus->setVisible(false);
         solidTorus->setVisible(false);
         btnSolidTorus->setVisible(false);
+
+        titleTxI->setVisible(false);
+        TxI->setVisible(false);
+        btnTxI->setVisible(false);
     }
 
     if (tri->isOrientable() && tri->isClosed() && tri->isValid() &&
@@ -748,6 +804,17 @@ void Tri3SurfacesUI::calculateSolidTorus() {
         "for larger triangulations.\n\n"
         "Please be patient."), ui);
     tri->isSolidTorus();
+    delete dlg;
+
+    refresh();
+}
+
+void Tri3SurfacesUI::calculateTxI() {
+    PatienceDialog* dlg = PatienceDialog::warn(tr(
+        "(T x I) recognition can be quite slow\n"
+        "for larger triangulations.\n\n"
+        "Please be patient."), ui);
+    tri->isTxI();
     delete dlg;
 
     refresh();
