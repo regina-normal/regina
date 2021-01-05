@@ -358,6 +358,8 @@ void Tri3SurfacesUI::refresh() {
     if (! tri->isValid())
         isHyp = false;
 
+    name.clear();
+
     // Begin with the combinatorial recognition.
     regina::StandardTriangulation* std =
         regina::StandardTriangulation::isStandardTriangulation(tri);
