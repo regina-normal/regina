@@ -39,9 +39,6 @@
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
-#include "triangulation/generic/boundarycomponent.h"
-#include "triangulation/generic/face.h"
-#include "triangulation/homologicaldata.h"
 
 namespace regina {
 
@@ -564,7 +561,7 @@ bool Triangulation<3>::isSolidTorus() const {
         delete crushed;
     }
 }
-    
+
 bool Triangulation<3>::knowsSolidTorus() const {
     if (solidTorus_.known())
         return true;
@@ -591,91 +588,68 @@ bool Triangulation<3>::knowsSolidTorus() const {
 }
 
 
-Edge<3>* Triangulation<3>::getEmbeddedBoundaryEdge() {
-    for (BoundaryComponent<3> *k : boundaryComponents())
-        for (Edge<3> *e : k->edges())
-            if (e->vertex(0) != e->vertex(1))
-                return e;
-    return (Edge<3>*) 0;
-}
+bool Triangulation<3>::isTxI() const {
+    // This call to knowsTxI checks basic things including validity and also
+    // the number topology of the boundary components.
+    if (knowsTxI())
+        return TxI_.value();
 
-Edge <3>* Triangulation<3>::getClosableBoundaryEdge() {
-    for (BoundaryComponent<3> *k : boundaryComponents())
-        for (Edge<3> *e : k->edges())
-            if (closeBook(e,true,false))
-                return e;
-    return (Edge<3>*) 0;
-}
-    
-bool Triangulation<3>::isTorusXInterval() const {
-    if (knowsTorusXInterval()){
-        return torusXInterval_.value();
-    }
-    
-    Triangulation<3>* working = new Triangulation<3>(*this, false);
-    working->intelligentSimplify();
-    working->idealToFinite();
-    working->intelligentSimplify();
+    Triangulation<3> working(*this, false);
+    working.intelligentSimplify();
+    working.idealToFinite();
+    working.intelligentSimplify();
 
     // If it's not a homology T2xI, we're done.
-    if (!working->isConnected()
-        || working->countBoundaryComponents() != 2
-        || working->homology().str() != "2 Z"
-        || working->homologyRel().str() != "Z"
-        || working->homologyBdry().str() != "4 Z"){
-        delete working;
-        return (torusXInterval_ = false);
+    if ((! working.homology().isFree(2)) ||
+            (! working.homologyRel().isZ()) ||
+            (! working.homologyBdry().isFree(4))) {
+        return (TxI_ = false);
     }
-    
-    // At this point we should already have boundary components with one vertex each.
+
+    // At this point we should already have boundary components with
+    // one vertex each.
     // But out of an abundance of caution, we ensure this is the case.
-    Edge<3>* emb = working->getEmbeddedBoundaryEdge();
-    while (emb != 0){
-        // The precondition of layerOn(emb) is that
-        // the edge emb be incident to distinct triangles.
-        const EdgeEmbedding<3>& front = emb->front();
-        const EdgeEmbedding<3>& back = emb->back();
-        Tetrahedron<3>* t0 = front.tetrahedron();
-        Tetrahedron<3>* t1 = back.tetrahedron();
-        Perm<4> p0 = front.vertices();
-        Perm<4> p1 = back.vertices();
-        if (t0->triangle(p0[3]) == t1->triangle(p1[2])){
-            working->layerOn(emb);
-        }
+    working.minimiseBoundary();
 
-        // If emb is incident to a single triangle,
-        // then the edge opposite emb is closable.
-        // Otherwise, the flip of emb, now present after layering, is closable.
-
-        Edge<3>* cls = working->getClosableBoundaryEdge();
-        while (cls != 0){
-            working->closeBook(cls,false,true);
-            cls = working->getClosableBoundaryEdge();
-        }
-        emb = working->getEmbeddedBoundaryEdge();
-    }
-
-    // We have a 0-efficient homology T2xI.
+    // We have a homology T2xI with a pair of two-triangle boundaries.
     // So we should move on to the meat of the algorithm, testing Dehn fillings.
-    
-    BoundaryComponent<3>* k = working->boundaryComponent(0);
-    bool isT2xI = true;
-    for (Edge<3>* e : k->edges()){
-        Triangulation<3>* filled = new Triangulation<3>(*working, false);
-        Edge<3>* cls = filled->edge(e->index());
-        filled->closeBook(cls, false, true);
-        isT2xI = isT2xI && filled->isSolidTorus();
-        delete filled;
-        if (!isT2xI) {
-            break;
-        }
+
+    BoundaryComponent<3>* k = working.boundaryComponents().front();
+    for (Edge<3>* e : k->edges()) {
+        Triangulation<3> filled(working, false);
+        Edge<3>* cls = filled.edge(e->index());
+        filled.closeBook(cls, false, true);
+        if (! filled.isSolidTorus())
+            return (TxI_ = false);
     }
-    delete working;
-    return (torusXInterval_ = isT2xI);
+    return (TxI_ = true);
 }
 
-bool Triangulation<3>::knowsTorusXInterval() const {
-    return torusXInterval_.known();
+bool Triangulation<3>::knowsTxI() const {
+    if (TxI_.known())
+        return true;
+
+    // Run some very fast prelimiary tests before we give up and say no.
+    if (! (isValid() && isOrientable() && isConnected())) {
+        TxI_ = false;
+        return true;
+    }
+
+    if (countBoundaryComponents() != 2) {
+        TxI_ = false;
+        return true;
+    }
+
+    if (boundaryComponents().front()->eulerChar() != 0 ||
+            (! boundaryComponents().front()->isOrientable()) ||
+            boundaryComponents().back()->eulerChar() != 0 ||
+            (! boundaryComponents().back()->isOrientable())) {
+        TxI_ = false;
+        return true;
+    }
+
+    // More work is required.
+    return false;
 }
 
 Packet* Triangulation<3>::makeZeroEfficient() {

@@ -14,6 +14,9 @@ Version 5.97  [ TODO ]
             - New routine isFree() to quickly test for the free abelian
               group of the given rank.
         Class Triangulation<3>:
+            - New routines isTxI() and knowsTxI() to test whether the
+              manifold is the product of the torus with an interval.
+              Thanks to Robert C. Haraway, III.
             - New routine minimiseBoundary() / minimizeBoundary() to
               ensure that each real boundary component uses the fewest
               posible triangles.

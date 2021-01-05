@@ -2868,7 +2868,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             runCensusAllBounded(&testSolidTorus4);
         }
 
-        Triangulation<3>* verifyTorusXInterval(Triangulation<3>* tri,
+        Triangulation<3>* verifyTxI(Triangulation<3>* tri,
                 const char* triName = 0) {
             if (triName)
                 tri->setLabel(triName);
@@ -2891,19 +2891,19 @@ class Triangulation3Test : public TriangulationTest<3> {
             idealBig.barycentricSubdivision();
             clearProperties(idealBig);
 
-            if (! bounded.isTorusXInterval()) {
+            if (! bounded.isTxI()) {
                 CPPUNIT_FAIL(("The real T^2xI " +
                     tri->label() + " is not recognised as such.").c_str());
             }
-            if (! ideal.isTorusXInterval()) {
+            if (! ideal.isTxI()) {
                 CPPUNIT_FAIL(("The ideal T^2xI " +
                     tri->label() + " is not recognised as such.").c_str());
             }
-            if (! boundedBig.isTorusXInterval()) {
+            if (! boundedBig.isTxI()) {
                 CPPUNIT_FAIL(("The subdivided real T^2xI " +
                     tri->label() + " is not recognised as such.").c_str());
             }
-            if (! idealBig.isTorusXInterval()) {
+            if (! idealBig.isTxI()) {
                 CPPUNIT_FAIL(("The subdivided ideal T^2xI " +
                     tri->label() + " is not recognised as such.").c_str());
             }
@@ -2911,7 +2911,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             return tri;
         }
 
-        Triangulation<3>* verifyNotTorusXInterval(Triangulation<3>* tri,
+        Triangulation<3>* verifyNotTxI(Triangulation<3>* tri,
                 const char* triName = 0) {
             if (triName)
                 tri->setLabel(triName);
@@ -2934,19 +2934,19 @@ class Triangulation3Test : public TriangulationTest<3> {
             idealBig.barycentricSubdivision();
             clearProperties(idealBig);
 
-            if (bounded.isTorusXInterval()) {
+            if (bounded.isTxI()) {
                 CPPUNIT_FAIL(("The real non-T^2xI " +
                     tri->label() + " is recognised as a T^2xI.").c_str());
             }
-            if (ideal.isTorusXInterval()) {
+            if (ideal.isTxI()) {
                 CPPUNIT_FAIL(("The ideal non-T^2xI " +
                     tri->label() + " is recognised as a T^2xI.").c_str());
             }
-            if (boundedBig.isTorusXInterval()) {
+            if (boundedBig.isTxI()) {
                 CPPUNIT_FAIL(("The subdivided real non-T^2xI " +
                     tri->label() + " is recognised as a T^2xI.").c_str());
             }
-            if (idealBig.isTorusXInterval()) {
+            if (idealBig.isTxI()) {
                 CPPUNIT_FAIL(("The subdivided ideal non-T^2xI " +
                     tri->label() + " is recognised as a T^2xI.").c_str());
             }
@@ -2954,35 +2954,35 @@ class Triangulation3Test : public TriangulationTest<3> {
             return tri;
         }
 
-        void verifyIsoSigTorusXInterval(const std::string& sigStr) {
+        void verifyIsoSigTxI(const std::string& sigStr) {
             Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
             t->setLabel(sigStr);
-            delete verifyTorusXInterval(t);
+            delete verifyTxI(t);
         }
 
-        void verifyIsoSigNotTorusXInterval(const std::string& sigStr) {
+        void verifyIsoSigNotTxI(const std::string& sigStr) {
             Triangulation<3>* t = Triangulation<3>::fromIsoSig(sigStr);
             t->setLabel(sigStr);
-            delete verifyNotTorusXInterval(t);
+            delete verifyNotTxI(t);
         }
 
         void torusXIntervalRecognition() {
             Triangulation<3>* tri;
 
             tri = Triangulation<3>::fromIsoSig("eLAkbbcddadbdb");
-            delete verifyTorusXInterval(tri, "Ideal T2xI eLAkbbcddadbdb");
+            delete verifyTxI(tri, "Ideal T2xI eLAkbbcddadbdb");
 
             tri = new Triangulation<3>();
-            delete verifyNotTorusXInterval(tri, "Empty triangulation");
+            delete verifyNotTxI(tri, "Empty triangulation");
 
             tri = new Triangulation<3>();
             tri->newTetrahedron();
-            delete verifyNotTorusXInterval(tri, "Single tetrahedron");
+            delete verifyNotTxI(tri, "Single tetrahedron");
 
             tri = new Triangulation<3>();
             Tetrahedron<3>* tet = tri->newTetrahedron();
             tet->join(0, tet, Perm<4>(3, 1, 2, 0));
-            delete verifyNotTorusXInterval(tri, "Snapped tetrahedron");
+            delete verifyNotTxI(tri, "Snapped tetrahedron");
 
             // Now we check some homology-T2xI manifolds.
 
@@ -2990,21 +2990,21 @@ class Triangulation3Test : public TriangulationTest<3> {
             // in Bailey and Roth's tables from Rolfsen's *Knots and links.*
             // (5^2_1 and 7^2_8 have the same exterior.)
 
-            verifyIsoSigNotTorusXInterval("eLPkbdcddabgbg");
-            verifyIsoSigNotTorusXInterval("eLPkbdcddhgggb");
-            verifyIsoSigNotTorusXInterval("eLMkbcdddaeeda");
-            verifyIsoSigNotTorusXInterval("eLMkbcddddedde");
-            // verifyIsoSigNotTorusXInterval("gLLMQbcdefffmvftaog");
-            // verifyIsoSigNotTorusXInterval("fLLQcbecdeepuwsua");
-            // verifyIsoSigNotTorusXInterval("hLLAPkbcdefgggtsfxjjgb");
-            // verifyIsoSigNotTorusXInterval("hLLMPkbcdfggfgmvfafwkf");
-            // verifyIsoSigNotTorusXInterval("hLLzQkcdegffgguvuqpgvk");
-            // verifyIsoSigNotTorusXInterval("iLLLAQccdegfhhghdcltautwa");
-            // verifyIsoSigNotTorusXInterval("kLLLALQkceffehijjijiiealshealf");
-            verifyIsoSigNotTorusXInterval("eLPkbdcddabobv");
+            verifyIsoSigNotTxI("eLPkbdcddabgbg");
+            verifyIsoSigNotTxI("eLPkbdcddhgggb");
+            verifyIsoSigNotTxI("eLMkbcdddaeeda");
+            verifyIsoSigNotTxI("eLMkbcddddedde");
+            // verifyIsoSigNotTxI("gLLMQbcdefffmvftaog");
+            // verifyIsoSigNotTxI("fLLQcbecdeepuwsua");
+            // verifyIsoSigNotTxI("hLLAPkbcdefgggtsfxjjgb");
+            // verifyIsoSigNotTxI("hLLMPkbcdfggfgmvfafwkf");
+            // verifyIsoSigNotTxI("hLLzQkcdegffgguvuqpgvk");
+            // verifyIsoSigNotTxI("iLLLAQccdegfhhghdcltautwa");
+            // verifyIsoSigNotTxI("kLLLALQkceffehijjijiiealshealf");
+            verifyIsoSigNotTxI("eLPkbdcddabobv");
 
             // Finally, the connected sum of the Poincare homology sphere and T2xI:
-            // verifyIsoSigNotTorusXInterval("pLvwwLuPIIIkaddkomnjlllonobabtlqinfjwjnw");
+            // verifyIsoSigNotTxI("pLvwwLuPIIIkaddkomnjlllonobabtlqinfjwjnw");
         }
 
         void verifyTV3(Triangulation<3>& t, const std::string& triName) {

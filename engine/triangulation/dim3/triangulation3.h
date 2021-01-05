@@ -163,8 +163,8 @@ class REGINA_API Triangulation<3> :
             /**< Is this a triangulation of a 3-dimensional ball? */
         mutable Property<bool> solidTorus_;
             /**< Is this a triangulation of the solid torus? */
-        mutable Property<bool> torusXInterval_;
-            /**< Is this a triangulation of the solid torus? */
+        mutable Property<bool> TxI_;
+            /**< Is this a triangulation of the product TxI? */
         mutable Property<bool> irreducible_;
             /**< Is this 3-manifold irreducible? */
         mutable Property<bool> compressingDisc_;
@@ -2089,38 +2089,53 @@ class REGINA_API Triangulation<3> :
         bool knowsSolidTorus() const;
 
         /**
-         * Return a pointer to an embedded boundary edge.
+         * Determines whether or not the underlying 3-manifold is
+         * the product of a torus with an interval.
+         *
+         * This routine can be used on a triangulation with real boundary
+         * triangles, or ideal boundary components, or a mix of both.
+         * If there are any ideal vertices, they will be treated as though
+         * they were truncated.
+         *
+         * The underlying algorithm is due to Robert C. Haraway, III; see
+         * https://journals.carleton.ca/jocg/index.php/jocg/article/view/433
+         * for details.
+         *
+         * \warning This algorithm ultimately relies on isSolidTorus(),
+         * which might run slowly for large triangulations.
+         *
+         * @return \c true if and only if this is a triangulation (either
+         * real, ideal or a combination) of the product of the torus with an
+         * interval.
          */
-
-        Edge<3> *getEmbeddedBoundaryEdge();
+        bool isTxI() const;
 
         /**
-         * Return a pointer to a closable boundary edge.
+         * Is it already known (or trivial to determine) whether or not this
+         * is a triangulation of a the product of a torus with an interval?
+         * See isTxI() for further details.
+         *
+         * If this property is indeed already known, future calls to
+         * isTxI() will be very fast (simply returning the precalculated value).
+         *
+         * If this property is not already known, this routine will
+         * nevertheless run some very fast preliminary tests to see if the
+         * answer is obviously no.  If so, it will store \c false as the
+         * precalculated value for isTxI() and this routine will return \c true.
+         *
+         * Otherwise a call to isTxI() may potentially require more
+         * significant work, and so this routine will return \c false.
+         *
+         * \warning This routine does not actually tell you \e whether
+         * this triangulation forms the product of the torus with an interval;
+         * it merely tells you whether the answer has already been computed
+         * (or is very easily computed).
+         *
+         * @return \c true if and only if this property is already known
+         * or trivial to calculate.
          */
+        bool knowsTxI() const;
 
-        Edge<3> *getClosableBoundaryEdge();
-        
-        /**
-        * Determines whether or not the underlying 3-manifold is
-        * the product of a torus with an interval,
-        * using the algorithm from
-        * https://journals.carleton.ca/jocg/index.php/jocg/article/view/433
-        * (also available as arXiv:1410.7115).
-        *
-        * \warning This algorithm ultimately relies on isSolidTorus(),
-        * which might run slowly for large triangulations.
-        *
-        * \pre This triangulation induces one-vertex triangulations
-        * on its boundary components.
-        */
-        bool isTorusXInterval() const;
-
-        /**
-         * Determines whether or not the value of isTorusXInterval is known,
-         * not the value itself.
-         */
-        bool knowsTorusXInterval() const;
-        
         /**
          * Determines whether the underlying 3-manifold (which must be
          * closed) is irreducible.  In other words, this routine determines
