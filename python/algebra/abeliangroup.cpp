@@ -91,6 +91,7 @@ void addAbelianGroup(pybind11::module_& m) {
         .def("invariantFactor", &AbelianGroup::invariantFactor)
         .def("isTrivial", &AbelianGroup::isTrivial)
         .def("isZ", &AbelianGroup::isZ)
+        .def("isFree", &AbelianGroup::isFree)
         .def("isZn", &AbelianGroup::isZn)
         .def("utf8", &AbelianGroup::utf8)
     ;

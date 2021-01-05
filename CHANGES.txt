@@ -10,6 +10,9 @@ Regina - A Normal Surface Theory Calculator
 Version 5.97  [ TODO ]
 
     ENGINE:
+        Class AbelianGroup:
+            - New routine isFree() to quickly test for the free abelian
+              group of the given rank.
         Class Triangulation<3>:
             - New routine minimiseBoundary() / minimizeBoundary() to
               ensure that each real boundary component uses the fewest
