@@ -681,7 +681,22 @@ bool Triangulation<3>::isTorusXInterval() const {
     // But out of an abundance of caution, we ensure this is the case.
     Edge<3>* emb = working->getEmbeddedBoundaryEdge();
     while (emb != 0){
-        working->layerOn(emb);
+        // The precondition of layerOn(emb) is that
+        // the edge emb be incident to distinct triangles.
+        const EdgeEmbedding<3>& front = emb->front();
+        const EdgeEmbedding<3>& back = emb->back();
+        Tetrahedron<3>* t0 = front.tetrahedron();
+        Tetrahedron<3>* t1 = back.tetrahedron();
+        Perm<4> p0 = front.vertices();
+        Perm<4> p1 = back.vertices();
+        if (t0->triangle(p0[3]) == t1->triangle(p1[2])){
+            working->layerOn(emb);
+        }
+
+        // If emb is incident to a single triangle,
+        // then the edge opposite emb is closable.
+        // Otherwise, the flip of emb, now present after layering, is closable.
+
         Edge<3>* cls = working->getClosableBoundaryEdge();
         while (cls != 0){
             working->closeBook(cls,false,true);
