@@ -626,56 +626,6 @@ bool Triangulation<3>::isTorusXInterval() const {
         delete working;
         return (torusXInterval_ = false);
     }
-
-    // Crushing will not introduce new boundary faces.
-    // T2xI is irreducible, so we should be able to crush to a 0-efficient triangulation.
-
-    int surfs = 0;
-    for (NormalSurface* round = working->hasNonTrivialSphereOrDisc();
-         round;
-         round = working->hasNonTrivialSphereOrDisc()){
-
-        Triangulation<3>* crushed = round->crush();
-        delete round;
-        delete working;
-        working = 0;
-        
-        int n = crushed->splitIntoComponents();
-        if (n == 0){
-            // A round surface crushed everything away; we don't have T2xI.
-            delete crushed;
-            return (torusXInterval_ = false);
-        }
-        
-        bool gotNewTriangulation = false;
-        for (Packet* p = crushed->firstChild(); p; p->nextSibling()){
-            working = static_cast<Triangulation<3>*>(p);
-            // If it's a homology T2xI, use it.
-            // (We can't have two such components,
-            //  since then the original triangulation would not have been a homology T2xI.)
-            if (working->isConnected()
-                && working->countBoundaryComponents() == 2
-                && working->homology().str() == "2 Z"
-                && working->homologyRel().str() == "Z"
-                && working->homologyBdry().str() == "4 Z"){
-                // Save our work into a new triangulation before cleaning up crushed.
-                working = new Triangulation<3>(*working, false);
-                delete crushed;
-                // The above deletion presumably deletes crushing's descendants too,
-                // such as p and working's former value.
-                // See similar code in isSolidTorus.
-                gotNewTriangulation = true;
-                break;
-            }
-        }
-
-        if (!gotNewTriangulation){
-            // None of the components of the crushing was a homology T2xI.
-            if (working)
-                delete working;
-            return (torusXInterval_ = false);
-        }
-    }
     
     // At this point we should already have boundary components with one vertex each.
     // But out of an abundance of caution, we ensure this is the case.
