@@ -185,8 +185,12 @@
 
  <indexentry>
   <primaryie>boundary components</primaryie>
-  <secondaryie><link linkend="tri-tribdry">triangulating</link></secondaryie>
-  <secondaryie><link linkend="tri-bdrycomponents">viewing</link></secondaryie>
+  <secondaryie><link linkend="surfaces-boundary">counting, for normal
+   surfaces</link></secondaryie>
+  <secondaryie><link linkend="tri-tribdry">triangulating, for
+   triangulations</link></secondaryie>
+  <secondaryie><link linkend="tri-bdrycomponents">viewing, for
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>

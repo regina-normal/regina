@@ -462,6 +462,12 @@
    See the <link linkend="python-snappy">&python; chapter</link>
    for details.
   </para>
+  <para>
+   If you build &regina; from source, you have the option of
+   working with either &python;&nbsp;2 or &python;&nbsp;3.
+   (If you download a ready-made package, then the package maintainer
+   will have made this choice for you.)
+  </para>
  </sect2>
 
  <sect2 id="features-interfaces">

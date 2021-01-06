@@ -6,8 +6,8 @@
 
   <para>
    A single Regina data file can store a rich variety of objects, from
-   3-manifold triangulations and normal surfaces to &python; scripts,
-   &pdf; documents and text notes.
+   knots, 3-manifold triangulations and normal surfaces through to
+   &python; scripts, &pdf; documents and text notes.
    All of these objects are called <firstterm>packets</firstterm>,
    and are arranged in a tree-like structure as you can see below.
   </para>
@@ -255,6 +255,30 @@
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="triangulation5.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+
+  <sect2 id="packet-link">
+   <title>Knots and Links</title>
+   <para>
+    A <firstterm>link</firstterm> packet describes a
+    knot or link diagram, formed from a collection of crossings and
+    strands that connect them.
+   </para>
+   <para>
+    Knots and links are marked by the following icon:
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="icon-link.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>

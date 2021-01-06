@@ -20,6 +20,8 @@
      the &snappea; kernel for working with hyperbolic manifolds.
      For 4-manifolds, it offers a range of combinatorial and algebraic tools,
      plus support for normal hypersurfaces.
+     For knots and links, Regina can perform combinatorial manipulation,
+     compute knot polynomials, and work with several import/export formats.
      &regina; comes with a full graphical user interface, as well as
      &python; bindings and a low-level &cpp; programming interface.
     </para>">
