@@ -1236,6 +1236,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-orient">reflecting
+   triangulations</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>rehydrating triangulations</primaryie>
   <seeie>See: dehydrated triangulations</seeie>
  </indexentry>
@@ -1676,6 +1681,7 @@
    underlying 2-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-recognition">recognising the
    underlying 3-manifold</link></secondaryie>
+  <secondaryie><link linkend="tri-orient">reflecting</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation across the census databases</link></secondaryie>
   <secondaryie><link linkend="tri-simplification">simplification</link></secondaryie>

@@ -3125,6 +3125,25 @@
     </inlinemediaobject>
    </para>
    <para>
+    You can reorder the vertices of each tetrahedron to have the
+    <emphasis>opposite</emphasis> orientation by selecting
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Reflect</guimenuitem>
+    </menuchoice>
+    from the menu. Regardless of whether the triangulation is orientable
+    and/or oriented, every tetrahedron will have its orientation
+    reversed. This will change the vertex numbers in each tetrahedron,
+    but not the tetrahedron numbers themselves.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-reflect.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     To convert a non-orientable triangulation into its orientable double cover,
     select
     <menuchoice>
