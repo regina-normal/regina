@@ -272,8 +272,25 @@
   <date>May 2014</date>
  </biblioentry>
 
+ <biblioentry id="bib-burton-knots">
+  <abbrev>Bur20</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>The next 350 million knots</title>
+  <edition>36th International Symposium on Computational Geometry
+   (SoCG 2020)</edition>
+  <volumenum>vol. 164 of Leibniz Int. Proc. Inform.</volumenum>
+  <artpagenums>pp. 25:1&ndash;25:17</artpagenums>
+  <publishername>Schloss Dagstuhl&ndash;Leibniz-Zentrum fuer
+   Informatik</publishername>
+  <date>2020</date>
+ </biblioentry>
+
  <biblioentry id="bib-turaevviro-fpt">
-  <abbrev>Bur15</abbrev>
+  <abbrev>BMS15</abbrev>
   <authorgroup>
    <author>
     <firstname>Benjamin</firstname>

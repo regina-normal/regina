@@ -107,8 +107,6 @@
   <!ENTITY macosx "<application>MacOS</application>">
   <!ENTITY mandriva "<application>Mandriva</application>">
   <!ENTITY mobius "M&ouml;bius">
-  <!ENTITY mpi "<acronym>MPI</acronym>">
-  <!ENTITY mpich "<application>MPICH</application>">
   <!ENTITY normaliz "<application>Normaliz</application>">
   <!ENTITY orb "<application>Orb</application>">
   <!ENTITY orbcasson "&orb; / &casson;">
