@@ -148,6 +148,7 @@
   <!ENTITY trist "triangular solid torus">
   <!ENTITY trists "triangular solid tori">
   <!ENTITY twopi "<literal>2&pi;</literal>">
+  <!ENTITY txi "T&nbsp;&times;&nbsp;I">
   <!ENTITY ubuntu "<application>Ubuntu</application>">
   <!ENTITY url "<acronym>URL</acronym>">
   <!ENTITY utf8 "<acronym>UTF-8</acronym>">

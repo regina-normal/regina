@@ -497,6 +497,23 @@
   <date>1962</date>
  </biblioentry>
 
+ <biblioentry id="bib-txi">
+  <abbrev>Har20</abbrev>
+  <authorgroup><author>
+   <firstname>Robert</firstname>
+   <othername>Cyrus</othername>
+   <surname>Haraway</surname>
+   <lineage>III</lineage>
+  </author></authorgroup>
+  <title>Determining hyperbolicity of compact orientable 3-manifolds
+   with torus boundary</title>
+  <edition>J. Comput. Geom.</edition>
+  <volumenum>vol. 11</volumenum>
+  <issuenum>no. 1</issuenum>
+  <artpagenums>pp. 125&ndash;136</artpagenums>
+  <date>2020</date>
+ </biblioentry>
+
  <biblioentry id="bib-hass-knotnp">
   <abbrev>HLP99</abbrev>
   <authorgroup>

@@ -1756,8 +1756,8 @@
     <link linkend="tri-recognition">recognition tab</link> instead.
     The recognition tab combines the results of this combinatorial
     recognition with slower but stronger routines, including
-    3-sphere, 3-ball and solid torus recognition, census lookup,
-    and more.
+    3-sphere, 3-ball, solid torus and &txi; recognition,
+    census lookup, and more.
    </para></tip>
    <para>
     <inlinemediaobject>
@@ -1947,7 +1947,7 @@
     techniques,
     and also computes other high-level properties of the triangulation.
     It offers a combination of slow but exact procedures
-    (such as 3-sphere, 3-ball and solid torus recognition),
+    (such as 3-sphere, 3-ball, solid torus and &txi; recognition),
     and fast "opportunistic" procedures such as combinatorial recognition
     and census lookup.
    </para>
@@ -2034,6 +2034,20 @@
        3-manifolds with real boundary triangles.
        For ideal triangulations, the ideal vertices will be treated as
        though they were truncated.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-proptxi">
+      <glossterm><guilabel>&txi;</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether this is a triangulation of the product of the
+       torus with an interval.
+       Again this uses a complete, exact algorithm that guarantees to
+       terminate with the correct result; this is a modification of
+       an algorithm due to Haraway <xref linkend="bib-txi"/>.
+      </para><para>
+       This property is shown for ideal triangulations as well as
+       3-manifolds with real boundary triangles (or indeed any mix of the two).
+       Any ideal vertices will be treated as though they were truncated.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop0eff">

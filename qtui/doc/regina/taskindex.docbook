@@ -1512,6 +1512,10 @@
  </indexdiv><indexdiv id='taskindex-T'><title>&mdash; T &mdash;</title>
 
  <indexentry>
+  <primaryie><link linkend="tri-proptxi">&txi; recognition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="options-python">tab size</link></primaryie>
  </indexentry>
 
@@ -1550,6 +1554,11 @@
   <primaryie>torsion linking form</primaryie>
   <secondaryie><link linkend="tri-algebra-cellular">Kawauchi-Kojima
    invariants</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="tri-proptxi">torus bundle
+   recognition</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1680,6 +1689,8 @@
    reconstructing triangulation from</link></secondaryie>
   <secondaryie><link linkend="tri-propsplitting">splitting surface,
    testing for</link></secondaryie>
+  <secondaryie><link linkend="tri-proptxi">&txi;
+   recognition</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedron face
    gluings, editing</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-tree">tree
