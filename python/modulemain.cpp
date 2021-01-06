@@ -116,10 +116,6 @@ PYBIND11_MODULE(regina, m) {
         .value("ALG_BACKTRACK", regina::ALG_BACKTRACK)
         .value("ALG_TREEWIDTH", regina::ALG_TREEWIDTH)
         .value("ALG_NAIVE", regina::ALG_NAIVE)
-        .value("TV_DEFAULT", regina::ALG_DEFAULT)
-        .value("TV_BACKTRACK", regina::ALG_BACKTRACK)
-        .value("TV_TREEWIDTH", regina::ALG_TREEWIDTH)
-        .value("TV_NAIVE", regina::ALG_NAIVE)
         .export_values();
         ;
 

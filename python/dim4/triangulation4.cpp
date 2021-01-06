@@ -199,26 +199,6 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
-        .def("oneFiveMove", &Triangulation<4>::oneFiveMove,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("twoFourMove", &Triangulation<4>::pachner<3>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("threeThreeMove", &Triangulation<4>::pachner<2>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("fourTwoMove", &Triangulation<4>::pachner<1>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("fiveOneMove", &Triangulation<4>::pachner<0>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
         .def("twoZeroMove",
             overload_cast<regina::Triangle<4>*, bool, bool>(
             &Triangulation<4>::twoZeroMove),

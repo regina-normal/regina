@@ -162,18 +162,6 @@ void addTriangulation2(pybind11::module_& m) {
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
-        .def("oneThreeMove", &Triangulation<2>::oneThreeMove,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("twoTwoMove", &Triangulation<2>::pachner<1>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("threeOneMove", &Triangulation<2>::pachner<0>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
         .def("finiteToIdeal", &Triangulation<2>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<2>::makeDoubleCover)
         .def("barycentricSubdivision",

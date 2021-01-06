@@ -187,7 +187,6 @@ void addTriangulation3(pybind11::module_& m) {
         .def("isZeroEfficient", &Triangulation<3>::isZeroEfficient)
         .def("knowsZeroEfficient", &Triangulation<3>::knowsZeroEfficient)
         .def("hasSplittingSurface", &Triangulation<3>::hasSplittingSurface)
-        .def("knowsSplittingSurface", &Triangulation<3>::knowsSplittingSurface)
         .def("hasNonTrivialSphereOrDisc",
             &Triangulation<3>::hasNonTrivialSphereOrDisc)
         .def("hasOctagonalAlmostNormalSphere",
@@ -222,22 +221,6 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
         .def("pachner", &Triangulation<3>::pachner<0>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("oneFourMove", &Triangulation<3>::oneFourMove,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("twoThreeMove", &Triangulation<3>::pachner<2>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("threeTwoMove", &Triangulation<3>::pachner<1>,
-            pybind11::arg(),
-            pybind11::arg("check") = true,
-            pybind11::arg("perform") = true)
-        .def("fourOneMove", &Triangulation<3>::pachner<0>,
             pybind11::arg(),
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
@@ -315,9 +298,6 @@ void addTriangulation3(pybind11::module_& m) {
         .def("finiteToIdeal", &Triangulation<3>::finiteToIdeal)
         .def("barycentricSubdivision", &Triangulation<3>::barycentricSubdivision)
         .def("pinchEdge", &Triangulation<3>::pinchEdge)
-        .def("drillEdge", &Triangulation<3>::drillEdge,
-            pybind11::arg(),
-            pybind11::arg("simplify") = true)
         .def("puncture", &Triangulation<3>::puncture,
             pybind11::arg("tet") = nullptr)
         .def("layerOn", &Triangulation<3>::layerOn,
@@ -381,7 +361,5 @@ void addTriangulation3(pybind11::module_& m) {
             return 3;
         })
     ;
-
-    m.attr("TuraevViroAlg") = m.attr("Algorithm");
 }
 

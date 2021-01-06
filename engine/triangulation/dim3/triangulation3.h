@@ -855,27 +855,6 @@ class REGINA_API Triangulation<3> :
          */
         bool hasSplittingSurface() const;
         /**
-         * Is it already known whether or not this triangulation has a
-         * splitting surface?
-         * See hasSplittingSurface() for further details.
-         *
-         * If this property is already known, future calls to
-         * hasSplittingSurface() will be very fast (simply returning the
-         * precalculated value).
-         *
-         * \warning This routine does not actually tell you \e whether
-         * this triangulation has a splitting surface; it merely tells you
-         * whether the answer has already been computed.
-         *
-         * \deprecated Since hasSplittingSurface() now uses a fast (small
-         * polynomial time) algorithm, there is no need to pre-query whether
-         * the property is already known.  Just call hasSplittingSurface()
-         * directly.
-         *
-         * @return \c true if and only if this property is already known.
-         */
-        [[deprecated]] bool knowsSplittingSurface() const;
-        /**
          * Searches for a non-vertex-linking normal sphere or disc
          * within this triangulation.  If such a surface exists within
          * this triangulation, this routine is guaranteed to find one.
@@ -1315,109 +1294,6 @@ class REGINA_API Triangulation<3> :
          * every boundary component was already minimal to begin with.
          */
         bool minimizeBoundary();
-
-        /**
-         * Deprecated function that checks the eligibility of and/or
-         * performs a 4-1 Pachner move upon the given vertex.
-         *
-         * This is an alias for pachner(Vertex<3>*, bool, bool);
-         * see that routine for further details.
-         *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
-         * \pre The given vertex is a vertex of this triangulation.
-         *
-         * \deprecated You should use the identical routine pachner() instead.
-         *
-         * @param v the vertex about which to perform the move.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        [[deprecated]] bool fourOneMove(Vertex<3>* v, bool check = true,
-            bool perform = true);
-        /**
-         * Deprecated function that checks the eligibility of and/or performs
-         * a 3-2 move about the given edge.
-         *
-         * This is an alias for pachner(Edge<3>*, bool, bool);
-         * see that routine for further details.
-         *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
-         * \pre The given edge is an edge of this triangulation.
-         *
-         * \deprecated You should use the identical routine pachner() instead.
-         *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        [[deprecated]] bool threeTwoMove(Edge<3>* e, bool check = true,
-            bool perform = true);
-        /**
-         * Deprecated function that checks the eligibility of and/or performs
-         * a 2-3 move about the given triangle.
-         *
-         * This is an alias for pachner(Triangle<3>*, bool, bool);
-         * see that routine for further details.
-         *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
-         * \pre The given triangle is a triangle of this triangulation.
-         *
-         * @param t the triangle about which to perform the move.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        [[deprecated]] bool twoThreeMove(Triangle<3>* t, bool check = true,
-            bool perform = true);
-        /**
-         * Deprecated function that checks the eligibility of and/or
-         * performs a 1-4 Pachner move upon the given tetrahedron.
-         *
-         * This differs from pachner(Simplex<3>*, bool, bool) in
-         * the labelling of the new tetrahedra:
-         *
-         * - pachner() will create the new vertex as
-         *   <tt>simplices().back()->vertex(0)</tt>, for consistency
-         *   with Pachner moves on faces of other dimensions;
-         *
-         * - oneFourMove() will create the new vertex as
-         *   <tt>simplices().back()->vertex(3)</tt>, for consistency
-         *   with earlier versions of Regina.
-         *
-         * \pre The given tetrahedron is a tetrahedron of this triangulation.
-         *
-         * \deprecated You should use the new routine pachner() instead
-         * (though note that this changes the labelling of the new tetrahedra).
-         *
-         * @param t the tetrahedron about which to perform the move.
-         * @param check this argument is ignored, since this move is
-         * always legal.
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return \c true always.
-         */
-        [[deprecated]] bool oneFourMove(Tetrahedron<3>* t, bool check = true,
-            bool perform = true);
 
         /**
          * Checks the eligibility of and/or performs a 4-4 move
@@ -2456,29 +2332,6 @@ class REGINA_API Triangulation<3> :
         void pinchEdge(Edge<3>* e);
 
         /**
-         * Deprecated routine that drills out a regular neighbourhood of the
-         * given edge of the triangulation.
-         *
-         * The drilling is done by (i) performing two barycentric subdivisions,
-         * (ii) removing all tetrahedra that touch the original edge,
-         * and then (iii) simplifying the resulting triangulation (unless
-         * the optional argument \a simplify is \c false).
-         *
-         * \deprecated This routine is very slow, largely thanks to the
-         * simplification needed after the second barycentric subdivision
-         * multiplies the number of tetrahedra by 576.  For those cases
-         * where drillEdge() does something interesting, you can typically
-         * achieve the same topological effect by calling pinchEdge()
-         * (followed by idealToFinite() if you need real boundary).
-         *
-         * @param e the edge to drill out.
-         * @param simplify \c true if the triangulation should be simplified,
-         * as described above.  This is highly recommended, due to the second
-         * barycentric subdivision.
-         */
-        [[deprecated]] void drillEdge(Edge<3>* e, bool simplify = true);
-
-        /**
          * Punctures this manifold by removing a 3-ball from the interior of
          * the given tetrahedron.  If no tetrahedron is specified (i.e.,
          * the tetrahedron pointer is \c null), then the puncture will be
@@ -3344,10 +3197,6 @@ inline bool Triangulation<3>::knowsZeroEfficient() const {
     return zeroEfficient_.known();
 }
 
-inline bool Triangulation<3>::knowsSplittingSurface() const {
-    return splittingSurface_.known();
-}
-
 inline bool Triangulation<3>::hasStrictAngleStructure() const {
     if (! strictAngleStructure_.known())
         findStrictAngleStructure();
@@ -3372,26 +3221,6 @@ inline bool Triangulation<3>::retriangulate(int height, unsigned nThreads,
 
 inline bool Triangulation<3>::minimizeBoundary() {
     return minimiseBoundary();
-}
-
-inline bool Triangulation<3>::oneFourMove(
-        Tetrahedron<3>* tet, bool check, bool perform) {
-    return detail::PachnerHelper<3, 3>::pachnerOld(this, tet, check, perform);
-}
-
-inline bool Triangulation<3>::twoThreeMove(
-        Triangle<3>* t, bool check, bool perform) {
-    return pachner(t, check, perform);
-}
-
-inline bool Triangulation<3>::threeTwoMove(
-        Edge<3>* e, bool check, bool perform) {
-    return pachner(e, check, perform);
-}
-
-inline bool Triangulation<3>::fourOneMove(
-        Vertex<3>* v, bool check, bool perform) {
-    return pachner(v, check, perform);
 }
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()

@@ -287,92 +287,6 @@ class REGINA_API Triangulation<2> :
         bool isMinimal() const;
 
         /*@}*/
-        /**
-         * \name Skeletal Transformations
-         */
-        /*@{*/
-
-        /**
-         * Deprecated function that checks the eligibility of and/or
-         * performs a 3-1 Pachner move upon the given vertex.
-         *
-         * This is an alias for pachner(Vertex<2>*, bool, bool);
-         * see that routine for further details.
-         *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
-         * \pre The given vertex is a vertex of this triangulation.
-         *
-         * \deprecated You should use the identical routine pachner() instead.
-         *
-         * @param v the vertex about which to perform the move.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        [[deprecated]] bool threeOneMove(Vertex<2>* v, bool check = true,
-            bool perform = true);
-        /**
-         * Deprecated function that checks the eligibility of and/or
-         * performs a 2-2 Pachner move upon the given edge.
-         *
-         * This is an alias for pachner(Edge<2>*, bool, bool);
-         * see that routine for further details.
-         *
-         * \pre If the move is being performed and no check is being run,
-         * it must be known in advance that the move is legal.
-         * \pre The given edge is an edge of this triangulation.
-         *
-         * \deprecated You should use the identical routine pachner() instead.
-         *
-         * @param e the edge about which to perform the move.
-         * @param check \c true if we are to check whether the move is
-         * allowed (defaults to \c true).
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return If \a check is \c true, the function returns \c true
-         * if and only if the requested move may be performed
-         * without changing the topology of the manifold.  If \a check
-         * is \c false, the function simply returns \c true.
-         */
-        [[deprecated]] bool twoTwoMove(Edge<2>* e, bool check = true,
-            bool perform = true);
-        /**
-         * Deprecated function that checks the eligibility of and/or
-         * performs a 1-3 Pachner move upon the given triangle.
-         *
-         * This differs from pachner(Simplex<2>*, bool, bool) in
-         * the labelling of the new triangles:
-         *
-         * - pachner() will create the new vertex as
-         *   <tt>simplices().back()->vertex(0)</tt>, for consistency
-         *   with Pachner moves on faces of other dimensions;
-         *
-         * - oneThreeMove() will create the new vertex as
-         *   <tt>simplices().back()->vertex(2)</tt>, for consistency
-         *   with earlier versions of Regina.
-         *
-         * \pre The given triangle is a triangle of this triangulation.
-         *
-         * \deprecated You should use the new routine pachner() instead
-         * (though note that this changes the labelling of the new triangles).
-         *
-         * @param t the triangle about which to perform the move.
-         * @param check this argument is ignored, since this move is
-         * always legal.
-         * @param perform \c true if we are to perform the move
-         * (defaults to \c true).
-         * @return \c true always.
-         */
-        [[deprecated]] bool oneThreeMove(Triangle<2>* t, bool check = true,
-            bool perform = true);
-
-        /*@}*/
 
         static XMLPacketReader* xmlReader(Packet* parent,
             XMLTreeResolver& resolver);
@@ -482,21 +396,6 @@ inline bool Triangulation<2>::isClosed() const {
 
 inline bool Triangulation<2>::isIdeal() const {
     return false;
-}
-
-inline bool Triangulation<2>::oneThreeMove(
-        Triangle<2>* tri, bool check, bool perform) {
-    return detail::PachnerHelper<2, 2>::pachnerOld(this, tri, check, perform);
-}
-
-inline bool Triangulation<2>::twoTwoMove(
-        Edge<2>* e, bool check, bool perform) {
-    return pachner(e, check, perform);
-}
-
-inline bool Triangulation<2>::threeOneMove(
-        Vertex<2>* v, bool check, bool perform) {
-    return pachner(v, check, perform);
 }
 
 inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
