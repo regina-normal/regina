@@ -82,6 +82,19 @@
     template <typename... Args, typename Return = returnType> \
     static std::enable_if_t<ring, Return>
 /**
+ * Use this as the return type for a deprecated Matrix member function that is
+ * only available when working with matrices over rings.
+ *
+ * Equivalent to <tt>[[deprecated]] returnType</tt> if the Matrix template
+ * argument \a ring is \c true, and removes the member function completey
+ * otherwise.
+ *
+ * This macro cannot be used with templated member functions.
+ */
+#define REGINA_ENABLE_FOR_RING_DEPRECATED(returnType) \
+    template <typename... Args, typename Return = returnType> \
+    [[deprecated]] std::enable_if_t<ring, Return>
+/**
  * Use this as the return type for a Matrix member function that is only
  * available when working with matrices over Regina's own integer classes.
  *
