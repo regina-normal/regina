@@ -70,8 +70,8 @@ packet ::= (&xml-tetrahedra;,
    <title>Deprecated Data</title>
    <para>
     The child &xml-turaevviro; element is deprecated, and should not be used.
-    This element will not be written by the latest version of &regina;,
-    and will be ignored when reading older data files.
+    As of &regina;&nbsp;5.0, this element will not be written, and will be
+    ignored when reading older data files.
    </para>
   </refsect2>
 

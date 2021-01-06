@@ -52,7 +52,8 @@ packet ::= (&xml-var;*, &xml-line;*, &xml-text;
    The &python; script itself is stored as a single &xml-text; element.
    In older versions of &regina; (4.95 and earlier) it was stored
    line-by-line using a sequence of &xml-line; elements, but this
-   method of storage is now deprecated.
+   method of storage was deprecated when the &xml-text; element
+   was introduced in &regina;&nbsp;4.96.
   </para>
   <para>
    If you are writing a file that must be read by older versions of

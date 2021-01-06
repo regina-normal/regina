@@ -45,9 +45,10 @@ allowstrict ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   This element has been renamed to &xml-spanstrict;.  The old name
-   &xml-allowstrict; has been kept for backward compatibility, but any
-   new code that writes data files should use &xml-spanstrict; instead.
+   This element was renamed to &xml-spanstrict; in &regina;&nbsp;4.90.
+   The old name &xml-allowstrict; has been kept for backward compatibility,
+   in that &regina; still understands it when reading data files; however,
+   any new code that writes data files should use &xml-spanstrict; instead.
   </para>
   <para>
    An &xml-allowstrict; element stores whether or not any convex
