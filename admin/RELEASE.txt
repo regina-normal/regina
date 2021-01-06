@@ -7,8 +7,6 @@ Program version:
     CMakeLists.txt (PACKAGE_VERSION)
     docs/man/*.1 (windows executable path)
     engine/regina-engine-config.1 (date)
-    ios/Regina-Info.plist (CFBundleShortVersionString, CFBundleVersion)
-    qtui/src/regina.plist (CFBundleShortVersionString, CFBundleVersion)
     qtui/src/reginaabout.cpp (regReleased)
     qtui/doc/regina/about.docbook (plain citation, bibTeX citation)
     qtui/doc/regina/index.docbook (&regversion;, &regdate;, copyrightyears)
@@ -16,6 +14,8 @@ Program version:
     qtui/doc/regina/python.docbook (python session banner)
     qtui/doc/regina-xml/index.docbook (&regversion;, &regdate;, copyrightyears)
     preconfig/*/regina-config.h (PACKAGE_* macros)
+    Regina.xcodeproject/project.pbxproj (CURRENT_PROJECT_VERSION x4,
+                                         MARKETING_VERSION x4)
     www/index.html (last updated, current version, contents, news,
                     filenames, what's new)
     www/source.html (unpacking instructions: filename, directory)
