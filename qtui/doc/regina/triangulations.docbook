@@ -3239,8 +3239,7 @@
        If necessary, &regina; will create real boundary components
        (formed from unglued triangular faces of tetrahedra).
        This happens, for instance, when the edge runs between two
-       distinct internal vertices (so the drilling produces a sphere boundary),
-       or when the edge touches a pre-existing real boundary component.
+       distinct internal vertices (so the drilling produces a sphere boundary).
       </para>
      </listitem>
      <listitem>
@@ -3249,6 +3248,15 @@
        &regina; will do nothing, and instead show a message explaining why.
        This happens, for example, if the chosen edge connects an
        internal vertex to a boundary component (either real or ideal).
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If the edge runs between two boundary components where at least one
+       is real, then &regina; will refuse to drill (since this could produce
+       an enormous number of tetrahedra).  You could try converting your
+       triangulation to an ideal triangulation instead, since &regina; will
+       happily drill an edge between two ideal vertices.
       </para>
      </listitem>
     </itemizedlist>
