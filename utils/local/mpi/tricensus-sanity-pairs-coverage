@@ -1,0 +1,76 @@
+#!/bin/bash
+#
+# Verifies that the face(t) pairing file in the given directory (the
+# "parent file") is precisely the union of all face(t) pairing files
+# in its subdirectories (the "child files").
+#
+# The order of pairings is not important.  Essentially, the test is
+# whether the parent file can be recreated by concatenating all child
+# files and then possibly reordering the lines.  If the parent file does not
+# contain repetitions, then a side-effect of this test is to ensure that
+# there are no repetitions amongst the child files.
+#
+# Higher-depth subdirectories are also searched (so, for instance,
+# child files can belong to subdirectories of subdirectories).
+#
+# The real purpose of this test is to ensure that, if a large census
+# enumeration job has been split into several pieces, that this splitting
+# has been done correctly.
+#
+# Usage:
+#
+#   tricensus-sanity-pairs-coverage <directory>
+#
+# where <directory> contains the parent file.
+#
+# Assumptions:
+#
+# - All pairings filenames are of the form "*pairs*";
+# - There is precisely one such file in the parent directory;
+# - No pairings filenames contain any whitespace.
+#
+set -e
+
+# Some sanity checking on arguments and preconditions.
+if [ -z "$1" -o -n "$2" ]; then
+  echo "Usage: $0 <directory>"
+  exit 1
+fi
+
+if [ ! -d "$1" ]; then
+  echo "ERROR: Argument is not a directory."
+  exit 1
+fi
+
+nparents=`find "$1" -maxdepth 1 -name "*pairs*" | wc -l`
+if [ "$nparents" = 0 ]; then
+  echo "ERROR: Directory contains no \"parent\" pairings file (*pairs*)"
+  exit 1
+elif [ "$nparents" != 1 ]; then
+  echo "ERROR: Directory contains more than one \"parent\" pairings file (*pairs*)"
+  exit 1
+fi
+
+# Locate the parent and children.
+parent=`find . -maxdepth 1 -name "*pairs*"`
+children=`find . -mindepth 2 -name "*pairs*"`
+
+# Count lines:
+plines=`cat "$parent" | wc -l`
+echo "Pairings in parent file: $plines"
+clines=`cat $children | wc -l`
+echo "Pairings in child files: $clines"
+
+# Examine precise pairings:
+psum=`cat "$parent" | sort | md5sum`
+echo "Checksum for parent file: $psum"
+csum=`cat $children | sort | md5sum`
+echo "Checksum for child files: $csum"
+
+if [ "$plines" != "$clines" -o "$psum" != "$csum" ]; then
+  echo "ERROR: Parent file is not the union of child files."
+  exit 1
+fi
+
+echo 'Ok'
+exit 0

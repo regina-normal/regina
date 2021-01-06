@@ -1,0 +1,67 @@
+#!/bin/bash
+#
+# Verifies that the triangulation count according to the tricensus-mpi
+# log file matches the triangulation count over all data files in the
+# given directory.
+#
+# Usage:
+#
+#   tricensus-sanity-tricount <directory>
+#
+# where <directory> contains both the log file and the data files.
+#
+# Assumptions:
+#
+# - The log filename ends in .log, and there is precisely one such file
+#   in the given directory (compressed .log.gz and .log.bz2 files are
+#   also supported);
+# - All data filenames end in .rga;
+# - The corresponding tricensus-mpi job made use of subsearches (--depth);
+# - The script tricensus-mpi-status is somewhere on the default search path.
+#
+set -e
+shopt -s nullglob
+
+# Some sanity checking on arguments and preconditions.
+if [ -z "$1" -o -n "$2" ]; then
+  echo "Usage: $0 <directory>"
+  exit 1
+fi
+
+if [ ! -d "$1" ]; then
+  echo "ERROR: Argument is not a directory."
+  exit 1
+fi
+
+nlogs=`find "$1" -maxdepth 1 -name "*.log" -o \
+                             -name "*.log.gz" -o \
+                             -name "*.log.bz2" | wc -l`
+if [ "$nlogs" = 0 ]; then
+  echo "ERROR: Directory contains no log file (*.log)"
+  exit 1
+elif [ "$nlogs" != 1 ]; then
+  echo "ERROR: Directory contains more than one log file (*.log)"
+  exit 1
+fi
+
+# Locate the unique log file.
+logfile=`find "$1" -maxdepth 1 -name "*.log" -o \
+                               -name "*.log.gz" -o \
+                               -name "*.log.bz2"`
+
+# Count triangulations.
+totlog=`tricensus-mpi-status "$logfile" | grep '^Pairing' | grep found | \
+  sed -e 's/^.* \([0-9]\+\) found.*$/\1/' | awk '{s+=$1} END {print s}'` \
+  || true
+echo "Triangulations found according to log file:   $totlog"
+
+totrga=`zcat "$1"/*.rga | grep 'type=.*Triangulation' | wc -l` || true
+echo "Triangulations found according to data files: $totrga"
+
+if [ "$totrga" != "$totlog" ]; then
+  echo "ERROR: Triangulation counts do not match for $1."
+  exit 1
+fi
+
+echo "Ok"
+exit 0

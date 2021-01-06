@@ -1,0 +1,83 @@
+#!/bin/bash
+#
+# Verifies that the number of face(t) pairings finished according to the
+# tricensus-mpi log file matches the number of lines in the face(t) pairings
+# file in the given directory.
+#
+# Usage:
+#
+#   tricensus-sanity-pairs-done <directory>
+#
+# where <directory> contains both the log file and the pairings file.
+#
+# Assumptions:
+#
+# - The log filename ends in .log, and there is precisely one such file
+#   in the given directory (compressed .log.gz and .log.bz2 files are
+#   also supported);
+# - The pairings filename is of the form *pairs*, and there is precisely
+#   one such file in the given directory;
+# - The corresponding tricensus-mpi job made use of subsearches (--depth);
+# - The script tricensus-mpi-status is somewhere on the default search path.
+#
+set -e
+
+# Some sanity checking on arguments and preconditions.
+if [ -z "$1" -o -n "$2" ]; then
+  echo "Usage: $0 <directory>"
+  exit 1
+fi
+
+if [ ! -d "$1" ]; then
+  echo "ERROR: Argument is not a directory."
+  exit 1
+fi
+
+nlogs=`find "$1" -maxdepth 1 -name "*.log" -o \
+                             -name "*.log.gz" -o \
+                             -name "*.log.bz2" | wc -l`
+if [ "$nlogs" = 0 ]; then
+  echo "ERROR: Directory contains no log file (*.log)"
+  exit 1
+elif [ "$nlogs" != 1 ]; then
+  echo "ERROR: Directory contains more than one log file (*.log)"
+  exit 1
+fi
+
+npairs=`find "$1" -maxdepth 1 -name "*pairs*" | wc -l`
+if [ "$npairs" = 0 ]; then
+  echo "ERROR: Directory contains no pairings file (*pairs*)"
+  exit 1
+elif [ "$npairs" != 1 ]; then
+  echo "ERROR: Directory contains more than one pairings file (*pairs*)"
+  exit 1
+fi
+
+# Locate the unique log file.
+logfile=`find "$1" -maxdepth 1 -name "*.log" -o \
+                               -name "*.log.gz" -o \
+                               -name "*.log.bz2"`
+
+# Are there any pairings still running?
+running=`tricensus-mpi-status "$logfile" | grep -v 'all .* done' | \
+  grep -v 'Still running,' | grep -v '^All done'` || true
+if test -n "$running"; then
+  echo "ERROR: Log in $1 shows pairings still running."
+  exit 1
+fi
+
+# Count pairings.
+lastpair=`tricensus-mpi-status "$logfile" | grep 'all .* done' | \
+  tail -1 | sed -e 's/^.*Pairing \([0-9]\+\):.*$/\1/'` || true
+echo "Pairings completed according to log file: $lastpair"
+
+countpairs=`wc -l "$1"/*pairs* | sed -e 's/ .*$//'`
+echo "Lines in pairings file:                   $countpairs"
+
+if [ "$lastpair" != "$countpairs" ]; then
+  echo "ERROR: Pairing counts do not match for $1."
+  exit 1
+fi
+
+echo 'Ok'
+exit 0
