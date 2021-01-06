@@ -1434,6 +1434,10 @@ class REGINA_API Triangulation<3> :
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.
          *
+         * If this triangulation is currently oriented, then this 4-4 move
+         * will label the new top-dimensional simplices in a way that
+         * preserves the orientation.
+         *
          * Note that after performing this move, all skeletal objects
          * (triangles, components, etc.) will be reconstructed, which means
          * any pointers to old skeletal objects (such as the argument \a e)

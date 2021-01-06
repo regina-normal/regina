@@ -100,6 +100,8 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     #endif
 
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
+    // Note that, by using pachner(), we also preserve orientation
+    // (if the triangulation was originally oriented).
     TopologyLock lock(this);
     ChangeEventSpan span(this);
     Triangle<3>* tri23 = (newAxis == 0 ?

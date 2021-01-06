@@ -2754,6 +2754,13 @@
     documentation</link>, and for 3-manifolds you can also read about
     them in plain English <xref linkend="bib-burton-hyamfest"/>.
    </para>
+   <note>
+    <para>
+     If your triangulation is oriented, then all of the moves described
+     below&mdash;except possibly the 2-1 move for 3-manifolds&mdash;will
+     preserve the orientation of your triangulation.
+    </para>
+   </note>
    <para>
     The available moves for 3-manifolds (as illustrated above) are:
     <glosslist>
