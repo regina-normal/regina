@@ -266,6 +266,10 @@
     A <firstterm>link</firstterm> packet describes a
     knot or link diagram, formed from a collection of crossings and
     strands that connect them.
+    Link packets were introduced in &regina;&nbsp;5.96,
+    and you can learn more about them by reading the
+    <link linkend="links">knots and links chapter</link> in
+    this handbook.
    </para>
    <para>
     Knots and links are marked by the following icon:
