@@ -17,6 +17,11 @@
  <para>
   All scripts in &regina; use the &python; programming language
   (<ulink url="http://www.python.org/"/>).
+  &regina; can work with either &python;&nbsp;2 or &python;&nbsp;3,
+  but you must choose your &python; version when you build &regina;.
+  If you download a ready-made package then the packager has already made this
+  choice for you; the ready-made packages on the &regina; website use the
+  default version of &python; on each system where possible.
  </para>
 
  <sect1 id="python-starting">
