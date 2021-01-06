@@ -276,6 +276,16 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>closed quadrilateral normal coordinates</primaryie>
+  <seeie>See: coordinate systems</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>closed quadrilateral-octagon almost normal coordinates</primaryie>
+  <seeie>See: coordinate systems</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>code</primaryie>
   <seeie>See: libraries</seeie>
  </indexentry>

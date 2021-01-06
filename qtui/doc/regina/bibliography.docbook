@@ -289,6 +289,31 @@
   <date>2020</date>
  </biblioentry>
 
+ <biblioentry id="bib-quadclosed">
+  <abbrev>BCT13</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Benjamin</firstname>
+    <othername>A.</othername>
+    <surname>Burton</surname>
+   </author>
+   <author>
+    <firstname>Alexander</firstname>
+    <surname>Coward</surname>
+   </author>
+   <author>
+    <firstname>Stephan</firstname>
+    <surname>Tillmann</surname>
+   </author>
+  </authorgroup>
+  <title>Computing closed essential surfaces in knot complements</title>
+  <edition>SCG '13: Proceedings of the 29th Annual Symposium on
+   Computational Geometry</edition>
+  <artpagenums>pp. 405&ndash;414</artpagenums>
+  <publishername>ACM</publishername>
+  <date>2013</date>
+ </biblioentry>
+
  <biblioentry id="bib-turaevviro-fpt">
   <abbrev>BMS15</abbrev>
   <authorgroup>
