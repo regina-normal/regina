@@ -95,6 +95,7 @@
   <!ENTITY hom1 "H<subscript>1</subscript>">
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY java "<application>Java</application>">
+  <!ENTITY json "<acronym>JSON</acronym>">
   <!ENTITY jython "<application>Jython</application>">
   <!ENTITY kde3 "&kde;&nbsp;3">
   <!ENTITY kde4 "&kde;&nbsp;4">
