@@ -26,6 +26,8 @@ Version 6.0  [ TODO ]
               This routine is now also explicitly marked as const.
             - As a consequence, routine knowsSplittingSurface() is no longer
               relevant, and so is now deprecated.
+            - Routine twoOneMove() now preserves orientation, if the
+              triangulation was oriented to begin with.
             - Changed the preconditions for closeBook() to something
               logically equivalent but simpler to explain and test.
     PYTHON:
