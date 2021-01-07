@@ -999,6 +999,9 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         static void verifyBary(Triangulation<4>* tri) {
             Triangulation<4> b(*tri);
+            if (b.isOrientable())
+                b.orient();
+
             b.barycentricSubdivision();
             clearProperties(b);
 
@@ -1040,6 +1043,13 @@ class Triangulation4Test : public TriangulationTest<4> {
                 std::ostringstream msg;
                 msg << tri->label()
                     << ": Barycentric subdivision breaks orientability.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->isOrientable() != b.isOriented()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -1092,6 +1102,14 @@ class Triangulation4Test : public TriangulationTest<4> {
                 return;
 
             b.intelligentSimplify();
+
+            if (tri->isOrientable() != b.isOriented()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision followed by "
+                    "simplification breaks orientation.";
+                CPPUNIT_FAIL(msg.str());
+            }
 
             if (! (tri->homologyH1() == b.homologyH1())) {
                 std::ostringstream msg;

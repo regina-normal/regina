@@ -1042,6 +1042,9 @@ class REGINA_API Triangulation<3> :
          * it can occasionally get stuck; in such cases you may wish to try
          * the more powerful but (much) slower simplifyExhaustive() instead.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
          * \warning Running this routine multiple times upon the same
          * triangulation may return different results, since the implementation
          * makes random decisions.  More broadly, the implementation of this
@@ -1070,6 +1073,9 @@ class REGINA_API Triangulation<3> :
          * Moves that do not reduce the number of tetrahedra
          * (such as 4-4 moves or book opening moves) are not used in this
          * routine.  Such moves do however feature in intelligentSimplify().
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.

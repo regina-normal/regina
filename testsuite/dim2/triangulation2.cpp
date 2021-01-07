@@ -224,6 +224,9 @@ class Triangulation2Test : public TriangulationTest<2> {
 
         static void verifyBary(Triangulation<2>* tri) {
             Triangulation<2> b(*tri);
+            if (b.isOrientable())
+                b.orient();
+
             b.barycentricSubdivision();
             clearProperties(b);
 
@@ -245,6 +248,13 @@ class Triangulation2Test : public TriangulationTest<2> {
                 std::ostringstream msg;
                 msg << tri->label()
                     << ": Barycentric subdivision breaks orientability.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->isOrientable() != b.isOriented()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 

@@ -26,10 +26,15 @@ Version 6.0  [ TODO ]
               This routine is now also explicitly marked as const.
             - As a consequence, routine knowsSplittingSurface() is no longer
               relevant, and so is now deprecated.
-            - Routine twoOneMove() now preserves orientation, if the
+            - Routines twoOneMove(), simplifyToLocalMinimum() and
+              intelligentSimplify() now preserve orientation, if the
               triangulation was oriented to begin with.
             - Changed the preconditions for closeBook() to something
               logically equivalent but simpler to explain and test.
+        Class Triangulation<4>:
+            - Routines simplifyToLocalMinimum() and intelligentSimplify()
+              preserve orientation; in fact this was true before, but it
+              is now a documented part of the API.
     PYTHON:
         - Fixed a deadlock that occurred with Python 3 on some systems when
           starting new python consoles in the GUI.
