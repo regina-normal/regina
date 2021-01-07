@@ -2,7 +2,249 @@
  <title>Knots and Links</title>
 
  <para>
-  TODO: Write this chapter.
+  Since version&nbsp;5.96, &regina; now offers native support for
+  knots and links.  &regina; collectively refers to all such objects as
+  <firstterm>links</firstterm>:
+  a link may have multiple components, or just one component
+  (i.e., a knot), or zero components (i.e., the empty link).
  </para>
-</chapter>
+ <para>
+  A link is stored using a <firstterm>link diagram</firstterm>,
+  which consists of <replaceable>n</replaceable> crossings and
+  2<replaceable>n</replaceable> strands that connect them, possibly
+  with some additional unknot components that have no crossings at all.
+ </para>
+ <para>
+  Link diagrams are embedded in the sphere. This means that &regina;
+  does keep track of left versus right, but it does not keep track of
+  which cell is the &ldquo;outer&rdquo; cell of the diagram.
+ </para>
+ <para>
+  Links in &regina; are <firstterm>oriented</firstterm>.
+  This means that &regina; keeps track of a &ldquo;direction of
+  travel&rdquo; around each component of the link.
+ </para>
 
+ <sect1 id="link-creation">
+  <title>Creation</title>
+
+  <para>
+   To create a new link, use the
+   <menuchoice>
+    <guimenu>Packet Tree</guimenu>
+    <guimenuitem>New Knot or Link</guimenuitem>
+   </menuchoice>
+   menu item (or the corresponding toolbar button).
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menu-newlink.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <para>
+   You will be asked what <emphasis>type</emphasis> of link
+   to create (see the drop-down box below).
+   Here we walk through the various options.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="newlink.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+
+  <sect2 id="link-new-code">
+   <title>Text Codes</title>
+
+   <para>
+    This will reconstruct a knot from one of several common text codes.
+    At present, &regina; can only reconstruct single-component knots
+    from these codes, not links with multiple components.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newlink-code.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The codes that &regina; understands include:
+    <itemizedlist>
+     <listitem id="link-new-knotsig">
+      <para>&regina;'s own <firstterm>knot signatures</firstterm>,
+       which are compact sequences of letters, digits and/or punctuation
+       that uniquely identify a knot up to combinatorial isomorphism.
+       Here <firstterm>combinatorial isomorphism</firstterm>
+       includes relabelling the crossings, reflecting the entire diagram,
+       and/or reversing the orientation of the knot (i.e., the direction
+       of travel).
+      </para>
+      <para>
+       An example is <literal>dabcabcv-</literal>, which represents
+       the trefoil.
+      </para>
+      <para>
+       Knot signatures played a significant role in the 19-crossing
+       knot tabulation <xref linkend="bib-burton-knots"/>.
+      </para>
+     </listitem>
+     <listitem id="link-new-classical-gauss">
+      <para>
+       <firstterm>Classical Gauss codes</firstterm>,
+       which are sequences of integers that encode the crossings that you
+       pass through as you traverse the knot from an arbitrary starting point.
+       Crossings are numbered consecutively from 1 to
+       <replaceable>n</replaceable> (but in any order),
+       and each crossing is written as a positive or negative integer
+       according to whether you pass over or under it.
+      </para>
+      <para>
+       An example of a Gauss code is
+       <literal>1 -2 3 -1 2 -3</literal>,
+       which represents the trefoil.
+      </para>
+      <para>
+       Classical Gauss codes are commonly used in the literature.
+       Be aware that they do not specify the orientation of the diagram, and
+       (more importantly) for composite knots they may not even uniquely
+       define the topology of the knot.
+       If this is a problem, consider using either
+       <emphasis>oriented</emphasis> Gauss codes or knot signatures
+       instead.
+      </para>
+     </listitem>
+     <listitem id="link-new-oriented-gauss">
+      <para>
+       <firstterm>Oriented Gauss codes</firstterm>,
+       which likewise encode the crossings that you pass through as you
+       traverse the knot, but this time with more precise information.
+       Again the crossings are numbered consecutively from 1 to
+       <replaceable>n</replaceable> (but in any order);
+       each crossing is then written with a sign (plus or minus),
+       an arrow (either less-than or greater-than), and an integer.
+       The sign indicates whether you pass over (<literal>+</literal>)
+       or under (<literal>-</literal>) the crossing, and
+       the arrow indicates whether the other strand of the crossing
+       passes from right-to-left (<literal>&lt;</literal>) or
+       left-to-right (<literal>&gt;</literal>).
+      </para>
+      <para>
+       An example is
+       <literal>+&gt;1 -&lt;2 +&gt;3 -&lt;1 +&gt;2 -&lt;3</literal>,
+       which represents the left-hand trefoil.
+      </para>
+      <para>
+       Oriented Gauss codes were introduced by Andreeva et al., and
+       are described as part of their
+       <ulink url="http://www.javaview.de/services/knots/doc/description.html#gc">Book Knot Simplifier</ulink>.
+       Unlike classical Gauss codes, they preserve the orientation of the
+       diagram, and they correctly identify the topology of composite knots.
+      </para>
+     </listitem>
+     <listitem id="link-new-dt">
+      <para>
+       <firstterm>Dowker-Thistlethwaite notation</firstterm>,
+       which is essentially a more streamlined variant of
+       classical Gauss codes.  They have played an important historical
+       role in knot tabulation; see Adams <xref linkend="bib-adams-knotbook"/>
+       for some history and also a precise description of the format.
+      </para>
+      <para>
+       &regina; understands both the numerical and alphabetical variants
+       of Dowker-Thistlethwaite notation.  The numerical variant
+       involves a sequence of <replaceable>n</replaceable> even signed
+       integers.
+       The alphabetical variant transforms this into a compact text string by
+       replacing the positive integers
+       <literal>2</literal>,<literal>4</literal>,<literal>6</literal>,&hellip;
+       with lower-case letters
+       <literal>a</literal>,<literal>b</literal>,<literal>c</literal>,&hellip;,
+       and replacing the negative integers
+       <literal>-2</literal>,<literal>-4</literal>,<literal>-6</literal>,&hellip;
+       with upper-case letters
+       <literal>A</literal>,<literal>B</literal>,<literal>C</literal>,&hellip;.
+       The alphabetical variant can only be used to describe knots with
+       26 crossings or fewer.
+      </para>
+      <para>
+       Examples are <literal>4 6 2</literal> or <literal>bca</literal>,
+       both of which represent the trefoil.
+      </para>
+      <para>
+       Like classical Gauss codes, Dowker-Thistlethwaite notation
+       does not specify the orientation of the diagram, and
+       (more importantly) for composite knots may not uniquely
+       define the topology of the knot.
+       If this is a problem, consider using either oriented Gauss codes
+       or knot signatures instead.
+      </para>
+     </listitem>
+    </itemizedlist>
+   </para>
+   <para>
+    If you already have a knot and you wish to view these different text
+    codes, you can do this through the
+    <link linkend="link-codes">codes tab</link>.
+   </para>
+   <caution><para>
+    Knot signatures and Dowker-Thistlethwaite notation are
+    both <emphasis>case sensitive</emphasis>!
+    Be sure that you are entering upper-case and lower-case correctly
+    (or better, copy and paste the text using the clipboard if you can).
+   </para></caution>
+
+  </sect2>
+  <sect2 id="link-new-torus">
+   <title>Torus Links</title>
+
+   <para>
+    &regina; can create a new torus link with the given parameters
+    (<replaceable>p</replaceable>, <replaceable>q</replaceable>).
+    This essentially involves drawing a
+    (<replaceable>p</replaceable>, <replaceable>q</replaceable>)
+    curve on an unknotted torus in 3-space and then removing the torus.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newlink-torus.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The parameters
+    <replaceable>p</replaceable> and <replaceable>q</replaceable>
+    must be non-negative integers.  They do not need to be coprime:
+    if their greatest common divisor is
+    <replaceable>d</replaceable>&nbsp;&gt;&nbsp;1 then the result will
+    be a link with <replaceable>d</replaceable> components.
+   </para>
+   <tip><para>
+    You do not need to separate the lens space parameters with commas;
+    any punctuation, or even just spaces, will suffice.
+   </para></tip>
+  </sect2>
+  <sect2 id="link-new-example">
+   <title>Example Knots and Links</title>
+
+   <para>
+    Like triangulations,
+    &regina; offers a selection of ready-made sample knots and links
+    which you can use to experiment with &regina;.
+    Simply select an example from the list provided and &regina; will
+    build the corresponding link for you.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="newlink-example.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+  </sect2>
+ </sect1>
+</chapter>

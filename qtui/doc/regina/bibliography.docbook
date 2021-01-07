@@ -1,5 +1,17 @@
 <bibliography id="bibliography">
 
+ <biblioentry id="bib-adams-knotbook">
+  <abbrev>Ada94</abbrev>
+  <authorgroup><author>
+   <firstname>Colin</firstname>
+   <othername>C.</othername>
+   <surname>Adams</surname>
+  </author></authorgroup>
+  <title>The knot book</title>
+  <publishername>W. H. Freeman &amp; Co.</publishername>
+  <date>1994</date>
+ </biblioentry>
+
  <biblioentry id="bib-agol-ideal">
   <abbrev>Ago11</abbrev>
   <authorgroup><author>

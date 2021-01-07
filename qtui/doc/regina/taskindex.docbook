@@ -267,6 +267,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>classical Gauss code</primaryie>
+  <seeie>See: Gauss code</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="packet-clone">cloning packets</link></primaryie>
  </indexentry>
 
@@ -496,6 +501,15 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>Dowker-Thistlethwaite notation</primaryie>
+  <secondaryie><link linkend="link-new-dt">described</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">reconstructing knots
+   from Dowker-Thistlethwaite notation</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing
+   the Dowker-Thistlethwaite notation for a knot</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>drilling edges</primaryie>
   <seeie>See: edges, drilling out of a triangulation</seeie>
  </indexentry>
@@ -594,6 +608,8 @@
   <primaryie>examples</primaryie>
   <secondaryie><link linkend="tri-new-example">3-manifold
    triangulations</link></secondaryie>
+  <secondaryie><link linkend="link-new-example">knots and
+   links</link></secondaryie>
   <secondaryie><link linkend="sessions">&python; scripting</link></secondaryie>
   <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
   <secondaryie><link linkend="snappea-new-example">&snappea;
@@ -721,6 +737,18 @@
   <secondaryie><link linkend="options-tools">configuration</link></secondaryie>
   <secondaryie><link linkend="tri-algebra-homfund">using to
    simplify group presentations</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>Gauss code, classical or oriented</primaryie>
+  <secondaryie><link linkend="link-new-classical-gauss">classical Gauss codes,
+   described</link></secondaryie>
+  <secondaryie><link linkend="link-new-oriented-gauss">oriented Gauss codes,
+   described</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">reconstructing knots
+   from Gauss codes</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing
+   the Gauss codes for a knot</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -875,6 +903,20 @@
   <seeie>See: torsion linking form</seeie>
  </indexentry>
 
+ <indexentry>
+  <primaryie>knot signatures</primaryie>
+  <secondaryie><link linkend="link-new-knotsig">described</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">reconstructing knots
+   from knot signatures</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing
+   the knot signature for a knot</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>knots</primaryie>
+  <seeie>See: links</seeie>
+ </indexentry>
+
  </indexdiv><indexdiv id='taskindex-L'><title>&mdash; L &mdash;</title>
 
  <indexentry>
@@ -929,6 +971,18 @@
  <indexentry>
   <primaryie><link linkend="license">licence details</link></primaryie>
  </indexentry>
+
+ <indexentry>
+  <primaryie>links, knots and</primaryie>
+  <secondaryie><link linkend="link-creation">creation</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">Dowker-Thistlethwaite notation,
+   recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">Gauss code
+   (classical or oriented), recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">knot signature,
+   recreating from</link></secondaryie>
+ </indexentry>
+
 
  <indexentry>
   <primaryie>links, vertex</primaryie>
@@ -1087,6 +1141,11 @@
  <indexentry>
   <primaryie><link linkend="tri-orient">orientable double
    cover</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>oriented Gauss code</primaryie>
+  <seeie>See: Gauss code</seeie>
  </indexentry>
 
  <indexentry>
@@ -1564,6 +1623,11 @@
  <indexentry>
   <primaryie><link linkend="tri-proptxi">torus bundle
    recognition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-new-torus">torus knots and links,
+   creating</link></primaryie>
  </indexentry>
 
  <indexentry>
