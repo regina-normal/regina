@@ -398,6 +398,10 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
 
         Perm<4> bottomFacePerm = Perm<4>(oldVertices[edgeEnd],
             oldVertices[otherEdgeEnd], oldVertices[2], oldVertices[3]);
+        if (bottomFacePerm.sign() < 0) {
+            // Switch vertices 2,3 in newTet so that we can preserve orientation.
+            bottomFacePerm = bottomFacePerm * NPerm<4>(2, 3);
+        }
 
         if (adjTop) {
             Perm<4> topGluing = top->adjacentGluing(topFace) *

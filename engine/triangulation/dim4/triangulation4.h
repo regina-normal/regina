@@ -339,6 +339,9 @@ class REGINA_API Triangulation<4> :
          * Currently this routine uses simplifyToLocalMinimum() in
          * combination with random 3-3 moves and book opening moves.
          *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
          * \warning The specific behaviour of this routine will almost
          * certainly change between releases.  At present,
          * simplification for 4-manifold triangulations is extremely
@@ -362,6 +365,9 @@ class REGINA_API Triangulation<4> :
          * Moves that do not reduce the number of pentachora
          * (such as 3-3 moves or book opening moves) are not used in this
          * routine.  Such moves do however feature in intelligentSimplify().
+         *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
          *
          * \warning The specific behaviour of this routine will almost
          * certainly change between releases.  At present,

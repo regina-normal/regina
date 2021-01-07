@@ -1304,6 +1304,9 @@ class TriangulationBase :
          * - ...
          * - the centroid of \a s itself will be labelled \a p[\a dim] in \a t.
          *
+         * In particular, if this triangulation is currently oriented, then
+         * this barycentric subdivision will preserve the orientation.
+         *
          * If simplex \a s has index \a i in the original triangulation, then
          * its sub-simplex corresponding to permutation \a p will have index
          * <tt>((dim + 1)! * i + p.index())</tt> in the resulting triangulation.

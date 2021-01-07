@@ -2635,6 +2635,14 @@
     boundary tetrahedra (in 4-D) as small as it can, though again
     there is no guarantee of reaching a global minimum.
    </para>
+   <note>
+    <para>
+     If your triangulation is oriented, then the fast simplification process
+     described above will preserve the orientation of your triangulation.
+     This is <emphasis>not</emphasis> true of the exhaustive process
+     described below.
+    </para>
+   </note>
    <sect3 id="tri-simplify-exhaustive">
     <title>Exhaustive Simplification</title>
     <para>
@@ -2698,6 +2706,14 @@
      of tetrahedra.  If you continue to press <guilabel>Keep trying</guilabel>
      over and over, you may well run out of time or memory (or both).
     </para></warning>
+    <warning>
+     <para>
+      Unlike the fast simplification process when you first press the
+      <guilabel>Simplify</guilabel> button, this exhaustive
+      simplification process does <emphasis>not</emphasis> preserve the
+      orientation of an oriented triangulation.
+     </para>
+    </warning>
    </sect3>
   </sect2>
 
@@ -2748,19 +2764,18 @@
     You may continue to apply one move after another.  When you are done,
     press <guibutton>Close</guibutton> to close the elementary move box.
    </para>
+   <note>
+    <para>
+     If your triangulation is oriented, then every move that is offered
+     will preserve the orientation of your triangulation.
+    </para>
+   </note>
    <para>
     We only give a brief summary of the various types of move here.
     The full details are in the <link linkend="python-docs">&api;
     documentation</link>, and for 3-manifolds you can also read about
     them in plain English <xref linkend="bib-burton-hyamfest"/>.
    </para>
-   <note>
-    <para>
-     If your triangulation is oriented, then all of the moves described
-     below&mdash;except possibly the 2-1 move for 3-manifolds&mdash;will
-     preserve the orientation of your triangulation.
-    </para>
-   </note>
    <para>
     The available moves for 3-manifolds (as illustrated above) are:
     <glosslist>

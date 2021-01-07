@@ -3189,6 +3189,9 @@ class Triangulation3Test : public TriangulationTest<3> {
 
         static void verifyBary(Triangulation<3>* tri) {
             Triangulation<3> b(*tri);
+            if (b.isOrientable())
+                b.orient();
+
             b.barycentricSubdivision();
             clearProperties(b);
 
@@ -3229,6 +3232,13 @@ class Triangulation3Test : public TriangulationTest<3> {
                 std::ostringstream msg;
                 msg << tri->label()
                     << ": Barycentric subdivision breaks orientability.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->isOrientable() != b.isOriented()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision breaks orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
@@ -3280,6 +3290,14 @@ class Triangulation3Test : public TriangulationTest<3> {
                 return;
 
             b.intelligentSimplify();
+
+            if (tri->isOrientable() != b.isOriented()) {
+                std::ostringstream msg;
+                msg << tri->label()
+                    << ": Barycentric subdivision followed by "
+                    "simplification breaks orientation.";
+                CPPUNIT_FAIL(msg.str());
+            }
 
             if (! (tri->homology() == b.homology())) {
                 std::ostringstream msg;
@@ -3953,6 +3971,9 @@ class Triangulation3Test : public TriangulationTest<3> {
         void verifySimplification(const Triangulation<3>& tri,
                 unsigned simpleSize, const char* simpleName) {
             Triangulation<3> t(tri);
+            if (t.isOrientable())
+                t.orient();
+
             t.intelligentSimplify();
             clearProperties(t);
 
@@ -3962,6 +3983,12 @@ class Triangulation3Test : public TriangulationTest<3> {
                     << ", but simplifies to " << t.size()
                     << " tetrahedra instead of the expected "
                     << simpleSize << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (tri.isOrientable() != t.isOriented()) {
+                std::ostringstream msg;
+                msg << "Simplification to " << simpleName
+                    << " breaks orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
