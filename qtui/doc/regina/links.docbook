@@ -247,4 +247,105 @@
    </para>
   </sect2>
  </sect1>
+ <sect1 id="link-analysis">
+  <title>Analysis</title>
+
+  <para>
+   You can view a variety of information about the link diagram, as well
+   as topological invariants of the link itself, by stepping through the
+   different tabs in the link viewer.
+   Here we talk through the different kinds of information and
+   invariants on offer.
+  </para>
+
+  <sect2 id="link-crossings">
+   <title>Crossings and Strands</title>
+   <para>
+    Talk about pictures vs text.
+   </para>
+  </sect2>
+
+  <sect2 id="link-polynomials">
+   <title>Polynomial Invariants</title>
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="link-codes">
+   <title>Text Codes</title>
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="link-graphs">
+   <title>Associated Graphs</title>
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="link-complement">
+   <title>Link Complements</title>
+   <para>
+   </para>
+  </sect2>
+ </sect1>
+ <sect1 id="link-modification">
+  <title>Modification</title>
+
+  <para>
+   There are several options for modifying a link diagram.
+   Many of these can be found in the
+   <guimenu>Knot&nbsp;/&nbsp;Link</guimenu> menu,
+   which appears when you open a link for viewing.
+  </para>
+  <para>
+   <inlinemediaobject>
+    <imageobject>
+     <imagedata fileref="menu-link.png"/>
+    </imageobject>
+   </inlinemediaobject>
+  </para>
+  <caution><para>
+   If you open one link for viewing but then select another in
+   the packet tree, all modifications will apply to
+   <emphasis>the link that you have open</emphasis> for viewing.
+  </para></caution>
+
+  <sect2 id="link-edit-crossings">
+   <title>Editing Crossings</title>
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="link-simplify">
+   <title>Automatic Simplification</title>
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="link-reidemeister">
+   <title>Reidemeister Moves</title>
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="link-flip">
+   <title>Reflection, Rotation and Reversal</title>
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="link-cables">
+   <title>Parallel Cables</title>
+   <para>
+   </para>
+  </sect2>
+
+  <sect2 id="link-composewith">
+   <title>Building Composite Links</title>
+   <para>
+   </para>
+  </sect2>
+ </sect1>
 </chapter>
+
