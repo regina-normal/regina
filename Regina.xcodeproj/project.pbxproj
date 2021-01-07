@@ -3881,7 +3881,6 @@
 		05685FEA1F97110500085B44 /* kde-default.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "kde-default.css"; sourceTree = "<group>"; };
 		05685FEB1F97110500085B44 /* data-packet-dim4triangulation.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-dim4triangulation.docbook"; sourceTree = "<group>"; };
 		05685FEC1F97110500085B44 /* data-surface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-surface.docbook"; sourceTree = "<group>"; };
-		05685FED1F97116B00085B44 /* fix-bundle-paths */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "fix-bundle-paths"; sourceTree = "<group>"; };
 		05685FEF1F9713D900085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05685FF01F9713D900085B44 /* testutils.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testutils.sh; sourceTree = "<group>"; };
 		0568741F20C5D868001C435B /* tangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tangle.h; sourceTree = "<group>"; };
@@ -6946,7 +6945,6 @@
 				0564A4221811D91E002CC2AE /* examplesaction.cpp */,
 				0564A4231811D91E002CC2AE /* examplesaction.h */,
 				0564A4241811D91E002CC2AE /* exports.cpp */,
-				05685FED1F97116B00085B44 /* fix-bundle-paths */,
 				0564A4251811D91E002CC2AE /* foreign */,
 				0564A4411811D91E002CC2AE /* iconcache.cpp */,
 				0564A4421811D91E002CC2AE /* iconcache.h */,
