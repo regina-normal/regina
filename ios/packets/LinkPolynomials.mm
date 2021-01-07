@@ -120,7 +120,17 @@ namespace {
 
     if (self.packet->knowsJones() || self.packet->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         self.calculateJones.hidden = YES;
-        self.jones.text = @(self.packet->jones().utf8(regina::Link::jonesVar).c_str());
+
+        const auto& polySqrtT = self.packet->jones();
+        if (polySqrtT.isZero() || polySqrtT.minExp() % 2 == 0) {
+            // We can express this as a polynomial in t.
+            regina::Laurent<regina::Integer> scaled(polySqrtT);
+            scaled.scaleDown(2);
+            self.jones.text = @(scaled.utf8("t").c_str());
+        } else {
+            // Keep it as a polynomial in sqrt(t).
+            self.jones.text = @(polySqrtT.utf8(regina::Link::jonesVar).c_str());
+        }
     } else {
         self.jones.text = @" ";
         self.calculateJones.hidden = NO;
@@ -280,9 +290,18 @@ namespace {
 {
     // Copy the selected polynomial in plain ASCII only.
     if (copyFrom == self.jones) {
-        if (self.packet->knowsJones())
-            [[UIPasteboard generalPasteboard] setString:@(self.packet->jones().str("x").c_str())];
-        else
+        if (self.packet->knowsJones()) {
+            const auto& polySqrtT = self.packet->jones();
+            if (polySqrtT.isZero() || polySqrtT.minExp() % 2 == 0) {
+                // We can express this as a polynomial in t.
+                regina::Laurent<regina::Integer> scaled(polySqrtT);
+                scaled.scaleDown(2);
+                [[UIPasteboard generalPasteboard] setString:@(scaled.str("t").c_str())];
+            } else {
+                // Keep it as a polynomial in sqrt(t).
+                [[UIPasteboard generalPasteboard] setString:@(polySqrtT.str("sqrt_t").c_str())];
+            }
+        } else
             [[UIPasteboard generalPasteboard] setString:@""];
     } else if (copyFrom == self.homfly) {
         if (self.packet->knowsHomfly()) {
