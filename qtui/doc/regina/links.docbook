@@ -247,6 +247,7 @@
    </para>
   </sect2>
  </sect1>
+
  <sect1 id="link-analysis">
   <title>Analysis</title>
 
@@ -259,15 +260,198 @@
   </para>
 
   <sect2 id="link-crossings">
-   <title>Crossings and Strands</title>
+   <title>Crossings and Components</title>
    <para>
-    Talk about pictures vs text.
+    At the top of each link viewer is a header listing: whether the knot
+    is alternating; the number of link components (or the word
+    &ldquo;knot&rdquo; to indicate just one); and the number of crossings,
+    including how many are positive and negative.
+    This header is circled in red below.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-header.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The <guilabel>Crossings</guilabel> tab shows the details of the individual
+    crossings and components that make up the link.
+    &regina; numbers crossings 0,1,2,&hellip;, and likewise for components.
+   <para>
+   </para>
+    For each component of the link, there will be a box beneath the
+    <guilabel>Crossings</guilabel> tab showing the crossings that you
+    visit in order as you traverse the link component from an
+    arbitrary starting point.
+    There are two different ways that you can view this information
+    (with a drop-down box to switch between them):
+   </para>
+   <para>
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>Pictures</guilabel></glossterm>
+      <glossdef>
+       <para>
+        Each crossing will be shown visually as a pair of arrows,
+        one crossing over the other.  One arrow will be a solid colour,
+        and will run horizontally from left to right;
+        this is the part of the link that you are traversing.
+        The other arrow will be grey, and will run vertically (either up
+        or down); this is the part of the link that you are passing over
+        or under.  The crossing number will be written in the top-right
+        corner beside the arrows.
+       </para>
+       <para>
+        <inlinemediaobject>
+         <imageobject>
+          <imagedata fileref="link-pictures.png"/>
+         </imageobject>
+        </inlinemediaobject>
+       </para>
+       <para>
+        For each crossing, the arrow that you are traversing will be
+        coloured blue for a positive crossing, or yellow for a negative
+        crossing. (This is just a visual aid, and is not strictly necessary;
+        you can already tell the sign of the crossing from the arrangement
+        of the arrows.)
+       </para>
+       <para>
+        Crossings are visited in order from left to right along each row
+        of the display, one row at a time (i.e., the same way that you
+        would read English text in a book).
+       </para>
+       <tip>
+        <para>
+         Because the arrows you traverse always run from left to right, you
+         can imagine the individual crossings as being attached together
+         in the order that they are displayed.
+         In other words, you can picture the link component as a long
+         arrow running from left to right through the individual crossings
+         (and then wrapping around to the next line each time it reaches
+         the right-hand edge of the window).
+         Of course this picture breaks down once you revisit the
+         same crossing for a second time.
+        </para>
+       </tip>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Text</guilabel></glossterm>
+      <glossdef>
+       <para>
+        Each crossing will be shown as a number with a plus or minus
+        sign attached.  The number indicates which crossing you are
+        passing through, and the sign indicates whether it is a positive or
+        negative crossing. The sign will appear as a superscript if you
+        are passing over the crossing, or a subscript if you are passing under.
+       </para>
+       <para>
+        <inlinemediaobject>
+         <imageobject>
+          <imagedata fileref="link-text.png"/>
+         </imageobject>
+        </inlinemediaobject>
+       </para>
+       <para>
+        As before, crossings are visited in order from left to right
+        along each row, one row at a time.
+        Also as before, positive crossings will be coloured blue and
+        negative crossings will be coloured yellow (but again the colour
+        is just a visual aid, since you already have this information
+        from the plus/minus sign).
+       </para>
+      </glossdef>
+     </glossentry>
+    </glosslist>
    </para>
   </sect2>
 
   <sect2 id="link-polynomials">
    <title>Polynomial Invariants</title>
    <para>
+    On the <guilabel>Polynomials</guilabel> tab, you can view
+    several polynomial invariants of the link and of the link diagram.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-polynomials.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The invariants include:
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>Jones</guilabel></glossterm>
+      <glossdef>
+       <para>
+        The Jones polynomial is a single-variable polynomial in the variable
+        <replaceable>t</replaceable>, whose exponents are integers for knots,
+        but whose exponents may be half-integers for some links
+        (depending on the parity of the number of link components).
+        You may therefore see this presented either as a polynomial in
+        <replaceable>t</replaceable> or as a polynomial in
+        &radic;<replaceable>t</replaceable>.
+       </para>
+       <para>
+        If you have opted <link linkend="options-unicode">not to use
+        unicode symbols</link>, then you will see this as a polynomial
+        in either <replaceable>t</replaceable> or
+        <replaceable>sqrt_t</replaceable>.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>HOMFLY-PT</guilabel></glossterm>
+      <glossdef>
+       <para>
+        The HOMFLY-PT polynomial is a two-variable polynomial with two
+        common formulations: one in the variables
+        (<replaceable>&alpha;</replaceable>, <replaceable>z</replaceable>)
+        and one in the variables
+        (<replaceable>l</replaceable>, <replaceable>m</replaceable>).
+        These formulations give different polynomials, which are
+        related via a simple substitution.
+        &regina; offers a pair of buttons beside the HOMFLY-PT
+        polynomial for you to choose which formulation is displayed.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Kauffman bracket</guilabel></glossterm>
+      <glossdef>
+       <para>
+        The Kauffman bracket is a property of the link diagram, not an
+        invariant of the link, and is related to the Jones polynomial
+        by a simple substitution.
+        See Adams <xref linkend="bib-adams-knotbook"/> for a simple
+        combinatorial introduction to the Kauffman bracket and the
+        Jones polynomial.
+       </para>
+      </glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+   <para>
+    For larger links, you may see a <guilabel>Calculate</guilabel> button
+    instead of a polynomial. This is because all of these polynomials
+    require exponential time to compute.  In this case you will need to
+    press the <guilabel>Calculate</guilabel> button and be prepared
+    to wait (you will see the progress displayed, and you will have the
+    opportunity to cancel the computation if you like).
+   </para>
+   <para>
+    For smaller links, all of the polynomials will be computed automatically.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-polynomials-calculate.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
 
@@ -289,6 +473,7 @@
    </para>
   </sect2>
  </sect1>
+
  <sect1 id="link-modification">
   <title>Modification</title>
 

@@ -124,6 +124,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-crossings">alternating links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>angle structures</primaryie>
   <secondaryie><link linkend="angles">definition</link></secondaryie>
   <secondaryie><link linkend="angles-creation">enumerating vertex
@@ -349,13 +353,13 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-decomposition-component">component
-   decomposition</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-components">components, viewing
-   in a triangulation</link></primaryie>
+  <primaryie>components</primaryie>
+  <secondaryie><link linkend="tri-decomposition-component">decomposing into,
+   for triangulations</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">viewing,
+   for links</link></secondaryie>
+  <secondaryie><link linkend="tri-components">viewing,
+   for triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -411,6 +415,11 @@
    different coordinate systems</link></secondaryie>
   <secondaryie><link linkend="surfaces-coords-coords">viewing in a
    different coordinate system</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>crossings, in links</primaryie>
+  <secondaryie><link linkend="link-crossings">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -779,6 +788,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-polynomials">HOMFLY-PT
+   polynomial</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="tri-algebra-homfund">homology
    groups</link></primaryie>
   <secondaryie><link linkend="tri-algebra-cellular">all homology
@@ -896,7 +910,19 @@
    sets of triangulations</link></secondaryie>
  </indexentry>
 
+ </indexdiv><indexdiv id='taskindex-J'><title>&mdash; J &mdash;</title>
+
+ <indexentry>
+  <primaryie><link linkend="link-polynomials">Jones
+   polynomial</link></primaryie>
+ </indexentry>
+
  </indexdiv><indexdiv id='taskindex-K'><title>&mdash; K &mdash;</title>
+
+ <indexentry>
+  <primaryie><link linkend="link-polynomials">Kauffman
+   bracket</link></primaryie>
+ </indexentry>
 
  <indexentry>
   <primaryie>Kawauchi-Kojima invariants</primaryie>
@@ -974,11 +1000,22 @@
 
  <indexentry>
   <primaryie>links, knots and</primaryie>
+  <secondaryie><link linkend="link-crossings">alternating</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">components,
+   viewing</link></secondaryie>
   <secondaryie><link linkend="link-creation">creation</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">crossings,
+   viewing</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Dowker-Thistlethwaite notation,
    recreating from</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Gauss code
    (classical or oriented), recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-polynomials">HOMFLY-PT
+   polynomial</link></secondaryie>
+  <secondaryie><link linkend="link-polynomials">Jones
+   polynomial</link></secondaryie>
+  <secondaryie><link linkend="link-polynomials">Kauffman
+   bracket</link></secondaryie>
   <secondaryie><link linkend="link-new-code">knot signature,
    recreating from</link></secondaryie>
  </indexentry>
