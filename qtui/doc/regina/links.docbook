@@ -863,6 +863,56 @@
   <sect2 id="link-composewith">
    <title>Building Composite Links</title>
    <para>
+    You can combine two links using the operation of
+    <firstterm>composition</firstterm>.
+    This will convert some link <replaceable>L</replaceable>
+    into the composite link
+    <replaceable>L</replaceable>&nbsp;#&nbsp;<replaceable>M</replaceable>
+    for some other link <replaceable>M</replaceable>
+    (note that
+    <replaceable>M</replaceable> is allowed to be the same as
+    <replaceable>L</replaceable>).
+    The composition operation will respect the orientations (i.e.,
+    directions of traversal) of each link.
+   </para>
+   <para>
+    To form this composition, first open the the link
+    <replaceable>L</replaceable> for editing;
+    this is the link that you are operating on, and it will be
+    modified directly.
+    Then select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Compose With</guimenuitem>
+    </menuchoice>
+    from the menu.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-composewith.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    &regina; will ask you which other link to compose with;
+    in other words, &regina; will ask you for the link
+    <replaceable>M</replaceable>.
+    This second link <replaceable>M</replaceable> will be
+    left unchanged (unless of course you have chosen to compose
+    <replaceable>L</replaceable> with itself, which is perfectly legal
+    and will work as expected).
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-composewith-link.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The link <replaceable>L</replaceable> will be changed directly
+    into the resulting composite link.
    </para>
   </sect2>
  </sect1>

@@ -3306,7 +3306,7 @@
    </para>
    <para>
     To form this connected sum, first open the the triangulation
-    <replaceable>X</replaceable> for viewing, and then select
+    <replaceable>X</replaceable> for editing, and then select
     <menuchoice>
      <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Connected Sum With</guimenuitem>

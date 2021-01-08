@@ -368,6 +368,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>composite link</primaryie>
+  <secondaryie><link linkend="link-composewith">building</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>composition, combinatorial</primaryie>
   <seeie>See: combinatorial composition</seeie>
  </indexentry>
@@ -387,7 +392,12 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>connected sum</primaryie>
+  <primaryie>connected sum, for links</primaryie>
+  <seeie>See: composite link</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>connected sum, for triangulations</primaryie>
   <secondaryie><link linkend="tri-connsumwith">building</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-connsum">decomposition</link></secondaryie>
  </indexentry>
@@ -1028,6 +1038,8 @@
   <secondaryie><link linkend="link-complement">complements</link></secondaryie>
   <secondaryie><link linkend="link-crossings">components,
    viewing</link></secondaryie>
+  <secondaryie><link linkend="link-composewith">composite link,
+   building</link></secondaryie>
   <secondaryie><link linkend="link-creation">creation</link></secondaryie>
   <secondaryie><link linkend="link-crossings">crossings,
    viewing</link></secondaryie>
