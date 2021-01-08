@@ -4286,7 +4286,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! copy.isIsomorphicTo(*tri)) {
+            if (! copy.isIdenticalTo(*tri)) {
                 std::ostringstream msg;
                 msg << tri->label() << ": minimiseBoundary() "
                     "made changes when it should not.";
