@@ -45,7 +45,8 @@
 namespace regina {
 
 /**
- * \weakgroup file
+ * \addtogroup file File I/O
+ * File formats and the filesystem
  * @{
  */
 
