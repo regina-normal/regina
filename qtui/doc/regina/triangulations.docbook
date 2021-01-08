@@ -146,6 +146,16 @@
       </imageobject>
      </inlinemediaobject>
     </para>
+    <tip id="tri-census-examples"><para>
+     You can see many more examples by looking through the various
+     censuses that are shipped with &regina;'s example data files.
+     Look inside the
+     <menuchoice>
+      <guimenu>File</guimenu>
+      <guisubmenu>Open Example</guisubmenu>
+     </menuchoice>
+     menu and explore.
+    </para></tip>
    </sect3>
    <sect3 id="tri-new-isosig">
     <title>Isomorphism Signature</title>

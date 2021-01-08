@@ -256,6 +256,10 @@
    triangulations (command-line)</link></secondaryie>
   <secondaryie><link linkend="tri-census-creation">creating a census of
    triangulations (&gui;)</link></secondaryie>
+  <secondaryie><link linkend="link-census-examples">examples, for
+   knots and links</link></secondaryie>
+  <secondaryie><link linkend="tri-census-examples">examples, for
+   triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation across the census databases (&gui;)</link></secondaryie>
   <secondaryie><link linkend="man-censuslookup">searching for a
@@ -655,10 +659,14 @@
 
  <indexentry>
   <primaryie>examples</primaryie>
-  <secondaryie><link linkend="tri-new-example">3-manifold
+  <secondaryie><link linkend="link-census-examples">census of prime
+   knots</link></secondaryie>
+  <secondaryie><link linkend="tri-census-examples">censuses of
    triangulations</link></secondaryie>
-  <secondaryie><link linkend="link-new-example">knots and
+  <secondaryie><link linkend="link-new-example">creating, for knots and
    links</link></secondaryie>
+  <secondaryie><link linkend="tri-new-example">creating, for
+   triangulations</link></secondaryie>
   <secondaryie><link linkend="sessions">&python; scripting</link></secondaryie>
   <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
   <secondaryie><link linkend="snappea-new-example">&snappea;
@@ -1086,6 +1094,10 @@
    recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">Dowker-Thistlethwaite notation,
    viewing</link></secondaryie>
+  <secondaryie><link linkend="link-new-example">examples,
+   creating</link></secondaryie>
+  <secondaryie><link linkend="link-census-examples">examples,
+   from censuses</link></secondaryie>
   <secondaryie><link linkend="link-cables">framings</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Gauss code
    (classical or oriented), recreating from</link></secondaryie>
@@ -1899,6 +1911,8 @@
    characteristic</link></secondaryie>
   <secondaryie><link linkend="tri-new-example">examples,
    creating</link></secondaryie>
+  <secondaryie><link linkend="tri-census-examples">examples,
+   from censuses</link></secondaryie>
   <secondaryie><link linkend="foreign-export">exporting to
    external files</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-dual">face pairing

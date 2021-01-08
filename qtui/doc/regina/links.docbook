@@ -246,6 +246,17 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <tip id="link-census-examples"><para>
+    You can see many more examples by looking through the prime knot census,
+    which is shipped as one of &regina;'s example data files.
+    Select
+    <menuchoice>
+     <guimenu>File</guimenu>
+     <guisubmenu>Open Example</guisubmenu>
+     <guimenuitem>Prime Knots</guimenuitem>
+    </menuchoice>
+    from the menu.
+   </para></tip>
   </sect2>
  </sect1>
 
