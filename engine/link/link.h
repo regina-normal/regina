@@ -1521,6 +1521,8 @@ class REGINA_API Link : public Packet {
          * component), then in such cases you can try the more powerful but
          * (much) slower simplifyExhaustive() instead.
          *
+         * This routine will never reflect or reverse the link.
+         *
          * \warning Running this routine multiple times upon the same link may
          * return different results, since the implementation makes random
          * decisions.  More broadly, the implementation of this routine
@@ -1543,6 +1545,8 @@ class REGINA_API Link : public Packet {
          * crossings) are not used in this routine.  Such moves do however
          * feature in intelligentSimplify().
          *
+         * This routine will never reflect or reverse the link.
+         *
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.
          *
@@ -1561,6 +1565,9 @@ class REGINA_API Link : public Packet {
          * Attempts to simplify this knot diagram using a slow but
          * exhaustive search through the Reidemeister graph.  This routine is
          * more powerful but much slower than intelligentSimplify().
+         *
+         * Unlike intelligentSimplify(), this routine <b>could potentially
+         * reflect or reverse the link</b>.
          *
          * This routine is only available for knots at the present time.
          * If this link has multiple (or zero) components, then this
@@ -1650,6 +1657,11 @@ class REGINA_API Link : public Packet {
          * This routine iterates through all knot diagrams that can be reached
          * from this via Reidemeister moves, without ever exceeding
          * \a height additional crossings beyond the original number.
+         * With the current implementation, these diagrams <b>could become
+         * reflected and/or reversed</b>, and moreover each diagram will only be
+         * considered once up to reflection and/or reversal; be aware that this
+         * behaviour could change and/or become configurable in a future version
+         * of Regina.
          *
          * For every such knot diagram (including this starting
          * diagram), this routine will call \a action (which must
