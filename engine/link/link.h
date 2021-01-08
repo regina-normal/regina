@@ -68,7 +68,7 @@ template <typename T> class Laurent2;
 template <int> class Triangulation;
 
 /**
- * Indicates one of the standard framing of a knot or link.
+ * Indicates one of the standard framings of a knot or link.
  * Here a \e framing refers to a choice of normal vector field along the
  * knot or link.  Equivalently, a framing refers to a choice of longitude
  * on the torus bounding each component of the link.
