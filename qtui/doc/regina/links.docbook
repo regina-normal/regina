@@ -785,7 +785,46 @@
   <sect2 id="link-edit-crossings">
    <title>Editing Crossings</title>
    <para>
-    TODO.
+    You can edit a link directly by altering its individual crossings.
+    &regina; gives you two ways do this, both of which will typically
+    change the topology of the link:
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>Changing a crossing</guilabel></glossterm>
+      <glossdef><para>
+       This involves switching the over-strand with the under-strand;
+       in other words, passing one strand through the other.
+      </para><para>
+       This operation is sometimes called
+       <firstterm>switching</firstterm> a crossing.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Resolving a crossing</guilabel></glossterm>
+      <glossdef><para>
+       This removes the crossing entirely by chopping and splicing the
+       over-strand and the under-strand together.
+       Suppose the crossing originally
+       involved strand <replaceable>x</replaceable> passing over strand
+       <replaceable>y</replaceable>.
+       After resolving the crossing, the section of the link that entered
+       along <replaceable>x</replaceable> will exit
+       along <replaceable>y</replaceable>, and the section that entered
+       along <replaceable>y</replaceable> will exit
+       along <replaceable>x</replaceable>.
+       This will be done in a way that preserves orientation
+       (i.e., the directions of the arrows).
+      </para><para>
+       This operation is sometimes called
+       <firstterm>splicing</firstterm> a crossing.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+   <para>
+    To change or resolve a crossing, switch to the
+    <guilabel>Crossings</guilabel> tab, right-click on the crossing you
+    want to change, and choose which operation you wish to perform.
    </para>
    <para>
     <inlinemediaobject>
@@ -793,6 +832,11 @@
       <imagedata fileref="link-editcrossing.png"/>
      </imageobject>
     </inlinemediaobject>
+   </para>
+   <para>
+    On computers where right-click is not supported (e.g.,
+    computers with a one-button mouse), you should use the normal
+    secondary-click mechanism for bringing up a pop-up context menu.
    </para>
   </sect2>
 

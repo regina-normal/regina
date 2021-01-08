@@ -273,6 +273,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-edit-crossings">changing
+   crossings</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>character encodings</primaryie>
   <secondaryie><link linkend="foreign">in
    imports and exports</link></secondaryie>
@@ -444,6 +449,10 @@
 
  <indexentry>
   <primaryie>crossings, in links</primaryie>
+  <secondaryie><link linkend="link-edit-crossings">changing
+   (or switching)</link></secondaryie>
+  <secondaryie><link linkend="link-edit-crossings">resolving
+   (or splicing)</link></secondaryie>
   <secondaryie><link linkend="link-crossings">viewing</link></secondaryie>
  </indexentry>
 
@@ -1065,6 +1074,10 @@
   <secondaryie><link linkend="link-composewith">composite link,
    building</link></secondaryie>
   <secondaryie><link linkend="link-creation">creation</link></secondaryie>
+  <secondaryie><link linkend="link-edit-crossings">crossings,
+   changing (or switching)</link></secondaryie>
+  <secondaryie><link linkend="link-edit-crossings">crossings,
+   resolving (or splicing)</link></secondaryie>
   <secondaryie><link linkend="link-crossings">crossings,
    viewing</link></secondaryie>
   <secondaryie><link linkend="link-graphs">diagram
@@ -1467,6 +1480,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-edit-crossings">resolving
+   crossings</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="man-retriangulate">retriangulating
    manifolds</link></primaryie>
  </indexentry>
@@ -1654,6 +1672,11 @@
    scripting</link></secondaryie>
  </indexentry>
 
+ <indexentry>
+  <primaryie>splicing crossings</primaryie>
+  <seeie>See: resolving crossings</seeie>
+ </indexentry>
+
  <indexentry id="idx-splitting-surfaces">
   <primaryie>splitting surfaces</primaryie>
   <secondaryie><link linkend="man-sigcensus">census of splitting
@@ -1730,6 +1753,11 @@
  <indexentry>
   <primaryie>surface, normal</primaryie>
   <seeie>See: normal surfaces</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>switching crossings</primaryie>
+  <seeie>See: changing crossings</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-T'><title>&mdash; T &mdash;</title>
