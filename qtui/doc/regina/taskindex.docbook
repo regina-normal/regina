@@ -647,9 +647,13 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>exhaustive simplification of triangulations</primaryie>
-  <secondaryie><link linkend="man-retriangulate">from the command-line</link></secondaryie>
-  <secondaryie><link linkend="tri-simplify-exhaustive">in the &gui;</link></secondaryie>
+  <primaryie>exhaustive simplification</primaryie>
+  <secondaryie><link linkend="link-simplify-exhaustive">of
+   links</link></secondaryie>
+  <secondaryie><link linkend="man-retriangulate">of triangulations,
+   from the command-line</link></secondaryie>
+  <secondaryie><link linkend="tri-simplify-exhaustive">of triangulations,
+   in the &gui;</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -794,6 +798,10 @@
  <indexentry>
   <primaryie>gluings</primaryie>
   <seeie>See: tetrahedron face gluings</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-gordian">Gordian unknot</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1073,6 +1081,7 @@
   <secondaryie><link linkend="link-flip">reflecting</link></secondaryie>
   <secondaryie><link linkend="link-flip">reversing</link></secondaryie>
   <secondaryie><link linkend="link-flip">rotating</link></secondaryie>
+  <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
  </indexentry>
@@ -1409,6 +1418,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-simplify-exhaustive">Reidemeister graph,
+   searching</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>removing</primaryie>
   <seeie>See: deleting</seeie>
  </indexentry>
@@ -1517,13 +1531,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-algebra-homfund">simplifying
-   group presentations</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-simplification">simplifying
-   triangulations</link></primaryie>
+  <primaryie>simplifying</primaryie>
+  <secondaryie><link linkend="tri-algebra-homfund">group
+   presentations</link></secondaryie>
+  <secondaryie><link linkend="link-simplify">links</link></secondaryie>
+  <secondaryie><link linkend="tri-simplification">triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>

@@ -791,7 +791,115 @@
   <sect2 id="link-simplify">
    <title>Automatic Simplification</title>
    <para>
+    &regina; offers a number of <link linkend="link-reidemeister">local
+    moves</link> (including the well-known Reidemeister moves) for
+    modifying a link diagram without changing the underlying link.
+    If you press the <guibutton>Simplify</guibutton> button (or select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Simplify</guimenuitem>
+    </menuchoice>),
+    then &regina; will use a combination of these moves to reduce the
+    link to as few crossings as it can.
+    This procedure is always fast and works well in many scenarios,
+    but there is <emphasis>no guarantee</emphasis> that this will produce the
+    fewest possible crossings:
+    &regina; might get stuck at a local minimum from which it cannot
+    see how to escape.
    </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-simplify.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <note>
+    <para>
+     This fast simplification process will never
+     <link linkend="link-flip">reflect or reverse</link> your link.
+     This is <emphasis>not</emphasis> true of the exhaustive process
+     described below.
+    </para>
+   </note>
+   <sect3 id="link-simplify-exhaustive">
+    <title>Exhaustive Simplification</title>
+    <para>
+     If &regina; cannot
+     simplify the link immediately using its fast heuristics,
+     and if your link has only one component (i.e., you have a knot),
+     then it will offer to perform a slower, more exhaustive search.  Press
+     the <guilabel>Try harder</guilabel> button, as shown below:
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="link-simplify-fail.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     At this point, &regina; will begin an exhaustive search through the
+     Reidemeister graph (this is essentially the graph that relates all
+     diagrams of the underlying knot through Reidemeister moves):
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="link-simplify-harder.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <para>
+     You can stop this search at any time by pressing the
+     <guilabel>Cancel</guilabel> button.
+    </para>
+    <para>
+     Since the Reidemeister graph is infinite, &regina; will only search
+     through intermediate knots with a certain maximum number of crossings.
+     If this still fails, it will offer
+     to search further, and you can press <guilabel>Keep trying</guilabel>
+     to continue the search using larger intermediate knots than before.
+     This cycle of ever-expanding searches will continue for as long as
+     you like: &regina; will only stop if you decline to keep searching,
+     or you cancel a search while it is running, or it finds a smaller
+     knot diagram than the one it began with.
+    </para>
+    <para>
+     <inlinemediaobject>
+      <imageobject>
+       <imagedata fileref="link-simplify-keeptrying.png"/>
+      </imageobject>
+     </inlinemediaobject>
+    </para>
+    <warning><para>
+     When searching the Reidemeister graph, both the time and memory
+     consumption grow at a super-exponential rate relative to the number
+     of crossings.  If you continue to press <guilabel>Keep trying</guilabel>
+     over and over, you may well run out of time or memory (or both).
+    </para></warning>
+    <warning>
+     <para>
+      Unlike the fast simplification process when you first press the
+      <guilabel>Simplify</guilabel> button, this exhaustive
+      simplification process could well
+      <link linkend="link-flip">reflect or reverse</link> your link.
+     </para>
+    </warning>
+    <tip id="link-gordian">
+     <para>
+      If your aim is to recognise a knot, an alternative is to
+      <link linkid="link-complement">build the knot complement</link>
+      and then try to recognise the resulting 3-manifold instead.
+      The 3-manifold tools in &regina; are much richer, and in
+      particular &regina;'s simplification of 3-manifold triangulations
+      works extremely well in practice.
+      For the 141-crossing Gordian unknot, building the complement
+      will detect unknottedness immediately, since &regina; is typically able
+      to reduce the complement immediately to a one-tetrahedron solid torus.
+     </para>
+    </tip>
+   </sect3>
   </sect2>
 
   <sect2 id="link-reidemeister">
