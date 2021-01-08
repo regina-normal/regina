@@ -19,6 +19,7 @@ INSTALL(
   PATTERN "*.gif"
   PATTERN "*.html"
   PATTERN "*.jpg"
+  PATTERN "*.js"
   PATTERN "*.png"
   PATTERN "*.txt"
   )

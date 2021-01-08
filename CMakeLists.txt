@@ -350,6 +350,16 @@ MACRO_LOG_FEATURE(POPT_FOUND
 
 # Optionals
 FIND_PACKAGE(Doxygen)
+IF (DOXYGEN_FOUND)
+  # The newline separator in doxygen aliases changed
+  # at some point in a way that (by version 1.9.0) is
+  # neither backward nor forward compatible.
+  IF (DOXYGEN_VERSION VERSION_GREATER 1.8.13)
+    SET(DOXYGEN_NEWLINE "^^")
+  ELSE (DOXYGEN_VERSION VERSION_GREATER 1.8.13)
+    SET(DOXYGEN_NEWLINE "\\n")
+  ENDIF (DOXYGEN_VERSION VERSION_GREATER 1.8.13)
+ENDIF (DOXYGEN_FOUND)
 MACRO_LOG_FEATURE(DOXYGEN_FOUND
   "Doxygen"
   "Generate C++/Python API docs"
