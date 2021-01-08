@@ -465,6 +465,16 @@
      &ldquo;pidgin &tex;&rdquo;.
     </para>
    </tip>
+   <tip>
+    <para>
+     If you find the polynomial exponents hard to read
+     (due to the subscripts being very small),
+     you can visit &regina;'s settings and
+     <link linkend="options-unicode">disable unicode symbols</link>.
+     This will change the polynomial display to use a simple
+     &ldquo;pidgin &tex;&rdquo; instead.
+    </para>
+   </tip>
   </sect2>
 
   <sect2 id="link-codes">
