@@ -79,7 +79,8 @@
        which are compact sequences of letters, digits and/or punctuation
        that uniquely identify a knot up to combinatorial isomorphism.
        Here <firstterm>combinatorial isomorphism</firstterm>
-       includes relabelling the crossings, reflecting the entire diagram,
+       includes relabelling the crossings,
+       reflecting or rotating the entire diagram,
        and/or reversing the orientation of the knot (i.e., the direction
        of travel).
       </para>
@@ -549,8 +550,8 @@
         designed to have a combinatorial uniqueness property:
         two knot diagrams have the same signature
         if and only if they are combinatorially isomorphic
-        (which includes relabelling crossings, reflecting and/or
-        reversing the knot).
+        (which includes relabelling crossings, reflecting,
+        rotating and/or reversing the knot).
        </para>
        <para>
         For a more detailed discussion of knot signatures,
@@ -802,7 +803,55 @@
   <sect2 id="link-flip">
    <title>Reflection, Rotation and Reversal</title>
    <para>
+    &regina; offers some simple transformations related to orientation:
+    each of these changes will alter the knot diagram, but the
+    <link linkend="link-new-knotsig">knot signature</link> will stay
+    the same.
    </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-refrotrev.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <itemizedlist>
+    <listitem><para>
+     If you select
+     <menuchoice>
+      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+      <guimenuitem>Reflect</guimenuitem>
+     </menuchoice>
+     from the menu (or press the <guilabel>Reflect</guilabel> button on
+     the toolbar), &regina; will reflect your link about an axis in the
+     plane.  Each crossing will change sign (positive becomes negative
+     and vice versa), but over-crossings will remain over-crossings, and
+     under-crossings will remain under-crossings.
+    </para></listitem>
+    <listitem><para>
+     If you select
+     <menuchoice>
+      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+      <guimenuitem>Rotate</guimenuitem>
+     </menuchoice>
+     from the menu, &regina; will rotate your link about an axis in the
+     plane (like turning a sheet of paper over so the back becomes visible).
+     This means that over-crossings will become under-crossings
+     and vice versa, but the sign of each crossing will remain the same.
+    </para></listitem>
+    <listitem><para>
+     If you select
+     <menuchoice>
+      <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+      <guimenuitem>Reverse</guimenuitem>
+     </menuchoice>
+     from the menu, &regina; will reverse the orientation (i.e.,
+     direction of traversal) of every component of your link.
+     Both the sign (positive or negative) and the side (under or over)
+     of each crossing will remain the same, but each component will walk
+     through its crossings in reverse order.
+    </para></listitem>
+   </itemizedlist>
   </sect2>
 
   <sect2 id="link-cables">

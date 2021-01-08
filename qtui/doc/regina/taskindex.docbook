@@ -1057,6 +1057,10 @@
    viewing</link></secondaryie>
   <secondaryie><link linkend="link-graphs-nice">nice tree
    decompositions</link></secondaryie>
+  <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
+  <secondaryie><link linkend="link-flip">reflecting</link></secondaryie>
+  <secondaryie><link linkend="link-flip">reversing</link></secondaryie>
+  <secondaryie><link linkend="link-flip">rotating</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
  </indexentry>
@@ -1230,7 +1234,13 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-flip">orienting links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>orienting tetrahedra</primaryie>
+  <secondaryie><link linkend="tri-orient">reflecting
+   triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">testing for consistent
    orientations</link></secondaryie>
  </indexentry>
@@ -1376,8 +1386,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-orient">reflecting
-   triangulations</link></primaryie>
+  <primaryie>reflecting</primaryie>
+  <secondaryie><link linkend="link-flip">links</link></secondaryie>
+  <secondaryie><link linkend="tri-orient">triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1402,6 +1413,14 @@
  <indexentry>
   <primaryie><link linkend="man-retriangulate">retriangulating
    manifolds</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-flip">reversing links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-flip">rotating links</link></primaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-S'><title>&mdash; S &mdash;</title>
