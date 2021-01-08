@@ -3756,7 +3756,6 @@
 		05685F661F970E6100085B44 /* cmakelint.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = cmakelint.pl; sourceTree = "<group>"; };
 		05685F671F970E6200085B44 /* distcheck */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = distcheck; sourceTree = "<group>"; };
 		05685F6A1F970E6400085B44 /* replacetabs */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = replacetabs; sourceTree = "<group>"; };
-		05685F6B1F970E6400085B44 /* index2gloss */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = index2gloss; sourceTree = "<group>"; };
 		05685F6C1F970E6400085B44 /* RELEASE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = RELEASE.txt; sourceTree = "<group>"; };
 		05685F6E1F970E6500085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05685F6F1F970E6500085B44 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -7217,7 +7216,6 @@
 			children = (
 				05685F661F970E6100085B44 /* cmakelint.pl */,
 				05685F671F970E6200085B44 /* distcheck */,
-				05685F6B1F970E6400085B44 /* index2gloss */,
 				05685F6F1F970E6500085B44 /* Makefile */,
 				05685F6E1F970E6500085B44 /* README.txt */,
 				05685F6C1F970E6400085B44 /* RELEASE.txt */,
