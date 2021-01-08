@@ -905,6 +905,112 @@
   <sect2 id="link-reidemeister">
    <title>Reidemeister Moves</title>
    <para>
+    Instead of using automatic simplification, you might wish to modify
+    your link manually one step at a time.  You can do this
+    using <firstterm>Reidemeister moves</firstterm>, which are small
+    local modifications
+    to the link diagram that preserve the topology of the underlying link.
+    To perform Reidemeister moves, select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Reidemeister Moves&hellip;</guimenuitem>
+    </menuchoice>
+   from the menu.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-reidemeister.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    This will bring up a box containing all the Reidemeister moves that
+    can be performed upon your link.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-reidemeisterbox.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    For each type of move, you will be offered a drop-down list of
+    locations at which the move can be performed.  If a move is disabled
+    (greyed out), this means there are no suitable locations in your
+    link for that move type.
+   </para>
+   <para>
+    Select a move, and then press <guibutton>Apply</guibutton> to perform it.
+    You may continue to apply one move after another.  When you are done,
+    press <guibutton>Close</guibutton> to close the Reidemeister move box.
+   </para>
+   <para>
+    The available moves are:
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>R1 twist</guilabel></glossterm>
+      <glossdef><para>
+       Introduces a small local twist in a strand of the link.
+       Each option in the drop-down list specifies a strand
+       (described as an arrow between two crossings),
+       which side of the strand to twist on (left or right,
+       as viewed when facing the direction of the arrow),
+       and the sign of the new crossing that will appear
+       (positive or negative).
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>R1 untwist</guilabel></glossterm>
+      <glossdef><para>
+       The opposite of an R1&nbsp;twist.
+       Each option in the drop-down list corresponds to a crossing where a
+       local twist is found
+       (this corresponds to the new crossing introduced by an
+       R1&nbsp;twist move).
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>R2 overlap</guilabel></glossterm>
+      <glossdef><para>
+       Takes two strands that border the same cell in the link diagram,
+       and passes one over the other.
+       This move comes with <emphasis>two</emphasis> drop-down lists,
+       marked <guilabel>Over</guilabel> and <guilabel>Under</guilabel>,
+       and you need to select your strands in this order.
+      </para><para>
+       First, use the <guilabel>Over</guilabel> list to choose which strand
+       will pass <emphasis>over</emphasis> the other;
+       each option in this list specifies both the strand
+       (as an arrow between two crossings) and in which direction it will
+       be pushed (left or right, as viewed when facing the direction of
+       the arrow).
+       This will cause the <guilabel>Under</guilabel> list to be re-filled
+       with compatible strands that can be pushed under the first,
+       and now you can select one of these options also.
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>R2 separate</guilabel></glossterm>
+      <glossdef><para>
+       The opposite of an R2&nbsp;overlap.
+       Each option in the drop-down list describes a pair of
+       crossings that are connected by a pair of strands that can be pulled
+       apart (these correspond to the two new crossings introduced by an
+       R2&nbsp;overlap move).
+      </para></glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>R3</guilabel></glossterm>
+      <glossdef><para>
+       Passes a strand of the link over a nearby crossing.
+       This move takes place around a triangular cell in the link diagram,
+       and each option in the drop-down list corresponds to the three
+       crossings that surround this triangle.
+      </para></glossdef>
+     </glossentry>
+    </glosslist>
    </para>
   </sect2>
 

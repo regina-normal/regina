@@ -1079,6 +1079,8 @@
    decompositions</link></secondaryie>
   <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
   <secondaryie><link linkend="link-flip">reflecting</link></secondaryie>
+  <secondaryie><link linkend="link-reidemeister">Reidemeister
+   moves</link></secondaryie>
   <secondaryie><link linkend="link-flip">reversing</link></secondaryie>
   <secondaryie><link linkend="link-flip">rotating</link></secondaryie>
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
@@ -1420,6 +1422,11 @@
  <indexentry>
   <primaryie><link linkend="link-simplify-exhaustive">Reidemeister graph,
    searching</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-reidemeister">Reidemeister
+   moves</link></primaryie>
  </indexentry>
 
  <indexentry>
