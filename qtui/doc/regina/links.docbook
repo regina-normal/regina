@@ -405,17 +405,17 @@
       </glossdef>
      </glossentry>
      <glossentry>
-      <glossterm><guilabel>HOMFLY-PT</guilabel></glossterm>
+      <glossterm><guilabel>&homflypt;</guilabel></glossterm>
       <glossdef>
        <para>
-        The HOMFLY-PT polynomial is a two-variable polynomial with two
+        The &homflypt; polynomial is a two-variable polynomial with two
         common formulations: one in the variables
         (<replaceable>&alpha;</replaceable>, <replaceable>z</replaceable>)
         and one in the variables
         (<replaceable>l</replaceable>, <replaceable>m</replaceable>).
         These formulations give different polynomials, which are
         related via a simple substitution.
-        &regina; offers a pair of buttons beside the HOMFLY-PT
+        &regina; offers a pair of buttons beside the &homflypt;
         polynomial for you to choose which formulation is displayed.
        </para>
       </glossdef>
@@ -453,23 +453,298 @@
      </imageobject>
     </inlinemediaobject>
    </para>
+   <tip>
+    <para>
+     You can copy any of these polynomials to the clipboard by
+     right-clicking and selecting either
+     <guilabel>Copy</guilabel> or <guilabel>Copy plain text</guilabel>.
+     If you press <guilabel>Copy</guilabel> then the polynomial will be
+     copied using <link linkend="options-unicode">unicode symbols</link>,
+     and if you press <guilabel>Copy plain text</guilabel> then the
+     polynomial will be copied in plain &ascii; symbols using a simple
+     &ldquo;pidgin &tex;&rdquo;.
+    </para>
+   </tip>
   </sect2>
 
   <sect2 id="link-codes">
    <title>Text Codes</title>
    <para>
+    The <guilabel>Text Codes</guilabel> tab allows you to export your
+    knot or link in several text-based formats. Simply select a format
+    from the drop-down box (indicated in the screenshot below), and the
+    corresponding text code will be shown in the box beneath.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-codes.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    The codes that &regina; can display include:
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>Gauss codes</guilabel></glossterm>
+      <glossdef>
+       <para>
+        This displays both the classical and oriented Gauss codes.
+        Classical Gauss codes are common in the literature, but they
+        suffer from ambiguities related to orientation; for
+        composite knots they may not even uniquely define the topology.
+        Oriented Gauss codes solve this problem by adding a little more
+        information.
+       </para>
+       <para>
+        For a more detailed description of both formats, see the
+        section on <link linkend="link-new-classical-gauss">creating
+        knots from Gauss codes</link>.
+       </para>
+       <para>
+        Currently &regina; only displays Gauss codes for knots, not
+        multiple component links.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Dowker-Thistlethwaite notation</guilabel></glossterm>
+      <glossdef>
+       <para>
+        Like classical Gauss codes, Dowker-Thistlethwaite notation is
+        also common in the literature, and also suffers from ambiguities
+        related to orientation and composite knots.
+        Dowker-Thistlethwaite notation comes in two
+        forms&mdash;numerical and alphabetical&mdash;and &regina;
+        displays both forms here.
+       </para>
+       <para>
+        For a more detailed discussion of Dowker-Thistlethwaite notation,
+        see the section on <link linkend="link-new-dt">creating
+        knots from Dowker-Thistlethwaite notation</link>.
+       </para>
+       <para>
+        Currently &regina; only displays Dowker-Thistlethwaite notation
+        for knots, not multiple component links.
+        Be aware that alphabetical Dowker-Thistlethwaite notation is
+        case-sensitive (i.e., upper-case and lower-case matters).
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Knot signature</guilabel></glossterm>
+      <glossdef>
+       <para>
+        Knot signatures are &regina;s own text-based format, and were
+        designed to have a combinatorial uniqueness property:
+        two knot diagrams have the same signature
+        if and only if they are combinatorially isomorphic
+        (which includes relabelling crossings, reflecting and/or
+        reversing the knot).
+       </para>
+       <para>
+        For a more detailed discussion of knot signatures,
+        see the section on <link linkend="link-new-knotsig">creating
+        knots from knot signatures</link>.
+       </para>
+       <para>
+        Currently &regina; only displays knot signatures
+        for knots, not multiple component links.
+        Be aware that knot signatures are case-sensitive
+        (i.e., upper-case and lower-case matters).
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry id="link-codes-jenkins">
+      <glossterm><guilabel>Jenkins format</guilabel></glossterm>
+      <glossdef>
+       <para>
+        This is a multiline text code described by Bob Jenkins,
+        and used in his
+        <ulink url="http://burtleburtle.net/bob/knot/homfly.html">&homflypt;
+        polynomial software</ulink>.
+        Unlike most of the codes here, &regina; will happily display the
+        Jenkins format for multiple-component links.
+       </para>
+       <para>
+        In this format, a link is described by a sequence of integers
+        separated by whitespace.  We assume that there are
+        <replaceable>n</replaceable> crossings in the link,
+        labelled arbitrarily as 0,1,2,&hellip;.
+        The sequence of integers will contain, in order:
+        <itemizedlist>
+         <listitem>
+          <para>
+           the number of components in the link;
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           for each link component:
+           <itemizedlist>
+            <listitem>
+             <para>
+              the number of times you pass a crossing when traversing the
+              component (i.e., the length of the component);
+             </para>
+            </listitem>
+            <listitem>
+             <para>
+              for each link component:
+              two integers for each crossing that you pass in such a traversal:
+              the crossing label, and then either +1 or -1 according to
+              whether you pass over or under the crossing respectively;
+             </para>
+            </listitem>
+           </itemizedlist>
+          </para>
+         </listitem>
+         <listitem>
+          <para>
+           for each crossing:
+           <itemizedlist>
+            <listitem>
+             <para>
+              the crossing label;
+             </para>
+            </listitem>
+            <listitem>
+             <para>
+              the sign of the crossing (either +1 or -1).
+             </para>
+            </listitem>
+           </itemizedlist>
+          </para>
+         </listitem>
+        </itemizedlist>
+       </para>
+      </glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+   <para id="link-codes-construct">
+    For all of these text codes except for Jenkins format,
+    you can convert a text code back into a link as described in
+    <link linkend="link-new-code">creating a new link</link>.
+    Be aware that the resulting link might not use the same
+    crossing numbers, and might even be a reflection and/or reversal
+    of the original.
+   </para>
+   <para>
+    For Jenkins format, &regina;'s graphical user interface does not offer a
+    way to convert a code back into a link; however, you can always bring up
+    a <link linkend="python-gui">&python; console</link> and call the
+    function <userinput>Link::fromJenkins()</userinput> instead.
    </para>
   </sect2>
 
   <sect2 id="link-graphs">
    <title>Associated Graphs</title>
    <para>
+    On the <guilabel>Graphs</guilabel> tab, you can view
+    different graphs associated with the link diagram.
+    These graphs are all related to the <firstterm>diagram
+    graph</firstterm>, which is a 4-valent graph with one vertex for each
+    crossing and edges that follow the strands of the link.
+   </para>
+   <para>
+    There is a drop-down box for you to choose which graph you want to see.
+    The options are:
+    <glosslist>
+     <glossentry id="link-graphs-tree">
+      <glossterm><guilabel>Tree decomposition</guilabel></glossterm>
+      <glossdef>
+       <para>
+        A <firstterm>tree decomposition</firstterm> (illustrated below)
+        models the diagram graph using a rooted tree;
+        you can read more about tree decompositions in the
+        <link linkend="tri-graphs-tree">triangulations chapter</link>.
+        &regina; uses these tree decompositions in its
+        fixed-parameter tractable algorithms for the Jones and &homflypt;
+        polynomials <xref linkend="bib-homfly-fpt"/>.
+       </para>
+       <para>
+        <inlinemediaobject>
+         <imageobject>
+          <imagedata fileref="link-graphs-tree.png"/>
+         </imageobject>
+        </inlinemediaobject>
+       </para>
+       <para>
+        &regina; will display both the width and the number of bags
+        above the tree decomposition itself.
+       </para>
+       <para>
+        As with triangulations,
+        &regina; does not guarantee to find a tree decomposition of
+        the smallest possible width (i.e., it does not compute the precise
+        <firstterm>treewidth</firstterm> of the diagram graph).
+        Instead it uses fast heuristics that are found to
+        produce low-width graphs in practice.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry id="link-graphs-nice">
+      <glossterm><guilabel>Nice tree decomposition</guilabel></glossterm>
+      <glossdef>
+       <para>
+        This is a variant of the tree decomposition that is less concise,
+        but more useful in practice for algorithms since it imposes very
+        tight constraints on the relationships between parent and child bags.
+        Again, you can read more about these in the
+        <link linkend="tri-graphs-nice">triangulations chapter</link>.
+       </para>
+       <para>
+        <inlinemediaobject>
+         <imageobject>
+          <imagedata fileref="link-graphs-nice.png"/>
+         </imageobject>
+        </inlinemediaobject>
+       </para>
+       <para>
+        As with tree decompositions, &regina; will display both the
+        width of the nice tree decomposition and the number of bags
+        that it contains.  Typically the width will be the same as for the
+        (plain) tree decomposition above, but the number of bags may
+        be significantly larger (though still linear in the overall
+        number of crossings).
+       </para>
+      </glossdef>
+     </glossentry>
+    </glosslist>
    </para>
   </sect2>
 
   <sect2 id="link-complement">
    <title>Link Complements</title>
    <para>
+    &regina; can do a lot more with
+    <link linkend="packet-triangulation3">3-manifold triangulations</link>
+    than with knots and links directly. If you want access to these more
+    powerful 3-manifold tools, you can build a triangulation of the
+    link complement.
+   </para>
+   <para>
+    The result will be an ideal 3-manifold triangulation,
+    describing the complement of your link in the 3-sphere.
+   </para>
+   <para>
+    To do this, select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Complement</guimenuitem>
+    </menuchoice>
+    from the menu, or just press the <guilabel>Complement</guilabel>
+    toolbar button (circled in the picture below).
+    This will create a new triangulation immediately beneath
+    your link in the packet tree.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-complement.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
  </sect1>

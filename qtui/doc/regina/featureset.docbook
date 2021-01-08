@@ -247,7 +247,7 @@
   </para>
   <para>
    &regina; computes several link invariants including the
-   Jones and HOMFLY-PT polynomials, allows you to build and study the
+   Jones and &homflypt; polynomials, allows you to build and study the
    underlying 4-valent graph and its tree decompositions, offers tools
    for isomorphism testing and isomorphism signatures, and allows you to
    build the knot/link complement as a 3-manifold triangulation.

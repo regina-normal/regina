@@ -93,6 +93,7 @@
   <!ENTITY gui "<acronym>GUI</acronym>">
   <!ENTITY gzip "<application>gzip</application>">
   <!ENTITY hom1 "H<subscript>1</subscript>">
+  <!ENTITY homflypt "HOMFLY-PT">
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY java "<application>Java</application>">
   <!ENTITY json "<acronym>JSON</acronym>">

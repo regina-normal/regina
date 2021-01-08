@@ -353,6 +353,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-complement">complement,
+   of a knot or link</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>components</primaryie>
   <secondaryie><link linkend="tri-decomposition-component">decomposing into,
    for triangulations</link></secondaryie>
@@ -494,6 +499,12 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>diagram graphs, for links</primaryie>
+  <secondaryie><link linkend="link-graphs-tree">tree
+   decomposition of</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>disjoint normal surfaces</primaryie>
   <seeie>See: compatibility matrices for normal surfaces</seeie>
  </indexentry>
@@ -529,7 +540,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>dual graphs</primaryie>
+  <primaryie>dual graphs, for triangulations</primaryie>
   <secondaryie><link linkend="options-fpg-labels">labelling</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-tree">tree
    decomposition of</link></secondaryie>
@@ -776,6 +787,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>graphs, diagram</primaryie>
+  <seeie>See: diagram graphs</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>graphs, face pairing</primaryie>
   <seeie>See: dual graphs</seeie>
  </indexentry>
@@ -788,7 +804,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-polynomials">HOMFLY-PT
+  <primaryie><link linkend="link-polynomials">&homflypt;
    polynomial</link></primaryie>
  </indexentry>
 
@@ -913,6 +929,14 @@
  </indexdiv><indexdiv id='taskindex-J'><title>&mdash; J &mdash;</title>
 
  <indexentry>
+  <primaryie>Jenkins format for links</primaryie>
+  <secondaryie><link linkend="link-codes-jenkins">described</link></secondaryie>
+  <secondaryie><link linkend="link-codes-construct">reconstructing
+   links from Jenkins format</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="link-polynomials">Jones
    polynomial</link></primaryie>
  </indexentry>
@@ -1001,23 +1025,40 @@
  <indexentry>
   <primaryie>links, knots and</primaryie>
   <secondaryie><link linkend="link-crossings">alternating</link></secondaryie>
+  <secondaryie><link linkend="link-complement">complements</link></secondaryie>
   <secondaryie><link linkend="link-crossings">components,
    viewing</link></secondaryie>
   <secondaryie><link linkend="link-creation">creation</link></secondaryie>
   <secondaryie><link linkend="link-crossings">crossings,
    viewing</link></secondaryie>
+  <secondaryie><link linkend="link-graphs">diagram
+   graphs</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Dowker-Thistlethwaite notation,
    recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-codes">Dowker-Thistlethwaite notation,
+   viewing</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Gauss code
    (classical or oriented), recreating from</link></secondaryie>
-  <secondaryie><link linkend="link-polynomials">HOMFLY-PT
+  <secondaryie><link linkend="link-codes">Gauss code
+   (classical or oriented), viewing</link></secondaryie>
+  <secondaryie><link linkend="link-polynomials">&homflypt;
    polynomial</link></secondaryie>
+  <secondaryie><link linkend="link-codes-construct">Jenkins format,
+   recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-codes">Jenkins format,
+   viewing</link></secondaryie>
   <secondaryie><link linkend="link-polynomials">Jones
    polynomial</link></secondaryie>
   <secondaryie><link linkend="link-polynomials">Kauffman
    bracket</link></secondaryie>
   <secondaryie><link linkend="link-new-code">knot signature,
    recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-codes">knot signature,
+   viewing</link></secondaryie>
+  <secondaryie><link linkend="link-graphs-nice">nice tree
+   decompositions</link></secondaryie>
+  <secondaryie><link linkend="link-graphs-tree">tree
+   decompositions</link></secondaryie>
  </indexentry>
 
 
@@ -1083,8 +1124,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-graphs-nice">nice tree
-   decomposition</link></primaryie>
+  <primaryie>nice tree decomposition</primaryie>
+  <secondaryie><link linkend="link-graphs-nice">for
+   links</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-nice">for
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1673,8 +1717,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-graphs-tree">tree
-   decomposition</link></primaryie>
+  <primaryie>tree decomposition</primaryie>
+  <secondaryie><link linkend="link-graphs-tree">for
+   links</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-tree">for
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>

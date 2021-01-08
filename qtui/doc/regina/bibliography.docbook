@@ -284,6 +284,26 @@
   <date>May 2014</date>
  </biblioentry>
 
+ <biblioentry id="bib-homfly-fpt">
+  <abbrev>Bur18</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>The HOMFLY-PT polynomial is fixed-parameter tractable</title>
+  <edition>34th International Symposium on Computational Geometry
+   (SoCG 2018)</edition>
+  <volumenum>vol. 99 of Leibniz Int. Proc. Inform.</volumenum>
+  <artpagenums>pp. 18:1&ndash;18:14</artpagenums>
+  <publisher>
+   <publishername>Schloss Dagstuhl &ndash; Leibniz-Zentrum fuer
+    Informatik</publishername>
+   <address>Dagstuhl, Germany</address>
+  </publisher>
+  <date>2018</date>
+ </biblioentry>
+
  <biblioentry id="bib-burton-knots">
   <abbrev>Bur20</abbrev>
   <authorgroup><author>
@@ -297,7 +317,7 @@
   <volumenum>vol. 164 of Leibniz Int. Proc. Inform.</volumenum>
   <artpagenums>pp. 25:1&ndash;25:17</artpagenums>
   <publisher>
-   <publishername>Schloss Dagstuhl&ndash;Leibniz-Zentrum fuer
+   <publishername>Schloss Dagstuhl &ndash; Leibniz-Zentrum fuer
     Informatik</publishername>
    <address>Dagstuhl, Germany</address>
   </publisher>
