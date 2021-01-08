@@ -153,6 +153,9 @@
   <!ENTITY ubuntu "<application>Ubuntu</application>">
   <!ENTITY url "<acronym>URL</acronym>">
   <!ENTITY utf8 "<acronym>UTF-8</acronym>">
+  <!ENTITY varC "<replaceable>C</replaceable>">
+  <!ENTITY varK "<replaceable>K</replaceable>">
+  <!ENTITY vark "<replaceable>k</replaceable>">
   <!ENTITY varM "<replaceable>M</replaceable>">
   <!ENTITY varm "<replaceable>m</replaceable>">
   <!ENTITY varn "<replaceable>n</replaceable>">

@@ -1079,7 +1079,28 @@
   <sect2 id="link-cables">
    <title>Parallel Cables</title>
    <para>
-    TODO.
+    You can convert a link into &vark; cables
+    of the link, all parallel to each other using a chosen framing.
+    This will effectively:
+    <itemizedlist>
+     <listitem><para>
+      treat each component of the original link as a ribbon, using
+      the chosen framing;
+     </para></listitem>
+     <listitem><para>
+      create &vark; parallel copies of the original link, following
+      each other side-by-side along these ribbons.
+     </para></listitem>
+    </itemizedlist>
+    Your link will be modified directly.
+   </para>
+   <para>
+    To do this, select
+    <menuchoice>
+     <guimenu>Knot&nbsp;/&nbsp;Link</guimenu>
+     <guimenuitem>Parallel Cables&hellip;</guimenuitem>
+    </menuchoice>.
+    from the menu.
    </para>
    <para>
     <inlinemediaobject>
@@ -1089,12 +1110,61 @@
     </inlinemediaobject>
    </para>
    <para>
+    You will be asked to choose the number of cables &vark;,
+    as well as the framing to use.
+   </para>
+   <para>
     <inlinemediaobject>
      <imageobject>
       <imagedata fileref="link-cablingbox.png"/>
      </imageobject>
     </inlinemediaobject>
    </para>
+   <para>
+    The number of cables should be an integer greater than one
+    (but not too large&mdash;see the warning below).
+    The framing may be one of:
+    <glosslist>
+     <glossentry>
+      <glossterm><guilabel>Seifert framing</guilabel></glossterm>
+      <glossdef>
+       <para>
+        This framing is a property of the underlying link
+        (i.e., it does not depend on your specific choice of link diagram).
+        One way to imagine it is to construct a Seifert surface (an
+        orientable surface embedded in the 3-sphere whose boundary is
+        the link), and then place the ribbons so that they sit flat upon
+        this surface.
+       </para>
+       <para>
+        Another way to imagine it is purely algebraic:
+        for each component &varC;
+        of the link, each edge of the corresponding ribbon follows a
+        curve with trivial homology in the complement of the knot &varC;.
+       </para>
+      </glossdef>
+     </glossentry>
+     <glossentry>
+      <glossterm><guilabel>Blackboard framing</guilabel></glossterm>
+      <glossdef>
+       <para>
+        Here each ribbon sits flat in the plane of the link diagram, with no
+        twists. This framing depends on the specific link diagram that
+        you are using.
+       </para>
+      </glossdef>
+     </glossentry>
+    </glosslist>
+   </para>
+   <warning><para>
+    This operation can increase the number of crossings enormously.
+    If you create &vark; cables then you will
+    multiply the number of crossings by
+    &vark;<superscript>2</superscript>,
+    and if you chose the Seifert framing then there may be even more
+    crossings due to twists in the ribbons.
+    Use a large &vark; at your peril!
+   </para></warning>
   </sect2>
 
   <sect2 id="link-composewith">

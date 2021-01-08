@@ -168,6 +168,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>blackboard framing</primaryie>
+  <seeie>See: framings, for links</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>book closing move</primaryie>
   <seeie>See: elementary moves</seeie>
  </indexentry>
@@ -220,6 +225,11 @@
  <indexentry>
   <primaryie>&cpp; source</primaryie>
   <seeie>See: source code</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>cabling of links</primaryie>
+  <seeie>See: parallel cables</seeie>
  </indexentry>
 
  <indexentry>
@@ -750,6 +760,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-cables">framings, for links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="troubleshooting">frequently asked
    questions</link></primaryie>
  </indexentry>
@@ -1043,6 +1057,8 @@
  <indexentry>
   <primaryie>links, knots and</primaryie>
   <secondaryie><link linkend="link-crossings">alternating</link></secondaryie>
+  <secondaryie><link linkend="link-cables">blackboard framing</link></secondaryie>
+  <secondaryie><link linkend="link-cables">cabling</link></secondaryie>
   <secondaryie><link linkend="link-complement">complements</link></secondaryie>
   <secondaryie><link linkend="link-crossings">components,
    viewing</link></secondaryie>
@@ -1057,6 +1073,7 @@
    recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">Dowker-Thistlethwaite notation,
    viewing</link></secondaryie>
+  <secondaryie><link linkend="link-cables">framings</link></secondaryie>
   <secondaryie><link linkend="link-new-code">Gauss code
    (classical or oriented), recreating from</link></secondaryie>
   <secondaryie><link linkend="link-codes">Gauss code
@@ -1078,11 +1095,13 @@
   <secondaryie><link linkend="link-graphs-nice">nice tree
    decompositions</link></secondaryie>
   <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
+  <secondaryie><link linkend="link-cables">parallel cables</link></secondaryie>
   <secondaryie><link linkend="link-flip">reflecting</link></secondaryie>
   <secondaryie><link linkend="link-reidemeister">Reidemeister
    moves</link></secondaryie>
   <secondaryie><link linkend="link-flip">reversing</link></secondaryie>
   <secondaryie><link linkend="link-flip">rotating</link></secondaryie>
+  <secondaryie><link linkend="link-cables">Seifert framing</link></secondaryie>
   <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
   <secondaryie><link linkend="link-graphs-tree">tree
    decompositions</link></secondaryie>
@@ -1314,6 +1333,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-cables">parallel cables</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>&pdf; documents</primaryie>
   <secondaryie><link linkend="export-pdf">exporting</link></secondaryie>
   <secondaryie><link linkend="import-pdf">importing</link></secondaryie>
@@ -1498,6 +1521,11 @@
 
  <indexentry>
   <primaryie><link linkend="tri-sfs">&sfslong;, creation</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>Seifert framing</primaryie>
+  <seeie>See: framings, for links</seeie>
  </indexentry>
 
  <indexentry>
