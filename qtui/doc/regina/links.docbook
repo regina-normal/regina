@@ -785,6 +785,14 @@
   <sect2 id="link-edit-crossings">
    <title>Editing Crossings</title>
    <para>
+    TODO.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-editcrossing.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
 
@@ -1071,6 +1079,21 @@
   <sect2 id="link-cables">
    <title>Parallel Cables</title>
    <para>
+    TODO.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-cabling.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="link-cablingbox.png"/>
+     </imageobject>
+    </inlinemediaobject>
    </para>
   </sect2>
 
