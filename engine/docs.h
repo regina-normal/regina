@@ -187,20 +187,9 @@
  *  I/O routines (such as fopen() or std::ifstream::open()) without modifying
  *  them in any way.
  *
- *  It should be noted that ancient data files that use the old binary
- *  format (Regina 2.x, before mid-2002) only support plain ASCII text.
- *  Support for the old binary format is likely to be removed entirely in the
- *  very near future.
- *
  *  \ifacespython Users and programmers who use the Python interface must
  *  take special care, since Python does not pass strings around in UTF-8
  *  by default.
- *
- *  Proper support for character encodings is quite new, and the main
- *  author rarely uses this (being a native English speaker).  If you
- *  see Regina treating international characters in unexpected ways,
- *  please mail the author(s) or file a bug report so the problem can be
- *  fixed!
  */
 
 /*! \page stddim Standard dimensions
