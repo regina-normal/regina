@@ -181,9 +181,9 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * In practice, this means you can create a hard-coded
          * polynomial using syntax such as:
          *
-         * \pre
+         * \code
          * Laurent2<Integer> p = { { 0, 0, 3 }, { 1, -1, 2 } };
-         * \endpre
+         * \endcode
          *
          * \pre Each tuple has a non-zero value \a v, and no two tuples
          * share the same pair of exponents (\a d, \a e).

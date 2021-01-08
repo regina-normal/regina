@@ -634,9 +634,9 @@ class REGINA_API Cyclotomic : public ShortOutput<Cyclotomic, true> {
          */
         Cyclotomic(size_t field, size_t degree, Rational* coeff);
 
-    friend Cyclotomic operator + (const Cyclotomic&, const Cyclotomic&);
-    friend Cyclotomic operator - (const Cyclotomic&, const Cyclotomic&);
-    friend Cyclotomic operator * (const Cyclotomic&, const Cyclotomic&);
+    friend Cyclotomic operator + (const Cyclotomic& lhs, const Cyclotomic& rhs);
+    friend Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
+    friend Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
 };
 
 /**

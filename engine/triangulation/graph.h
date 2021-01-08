@@ -694,7 +694,7 @@ namespace graph {
      * @return the degree of the dual vertex \a v.
      */
     template <int dim>
-    unsigned degree(Simplex<dim>* v, const Triangulation<dim>&);
+    unsigned degree(Simplex<dim>* v, const Triangulation<dim>& t);
 
     /**
      * Returns the degree of the given vertex in the dual graph of the given
@@ -736,7 +736,7 @@ namespace graph {
      * routine is compatible with the Boost Graph Library, where
      * Triangulation<dim> can be used directly as the underlying graph type.
      *
-     * @param \a v the vertex of the dual graph that we are examining.
+     * @param v the vertex of the dual graph that we are examining.
      * @param t the dual graph itself (i.e., the underlying triangulation).
      * @return the range of all dual vertices adjacent to \a v.
      */
@@ -757,7 +757,7 @@ namespace graph {
      * \note The routine out_edges() returns the same range of dual edges,
      * but oriented in the opposite direction.
      *
-     * @param \a v the vertex of the dual graph that we are examining.
+     * @param v the vertex of the dual graph that we are examining.
      * @param t the dual graph itself (i.e., the underlying triangulation).
      * @return the range of all dual edges incident with \a v.
      */
@@ -778,7 +778,7 @@ namespace graph {
      * \note The routine in_edges() returns the same range of dual edges,
      * but oriented in the opposite direction.
      *
-     * @param \a v the vertex of the dual graph that we are examining.
+     * @param v the vertex of the dual graph that we are examining.
      * @param t the dual graph itself (i.e., the underlying triangulation).
      * @return the range of all dual edges incident with \a v.
      */

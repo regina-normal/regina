@@ -1884,6 +1884,7 @@ class REGINA_API Link : public Packet {
          *
          * @param k the number of parallel copies to create.
          * This must be non-negative.
+         * @param framing the framing under which these copies will be parallel.
          * @return \a k parallel copies of this link, as a newly-created object.
          */
         Link* parallel(int k, Framing framing = FRAMING_SEIFERT) const;
@@ -1984,7 +1985,7 @@ class REGINA_API Link : public Packet {
          * polynomial", Algebraic & Geometric Topology 2 (2002), 337-370, you
          * can simply take the polynomial returned by this routine and replace
          * the variable <i>x</i> (which represents the square root of \a t)
-         * with the expression -</i>q</i>.
+         * with the expression -<i>q</i>.
          *
          * To pretty-print this polynomial for human consumption, you can
          * call <tt>Laurent::str(Link::jonesVar)</tt>.
@@ -2756,6 +2757,8 @@ class REGINA_API Link : public Packet {
          * non-negative.
          * @param q the second parameter of the new torus link; this must
          * also be non-negative.
+         * @param positive \c true if the crossings in the new torus link
+         * should be positive, or \c false if they should be negative.
          */
         void insertTorusLink(int p, int q, bool positive = true);
 
@@ -2792,10 +2795,10 @@ class REGINA_API Link : public Packet {
          * As an example, you can construct the left-hand trefoil and
          * the Hopf link as follows:
          *
-         * \pre
+         * \code
          * trefoil = Link::fromData({ -1, -1, -1 }, { 1, -2, 3, -1, 2, -3 });
          * hopf = Link::fromData({ +1, +1 }, { 1, -2 }, { -1, 2 });
-         * \endpre
+         * \endcode
          *
          * The topology of the link is defined precisely by this data, but the
          * precise embedding of the diagram in the plane remains ambiguous.
@@ -3767,7 +3770,7 @@ class REGINA_API ArcIterator {
          * from the upper or lower strand respectively.  For a
          * past-the-end iterator, this should always be \c false.
          */
-        ArcIterator(const Link& link, size_t index = 0, bool upper = false);
+        ArcIterator(const Link& link, size_t crossing = 0, bool upper = false);
 
         /**
          * Preincrement operator.

@@ -88,8 +88,6 @@ class REGINA_API FileInfo : public Output<FileInfo> {
     public:
         /**
          * Creates a new copy of the given file information.
-         *
-         * @param cloneMe the file information to clone.
          */
         FileInfo(const FileInfo&) = default;
         /**
@@ -139,8 +137,6 @@ class REGINA_API FileInfo : public Output<FileInfo> {
 
         /**
          * Sets this to be a copy of the given file information.
-         *
-         * @param cloneMe the file information to clone.
          */
         FileInfo& operator = (const FileInfo&) = default;
 

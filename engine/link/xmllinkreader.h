@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file link/nxmllinkreader.h
+/*! \file link/xmllinkreader.h
  *  \brief Deals with parsing XML data for knot/link packets.
  */
 

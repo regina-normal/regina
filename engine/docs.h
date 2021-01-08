@@ -221,7 +221,6 @@ namespace regina {
 
 /*! \page bgl Boost Graph Library interface
  *
-/**
  * The namespace regina::graph provides an interface for various types of
  * objects from Regina to work directly with the Boost Graph Library (BGL).
  *

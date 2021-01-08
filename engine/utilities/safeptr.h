@@ -154,6 +154,10 @@ private:
         /** The pointee. */
 };
 
+/*@}*/
+
+// Inline functions:
+
 template<class T>
 inline SafePtr<T>::SafePtr()
     : object_(nullptr)
