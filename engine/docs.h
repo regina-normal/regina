@@ -47,8 +47,8 @@
  *  be accessed through Python.
  *
  *  To start: visit the <a href="modules.html">Modules</a> page and take
- *  a look around, or browse through the classes regina::Triangulation<3> and
- *  regina::NormalSurfaces.
+ *  a look around, or browse through the classes regina::Triangulation<3>,
+ *  regina::Link, and regina::NormalSurfaces.
  *
  *  <h3>Python</h3>
  *
