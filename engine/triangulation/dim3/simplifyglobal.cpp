@@ -118,8 +118,15 @@ startAgain:
                 // At this point, all edges and boundary components have
                 // been destroyed (so we cannot access edge->...).
                 snap->join(0, snap, Perm<4>(0, 1));
-                snap->join(3, tet1, roles1);
-                snap->join(2, tet2, roles2);
+                if (roles1.sign() < 0) {
+                    snap->join(3, tet1, roles1);
+                    snap->join(2, tet2, roles2);
+                } else {
+                    // In case the triangulation was oriented,
+                    // we would like to keep it that way.
+                    snap->join(3, tet1, roles1 * Perm<4>(0, 1));
+                    snap->join(2, tet2, roles2 * Perm<4>(0, 1));
+                }
 
                 goto startAgain;
             }

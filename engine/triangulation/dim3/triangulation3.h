@@ -1301,6 +1301,9 @@ class REGINA_API Triangulation<3> :
          * it is fine if the triangulation also contains ideal boundary
          * components (and these simply will be left alone).
          *
+         * If this triangulation is currently oriented, then this operation
+         * will preserve the orientation.
+         *
          * \pre This triangulation is valid.
          *
          * @return \c true if the triangulation was changed, or \c false if

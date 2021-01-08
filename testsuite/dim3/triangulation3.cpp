@@ -4308,6 +4308,9 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             Triangulation<3> copy(*tri);
+            if (copy.isOrientable())
+                copy.orient();
+
             if (! copy.minimiseBoundary()) {
                 std::ostringstream msg;
                 msg << tri->label() << ": minimiseBoundary() "
@@ -4340,6 +4343,13 @@ class Triangulation3Test : public TriangulationTest<3> {
                 std::ostringstream msg;
                 msg << tri->label() << ": minimiseBoundary() changed "
                     "Euler characteristic (manifold).";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (tri->isOrientable() != copy.isOriented()) {
+                std::ostringstream msg;
+                msg << tri->label() << ": minimiseBoundary() broke "
+                    "orientation.";
                 CPPUNIT_FAIL(msg.str());
             }
 
