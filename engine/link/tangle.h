@@ -124,7 +124,7 @@ class REGINA_API Tangle : public Output<Tangle> {
          * In all cases, this is equivalent to calling the rational
          * tangle constructor Tangle(\a twists, 1).
          *
-         * @param num the number of twists to perform; this may be
+         * @param twists the number of twists to perform; this may be
          * positive, negative or zero.
          */
         Tangle(int twists);

@@ -456,7 +456,7 @@ class Perm {
          * without the \a gen argument is available.
          *
          * @param gen the source of randomness to use (e.g., one of the
-         * many options provided in the C++ standard <random> header).
+         * many options provided in the C++ standard \c random header).
          * @param even if \c true, then the resulting permutation is
          * guaranteed to be even (and again all even permutations are
          * returned with equal probability).

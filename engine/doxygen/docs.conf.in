@@ -110,7 +110,8 @@ PREDEFINED           = \
     __DOXYGEN \
     REGINA_API= \
     REGINA_ENABLE_FOR_RING(returnType)=returnType \
-    REGINA_ENABLE_FOR_INTDOMAIN(returnType)=returnType \
+    REGINA_ENABLE_FOR_REGINA_INTEGER(returnType)=returnType \
+    "REGINA_ENABLE_FOR_RING_STATIC(returnType)=static returnType" \
     "REGINA_ENABLE_FOR_RING_DEPRECATED(returnType)=[[deprecated]] returnType"
 
 SEARCH_INCLUDES      = YES

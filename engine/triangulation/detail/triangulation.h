@@ -1207,7 +1207,7 @@ class TriangulationBase :
          * that contain it are distinct; and (iii) these simplices are joined
          * in such a way that the link of the given <i>k</i>-face is the
          * standard triangulation of the (\a dim - 1 - \a k)-sphere as
-         * the boundary of a (\a dim - \k)-simplex.
+         * the boundary of a (\a dim - \a k)-simplex.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.  In

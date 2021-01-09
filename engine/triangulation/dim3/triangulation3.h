@@ -277,7 +277,7 @@ class REGINA_API Triangulation<3> :
          *
          * \ifacescpp Not present.
          *
-         * @param m a SnapPy object of type snappy.Triangulation.
+         * @param t a SnapPy object of type snappy.Triangulation.
          */
         Triangulation(snappy.Triangulation t);
 #endif

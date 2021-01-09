@@ -67,8 +67,8 @@ class REGINA_API mem_istream : public std::istream {
          * Initialies an input stream that reads from the given array of
          * characters.
          *
-         * @begin a pointer to the beginning of the array to read.
-         * @end a pointer past-the-end of the array to read.
+         * @param begin a pointer to the beginning of the array to read.
+         * @param end a pointer past-the-end of the array to read.
          */
         mem_istream(const char* begin, const char* end);
         /**
@@ -96,8 +96,8 @@ class REGINA_API mem_streambuf : public std::streambuf {
          * Initialies a read-only stream buffer that reads from the
          * given array of characters.
          *
-         * @begin a pointer to the beginning of the array to read.
-         * @end a pointer past-the-end of the array to read.
+         * @param begin a pointer to the beginning of the array to read.
+         * @param end a pointer past-the-end of the array to read.
          */
         mem_streambuf(const char *begin, const char *end);
 

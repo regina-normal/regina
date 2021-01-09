@@ -56,7 +56,7 @@ namespace regina {
  *
  * Regina has at its heart a global uniform random bit generator (URBG) that
  * complies with the C++ UniformRandomBitGenerator concept, and can be used
- * with other data types and algorithms from the standard <random> header.
+ * with other data types and algorithms from the standard \c random header.
  *
  * An object of this class offers threadsafe access to this global URBG.
  *

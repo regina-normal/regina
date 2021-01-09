@@ -1261,7 +1261,7 @@ class REGINA_API TreeDecomposition : public Output<TreeDecomposition> {
          *
          * \ifacespython Not present.
          *
-         * @param paceFormat an input stream that provides a text
+         * @param in an input stream that provides a text
          * representation of the tree decomposition using the PACE text format.
          * @return a newly constructed tree decomposition, or \c null if
          * the input was found to be invalid.
