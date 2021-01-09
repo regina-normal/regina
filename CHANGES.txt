@@ -7,8 +7,15 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
-Version 6.0  [ TODO ]
+Version 6.0  [ 11 January, 2021 ]
 
+    GENERAL:
+        - Lots more polish and cleaning up of unfinished business from 5.96,
+          which was just a prerelease for this version 6.0.
+        - Removed the Christy knot/link complements from the example files,
+          though it remains in the census lookup databases.  Also renamed it
+          from the old "hyperbolic knot/link complements" to better reflect
+          the ad-hoc nature of its contents.
     ENGINE:
         Class AbelianGroup:
             - New routine isFree() to quickly test for the free abelian
@@ -29,6 +36,8 @@ Version 6.0  [ TODO ]
             - Routines twoOneMove(), simplifyToLocalMinimum() and
               intelligentSimplify() now preserve orientation, if the
               triangulation was oriented to begin with.
+            - Routine barycentricSubdivision() already preserved orientation,
+              but this is now a formal promise of the API.
             - Changed the preconditions for closeBook() to something
               logically equivalent but simpler to explain and test.
         Class Triangulation<4>:
@@ -38,6 +47,15 @@ Version 6.0  [ TODO ]
     PYTHON:
         - Fixed a deadlock that occurred with Python 3 on some systems when
           starting new python consoles in the GUI.
+    USER INTERFACES:
+        - The Jones polynomial is now displayed as a polynomial in t
+          where possible (as opposed to a polynomial in sqrt{t}).
+        - Removed all use of the deprecated drillEdge(); in particular,
+          this means the GUI will now refuse to drill between two boundary
+          components where at least one of these boundaries is real.
+    DOCUMENTATION:
+        - Brough the user handbook up to date for this release, in
+          particular with a new chapter on knots and links.
 
 Version 5.96  [ 24 December, 2020 ]
 
