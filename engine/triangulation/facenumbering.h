@@ -116,6 +116,8 @@ class FaceNumbering : public detail::FaceNumberingImpl<
 template <int dim>
 inline int faceOppositeEdge(int i, int j);
 
+/*@}*/
+
 // Inline functions
 
 template <int dim>

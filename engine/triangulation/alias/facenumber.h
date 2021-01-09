@@ -159,6 +159,8 @@ class FaceNumber<Derived, 4> {
         }
 };
 
+/*@}*/
+
 } } // namespace regina::alias
 
 #endif

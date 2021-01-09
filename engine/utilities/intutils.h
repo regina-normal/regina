@@ -53,6 +53,11 @@ template <int bytes>
 class NativeInteger;
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * Determines if the type \a T is one of Regina's own integer types.
  *
  * This is true precisely when \a T is one of the classes Integer,
@@ -250,6 +255,8 @@ struct IntOfSize<8> {
 #endif
 
 #endif // __DOXYGEN
+
+/*@}*/
 
 } // namespace regina
 

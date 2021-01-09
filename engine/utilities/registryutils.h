@@ -47,6 +47,11 @@
 namespace regina {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * A convenience base class for a non-void function object, which does nothing
  * beyond provide a \a ReturnType typedef.
  *
@@ -190,6 +195,8 @@ struct NewFunction : public Returns<Base*> {
         return new typename Info::Class(std::forward<Args>(args)...);
     }
 };
+
+/*@}*/
 
 } // namespace regina
 
