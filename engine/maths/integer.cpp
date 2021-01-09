@@ -39,6 +39,13 @@
 // We instantiate both variants of the IntegerBase template at the bottom
 // of this file.
 
+// The implementations in this file currently require a native integer
+// that is twice the size of a long.  The C++ standard does not mandate this,
+// but also I am not aware of a platform on which this fails.
+static_assert(
+    ! std::is_void<typename regina::IntOfSize<2 * sizeof(long)>::type>(),
+    "Regina requires a native integer type that is twice the size of a long. The developers are not currently aware of any cases where this fails, so if you see this error then _please_ write and let us know.");
+
 /**
  * Old macros for testing signed integer overflow, given in order from
  * fastest to slowest (by experimentation).  All are based on section
@@ -300,6 +307,10 @@ IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator *=(
         mpz_init(large_);
         mpz_mul_si(large_, other.large_, small_);
     } else {
+        // Hum. We are assuming that Wide is not void, i.e., there is
+        // a native integer type that is twice the size of a long.
+        // Currently this is enforced through a static_assert at the
+        // top of this file.
         typedef typename IntOfSize<2 * sizeof(long)>::type Wide;
         Wide ans = static_cast<Wide>(small_) * static_cast<Wide>(other.small_);
         if (ans > LONG_MAX || ans < LONG_MIN) {
