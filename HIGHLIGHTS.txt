@@ -12,8 +12,9 @@ Version 6.0  [ 11 January, 2021 ]
       was just a prerelease for this version 6.0.  See the 5.96 highlights
       if you missed those!
     - The user handbook has now been brought up to date.
+    - The example files now include a census of prime knots.
     - Added TxI recognition using Haraway's algorithm.
-    - Added a handful of smaller features and fixes since last month; see the
+    - Plus a handful of smaller features and fixes since last month; see the
       full changelog for details.
 
 Version 5.96  [ 24 December, 2020 ]
