@@ -846,7 +846,7 @@ class REGINA_API Triangulation<3> :
          * In the special case where this is the empty triangulation,
          * this routine returns \c false.
          *
-         * As of Regina 5.97, this routine is now fast (small polynomial
+         * As of Regina 6.0, this routine is now fast (small polynomial
          * time), and works even for triangulations with more than one
          * connected component.  Thanks to Robert Haraway.
          *
