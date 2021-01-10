@@ -198,6 +198,8 @@ class IsomorphismImage<Derived, 4> {
         }
 };
 
+/*@}*/
+
 } } // namespace regina::alias
 
 #endif

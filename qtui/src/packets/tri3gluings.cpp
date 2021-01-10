@@ -964,16 +964,20 @@ void Tri3GluingsUI::drillEdge() {
                     // We are drilling an edge between two boundaries,
                     // at least one of which is real.  Therefore we
                     // cannot use pinchEdge(), which would create a
-                    // mixed real-ideal boundary.  Use drillEdge() instead.
-                    std::unique_ptr<PatienceDialog> dlg(
-                        PatienceDialog::warn(tr(
-                            "Drilling between boundary components requires\n"
-                            "multiple subdivisions, and can be quite slow\n"
-                            "for larger triangulations.\n\n"
-                            "Please be patient."), ui));
-
-                    ans = new regina::Triangulation<3>(*tri);
-                    ans->drillEdge(ans->edge(e->index()));
+                    // mixed real-ideal boundary.  Since drillEdge() is
+                    // deprecated (and will be removed in Regina 6.1),
+                    // we will just refuse to do it here in the GUI.
+                    ReginaSupport::sorry(ui,
+                        tr("Cannot drill between boundaries."),
+                        tr("I am not brave enough "
+                            "to drill an edge between two boundary "
+                            "components where at least one is real, "
+                            "since this could produce an enormous "
+                            "number of tetrahedra.\n\n"
+                            "You could try converting to an ideal "
+                            "triangulation, since I will happily "
+                            "drill edges between ideal vertices."));
+                    return;
                 }
             } else {
                 // The edge does not connect with any real boundary.

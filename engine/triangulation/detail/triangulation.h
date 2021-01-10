@@ -1188,7 +1188,7 @@ class TriangulationBase :
          * that contain it are distinct; and (iii) these simplices are joined
          * in such a way that the link of the given <i>k</i>-face is the
          * standard triangulation of the (\a dim - 1 - \a k)-sphere as
-         * the boundary of a (\a dim - \k)-simplex.
+         * the boundary of a (\a dim - \a k)-simplex.
          *
          * If the routine is asked to both check and perform, the move
          * will only be performed if the check shows it is legal.  In
@@ -1281,6 +1281,9 @@ class TriangulationBase :
          *   will be labelled \a p[2] in \a t;
          * - ...
          * - the centroid of \a s itself will be labelled \a p[\a dim] in \a t.
+         *
+         * In particular, if this triangulation is currently oriented, then
+         * this barycentric subdivision will preserve the orientation.
          *
          * If simplex \a s has index \a i in the original triangulation, then
          * its sub-simplex corresponding to permutation \a p will have index

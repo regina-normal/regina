@@ -39,14 +39,14 @@
 #define __SAFEPTR_H
 #endif
 
+namespace regina {
+
+template <class> class SafePointeeBase;
+
 /**
  * \weakgroup utilities
  * @{
  */
-
-namespace regina {
-
-template <class> class SafePointeeBase;
 
 /**
  * A reference counted smart pointer that supports alternate models of
@@ -153,6 +153,10 @@ private:
     T* object_;
         /** The pointee. */
 };
+
+/*@}*/
+
+// Inline functions:
 
 template<class T>
 inline SafePtr<T>::SafePtr()

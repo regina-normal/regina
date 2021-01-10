@@ -572,6 +572,8 @@ class FacesOfTriangulation<Derived, dim, 4> :
         }
 };
 
+/*@}*/
+
 } } // namespace regina::alias
 
 #endif

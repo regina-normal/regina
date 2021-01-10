@@ -45,9 +45,10 @@ allowtaut ::=</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   This element has been renamed to &xml-spantaut;.  The old name
-   &xml-allowtaut; has been kept for backward compatibility, but any
-   new code that writes data files should use &xml-spantaut; instead.
+   This element was renamed to &xml-spantaut; in &regina;&nbsp;4.90.
+   The old name &xml-allowtaut; has been kept for backward compatibility,
+   in that &regina; still understands it when reading data files; however,
+   any new code that writes data files should use &xml-spantaut; instead.
   </para>
   <para>
    An &xml-allowtaut; element stores whether or not any convex

@@ -357,7 +357,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the source vertex of the edge \a e.
      */
-    REGINA_API Crossing* source(const StrandRef& e, const Link& t);
+    REGINA_API Crossing* source(const StrandRef& e, const Link& l);
 
     /**
      * Returns the target vertex of the given directed edge in the
@@ -369,7 +369,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the target vertex of the edge \a e.
      */
-    REGINA_API Crossing* target(const StrandRef& e, const Link& t);
+    REGINA_API Crossing* target(const StrandRef& e, const Link& l);
 
     /**
      * Returns the total degree of the given vertex in the graph of the given
@@ -420,7 +420,7 @@ namespace graph {
      * This routine is compatible with the Boost Graph Library, where
      * Link can be used directly as the underlying graph type.
      *
-     * @param \a v the vertex of the knot/link graph that we are examining.
+     * @param v the vertex of the knot/link graph that we are examining.
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the range of all vertices adjacent to \a v.
      */
@@ -434,7 +434,7 @@ namespace graph {
      * routine is compatible with the Boost Graph Library, where
      * Link can be used directly as the underlying graph type.
      *
-     * @param \a v the vertex of the knot/link graph that we are examining.
+     * @param v the vertex of the knot/link graph that we are examining.
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the range of all directed edges entering \a v.
      */
@@ -448,7 +448,7 @@ namespace graph {
      * routine is compatible with the Boost Graph Library, where
      * Link can be used directly as the underlying graph type.
      *
-     * @param \a v the vertex of the knot/link graph that we are examining.
+     * @param v the vertex of the knot/link graph that we are examining.
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the range of all directed edges exiting \a v.
      */

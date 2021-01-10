@@ -841,6 +841,8 @@ class REGINA_API FaceNumberingImpl<4, 3, false> : public FaceNumberingAPI<4, 3> 
 #endif // ! __DOXYGEN
 };
 
+/*@}*/
+
 } } // namespace regina::detail
 
 #endif

@@ -45,6 +45,11 @@
 namespace regina {
 
 /**
+ * \weakgroup utilities
+ * @{
+ */
+
+/**
  * A lightweight class for storing a random-access sequence of objects.
  *
  * This class is intended as a lightweight substitute for std::vector,
@@ -432,6 +437,8 @@ class REGINA_API LightweightSequence {
  */
 template <typename T>
 std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
+
+/*@}*/
 
 // Inline functions:
 

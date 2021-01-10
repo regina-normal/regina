@@ -1,5 +1,17 @@
 <bibliography id="bibliography">
 
+ <biblioentry id="bib-adams-knotbook">
+  <abbrev>Ada94</abbrev>
+  <authorgroup><author>
+   <firstname>Colin</firstname>
+   <othername>C.</othername>
+   <surname>Adams</surname>
+  </author></authorgroup>
+  <title>The knot book</title>
+  <publishername>W. H. Freeman &amp; Co.</publishername>
+  <date>1994</date>
+ </biblioentry>
+
  <biblioentry id="bib-agol-ideal">
   <abbrev>Ago11</abbrev>
   <authorgroup><author>
@@ -272,8 +284,73 @@
   <date>May 2014</date>
  </biblioentry>
 
+ <biblioentry id="bib-homfly-fpt">
+  <abbrev>Bur18</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>The HOMFLY-PT polynomial is fixed-parameter tractable</title>
+  <edition>34th International Symposium on Computational Geometry
+   (SoCG 2018)</edition>
+  <volumenum>vol. 99 of Leibniz Int. Proc. Inform.</volumenum>
+  <artpagenums>pp. 18:1&ndash;18:14</artpagenums>
+  <publisher>
+   <publishername>Schloss Dagstuhl &ndash; Leibniz-Zentrum fuer
+    Informatik</publishername>
+   <address>Dagstuhl, Germany</address>
+  </publisher>
+  <date>2018</date>
+ </biblioentry>
+
+ <biblioentry id="bib-burton-knots">
+  <abbrev>Bur20</abbrev>
+  <authorgroup><author>
+   <firstname>Benjamin</firstname>
+   <othername>A.</othername>
+   <surname>Burton</surname>
+  </author></authorgroup>
+  <title>The next 350 million knots</title>
+  <edition>36th International Symposium on Computational Geometry
+   (SoCG 2020)</edition>
+  <volumenum>vol. 164 of Leibniz Int. Proc. Inform.</volumenum>
+  <artpagenums>pp. 25:1&ndash;25:17</artpagenums>
+  <publisher>
+   <publishername>Schloss Dagstuhl &ndash; Leibniz-Zentrum fuer
+    Informatik</publishername>
+   <address>Dagstuhl, Germany</address>
+  </publisher>
+  <date>2020</date>
+ </biblioentry>
+
+ <biblioentry id="bib-quadclosed">
+  <abbrev>BCT13</abbrev>
+  <authorgroup>
+   <author>
+    <firstname>Benjamin</firstname>
+    <othername>A.</othername>
+    <surname>Burton</surname>
+   </author>
+   <author>
+    <firstname>Alexander</firstname>
+    <surname>Coward</surname>
+   </author>
+   <author>
+    <firstname>Stephan</firstname>
+    <surname>Tillmann</surname>
+   </author>
+  </authorgroup>
+  <title>Computing closed essential surfaces in knot complements</title>
+  <edition>SCG '13: Proceedings of the 29th Annual Symposium on
+   Computational Geometry</edition>
+  <artpagenums>pp. 405&ndash;414</artpagenums>
+  <publishername>ACM</publishername>
+  <date>2013</date>
+ </biblioentry>
+
  <biblioentry id="bib-turaevviro-fpt">
-  <abbrev>Bur15</abbrev>
+  <abbrev>BMS15</abbrev>
   <authorgroup>
    <author>
     <firstname>Benjamin</firstname>
@@ -453,6 +530,23 @@
   <volumenum>vol. 80</volumenum>
   <artpagenums>pp. 89&ndash;120</artpagenums>
   <date>1962</date>
+ </biblioentry>
+
+ <biblioentry id="bib-txi">
+  <abbrev>Har20</abbrev>
+  <authorgroup><author>
+   <firstname>Robert</firstname>
+   <othername>Cyrus</othername>
+   <surname>Haraway</surname>
+   <lineage>III</lineage>
+  </author></authorgroup>
+  <title>Determining hyperbolicity of compact orientable 3-manifolds
+   with torus boundary</title>
+  <edition>J. Comput. Geom.</edition>
+  <volumenum>vol. 11</volumenum>
+  <issuenum>no. 1</issuenum>
+  <artpagenums>pp. 125&ndash;136</artpagenums>
+  <date>2020</date>
  </biblioentry>
 
  <biblioentry id="bib-hass-knotnp">

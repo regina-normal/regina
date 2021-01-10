@@ -85,8 +85,6 @@ class StoreValue {
          *
          * This clones the given property's value, regardless of whether
          * the property is uninitialised and/or unknown.
-         *
-         * @param cloneMe the property to clone.
          */
         StoreValue(const StoreValue&) = default;
 
@@ -95,8 +93,6 @@ class StoreValue {
          *
          * This clones the given property's value, regardless of whether
          * the property is uninitialised and/or unknown.
-         *
-         * @param cloneMe the property to clone.
          */
         StoreValue& operator = (const StoreValue&) = default;
 
@@ -155,8 +151,6 @@ class StoreConstPtr {
          *
          * This clones the given property's pointer, regardless of whether
          * the property is known or unknown.
-         *
-         * @param cloneMe the property to clone.
          */
         StoreConstPtr(const StoreConstPtr&) = default;
 
@@ -165,8 +159,6 @@ class StoreConstPtr {
          *
          * This clones the given property's pointer, regardless of whether
          * the property is known or unknown.
-         *
-         * @param cloneMe the property to clone.
          */
         StoreConstPtr& operator = (const StoreConstPtr&) = default;
 

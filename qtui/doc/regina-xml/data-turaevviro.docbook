@@ -54,8 +54,8 @@ turaevviro ::=</synopsis>
   <title>Description</title>
   <para>
    This element is deprecated, and should no longer be used.
-   This element will not be written by the latest version of &regina;,
-   and will be ignored when reading older data files.
+   As of &regina;&nbsp;5.0, this element will not be written, and will be
+   ignored when reading older data files.
   </para>
   <para>
    A &xml-turaevviro; element stores a single calculated Turaev-Viro

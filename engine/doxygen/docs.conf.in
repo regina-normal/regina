@@ -33,11 +33,11 @@ VERBATIM_HEADERS     = NO
 
 # Aliases:
 ALIASES = \
-    "ifaces=\par Interfaces:\n" \
-    "ifacescpp=\par C++:\n" \
-    "ifacespython=\par Python:\n" \
-    "snappy=\par SnapPy:\n" \
-    "i18n=\par Internationalisation:\n" \
+    "ifaces=\par Interfaces@DOXYGEN_NEWLINE@" \
+    "ifacescpp=\par C++@DOXYGEN_NEWLINE@" \
+    "ifacespython=\par Python@DOXYGEN_NEWLINE@" \
+    "snappy=\par SnapPy@DOXYGEN_NEWLINE@" \
+    "i18n=\par Internationalisation@DOXYGEN_NEWLINE@" \
     "proburgent=<i><b>Bug (urgent):</b></i>" \
     "prob=<i>Bug:</i>" \
     "problong=<i>Bug (long-term):</i>" \
@@ -50,7 +50,7 @@ ALIASES = \
     "tidyurgent=<i><b>Tidy (urgent):</b></i>" \
     "tidy=<i>Tidy:</i>" \
     "tidylong=<i>Tidy (long-term):</i>" \
-    "headers=\par Headers:\n" \
+    "headers=\par Headers@DOXYGEN_NEWLINE@" \
     "apinotfinal=\warning The API for this class has not yet been finalised.  This means that the class interface may change in new versions of Regina, without maintaining backward compatibility.  If you use this class directly in your own code, please watch the detailed changelogs upon new releases to see if you need to make changes to your code."
 
 # Warning and progress related options:
@@ -110,7 +110,8 @@ PREDEFINED           = \
     __DOXYGEN \
     REGINA_API= \
     REGINA_ENABLE_FOR_RING(returnType)=returnType \
-    REGINA_ENABLE_FOR_INTDOMAIN(returnType)=returnType \
+    REGINA_ENABLE_FOR_REGINA_INTEGER(returnType)=returnType \
+    "REGINA_ENABLE_FOR_RING_STATIC(returnType)=static returnType" \
     "REGINA_ENABLE_FOR_RING_DEPRECATED(returnType)=[[deprecated]] returnType"
 
 SEARCH_INCLUDES      = YES

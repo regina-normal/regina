@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file link/nxmllinkreader.h
+/*! \file link/xmllinkreader.h
  *  \brief Deals with parsing XML data for knot/link packets.
  */
 
@@ -103,6 +103,12 @@ class REGINA_API XMLLinkCrossingsReader : public XMLElementReader {
             const regina::xml::XMLPropertyDict&, XMLElementReader*) override;
         virtual void initialChars(const std::string& chars) override;
 
+        /**
+         * Indicates whether the XML element has been found to contain
+         * invalid data.
+         *
+         * @return \c true if and only if invalid data has been found.
+         */
         bool broken() const;
 };
 
@@ -128,6 +134,12 @@ class REGINA_API XMLLinkConnectionsReader : public XMLElementReader {
 
         virtual void initialChars(const std::string& chars);
 
+        /**
+         * Indicates whether the XML element has been found to contain
+         * invalid data.
+         *
+         * @return \c true if and only if invalid data has been found.
+         */
         bool broken() const;
 };
 
@@ -158,6 +170,12 @@ class REGINA_API XMLLinkComponentsReader : public XMLElementReader {
             const regina::xml::XMLPropertyDict&, XMLElementReader*);
         virtual void initialChars(const std::string& chars);
 
+        /**
+         * Indicates whether the XML element has been found to contain
+         * invalid data.
+         *
+         * @return \c true if and only if invalid data has been found.
+         */
         bool broken() const;
 };
 

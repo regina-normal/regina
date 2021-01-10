@@ -221,10 +221,24 @@ void LinkPolynomialUI::refresh() {
 
     if (link->knowsJones() || link->size() <= MAX_LINK_AUTO_POLYNOMIALS) {
         btnJones->setVisible(false);
-        if (unicode)
-            jones->setText(link->jones().utf8(regina::Link::jonesVar).c_str());
-        else
-            jones->setText(link->jones().str("x").c_str());
+
+        const auto& polySqrtT = link->jones();
+        if (polySqrtT.isZero() || polySqrtT.minExp() % 2 == 0) {
+            // We can express this as a polynomial in t.
+            regina::Laurent<regina::Integer> scaled(polySqrtT);
+            scaled.scaleDown(2);
+            if (unicode)
+                jones->setText(scaled.utf8("t").c_str());
+            else
+                jones->setText(scaled.str("t").c_str());
+        } else {
+            // Keep it as a polynomial in sqrt(t).
+            if (unicode)
+                jones->setText(polySqrtT.utf8(regina::Link::jonesVar).c_str());
+            else
+                jones->setText(polySqrtT.str("sqrt_t").c_str());
+        }
+
         QPalette pal = jones->palette();
         pal.setColor(jones->foregroundRole(), Qt::black);
         jones->setPalette(pal);
@@ -381,7 +395,16 @@ void LinkPolynomialUI::copyBracket() {
 }
 
 void LinkPolynomialUI::copyJonesPlain() {
-    QApplication::clipboard()->setText(link->jones().str("x").c_str());
+    const auto& polySqrtT = link->jones();
+    if (polySqrtT.isZero() || polySqrtT.minExp() % 2 == 0) {
+        // We can express this as a polynomial in t.
+        regina::Laurent<regina::Integer> scaled(polySqrtT);
+        scaled.scaleDown(2);
+        QApplication::clipboard()->setText(scaled.str("t").c_str());
+    } else {
+        // Keep it as a polynomial in sqrt(t).
+        QApplication::clipboard()->setText(polySqrtT.str("sqrt_t").c_str());
+    }
 }
 
 void LinkPolynomialUI::copyHomflyPlain() {

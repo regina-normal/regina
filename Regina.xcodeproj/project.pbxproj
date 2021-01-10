@@ -2037,7 +2037,7 @@
 				"$(DERIVED_FILE_DIR)/engine-docs",
 			);
 			runOncePerArchitecture = 0;
-			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/../..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" > \"${conf}\"\n\nmkdir -p \"${output}\"\n/usr/local/bin/doxygen \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
+			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/../..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\n# Note: our use of ^^ for newlines requires doxygen >= 1.8.14.\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" -e \"s#@DOXYGEN_NEWLINE@#^^#\" > \"${conf}\"\n\nmkdir -p \"${output}\"\n/usr/local/bin/doxygen \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
 		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
@@ -3431,7 +3431,6 @@
 		05685F661F970E6100085B44 /* cmakelint.pl */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = cmakelint.pl; sourceTree = "<group>"; };
 		05685F671F970E6200085B44 /* distcheck */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = distcheck; sourceTree = "<group>"; };
 		05685F6A1F970E6400085B44 /* replacetabs */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = replacetabs; sourceTree = "<group>"; };
-		05685F6B1F970E6400085B44 /* index2gloss */ = {isa = PBXFileReference; lastKnownFileType = text.script.perl; path = index2gloss; sourceTree = "<group>"; };
 		05685F6C1F970E6400085B44 /* RELEASE.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = RELEASE.txt; sourceTree = "<group>"; };
 		05685F6E1F970E6500085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05685F6F1F970E6500085B44 /* Makefile */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.make; path = Makefile; sourceTree = "<group>"; };
@@ -3556,7 +3555,6 @@
 		05685FEA1F97110500085B44 /* kde-default.css */ = {isa = PBXFileReference; lastKnownFileType = text.css; path = "kde-default.css"; sourceTree = "<group>"; };
 		05685FEB1F97110500085B44 /* data-packet-dim4triangulation.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-packet-dim4triangulation.docbook"; sourceTree = "<group>"; };
 		05685FEC1F97110500085B44 /* data-surface.docbook */ = {isa = PBXFileReference; lastKnownFileType = text; path = "data-surface.docbook"; sourceTree = "<group>"; };
-		05685FED1F97116B00085B44 /* fix-bundle-paths */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "fix-bundle-paths"; sourceTree = "<group>"; };
 		05685FEF1F9713D900085B44 /* README.txt */ = {isa = PBXFileReference; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05685FF01F9713D900085B44 /* testutils.sh */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = testutils.sh; sourceTree = "<group>"; };
 		0568741F20C5D868001C435B /* tangle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tangle.h; sourceTree = "<group>"; };
@@ -6423,7 +6421,6 @@
 				0564A4221811D91E002CC2AE /* examplesaction.cpp */,
 				0564A4231811D91E002CC2AE /* examplesaction.h */,
 				0564A4241811D91E002CC2AE /* exports.cpp */,
-				05685FED1F97116B00085B44 /* fix-bundle-paths */,
 				0564A4251811D91E002CC2AE /* foreign */,
 				0564A4411811D91E002CC2AE /* iconcache.cpp */,
 				0564A4421811D91E002CC2AE /* iconcache.h */,
@@ -6696,7 +6693,6 @@
 			children = (
 				05685F661F970E6100085B44 /* cmakelint.pl */,
 				05685F671F970E6200085B44 /* distcheck */,
-				05685F6B1F970E6400085B44 /* index2gloss */,
 				05685F6F1F970E6500085B44 /* Makefile */,
 				05685F6E1F970E6500085B44 /* README.txt */,
 				05685F6C1F970E6400085B44 /* RELEASE.txt */,
@@ -8273,7 +8269,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/bash;
-			shellScript = "# We have work to do if we bundle our own copy of Python.\nif [ -n \"${REGINA_PYTHON_FRAMEWORK}\" ]; then\n  fwDir=\"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/${REGINA_PYTHON_FRAMEWORK}.framework\n  versionPath=`find \"$fwDir\"/Versions -type d -depth 1`\n  version=`basename \"$versionPath\"`\n  \n  # Sanity checks:\n  if [ ! -e \"$versionPath/${REGINA_PYTHON_FRAMEWORK}\" ]; then\n    echo \"ERROR: Missing framework library from $versionPath\"\n    exit 1\n  fi\n  if [ ! -d \"$versionPath/Resources/Python.app\" ]; then\n    echo \"ERROR: Missing Python.app from $versionPath\"\n    exit 1\n  fi\n  \n  # Remove the broken symlink to headers that Xcode removed.\n  if [ -d \"$versionPath\"/include ]; then\n    rm \"$versionPath\"/include/python$version\n    rmdir \"$versionPath\"/include\n  fi\n  \n  # Change the Python bundle IDs to be specific to Regina.\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Info.plist\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Python.app/Contents/Info.plist\n  \n  # From here on we re-sign *everything* with our own signature,\n  # inside-out, one file at a time.\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/${REGINA_PYTHON_FRAMEWORK}\n\n  # Executables need hardened runtime (for website distribution)\n  # and sandboxing (for App Store distribution).\n  for i in bin/python$version Resources/Python.app/Contents/MacOS/Python; do\n    file=\"$versionPath\"/$i\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --prefix net.sourceforge.regina.py. \\\n      --entitlements \"${SRCROOT}\"/utils/bundle/Utils.entitlements \\\n      --options runtime \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  for file in \"$versionPath\"/lib/python$version/lib-dynload/*.so; do\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --preserve-metadata=identifier,entitlements \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  # Strip out some problematic things if we are sandboxed:\n  if ( grep sandbox \"${SRCROOT}\"/utils/bundle/Utils.entitlements >/dev/null ); then\n    # .../bin/pythonX.Y will crash. We don't need it anyway, and we\n    # shouldn't pretend to offer the user a generic python that is sandboxed.\n    if [ -d \"$versionPath\"/bin ]; then\n      rm \"$versionPath\"/bin/python*\n      rm \"$versionPath\"/bin/pydoc*\n      rm \"$versionPath\"/bin/2to3*\n      rmdir \"$versionPath\"/bin\n    fi\n    \n    # Remove modules that contain \"private API calls\" that Apple disallows:\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_curses.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_curses_panel.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_tkinter.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_lzma.*\n    rm -rf \"$versionPath\"/lib/python$version/curses\n    rm -rf \"$versionPath\"/lib/python$version/tkinter\n    rm -f \"$versionPath\"/lib/python$version/lzma.py\n    \n    # Remove SSL so we are not exporting encryption:\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_ssl.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_hashlib.*\n    rm -f \"$versionPath\"/lib/python$version/ssl.py\n    rm -f \"$versionPath\"/lib/python$version/hashlib.py\n    \n    # Remove readline, which locks up in a sandboxed environment:\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/readline.*\n  fi\n\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --options runtime \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/Resources/Python.app\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"\nfi\n";
+			shellScript = "# We have work to do if we bundle our own copy of Python.\nif [ -n \"${REGINA_PYTHON_FRAMEWORK}\" ]; then\n  fwDir=\"${CONFIGURATION_BUILD_DIR}\"/Regina.app/Contents/Frameworks/${REGINA_PYTHON_FRAMEWORK}.framework\n  versionPath=`find \"$fwDir\"/Versions -type d -depth 1`\n  version=`basename \"$versionPath\"`\n  \n  # Sanity checks:\n  if [ ! -e \"$versionPath/${REGINA_PYTHON_FRAMEWORK}\" ]; then\n    echo \"ERROR: Missing framework library from $versionPath\"\n    exit 1\n  fi\n  if [ ! -d \"$versionPath/Resources/Python.app\" ]; then\n    echo \"ERROR: Missing Python.app from $versionPath\"\n    exit 1\n  fi\n  \n  # Remove the broken symlink to headers that Xcode removed.\n  if [ -d \"$versionPath\"/include ]; then\n    rm \"$versionPath\"/include/python$version\n    rmdir \"$versionPath\"/include\n  fi\n  \n  # Change the Python bundle IDs to be specific to Regina.\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Info.plist\n  plutil -replace CFBundleIdentifier -string net.sourceforge.regina.Python \"$versionPath\"/Resources/Python.app/Contents/Info.plist\n  \n  # From here on we re-sign *everything* with our own signature,\n  # inside-out, one file at a time.\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/${REGINA_PYTHON_FRAMEWORK}\n\n  # Executables need hardened runtime (for website distribution)\n  # and sandboxing (for App Store distribution).\n  for i in bin/python$version Resources/Python.app/Contents/MacOS/Python; do\n    file=\"$versionPath\"/$i\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --prefix net.sourceforge.regina.py. \\\n      --entitlements \"${SRCROOT}\"/python/bundle/Python.entitlements \\\n      --options runtime \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  for file in \"$versionPath\"/lib/python$version/lib-dynload/*.so; do\n    /usr/bin/codesign --force \\\n      --sign 'Apple Development:' \\\n      --preserve-metadata=identifier,entitlements \\\n      --timestamp=none \\\n      \"$file\"\n  done\n  \n  # Strip out some problematic things if we are sandboxed:\n  if ( grep sandbox \"${SRCROOT}\"/python/bundle/Python.entitlements >/dev/null ); then\n    # .../bin/pythonX.Y will crash. We don't need it anyway, and we\n    # shouldn't pretend to offer the user a generic python that is sandboxed.\n    if [ -d \"$versionPath\"/bin ]; then\n      rm \"$versionPath\"/bin/python*\n      rm \"$versionPath\"/bin/pydoc*\n      rm \"$versionPath\"/bin/2to3*\n      rmdir \"$versionPath\"/bin\n    fi\n    \n    # Remove modules that contain \"private API calls\" that Apple disallows:\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_curses.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_curses_panel.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_tkinter.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_lzma.*\n    rm -rf \"$versionPath\"/lib/python$version/curses\n    rm -rf \"$versionPath\"/lib/python$version/tkinter\n    rm -f \"$versionPath\"/lib/python$version/lzma.py\n    \n    # Remove SSL so we are not exporting encryption:\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_ssl.*\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/_hashlib.*\n    rm -f \"$versionPath\"/lib/python$version/ssl.py\n    rm -f \"$versionPath\"/lib/python$version/hashlib.py\n    \n    # Remove readline, which locks up in a sandboxed environment:\n    rm -f \"$versionPath\"/lib/python$version/lib-dynload/readline.*\n  fi\n\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --options runtime \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"/Resources/Python.app\n  /usr/bin/codesign --force \\\n    --sign 'Apple Development:' \\\n    --preserve-metadata=entitlements \\\n    --timestamp=none \\\n    \"$versionPath\"\nfi\n";
 		};
 		05DADB022192543B00DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
@@ -10292,7 +10288,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 5.96.0;
+				CURRENT_PROJECT_VERSION = 6.0.0;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -10319,7 +10315,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.96;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
@@ -10338,7 +10334,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "iPhone Developer";
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
-				CURRENT_PROJECT_VERSION = 5.96.0;
+				CURRENT_PROJECT_VERSION = 6.0.0;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -10361,7 +10357,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 5.96;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "net.sourceforge.regina.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = Regina;
 				PROVISIONING_PROFILE = "";
@@ -10969,7 +10965,7 @@
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5.96.4;
+				CURRENT_PROJECT_VERSION = 6.0.1;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -11005,7 +11001,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 5.96;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				REGINA_PYTHON_FRAMEWORK = "";
@@ -11022,7 +11018,7 @@
 				CODE_SIGN_ENTITLEMENTS = qtui/Regina.entitlements;
 				CODE_SIGN_IDENTITY = "Mac Developer";
 				COMBINE_HIDPI_IMAGES = YES;
-				CURRENT_PROJECT_VERSION = 5.96.4;
+				CURRENT_PROJECT_VERSION = 6.0.1;
 				DEVELOPMENT_TEAM = 67JTSH67LZ;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
@@ -11056,7 +11052,7 @@
 				INFOPLIST_PREPROCESS = YES;
 				LD_RUNPATH_SEARCH_PATHS = "@executable_path/../Frameworks";
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				MARKETING_VERSION = 5.96;
+				MARKETING_VERSION = 6.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.sourceforge.regina.macos.Regina;
 				PRODUCT_NAME = Regina;
 				REGINA_PYTHON_FRAMEWORK = "";

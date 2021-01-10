@@ -237,24 +237,25 @@
  <sect2 id="features-links">
   <title>Knots and Links</title>
   <para>
-   Since version&nbsp;5.96 (the first prerelease for version&nbsp;6.0),
+   Since version&nbsp;5.96,
    &regina; now offers native support for knots and links.
   </para>
   <para>
    You can create knots and links from Gauss or Dowker-Thistlethwaite codes,
+   from parameterised families of knots and links,
    or by construction of ready-made examples.
   </para>
   <para>
    &regina; computes several link invariants including the
-   Jones and HOMFLY-PT polynomials, allows you to build and study the
+   Jones and &homflypt; polynomials, allows you to build and study the
    underlying 4-valent graph and its tree decompositions, offers tools
    for isomorphism testing and isomorphism signatures, and allows you to
    build the knot/link complement as a 3-manifold triangulation.
   </para>
   <para>
    To manipulate knots and links, you can edit individual crossings,
-   perform Reidemeister moves, or run more sophisticated simplification
-   tools.
+   perform Reidemeister moves, take cablings, or run
+   sophisticated simplification tools.
   </para>
  </sect2>
 
@@ -272,18 +273,15 @@
    <xref linkend="bib-burton-facegraphs"/>,
    <xref linkend="bib-burton-nor10"/> and
    <xref linkend="bib-burton-genus"/> for details.
-   There is also an &mpi; version that
-   can be distributed across a large number of machines for
-   use on high-performance clusters.
   </para>
   <para>
-   &regina; ships with a several
+   &regina; ships with several
    census databases, including closed 3-manifold triangulations
    <xref linkend="bib-burton-nor8"/>, <xref linkend="bib-burton-nor10"/>,
    <xref linkend="bib-burton-genus"/>, hyperbolic 3-manifolds
    <xref linkend="bib-burton-complete"/>,
    <xref linkend="bib-cuspedcensus"/>, <xref linkend="bib-closedhypcensus"/>,
-   and knot and link complements (tabulated by Joe Christy).
+   and knots and links <xref linkend="bib-burton-knots"/>.
   </para>
   <para>
    &regina; can also search for a given triangulation across these databases
@@ -461,6 +459,12 @@
    communicate with each other inside the same &python; session.
    See the <link linkend="python-snappy">&python; chapter</link>
    for details.
+  </para>
+  <para>
+   If you build &regina; from source, you have the option of
+   working with either &python;&nbsp;2 or &python;&nbsp;3.
+   (If you download a ready-made package, then the package maintainer
+   will have made this choice for you.)
   </para>
  </sect2>
 

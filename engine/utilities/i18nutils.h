@@ -289,6 +289,8 @@ class REGINA_API IConvStream : public std::ostream {
         IConvStream& operator = (const IConvStream&) = delete;
 };
 
+/*@}*/
+
 // Inline functions for IConvStreamBuffer
 
 inline IConvStreamBuffer::IConvStreamBuffer() :

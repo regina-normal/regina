@@ -124,6 +124,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-crossings">alternating links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>angle structures</primaryie>
   <secondaryie><link linkend="angles">definition</link></secondaryie>
   <secondaryie><link linkend="angles-creation">enumerating vertex
@@ -164,6 +168,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>blackboard framing</primaryie>
+  <seeie>See: framings, for links</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>book closing move</primaryie>
   <seeie>See: elementary moves</seeie>
  </indexentry>
@@ -185,8 +194,12 @@
 
  <indexentry>
   <primaryie>boundary components</primaryie>
-  <secondaryie><link linkend="tri-tribdry">triangulating</link></secondaryie>
-  <secondaryie><link linkend="tri-bdrycomponents">viewing</link></secondaryie>
+  <secondaryie><link linkend="surfaces-boundary">counting, for normal
+   surfaces</link></secondaryie>
+  <secondaryie><link linkend="tri-tribdry">triangulating, for
+   triangulations</link></secondaryie>
+  <secondaryie><link linkend="tri-bdrycomponents">viewing, for
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -215,6 +228,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>cabling of links</primaryie>
+  <seeie>See: parallel cables</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>calculation engine</primaryie>
   <secondaryie><link linkend="python">accessing</link></secondaryie>
   <secondaryie><link linkend="python-docs">documentation</link></secondaryie>
@@ -238,6 +256,10 @@
    triangulations (command-line)</link></secondaryie>
   <secondaryie><link linkend="tri-census-creation">creating a census of
    triangulations (&gui;)</link></secondaryie>
+  <secondaryie><link linkend="link-census-examples">examples, for
+   knots and links</link></secondaryie>
+  <secondaryie><link linkend="tri-census-examples">examples, for
+   triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation across the census databases (&gui;)</link></secondaryie>
   <secondaryie><link linkend="man-censuslookup">searching for a
@@ -255,11 +277,21 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-edit-crossings">changing
+   crossings</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>character encodings</primaryie>
   <secondaryie><link linkend="foreign">in
    imports and exports</link></secondaryie>
   <secondaryie><link linkend="python-i18n">in
    &python;</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>classical Gauss code</primaryie>
+  <seeie>See: Gauss code</seeie>
  </indexentry>
 
  <indexentry>
@@ -269,6 +301,16 @@
  <indexentry>
   <primaryie>close book</primaryie>
   <seeie>See: elementary moves</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>closed quadrilateral normal coordinates</primaryie>
+  <seeie>See: coordinate systems</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>closed quadrilateral-octagon almost normal coordinates</primaryie>
+  <seeie>See: coordinate systems</seeie>
  </indexentry>
 
  <indexentry>
@@ -330,13 +372,23 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-decomposition-component">component
-   decomposition</link></primaryie>
+  <primaryie><link linkend="link-complement">complement,
+   of a knot or link</link></primaryie>
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-components">components, viewing
-   in a triangulation</link></primaryie>
+  <primaryie>components</primaryie>
+  <secondaryie><link linkend="tri-decomposition-component">decomposing into,
+   for triangulations</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">viewing,
+   for links</link></secondaryie>
+  <secondaryie><link linkend="tri-components">viewing,
+   for triangulations</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>composite link</primaryie>
+  <secondaryie><link linkend="link-composewith">building</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -359,7 +411,12 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>connected sum</primaryie>
+  <primaryie>connected sum, for links</primaryie>
+  <seeie>See: composite link</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>connected sum, for triangulations</primaryie>
   <secondaryie><link linkend="tri-connsumwith">building</link></secondaryie>
   <secondaryie><link linkend="tri-decomposition-connsum">decomposition</link></secondaryie>
  </indexentry>
@@ -392,6 +449,15 @@
    different coordinate systems</link></secondaryie>
   <secondaryie><link linkend="surfaces-coords-coords">viewing in a
    different coordinate system</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>crossings, in links</primaryie>
+  <secondaryie><link linkend="link-edit-crossings">changing
+   (or switching)</link></secondaryie>
+  <secondaryie><link linkend="link-edit-crossings">resolving
+   (or splicing)</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">viewing</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -466,6 +532,12 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>diagram graphs, for links</primaryie>
+  <secondaryie><link linkend="link-graphs-tree">tree
+   decomposition of</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>disjoint normal surfaces</primaryie>
   <seeie>See: compatibility matrices for normal surfaces</seeie>
  </indexentry>
@@ -482,6 +554,15 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>Dowker-Thistlethwaite notation</primaryie>
+  <secondaryie><link linkend="link-new-dt">described</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">reconstructing knots
+   from Dowker-Thistlethwaite notation</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing
+   the Dowker-Thistlethwaite notation for a knot</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>drilling edges</primaryie>
   <seeie>See: edges, drilling out of a triangulation</seeie>
  </indexentry>
@@ -492,7 +573,7 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>dual graphs</primaryie>
+  <primaryie>dual graphs, for triangulations</primaryie>
   <secondaryie><link linkend="options-fpg-labels">labelling</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-tree">tree
    decomposition of</link></secondaryie>
@@ -578,7 +659,13 @@
 
  <indexentry>
   <primaryie>examples</primaryie>
-  <secondaryie><link linkend="tri-new-example">3-manifold
+  <secondaryie><link linkend="link-census-examples">census of prime
+   knots</link></secondaryie>
+  <secondaryie><link linkend="tri-census-examples">censuses of
+   triangulations</link></secondaryie>
+  <secondaryie><link linkend="link-new-example">creating, for knots and
+   links</link></secondaryie>
+  <secondaryie><link linkend="tri-new-example">creating, for
    triangulations</link></secondaryie>
   <secondaryie><link linkend="sessions">&python; scripting</link></secondaryie>
   <secondaryie><link linkend="tutorial">sample data files</link></secondaryie>
@@ -587,9 +674,13 @@
  </indexentry>
 
  <indexentry>
-  <primaryie>exhaustive simplification of triangulations</primaryie>
-  <secondaryie><link linkend="man-retriangulate">from the command-line</link></secondaryie>
-  <secondaryie><link linkend="tri-simplify-exhaustive">in the &gui;</link></secondaryie>
+  <primaryie>exhaustive simplification</primaryie>
+  <secondaryie><link linkend="link-simplify-exhaustive">of
+   links</link></secondaryie>
+  <secondaryie><link linkend="man-retriangulate">of triangulations,
+   from the command-line</link></secondaryie>
+  <secondaryie><link linkend="tri-simplify-exhaustive">of triangulations,
+   in the &gui;</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -686,6 +777,10 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-cables">framings, for links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="troubleshooting">frequently asked
    questions</link></primaryie>
  </indexentry>
@@ -710,6 +805,18 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>Gauss code, classical or oriented</primaryie>
+  <secondaryie><link linkend="link-new-classical-gauss">classical Gauss codes,
+   described</link></secondaryie>
+  <secondaryie><link linkend="link-new-oriented-gauss">oriented Gauss codes,
+   described</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">reconstructing knots
+   from Gauss codes</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing
+   the Gauss codes for a knot</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>globally compatible normal surfaces</primaryie>
   <seeie>See: compatibility matrices for normal surfaces</seeie>
  </indexentry>
@@ -725,6 +832,15 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-gordian">Gordian unknot</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>graphs, diagram</primaryie>
+  <seeie>See: diagram graphs</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>graphs, face pairing</primaryie>
   <seeie>See: dual graphs</seeie>
  </indexentry>
@@ -734,6 +850,11 @@
  <indexentry>
   <primaryie><link linkend="tri-haken">Hakenness,
    testing</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-polynomials">&homflypt;
+   polynomial</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -854,11 +975,45 @@
    sets of triangulations</link></secondaryie>
  </indexentry>
 
+ </indexdiv><indexdiv id='taskindex-J'><title>&mdash; J &mdash;</title>
+
+ <indexentry>
+  <primaryie>Jenkins format for links</primaryie>
+  <secondaryie><link linkend="link-codes-jenkins">described</link></secondaryie>
+  <secondaryie><link linkend="link-codes-construct">reconstructing
+   links from Jenkins format</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-polynomials">Jones
+   polynomial</link></primaryie>
+ </indexentry>
+
  </indexdiv><indexdiv id='taskindex-K'><title>&mdash; K &mdash;</title>
+
+ <indexentry>
+  <primaryie><link linkend="link-polynomials">Kauffman
+   bracket</link></primaryie>
+ </indexentry>
 
  <indexentry>
   <primaryie>Kawauchi-Kojima invariants</primaryie>
   <seeie>See: torsion linking form</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>knot signatures</primaryie>
+  <secondaryie><link linkend="link-new-knotsig">described</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">reconstructing knots
+   from knot signatures</link></secondaryie>
+  <secondaryie><link linkend="link-codes">viewing
+   the knot signature for a knot</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>knots</primaryie>
+  <seeie>See: links</seeie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-L'><title>&mdash; L &mdash;</title>
@@ -917,6 +1072,68 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>links, knots and</primaryie>
+  <secondaryie><link linkend="link-crossings">alternating</link></secondaryie>
+  <secondaryie><link linkend="link-cables">blackboard framing</link></secondaryie>
+  <secondaryie><link linkend="link-cables">cabling</link></secondaryie>
+  <secondaryie><link linkend="link-complement">complements</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">components,
+   viewing</link></secondaryie>
+  <secondaryie><link linkend="link-composewith">composite link,
+   building</link></secondaryie>
+  <secondaryie><link linkend="link-creation">creation</link></secondaryie>
+  <secondaryie><link linkend="link-edit-crossings">crossings,
+   changing (or switching)</link></secondaryie>
+  <secondaryie><link linkend="link-edit-crossings">crossings,
+   resolving (or splicing)</link></secondaryie>
+  <secondaryie><link linkend="link-crossings">crossings,
+   viewing</link></secondaryie>
+  <secondaryie><link linkend="link-graphs">diagram
+   graphs</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">Dowker-Thistlethwaite notation,
+   recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-codes">Dowker-Thistlethwaite notation,
+   viewing</link></secondaryie>
+  <secondaryie><link linkend="link-new-example">examples,
+   creating</link></secondaryie>
+  <secondaryie><link linkend="link-census-examples">examples,
+   from censuses</link></secondaryie>
+  <secondaryie><link linkend="link-cables">framings</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">Gauss code
+   (classical or oriented), recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-codes">Gauss code
+   (classical or oriented), viewing</link></secondaryie>
+  <secondaryie><link linkend="link-polynomials">&homflypt;
+   polynomial</link></secondaryie>
+  <secondaryie><link linkend="link-codes-construct">Jenkins format,
+   recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-codes">Jenkins format,
+   viewing</link></secondaryie>
+  <secondaryie><link linkend="link-polynomials">Jones
+   polynomial</link></secondaryie>
+  <secondaryie><link linkend="link-polynomials">Kauffman
+   bracket</link></secondaryie>
+  <secondaryie><link linkend="link-new-code">knot signature,
+   recreating from</link></secondaryie>
+  <secondaryie><link linkend="link-codes">knot signature,
+   viewing</link></secondaryie>
+  <secondaryie><link linkend="link-graphs-nice">nice tree
+   decompositions</link></secondaryie>
+  <secondaryie><link linkend="link-flip">orienting</link></secondaryie>
+  <secondaryie><link linkend="link-cables">parallel cables</link></secondaryie>
+  <secondaryie><link linkend="link-flip">reflecting</link></secondaryie>
+  <secondaryie><link linkend="link-reidemeister">Reidemeister
+   moves</link></secondaryie>
+  <secondaryie><link linkend="link-flip">reversing</link></secondaryie>
+  <secondaryie><link linkend="link-flip">rotating</link></secondaryie>
+  <secondaryie><link linkend="link-cables">Seifert framing</link></secondaryie>
+  <secondaryie><link linkend="link-simplify">simplification</link></secondaryie>
+  <secondaryie><link linkend="link-graphs-tree">tree
+   decompositions</link></secondaryie>
+ </indexentry>
+
+
+ <indexentry>
   <primaryie>links, vertex</primaryie>
   <seeie>See: vertex links</seeie>
  </indexentry>
@@ -966,11 +1183,6 @@
    packet tree</link></primaryie>
  </indexentry>
 
- <indexentry>
-  <primaryie>&mpi;</primaryie>
-  <seeie>See: parallel processing</seeie>
- </indexentry>
-
  </indexdiv><indexdiv id='taskindex-N'><title>&mdash; N &mdash;</title>
 
  <indexentry>
@@ -983,8 +1195,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-graphs-nice">nice tree
-   decomposition</link></primaryie>
+  <primaryie>nice tree decomposition</primaryie>
+  <secondaryie><link linkend="link-graphs-nice">for
+   links</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-nice">for
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1081,7 +1296,18 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>oriented Gauss code</primaryie>
+  <seeie>See: Gauss code</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-flip">orienting links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>orienting tetrahedra</primaryie>
+  <secondaryie><link linkend="tri-orient">reflecting
+   triangulations</link></secondaryie>
   <secondaryie><link linkend="tri-proporient">testing for consistent
    orientations</link></secondaryie>
  </indexentry>
@@ -1129,6 +1355,10 @@
   <primaryie>padlock</primaryie>
   <secondaryie><link linkend="packet-uneditable">in the packet
    tree</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-cables">parallel cables</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1227,8 +1457,24 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>reflecting</primaryie>
+  <secondaryie><link linkend="link-flip">links</link></secondaryie>
+  <secondaryie><link linkend="tri-orient">triangulations</link></secondaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>rehydrating triangulations</primaryie>
   <seeie>See: dehydrated triangulations</seeie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-simplify-exhaustive">Reidemeister graph,
+   searching</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-reidemeister">Reidemeister
+   moves</link></primaryie>
  </indexentry>
 
  <indexentry>
@@ -1246,8 +1492,21 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="link-edit-crossings">resolving
+   crossings</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie><link linkend="man-retriangulate">retriangulating
    manifolds</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-flip">reversing links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-flip">rotating links</link></primaryie>
  </indexentry>
 
  </indexdiv><indexdiv id='taskindex-S'><title>&mdash; S &mdash;</title>
@@ -1295,6 +1554,11 @@
  </indexentry>
 
  <indexentry>
+  <primaryie>Seifert framing</primaryie>
+  <seeie>See: framings, for links</seeie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>Seifert-Weber dodecahedral space</primaryie>
   <seeie>See: Weber-Seifert dodecahedral space</seeie>
  </indexentry>
@@ -1332,13 +1596,11 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-algebra-homfund">simplifying
-   group presentations</link></primaryie>
- </indexentry>
-
- <indexentry>
-  <primaryie><link linkend="tri-simplification">simplifying
-   triangulations</link></primaryie>
+  <primaryie>simplifying</primaryie>
+  <secondaryie><link linkend="tri-algebra-homfund">group
+   presentations</link></secondaryie>
+  <secondaryie><link linkend="link-simplify">links</link></secondaryie>
+  <secondaryie><link linkend="tri-simplification">triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1422,6 +1684,11 @@
    scripting</link></secondaryie>
  </indexentry>
 
+ <indexentry>
+  <primaryie>splicing crossings</primaryie>
+  <seeie>See: resolving crossings</seeie>
+ </indexentry>
+
  <indexentry id="idx-splitting-surfaces">
   <primaryie>splitting surfaces</primaryie>
   <secondaryie><link linkend="man-sigcensus">census of splitting
@@ -1500,7 +1767,16 @@
   <seeie>See: normal surfaces</seeie>
  </indexentry>
 
+ <indexentry>
+  <primaryie>switching crossings</primaryie>
+  <seeie>See: changing crossings</seeie>
+ </indexentry>
+
  </indexdiv><indexdiv id='taskindex-T'><title>&mdash; T &mdash;</title>
+
+ <indexentry>
+  <primaryie><link linkend="tri-proptxi">&txi; recognition</link></primaryie>
+ </indexentry>
 
  <indexentry>
   <primaryie><link linkend="options-python">tab size</link></primaryie>
@@ -1544,13 +1820,26 @@
  </indexentry>
 
  <indexentry>
+  <primaryie><link linkend="tri-proptxi">torus bundle
+   recognition</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie><link linkend="link-new-torus">torus knots and links,
+   creating</link></primaryie>
+ </indexentry>
+
+ <indexentry>
   <primaryie>tree</primaryie>
   <seeie>See: packet tree</seeie>
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="tri-graphs-tree">tree
-   decomposition</link></primaryie>
+  <primaryie>tree decomposition</primaryie>
+  <secondaryie><link linkend="link-graphs-tree">for
+   links</link></secondaryie>
+  <secondaryie><link linkend="tri-graphs-tree">for
+   triangulations</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1622,6 +1911,8 @@
    characteristic</link></secondaryie>
   <secondaryie><link linkend="tri-new-example">examples,
    creating</link></secondaryie>
+  <secondaryie><link linkend="tri-census-examples">examples,
+   from censuses</link></secondaryie>
   <secondaryie><link linkend="foreign-export">exporting to
    external files</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-dual">face pairing
@@ -1658,6 +1949,7 @@
    underlying 2-manifold</link></secondaryie>
   <secondaryie><link linkend="tri-recognition">recognising the
    underlying 3-manifold</link></secondaryie>
+  <secondaryie><link linkend="tri-orient">reflecting</link></secondaryie>
   <secondaryie><link linkend="tri-censuslookup">searching for a
    triangulation across the census databases</link></secondaryie>
   <secondaryie><link linkend="tri-simplification">simplification</link></secondaryie>
@@ -1671,6 +1963,8 @@
    reconstructing triangulation from</link></secondaryie>
   <secondaryie><link linkend="tri-propsplitting">splitting surface,
    testing for</link></secondaryie>
+  <secondaryie><link linkend="tri-proptxi">&txi;
+   recognition</link></secondaryie>
   <secondaryie><link linkend="tri-editgluings">tetrahedron face
    gluings, editing</link></secondaryie>
   <secondaryie><link linkend="tri-graphs-tree">tree

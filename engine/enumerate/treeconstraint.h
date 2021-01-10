@@ -834,6 +834,8 @@ class BanTorusBoundary : public BanConstraintBase {
         static bool supported(NormalCoords coords);
 };
 
+/*@}*/
+
 }
 
 #include "enumerate/treelp.h"

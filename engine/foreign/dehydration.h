@@ -46,7 +46,8 @@ namespace regina {
 class Container;
 
 /**
- * \weakgroup foreign
+ * \addtogroup foreign Foreign File Formats
+ * Reading and writing foreign file formats
  * @{
  */
 

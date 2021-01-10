@@ -100,6 +100,8 @@ bool Triangulation<3>::fourFourMove(Edge<3>* e, int newAxis, bool check,
     #endif
 
     // Perform the 4-4 move as a 2-3 move followed by a 3-2 move.
+    // Note that, by using pachner(), we also preserve orientation
+    // (if the triangulation was originally oriented).
     TopologyLock lock(this);
     ChangeEventSpan span(this);
     Triangle<3>* tri23 = (newAxis == 0 ?
@@ -396,6 +398,10 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
 
         Perm<4> bottomFacePerm = Perm<4>(oldVertices[edgeEnd],
             oldVertices[otherEdgeEnd], oldVertices[2], oldVertices[3]);
+        if (bottomFacePerm.sign() < 0) {
+            // Switch vertices 2,3 in newTet so that we can preserve orientation.
+            bottomFacePerm = bottomFacePerm * NPerm<4>(2, 3);
+        }
 
         if (adjTop) {
             Perm<4> topGluing = top->adjacentGluing(topFace) *

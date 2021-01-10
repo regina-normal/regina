@@ -68,7 +68,7 @@ template <typename T> class Laurent2;
 template <int> class Triangulation;
 
 /**
- * Indicates one of the standard framing of a knot or link.
+ * Indicates one of the standard framings of a knot or link.
  * Here a \e framing refers to a choice of normal vector field along the
  * knot or link.  Equivalently, a framing refers to a choice of longitude
  * on the torus bounding each component of the link.
@@ -1521,6 +1521,8 @@ class REGINA_API Link : public Packet {
          * component), then in such cases you can try the more powerful but
          * (much) slower simplifyExhaustive() instead.
          *
+         * This routine will never reflect or reverse the link.
+         *
          * \warning Running this routine multiple times upon the same link may
          * return different results, since the implementation makes random
          * decisions.  More broadly, the implementation of this routine
@@ -1543,6 +1545,8 @@ class REGINA_API Link : public Packet {
          * crossings) are not used in this routine.  Such moves do however
          * feature in intelligentSimplify().
          *
+         * This routine will never reflect or reverse the link.
+         *
          * \warning The implementation of this routine (and therefore
          * its results) may change between different releases of Regina.
          *
@@ -1561,6 +1565,9 @@ class REGINA_API Link : public Packet {
          * Attempts to simplify this knot diagram using a slow but
          * exhaustive search through the Reidemeister graph.  This routine is
          * more powerful but much slower than intelligentSimplify().
+         *
+         * Unlike intelligentSimplify(), this routine <b>could potentially
+         * reflect or reverse the link</b>.
          *
          * This routine is only available for knots at the present time.
          * If this link has multiple (or zero) components, then this
@@ -1650,6 +1657,11 @@ class REGINA_API Link : public Packet {
          * This routine iterates through all knot diagrams that can be reached
          * from this via Reidemeister moves, without ever exceeding
          * \a height additional crossings beyond the original number.
+         * With the current implementation, these diagrams <b>could become
+         * reflected and/or reversed</b>, and moreover each diagram will only be
+         * considered once up to reflection and/or reversal; be aware that this
+         * behaviour could change and/or become configurable in a future version
+         * of Regina.
          *
          * For every such knot diagram (including this starting
          * diagram), this routine will call \a action (which must
@@ -1872,6 +1884,7 @@ class REGINA_API Link : public Packet {
          *
          * @param k the number of parallel copies to create.
          * This must be non-negative.
+         * @param framing the framing under which these copies will be parallel.
          * @return \a k parallel copies of this link, as a newly-created object.
          */
         Link* parallel(int k, Framing framing = FRAMING_SEIFERT) const;
@@ -1972,7 +1985,7 @@ class REGINA_API Link : public Packet {
          * polynomial", Algebraic & Geometric Topology 2 (2002), 337-370, you
          * can simply take the polynomial returned by this routine and replace
          * the variable <i>x</i> (which represents the square root of \a t)
-         * with the expression -</i>q</i>.
+         * with the expression -<i>q</i>.
          *
          * To pretty-print this polynomial for human consumption, you can
          * call <tt>Laurent::str(Link::jonesVar)</tt>.
@@ -2744,6 +2757,8 @@ class REGINA_API Link : public Packet {
          * non-negative.
          * @param q the second parameter of the new torus link; this must
          * also be non-negative.
+         * @param positive \c true if the crossings in the new torus link
+         * should be positive, or \c false if they should be negative.
          */
         void insertTorusLink(int p, int q, bool positive = true);
 
@@ -2780,10 +2795,10 @@ class REGINA_API Link : public Packet {
          * As an example, you can construct the left-hand trefoil and
          * the Hopf link as follows:
          *
-         * \pre
+         * \code
          * trefoil = Link::fromData({ -1, -1, -1 }, { 1, -2, 3, -1, 2, -3 });
          * hopf = Link::fromData({ +1, +1 }, { 1, -2 }, { -1, 2 });
-         * \endpre
+         * \endcode
          *
          * The topology of the link is defined precisely by this data, but the
          * precise embedding of the diagram in the plane remains ambiguous.
@@ -3755,7 +3770,7 @@ class REGINA_API ArcIterator {
          * from the upper or lower strand respectively.  For a
          * past-the-end iterator, this should always be \c false.
          */
-        ArcIterator(const Link& link, size_t index = 0, bool upper = false);
+        ArcIterator(const Link& link, size_t crossing = 0, bool upper = false);
 
         /**
          * Preincrement operator.

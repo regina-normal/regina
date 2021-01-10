@@ -153,6 +153,8 @@ class GlobalArray {
          * This routine must be called for each set of template
          * parameters before the first object of this class is wrapped.
          *
+         * @param m the Python module in which these wrappers should be
+         * installed.
          * @param className the name that will be assigned to this
          * class in Python.
          */
@@ -364,6 +366,8 @@ class GlobalArray2D {
          * This routine must be called for each set of template
          * parameters before the first object of this class is wrapped.
          *
+         * @param m the Python module in which these wrappers should be
+         * installed.
          * @param className the name that will be assigned to this
          * class in Python.
          */
@@ -588,6 +592,8 @@ class GlobalArray3D {
          * This routine must be called for each set of template
          * parameters before the first object of this class is wrapped.
          *
+         * @param m the Python module in which these wrappers should be
+         * installed.
          * @param className the name that will be assigned to this
          * class in Python.
          */

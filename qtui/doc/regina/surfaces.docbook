@@ -221,6 +221,55 @@
           </para>
          </glossdef>
         </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Closed quad (non-spun)</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These are the same 3<replaceable>n</replaceable>-dimensional
+           <firstterm>quadrilateral coordinates</firstterm> as before,
+           but the enumeration includes extra constraints to ensure the list
+           includes closed surfaces only.
+           The resulting solution space is the space
+           <replaceable>Q</replaceable><subscript>0</subscript>,
+           as described in <xref linkend="bib-quadclosed"/>,
+           and will not contain any spun-normal surfaces.
+          </para>
+          <para>
+           This coordinate system can only be used with oriented ideal
+           triangulations that have precisely one torus cusp and no
+           other boundary components or internal vertices.
+           &regina; will tell you if you try to use this coordinate
+           system with a triangulation that is not suitable.
+          </para>
+         </glossdef>
+        </glossentry>
+        <glossentry>
+         <glossterm><guilabel>Closed quad-oct (non-spun)</guilabel></glossterm>
+         <glossdef>
+          <para>
+           These are the same 6<replaceable>n</replaceable>-dimensional
+           <firstterm>quadrilateral-octagon coordinates</firstterm> as before,
+           but the enumeration includes extra constraints to ensure the list
+           includes closed surfaces only.
+           The resulting solution space will not contain any spun-normal
+           surfaces.
+           See <xref linkend="bib-quadclosed"/> for further information
+           on the normal (as opposed to almost normal) variant of this
+           coordinate system.
+          </para>
+          <para>
+           Like closed quad coordinates,
+           this coordinate system can only be used with oriented ideal
+           triangulations that have precisely one torus cusp and no
+           other boundary components or internal vertices.
+           &regina; will tell you if you try to use this coordinate
+           system with a triangulation that is not suitable.
+          </para>
+          <para>
+           This system supports almost normal surfaces.
+          </para>
+         </glossdef>
+        </glossentry>
        </glosslist>
       </para>
       <para id="hypersurfaces-selectcoords">

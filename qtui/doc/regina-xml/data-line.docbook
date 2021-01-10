@@ -34,10 +34,12 @@ line ::= (#PCDATA)</synopsis>
  <refsect1>
   <title>Description</title>
   <para>
-   This element (used to store a &python; script one line at a time) has
-   been replaced with &xml-text; (which stores the entire script at once).
+   This element (used to store a &python; script one line at a time) was
+   replaced in &regina;&nbsp;4.96 with &xml-text;, which stores the entire
+   script at once.
    The old &xml-line; element has been kept for backward compatibility,
-   but any new code that writes data files should use a single &xml-text;
+   in that &regina; still understands it when reading data files; however,
+   any new code that writes data files should use a single &xml-text;
    element instead.
   </para>
   <para>

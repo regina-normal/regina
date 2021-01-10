@@ -47,8 +47,14 @@ Notes:
 """
 
 import atexit
-import builtins
 import __main__
+
+# The original rlcompleter simply imports the builtins module.
+# However, we need to maintain compatibility with python 2 also.
+try:
+    import builtins
+except:
+    import __builtin__ as builtins
 
 __all__ = ["Completer"]
 

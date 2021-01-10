@@ -146,6 +146,16 @@
       </imageobject>
      </inlinemediaobject>
     </para>
+    <tip id="tri-census-examples"><para>
+     You can see many more examples by looking through the various
+     censuses that are shipped with &regina;'s example data files.
+     Look inside the
+     <menuchoice>
+      <guimenu>File</guimenu>
+      <guisubmenu>Open Example</guisubmenu>
+     </menuchoice>
+     menu and explore.
+    </para></tip>
    </sect3>
    <sect3 id="tri-new-isosig">
     <title>Isomorphism Signature</title>
@@ -1756,8 +1766,8 @@
     <link linkend="tri-recognition">recognition tab</link> instead.
     The recognition tab combines the results of this combinatorial
     recognition with slower but stronger routines, including
-    3-sphere, 3-ball and solid torus recognition, census lookup,
-    and more.
+    3-sphere, 3-ball, solid torus and &txi; recognition,
+    census lookup, and more.
    </para></tip>
    <para>
     <inlinemediaobject>
@@ -1947,7 +1957,7 @@
     techniques,
     and also computes other high-level properties of the triangulation.
     It offers a combination of slow but exact procedures
-    (such as 3-sphere, 3-ball and solid torus recognition),
+    (such as 3-sphere, 3-ball, solid torus and &txi; recognition),
     and fast "opportunistic" procedures such as combinatorial recognition
     and census lookup.
    </para>
@@ -2034,6 +2044,20 @@
        3-manifolds with real boundary triangles.
        For ideal triangulations, the ideal vertices will be treated as
        though they were truncated.
+      </para></glossdef>
+     </glossentry>
+     <glossentry id="tri-proptxi">
+      <glossterm><guilabel>&txi;</guilabel></glossterm>
+      <glossdef><para>
+       Determines whether this is a triangulation of the product of the
+       torus with an interval.
+       Again this uses a complete, exact algorithm that guarantees to
+       terminate with the correct result; this is a modification of
+       an algorithm due to Haraway <xref linkend="bib-txi"/>.
+      </para><para>
+       This property is shown for ideal triangulations as well as
+       3-manifolds with real boundary triangles (or indeed any mix of the two).
+       Any ideal vertices will be treated as though they were truncated.
       </para></glossdef>
      </glossentry>
      <glossentry id="tri-prop0eff">
@@ -2621,6 +2645,14 @@
     boundary tetrahedra (in 4-D) as small as it can, though again
     there is no guarantee of reaching a global minimum.
    </para>
+   <note>
+    <para>
+     If your triangulation is oriented, then the fast simplification process
+     described above will preserve the orientation of your triangulation.
+     This is <emphasis>not</emphasis> true of the exhaustive process
+     described below.
+    </para>
+   </note>
    <sect3 id="tri-simplify-exhaustive">
     <title>Exhaustive Simplification</title>
     <para>
@@ -2684,6 +2716,14 @@
      of tetrahedra.  If you continue to press <guilabel>Keep trying</guilabel>
      over and over, you may well run out of time or memory (or both).
     </para></warning>
+    <warning>
+     <para>
+      Unlike the fast simplification process when you first press the
+      <guilabel>Simplify</guilabel> button, this exhaustive
+      simplification process does <emphasis>not</emphasis> preserve the
+      orientation of an oriented triangulation.
+     </para>
+    </warning>
    </sect3>
   </sect2>
 
@@ -2734,6 +2774,12 @@
     You may continue to apply one move after another.  When you are done,
     press <guibutton>Close</guibutton> to close the elementary move box.
    </para>
+   <note>
+    <para>
+     If your triangulation is oriented, then every move that is offered
+     will preserve the orientation of your triangulation.
+    </para>
+   </note>
    <para>
     We only give a brief summary of the various types of move here.
     The full details are in the <link linkend="python-docs">&api;
@@ -3111,6 +3157,25 @@
     </inlinemediaobject>
    </para>
    <para>
+    You can reorder the vertices of each tetrahedron to have the
+    <emphasis>opposite</emphasis> orientation by selecting
+    <menuchoice>
+     <guimenu>Triangulation</guimenu>
+     <guimenuitem>Reflect</guimenuitem>
+    </menuchoice>
+    from the menu. Regardless of whether the triangulation is orientable
+    and/or oriented, every tetrahedron will have its orientation
+    reversed. This will change the vertex numbers in each tetrahedron,
+    but not the tetrahedron numbers themselves.
+   </para>
+   <para>
+    <inlinemediaobject>
+     <imageobject>
+      <imagedata fileref="tri-reflect.png"/>
+     </imageobject>
+    </inlinemediaobject>
+   </para>
+   <para>
     To convert a non-orientable triangulation into its orientable double cover,
     select
     <menuchoice>
@@ -3199,8 +3264,7 @@
        If necessary, &regina; will create real boundary components
        (formed from unglued triangular faces of tetrahedra).
        This happens, for instance, when the edge runs between two
-       distinct internal vertices (so the drilling produces a sphere boundary),
-       or when the edge touches a pre-existing real boundary component.
+       distinct internal vertices (so the drilling produces a sphere boundary).
       </para>
      </listitem>
      <listitem>
@@ -3209,6 +3273,15 @@
        &regina; will do nothing, and instead show a message explaining why.
        This happens, for example, if the chosen edge connects an
        internal vertex to a boundary component (either real or ideal).
+      </para>
+     </listitem>
+     <listitem>
+      <para>
+       If the edge runs between two boundary components where at least one
+       is real, then &regina; will refuse to drill (since this could produce
+       an enormous number of tetrahedra).  You could try converting your
+       triangulation to an ideal triangulation instead, since &regina; will
+       happily drill an edge between two ideal vertices.
       </para>
      </listitem>
     </itemizedlist>
@@ -3243,7 +3316,7 @@
    </para>
    <para>
     To form this connected sum, first open the the triangulation
-    <replaceable>X</replaceable> for viewing, and then select
+    <replaceable>X</replaceable> for editing, and then select
     <menuchoice>
      <guimenu>3-D&nbsp;Triangulation</guimenu>
      <guimenuitem>Connected Sum With</guimenuitem>

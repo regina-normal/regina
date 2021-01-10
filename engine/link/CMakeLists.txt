@@ -38,6 +38,7 @@ if (${REGINA_INSTALL_DEV})
     examplelink.h
     gauss-impl.h
     gauss-tangle-impl.h
+    graph.h
     link.h
     modellinkgraph.h
     tangle.h
