@@ -1272,13 +1272,14 @@ class REGINA_API GroupPresentation :
 
 #ifdef __DOXYGEN
         /**
-         * A Sage-only routine that returns a copy of this group presentation
-         * in a format native to Sage.
+         * A SageMath-only routine that returns a copy of this group
+         * presentation in a format native to SageMath.
          *
          * \ifacescpp Not present.
-         * \ifacespython Only present when run within Sage.
+         * \ifacespython Only present when run within SageMath.
          *
-         * @return a copy of this group as a mathematical object native to Sage.
+         * @return a copy of this group as a mathematical object native to
+         * SageMath.
          */
         FinitelyPresentedGroup sage() const;
 #endif
