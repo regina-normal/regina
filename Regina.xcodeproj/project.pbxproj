@@ -8324,7 +8324,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "custom=\"${SRCROOT}\"/qtui/doc/ksgmltools2/customization\ndtd=\"${custom}\"/dtd\nsheet=\"${custom}\"/regina.xsl\n\nfor i in regina regina-xml; do\n  input=\"${SRCROOT}\"/qtui/doc/$i\n  output=\"${BUILD_DIR}\"/docs-$i\n  /usr/bin/xsltproc --path \"$dtd\" -o \"${output}\"/ \"$sheet\" \"${input}\"/index.docbook\n  cp \"${input}\"/*.{css,png} \"${output}\"\ndone\n";
+			shellScript = "custom=\"${SRCROOT}\"/qtui/doc/ksgmltools2/customization\ndtd=\"${custom}\"/dtd\nsheet=\"${custom}\"/regina.xsl\n\nfor i in regina regina-xml; do\n  input=\"${SRCROOT}\"/qtui/doc/$i\n  output=\"${BUILD_DIR}\"/docs-$i\n  /usr/bin/xsltproc --path \"$dtd\" -o \"${output}\"/ \"$sheet\" \"${input}\"/index.docbook\n  cp \"${input}\"/*.{css,png} \"${output}\"\n  if [ $i = regina ]; then\n    # The handbook (but not the XML reference) includes HTML files also,\n    # such as the full text of the GPL.\n    cp \"${input}\"/*.html \"${output}\"\n  fi\ndone\n";
 		};
 		05DADB082192573400DC80E1 /* ShellScript */ = {
 			isa = PBXShellScriptBuildPhase;
