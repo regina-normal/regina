@@ -114,8 +114,6 @@ QWidget* LinkCodesUI::getInterface() {
 }
 
 void LinkCodesUI::refresh() {
-    bool unicode = ReginaPrefSet::global().displayUnicode;
-
     QString ans;
     if (type->currentIndex() == 1) {
         code->setWhatsThis("A description of this knot using "
@@ -184,7 +182,7 @@ void LinkCodesUI::refresh() {
     }
 
     /* Don't use unicode because we want clipboard copy to fetch pure ASCII.
-    if (unicode) {
+    if (ReginaPrefSet::global().displayUnicode) {
         ans.replace(' ', QChar(0x2002)); // enspace
         ans.replace('-', QChar(0x2212)); // minus
     }

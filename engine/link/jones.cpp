@@ -783,7 +783,6 @@ void Link::optimiseForJones(TreeDecomposition& td) const {
     int p, q;
     Crossing *c;
     int adj, adjRoot;
-    const TreeBag *desc;
     for (b = td.first(); b; b = b->next()) {
         for (i = 0; i < b->size(); ++i) {
             c = crossings_[b->element(i)];

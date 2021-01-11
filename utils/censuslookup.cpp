@@ -76,7 +76,6 @@ int main(int argc, char* argv[]) {
 #endif
 #endif
 
-    const regina::CensusHit* hit;
     for (int i = 1; i < argc; ++i) {
         regina::CensusHits* hits = regina::Census::lookup(argv[i]);
 
