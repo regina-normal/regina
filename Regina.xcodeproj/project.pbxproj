@@ -1201,9 +1201,7 @@
 		05721F121F97162600A83FFC /* pylink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F0C1F97162600A83FFC /* pylink.cpp */; };
 		05721F131F97162600A83FFC /* link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F0D1F97162600A83FFC /* link.cpp */; };
 		05721F141F97162600A83FFC /* link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F0D1F97162600A83FFC /* link.cpp */; };
-		05721F1A1F97165E00A83FFC /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F171F97165000A83FFC /* graph.cpp */; };
 		05721F1B1F97165E00A83FFC /* link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F191F97165000A83FFC /* link.cpp */; };
-		05721F1C1F97165E00A83FFC /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F171F97165000A83FFC /* graph.cpp */; };
 		05721F1D1F97165E00A83FFC /* link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721F191F97165000A83FFC /* link.cpp */; };
 		05754CC2258B38C100236ED7 /* laurent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CC1258B38C100236ED7 /* laurent2.cpp */; };
 		05754CC3258B38C100236ED7 /* laurent2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05754CC1258B38C100236ED7 /* laurent2.cpp */; };
@@ -2015,8 +2013,6 @@
 		05F23E1619C13432005B53B5 /* NewFilterController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1519C13432005B53B5 /* NewFilterController.mm */; };
 		05F23E1919C1418A005B53B5 /* NewSnapPeaController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F23E1819C1418A005B53B5 /* NewSnapPeaController.mm */; };
 		05F6D3B91C52CD5F007307F0 /* NewTri4Controller.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F6D3B61C52CB9B007307F0 /* NewTri4Controller.mm */; };
-		05F904531F97F9F800893670 /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F904511F97F9F300893670 /* graph.cpp */; };
-		05F904541F97F9F900893670 /* graph.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F904511F97F9F300893670 /* graph.cpp */; };
 		05F9561319B53E7900377BEC /* Tri3Recognition.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F9561219B53E7900377BEC /* Tri3Recognition.mm */; };
 		05F96C131809F59600C99F96 /* PacketTreeController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C121809F59600C99F96 /* PacketTreeController.mm */; };
 		05F96C17180A153A00C99F96 /* MBProgressHUD.m in Sources */ = {isa = PBXBuildFile; fileRef = 05F96C16180A153A00C99F96 /* MBProgressHUD.m */; };
@@ -8688,9 +8684,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				05721F1A1F97165E00A83FFC /* graph.cpp in Sources */,
 				051324F5258AF3FA001014F0 /* laurent.cpp in Sources */,
-				05F904531F97F9F800893670 /* graph.cpp in Sources */,
 				052FA11C1806088B00FAE4DF /* triangulation3.cpp in Sources */,
 				052FA10B1806088B00FAE4DF /* perm3.cpp in Sources */,
 				05FB46C81DD92CF900BB00E5 /* grouppresentation.cpp in Sources */,
@@ -8896,7 +8890,6 @@
 				052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				05F0A05D1DBF0B7000117BFC /* simplify.cpp in Sources */,
 				05DC137F1FEB86AB00171D66 /* pachner.cpp in Sources */,
-				05721F1C1F97165E00A83FFC /* graph.cpp in Sources */,
 				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
 				05D1174319EE01A1003BEC55 /* census2.cpp in Sources */,
 				05721EF41F97156600A83FFC /* gauss.cpp in Sources */,
@@ -9020,7 +9013,6 @@
 				052FA234180612DD00FAE4DF /* solve_equations.c in Sources */,
 				05A066C01DFA67D50047872E /* pluggedtorusbundle.cpp in Sources */,
 				05249EF61DBC16F1001FE29E /* isomorphism6.cpp in Sources */,
-				05F904541F97F9F900893670 /* graph.cpp in Sources */,
 				054C6A7A1DCC1FF4005373F0 /* example14.cpp in Sources */,
 				05FF4D3E1DB6BE310056D1EA /* SyntaxHighlighter.mm in Sources */,
 				05FB46F11DD92D5100BB00E5 /* markedabeliangroup.cpp in Sources */,

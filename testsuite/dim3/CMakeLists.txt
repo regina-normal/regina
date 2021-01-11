@@ -1,10 +1,11 @@
 # dim3
 
 # Files to compile
+#
+# Currently we exclude graph.cpp, since we no longer build-depend on boost.
 SET ( FILES
   connectedsumdecomp
   eltmoves
-  graph
   homologicaldata
   isomorphism
   triangulation3
