@@ -171,8 +171,8 @@
  *  they are returned in UTF-8.  Note that plain ASCII is a subset of
  *  UTF-8, so plain ASCII text is always fine to use.
  *
- *  Regina's XML data files are also stored using UTF-8.  Older
- *  versions of Regina used LATIN1 (the default for the Qt libraries)
+ *  Regina's XML data files are also stored using UTF-8.  Older versions of
+ *  Regina used LATIN1 (the default at the time for the Qt libraries)
  *  and did not specify an encoding in the XML header; however, Regina's
  *  file I/O routines are aware of this, and will convert older data into
  *  UTF-8 as it is loaded into memory (the files themselves are

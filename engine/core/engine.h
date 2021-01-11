@@ -83,7 +83,7 @@ REGINA_API int versionMinor();
  *
  * In Regina versions 4.4 and below, no particular attention was paid to
  * character encodings.  As a result, the GUI typically stored data in
- * LATIN1 (the default for the Qt libraries).
+ * LATIN1 (the default at the time for the Qt libraries).
  *
  * As of Regina 4.5, all strings are now stored in UTF-8 where possible.
  *
