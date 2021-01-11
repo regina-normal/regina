@@ -58,16 +58,6 @@
    need are:
    <variablelist>
     <varlistentry>
-     <term>Boost headers</term>
-     <listitem><para>
-      Look for a package named
-      <literal>libboost-dev</literal> or
-      <literal>boost-devel</literal>.
-      You only need the headers (there is no need for pre-built libraries
-      such as Boost.Regex or Boost.Python).
-     </para></listitem>
-    </varlistentry>
-    <varlistentry>
      <term><acronym>GNOME</acronym> &xml; library
       (<firstterm>libxml2</firstterm>)</term>
      <listitem><para>

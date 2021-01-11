@@ -293,14 +293,6 @@ MACRO_LOG_FEATURE(JANSSON_FOUND
   "http://www.digip.org/jansson/"
   TRUE)
 
-FIND_PACKAGE(Boost 1.55)
-INCLUDE_DIRECTORIES(${Boost_INCLUDE_DIR})
-MACRO_LOG_FEATURE(Boost_FOUND
-  "Boost (>= 1.55)"
-  "Essential: C++ components (headers only)"
-  "http://www.boost.org/"
-  TRUE)
-
 IF (NOT DISABLE_PYTHON)
   MESSAGE (STATUS "Searching for a Python installation")
 
