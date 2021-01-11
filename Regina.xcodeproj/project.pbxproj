@@ -4074,6 +4074,7 @@
 		05A73CD719B2F2180099C617 /* cuspchooser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cuspchooser.h; sourceTree = "<group>"; };
 		05A73CD919B2F24A0099C617 /* cusped-hyp-nor-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-nor-census.rga"; sourceTree = "<group>"; };
 		05A73CDA19B2F24A0099C617 /* cusped-hyp-or-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census.rga"; sourceTree = "<group>"; };
+		05A7DA8D25AC299E0045CE48 /* regina-size_t.patch */ = {isa = PBXFileReference; lastKnownFileType = text; path = "regina-size_t.patch"; sourceTree = "<group>"; };
 		05AA71ED1FB17DFF00186E30 /* flype.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = flype.cpp; sourceTree = "<group>"; };
 		05AC685A1DFE729100FF1A4C /* layeredtorusbundle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = layeredtorusbundle.cpp; sourceTree = "<group>"; };
 		05AC685B1DFE729100FF1A4C /* layeredtorusbundle.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = layeredtorusbundle.h; sourceTree = "<group>"; };
@@ -6237,6 +6238,7 @@
 				05431F591C40F3C9009BC072 /* reduction.cpp */,
 				05431F5A1C40F3C9009BC072 /* reduction.h */,
 				05431F5B1C40F3C9009BC072 /* regina.patch */,
+				05A7DA8D25AC299E0045CE48 /* regina-size_t.patch */,
 				05B7001D25AC2305003BAF5C /* regina-warnings.patch */,
 				05431F5C1C40F3C9009BC072 /* simplex.cpp */,
 				05431F5D1C40F3C9009BC072 /* simplex.h */,
