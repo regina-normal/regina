@@ -33,12 +33,12 @@
 // UI includes:
 #include "codecchooser.h"
 
-#include <QtAlgorithms>
+#include <algorithm>
 #include <QTextCodec>
 
 CodecChooser::CodecChooser() : QComboBox() {
     QList<QByteArray> all = QTextCodec::availableCodecs();
-    qSort(all);
+    std::sort(all.begin(), all.end());
 
     int defaultIndex = -1;
     for (int i = 0; i < all.size(); ++i) {
@@ -52,14 +52,13 @@ CodecChooser::CodecChooser() : QComboBox() {
 }
 
 QByteArray CodecChooser::selectedCodecName() {
-    // Latin1 is ok since codec names are just ASCII, no?
-    return currentText().toLatin1();
+    // UTF-8 is ok since codec names are just ASCII, no?
+    return currentText().toUtf8();
 }
 
 void CodecChooser::setCodecName(const QByteArray& codec) {
-    // Latin1 is ok since codec names are just ASCII, no?
-    int pos = findText(QString::fromLatin1(codec));
+    // UTF-8 is ok since codec names are just ASCII, no?
+    int pos = findText(QString::fromUtf8(codec));
     if (pos >= 0)
         setCurrentIndex(pos);
 }
-
