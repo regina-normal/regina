@@ -85,7 +85,7 @@ void EdgeIntChooser::select(regina::Edge<3>* option, int arg) {
 QString EdgeIntChooser::description(regina::Edge<3>* option, int arg) {
     if (option->degree() == 1) {
         const regina::EdgeEmbedding<3>& e0 = option->embedding(0);
-        return trUtf8("Edge %1 [%2 %3] — %4 (%5)")
+        return tr("Edge %1 [%2 %3] — %4 (%5)")
             .arg(option->index())
             .arg(argDesc_)
             .arg(arg)
@@ -96,9 +96,9 @@ QString EdgeIntChooser::description(regina::Edge<3>* option, int arg) {
         const regina::EdgeEmbedding<3>& e1 = option->embedding(1);
         QString base;
         if (option->degree() == 2)
-            base = trUtf8("Edge %1 [%2 %3] — %4 (%5), %6 (%7)");
+            base = tr("Edge %1 [%2 %3] — %4 (%5), %6 (%7)");
         else
-            base = trUtf8("Edge %1 [%2 %3] — %4 (%5), %6 (%7), ...");
+            base = tr("Edge %1 [%2 %3] — %4 (%5), %6 (%7), ...");
         return base
                 .arg(option->index())
                 .arg(argDesc_)

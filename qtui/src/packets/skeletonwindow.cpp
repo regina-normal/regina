@@ -393,7 +393,7 @@ QVariant Triangle3Model::data(const QModelIndex& index, int role) const {
                 if (type == Triangle<3>::PARACHUTE)
                     return prefix + tr("Parachute");
                 if (type == Triangle<3>::MOBIUS)
-                    return prefix + trUtf8("Möbius band");
+                    return prefix + tr("Möbius band");
                 if (type == Triangle<3>::CONE)
                     return prefix + tr("Cone");
                 if (type == Triangle<3>::HORN)

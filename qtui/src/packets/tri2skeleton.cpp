@@ -125,7 +125,7 @@ Tri2SkelCompUI::Tri2SkelCompUI(regina::Triangulation<2>* packet,
     label->setWhatsThis(msg);
     nBdryComps->setWhatsThis(msg);
 
-    label = new QLabel(trUtf8("χ:"), ui);
+    label = new QLabel(tr("χ:"), ui);
     grid->addWidget(label, 2, 7);
     eulerTri = new QLabel(ui);
     eulerTri->setAlignment(Qt::AlignRight | Qt::AlignVCenter);

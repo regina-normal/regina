@@ -131,10 +131,10 @@ QString LinkHeaderUI::summaryInfo(regina::Link* link) {
             signs = QObject::tr("<span style='color:" POS_COLOUR ";'>"
                 "all +ve</span>");
         else if (plus == 0)
-            signs = QObject::trUtf8("<span style='color:" NEG_COLOUR ";'>"
+            signs = QObject::tr("<span style='color:" NEG_COLOUR ";'>"
                 "all −ve</span>");
         else
-            signs = QObject::trUtf8("<span style='color:" POS_COLOUR ";'>"
+            signs = QObject::tr("<span style='color:" POS_COLOUR ";'>"
                 "%1 +ve</span>, <span style='color:" NEG_COLOUR ";'>"
                 "%2 −ve</span>").arg(plus).arg(minus);
     } else if (link->size() == 1) {
@@ -142,7 +142,7 @@ QString LinkHeaderUI::summaryInfo(regina::Link* link) {
             signs = QObject::tr("<span style='color:" POS_COLOUR ";'>"
                 "+ve</span>");
         else
-            signs = QObject::trUtf8("<span style='color:" NEG_COLOUR ";'>"
+            signs = QObject::tr("<span style='color:" NEG_COLOUR ";'>"
                 "−ve</span>");
     }
 

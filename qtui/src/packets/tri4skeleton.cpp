@@ -143,7 +143,7 @@ Tri4SkelCompUI::Tri4SkelCompUI(regina::Triangulation<4>* packet,
     label->setWhatsThis(msg);
     nBdryComps->setWhatsThis(msg);
 
-    label = new QLabel(trUtf8("χ (Triangulation):"), ui);
+    label = new QLabel(tr("χ (Triangulation):"), ui);
     grid->addWidget(label, 2, 7);
     eulerTri = new QLabel(ui);
     eulerTri->setAlignment(Qt::AlignRight | Qt::AlignVCenter);
@@ -154,7 +154,7 @@ Tri4SkelCompUI::Tri4SkelCompUI(regina::Triangulation<4>* packet,
     label->setWhatsThis(msg);
     eulerTri->setWhatsThis(msg);
 
-    eulerManifoldLabel = new QLabel(trUtf8("χ (Manifold):"), ui);
+    eulerManifoldLabel = new QLabel(tr("χ (Manifold):"), ui);
     grid->addWidget(eulerManifoldLabel, 3, 7);
     eulerManifold = new QLabel(ui);
     eulerManifold->setAlignment(Qt::AlignRight | Qt::AlignVCenter);

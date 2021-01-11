@@ -74,7 +74,7 @@ namespace {
         ExampleCreator<2>(QObject::tr("Annulus"), &regina::Example<2>::annulus),
         ExampleCreator<2>(QObject::tr("Disc"), &regina::Example<2>::disc),
         ExampleCreator<2>(QObject::tr("Klein bottle"), &regina::Example<2>::kb),
-        ExampleCreator<2>(QObject::trUtf8("Möbius band"), &regina::Example<2>::mobius),
+        ExampleCreator<2>(QObject::tr("Möbius band"), &regina::Example<2>::mobius),
         ExampleCreator<2>(QObject::tr("Projective plane"), &regina::Example<2>::rp2),
         ExampleCreator<2>(QObject::tr("Torus"), &regina::Example<2>::torus)
     };

@@ -56,7 +56,7 @@ QString R1UpArg::display() const {
         else
             ans = QObject::tr("%1 upper ").arg(s.crossing()->index());
         if (utf8)
-            ans += QObject::trUtf8("→ ");
+            ans += QObject::tr("→ ");
         else
             ans += "-> ";
         ++s;
@@ -74,7 +74,7 @@ QString R1UpArg::display() const {
 
     if (sign < 0) {
         if (utf8)
-            ans += QObject::trUtf8("−ve");
+            ans += QObject::tr("−ve");
         else
             ans += QObject::tr("-ve");
     } else
@@ -100,7 +100,7 @@ QString R2UpArg::display(int position) const {
         else
             ans = QObject::tr("%1 upper ").arg(s.crossing()->index());
         if (utf8)
-            ans += QObject::trUtf8("→ ");
+            ans += QObject::tr("→ ");
         else
             ans += "-> ";
         ++s;

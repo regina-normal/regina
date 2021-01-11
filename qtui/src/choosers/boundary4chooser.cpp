@@ -85,9 +85,9 @@ QString BoundaryComponent4Chooser::description(
         regina::Vertex<4>* v = option->vertex(0);
         QString desc;
         if (v->degree() == 1)
-            desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4)");
+            desc = tr("Ideal bdry comp %1 — Vertex %2 — %3 (%4)");
         else
-            desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4), ...");
+            desc = tr("Ideal bdry comp %1 — Vertex %2 — %3 (%4), ...");
         return desc.arg(option->index())
                 .arg(v->index())
                 .arg(v->front().simplex()->index())
@@ -96,9 +96,9 @@ QString BoundaryComponent4Chooser::description(
         regina::Vertex<4>* v = option->vertex(0);
         QString desc;
         if (v->degree() == 1)
-            desc = trUtf8("Invalid bdry comp %1 — Vertex %2 — %3 (%4)");
+            desc = tr("Invalid bdry comp %1 — Vertex %2 — %3 (%4)");
         else
-            desc = trUtf8("Invalid bdry comp %1 — Vertex %2 — %3 (%4), ...");
+            desc = tr("Invalid bdry comp %1 — Vertex %2 — %3 (%4), ...");
         return desc.arg(option->index())
                 .arg(v->index())
                 .arg(v->front().simplex()->index())
@@ -108,9 +108,9 @@ QString BoundaryComponent4Chooser::description(
             option->tetrahedron(0)->front();
         QString desc;
         if (option->countTetrahedra() == 1)
-            desc = trUtf8("Real bdry comp %1 — Tetrahedron %2 (%3)");
+            desc = tr("Real bdry comp %1 — Tetrahedron %2 (%3)");
         else
-            desc = trUtf8("Real bdry comp %1 — Tetrahedra %2 (%3), ...");
+            desc = tr("Real bdry comp %1 — Tetrahedra %2 (%3), ...");
         return desc.arg(option->index())
                 .arg(f0.simplex()->index())
                 .arg(f0.vertices().trunc4().c_str());

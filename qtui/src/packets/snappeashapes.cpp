@@ -186,9 +186,9 @@ bool CuspModel::setData(const QModelIndex& index, const QVariant& value,
         if ((! tri_->cusp(index.row())->vertex()->isLinkOrientable()) &&
                 l != 0) {
             ReginaSupport::sorry(0,
-                trUtf8("For non-orientable cusps, the filling coefficients "
+                tr("For non-orientable cusps, the filling coefficients "
                     "must be (±1, 0)."),
-                trUtf8("Although SnapPea can handle more general filling "
+                tr("Although SnapPea can handle more general filling "
                     "coefficients, Regina insists on (±1, 0) for "
                     "non-orientable cusps."));
             return false;

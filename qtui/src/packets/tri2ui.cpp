@@ -84,7 +84,7 @@ Tri2HeaderUI::Tri2HeaderUI(regina::Triangulation<2>* packet,
     header = new QLabel();
     header->setAlignment(Qt::AlignCenter);
     header->setMargin(10);
-    header->setWhatsThis(QObject::trUtf8(
+    header->setWhatsThis(QObject::tr(
         "Displays basic information about the surface, "
         "including the Euler characteristic χ."));
     uiLayout->addWidget(header);
@@ -155,7 +155,7 @@ QString Tri2HeaderUI::summaryInfo(regina::Triangulation<2>* tri) {
 
             // Special names for surfaces with boundary:
             if (genus == 1 && punctures == 1)
-                msg = QObject::trUtf8("Möbius band");
+                msg = QObject::tr("Möbius band");
             else {
                 if (genus == 1)
                     msg = QObject::tr("Projective plane");
@@ -173,7 +173,7 @@ QString Tri2HeaderUI::summaryInfo(regina::Triangulation<2>* tri) {
         }
     }
 
-    msg += QObject::trUtf8(" (χ = %1)").arg(tri->eulerChar());
+    msg += QObject::tr(" (χ = %1)").arg(tri->eulerChar());
     return msg;
 }
 

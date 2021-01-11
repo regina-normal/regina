@@ -208,7 +208,7 @@ QString FaceChooser<dim, subdim>::description(
     // However, it seems unlikely that this routine is a bottleneck, and
     // so we leave the code in its generic form for now.
     if (option->degree() == 1)
-        return trUtf8("%1 %2 — %3 (%4)")
+        return tr("%1 %2 — %3 (%4)")
             .arg(FaceName<subdim>::upper())
             .arg(option->index())
             .arg(option->front().simplex()->index())
@@ -217,7 +217,7 @@ QString FaceChooser<dim, subdim>::description(
         const regina::FaceEmbedding<dim, subdim>& e0 = option->embedding(0);
         const regina::FaceEmbedding<dim, subdim>& e1 = option->embedding(1);
         if (option->degree() == 2)
-            return trUtf8("%1 %2 — %3 (%4), %5 (%6)")
+            return tr("%1 %2 — %3 (%4), %5 (%6)")
                 .arg(FaceName<subdim>::upper())
                 .arg(option->index())
                 .arg(e0.simplex()->index())
@@ -225,7 +225,7 @@ QString FaceChooser<dim, subdim>::description(
                 .arg(e1.simplex()->index())
                 .arg(e1.vertices().trunc(subdim + 1).c_str());
         else
-            return trUtf8("%1 %2 — %3 (%4), %5 (%6), ...")
+            return tr("%1 %2 — %3 (%4), %5 (%6), ...")
                 .arg(FaceName<subdim>::upper())
                 .arg(option->index())
                 .arg(e0.simplex()->index())

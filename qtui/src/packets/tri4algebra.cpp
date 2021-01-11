@@ -166,8 +166,8 @@ void Tri4HomologyFundUI::fundGroupSimplified() {
 
 void Tri4HomologyFundUI::refreshLabels() {
     if (ReginaPrefSet::global().displayUnicode) {
-        labelH1->setText(QObject::trUtf8("H\u2081(M):"));
-        labelH2->setText(QObject::trUtf8("H\u2082(M):"));
+        labelH1->setText(QObject::tr("H\u2081(M):"));
+        labelH2->setText(QObject::tr("H\u2082(M):"));
     } else {
         labelH1->setText(QObject::tr("H1(M):"));
         labelH2->setText(QObject::tr("H2(M):"));

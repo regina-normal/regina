@@ -243,7 +243,7 @@ void HyperSummaryUI::refresh() {
         for (const std::string& hom : allHomClosed) {
             row = new QTreeWidgetItem();
             if (unicode)
-                row->setText(0, trUtf8("H\u2081 = %1").arg(hom.c_str()));
+                row->setText(0, tr("H\u2081 = %1").arg(hom.c_str()));
             else
                 row->setText(0, tr("H1 = %1").arg(hom.c_str()));
             row->setTextAlignment(0, Qt::AlignLeft);
@@ -289,7 +289,7 @@ void HyperSummaryUI::refresh() {
             for (const std::string& hom : allHomBounded) {
                 row = new QTreeWidgetItem();
                 if (unicode)
-                    row->setText(0, trUtf8("H\u2081 = %1").arg(hom.c_str()));
+                    row->setText(0, tr("H\u2081 = %1").arg(hom.c_str()));
                 else
                     row->setText(0, tr("H1 = %1").arg(hom.c_str()));
                 row->setTextAlignment(0, Qt::AlignLeft);

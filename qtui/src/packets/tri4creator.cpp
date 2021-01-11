@@ -75,11 +75,11 @@ namespace {
         ExampleCreator<4>(QObject::tr("4-sphere (minimal)"), &regina::Example<4>::sphere),
         ExampleCreator<4>(QObject::tr("4-sphere (simplex boundary)"), &regina::Example<4>::simplicialFourSphere),
         ExampleCreator<4>(QObject::tr("Cappell-Shaneson knot complement"), &regina::Example<4>::cappellShaneson),
-        ExampleCreator<4>(QObject::trUtf8("Product B³ × S¹"), &regina::Example<4>::ballBundle),
-        ExampleCreator<4>(QObject::trUtf8("Product S³ × S¹"), &regina::Example<4>::sphereBundle),
-        ExampleCreator<4>(QObject::trUtf8("ℝP⁴"), &regina::Example<4>::rp4),
-        ExampleCreator<4>(QObject::trUtf8("Twisted product B³ ×~ S¹"), &regina::Example<4>::twistedBallBundle),
-        ExampleCreator<4>(QObject::trUtf8("Twisted product S³ ×~ S¹"), &regina::Example<4>::twistedSphereBundle)
+        ExampleCreator<4>(QObject::tr("Product B³ × S¹"), &regina::Example<4>::ballBundle),
+        ExampleCreator<4>(QObject::tr("Product S³ × S¹"), &regina::Example<4>::sphereBundle),
+        ExampleCreator<4>(QObject::tr("ℝP⁴"), &regina::Example<4>::rp4),
+        ExampleCreator<4>(QObject::tr("Twisted product B³ ×~ S¹"), &regina::Example<4>::twistedBallBundle),
+        ExampleCreator<4>(QObject::tr("Twisted product S³ ×~ S¹"), &regina::Example<4>::twistedSphereBundle)
     };
 
     /**
@@ -124,7 +124,7 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
     area->setLayout(subLayout);
-    expln = QObject::trUtf8("<qt>Select the 3-manifold triangulation <i>M</i> "
+    expln = QObject::tr("<qt>Select the 3-manifold triangulation <i>M</i> "
         "that you wish to use to form the I-bundle "
         "<i>M</i>&nbsp;×&nbsp;I.</qt>");
     label = new QLabel(QObject::tr("Select a 3-manifold to build an "
@@ -139,15 +139,15 @@ Tri4Creator::Tri4Creator(ReginaMain* mainWindow) {
     subLayout->addWidget(iBundleFrom, 1);
     details->addWidget(area);
 
-    type->addItem(QObject::trUtf8("S¹-bundle"));
+    type->addItem(QObject::tr("S¹-bundle"));
     area = new QWidget();
     subLayout = new QVBoxLayout();
     subLayout->setContentsMargins(0, 0, 0, 0);
     area->setLayout(subLayout);
-    expln = QObject::trUtf8("<qt>Select the 3-manifold triangulation <i>M</i> "
+    expln = QObject::tr("<qt>Select the 3-manifold triangulation <i>M</i> "
         "that you wish to use to form the S¹-bundle "
         "<i>M</i>&nbsp;×&nbsp;S¹.</qt>");
-    label = new QLabel(QObject::trUtf8("Select a 3-manifold to build an "
+    label = new QLabel(QObject::tr("Select a 3-manifold to build an "
         "S¹-bundle from:"));
     label->setWhatsThis(expln);
     subLayout->addWidget(label);
@@ -243,7 +243,7 @@ regina::Packet* Tri4Creator::createPacket(regina::Packet*,
         regina::Triangulation<3>* from = dynamic_cast<regina::Triangulation<3>*>(
             s1BundleFrom->selectedPacket());
         if (! from) {
-            ReginaSupport::info(parentWidget, QObject::trUtf8(
+            ReginaSupport::info(parentWidget, QObject::tr(
                 "Please select a 3-manifold triangulation to build the "
                 "S¹-bundle from."));
             return 0;

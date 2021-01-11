@@ -102,7 +102,7 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
     sublayout->setContentsMargins(0, 0, 0, 0);
     sublayout->setSpacing(0);
     label = new QLabel(tr("<b>HOMFLY-PT</b>"), ui);
-    msg = trUtf8("The HOMFLY-PT polynomial of this link.<p>"
+    msg = tr("The HOMFLY-PT polynomial of this link.<p>"
         "There are two tightly related variants of this polynomial: "
         "one as a Laurent polynomial in the variables (α, <i>z</i>), and "
         "one as a Laurent polynomial in the variables (<i>l</i>, <i>m</i>).  "
@@ -112,9 +112,9 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
     sublayout->addWidget(label);
     sublayout->addStretch(1);
     btnAZ = new QRadioButton(ui);
-    btnAZ->setToolTip(trUtf8("Present the HOMFLY-PT polynomial "
+    btnAZ->setToolTip(tr("Present the HOMFLY-PT polynomial "
         "using the variant in variables (α, <i>z</i>)."));
-    btnAZ->setWhatsThis(trUtf8("Presents the HOMFLY-PT polynomial "
+    btnAZ->setWhatsThis(tr("Presents the HOMFLY-PT polynomial "
         "using the variant in variables (α, <i>z</i>).<p>"
         "There are two tightly related variants of the HOMFLY-PT polynomial: "
         "one as a Laurent polynomial in the variables (α, <i>z</i>), and "
@@ -123,9 +123,9 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
     sublayout->addWidget(btnAZ);
     sublayout->addSpacing(5);
     btnLM = new QRadioButton(ui);
-    btnLM->setToolTip(trUtf8("Present the HOMFLY-PT polynomial "
+    btnLM->setToolTip(tr("Present the HOMFLY-PT polynomial "
         "using the variant in variables (<i>l</i>, <i>m</i>)."));
-    btnLM->setWhatsThis(trUtf8("Presents the HOMFLY-PT polynomial "
+    btnLM->setWhatsThis(tr("Presents the HOMFLY-PT polynomial "
         "using the variant in variables (<i>l</i>, <i>m</i>).<p>"
         "There are two tightly related variants of the HOMFLY-PT polynomial: "
         "one as a Laurent polynomial in the variables (α, <i>z</i>), and "
@@ -164,7 +164,7 @@ LinkPolynomialUI::LinkPolynomialUI(regina::Link* packet,
     layout->addSpacing(10);
 
     label = new QLabel(tr("<b>Kauffman bracket</b>"), ui);
-    msg = trUtf8("The Kauffman bracket polynomial of this link.");
+    msg = tr("The Kauffman bracket polynomial of this link.");
     label->setWhatsThis(msg);
     layout->addWidget(label);
 
@@ -435,7 +435,7 @@ void LinkPolynomialUI::updatePreferences() {
 
 void LinkPolynomialUI::updateLabels() {
     if (ReginaPrefSet::global().displayUnicode) {
-        btnAZ->setText(trUtf8("(α, z)"));
+        btnAZ->setText(tr("(α, z)"));
     } else {
         btnAZ->setText(tr("(a, z)"));
     }

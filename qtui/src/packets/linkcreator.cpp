@@ -122,7 +122,7 @@ LinkCreator::LinkCreator(ReginaMain* mainWindow) {
     area->setLayout(subLayout);
     QBoxLayout* subSubLayout = new QHBoxLayout();
     subSubLayout->setContentsMargins(0, 0, 0, 0);
-    expln = QObject::trUtf8("<qt>A knot signature, "
+    expln = QObject::tr("<qt>A knot signature, "
         "oriented Gauss code, classical Gauss code, "
         "or Dowker-Thistlethwaite notation representing a knot.<p>"
         "At present, these codes can only be used for knots, not "

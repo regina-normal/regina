@@ -86,9 +86,9 @@ QString BoundaryComponent3Chooser::description(
         regina::Vertex<3>* v = option->vertex(0);
         QString desc;
         if (v->degree() == 1)
-            desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4)");
+            desc = tr("Ideal bdry comp %1 — Vertex %2 — %3 (%4)");
         else
-            desc = trUtf8("Ideal bdry comp %1 — Vertex %2 — %3 (%4), ...");
+            desc = tr("Ideal bdry comp %1 — Vertex %2 — %3 (%4), ...");
         return desc.arg(option->index())
                 .arg(v->index())
                 .arg(v->front().simplex()->index())
@@ -99,9 +99,9 @@ QString BoundaryComponent3Chooser::description(
         const regina::TriangleEmbedding<3>& f1 = option->triangle(1)->front();
         QString desc;
         if (option->countTriangles() == 2)
-            desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5)");
+            desc = tr("Real bdry comp %1 — Triangles %2 (%3), %4 (%5)");
         else
-            desc = trUtf8("Real bdry comp %1 — Triangles %2 (%3), %4 (%5), ...");
+            desc = tr("Real bdry comp %1 — Triangles %2 (%3), %4 (%5), ...");
         return desc.arg(option->index())
                 .arg(f0.simplex()->index())
                 .arg(f0.vertices().trunc3().c_str())

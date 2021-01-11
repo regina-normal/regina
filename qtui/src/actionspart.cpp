@@ -695,7 +695,7 @@ void ReginaMain::setupActions() {
         windowMenu = new QMenu(tr("&Window"));
 
     docMenu = new QMenu(windowTitle(), this);
-    docAction = new QAction(trUtf8("– Main window –"), this);
+    docAction = new QAction(tr("– Main window –"), this);
     connect(docAction, SIGNAL(triggered()), this, SLOT(raiseWindow()));
 
     docMenu->addAction(docAction);

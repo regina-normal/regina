@@ -83,7 +83,7 @@ QString CuspChooser::description(int option) {
     if (option == CUSP_ALL)
         return tr("All cusps");
 
-    return trUtf8("Cusp %1 — Vertex %2")
+    return tr("Cusp %1 — Vertex %2")
         .arg(option)
         .arg(tri_->cusp(option)->vertex()->markedIndex());
 }

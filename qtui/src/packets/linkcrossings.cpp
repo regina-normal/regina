@@ -162,26 +162,26 @@ QVariant CrossingModel::data(const QModelIndex& index, int role) const {
             if (ReginaPrefSet::global().displayUnicode) {
                 if (sign > 0) {
                     if (strand == 0)
-                        return trUtf8("%1₊").arg(crossing);
+                        return tr("%1₊").arg(crossing);
                     else
-                        return trUtf8("%1⁺").arg(crossing);
+                        return tr("%1⁺").arg(crossing);
                 } else {
                     if (strand == 0)
-                        return trUtf8("%1₋").arg(crossing);
+                        return tr("%1₋").arg(crossing);
                     else
-                        return trUtf8("%1⁻").arg(crossing);
+                        return tr("%1⁻").arg(crossing);
                 }
             } else {
                 if (sign > 0) {
                     if (strand == 0)
-                        return trUtf8("%1_+").arg(crossing);
+                        return tr("%1_+").arg(crossing);
                     else
-                        return trUtf8("%1^+").arg(crossing);
+                        return tr("%1^+").arg(crossing);
                 } else {
                     if (strand == 0)
-                        return trUtf8("%1_-").arg(crossing);
+                        return tr("%1_-").arg(crossing);
                     else
-                        return trUtf8("%1^-").arg(crossing);
+                        return tr("%1^-").arg(crossing);
                 }
             }
         }

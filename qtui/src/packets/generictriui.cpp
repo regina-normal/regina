@@ -91,7 +91,7 @@ GenericTriangulationUI<dim>::GenericTriangulationUI(Triangulation<dim>* packet,
     fVector = new QLabel();
     fVector->setAlignment(Qt::AlignCenter);
     fVector->setWordWrap(true);
-    fVector->setWhatsThis(QObject::trUtf8("<qt>Displays the f-vector "
+    fVector->setWhatsThis(QObject::tr("<qt>Displays the f-vector "
         "of this triangulation.  "
         "The f-vector is (f<sub>0</sub>, f<sub>1</sub>, …, f<sub>%1</sub>), "
         "where f<sub><i>k</i></sub> gives the number of <i>k</i>-faces.</qt>")
@@ -109,7 +109,7 @@ GenericTriangulationUI<dim>::GenericTriangulationUI(Triangulation<dim>* packet,
     divider->setFrameStyle(QFrame::HLine | QFrame::Sunken);
     layout->addWidget(divider);
 
-    QLabel* label = new QLabel(QObject::trUtf8(
+    QLabel* label = new QLabel(QObject::tr(
         "<qt>I cannot view trianguations of dimension ≥ 5 here in the "
         "graphical user interface.<p>"
         "You can, however, work with this triangulation in Python."));

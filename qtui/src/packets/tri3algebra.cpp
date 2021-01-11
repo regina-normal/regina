@@ -278,11 +278,11 @@ void Tri3HomologyFundUI::fundGroupSimplified() {
 
 void Tri3HomologyFundUI::refreshLabels() {
     if (ReginaPrefSet::global().displayUnicode) {
-        labelH1->setText(QObject::trUtf8("H\u2081(M):"));
-        labelH1Rel->setText(QObject::trUtf8("H\u2081(M, \u2202M):"));
-        labelH1Bdry->setText(QObject::trUtf8("H\u2081(\u2202M):"));
-        labelH2->setText(QObject::trUtf8("H\u2082(M):"));
-        labelH2Z2->setText(QObject::trUtf8("H\u2082(M ; \u2124\u2082):"));
+        labelH1->setText(QObject::tr("H\u2081(M):"));
+        labelH1Rel->setText(QObject::tr("H\u2081(M, \u2202M):"));
+        labelH1Bdry->setText(QObject::tr("H\u2081(\u2202M):"));
+        labelH2->setText(QObject::tr("H\u2082(M):"));
+        labelH2Z2->setText(QObject::tr("H\u2082(M ; \u2124\u2082):"));
     } else {
         labelH1->setText(QObject::tr("H1(M):"));
         labelH1Rel->setText(QObject::tr("H1(M, bdry M):"));
@@ -308,7 +308,7 @@ Tri3TuraevViroUI::Tri3TuraevViroUI(regina::Triangulation<3>* packet,
     layout->addLayout(paramsArea);
     paramsArea->addStretch(1);
 
-    QString expln = trUtf8("<qt>The argument <i>r</i> of the Turaev-Viro "
+    QString expln = tr("<qt>The argument <i>r</i> of the Turaev-Viro "
         "invariant(s) to calculate.  This argument describes the initial data "
         "for the invariant as described in <i>State sum invariants of "
         "3-manifolds and quantum 6j-symbols</i>, Turaev and Viro, "
@@ -537,7 +537,7 @@ void Tri3CellularInfoUI::refresh() {
         EulerChar->setText(QString::number(minfo.eulerChar()));
 
         if (unicode) {
-            H0H1H2H3->setText(QObject::trUtf8("H\u2080 = %1,  H\u2081 = %2,  "
+            H0H1H2H3->setText(QObject::tr("H\u2080 = %1,  H\u2081 = %2,  "
                     "H\u2082 = %3,  H\u2083 = %4").
                 arg(minfo.homology(0).utf8().c_str()).
                 arg(minfo.homology(1).utf8().c_str()).
@@ -789,7 +789,7 @@ QWidget* Tri3CellularInfoUI::getInterface() {
 
 void Tri3CellularInfoUI::refreshLabels() {
     if (ReginaPrefSet::global().displayUnicode)
-        labelBdryMap->setText(QObject::trUtf8(
+        labelBdryMap->setText(QObject::tr(
             "<qt>H\u2081(\u2202M &rarr; M): </qt>"));
     else
         labelBdryMap->setText(QObject::tr("<qt>H1(bdry M &rarr; M): </qt>"));
