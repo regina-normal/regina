@@ -32,7 +32,12 @@
 
 /*! \file triangulation/graph.h
  *  \brief Provides an interface for using triangulations with the
- *  Boost Graph Library.
+ *  Boost Graph Library (but see the warning below).
+ *
+ *  \warning Regina does not use this interface itself, and the developers do
+ *  not actively test it (since Regina no longer requires Boost at build time).
+ *  If you encounter any problems with it then please let the Regina
+ *  developers know.
  */
 
 #ifndef __TRIANGULATION_GRAPH_H

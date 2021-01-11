@@ -11,7 +11,9 @@ Version 6.1  [ TODO ]
 
     GENERAL:
         - Updated the bundled copy of Normaliz to version 3.8.9 (26 Sep 2020).
-        - Regina no longer needs boost to build.
+        - Regina no longer needs boost to build. It still ships the
+          Boost.Graph headers (link/graph.h and triangulation/graph.h), but
+          these not compiled into Regina itself, and are not actively tested.
 
 Version 6.0  [ 11 January, 2021 ]
 
