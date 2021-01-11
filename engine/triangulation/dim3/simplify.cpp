@@ -400,7 +400,7 @@ bool Triangulation<3>::twoOneMove(Edge<3>* e, int edgeEnd,
             oldVertices[otherEdgeEnd], oldVertices[2], oldVertices[3]);
         if (bottomFacePerm.sign() < 0) {
             // Switch vertices 2,3 in newTet so that we can preserve orientation.
-            bottomFacePerm = bottomFacePerm * NPerm<4>(2, 3);
+            bottomFacePerm = bottomFacePerm * Perm<4>(2, 3);
         }
 
         if (adjTop) {
