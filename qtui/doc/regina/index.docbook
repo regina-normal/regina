@@ -64,7 +64,6 @@
   <!ENTITY bi "<replaceable>b<subscript><replaceable>i</replaceable></subscript></replaceable>">
   <!ENTITY bn "<replaceable>b<subscript><replaceable>n</replaceable></subscript></replaceable>">
   <!ENTITY bibtex "<application>BibTeX</application>">
-  <!ENTITY boost-python "<application>boost.python</application>">
   <!ENTITY bsd "<acronym>BSD</acronym>">
   <!ENTITY bzip2 "<application>bzip2</application>">
   <!ENTITY casson "<application>Casson</application>">

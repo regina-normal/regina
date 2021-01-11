@@ -8,7 +8,7 @@ import sage.all
 # Sage-related hacks implemented at the C++ level in Regina
 # -------------------------------------------------------------------------
 
-# These hacks include making boost::python work with Sage's Integer type.
+# These hacks include making pybind11 work with Sage's Integer type.
 engine._addSageHacks()
 
 # -------------------------------------------------------------------------
