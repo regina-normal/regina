@@ -7,6 +7,11 @@ Regina - A Normal Surface Theory Calculator
     For just the key highlights, see the (far more readable) file
     HIGHLIGHTS.txt.
 
+Version 6.1  [ TODO ]
+
+    GENERAL:
+        - Updated the bundled copy of Normaliz to version 3.8.9 (26 Sep 2020).
+
 Version 6.0  [ 11 January, 2021 ]
 
     GENERAL:

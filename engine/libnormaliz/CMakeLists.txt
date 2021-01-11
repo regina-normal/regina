@@ -2,13 +2,26 @@
 
 # Files to compile (taken from libnormaliz' Makefile.classic)
 SET ( FILES
-  cone_and_control
-  enumeration
-  linear_algebra
+  automorph
+  reduction
+  cone_dual_mode
+  project_and_lift
+  face_lattice
+  descent
+  HilbertSeries
+  sublattice_representation
+  matrix
+  nmz_nauty
+  cone
+  cone_property
+  general
+  collection
+  full_cone
+  simplex
+  input
+  options
   offload_handler
-  other_algorithms
   output
-  primal
   )
 
 # Prepend folder name

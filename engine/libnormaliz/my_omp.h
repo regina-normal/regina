@@ -21,13 +21,13 @@
  * terms of service.
  */
 
-/* 
+/*
  * This header provide some dummy replacements of OpenMP functions. We use it
  * to compile Normaliz without OpenMP.
  */
 
-#ifndef MY_OMP_H_
-#define MY_OMP_H_
+#ifndef LIBNORMALIZ_MY_OMP_H_
+#define LIBNORMALIZ_MY_OMP_H_
 
 #ifdef _OPENMP
 #include <omp.h>
@@ -37,7 +37,7 @@ inline int omp_in_parallel() {
     return false;
 }
 
-inline int omp_get_level(){
+inline int omp_get_level() {
     return 0;
 }
 
@@ -61,10 +61,13 @@ inline int omp_set_nested(int on_off) {
     return 0;
 }
 
-inline int omp_set_num_threads(int max_threads) {
+inline int omp_set_max_active_levels(int n) {
     return 0;
 }
 
+inline int omp_set_num_threads(int max_threads) {
+    return 0;
+}
 
 #endif /* ifndef _OPENMP */
 #endif /* MY_OMP_H_ */
