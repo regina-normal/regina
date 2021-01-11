@@ -54,9 +54,12 @@
 #include "libnormaliz/my_omp.h"
 
 
+/*
+// Regina will use GMP everywhere, even on Windows.
 #ifdef _WIN32     // for 32 and 64 bit windows
 #define NMZ_MPIR  // always use MPIR
 #endif
+*/
 
 #ifdef NMZ_MPIR  // use MPIR
 #include <mpirxx.h>

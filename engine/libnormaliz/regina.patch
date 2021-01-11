@@ -1,37 +1,35 @@
 diff --git a/engine/libnormaliz/general.h b/engine/libnormaliz/general.h
-index c17ee6aa2..263a7ff6b 100644
+index d17308e94..5370ec83c 100644
 --- a/engine/libnormaliz/general.h
 +++ b/engine/libnormaliz/general.h
-@@ -29,9 +29,12 @@
- #include <assert.h>
- #include <cstddef>
+@@ -54,9 +54,12 @@
+ #include "libnormaliz/my_omp.h"
+ 
  
 +/*
 +// Regina will use GMP everywhere, even on Windows.
- #ifdef _WIN32 //for 32 and 64 bit windows
-     #define NMZ_MPIR //always use MPIR
+ #ifdef _WIN32     // for 32 and 64 bit windows
+ #define NMZ_MPIR  // always use MPIR
  #endif
 +*/
  
- #ifdef NMZ_MPIR // use MPIR
-     #include <mpirxx.h>
-diff --git a/engine/libnormaliz/cone.cpp b/engine/libnormaliz/cone.cpp
-index 46b8c8e05..120408b22 100644
---- a/engine/libnormaliz/cone.cpp
-+++ b/engine/libnormaliz/cone.cpp
-@@ -4478,6 +4478,7 @@ void Cone<Integer>::setFaceCodimBound(long bound){
-     f_vector.clear();
- }
+ #ifdef NMZ_MPIR  // use MPIR
+ #include <mpirxx.h>
+diff --git a/engine/libnormaliz/nmz_config.h b/engine/libnormaliz/nmz_config.h
+index 2af3136b6..3b03f16e6 100644
+--- a/engine/libnormaliz/nmz_config.h
++++ b/engine/libnormaliz/nmz_config.h
+@@ -7,8 +7,8 @@
+ #undef NMZ_FLINT
+ #undef NMZ_COCOA
  
-+#if 0
- bool executable(string command){
- //n check whether "command --version" cam be executed
- 
-@@ -4525,6 +4526,7 @@ string command(const string& original_call, const string& to_replace, const stri
-         return test_path;
-     return ""; // no executable found
- }
-+#endif
- 
- //---------------------------------------------------------------------------
- template<typename Integer>
+-#define ENFNORMALIZ
+-#define NMZ_NAUTY
+-#define NMZ_FLINT
+-#define NMZ_COCOA
+-#define NORMALIZ_USE_DLL
++// #define ENFNORMALIZ
++// #define NMZ_NAUTY
++// #define NMZ_FLINT
++// #define NMZ_COCOA
++// #define NORMALIZ_USE_DLL

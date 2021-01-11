@@ -7,8 +7,8 @@
 #undef NMZ_FLINT
 #undef NMZ_COCOA
 
-#define ENFNORMALIZ
-#define NMZ_NAUTY
-#define NMZ_FLINT
-#define NMZ_COCOA
-#define NORMALIZ_USE_DLL
+// #define ENFNORMALIZ
+// #define NMZ_NAUTY
+// #define NMZ_FLINT
+// #define NMZ_COCOA
+// #define NORMALIZ_USE_DLL

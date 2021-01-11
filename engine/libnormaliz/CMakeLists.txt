@@ -1,27 +1,28 @@
 # normaliz
 
-# Files to compile (taken from libnormaliz' Makefile.classic)
+# Files to compile.
+#
+# Currently we exclude: nmz_integral, nmz_nauty
 SET ( FILES
-  automorph
-  reduction
-  cone_dual_mode
-  project_and_lift
-  face_lattice
-  descent
   HilbertSeries
-  sublattice_representation
-  matrix
-  nmz_nauty
-  cone
-  cone_property
-  general
+  automorph
   collection
+  cone
+  cone_dual_mode
+  cone_property
+  descent
+  face_lattice
   full_cone
-  simplex
+  general
   input
-  options
+  matrix
   offload_handler
+  options
   output
+  project_and_lift
+  reduction
+  simplex
+  sublattice_representation
   )
 
 # Prepend folder name
