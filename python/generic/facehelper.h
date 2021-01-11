@@ -175,7 +175,7 @@ struct FaceHelper {
                 patient.addNurse(elt);
                 ans.append(elt);
             }
-            return ans;
+            return std::move(ans);
         }
         return FaceHelper<T, dim, subdim - 1>::template facesFrom<policy>(
             t, subdimArg);
@@ -220,7 +220,7 @@ struct FaceHelper<T, dim, 0> {
             patient.addNurse(elt);
             ans.append(elt);
         }
-        return ans;
+        return std::move(ans);
     }
 
     template <int permSize>
