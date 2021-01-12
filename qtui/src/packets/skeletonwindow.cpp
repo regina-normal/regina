@@ -69,7 +69,7 @@ QSize SkeletonTreeView::sizeHint() const {
     int preferredWidth = header()->length();
 
     // Wide, but not insanely wide.
-    int desktopWidth = QApplication::desktop()->availableGeometry().width();
+    int desktopWidth = QApplication::desktop()->availableGeometry(this).width();
     if (preferredWidth > desktopWidth / 2)
         preferredWidth = desktopWidth / 2;
 

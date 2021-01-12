@@ -37,7 +37,7 @@
 #include <QDesktopWidget>
 
 QSize BigWidget::sizeHint() const {
-    QSize d = QApplication::desktop()->availableGeometry().size();
+    QSize d = QApplication::desktop()->availableGeometry(this).size();
     if (desktopNum_ != 1)
         d *= desktopNum_;
     if (desktopDen_ != 1)

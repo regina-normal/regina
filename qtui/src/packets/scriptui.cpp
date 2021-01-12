@@ -541,7 +541,17 @@ void ScriptUI::updatePreferences() {
 }
 
 void ScriptUI::updateTabWidth() {
+#if QT_VERSION >= QT_VERSION_CHECK(5,11,0)
+    editWidget->setTabStopDistance(
+        QFontMetrics(editWidget->font()).horizontalAdvance('x') *
+        ReginaPrefSet::global().pythonSpacesPerTab);
+#elif QT_VERSION >= QT_VERSION_CHECK(5,10,0)
+    editWidget->setTabStopDistance(
+        QFontMetrics(editWidget->font()).width('x') *
+        ReginaPrefSet::global().pythonSpacesPerTab);
+#else
     editWidget->setTabStopWidth(
         QFontMetrics(editWidget->font()).width('x') *
         ReginaPrefSet::global().pythonSpacesPerTab);
+#endif
 }

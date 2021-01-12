@@ -81,7 +81,11 @@ bool ProgressDialogNumeric::run() {
                 if (tracker_->descriptionChanged()) {
                     QString text = tracker_->description().c_str();
 
+#if QT_VERSION >= QT_VERSION_CHECK(5,11,0)
+                    int w = metrics_.horizontalAdvance(text) + 100;
+#else
                     int w = metrics_.width(text) + 100;
+#endif
                     if (width() < w)
                         resize(w, height());
 

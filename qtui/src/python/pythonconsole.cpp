@@ -476,7 +476,7 @@ QSize PythonConsole::sizeHint() const {
     if (ReginaPrefSet::global().windowPythonSize.isValid())
         return ReginaPrefSet::global().windowPythonSize;
 
-    QRect d = QApplication::desktop()->availableGeometry();
+    QRect d = QApplication::desktop()->availableGeometry(this);
     return QSize(d.width() / 2,
                  d.height() * 2 / 3); // A little taller for its size.
 }
