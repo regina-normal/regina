@@ -45,7 +45,7 @@
 #endif
 
 #include <algorithm>
-#include "information.h"
+#include "simplexinfo.h"
 #include "triangulation/generic/triangulation.h"
 
 namespace regina {
