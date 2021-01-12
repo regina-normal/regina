@@ -1,5 +1,6 @@
-/*
- *  covers.h
+/**
+ *  @file covers.h
+ *  @brief Permutation representations and finite covers.
  *
  *  SnapPea constructs an n-sheeted cover of a given manifold as follows.
  *  First it creates n copies of a fundamental domain.  For convenience it
@@ -33,7 +34,7 @@
 
 #include "kernel_namespace.h"
 
-/*
+/**
  *  A covering is "regular" iff for any two lifts of a point in the base
  *  manifold, there is a covering transformation taking one to the other.
  *  (An alternative definition is that the cover's fundamental group
@@ -43,38 +44,37 @@
  *
  *  All cyclic coverings are regular.
  */
-typedef int CoveringType;
-enum
+typedef enum
 {
     unknown_cover,
     irregular_cover,
     regular_cover,
     cyclic_cover
-};
+} CoveringType;
 
 
 typedef struct RepresentationIntoSn     RepresentationIntoSn;
 
 typedef struct
 {
-    /*
+    /**
      *  How many face pairs does the fundamental domain
      *  (defined in choose_generators.c) have?
      */
     int                     num_generators;
 
-    /*
+    /**
      *  How many sheets does the covering have?
      */
     int                     num_sheets;
 
-    /*
+    /**
      *  How many cusps (filled or unfilled) does the manifold have?
      *  (For use with primitive_Dehn_image below.)
      */
     int                     num_cusps;
 
-    /*
+    /**
      *  The representations themselves are kept on a NULL-terminated
      *  singly linked list.
      */
@@ -84,7 +84,7 @@ typedef struct
 
 struct RepresentationIntoSn
 {
-    /*
+    /**
      *  The permutation corresponding to generator i takes sheet j
      *  of the cover to sheet image[i][j].
      *
@@ -93,7 +93,7 @@ struct RepresentationIntoSn
      */
     int                     **image;
 
-    /*
+    /**
      *  The algorithm in construct_cover() in cover.c would like to know
      *  the permutation assigned to each "primitive" Dehn filling curve.
      *  If the Dehn filling coefficients are (a,b), the primitive Dehn
@@ -110,13 +110,13 @@ struct RepresentationIntoSn
      */
     int                     **primitive_Dehn_image;
 
-    /*
+    /**
      *  Is the cover defined by this representation irregular,
      *  regular or cyclic?
      */
     CoveringType            covering_type;
 
-    /*
+    /**
      *  The RepresentationList keeps RepresentationIntoSn's on
      *  a NULL-terminated singly linked list.
      */
@@ -124,17 +124,24 @@ struct RepresentationIntoSn
 };
 
 
-/*
+/**
  *  find_representations() takes a PermutationSubgroup parameter
  *  specifying the subgroup of the symmetric group S(n) into which
  *  the representations are to be found.
  */
-typedef int PermutationSubgroup;
-enum
+typedef enum
 {
-    permutation_subgroup_Zn,    /* finds cyclic covers only */
-    permutation_subgroup_Sn     /* finds all n-fold covers  */
+    permutation_subgroup_Zn,    /**< finds cyclic covers only */
+    permutation_subgroup_Sn     /**< finds all n-fold covers  */
     /* eventually an option for dihedral covers could be added */
-};
+} PermutationSubgroup;
 
 #include "end_namespace.h"
+
+/* Local Variables:                      */
+/* mode: c                               */
+/* c-basic-offset: 4                     */
+/* fill-column: 80                       */
+/* comment-column: 0                     */
+/* c-file-offsets: ((inextern-lang . 0)) */
+/* End:                                  */

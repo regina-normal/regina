@@ -33,7 +33,7 @@
 #define COLUMN_PRODUCT(m, i, j)     \
     (-m[0][i]*m[0][j] + m[1][i]*m[1][j] + m[2][i]*m[2][j] + m[3][i]*m[3][j])
 
-const O31Matrix   O31_identity = {
+O31Matrix   O31_identity = {
                                 {1.0, 0.0, 0.0, 0.0},
                                 {0.0, 1.0, 0.0, 0.0},
                                 {0.0, 0.0, 1.0, 0.0},
@@ -43,7 +43,7 @@ const O31Matrix   O31_identity = {
 
 void o31_copy(
     O31Matrix   dest,
-    const O31Matrix   source)
+    O31Matrix   source)
 {
     int i,
         j;
@@ -325,11 +325,15 @@ void o31_product(
     O31Matrix   b,
     O31Matrix   product)
 {
-    int    i,
-           j,
-           k;
-    Real sum;
-    O31Matrix       temp;
+    /*
+     *  (Note that register keyword has been obsoleted.)
+     */
+
+    /* register */ int    i,
+                          j,
+                          k;
+    /* register */ Real   sum;
+    O31Matrix             temp;
 
     for (i = 0; i < 4; i++)
         for (j = 0; j < 4; j++)
@@ -522,10 +526,10 @@ void o31_matrix_times_vector(
     O31Vector   v,
     O31Vector   product)
 {
-    int    i,
-           j;
-    Real sum;
-    O31Vector       temp;
+    /* register */ int    i,
+                          j;
+    /* register */ Real   sum;
+    O31Vector             temp;
 
     for (i = 0; i < 4; i++)
     {

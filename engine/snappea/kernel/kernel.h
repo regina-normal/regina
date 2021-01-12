@@ -1,5 +1,6 @@
-/*
- *  kernel.h
+/**
+ *  @file kernel.h
+ *  @brief Includes all public and private headers files, for building the kernel.
  *
  *  This file #includes all header files needed for the kernel.
  *  It should be #included in all kernel .c files, but nowhere else.
@@ -10,11 +11,9 @@
 
 #include "SnapPea.h"
 
-/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
 #ifdef __cplusplus
 extern "C" {
 #endif
-*/
 
 #include <string.h>
 #include <math.h>
@@ -31,11 +30,15 @@ extern "C" {
 #include "kernel_prototypes.h"
 #include "tables.h"
 
-/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
 #ifdef __cplusplus
 }
 #endif
-*/
 
 #endif
-
+/* Local Variables:                      */
+/* mode: c                               */
+/* c-basic-offset: 4                     */
+/* fill-column: 80                       */
+/* comment-column: 0                     */
+/* c-file-offsets: ((inextern-lang . 0)) */
+/* End:                                  */

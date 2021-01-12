@@ -227,14 +227,13 @@
 #define DUPLICATE_RADIUS_EPSILON    1e-3
 
 
-typedef int MinDistanceType;
-enum
+typedef enum
 {
     dist_self_to_self,
     dist_self_to_any,
     dist_group_to_group,
     dist_group_to_any
-};
+} MinDistanceType;
 
 typedef struct
 {
@@ -654,7 +653,10 @@ static void compute_one_reach(
             }
 
         if (proto_canonize(triangulation_copy) != func_OK)
+        {
             uFatalError("compute_one_reach", "cusp_neighborhoods.c");
+            break;
+        }
     }
 
     /*
@@ -726,7 +728,10 @@ static void compute_tie_group_reach(
             }
 
         if (proto_canonize(triangulation_copy) != func_OK)
+        {
             uFatalError("compute_tie_group_reach", "cusp_neighborhoods.c");
+            break;
+        }
     }
 
     free_triangulation(triangulation_copy);
@@ -1416,11 +1421,10 @@ static void compute_cusp_nbhd_positions(
     CuspNeighborhoods   *cusp_neighborhoods)
 {
     Tetrahedron     *tet;
-    Orientation     h;
+    int             c, h;
     VertexIndex     v;
     int             max_triangles;
     Cusp            *cusp;
-    PeripheralCurve c;
     Complex         (*x)[4][4],
                     *translation;
     Boolean         (*in_use)[4];
@@ -1431,7 +1435,7 @@ static void compute_cusp_nbhd_positions(
     int             strands1,
                     strands2,
                     flow;
-    Real          length;
+    Real            length;
     Complex         factor;
 
     /*
@@ -1482,10 +1486,10 @@ static void compute_cusp_nbhd_positions(
                  */
 
                 for (h = 0; h < 2; h++)     /* h = right_handed, left_handed */
-
-                    if (contains_meridian(tet, h, v) == TRUE)
+                
+                    if (contains_meridian(tet, ORIENTATION(h), v) == TRUE)
                     {
-                        set_one_component(tet, h, v, max_triangles);
+                        set_one_component(tet, ORIENTATION(h), v, max_triangles);
                         break;
                     }
             }
@@ -1552,7 +1556,7 @@ static void compute_cusp_nbhd_positions(
         {
             cusp = tet->cusp[v];
 
-            for (c = 0; c < 2; c++)
+            for (c = 0; c < 2; c++)  /* c = M, L */
             {
                 translation = &cusp->translation[c];
 
@@ -1787,7 +1791,7 @@ static void set_one_component(
             gluing = tri.tet->gluing[ff];
 
             nbr.tet = tri.tet->neighbor[ff];
-            nbr.h   = (parity[gluing] == orientation_preserving) ? tri.h : ! tri.h;
+            nbr.h   = (parity[gluing] == orientation_preserving) ? tri.h : REVERSE(tri.h);
             nbr.v   = EVALUATE(gluing, tri.v);
 
             our_data = tri.tet->cusp_nbhd_position;
@@ -1906,7 +1910,7 @@ void cn_find_third_corner(
         f0   = f1;
         f1   = temp;
 
-        tet_orientation = ! tet_orientation;
+        tet_orientation = REVERSE(tet_orientation);
     }
 
     /*
@@ -1961,7 +1965,7 @@ CuspNbhdSegmentList *get_cusp_neighborhood_triangulation(
     Complex             (*x)[4][4];
     Boolean             (*in_use)[4];
     VertexIndex         v;
-    Orientation         h;
+    int                 h;
     FaceIndex           f,
                         nbr_f;
 
@@ -2077,9 +2081,10 @@ CuspNbhdSegmentList *get_cusp_neighborhood_triangulation(
      *  How many segments did we find?
      *
      *  (ANSI C will subtract the pointers correctly, automatically
-     *  dividing by sizeof(CuspNbhdSegment).)
+     *  dividing by sizeof(CuspNbhdSegment).  We assume that the
+     *  difference will fit in an int.)
      */
-    theSegmentList->num_segments = next_segment - theSegmentList->segment;
+    theSegmentList->num_segments = (int)(next_segment - theSegmentList->segment);
 
     /*
      *  Did we find more segments than we had allocated space for?
@@ -2229,9 +2234,10 @@ static CuspNbhdHoroballList *get_quick_horoball_list(
      *  How many horoballs did we find?
      *
      *  (ANSI C will subtract the pointers correctly, automatically
-     *  dividing by sizeof(CuspNbhdHoroball).)
+     *  dividing by sizeof(CuspNbhdHoroball).  We assume that the
+     *  difference will fit in an int.)
      */
-    theHoroballList->num_horoballs = next_horoball - theHoroballList->horoball;
+    theHoroballList->num_horoballs = (int)(next_horoball - theHoroballList->horoball);
 
     /*
      *  Did we find more horoballs than we had allocated space for?
@@ -2257,7 +2263,7 @@ static void get_quick_edge_horoballs(
     VertexIndex             v[2];
     int                     i;
     int                     other_index;
-    Orientation             h;
+    int                     h;
 
     for (edge = manifold->edge_list_begin.next;
          edge != &manifold->edge_list_end;
@@ -2446,8 +2452,9 @@ static void get_quick_face_horoballs(
                     missing_corner;
     Permutation     gluing;
     Complex         corner[4];
-    Orientation     h;
-    Real          height_u,
+    int             h;
+    Orientation     orientation;
+    Real            height_u,
                     exp_d,
                     c_squared;
 
@@ -2485,10 +2492,13 @@ static void get_quick_face_horoballs(
                  *  Call compute_fourth_corner() to compute
                  *  corner[missing_corner].
                  */
+                orientation = ORIENTATION(h);
+                if (parity[gluing] == orientation_reversing)
+                    orientation = REVERSE(orientation);
                 compute_fourth_corner(
                     corner,
                     missing_corner,
-                    (parity[gluing] == orientation_preserving) ? h : !h,
+                    orientation, 
                     tet->neighbor[v]->shape[complete]->cwl[ultimate]);
 
                 /*
@@ -2952,7 +2962,7 @@ static void read_initial_tetrahedra(
     Boolean         (*in_use)[4];
     VertexIndex     v,
                     w;
-    Orientation     h;
+    int             h;
     TilingTet       *tiling_tet;
     EdgeIndex       edge_index;
     EdgeClass       *edge;
@@ -2977,7 +2987,7 @@ static void read_initial_tetrahedra(
                 tiling_tet = NEW_STRUCT(TilingTet);
 
                 tiling_tet->underlying_tet  = tet;
-                tiling_tet->orientation     = h;
+                tiling_tet->orientation     = ORIENTATION(h);
 
                 for (w = 0; w < 4; w++)
                     if (w != v)
@@ -3191,7 +3201,7 @@ static TilingTet *make_neighbor_tiling_tet(
     tiling_nbr->underlying_tet  = nbr;
     tiling_nbr->orientation     = (parity[gluing] == orientation_preserving) ?
                                     tiling_tet->orientation :
-                                  ! tiling_tet->orientation;
+                                    REVERSE(tiling_tet->orientation);
 
     for (v = 0; v < 4; v++)
     {
@@ -3900,7 +3910,7 @@ CuspNbhdSegmentList *get_cusp_neighborhood_Ford_domain(
                         u,
                         nbr_u,
                         w[3];
-    Orientation         h,
+    int                 h,
                         nbr_h;
     FaceIndex           f,
                         nbr_f;
@@ -4220,9 +4230,10 @@ CuspNbhdSegmentList *get_cusp_neighborhood_Ford_domain(
      *  How many segments did we find?
      *
      *  (ANSI C will subtract the pointers correctly, automatically
-     *  dividing by sizeof(CuspNbhdSegment).)
+     *  dividing by sizeof(CuspNbhdSegment).   We assume that the
+     *  difference will fit in an int.)
      */
-    theSegmentList->num_segments = next_segment - theSegmentList->segment;
+    theSegmentList->num_segments = (int)(next_segment - theSegmentList->segment);
 
     /*
      *  Did we find more segments than we had allocated space for?

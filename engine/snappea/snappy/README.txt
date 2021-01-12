@@ -13,8 +13,9 @@ version 2 or any later version, as published by the Free Software
 Foundation.  The full text of this license can be found in the file
 LICENSE.txt in Regina's top-level source directory.
 
-SnapPy is primarily developed by Marc Culler and Nathan Dunfield, with
-contributions from many people, and is based on SnapPea by Jeffery Weeks.
+SnapPy is primarily developed by Marc Culler, Nathan Dunfield, and
+Matthias Goerner, with contributions from many people, and is based on
+SnapPea by Jeffery Weeks.
 
 M. Culler, N. M. Dunfield, and J. R. Weeks.
 SnapPy, a computer program for studying the geometry and topology

@@ -41,7 +41,7 @@
 #
 set -e
 
-testfile=cython/SnapPycore.pxi
+testfile=kernel/headers/SnapPea.h
 if ! [ -d "$1" -a -e "$1/$testfile" ]; then
     echo "Usage: $0 <snappy_source_dir>"
     echo

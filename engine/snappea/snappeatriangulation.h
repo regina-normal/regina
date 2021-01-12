@@ -315,11 +315,11 @@ class REGINA_API Cusp : public ShortOutput<Cusp> {
  * Regina's function regina::versionSnapPy().
  *
  * The SnapPea kernel was originally written by Jeff Weeks.  SnapPy,
- * where this kernel is now maintained, is primarily developed by Marc Culler
- * and Nathan Dunfield, with contributions from many people.  SnapPy and the
- * corresponding SnapPea kernel are distributed under the terms of the GNU
- * General Public License, version 2 or any later version, as published by the
- * Free Software Foundation.
+ * where this kernel is now maintained, is primarily developed by Marc Culler,
+ * Nathan Dunfield and Matthias Goerner, with contributions from many people.
+ * SnapPy and the corresponding SnapPea kernel are distributed under the terms
+ * of the GNU General Public License, version 2 or any later version, as
+ * published by the Free Software Foundation.
  *
  * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.

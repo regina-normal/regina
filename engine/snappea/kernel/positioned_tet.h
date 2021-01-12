@@ -1,5 +1,6 @@
-/*
- *  positioned_tet.h
+/**
+ *  @file positioned_tet.h
+ *  @brief Defines the PositionedTetrahedron data structure.
  *
  *  The PositionedTet data structure records the position in which a
  *  Tetrahedron is currently being considered.  The file positioned_tet.c
@@ -36,3 +37,10 @@ typedef struct
 #include "end_namespace.h"
 
 #endif
+/* Local Variables:                      */
+/* mode: c                               */
+/* c-basic-offset: 4                     */
+/* fill-column: 80                       */
+/* comment-column: 0                     */
+/* c-file-offsets: ((inextern-lang . 0)) */
+/* End:                                  */

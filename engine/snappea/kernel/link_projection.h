@@ -1,12 +1,16 @@
-/* Modified 8/19/98 by NMD to add a label field to each crossing */
-
-/*
- *  link_projection.h
+/**
+ *  @file link_projection.h
+ *  @brief Public KLP data structures for describing link projections.
  *
- *  This file provides the data format in which the UI passes
- *  link projections to the kernel.  All typedefs begin with
- *  "KLP" ("Kernel Link Projection") to avoid name conflicts
- *  with the UI's private link projection data structure.
+ *  This file provides the data format in which the UI passes link
+ *  projections to the kernel.  All typedefs begin with "KLP" ("Kernel
+ *  Link Projection") to avoid name conflicts with the UI's private
+ *  link projection data structure.
+ *
+ *  The KLPStrandType and KLPDirectionType enums defined here are used
+ *  to index array entires, so their values must be 0 and 1.  (But the
+ *  code does not rely on which has value 0 and which has value 1.)
+ *
  */
 
 #ifndef _link_projection_
@@ -17,16 +21,7 @@
 typedef struct KLPCrossing      KLPCrossing;
 typedef struct KLPProjection    KLPProjection;
 
-/*
- *  The KLPStrandType and KLPDirectionType enums are used to index
- *  array entires, so their values must be 0 and 1.  (But the code
- *  does not rely on which has value 0 and which has value 1.)
- *
- *  JRW 2000/11/12   Use fake "typedef enums" instead of real ones,
- *  for the reasons explained at the top of kernel_typedefs.h.
- */
-
-/*
+/**
  *  If you view a crossing (from above) so that the strands go in the
  *  direction of the postive x- and y-axes, then the strand going in
  *  the x-direction is the KLPStrandX, and the strand going in the
@@ -40,28 +35,28 @@ typedef struct KLPProjection    KLPProjection;
  *                                 |
  *                                 |
  */
-typedef int KLPStrandType;
-enum
+typedef enum
 {
     KLPStrandX = 0,
     KLPStrandY,
     KLPStrandUnknown
-};
+} KLPStrandType;
 
-/*
+#define OTHERSTRAND(s) (s == KLPStrandX ? KLPStrandY : KLPStrandX)
+                        
+/**
  *  The backward and forward directions are what you would expect.
  *
  *              KLPBackward   --------->   KLPForward
  */
-typedef int KLPDirectionType;
-enum
+typedef enum
 {
     KLPBackward = 0,
     KLPForward,
     KLPDirectionUnknown
-};
+} KLPDirectionType;
 
-/*
+/**
  *  A crossing is either a clockwise (CL) or counterclockwise (CCL)
  *  half twist.
  *
@@ -73,16 +68,15 @@ enum
  *                /   \                       /   \
  *            KLPHalfTwistCL              KLPHalfTwistCCL
  */
-typedef int KLPCrossingType;
-enum
+typedef enum
 {
     KLPHalfTwistCL,
     KLPHalfTwistCCL,
     KLPCrossingTypeUnknown
-};
+} KLPCrossingType;
 
 
-/*
+/**
  *  A link projection is essentially an array of crossings.
  */
 struct KLPProjection
@@ -109,13 +103,13 @@ struct KLPProjection
     KLPCrossing *crossings;
 };
 
-/*
+/**
  *  Each crossing has pointers to its four neighbors,
  *  along with information about its own handedness.
  */
 struct KLPCrossing
 {
-    /*
+    /**
      *  The four neighbors are
      *
      *      neighbor[KLPStrandX][KLPBackward]
@@ -128,7 +122,7 @@ struct KLPCrossing
      */
     KLPCrossing     *neighbor[2][2];
 
-    /*
+    /**
      *  When you arrive at a neighbor, you could arrive at either the
      *  x-strand or the y-strand.  The strand[][] field says which it is.
      *
@@ -137,12 +131,12 @@ struct KLPCrossing
      */
     KLPStrandType   strand[2][2];
 
-    /*
+    /**
      *  The crossing is either a clockwise or counterclockwise half twist.
      */
     KLPCrossingType handedness;
 
-    /*
+    /**
      *  To which component of the link does each strand belong?  A link
      *  component is given by an integer from 0 to (#components - 1).
      *  For example, if component[KLPStrandX] == 0 and
@@ -151,12 +145,20 @@ struct KLPCrossing
      */
     int             component[2];
 
-  /* Field added 8/19/98 by NMD to store info about wirt. presentation */
-  /* first index should be a KLPStrand and the second a KLPDirectionType */
-
-  int      label[2][2];
+    /** 
+     *  Extra field to store info about Wirtinger presentations.
+     *  The first index should be a KLPStrand and the second a KLPDirectionType.
+     */
+    int            label[2][2];
 };
 
 #include "end_namespace.h"
 
 #endif
+/* Local Variables:                      */
+/* mode: c                               */
+/* c-basic-offset: 4                     */
+/* fill-column: 80                       */
+/* comment-column: 0                     */
+/* c-file-offsets: ((inextern-lang . 0)) */
+/* End:                                  */
