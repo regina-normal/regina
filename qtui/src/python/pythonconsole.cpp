@@ -455,7 +455,7 @@ void PythonConsole::saveLog() {
             QTextStream out(&f);
             out.setCodec(QTextCodec::codecForName("UTF-8"));
             out << session->toPlainText();
-            endl(out);
+            Qt::endl(out);
         }
     }
 }
