@@ -1,5 +1,18 @@
-#include "kernel.h"
-#include "kernel_namespace.h"
+#include "../kernel/kernel.h"
+#include "../kernel/kernel_namespace.h"
+
+/*
+ * This file was originally named "get_gluing_equations.c" when distributed with
+ * SnapPy, but has been renamed here to avoid conflict. 
+ *
+ * SnapPy, and this file as a result, is licensed under the GNU General Public
+ * License.
+ *
+ * M. Culler, N. M. Dunfield, M. Goerner, and J. R. Weeks. 
+ * SnapPy, a computer program for studying the geometry and 
+ * topology of 3-manifolds, http://snappy.computop.org
+ *
+ * */
 
 /*
 
@@ -140,4 +153,4 @@ void free_cusp_equation(int* equation){
   my_free(equation);
 }
   
-#include "end_namespace.h"
+#include "../kernel/end_namespace.h"

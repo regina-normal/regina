@@ -1,3 +1,14 @@
+/**
+ *  Headers for additional SnapPy code that is not shipped with the
+ *  SnapPea kernel.
+ */
+
+#ifndef _SnapPy_
+#define _SnapPy_
+
+#include "../kernel/SnapPea.h"
+#include "../kernel/kernel_namespace.h"
+
 /* Prototypes for functions defined in gluing_equations.c */
 
 extern int** get_gluing_equations(Triangulation* manifold, 
@@ -67,3 +78,6 @@ void install_combinatorial_bases( Triangulation *manifold,
                                   MatrixInt22   *matrices );
 void install_shortest_with_matrices( Triangulation *manifold, MatrixInt22 *matrices );
 void reindex_cusps( Triangulation *manifold, int *indices );
+
+#include "../kernel/end_namespace.h"
+#endif
