@@ -67,7 +67,7 @@ QString ShortRunner::run(bool mergeStderr) {
     proc.waitForFinished(500);
     proc.kill();
 
-    return QString::null;
+    return QString();
 }
 
 void ShortRunner::processStarted() {

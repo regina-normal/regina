@@ -324,7 +324,7 @@ QString GroupWidget::verifyGAPExec() {
                 "installed on your system, please go into Regina's "
                 "settings (<i>Tools</i> section) and tell Regina "
                 "where it can find GAP.</qt>"));
-            return QString::null;
+            return QString();
         }
     }
 
@@ -338,7 +338,7 @@ QString GroupWidget::verifyGAPExec() {
             "installed on your system, please go into Regina's "
             "settings (<i>Tools</i> section) and tell Regina "
             "where it can find GAP.</qt>"));
-        return QString::null;
+        return QString();
     } else if (! (info.isFile() && info.isExecutable())) {
         ReginaSupport::sorry(this,
             tr("<qt>The GAP executable <i>%1</i> does not appear to be "
@@ -347,7 +347,7 @@ QString GroupWidget::verifyGAPExec() {
             "installed on your system, please go into Regina's "
             "settings (<i>Tools</i> section) and tell Regina "
             "where it can find GAP.</qt>"));
-        return QString::null;
+        return QString();
     }
 
     // All good.

@@ -129,13 +129,13 @@ class PythonConsole : public QMainWindow {
         /**
          * Disallow input, specifying an optional message.
          */
-        void blockInput(const QString& msg = QString::null);
+        void blockInput(const QString& msg = QString());
 
         /**
          * Allow input, using either the primary or secondary prompt.
          */
         void allowInput(bool primaryPrompt = true,
-            const QString& suggestedInput = QString::null);
+            const QString& suggestedInput = QString());
 
         /**
          * Configure the python interpreter.

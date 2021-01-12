@@ -260,7 +260,7 @@ QString GluingsModel2::isEdgeStringValid(unsigned long srcTri, int srcEdge,
     if (gluing)
         *gluing = foundGluing;
 
-    return QString::null;
+    return QString();
 }
 
 void GluingsModel2::showError(const QString& message) {

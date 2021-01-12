@@ -442,7 +442,7 @@ void PythonConsole::runScript(regina::Script* script) {
 void PythonConsole::saveLog() {
     QString fileName =
         QFileDialog::getSaveFileName(this, tr("Save Session Transcript"),
-        QString::null, tr(FILTER_ALL));
+        QString(), tr(FILTER_ALL));
     if (! fileName.isEmpty()) {
         QFile f(fileName);
         if (! f.open(QIODevice::WriteOnly))

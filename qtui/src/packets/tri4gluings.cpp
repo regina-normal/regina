@@ -268,7 +268,7 @@ QString GluingsModel4::isFacetStringValid(unsigned long srcPent,
     if (gluing)
         *gluing = foundGluing;
 
-    return QString::null;
+    return QString();
 }
 
 void GluingsModel4::showError(const QString& message) {

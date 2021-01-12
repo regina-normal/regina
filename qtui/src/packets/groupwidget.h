@@ -106,7 +106,7 @@ class GroupWidget : public QWidget {
 
     private:
         /**
-         * Returns the full path to the GAP executable, or QString::null
+         * Returns the full path to the GAP executable, or a null string
          * if the GAP executable does not appear to be valid.
          */
         QString verifyGAPExec();

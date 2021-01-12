@@ -74,7 +74,7 @@ class ShortRunner : public QObject {
          * Runs the process and collects standard output (optionally
          * with standard error also).
          *
-         * Returns QString::null if the process could not be started,
+         * Returns a null string if the process could not be started,
          * or if it times out (call timedOut() to distinguish between
          * these two cases).  Otherwise returns the output produced (and
          * an empty string if no output was produced).
@@ -84,7 +84,7 @@ class ShortRunner : public QObject {
         /**
          * Did the process reach the timeout before termination?
          * This routine is used to distinguish between the never-started
-         * and never-finished cases, both of which return QString::null
+         * and never-finished cases, both of which return a null string
          * from run().
          */
         bool timedOut() const;

@@ -276,7 +276,7 @@ QString GluingsModel3::isFaceStringValid(unsigned long srcTet, int srcFace,
     if (gluing)
         *gluing = foundGluing;
 
-    return QString::null;
+    return QString();
 }
 
 void GluingsModel3::showError(const QString& message) {
