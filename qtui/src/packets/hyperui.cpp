@@ -72,7 +72,7 @@ HyperUI::HyperUI(regina::NormalHypersurfaces* packet,
     addTab(compat, tr("Com&patibility"));
 }
 
-const QLinkedList<QAction*>& HyperUI::getPacketTypeActions() {
+const std::vector<QAction*>& HyperUI::getPacketTypeActions() {
     return coords->getPacketTypeActions();
 }
 

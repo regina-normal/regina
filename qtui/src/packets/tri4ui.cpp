@@ -70,7 +70,7 @@ Tri4UI::Tri4UI(regina::Triangulation<4>* packet,
     addTab(algebra, QObject::tr("&Algebra"));
 }
 
-const QLinkedList<QAction*>& Tri4UI::getPacketTypeActions() {
+const std::vector<QAction*>& Tri4UI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 

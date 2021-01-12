@@ -153,7 +153,7 @@ class ScriptUI : public QObject, public PacketUI {
          */
         QAction* actAdd;
         QAction* actRemove;
-        QLinkedList<QAction*> scriptActionList;
+        std::vector<QAction*> scriptActionList;
 
     public:
         /**
@@ -168,7 +168,7 @@ class ScriptUI : public QObject, public PacketUI {
         regina::Packet* getPacket();
         QWidget* getInterface();
         PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
+        const std::vector<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
         void refresh();
         void endEdit();

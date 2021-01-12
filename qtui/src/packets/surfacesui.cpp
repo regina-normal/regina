@@ -72,7 +72,7 @@ SurfacesUI::SurfacesUI(regina::NormalSurfaces* packet,
     addTab(compat, tr("Com&patibility"));
 }
 
-const QLinkedList<QAction*>& SurfacesUI::getPacketTypeActions() {
+const std::vector<QAction*>& SurfacesUI::getPacketTypeActions() {
     return coords->getPacketTypeActions();
 }
 

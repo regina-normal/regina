@@ -114,9 +114,9 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
         QAction* actRandomise;
         QAction* actFill;
         QAction* actToRegina;
-        QLinkedList<QAction*> triActionList;
-        QLinkedList<QAction*> enableWhenWritable;
-        QLinkedList<QAction*> requiresNonNull;
+        std::vector<QAction*> triActionList;
+        std::vector<QAction*> enableWhenWritable;
+        std::vector<QAction*> requiresNonNull;
 
     public:
         /**
@@ -140,7 +140,7 @@ class SnapPeaShapesUI : public QObject, public PacketEditorTab {
          */
         regina::Packet* getPacket();
         QWidget* getInterface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
+        const std::vector<QAction*>& getPacketTypeActions();
         void refresh();
         void endEdit();
         void setReadWrite(bool readWrite);

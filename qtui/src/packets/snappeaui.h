@@ -82,7 +82,7 @@ class SnapPeaUI : public PacketTabbedUI {
          * PacketUI overrides.
          */
         PacketEditIface* getEditIface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
+        const std::vector<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 };
 

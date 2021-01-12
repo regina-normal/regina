@@ -75,7 +75,7 @@ LinkUI::~LinkUI() {
     delete editIface;
 }
 
-const QLinkedList<QAction*>& LinkUI::getPacketTypeActions() {
+const std::vector<QAction*>& LinkUI::getPacketTypeActions() {
     return crossings->getPacketTypeActions();
 }
 

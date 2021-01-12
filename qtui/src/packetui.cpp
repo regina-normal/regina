@@ -50,7 +50,6 @@
 #include <QEvent>
 #include <QFrame>
 #include <QLabel>
-#include <QLinkedList>
 #include <QMenu>
 #include <QMessageBox>
 #include <QPushButton>
@@ -66,7 +65,7 @@ namespace {
     const int headerSize = 22;
 };
 
-QLinkedList<QAction*> PacketUI::noActions;
+std::vector<QAction*> PacketUI::noActions;
 
 DefaultPacketUI::DefaultPacketUI(regina::Packet* newPacket,
         PacketPane* newEnclosingPane) :
@@ -166,13 +165,10 @@ PacketPane::~PacketPane() {
 }
 
 void PacketPane::fillPacketTypeMenu(QMenu* menu) {
-    const QLinkedList<QAction*>& packetTypeActions(
-        mainUI->getPacketTypeActions());
-    if (! packetTypeActions.isEmpty()) {
-        for (QLinkedListIterator<QAction*> it(packetTypeActions) ;
-                it.hasNext(); ) {
-            menu->addAction( it.next() );  
-        }
+    const auto& packetTypeActions(mainUI->getPacketTypeActions());
+    if (! packetTypeActions.empty()) {
+        for (auto action : packetTypeActions)
+            menu->addAction(action);
         menu->addSeparator();
     }
     menu->addAction(actClose);

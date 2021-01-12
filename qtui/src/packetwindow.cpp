@@ -40,7 +40,6 @@
 
 #include <QAction>
 #include <QCloseEvent>
-#include <QLinkedList>
 #include <QMenu>
 #include <QMenuBar>
 

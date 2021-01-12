@@ -39,7 +39,7 @@
 
 #include "packet/packet.h"
 
-#include <QLinkedList>
+#include <vector>
 #include <QWidget>
 
 class PacketEditIface;
@@ -118,7 +118,7 @@ class PacketUI {
          * The default implementation of this routine simply returns an
          * empty list.
          */
-        virtual const QLinkedList<QAction*>& getPacketTypeActions();
+        virtual const std::vector<QAction*>& getPacketTypeActions();
 
         /**
          * Return the label of the menu that should contain the actions
@@ -200,7 +200,7 @@ class PacketUI {
         /**
          * An empty action list.
          */
-        static QLinkedList<QAction*> noActions;
+        static std::vector<QAction*> noActions;
 };
 
 /**
@@ -442,7 +442,7 @@ inline PacketEditIface* PacketUI::getEditIface() {
     return 0;
 }
 
-inline const QLinkedList<QAction*>& PacketUI::getPacketTypeActions() {
+inline const std::vector<QAction*>& PacketUI::getPacketTypeActions() {
     return noActions;
 }
 

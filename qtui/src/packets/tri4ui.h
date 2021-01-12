@@ -72,7 +72,7 @@ class Tri4UI : public PacketTabbedUI {
         /**
          * PacketUI overrides.
          */
-        const QLinkedList<QAction*>& getPacketTypeActions();
+        const std::vector<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 };
 

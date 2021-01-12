@@ -191,9 +191,8 @@ void Tri2SkelCompUI::refresh() {
 
     eulerTri->setText(QString::number(tri->eulerChar()));
 
-    QLinkedListIterator<SkeletonWindow*> it(viewers);
-    while( it.hasNext())
-        (it.next())->refresh();
+    for (auto window : viewers)
+        window->refresh();
 }
 
 void Tri2SkelCompUI::viewVertices() {
@@ -203,25 +202,25 @@ void Tri2SkelCompUI::viewVertices() {
     // Similarly for edges, triangles, etc.
     SkeletonWindow* win = new SkeletonWindow(this, new Vertex2Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri2SkelCompUI::viewEdges() {
     SkeletonWindow* win = new SkeletonWindow(this, new Edge2Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri2SkelCompUI::viewComponents() {
     SkeletonWindow* win = new SkeletonWindow(this, new Component2Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri2SkelCompUI::viewBoundaryComponents() {
     SkeletonWindow* win = new SkeletonWindow(this,
         new BoundaryComponent2Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 

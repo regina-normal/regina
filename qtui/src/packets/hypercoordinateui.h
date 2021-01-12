@@ -137,7 +137,7 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
          * Hypersurface list actions
          */
         QAction* actTriangulate;
-        QLinkedList<QAction*> surfaceActionList;
+        std::vector<QAction*> surfaceActionList;
 
         /**
          * Internal status
@@ -159,7 +159,7 @@ class HyperCoordinateUI : public QObject, public PacketEditorTab {
          */
         regina::Packet* getPacket();
         QWidget* getInterface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
+        const std::vector<QAction*>& getPacketTypeActions();
         void setReadWrite(bool readWrite);
 
     public slots:

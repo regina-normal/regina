@@ -359,8 +359,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     actAddPent->setEnabled(readWrite);
     actAddPent->setWhatsThis(tr("Add a new pentachoron to this "
         "triangulation."));
-    enableWhenWritable.append(actAddPent);
-    triActionList.append(actAddPent);
+    enableWhenWritable.push_back(actAddPent);
+    triActionList.push_back(actAddPent);
     connect(actAddPent, SIGNAL(triggered()), this, SLOT(addPent()));
 
     actRemovePent = new QAction(this);
@@ -375,11 +375,11 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
     connect(facetTable->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateRemoveState()));
-    triActionList.append(actRemovePent);
+    triActionList.push_back(actRemovePent);
 
     sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
@@ -393,8 +393,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "Note that there is no guarantee that the smallest possible number of "
         "pentachora will be achieved."));
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
-    enableWhenWritable.append(actSimplify);
-    triActionList.append(actSimplify);
+    enableWhenWritable.push_back(actSimplify);
+    triActionList.push_back(actSimplify);
 
     QAction* actEltMove = new QAction(this);
     actEltMove->setText(tr("&Elementary Moves..."));
@@ -407,13 +407,13 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "4-manifold.<p>"
         "A dialog will be presented for you to select which "
         "elementary moves to apply.</qt>"));
-    enableWhenWritable.append(actEltMove);
-    triActionList.append(actEltMove);
+    enableWhenWritable.push_back(actEltMove);
+    triActionList.push_back(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
@@ -426,7 +426,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "so that orientation is preserved across adjacent facets.<p>"
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled.</qt>"));
-    triActionList.append(actOrient);
+    triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
     QAction* actReflect = new QAction(this);
@@ -440,7 +440,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "If this triangulation is oriented, then the overall effect will be "
         "to convert this into an isomorphic triangulation with the "
         "opposite orientation.</qt>"));
-    triActionList.append(actReflect);
+    triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
     QAction* actBarycentricSubdivide = new QAction(this);
@@ -454,8 +454,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "changed directly.<p>"
         "This operation involves subdividing each pentachoron into "
         "120 smaller pentachora."));
-    enableWhenWritable.append(actBarycentricSubdivide);
-    triActionList.append(actBarycentricSubdivide);
+    enableWhenWritable.push_back(actBarycentricSubdivide);
+    triActionList.push_back(actBarycentricSubdivide);
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
@@ -473,8 +473,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "This triangulation will be modified directly.  If there are no "
         "vertices of this type to truncate, this operation will have no "
         "effect."));
-    enableWhenWritable.append(actIdealToFinite);
-    triActionList.append(actIdealToFinite);
+    enableWhenWritable.push_back(actIdealToFinite);
+    triActionList.push_back(actIdealToFinite);
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
     QAction* actFiniteToIdeal = new QAction(this);
@@ -491,8 +491,8 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "components will be filled in with balls.<p>"
         "This triangulation will be modified directly.  If there are no "
         "real boundary components, this operation will have no effect."));
-    enableWhenWritable.append(actFiniteToIdeal);
-    triActionList.append(actFiniteToIdeal);
+    enableWhenWritable.push_back(actFiniteToIdeal);
+    triActionList.push_back(actFiniteToIdeal);
     connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
     QAction* actDoubleCover = new QAction(this);
@@ -506,13 +506,13 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "will be modified directly.<p>"
         "If this triangulation is already orientable, it will simply be "
         "duplicated, resulting in a disconnected triangulation."));
-    enableWhenWritable.append(actDoubleCover);
-    triActionList.append(actDoubleCover);
+    enableWhenWritable.push_back(actDoubleCover);
+    triActionList.push_back(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     actBoundaryComponents = new QAction(this);
     actBoundaryComponents->setText(tr("Boundar&y Components..."));
@@ -525,7 +525,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "a 3-manifold triangulation from its boundary tetrahedra.  "
         "If you select an ideal boundary component, this will construct "
         "a 3-manifold triangulation from the corresponding vertex link.</qt>"));
-    triActionList.append(actBoundaryComponents);
+    triActionList.push_back(actBoundaryComponents);
     connect(actBoundaryComponents, SIGNAL(triggered()), this,
         SLOT(boundaryComponents()));
 
@@ -540,7 +540,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "frontier of a small regular neighbourhood of <i>V</i>.  "
         "The tetrahedra that make up this link sit inside "
         "the pentachoron corners that meet together at <i>V</i>.</qt>"));
-    triActionList.append(actVertexLinks);
+    triActionList.push_back(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
     QAction* actSplitIntoComponents = new QAction(this);
@@ -555,7 +555,7 @@ Tri4GluingsUI::Tri4GluingsUI(regina::Triangulation<4>* packet,
         "it in the packet tree.<p>"
         "If this triangulation is already connected, this operation will "
         "do nothing.</qt>"));
-    triActionList.append(actSplitIntoComponents);
+    triActionList.push_back(actSplitIntoComponents);
     connect(actSplitIntoComponents, SIGNAL(triggered()), this,
         SLOT(splitIntoComponents()));
 
@@ -570,7 +570,7 @@ Tri4GluingsUI::~Tri4GluingsUI() {
     delete model;
 }
 
-const QLinkedList<QAction*>& Tri4GluingsUI::getPacketTypeActions() {
+const std::vector<QAction*>& Tri4GluingsUI::getPacketTypeActions() {
     return triActionList;
 }
 
@@ -610,9 +610,8 @@ void Tri4GluingsUI::setReadWrite(bool readWrite) {
     } else
         facetTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    QLinkedListIterator<QAction*> it(enableWhenWritable);
-    while (it.hasNext())
-        (it.next())->setEnabled(readWrite);
+    for (auto action : enableWhenWritable)
+        action->setEnabled(readWrite);
 
     updateRemoveState();
     updateActionStates();

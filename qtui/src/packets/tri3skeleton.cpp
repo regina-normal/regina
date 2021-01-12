@@ -228,9 +228,8 @@ void Tri3SkelCompUI::refresh() {
     eulerTri->setText(QString::number(tri->eulerCharTri()));
     eulerManifold->setText(QString::number(tri->eulerCharManifold()));
 
-    QLinkedListIterator<SkeletonWindow*> it(viewers);
-    while( it.hasNext())
-        (it.next())->refresh();
+    for (auto window : viewers)
+        window->refresh();
 }
 
 void Tri3SkelCompUI::viewVertices() {
@@ -240,31 +239,31 @@ void Tri3SkelCompUI::viewVertices() {
     // Similarly for edges, triangles, etc.
     SkeletonWindow* win = new SkeletonWindow(this, new Vertex3Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewEdges() {
     SkeletonWindow* win = new SkeletonWindow(this, new Edge3Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewTriangles() {
     SkeletonWindow* win = new SkeletonWindow(this, new Triangle3Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewComponents() {
     SkeletonWindow* win = new SkeletonWindow(this, new Component3Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri3SkelCompUI::viewBoundaryComponents() {
     SkeletonWindow* win = new SkeletonWindow(this,
         new BoundaryComponent3Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 

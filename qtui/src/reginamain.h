@@ -43,7 +43,8 @@
 #include "reginaprefset.h"
 #include "reginaabout.h"
 
-#include <QLinkedList>
+#include <list>
+#include <vector>
 #include <QMainWindow>
 
 class ExamplesAction;
@@ -115,9 +116,9 @@ class ReginaMain : public QMainWindow {
         QAction* actCut;
         QAction* actCopy;
         QAction* actPaste;
-        QLinkedList<QAction *> treePacketViewActions;
-        QLinkedList<QAction *> treePacketEditActions;
-        QLinkedList<QAction *> treeGeneralEditActions;
+        std::vector<QAction*> treePacketViewActions;
+        std::vector<QAction*> treePacketEditActions;
+        std::vector<QAction*> treeGeneralEditActions;
 
         /**
          * Menus and toolbars
@@ -150,7 +151,7 @@ class ReginaMain : public QMainWindow {
         /**
          * Packet panes
          */
-        QLinkedList<PacketPane*> allPanes;
+        std::list<PacketPane*> allPanes;
 
         /** 
          * Miscellaneous flags

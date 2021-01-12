@@ -86,7 +86,7 @@ SnapPeaUI::~SnapPeaUI() {
     delete editIface;
 }
 
-const QLinkedList<QAction*>& SnapPeaUI::getPacketTypeActions() {
+const std::vector<QAction*>& SnapPeaUI::getPacketTypeActions() {
     return shapes->getPacketTypeActions();
 }
 

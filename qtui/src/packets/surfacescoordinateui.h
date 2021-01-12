@@ -154,7 +154,7 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
          */
         QAction* actCutAlong;
         QAction* actCrush;
-        QLinkedList<QAction*> surfaceActionList;
+        std::vector<QAction*> surfaceActionList;
 
         /**
          * Internal status
@@ -176,7 +176,7 @@ class SurfacesCoordinateUI : public QObject, public PacketEditorTab,
          */
         regina::Packet* getPacket() override;
         QWidget* getInterface() override;
-        const QLinkedList<QAction*>& getPacketTypeActions() override;
+        const std::vector<QAction*>& getPacketTypeActions() override;
         void setReadWrite(bool readWrite) override;
 
         /**

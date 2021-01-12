@@ -343,8 +343,8 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
     actAddTri->setToolTip(tr("Add a new triangle"));
     actAddTri->setEnabled(readWrite);
     actAddTri->setWhatsThis(tr("Add a new triangle to this triangulation."));
-    enableWhenWritable.append(actAddTri);
-    triActionList.append(actAddTri);
+    enableWhenWritable.push_back(actAddTri);
+    triActionList.push_back(actAddTri);
     connect(actAddTri, SIGNAL(triggered()), this, SLOT(addTri()));
 
     actRemoveTri = new QAction(this);
@@ -358,11 +358,11 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
     connect(edgeTable->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateRemoveState()));
-    triActionList.append(actRemoveTri);
+    triActionList.push_back(actRemoveTri);
 
     QAction* sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
@@ -375,7 +375,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
         "so that orientation is preserved across adjacent edges.<p>"
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled.</qt>"));
-    triActionList.append(actOrient);
+    triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
     QAction* actReflect = new QAction(this);
@@ -389,7 +389,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
         "If this triangulation is oriented, then the overall effect will be "
         "to convert this into an isomorphic triangulation with the "
         "opposite orientation.</qt>"));
-    triActionList.append(actReflect);
+    triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
     QAction* actBarycentricSubdivide = new QAction(this);
@@ -403,8 +403,8 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
         "changed directly.<p>"
         "This operation involves subdividing each triangle into "
         "6 smaller triangles."));
-    enableWhenWritable.append(actBarycentricSubdivide);
-    triActionList.append(actBarycentricSubdivide);
+    enableWhenWritable.push_back(actBarycentricSubdivide);
+    triActionList.push_back(actBarycentricSubdivide);
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
@@ -419,13 +419,13 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
         "will be modified directly.<p>"
         "If this triangulation is already orientable, it will simply be "
         "duplicated, resulting in a disconnected triangulation."));
-    enableWhenWritable.append(actDoubleCover);
-    triActionList.append(actDoubleCover);
+    enableWhenWritable.push_back(actDoubleCover);
+    triActionList.push_back(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     QAction* actSplitIntoComponents = new QAction(this);
     actSplitIntoComponents->setText(tr("E&xtract Components"));
@@ -439,7 +439,7 @@ Tri2GluingsUI::Tri2GluingsUI(regina::Triangulation<2>* packet,
         "it in the packet tree.<p>"
         "If this triangulation is already connected, this operation will "
         "do nothing.</qt>"));
-    triActionList.append(actSplitIntoComponents);
+    triActionList.push_back(actSplitIntoComponents);
     connect(actSplitIntoComponents, SIGNAL(triggered()), this,
         SLOT(splitIntoComponents()));
 
@@ -454,7 +454,7 @@ Tri2GluingsUI::~Tri2GluingsUI() {
     delete model;
 }
 
-const QLinkedList<QAction*>& Tri2GluingsUI::getPacketTypeActions() {
+const std::vector<QAction*>& Tri2GluingsUI::getPacketTypeActions() {
     return triActionList;
 }
 
@@ -493,9 +493,8 @@ void Tri2GluingsUI::setReadWrite(bool readWrite) {
     } else
         edgeTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    QLinkedListIterator<QAction*> it(enableWhenWritable);
-    while (it.hasNext())
-        (it.next())->setEnabled(readWrite);
+    for (auto action : enableWhenWritable)
+        action->setEnabled(readWrite);
 
     updateRemoveState();
     updateActionStates();

@@ -248,9 +248,8 @@ void Tri4SkelCompUI::refresh() {
         eulerManifold->hide();
     }
 
-    QLinkedListIterator<SkeletonWindow*> it(viewers);
-    while( it.hasNext())
-        (it.next())->refresh();
+    for (auto window : viewers)
+        window->refresh();
 }
 
 void Tri4SkelCompUI::viewVertices() {
@@ -260,38 +259,38 @@ void Tri4SkelCompUI::viewVertices() {
     // Similarly for edges, triangles, etc.
     SkeletonWindow* win = new SkeletonWindow(this, new Vertex4Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewEdges() {
     SkeletonWindow* win = new SkeletonWindow(this, new Edge4Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewTriangles() {
     SkeletonWindow* win = new SkeletonWindow(this, new Triangle4Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewTetrahedra() {
     SkeletonWindow* win = new SkeletonWindow(this,
         new Tetrahedron4Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewComponents() {
     SkeletonWindow* win = new SkeletonWindow(this, new Component4Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 
 void Tri4SkelCompUI::viewBoundaryComponents() {
     SkeletonWindow* win = new SkeletonWindow(this,
         new BoundaryComponent4Model(tri));
     win->show();
-    viewers.append(win);
+    viewers.push_back(win);
 }
 

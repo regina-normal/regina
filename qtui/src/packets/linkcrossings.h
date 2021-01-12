@@ -158,8 +158,8 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
         QAction* actReflect;
         QAction* actSimplify;
         QAction* actComplement;
-        QLinkedList<QAction*> actionList;
-        QLinkedList<QAction*> enableWhenWritable;
+        std::vector<QAction*> actionList;
+        std::vector<QAction*> enableWhenWritable;
 
     public:
         /**
@@ -183,7 +183,7 @@ class LinkCrossingsUI : public QObject, public PacketEditorTab {
          */
         regina::Packet* getPacket();
         QWidget* getInterface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
+        const std::vector<QAction*>& getPacketTypeActions();
         void refresh();
         void setReadWrite(bool readWrite);
 

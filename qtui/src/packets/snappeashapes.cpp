@@ -263,9 +263,9 @@ SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
     actRandomise->setWhatsThis(tr("Randomise this triangulation.  "
         "The manifold will be randomly retriangulated using local moves "
         "that preserve the topology."));
-    enableWhenWritable.append(actRandomise);
-    triActionList.append(actRandomise);
-    requiresNonNull.append(actRandomise);
+    enableWhenWritable.push_back(actRandomise);
+    triActionList.push_back(actRandomise);
+    requiresNonNull.push_back(actRandomise);
     connect(actRandomise, SIGNAL(triggered()), this, SLOT(randomise()));
 
     QAction* actCanonise = new QAction(this);
@@ -285,8 +285,8 @@ SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
         "<b>Warning:</b> SnapPea might not compute the canonical "
         "cell decomposition correctly.  However, it does guarantee "
         "that the resulting manifold is homeomorphic to the original.</qt>"));
-    triActionList.append(actCanonise);
-    requiresNonNull.append(actCanonise);
+    triActionList.push_back(actCanonise);
+    requiresNonNull.push_back(actCanonise);
     connect(actCanonise, SIGNAL(triggered()), this, SLOT(canonise()));
 
     QAction* actVertexLinks = new QAction(this);
@@ -300,8 +300,8 @@ SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
         "frontier of a small regular neighbourhood of <i>V</i>.  "
         "The triangles that make up this link sit inside "
         "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
-    triActionList.append(actVertexLinks);
-    requiresNonNull.append(actVertexLinks);
+    triActionList.push_back(actVertexLinks);
+    requiresNonNull.push_back(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
     actFill = new QAction(this);
@@ -312,13 +312,13 @@ SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
     actFill->setWhatsThis(tr("<qt>Retriangulate to permanently "
         "fill either one cusp or all cusps of this manifold.  "
         "The original triangulation will be left untouched.</qt>"));
-    triActionList.append(actFill);
-    requiresNonNull.append(actFill);
+    triActionList.push_back(actFill);
+    requiresNonNull.push_back(actFill);
     connect(actFill, SIGNAL(triggered()), this, SLOT(fill()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     actToRegina = new QAction(this);
     actToRegina->setText(tr("&Convert to Regina"));
@@ -332,8 +332,8 @@ SnapPeaShapesUI::SnapPeaShapesUI(regina::SnapPeaTriangulation* packet,
         "However, the native Regina "
         "triangulation will lose any SnapPea-specific "
         "information (such as peripheral curves on cusps).</qt>"));
-    triActionList.append(actToRegina);
-    requiresNonNull.append(actToRegina);
+    triActionList.push_back(actToRegina);
+    requiresNonNull.push_back(actToRegina);
     connect(actToRegina, SIGNAL(triggered()), this, SLOT(toRegina()));
 
     // Tidy up.
@@ -344,7 +344,7 @@ SnapPeaShapesUI::~SnapPeaShapesUI() {
     delete model;
 }
 
-const QLinkedList<QAction*>& SnapPeaShapesUI::getPacketTypeActions() {
+const std::vector<QAction*>& SnapPeaShapesUI::getPacketTypeActions() {
     return triActionList;
 }
 
@@ -420,9 +420,8 @@ void SnapPeaShapesUI::setReadWrite(bool readWrite) {
     if (tri->isNull())
         readWrite = false;
 
-    QLinkedListIterator<QAction*> it(enableWhenWritable);
-    while (it.hasNext())
-        (it.next())->setEnabled(readWrite);
+    for (auto action : enableWhenWritable)
+        action->setEnabled(readWrite);
 
     updateNonNullActions();
 }
@@ -545,9 +544,8 @@ void SnapPeaShapesUI::canonise() {
 
 void SnapPeaShapesUI::updateNonNullActions() {
     if (tri->isNull()) {
-        QLinkedListIterator<QAction*> it(requiresNonNull);
-        while (it.hasNext())
-            (it.next())->setEnabled(false);
+        for (auto action : requiresNonNull)
+            action->setEnabled(false);
     }
 }
 

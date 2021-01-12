@@ -62,7 +62,7 @@ Tri2UI::Tri2UI(regina::Triangulation<2>* packet,
     addTab(skeleton, QObject::tr("&Skeleton"));
 }
 
-const QLinkedList<QAction*>& Tri2UI::getPacketTypeActions() {
+const std::vector<QAction*>& Tri2UI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 

@@ -40,8 +40,6 @@
 #include "packettabui.h"
 #include "reginamain.h"
 
-#include <QLinkedList>
-
 class SurfacesCompatibilityUI;
 class SurfacesCoordinateUI;
 class QLabel;
@@ -73,7 +71,7 @@ class SurfacesUI : public PacketTabbedUI {
         /**
          * PacketUI overrides.
          */
-        const QLinkedList<QAction*>& getPacketTypeActions();
+        const std::vector<QAction*>& getPacketTypeActions();
         QString getPacketMenuText() const;
 };
 

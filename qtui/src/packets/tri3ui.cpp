@@ -77,7 +77,7 @@ Tri3UI::Tri3UI(regina::Triangulation<3>* packet,
     addTab(snapPea, QObject::tr("Snap&Pea"));
 }
 
-const QLinkedList<QAction*>& Tri3UI::getPacketTypeActions() {
+const std::vector<QAction*>& Tri3UI::getPacketTypeActions() {
     return gluings->getPacketTypeActions();
 }
 

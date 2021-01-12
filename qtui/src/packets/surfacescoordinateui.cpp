@@ -550,7 +550,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
         "boundary triangles, the resulting number of tetrahedra might be very "
         "large.</qt>"));
     connect(actCutAlong, SIGNAL(triggered()), this, SLOT(cutAlong()));
-    surfaceActionList.append(actCutAlong);
+    surfaceActionList.push_back(actCutAlong);
 
     actCrush = new QAction(this);
     actCrush->setText("Crus&h Surface");
@@ -565,7 +565,7 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
         "topology of the underlying 3-manifold beyond just slicing along "
         "the surface and shrinking the resulting boundary/boundaries "
         "to points.</qt>"));
-    surfaceActionList.append(actCrush);
+    surfaceActionList.push_back(actCrush);
     connect(actCrush, SIGNAL(triggered()), this, SLOT(crush()));
 
     connect(table->selectionModel(),
@@ -577,13 +577,10 @@ SurfacesCoordinateUI::SurfacesCoordinateUI(regina::NormalSurfaces* packet,
 }
 
 SurfacesCoordinateUI::~SurfacesCoordinateUI() {
-    // Make sure the actions, including separators, are all deleted.
-    surfaceActionList.clear();
-
     delete model;
 }
 
-const QLinkedList<QAction*>& SurfacesCoordinateUI::getPacketTypeActions() {
+const std::vector<QAction*>& SurfacesCoordinateUI::getPacketTypeActions() {
     return surfaceActionList;
 }
 

@@ -336,7 +336,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         "this data file."));
     connect(actAdd, SIGNAL(triggered()), this, SLOT(addVariable()));
     actionBar->addAction(actAdd);
-    scriptActionList.append(actAdd);
+    scriptActionList.push_back(actAdd);
 
     actRemove = new QAction(this);
     //scriptActions->addAction("script_remove_var");
@@ -356,13 +356,13 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     connect(varTable, SIGNAL(itemSelectionChanged()), this,
         SLOT(updateRemoveState()));
     actionBar->addAction(actRemove);
-    scriptActionList.append(actRemove);
+    scriptActionList.push_back(actRemove);
 
     QAction* actSep = new QAction(this);
     //scriptActions->addAction("script_separator");
     actSep->setSeparator(true);
     actionBar->addAction(actSep);
-    scriptActionList.append(actSep);
+    scriptActionList.push_back(actSep);
 
     QAction* actRun = new QAction(this);
     //scriptActions->addAction("script_run");;
@@ -373,7 +373,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
         "script will be run in a separate Python console."));
     connect(actRun, SIGNAL(triggered()), this, SLOT(execute()));
     actionBar->addAction(actRun);
-    scriptActionList.append(actRun);
+    scriptActionList.push_back(actRun);
 
     // --- Finalising ---
 
@@ -393,11 +393,6 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
 }
 
 ScriptUI::~ScriptUI() {
-    // Make sure the actions, including separators, are all deleted.
-    for (QLinkedList<QAction*>::iterator it = scriptActionList.begin() ;
-            it != scriptActionList.end(); it++ )
-        delete *it;
-
     // Clean up.
     delete valueDelegate;
     delete model;
@@ -413,7 +408,7 @@ QWidget* ScriptUI::getInterface() {
     return ui;
 }
 
-const QLinkedList<QAction*>& ScriptUI::getPacketTypeActions() {
+const std::vector<QAction*>& ScriptUI::getPacketTypeActions() {
     return scriptActionList;
 }
 

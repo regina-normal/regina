@@ -419,7 +419,7 @@ HyperCoordinateUI::HyperCoordinateUI(regina::NormalHypersurfaces* packet,
         "which means that information about the <i>combinatorics</i> "
         "of the hypersurface will be lost.</qt>"));
     connect(actTriangulate, SIGNAL(triggered()), this, SLOT(triangulate()));
-    surfaceActionList.append(actTriangulate);
+    surfaceActionList.push_back(actTriangulate);
 
     connect(table->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
@@ -430,13 +430,10 @@ HyperCoordinateUI::HyperCoordinateUI(regina::NormalHypersurfaces* packet,
 }
 
 HyperCoordinateUI::~HyperCoordinateUI() {
-    // Make sure the actions, including separators, are all deleted.
-    surfaceActionList.clear();
-
     delete model;
 }
 
-const QLinkedList<QAction*>& HyperCoordinateUI::getPacketTypeActions() {
+const std::vector<QAction*>& HyperCoordinateUI::getPacketTypeActions() {
     return surfaceActionList;
 }
 

@@ -110,10 +110,9 @@ ReginaMain::~ReginaMain() {
         delete aboutApp;
 
     // Make an emergency closure of any remaining packet panes.
-    QLinkedList<PacketPane*> panes = allPanes;
-    QLinkedList<PacketPane*>::iterator i;
-    for (i=panes.begin() ; i!=panes.end(); i++)
-        delete *i;
+    std::list<PacketPane*> panes = allPanes;
+    for (auto pane : panes)
+        delete pane;
 
     // Delete the visual tree before the underlying packets so that
     // we don't get a flood of change events.
@@ -210,7 +209,7 @@ void ReginaMain::ensureVisibleInTree(regina::Packet* packet) {
 }
 
 void ReginaMain::isClosing(PacketPane* closingPane) {
-    allPanes.removeAll(closingPane);
+    allPanes.remove(closingPane);
 }
 
 void ReginaMain::dragEnterEvent(QDragEnterEvent *event) {
@@ -491,9 +490,8 @@ void ReginaMain::treeRefresh() {
     treeView->refreshFullTree();
 
     // Refresh all packet panes.
-    for (QLinkedList<PacketPane *>::iterator it = allPanes.begin();
-            it != allPanes.end(); it++)
-        (*it)->refresh();
+    for (auto pane : allPanes)
+        pane->refresh();
 }
 
 void ReginaMain::clonePacket() {
@@ -573,41 +571,33 @@ void ReginaMain::helpIntro() {
 bool ReginaMain::closeAllPanes() {
     // Copy the list since the original list will be modified as panes
     // are closed.
-    QLinkedList<PacketPane *> panes = allPanes;
+    std::list<PacketPane*> panes = allPanes;
 
-    // Try to close each pane in return, returning false if a pane
-    // refuses.
-    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
-            it != panes.end() ; it++) {
-        if (! (*it)->close())
+    // Try to close each pane in return, returning false if a pane refuses.
+    for (auto pane : panes)
+        if (! pane->close())
             return false;
-    }
 
     return true;
 }
 
 void ReginaMain::endEdit() {
-    QLinkedList<PacketPane *> panes = allPanes;
-    for (QLinkedList<PacketPane *>::iterator it = panes.begin(); 
-            it != panes.end() ; it++)
-        ((*it)->getUI()->endEdit());
+    std::list<PacketPane *> panes = allPanes;
+    for (auto pane : panes)
+        pane->getUI()->endEdit();
 }
 
 void ReginaMain::updateTreeActions() {
-    QLinkedList<QAction *>::iterator it;
-    for (it = treeGeneralEditActions.begin(); 
-            it != treeGeneralEditActions.end(); it++)
-        (*it)->setEnabled(true);
+    for (auto action : treeGeneralEditActions)
+        action->setEnabled(true);
 
     bool enable = ! treeView->selectedItems().isEmpty(); 
 
-    for (it = treePacketViewActions.begin(); 
-            it != treePacketViewActions.end(); it++)
-        (*it)->setEnabled(enable);
+    for (auto action : treePacketViewActions)
+        action->setEnabled(enable);
 
-    for (it = treePacketEditActions.begin(); 
-            it != treePacketEditActions.end(); it++)
-        (*it)->setEnabled(enable);
+    for (auto action : treePacketEditActions)
+        action->setEnabled(enable);
 }
 
 void ReginaMain::setupWidgets() {
@@ -676,7 +666,7 @@ void ReginaMain::view(PacketPane* newPane) {
     newPane->floatPane();
 
     // Add it to the list of currently managed panes.
-    allPanes.append(newPane);
+    allPanes.push_back(newPane);
 }
 
 regina::Packet* ReginaMain::checkPacketSelected() {

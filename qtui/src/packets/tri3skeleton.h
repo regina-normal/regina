@@ -85,7 +85,7 @@ class Tri3SkelCompUI : public QObject, public PacketViewerTab {
         /**
          * Skeleton viewers
          */
-        QLinkedList<SkeletonWindow*> viewers;
+        std::vector<SkeletonWindow*> viewers;
 
     public:
         /**

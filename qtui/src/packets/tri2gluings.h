@@ -154,8 +154,8 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
         QAction* actAddTri;
         QAction* actRemoveTri;
         QAction* actOrient;
-        QLinkedList<QAction*> triActionList;
-        QLinkedList<QAction*> enableWhenWritable;
+        std::vector<QAction*> triActionList;
+        std::vector<QAction*> enableWhenWritable;
 
     public:
         /**
@@ -179,7 +179,7 @@ class Tri2GluingsUI : public QObject, public PacketEditorTab {
          */
         regina::Packet* getPacket();
         QWidget* getInterface();
-        const QLinkedList<QAction*>& getPacketTypeActions();
+        const std::vector<QAction*>& getPacketTypeActions();
         void refresh();
         void endEdit();
         void setReadWrite(bool readWrite);

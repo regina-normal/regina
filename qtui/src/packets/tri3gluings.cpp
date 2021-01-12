@@ -364,8 +364,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actAddTet->setEnabled(readWrite);
     actAddTet->setWhatsThis(tr("Add a new tetrahedron to this "
         "triangulation."));
-    enableWhenWritable.append(actAddTet);
-    triActionList.append(actAddTet);
+    enableWhenWritable.push_back(actAddTet);
+    triActionList.push_back(actAddTet);
     connect(actAddTet, SIGNAL(triggered()), this, SLOT(addTet()));
 
     actRemoveTet = new QAction(this);
@@ -379,11 +379,11 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     connect(faceTable->selectionModel(),
         SIGNAL(selectionChanged(const QItemSelection&, const QItemSelection&)),
         this, SLOT(updateRemoveState()));
-    triActionList.append(actRemoveTet);
+    triActionList.push_back(actRemoveTet);
 
     sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     actSimplify = new QAction(this);
     actSimplify->setText(tr("&Simplify"));
@@ -401,8 +401,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "the <i>Make 0-Efficient</i> routine for a slower but more powerful "
         "reduction."));
     connect(actSimplify, SIGNAL(triggered()), this, SLOT(simplify()));
-    enableWhenWritable.append(actSimplify);
-    triActionList.append(actSimplify);
+    enableWhenWritable.push_back(actSimplify);
+    triActionList.push_back(actSimplify);
 
     QAction* actEltMove = new QAction(this);
     actEltMove->setText(tr("&Elementary Moves..."));
@@ -415,13 +415,13 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "3-manifold.<p>"
         "A dialog will be presented for you to select which "
         "elementary moves to apply.</qt>"));
-    enableWhenWritable.append(actEltMove);
-    triActionList.append(actEltMove);
+    enableWhenWritable.push_back(actEltMove);
+    triActionList.push_back(actEltMove);
     connect(actEltMove, SIGNAL(triggered()), this, SLOT(elementaryMove()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     actOrient = new QAction(this);
     actOrient->setText(tr("&Orient"));
@@ -434,8 +434,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "so that orientation is preserved across adjacent faces.<p>"
         "If this triangulation includes both orientable and non-orientable "
         "components, only the orientable components will be relabelled.</qt>"));
-    enableWhenWritable.append(actOrient);
-    triActionList.append(actOrient);
+    enableWhenWritable.push_back(actOrient);
+    triActionList.push_back(actOrient);
     connect(actOrient, SIGNAL(triggered()), this, SLOT(orient()));
 
     QAction* actReflect = new QAction(this);
@@ -449,7 +449,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "If this triangulation is oriented, then the overall effect will be "
         "to convert this into an isomorphic triangulation with the "
         "opposite orientation.</qt>"));
-    triActionList.append(actReflect);
+    triActionList.push_back(actReflect);
     connect(actReflect, SIGNAL(triggered()), this, SLOT(reflect()));
 
     QAction* actBarycentricSubdivide = new QAction(this);
@@ -463,8 +463,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "changed directly.<p>"
         "This operation involves subdividing each tetrahedron into "
         "24 smaller tetrahedra."));
-    enableWhenWritable.append(actBarycentricSubdivide);
-    triActionList.append(actBarycentricSubdivide);
+    enableWhenWritable.push_back(actBarycentricSubdivide);
+    triActionList.push_back(actBarycentricSubdivide);
     connect(actBarycentricSubdivide, SIGNAL(triggered()), this,
         SLOT(barycentricSubdivide()));
 
@@ -482,8 +482,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "vertices of this type to truncate, this operation will have no "
         "effect.<p>"
         "This action was previously called <i>Ideal to Finite</i>."));
-    enableWhenWritable.append(actIdealToFinite);
-    triActionList.append(actIdealToFinite);
+    enableWhenWritable.push_back(actIdealToFinite);
+    triActionList.push_back(actIdealToFinite);
     connect(actIdealToFinite, SIGNAL(triggered()), this, SLOT(idealToFinite()));
 
     QAction* actFiniteToIdeal = new QAction(this);
@@ -500,8 +500,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "components will be filled in with balls.<p>"
         "This triangulation will be modified directly.  If there are no "
         "real boundary components, this operation will have no effect."));
-    enableWhenWritable.append(actFiniteToIdeal);
-    triActionList.append(actFiniteToIdeal);
+    enableWhenWritable.push_back(actFiniteToIdeal);
+    triActionList.push_back(actFiniteToIdeal);
     connect(actFiniteToIdeal, SIGNAL(triggered()), this, SLOT(finiteToIdeal()));
 
     QAction* actDoubleCover = new QAction(this);
@@ -515,8 +515,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "will be modified directly.<p>"
         "If this triangulation is already orientable, it will simply be "
         "duplicated, resulting in a disconnected triangulation."));
-    enableWhenWritable.append(actDoubleCover);
-    triActionList.append(actDoubleCover);
+    enableWhenWritable.push_back(actDoubleCover);
+    triActionList.push_back(actDoubleCover);
     connect(actDoubleCover, SIGNAL(triggered()), this, SLOT(doubleCover()));
 
     QAction* actPuncture = new QAction(this);
@@ -528,8 +528,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actPuncture->setWhatsThis(tr("Removes a ball from the interior of "
         "this triangulation.  "
         "This triangulation will be modified directly."));
-    enableWhenWritable.append(actPuncture);
-    triActionList.append(actPuncture);
+    enableWhenWritable.push_back(actPuncture);
+    triActionList.push_back(actPuncture);
     connect(actPuncture, SIGNAL(triggered()), this, SLOT(puncture()));
 
     QAction* actDrillEdge = new QAction(this);
@@ -541,8 +541,8 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actDrillEdge->setWhatsThis(tr("Drill out a regular neighbourhood "
         "of an edge of this triangulation.  "
         "This triangulation will be modified directly."));
-    enableWhenWritable.append(actDrillEdge);
-    triActionList.append(actDrillEdge);
+    enableWhenWritable.push_back(actDrillEdge);
+    triActionList.push_back(actDrillEdge);
     connect(actDrillEdge, SIGNAL(triggered()), this, SLOT(drillEdge()));
 
     QAction* actConnectedSumWith = new QAction(this);
@@ -554,14 +554,14 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
     actConnectedSumWith->setWhatsThis(tr("Forms the connected sum "
         "of this triangulation with some other triangulation.  "
         "This triangulation will be modified directly."));
-    enableWhenWritable.append(actConnectedSumWith);
-    triActionList.append(actConnectedSumWith);
+    enableWhenWritable.push_back(actConnectedSumWith);
+    triActionList.push_back(actConnectedSumWith);
     connect(actConnectedSumWith, SIGNAL(triggered()), this,
         SLOT(connectedSumWith()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     actBoundaryComponents = new QAction(this);
     actBoundaryComponents->setText(tr("Boundar&y Components..."));
@@ -574,7 +574,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "a 2-manifold triangulation from its boundary triangles.  "
         "If you select an ideal boundary component, this will construct "
         "a 2-manifold triangulation from the corresponding vertex link.</qt>"));
-    triActionList.append(actBoundaryComponents);
+    triActionList.push_back(actBoundaryComponents);
     connect(actBoundaryComponents, SIGNAL(triggered()), this,
         SLOT(boundaryComponents()));
 
@@ -589,7 +589,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "frontier of a small regular neighbourhood of <i>V</i>.  "
         "The triangles that make up this link sit inside "
         "the tetrahedron corners that meet together at <i>V</i>.</qt>"));
-    triActionList.append(actVertexLinks);
+    triActionList.push_back(actVertexLinks);
     connect(actVertexLinks, SIGNAL(triggered()), this, SLOT(vertexLinks()));
 
     QAction* actSplitIntoComponents = new QAction(this);
@@ -604,7 +604,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "it in the packet tree.<p>"
         "If this triangulation is already connected, this operation will "
         "do nothing.</qt>"));
-    triActionList.append(actSplitIntoComponents);
+    triActionList.push_back(actSplitIntoComponents);
     connect(actSplitIntoComponents, SIGNAL(triggered()), this,
         SLOT(splitIntoComponents()));
 
@@ -619,7 +619,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "triangulation will not be modified &ndash; the individual prime "
         "summands will be added as new triangulations beneath it in "
         "the packet tree."));
-    triActionList.append(actConnectedSumDecomposition);
+    triActionList.push_back(actConnectedSumDecomposition);
     connect(actConnectedSumDecomposition, SIGNAL(triggered()), this,
         SLOT(connectedSumDecomposition()));
 
@@ -636,13 +636,13 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "Note also that some 3-manifolds (such as composite 3-manifolds) "
         "can never have 0-efficient triangulations.  You will be notified "
         "if this is the case.</qt>"));
-    enableWhenWritable.append(actZeroEff);
-    triActionList.append(actZeroEff);
+    enableWhenWritable.push_back(actZeroEff);
+    triActionList.push_back(actZeroEff);
     connect(actZeroEff, SIGNAL(triggered()), this, SLOT(makeZeroEfficient()));
 
     sep = new QAction(this);
     sep->setSeparator(true);
-    triActionList.append(sep);
+    triActionList.push_back(sep);
 
     QAction* actToSnapPea = new QAction(this);
     actToSnapPea->setText(tr("Convert to SnapPea"));
@@ -654,7 +654,7 @@ Tri3GluingsUI::Tri3GluingsUI(regina::Triangulation<3>* packet,
         "Using a SnapPea triangulation will give you richer access to the "
         "SnapPea kernel.  For peripheral curves, Regina will attempt "
         "to install the (shortest, second shortest) basis on each cusp.</qt>"));
-    triActionList.append(actToSnapPea);
+    triActionList.push_back(actToSnapPea);
     connect(actToSnapPea, SIGNAL(triggered()), this, SLOT(toSnapPea()));
 
     // Tidy up.
@@ -668,7 +668,7 @@ Tri3GluingsUI::~Tri3GluingsUI() {
     delete model;
 }
 
-const QLinkedList<QAction*>& Tri3GluingsUI::getPacketTypeActions() {
+const std::vector<QAction*>& Tri3GluingsUI::getPacketTypeActions() {
     return triActionList;
 }
 
@@ -708,9 +708,8 @@ void Tri3GluingsUI::setReadWrite(bool readWrite) {
     } else
         faceTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    QLinkedListIterator<QAction*> it(enableWhenWritable);
-    while (it.hasNext())
-        (it.next())->setEnabled(readWrite);
+    for (auto action : enableWhenWritable)
+        action->setEnabled(readWrite);
 
     updateRemoveState();
     updateActionStates();
