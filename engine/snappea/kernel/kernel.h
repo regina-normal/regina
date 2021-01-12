@@ -11,9 +11,11 @@
 
 #include "SnapPea.h"
 
+/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
 #ifdef __cplusplus
 extern "C" {
 #endif
+*/
 
 #include <string.h>
 #include <math.h>
@@ -30,9 +32,11 @@ extern "C" {
 #include "kernel_prototypes.h"
 #include "tables.h"
 
+/* We build the snappea kernel as C++, so link it as C++. - B.B., 27/03/2014.
 #ifdef __cplusplus
 }
 #endif
+*/
 
 #endif
 /* Local Variables:                      */

@@ -16,3 +16,5 @@
 #endif
 #endif
 #endif
+
+namespace regina { namespace snappea {
