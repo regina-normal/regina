@@ -42,7 +42,6 @@ my @actionIcons = qw/
     list-add
     list-remove
     process-stop
-    run-build-file
     text-x-c++src
     utilities-terminal
     window-close
