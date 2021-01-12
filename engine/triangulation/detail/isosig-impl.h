@@ -343,12 +343,23 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
 template <int dim>
 std::string isoSigv2(TriangulationBase<dim>* triangulation) {
     std::vector<SimplexInfo<dim>> properties;
+    /**
+     * Preprocesses each simplex so they can be compared easily using
+     * the 'SimplexInfo' class. (Look into the class to see how these
+     * comparisons are done) 
+     */
     for (int i = 0; i < triangulation->size(); i++) {
         Simplex<dim>* tetrahedra = triangulation->simplex(i);
         properties.emplace_back(SimplexInfo<dim>(tetrahedra, i, triangulation->size()));
     }
+    /**
+     * Creates an ordering of simplices through sorting
+     */
     std::sort(properties.begin(), properties.end());
-    //Iterate through and partitionSizes into runs
+    /**
+     * Iterate through properties and stores the lengths of consecutive 
+     * equal SimplexInfo objects. 
+     */
     int prev = 0;
     int runLength = 1;
     std::vector<int> partitionSizes;
@@ -362,7 +373,9 @@ std::string isoSigv2(TriangulationBase<dim>* triangulation) {
         }
     }
     partitionSizes.push_back(runLength);
-    //Use best partition (Partition requiring minimal tetrahedra)
+    /** 
+     * Selects the the first minimum size partition to use. 
+     */
     int index = 0;
     int bestIndex = 0; //Starting index for best tetrahedra
     int partitionIndex = 0; //Partition index for best tetrahedra
@@ -375,8 +388,18 @@ std::string isoSigv2(TriangulationBase<dim>* triangulation) {
             partitionIndex = i;
         }
     }
+
+    /** 
+     * Chooses the isomorphism signature that is lexicographically smallest
+     * which is contained within the first minimum size partition selected
+     * previously, and with a permutation where  each vertex label in the 
+     * comparison is ranked equal or higher then the previous vertex label.
+     */    
     std::string ans;
     for (int i = 0; i < partitionSizes[partitionIndex]; i++) {
+        /** 
+         * Gets only the necessary to check permutations.
+         */          
         auto perms = properties[bestIndex + i].getAllPerms();
         for (auto perm : perms) {
             std::string curr = isoSigFrom(triangulation->simplex(properties[bestIndex + i].getLabel())->index(), 
