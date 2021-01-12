@@ -22,14 +22,14 @@
 #include "kernel.h"
 #include "kernel_namespace.h"
 
-Complex Zero        = { 0.0, 0.0};
-Complex One         = { 1.0, 0.0};
-Complex Two         = { 2.0, 0.0};
-Complex Four        = { 4.0, 0.0};
-Complex MinusOne    = {-1.0, 0.0};
-Complex I           = { 0.0, 1.0};
-Complex TwoPiI      = { 0.0, TWO_PI};
-Complex Infinity    = {1e64, 0.0};
+const Complex Zero        = { 0.0, 0.0};
+const Complex One         = { 1.0, 0.0};
+const Complex Two         = { 2.0, 0.0};
+const Complex Four        = { 4.0, 0.0};
+const Complex MinusOne    = {-1.0, 0.0};
+const Complex I           = { 0.0, 1.0};
+const Complex TwoPiI      = { 0.0, TWO_PI};
+const Complex Infinity    = {1e64, 0.0};
 
 Complex complex_plus(
     Complex z0,

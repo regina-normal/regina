@@ -33,7 +33,7 @@
 #define COLUMN_PRODUCT(m, i, j)     \
     (-m[0][i]*m[0][j] + m[1][i]*m[1][j] + m[2][i]*m[2][j] + m[3][i]*m[3][j])
 
-O31Matrix   O31_identity = {
+const O31Matrix   O31_identity = {
                                 {1.0, 0.0, 0.0, 0.0},
                                 {0.0, 1.0, 0.0, 0.0},
                                 {0.0, 0.0, 1.0, 0.0},
@@ -43,7 +43,7 @@ O31Matrix   O31_identity = {
 
 void o31_copy(
     O31Matrix   dest,
-    O31Matrix   source)
+    const O31Matrix   source)
 {
     int i,
         j;
