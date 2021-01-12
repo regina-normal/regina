@@ -74,3 +74,40 @@ index c24d6199e..ef142f978 100644
  #endif
 +
 +namespace regina { namespace snappea {
+diff --git a/engine/snappea/kernel/SnapPea.h b/engine/snappea/kernel/SnapPea.h
+index 6fa6aaa96..469223e71 100644
+--- a/engine/snappea/kernel/SnapPea.h
++++ b/engine/snappea/kernel/SnapPea.h
+@@ -430,6 +430,7 @@ typedef struct SymmetryGroup                SymmetryGroup;
+ typedef struct SymmetryGroupPresentation    SymmetryGroupPresentation;
+ typedef struct DualOneSkeletonCurve         DualOneSkeletonCurve;
+ typedef struct TerseTriangulation           TerseTriangulation;
++struct GroupPresentation; // To distinguish snappea's from regina's.
+ typedef struct GroupPresentation            GroupPresentation;
+ typedef struct CuspNeighborhoods            CuspNeighborhoods;
+ typedef struct NormalSurfaceList            NormalSurfaceList;
+diff --git a/engine/snappea/kernel/triangulation.h b/engine/snappea/kernel/triangulation.h
+index c1c515f54..3650008b4 100644
+--- a/engine/snappea/kernel/triangulation.h
++++ b/engine/snappea/kernel/triangulation.h
+@@ -62,7 +62,7 @@ typedef struct ComplexWithLog   ComplexWithLog;
+ typedef struct TetShape         TetShape;
+ typedef struct Tetrahedron      Tetrahedron;
+ typedef struct EdgeClass        EdgeClass;
+-typedef struct Cusp             Cusp;
++struct Cusp;
+ 
+ 
+ /**
+diff --git a/engine/snappea/kernel/winged_edge.h b/engine/snappea/kernel/winged_edge.h
+index 568c6011b..875f7f434 100644
+--- a/engine/snappea/kernel/winged_edge.h
++++ b/engine/snappea/kernel/winged_edge.h
+@@ -54,6 +54,7 @@ typedef enum
+  *  (Indeed even the existence of the Tetrahedron structure is private to
+  *  the kernel, so we are "cheating" a bit even by including the typedef.)
+  */
++struct Tetrahedron; // To distinguish snappea's Tetrahedron from regina's
+ typedef struct Tetrahedron      TetrahedronSneak;
+ 
+ 

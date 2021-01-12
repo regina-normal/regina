@@ -430,6 +430,7 @@ typedef struct SymmetryGroup                SymmetryGroup;
 typedef struct SymmetryGroupPresentation    SymmetryGroupPresentation;
 typedef struct DualOneSkeletonCurve         DualOneSkeletonCurve;
 typedef struct TerseTriangulation           TerseTriangulation;
+struct GroupPresentation; // To distinguish snappea's from regina's.
 typedef struct GroupPresentation            GroupPresentation;
 typedef struct CuspNeighborhoods            CuspNeighborhoods;
 typedef struct NormalSurfaceList            NormalSurfaceList;
