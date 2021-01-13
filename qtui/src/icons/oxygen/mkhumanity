@@ -1,0 +1,73 @@
+#!/usr/bin/perl -w
+use strict;
+
+my @actionSizes = ( 16, 22, 32 );
+my @dialogSizes = ( 16, 22, 32, 48, 64 );
+my @allSizesDesc = ( 64, 48, 32, 24, 22, 16 );
+my @actionIcons = qw/
+    application-exit
+    document-new
+    document-open
+    document-open-recent
+    document-save
+    document-save-as
+    window-close
+    /;
+my @dialogIcons = qw/
+    system-run
+    /;
+
+my $root = undef;
+
+sub usage {
+    my $err = shift;
+    $err and print STDERR "ERROR: $err\n\n";
+    print STDERR "Usage: $0 <path to humanity-icon-theme-X.Y.Z>\n";
+    exit 1;
+}
+
+sub render {
+    my $icon = shift;
+    my $size = shift;
+    my $filename = shift;
+
+    my $src = undef;
+    foreach (@allSizesDesc) {
+        $_ < $size and $src and last;
+        my $loc = "$root/Humanity/actions/$_/$icon.svg";
+        -e "$loc" and $src = $loc;
+    }
+    if (not defined $src) {
+        print STDERR "ERROR: No sources found for $icon/$size\n";
+        return;
+    }
+
+    print "Rendering $icon/$size...\n";
+    `rsvg -w$size -h$size "$src" "$filename"`;
+}
+
+sub process {
+    my $icon = shift;
+    my $sizes = shift;
+
+    foreach (@$sizes) {
+        render($icon, $_, "$icon-$_.png", $1);
+        render($icon, 2 * $_, "$icon-$_\@2x.png", $1);
+    }
+}
+
+$#ARGV == 0 or usage;
+
+$root = $ARGV[0];
+-d "$root" or usage "Argument \"$root\" is not a directory.";
+-e "$root/Humanity/actions/16/window-close.svg" or
+    usage "Argument \"$root\" does not look like a humanity-icon-theme checkout.";
+
+foreach my $i (@actionIcons) {
+    process($i, \@actionSizes);
+}
+
+foreach my $i (@dialogIcons) {
+    process($i, \@dialogSizes);
+}
+
