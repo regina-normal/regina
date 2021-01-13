@@ -3,12 +3,6 @@ set (IMG_FILES )
 set (IMGS
   application-exit
   application-xml
-  arrow-down
-  arrow-down-double
-  arrow-left
-  arrow-right
-  arrow-up
-  arrow-up-double
   bookmarks
   clock
   configure
@@ -28,7 +22,11 @@ set (IMGS
   edit-rename
   edit-select-all
   go-bottom
+  go-down
+  go-next
+  go-previous
   go-top
+  go-up
   help-about
   help-contents
   help-contextual

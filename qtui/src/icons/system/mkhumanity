@@ -11,6 +11,12 @@ my @actionIcons = qw/
     document-open-recent
     document-save
     document-save-as
+    go-bottom
+    go-down
+    go-next
+    go-previous
+    go-top
+    go-up
     window-close
     /;
 my @dialogIcons = qw/

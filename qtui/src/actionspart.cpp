@@ -535,7 +535,7 @@ void ReginaMain::setupActions() {
     // Tree reorganisation:
     act = new QAction(this);
     act->setText(tr("&Higher Level"));
-    act->setIcon(ReginaSupport::themeIcon("arrow-left"));
+    act->setIcon(ReginaSupport::themeIcon("go-previous"));
     act->setShortcut(tr("Alt+Left"));
     act->setToolTip(tr("Move packet to a higher (shallower) level "
         "in the tree"));
@@ -549,7 +549,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Lower Level"));
-    act->setIcon(ReginaSupport::themeIcon("arrow-right"));
+    act->setIcon(ReginaSupport::themeIcon("go-next"));
     act->setShortcut(tr("Alt+Right"));
     act->setToolTip(tr("Move packet to a lower (deeper) level in the tree"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -564,7 +564,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Up"));
-    act->setIcon(ReginaSupport::themeIcon("arrow-up"));
+    act->setIcon(ReginaSupport::themeIcon("go-up"));
     act->setShortcut(tr("Alt+Up"));
     act->setToolTip(tr("Move packet up through its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -576,7 +576,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Jump U&p"));
-    act->setIcon(ReginaSupport::themeIcon("arrow-up-double"));
+    // act->setIcon(ReginaSupport::themeIcon("arrow-up-double"));
     act->setShortcut(tr("Alt+Shift+Up"));
     act->setToolTip(tr("Jump packet up through its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -603,7 +603,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Down"));
-    act->setIcon(ReginaSupport::themeIcon("arrow-down"));
+    act->setIcon(ReginaSupport::themeIcon("go-down"));
     act->setShortcut(tr("Alt+Down"));
     act->setToolTip(tr("Move packet down through its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "
@@ -615,7 +615,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Jump Do&wn"));
-    act->setIcon(ReginaSupport::themeIcon("arrow-down-double"));
+    // act->setIcon(ReginaSupport::themeIcon("arrow-down-double"));
     act->setShortcut(tr("Alt+Shift+Down"));
     act->setToolTip(tr("Jump packet down through its siblings"));
     act->setWhatsThis(tr("Move the currently selected packet "

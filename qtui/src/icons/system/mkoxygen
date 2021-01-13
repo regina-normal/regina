@@ -9,12 +9,6 @@ my @actionSizes = ( 16, 22, 32 );
 my @dialogSizes = ( 16, 22, 32, 48, 64 );
 my @actionIcons = qw/
     application-xml
-    arrow-down
-    arrow-down-double
-    arrow-left
-    arrow-right
-    arrow-up
-    arrow-up-double
     bookmarks
     configure
     dialog-cancel
@@ -26,8 +20,6 @@ my @actionIcons = qw/
     edit-paste
     edit-rename
     edit-select-all
-    go-bottom
-    go-top
     help-about
     help-contents
     help-contextual
