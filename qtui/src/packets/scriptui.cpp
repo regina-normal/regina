@@ -326,7 +326,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actAdd = new QAction(this);
     //scriptActions->addAction("script_add_var");
     actAdd->setText(tr("&Add Var"));
-    actAdd->setIcon(ReginaSupport::themeIcon("edit-table-insert-row-below"));
+    actAdd->setIcon(ReginaSupport::regIcon("insert"));
     actAdd->setToolTip(tr("Add a new script variable"));
     actAdd->setEnabled(readWrite);
     actAdd->setWhatsThis(tr("Add a new variable to this script.<p>"
@@ -341,7 +341,7 @@ ScriptUI::ScriptUI(Script* packet, PacketPane* enclosingPane) :
     actRemove = new QAction(this);
     //scriptActions->addAction("script_remove_var");
     actRemove->setText(tr("Re&move Var"));
-    actRemove->setIcon(ReginaSupport::themeIcon("edit-table-delete-row"));
+    actRemove->setIcon(ReginaSupport::regIcon("delete"));
     actRemove->setToolTip(tr(
         "Remove the currently selected script variable(s)"));
     actRemove->setEnabled(false);

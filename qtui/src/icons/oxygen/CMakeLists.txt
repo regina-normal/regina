@@ -27,8 +27,6 @@ set (IMGS
   edit-paste
   edit-rename
   edit-select-all
-  edit-table-delete-row
-  edit-table-insert-row-below
   go-bottom
   go-top
   help-about
