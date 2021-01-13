@@ -14,6 +14,9 @@ Version 6.1  [ TODO ]
         - Regina no longer needs boost to build. It still ships the
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
+    USER INTERFACES:
+        - Gave some of the standard system icons (open, save, close, etc.)
+          a long-awaited refresh.
 
 Version 6.0  [ 11 January, 2021 ]
 

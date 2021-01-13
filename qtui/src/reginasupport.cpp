@@ -164,8 +164,8 @@ QIcon ReginaSupport::themeIcon(const QString& name) {
     if (! icon.isNull())
         return icon;
 
-    QString filename = home() + "/icons/oxygen/" + name + "-%1.png";
-    QString filename2x = home() + "/icons/oxygen/" + name + "-%1@2x.png";
+    QString filename = home() + "/icons/system/" + name + "-%1.png";
+    QString filename2x = home() + "/icons/system/" + name + "-%1@2x.png";
     for (int i = 0; iconSizes[i]; ++i) {
         icon.addFile(filename.arg(iconSizes[i]));
         icon.addFile(filename2x.arg(iconSizes[i]));

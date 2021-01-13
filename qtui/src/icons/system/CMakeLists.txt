@@ -50,5 +50,5 @@ foreach (IMG_CLASS ${IMGS})
   endforeach (IMG_SIZE ${SIZES})
 endforeach (IMG_CLASS ${IMGS})
 
-INSTALL (FILES ${IMG_FILES} DESTINATION ${PKGDATADIR}/icons/oxygen)
+INSTALL (FILES ${IMG_FILES} DESTINATION ${PKGDATADIR}/icons/system)
 
