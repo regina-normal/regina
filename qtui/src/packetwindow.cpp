@@ -194,7 +194,7 @@ void PacketWindow::setupMenus() {
 
     act = new QAction(this);
     act->setText(tr("&About Regina"));
-    act->setIcon(ReginaSupport::themeIcon("help-about"));
+    act->setIcon(ReginaSupport::themeIcon("dialog-information"));
     act->setMenuRole(QAction::AboutRole);
     act->setWhatsThis(tr("Display information about Regina, such as "
         "the authors, license and website."));

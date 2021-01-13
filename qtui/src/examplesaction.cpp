@@ -49,7 +49,7 @@
 ExamplesAction::ExamplesAction(QWidget* parent) :
         QMenu(parent) {
     setTitle(tr("Open E&xample"));
-    setIcon(ReginaSupport::themeIcon("bookmarks"));
+    setIcon(ReginaSupport::themeIcon("help-about"));
 
     group = new QActionGroup(parent);
     //setMenuAccelsEnabled(false);

@@ -17,6 +17,7 @@ my @actionIcons = qw/
     go-previous
     go-top
     go-up
+    help-about
     window-close
     /;
 my @dialogIcons = qw/

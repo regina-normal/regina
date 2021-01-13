@@ -9,7 +9,6 @@ my @actionSizes = ( 16, 22, 32 );
 my @dialogSizes = ( 16, 22, 32, 48, 64 );
 my @actionIcons = qw/
     application-xml
-    bookmarks
     configure
     dialog-cancel
     dialog-ok
@@ -19,7 +18,6 @@ my @actionIcons = qw/
     edit-paste
     edit-rename
     edit-select-all
-    help-about
     help-contents
     help-contextual
     process-stop

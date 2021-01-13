@@ -3,7 +3,6 @@ set (IMG_FILES )
 set (IMGS
   application-exit
   application-xml
-  bookmarks
   clock
   configure
   dialog-cancel
