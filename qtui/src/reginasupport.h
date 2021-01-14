@@ -110,7 +110,7 @@ class ReginaSupport {
 
         /**
          * Load an icon from the default theme, falling back to the
-         * Oxygen icons shipped with Regina if necessary.
+         * Humanity/Oxygen icons shipped with Regina if necessary.
          */
         static QIcon themeIcon(const QString& name);
 
