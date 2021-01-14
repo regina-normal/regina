@@ -748,7 +748,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("Tr&oubleshooting"));
-    act->setIcon(ReginaSupport::themeIcon("dialog-warning"));
+    act->setIcon(ReginaSupport::regIcon("troubleshoot"));
     act->setWhatsThis(tr("Show solutions and discussions for common "
         "problems."));
     connect(act, SIGNAL(triggered()), this, SLOT(helpTrouble()));

@@ -65,6 +65,7 @@ set (IMGS
   simplify
   simplify-link
   snappea
+  troubleshoot
   vtxlinks
   )
 set (SIZES 16 16@2x 22 22@2x 32 32@2x 48 48@2x 64 64@2x)
