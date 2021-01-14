@@ -33,6 +33,10 @@ my @actionIconsForDialog = qw/
 my @appIcons = qw/
     clock
     /;
+my @dialogIcons = qw/
+    dialog-information
+    dialog-warning
+    /;
 # Hmm, I think the C++ and XML mime icons looked better in the oxygen icon set.
 my @mimeIcons = qw/
     /;
@@ -96,6 +100,10 @@ foreach my $i (@actionIconsForDialog) {
 
 foreach my $i (@appIcons) {
     process($i, \@dialogSizes, "apps");
+}
+
+foreach my $i (@dialogIcons) {
+    process($i, \@dialogSizes, "status");
 }
 
 foreach my $i (@mimeIcons) {
