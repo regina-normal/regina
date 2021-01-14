@@ -27,7 +27,7 @@ my @actionIcons = qw/
     process-stop
     window-close
     /;
-my @dialogIcons = qw/
+my @actionIconsForDialog = qw/
     system-run
     /;
 my @appIcons = qw/
@@ -90,7 +90,7 @@ foreach my $i (@actionIcons) {
     process($i, \@actionSizes, "actions");
 }
 
-foreach my $i (@dialogIcons) {
+foreach my $i (@actionIconsForDialog) {
     process($i, \@dialogSizes, "actions");
 }
 
