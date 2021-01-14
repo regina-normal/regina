@@ -40,7 +40,9 @@
 #include <QPainter>
 
 namespace {
-    const int iconSizes[] = { 16, 22, 32, 48, 64, 128, 0 /* terminator */ };
+    // We list icon sizes in descending order so that icon-{k}@2x.png
+    // takes priority over icon-{2k}.png.
+    const int iconSizes[] = { 128, 64, 48, 32, 22, 16, 0 /* terminator */ };
     const int iconSizesRaw[] = { 16, 22, 32, 44, 48, 64, 96, 128, 256, 0 };
         /**< The union of (iconSizes) and (2 * iconSizes). */
 }
