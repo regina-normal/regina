@@ -61,11 +61,12 @@ $svn = $ARGV[0];
 -e "$svn/scalable/actions/window-close.svgz" or
     usage "Argument \"$svn\" does not look like an oxygen-icons checkout.";
 
+# Not in humanity:
 process('configure', 'actions', \@actionSizes);
 process('edit-rename', 'actions', \@actionSizes);
-process('help-contents', 'actions', \@actionSizes);
 process('help-contextual', 'actions', \@actionSizes);
-process('help-hint', 'actions', \@dialogSizes);
+
+# Better than the verison in humanity:
 process('application-xml', 'mimetypes', \@actionSizes);
 process('text-x-c++src', 'mimetypes', \@actionSizes);
 

@@ -24,6 +24,7 @@ my @actionIcons = qw/
     go-previous
     go-top
     go-up
+    help-contents
     process-stop
     window-close
     /;

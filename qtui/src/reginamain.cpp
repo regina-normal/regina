@@ -628,7 +628,7 @@ void ReginaMain::setupWidgets() {
         int iconSize = QApplication::style()->pixelMetric(
             QStyle::PM_ToolBarIconSize);
         QLabel* icon = new QLabel(advice);
-        icon->setPixmap(ReginaSupport::themeIcon("help-hint").pixmap(iconSize));
+        icon->setPixmap(ReginaSupport::regIcon("welcome").pixmap(iconSize));
         advLayout->addWidget(icon);
 
         advLayout->addSpacing(iconSize / 2);

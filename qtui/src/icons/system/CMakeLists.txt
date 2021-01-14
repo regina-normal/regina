@@ -28,7 +28,6 @@ set (IMGS
   go-up
   help-contents
   help-contextual
-  help-hint
   mail-attachment
   process-stop
   system-run

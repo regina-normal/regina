@@ -153,7 +153,7 @@ void PacketWindow::setupMenus() {
 
     act = new QAction(this);
     act->setText(tr("&Getting Started"));
-    act->setIcon(ReginaSupport::themeIcon("help-hint"));
+    act->setIcon(ReginaSupport::regIcon("welcome"));
     act->setWhatsThis(tr("Show some introductory information "
         "for users new to Regina."));
     connect(act, SIGNAL(triggered()), mainWindow, SLOT(helpIntro()));

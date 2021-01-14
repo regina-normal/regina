@@ -53,7 +53,7 @@ IntroDialog::IntroDialog(QWidget* parent) : QDialog(parent) {
     titleBox->setSpacing(0);
     QLabel* label = new QLabel();
     //label->setPixmap(IconCache::icon(IconCache::regina).pixmap(iconSize));
-    label->setPixmap(ReginaSupport::themeIcon("help-hint").pixmap(iconSize));
+    label->setPixmap(ReginaSupport::regIcon("welcome").pixmap(iconSize));
     titleBox->addWidget(label);
     titleBox->addSpacing(iconSize / 2);
     label = new QLabel(tr(
