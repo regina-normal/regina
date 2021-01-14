@@ -28,6 +28,9 @@ my @actionIcons = qw/
 my @dialogIcons = qw/
     system-run
     /;
+# Hmm, I think the C++ and XML mime icons looked better in the oxygen icon set.
+my @mimeIcons = qw/
+    /;
 
 my $root = undef;
 
@@ -43,11 +46,12 @@ sub render {
     my $geometry = shift;
     my $size = shift;
     my $filename = shift;
+    my $section = shift;
 
     my $src = undef;
     foreach (@allSizesDesc) {
         $_ < $geometry and $src and last;
-        my $loc = "$root/Humanity/actions/$_/$icon.svg";
+        my $loc = "$root/Humanity/$section/$_/$icon.svg";
         -e "$loc" and $src = $loc;
     }
     if (not defined $src) {
@@ -62,10 +66,11 @@ sub render {
 sub process {
     my $icon = shift;
     my $sizes = shift;
+    my $section = shift;
 
     foreach (@$sizes) {
-        render($icon, $_, $_, "$icon-$_.png", $1);
-        render($icon, $_, 2 * $_, "$icon-$_\@2x.png", $1);
+        render($icon, $_, $_, "$icon-$_.png", $section);
+        render($icon, $_, 2 * $_, "$icon-$_\@2x.png", $section);
     }
 }
 
@@ -77,10 +82,14 @@ $root = $ARGV[0];
     usage "Argument \"$root\" does not look like a humanity-icon-theme checkout.";
 
 foreach my $i (@actionIcons) {
-    process($i, \@actionSizes);
+    process($i, \@actionSizes, "actions");
 }
 
 foreach my $i (@dialogIcons) {
-    process($i, \@dialogSizes);
+    process($i, \@dialogSizes, "actions");
+}
+
+foreach my $i (@mimeIcons) {
+    process($i, \@actionSizes, "mimes");
 }
 
