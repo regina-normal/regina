@@ -23,6 +23,7 @@ my @actionIcons = qw/
     go-top
     go-up
     help-about
+    process-stop
     window-close
     /;
 my @dialogIcons = qw/
