@@ -151,10 +151,8 @@ const QString& ReginaSupport::home() {
 QIcon ReginaSupport::regIcon(const QString& name) {
     QIcon icon;
     QString filename = home() + "/icons/" + name + "-%1.png";
-    QString filename2x = home() + "/icons/" + name + "-%1@2x.png";
     for (int i = 0; iconSizes[i]; ++i) {
         icon.addFile(filename.arg(iconSizes[i]));
-        icon.addFile(filename2x.arg(iconSizes[i]));
     }
     return icon;
 }
@@ -165,10 +163,8 @@ QIcon ReginaSupport::themeIcon(const QString& name) {
         return icon;
 
     QString filename = home() + "/icons/system/" + name + "-%1.png";
-    QString filename2x = home() + "/icons/system/" + name + "-%1@2x.png";
     for (int i = 0; iconSizes[i]; ++i) {
         icon.addFile(filename.arg(iconSizes[i]));
-        icon.addFile(filename2x.arg(iconSizes[i]));
     }
     return icon;
 }
