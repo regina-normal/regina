@@ -35,21 +35,22 @@ sub usage {
 
 sub render {
     my $icon = shift;
+    my $geometry = shift;
     my $size = shift;
     my $filename = shift;
 
     my $src = undef;
     foreach (@allSizesDesc) {
-        $_ < $size and $src and last;
+        $_ < $geometry and $src and last;
         my $loc = "$root/Humanity/actions/$_/$icon.svg";
         -e "$loc" and $src = $loc;
     }
     if (not defined $src) {
-        print STDERR "ERROR: No sources found for $icon/$size\n";
+        print STDERR "ERROR: No sources found for $icon/$geometry\n";
         return;
     }
 
-    print "Rendering $icon/$size...\n";
+    print "Rendering $icon/$geometry at $size...\n";
     `rsvg -w$size -h$size "$src" "$filename"`;
 }
 
@@ -58,8 +59,8 @@ sub process {
     my $sizes = shift;
 
     foreach (@$sizes) {
-        render($icon, $_, "$icon-$_.png", $1);
-        render($icon, 2 * $_, "$icon-$_\@2x.png", $1);
+        render($icon, $_, $_, "$icon-$_.png", $1);
+        render($icon, $_, 2 * $_, "$icon-$_\@2x.png", $1);
     }
 }
 
