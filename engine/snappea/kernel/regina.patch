@@ -1,8 +1,8 @@
 diff --git a/engine/snappea/kernel/SnapPea.h b/engine/snappea/kernel/SnapPea.h
-index 8964456..40b8421 100644
+index bb7ccad80..6fa6aaa96 100644
 --- a/engine/snappea/kernel/SnapPea.h
 +++ b/engine/snappea/kernel/SnapPea.h
-@@ -488,9 +488,11 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
+@@ -496,9 +496,11 @@ typedef struct NormalSurfaceList            NormalSurfaceList;
  /* #define CONST const */
  
  
@@ -14,7 +14,7 @@ index 8964456..40b8421 100644
  
  /************************************************************************/
  
-@@ -2631,8 +2633,10 @@ extern Real volume(Triangulation *manifold, int *precision);
+@@ -2697,9 +2699,11 @@ extern Real volume(Triangulation *manifold, int *precision);
  
  #include "end_namespace.h"
  
@@ -25,21 +25,22 @@ index 8964456..40b8421 100644
 +*/
  
  #endif
+ /* Local Variables:                      */
 diff --git a/engine/snappea/kernel/end_namespace.h b/engine/snappea/kernel/end_namespace.h
-index c84202c..8a5082a 100644
+index 7f7c29f1b..c0911805e 100644
 --- a/engine/snappea/kernel/end_namespace.h
 +++ b/engine/snappea/kernel/end_namespace.h
-@@ -2,3 +2,5 @@
-  * If you declared a namespace block in kernel_namespace.h then
-  * you can close the block here.
+@@ -5,3 +5,5 @@
+  *  If you declared a namespace block in kernel_namespace.h then
+  *  you can close the block here.
   */
 +
 +} }
 diff --git a/engine/snappea/kernel/kernel.h b/engine/snappea/kernel/kernel.h
-index aa19f93..7536443 100644
+index 7b97fd785..837f6d1c7 100644
 --- a/engine/snappea/kernel/kernel.h
 +++ b/engine/snappea/kernel/kernel.h
-@@ -10,9 +10,11 @@
+@@ -11,9 +11,11 @@
  
  #include "SnapPea.h"
  
@@ -51,7 +52,7 @@ index aa19f93..7536443 100644
  
  #include <string.h>
  #include <math.h>
-@@ -29,9 +31,11 @@ extern "C" {
+@@ -30,9 +32,11 @@ extern "C" {
  #include "kernel_prototypes.h"
  #include "tables.h"
  
@@ -62,144 +63,34 @@ index aa19f93..7536443 100644
 +*/
  
  #endif
- 
+ /* Local Variables:                      */
 diff --git a/engine/snappea/kernel/kernel_namespace.h b/engine/snappea/kernel/kernel_namespace.h
-index 85f0600..8aee67e 100644
+index c24d6199e..ef142f978 100644
 --- a/engine/snappea/kernel/kernel_namespace.h
 +++ b/engine/snappea/kernel/kernel_namespace.h
-@@ -13,3 +13,5 @@
+@@ -16,3 +16,5 @@
  #endif
  #endif
  #endif
 +
 +namespace regina { namespace snappea {
-diff --git a/engine/snappea/kernel/o31_matrices.c b/engine/snappea/kernel/o31_matrices.c
-index 23f45cb..8945d47 100644
---- a/engine/snappea/kernel/o31_matrices.c
-+++ b/engine/snappea/kernel/o31_matrices.c
-@@ -33,7 +33,7 @@
- #define COLUMN_PRODUCT(m, i, j)     \
-     (-m[0][i]*m[0][j] + m[1][i]*m[1][j] + m[2][i]*m[2][j] + m[3][i]*m[3][j])
- 
--O31Matrix   O31_identity = {
-+const O31Matrix   O31_identity = {
-                                 {1.0, 0.0, 0.0, 0.0},
-                                 {0.0, 1.0, 0.0, 0.0},
-                                 {0.0, 0.0, 1.0, 0.0},
-@@ -43,7 +43,7 @@ O31Matrix   O31_identity = {
- 
- void o31_copy(
-     O31Matrix   dest,
--    O31Matrix   source)
-+    const O31Matrix   source)
- {
-     int i,
-         j;
-@@ -325,10 +325,10 @@ void o31_product(
-     O31Matrix   b,
-     O31Matrix   product)
- {
--    register int    i,
--                    j,
--                    k;
--    register Real sum;
-+    int    i,
-+           j,
-+           k;
-+    Real sum;
-     O31Matrix       temp;
- 
-     for (i = 0; i < 4; i++)
-@@ -522,9 +522,9 @@ void o31_matrix_times_vector(
-     O31Vector   v,
-     O31Vector   product)
- {
--    register int    i,
--                    j;
--    register Real sum;
-+    int    i,
-+           j;
-+    Real sum;
-     O31Vector       temp;
- 
-     for (i = 0; i < 4; i++)
-diff --git a/engine/snappea/kernel/solve_equations.c b/engine/snappea/kernel/solve_equations.c
-index 77df264..43bf717 100644
---- a/engine/snappea/kernel/solve_equations.c
-+++ b/engine/snappea/kernel/solve_equations.c
-@@ -50,15 +50,15 @@ FuncResult solve_complex_equations(
-     Complex *solution)
- {
-     /*
--     *  The following register variables are used in the n^3 bottleneck.
-+     *  The following variables are used in the n^3 bottleneck.
-      *  (See below.)
-      */
- 
--    register Real       factor_real,
--                        factor_imag;
--    register Complex    *row_r,
--                        *row_c;
--    register int        count;
-+    Real       factor_real,
-+               factor_imag;
-+    Complex    *row_r,
-+               *row_c;
-+    int        count;
- 
-     /*
-      *  The remaining variables are used in less critical places.
-@@ -252,14 +252,14 @@ FuncResult solve_real_equations(
-     Real  *solution)
- {
-     /*
--     *  The following register variables are used in the n^3 bottleneck.
-+     *  The following variables are used in the n^3 bottleneck.
-      *  (See below.)
-      */
- 
--    register Real factor,
--                    *row_r,
--                    *row_c;
--    register int    count;
-+    Real factor,
-+           *row_r,
-+           *row_c;
-+    int    count;
- 
-     /*
-      *  The remaining variables are used in less critical places.
-diff --git a/engine/snappea/kernel/tables.c b/engine/snappea/kernel/tables.c
-index ac1bed6..cd330c4 100644
---- a/engine/snappea/kernel/tables.c
-+++ b/engine/snappea/kernel/tables.c
-@@ -210,7 +210,7 @@ const Permutation permutation_by_index[24] = {
-  *  index_by_permutation[] is the inverse of permutation_by_index[].
-  *  That is, for 0 <= i < 24,  index_by_permutation[permutation_by_index[i]] = i.
-  */
--const char index_by_permutation[256] = {
-+const signed char index_by_permutation[256] = {
-     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1,
-     -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, -1, 23, -1, -1, 22, -1,
-     -1, -1, -1, -1, -1, -1, -1, 20, -1, -1, -1, -1, -1, 21, -1, -1,
-diff --git a/engine/snappea/kernel/tables.h b/engine/snappea/kernel/tables.h
-index e436105..17618d3 100644
---- a/engine/snappea/kernel/tables.h
-+++ b/engine/snappea/kernel/tables.h
-@@ -27,7 +27,7 @@ extern const Permutation    inverse_permutation[256];
- extern const signed char    parity[256];
- extern const FaceIndex      vt_side[4][3];
- extern const Permutation    permutation_by_index[24];
--extern const char           index_by_permutation[256];
-+extern const signed char    index_by_permutation[256];
- 
- #include "end_namespace.h"
- 
+diff --git a/engine/snappea/kernel/SnapPea.h b/engine/snappea/kernel/SnapPea.h
+index 6fa6aaa96..469223e71 100644
+--- a/engine/snappea/kernel/SnapPea.h
++++ b/engine/snappea/kernel/SnapPea.h
+@@ -430,6 +430,7 @@ typedef struct SymmetryGroup                SymmetryGroup;
+ typedef struct SymmetryGroupPresentation    SymmetryGroupPresentation;
+ typedef struct DualOneSkeletonCurve         DualOneSkeletonCurve;
+ typedef struct TerseTriangulation           TerseTriangulation;
++struct GroupPresentation; // To distinguish snappea's from regina's.
+ typedef struct GroupPresentation            GroupPresentation;
+ typedef struct CuspNeighborhoods            CuspNeighborhoods;
+ typedef struct NormalSurfaceList            NormalSurfaceList;
 diff --git a/engine/snappea/kernel/triangulation.h b/engine/snappea/kernel/triangulation.h
-index a85629c..bf53f81 100644
+index c1c515f54..3650008b4 100644
 --- a/engine/snappea/kernel/triangulation.h
 +++ b/engine/snappea/kernel/triangulation.h
-@@ -61,7 +61,7 @@ typedef struct ComplexWithLog   ComplexWithLog;
+@@ -62,7 +62,7 @@ typedef struct ComplexWithLog   ComplexWithLog;
  typedef struct TetShape         TetShape;
  typedef struct Tetrahedron      Tetrahedron;
  typedef struct EdgeClass        EdgeClass;
@@ -207,31 +98,19 @@ index a85629c..bf53f81 100644
 +struct Cusp;
  
  
- /*
+ /**
 diff --git a/engine/snappea/kernel/winged_edge.h b/engine/snappea/kernel/winged_edge.h
-index a4fb91b..54c5012 100644
+index 568c6011b..875f7f434 100644
 --- a/engine/snappea/kernel/winged_edge.h
 +++ b/engine/snappea/kernel/winged_edge.h
-@@ -49,6 +49,7 @@ enum
+@@ -54,6 +54,7 @@ typedef enum
   *  (Indeed even the existence of the Tetrahedron structure is private to
   *  the kernel, so we are "cheating" a bit even by including the typedef.)
   */
-+struct Tetrahedron; // To distinguish snappea's Tetrahedron from regina's.
++struct Tetrahedron; // To distinguish snappea's Tetrahedron from regina's
  typedef struct Tetrahedron      TetrahedronSneak;
  
  
-diff --git a/engine/snappea/kernel/SnapPea.h b/engine/snappea/kernel/SnapPea.h
-index 40b8421..63c7582 100644
---- a/engine/snappea/kernel/SnapPea.h
-+++ b/engine/snappea/kernel/SnapPea.h
-@@ -425,6 +425,7 @@ typedef struct SymmetryGroup                SymmetryGroup;
- typedef struct SymmetryGroupPresentation    SymmetryGroupPresentation;
- typedef struct DualOneSkeletonCurve         DualOneSkeletonCurve;
- typedef struct TerseTriangulation           TerseTriangulation;
-+struct GroupPresentation; // To distinguish snappea's GroupPresentation from regina's.
- typedef struct GroupPresentation            GroupPresentation;
- typedef struct CuspNeighborhoods            CuspNeighborhoods;
- typedef struct NormalSurfaceList            NormalSurfaceList;
 diff --git a/engine/snappea/kernel/complex.c b/engine/snappea/kernel/complex.c
 index 0118f2df2..9a6b8dbcf 100644
 --- a/engine/snappea/kernel/complex.c
@@ -260,19 +139,33 @@ index 0118f2df2..9a6b8dbcf 100644
  Complex complex_plus(
      Complex z0,
 diff --git a/engine/snappea/kernel/kernel_prototypes.h b/engine/snappea/kernel/kernel_prototypes.h
-index 72d5addae..0322c62cb 100644
+index 76c77fbbe..1c26a340f 100644
 --- a/engine/snappea/kernel/kernel_prototypes.h
 +++ b/engine/snappea/kernel/kernel_prototypes.h
-@@ -81,7 +81,7 @@ extern void close_cusps(Triangulation *manifold, Boolean fill_cusp[]);
- /*                                                                      */
- /************************************************************************/
- 
+@@ -89,14 +89,14 @@ extern void close_cusps(Triangulation *manifold, Boolean fill_cusp[]);
+  * Complex constant
+  */
+ /** @{ */
 -extern Complex  Zero,
+-                One,
+-                Two,
+-                Four,
+-                MinusOne,
+-                I,
+-                TwoPiI,
+-                Infinity;
 +extern const Complex  Zero,
-                 One,
-                 Two,
-                 Four,
-@@ -651,9 +651,9 @@ extern void recognize_embedded_surface( Triangulation   *manifold,
++                      One,
++                      Two,
++                      Four,
++                      MinusOne,
++                      I,
++                      TwoPiI,
++                      Infinity;
+ /** @} */
+ 
+ /************************************************************************/
+@@ -664,9 +664,9 @@ extern void recognize_embedded_surface( Triangulation   *manifold,
  /*                                                                      */
  /************************************************************************/
  
@@ -284,3 +177,25 @@ index 72d5addae..0322c62cb 100644
  extern void         o31_invert(O31Matrix m, O31Matrix m_inverse);
  extern FuncResult   gl4R_invert(GL4RMatrix m, GL4RMatrix m_inverse);
  extern void         o31_product(O31Matrix a, O31Matrix b, O31Matrix product);
+diff --git a/engine/snappea/kernel/o31_matrices.c b/engine/snappea/kernel/o31_matrices.c
+index 36d64e642..281a21611 100644
+--- a/engine/snappea/kernel/o31_matrices.c
++++ b/engine/snappea/kernel/o31_matrices.c
+@@ -33,7 +33,7 @@
+ #define COLUMN_PRODUCT(m, i, j)     \
+     (-m[0][i]*m[0][j] + m[1][i]*m[1][j] + m[2][i]*m[2][j] + m[3][i]*m[3][j])
+ 
+-O31Matrix   O31_identity = {
++const O31Matrix   O31_identity = {
+                                 {1.0, 0.0, 0.0, 0.0},
+                                 {0.0, 1.0, 0.0, 0.0},
+                                 {0.0, 0.0, 1.0, 0.0},
+@@ -43,7 +43,7 @@ O31Matrix   O31_identity = {
+ 
+ void o31_copy(
+     O31Matrix   dest,
+-    O31Matrix   source)
++    const O31Matrix   source)
+ {
+     int i,
+         j;

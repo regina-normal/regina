@@ -1,3 +1,11 @@
+/**
+ * @file qd_real_SnapPy.h
+ * @brief Support for building a kernel that use quad doubles for floating point arithmetic.
+
+ * This file contains the macros and typedefs which are needed to build a kernel
+ * which uses quad doubles as the basic floating point type.
+ */
+
 #ifndef _QD_REAL_SNAPPY_
 #define _QD_REAL_SNAPPY_
 #include "qd/qd_real.h"
@@ -5,7 +13,7 @@
 #include "kernel_namespace.h"
 
 typedef qd_real Real;
-/*
+/**
  * This is used to work around the Cython bug which prevents declaring
  * arrays of C++ objects.  See SnapPy.pxi.
  */
@@ -39,21 +47,49 @@ static Real ROOT_3_OVER_2 = (qd_real)"0.8660254037844386467637231707529361834714
 static Real LOG_TWO_PI = (qd_real)"1.837877066409345483560659472811235279722794947275566825634303080965531391855";
 
 /* Constants used in various kernel modules. */
-/* Dirichlet.h */
+
+/** Used in canonize.h. */
+#define CONCAVITY_EPSILON  1e-21
+
+/** Used in Dirichlet.h */
 #define MATRIX_EPSILON          1e-15
-/* Dirichlet.cpp */
+
+/** Used in Dirichlet.cpp */
 #define FIXED_BASEPOINT_EPSILON 1e-18
-/* Dirichlet_construction.cpp */
+
+/** Used in  Dirichlet_construction.cpp */
+/** @{ */
 #define DIRICHLET_ERROR_EPSILON 1e-12
 #define HYPERIDEAL_EPSILON      1e-9
 #define VERIFY_EPSILON          1e-12
 #define DEVIATION_EPSILON       1e-9
-/* Dirichlet_extras.cpp */
+/** @} */
+
+/** Used in Dirichlet_extras.cpp */
+/** @{ */
 #define DIST_EPSILON            1e-9
 #define EDGE_EPSILON            1e-9
 #define IDEAL_EPSILON           4e-21
 #define HALF_TWIST_EPSILON      1e-6
 #define PI_EPSILON              1e-3
 #define SOLID_ANGLE_EPSILON     1e-12
+/** @} */
 
+/** Used in dual_curves.cpp */
+/** @{ */
+#define PARABOLIC_EPSILON    1e-6
+#define DUAL_CURVES_LENGTH_EPSILON       1e-10
+/** @} */
+
+/** Used in chern_simons.cpp */
+/** @{ */
+#define NUM_DILOG_COEFFICIENTS 120
+/** @} */
 #endif
+/* Local Variables:                      */
+/* mode: c                               */
+/* c-basic-offset: 4                     */
+/* fill-column: 80                       */
+/* comment-column: 0                     */
+/* c-file-offsets: ((inextern-lang . 0)) */
+/* End:                                  */

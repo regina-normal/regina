@@ -298,20 +298,19 @@ struct PerimeterPiece
     PerimeterPiece  *prev;  /* the neighbor in the clockwise        direction   */
 };
 
-/*
+/**
  *  The following enum lists the six possible gluing
  *  patterns for a torus or Klein bottle.
  */
-typedef int GluingPattern;
-enum
+typedef enum
 {
-    abAB,   /* square torus                     */
-    abcABC, /* hexagonal torus                  */
-    abAb,   /* standard square Klein bottle     */
-    aabb,   /* P^2 # P^2 square Klein bottle    */
-    abcAcb, /* standard hexagonal Klein bottle  */
-    aabccB  /* P^2 # P^2 hexagonal Klein bottle */
-};
+    abAB,   /**< square torus                     */
+    abcABC, /**< hexagonal torus                  */
+    abAb,   /**< standard square Klein bottle     */
+    aabb,   /**< P^2 # P^2 square Klein bottle    */
+    abcAcb, /**< standard hexagonal Klein bottle  */
+    aabccB  /**< P^2 # P^2 hexagonal Klein bottle */
+} GluingPattern;
 
 
 static void             zero_peripheral_curves(Triangulation *manifold);
@@ -476,10 +475,9 @@ static Boolean cusp_has_curves(
     Cusp            *cusp)
 {
     Tetrahedron     *tet;
+    int             c, h;
     VertexIndex     v;
     FaceIndex       f;
-    PeripheralCurve c;
-    Orientation     h;
 
     for (tet = manifold->tet_list_begin.next;
          tet != &manifold->tet_list_end;
@@ -630,7 +628,7 @@ static void expand_perimeter(
                 if (parity[gluing] == orientation_preserving)
                     nbr_orientation =   pp->orientation;
                 else
-                    nbr_orientation = ! pp->orientation;
+                  nbr_orientation =  REVERSE(pp->orientation);
 
                 if (nbr_orientation == right_handed)
                 {

@@ -34,7 +34,6 @@ Full license details:
 
 SnapPy version:
     CMakeLists.txt (SNAPPY_VERSION)
-    qtui/doc/regina/trouble.docbook (SnapPy multiple interpreters)
 
 SnapPea / SnapPy copyright (in addition to full license locations above):
     engine/snappea/kernel/README.txt

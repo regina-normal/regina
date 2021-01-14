@@ -8,7 +8,7 @@
  * SnapPy, and this file as a result, is licensed under the GNU General Public
  * License.
  *
- * M. Culler, N. M. Dunfield, and J. R. Weeks. 
+ * M. Culler, N. M. Dunfield, M. Goerner, and J. R. Weeks. 
  * SnapPy, a computer program for studying the geometry and 
  * topology of 3-manifolds, http://snappy.computop.org
  *
@@ -105,7 +105,7 @@ int* get_cusp_equation(Triangulation* manifold, int cusp_num, int m, int l, int*
     VertexIndex     v;
     Cusp *cusp;
     FaceIndex       f, ff;
-    PeripheralCurve c;
+    int             c;
 
     /* initialize variables */
 

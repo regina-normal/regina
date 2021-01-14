@@ -103,11 +103,11 @@ const QString ReginaAbout::regLicense( tr(
     "Regina includes portions of the SnapPea kernel and its successor SnapPy,\n"
     "which it uses for some geometric calculations.  The SnapPea kernel was\n"
     "originally written by Jeff Weeks.  SnapPy, where this kernel is now\n"
-    "maintained, is primarily developed by Marc Culler and Nathan Dunfield,\n"
-    "with contributions from many people.  SnapPy and the corresponding\n"
-    "SnapPea kernel are distributed under the terms of the GNU General Public\n"
-    "License, version 2 or any later version, as published by the Free\n"
-    "Software Foundation.\n\n"
+    "maintained, is primarily developed by Marc Culler, Nathan Dunfield and\n"
+    "Matthias Goerner, with contributions from many people.  SnapPy and the\n"
+    "corresponding SnapPea kernel are distributed under the terms of the\n"
+    "GNU General Public License, version 2 or any later version, as published\n"
+    "by the Free Software Foundation.\n\n"
     "NORMALIZ LIBRARY:\n\n"
     "Regina includes a copy of libnormaliz, which it uses to help with the\n"
     "enumeration of fundamental normal surfaces.  Normaliz was written by\n"
@@ -173,8 +173,8 @@ ReginaAbout::ReginaAbout(QWidget* parent) :
     thanksCode << "Kevin Zhang";
     thanksCode << "Winfried Bruns, Bogdan Ichim and Christof Soeger "
         "(for the Normaliz library)";
-    thanksCode << "Marc Culler, Nathan Dunfield and Jeff Weeks "
-        "(for code from SnapPea and SnapPy)";
+    thanksCode << "Marc Culler, Nathan Dunfield, Matthias Goerner and "
+        "Jeff Weeks (for code from SnapPea and SnapPy)";
 
     thanksExpertise << "Bernard Blackham";
     thanksExpertise << "Marc Culler";

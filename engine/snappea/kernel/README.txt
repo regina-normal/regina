@@ -2,7 +2,7 @@ SnapPea Kernel
 --------------
 
 This directory contains portions of the SnapPea kernel, as downloaded
-from http://www.math.uic.edu/t3m/.  This copy includes additional patches
+from https://snappy.math.uic.edu/.  This copy includes additional patches
 not included in the original SnapPea kernel; see regina.patch for details.
 
 You can query the version of this SnapPea kernel by calling Regina's function
@@ -15,8 +15,8 @@ license can be found in the file LICENSE.txt in Regina's top-level
 source directory.
 
 The SnapPea kernel was originally written by Jeff Weeks.  SnapPy, where
-this kernel now maintained, is primarily developed by Marc Culler and
-Nathan Dunfield, with contributions from many people.
+this kernel now maintained, is primarily developed by Marc Culler,
+Nathan Dunfield, and Matthias Goerner, with contributions from many people.
 
 M. Culler, N. M. Dunfield, and J. R. Weeks.
 SnapPy, a computer program for studying the geometry and topology

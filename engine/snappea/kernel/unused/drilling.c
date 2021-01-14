@@ -187,12 +187,11 @@ typedef struct
 } MeridionalAnnulus;
 
 
-typedef int DirectionToTravel;
-enum
+typedef enum
 {
     to_the_east,
     to_the_west
-};
+} DirectionToTravel;
 
 
 static void attach_extra(Triangulation *manifold);
@@ -1296,7 +1295,7 @@ static void move_sideways(
      */
     new_ma.ptet.orientation  = (parity[gluing] == orientation_preserving) ?
                                   ma->ptet.orientation :
-                                ! ma->ptet.orientation;
+                                  REVERSE(ma->ptet.orientation);
 
     /*
      *  Copy the new data to the original data structure.

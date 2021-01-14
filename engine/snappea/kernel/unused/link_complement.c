@@ -4,9 +4,13 @@
  *  This file provides the function
  *
  *      Triangulation *triangulate_link_complement(
- *                          KLPProjection *aLinkProjection);
+ *                          KLPProjection *aLinkProjection,
+ *                          Boolean remove_extra_vertices);
  *
- *  which triangulates the complement of aLinkProjection.
+ *  which triangulates the complement of aLinkProjection.  In all normal
+ *  circumstances, the flag remove_extra_vertices should be TRUE; setting 
+ *  it to FALSE gives a triangulation with two extra finite vertices, one 
+ *  below and one above the projection plane.
  *
  *  If aLinkProjection is empty returns NULL;  otherwise returns
  *  a pointer to the resulting Triangulation.
@@ -259,7 +263,8 @@ static void             adjust_longitudes(LCProjection *internal_link_projection
 
 
 Triangulation *triangulate_link_complement(
-    KLPProjection   *aLinkProjection)
+    KLPProjection   *aLinkProjection,
+    Boolean remove_extra_vertices)
 {
     LCProjection    *internal_link_projection;
     Triangulation   *manifold;
@@ -340,16 +345,13 @@ Triangulation *triangulate_link_complement(
      *  Absorb the finite vertices at the north and south poles
      *  into the cusps.
      */
-    remove_finite_vertices(manifold);
-
-    /*
-     *  Try to find the complete hyperbolic structure.
-     *
-     *  Removed 2013/10/15
-     * 
-     *  find_complete_hyperbolic_structure(manifold);
-     *
-     */
+    if (remove_extra_vertices)
+	remove_finite_vertices(manifold);
+    else{
+	number_the_tetrahedra(manifold);
+	number_the_edge_classes(manifold);
+	count_cusps(manifold);
+    }
 
     return manifold;
 }
@@ -456,7 +458,7 @@ static void add_nugatory_crossings_to_free_loops(
             for (j = 0; j < 2; j++) /* j = KLPBackward, KLPForward */
             {
                 new_crossing->neighbor[i][j] = new_crossing;
-                new_crossing->strand  [i][j] = !i;
+                new_crossing->strand  [i][j] = OTHERSTRAND(i);
             }
         
         new_crossing->handedness = KLPHalfTwistCL;
@@ -719,8 +721,8 @@ static void do_Reidemeister_II(
      *  Make room for the two new crossings, and give them names.
      *  Also revise the pointers to crossing0 and crossing1.
      */
-    crossing_index0 = crossing0 - internal_link_projection->crossings;
-    crossing_index1 = crossing1 - internal_link_projection->crossings;
+    crossing_index0 = (int)(crossing0 - internal_link_projection->crossings);
+    crossing_index1 = (int)(crossing1 - internal_link_projection->crossings);
     resize_crossing_array(  internal_link_projection,
                             internal_link_projection->num_crossings + 2);
     internal_link_projection->num_crossings += 2;

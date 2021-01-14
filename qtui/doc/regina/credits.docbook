@@ -25,8 +25,8 @@
     <listitem><para>Kevin Zhang</para></listitem>
     <listitem><para>Winfried Bruns, Bogdan Ichim and Christof Soeger
      (for the &normaliz; library)</para></listitem>
-    <listitem><para>Marc Culler, Nathan Dunfield and Jeff Weeks
-     (for code from &snappea; and &snappy;)</para></listitem>
+    <listitem><para>Marc Culler, Nathan Dunfield, Matthias Goerner
+     and Jeff Weeks (for code from &snappea; and &snappy;)</para></listitem>
    </itemizedlist>
   </para>
   <para>Thanks also to the help and expertise of:
@@ -146,7 +146,8 @@
      &snappy;, which it uses for some geometric calculations.
      The &snappea; kernel was originally written by Jeff Weeks.
      &snappy;, where this kernel is now maintained, is primarily developed by
-     Marc Culler and Nathan Dunfield, with contributions from many people.
+     Marc Culler, Nathan Dunfield and Matthias Goerner, with contributions
+     from many people.
      &snappy; and the corresponding &snappea; kernel are distributed
      under the terms of the &gnu; General Public License, version&nbsp;2
      or any later version, as published by the Free Software Foundation.

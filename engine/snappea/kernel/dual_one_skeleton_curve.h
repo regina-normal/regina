@@ -1,5 +1,6 @@
-/*
- *  dual_one_skeleton_curve.h
+/**
+ *  @file dual_one_skeleton_curve.h
+ *  @brief Data structures for curves dual to a triangulation.
  *
  *  This file defines the data structure used to represent
  *  a simple closed curve in the 1-skeleton of a Triangulation's
@@ -40,7 +41,7 @@
 
 #include "kernel_namespace.h"
 
-/*
+/**
  *  An array of four Booleans represents the intersection
  *  of a dual curve with the four faces of a given
  *  Tetrahedron.  The i-th Boolean is TRUE iff the dual
@@ -49,7 +50,7 @@
 
 typedef Boolean DualOneSkeletonCurvePiece[4];
 
-/*
+/**
  *  An array of DualOneSkeletonCurvePieces represents
  *  a complete curve in the dual 1-skeleton.  The i-th
  *  element in the array describes the curve's intersection
@@ -65,7 +66,7 @@ typedef Boolean DualOneSkeletonCurvePiece[4];
 
 struct DualOneSkeletonCurve
 {
-    /*
+    /**
      *  tet_intersection will contain the address of
      *  an array of n DualOneSkeletonCurvePieces, where n
      *  is the number of Tetrahedra in the Triangulation.
@@ -74,12 +75,12 @@ struct DualOneSkeletonCurve
      */
     DualOneSkeletonCurvePiece   *tet_intersection;
 
-    /*
+    /**
      *  Is this curve orientation_reversing or orientation_preserving?
      */
     MatrixParity                parity;
 
-    /*
+    /**
      *  The length field will contain the complex length of
      *  the geodesic in the homotopy class of the dual curve.
      *  length[complete] and length[filled] give the length
@@ -88,13 +89,13 @@ struct DualOneSkeletonCurve
      */
     Complex                     length[2];
 
-    /*
+    /**
      *  The size field will contain the number
      *  of segments in the curve.
      */
     int                         size;
 
-    /*
+    /**
      *  We'll be working with large numbers of DualOneSkeletonCurves,
      *  many of which will be homotopic to each other, so for efficiency
      *  in sorting them out we'll keep them on a binary tree, keyed by
@@ -113,3 +114,10 @@ struct DualOneSkeletonCurve
 #include "end_namespace.h"
 
 #endif
+/* Local Variables:                      */
+/* mode: c                               */
+/* c-basic-offset: 4                     */
+/* fill-column: 80                       */
+/* comment-column: 0                     */
+/* c-file-offsets: ((inextern-lang . 0)) */
+/* End:                                  */

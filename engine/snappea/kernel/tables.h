@@ -1,9 +1,10 @@
-/*
- *  tables.h
+/**
+ *  @file tables.h
+ *  @brief Various private tables used by the kernel.
  *
- *  The following tables are defined and documented in tables.c.
- *  They are globally available within the kernel, but are not
- *  available to the user interface.
+ *  The tables declared in this file are defined and documented in tables.c.
+ *  They are globally available within the kernel, but are not available to the
+ *  user interface.
  */
 
 #ifndef _tables_
@@ -32,3 +33,10 @@ extern const signed char    index_by_permutation[256];
 #include "end_namespace.h"
 
 #endif
+/* Local Variables:                      */
+/* mode: c                               */
+/* c-basic-offset: 4                     */
+/* fill-column: 80                       */
+/* comment-column: 0                     */
+/* c-file-offsets: ((inextern-lang . 0)) */
+/* End:                                  */

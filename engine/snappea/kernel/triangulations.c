@@ -91,6 +91,14 @@ void data_to_triangulation(
     *manifold_ptr = NULL;
 
     /*
+     * Issue error when given no data.
+     */
+    if (data == NULL) {
+        uFatalError("data_to_triangulation", "triangulations");
+        return;
+    }
+
+    /*
      *  Allocate and initialize the Triangulation structure.
      */
     manifold = NEW_STRUCT(Triangulation);
@@ -263,6 +271,8 @@ void data_to_triangulation(
         {
             fix_peripheral_orientations(manifold);
         }
+        replace_edge_classes(manifold);
+        orient_edge_classes(manifold);
     }
 
     /*
@@ -555,11 +565,8 @@ void free_tetrahedron(
 void clear_shape_history(
     Tetrahedron *tet)
 {
-    int i;
-
-    for (i = 0; i < 2; i++)     /* i = complete, filled */
-
-        clear_one_shape_history(tet, i);
+    clear_one_shape_history(tet, complete);
+    clear_one_shape_history(tet, filled);
 }
 
 
@@ -791,11 +798,6 @@ void copy_triangulation(
     my_free(new_tet);
     my_free(new_edge);
     my_free(new_cusp);
-
-    /*
-     * Copy the dilog function pointer.
-     */
-    destination->dilog = source->dilog;
 }
 
 
@@ -835,7 +837,6 @@ void initialize_triangulation(
     manifold->CS_value[penultimate]     = 0.0;
     manifold->CS_fudge[ultimate]        = 0.0;
     manifold->CS_fudge[penultimate]     = 0.0;
-    manifold->dilog                     = NULL;
 
     initialize_tetrahedron(&manifold->tet_list_begin);
     initialize_tetrahedron(&manifold->tet_list_end);
@@ -878,7 +879,7 @@ void initialize_tetrahedron(
         tet->cusp[i]                = NULL;
         tet->generator_status[i]    = unassigned_generator;
         tet->generator_index[i]     = -1;
-        tet->generator_parity[i]    = -1;
+        tet->generator_parity[i]    = unknown_parity;
         tet->corner[i]              = Zero;
         tet->tilt[i]                = -1.0e17;
     }
@@ -892,7 +893,7 @@ void initialize_tetrahedron(
     for (i = 0; i < 6; i++)
     {
         tet->edge_class[i]          = NULL;
-        tet->edge_orientation[i]    = -1;
+        tet->edge_orientation[i]    = unknown_orientation;
     }
 
     for (i = 0; i < 2; i++)

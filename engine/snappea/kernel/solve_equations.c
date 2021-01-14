@@ -50,15 +50,17 @@ FuncResult solve_complex_equations(
     Complex *solution)
 {
     /*
-     *  The following variables are used in the n^3 bottleneck.
+     *  The following register variables are used in the n^3 bottleneck.
      *  (See below.)
+     *
+     *  (Note that register keyword has been obsoleted.)
      */
 
-    Real       factor_real,
-               factor_imag;
-    Complex    *row_r,
-               *row_c;
-    int        count;
+    /* register */ Real       factor_real,
+                              factor_imag;
+    /* register */ Complex    *row_r,
+                              *row_c;
+    /* register */ int        count;
 
     /*
      *  The remaining variables are used in less critical places.
@@ -252,14 +254,16 @@ FuncResult solve_real_equations(
     Real  *solution)
 {
     /*
-     *  The following variables are used in the n^3 bottleneck.
+     *  The following register variables are used in the n^3 bottleneck.
      *  (See below.)
+     *
+     *  (Note that register keyword has been obsoleted.)
      */
 
-    Real factor,
-           *row_r,
-           *row_c;
-    int    count;
+    /* register */ Real factor,
+                        *row_r,
+                        *row_c;
+    /* register */ int    count;
 
     /*
      *  The remaining variables are used in less critical places.

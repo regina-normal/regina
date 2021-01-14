@@ -1,5 +1,6 @@
-/*
- *  kernel.h
+/**
+ *  @file kernel.h
+ *  @brief Includes all public and private headers files, for building the kernel.
  *
  *  This file #includes all header files needed for the kernel.
  *  It should be #included in all kernel .c files, but nowhere else.
@@ -38,4 +39,10 @@ extern "C" {
 */
 
 #endif
-
+/* Local Variables:                      */
+/* mode: c                               */
+/* c-basic-offset: 4                     */
+/* fill-column: 80                       */
+/* comment-column: 0                     */
+/* c-file-offsets: ((inextern-lang . 0)) */
+/* End:                                  */
