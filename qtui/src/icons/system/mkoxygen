@@ -1,97 +1,56 @@
 #!/usr/bin/perl -w
 use strict;
 
-# Oxygen icon sources:
-# svn://anonsvn.kde.org/home/kde/tags/kdesupport-for-4.5/oxygen-icons
-# svn://anonsvn.kde.org/home/kde/trunk/kdesupport/oxygen-icons
-
-# Note:
-# - utilities-terminal comes from apps/
-# - application-xml and text-x-c++src come from mimes/
-# - configure, help-{contents,contextual,hint}, edit-rename come from actions/
-
 my @actionSizes = ( 16, 22, 32 );
 my @dialogSizes = ( 16, 22, 32, 48, 64 );
-my @actionIcons = qw/
-    application-xml
-    configure
-    edit-rename
-    help-contents
-    help-contextual
-    text-x-c++src
-    utilities-terminal
-    /;
-my @dialogIcons = qw/
-    help-hint
-    /;
+my @allSizesDesc = ( 64, 48, 32, 24, 22, 16 );
+
+# The list of oxygen icons that we still use is small, and appears at
+# the bottom of this script.
 
 my $svn = undef;
 
 sub usage {
     my $err = shift;
     $err and print STDERR "ERROR: $err\n\n";
-    print STDERR "Usage: mkicons <path_to_scalable_checkout>\n";
+    print STDERR "Usage: mkicons <path to oxygen-icons-X.Y.Z>\n";
     exit 1;
 }
 
 sub render {
     my $icon = shift;
+    my $geometry = shift;
     my $size = shift;
     my $filename = shift;
-    my $class = shift;
+    my $section = shift;
 
-    my $src = "$svn/${size}x${size}/$class/$icon.png";
-    if (-e "$src") {
-        `cp "$src" "$filename"`;
+    my $src = undef;
+
+    my $loc = "$svn/scalable/$section/$icon.svgz";
+    -e "$loc" and $src = $loc;
+
+    foreach (@allSizesDesc) {
+        $_ < $geometry and $src and last;
+        $loc = "$svn/scalable/$section/small/${_}x${_}/$icon.svgz";
+        -e "$loc" and $src = $loc;
+    }
+    if (not defined $src) {
+        print STDERR "ERROR: No sources found for $icon/$geometry\n";
         return;
     }
 
-    $src = "$svn/scalable/$class/$icon.svgz";
-    -e $src or $src = "$svn/scalable/$class/small/64x64/$icon.svgz";
-    -e $src or $src = "$svn/scalable/$class/small/48x48/$icon.svgz";
-    -e $src or $src = "$svn/scalable/$class/small/32x32/$icon.svgz";
-    if (not -e $src) {
-        print STDERR "ERROR: Could not find source for $icon at size $size.\n";
-        return;
-    }
-
-    #`rsvg -w$size -h$size "$src" "$filename"`;
-    `inkscape -z -e "$filename" -w $size -h $size "$src"`;
+    print "Rendering $icon/$geometry at $size...\n";
+    `rsvg -w$size -h$size "$src" "$filename"`;
 }
 
 sub process {
     my $icon = shift;
+    my $section = shift;
     my $sizes = shift;
 
-    my @src = glob("$svn/scalable/*/$icon.svgz");
-    if ($#src > 0) {
-        print STDERR "ERROR: Ambiguous sources for $icon:\n";
-        foreach (@src) {
-            print STDERR "$_\n";
-        }
-        return;
-    }
-    if ($#src < 0) {
-        @src = glob("$svn/scalable/*/small/48x48/$icon.svgz");
-        if ($#src > 0) {
-            print STDERR "ERROR: Ambiguous sources for $icon:\n";
-            foreach (@src) {
-                print STDERR "$_\n";
-            }
-            return;
-        }
-        if ($#src < 0) {
-            print STDERR "ERROR: No sources found for $icon\n";
-            return;
-        }
-    }
-
-    $src[0] =~ /scalable\/([^\/]+)\// or die;
-    my $class = $1;
-
     foreach (@$sizes) {
-        render($icon, $_, "$icon-$_.png", $1);
-        render($icon, 2 * $_, "$icon-$_\@2x.png", $1);
+        render($icon, $_, $_, "$icon-$_.png", $section);
+        render($icon, $_, 2 * $_, "$icon-$_\@2x.png", $section);
     }
 }
 
@@ -102,11 +61,12 @@ $svn = $ARGV[0];
 -e "$svn/scalable/actions/window-close.svgz" or
     usage "Argument \"$svn\" does not look like an oxygen-icons checkout.";
 
-foreach my $i (@actionIcons) {
-    process($i, \@actionSizes);
-}
-
-foreach my $i (@dialogIcons) {
-    process($i, \@dialogSizes);
-}
+process('configure', 'actions', \@actionSizes);
+process('edit-rename', 'actions', \@actionSizes);
+process('help-contents', 'actions', \@actionSizes);
+process('help-contextual', 'actions', \@actionSizes);
+process('help-hint', 'actions', \@dialogSizes);
+process('utilities-terminal', 'apps', \@actionSizes);
+# process('application-xml', 'mimes', \@actionSizes);
+# process('text-x-c++src', 'mimes', \@actionSizes);
 
