@@ -785,7 +785,6 @@ void ReginaMain::setupActions() {
     toolBarMain->addAction(actOpen);
     toolBarMain->addAction(actSave);
     toolBarMain->addSeparator();
-    toolBarMain->addAction(actView);
     toolBarMain->addAction(actRename);
     toolBarMain->addAction(actDelete);
     toolBarMain->addSeparator();
