@@ -12,12 +12,7 @@ my @actionIcons = qw/
     configure
     dialog-cancel
     dialog-ok
-    edit-copy
-    edit-cut
-    edit-delete
-    edit-paste
     edit-rename
-    edit-select-all
     help-contents
     help-contextual
     process-stop

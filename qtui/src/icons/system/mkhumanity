@@ -11,6 +11,11 @@ my @actionIcons = qw/
     document-open-recent
     document-save
     document-save-as
+    edit-copy
+    edit-cut
+    edit-delete
+    edit-paste
+    edit-select-all
     go-bottom
     go-down
     go-next
