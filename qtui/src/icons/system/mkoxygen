@@ -9,8 +9,7 @@ use strict;
 # - utilities-terminal comes from apps/
 # - application-xml and text-x-c++src come from mimes/
 # - dialog-{information,warning} come from status/
-# - clock comes from apps/
-# - all other icon come from actions/
+# - configure, help-{contents,contextual,hint}, edit-rename come from actions/
 
 my @actionSizes = ( 16, 22, 32 );
 my @dialogSizes = ( 16, 22, 32, 48, 64 );
@@ -24,7 +23,6 @@ my @actionIcons = qw/
     utilities-terminal
     /;
 my @dialogIcons = qw/
-    clock
     dialog-warning
     dialog-information
     help-hint
