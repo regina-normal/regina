@@ -17,8 +17,6 @@ my @dialogSizes = ( 16, 22, 32, 48, 64 );
 my @actionIcons = qw/
     application-xml
     configure
-    dialog-cancel
-    dialog-ok
     edit-rename
     help-contents
     help-contextual

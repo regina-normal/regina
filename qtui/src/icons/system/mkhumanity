@@ -6,6 +6,8 @@ my @dialogSizes = ( 16, 22, 32, 48, 64 );
 my @allSizesDesc = ( 64, 48, 32, 24, 22, 16 );
 my @actionIcons = qw/
     application-exit
+    dialog-cancel
+    dialog-ok
     document-new
     document-open
     document-open-recent
