@@ -26,7 +26,6 @@ set (IMGS
   go-previous
   go-top
   go-up
-  help-about
   help-contents
   help-contextual
   help-hint

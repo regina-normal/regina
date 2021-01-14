@@ -17,6 +17,7 @@ set (IMGS
   delete
   doublecover
   drilledge
+  examples
   fill
   filter_comb
   filter_prop
