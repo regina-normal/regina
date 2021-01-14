@@ -30,6 +30,7 @@ set (IMGS
   help-contextual
   mail-attachment
   process-stop
+  stock_edit
   system-run
   text-x-c++src
   utilities-terminal

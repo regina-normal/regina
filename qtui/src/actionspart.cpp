@@ -499,7 +499,7 @@ void ReginaMain::setupActions() {
     // Basic packet actions:
     QAction* actView = new QAction(this);
     actView->setText(tr("&View/Edit"));
-    actView->setIcon(ReginaSupport::regIcon("packet_view"));
+    actView->setIcon(ReginaSupport::themeIcon("stock_edit"));
     actView->setShortcut(tr("Alt+v"));
     actView->setToolTip(tr("View or edit the selected packet"));
     actView->setWhatsThis(tr("View or edit the packet currently selected "

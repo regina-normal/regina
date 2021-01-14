@@ -26,6 +26,7 @@ my @actionIcons = qw/
     go-up
     help-contents
     process-stop
+    stock_edit
     window-close
     /;
 my @actionIconsForDialog = qw/
