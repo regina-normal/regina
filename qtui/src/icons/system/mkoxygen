@@ -66,6 +66,6 @@ process('edit-rename', 'actions', \@actionSizes);
 process('help-contents', 'actions', \@actionSizes);
 process('help-contextual', 'actions', \@actionSizes);
 process('help-hint', 'actions', \@dialogSizes);
-# process('application-xml', 'mimes', \@actionSizes);
-# process('text-x-c++src', 'mimes', \@actionSizes);
+process('application-xml', 'mimetypes', \@actionSizes);
+process('text-x-c++src', 'mimetypes', \@actionSizes);
 
