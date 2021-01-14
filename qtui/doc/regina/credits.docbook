@@ -216,11 +216,10 @@
     <para>
      Many of &regina;'s icons are custom-made, and are under the same license
      as &regina;.  Some system icons are taken from the Humanity icon set
-     (licensed under the &gnu; General Public License version&nbsp;2) and
-     the Oxygen icon set (dual-licensed under the
-     Creative Common Attribution-ShareAlike&nbsp;3.0 License
-     or the &gnu; Library General Public License).  The die icon is based on an
-     image from openclipart.org, which has been released into the public domain.
+     (licensed under the &gnu; General Public License version&nbsp;2) and the
+     Oxygen icon set (licensed under the &gnu; Lesser General Public License
+     version&nbsp;3 or above).  &regina;'s die icon is based on an image from
+     openclipart.org, which has been released into the public domain.
     </para>
    </sect3>
   </sect2>

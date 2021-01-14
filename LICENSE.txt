@@ -122,9 +122,9 @@ ICONS:
 Many of Regina's icons are custom-made, and are under the same license as
 Regina.  Some system icons are taken from the Humanity icon set (licensed
 under the GNU General Public License version 2) and the Oxygen icon set
-(dual-licensed under the Creative Common Attribution-ShareAlike 3.0 License
-or the GNU Library General Public License).  The die icon is based on an
-image from openclipart.org, which has been released into the public domain.
+(licensed under the GNU Lesser General Public License version 3 or later).
+Regina's die icon is based on an image from openclipart.org, which has been
+released into the public domain.
 
 
 

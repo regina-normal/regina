@@ -142,10 +142,9 @@ const QString ReginaAbout::regLicense( tr(
     "Many of Regina's icons are custom-made, and are under the same license\n"
     "as Regina.  Some system icons are taken from the Humanity icon set\n"
     "licensed under the GNU General Public License version 2) and the Oxygen\n"
-    "icon set (dual-licensed under the Creative Common Attribution-ShareAlike\n"
-    "3.0 License or the GNU Library General Public License).  The die icon is\n"
-    "based on an image from openclipart.org, which has been released into the\n"
-    "public domain.\n"
+    "icon set (licensed under the GNU Lesser General Public License).\n"
+    "Regina's die icon is based on an image from openclipart.org, which has\n"
+    "been released into the public domain.\n"
     ));
 
 ReginaAbout::ReginaAbout(QWidget* parent) : 
