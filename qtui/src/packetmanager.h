@@ -58,12 +58,8 @@ class PacketManager {
         /**
          * Returns an icon appropriate for the given packet.  This icon
          * may be rendered at various different sizes.
-         *
-         * If \a allowLock is true and the packet is not editable
-         * according to Packet::isPacketEditable(), a small padlock
-         * will be overlaid onto the icon.
          */
-        static QIcon icon(regina::Packet* packet, bool allowLock = false);
+        static QIcon icon(regina::Packet* packet);
 
         /**
          * Returns a newly created interface appropriate for viewing or

@@ -114,11 +114,6 @@ class ReginaSupport {
          */
         static QIcon themeIcon(const QString& name);
 
-        /**
-         * Overlay an emblem onto an icon.
-         */
-        static QIcon overlayIcon(const QIcon& base, const QIcon& emblem);
-
     private:
         static const QString& home();
 };

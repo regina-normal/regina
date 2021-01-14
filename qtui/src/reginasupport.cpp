@@ -40,11 +40,10 @@
 #include <QPainter>
 
 namespace {
+    // These are the possible icon sizes as measured in points (not pixels).
     // We list icon sizes in descending order so that icon-{k}@2x.png
     // takes priority over icon-{2k}.png.
     const int iconSizes[] = { 128, 64, 48, 32, 22, 16, 0 /* terminator */ };
-    const int iconSizesRaw[] = { 16, 22, 32, 44, 48, 64, 96, 128, 256, 0 };
-        /**< The union of (iconSizes) and (2 * iconSizes). */
 }
 
 QString ReginaSupport::home_;
@@ -167,20 +166,6 @@ QIcon ReginaSupport::themeIcon(const QString& name) {
     QString filename = home() + "/icons/system/" + name + "-%1.png";
     for (int i = 0; iconSizes[i]; ++i) {
         icon.addFile(filename.arg(iconSizes[i]));
-    }
-    return icon;
-}
-
-QIcon ReginaSupport::overlayIcon(const QIcon& base, const QIcon& emblem) {
-    QIcon icon;
-    for (int i = 0; iconSizesRaw[i]; ++i) {
-        QPixmap iconPic = base.pixmap(iconSizesRaw[i]);
-        if (iconPic.isNull())
-            continue;
-
-        QPainter painter(&iconPic);
-        painter.drawPixmap(0, 0, emblem.pixmap(iconSizesRaw[i]));
-        icon.addPixmap(iconPic);
     }
     return icon;
 }

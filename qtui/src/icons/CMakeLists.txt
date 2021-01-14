@@ -23,7 +23,6 @@ set (IMGS
   finite
   insert
   lock
-  locked
   orb
   orient
   packet_angles

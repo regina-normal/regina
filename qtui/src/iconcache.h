@@ -74,10 +74,6 @@ class IconCache {
     private:
         static QIcon cache_[END_OF_LIST];
             /**< The main icon cache. */
-        static QIcon locked_[END_OF_LIST];
-            /**< Icons with an overlaid "locked" emblem. */
-        static QIcon emblemLocked_;
-            /**< The "locked" emblem, to use for overlays. */
 
     public:
         /**
@@ -87,23 +83,11 @@ class IconCache {
          */
         static QIcon icon(IconID id);
 
-        /**
-         * Return the requested icon with a "locked" overlay.
-         * It will be constructed the first time, and then
-         * pulled from the cache each time after that.
-         */
-        static QIcon lockedIcon(IconID id);
-
     private:
         /**
          * Load the given icon from disk.
          */
         static void load(IconID id);
-
-        /**
-         * Construct the given "locked" icon.
-         */
-        static void constructLocked(IconID id);
 };
 
 inline QIcon IconCache::icon(IconID id) {
@@ -112,14 +96,6 @@ inline QIcon IconCache::icon(IconID id) {
     if (cache_[id].isNull())
         load(id);
     return cache_[id];
-}
-
-inline QIcon IconCache::lockedIcon(IconID id) {
-    if (id < 0 || id >= END_OF_LIST)
-        return QIcon();
-    if (locked_[id].isNull())
-        constructLocked(id);
-    return locked_[id];
 }
 
 #endif

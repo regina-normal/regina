@@ -34,8 +34,6 @@
 #include "reginasupport.h"
 
 QIcon IconCache::cache_[IconCache::END_OF_LIST];
-QIcon IconCache::locked_[IconCache::END_OF_LIST];
-QIcon IconCache::emblemLocked_;
 
 void IconCache::load(IconID id) {
     switch (id) {
@@ -95,14 +93,5 @@ void IconCache::load(IconID id) {
         case END_OF_LIST:
             return;
     }
-}
-
-void IconCache::constructLocked(IconID id) {
-    QIcon base = icon(id);
-
-    if (emblemLocked_.isNull())
-        emblemLocked_ = ReginaSupport::regIcon("locked");
-
-    locked_[id] = ReginaSupport::overlayIcon(base, emblemLocked_);
 }
 

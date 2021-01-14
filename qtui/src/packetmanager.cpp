@@ -59,7 +59,7 @@
 
 using namespace regina;
 
-QIcon PacketManager::icon(Packet* packet, bool allowLock) {
+QIcon PacketManager::icon(Packet* packet) {
     IconCache::IconID id;
 
     switch (packet->type()) {
@@ -143,10 +143,7 @@ QIcon PacketManager::icon(Packet* packet, bool allowLock) {
             return QIcon();
     }
 
-    if (allowLock && ! packet->isPacketEditable())
-        return IconCache::lockedIcon(id);
-    else
-        return IconCache::icon(id);
+    return IconCache::icon(id);
 }
 
 PacketUI* PacketManager::createUI(regina::Packet* packet,
