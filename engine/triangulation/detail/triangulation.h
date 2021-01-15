@@ -537,7 +537,7 @@ class TriangulationBase :
             /**< Fundamental group of the triangulation. */
         mutable Property<AbelianGroup, StoreManagedPtr> H1_;
             /**< First homology group of the triangulation. */
-
+           
     public:
         /**
          * \name Constructors and Destructors
@@ -1786,6 +1786,7 @@ class TriangulationBase :
          * from fromIsoSig(), as described above.
          * @return the isomorphism signature of this triangulation.
          */
+        template <int version = 1>
         std::string isoSig(Isomorphism<dim>** relabelling = 0) const;
 
         /**
@@ -2034,6 +2035,53 @@ class TriangulationBase :
         template <int subdim>
         void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
             Face<dim, dim-1>* facet);
+
+        /**
+         * An internal version of isoSig()
+         * 
+         * Constructs the isomorphism signature for a single
+         * component of this triangulation that the component
+         * iterator points to. 
+         * 
+         * Chooses the lexicographically smallest isomorphism signature
+         * out of all possible starting permutations and simplices.
+         * 
+         * @param it The component iterator of the triangulation
+         * @param relabelling if this is non-null, it will be modified to
+         * point to a new isomorphism that describes the relationship between
+         * this triangulation and the triangulation that will be reconstructed
+         * from fromIsoSig(), as described above.
+         * @param currRelabelling The current relabelling of the triangulation
+         * @return The isomorphism signature corresponding to the component 
+         * using the specified version of the isomorphism signature.
+         */
+        std::string isoSigv0(ComponentIterator& it,
+                Isomorphism<dim>** relabelling, 
+                Isomorphism<dim>* currRelabelling) const;
+
+        /**
+         * An internal version of isoSig()
+         * 
+         * Constructs the isomorphism signature for a single
+         * component of this triangulation that the component
+         * iterator points to. 
+         * 
+         * Chooses the lexicographically smallest isomorphism signature
+         * of the smallest set of all possible starting permutations 
+         * and simplices using degree information to distinguish sets.
+         * 
+         * @param it The component iterator of the triangulation
+         * @param relabelling if this is non-null, it will be modified to
+         * point to a new isomorphism that describes the relationship between
+         * this triangulation and the triangulation that will be reconstructed
+         * from fromIsoSig(), as described above.
+         * @param currRelabelling The current relabelling of the triangulation
+         * @return The isomorphism signature corresponding to the component 
+         * using the specified version of the isomorphism signature.
+         */
+        std::string isoSigv1(ComponentIterator& it,
+                Isomorphism<dim>** relabelling, 
+                Isomorphism<dim>* currRelabelling) const;             
 
         /**
          * Internal to isoSig().

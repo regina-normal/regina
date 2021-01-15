@@ -52,7 +52,8 @@
 
 namespace regina {
 
-static bool SimplexInfo::compArr(const std::vector<int>& v1, const std::vector<int>& v2) {
+template <int dim>
+bool SimplexInfo<dim>::compArr(const std::vector<int>& v1, const std::vector<int>& v2) {
     /**
      * Iterates through the vectors to determine the higher ranked vector
      */
@@ -69,7 +70,8 @@ static bool SimplexInfo::compArr(const std::vector<int>& v1, const std::vector<i
     return true;
 }
 
-bool SimplexInfo::compVertex(int i, int j) {
+template <int dim>
+bool SimplexInfo<dim>::compVertex(int i, int j) {
     /**
      * Iterates through dimensions to check for the higher ranked
      * vertex overall
@@ -85,8 +87,8 @@ bool SimplexInfo::compVertex(int i, int j) {
     return true;
 }
 
-template <int dim, int subdim>
-bool SimplexInfo::compareSimplex(const SimplexInfo & other) {
+template <int dim> template <int subdim>
+bool SimplexInfo<dim>::compareSimplex(const SimplexInfo & other) {
     /**
      * Compares all simplexAnnotations from lowest subdimension
      * up to the (dim + 1) / 2
@@ -104,8 +106,8 @@ bool SimplexInfo::compareSimplex(const SimplexInfo & other) {
     return true; 
 } 
 
-template <int dim, int subdim, int numbering = 0, int vertexCount = 0>
-void SimplexInfo::addVertexAnnotation(Simplex<dim>* simplex, int size, std::vector<std::vector<int>>& annotations) {
+template <int dim> template <int subdim, int numbering, int vertexCount>
+void SimplexInfo<dim>::addVertexAnnotation(Simplex<dim>* simplex, int size, std::vector<std::vector<int>>& annotations) {
     /**
      * Recusively goes through all faces of a specific subdimension, and adds
      * it as a vertex annotation
@@ -121,8 +123,8 @@ void SimplexInfo::addVertexAnnotation(Simplex<dim>* simplex, int size, std::vect
     }
 }
 
-template <int dim, int subdim, int numbering = 0>
-void SimplexInfo::addSimplexAnnotation(Simplex<dim>* simplex, int size, std::vector<int>& annotations) {
+template <int dim> template <int subdim, int numbering>
+void SimplexInfo<dim>::addSimplexAnnotation(Simplex<dim>* simplex, int size, std::vector<int>& annotations) {
     /**
      * Recusively goes through all faces of a specific subdimension, and adds
      * its simplex annotations. This information is combined with its opposite face
@@ -148,8 +150,8 @@ void SimplexInfo::addSimplexAnnotation(Simplex<dim>* simplex, int size, std::vec
     }
 }   
 
-template <int dim, int subdim = 0>
-void SimplexInfo::init(Simplex<dim>* simplex, int size) {
+template <int dim> template <int subdim>
+void SimplexInfo<dim>::init(Simplex<dim>* simplex, int size) {
     /**
      * Adds simplex annotations for subdim-faces
      */     
@@ -173,7 +175,7 @@ void SimplexInfo::init(Simplex<dim>* simplex, int size) {
 } 
 
 template <int dim>
-std::vector<int> SimplexInfo::getAllPerms() {
+std::vector<int> SimplexInfo<dim>::getAllPerms() {
     std::vector<int> ans;
     for (int perm = 0; perm < Perm<dim + 1>::nPerms; ++perm) {
         /**
@@ -189,7 +191,8 @@ std::vector<int> SimplexInfo::getAllPerms() {
     return ans;
 } 
 
-bool SimplexInfo::operator ==(const SimplexInfo & other) {
+template <int dim>
+bool SimplexInfo<dim>::operator ==(const SimplexInfo & other) {
     for (int i = 0; i < simplexAnnotations.size(); i++) {
         if (simplexAnnotations[i] != other.simplexAnnotations[i]) {
             return false;
@@ -198,11 +201,13 @@ bool SimplexInfo::operator ==(const SimplexInfo & other) {
     return true;
 }
 
-bool SimplexInfo::operator <(SimplexInfo & other) {
+template <int dim>
+bool SimplexInfo<dim>::operator <(SimplexInfo & other) {
     return compareSimplex<0>(other);
 }
 
-SimplexInfo::SimplexInfo(Simplex<dim>* simplex, int simplexNum, int size) {
+template <int dim>
+SimplexInfo<dim>::SimplexInfo(Simplex<dim>* simplex, int simplexNum, int size) {
     label = simplexNum;
     init(simplex, size);
 }

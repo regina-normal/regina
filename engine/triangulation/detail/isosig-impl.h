@@ -45,7 +45,7 @@
 #endif
 
 #include <algorithm>
-#include "simplexinfo.h"
+#include "simplexinfo-impl.h"
 #include "triangulation/generic/triangulation.h"
 
 namespace regina {
@@ -340,8 +340,40 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
     return ans;
 }
 
+/**
+ * Chooses the lexicographically smallest isomorphism signature
+ * out of all possible starting permutations and simplices.
+ */
 template <int dim>
-std::string isoSigv2(TriangulationBase<dim>* triangulation) {
+std::string TriangulationBase<dim>::isoSigv0(ComponentIterator& it,
+        Isomorphism<dim>** relabelling,
+        Isomorphism<dim>* currRelabelling) const { 
+    auto triangulation = *it;
+    std::string ans;
+    for (int simp = 0; simp < triangulation->size(); ++simp) {
+        for (int perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
+            std::string curr = isoSigFrom(triangulation->simplex(simp)->index(),
+                Perm<dim+1>::atIndex(perm), currRelabelling);
+            if ((simp == 0 && perm == 0) || (curr < ans)) {
+                ans = curr;
+                if (relabelling)
+                    std::swap(*relabelling, currRelabelling);
+            }
+        }
+    }
+    return ans;
+}
+
+/**
+ * Chooses the lexicographically smallest isomorphism signature
+ * of the smallest set of all possible starting permutations 
+ * and simplices using degree information to distinguish sets.
+ */
+template <int dim>
+std::string TriangulationBase<dim>::isoSigv1(ComponentIterator& it, 
+        Isomorphism<dim>** relabelling, 
+        Isomorphism<dim>* currRelabelling) const {
+    auto triangulation = *it;
     std::vector<SimplexInfo<dim>> properties;
     /**
      * Preprocesses each simplex so they can be compared easily using
@@ -403,18 +435,18 @@ std::string isoSigv2(TriangulationBase<dim>* triangulation) {
         auto perms = properties[bestIndex + i].getAllPerms();
         for (auto perm : perms) {
             std::string curr = isoSigFrom(triangulation->simplex(properties[bestIndex + i].getLabel())->index(), 
-                Perm<dim + 1>::atIndex(perm), (Isomorphism<dim>*) nullptr);
-            if (ans.size() == 0) {
+                Perm<dim + 1>::atIndex(perm), currRelabelling);
+            if (ans.size() == 0 || ans < curr) {
                 ans = curr;
-            } else {
-                ans = std::min(ans, curr);
-            }
+                if (relabelling)
+                    std::swap(*relabelling, currRelabelling);                
+            } 
         }    
     }
     return ans;
 }
 
-template <int dim>
+template <int dim> template <int version>
 std::string TriangulationBase<dim>::isoSig(
         Isomorphism<dim>** relabelling) const {
     // Make sure the user is not trying to do something illegal.
@@ -447,16 +479,14 @@ std::string TriangulationBase<dim>::isoSig(
     std::string* comp = new std::string[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
-        for (simp = 0; simp < (*it)->size(); ++simp)
-            for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
-                curr = isoSigFrom((*it)->simplex(simp)->index(),
-                    Perm<dim+1>::atIndex(perm), currRelabelling);
-                if ((simp == 0 && perm == 0) || (curr < comp[i])) {
-                    comp[i].swap(curr);
-                    if (relabelling)
-                        std::swap(*relabelling, currRelabelling);
-                }
-            }
+        // Different versions of isoSig
+        if constexpr (version == 0) {
+            comp[i] = isoSigv0(relabelling, currRelabelling);
+        } else if constexpr (version == 1) {
+            comp[i] = isoSigv1(it, relabelling, currRelabelling);
+        } else { //Default to version 0
+            comp[i] = isoSigv0(relabelling, currRelabelling);
+        }
     }
 
     // Pack the components together.

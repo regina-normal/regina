@@ -42,12 +42,6 @@
 
 #include <vector>
 #include <algorithm>
-#include"triangulation/dim3.h"
-#include"triangulation/dim4.h"
-#include"triangulation/example3.h"
-#include"triangulation/example4.h"
-#include"triangulation/detail/triangulation.h"
-#include"triangulation/detail/facenumbering.h"
 
 namespace regina {
 
@@ -63,6 +57,8 @@ namespace regina {
  * face degrees for a simplex to distinguish itself from other simplices
  * in a triangulation. This information is stored in the same way regardless
  * of the orientation of the simplex.
+ * 
+ * \tparam dim the dimension of the underlying triangulation.
  */
 template <int dim>
 class SimplexInfo {
@@ -101,10 +97,13 @@ class SimplexInfo {
          * ranked simplex is simplex with the higher ranked simplexAnnotations in 
          * the lower subdimensional faces.
          *
+         * \tparam subdim the dimension of the faces to utilise in comparison
+         * 
          * @param other the simplex compared against
          * @return \c true if and only if the current simplex is ranked higher than
          * the other simplex
          */
+        template <int subdim>
         bool compareSimplex(const SimplexInfo & other);
 
         /**
@@ -112,22 +111,31 @@ class SimplexInfo {
          * for the dimension <i>subdim<i>. Vertex annotations of a specific subdimension for
          * a specific vertex are the degrees of all faces containing that vertex of that 
          * dimension in sorted format.
-         *
+         * 
+         * \tparam subdim the dimension of the faces to utilise in comparison
+         * \tparam numbering the face dimesnion value to add
+         * \tparam vertexCount the vertex number used to add annotation on
+         * 
          * @param simplex The simplex used for annotations
          * @param size The size of the original triangulation
          * @param annotations The annotations for that specific subdimension
          */    
+        template <int subdim, int numbering = 0, int vertexCount = 0>
         void addVertexAnnotation(Simplex<dim>* simplex, int size, std::vector<std::vector<int>>& annotations);
 
         /**
          * Calling addSimplexAnnotation with <i>subdim<i> adds simplex annotations for the 
          * dimension <i>subdim<i>. Simplex annotations of a specific subdimension are
          * a vector of the degrees of all faces of that dimension.
-         *
+         * 
+         * \tparam subdim the dimension of the faces to utilise in comparison
+         * \tparam numbering the face dimesnion value to add
+         * 
          * @param simplex The simplex used for annotations
          * @param size The size of the original triangulation
          * @param annotations The annotations for that specific subdimension
          */         
+        template <int subdim, int numbering = 0>
         void addSimplexAnnotation(Simplex<dim>* simplex, int size, std::vector<int>& annotations);   
 
         /**
@@ -135,9 +143,12 @@ class SimplexInfo {
          * Adds vertex and simplex annotations for all possible subdimensions for
          * the given simplex and stores for usage in comparisons.
          *
+         * \tparam subdim the dimension of the faces to utilise in comparison
+         * 
          * @param simplex The simplex used for annotations
          * @param size The size of the original triangulation
          */          
+        template <int subdim = 0>
         void init(Simplex<dim>* simplex, int size);      
     public:
         /**
