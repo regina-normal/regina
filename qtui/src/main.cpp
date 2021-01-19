@@ -43,8 +43,22 @@
 #include <QApplication>
 #include <QFile>
 
+// Some sanity checking.
+#if defined(REGINA_INSTALL_BUNDLE)
+    #if defined(Q_OS_MACX) && defined(REGINA_XCODE_BUNDLE)
+    #else
+        #error "Regina only supports macOS bundles through the Xcode build."
+    #endif
+#endif
+#ifdef REGINA_INSTALL_WINDOWS
+    #ifdef Q_OS_WIN32
+    #else
+        #error "Regina only supports Windows builds on Windows platforms."
+    #endif
+#endif
+
 int main(int argc, char **argv) {
-#if defined(REGINA_INSTALL_BUNDLE) && defined(Q_OS_MACX) && defined(REGINA_XCODE_BUNDLE)
+#if defined(REGINA_INSTALL_BUNDLE)
     // The Xcode bundle has sandboxing enabled, which means Qt will have
     // trouble searching for its plugins.
     // Therefore we need to set the Qt plugin path explicitly, *before*
@@ -73,31 +87,20 @@ int main(int argc, char **argv) {
     QCoreApplication::setApplicationName("Regina");
 
 #ifdef REGINA_INSTALL_BUNDLE
-#ifdef Q_OS_MACX
     regina::GlobalDirs::setDirs(
         static_cast<const char*>(QFile::encodeName(
             QCoreApplication::applicationDirPath() + "/../Resources")),
         static_cast<const char*>(QFile::encodeName(
             QCoreApplication::applicationDirPath() + "/python")),
-#ifdef REGINA_XCODE_BUNDLE
         /* The Xcode bundle currently puts census databases in the
            root resources directory.  This is difficult to avoid, since
            these are "derived sources" and hence need to go in a
            "copy bundle resources" phase, not a "copy files" phase. */
         static_cast<const char*>(QFile::encodeName(
             QCoreApplication::applicationDirPath() + "/../Resources")));
-#else
-        /* We are building a MacOS bundle via cmake, which puts the
-           census databases in the "normal" place beneath Resources/data/. */
-        static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath() +
-            "/../Resources/data/census")));
-#endif
-#endif
 #endif
 
 #ifdef REGINA_INSTALL_WINDOWS
-#ifdef Q_OS_WIN32
     regina::GlobalDirs::setDirs(
         static_cast<const char*>(QFile::encodeName(
             QCoreApplication::applicationDirPath() + "/../share/regina")),
@@ -105,7 +108,6 @@ int main(int argc, char **argv) {
             QCoreApplication::applicationDirPath() + "/../lib/regina/python")),
         static_cast<const char*>(QFile::encodeName(
             QCoreApplication::applicationDirPath() + "/../share/regina/data/census")));
-#endif
 #endif
 
     // Load preferences from file.
