@@ -439,7 +439,7 @@ Welcome to Regina!
 
 A single Regina data file can store a range of objects, from 3-manifold triangulations and normal surfaces to Python scripts, PDF documents and text notes (such as the one you are reading now).
 
-These objects are called "packets", and are arranged in a tree-like structure as you can see to the left.  To view or edit a packet, just click on the packet in the tree (on some platforms, such as macOS, you should double-click instead).
+These objects are called "packets", and are arranged in a tree-like structure as you can see to the left.  To view or edit a packet, just click on the packet in the tree (on some platforms, such as MacOS, you should double-click instead).
 
 Have a play with the packets in this file to see what Regina can do.
 
