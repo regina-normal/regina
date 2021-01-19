@@ -41,7 +41,7 @@
    Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
 #define REGINA_INSTALL_XDG
 
-/* Define if we are building a self-contained MacOS app bundle that users can
+/* Define if we are building a self-contained macOS app bundle that users can
    drag and drop.
    Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
 /* #undef REGINA_INSTALL_BUNDLE */

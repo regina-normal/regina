@@ -51,7 +51,7 @@ QString ReginaSupport::home_;
 void ReginaSupport::info(QWidget* parent, const QString& text,
         const QString& informativeText, const QString& detailedText) {
     // Make sure that the window title is ignorable, since it does not
-    // appear on MacOSX.
+    // appear on macOS.
     // The tr() call needs a QObject subclass as context; here we use
     // ReginaMain.
     QMessageBox msg(QMessageBox::Information,
@@ -66,7 +66,7 @@ void ReginaSupport::info(QWidget* parent, const QString& text,
 void ReginaSupport::sorry(QWidget* parent, const QString& text,
         const QString& informativeText, const QString& detailedText) {
     // Make sure that the window title is ignorable, since it does not
-    // appear on MacOSX.
+    // appear on macOS.
     // The tr() call needs a QObject subclass as context; here we use
     // ReginaMain.
 
@@ -84,7 +84,7 @@ void ReginaSupport::sorry(QWidget* parent, const QString& text,
 void ReginaSupport::warn(QWidget* parent, const QString& text,
         const QString& informativeText, const QString& detailedText) {
     // Make sure that the window title is ignorable, since it does not
-    // appear on MacOSX.
+    // appear on macOS.
     // The tr() call needs a QObject subclass as context; here we use
     // ReginaMain.
     QMessageBox msg(QMessageBox::Warning,
@@ -99,7 +99,7 @@ void ReginaSupport::warn(QWidget* parent, const QString& text,
 bool ReginaSupport::warnYesNo(QWidget* parent, const QString& text,
         const QString& informativeText, const QString& detailedText) {
     // Make sure that the window title is ignorable, since it does not
-    // appear on MacOSX.
+    // appear on macOS.
     // The tr() call needs a QObject subclass as context; here we use
     // ReginaMain.
     QMessageBox msg(QMessageBox::Information,
@@ -116,7 +116,7 @@ bool ReginaSupport::warnYesNo(QWidget* parent, const QString& text,
 void ReginaSupport::success(QWidget* parent, const QString& text,
         const QString& informativeText, const QString& detailedText) {
     // Make sure that the window title is ignorable, since it does not
-    // appear on MacOSX.
+    // appear on macOS.
     // The tr() call needs a QObject subclass as context; here we use
     // ReginaMain.
     QMessageBox msg(QMessageBox::Information,
@@ -131,7 +131,7 @@ void ReginaSupport::success(QWidget* parent, const QString& text,
 void ReginaSupport::failure(QWidget* parent, const QString& text,
         const QString& informativeText, const QString& detailedText) {
     // Make sure that the window title is ignorable, since it does not
-    // appear on MacOSX.
+    // appear on macOS.
     // The tr() call needs a QObject subclass as context; here we use
     // ReginaMain.
     QMessageBox msg(QMessageBox::Warning,

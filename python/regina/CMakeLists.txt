@@ -24,7 +24,7 @@ ENDIF (REGINA_PYTHON_EXTENSION_NONSTANDARD)
 IF (APPLE)
   # Avoid linking with ${Python_LIBRARIES} so we can load the module in a
   # different python build if we so desire.
-  # On MacOS this requires the "-undefined dynamic_lookup" linker flag.
+  # On macOS this requires the "-undefined dynamic_lookup" linker flag.
   SET_TARGET_PROPERTIES(engine PROPERTIES LINK_FLAGS
     "-undefined dynamic_lookup")
   TARGET_LINK_LIBRARIES(engine ${ENGINE_LIBRARY})

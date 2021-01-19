@@ -59,7 +59,7 @@ namespace regina {
  * at build time.
  *
  * If Regina may have been moved around on the filesystem (e.g., if you are
- * running an app bundle on MacOS), then you \e must call setDirs() when your
+ * running an app bundle on macOS), then you \e must call setDirs() when your
  * application starts.  Otherwise the directories that GlobalDirs returns
  * might be incorrect, and might not even exist.
  *
@@ -81,7 +81,7 @@ class REGINA_API GlobalDirs {
          * \c /usr/local/share/regina .
          *
          * \warning If Regina is not installed in the exact location
-         * configured at compile time (e.g., if you are running a MacOSX
+         * configured at compile time (e.g., if you are running a macOS
          * app bundle), you \e must call setDirs() before calling this routine.
          * \warning If you are running out of the source tree, this
          * routine will almost certainly return an incorrect (and possibly
@@ -97,7 +97,7 @@ class REGINA_API GlobalDirs {
          * standard site-packages directory.
          *
          * \warning If Regina is not installed in the exact location
-         * configured at compile time (e.g., if you are running a MacOSX
+         * configured at compile time (e.g., if you are running a macOS
          * app bundle), you \e must call setDirs() before calling this routine.
          * \warning If you are running out of the source tree, this
          * routine will almost certainly return an incorrect (and possibly
@@ -117,7 +117,7 @@ class REGINA_API GlobalDirs {
          * \c /usr/local/share/regina/data/census .
          *
          * \warning If Regina is not installed in the exact location
-         * configured at compile time (e.g., if you are running a MacOSX
+         * configured at compile time (e.g., if you are running a macOS
          * app bundle), you \e must call setDirs() before calling this routine.
          * \warning If you are running out of the source tree, this
          * routine will almost certainly return an incorrect (and possibly
@@ -137,7 +137,7 @@ class REGINA_API GlobalDirs {
          * \c /usr/local/share/regina/pylib .
          *
          * \warning If Regina is not installed in the exact location
-         * configured at compile time (e.g., if you are running a MacOSX
+         * configured at compile time (e.g., if you are running a macOS
          * app bundle), you \e must call setDirs() before calling this routine.
          * \warning If you are running out of the source tree, this
          * routine will almost certainly return an incorrect (and possibly
@@ -157,7 +157,7 @@ class REGINA_API GlobalDirs {
          * \c /usr/local/share/regina/examples .
          *
          * \warning If Regina is not installed in the exact location
-         * configured at compile time (e.g., if you are running a MacOSX
+         * configured at compile time (e.g., if you are running a macOS
          * app bundle), you \e must call setDirs() before calling this routine.
          * \warning If you are running out of the source tree, this
          * routine will almost certainly return an incorrect (and possibly
@@ -177,7 +177,7 @@ class REGINA_API GlobalDirs {
          * \c /usr/local/share/regina/engine-docs .
          *
          * \warning If Regina is not installed in the exact location
-         * configured at compile time (e.g., if you are running a MacOSX
+         * configured at compile time (e.g., if you are running a macOS
          * app bundle), you \e must call setDirs() before calling this routine.
          * \warning If you are running out of the source tree, this
          * routine will almost certainly return an incorrect (and possibly
@@ -197,7 +197,7 @@ class REGINA_API GlobalDirs {
          * \c /usr/local/share/regina/data .
          *
          * \warning If Regina is not installed in the exact location
-         * configured at compile time (e.g., if you are running a MacOSX
+         * configured at compile time (e.g., if you are running a macOS
          * app bundle), you \e must call setDirs() before calling this routine.
          * \warning If you are running out of the source tree, this
          * routine will almost certainly return an incorrect (and possibly
@@ -211,7 +211,7 @@ class REGINA_API GlobalDirs {
          * Tells Regina where data files are installed.  You must call this
          * at runtime if Regina is not installed in the location that was
          * configured by \e cmake at build time (e.g., if you are
-         * running a MacOSX app bundle).
+         * running a macOS app bundle).
          *
          * Empty strings are treated as follows:
          *

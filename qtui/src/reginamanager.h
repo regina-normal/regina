@@ -59,7 +59,7 @@ class ReginaManager : public QApplication {
 
     protected:
         /**
-         * Support QEvent::FileOpen on MacOS.
+         * Support QEvent::FileOpen on macOS.
          */
         bool event(QEvent*);
 

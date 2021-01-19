@@ -19,7 +19,7 @@
 #   (e.g., that you cannot write to /foo.rga, or that /tmp/out.rga is
 #   fair game to create, edit and delete automatically.)
 #
-# - This has only been tested on MacOS, and may (or may not) rely on
+# - This has only been tested on macOS, and may (or may not) rely on
 #   features specific to that operating system.  (The main culprit, if any,
 #   is likely to be "gzcat -f".)
 #

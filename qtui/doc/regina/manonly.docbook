@@ -34,7 +34,7 @@
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY kde "<acronym>KDE</acronym>">
   <!ENTITY linux "<application><acronym>GNU</acronym>/Linux</application>">
-  <!ENTITY macosx "<application>MacOS&nbsp;X</application>">
+  <!ENTITY macosx "<application>macOS</application>">
   <!ENTITY mdash " - ">
   <!ENTITY menuapidocs "Help-&gt;&python; &api; Reference">
   <!ENTITY menuhandbook "Help-&gt;Regina Handbook">

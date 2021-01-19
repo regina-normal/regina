@@ -80,7 +80,7 @@ def reginaSetup(quiet = False, readline = True, banner = False,
                      occurs, details of the error will be written regardless.
         readline   : If true, attempt to enable tab completion.
         snappyPath : Applies to platforms where SnapPy might not be installed
-                     on the python path (e.g., MacOS users with the SnapPy app
+                     on the python path (e.g., macOS users with the SnapPy app
                      bundle).  If true, this setup routine will (i) attempt
                      to locate SnapPy, and (ii) if successful, extend sys.path
                      to include the location of SnapPy's python module and its
@@ -124,10 +124,10 @@ def reginaSetup(quiet = False, readline = True, banner = False,
             pass
 
     if snappyPath:
-        # For the time being, only find SnapPy on MacOS.
+        # For the time being, only find SnapPy on macOS.
         if sys.platform == 'darwin':
             if sys.version_info[:2] == (3, 8):
-                # Ask MacOS where SnapPy lives.
+                # Ask macOS where SnapPy lives.
                 import subprocess
                 try:
                     app = subprocess.check_output(['mdfind',

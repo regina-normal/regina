@@ -47,7 +47,7 @@ class QWidget;
  *
  * The icon loading routines give correct results for full installations in
  * a fixed location (e.g., a typical Linux install), as well as relocatable
- * application bundles (e.g., a typical MacOSX install).
+ * application bundles (e.g., a typical macOS install).
  */
 class ReginaSupport {
     private:
