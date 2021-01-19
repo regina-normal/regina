@@ -1481,6 +1481,10 @@
 		059BC6941DC7F7A300AB4206 /* boundarycomponent13.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059BC6721DC7F79600AB4206 /* boundarycomponent13.cpp */; };
 		059BC6951DC7F7A300AB4206 /* boundarycomponent14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059BC6731DC7F79600AB4206 /* boundarycomponent14.cpp */; };
 		059BC6961DC7F7A300AB4206 /* boundarycomponent15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059BC6741DC7F79600AB4206 /* boundarycomponent15.cpp */; };
+		059D019D25B6A72C004150F7 /* libregina-engine.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 0575E6591805F36D009E3FC4 /* libregina-engine.dylib */; };
+		059D019E25B6A72C004150F7 /* libgmp.xcframework in Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B4AC2581ABA20022EA5D /* libgmp.xcframework */; };
+		059D019F25B6A72C004150F7 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
+		059D01B425B6A742004150F7 /* shell.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059D017925B6A715004150F7 /* shell.cpp */; };
 		059D612A258865B00011E905 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFEE258241E100965440 /* libz.tbd */; };
 		059D6149258865BD0011E905 /* libxml2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 05E0EFED258241E100965440 /* libxml2.tbd */; };
 		059D6197258866640011E905 /* libbz2.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 059D6168258866370011E905 /* libbz2.tbd */; };
@@ -3929,6 +3933,9 @@
 		059BC6721DC7F79600AB4206 /* boundarycomponent13.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponent13.cpp; sourceTree = "<group>"; };
 		059BC6731DC7F79600AB4206 /* boundarycomponent14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponent14.cpp; sourceTree = "<group>"; };
 		059BC6741DC7F79600AB4206 /* boundarycomponent15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundarycomponent15.cpp; sourceTree = "<group>"; };
+		059D017925B6A715004150F7 /* shell.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shell.cpp; sourceTree = "<group>"; };
+		059D01A325B6A72C004150F7 /* Timing */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Timing; sourceTree = BUILT_PRODUCTS_DIR; };
+		059D01F625B6AA94004150F7 /* Timing.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = Timing.entitlements; path = Timing/Timing.entitlements; sourceTree = "<group>"; };
 		059D6168258866370011E905 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		059D61692588663B0011E905 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
 		05A0665E1DFA67CB0047872E /* augtrisolidtorus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = augtrisolidtorus.cpp; sourceTree = "<group>"; };
@@ -4527,6 +4534,16 @@
 				0567B5E02581AD050022EA5D /* popt.xcframework in Frameworks */,
 				057EDC852581F0C2004F0068 /* libgmp.xcframework in Frameworks */,
 				05E0F05B2582422100965440 /* libxml2.tbd in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		059D019C25B6A72C004150F7 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				059D019D25B6A72C004150F7 /* libregina-engine.dylib in Frameworks */,
+				059D019E25B6A72C004150F7 /* libgmp.xcframework in Frameworks */,
+				059D019F25B6A72C004150F7 /* libxml2.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -6871,6 +6888,7 @@
 		0575E6501805F36D009E3FC4 = {
 			isa = PBXGroup;
 			children = (
+				059D01F625B6AA94004150F7 /* Timing.entitlements */,
 				052F9BFD180600FA00FAE4DF /* engine */,
 				052FA12F1806102F00FAE4DF /* ios */,
 				050F5CDE1B9BAAAA00C1F681 /* python */,
@@ -6879,6 +6897,7 @@
 				05617ADE1D9DBFBF00B1E33B /* utils */,
 				057118AF19B307A3009FEDC5 /* data */,
 				05A47F961809CB7500F86BFD /* examples */,
+				059D015A25B6A6E3004150F7 /* timing */,
 				0577E71A1F970D2600CBDF15 /* admin */,
 				0575E65A1805F36D009E3FC4 /* Products */,
 				052FA0AF180604A900FAE4DF /* Frameworks */,
@@ -6904,6 +6923,7 @@
 				05617B381D9DC55000B1E33B /* sigcensus */,
 				05617B431D9DC55B00B1E33B /* trisetcmp */,
 				058FC8721FE188A0006D04B4 /* retriangulate */,
+				059D01A325B6A72C004150F7 /* Timing */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -7105,6 +7125,14 @@
 				05B4D2E422A02B0A00B7B11C /* sample-py3.rga */,
 			);
 			path = ios;
+			sourceTree = "<group>";
+		};
+		059D015A25B6A6E3004150F7 /* timing */ = {
+			isa = PBXGroup;
+			children = (
+				059D017925B6A715004150F7 /* shell.cpp */,
+			);
+			path = timing;
 			sourceTree = "<group>";
 		};
 		05A47F961809CB7500F86BFD /* examples */ = {
@@ -7978,6 +8006,22 @@
 			productReference = 058FC8721FE188A0006D04B4 /* retriangulate */;
 			productType = "com.apple.product-type.tool";
 		};
+		059D019925B6A72C004150F7 /* Timing */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 059D01A025B6A72C004150F7 /* Build configuration list for PBXNativeTarget "Timing" */;
+			buildPhases = (
+				059D019A25B6A72C004150F7 /* Sources */,
+				059D019C25B6A72C004150F7 /* Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Timing;
+			productName = "Utils - TriSetCmp";
+			productReference = 059D01A325B6A72C004150F7 /* Timing */;
+			productType = "com.apple.product-type.tool";
+		};
 		05B14EA219B423A0002138C0 /* Census Tools */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 05B14EAB19B423A0002138C0 /* Build configuration list for PBXNativeTarget "Census Tools" */;
@@ -8096,6 +8140,7 @@
 				05617B371D9DC55000B1E33B /* Utils - SigCensus */,
 				05617ADC1D9DBFBE00B1E33B /* Utils - TriCensus */,
 				05617B421D9DC55B00B1E33B /* Utils - TriSetCmp */,
+				059D019925B6A72C004150F7 /* Timing */,
 			);
 		};
 /* End PBXProject section */
@@ -10026,6 +10071,14 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		059D019A25B6A72C004150F7 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				059D01B425B6A742004150F7 /* shell.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		05B14E9F19B423A0002138C0 /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -11359,6 +11412,86 @@
 			};
 			name = Release;
 		};
+		059D01A125B6A72C004150F7 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_ENTITLEMENTS = Timing/Timing.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"REGINA_XCODE_BUNDLE=1",
+					"$(inherited)",
+				);
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"@executable_path",
+				);
+				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/trisetcmp.plist",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Debug;
+		};
+		059D01A225B6A72C004150F7 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_CXX_LANGUAGE_STANDARD = "c++14";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_SUSPICIOUS_MOVES = YES;
+				CODE_SIGN_ENTITLEMENTS = Timing/Timing.entitlements;
+				CODE_SIGN_IDENTITY = "-";
+				COPY_PHASE_STRIP = NO;
+				ENABLE_HARDENED_RUNTIME = YES;
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
+				GCC_PREPROCESSOR_DEFINITIONS = "REGINA_XCODE_BUNDLE=1";
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				HEADER_SEARCH_PATHS = (
+					"$(inherited)",
+					/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/include,
+					"\"$(SRCROOT)/preconfig/osx-xcode5\"",
+					"\"$(SRCROOT)/engine\"",
+					/usr/include/libxml2,
+				);
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(USER_LIBRARY_DIR)/Frameworks",
+					"@executable_path",
+				);
+				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = (
+					"-sectcreate",
+					__TEXT,
+					__info_plist,
+					"$(SRCROOT)/utils/bundle/trisetcmp.plist",
+				);
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SKIP_INSTALL = YES;
+			};
+			name = Release;
+		};
 		05B14EA919B423A0002138C0 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -11589,6 +11722,15 @@
 			buildConfigurations = (
 				058FC8701FE188A0006D04B4 /* Debug */,
 				058FC8711FE188A0006D04B4 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		059D01A025B6A72C004150F7 /* Build configuration list for PBXNativeTarget "Timing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				059D01A125B6A72C004150F7 /* Debug */,
+				059D01A225B6A72C004150F7 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
