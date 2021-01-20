@@ -116,7 +116,7 @@ void SimplexInfo<dim>::addVertexAnnotation(Simplex<dim>* simplex, int size, std:
         if constexpr (vertexCount <= subdim) {
             int vertexNumber = FaceNumbering<dim, subdim>::ordering(numbering)[vertexCount];
             annotations[vertexNumber].emplace_back(simplex->template face<subdim>(numbering)->degree());
-            addVertexAnnotation<subdim, numbering + 1, vertexCount + 1>(simplex, size, annotations);
+            addVertexAnnotation<subdim, numbering, vertexCount + 1>(simplex, size, annotations);
         } else {
             addVertexAnnotation<subdim, numbering + 1>(simplex, size, annotations);
         }

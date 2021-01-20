@@ -473,19 +473,17 @@ std::string TriangulationBase<dim>::isoSig(
     ComponentIterator it;
     size_t i;
     size_t simp;
-    typename Perm<dim+1>::Index perm;
-    std::string curr;
 
     std::string* comp = new std::string[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
         // Different versions of isoSig
         if constexpr (version == 0) {
-            comp[i] = isoSigv0(relabelling, currRelabelling);
-        } else if constexpr (version == 1) {
+            comp[i] = isoSigv0(it, relabelling, currRelabelling);
+        } else if constexpr (version == 1 && dim < 8) {
             comp[i] = isoSigv1(it, relabelling, currRelabelling);
         } else { //Default to version 0
-            comp[i] = isoSigv0(relabelling, currRelabelling);
+            comp[i] = isoSigv0(it, relabelling, currRelabelling);
         }
     }
 

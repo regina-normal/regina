@@ -1786,7 +1786,7 @@ class TriangulationBase :
          * from fromIsoSig(), as described above.
          * @return the isomorphism signature of this triangulation.
          */
-        template <int version = 1>
+        template <int version = 0>
         std::string isoSig(Isomorphism<dim>** relabelling = 0) const;
 
         /**
