@@ -42,11 +42,11 @@
 #define __TRIANGULATION4_H
 #endif
 
-#include <functional>
 #include <list>
 #include <memory>
 #include <vector>
 #include "regina-core.h"
+#include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"
 
@@ -484,8 +484,9 @@ class REGINA_API Triangulation<4> :
          * be a function or some other callable object).
          *
          * - \a action must take at least one argument.  The first argument
-         *   will be of type Triangulation<4>&, and will reference the
-         *   triangulation that has been found.  If there are any
+         *   must be of type Triangulation<4>& or const std::string&;
+         *   this will be either the triangulation that has been found or
+         *   its isomorphism signature, respectively.  If there are any
          *   additional arguments supplied in the list \a args, then
          *   these will be passed as subsequent arguments to \a action.
          *
@@ -500,11 +501,11 @@ class REGINA_API Triangulation<4> :
          *   from the original form of this triangulation, before any
          *   subsequent changes (if any) were made.
          *
-         * - \a action may, if it chooses, make changes to the triangulation
-         *   that is passed in its argument (though it must not delete it).
-         *   This will likewise not affect the search, since the triangulation
-         *   that is passed to \a action will be destroyed immediately after
-         *   \a action is called.
+         * - \a action may, if it takes a Triangulation<4>& as its first
+         *   argument, make changes to this triangulation that is passed
+         *   (though it must not delete it).  This will likewise not affect
+         *   the search, since the triangulation that is passed to \a action
+         *   will be destroyed immediately after \a action is called.
          *
          * - \a action will only be called once for each triangulation
          *   (including this starting triangulation).  In other words, no
@@ -535,7 +536,9 @@ class REGINA_API Triangulation<4> :
          * processing has finished (i.e., either \a action returned \c true,
          * or the search was exhausted).  All calls to \a action will be
          * protected by a mutex (i.e., different threads will never be
-         * calling \a action at the same time).
+         * calling \a action at the same time); as a corollary, the action
+         * should avoid expensive operations where possible (otherwise
+         * it will become a serialisation bottleneck in the multithreading).
          *
          * If no progress tracker was passed then it will immediately return
          * \c false; otherwise the progress tracker will immediately be
@@ -560,7 +563,7 @@ class REGINA_API Triangulation<4> :
          * @param tracker a progress tracker through which progress will
          * be reported, or 0 if no progress reporting is required.
          * @param action a function (or other callable object) to call
-         * upon each triangulation that is found.
+         * for each triangulation that is found.
          * @param args any additional arguments that should be passed to
          * \a action, following the initial triangulation argument.
          * @return If a progress tracker is passed, then this routine
@@ -897,17 +900,18 @@ class REGINA_API Triangulation<4> :
         /**
          * A non-templated version of retriangulate().
          *
-         * This is identical to retriangulate(), except that the action
-         * function is given in the form of a std::function.
-         * This routine contains the bulk of the implementation of
-         * retriangulate().
+         * This is identical to retriangulate(), except that the type
+         * of the action function is now known precisely.  This means that
+         * the implementation can be kept out of the main headers.
          *
-         * Because this routine is not templated, its implementation
-         * can be kept out of the main headers.
+         * \tparam sigOnly \c true if the action function takes an
+         * isomorphism signature, or \c false if it takes a triangulation.
          */
+        template <bool sigOnly>
         bool retriangulateInternal(int height, unsigned nThreads,
             ProgressTrackerOpen* tracker,
-            const std::function<bool(Triangulation<4>&)>& action) const;
+            const regina::detail::RetriangulateActionFunc<
+                Triangulation<4>, sigOnly>& action) const;
 
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
@@ -977,7 +981,13 @@ inline bool Triangulation<4>::isClosed() const {
 template <typename Action, typename... Args>
 inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
-    return retriangulateInternal(height, nThreads, tracker,
+    // Use RetriangulateActionTraits to deduce whether the given action
+    // takes a triangulation or an isomorphism signature as its first argument.
+    typedef regina::detail::RetriangulateActionTraits<
+        Triangulation<4>, Action> Traits;
+    static_assert(Traits::valid,
+        "The action that is passed to retriangulate() should take either a triangulation or an isomorphism signature as its first argument.");
+    return retriangulateInternal<Traits::sigOnly>(height, nThreads, tracker,
         std::bind(action, std::placeholders::_1, args...));
 }
 

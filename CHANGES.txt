@@ -15,6 +15,15 @@ Version 6.1  [ TODO ]
         - Regina no longer needs boost to build. It still ships the
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
+    ENGINE:
+        Class Triangulation<3>:
+            - Overhauled retriangulate() to be faster, more generic, and
+              support actions that take an isomorphism signature instead
+              of a full triangluation.
+        Class Triangluation<4>:
+            - Overhauled retriangulate() to be faster, more generic, and
+              support actions that take an isomorphism signature instead
+              of a full triangluation.
     USER INTERFACES:
         - Removed the View/Edit action from the toolbar, since you might as
           well just double-click on the packet instead.
