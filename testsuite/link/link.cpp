@@ -32,6 +32,7 @@
 
 #include <cmath>
 #include <iomanip>
+#include <unistd.h>
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/census.h"
 #include "link/examplelink.h"
@@ -2421,23 +2422,96 @@ class LinkTest : public CppUnit::TestFixture {
             verifyOrientedGauss(rht_lht);
         }
 
-        void verifyRewrite(const Link* l, int height) {
+        void verifyRewrite(const Link& link, int height, int threads,
+                bool track, size_t count) {
             // For now, this should only be called for knots that are
             // equivalent to their mirror image.
-            if (l->rewrite(height, 1 /* threads */, nullptr,
-                    [l](const Link& alt) {
-                        return (alt.jones() != l->jones());
-                    })) {
+
+            size_t tot = 0;
+            bool broken = false;
+
+            regina::ProgressTrackerOpen* tracker = nullptr;
+            if (track)
+                tracker = new regina::ProgressTrackerOpen();
+
+            bool result = link.rewrite(height, threads, tracker,
+                    [&tot, &broken, link](const Link& alt) {
+                        ++tot;
+                        if (alt.jones() != link.jones()) {
+                            broken = true; return true;
+                        }
+                        return false;
+                    });
+
+            if (track) {
+                // Wait for it to finish...
+                while (! tracker->isFinished()) {
+                    usleep(100000 /* microseconds */);
+                }
+                delete tracker;
+
+                if (! result) {
+                    std::ostringstream msg;
+                    msg << link.label() <<
+                        ": rewrite() could not start in the background.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                if (result != broken) {
+                    std::ostringstream msg;
+                    msg << link.label() <<
+                        ": rewrite() return value differs from "
+                        "action return values.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if (broken) {
                 std::ostringstream msg;
-                msg << l->label() << ": rewrite() produced a different "
-                    "jones polynomial.";
+                msg << link.label() << ": rewrite() changed the link.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (count == 0) {
+                std::cerr << link.label() << " -> " << tot << std::endl;
+                return;
+            }
+            if (tot != count) {
+                std::ostringstream msg;
+                msg << link.label() << ": rewrite() with height "
+                    << height << " gave " << tot
+                    << " diagram(s) instead of " << count << ".";
                 CPPUNIT_FAIL(msg.str());
             }
         }
 
+        void verifyRewrite(const Link* link, int height, size_t count) {
+            // Single-threaded, no tracker:
+            verifyRewrite(*link, height, 1, false, count);
+            // Multi-threaded, with and without tracker:
+            verifyRewrite(*link, height, 2, false, count);
+            verifyRewrite(*link, height, 2, true, count);
+        }
+
         void rewrite() {
-            verifyRewrite(figureEight, 1);
-            verifyRewrite(figureEight, 2);
+            // The counts here were computed using Regina 6.0 in
+            // single-threaded mode.
+            //
+            // The expected counts should always be positive, so passing
+            // an expected count of 0 will be treated as a request to display
+            // the number of triangulations that were actually found.
+            //
+            verifyRewrite(figureEight, 0, 1);
+            verifyRewrite(figureEight, 1, 8);
+            verifyRewrite(figureEight, 2, 137);
+            verifyRewrite(figureEight, 3, 2401);
+            verifyRewrite(unknot3, 0, 22);
+            verifyRewrite(unknot3, 1, 131);
+            verifyRewrite(unknot3, 2, 998);
+            verifyRewrite(rht_lht, 0, 1);
+            verifyRewrite(rht_lht, 1, 35);
+            verifyRewrite(rht_lht, 2, 1131);
+            verifyRewrite(figureEight_r1x2, 0, 137);
+            verifyRewrite(figureEight_r1x2, 1, 2401);
+            verifyRewrite(figureEight_r1x2, 2, 44985);
         }
 };
 
