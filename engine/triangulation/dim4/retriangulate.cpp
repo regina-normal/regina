@@ -112,22 +112,22 @@ namespace detail {
     };
 } // namespace detail
 
-template <bool sigOnly>
+template <bool withSig>
 bool Triangulation<4>::retriangulateInternal(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
-        const regina::detail::RetriangulateActionFunc<
-            Triangulation<4>, sigOnly>& action) const {
+        regina::detail::RetriangulateActionFunc<
+            Triangulation<4>, withSig>&& action) const {
     if (tracker) {
         try {
-            std::thread(&regina::detail::enumerate<Triangulation<4>, sigOnly>,
-                *this, height, nThreads, tracker, action).detach();
+            std::thread(&regina::detail::enumerate<Triangulation<4>, withSig>,
+                *this, height, nThreads, tracker, std::move(action)).detach();
             return true;
         } catch (const std::system_error& e) {
             return false;
         }
     } else
-        return regina::detail::enumerate<Triangulation<4>, sigOnly>(
-            *this, height, nThreads, tracker, action);
+        return regina::detail::enumerate<Triangulation<4>, withSig>(
+            *this, height, nThreads, tracker, std::move(action));
 }
 
 // Instantiate all retriangulateInternal() template functions
@@ -135,13 +135,11 @@ bool Triangulation<4>::retriangulateInternal(int height, unsigned nThreads,
 
 template REGINA_API bool Triangulation<4>::retriangulateInternal<true>(
     int, unsigned, ProgressTrackerOpen*,
-    const regina::detail::RetriangulateActionFunc<
-        Triangulation<4>, true>&) const;
+    regina::detail::RetriangulateActionFunc<Triangulation<4>, true>&&) const;
 
 template REGINA_API bool Triangulation<4>::retriangulateInternal<false>(
     int, unsigned, ProgressTrackerOpen*,
-    const regina::detail::RetriangulateActionFunc<
-        Triangulation<4>, false>&) const;
+    regina::detail::RetriangulateActionFunc<Triangulation<4>, false>&&) const;
 
 bool Triangulation<4>::simplifyExhaustive(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker) {

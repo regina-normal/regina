@@ -483,12 +483,15 @@ class REGINA_API Triangulation<4> :
          * triangulation), this routine will call \a action (which must
          * be a function or some other callable object).
          *
-         * - \a action must take at least one argument.  The first argument
-         *   must be of type Triangulation<4>& or const std::string&;
-         *   this will be either the triangulation that has been found or
-         *   its isomorphism signature, respectively.  If there are any
-         *   additional arguments supplied in the list \a args, then
-         *   these will be passed as subsequent arguments to \a action.
+         * - \a action must take the following initial argument(s).
+         *   Either (a) the first argument must be of type Triangulation<4>&,
+         *   representing the triangulation that has been found; or else
+         *   (b) the first two arguments must be of types const std::string&
+         *   and Triangulation<4>&, representing both the triangulation and its
+         *   isomorphism signature.  The second form is offered in order to
+         *   avoid unnecessarily recomputation within the \a action function.
+         *   If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
          *
          * - \a action must return a boolean.  If \a action ever returns
          *   \c true, then this indicates that processing should stop
@@ -565,7 +568,7 @@ class REGINA_API Triangulation<4> :
          * @param action a function (or other callable object) to call
          * for each triangulation that is found.
          * @param args any additional arguments that should be passed to
-         * \a action, following the initial triangulation argument.
+         * \a action, following the initial triangulation argument(s).
          * @return If a progress tracker is passed, then this routine
          * will return \c true or \c false immediately according to
          * whether a new thread could or could not be started.  If no
@@ -904,14 +907,15 @@ class REGINA_API Triangulation<4> :
          * of the action function is now known precisely.  This means that
          * the implementation can be kept out of the main headers.
          *
-         * \tparam sigOnly \c true if the action function takes an
-         * isomorphism signature, or \c false if it takes a triangulation.
+         * \tparam withSig \c true if the action function includes an
+         * isomorphism signature before the triangulation in its
+         * initial argument(s).
          */
-        template <bool sigOnly>
+        template <bool withSig>
         bool retriangulateInternal(int height, unsigned nThreads,
             ProgressTrackerOpen* tracker,
-            const regina::detail::RetriangulateActionFunc<
-                Triangulation<4>, sigOnly>& action) const;
+            regina::detail::RetriangulateActionFunc<
+                Triangulation<4>, withSig>&& action) const;
 
     friend class regina::Face<4, 4>;
     friend class regina::detail::SimplexBase<4>;
@@ -982,13 +986,15 @@ template <typename Action, typename... Args>
 inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
     // Use RetriangulateActionTraits to deduce whether the given action
-    // takes a triangulation or an isomorphism signature as its first argument.
+    // takes a triangulation or both an isomorphism signature and triangulation
+    // as its initial argument(s).
     typedef regina::detail::RetriangulateActionTraits<
         Triangulation<4>, Action> Traits;
     static_assert(Traits::valid,
-        "The action that is passed to retriangulate() should take either a triangulation or an isomorphism signature as its first argument.");
-    return retriangulateInternal<Traits::sigOnly>(height, nThreads, tracker,
-        std::bind(action, std::placeholders::_1, args...));
+        "The action that is passed to retriangulate() does not take the correct initial argument type(s).");
+    return retriangulateInternal<Traits::withSig>(height, nThreads, tracker,
+        Traits::convert(std::forward<Action>(action),
+            std::forward<Args>(args)...));
 }
 
 inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {

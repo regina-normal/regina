@@ -73,22 +73,22 @@ namespace detail {
     };
 } // namespace detail
 
-template <bool sigOnly>
+template <bool withSig>
 bool Triangulation<3>::retriangulateInternal(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
-        const regina::detail::RetriangulateActionFunc<
-            Triangulation<3>, sigOnly>& action) const {
+        regina::detail::RetriangulateActionFunc<
+            Triangulation<3>, withSig>&& action) const {
     if (tracker) {
         try {
-            std::thread(&regina::detail::enumerate<Triangulation<3>, sigOnly>,
-                *this, height, nThreads, tracker, action).detach();
+            std::thread(&regina::detail::enumerate<Triangulation<3>, withSig>,
+                *this, height, nThreads, tracker, std::move(action)).detach();
             return true;
         } catch (const std::system_error& e) {
             return false;
         }
     } else
-        return regina::detail::enumerate<Triangulation<3>, sigOnly>(
-            *this, height, nThreads, tracker, action);
+        return regina::detail::enumerate<Triangulation<3>, withSig>(
+            *this, height, nThreads, tracker, std::move(action));
 }
 
 // Instantiate all retriangulateInternal() template functions
@@ -96,13 +96,11 @@ bool Triangulation<3>::retriangulateInternal(int height, unsigned nThreads,
 
 template REGINA_API bool Triangulation<3>::retriangulateInternal<true>(
     int, unsigned, ProgressTrackerOpen*,
-    const regina::detail::RetriangulateActionFunc<
-        Triangulation<3>, true>&) const;
+    regina::detail::RetriangulateActionFunc<Triangulation<3>, true>&&) const;
 
 template REGINA_API bool Triangulation<3>::retriangulateInternal<false>(
     int, unsigned, ProgressTrackerOpen*,
-    const regina::detail::RetriangulateActionFunc<
-        Triangulation<3>, false>&) const;
+    regina::detail::RetriangulateActionFunc<Triangulation<3>, false>&&) const;
 
 bool Triangulation<3>::simplifyExhaustive(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker) {

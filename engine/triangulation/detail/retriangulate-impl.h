@@ -102,18 +102,19 @@ struct Propagator;
 /**
  * A helper class that performs the callable action that was passed to the
  * high-level retriangulation function.
- * This implementation is for actions that take an isomorphism signature.
+ * This implementation is for actions that take an isomorphism signature
+ * as well as a triangulation.
  */
 template <class Object>
 bool retriangulateAct(const RetriangulateActionFunc<Object, true>& action,
-        Object&, const std::string& sig) {
-    return action(sig);
+        Object& obj, const std::string& sig) {
+    return action(sig, obj);
 }
 
 /**
  * A helper class that performs the callable action that was passed to the
  * high-level retriangulation function.
- * This implementation is for actions that take a full triangulation.
+ * This implementation is for actions that just take a triangulation.
  */
 template <class Object>
 bool retriangulateAct(const RetriangulateActionFunc<Object, false>& action,
@@ -276,16 +277,17 @@ class RetriangulateThreadSync<false> {
  * \tparam Object the class that provides the retriangulation function,
  * such as regina::Triangulation<dim>.
  * \tparam threading \c true if and only if multithreading is enabled.
- * \tparam sigOnly \c true if the action that was passed takes an
- * isomorphism signature, or \c false if it takes a full triangulation.
+ * \tparam withSig \c true if the action that was passed takes an
+ * isomorphism signature as its initial argument (in addition to the
+ * triangulation which is passed in all cases).
  */
-template <class Object, bool threading, bool sigOnly>
+template <class Object, bool threading, bool withSig>
 class Retriangulator : public RetriangulateThreadSync<threading> {
     private:
         typedef std::set<std::string> SigSet;
 
         const size_t maxSimp_;
-        RetriangulateActionFunc<Object, sigOnly> action_;
+        RetriangulateActionFunc<Object, withSig> action_;
 
         SigSet sigs_;
         std::priority_queue<SigSet::iterator,
@@ -311,7 +313,7 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
 
     public:
         Retriangulator(size_t maxSimp,
-                const RetriangulateActionFunc<Object, sigOnly>& action) :
+                RetriangulateActionFunc<Object, withSig>&& action) :
             maxSimp_(maxSimp), action_(action), process_(lowerPriority) {
         }
 
@@ -341,8 +343,8 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         bool candidate(Object& alt);
 };
 
-template <class Object, bool threading, bool sigOnly>
-inline bool Retriangulator<Object, threading, sigOnly>::seed(
+template <class Object, bool threading, bool withSig>
+inline bool Retriangulator<Object, threading, withSig>::seed(
         const Object& tri) {
     // We have to pass a *copy* of tri to action_, since action_ is
     // allowed to change the object that is passed to it.
@@ -361,8 +363,8 @@ inline bool Retriangulator<Object, threading, sigOnly>::seed(
     return false;
 }
 
-template <class Object, bool threading, bool sigOnly>
-void Retriangulator<Object, threading, sigOnly>::processQueue(
+template <class Object, bool threading, bool withSig>
+void Retriangulator<Object, threading, withSig>::processQueue(
         ProgressTrackerOpen* tracker) {
     SigSet::iterator next;
 
@@ -398,8 +400,8 @@ void Retriangulator<Object, threading, sigOnly>::processQueue(
     }
 }
 
-template <class Object, bool threading, bool sigOnly>
-bool Retriangulator<Object, threading, sigOnly>::candidate(Object& alt) {
+template <class Object, bool threading, bool withSig>
+bool Retriangulator<Object, threading, withSig>::candidate(Object& alt) {
     const std::string sig = alt.isoSig();
 
     typename RetriangulateThreadSync<threading>::Lock lock(this);
@@ -429,17 +431,17 @@ bool Retriangulator<Object, threading, sigOnly>::candidate(Object& alt) {
     return false;
 }
 
-template <class Object, bool threading, bool sigOnly>
+template <class Object, bool threading, bool withSig>
 bool enumerateDetail(const Object& tri, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
-        const RetriangulateActionFunc<Object, sigOnly>& action) {
+        RetriangulateActionFunc<Object, withSig>&& action) {
     if (tracker)
         tracker->newStage("Exploring triangulations");
 
-    typedef Retriangulator<Object, threading, sigOnly> T;
+    typedef Retriangulator<Object, threading, withSig> T;
 
     T bfs((height >= 0 ? tri.size() + height :
-        std::numeric_limits<std::size_t>::max()), action);
+        std::numeric_limits<std::size_t>::max()), std::move(action));
     if (bfs.seed(tri)) {
         if (tracker)
             tracker->setFinished();
@@ -452,16 +454,16 @@ bool enumerateDetail(const Object& tri, int height, unsigned nThreads,
     return bfs.done();
 }
 
-template <class Object, bool sigOnly>
+template <class Object, bool withSig>
 bool enumerate(const Object& tri, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
-        const RetriangulateActionFunc<Object, sigOnly>& action) {
+        RetriangulateActionFunc<Object, withSig>&& action) {
     if (nThreads <= 1) {
-        return enumerateDetail<Object, false, sigOnly>(
-            tri, height, nThreads, tracker, action);
+        return enumerateDetail<Object, false, withSig>(
+            tri, height, nThreads, tracker, std::move(action));
     } else {
-        return enumerateDetail<Object, true, sigOnly>(
-            tri, height, nThreads, tracker, action);
+        return enumerateDetail<Object, true, withSig>(
+            tri, height, nThreads, tracker, std::move(action));
     }
 }
 
