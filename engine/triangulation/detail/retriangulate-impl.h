@@ -32,12 +32,12 @@
 
 /**
  *! \file triangulation/detail/retriangulate-impl.h
- *  \brief Full implementation details for the various retriangulation
- *  functions.
+ *  \brief Full implementation details for the retriangulation and
+ *  link rewriting functions.
  *
- *  This file is \e not included from triangulation.h, but the routines
- *  it contains are explicitly instantiated in Regina's calculation engine.
- *  Therefore end users should never need to include this header.
+ *  This file is \e not included from triangulation.h or link.h, but the
+ *  routines it contains are explicitly instantiated in Regina's calculation
+ *  engine.  Therefore end users should never need to include this header.
  */
 
 #ifndef __RETRIANGULATE_IMPL_H_DETAIL
@@ -61,28 +61,29 @@ namespace detail {
 #ifndef __DOXYGEN
 
 /**
- * Provides atomic steps used to move between triangulations.
+ * Provides atomic steps used to move between triangulations or links.
  *
- * Every class (e.g., regina::Triangulation<dim>) that uses this
+ * Every class (e.g., regina::Triangulation<dim> or regina::Link) that uses this
  * retriangulation code must provide its own specialisation of Propagator.
  *
  * The specialisation should provide a single template function
  * <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>, where:
  *
- * - \a sig is the isomorphism signature of a triangulation (typically
- *   passed as a const std::string&);
- * - \a max is the maximum size of a triangulation that we are allowed
- *   to consider (typically passed as a \c size_t);
+ * - \a sig is the isomorphism signature of a triangulation or the knot
+ *   signature of a link (typically passed as a const std::string&);
+ * - \a max is the maximum size() of a triangulation or link that we are
+ *   allowed to consider (typically passed as a \c size_t);
  * - \a retriangulator is the instance of the Retriangulator class that
- *   is managing the overall retriangulation process (which must be
+ *   is managing the overall retriangulation/rewriting process (which must be
  *   passed as a pointer to type \a T).
  *
  * The template parameter \a T is the type of the managing Retriangulator class,
  * with all of the Retriangulator template parameters filled in.
  *
- * The function should reconstruct a triangulation from \a sig, examine
- * all possible moves that do not exceed size \a max, and for each resulting
- * triangulation \a alt it should call <tt>retriangulator->candidate(alt)</tt>
+ * The function should reconstruct a triangulation or link from \a sig; examine
+ * all possible moves that do not exceed size \a max; and for each resulting
+ * triangulation/link \a alt, it should call
+ * <tt>retriangulator->candidate(alt)</tt>
  * and then immediately destroy \a alt.  Note that the \a candidate function
  * is allowed to modify \a alt.
  *
@@ -93,17 +94,17 @@ namespace detail {
  *
  * \apinotfinal
  *
- * \tparam Object the class that provides the retriangulation function,
- * such as regina::Triangulation<dim>.
+ * \tparam Object the class that provides the retriangulation/rewriting
+ * function, such as regina::Triangulation<dim> or regina::Link.
  */
 template <class Object>
 struct Propagator;
 
 /**
  * A helper class that performs the callable action that was passed to the
- * high-level retriangulation function.
- * This implementation is for actions that take an isomorphism signature
- * as well as a triangulation.
+ * high-level retriangulation or link rewriting function.
+ * This implementation is for actions that take a text signature
+ * as well as a triangulation/link.
  */
 template <class Object>
 bool retriangulateAct(const RetriangulateActionFunc<Object, true>& action,
@@ -113,8 +114,8 @@ bool retriangulateAct(const RetriangulateActionFunc<Object, true>& action,
 
 /**
  * A helper class that performs the callable action that was passed to the
- * high-level retriangulation function.
- * This implementation is for actions that just take a triangulation.
+ * high-level retriangulation or link rewriting function.
+ * This implementation is for actions that just take a triangulation/link.
  */
 template <class Object>
 bool retriangulateAct(const RetriangulateActionFunc<Object, false>& action,
@@ -272,14 +273,15 @@ class RetriangulateThreadSync<false> {
 };
 
 /**
- * Provides the main implementation of the retriangulation code.
+ * Provides the main implementation of the retriangulation and link
+ * rewriting code.
  *
- * \tparam Object the class that provides the retriangulation function,
- * such as regina::Triangulation<dim>.
+ * \tparam Object the class that provides the retriangulation/rewriting
+ * function, such as regina::Triangulation<dim> or regina::Link.
  * \tparam threading \c true if and only if multithreading is enabled.
- * \tparam withSig \c true if the action that was passed takes an
- * isomorphism signature as its initial argument (in addition to the
- * triangulation which is passed in all cases).
+ * \tparam withSig \c true if the action that was passed takes a
+ * text signature as its initial argument (in addition to the
+ * triangulation/link which is passed in all cases).
  */
 template <class Object, bool threading, bool withSig>
 class Retriangulator : public RetriangulateThreadSync<threading> {
@@ -297,15 +299,17 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
 
     public:
         /**
-         * The priority function used to choose which triangulation
-         * to process next.
+         * The priority function used to choose which triangulation or
+         * link to process next.
          */
         static bool lowerPriority(SigSet::iterator a, SigSet::iterator b) {
             // The function should compute whether a.size > b.size,
-            // where "size" measures number of top-dimensional simplices.
+            // where "size" measures number of top-dimensional simplices
+            // for triangulations or number of crossings for link diagrams.
             //
             // Here we use the string length, which is fast to compute,
-            // and which should have the same effect for triangulations
+            // and which should have the same effect for knots (i.e.,
+            // single-component links) and also for triangulations
             // with the same number of boundary facets (which is
             // preserved under Pachner moves).
             return a->length() > b->length();
@@ -322,10 +326,10 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         Retriangulator& operator = (const Retriangulator&) = delete;
 
         /**
-         * Sets up the initial triangulation from which our search will
+         * Sets up the initial triangulation/link from which our search will
          * start.  This should be called before any multithreading begins.
          */
-        bool seed(const Object& tri);
+        bool seed(const Object& obj);
 
         /**
          * The main function for each worker thread.
@@ -345,13 +349,13 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
 
 template <class Object, bool threading, bool withSig>
 inline bool Retriangulator<Object, threading, withSig>::seed(
-        const Object& tri) {
-    // We have to pass a *copy* of tri to action_, since action_ is
+        const Object& obj) {
+    // We have to pass a *copy* of obj to action_, since action_ is
     // allowed to change the object that is passed to it.
     // This is inefficient, but at least it only happens once.
-    std::string sig = tri.isoSig();
+    std::string sig = obj.isoSig();
     {
-        Object copy(tri, false);
+        Object copy(obj, false);
         if (retriangulateAct(action_, copy, sig)) {
             RetriangulateThreadSync<threading>::setDone();
             return true;

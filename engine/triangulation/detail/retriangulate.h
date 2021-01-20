@@ -32,7 +32,7 @@
 
 /*! \file triangulation/detail/retriangulate.h
  *  \brief Traits classes for analysing actions that are passed to
- *  retriangulation functions.
+ *  retriangulation or link rewriting functions.
  */
 
 #ifndef __RETRIANGULATE_H_DETAIL
@@ -60,9 +60,9 @@ namespace detail {
  * object pointer \c this which is implicitly passed to every non-static
  * member function).
  *
- * If \a Action does not take enough arguments, then this will almost
- * certainly generate an error deep with in the standard library
- * (most likely with std::tuple_element).
+ * If \a Action does not take enough arguments for the given \a pos,
+ * then this will almost certainly generate an error deep with in the
+ * standard library (most likely with std::tuple_element).
  *
  * \tparam Action the type of a callable object that takes at least
  * one argument.
@@ -96,36 +96,36 @@ struct CallableArg<ReturnType(Class::*)(Args...) const, pos> {
 #endif // __DOXYGEN
 
 /**
- * Declares the internal type used to store a callable action that is
- * passed to a retriangulation function.  This internal type is included
- * here as a member typedef, but you can also access it directly through
- * the simpler type alias RetriangulateActionFunc<Object, withSig>.
+ * Declares the internal type used to store a callable action that is passed
+ * to a retriangulation or link rewriting function.  This internal type is
+ * included here as a member typedef, but you can also access it directly
+ * through the simpler type alias RetriangulateActionFunc<Object, withSig>.
  *
- * A retriangulation function can work with arbitrary callable objects.
- * However, the \e implementation of retriangulation is long and should
- * not be dragged into the main triangulation headers.  The main purpose
+ * A retriangulation or link rewriting function can work with arbitrary
+ * callable objects.  However, the \e implementations of such functions are
+ * long and should not be dragged into the main headers.  The core purpose
  * of this class is therefore to coalesce the arbitrary action types
- * down to just \e two fixed types (depending on whether the action includes
- * an isomorphism signature in its initial argument(s)).
- * This means that the retriangulation code can be templated on a single
- * boolean parameter, and so we can instatiate it completely in Regina's
- * library and keep the implementation details out of the main headers.
+ * down to just \e two fixed types (depending on whether the action includes a
+ * text signature (e.g., an isomorphism signature) in its initial argument(s)).
+ * This means that the retriangulation or rewriting code can be templated on
+ * a single boolean parameter, and so we can instatiate it completely in
+ * Regina's library and keep the implementation details out of the main headers.
  *
  * The current implementation packages the action up as a std::function object
- * with either a single argument (a triangulation) or a pair of arguments
- * (an isomorphism signature and a triangulation).  Any additional arguments
- * to the retriangulation action will be bound in the std::function object).
+ * with either a single argument (a triangulation/link) or a pair of arguments
+ * (a text signature and a triangulation/link).  Any additional arguments to the
+ * retriangulation/rewriting action will be bound in the std::function object).
  * This implementation is subject to change in future versions of Regina.
  *
  * This struct provides a single member typedef, named \a type,
  * which is the internal type used to store the callable action.
  *
- * \tparam Object the class providing the retriangulation function, such
- * as regina::Triangulation<dim>.
- * \tparam withSig \c true if we are storing an action that includes both an
- * isomorphism signature and a triangulation in its initial argument(s),
+ * \tparam Object the class providing the retriangulation/rewriting function,
+ * such as regina::Triangulation<dim> or regina::Link.
+ * \tparam withSig \c true if we are storing an action that includes both a
+ * text signature and a triangulation in its initial argument(s),
  * or \c false if we are storing an action whose argument list begins with
- * just a triangulation.
+ * just a triangulation/link.
  */
 template <class Object, bool withSig>
 struct RetriangulateActionFuncDetail;
@@ -146,7 +146,8 @@ struct RetriangulateActionFuncDetail<Object, false> {
 
 /**
  * The internal type used to store a callable action that is passed to a
- * retriangulation function.  See RetriangulateActionFuncDetail for details.
+ * retriangulation or link rewriting function.
+ * See RetriangulateActionFuncDetail for details.
  */
 template <class Object, bool withSig>
 using RetriangulateActionFunc =
@@ -154,38 +155,38 @@ using RetriangulateActionFunc =
 
 /**
  * A traits class that analyses callable objects that are passed to
- * retriangulation functions.
+ * retriangulation or link rewriting functions.
  *
- * Recall that such a callable object must take either a triangulation
- * or both an isomorphism signature and a triangulation as its initial
- * argument(s).
+ * Recall that the initial arguments for such a callable object must be either
+ * (a) a single triangulation/link, or (b) a text signature (e.g., an
+ * isomorphism signature) followed by a triangulation/link.
  *
  * This struct provides a boolean compile-time constant \a valid, which is
  * \c true if and only if the initial arguemnt(s) to \a Action are acceptable
  * as outlined above (i.e., a reference to the underlying \a Object class
- * for actions that take a triangulation, or a const string reference and an
- * \a Object reference for actions that take an isomorphism signature also).
+ * for actions that take a triangulation/link, or a const string reference and
+ * an \a Object reference for actions that take a text signature also).
  *
  * If \a valid is \c true, then this struct also provides a boolean
  * compile-time constant \a withSig, which is \c true if and only if the action
- * takes both an isomorphism signature and a triangulation.
+ * takes both a text signature and a triangulation/link.
  * If \a valid is \c false then the boolean constant \a withSig will still
  * be present, but its value is not defined.
  *
  * Finally, if \a valid is \c true, then this struct provides a static
  * function convert() that takes a callable object and all of its later
- * optional arguments (i.e., excluding the initial triangulation or the
- * initial signature-and-triangulation), and returns a callable object
+ * optional arguments (i.e., excluding the initial triangulation/link
+ * and possibly the text signature before it), and returns a callable object
  * of type RetriangulateActionFunc<withSig> where these later optional
  * arguments are bound.  All arguments to convert() will be moved/copied
  * using std::forward().
  * If \a valid is \c false then the function \a convert will still be
  * declared but not defined, and it will have a \c void return type.
  *
- * \tparam Object the class providing the retriangulation function, such
- * as regina::Triangulation<dim>.
+ * \tparam Object the class providing the retriangulation or link rewriting
+ * function, such as regina::Triangulation<dim> or regina::Link.
  * \tparam Action the type of a callable object that is passed to the
- * retriangulation function.
+ * retriangulation/rewriting function.
  * \tparam FirstArg the type of the first argument to \a Action; you should
  * not specify this directly, but instead allow the compiler to deduce it.
  */
