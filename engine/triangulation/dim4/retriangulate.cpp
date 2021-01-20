@@ -111,7 +111,6 @@ namespace detail {
                 }
 
             delete t;
-            return;
         }
     };
 } // namespace detail
