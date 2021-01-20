@@ -32,8 +32,10 @@
 
 #include <sstream>
 #include <cppunit/extensions/HelperMacros.h>
+#include <unistd.h>
 #include "triangulation/example4.h"
 #include "manifold/manifold.h"
+#include "progress/progresstracker.h"
 #include "subcomplex/standardtri.h"
 #include "triangulation/example3.h"
 #include "triangulation/dim2.h"
@@ -93,6 +95,7 @@ class Triangulation4Test : public TriangulationTest<4> {
     CPPUNIT_TEST(iBundle);
     CPPUNIT_TEST(s1Bundle);
     CPPUNIT_TEST(bundleWithMonodromy);
+    CPPUNIT_TEST(retriangulate);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -1953,6 +1956,113 @@ class Triangulation4Test : public TriangulationTest<4> {
             t0->join(3, t1, regina::Perm<4>(1,2,3,0));
             tri.setLabel("Hand-coded L(3,1)");
             verifyBundleWithMonodromy(&tri);
+        }
+
+        void verifyRetriangulate(const Triangulation<4>& tri,
+                int height, int threads, bool track, size_t count) {
+            size_t tot = 0;
+            bool broken = false;
+
+            regina::ProgressTrackerOpen* tracker = nullptr;
+            if (track)
+                tracker = new regina::ProgressTrackerOpen();
+
+            bool result = tri.retriangulate(height, threads, tracker,
+                    [&tot, &broken, tri](const Triangulation<4>& alt) {
+                        ++tot;
+                        if (alt.isValid() != tri.isValid()) {
+                            broken = true; return true;
+                        }
+                        if (alt.isOrientable() != tri.isOrientable()) {
+                            broken = true; return true;
+                        }
+                        if (alt.countBoundaryComponents() !=
+                                tri.countBoundaryComponents()) {
+                            broken = true; return true;
+                        }
+                        if (alt.homology() != tri.homology()) {
+                            broken = true; return true;
+                        }
+                        return false;
+                    });
+
+            if (track) {
+                // Wait for it to finish...
+                while (! tracker->isFinished()) {
+                    usleep(100000 /* microseconds */);
+                }
+                delete tracker;
+
+                if (! result) {
+                    std::ostringstream msg;
+                    msg << tri.label() <<
+                        ": retriangulate() could not start in the background.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                if (result != broken) {
+                    std::ostringstream msg;
+                    msg << tri.label() <<
+                        ": retriangulate() return value differs from "
+                        "action return values.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if (broken) {
+                std::ostringstream msg;
+                msg << tri.label() << ": retriangulate() changed the manifold.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (count == 0) {
+                std::cerr << tri.label() << " -> " << tot << std::endl;
+                return;
+            }
+            if (tot != count) {
+                std::ostringstream msg;
+                msg << tri.label() << ": retriangulate() with height "
+                    << height << " gave " << tot
+                    << " triangulation(s) instead of " << count << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void verifyRetriangulate(const Triangulation<4>& tri,
+                int height, size_t count) {
+            // Single-threaded, no tracker:
+            verifyRetriangulate(tri, height, 1, false, count);
+            // Multi-threaded, with and without tracker:
+            verifyRetriangulate(tri, height, 2, false, count);
+            verifyRetriangulate(tri, height, 2, true, count);
+        }
+
+        void retriangulate() {
+            // The counts here were computed using Regina 6.0 in
+            // single-threaded mode.
+            //
+            // The counts that are commented out are too slow, though
+            // they can be brought back in again as the retriangulation
+            // code gets faster.
+            //
+            // The expected counts should always be positive, so passing
+            // an expected count of 0 will be treated as a request to display
+            // the number of triangulations that were actually found.
+            //
+            verifyRetriangulate(s4_doubleConeS3, 0, 1);
+            verifyRetriangulate(s4_doubleConeS3, 1, 1);
+            verifyRetriangulate(s4_doubleConeS3, 2, 15);
+            // verifyRetriangulate(s4_doubleConeS3, 4, 12316);
+            verifyRetriangulate(rp4, 0, 1);
+            verifyRetriangulate(rp4, 1, 1);
+            verifyRetriangulate(rp4, 2, 53);
+            // verifyRetriangulate(rp4, 4, 3854489);
+            verifyRetriangulate(ball_layerAndFold, 0, 1);
+            verifyRetriangulate(ball_layerAndFold, 1, 1);
+            verifyRetriangulate(ball_layerAndFold, 2, 4);
+            verifyRetriangulate(ball_layerAndFold, 4, 863);
+            verifyRetriangulate(idealCappellShaneson, 0, 1);
+            verifyRetriangulate(idealCappellShaneson, 1, 1);
+            verifyRetriangulate(idealCappellShaneson, 2, 9);
+            verifyRetriangulate(idealCappellShaneson, 4, 1610);
         }
 };
 
