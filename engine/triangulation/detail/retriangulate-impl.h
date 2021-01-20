@@ -47,6 +47,7 @@
 
 #include <condition_variable>
 #include <limits>
+#include <map>
 #include <mutex>
 #include <queue>
 #include <set>
@@ -92,16 +93,16 @@ namespace detail {
  * The template parameter \a T is the type of the managing Retriangulator class,
  * with all of the Retriangulator template parameters filled in.
  *
- * The function should reconstruct a triangulation or link from \a sig; examine
- * all possible moves that do not exceed size \a max; and for each resulting
- * triangulation/link \a alt, it should call
- * <tt>retriangulator->candidate(alt)</tt>
+ * The function should reconstruct a triangulation or link \a obj from \a sig;
+ * examine all possible moves from \a obj that do not exceed size \a max; and
+ * for each resulting triangulation/link \a alt, it should call
+ * <tt>retriangulator->candidate(alt, sig)</tt>
  * and then immediately destroy \a alt.  Note that the \a candidate function
  * is allowed to modify \a alt.
  *
  * The function should also check the return value each time it calls
- * <tt>retriangulator->candidate(alt)</tt>.  If the \a candidate function
- * ever returns \c true then it should not try any further moves, but
+ * <tt>retriangulator->candidate(alt, sig)</tt>.  If the \a candidate
+ * function ever returns \c true then it should not try any further moves, but
  * instead should clean up and return immediately.
  *
  * \apinotfinal
@@ -290,6 +291,80 @@ class RetriangulateThreadSync<false> {
 };
 
 /**
+ * A helper class that manages optional backtracing. This means that,
+ * when a retriangulation/rewriting path is found for which the
+ * user-suppled action returns \c true, Regina can output the series of
+ * triangulations or links that it passed through to get there.
+ *
+ * The backtracing is not well optimised, and moreover it simply dumps the
+ * backtrace to std::cerr.
+ *
+ * Therefore, this backtracing code is disabled at the source code level
+ * and not available at all through the API. To turn it on, you will
+ * need to edit this source file and change the typedef
+ * Retriangulator::SigSet from RetriangulateSigGraph<false> to
+ * RetriangulateSigGraph<true>.
+ *
+ * \tparam backtrace \c true if and only if backtracing is enabled.
+ */
+template <bool backtrace>
+class RetriangulateSigGraph;
+
+/**
+ * This keeps a map whose keys are all signatures seen so far,
+ * and whose corresponding values are the signatures from which they
+ * were derived.  Seed signatures (the starting points of the search)
+ * have associated values of the empty string.
+ */
+template <>
+class RetriangulateSigGraph<true> : private std::map<std::string, std::string> {
+    public:
+        using std::map<std::string, std::string>::iterator;
+
+        auto insertStart(const std::string& sig) {
+            return insert(std::make_pair(sig, std::string()));
+        }
+
+        auto insertDerived(const std::string& sig, const std::string& from) {
+            return insert(std::make_pair(sig, from));
+        }
+
+        static const std::string& sigAt(iterator it) {
+            return it->first;
+        }
+
+        void backtrace(const std::string& sig) const {
+            std::cerr << sig;
+            for (auto it = find(sig); ! it->second.empty();
+                    it = find(it->second)) {
+                std::cerr << " <- " << it->second;
+            }
+            std::cerr << std::endl;
+        }
+};
+
+template <>
+class RetriangulateSigGraph<false> : private std::set<std::string> {
+    public:
+        using std::set<std::string>::iterator;
+
+        auto insertStart(const std::string& sig) {
+            return insert(sig);
+        }
+
+        auto insertDerived(const std::string& sig, const std::string& from) {
+            return insert(sig);
+        }
+
+        static const std::string& sigAt(iterator it) {
+            return *it;
+        }
+
+        void backtrace(const std::string& sig) const {
+        }
+};
+
+/**
  * Provides the main implementation of the retriangulation and link
  * rewriting code.
  *
@@ -303,7 +378,9 @@ class RetriangulateThreadSync<false> {
 template <class Object, bool threading, bool withSig>
 class Retriangulator : public RetriangulateThreadSync<threading> {
     private:
-        typedef std::set<std::string> SigSet;
+        // To switch on backtracing, just change the following typedef to
+        // RetriangulateSigGraph<true>.
+        typedef RetriangulateSigGraph<false> SigSet;
 
         const size_t maxSize_;
         RetriangulateActionFunc<Object, withSig> action_;
@@ -329,7 +406,7 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
             // single-component links) and also for triangulations
             // with the same number of boundary facets (which is
             // preserved under Pachner moves).
-            return a->length() > b->length();
+            return SigSet::sigAt(a).length() > SigSet::sigAt(b).length();
         }
 
     public:
@@ -360,8 +437,13 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
          * implementation is specific to \a Object (i.e., the underlying
          * triangulation class).  It may assume that the RetriangulateParams
          * class will delete \a alt immediately after calling this function.
+         *
+         * The argument \a derivedFrom is to support optional backtracing.
+         * This should be the signature of the previously-found object from
+         * which a single move (e.g., a Pachner or Reidemeister move)
+         * produced \a alt.
          */
-        bool candidate(Object& alt);
+        bool candidate(Object& alt, const std::string& derivedFrom);
 };
 
 template <class Object, bool threading, bool withSig>
@@ -374,13 +456,14 @@ inline bool Retriangulator<Object, threading, withSig>::seed(
     {
         Object copy(obj, false);
         if (retriangulateAct(action_, copy, sig)) {
+            sigs_.backtrace(sig);
             RetriangulateThreadSync<threading>::setDone();
             return true;
         }
         // We cannot use copy from here, since action_() might have
         // changed it.
     }
-    process_.push(sigs_.insert(sig).first);
+    process_.push(sigs_.insertStart(sig).first);
     return false;
 }
 
@@ -404,10 +487,10 @@ void Retriangulator<Object, threading, withSig>::processQueue(
 
             // We can do our expensive propagation outside the mutex,
             // since the C++ standard requires that insertion into a
-            // std::set does not invalidate iterators.
+            // std::set or std::map does not invalidate iterators.
             lock.unlock();
-            RetriangulateParams<Object>::
-                template propagateFrom<Retriangulator>(*next, maxSize_, this);
+            RetriangulateParams<Object>::template propagateFrom<Retriangulator>(
+                SigSet::sigAt(next), maxSize_, this);
             lock.lock();
 
             if (tracker)
@@ -422,7 +505,8 @@ void Retriangulator<Object, threading, withSig>::processQueue(
 }
 
 template <class Object, bool threading, bool withSig>
-bool Retriangulator<Object, threading, withSig>::candidate(Object& alt) {
+bool Retriangulator<Object, threading, withSig>::candidate(
+        Object& alt, const std::string& derivedFrom) {
     const std::string sig = RetriangulateParams<Object>::sig(alt);
 
     typename RetriangulateThreadSync<threading>::Lock lock(this);
@@ -430,7 +514,7 @@ bool Retriangulator<Object, threading, withSig>::candidate(Object& alt) {
     if (RetriangulateThreadSync<threading>::done())
         return false;
 
-    auto result = sigs_.insert(sig);
+    auto result = sigs_.insertDerived(sig, derivedFrom);
     if (result.second) {
         // We have not seen this triangulation before.
         if (process_.empty()) {
@@ -443,6 +527,7 @@ bool Retriangulator<Object, threading, withSig>::candidate(Object& alt) {
             process_.push(result.first);
 
         if (retriangulateAct(action_, alt, sig)) {
+            sigs_.backtrace(sig);
             RetriangulateThreadSync<threading>::setDone();
             return true;
         }

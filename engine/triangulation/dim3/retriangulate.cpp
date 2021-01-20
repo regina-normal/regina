@@ -51,7 +51,7 @@ namespace detail {
                 if (t->pachner(t->edge(i), true, false)) {
                     Triangulation<3> alt(*t, false);
                     alt.pachner(alt.edge(i), false, true);
-                    if (retriang->candidate(alt)) {
+                    if (retriang->candidate(alt, sig)) {
                         delete t;
                         return;
                     }
@@ -64,7 +64,7 @@ namespace detail {
                     if (t->pachner(t->triangle(i), true, false)) {
                         Triangulation<3> alt(*t, false);
                         alt.pachner(alt.triangle(i), false, true);
-                        if (retriang->candidate(alt)) {
+                        if (retriang->candidate(alt, sig)) {
                             delete t;
                             return;
                         }
