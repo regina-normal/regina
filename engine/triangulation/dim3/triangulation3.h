@@ -1184,11 +1184,11 @@ class REGINA_API Triangulation<3> :
          *   from the original form of this triangulation, before any
          *   subsequent changes (if any) were made.
          *
-         * - \a action may, if it takes a Triangulation<3>& as its first
-         *   argument, make changes to this triangulation that is passed
-         *   (though it must not delete it).  This will likewise not affect
-         *   the search, since the triangulation that is passed to \a action
-         *   will be destroyed immediately after \a action is called.
+         * - \a action may, if it chooses, make changes to the triangulation
+         *   that is passed in its initial argument(s) (though it must not
+         *   delete it).  This will likewise not affect the search, since
+         *   the triangulation that is passed to \a action will be destroyed
+         *   immediately after \a action is called.
          *
          * - \a action will only be called once for each triangulation
          *   (including this starting triangulation).  In other words, no
@@ -3091,7 +3091,7 @@ class REGINA_API Triangulation<3> :
         void calculateBoundaryProperties() const;
 
         /**
-         * A non-templated version of retriangulate().
+         * A much less templated version of retriangulate().
          *
          * This is identical to retriangulate(), except that the type
          * of the action function is now known precisely.  This means that
