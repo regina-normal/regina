@@ -286,7 +286,7 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
     private:
         typedef std::set<std::string> SigSet;
 
-        const size_t maxSimp_;
+        const size_t maxSize_;
         RetriangulateActionFunc<Object, withSig> action_;
 
         SigSet sigs_;
@@ -312,9 +312,9 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         }
 
     public:
-        Retriangulator(size_t maxSimp,
+        Retriangulator(size_t maxSize,
                 RetriangulateActionFunc<Object, withSig>&& action) :
-            maxSimp_(maxSimp), action_(action), process_(lowerPriority) {
+            maxSize_(maxSize), action_(action), process_(lowerPriority) {
         }
 
         // Make this class non-copyable.
@@ -386,7 +386,7 @@ void Retriangulator<Object, threading, withSig>::processQueue(
             // std::set does not invalidate iterators.
             lock.unlock();
             Propagator<Object>::template propagateFrom<Retriangulator>(
-                *next, maxSimp_, this);
+                *next, maxSize_, this);
             lock.lock();
 
             if (tracker)

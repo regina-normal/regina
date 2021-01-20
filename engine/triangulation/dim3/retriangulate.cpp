@@ -39,7 +39,7 @@ namespace detail {
     template <>
     struct Propagator<Triangulation<3>> {
         template <class Retriangulator>
-        static void propagateFrom(const std::string& sig, size_t maxTet,
+        static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
             Triangulation<3>* t = Triangulation<3>::fromIsoSig(sig);
             size_t i;
@@ -55,7 +55,7 @@ namespace detail {
                     // have changed it.
                 }
 
-            if (t->size() < maxTet)
+            if (t->size() < maxSize)
                 for (i = 0; i < t->countTriangles(); ++i)
                     if (t->pachner(t->triangle(i), true, false)) {
                         Triangulation<3> alt(*t, false);

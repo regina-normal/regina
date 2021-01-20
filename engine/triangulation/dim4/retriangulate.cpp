@@ -39,7 +39,7 @@ namespace detail {
     template <>
     struct Propagator<Triangulation<4>> {
         template <class Retriangulator>
-        static void propagateFrom(const std::string& sig, size_t maxSimp,
+        static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
             Triangulation<4>* t = Triangulation<4>::fromIsoSig(sig);
             size_t i;
@@ -80,7 +80,7 @@ namespace detail {
                     // have changed it.
                 }
 
-            if (t->size() + 2 <= maxSimp)
+            if (t->size() + 2 <= maxSize)
                 for (i = 0; i < t->countTetrahedra(); ++i)
                     if (t->pachner(t->tetrahedron(i), true, false)) {
                         Triangulation<4> alt(*t, false);
@@ -93,7 +93,7 @@ namespace detail {
                         // have changed it.
                     }
 
-            if (t->size() + 4 <= maxSimp)
+            if (t->size() + 4 <= maxSize)
                 for (i = 0; i < t->size(); ++i) {
                     // 1-5 moves are always legal.
                     Triangulation<4> alt(*t, false);
