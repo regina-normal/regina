@@ -48,6 +48,7 @@
 #include "packet/packet.h"
 #include "progress/progresstracker.h"
 #include "treewidth/treedecomposition.h"
+#include "triangulation/detail/retriangulate.h"
 #include "utilities/markedvector.h"
 #include "utilities/property.h"
 
@@ -1667,11 +1668,15 @@ class REGINA_API Link : public Packet {
          * diagram), this routine will call \a action (which must
          * be a function or some other callable object).
          *
-         * - \a action must take at least one argument.  The first argument
-         *   will be of type Link&, and will reference the
-         *   knot diagram that has been found.  If there are any
-         *   additional arguments supplied in the list \a args, then
-         *   these will be passed as subsequent arguments to \a action.
+         * - \a action must take the following initial argument(s).
+         *   Either (a) the first argument must be of type Link&,
+         *   representing the knot diagram that has been found; or else
+         *   (b) the first two arguments must be of types const std::string&
+         *   and Link&, representing both the knot diagram and its
+         *   knot signature.  The second form is offered in order to
+         *   avoid unnecessarily recomputation within the \a action function.
+         *   If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
          *
          * - \a action must return a boolean.  If \a action ever returns
          *   \c true, then this indicates that processing should stop
@@ -1684,8 +1689,8 @@ class REGINA_API Link : public Packet {
          *   from the original knot diagram, before any subsequent changes
          *   (if any) were made.
          *
-         * - \a action may, if it chooses, make changes to the knot
-         *   that is passed in its argument (though it must not delete it).
+         * - \a action may, if it chooses, make changes to the knot that is
+         *   passed in its initial argument(s) (though it must not delete it).
          *   This will likewise not affect the search, since the knot diagram
          *   that is passed to \a action will be destroyed immediately after
          *   \a action is called.
@@ -1719,7 +1724,9 @@ class REGINA_API Link : public Packet {
          * processing has finished (i.e., either \a action returned \c true,
          * or the search was exhausted).  All calls to \a action will be
          * protected by a mutex (i.e., different threads will never be
-         * calling \a action at the same time).
+         * calling \a action at the same time); as a corollary, the action
+         * should avoid expensive operations where possible (otherwise
+         * it will become a serialisation bottleneck in the multithreading).
          *
          * If this link does not have precisely one component, then this
          * routine will do nothing.  If no progress tracker was passed then
@@ -1743,9 +1750,9 @@ class REGINA_API Link : public Packet {
          * @param tracker a progress tracker through which progress will
          * be reported, or 0 if no progress reporting is required.
          * @param action a function (or other callable object) to call
-         * upon each knot diagram that is found.
+         * for each knot diagram that is found.
          * @param args any additional arguments that should be passed to
-         * \a action, following the initial knot argument.
+         * \a action, following the initial knot argument(s).
          * @return If a progress tracker is passed, then this routine
          * will return \c true or \c false immediately according to
          * whether a new thread could or could not be started.  If no
@@ -3602,19 +3609,20 @@ class REGINA_API Link : public Packet {
         void setPropertiesFromBracket(Laurent<Integer>* bracket) const;
 
         /**
-         * A non-templated version of rewrite().
+         * A much less templated version of rewrite().
          *
-         * This is identical to rewrite(), except that the action
-         * function is given in the form of a std::function.
-         * This routine contains the bulk of the implementation of
-         * rewrite().
+         * This is identical to rewrite(), except that the type of the
+         * action function is now known precisely.  This means that the
+         * implementation can be kept out of the main headers.
          *
-         * Because this routine is not templated, its implementation
-         * can be kept out of the main headers.
+         * \tparam withSig \c true if the action function includes a
+         * knot signature before the link in its initial argument(s).
          */
+        template <bool withSig>
         bool rewriteInternal(int height, unsigned nThreads,
             ProgressTrackerOpen* tracker,
-            const std::function<bool(Link&)>& action) const;
+            regina::detail::RetriangulateActionFunc<Link, withSig>&& action)
+                const;
 
     friend class ModelLinkGraph;
     friend class Tangle;
@@ -4106,8 +4114,14 @@ inline StrandRef Link::translate(const StrandRef& other) const {
 template <typename Action, typename... Args>
 inline bool Link::rewrite(int height, unsigned nThreads,
         ProgressTrackerOpen* tracker, Action&& action, Args&&... args) const {
-    return rewriteInternal(height, nThreads, tracker,
-        std::bind(action, std::placeholders::_1, args...));
+    // Use RetriangulateActionTraits to deduce whether the given action takes
+    // a link or both a knot signature and link as its initial argument(s).
+    typedef regina::detail::RetriangulateActionTraits<Link, Action> Traits;
+    static_assert(Traits::valid,
+        "The action that is passed to rewrite() does not take the correct initial argument type(s).");
+    return rewriteInternal<Traits::withSig>(height, nThreads, tracker,
+        Traits::convert(std::forward<Action>(action),
+            std::forward<Args>(args)...));
 }
 
 inline void Link::join(const StrandRef& s, const StrandRef& t) {
