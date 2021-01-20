@@ -51,7 +51,7 @@ void process(regina::Triangulation<dim>* tri) {
 
     tri->retriangulate(argHeight, argThreads, nullptr /* tracker */,
         [&nSolns, &nonMinimal, &simpler, tri](
-                const std::string& sig, const Triangulation<dim>& t) {
+                const std::string& sig, const regina::Triangulation<dim>& t) {
             if (t.size() > tri->size())
                 return false;
 
