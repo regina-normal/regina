@@ -37,7 +37,7 @@ namespace regina {
 
 namespace detail {
     template <>
-    struct Propagator<Triangulation<4>> {
+    struct RetriangulateParams<Triangulation<4>> {
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {

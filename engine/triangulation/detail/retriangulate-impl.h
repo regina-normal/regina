@@ -61,10 +61,12 @@ namespace detail {
 #ifndef __DOXYGEN
 
 /**
- * Provides atomic steps used to move between triangulations or links.
+ * Provides domain-specific details for the retriangulation or link
+ * rewriting process, specific to a particular triangulation or link class.
  *
  * Every class (e.g., regina::Triangulation<dim> or regina::Link) that uses this
- * retriangulation code must provide its own specialisation of Propagator.
+ * retriangulation code must provide its own specialisation of
+ * RetriangulationParams.
  *
  * The specialisation should provide a single template function
  * <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>, where:
@@ -98,7 +100,7 @@ namespace detail {
  * function, such as regina::Triangulation<dim> or regina::Link.
  */
 template <class Object>
-struct Propagator;
+struct RetriangulationParams;
 
 /**
  * A helper class that performs the callable action that was passed to the
@@ -339,10 +341,10 @@ class Retriangulator : public RetriangulateThreadSync<threading> {
         void processQueue(ProgressTrackerOpen* tracker);
 
         /**
-         * This function is called from the Propagator class, whose
+         * This function is called from the RetriangulateParams class, whose
          * implementation is specific to \a Object (i.e., the underlying
-         * triangulation class).  It may assume that the Propagator class
-         * will delete \a alt immediately after calling this function.
+         * triangulation class).  It may assume that the RetriangulateParams
+         * class will delete \a alt immediately after calling this function.
          */
         bool candidate(Object& alt);
 };
@@ -389,8 +391,8 @@ void Retriangulator<Object, threading, withSig>::processQueue(
             // since the C++ standard requires that insertion into a
             // std::set does not invalidate iterators.
             lock.unlock();
-            Propagator<Object>::template propagateFrom<Retriangulator>(
-                *next, maxSize_, this);
+            RetriangulationParams<Object>::
+                template propagateFrom<Retriangulator>(*next, maxSize_, this);
             lock.lock();
 
             if (tracker)
