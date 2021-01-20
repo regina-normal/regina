@@ -66,10 +66,20 @@ namespace detail {
  *
  * Every class (e.g., regina::Triangulation<dim> or regina::Link) that uses this
  * retriangulation code must provide its own specialisation of
- * RetriangulationParams.
+ * RetriangulateParams.
  *
- * The specialisation should provide a single template function
- * <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>, where:
+ * The specialisation should provide:
+ *
+ * - a template function
+ *   <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>,
+ *   as described below;
+ *
+ * - a function <tt>static std::string sig(const Object&)</tt>, which
+ *   returns the text signature that is used to identify a triangulation
+ *   or link up to the appropriate notion of combinatorial equivalence.
+ *
+ * The function <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>
+ * takes the following arguments:
  *
  * - \a sig is the isomorphism signature of a triangulation or the knot
  *   signature of a link (typically passed as a const std::string&);
@@ -96,11 +106,16 @@ namespace detail {
  *
  * \apinotfinal
  *
+ * \pre The class \a Object provides a two-argument copy constructor,
+ * where the second argument is a boolean indicating whether computed
+ * properties should be cloned.  All of Regina's triangulation and link
+ * classes have such a constructor.
+ *
  * \tparam Object the class that provides the retriangulation/rewriting
  * function, such as regina::Triangulation<dim> or regina::Link.
  */
 template <class Object>
-struct RetriangulationParams;
+struct RetriangulateParams;
 
 /**
  * A helper class that performs the callable action that was passed to the
@@ -355,7 +370,7 @@ inline bool Retriangulator<Object, threading, withSig>::seed(
     // We have to pass a *copy* of obj to action_, since action_ is
     // allowed to change the object that is passed to it.
     // This is inefficient, but at least it only happens once.
-    std::string sig = obj.isoSig();
+    const std::string sig = RetriangulateParams<Object>::sig(obj);
     {
         Object copy(obj, false);
         if (retriangulateAct(action_, copy, sig)) {
@@ -391,7 +406,7 @@ void Retriangulator<Object, threading, withSig>::processQueue(
             // since the C++ standard requires that insertion into a
             // std::set does not invalidate iterators.
             lock.unlock();
-            RetriangulationParams<Object>::
+            RetriangulateParams<Object>::
                 template propagateFrom<Retriangulator>(*next, maxSize_, this);
             lock.lock();
 
@@ -408,7 +423,7 @@ void Retriangulator<Object, threading, withSig>::processQueue(
 
 template <class Object, bool threading, bool withSig>
 bool Retriangulator<Object, threading, withSig>::candidate(Object& alt) {
-    const std::string sig = alt.isoSig();
+    const std::string sig = RetriangulateParams<Object>::sig(alt);
 
     typename RetriangulateThreadSync<threading>::Lock lock(this);
 

@@ -38,6 +38,10 @@ namespace regina {
 namespace detail {
     template <>
     struct RetriangulateParams<Triangulation<4>> {
+        static std::string sig(const Triangulation<4>& tri) {
+            return tri.isoSig();
+        }
+
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
