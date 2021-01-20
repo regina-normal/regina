@@ -50,16 +50,17 @@ void process(regina::Triangulation<dim>* tri) {
     std::string simpler;
 
     tri->retriangulate(argHeight, argThreads, nullptr /* tracker */,
-        [&nSolns, &nonMinimal, &simpler, tri](regina::Triangulation<dim>& t) {
+        [&nSolns, &nonMinimal, &simpler, tri](
+                const std::string& sig, const Triangulation<dim>& t) {
             if (t.size() > tri->size())
                 return false;
 
             std::lock_guard<std::mutex> lock(mutex);
-            std::cout << t.isoSig() << std::endl;
+            std::cout << sig << std::endl;
 
             if (t.size() < tri->size()) {
                 nonMinimal = true;
-                simpler = t.isoSig();
+                simpler = sig;
                 return true;
             }
 
