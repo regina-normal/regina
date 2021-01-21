@@ -57,15 +57,6 @@ const unsigned Perm<4>::invS4[24] = {
     14, 21, 22, 17
 };
 
-const unsigned Perm<4>::revS4[24] = {
-    22, 17, 10, 21,
-    14, 9, 16, 23,
-    18, 5, 2, 13,
-    20, 11, 4, 19,
-    6, 1, 8, 15,
-    12, 3, 0, 7
-};
-
 const unsigned* Perm<4>::invSn = Perm<4>::invS4;
 
 const Perm<4> Perm<4>::orderedS4[24] = {

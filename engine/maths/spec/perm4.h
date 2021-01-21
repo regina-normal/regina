@@ -229,17 +229,8 @@ class REGINA_API Perm<4> {
 
     private:
         Code code_;
-            /**< The internal code representing this permutation. */
-
-        /**
-         * Contains the reverses of the permutations in the array \a S4.
-         *
-         * Specifically, the reverse of permutation <tt>S4[i]</tt> is
-         * the permutation <tt>S4[ revS4[i] ]</tt>.
-         *
-         * See reverse() for details on what "reverse" means.
-         */
-        static const unsigned revS4[24];
+            /**< The internal second-generation permutation code
+                 representing this permutation. */
 
     public:
         /**
@@ -891,7 +882,8 @@ inline Perm<4> Perm<4>::inverse() const {
 }
 
 inline Perm<4> Perm<4>::reverse() const {
-    return Perm<4>(static_cast<Code>(revS4[code_]));
+    // p becomes p * 3210 (which has second-generation code 22).
+    return Perm<4>(productTable[code_][22]);
 }
 
 inline int Perm<4>::sign() const {
