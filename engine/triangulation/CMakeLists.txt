@@ -48,6 +48,7 @@ if (${REGINA_INSTALL_DEV})
     generic.h
     graph.h
     homologicaldata.h
+    isosigtype.h
     pachner.h
     xmltrireader.h
     xmltrireader2.h

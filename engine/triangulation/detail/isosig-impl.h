@@ -46,6 +46,7 @@
 
 #include <algorithm>
 #include "triangulation/generic/triangulation.h"
+#include "triangulation/isosigtype.h"
 
 namespace regina {
 namespace detail {
@@ -365,23 +366,23 @@ std::string TriangulationBase<dim>::isoSig(
     // connected component.
     ComponentIterator it;
     size_t i;
-    size_t simp;
-    typename Perm<dim+1>::Index perm;
     std::string curr;
 
     std::string* comp = new std::string[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
-        for (simp = 0; simp < (*it)->size(); ++simp)
-            for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
-                curr = isoSigFrom((*it)->simplex(simp)->index(),
-                    Perm<dim+1>::atIndex(perm), currRelabelling);
-                if ((simp == 0 && perm == 0) || (curr < comp[i])) {
-                    comp[i].swap(curr);
-                    if (relabelling)
-                        std::swap(*relabelling, currRelabelling);
-                }
+        IsoSigEdgeDegrees<dim> sigIt(**it);
+        bool first = true;
+        do {
+            curr = isoSigFrom((*it)->simplex(sigIt.simplex())->index(),
+                sigIt.perm(), currRelabelling);
+            if (first || curr < comp[i]) {
+                comp[i].swap(curr);
+                if (relabelling)
+                    std::swap(*relabelling, currRelabelling);
             }
+            first = false;
+        } while (sigIt.next());
     }
 
     // Pack the components together.
