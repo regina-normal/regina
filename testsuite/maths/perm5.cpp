@@ -50,12 +50,7 @@ class Perm5Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(databases);
     CPPUNIT_TEST(aliases);
-    CPPUNIT_TEST(clear<0>);
-    CPPUNIT_TEST(clear<1>);
-    CPPUNIT_TEST(clear<2>);
-    CPPUNIT_TEST(clear<3>);
-    CPPUNIT_TEST(clear<4>);
-    CPPUNIT_TEST(clear<5>);
+    CPPUNIT_TEST(clear);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -567,7 +562,8 @@ class Perm5Test : public CppUnit::TestFixture {
         }
 
         template <int from>
-        void clear() {
+        void clearFrom() {
+            // Requires 2 <= from <= n-2.
             Perm<5> rev = Perm<5>().reverse();
 
             unsigned i, j;
@@ -587,42 +583,21 @@ class Perm5Test : public CppUnit::TestFixture {
                 }
         }
 
-        template <>
-        void clear<0>() {
+        void clear() {
             Perm<5> rev = Perm<5>().reverse();
+            unsigned i, j;
 
-            for (unsigned j = 0; j < Perm<5>::nPerms; ++j) {
-                Perm<5> p = Perm<5>::Sn[j];
-                p.clear(0);
-                if (! looksLikeIdentity(p)) {
+            for (i = 0; i < Perm<5>::nPerms; ++i) {
+                Perm<5> p = Perm<5>::Sn[i];
+                p.clear(5);
+                if (! looksEqual(p, Perm<5>::Sn[i])) {
                     std::ostringstream msg;
-                    msg << "Clearing from position 0 "
+                    msg << "Clearing from position 5 "
                         "gives the wrong result.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-        }
-
-        template <>
-        void clear<1>() {
-            Perm<5> rev = Perm<5>().reverse();
-
-            for (unsigned j = 0; j < Perm<4>::nPerms; ++j) {
-                Perm<5> p = rev *
-                    Perm<5>::extend(regina::Perm<4>::Sn[j]) * rev;
-                p.clear(1);
-                if (! looksLikeIdentity(p)) {
-                    std::ostringstream msg;
-                    msg << "Clearing from position 1 "
-                        "gives the wrong result.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
-        template <>
-        void clear<4>() {
-            for (unsigned i = 0; i < Perm<4>::nPerms; ++i) {
+            for (i = 0; i < Perm<4>::nPerms; ++i) {
                 Perm<5> left = Perm<5>::extend(regina::Perm<4>::Sn[i]);
                 Perm<5> p = left;
                 p.clear(4);
@@ -633,16 +608,27 @@ class Perm5Test : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-        }
 
-        template <>
-        void clear<5>() {
-            for (unsigned i = 0; i < Perm<5>::nPerms; ++i) {
-                Perm<5> p = Perm<5>::Sn[i];
-                p.clear(5);
-                if (! looksEqual(p, Perm<5>::Sn[i])) {
+            clearFrom<3>();
+            clearFrom<2>();
+
+            for (j = 0; j < Perm<4>::nPerms; ++j) {
+                Perm<5> p = rev *
+                    Perm<5>::extend(regina::Perm<4>::Sn[j]) * rev;
+                p.clear(1);
+                if (! looksLikeIdentity(p)) {
                     std::ostringstream msg;
-                    msg << "Clearing from position 5 "
+                    msg << "Clearing from position 1 "
+                        "gives the wrong result.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            for (j = 0; j < Perm<5>::nPerms; ++j) {
+                Perm<5> p = Perm<5>::Sn[j];
+                p.clear(0);
+                if (! looksLikeIdentity(p)) {
+                    std::ostringstream msg;
+                    msg << "Clearing from position 0 "
                         "gives the wrong result.";
                     CPPUNIT_FAIL(msg.str());
                 }

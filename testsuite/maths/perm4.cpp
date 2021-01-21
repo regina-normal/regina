@@ -50,11 +50,7 @@ class Perm4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(databases);
     CPPUNIT_TEST(aliases);
-    CPPUNIT_TEST(clear<0>);
-    CPPUNIT_TEST(clear<1>);
-    CPPUNIT_TEST(clear<2>);
-    CPPUNIT_TEST(clear<3>);
-    CPPUNIT_TEST(clear<4>);
+    CPPUNIT_TEST(clear);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -545,63 +541,21 @@ class Perm4Test : public CppUnit::TestFixture {
                     CPPUNIT_FAIL("Arrays S3 and Sn_1 disagree for Perm<4>.");
         }
 
-        template <int from>
         void clear() {
             Perm<4> rev = Perm<4>().reverse();
-
             unsigned i, j;
-            for (i = 0; i < Perm<from>::nPerms; ++i)
-                for (j = 0; j < Perm<4 - from>::nPerms; ++j) {
-                    Perm<4> left = Perm<4>::extend(regina::Perm<from>::Sn[i]);
-                    Perm<4> right = rev *
-                        Perm<4>::extend(regina::Perm<4 - from>::Sn[j]) * rev;
-                    Perm<4> p = left * right;
-                    p.clear(from);
-                    if (! looksEqual(p, left)) {
-                        std::ostringstream msg;
-                        msg << "Clearing from position " << from
-                            << " gives the wrong result.";
-                        CPPUNIT_FAIL(msg.str());
-                    }
-                }
-        }
 
-        template <>
-        void clear<0>() {
-            Perm<4> rev = Perm<4>().reverse();
-
-            for (unsigned j = 0; j < Perm<4>::nPerms; ++j) {
-                Perm<4> p = Perm<4>::Sn[j];
-                p.clear(0);
-                if (! looksLikeIdentity(p)) {
+            for (i = 0; i < Perm<4>::nPerms; ++i) {
+                Perm<4> p = Perm<4>::Sn[i];
+                p.clear(4);
+                if (! looksEqual(p, Perm<4>::Sn[i])) {
                     std::ostringstream msg;
-                    msg << "Clearing from position 0 "
+                    msg << "Clearing from position 4 "
                         "gives the wrong result.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-        }
-
-        template <>
-        void clear<1>() {
-            Perm<4> rev = Perm<4>().reverse();
-
-            for (unsigned j = 0; j < Perm<3>::nPerms; ++j) {
-                Perm<4> p = rev *
-                    Perm<4>::extend(regina::Perm<3>::Sn[j]) * rev;
-                p.clear(1);
-                if (! looksLikeIdentity(p)) {
-                    std::ostringstream msg;
-                    msg << "Clearing from position 1 "
-                        "gives the wrong result.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
-        template <>
-        void clear<3>() {
-            for (unsigned i = 0; i < Perm<3>::nPerms; ++i) {
+            for (i = 0; i < Perm<3>::nPerms; ++i) {
                 Perm<4> left = Perm<4>::extend(regina::Perm<3>::Sn[i]);
                 Perm<4> p = left;
                 p.clear(3);
@@ -612,16 +566,37 @@ class Perm4Test : public CppUnit::TestFixture {
                     CPPUNIT_FAIL(msg.str());
                 }
             }
-        }
-
-        template <>
-        void clear<4>() {
-            for (unsigned i = 0; i < Perm<4>::nPerms; ++i) {
-                Perm<4> p = Perm<4>::Sn[i];
-                p.clear(4);
-                if (! looksEqual(p, Perm<4>::Sn[i])) {
+            for (i = 0; i < Perm<2>::nPerms; ++i)
+                for (j = 0; j < Perm<2>::nPerms; ++j) {
+                    Perm<4> left = Perm<4>::extend(regina::Perm<2>::Sn[i]);
+                    Perm<4> right = rev *
+                        Perm<4>::extend(regina::Perm<2>::Sn[j]) * rev;
+                    Perm<4> p = left * right;
+                    p.clear(2);
+                    if (! looksEqual(p, left)) {
+                        std::ostringstream msg;
+                        msg << "Clearing from position 2 "
+                            "gives the wrong result.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+                }
+            for (j = 0; j < Perm<3>::nPerms; ++j) {
+                Perm<4> p = rev *
+                    Perm<4>::extend(regina::Perm<3>::Sn[j]) * rev;
+                p.clear(1);
+                if (! looksLikeIdentity(p)) {
                     std::ostringstream msg;
-                    msg << "Clearing from position 4 "
+                    msg << "Clearing from position 1 "
+                        "gives the wrong result.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            for (j = 0; j < Perm<4>::nPerms; ++j) {
+                Perm<4> p = Perm<4>::Sn[j];
+                p.clear(0);
+                if (! looksLikeIdentity(p)) {
+                    std::ostringstream msg;
+                    msg << "Clearing from position 0 "
                         "gives the wrong result.";
                     CPPUNIT_FAIL(msg.str());
                 }
