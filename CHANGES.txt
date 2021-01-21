@@ -16,6 +16,14 @@ Version 6.1  [ TODO ]
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
     ENGINE:
+        Class Perm<5>:
+            - Changed the internal representation; as a result there are new
+              routines permCode2(), fromPermCode2(), setPermCode2() and
+              isPermCode2(), and a new type Code2.  The old first-generation
+              codes (used by permCode(), fromPermCode(), setPermCode() and
+              isPermCode()) are slower to work with, and should be avoided.
+            - Several operations are now considerably faster than before
+              (in particular, composition and inverses).
         Class Triangulation<3>:
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as

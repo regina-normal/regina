@@ -122,17 +122,10 @@ inline Perm<4> Perm<4>::extend(Perm<3> p) {
 
 template <int k>
 inline Perm<4> Perm<4>::contract(Perm<k> p) {
-    static_assert(k >= 6, "The generic implementation of Perm<4>::contract<k> "
-        "requires k >= 6.");
+    static_assert(k >= 5, "The generic implementation of Perm<4>::contract<k> "
+        "requires k >= 5.");
 
     return Perm<4>(p[0], p[1], p[2], p[3]);
-}
-
-template <>
-inline Perm<4> Perm<4>::contract(Perm<5> p) {
-    Perm<5>::Code code = p.permCode();
-    return Perm<4>(code & 0x03, (code >> 3) & 0x03,
-        (code >> 6) & 0x03, (code >> 9) & 0x03);
 }
 
 inline void Perm<4>::clear(unsigned from) {
@@ -144,12 +137,21 @@ inline void Perm<4>::clear(unsigned from) {
 
 template <>
 inline Perm<5> Perm<5>::extend(Perm<2> p) {
-    return Perm<5>(static_cast<Code>(p.permCode() == 0 ? 18056 : 18049));
+    return Perm<5>(static_cast<Code>(p.permCode() == 0 ? 0 : 25));
 }
 
 template <>
 inline Perm<5> Perm<5>::extend(Perm<3> p) {
-    return Perm<5>(p[0], p[1], p[2], 3, 4);
+    // Code map: 0,1,2,3,4,5 -> 0,7,30,25,48,55.
+    switch (p.permCode()) {
+        case 0 : return Perm<5>(static_cast<Code2>(0));
+        case 1 : return Perm<5>(static_cast<Code2>(7));
+        case 2 : return Perm<5>(static_cast<Code2>(30));
+        case 3 : return Perm<5>(static_cast<Code2>(25));
+        case 4 : return Perm<5>(static_cast<Code2>(48));
+        case 5 : return Perm<5>(static_cast<Code2>(55));
+        default : return Perm<5>(); // should never happen
+    }
 }
 
 template <>
@@ -163,22 +165,17 @@ template <int k>
 Perm<5> Perm<5>::contract(Perm<k> p) {
     static_assert(k > 5, "Perm<5>::contract<k> requires k > 5.");
 
-    // TODO: Reimplement this to directly truncate p's code, in the case
-    // where Perm<k> and Perm<5> use the same style of code with the
-    // same value of imageBits.
-
-    Code c = 0;
-    int i = 0;
-    for ( ; i < 5; ++i)
-        c |= (static_cast<Code>(p[i]) << (imageBits * i));
-
-    return Perm<5>(c);
+    return Perm<5>(p[0], p[1], p[2], p[3], p[4]);
 }
 
 inline void Perm<5>::clear(unsigned from) {
-    for (int i = from; i < 5; ++i) {
-        code &= ~(7 << (imageBits * i));
-        code |= (static_cast<Code>(i) << (imageBits * i));
+    if (from <= 1)
+        code2_ = 0;
+    else if (from == 2)
+        code2_ = (imageTable[code2_][0] == 0 ? 0 /* 01234 */ : 25 /* 10234 */);
+    else if (from == 3) {
+        if (imageTable[code2_][3] == 4)
+            code2_ = code2_ ^ 1;
     }
 }
 

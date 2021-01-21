@@ -72,10 +72,28 @@ namespace regina {
  * Each permutation has an internal code, which is a single native
  * integer that is sufficient to reconstruct the permutation.
  * Thus the internal code may be a useful means for passing permutation
- * objects to and from the engine.  For Perm<5>, the internal code follows
- * the general scheme used for Perm<n>: the lowest three bits represent
- * the image of 0, the next lowest three bits represent the image of 1 and so
- * on.  See the generic Perm template for further details.
+ * objects to and from the engine.  For Perm<5>, the internal permutation
+ * codes have changed as of Regina 6.1:
+ *
+ * - \e First-generation codes were used internally in Regina 6.0 and earlier.
+ *   These codes were characters whose lowest three bits represented the
+ *   image of 0, whose next lowest three bits represented the image of 1,
+ *   and so on.  The routines permCode(), setPermCode(), fromPermCode()
+ *   and isPermCode() continue to work with first-generation codes for
+ *   backward compatibility.  Likewise, the XML data file format
+ *   continues to use first-generation codes to describe pentachoron gluings.
+ *
+ * - \e Second-generation codes are used internally in Regina 6.1 and above.
+ *   These codes are integers between 0 and 119 inclusive, representing the
+ *   index of the permutation in the array Perm<5>::S5.  The routines
+ *   permCode2(), setPermCode2(), fromPermCode2() and isPermCode2()
+ *   work with second-generation codes.
+ *
+ * It is highly recommended that, if you need to work with permutation
+ * codes at all, you use second-generation codes where possible.  This
+ * is because the first-generation routines incur additional overhead
+ * in converting back and forth between the second-generation codes
+ * (which are used internally by Perm<5>).
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *
@@ -105,19 +123,25 @@ class REGINA_API Perm<5> {
         static const Index nPerms_1 = 24;
 
         /**
-         * Indicates the number of bits used by the permutation code to
-         * store the image of a single integer.
+         * Indicates the number of bits used by a first-generation
+         * permutation code to store the image of a single integer.
          *
-         * The full permutation code packs 5 such images together, and
+         * The full first-generation code packs 5 such images together, and
          * so uses 5 * \a imageBits bits in total.
          */
         static const int imageBits = 3;
 
         /**
-         * Indicates the native unsigned integer type used to store the
-         * internal permutation code.
+         * Indicates the native unsigned integer type used to store a
+         * first-generation permutation code.
          */
         typedef uint16_t Code;
+
+        /**
+         * Indicates the native unsigned integer type used to store a
+         * second-generation permutation code.
+         */
+        typedef uint8_t Code2;
 
         /**
          * Contains all possible permutations of five elements.
@@ -239,8 +263,9 @@ class REGINA_API Perm<5> {
         static const Perm<5> S2[2];
 
     private:
-        unsigned code;
-            /**< The internal code representing this permutation. */
+        Code2 code2_;
+            /**< The internal second-generation permutation code
+                 representing this permutation. */
 
     public:
         /**
@@ -333,49 +358,124 @@ class REGINA_API Perm<5> {
         Perm(const Perm<5>& cloneMe) = default;
 
         /**
-         * Returns the internal code representing this permutation.
-         * Note that the internal code is sufficient to reproduce the
-         * entire permutation.
+         * Returns the first-generation code representing this permutation.
+         * This code is sufficient to reproduce the entire permutation.
          *
-         * The code returned will be a valid permutation code as
-         * determined by isPermCode().
+         * The code returned will be a valid first-generation permutation
+         * code as determined by isPermCode().
          *
-         * @return the internal code.
+         * \warning This routine will incur additional overhead, since
+         * Perm<5> now uses second-generation codes internally.
+         * See the class notes and the routine permCode2() for details.
+         *
+         * @return the first-generation permutation code.
          */
         Code permCode() const;
 
         /**
+         * Returns the second-generation code representing this permutation.
+         * This code is sufficient to reproduce the entire permutation.
+         *
+         * The code returned will be a valid second-generation permutation
+         * code as determined by isPermCode2().
+         *
+         * Second-generation codes are fast to work with, since they are
+         * used internally by the Perm<5> class.
+         *
+         * @return the second-generation permutation code.
+         */
+        Code2 permCode2() const;
+
+        /**
          * Sets this permutation to that represented by the given
-         * internal code.
+         * first-generation permutation code.
          *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
+         * \pre the given code is a valid first-generation permutation code;
+         * see isPermCode() for details.
          *
-         * @param newCode the internal code that will determine the
+         * \warning This routine will incur additional overhead, since
+         * Perm<5> now uses second-generation codes internally.
+         * See the class notes and the routine setPermCode2() for details.
+         *
+         * @param code the first-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(Code newCode);
+        void setPermCode(Code code);
 
         /**
-         * Creates a permutation from the given internal code.
+         * Sets this permutation to that represented by the given
+         * second-generation permutation code.
          *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
+         * Second-generation codes are fast to work with, since they are
+         * used internally by the Perm<5> class.
          *
-         * @param newCode the internal code for the new permutation.
-         * @return the permutation reprsented by the given internal code.
+         * \pre the given code is a valid second-generation permutation code;
+         * see isPermCode2() for details.
+         *
+         * @param code the second-generation code that will determine the
+         * new value of this permutation.
          */
-        static Perm<5> fromPermCode(Code newCode);
+        void setPermCode2(Code2 code);
 
         /**
-         * Determines whether the given integer is a valid internal
-         * permutation code.  Valid permutation codes can be passed to
+         * Creates a permutation from the given first-generation
+         * permutation code.
+         *
+         * \pre the given code is a valid first-generation permutation code;
+         * see isPermCode() for details.
+         *
+         * \warning This routine will incur additional overhead, since
+         * Perm<5> now uses second-generation codes internally.
+         * See the class notes and the routine fromPermCode2() for details.
+         *
+         * @param code the first-generation code for the new permutation.
+         * @return the permutation represented by the given code.
+         */
+        static Perm<5> fromPermCode(Code code);
+
+        /**
+         * Creates a permutation from the given second-generation
+         * permutation code.
+         *
+         * Second-generation codes are fast to work with, since they are
+         * used internally by the Perm<5> class.
+         *
+         * \pre the given code is a valid second-generation permutation code;
+         * see isPermCode2() for details.
+         *
+         * @param code the second-generation code for the new permutation.
+         * @return the permutation represented by the given code.
+         */
+        static Perm<5> fromPermCode2(Code2 code);
+
+        /**
+         * Determines whether the given character is a valid first-generation
+         * permutation code.  Valid first-generation codes can be passed to
          * setPermCode() or fromPermCode(), and are returned by permCode().
          *
+         * \warning This routine will incur additional overhead, since
+         * Perm<5> now uses second-generation codes internally.
+         * See the class notes and the routine isPermCode2() for details.
+         *
+         * @param code the permutation code to test.
          * @return \c true if and only if the given code is a valid
-         * internal permutation code.
+         * first-generation permutation code.
          */
-        static bool isPermCode(Code newCode);
+        static bool isPermCode(Code code);
+
+        /**
+         * Determines whether the given character is a valid second-generation
+         * permutation code.  Valid second-generation codes can be passed to
+         * setPermCode2() or fromPermCode2(), and are returned by permCode2().
+         *
+         * Second-generation codes are fast to work with, since they are
+         * used internally by the Perm<5> class.
+         *
+         * @param code the permutation code to test.
+         * @return \c true if and only if the given code is a valid
+         * second-generation permutation code.
+         */
+        static bool isPermCode2(Code2 code);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -704,130 +804,176 @@ class REGINA_API Perm<5> {
 
     private:
         /**
-         * Creates a permutation from the given internal code.
-         *
-         * \pre the given code is a valid permutation code; see
-         * isPermCode() for details.
-         *
-         * @param newCode the internal code from which the new
-         * permutation will be created.
-         */
-        Perm<5>(Code newCode);
-
-        /**
-         * Determines the image of the given integer under this
+         * Contains the images of every element under every possible
          * permutation.
          *
-         * @param source the integer whose image we wish to find.  This
-         * should be between 0 and 4 inclusive.
-         * @return the image of \a source.
+         * Specifically, the image of \a x under the permutation <tt>S5[i]</tt>
+         * is <tt>imageTable[i][x]</tt>.
+         */
+        static const int imageTable[120][5];
+
+        /**
+         * Contains the full multiplication table for all possible
+         * permutations.
+         *
+         * Specifically, the product <tt>S5[x] * S5[y]</tt> is the
+         * permutation <tt>S5[product[x][y]]</tt>.
+         *
+         * This table contains 14.4 kilobytes of data, and so as of the year
+         * 2021 we declare this is a perfectly reasonably memory cost for the
+         * speed-ups that a hard-coded multiplication table gives us.
+         */
+        static const Code2 productTable[120][120];
+
+        /**
+         * Contains a full table of two-element swaps.
+         *
+         * Specifically, the permutation that swaps \a x and \a y is
+         * <tt>S5[swapTable[x][y]]</tt>.  Here \a x and \a y may be equal.
+         */
+        static const Code2 swapTable[5][5];
+
+    private:
+        /**
+         * Creates a permutation from the given second-generation
+         * permutation code.
+         *
+         * \pre the given code is a valid second-generation permutation code;
+         * see isPermCode2() for details.
+         *
+         * @param code the second-generation code from which the new
+         * permutation will be created.
+         */
+        Perm<5>(Code2 code);
+
+        /**
+         * Returns the index into the Perm<5>::S5 array of the permutation that
+         * maps (0,...,5) to (<i>a</i>,...,<i>e</i>) respectively.
+         *
+         * \pre {<i>a</i>,<i>b</i>,<i>c</i>,<i>d</i>,<i>e</i>} = {0,1,2,3,4}.
+         *
+         * @param a the desired image of 0.
+         * @param b the desired image of 1.
+         * @param c the desired image of 2.
+         * @param d the desired image of 3.
+         * @param e the desired image of 4.
+         * @return the index \a i for which the given permutation is equal to
+         * Perm<5>::S5[i].  This will be between 0 and 119 inclusive.
          */
         REGINA_INLINE_REQUIRED
-        int imageOf(int source) const;
+        static int S5Index(int a, int b, int c, int d, int e);
 };
 
 /*@}*/
 
 // Inline functions for Perm<5>
 
-inline Perm<5>::Perm() : code(18056) {
+inline Perm<5>::Perm() : code2_(0) {
 }
 
-inline Perm<5>::Perm(Code newCode) : code(newCode) {
+inline Perm<5>::Perm(Code2 code) : code2_(code) {
 }
 
-inline Perm<5>::Perm(int a, int b) {
-    code = 18056;
-    code += ((a << (3*b)) - (b << (3*b)));
-    code += ((b << (3*a)) - (a << (3*a)));
+inline Perm<5>::Perm(int a, int b) : code2_(swapTable[a][b]) {
 }
 
-inline Perm<5>::Perm(int a, int b, int c, int d, int e) {
-    code = (e << 12) | (d << 9) | (c << 6) | (b << 3) | a;
+inline Perm<5>::Perm(int a, int b, int c, int d, int e) :
+        code2_(static_cast<Code2>(S5Index(a, b, c, d, e))) {
 }
 
-inline Perm<5>::Perm(const int* image) {
-    code = (image[4] << 12) | (image[3] << 9) | (image[2] << 6) |
-        (image[1] << 3) | image[0];
-}
-
-inline Perm<5>::Perm(const int* a, const int* b) {
-    code =
-        (b[0] << (3*a[0])) |
-        (b[1] << (3*a[1])) |
-        (b[2] << (3*a[2])) |
-        (b[3] << (3*a[3])) |
-        (b[4] << (3*a[4]));
-}
-
-inline Perm<5>::Perm(int a0, int a1, int b0, int b1,
-        int c0, int c1, int d0, int d1, int e0, int e1) {
-    code =
-        (a1 << (3*a0)) |
-        (b1 << (3*b0)) |
-        (c1 << (3*c0)) |
-        (d1 << (3*d0)) |
-        (e1 << (3*e0));
+inline Perm<5>::Perm(const int* image) :
+        code2_(static_cast<Code2>(S5Index(
+            image[0], image[1], image[2], image[3], image[4]))) {
 }
 
 inline Perm<5>::Code Perm<5>::permCode() const {
-    return code;
+    return static_cast<Code>(
+        imageTable[code2_][0] |
+        (imageTable[code2_][1] << 3) |
+        (imageTable[code2_][2] << 6) |
+        (imageTable[code2_][3] << 9) |
+        (imageTable[code2_][4] << 12));
 }
 
-inline void Perm<5>::setPermCode(Code newCode) {
-    code = newCode;
+inline Perm<5>::Code2 Perm<5>::permCode2() const {
+    return code2_;
 }
 
-inline Perm<5> Perm<5>::fromPermCode(Code newCode) {
-    return Perm<5>(newCode);
+inline void Perm<5>::setPermCode(Code code) {
+    code2_ = static_cast<Code2>(S5Index(
+        code & 0x07,
+        (code >> 3) & 0x07,
+        (code >> 6) & 0x07,
+        (code >> 9) & 0x07,
+        (code >> 12) & 0x07));
+}
+
+inline void Perm<5>::setPermCode2(Code2 code) {
+    code2_ = code;
+}
+
+inline Perm<5> Perm<5>::fromPermCode(Code code) {
+    return Perm<5>(static_cast<Code2>(S5Index(
+        code & 0x07,
+        (code >> 3) & 0x07,
+        (code >> 6) & 0x07,
+        (code >> 9) & 0x07,
+        (code >> 12) & 0x07)));
+}
+
+inline Perm<5> Perm<5>::fromPermCode2(Code2 code) {
+    return Perm<5>(code);
+}
+
+inline bool Perm<5>::isPermCode2(Code2 code) {
+    // code >= 0 is automatic because we are using an unsigned data type.
+    return (code < 120);
 }
 
 inline Perm<5> Perm<5>::operator *(const Perm<5>& q) const {
-    return Perm<5>(imageOf(q[0]), imageOf(q[1]), imageOf(q[2]),
-        imageOf(q[3]), imageOf(q[4]));
+    return Perm<5>(productTable[code2_][q.code2_]);
 }
 
 inline Perm<5> Perm<5>::inverse() const {
-    // Specify the inverse by its internal code.
-    return Perm<5>(static_cast<Code>(
-        (1 << (3*imageOf(1))) |
-        (2 << (3*imageOf(2))) |
-        (3 << (3*imageOf(3))) |
-        (4 << (3*imageOf(4)))));
+    return Perm<5>(static_cast<Code2>(invS5[code2_]));
 }
 
 inline Perm<5> Perm<5>::reverse() const {
-    // Specify the inverse by its internal code.
-    return Perm<5>(static_cast<Code>(
-        (imageOf(4)) |
-        (imageOf(3) << 3) |
-        (imageOf(2) << 6) |
-        (imageOf(1) << 9) |
-        (imageOf(0) << 12)));
+    // p becomes p * 43210 (which has second-generation code 118).
+    return Perm<5>(productTable[code2_][118]);
+}
+
+inline int Perm<5>::sign() const {
+    return (code2_ % 2 ? -1 : 1);
 }
 
 inline int Perm<5>::operator[](int source) const {
-    return (code >> (3*source)) & 7;
+    return imageTable[code2_][source];
 }
 
 inline int Perm<5>::preImageOf(int image) const {
-    if (( code       & 7) == static_cast<Code>(image)) return 0;
-    if (((code >> 3) & 7) == static_cast<Code>(image)) return 1;
-    if (((code >> 6) & 7) == static_cast<Code>(image)) return 2;
-    if (((code >> 9) & 7) == static_cast<Code>(image)) return 3;
-    return 4;
+    return imageTable[invS5[code2_]][image];
 }
 
 inline bool Perm<5>::operator == (const Perm<5>& other) const {
-    return (code == other.code);
+    return (code2_ == other.code2_);
 }
 
 inline bool Perm<5>::operator != (const Perm<5>& other) const {
-    return (code != other.code);
+    return (code2_ != other.code2_);
+}
+
+inline int Perm<5>::compareWith(const Perm<5>& other) const {
+    // Computing orderedS5Index() is very fast, now that we use S5 indices
+    // for internal permutation codes.  Use this instead of comparing images
+    // one at a time.
+    int o1 = orderedS5Index();
+    int o2 = other.orderedS5Index();
+    return (o1 == o2 ? 0 : o1 < o2 ? -1 : 1);
 }
 
 inline bool Perm<5>::isIdentity() const {
-    return (code == 18056);
+    return (code2_ == 0);
 }
 
 inline Perm<5> Perm<5>::atIndex(Index i) {
@@ -854,12 +1000,34 @@ inline Perm<5> Perm<5>::rand(URBG&& gen, bool even) {
     }
 }
 
-inline int Perm<5>::imageOf(int source) const {
-    return (code >> (3*source)) & 7;
+inline int Perm<5>::S5Index() const {
+    return code2_;
 }
 
 inline int Perm<5>::SnIndex() const {
-    return S5Index();
+    return code2_;
+}
+
+inline int Perm<5>::orderedS5Index() const {
+    // S5 is almost the same as orderedS5, except that some pairs
+    // S5[2i] <--> S5[2i+1] have been swapped to ensure that all
+    // permutations S5[2i] are even and all permutations S5[2i+1] are odd.
+    //
+    // Specifically, we must flip between 2i <--> 2i+1 if and only if
+    // one but not both of (S5Index / 2) and (S5Index / 24) is even.
+    // Here we use (S5Index >> 1), which is equivalent to (S5Index / 2).
+    return ((((code2_ >> 1) ^ (code2_ / 24)) & 1) ? (code2_ ^ 1) : code2_);
+}
+
+inline int Perm<5>::S5Index(int a, int b, int c, int d, int e) {
+    // First compute the ordered S5 index.
+    int ans = 24 * a +
+              6 * (b - (b > a ? 1 : 0)) +
+              2 * (c - ((c > b ? 1 : 0) + (c > a ? 1 : 0))) +
+                  (d > e ? 1 : 0);
+
+    // Then switch (2i, 2i+1) pairs as indicated above.
+    return ((((ans >> 1) ^ (ans / 24)) & 1) ? (ans ^ 1) : ans);
 }
 
 inline int Perm<5>::orderedSnIndex() const {
