@@ -75,9 +75,22 @@ namespace detail {
  *   <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>,
  *   as described below;
  *
+ * - a function <tt>static const char* progressStage()</tt>, which returns
+ *   the human-readable description of the processing stage that will be set
+ *   up in the progress tracker (but note that when Regina moves to C++17,
+ *   this will become an inline static std::string constant);
+ *
  * - a function <tt>static std::string sig(const Object&)</tt>, which
  *   returns the text signature that is used to identify a triangulation
- *   or link up to the appropriate notion of combinatorial equivalence.
+ *   or link up to the appropriate notion of combinatorial equivalence;
+ *
+ * - a function <tt>bool satisfiesPreconditions(const Object&)</tt>, which
+ *   tests any preconditions on the retriangulation/rewriting routine
+ *   and returns \c false if they fail.  For any object that fails the
+ *   preconditions, the retriangulation/rewriting code will do nothing;
+ *   moreover, if a progress tracker was passed then it will be immediately
+ *   marked as finished, and otherwise the retriangulation/rewriting routine
+ *   will return \c false.
  *
  * The function <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>
  * takes the following arguments:
@@ -538,17 +551,23 @@ bool Retriangulator<Object, threading, withSig>::candidate(
 }
 
 template <class Object, bool threading, bool withSig>
-bool enumerateDetail(const Object& tri, int height, unsigned nThreads,
+bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (tracker)
-        tracker->newStage("Exploring triangulations");
+        tracker->newStage(RetriangulateParams<Object>::progressStage());
+
+    if (! RetriangulateParams<Object>::satisfiesPreconditions(obj)) {
+        if (tracker)
+            tracker->setFinished();
+        return false;
+    }
 
     typedef Retriangulator<Object, threading, withSig> T;
 
-    T bfs((height >= 0 ? tri.size() + height :
+    T bfs((height >= 0 ? obj.size() + height :
         std::numeric_limits<std::size_t>::max()), std::move(action));
-    if (bfs.seed(tri)) {
+    if (bfs.seed(obj)) {
         if (tracker)
             tracker->setFinished();
         return true;
@@ -561,15 +580,15 @@ bool enumerateDetail(const Object& tri, int height, unsigned nThreads,
 }
 
 template <class Object, bool withSig>
-bool enumerate(const Object& tri, int height, unsigned nThreads,
+bool enumerate(const Object& obj, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (nThreads <= 1) {
         return enumerateDetail<Object, false, withSig>(
-            tri, height, nThreads, tracker, std::move(action));
+            obj, height, nThreads, tracker, std::move(action));
     } else {
         return enumerateDetail<Object, true, withSig>(
-            tri, height, nThreads, tracker, std::move(action));
+            obj, height, nThreads, tracker, std::move(action));
     }
 }
 

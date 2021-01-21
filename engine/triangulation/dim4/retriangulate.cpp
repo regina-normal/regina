@@ -42,6 +42,14 @@ namespace detail {
             return tri.isoSig();
         }
 
+        static const char* progressStage() {
+            return "Exploring triangulations";
+        }
+
+        static bool satisfiesPreconditions(const Triangulation<4>&) {
+            return true;
+        }
+
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {

@@ -42,6 +42,14 @@ namespace detail {
             return link.knotSig();
         }
 
+        static const char* progressStage() {
+            return "Exploring diagrams";
+        }
+
+        static bool satisfiesPreconditions(const Link& link) {
+            return link.countComponents() == 1;
+        }
+
         template <class Retriangulator>
         static void propagateFrom(const std::string& sig, size_t maxSize,
                 Retriangulator* retriang) {
