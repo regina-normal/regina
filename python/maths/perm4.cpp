@@ -97,6 +97,7 @@ void addPerm4(pybind11::module_& m) {
         .def("trunc3", &Perm<4>::trunc3)
         .def("clear", &Perm<4>::clear)
         .def("S4Index", (int (Perm<4>::*)() const) &Perm<4>::S4Index)
+        .def("SnIndex", &Perm<4>::SnIndex)
         .def("orderedS4Index", &Perm<4>::orderedS4Index)
         .def("orderedSnIndex", &Perm<4>::orderedS4Index)
         .def_static("extend", &Perm<4>::extend<2>)

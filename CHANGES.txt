@@ -24,6 +24,9 @@ Version 6.1  [ TODO ]
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.
+    PYTHON:
+        - Wrapped Perm<n>::SnIndex() for n=2,3,4,5; this alias has been present
+          in C++ for a long time but was somehow never wrapped in Python.
     USER INTERFACES:
         - Removed the View/Edit action from the toolbar, since you might as
           well just double-click on the packet instead.

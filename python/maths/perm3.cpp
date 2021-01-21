@@ -89,6 +89,7 @@ void addPerm3(pybind11::module_& m) {
         .def("trunc2", &Perm<3>::trunc2)
         .def("clear", &Perm<3>::clear)
         .def("S3Index", &Perm<3>::S3Index)
+        .def("SnIndex", &Perm<3>::SnIndex)
         .def("orderedS3Index", &Perm<3>::orderedS3Index)
         .def("orderedSnIndex", &Perm<3>::orderedS3Index)
         .def_static("extend", &Perm<3>::extend<2>)

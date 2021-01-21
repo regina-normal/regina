@@ -86,6 +86,7 @@ void addPerm2(pybind11::module_& m) {
         .def("trunc", &Perm<2>::trunc)
         .def("clear", &Perm<2>::clear)
         .def("S2Index", &Perm<2>::S2Index)
+        .def("SnIndex", &Perm<2>::SnIndex)
         .def("orderedS2Index", &Perm<2>::orderedS2Index)
         .def("orderedSnIndex", &Perm<2>::orderedS2Index)
         .def_readonly_static("nPerms", &Perm<2>::nPerms)
