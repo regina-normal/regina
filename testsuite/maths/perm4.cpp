@@ -41,6 +41,7 @@ using regina::Perm;
 class Perm4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Perm4Test);
 
+    CPPUNIT_TEST(permCode2);
     CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
@@ -59,6 +60,19 @@ class Perm4Test : public CppUnit::TestFixture {
         }
 
         void tearDown() {
+        }
+
+        void permCode2() {
+            for (int i = 0; i < 24; i++) {
+                auto code = Perm<4>::S4[i].permCode2();
+                if (code != i) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << i
+                        << " has incorrect second-generation code "
+                        << code << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
         }
 
         void inverse() {
