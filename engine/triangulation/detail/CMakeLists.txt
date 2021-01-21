@@ -25,6 +25,8 @@ if (${REGINA_INSTALL_DEV})
     isomorphism.h
     isosig-impl.h
     pachner-impl.h
+    retriangulate.h
+    retriangulate-impl.h
     simplex.h
     skeleton-impl.h
     strings.h
