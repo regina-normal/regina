@@ -50,6 +50,7 @@ class Perm2Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(aliases);
+    CPPUNIT_TEST(clear);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -464,6 +465,27 @@ class Perm2Test : public CppUnit::TestFixture {
             for (i = 0; i < 1; ++i)
                 if (Perm<2>::S1[i] != Perm<2>::Sn_1[i])
                     CPPUNIT_FAIL("Arrays S1 and Sn_1 disagree for Perm<2>.");
+        }
+
+        void clear() {
+            for (int i = 0; i <= 2; ++i) {
+                Perm<2> id;
+                id.clear(i);
+                if (! looksLikeIdentity(id))
+                    CPPUNIT_FAIL("Wrong result for identity.clear().");
+            }
+            for (int i = 0; i < 2; ++i) {
+                Perm<2> p = Perm<2>::Sn[i];
+                p.clear(0);
+                if (! looksLikeIdentity(p))
+                    CPPUNIT_FAIL("Wrong result for clear(0).");
+            }
+            for (int i = 0; i < 2; ++i) {
+                Perm<2> p = Perm<2>::Sn[i];
+                p.clear(2);
+                if (! looksEqual(p, Perm<2>::Sn[i]))
+                    CPPUNIT_FAIL("Wrong result for clear(2).");
+            }
         }
 };
 
