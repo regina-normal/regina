@@ -227,16 +227,6 @@ class REGINA_API Perm<3> {
         Code code_;
             /**< The internal code representing this permutation. */
 
-        /**
-         * Contains the reverses of the permutations in the array \a S3.
-         *
-         * Specifically, the reverse of permutation <tt>S3[i]</tt> is
-         * the permutation <tt>S3[ revS3[i] ]</tt>.
-         *
-         * See reverse() for details on what "reverse" means.
-         */
-        static const unsigned revS3[6];
-
     public:
         /**
          * Creates the identity permutation.
@@ -754,7 +744,8 @@ inline Perm<3> Perm<3>::inverse() const {
 }
 
 inline Perm<3> Perm<3>::reverse() const {
-    return Perm<3>(static_cast<Code>(revS3[code_]));
+    // p becomes p * 210.
+    return Perm<3>(productTable[code_][code210]);
 }
 
 inline int Perm<3>::sign() const {

@@ -49,10 +49,6 @@ const unsigned Perm<3>::invS3[6] = {
     0, 1, 4, 3, 2, 5
 };
 
-const unsigned Perm<3>::revS3[6] = {
-    5, 2, 1, 4, 3, 0
-};
-
 const unsigned* Perm<3>::invSn = Perm<3>::invS3;
 
 const Perm<3> Perm<3>::orderedS3[6] = {
