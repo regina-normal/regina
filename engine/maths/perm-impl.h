@@ -58,8 +58,8 @@ namespace regina {
 
 template <int k>
 inline Perm<2> Perm<2>::contract(Perm<k> p) {
-    static_assert(k >= 5, "The generic implementation of Perm<2>::contract<k> "
-        "requires k >= 5.");
+    static_assert(k >= 6, "The generic implementation of Perm<2>::contract<k> "
+        "requires k >= 6.");
 
     return Perm<2>(static_cast<Code>(p.permCode() % 2 ? 1 : 0));
 }
@@ -72,6 +72,11 @@ inline Perm<2> Perm<2>::contract(Perm<3> p) {
 template <>
 inline Perm<2> Perm<2>::contract(Perm<4> p) {
     return Perm<2>(static_cast<Code>(p.permCode2() < 6 ? 0 : 1));
+}
+
+template <>
+inline Perm<2> Perm<2>::contract(Perm<5> p) {
+    return Perm<2>(static_cast<Code>(p.permCode2() < 24 ? 0 : 1));
 }
 
 inline void Perm<2>::clear(unsigned from) {
