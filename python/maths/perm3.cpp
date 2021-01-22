@@ -34,19 +34,18 @@
 #include "../pybind11/operators.h"
 #include "maths/perm.h"
 #include "../constarray.h"
-#include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::Perm;
 using regina::python::ConstArray;
-using regina::python::GlobalArray;
 
 namespace {
     ConstArray<decltype(Perm<3>::S3)>
         Perm3_S3_arr(Perm<3>::S3, 6);
     ConstArray<decltype(Perm<3>::orderedS3)>
         Perm3_orderedS3_arr(Perm<3>::orderedS3, 6);
-    GlobalArray<Perm<3>> Perm3_S2_arr(Perm<3>::S2, 2);
+    ConstArray<decltype(Perm<3>::S2)>
+        Perm3_S2_arr(Perm<3>::S2, 2);
 
     template <int k>
     struct Perm3_contract {
@@ -67,8 +66,9 @@ namespace {
 }
 
 void addPerm3(pybind11::module_& m) {
-    decltype(Perm3_S3_arr)::wrapClass(m, "ConstArray_S3");
-    decltype(Perm3_orderedS3_arr)::wrapClass(m, "ConstArray_orderedS3");
+    decltype(Perm3_S3_arr)::wrapClass(m, "ConstArray_Perm3_S3");
+    decltype(Perm3_orderedS3_arr)::wrapClass(m, "ConstArray_Perm3_orderedS3");
+    decltype(Perm3_S2_arr)::wrapClass(m, "ConstArray_Perm3_S2");
 
     auto c = pybind11::class_<Perm<3>>(m, "Perm3")
         .def(pybind11::init<>())
@@ -99,8 +99,10 @@ void addPerm3(pybind11::module_& m) {
         .def("orderedS3Index", &Perm<3>::orderedS3Index)
         .def("orderedSnIndex", &Perm<3>::orderedS3Index)
         .def_static("extend", &Perm<3>::extend<2>)
-        .def_readonly_static("nPerms", &Perm<3>::nPerms)
-        .def_readonly_static("nPerms_1", &Perm<3>::nPerms_1)
+        .def_property_readonly_static("nPerms",
+            [](pybind11::object /* self */) { return Perm<3>::nPerms; })
+        .def_property_readonly_static("nPerms_1",
+            [](pybind11::object /* self */) { return Perm<3>::nPerms_1; })
         .def_readonly_static("S3", &Perm3_S3_arr)
         .def_readonly_static("Sn", &Perm3_S3_arr)
         .def_readonly_static("orderedS3", &Perm3_orderedS3_arr)

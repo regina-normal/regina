@@ -31,6 +31,7 @@ Version 6.1  [ TODO ]
             - Replaced the lookup tables S3 and orderedS3 with lightweight
               objects whose square bracket operators compute the relevant
               permutations on the fly (and very quickly).
+            - Almost everything in this class is now constexpr.
         Class Perm<4>:
             - The constant arrays invS4 and invSn have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really

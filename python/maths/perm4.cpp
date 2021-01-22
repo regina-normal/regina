@@ -69,8 +69,8 @@ namespace {
 }
 
 void addPerm4(pybind11::module_& m) {
-    decltype(Perm4_S4_arr)::wrapClass(m, "ConstArray_S4");
-    decltype(Perm4_orderedS4_arr)::wrapClass(m, "ConstArray_orderedS4");
+    decltype(Perm4_S4_arr)::wrapClass(m, "ConstArray_Perm4_S4");
+    decltype(Perm4_orderedS4_arr)::wrapClass(m, "ConstArray_Perm4_orderedS4");
 
     auto c = pybind11::class_<Perm<4>>(m, "Perm4")
         .def(pybind11::init<>())
@@ -108,8 +108,10 @@ void addPerm4(pybind11::module_& m) {
         .def("orderedSnIndex", &Perm<4>::orderedS4Index)
         .def_static("extend", &Perm<4>::extend<2>)
         .def_static("extend", &Perm<4>::extend<3>)
-        .def_readonly_static("nPerms", &Perm<4>::nPerms)
-        .def_readonly_static("nPerms_1", &Perm<4>::nPerms_1)
+        .def_property_readonly_static("nPerms",
+            [](pybind11::object /* self */) { return Perm<4>::nPerms; })
+        .def_property_readonly_static("nPerms_1",
+            [](pybind11::object /* self */) { return Perm<4>::nPerms_1; })
         .def_readonly_static("S4", &Perm4_S4_arr)
         .def_readonly_static("Sn", &Perm4_S4_arr)
         .def_readonly_static("orderedS4", &Perm4_orderedS4_arr)

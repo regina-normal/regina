@@ -63,7 +63,7 @@ namespace {
 }
 
 void addPerm2(pybind11::module_& m) {
-    decltype(Perm2_S2_arr)::wrapClass(m, "ConstArray_S2");
+    decltype(Perm2_S2_arr)::wrapClass(m, "ConstArray_Perm2_S2");
 
     auto c = pybind11::class_<Perm<2>>(m, "Perm2")
         .def(pybind11::init<>())

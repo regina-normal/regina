@@ -35,9 +35,6 @@
 
 namespace regina {
 
-const Perm<4>::Index Perm<4>::nPerms;
-const Perm<4>::Index Perm<4>::nPerms_1;
-
 const Perm<4>::Code Perm<4>::invS4[24] = {
     0, 1, 4, 3,
     2, 5, 6, 7,

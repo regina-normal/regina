@@ -35,8 +35,6 @@
 
 namespace regina {
 
-const Perm<5>::Index Perm<5>::nPerms;
-const Perm<5>::Index Perm<5>::nPerms_1;
 const int Perm<5>::imageBits;
 
 const Perm<5>::Code2 Perm<5>::invS5[120] = {

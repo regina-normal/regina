@@ -585,12 +585,6 @@ template <> class Perm<5>;
 // Static constants for Perm
 
 template <int n>
-constexpr typename Perm<n>::Index Perm<n>::nPerms;
-
-template <int n>
-constexpr typename Perm<n>::Index Perm<n>::nPerms_1;
-
-template <int n>
 constexpr int Perm<n>::imageBits;
 
 template <int n>

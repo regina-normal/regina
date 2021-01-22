@@ -71,8 +71,8 @@ namespace {
 }
 
 void addPerm5(pybind11::module_& m) {
-    decltype(Perm5_S5_arr)::wrapClass(m, "ConstArray_S5");
-    decltype(Perm5_orderedS5_arr)::wrapClass(m, "ConstArray_orderedS5");
+    decltype(Perm5_S5_arr)::wrapClass(m, "ConstArray_Perm5_S5");
+    decltype(Perm5_orderedS5_arr)::wrapClass(m, "ConstArray_Perm5_orderedS5");
 
     auto c = pybind11::class_<Perm<5>>(m, "Perm5")
         .def(pybind11::init<>())
@@ -113,8 +113,10 @@ void addPerm5(pybind11::module_& m) {
         .def_static("extend", &Perm<5>::extend<3>)
         .def_static("extend", &Perm<5>::extend<4>)
         .def_readonly_static("imageBits", &Perm<5>::imageBits)
-        .def_readonly_static("nPerms", &Perm<5>::nPerms)
-        .def_readonly_static("nPerms_1", &Perm<5>::nPerms_1)
+        .def_property_readonly_static("nPerms",
+            [](pybind11::object /* self */) { return Perm<5>::nPerms; })
+        .def_property_readonly_static("nPerms_1",
+            [](pybind11::object /* self */) { return Perm<5>::nPerms_1; })
         .def_readonly_static("S5", &Perm5_S5_arr)
         .def_readonly_static("Sn", &Perm5_S5_arr)
         .def_readonly_static("orderedS5", &Perm5_orderedS5_arr)

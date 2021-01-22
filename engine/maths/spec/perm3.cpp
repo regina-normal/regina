@@ -35,37 +35,6 @@
 
 namespace regina {
 
-const Perm<3>::Index Perm<3>::nPerms;
-const Perm<3>::Index Perm<3>::nPerms_1;
-
-const Perm<3>::Code Perm<3>::invS3[6] = {
-    0, 1, 4, 3, 2, 5
-};
-
-const Perm<3> Perm<3>::S2[2] = {
-    Perm<3>(code012), Perm<3>(code102)
-};
-
-const Perm<3>* Perm<3>::Sn_1 = Perm<3>::S2;
-
-const Perm<3>::Code Perm<3>::imageTable[6][3] = {
-    { 0, 1, 2 },
-    { 0, 2, 1 },
-    { 1, 2, 0 },
-    { 1, 0, 2 },
-    { 2, 0, 1 },
-    { 2, 1, 0 }
-};
-
-const Perm<3>::Code Perm<3>::productTable[6][6] = {
-    { 0, 1, 2, 3, 4, 5 },
-    { 1, 0, 5, 4, 3, 2 },
-    { 2, 3, 4, 5, 0, 1 },
-    { 3, 2, 1, 0, 5, 4 },
-    { 4, 5, 0, 1, 2, 3 },
-    { 5, 4, 3, 2, 1, 0 }
-};
-
 Perm<3>::Perm(const int* a, const int* b) {
     int image[3];
     image[a[0]] = b[0];

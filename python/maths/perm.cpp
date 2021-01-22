@@ -119,8 +119,10 @@ void addPerm(pybind11::module_& m, const char* name) {
             pybind11::arg("even") = false)
         .def("trunc", &Perm<n>::trunc)
         .def("clear", &Perm<n>::clear)
-        .def_readonly_static("nPerms", &Perm<n>::nPerms)
-        .def_readonly_static("nPerms_1", &Perm<n>::nPerms_1)
+        .def_property_readonly_static("nPerms",
+            [](pybind11::object /* self */) { return Perm<n>::nPerms; })
+        .def_property_readonly_static("nPerms_1",
+            [](pybind11::object /* self */) { return Perm<n>::nPerms_1; })
         .def_readonly_static("imageBits", &Perm<n>::imageBits)
     ;
     Perm_extend<n, n-1>::add_bindings(c);

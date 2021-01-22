@@ -96,7 +96,7 @@ class REGINA_API Perm<3> {
              * @param index an index between 0 and 5 inclusive.
              * @return the corresponding permutation in S3.
              */
-            Perm<3> operator[] (int index) const;
+            constexpr Perm<3> operator[] (int index) const;
         };
 
         /**
@@ -110,7 +110,21 @@ class REGINA_API Perm<3> {
              * @param index an index between 0 and 5 inclusive.
              * @return the corresponding permutation in orderedS3.
              */
-            Perm<3> operator[] (int index) const;
+            constexpr Perm<3> operator[] (int index) const;
+        };
+
+        /**
+         * An array-like object used to implement Perm<3>::S2.
+         */
+        struct S2Lookup {
+            /**
+             * Returns the permutation at the given index in the array S2.
+             * See Perm<3>::S2 for details.
+             *
+             * @param index an index between 0 and 1 inclusive.
+             * @return the corresponding permutation in S2.
+             */
+            constexpr Perm<3> operator[] (int index) const;
         };
 
     public:
@@ -125,13 +139,13 @@ class REGINA_API Perm<3> {
          * The total number of permutations on three elements.
          * This is the size of the array Sn.
          */
-        static const Index nPerms = 6;
+        static constexpr Index nPerms = 6;
 
         /**
          * The total number of permutations on two elements.
          * This is the size of the array Sn_1.
          */
-        static const Index nPerms_1 = 2;
+        static constexpr Index nPerms_1 = 2;
 
         /**
          * Indicates the native unsigned integer type used to store the
@@ -197,8 +211,18 @@ class REGINA_API Perm<3> {
         static constexpr OrderedS3Lookup orderedSn {};
 
         /**
-         * Contains all possible permutations of two elements.
-         * In each permutation, 2 maps to 2.
+         * Gives array-like access to all possible permutations of
+         * two elements.  In each permutation, 2 maps to 2.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>S2[i]</tt>.  The index \a i must be
+         * between 0 and 1 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -210,14 +234,14 @@ class REGINA_API Perm<3> {
          *
          * Note that these permutations are already in lexicographical order.
          */
-        static const Perm<3> S2[2];
+        static constexpr S2Lookup S2 {};
 
         /**
          * A dimension-agnostic alias for Perm<3>::S2.  In general, for
          * each \a K the class PermK will define an alias \a Sn_1
          * that references the list of all permutations PermK::S(K-1).
          */
-        static const Perm<3>* Sn_1;
+        static constexpr S2Lookup Sn_1 {};
 
         enum {
             /**
@@ -266,7 +290,7 @@ class REGINA_API Perm<3> {
         /**
          * Creates the identity permutation.
          */
-        Perm();
+        constexpr Perm();
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -277,7 +301,7 @@ class REGINA_API Perm<3> {
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
-        Perm(int a, int b);
+        constexpr Perm(int a, int b);
 
         /**
          * Creates a permutation mapping (0,1,2) to
@@ -289,7 +313,7 @@ class REGINA_API Perm<3> {
          * @param b the desired image of 1.
          * @param c the desired image of 2.
          */
-        Perm(int a, int b, int c);
+        constexpr Perm(int a, int b, int c);
 
         /**
          * Creates a permutation mapping \a i to \a image[i] for each
@@ -302,7 +326,7 @@ class REGINA_API Perm<3> {
          *
          * @param image the array of images.
          */
-        Perm(const int* image);
+        constexpr Perm(const int* image);
 
         /**
          * Creates a permutation mapping (\a a[0], ..., \a a[2]) to
@@ -325,7 +349,7 @@ class REGINA_API Perm<3> {
          *
          * @param cloneMe the permutation to clone.
          */
-        Perm(const Perm<3>& cloneMe) = default;
+        constexpr Perm(const Perm<3>& cloneMe) = default;
 
         /**
          * Returns the internal code representing this permutation.
@@ -337,7 +361,7 @@ class REGINA_API Perm<3> {
          *
          * @return the internal code.
          */
-        Code permCode() const;
+        constexpr Code permCode() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -360,7 +384,7 @@ class REGINA_API Perm<3> {
          * @param code the internal code for the new permutation.
          * @return the permutation represented by the given internal code.
          */
-        static Perm<3> fromPermCode(Code code);
+        static constexpr Perm<3> fromPermCode(Code code);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -370,7 +394,7 @@ class REGINA_API Perm<3> {
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
-        static bool isPermCode(Code code);
+        static constexpr bool isPermCode(Code code);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -390,14 +414,14 @@ class REGINA_API Perm<3> {
          * @param q the permutation with which to compose this.
          * @return the composition of both permutations.
          */
-        Perm<3> operator * (const Perm<3>& q) const;
+        constexpr Perm<3> operator * (const Perm<3>& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
          * @return the inverse of this permutation.
          */
-        Perm<3> inverse() const;
+        constexpr Perm<3> inverse() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -406,7 +430,7 @@ class REGINA_API Perm<3> {
          * In other words, if permutation \a q is the
          * reverse of \a p, then <tt>p[i] == q[2 - i]</tt> for all \a i.
          */
-        Perm<3> reverse() const;
+        constexpr Perm<3> reverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -414,7 +438,7 @@ class REGINA_API Perm<3> {
          * @return 1 if this permutation is even, or -1 if this
          * permutation is odd.
          */
-        int sign() const;
+        constexpr int sign() const;
 
         /**
          * Determines the image of the given integer under this
@@ -424,7 +448,7 @@ class REGINA_API Perm<3> {
          * should be between 0 and 2 inclusive.
          * @return the image of \a source.
          */
-        int operator[](int source) const;
+        constexpr int operator[](int source) const;
 
         /**
          * Determines the preimage of the given integer under this
@@ -434,7 +458,7 @@ class REGINA_API Perm<3> {
          * should be between 0 and 2 inclusive.
          * @return the preimage of \a image.
          */
-        int preImageOf(int image) const;
+        constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -445,7 +469,7 @@ class REGINA_API Perm<3> {
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
-        bool operator == (const Perm<3>& other) const;
+        constexpr bool operator == (const Perm<3>& other) const;
 
         /**
          * Determines if this differs from the given permutation.
@@ -456,7 +480,7 @@ class REGINA_API Perm<3> {
          * @return \c true if and only if this and the given permutation
          * differ.
          */
-        bool operator != (const Perm<3>& other) const;
+        constexpr bool operator != (const Perm<3>& other) const;
 
         /**
          * Lexicographically compares the images of (0,1,2) under this
@@ -467,7 +491,7 @@ class REGINA_API Perm<3> {
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
          */
-        int compareWith(const Perm<3>& other) const;
+        constexpr int compareWith(const Perm<3>& other) const;
 
         /**
          * Determines if this is the identity permutation.
@@ -475,7 +499,7 @@ class REGINA_API Perm<3> {
          *
          * @return \c true if and only if this is the identity permutation.
          */
-        bool isIdentity() const;
+        constexpr bool isIdentity() const;
 
         /**
          * Returns the <i>i</i>th permutation on three elements, where
@@ -490,7 +514,7 @@ class REGINA_API Perm<3> {
          * must be between 0 and 5 inclusive.
          * @return the <i>i</i>th permutation.
          */
-        static Perm atIndex(Index i);
+        static constexpr Perm atIndex(Index i);
 
         /**
          * Returns a random permutation on three elements.
@@ -552,7 +576,7 @@ class REGINA_API Perm<3> {
          * @return the index of this permutation, which will be between
          * 0 and 5 inclusive.
          */
-        Index index() const;
+        constexpr Index index() const;
 
         /**
          * Returns a string representation of this permutation.
@@ -606,7 +630,7 @@ class REGINA_API Perm<3> {
          * @return the index \a i for which this permutation is equal to
          * Perm<3>::S3[i].  This will be between 0 and 5 inclusive.
          */
-        int S3Index() const;
+        constexpr int S3Index() const;
 
         /**
          * Returns the index of this permutation in the Perm<3>::S3 array.
@@ -615,7 +639,7 @@ class REGINA_API Perm<3> {
          * @return the index \a i for which this permutation is equal to
          * Perm<3>::S3[i].  This will be between 0 and 5 inclusive.
          */
-        int SnIndex() const;
+        constexpr int SnIndex() const;
 
         /**
          * Returns the index of this permutation in the Perm<3>::orderedS3 array.
@@ -624,7 +648,7 @@ class REGINA_API Perm<3> {
          * Perm<3>::orderedS3[i].  This will be between 0 and 5 inclusive.
          */
         REGINA_INLINE_REQUIRED
-        int orderedS3Index() const;
+        constexpr int orderedS3Index() const;
 
         /**
          * Returns the index of this permutation in the Perm<3>::orderedS3 array.
@@ -633,7 +657,7 @@ class REGINA_API Perm<3> {
          * @return the index \a i for which this permutation is equal to
          * Perm<3>::orderedS3[i].  This will be between 0 and 5 inclusive.
          */
-        int orderedSnIndex() const;
+        constexpr int orderedSnIndex() const;
 
         /**
          * Extends a <i>k</i>-element permutation to an 3-element permutation.
@@ -682,7 +706,14 @@ class REGINA_API Perm<3> {
          * Specifically, the image of \a x under the permutation <tt>S3[i]</tt>
          * is <tt>imageTable[i][x]</tt>.
          */
-        static const Code imageTable[6][3];
+        static constexpr Code imageTable[6][3] = {
+            { 0, 1, 2 },
+            { 0, 2, 1 },
+            { 1, 2, 0 },
+            { 1, 0, 2 },
+            { 2, 0, 1 },
+            { 2, 1, 0 }
+        };
 
         /**
          * Contains the inverses of the permutations in the array \a S3.
@@ -690,7 +721,9 @@ class REGINA_API Perm<3> {
          * Specifically, the inverse of permutation <tt>S3[i]</tt> is
          * the permutation <tt>S3[ invS3[i] ]</tt>.
          */
-        static const Code invS3[6];
+        static constexpr Code invS3[6] = {
+            0, 1, 4, 3, 2, 5
+        };
 
         /**
          * Contains the full multiplication table for all possible
@@ -699,7 +732,14 @@ class REGINA_API Perm<3> {
          * Specifically, the product <tt>S3[x] * S3[y]</tt> is
          * the permutation <tt>S3[product[x][y]]</tt>.
          */
-        static const Code productTable[6][6];
+        static constexpr Code productTable[6][6] = {
+            { 0, 1, 2, 3, 4, 5 },
+            { 1, 0, 5, 4, 3, 2 },
+            { 2, 3, 4, 5, 0, 1 },
+            { 3, 2, 1, 0, 5, 4 },
+            { 4, 5, 0, 1, 2, 3 },
+            { 5, 4, 3, 2, 1, 0 }
+        };
 
     private:
         /**
@@ -711,7 +751,7 @@ class REGINA_API Perm<3> {
          * @param code the internal code from which the new
          * permutation will be created.
          */
-        Perm<3>(Code code);
+        constexpr Perm<3>(Code code);
 
         /**
          * Converts between an index into Perm<3>::S3 and an index into
@@ -721,7 +761,7 @@ class REGINA_API Perm<3> {
          * either \c int or \a Code.
          */
         template <typename Int>
-        static Int convOrderedUnordered(Int index);
+        static constexpr Int convOrderedUnordered(Int index);
 };
 
 /*@}*/
@@ -729,64 +769,51 @@ class REGINA_API Perm<3> {
 // Inline functions for Perm<3>
 
 template <typename Int>
-inline Int Perm<3>::convOrderedUnordered(Int index) {
+inline constexpr Int Perm<3>::convOrderedUnordered(Int index) {
     // S5 is almost the same as orderedS5, except that we
     // swap indices 2 <--> 3.
     return ((index == 2 || index == 3) ? (index ^ 1) : index);
 }
 
-inline Perm<3> Perm<3>::S3Lookup::operator[] (int index) const {
+inline constexpr Perm<3> Perm<3>::S3Lookup::operator[] (int index) const {
     return Perm<3>(static_cast<Code>(index));
 }
 
-inline Perm<3> Perm<3>::OrderedS3Lookup::operator[] (int index) const {
+inline constexpr Perm<3> Perm<3>::OrderedS3Lookup::operator[] (int index)
+        const {
     return Perm<3>(static_cast<Code>(convOrderedUnordered(index)));
 }
 
-inline Perm<3>::Perm() : code_(0) {
+inline constexpr Perm<3> Perm<3>::S2Lookup::operator[] (int index) const {
+    return Perm<3>(index == 0 ? code012 : code102);
 }
 
-inline Perm<3>::Perm(Code code) : code_(code) {
+inline constexpr Perm<3>::Perm() : code_(0) {
 }
 
-inline Perm<3>::Perm(int a, int b) {
-    // Transposition.
-    if (a == b)
-        code_ = code012;
-    else switch (a) {
-        case 0:
-            code_ = (b == 1 ? code102 : code210); break;
-        case 1:
-            code_ = (b == 0 ? code102 : code021); break;
-        case 2:
-            code_ = (b == 0 ? code210 : code021); break;
-    }
+inline constexpr Perm<3>::Perm(Code code) : code_(code) {
 }
 
-inline Perm<3>::Perm(int a, int b, int) {
-    // Images of (0, 1, 2).
-    switch (a) {
-        case 0:
-            code_ = static_cast<Code>(b == 1 ? 0 : 1); break;
-        case 1:
-            code_ = static_cast<Code>(b == 2 ? 2 : 3); break;
-        case 2:
-            code_ = static_cast<Code>(b == 0 ? 4 : 5); break;
-    }
+inline constexpr Perm<3>::Perm(int a, int b) :
+        code_(a == b ? code012 :
+              a == 0 ? (b == 1 ? code102 : code210) :
+              a == 1 ? (b == 0 ? code102 : code021) :
+                       (b == 0 ? code210 : code021)) {
 }
 
-inline Perm<3>::Perm(const int* image) {
-    switch (image[0]) {
-        case 0:
-            code_ = static_cast<Code>(image[1] == 1 ? 0 : 1); break;
-        case 1:
-            code_ = static_cast<Code>(image[1] == 2 ? 2 : 3); break;
-        case 2:
-            code_ = static_cast<Code>(image[1] == 0 ? 4 : 5); break;
-    }
+inline constexpr Perm<3>::Perm(int a, int b, int) :
+        code_(a == 0 ? (b == 1 ? 0 : 1) :
+              a == 1 ? (b == 2 ? 2 : 3) :
+                       (b == 0 ? 4 : 5)) {
 }
 
-inline Perm<3>::Code Perm<3>::permCode() const {
+inline constexpr Perm<3>::Perm(const int* image) :
+        code_(image[0] == 0 ? (image[1] == 1 ? 0 : 1) :
+              image[0] == 1 ? (image[1] == 2 ? 2 : 3) :
+                              (image[1] == 0 ? 4 : 5)) {
+}
+
+inline constexpr Perm<3>::Code Perm<3>::permCode() const {
     return code_;
 }
 
@@ -794,49 +821,49 @@ inline void Perm<3>::setPermCode(Code code) {
     code_ = code;
 }
 
-inline Perm<3> Perm<3>::fromPermCode(Code code) {
+inline constexpr Perm<3> Perm<3>::fromPermCode(Code code) {
     return Perm<3>(code);
 }
 
-inline bool Perm<3>::isPermCode(Code code) {
+inline constexpr bool Perm<3>::isPermCode(Code code) {
     // code >= 0 is a no-op because we are using an unsigned data type.
     return (code < 6);
 }
 
-inline Perm<3> Perm<3>::operator * (const Perm<3>& q) const {
+inline constexpr Perm<3> Perm<3>::operator * (const Perm<3>& q) const {
     return Perm<3>(productTable[code_][q.code_]);
 }
 
-inline Perm<3> Perm<3>::inverse() const {
+inline constexpr Perm<3> Perm<3>::inverse() const {
     return Perm<3>(invS3[code_]);
 }
 
-inline Perm<3> Perm<3>::reverse() const {
+inline constexpr Perm<3> Perm<3>::reverse() const {
     // p becomes p * 210.
     return Perm<3>(productTable[code_][code210]);
 }
 
-inline int Perm<3>::sign() const {
+inline constexpr int Perm<3>::sign() const {
     return (code_ % 2 ? -1 : 1);
 }
 
-inline int Perm<3>::operator[](int source) const {
+inline constexpr int Perm<3>::operator[](int source) const {
     return imageTable[code_][source];
 }
 
-inline int Perm<3>::preImageOf(int image) const {
+inline constexpr int Perm<3>::preImageOf(int image) const {
     return imageTable[invS3[code_]][image];
 }
 
-inline bool Perm<3>::operator == (const Perm<3>& other) const {
+inline constexpr bool Perm<3>::operator == (const Perm<3>& other) const {
     return (code_ == other.code_);
 }
 
-inline bool Perm<3>::operator != (const Perm<3>& other) const {
+inline constexpr bool Perm<3>::operator != (const Perm<3>& other) const {
     return (code_ != other.code_);
 }
 
-inline int Perm<3>::compareWith(const Perm<3>& other) const {
+inline constexpr int Perm<3>::compareWith(const Perm<3>& other) const {
     // Computing orderedS3Index() is very fast.
     // Use this instead of comparing images one at a time.
     int o1 = orderedS3Index();
@@ -844,15 +871,15 @@ inline int Perm<3>::compareWith(const Perm<3>& other) const {
     return (o1 == o2 ? 0 : o1 < o2 ? -1 : 1);
 }
 
-inline bool Perm<3>::isIdentity() const {
+inline constexpr bool Perm<3>::isIdentity() const {
     return (code_ == 0);
 }
 
-inline Perm<3> Perm<3>::atIndex(Index i) {
+inline constexpr Perm<3> Perm<3>::atIndex(Index i) {
     return orderedS3[i];
 }
 
-inline Perm<3>::Index Perm<3>::index() const {
+inline constexpr Perm<3>::Index Perm<3>::index() const {
     return orderedS3Index();
 }
 
@@ -872,19 +899,19 @@ inline Perm<3> Perm<3>::rand(URBG&& gen, bool even) {
     }
 }
 
-inline int Perm<3>::S3Index() const {
+inline constexpr int Perm<3>::S3Index() const {
     return code_;
 }
 
-inline int Perm<3>::SnIndex() const {
+inline constexpr int Perm<3>::SnIndex() const {
     return code_;
 }
 
-inline int Perm<3>::orderedS3Index() const {
+inline constexpr int Perm<3>::orderedS3Index() const {
     return convOrderedUnordered(code_);
 }
 
-inline int Perm<3>::orderedSnIndex() const {
+inline constexpr int Perm<3>::orderedSnIndex() const {
     return orderedS3Index();
 }
 
