@@ -41,7 +41,7 @@ using regina::Perm;
 class Perm2Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Perm2Test);
 
-    CPPUNIT_TEST(inverse);
+    CPPUNIT_TEST(permCode);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(swaps);
@@ -61,13 +61,13 @@ class Perm2Test : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void inverse() {
+        void permCode() {
             for (int i = 0; i < 2; i++) {
-                if (Perm<2>::S2[i].inverse() != Perm<2>::S2[Perm<2>::invS2[i]]) {
+                auto code = Perm<2>::S2[i].permCode();
+                if (code != i) {
                     std::ostringstream msg;
-                    msg << "Permutation #" << i << " was found to have "
-                        "inverse " << Perm<2>::S2[i].inverse() <<
-                        " instead of " << Perm<2>::S2[Perm<2>::invS2[i]] << ".";
+                    msg << "Permutation #" << i
+                        << " has incorrect permutation code " << code << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
