@@ -16,6 +16,23 @@ Version 6.1  [ TODO ]
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
     ENGINE:
+        Class Perm<n>:
+            - Constant arrays invS2, invS3, ... have been removed completely.
+              Calling perm.inverse() directly is just as fast.  If you really
+              needed invSn[i], use Sn[i].inverse().SnIndex() instead.
+            - Replaced lookup tables S1, S2, S3, ..., orderedS2, orderedS3, ...
+              with lightweight objects whose square bracket operators compute
+              and/or look up the relevant permutations on the fly.
+            - Almost everything in the permutation classes is now constexpr.
+        Class Perm<5>:
+            - All of the changes listed for Perm<n> above.
+            - Changed the internal representation; as a result there are new
+              routines permCode2(), fromPermCode2(), setPermCode2() and
+              isPermCode2(), and a new type Code2.  The old first-generation
+              codes (used by permCode(), fromPermCode(), setPermCode() and
+              isPermCode()) are slower to work with, and should be avoided.
+            - Several operations are now considerably faster than before
+              (in particular, composition and inverses).
         Class Triangulation<3>:
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
@@ -24,6 +41,9 @@ Version 6.1  [ TODO ]
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.
+    PYTHON:
+        - Wrapped Perm<n>::SnIndex() for n=2,3,4,5; this alias has been present
+          in C++ for a long time but was somehow never wrapped in Python.
     USER INTERFACES:
         - Removed the View/Edit action from the toolbar, since you might as
           well just double-click on the packet instead.

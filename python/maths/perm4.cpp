@@ -33,19 +33,21 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "maths/perm.h"
-#include "../globalarray.h"
+#include "../constarray.h"
 #include "../helpers.h"
 
 using regina::Perm;
-using regina::python::GlobalArray;
+using regina::python::ConstArray;
 
 namespace {
-    GlobalArray<Perm<4>> Perm4_S4_arr(Perm<4>::S4, 24);
-    GlobalArray<unsigned> Perm4_invS4_arr(Perm<4>::invS4, 24);
-    GlobalArray<Perm<4>> Perm4_orderedS4_arr(Perm<4>::orderedS4, 24);
-    GlobalArray<Perm<4>> Perm4_S3_arr(Perm<4>::S3, 6);
-    GlobalArray<Perm<4>> Perm4_orderedS3_arr(Perm<4>::orderedS3, 6);
-    GlobalArray<Perm<4>> Perm4_S2_arr(Perm<4>::S2, 2);
+    ConstArray<decltype(Perm<4>::S4)>
+        Perm4_S4_arr(Perm<4>::S4, 24);
+    ConstArray<decltype(Perm<4>::orderedS4)>
+        Perm4_orderedS4_arr(Perm<4>::orderedS4, 24);
+    ConstArray<decltype(Perm<4>::S3)> Perm4_S3_arr(Perm<4>::S3, 6);
+    ConstArray<decltype(Perm<4>::orderedS3)>
+        Perm4_orderedS3_arr(Perm<4>::orderedS3, 6);
+    ConstArray<decltype(Perm<4>::S2)> Perm4_S2_arr(Perm<4>::S2, 2);
 
     template <int k>
     struct Perm4_contract {
@@ -66,6 +68,12 @@ namespace {
 }
 
 void addPerm4(pybind11::module_& m) {
+    decltype(Perm4_S4_arr)::wrapClass(m, "ConstArray_Perm4_S4");
+    decltype(Perm4_orderedS4_arr)::wrapClass(m, "ConstArray_Perm4_orderedS4");
+    decltype(Perm4_S3_arr)::wrapClass(m, "ConstArray_Perm4_S3");
+    decltype(Perm4_orderedS3_arr)::wrapClass(m, "ConstArray_Perm4_orderedS3");
+    decltype(Perm4_S2_arr)::wrapClass(m, "ConstArray_Perm4_S2");
+
     auto c = pybind11::class_<Perm<4>>(m, "Perm4")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
@@ -97,16 +105,17 @@ void addPerm4(pybind11::module_& m) {
         .def("trunc3", &Perm<4>::trunc3)
         .def("clear", &Perm<4>::clear)
         .def("S4Index", (int (Perm<4>::*)() const) &Perm<4>::S4Index)
+        .def("SnIndex", &Perm<4>::SnIndex)
         .def("orderedS4Index", &Perm<4>::orderedS4Index)
         .def("orderedSnIndex", &Perm<4>::orderedS4Index)
         .def_static("extend", &Perm<4>::extend<2>)
         .def_static("extend", &Perm<4>::extend<3>)
-        .def_readonly_static("nPerms", &Perm<4>::nPerms)
-        .def_readonly_static("nPerms_1", &Perm<4>::nPerms_1)
+        .def_property_readonly_static("nPerms",
+            [](pybind11::object /* self */) { return Perm<4>::nPerms; })
+        .def_property_readonly_static("nPerms_1",
+            [](pybind11::object /* self */) { return Perm<4>::nPerms_1; })
         .def_readonly_static("S4", &Perm4_S4_arr)
         .def_readonly_static("Sn", &Perm4_S4_arr)
-        .def_readonly_static("invS4", &Perm4_invS4_arr)
-        .def_readonly_static("invSn", &Perm4_invS4_arr)
         .def_readonly_static("orderedS4", &Perm4_orderedS4_arr)
         .def_readonly_static("orderedSn", &Perm4_orderedS4_arr)
         .def_readonly_static("S3", &Perm4_S3_arr)

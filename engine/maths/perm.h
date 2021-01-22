@@ -192,7 +192,7 @@ class Perm {
         /**
          * Creates the identity permutation.
          */
-        Perm();
+        constexpr Perm();
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -203,7 +203,7 @@ class Perm {
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
-        Perm(int a, int b);
+        constexpr Perm(int a, int b);
 
         /**
          * Creates a permutation mapping \a i to \a image[\a i] for each
@@ -214,7 +214,7 @@ class Perm {
          *
          * @param image the array of images.
          */
-        Perm(const int* image);
+        constexpr Perm(const int* image);
 
         /**
          * Creates a permutation mapping
@@ -230,7 +230,7 @@ class Perm {
          * @param b the corresponding array of images; this must also have
          * length \a n.
          */
-        Perm(const int* a, const int* b);
+        constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -238,7 +238,7 @@ class Perm {
          *
          * @param cloneMe the permutation to clone.
          */
-        Perm(const Perm<n>& cloneMe) = default;
+        constexpr Perm(const Perm<n>& cloneMe) = default;
 
         /**
          * Returns the internal code representing this permutation.
@@ -250,7 +250,7 @@ class Perm {
          *
          * @return the internal code.
          */
-        Code permCode() const;
+        constexpr Code permCode() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -274,7 +274,7 @@ class Perm {
          * @return the permutation reprsented by the given internal
          * code.
          */
-        static Perm fromPermCode(Code code);
+        static constexpr Perm fromPermCode(Code code);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -284,7 +284,7 @@ class Perm {
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
-        static bool isPermCode(Code newCode);
+        static constexpr bool isPermCode(Code newCode);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -303,14 +303,14 @@ class Perm {
          * @param q the permutation to compose this with.
          * @return the composition of both permutations.
          */
-        Perm operator * (const Perm& q) const;
+        constexpr Perm operator * (const Perm& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
          * @return the inverse of this permutation.
          */
-        Perm inverse() const;
+        constexpr Perm inverse() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -319,7 +319,7 @@ class Perm {
          * 0,...,<i>n</i>-1.  In other words, if permutation \a q is the
          * reverse of \a p, then <tt>p[i] == q[n - 1 - i]</tt> for all \a i.
          */
-        Perm reverse() const;
+        constexpr Perm reverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -327,7 +327,7 @@ class Perm {
          * @return 1 if this permutation is even, or -1 if this
          * permutation is odd.
          */
-        int sign() const;
+        constexpr int sign() const;
 
         /**
          * Determines the image of the given integer under this
@@ -337,7 +337,7 @@ class Perm {
          * should be between 0 and <i>n</i>-1 inclusive.
          * @return the image of \a source.
          */
-        int operator[](int source) const;
+        constexpr int operator[](int source) const;
 
         /**
          * Determines the preimage of the given integer under this
@@ -347,7 +347,7 @@ class Perm {
          * should be between 0 and <i>n</i>-1 inclusive.
          * @return the preimage of \a image.
          */
-        int preImageOf(int image) const;
+        constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -358,7 +358,7 @@ class Perm {
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
-        bool operator == (const Perm& other) const;
+        constexpr bool operator == (const Perm& other) const;
 
         /**
          * Determines if this differs from the given permutation.
@@ -369,7 +369,7 @@ class Perm {
          * @return \c true if and only if this and the given permutation
          * differ.
          */
-        bool operator != (const Perm& other) const;
+        constexpr bool operator != (const Perm& other) const;
 
         /**
          * Lexicographically compares the images of (0,1,...,\a n-1) under this
@@ -380,7 +380,7 @@ class Perm {
          * the permutations are equal, and 1 if this permutation produces
          * a greater image.
          */
-        int compareWith(const Perm& other) const;
+        constexpr int compareWith(const Perm& other) const;
 
         /**
          * Determines if this is the identity permutation.
@@ -390,7 +390,7 @@ class Perm {
          * @return \c true if and only if this is the identity
          * permutation.
          */
-        bool isIdentity() const;
+        constexpr bool isIdentity() const;
 
         /**
          * Returns the <i>i</i>th permutation on \a n elements, where
@@ -520,7 +520,7 @@ class Perm {
          * \a n elements.
          */
         template <int k>
-        static Perm extend(Perm<k> p);
+        static constexpr Perm extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to an <i>n</i>-element
@@ -541,7 +541,7 @@ class Perm {
          * \a n elements.
          */
         template <int k>
-        static Perm contract(Perm<k> p);
+        static constexpr Perm contract(Perm<k> p);
 
     private:
         /**
@@ -553,7 +553,7 @@ class Perm {
          * @param code the internal code from which the new permutation
          * will be created.
          */
-        Perm(Code code);
+        constexpr Perm(Code code);
 };
 
 /**
@@ -585,12 +585,6 @@ template <> class Perm<5>;
 // Static constants for Perm
 
 template <int n>
-constexpr typename Perm<n>::Index Perm<n>::nPerms;
-
-template <int n>
-constexpr typename Perm<n>::Index Perm<n>::nPerms_1;
-
-template <int n>
 constexpr int Perm<n>::imageBits;
 
 template <int n>
@@ -609,11 +603,11 @@ inline constexpr typename Perm<n>::Code Perm<n>::idCodePartial(int k) {
 }
 
 template <int n>
-inline Perm<n>::Perm() : code_(idCode_) {
+inline constexpr Perm<n>::Perm() : code_(idCode_) {
 }
 
 template <int n>
-inline Perm<n>::Perm(int a, int b) : code_(idCode_) {
+inline constexpr Perm<n>::Perm(int a, int b) : code_(idCode_) {
     code_ &= ~(imageMask_ << (imageBits * a));
     code_ &= ~(imageMask_ << (imageBits * b));
     code_ |= (static_cast<Code>(a) << (imageBits * b));
@@ -621,25 +615,23 @@ inline Perm<n>::Perm(int a, int b) : code_(idCode_) {
 }
 
 template <int n>
-inline Perm<n>::Perm(const int* image) {
-    code_ = 0;
+inline constexpr Perm<n>::Perm(const int* image) : code_(0) {
     for (int i = 0; i < n; ++i)
         code_ |= (static_cast<Code>(image[i]) << (imageBits * i));
 }
 
 template <int n>
-inline Perm<n>::Perm(const int* a, const int* b) {
-    code_ = 0;
+inline constexpr Perm<n>::Perm(const int* a, const int* b) : code_(0) {
     for (int i = 0; i < n; ++i)
         code_ |= (static_cast<Code>(b[i]) << (imageBits * a[i]));
 }
 
 template <int n>
-inline Perm<n>::Perm(Code code) : code_(code) {
+inline constexpr Perm<n>::Perm(Code code) : code_(code) {
 }
 
 template <int n>
-inline typename Perm<n>::Code Perm<n>::permCode() const {
+inline constexpr typename Perm<n>::Code Perm<n>::permCode() const {
     return code_;
 }
 
@@ -649,12 +641,12 @@ inline void Perm<n>::setPermCode(Code code) {
 }
 
 template <int n>
-inline Perm<n> Perm<n>::fromPermCode(Code code) {
+inline constexpr Perm<n> Perm<n>::fromPermCode(Code code) {
     return Perm<n>(code);
 }
 
 template <int n>
-bool Perm<n>::isPermCode(Code code) {
+constexpr bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < n; ++i)
         mask |= (1 << ((code >> (imageBits * i)) & imageMask_));
@@ -662,7 +654,7 @@ bool Perm<n>::isPermCode(Code code) {
 }
 
 template <int n>
-inline Perm<n> Perm<n>::operator * (const Perm& q) const {
+inline constexpr Perm<n> Perm<n>::operator * (const Perm& q) const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>((*this)[q[i]]) << (imageBits * i));
@@ -670,7 +662,7 @@ inline Perm<n> Perm<n>::operator * (const Perm& q) const {
 }
 
 template <int n>
-inline Perm<n> Perm<n>::inverse() const {
+inline constexpr Perm<n> Perm<n>::inverse() const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>(i) << (imageBits * (*this)[i]));
@@ -678,7 +670,7 @@ inline Perm<n> Perm<n>::inverse() const {
 }
 
 template <int n>
-inline Perm<n> Perm<n>::reverse() const {
+inline constexpr Perm<n> Perm<n>::reverse() const {
     Code c = 0;
     for (int i = 0; i < n; ++i)
         c |= (static_cast<Code>((*this)[i]) << (imageBits * (n - 1 - i)));
@@ -686,7 +678,7 @@ inline Perm<n> Perm<n>::reverse() const {
 }
 
 template <int n>
-int Perm<n>::sign() const {
+constexpr int Perm<n>::sign() const {
     // This algorithm is quadratic in n.  Surely we can do better?
     bool even = true;
     for (int i = 0; i < n; ++i)
@@ -697,12 +689,12 @@ int Perm<n>::sign() const {
 }
 
 template <int n>
-inline int Perm<n>::operator[](int source) const {
+inline constexpr int Perm<n>::operator[](int source) const {
     return (code_ >> (imageBits * source)) & imageMask_;
 }
 
 template <int n>
-inline int Perm<n>::preImageOf(int image) const {
+inline constexpr int Perm<n>::preImageOf(int image) const {
     for (int i = 0; i < n; ++i)
         if (((code_ >> (imageBits * i)) & imageMask_) == image)
             return i;
@@ -711,17 +703,17 @@ inline int Perm<n>::preImageOf(int image) const {
 }
 
 template <int n>
-inline bool Perm<n>::operator == (const Perm& other) const {
+inline constexpr bool Perm<n>::operator == (const Perm& other) const {
     return (code_ == other.code_);
 }
 
 template <int n>
-inline bool Perm<n>::operator != (const Perm& other) const {
+inline constexpr bool Perm<n>::operator != (const Perm& other) const {
     return (code_ != other.code_);
 }
 
 template <int n>
-int Perm<n>::compareWith(const Perm& other) const {
+constexpr int Perm<n>::compareWith(const Perm& other) const {
     for (int i = 0; i < n; ++i) {
         if ((*this)[i] < other[i])
             return -1;
@@ -732,7 +724,7 @@ int Perm<n>::compareWith(const Perm& other) const {
 }
 
 template <int n>
-inline bool Perm<n>::isIdentity() const {
+inline constexpr bool Perm<n>::isIdentity() const {
     return (code_ == idCode_);
 }
 

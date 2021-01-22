@@ -2,7 +2,6 @@
 
 # Files to compile
 SET ( FILES
-  perm2
   perm3
   perm4
   perm5

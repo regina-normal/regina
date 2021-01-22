@@ -35,58 +35,6 @@
 
 namespace regina {
 
-const Perm<3>::Index Perm<3>::nPerms;
-const Perm<3>::Index Perm<3>::nPerms_1;
-
-const Perm<3> Perm<3>::S3[6] = {
-    Perm<3>((Perm<3>::Code)0), Perm<3>(1), Perm<3>(2),
-    Perm<3>(3), Perm<3>(4), Perm<3>(5)
-};
-
-const Perm<3>* Perm<3>::Sn = Perm<3>::S3;
-
-const unsigned Perm<3>::invS3[6] = {
-    0, 1, 4, 3, 2, 5
-};
-
-const unsigned Perm<3>::revS3[6] = {
-    5, 2, 1, 4, 3, 0
-};
-
-const unsigned* Perm<3>::invSn = Perm<3>::invS3;
-
-const Perm<3> Perm<3>::orderedS3[6] = {
-    Perm<3>(code012), Perm<3>(code021),
-    Perm<3>(code102), Perm<3>(code120),
-    Perm<3>(code201), Perm<3>(code210)
-};
-
-const Perm<3>* Perm<3>::orderedSn = Perm<3>::orderedS3;
-
-const Perm<3> Perm<3>::S2[2] = {
-    Perm<3>(code012), Perm<3>(code102)
-};
-
-const Perm<3>* Perm<3>::Sn_1 = Perm<3>::S2;
-
-const Perm<3>::Code Perm<3>::imageTable[6][3] = {
-    { 0, 1, 2 },
-    { 0, 2, 1 },
-    { 1, 2, 0 },
-    { 1, 0, 2 },
-    { 2, 0, 1 },
-    { 2, 1, 0 }
-};
-
-const Perm<3>::Code Perm<3>::productTable[6][6] = {
-    { 0, 1, 2, 3, 4, 5 },
-    { 1, 0, 5, 4, 3, 2 },
-    { 2, 3, 4, 5, 0, 1 },
-    { 3, 2, 1, 0, 5, 4 },
-    { 4, 5, 0, 1, 2, 3 },
-    { 5, 4, 3, 2, 1, 0 }
-};
-
 Perm<3>::Perm(const int* a, const int* b) {
     int image[3];
     image[a[0]] = b[0];

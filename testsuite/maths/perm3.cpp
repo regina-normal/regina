@@ -41,7 +41,7 @@ using regina::Perm;
 class Perm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Perm3Test);
 
-    CPPUNIT_TEST(inverse);
+    CPPUNIT_TEST(permCode);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(swaps);
@@ -50,6 +50,8 @@ class Perm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(compareWith);
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(aliases);
+    CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(S2);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -60,13 +62,13 @@ class Perm3Test : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void inverse() {
+        void permCode() {
             for (int i = 0; i < 6; i++) {
-                if (Perm<3>::S3[i].inverse() != Perm<3>::S3[Perm<3>::invS3[i]]) {
+                auto code = Perm<3>::S3[i].permCode();
+                if (code != i) {
                     std::ostringstream msg;
-                    msg << "Permutation #" << i << " was found to have "
-                        "inverse " << Perm<3>::S3[i].inverse() <<
-                        " instead of " << Perm<3>::S3[Perm<3>::invS3[i]] << ".";
+                    msg << "Permutation #" << i
+                        << " has incorrect permutation code " << code << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }
@@ -504,6 +506,56 @@ class Perm3Test : public CppUnit::TestFixture {
             for (i = 0; i < 2; ++i)
                 if (Perm<3>::S2[i] != Perm<3>::Sn_1[i])
                     CPPUNIT_FAIL("Arrays S2 and Sn_1 disagree for Perm<3>.");
+        }
+
+        void clear() {
+            Perm<3> rev = Perm<3>().reverse();
+
+            for (unsigned j = 0; j < Perm<3>::nPerms; ++j) {
+                Perm<3> p = Perm<3>::Sn[j];
+                p.clear(0);
+                if (! looksLikeIdentity(p))
+                    CPPUNIT_FAIL("Wrong result for clear(0).");
+            }
+            for (unsigned j = 0; j < Perm<2>::nPerms; ++j) {
+                Perm<3> p = rev *
+                    Perm<3>::extend(regina::Perm<2>::Sn[j]) * rev;
+                p.clear(1);
+                if (! looksLikeIdentity(p))
+                    CPPUNIT_FAIL("Wrong result for clear(1).");
+            }
+            for (unsigned i = 0; i < Perm<2>::nPerms; ++i) {
+                Perm<3> left = Perm<3>::extend(regina::Perm<2>::Sn[i]);
+                Perm<3> p = left;
+                p.clear(2);
+                if (! looksEqual(p, left))
+                    CPPUNIT_FAIL("Wrong result for clear(2).");
+            }
+            for (unsigned i = 0; i < Perm<3>::nPerms; ++i) {
+                Perm<3> p = Perm<3>::Sn[i];
+                p.clear(3);
+                if (! looksEqual(p, Perm<3>::Sn[i]))
+                    CPPUNIT_FAIL("Wrong result for clear(3).");
+            }
+        }
+
+        void S2() {
+            for (unsigned i = 0; i < 2; ++i) {
+                if (! looksEqual(Perm<3>::S2[i],
+                        Perm<3>::extend(Perm<2>::S2[i])))
+                    CPPUNIT_FAIL("S2 permutations do not match "
+                        "Perm<2> extensions.");
+                if (! looksEqual(Perm<3>::Sn_1[i],
+                        Perm<3>::extend(Perm<2>::S2[i])))
+                    CPPUNIT_FAIL("S2 permutations do not match "
+                        "Perm<2> extensions.");
+                if (Perm<2>::S2[i] != Perm<2>::contract(Perm<3>::S2[i]))
+                    CPPUNIT_FAIL("Contracted S2 permutations do not "
+                        "match Perm<2>.");
+                if (Perm<2>::S2[i] != Perm<2>::contract(Perm<3>::Sn_1[i]))
+                    CPPUNIT_FAIL("Contracted S2 permutations do not "
+                        "match Perm<2>.");
+            }
         }
 };
 

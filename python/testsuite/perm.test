@@ -1,0 +1,88 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides detailed tests for permutation constant arrays.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+print(Perm2.nPerms)
+print(Perm3.nPerms)
+print(Perm4.nPerms)
+print(Perm5.nPerms)
+print(Perm6.nPerms)
+print(Perm10.nPerms)
+print(Perm16.nPerms)
+
+print(Perm2.nPerms_1)
+print(Perm3.nPerms_1)
+print(Perm4.nPerms_1)
+print(Perm5.nPerms_1)
+print(Perm6.nPerms_1)
+print(Perm10.nPerms_1)
+print(Perm16.nPerms_1)
+
+print(Perm5.imageBits)
+print(Perm6.imageBits)
+print(Perm10.imageBits)
+print(Perm16.imageBits)
+
+print(Perm2.S1)
+print(Perm2.Sn_1)
+print(Perm2.S2)
+print(Perm2.Sn)
+print(Perm2.orderedS2)
+print(Perm2.orderedSn)
+
+print(Perm3.S2)
+print(Perm3.Sn_1)
+print(Perm3.S3)
+print(Perm3.Sn)
+print(Perm3.orderedS3)
+print(Perm3.orderedSn)
+
+print(Perm4.S2)
+print(Perm4.S3)
+print(Perm4.Sn_1)
+print(Perm4.orderedS3)
+print(Perm4.S4)
+print(Perm4.Sn)
+print(Perm4.orderedS4)
+print(Perm4.orderedSn)
+
+print(Perm5.S2)
+print(Perm5.S3)
+print(Perm5.orderedS3)
+print(Perm5.S4)
+print(Perm5.Sn_1)
+print(Perm5.orderedS4)
+print(Perm5.S5)
+print(Perm5.Sn)
+print(Perm5.orderedS5)
+print(Perm5.orderedSn)
+
