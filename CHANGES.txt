@@ -39,6 +39,7 @@ Version 6.1  [ TODO ]
             - Replaced the lookup tables S4 and orderedS4 with lightweight
               objects whose square bracket operators compute the relevant
               permutations on the fly (and very quickly).
+            - Almost everything in this class is now constexpr.
         Class Perm<5>:
             - The constant arrays invS5 and invSn have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
@@ -53,6 +54,9 @@ Version 6.1  [ TODO ]
             - Replaced the lookup tables S5 and orderedS5 with lightweight
               objects whose square bracket operators compute the relevant
               permutations on the fly (and very quickly).
+            - Almost everything in this class is now constexpr.
+        Class Perm<6..16>:
+            - Almost everything in this class is now constexpr.
         Class Triangulation<3>:
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as

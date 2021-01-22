@@ -34,21 +34,20 @@
 #include "../pybind11/operators.h"
 #include "maths/perm.h"
 #include "../constarray.h"
-#include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::Perm;
 using regina::python::ConstArray;
-using regina::python::GlobalArray;
 
 namespace {
     ConstArray<decltype(Perm<4>::S4)>
         Perm4_S4_arr(Perm<4>::S4, 24);
     ConstArray<decltype(Perm<4>::orderedS4)>
         Perm4_orderedS4_arr(Perm<4>::orderedS4, 24);
-    GlobalArray<Perm<4>> Perm4_S3_arr(Perm<4>::S3, 6);
-    GlobalArray<Perm<4>> Perm4_orderedS3_arr(Perm<4>::orderedS3, 6);
-    GlobalArray<Perm<4>> Perm4_S2_arr(Perm<4>::S2, 2);
+    ConstArray<decltype(Perm<4>::S3)> Perm4_S3_arr(Perm<4>::S3, 6);
+    ConstArray<decltype(Perm<4>::orderedS3)>
+        Perm4_orderedS3_arr(Perm<4>::orderedS3, 6);
+    ConstArray<decltype(Perm<4>::S2)> Perm4_S2_arr(Perm<4>::S2, 2);
 
     template <int k>
     struct Perm4_contract {
@@ -71,6 +70,9 @@ namespace {
 void addPerm4(pybind11::module_& m) {
     decltype(Perm4_S4_arr)::wrapClass(m, "ConstArray_Perm4_S4");
     decltype(Perm4_orderedS4_arr)::wrapClass(m, "ConstArray_Perm4_orderedS4");
+    decltype(Perm4_S3_arr)::wrapClass(m, "ConstArray_Perm4_S3");
+    decltype(Perm4_orderedS3_arr)::wrapClass(m, "ConstArray_Perm4_orderedS3");
+    decltype(Perm4_S2_arr)::wrapClass(m, "ConstArray_Perm4_S2");
 
     auto c = pybind11::class_<Perm<4>>(m, "Perm4")
         .def(pybind11::init<>())

@@ -34,23 +34,23 @@
 #include "../pybind11/operators.h"
 #include "maths/perm.h"
 #include "../constarray.h"
-#include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::Perm;
 using regina::python::ConstArray;
-using regina::python::GlobalArray;
 
 namespace {
     ConstArray<decltype(Perm<5>::S5)>
         Perm5_S5_arr(Perm<5>::S5, 120);
     ConstArray<decltype(Perm<5>::orderedS5)>
         Perm5_orderedS5_arr(Perm<5>::orderedS5, 120);
-    GlobalArray<Perm<5>> Perm5_S4_arr(Perm<5>::S4, 24);
-    GlobalArray<Perm<5>> Perm5_orderedS4_arr(Perm<5>::orderedS4, 24);
-    GlobalArray<Perm<5>> Perm5_S3_arr(Perm<5>::S3, 6);
-    GlobalArray<Perm<5>> Perm5_orderedS3_arr(Perm<5>::orderedS3, 6);
-    GlobalArray<Perm<5>> Perm5_S2_arr(Perm<5>::S2, 2);
+    ConstArray<decltype(Perm<5>::S4)> Perm5_S4_arr(Perm<5>::S4, 24);
+    ConstArray<decltype(Perm<5>::orderedS4)>
+        Perm5_orderedS4_arr(Perm<5>::orderedS4, 24);
+    ConstArray<decltype(Perm<5>::S3)> Perm5_S3_arr(Perm<5>::S3, 6);
+    ConstArray<decltype(Perm<5>::orderedS3)>
+        Perm5_orderedS3_arr(Perm<5>::orderedS3, 6);
+    ConstArray<decltype(Perm<5>::S2)> Perm5_S2_arr(Perm<5>::S2, 2);
 
     template <int k>
     struct Perm5_contract {
@@ -73,6 +73,11 @@ namespace {
 void addPerm5(pybind11::module_& m) {
     decltype(Perm5_S5_arr)::wrapClass(m, "ConstArray_Perm5_S5");
     decltype(Perm5_orderedS5_arr)::wrapClass(m, "ConstArray_Perm5_orderedS5");
+    decltype(Perm5_S4_arr)::wrapClass(m, "ConstArray_Perm5_S4");
+    decltype(Perm5_orderedS4_arr)::wrapClass(m, "ConstArray_Perm5_orderedS4");
+    decltype(Perm5_S3_arr)::wrapClass(m, "ConstArray_Perm5_S3");
+    decltype(Perm5_orderedS3_arr)::wrapClass(m, "ConstArray_Perm5_orderedS3");
+    decltype(Perm5_S2_arr)::wrapClass(m, "ConstArray_Perm5_S2");
 
     auto c = pybind11::class_<Perm<5>>(m, "Perm5")
         .def(pybind11::init<>())
@@ -112,7 +117,8 @@ void addPerm5(pybind11::module_& m) {
         .def_static("extend", &Perm<5>::extend<2>)
         .def_static("extend", &Perm<5>::extend<3>)
         .def_static("extend", &Perm<5>::extend<4>)
-        .def_readonly_static("imageBits", &Perm<5>::imageBits)
+        .def_property_readonly_static("imageBits",
+            [](pybind11::object /* self */) { return Perm<5>::imageBits; })
         .def_property_readonly_static("nPerms",
             [](pybind11::object /* self */) { return Perm<5>::nPerms; })
         .def_property_readonly_static("nPerms_1",

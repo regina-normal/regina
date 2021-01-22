@@ -132,6 +132,48 @@ class REGINA_API Perm<4> {
             constexpr Perm<4> operator[] (int index) const;
         };
 
+        /**
+         * An array-like object used to implement Perm<4>::S3.
+         */
+        struct S3Lookup {
+            /**
+             * Returns the permutation at the given index in the array S3.
+             * See Perm<4>::S3 for details.
+             *
+             * @param index an index between 0 and 5 inclusive.
+             * @return the corresponding permutation in S3.
+             */
+            constexpr Perm<4> operator[] (int index) const;
+        };
+
+        /**
+         * An array-like object used to implement Perm<4>::orderedS3.
+         */
+        struct OrderedS3Lookup {
+            /**
+             * Returns the permutation at the given index in the array
+             * orderedS3.  See Perm<4>::orderedS3 for details.
+             *
+             * @param index an index between 0 and 5 inclusive.
+             * @return the corresponding permutation in orderedS3.
+             */
+            constexpr Perm<4> operator[] (int index) const;
+        };
+
+        /**
+         * An array-like object used to implement Perm<4>::S2.
+         */
+        struct S2Lookup {
+            /**
+             * Returns the permutation at the given index in the array S2.
+             * See Perm<4>::S2 for details.
+             *
+             * @param index an index between 0 and 1 inclusive.
+             * @return the corresponding permutation in S2.
+             */
+            constexpr Perm<4> operator[] (int index) const;
+        };
+
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -216,8 +258,18 @@ class REGINA_API Perm<4> {
         static constexpr OrderedS4Lookup orderedSn {};
 
         /**
-         * Contains all possible permutations of three elements.
-         * In each permutation, 3 maps to 3.
+         * Gives array-like access to all possible permutations of
+         * three elements.  In each permutation, 3 maps to 3.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>S3[i]</tt>.  The index \a i must be
+         * between 0 and 5 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -230,24 +282,44 @@ class REGINA_API Perm<4> {
          * Note that the permutations are not necessarily in
          * lexicographical order.
          */
-        static const Perm<4> S3[6];
+        static constexpr S3Lookup S3 {};
 
         /**
          * A dimension-agnostic alias for Perm<4>::S3.  In general, for
          * each \a K the class PermK will define an alias \a Sn_1
          * that references the list of all permutations PermK::S(K-1).
          */
-        static const Perm<4>* Sn_1;
+        static constexpr S3Lookup Sn_1 {};
 
         /**
-         * Contains all possible permutations of three elements in
-         * lexicographical order.  In each permutation, 3 maps to 3.
+         * Gives array-like access to all possible permutations of three
+         * elements in lexicographical order.  In each permutation, 3 maps to 3.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>orderedS3[i]</tt>.  The index \a i
+         * must be between 0 and 5 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          */
-        static const Perm<4> orderedS3[6];
+        static constexpr OrderedS3Lookup orderedS3 {};
 
         /**
-         * Contains all possible permutations of two elements.
-         * In each permutation, 2 maps to 2 and 3 maps to 3.
+         * Gives array-like access to all possible permutations of
+         * two elements.  In each permutation, 2 maps to 2 and 3 maps to 3.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>S2[i]</tt>.  The index \a i must be
+         * between 0 and 1 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -259,7 +331,7 @@ class REGINA_API Perm<4> {
          *
          * Note that these permutations are already in lexicographical order.
          */
-        static const Perm<4> S2[2];
+        static constexpr S2Lookup S2 {};
 
     private:
         Code code_;
@@ -861,6 +933,12 @@ class REGINA_API Perm<4> {
             { 21, 5,  1,  0 }
         };
 
+        /**
+         * Contains the S4 indices of the elements of S3, where the
+         * element 3 maps to itself.
+         */
+        static constexpr Code S3Table[6] = { 0, 3, 8, 7, 12, 15 };
+
     private:
         /**
          * Creates a permutation from the given second-generation
@@ -926,6 +1004,19 @@ inline constexpr Perm<4> Perm<4>::S4Lookup::operator[] (int index) const {
 inline constexpr Perm<4> Perm<4>::OrderedS4Lookup::operator[] (int index)
         const {
     return Perm<4>(static_cast<Code>(convOrderedUnordered(index)));
+}
+
+inline constexpr Perm<4> Perm<4>::S3Lookup::operator[] (int index) const {
+    return Perm<4>(S3Table[index]);
+}
+
+inline constexpr Perm<4> Perm<4>::OrderedS3Lookup::operator[] (int index)
+        const {
+    return Perm<4>(S3Table[Perm<3>::orderedS3[index].S3Index()]);
+}
+
+inline constexpr Perm<4> Perm<4>::S2Lookup::operator[] (int index) const {
+    return Perm<4>(index == 0 ? 0 : 7);
 }
 
 inline constexpr Perm<4>::Perm() : code_(0) {

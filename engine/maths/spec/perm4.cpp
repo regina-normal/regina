@@ -35,24 +35,6 @@
 
 namespace regina {
 
-const Perm<4> Perm<4>::S3[6] = {
-    Perm<4>(0,1,2,3), Perm<4>(0,2,1,3),
-    Perm<4>(1,2,0,3), Perm<4>(1,0,2,3),
-    Perm<4>(2,0,1,3), Perm<4>(2,1,0,3)
-};
-
-const Perm<4>* Perm<4>::Sn_1 = Perm<4>::S3;
-
-const Perm<4> Perm<4>::orderedS3[6] = {
-    Perm<4>(0,1,2,3), Perm<4>(0,2,1,3),
-    Perm<4>(1,0,2,3), Perm<4>(1,2,0,3),
-    Perm<4>(2,0,1,3), Perm<4>(2,1,0,3)
-};
-
-const Perm<4> Perm<4>::S2[2] = {
-    Perm<4>(0,1,2,3), Perm<4>(1,0,2,3)
-};
-
 Perm<4>::Perm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) {
     int image[4];
     image[a0] = a1;
