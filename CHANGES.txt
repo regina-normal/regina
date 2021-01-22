@@ -10,6 +10,7 @@ Regina - A Normal Surface Theory Calculator
 Version 6.1  [ TODO ]
 
     GENERAL:
+        - Now requires C++17 (not C++14).
         - Updated the bundled copy of Normaliz to version 3.8.9 (26 Sep 2020).
         - Updated the SnapPea kernel to the one shipped with SnapPy 2.8.
         - Regina no longer needs boost to build. It still ships the
