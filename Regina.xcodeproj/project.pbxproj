@@ -4695,6 +4695,7 @@
 				050F5DC81B9BAB9C00C1F681 /* foreign */,
 				05431FAB1C40F5B3009BC072 /* generic */,
 				050F5D1E1B9BAB9C00C1F681 /* globalarray.h */,
+				050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */,
 				05B22D0422D485ED0099008B /* gui */,
 				05431FA21C40F56E009BC072 /* helpers.h */,
 				05431FC71C40F5EE009BC072 /* helpers */,
@@ -4713,7 +4714,6 @@
 				050F5D841B9BAB9C00C1F681 /* testsuite */,
 				050F5DA61B9BAB9C00C1F681 /* treewidth */,
 				050F5DB91B9BAB9C00C1F681 /* utilities */,
-				050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */,
 			);
 			path = python;
 			sourceTree = "<group>";
