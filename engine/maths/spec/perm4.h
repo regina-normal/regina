@@ -115,7 +115,7 @@ class REGINA_API Perm<4> {
              * @param index an index between 0 and 23 inclusive.
              * @return the corresponding permutation in S4.
              */
-            Perm<4> operator[] (int index) const;
+            constexpr Perm<4> operator[] (int index) const;
         };
 
         /**
@@ -129,7 +129,7 @@ class REGINA_API Perm<4> {
              * @param index an index between 0 and 23 inclusive.
              * @return the corresponding permutation in orderedS4.
              */
-            Perm<4> operator[] (int index) const;
+            constexpr Perm<4> operator[] (int index) const;
         };
 
     public:
@@ -144,13 +144,13 @@ class REGINA_API Perm<4> {
          * The total number of permutations on four elements.
          * This is the size of the array Sn.
          */
-        static const Index nPerms = 24;
+        static constexpr Index nPerms = 24;
 
         /**
          * The total number of permutations on three elements.
          * This is the size of the array Sn_1.
          */
-        static const Index nPerms_1 = 6;
+        static constexpr Index nPerms_1 = 6;
 
         /**
          * Indicates the native unsigned integer type used to store the
@@ -270,7 +270,7 @@ class REGINA_API Perm<4> {
         /**
          * Creates the identity permutation.
          */
-        Perm();
+        constexpr Perm();
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -281,7 +281,7 @@ class REGINA_API Perm<4> {
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
-        Perm(int a, int b);
+        constexpr Perm(int a, int b);
 
         /**
          * Creates a permutation mapping (0,1,2,3) to
@@ -294,7 +294,7 @@ class REGINA_API Perm<4> {
          * @param c the desired image of 2.
          * @param d the desired image of 3.
          */
-        Perm(int a, int b, int c, int d);
+        constexpr Perm(int a, int b, int c, int d);
 
         /**
          * Creates a permutation mapping \a i to \a image[i] for each
@@ -307,7 +307,7 @@ class REGINA_API Perm<4> {
          *
          * @param image the array of images.
          */
-        Perm(const int* image);
+        constexpr Perm(const int* image);
 
         /**
          * Creates a permutation mapping (\a a[0], ..., \a a[3]) to
@@ -350,7 +350,7 @@ class REGINA_API Perm<4> {
          *
          * @param cloneMe the permutation to clone.
          */
-        Perm(const Perm<4>& cloneMe) = default;
+        constexpr Perm(const Perm<4>& cloneMe) = default;
 
         /**
          * Returns the first-generation code representing this permutation.
@@ -365,7 +365,7 @@ class REGINA_API Perm<4> {
          *
          * @return the first-generation permutation code.
          */
-        Code permCode() const;
+        constexpr Code permCode() const;
 
         /**
          * Returns the second-generation code representing this permutation.
@@ -379,7 +379,7 @@ class REGINA_API Perm<4> {
          *
          * @return the second-generation permutation code.
          */
-        Code permCode2() const;
+        constexpr Code permCode2() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -426,7 +426,7 @@ class REGINA_API Perm<4> {
          * @param code the first-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static Perm<4> fromPermCode(Code code);
+        static constexpr Perm<4> fromPermCode(Code code);
 
         /**
          * Creates a permutation from the given second-generation
@@ -441,7 +441,7 @@ class REGINA_API Perm<4> {
          * @param code the second-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static Perm<4> fromPermCode2(Code code);
+        static constexpr Perm<4> fromPermCode2(Code code);
 
         /**
          * Determines whether the given character is a valid first-generation
@@ -456,7 +456,7 @@ class REGINA_API Perm<4> {
          * @return \c true if and only if the given code is a valid
          * first-generation permutation code.
          */
-        static bool isPermCode(Code code);
+        static constexpr bool isPermCode(Code code);
 
         /**
          * Determines whether the given character is a valid second-generation
@@ -470,7 +470,7 @@ class REGINA_API Perm<4> {
          * @return \c true if and only if the given code is a valid
          * second-generation permutation code.
          */
-        static bool isPermCode2(Code code);
+        static constexpr bool isPermCode2(Code code);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -490,14 +490,14 @@ class REGINA_API Perm<4> {
          * @param q the permutation with which to compose this.
          * @return the composition of both permutations.
          */
-        Perm<4> operator *(const Perm<4>& q) const;
+        constexpr Perm<4> operator *(const Perm<4>& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
          * @return the inverse of this permutation.
          */
-        Perm<4> inverse() const;
+        constexpr Perm<4> inverse() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -506,7 +506,7 @@ class REGINA_API Perm<4> {
          * In other words, if permutation \a q is the
          * reverse of \a p, then <tt>p[i] == q[3 - i]</tt> for all \a i.
          */
-        Perm<4> reverse() const;
+        constexpr Perm<4> reverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -514,7 +514,7 @@ class REGINA_API Perm<4> {
          * @return 1 if this permutation is even, or -1 if this
          * permutation is odd.
          */
-        int sign() const;
+        constexpr int sign() const;
 
         /**
          * Determines the image of the given integer under this
@@ -524,7 +524,7 @@ class REGINA_API Perm<4> {
          * should be between 0 and 3 inclusive.
          * @return the image of \a source.
          */
-        int operator[](int source) const;
+        constexpr int operator[](int source) const;
 
         /**
          * Determines the preimage of the given integer under this
@@ -534,7 +534,7 @@ class REGINA_API Perm<4> {
          * should be between 0 and 3 inclusive.
          * @return the preimage of \a image.
          */
-        int preImageOf(int image) const;
+        constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -545,7 +545,7 @@ class REGINA_API Perm<4> {
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
-        bool operator == (const Perm<4>& other) const;
+        constexpr bool operator == (const Perm<4>& other) const;
 
         /**
          * Determines if this differs from the given permutation.
@@ -556,7 +556,7 @@ class REGINA_API Perm<4> {
          * @return \c true if and only if this and the given permutation
          * differ.
          */
-        bool operator != (const Perm<4>& other) const;
+        constexpr bool operator != (const Perm<4>& other) const;
 
         /**
          * Lexicographically compares the images of (0,1,2,3) under this
@@ -567,7 +567,7 @@ class REGINA_API Perm<4> {
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
          */
-        int compareWith(const Perm<4>& other) const;
+        constexpr int compareWith(const Perm<4>& other) const;
 
         /**
          * Determines if this is the identity permutation.
@@ -577,7 +577,7 @@ class REGINA_API Perm<4> {
          * @return \c true if and only if this is the identity
          * permutation.
          */
-        bool isIdentity() const;
+        constexpr bool isIdentity() const;
 
         /**
          * Returns the <i>i</i>th permutation on four elements, where
@@ -592,7 +592,7 @@ class REGINA_API Perm<4> {
          * must be between 0 and 23 inclusive.
          * @return the <i>i</i>th permutation.
          */
-        static Perm atIndex(Index i);
+        static constexpr Perm atIndex(Index i);
 
         /**
          * Returns the lexicographical index of this permutation.  This
@@ -610,7 +610,7 @@ class REGINA_API Perm<4> {
          * @return the index of this permutation, which will be between
          * 0 and 23 inclusive.
          */
-        Index index() const;
+        constexpr Index index() const;
 
         /**
          * Returns a random permutation on four elements.
@@ -717,7 +717,7 @@ class REGINA_API Perm<4> {
          * @return the index \a i for which this permutation is equal to
          * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
          */
-        int S4Index() const;
+        constexpr int S4Index() const;
 
         /**
          * Returns the index of this permutation in the Perm<4>::S4 array.
@@ -726,7 +726,7 @@ class REGINA_API Perm<4> {
          * @return the index \a i for which this permutation is equal to
          * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
          */
-        int SnIndex() const;
+        constexpr int SnIndex() const;
 
         /**
          * Returns the index of this permutation in the Perm<4>::orderedS4 array.
@@ -735,7 +735,7 @@ class REGINA_API Perm<4> {
          * Perm<4>::orderedS4[i].  This will be between 0 and 23 inclusive.
          */
         REGINA_INLINE_REQUIRED
-        int orderedS4Index() const;
+        constexpr int orderedS4Index() const;
 
         /**
          * Returns the index of this permutation in the Perm<4>::orderedS4 array.
@@ -744,7 +744,7 @@ class REGINA_API Perm<4> {
          * @return the index \a i for which this permutation is equal to
          * Perm<4>::orderedS4[i].  This will be between 0 and 23 inclusive.
          */
-        int orderedSnIndex() const;
+        constexpr int orderedSnIndex() const;
 
         /**
          * Extends a <i>k</i>-element permutation to a 4-element permutation,
@@ -792,7 +792,7 @@ class REGINA_API Perm<4> {
          * Specifically, the image of \a x under the permutation <tt>S4[i]</tt>
          * is <tt>imageTable[i][x]</tt>.
          */
-        static constexpr Code imageTable[24][4] =
+        static constexpr Code imageTable[24][4] = {
             { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 0, 2, 3, 1 }, { 0, 2, 1, 3 },
             { 0, 3, 1, 2 }, { 0, 3, 2, 1 }, { 1, 0, 3, 2 }, { 1, 0, 2, 3 },
             { 1, 2, 0, 3 }, { 1, 2, 3, 0 }, { 1, 3, 2, 0 }, { 1, 3, 0, 2 },
@@ -872,7 +872,7 @@ class REGINA_API Perm<4> {
          * @param code the second-generation code from which the new
          * permutation will be created.
          */
-        Perm<4>(Code code);
+        constexpr Perm<4>(Code code);
 
         /**
          * Returns the index into the Perm<4>::S4 array of the permutation that
@@ -888,7 +888,7 @@ class REGINA_API Perm<4> {
          * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
          */
         REGINA_INLINE_REQUIRED
-        static int S4Index(int a, int b, int c, int d);
+        static constexpr int S4Index(int a, int b, int c, int d);
 
         /**
          * Converts between an index into Perm<4>::S4 and an index into
@@ -898,7 +898,7 @@ class REGINA_API Perm<4> {
          * either \c int or \a Code.
          */
         template <typename Int>
-        static Int convOrderedUnordered(Int index);
+        static constexpr Int convOrderedUnordered(Int index);
 };
 
 // Routines for constructing the permutations associated to
@@ -909,7 +909,7 @@ class REGINA_API Perm<4> {
 // Inline functions for Perm<4>
 
 template <typename Int>
-inline Int Perm<4>::convOrderedUnordered(Int index) {
+inline constexpr Int Perm<4>::convOrderedUnordered(Int index) {
     // S4 is almost the same as orderedS4, except that some pairs
     // S4[2i] <--> S4[2i+1] have been swapped to ensure that all
     // permutations S4[2i] are even and all permutations S4[2i+1] are odd.
@@ -919,33 +919,34 @@ inline Int Perm<4>::convOrderedUnordered(Int index) {
     return ((index & 2) ? (index ^ 1) : index);
 }
 
-inline Perm<4> Perm<4>::S4Lookup::operator[] (int index) const {
+inline constexpr Perm<4> Perm<4>::S4Lookup::operator[] (int index) const {
     return Perm<4>(static_cast<Code>(index));
 }
 
-inline Perm<4> Perm<4>::OrderedS4Lookup::operator[] (int index) const {
+inline constexpr Perm<4> Perm<4>::OrderedS4Lookup::operator[] (int index)
+        const {
     return Perm<4>(static_cast<Code>(convOrderedUnordered(index)));
 }
 
-inline Perm<4>::Perm() : code_(0) {
+inline constexpr Perm<4>::Perm() : code_(0) {
 }
 
-inline Perm<4>::Perm(Code code) : code_(code) {
+inline constexpr Perm<4>::Perm(Code code) : code_(code) {
 }
 
-inline Perm<4>::Perm(int a, int b) : code_(swapTable[a][b]) {
+inline constexpr Perm<4>::Perm(int a, int b) : code_(swapTable[a][b]) {
 }
 
-inline Perm<4>::Perm(int a, int b, int c, int d) :
+inline constexpr Perm<4>::Perm(int a, int b, int c, int d) :
         code_(static_cast<Code>(S4Index(a, b, c, d))) {
 }
 
-inline Perm<4>::Perm(const int* image) :
+inline constexpr Perm<4>::Perm(const int* image) :
         code_(static_cast<Code>(S4Index(
         image[0], image[1], image[2], image[3]))) {
 }
 
-inline Perm<4>::Code Perm<4>::permCode() const {
+inline constexpr Perm<4>::Code Perm<4>::permCode() const {
     return static_cast<Code>(
         imageTable[code_][0] |
         (imageTable[code_][1] << 2) |
@@ -953,7 +954,7 @@ inline Perm<4>::Code Perm<4>::permCode() const {
         (imageTable[code_][3] << 6));
 }
 
-inline Perm<4>::Code Perm<4>::permCode2() const {
+inline constexpr Perm<4>::Code Perm<4>::permCode2() const {
     return code_;
 }
 
@@ -969,7 +970,7 @@ inline void Perm<4>::setPermCode2(Code code) {
     code_ = code;
 }
 
-inline Perm<4> Perm<4>::fromPermCode(Code code) {
+inline constexpr Perm<4> Perm<4>::fromPermCode(Code code) {
     return Perm<4>(static_cast<Code>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
@@ -977,11 +978,11 @@ inline Perm<4> Perm<4>::fromPermCode(Code code) {
         (code >> 6) & 0x03)));
 }
 
-inline Perm<4> Perm<4>::fromPermCode2(Code code) {
+inline constexpr Perm<4> Perm<4>::fromPermCode2(Code code) {
     return Perm<4>(code);
 }
 
-inline bool Perm<4>::isPermCode(Code code) {
+inline constexpr bool Perm<4>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));
@@ -989,37 +990,37 @@ inline bool Perm<4>::isPermCode(Code code) {
     return (mask == 15);
 }
 
-inline bool Perm<4>::isPermCode2(Code code) {
+inline constexpr bool Perm<4>::isPermCode2(Code code) {
     // code >= 0 is automatic because we are using an unsigned data type.
     return (code < 24);
 }
 
-inline Perm<4> Perm<4>::operator *(const Perm<4>& q) const {
+inline constexpr Perm<4> Perm<4>::operator *(const Perm<4>& q) const {
     return Perm<4>(productTable[code_][q.code_]);
 }
 
-inline Perm<4> Perm<4>::inverse() const {
+inline constexpr Perm<4> Perm<4>::inverse() const {
     return Perm<4>(invS4[code_]);
 }
 
-inline Perm<4> Perm<4>::reverse() const {
+inline constexpr Perm<4> Perm<4>::reverse() const {
     // p becomes p * 3210 (which has second-generation code 22).
     return Perm<4>(productTable[code_][22]);
 }
 
-inline int Perm<4>::sign() const {
+inline constexpr int Perm<4>::sign() const {
     return (code_ % 2 ? -1 : 1);
 }
 
-inline int Perm<4>::operator[](int source) const {
+inline constexpr int Perm<4>::operator[](int source) const {
     return imageTable[code_][source];
 }
 
-inline int Perm<4>::preImageOf(int image) const {
+inline constexpr int Perm<4>::preImageOf(int image) const {
     return imageTable[invS4[code_]][image];
 }
 
-inline int Perm<4>::compareWith(const Perm<4>& other) const {
+inline constexpr int Perm<4>::compareWith(const Perm<4>& other) const {
     // Computing orderedS4Index() is very fast, now that we use S4 indices
     // for internal permutation codes.  Use this instead of comparing images
     // one at a time.
@@ -1028,15 +1029,15 @@ inline int Perm<4>::compareWith(const Perm<4>& other) const {
     return (o1 == o2 ? 0 : o1 < o2 ? -1 : 1);
 }
 
-inline bool Perm<4>::isIdentity() const {
+inline constexpr bool Perm<4>::isIdentity() const {
     return (code_ == 0);
 }
 
-inline Perm<4> Perm<4>::atIndex(Index i) {
+inline constexpr Perm<4> Perm<4>::atIndex(Index i) {
     return orderedS4[i];
 }
 
-inline Perm<4>::Index Perm<4>::index() const {
+inline constexpr Perm<4>::Index Perm<4>::index() const {
     return orderedS4Index();
 }
 
@@ -1056,27 +1057,27 @@ inline Perm<4> Perm<4>::rand(URBG&& gen, bool even) {
     }
 }
 
-inline bool Perm<4>::operator == (const Perm<4>& other) const {
+inline constexpr bool Perm<4>::operator == (const Perm<4>& other) const {
     return (code_ == other.code_);
 }
 
-inline bool Perm<4>::operator != (const Perm<4>& other) const {
+inline constexpr bool Perm<4>::operator != (const Perm<4>& other) const {
     return (code_ != other.code_);
 }
 
-inline int Perm<4>::S4Index() const {
+inline constexpr int Perm<4>::S4Index() const {
     return code_;
 }
 
-inline int Perm<4>::orderedS4Index() const {
+inline constexpr int Perm<4>::orderedS4Index() const {
     return convOrderedUnordered(code_);
 }
 
-inline int Perm<4>::orderedSnIndex() const {
+inline constexpr int Perm<4>::orderedSnIndex() const {
     return orderedS4Index();
 }
 
-inline int Perm<4>::S4Index(int a, int b, int c, int d) {
+inline constexpr int Perm<4>::S4Index(int a, int b, int c, int d) {
     // First compute the ordered S4 index.
     int ans = 6 * a +
               2 * (b - (b > a ? 1 : 0)) +
@@ -1086,7 +1087,7 @@ inline int Perm<4>::S4Index(int a, int b, int c, int d) {
     return convOrderedUnordered(ans);
 }
 
-inline int Perm<4>::SnIndex() const {
+inline constexpr int Perm<4>::SnIndex() const {
     return S4Index();
 }
 

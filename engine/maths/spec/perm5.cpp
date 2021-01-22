@@ -35,8 +35,6 @@
 
 namespace regina {
 
-const int Perm<5>::imageBits;
-
 const Perm<5> Perm<5>::S4[24] = {
     Perm<5>(0,1,2,3,4), Perm<5>(0,1,3,2,4), Perm<5>(0,2,3,1,4), Perm<5>(0,2,1,3,4),
     Perm<5>(0,3,1,2,4), Perm<5>(0,3,2,1,4), Perm<5>(1,0,3,2,4), Perm<5>(1,0,2,3,4),
