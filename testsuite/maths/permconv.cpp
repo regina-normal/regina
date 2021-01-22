@@ -95,6 +95,16 @@ class PermConvTest : public CppUnit::TestFixture {
                             << "> -> Perm<" << b << "> conversion.";
                         CPPUNIT_FAIL(msg.str());
                     }
+
+                    Perm<b> r = p;
+                    r.clear(a);
+                    if (! (p == r && p.str() == r.str())) {
+                        std::ostringstream msg;
+                        msg << "Permutation #" << i << " is changed after "
+                            "clearing positions " << a << " onwards.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+
                     ++done;
                 }
                 // Does it look like we tested everything that maps a,...,b-1
