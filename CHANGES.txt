@@ -17,34 +17,16 @@ Version 6.1  [ TODO ]
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
     ENGINE:
-        Class Perm<2>:
-            - The constant arrays invS2 and invSn have been removed completely.
+        Class Perm<n>:
+            - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
-              needed invS2[i], use S2[i].inverse().S2Index() instead.
-            - Replaced the lookup tables S2, S1 and orderedS2 with lightweight
-              objects whose square bracket operators compute the relevant
-              permutations on the fly (and very quickly).
-            - Almost everything in this class is now constexpr.
-        Class Perm<3>:
-            - The constant arrays invS3 and invSn have been removed completely.
-              Calling perm.inverse() directly is just as fast.  If you really
-              needed invS3[i], use S3[i].inverse().S3Index() instead.
-            - Replaced the lookup tables S3 and orderedS3 with lightweight
-              objects whose square bracket operators compute the relevant
-              permutations on the fly (and very quickly).
-            - Almost everything in this class is now constexpr.
-        Class Perm<4>:
-            - The constant arrays invS4 and invSn have been removed completely.
-              Calling perm.inverse() directly is just as fast.  If you really
-              needed invS4[i], use S4[i].inverse().S4Index() instead.
-            - Replaced the lookup tables S4 and orderedS4 with lightweight
-              objects whose square bracket operators compute the relevant
-              permutations on the fly (and very quickly).
-            - Almost everything in this class is now constexpr.
+              needed invSn[i], use Sn[i].inverse().SnIndex() instead.
+            - Replaced lookup tables S1, S2, S3, ..., orderedS2, orderedS3, ...
+              with lightweight objects whose square bracket operators compute
+              and/or look up the relevant permutations on the fly.
+            - Almost everything in the permutation classes is now constexpr.
         Class Perm<5>:
-            - The constant arrays invS5 and invSn have been removed completely.
-              Calling perm.inverse() directly is just as fast.  If you really
-              needed invS5[i], use S5[i].inverse().S5Index() instead.
+            - All of the changes listed for Perm<n> above.
             - Changed the internal representation; as a result there are new
               routines permCode2(), fromPermCode2(), setPermCode2() and
               isPermCode2(), and a new type Code2.  The old first-generation
@@ -52,12 +34,6 @@ Version 6.1  [ TODO ]
               isPermCode()) are slower to work with, and should be avoided.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
-            - Replaced the lookup tables S5 and orderedS5 with lightweight
-              objects whose square bracket operators compute the relevant
-              permutations on the fly (and very quickly).
-            - Almost everything in this class is now constexpr.
-        Class Perm<6..16>:
-            - Almost everything in this class is now constexpr.
         Class Triangulation<3>:
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as

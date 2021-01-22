@@ -57,7 +57,7 @@
 namespace regina {
 
 template <int k>
-inline Perm<2> Perm<2>::contract(Perm<k> p) {
+inline constexpr Perm<2> Perm<2>::contract(Perm<k> p) {
     static_assert(k >= 6, "The generic implementation of Perm<2>::contract<k> "
         "requires k >= 6.");
 
@@ -65,17 +65,17 @@ inline Perm<2> Perm<2>::contract(Perm<k> p) {
 }
 
 template <>
-inline Perm<2> Perm<2>::contract(Perm<3> p) {
+inline constexpr Perm<2> Perm<2>::contract(Perm<3> p) {
     return Perm<2>(static_cast<Code>(p.permCode() == 0 ? 0 : 1));
 }
 
 template <>
-inline Perm<2> Perm<2>::contract(Perm<4> p) {
+inline constexpr Perm<2> Perm<2>::contract(Perm<4> p) {
     return Perm<2>(static_cast<Code>(p.permCode2() < 6 ? 0 : 1));
 }
 
 template <>
-inline Perm<2> Perm<2>::contract(Perm<5> p) {
+inline constexpr Perm<2> Perm<2>::contract(Perm<5> p) {
     return Perm<2>(static_cast<Code>(p.permCode2() < 24 ? 0 : 1));
 }
 
@@ -85,13 +85,13 @@ inline void Perm<2>::clear(unsigned from) {
 }
 
 template <>
-inline Perm<3> Perm<3>::extend(Perm<2> p) {
+inline constexpr Perm<3> Perm<3>::extend(Perm<2> p) {
     return Perm<3>(static_cast<Code>(
         p.permCode() == 0 ? code012 : code102));
 }
 
 template <int k>
-inline Perm<3> Perm<3>::contract(Perm<k> p) {
+inline constexpr Perm<3> Perm<3>::contract(Perm<k> p) {
     static_assert(k >= 5, "The generic implementation of Perm<3>::contract<k> "
         "requires k >= 5.");
 
@@ -99,7 +99,7 @@ inline Perm<3> Perm<3>::contract(Perm<k> p) {
 }
 
 template <>
-inline Perm<3> Perm<3>::contract(Perm<4> p) {
+inline constexpr Perm<3> Perm<3>::contract(Perm<4> p) {
     // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
     Perm<4>::Code c = p.permCode2();
     return Perm<3>::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
@@ -111,22 +111,18 @@ inline void Perm<3>::clear(unsigned from) {
 }
 
 template <>
-inline Perm<4> Perm<4>::extend(Perm<2> p) {
+inline constexpr Perm<4> Perm<4>::extend(Perm<2> p) {
     return Perm<4>(static_cast<Code>(p.permCode() == 0 ? 0 : 7));
 }
 
 template <>
-inline Perm<4> Perm<4>::extend(Perm<3> p) {
-    // Code map: 0,1,2,3,4,5 -> 0,3,8,7,12,15.
-    switch (p.permCode()) {
-        case 2 : return Perm<4>(static_cast<Code>(8));
-        case 3 : return Perm<4>(static_cast<Code>(7));
-        default : return Perm<4>(static_cast<Code>(3 * p.permCode()));
-    }
+inline constexpr Perm<4> Perm<4>::extend(Perm<3> p) {
+    // This is implemented as an array lookup.
+    return Perm<4>::S3[p.S3Index()];
 }
 
 template <int k>
-inline Perm<4> Perm<4>::contract(Perm<k> p) {
+inline constexpr Perm<4> Perm<4>::contract(Perm<k> p) {
     static_assert(k >= 5, "The generic implementation of Perm<4>::contract<k> "
         "requires k >= 5.");
 
@@ -141,33 +137,24 @@ inline void Perm<4>::clear(unsigned from) {
 }
 
 template <>
-inline Perm<5> Perm<5>::extend(Perm<2> p) {
+inline constexpr Perm<5> Perm<5>::extend(Perm<2> p) {
     return Perm<5>(static_cast<Code>(p.permCode() == 0 ? 0 : 25));
 }
 
 template <>
-inline Perm<5> Perm<5>::extend(Perm<3> p) {
-    // Code map: 0,1,2,3,4,5 -> 0,7,30,25,48,55.
-    switch (p.permCode()) {
-        case 0 : return Perm<5>(static_cast<Code2>(0));
-        case 1 : return Perm<5>(static_cast<Code2>(7));
-        case 2 : return Perm<5>(static_cast<Code2>(30));
-        case 3 : return Perm<5>(static_cast<Code2>(25));
-        case 4 : return Perm<5>(static_cast<Code2>(48));
-        case 5 : return Perm<5>(static_cast<Code2>(55));
-        default : return Perm<5>(); // should never happen
-    }
+inline constexpr Perm<5> Perm<5>::extend(Perm<3> p) {
+    // This is implemented as an array lookup.
+    return Perm<5>::S3[p.S3Index()];
 }
 
 template <>
-inline Perm<5> Perm<5>::extend(Perm<4> p) {
-    // Note that, if we decide to use p.permCode() in some later implementation,
-    // we should actually use p.permCode2().
-    return Perm<5>(p[0], p[1], p[2], p[3], 4);
+inline constexpr Perm<5> Perm<5>::extend(Perm<4> p) {
+    // This is implemented as an array lookup.
+    return Perm<5>::S4[p.S4Index()];
 }
 
 template <int k>
-Perm<5> Perm<5>::contract(Perm<k> p) {
+constexpr Perm<5> Perm<5>::contract(Perm<k> p) {
     static_assert(k > 5, "Perm<5>::contract<k> requires k > 5.");
 
     return Perm<5>(p[0], p[1], p[2], p[3], p[4]);
@@ -186,7 +173,7 @@ inline void Perm<5>::clear(unsigned from) {
 
 template <int n>
 template <int k>
-Perm<n> Perm<n>::extend(Perm<k> p) {
+constexpr Perm<n> Perm<n>::extend(Perm<k> p) {
     static_assert(k < n, "Perm<n>::extend<k> requires k < n.");
 
     // TODO: Reimplement this to replace the first loop with a direct
@@ -205,7 +192,7 @@ Perm<n> Perm<n>::extend(Perm<k> p) {
 
 template <int n>
 template <int k>
-Perm<n> Perm<n>::contract(Perm<k> p) {
+constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
     static_assert(n < k, "Perm<n>::contract<k> requires n < k.");
 
     // TODO: Reimplement this to directly truncate p's code, in the case

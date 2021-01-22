@@ -676,7 +676,7 @@ class REGINA_API Perm<3> {
          * three elements.
          */
         template <int k>
-        static Perm<3> extend(Perm<k> p);
+        static constexpr Perm<3> extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to an 3-element
@@ -696,7 +696,7 @@ class REGINA_API Perm<3> {
          * 3 elements.
          */
         template <int k>
-        static Perm<3> contract(Perm<k> p);
+        static constexpr Perm<3> contract(Perm<k> p);
 
     private:
         /**

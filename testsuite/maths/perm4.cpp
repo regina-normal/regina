@@ -51,6 +51,8 @@ class Perm4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(databases);
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(S2);
+    CPPUNIT_TEST(S3);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -601,6 +603,45 @@ class Perm4Test : public CppUnit::TestFixture {
                         "gives the wrong result.";
                     CPPUNIT_FAIL(msg.str());
                 }
+            }
+        }
+
+        void S2() {
+            for (unsigned i = 0; i < 2; ++i) {
+                if (! looksEqual(Perm<4>::S2[i],
+                        Perm<4>::extend(Perm<2>::S2[i])))
+                    CPPUNIT_FAIL("S2 permutations do not match "
+                        "Perm<2> extensions.");
+                if (Perm<2>::S2[i] != Perm<2>::contract(Perm<4>::S2[i]))
+                    CPPUNIT_FAIL("Contracted S2 permutations do not "
+                        "match Perm<2>.");
+            }
+        }
+
+        void S3() {
+            for (unsigned i = 0; i < 6; ++i) {
+                if (! looksEqual(Perm<4>::S3[i],
+                        Perm<4>::extend(Perm<3>::S3[i])))
+                    CPPUNIT_FAIL("S3 permutations do not match "
+                        "Perm<3> extensions.");
+                if (! looksEqual(Perm<4>::Sn_1[i],
+                        Perm<4>::extend(Perm<3>::S3[i])))
+                    CPPUNIT_FAIL("S3 permutations do not match "
+                        "Perm<3> extensions.");
+                if (! looksEqual(Perm<4>::orderedS3[i],
+                        Perm<4>::extend(Perm<3>::orderedS3[i])))
+                    CPPUNIT_FAIL("S3 permutations do not match "
+                        "Perm<3> extensions.");
+                if (Perm<3>::S3[i] != Perm<3>::contract(Perm<4>::S3[i]))
+                    CPPUNIT_FAIL("Contracted S3 permutations do not "
+                        "match Perm<3>.");
+                if (Perm<3>::S3[i] != Perm<3>::contract(Perm<4>::Sn_1[i]))
+                    CPPUNIT_FAIL("Contracted S3 permutations do not "
+                        "match Perm<3>.");
+                if (Perm<3>::orderedS3[i] !=
+                        Perm<3>::contract(Perm<4>::orderedS3[i]))
+                    CPPUNIT_FAIL("Contracted S3 permutations do not "
+                        "match Perm<3>.");
             }
         }
 };

@@ -589,7 +589,7 @@ class REGINA_API Perm<2> {
          * 2 elements.
          */
         template <int k>
-        static Perm<2> contract(Perm<k> p);
+        static constexpr Perm<2> contract(Perm<k> p);
 
     private:
         /**
