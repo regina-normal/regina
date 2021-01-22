@@ -51,6 +51,7 @@ class Perm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(S2);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -535,6 +536,25 @@ class Perm3Test : public CppUnit::TestFixture {
                 p.clear(3);
                 if (! looksEqual(p, Perm<3>::Sn[i]))
                     CPPUNIT_FAIL("Wrong result for clear(3).");
+            }
+        }
+
+        void S2() {
+            for (unsigned i = 0; i < 2; ++i) {
+                if (! looksEqual(Perm<3>::S2[i],
+                        Perm<3>::extend(Perm<2>::S2[i])))
+                    CPPUNIT_FAIL("S2 permutations do not match "
+                        "Perm<2> extensions.");
+                if (! looksEqual(Perm<3>::Sn_1[i],
+                        Perm<3>::extend(Perm<2>::S2[i])))
+                    CPPUNIT_FAIL("S2 permutations do not match "
+                        "Perm<2> extensions.");
+                if (Perm<2>::S2[i] != Perm<2>::contract(Perm<3>::S2[i]))
+                    CPPUNIT_FAIL("Contracted S2 permutations do not "
+                        "match Perm<2>.");
+                if (Perm<2>::S2[i] != Perm<2>::contract(Perm<3>::Sn_1[i]))
+                    CPPUNIT_FAIL("Contracted S2 permutations do not "
+                        "match Perm<2>.");
             }
         }
 };
