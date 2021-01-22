@@ -46,7 +46,6 @@ namespace {
         Perm3_S3_arr(Perm<3>::S3, 6);
     ConstArray<decltype(Perm<3>::orderedS3)>
         Perm3_orderedS3_arr(Perm<3>::orderedS3, 6);
-    GlobalArray<unsigned> Perm3_invS3_arr(Perm<3>::invS3, 6);
     GlobalArray<Perm<3>> Perm3_S2_arr(Perm<3>::S2, 2);
 
     template <int k>
@@ -106,8 +105,6 @@ void addPerm3(pybind11::module_& m) {
         .def_readonly_static("Sn", &Perm3_S3_arr)
         .def_readonly_static("orderedS3", &Perm3_orderedS3_arr)
         .def_readonly_static("orderedSn", &Perm3_orderedS3_arr)
-        .def_readonly_static("invS3", &Perm3_invS3_arr)
-        .def_readonly_static("invSn", &Perm3_invS3_arr)
         .def_readonly_static("S2", &Perm3_S2_arr)
         .def_readonly_static("Sn_1", &Perm3_S2_arr)
     ;

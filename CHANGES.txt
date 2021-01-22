@@ -17,18 +17,31 @@ Version 6.1  [ TODO ]
           these not compiled into Regina itself, and are not actively tested.
     ENGINE:
         Class Perm<2>:
+            - The constant arrays invS2 and invSn have been removed completely.
+              Calling perm.inverse() directly is just as fast.  If you really
+              needed invS2[i], use S2[i].inverse().S2Index() instead.
             - Replaced the lookup tables S2, S1 and orderedS2 with lightweight
               objects whose square bracket operators compute the relevant
               permutations on the fly (and very quickly).
+            - Almost everything in this class is now constexpr.
         Class Perm<3>:
+            - The constant arrays invS3 and invSn have been removed completely.
+              Calling perm.inverse() directly is just as fast.  If you really
+              needed invS3[i], use S3[i].inverse().S3Index() instead.
             - Replaced the lookup tables S3 and orderedS3 with lightweight
               objects whose square bracket operators compute the relevant
               permutations on the fly (and very quickly).
         Class Perm<4>:
+            - The constant arrays invS4 and invSn have been removed completely.
+              Calling perm.inverse() directly is just as fast.  If you really
+              needed invS4[i], use S4[i].inverse().S4Index() instead.
             - Replaced the lookup tables S4 and orderedS4 with lightweight
               objects whose square bracket operators compute the relevant
               permutations on the fly (and very quickly).
         Class Perm<5>:
+            - The constant arrays invS5 and invSn have been removed completely.
+              Calling perm.inverse() directly is just as fast.  If you really
+              needed invS5[i], use S5[i].inverse().S5Index() instead.
             - Changed the internal representation; as a result there are new
               routines permCode2(), fromPermCode2(), setPermCode2() and
               isPermCode2(), and a new type Code2.  The old first-generation

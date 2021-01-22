@@ -42,7 +42,6 @@ class Perm2Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Perm2Test);
 
     CPPUNIT_TEST(permCode);
-    CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(swaps);
@@ -69,18 +68,6 @@ class Perm2Test : public CppUnit::TestFixture {
                     std::ostringstream msg;
                     msg << "Permutation #" << i
                         << " has incorrect permutation code " << code << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
-        void inverse() {
-            for (int i = 0; i < 2; i++) {
-                if (Perm<2>::S2[i].inverse() != Perm<2>::S2[Perm<2>::invS2[i]]) {
-                    std::ostringstream msg;
-                    msg << "Permutation #" << i << " was found to have "
-                        "inverse " << Perm<2>::S2[i].inverse() <<
-                        " instead of " << Perm<2>::S2[Perm<2>::invS2[i]] << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

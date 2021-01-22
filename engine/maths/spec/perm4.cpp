@@ -38,7 +38,7 @@ namespace regina {
 const Perm<4>::Index Perm<4>::nPerms;
 const Perm<4>::Index Perm<4>::nPerms_1;
 
-const unsigned Perm<4>::invS4[24] = {
+const Perm<4>::Code Perm<4>::invS4[24] = {
     0, 1, 4, 3,
     2, 5, 6, 7,
     12, 19, 18, 13,
@@ -46,8 +46,6 @@ const unsigned Perm<4>::invS4[24] = {
     16, 23, 10, 9,
     14, 21, 22, 17
 };
-
-const unsigned* Perm<4>::invSn = Perm<4>::invS4;
 
 const Perm<4> Perm<4>::S3[6] = {
     Perm<4>(0,1,2,3), Perm<4>(0,2,1,3),

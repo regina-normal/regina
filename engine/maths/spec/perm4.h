@@ -193,21 +193,6 @@ class REGINA_API Perm<4> {
         static constexpr S4Lookup Sn {};
 
         /**
-         * Contains the inverses of the permutations in the array \a S4.
-         *
-         * Specifically, the inverse of permutation <tt>S4[i]</tt> is
-         * the permutation <tt>S4[ invS4[i] ]</tt>.
-         */
-        static const unsigned invS4[24];
-
-        /**
-         * A dimension-agnostic alias for Perm<4>::invS4.  In general, for
-         * each \a K the class PermK will define an alias \a invSn
-         * that references the list of all permutations PermK::invSK.
-         */
-        static const unsigned* invSn;
-
-        /**
          * Gives array-like access to all possible permutations of four
          * elements in lexicographical order.
          *
@@ -243,8 +228,7 @@ class REGINA_API Perm<4> {
          * of course using different data types).
          *
          * Note that the permutations are not necessarily in
-         * lexicographical order.  For the corresponding inverse array,
-         * see Perm<3>::invS3.
+         * lexicographical order.
          */
         static const Perm<4> S3[6];
 
@@ -811,6 +795,14 @@ class REGINA_API Perm<4> {
         static const Code imageTable[24][4];
 
         /**
+         * Contains the inverses of the permutations in the array \a S4.
+         *
+         * Specifically, the inverse of permutation <tt>S4[i]</tt> is
+         * the permutation <tt>S4[ invS4[i] ]</tt>.
+         */
+        static const Code invS4[24];
+
+        /**
          * Contains the full multiplication table for all possible
          * permutations.
          *
@@ -957,7 +949,7 @@ inline Perm<4> Perm<4>::operator *(const Perm<4>& q) const {
 }
 
 inline Perm<4> Perm<4>::inverse() const {
-    return Perm<4>(static_cast<Code>(invS4[code_]));
+    return Perm<4>(invS4[code_]);
 }
 
 inline Perm<4> Perm<4>::reverse() const {

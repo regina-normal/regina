@@ -372,7 +372,7 @@ void GluingPermSearcher<4>::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = Perm<4>::invS4[permIndex(facet)];
+        permIndex(adj) = Perm<4>::S4[permIndex(facet)].inverse().S4Index();
 
 #ifndef DIM4_NO_UNION_FIND
         // Merge triangle links and run corresponding tests.

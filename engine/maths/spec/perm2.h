@@ -106,7 +106,7 @@ class REGINA_API Perm<2> {
              * @param index an index between 0 and 1 inclusive.
              * @return the corresponding permutation in S2.
              */
-            Perm<2> operator[] (int index) const;
+            constexpr Perm<2> operator[] (int index) const;
         };
 
     public:
@@ -121,13 +121,13 @@ class REGINA_API Perm<2> {
          * The total number of permutations on two elements.
          * This is the size of the array Sn.
          */
-        static const Index nPerms = 2;
+        static constexpr Index nPerms = 2;
 
         /**
          * The total number of permutations on one element.
          * This is the size of the array Sn_1.
          */
-        static const Index nPerms_1 = 1;
+        static constexpr Index nPerms_1 = 1;
 
         /**
          * Indicates the native unsigned integer type used to store the
@@ -157,33 +157,14 @@ class REGINA_API Perm<2> {
          * the S2 array stores the same permutations in the same order
          * (but of course using different data types).
          */
-        static const S2Lookup S2;
+        static constexpr S2Lookup S2 {};
 
         /**
          * A dimension-agnostic alias for Perm<2>::S2.  In general, for
          * each \a K the class PermK will define an alias \a Sn
          * that references the list of all permutations PermK::SK.
          */
-        static const S2Lookup Sn;
-
-        /**
-         * Contains the inverses of the permutations in the array \a S2.
-         *
-         * Specifically, the inverse of permutation <tt>S2[i]</tt> is
-         * the permutation <tt>S2[ invS2[i] ]</tt>.
-         *
-         * This array is provided for consistency with larger permutation
-         * classes; of course, for permutations of two elements, the
-         * inverse of \a p is always \a p itself.
-         */
-        static const unsigned invS2[2];
-
-        /**
-         * A dimension-agnostic alias for Perm<2>::invS2.  In general, for
-         * each \a K the class PermK will define an alias \a invSn
-         * that references the list of all permutations PermK::invSK.
-         */
-        static const unsigned* invSn;
+        static constexpr S2Lookup Sn {};
 
         /**
          * Gives array-like access to all possible permutations of two
@@ -247,7 +228,7 @@ class REGINA_API Perm<2> {
         /**
          * Creates the identity permutation.
          */
-        Perm();
+        constexpr Perm();
 
         /**
          * Creates the transposition of \a a and \a b.
@@ -258,7 +239,7 @@ class REGINA_API Perm<2> {
          * @param a the element to switch with \a b.
          * @param b the element to switch with \a a.
          */
-        Perm(int a, int b);
+        constexpr Perm(int a, int b);
 
         /**
          * Creates a permutation mapping \a i to \a image[i] for each
@@ -271,7 +252,7 @@ class REGINA_API Perm<2> {
          *
          * @param image the array of images.
          */
-        Perm(const int* image);
+        constexpr Perm(const int* image);
 
         /**
          * Creates a permutation mapping (\a a[0], \a a[1]) to
@@ -286,7 +267,7 @@ class REGINA_API Perm<2> {
          * @param b the corresponding array of images; this must also have
          * length 2.
          */
-        Perm(const int* a, const int* b);
+        constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -294,7 +275,7 @@ class REGINA_API Perm<2> {
          *
          * @param cloneMe the permutation to clone.
          */
-        Perm(const Perm<2>& cloneMe) = default;
+        constexpr Perm(const Perm<2>& cloneMe) = default;
 
         /**
          * Returns the internal code representing this permutation.
@@ -306,7 +287,7 @@ class REGINA_API Perm<2> {
          *
          * @return the internal code.
          */
-        Code permCode() const;
+        constexpr Code permCode() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -329,7 +310,7 @@ class REGINA_API Perm<2> {
          * @param code the internal code for the new permutation.
          * @return the permutation represented by the given internal code.
          */
-        static Perm<2> fromPermCode(Code code);
+        static constexpr Perm<2> fromPermCode(Code code);
 
         /**
          * Determines whether the given integer is a valid internal
@@ -339,7 +320,7 @@ class REGINA_API Perm<2> {
          * @return \c true if and only if the given code is a valid
          * internal permutation code.
          */
-        static bool isPermCode(Code code);
+        static constexpr bool isPermCode(Code code);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -359,14 +340,14 @@ class REGINA_API Perm<2> {
          * @param q the permutation with which to compose this.
          * @return the composition of both permutations.
          */
-        Perm<2> operator * (const Perm<2>& q) const;
+        constexpr Perm<2> operator * (const Perm<2>& q) const;
 
         /**
          * Finds the inverse of this permutation.
          *
          * @return the inverse of this permutation.
          */
-        Perm<2> inverse() const;
+        constexpr Perm<2> inverse() const;
 
         /**
          * Finds the reverse of this permutation.
@@ -375,7 +356,7 @@ class REGINA_API Perm<2> {
          * In other words, if permutation \a q is the
          * reverse of \a p, then <tt>p[i] == q[1 - i]</tt> for all \a i.
          */
-        Perm<2> reverse() const;
+        constexpr Perm<2> reverse() const;
 
         /**
          * Determines the sign of this permutation.
@@ -383,7 +364,7 @@ class REGINA_API Perm<2> {
          * @return 1 if this permutation is even, or -1 if this
          * permutation is odd.
          */
-        int sign() const;
+        constexpr int sign() const;
 
         /**
          * Determines the image of the given integer under this permutation.
@@ -392,7 +373,7 @@ class REGINA_API Perm<2> {
          * should be 0 or 1.
          * @return the image of \a source.
          */
-        int operator[](int source) const;
+        constexpr int operator[](int source) const;
 
         /**
          * Determines the preimage of the given integer under this permutation.
@@ -401,7 +382,7 @@ class REGINA_API Perm<2> {
          * should be 0 or 1.
          * @return the preimage of \a image.
          */
-        int preImageOf(int image) const;
+        constexpr int preImageOf(int image) const;
 
         /**
          * Determines if this is equal to the given permutation.
@@ -412,7 +393,7 @@ class REGINA_API Perm<2> {
          * @return \c true if and only if this and the given permutation
          * are equal.
          */
-        bool operator == (const Perm<2>& other) const;
+        constexpr bool operator == (const Perm<2>& other) const;
 
         /**
          * Determines if this differs from the given permutation.
@@ -423,7 +404,7 @@ class REGINA_API Perm<2> {
          * @return \c true if and only if this and the given permutation
          * differ.
          */
-        bool operator != (const Perm<2>& other) const;
+        constexpr bool operator != (const Perm<2>& other) const;
 
         /**
          * Lexicographically compares the images of (0,1) under this
@@ -434,7 +415,7 @@ class REGINA_API Perm<2> {
          * the permutations are equal and 1 if this permutation produces
          * a greater image.
          */
-        int compareWith(const Perm<2>& other) const;
+        constexpr int compareWith(const Perm<2>& other) const;
 
         /**
          * Determines if this is the identity permutation.
@@ -442,7 +423,7 @@ class REGINA_API Perm<2> {
          *
          * @return \c true if and only if this is the identity permutation.
          */
-        bool isIdentity() const;
+        constexpr bool isIdentity() const;
 
         /**
          * Returns the <i>i</i>th permutation on two elements, where
@@ -457,7 +438,7 @@ class REGINA_API Perm<2> {
          * must be 0 or 1.
          * @return the <i>i</i>th permutation.
          */
-        static Perm atIndex(Index i);
+        static constexpr Perm atIndex(Index i);
 
         /**
          * Returns a random permutation on two elements.
@@ -517,7 +498,7 @@ class REGINA_API Perm<2> {
          *
          * @return the index of this permutation, which will be 0 or 1.
          */
-        Index index() const;
+        constexpr Index index() const;
 
         /**
          * Returns a string representation of this permutation.
@@ -562,7 +543,7 @@ class REGINA_API Perm<2> {
          * @return the index \a i for which this permutation is equal to
          * Perm<2>::S2[i].  This will be 0 or 1.
          */
-        int S2Index() const;
+        constexpr int S2Index() const;
 
         /**
          * Returns the index of this permutation in the Perm<2>::S2 array.
@@ -571,7 +552,7 @@ class REGINA_API Perm<2> {
          * @return the index \a i for which this permutation is equal to
          * Perm<2>::S2[i].  This will be 0 or 1.
          */
-        int SnIndex() const;
+        constexpr int SnIndex() const;
 
         /**
          * Returns the index of this permutation in the Perm<2>::orderedS2 array.
@@ -579,7 +560,7 @@ class REGINA_API Perm<2> {
          * @return the index \a i for which this permutation is equal to
          * Perm<2>::orderedS2[i].  This will be 0 or 1.
          */
-        int orderedS2Index() const;
+        constexpr int orderedS2Index() const;
 
         /**
          * Returns the index of this permutation in the Perm<2>::orderedS2 array.
@@ -588,7 +569,7 @@ class REGINA_API Perm<2> {
          * @return the index \a i for which this permutation is equal to
          * Perm<2>::orderedS2[i].  This will be 0 or 1.
          */
-        int orderedSnIndex() const;
+        constexpr int orderedSnIndex() const;
 
         /**
          * Restricts a <i>k</i>-element permutation to an 2-element
@@ -620,37 +601,34 @@ class REGINA_API Perm<2> {
          * @param code the internal code from which the new
          * permutation will be created.
          */
-        Perm<2>(Code code);
+        constexpr Perm<2>(Code code);
 };
 
 /*@}*/
 
 // Inline functions for Perm<2>
 
-inline Perm<2> Perm<2>::S2Lookup::operator[] (int index) const {
+inline constexpr Perm<2> Perm<2>::S2Lookup::operator[] (int index) const {
     return Perm<2>(static_cast<Code>(index));
 }
 
-inline Perm<2>::Perm() : code_(0) {
+inline constexpr Perm<2>::Perm() : code_(0) {
 }
 
-inline Perm<2>::Perm(Code code) : code_(code) {
+inline constexpr Perm<2>::Perm(Code code) : code_(code) {
 }
 
-inline Perm<2>::Perm(int a, int b) {
-    // Transposition.
-    code_ = (a == b ? 0 : 1);
+inline constexpr Perm<2>::Perm(int a, int b) : code_(a == b ? 0 : 1) {
 }
 
-inline Perm<2>::Perm(const int* image) {
-    code_ = image[0];
+inline constexpr Perm<2>::Perm(const int* image) : code_(image[0]) {
 }
 
-inline Perm<2>::Perm(const int* a, const int* b) {
-    code_ = (a[0] == b[0] ? 0 : 1);
+inline constexpr Perm<2>::Perm(const int* a, const int* b) :
+        code_(a[0] == b[0] ? 0 : 1) {
 }
 
-inline Perm<2>::Code Perm<2>::permCode() const {
+inline constexpr Perm<2>::Code Perm<2>::permCode() const {
     return code_;
 }
 
@@ -658,61 +636,61 @@ inline void Perm<2>::setPermCode(Code code) {
     code_ = code;
 }
 
-inline Perm<2> Perm<2>::fromPermCode(Code code) {
+inline constexpr Perm<2> Perm<2>::fromPermCode(Code code) {
     return Perm<2>(code);
 }
 
-inline bool Perm<2>::isPermCode(Code code) {
+inline constexpr bool Perm<2>::isPermCode(Code code) {
     // code >= 0 is a no-op because we are using an unsigned data type.
     return (code < 2);
 }
 
-inline Perm<2> Perm<2>::operator * (const Perm<2>& q) const {
+inline constexpr Perm<2> Perm<2>::operator * (const Perm<2>& q) const {
     return Perm<2>(code_ ^ q.code_);
 }
 
-inline Perm<2> Perm<2>::inverse() const {
+inline constexpr Perm<2> Perm<2>::inverse() const {
     return *this;
 }
 
-inline Perm<2> Perm<2>::reverse() const {
+inline constexpr Perm<2> Perm<2>::reverse() const {
     return Perm<2>(static_cast<Code>(1 - code_));
 }
 
-inline int Perm<2>::sign() const {
+inline constexpr int Perm<2>::sign() const {
     return (code_ ? -1 : 1);
 }
 
-inline int Perm<2>::operator[](int source) const {
+inline constexpr int Perm<2>::operator[](int source) const {
     return source ^ code_;
 }
 
-inline int Perm<2>::preImageOf(int image) const {
+inline constexpr int Perm<2>::preImageOf(int image) const {
     return image ^ code_;
 }
 
-inline bool Perm<2>::operator == (const Perm<2>& other) const {
+inline constexpr bool Perm<2>::operator == (const Perm<2>& other) const {
     return (code_ == other.code_);
 }
 
-inline bool Perm<2>::operator != (const Perm<2>& other) const {
+inline constexpr bool Perm<2>::operator != (const Perm<2>& other) const {
     return (code_ != other.code_);
 }
 
-inline int Perm<2>::compareWith(const Perm<2>& other) const {
+inline constexpr int Perm<2>::compareWith(const Perm<2>& other) const {
     // For n=2, permutation codes respect lexicographical order.
     return (code_ == other.code_ ? 0 : code_ < other.code_ ? -1 : 1);
 }
 
-inline bool Perm<2>::isIdentity() const {
+inline constexpr bool Perm<2>::isIdentity() const {
     return (code_ == 0);
 }
 
-inline Perm<2> Perm<2>::atIndex(Index i) {
+inline constexpr Perm<2> Perm<2>::atIndex(Index i) {
     return Perm<2>(static_cast<Code>(i));
 }
 
-inline Perm<2>::Index Perm<2>::index() const {
+inline constexpr Perm<2>::Index Perm<2>::index() const {
     return code_;
 }
 
@@ -743,19 +721,19 @@ inline std::string Perm<2>::trunc(unsigned len) const {
     }
 }
 
-inline int Perm<2>::S2Index() const {
+inline constexpr int Perm<2>::S2Index() const {
     return code_;
 }
 
-inline int Perm<2>::SnIndex() const {
+inline constexpr int Perm<2>::SnIndex() const {
     return code_;
 }
 
-inline int Perm<2>::orderedS2Index() const {
+inline constexpr int Perm<2>::orderedS2Index() const {
     return code_;
 }
 
-inline int Perm<2>::orderedSnIndex() const {
+inline constexpr int Perm<2>::orderedSnIndex() const {
     return code_;
 }
 

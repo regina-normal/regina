@@ -46,7 +46,6 @@ namespace {
         Perm4_S4_arr(Perm<4>::S4, 24);
     ConstArray<decltype(Perm<4>::orderedS4)>
         Perm4_orderedS4_arr(Perm<4>::orderedS4, 24);
-    GlobalArray<unsigned> Perm4_invS4_arr(Perm<4>::invS4, 24);
     GlobalArray<Perm<4>> Perm4_S3_arr(Perm<4>::S3, 6);
     GlobalArray<Perm<4>> Perm4_orderedS3_arr(Perm<4>::orderedS3, 6);
     GlobalArray<Perm<4>> Perm4_S2_arr(Perm<4>::S2, 2);
@@ -113,8 +112,6 @@ void addPerm4(pybind11::module_& m) {
         .def_readonly_static("nPerms_1", &Perm<4>::nPerms_1)
         .def_readonly_static("S4", &Perm4_S4_arr)
         .def_readonly_static("Sn", &Perm4_S4_arr)
-        .def_readonly_static("invS4", &Perm4_invS4_arr)
-        .def_readonly_static("invSn", &Perm4_invS4_arr)
         .def_readonly_static("orderedS4", &Perm4_orderedS4_arr)
         .def_readonly_static("orderedSn", &Perm4_orderedS4_arr)
         .def_readonly_static("S3", &Perm4_S3_arr)

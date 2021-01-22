@@ -189,7 +189,7 @@ void GluingPermSearcher<3>::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = Perm<3>::invS3[permIndex(face)];
+        permIndex(adj) = Perm<3>::S3[permIndex(face)].inverse().S3Index();
 
         // Is this going to lead to an unwanted triangulation?
         //

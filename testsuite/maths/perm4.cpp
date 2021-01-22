@@ -42,7 +42,6 @@ class Perm4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE(Perm4Test);
 
     CPPUNIT_TEST(permCode2);
-    CPPUNIT_TEST(inverse);
     CPPUNIT_TEST(sign);
     CPPUNIT_TEST(index);
     CPPUNIT_TEST(exhaustive);
@@ -70,18 +69,6 @@ class Perm4Test : public CppUnit::TestFixture {
                     msg << "Permutation #" << i
                         << " has incorrect second-generation code "
                         << code << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
-        void inverse() {
-            for (int i = 0; i < 24; i++) {
-                if (Perm<4>::S4[i].inverse() != Perm<4>::S4[Perm<4>::invS4[i]]) {
-                    std::ostringstream msg;
-                    msg << "Permutation #" << i << " was found to have "
-                        "inverse " << Perm<4>::S4[i].inverse() << " instead of "
-                        << Perm<4>::S4[Perm<4>::invS4[i]] << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

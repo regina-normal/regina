@@ -226,21 +226,6 @@ class REGINA_API Perm<5> {
         static constexpr OrderedS5Lookup orderedSn {};
 
         /**
-         * Contains the inverses of the permutations in the array \a S5.
-         *
-         * Specifically, the inverse of permutation <tt>S5[i]</tt> is
-         * the permutation <tt>S5[ invS5[i] ]</tt>.
-         */
-        static const unsigned invS5[120];
-
-        /**
-         * A dimension-agnostic alias for Perm<5>::invS5.  In general, for
-         * each \a K the class PermK will define an alias \a invSn
-         * that references the list of all permutations PermK::invSK.
-         */
-        static const unsigned* invSn;
-
-        /**
          * Contains all possible permutations of four elements.
          * In each permutation, 4 maps to 4.
          *
@@ -253,8 +238,7 @@ class REGINA_API Perm<5> {
          * of course using different data types).
          *
          * Note that the permutations are not necessarily in
-         * lexicographical order.  For the corresponding inverse array,
-         * see Perm<4>::invS4.
+         * lexicographical order.
          */
         static const Perm<5> S4[24];
 
@@ -284,8 +268,7 @@ class REGINA_API Perm<5> {
          * of course using different data types).
          *
          * Note that the permutations are not necessarily in
-         * lexicographical order.  For the corresponding inverse array,
-         * see Perm<3>::invS3.
+         * lexicographical order.
          */
         static const Perm<5> S3[6];
 
@@ -863,6 +846,14 @@ class REGINA_API Perm<5> {
         static const int imageTable[120][5];
 
         /**
+         * Contains the inverses of the permutations in the array \a S5.
+         *
+         * Specifically, the inverse of permutation <tt>S5[i]</tt> is
+         * the permutation <tt>S5[ invS5[i] ]</tt>.
+         */
+        static const Code2 invS5[120];
+
+        /**
          * Contains the full multiplication table for all possible
          * permutations.
          *
@@ -1016,7 +1007,7 @@ inline Perm<5> Perm<5>::operator *(const Perm<5>& q) const {
 }
 
 inline Perm<5> Perm<5>::inverse() const {
-    return Perm<5>(static_cast<Code2>(invS5[code2_]));
+    return Perm<5>(invS5[code2_]);
 }
 
 inline Perm<5> Perm<5>::reverse() const {

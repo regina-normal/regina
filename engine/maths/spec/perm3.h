@@ -174,21 +174,6 @@ class REGINA_API Perm<3> {
         static constexpr S3Lookup Sn {};
 
         /**
-         * Contains the inverses of the permutations in the array \a S3.
-         *
-         * Specifically, the inverse of permutation <tt>S3[i]</tt> is
-         * the permutation <tt>S3[ invS3[i] ]</tt>.
-         */
-        static const unsigned invS3[6];
-
-        /**
-         * A dimension-agnostic alias for Perm<3>::invS3.  In general, for
-         * each \a K the class PermK will define an alias \a invSn
-         * that references the list of all permutations PermK::invSK.
-         */
-        static const unsigned* invSn;
-
-        /**
          * Gives array-like access to all possible permutations of three
          * elements in lexicographical order.
          *
@@ -700,6 +685,14 @@ class REGINA_API Perm<3> {
         static const Code imageTable[6][3];
 
         /**
+         * Contains the inverses of the permutations in the array \a S3.
+         *
+         * Specifically, the inverse of permutation <tt>S3[i]</tt> is
+         * the permutation <tt>S3[ invS3[i] ]</tt>.
+         */
+        static const Code invS3[6];
+
+        /**
          * Contains the full multiplication table for all possible
          * permutations.
          *
@@ -815,7 +808,7 @@ inline Perm<3> Perm<3>::operator * (const Perm<3>& q) const {
 }
 
 inline Perm<3> Perm<3>::inverse() const {
-    return Perm<3>(static_cast<Code>(invS3[code_]));
+    return Perm<3>(invS3[code_]);
 }
 
 inline Perm<3> Perm<3>::reverse() const {

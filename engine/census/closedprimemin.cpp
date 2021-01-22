@@ -435,7 +435,7 @@ void ClosedPrimeMinSearcher::runSearch(long maxDepth) {
         }
 
         // We are sitting on a new permutation to try.
-        permIndex(adj) = Perm<3>::invS3[permIndex(face)];
+        permIndex(adj) = Perm<3>::S3[permIndex(face)].inverse().S3Index();
 
         // In the following code we use several results from
         // "Face pairing graphs and 3-manifold enumeration", B. A. Burton,

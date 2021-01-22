@@ -39,7 +39,7 @@ const Perm<5>::Index Perm<5>::nPerms;
 const Perm<5>::Index Perm<5>::nPerms_1;
 const int Perm<5>::imageBits;
 
-const unsigned Perm<5>::invS5[120] = {
+const Perm<5>::Code2 Perm<5>::invS5[120] = {
      0,  1,  4,  3,  2,  5,  6,  7, 12, 19, 18, 13,
      8, 11, 20, 15, 16, 23, 10,  9, 14, 21, 22, 17,
     24, 25, 26, 29, 28, 27, 48, 49, 96, 73, 72, 97,
@@ -51,8 +51,6 @@ const unsigned Perm<5>::invS5[120] = {
     32, 35, 44, 39, 40, 47, 58, 57, 80,105,106, 83,
     62, 69,110, 87, 92,117, 70, 65, 88,113,118, 95
 };
-
-const unsigned* Perm<5>::invSn = Perm<5>::invS5;
 
 const Perm<5> Perm<5>::S4[24] = {
     Perm<5>(0,1,2,3,4), Perm<5>(0,1,3,2,4), Perm<5>(0,2,3,1,4), Perm<5>(0,2,1,3,4),
