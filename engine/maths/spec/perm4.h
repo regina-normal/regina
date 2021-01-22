@@ -834,7 +834,7 @@ class REGINA_API Perm<4> {
          * four elements.
          */
         template <int k>
-        static Perm<4> extend(Perm<k> p);
+        static constexpr Perm<4> extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to an 4-element
@@ -854,7 +854,7 @@ class REGINA_API Perm<4> {
          * 4 elements.
          */
         template <int k>
-        static Perm<4> contract(Perm<k> p);
+        static constexpr Perm<4> contract(Perm<k> p);
 
     private:
         /**

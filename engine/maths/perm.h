@@ -520,7 +520,7 @@ class Perm {
          * \a n elements.
          */
         template <int k>
-        static Perm extend(Perm<k> p);
+        static constexpr Perm extend(Perm<k> p);
 
         /**
          * Restricts a <i>k</i>-element permutation to an <i>n</i>-element
@@ -541,7 +541,7 @@ class Perm {
          * \a n elements.
          */
         template <int k>
-        static Perm contract(Perm<k> p);
+        static constexpr Perm contract(Perm<k> p);
 
     private:
         /**
