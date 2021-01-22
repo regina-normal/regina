@@ -127,6 +127,54 @@ Equality type : EqualityType.BY_REFERENCE
 Component9 : class
 Equality type : EqualityType.BY_REFERENCE
 
+ConstArray_Perm2_S2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm3_S2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm3_S3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm3_orderedS3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm4_S2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm4_S3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm4_S4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm4_orderedS3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm4_orderedS4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm5_S2 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm5_S3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm5_S4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm5_S5 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm5_orderedS3 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm5_orderedS4 : class
+Equality type : EqualityType.BY_REFERENCE
+
+ConstArray_Perm5_orderedS5 : class
+Equality type : EqualityType.BY_REFERENCE
+
 Container : class
 Equality type : EqualityType.BY_REFERENCE
 
