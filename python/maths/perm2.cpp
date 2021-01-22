@@ -33,16 +33,19 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "maths/perm.h"
+#include "../constarray.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::Perm;
+using regina::python::ConstArray;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<Perm<2>> Perm2_S2_arr(Perm<2>::S2, 2);
+    // Note that S2 and S1 are the same C++ type.
+    ConstArray<decltype(Perm<2>::S2)> Perm2_S2_arr(Perm<2>::S2, 2);
+    ConstArray<decltype(Perm<2>::S2)> Perm2_S1_arr(Perm<2>::S1, 1);
     GlobalArray<unsigned> Perm2_invS2_arr(Perm<2>::invS2, 2);
-    GlobalArray<Perm<2>> Perm2_S1_arr(Perm<2>::S1, 1);
 
     template <int k>
     struct Perm2_contract {
@@ -63,6 +66,8 @@ namespace {
 }
 
 void addPerm2(pybind11::module_& m) {
+    decltype(Perm2_S2_arr)::wrapClass(m, "ConstArray_S2");
+
     auto c = pybind11::class_<Perm<2>>(m, "Perm2")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

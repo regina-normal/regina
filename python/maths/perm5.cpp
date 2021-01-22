@@ -33,15 +33,19 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "maths/perm.h"
+#include "../constarray.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::Perm;
+using regina::python::ConstArray;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<Perm<5>> Perm5_S5_arr(Perm<5>::S5, 120);
-    GlobalArray<Perm<5>> Perm5_orderedS5_arr(Perm<5>::orderedS5, 120);
+    ConstArray<decltype(Perm<5>::S5)>
+        Perm5_S5_arr(Perm<5>::S5, 120);
+    ConstArray<decltype(Perm<5>::orderedS5)>
+        Perm5_orderedS5_arr(Perm<5>::orderedS5, 120);
     GlobalArray<unsigned> Perm5_invS5_arr(Perm<5>::invS5, 120);
     GlobalArray<Perm<5>> Perm5_S4_arr(Perm<5>::S4, 24);
     GlobalArray<Perm<5>> Perm5_orderedS4_arr(Perm<5>::orderedS4, 24);
@@ -68,6 +72,9 @@ namespace {
 }
 
 void addPerm5(pybind11::module_& m) {
+    decltype(Perm5_S5_arr)::wrapClass(m, "ConstArray_S5");
+    decltype(Perm5_orderedS5_arr)::wrapClass(m, "ConstArray_orderedS5");
+
     auto c = pybind11::class_<Perm<5>>(m, "Perm5")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

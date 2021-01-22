@@ -103,6 +103,35 @@ namespace regina {
  */
 template <>
 class REGINA_API Perm<4> {
+    private:
+        /**
+         * An array-like object used to implement Perm<4>::S4.
+         */
+        struct S4Lookup {
+            /**
+             * Returns the permutation at the given index in the array S4.
+             * See Perm<4>::S4 for details.
+             *
+             * @param index an index between 0 and 23 inclusive.
+             * @return the corresponding permutation in S4.
+             */
+            Perm<4> operator[] (int index) const;
+        };
+
+        /**
+         * An array-like object used to implement Perm<4>::orderedS4.
+         */
+        struct OrderedS4Lookup {
+            /**
+             * Returns the permutation at the given index in the array
+             * orderedS4.  See Perm<4>::orderedS4 for details.
+             *
+             * @param index an index between 0 and 23 inclusive.
+             * @return the corresponding permutation in orderedS4.
+             */
+            Perm<4> operator[] (int index) const;
+        };
+
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -130,7 +159,18 @@ class REGINA_API Perm<4> {
         typedef uint8_t Code;
 
         /**
-         * Contains all possible permutations of four elements.
+         * Gives array-like access to all possible permutations of
+         * four elements.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>S4[i]</tt>.  The index \a i must be
+         * between 0 and 23 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -143,14 +183,14 @@ class REGINA_API Perm<4> {
          * Note that the permutations are not necessarily in
          * lexicographical order.
          */
-        static const Perm<4> S4[24];
+        static constexpr S4Lookup S4 {};
 
         /**
          * A dimension-agnostic alias for Perm<4>::S4.  In general, for
          * each \a K the class PermK will define an alias \a Sn
          * that references the list of all permutations PermK::SK.
          */
-        static const Perm<4>* Sn;
+        static constexpr S4Lookup Sn {};
 
         /**
          * Contains the inverses of the permutations in the array \a S4.
@@ -168,17 +208,27 @@ class REGINA_API Perm<4> {
         static const unsigned* invSn;
 
         /**
-         * Contains all possible permutations of four elements in
-         * lexicographical order.
+         * Gives array-like access to all possible permutations of four
+         * elements in lexicographical order.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>orderedS4[i]</tt>.  The index \a i
+         * must be between 0 and 23 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          */
-        static const Perm<4> orderedS4[24];
+        static constexpr OrderedS4Lookup orderedS4 {};
 
         /**
          * A dimension-agnostic alias for Perm<4>::orderedS4.  In general, for
          * each \a K the class PermK will define an alias \a orderedSn
          * that references the list of all permutations PermK::orderedSK.
          */
-        static const Perm<4>* orderedSn;
+        static constexpr OrderedS4Lookup orderedSn {};
 
         /**
          * Contains all possible permutations of three elements.
@@ -805,6 +855,16 @@ class REGINA_API Perm<4> {
          */
         REGINA_INLINE_REQUIRED
         static int S4Index(int a, int b, int c, int d);
+
+        /**
+         * Converts between an index into Perm<4>::S4 and an index into
+         * Perm<4>::orderedS4.  This conversion works in either direction.
+         *
+         * \tparam Int a native integer type; this would typically be
+         * either \c int or \a Code.
+         */
+        template <typename Int>
+        static Int convOrderedUnordered(Int index);
 };
 
 // Routines for constructing the permutations associated to
@@ -813,6 +873,25 @@ class REGINA_API Perm<4> {
 /*@}*/
 
 // Inline functions for Perm<4>
+
+template <typename Int>
+inline Int Perm<4>::convOrderedUnordered(Int index) {
+    // S4 is almost the same as orderedS4, except that some pairs
+    // S4[2i] <--> S4[2i+1] have been swapped to ensure that all
+    // permutations S4[2i] are even and all permutations S4[2i+1] are odd.
+    //
+    // Specifically, we must interchange all pairs 4i+2 <--> 4i+3.
+    //
+    return ((index & 2) ? (index ^ 1) : index);
+}
+
+inline Perm<4> Perm<4>::S4Lookup::operator[] (int index) const {
+    return Perm<4>(static_cast<Code>(index));
+}
+
+inline Perm<4> Perm<4>::OrderedS4Lookup::operator[] (int index) const {
+    return Perm<4>(static_cast<Code>(convOrderedUnordered(index)));
+}
 
 inline Perm<4>::Perm() : code_(0) {
 }
@@ -948,12 +1027,7 @@ inline int Perm<4>::S4Index() const {
 }
 
 inline int Perm<4>::orderedS4Index() const {
-    // S4 is almost the same as orderedS4, except that some pairs
-    // S4[2i] <--> S4[2i+1] have been swapped to ensure that all
-    // permutations S4[2i] are even and all permutations S4[2i+1] are odd.
-    //
-    // Specifically, we must interchange all pairs 4i+2 <--> 4i+3.
-    return ((code_ & 2) ? (code_ ^ 1) : code_);
+    return convOrderedUnordered(code_);
 }
 
 inline int Perm<4>::orderedSnIndex() const {
@@ -961,12 +1035,13 @@ inline int Perm<4>::orderedSnIndex() const {
 }
 
 inline int Perm<4>::S4Index(int a, int b, int c, int d) {
-    int orderedS4Index = 6 * a +
-                         2 * (b - (b > a ? 1 : 0)) +
-                             (c > d ? 1 : 0);
+    // First compute the ordered S4 index.
+    int ans = 6 * a +
+              2 * (b - (b > a ? 1 : 0)) +
+                  (c > d ? 1 : 0);
 
-    // As above, to obtain an S4 index, interchange all pairs 4i+2 <--> 4i+3.
-    return ((orderedS4Index & 2) ? (orderedS4Index ^ 1) : orderedS4Index);
+    // Then switch to the plain (unordered) S4 index.
+    return convOrderedUnordered(ans);
 }
 
 inline int Perm<4>::SnIndex() const {

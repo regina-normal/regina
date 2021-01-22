@@ -33,16 +33,20 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "maths/perm.h"
+#include "../constarray.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::Perm;
+using regina::python::ConstArray;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<Perm<4>> Perm4_S4_arr(Perm<4>::S4, 24);
+    ConstArray<decltype(Perm<4>::S4)>
+        Perm4_S4_arr(Perm<4>::S4, 24);
+    ConstArray<decltype(Perm<4>::orderedS4)>
+        Perm4_orderedS4_arr(Perm<4>::orderedS4, 24);
     GlobalArray<unsigned> Perm4_invS4_arr(Perm<4>::invS4, 24);
-    GlobalArray<Perm<4>> Perm4_orderedS4_arr(Perm<4>::orderedS4, 24);
     GlobalArray<Perm<4>> Perm4_S3_arr(Perm<4>::S3, 6);
     GlobalArray<Perm<4>> Perm4_orderedS3_arr(Perm<4>::orderedS3, 6);
     GlobalArray<Perm<4>> Perm4_S2_arr(Perm<4>::S2, 2);
@@ -66,6 +70,9 @@ namespace {
 }
 
 void addPerm4(pybind11::module_& m) {
+    decltype(Perm4_S4_arr)::wrapClass(m, "ConstArray_S4");
+    decltype(Perm4_orderedS4_arr)::wrapClass(m, "ConstArray_orderedS4");
+
     auto c = pybind11::class_<Perm<4>>(m, "Perm4")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

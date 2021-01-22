@@ -33,15 +33,19 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "maths/perm.h"
+#include "../constarray.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::Perm;
+using regina::python::ConstArray;
 using regina::python::GlobalArray;
 
 namespace {
-    GlobalArray<Perm<3>> Perm3_S3_arr(Perm<3>::S3, 6);
-    GlobalArray<Perm<3>> Perm3_orderedS3_arr(Perm<3>::orderedS3, 6);
+    ConstArray<decltype(Perm<3>::S3)>
+        Perm3_S3_arr(Perm<3>::S3, 6);
+    ConstArray<decltype(Perm<3>::orderedS3)>
+        Perm3_orderedS3_arr(Perm<3>::orderedS3, 6);
     GlobalArray<unsigned> Perm3_invS3_arr(Perm<3>::invS3, 6);
     GlobalArray<Perm<3>> Perm3_S2_arr(Perm<3>::S2, 2);
 
@@ -64,6 +68,9 @@ namespace {
 }
 
 void addPerm3(pybind11::module_& m) {
+    decltype(Perm3_S3_arr)::wrapClass(m, "ConstArray_S3");
+    decltype(Perm3_orderedS3_arr)::wrapClass(m, "ConstArray_orderedS3");
+
     auto c = pybind11::class_<Perm<3>>(m, "Perm3")
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())

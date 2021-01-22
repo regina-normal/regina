@@ -38,16 +38,6 @@ namespace regina {
 const Perm<4>::Index Perm<4>::nPerms;
 const Perm<4>::Index Perm<4>::nPerms_1;
 
-const Perm<4> Perm<4>::S4[24] = {
-    Perm<4>((Perm<4>::Code)0),
-                Perm<4>(1),  Perm<4>(2),  Perm<4>(3),  Perm<4>(4),  Perm<4>(5),
-    Perm<4>(6),  Perm<4>(7),  Perm<4>(8),  Perm<4>(9),  Perm<4>(10), Perm<4>(11),
-    Perm<4>(12), Perm<4>(13), Perm<4>(14), Perm<4>(15), Perm<4>(16), Perm<4>(17),
-    Perm<4>(18), Perm<4>(19), Perm<4>(20), Perm<4>(21), Perm<4>(22), Perm<4>(23)
-};
-
-const Perm<4>* Perm<4>::Sn = Perm<4>::S4;
-
 const unsigned Perm<4>::invS4[24] = {
     0, 1, 4, 3,
     2, 5, 6, 7,
@@ -58,17 +48,6 @@ const unsigned Perm<4>::invS4[24] = {
 };
 
 const unsigned* Perm<4>::invSn = Perm<4>::invS4;
-
-const Perm<4> Perm<4>::orderedS4[24] = {
-    Perm<4>((Perm<4>::Code)0),  Perm<4>(1),  Perm<4>(3),  Perm<4>(2),
-    Perm<4>(4),  Perm<4>(5),  Perm<4>(7),  Perm<4>(6),
-    Perm<4>(8),  Perm<4>(9),  Perm<4>(11), Perm<4>(10),
-    Perm<4>(12), Perm<4>(13), Perm<4>(15), Perm<4>(14),
-    Perm<4>(16), Perm<4>(17), Perm<4>(19), Perm<4>(18),
-    Perm<4>(20), Perm<4>(21), Perm<4>(23), Perm<4>(22)
-};
-
-const Perm<4>* Perm<4>::orderedSn = Perm<4>::orderedS4;
 
 const Perm<4> Perm<4>::S3[6] = {
     Perm<4>(0,1,2,3), Perm<4>(0,2,1,3),

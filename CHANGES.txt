@@ -16,6 +16,18 @@ Version 6.1  [ TODO ]
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
     ENGINE:
+        Class Perm<2>:
+            - Replaced the lookup tables S2, S1 and orderedS2 with lightweight
+              objects whose square bracket operators compute the relevant
+              permutations on the fly (and very quickly).
+        Class Perm<3>:
+            - Replaced the lookup tables S3 and orderedS3 with lightweight
+              objects whose square bracket operators compute the relevant
+              permutations on the fly (and very quickly).
+        Class Perm<4>:
+            - Replaced the lookup tables S4 and orderedS4 with lightweight
+              objects whose square bracket operators compute the relevant
+              permutations on the fly (and very quickly).
         Class Perm<5>:
             - Changed the internal representation; as a result there are new
               routines permCode2(), fromPermCode2(), setPermCode2() and
@@ -24,6 +36,9 @@ Version 6.1  [ TODO ]
               isPermCode()) are slower to work with, and should be avoided.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
+            - Replaced the lookup tables S5 and orderedS5 with lightweight
+              objects whose square bracket operators compute the relevant
+              permutations on the fly (and very quickly).
         Class Triangulation<3>:
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as

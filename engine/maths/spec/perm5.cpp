@@ -39,65 +39,6 @@ const Perm<5>::Index Perm<5>::nPerms;
 const Perm<5>::Index Perm<5>::nPerms_1;
 const int Perm<5>::imageBits;
 
-const Perm<5> Perm<5>::S5[120] = {
-    Perm<5>((Perm<5>::Code2)0), Perm<5>(1), Perm<5>(2), Perm<5>(3), Perm<5>(4),
-    Perm<5>(5), Perm<5>(6), Perm<5>(7), Perm<5>(8), Perm<5>(9),
-    Perm<5>(10), Perm<5>(11), Perm<5>(12), Perm<5>(13), Perm<5>(14),
-    Perm<5>(15), Perm<5>(16), Perm<5>(17), Perm<5>(18), Perm<5>(19),
-    Perm<5>(20), Perm<5>(21), Perm<5>(22), Perm<5>(23), Perm<5>(24),
-    Perm<5>(25), Perm<5>(26), Perm<5>(27), Perm<5>(28), Perm<5>(29),
-    Perm<5>(30), Perm<5>(31), Perm<5>(32), Perm<5>(33), Perm<5>(34),
-    Perm<5>(35), Perm<5>(36), Perm<5>(37), Perm<5>(38), Perm<5>(39),
-    Perm<5>(40), Perm<5>(41), Perm<5>(42), Perm<5>(43), Perm<5>(44),
-    Perm<5>(45), Perm<5>(46), Perm<5>(47), Perm<5>(48), Perm<5>(49),
-    Perm<5>(50), Perm<5>(51), Perm<5>(52), Perm<5>(53), Perm<5>(54),
-    Perm<5>(55), Perm<5>(56), Perm<5>(57), Perm<5>(58), Perm<5>(59),
-    Perm<5>(60), Perm<5>(61), Perm<5>(62), Perm<5>(63), Perm<5>(64),
-    Perm<5>(65), Perm<5>(66), Perm<5>(67), Perm<5>(68), Perm<5>(69),
-    Perm<5>(70), Perm<5>(71), Perm<5>(72), Perm<5>(73), Perm<5>(74),
-    Perm<5>(75), Perm<5>(76), Perm<5>(77), Perm<5>(78), Perm<5>(79),
-    Perm<5>(80), Perm<5>(81), Perm<5>(82), Perm<5>(83), Perm<5>(84),
-    Perm<5>(85), Perm<5>(86), Perm<5>(87), Perm<5>(88), Perm<5>(89),
-    Perm<5>(90), Perm<5>(91), Perm<5>(92), Perm<5>(93), Perm<5>(94),
-    Perm<5>(95), Perm<5>(96), Perm<5>(97), Perm<5>(98), Perm<5>(99),
-    Perm<5>(100), Perm<5>(101), Perm<5>(102), Perm<5>(103), Perm<5>(104),
-    Perm<5>(105), Perm<5>(106), Perm<5>(107), Perm<5>(108), Perm<5>(109),
-    Perm<5>(110), Perm<5>(111), Perm<5>(112), Perm<5>(113), Perm<5>(114),
-    Perm<5>(115), Perm<5>(116), Perm<5>(117), Perm<5>(118), Perm<5>(119)
-};
-
-const Perm<5>* Perm<5>::Sn = Perm<5>::S5;
-
-const Perm<5> Perm<5>::orderedS5[120] = {
-    // Generated using Regina 6.0.
-    Perm<5>((Perm<5>::Code2)0), Perm<5>(1), Perm<5>(3), Perm<5>(2), Perm<5>(4),
-    Perm<5>(5), Perm<5>(7), Perm<5>(6), Perm<5>(8), Perm<5>(9),
-    Perm<5>(11), Perm<5>(10), Perm<5>(12), Perm<5>(13), Perm<5>(15),
-    Perm<5>(14), Perm<5>(16), Perm<5>(17), Perm<5>(19), Perm<5>(18),
-    Perm<5>(20), Perm<5>(21), Perm<5>(23), Perm<5>(22), Perm<5>(25),
-    Perm<5>(24), Perm<5>(26), Perm<5>(27), Perm<5>(29), Perm<5>(28),
-    Perm<5>(30), Perm<5>(31), Perm<5>(33), Perm<5>(32), Perm<5>(34),
-    Perm<5>(35), Perm<5>(37), Perm<5>(36), Perm<5>(38), Perm<5>(39),
-    Perm<5>(41), Perm<5>(40), Perm<5>(42), Perm<5>(43), Perm<5>(45),
-    Perm<5>(44), Perm<5>(46), Perm<5>(47), Perm<5>(48), Perm<5>(49),
-    Perm<5>(51), Perm<5>(50), Perm<5>(52), Perm<5>(53), Perm<5>(55),
-    Perm<5>(54), Perm<5>(56), Perm<5>(57), Perm<5>(59), Perm<5>(58),
-    Perm<5>(60), Perm<5>(61), Perm<5>(63), Perm<5>(62), Perm<5>(64),
-    Perm<5>(65), Perm<5>(67), Perm<5>(66), Perm<5>(68), Perm<5>(69),
-    Perm<5>(71), Perm<5>(70), Perm<5>(73), Perm<5>(72), Perm<5>(74),
-    Perm<5>(75), Perm<5>(77), Perm<5>(76), Perm<5>(78), Perm<5>(79),
-    Perm<5>(81), Perm<5>(80), Perm<5>(82), Perm<5>(83), Perm<5>(85),
-    Perm<5>(84), Perm<5>(86), Perm<5>(87), Perm<5>(89), Perm<5>(88),
-    Perm<5>(90), Perm<5>(91), Perm<5>(93), Perm<5>(92), Perm<5>(94),
-    Perm<5>(95), Perm<5>(96), Perm<5>(97), Perm<5>(99), Perm<5>(98),
-    Perm<5>(100), Perm<5>(101), Perm<5>(103), Perm<5>(102), Perm<5>(104),
-    Perm<5>(105), Perm<5>(107), Perm<5>(106), Perm<5>(108), Perm<5>(109),
-    Perm<5>(111), Perm<5>(110), Perm<5>(112), Perm<5>(113), Perm<5>(115),
-    Perm<5>(114), Perm<5>(116), Perm<5>(117), Perm<5>(119), Perm<5>(118)
-};
-
-const Perm<5>* Perm<5>::orderedSn = Perm<5>::orderedS5;
-
 const unsigned Perm<5>::invS5[120] = {
      0,  1,  4,  3,  2,  5,  6,  7, 12, 19, 18, 13,
      8, 11, 20, 15, 16, 23, 10,  9, 14, 21, 22, 17,

@@ -94,6 +94,21 @@ namespace regina {
  */
 template <>
 class REGINA_API Perm<2> {
+    private:
+        /**
+         * An array-like object used to implement Perm<2>::S2.
+         */
+        struct S2Lookup {
+            /**
+             * Returns the permutation at the given index in the array S2.
+             * See Perm<2>::S2 for details.
+             *
+             * @param index an index between 0 and 1 inclusive.
+             * @return the corresponding permutation in S2.
+             */
+            Perm<2> operator[] (int index) const;
+        };
+
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -121,7 +136,18 @@ class REGINA_API Perm<2> {
         typedef uint8_t Code;
 
         /**
-         * Contains all possible permutations of two elements.
+         * Gives array-like access to all possible permutations of
+         * two elements.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>S2[i]</tt>.  The index \a i must be
+         * between 0 and 1 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          *
          * The identity permutation has index 0, and the non-identity
          * permutation has index 1.  As a result, S2[\a i] is an even
@@ -131,14 +157,14 @@ class REGINA_API Perm<2> {
          * the S2 array stores the same permutations in the same order
          * (but of course using different data types).
          */
-        static const Perm<2> S2[2];
+        static const S2Lookup S2;
 
         /**
          * A dimension-agnostic alias for Perm<2>::S2.  In general, for
          * each \a K the class PermK will define an alias \a Sn
          * that references the list of all permutations PermK::SK.
          */
-        static const Perm<2>* Sn;
+        static const S2Lookup Sn;
 
         /**
          * Contains the inverses of the permutations in the array \a S2.
@@ -160,45 +186,58 @@ class REGINA_API Perm<2> {
         static const unsigned* invSn;
 
         /**
-         * Contains all possible permutations of two elements in
-         * lexicographical order.
+         * Gives array-like access to all possible permutations of two
+         * elements in lexicographical order.
          *
-         * This is identical to the array Perm<2>::S2, and in fact
-         * \a orderedS2 and \a S2 are pointers to the same array in memory.
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>orderedS2[i]</tt>.  The index \a i
+         * must be between 0 and 1 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
+         *
+         * This ordered array is identical to Perm<2>::S2.
          * Note however that for \a n &ge; 3, the arrays Perm<n>::Sn and
          * Perm<n>::orderedSn are different: \a Sn alternates between even
          * and odd permutations, and \a orderedSn stores permutations in
          * lexicograpical order.
          */
-        static const Perm<2>* orderedS2;
+        static constexpr S2Lookup orderedS2 {};
 
         /**
          * A dimension-agnostic alias for Perm<2>::orderedS2.  In general, for
          * each \a K the class PermK will define an alias \a orderedSn
          * that references the list of all permutations PermK::orderedSK.
          */
-        static const Perm<2>* orderedSn;
+        static constexpr S2Lookup orderedSn {};
 
         /**
-         * Contains all possible permutations of one element.
-         * In each permutation, 1 maps to 1.
+         * Gives array-like access to all possible permutations of one element.
          *
-         * Of course, this array is trivial: it contains just the
-         * identity permutation.  This array is provided for consistency
-         * with larger permutation classes Perm<n>.
+         * Of course, this array is trivial: it contains just the identity
+         * permutation.  This array is provided for consistency with
+         * larger permutation classes Perm<n>.
          *
-         * Note that, as an implementation detail, the arrays \a S1 and \a S2
-         * point to the same location in memory (however, they are treated as
-         * arrays of different lengths).
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>S1[i]</tt>.  The index \a i must be 0.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          */
-        static const Perm<2>* S1;
+        static constexpr S2Lookup S1 {};
 
         /**
          * A dimension-agnostic alias for Perm<2>::S1.  In general, for
          * each \a K the class PermK will define an alias \a Sn_1
          * that references the list of all permutations PermK::S(K-1).
          */
-        static const Perm<2>* Sn_1;
+        static constexpr S2Lookup Sn_1 {};
 
     private:
         Code code_;
@@ -587,6 +626,10 @@ class REGINA_API Perm<2> {
 /*@}*/
 
 // Inline functions for Perm<2>
+
+inline Perm<2> Perm<2>::S2Lookup::operator[] (int index) const {
+    return Perm<2>(static_cast<Code>(index));
+}
 
 inline Perm<2>::Perm() : code_(0) {
 }

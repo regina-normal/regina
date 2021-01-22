@@ -102,6 +102,35 @@ namespace regina {
  */
 template <>
 class REGINA_API Perm<5> {
+    private:
+        /**
+         * An array-like object used to implement Perm<5>::S5.
+         */
+        struct S5Lookup {
+            /**
+             * Returns the permutation at the given index in the array S5.
+             * See Perm<5>::S5 for details.
+             *
+             * @param index an index between 0 and 119 inclusive.
+             * @return the corresponding permutation in S5.
+             */
+            Perm<5> operator[] (int index) const;
+        };
+
+        /**
+         * An array-like object used to implement Perm<5>::orderedS5.
+         */
+        struct OrderedS5Lookup {
+            /**
+             * Returns the permutation at the given index in the array
+             * orderedS5.  See Perm<5>::orderedS5 for details.
+             *
+             * @param index an index between 0 and 119 inclusive.
+             * @return the corresponding permutation in orderedS5.
+             */
+            Perm<5> operator[] (int index) const;
+        };
+
     public:
         /**
          * Denotes a native signed integer type large enough to count all
@@ -144,7 +173,18 @@ class REGINA_API Perm<5> {
         typedef uint8_t Code2;
 
         /**
-         * Contains all possible permutations of five elements.
+         * Gives array-like access to all possible permutations of
+         * five elements.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>S5[i]</tt>.  The index \a i must be
+         * between 0 and 119 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          *
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
@@ -153,27 +193,37 @@ class REGINA_API Perm<5> {
          * Note that the permutations are not necessarily in
          * lexicographical order.
          */
-        static const Perm<5> S5[120];
+        static constexpr S5Lookup S5 {};
 
         /**
          * A dimension-agnostic alias for Perm<5>::S5.  In general, for
          * each \a K the class PermK will define an alias \a Sn
          * that references the list of all permutations PermK::SK.
          */
-        static const Perm<5>* Sn;
+        static constexpr S5Lookup Sn {};
 
         /**
-         * Contains all possible permutations of five elements in
-         * lexicographical order.
+         * Gives array-like access to all possible permutations of five
+         * elements in lexicographical order.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>orderedS5[i]</tt>.  The index \a i
+         * must be between 0 and 119 inclusive.
+         *
+         * In Regina 6.0 and earlier, this was a hard-coded C-style array;
+         * since Regina 6.1 it has changed type, but accessing elements as
+         * described above remains extremely fast.  The object that is returned
+         * is lightweight and is defined in the headers only; in particular,
+         * you cannot make a reference to it (but you can always make a copy).
          */
-        static const Perm<5> orderedS5[120];
+        static constexpr OrderedS5Lookup orderedS5 {};
 
         /**
          * A dimension-agnostic alias for Perm<5>::orderedS5.  In general, for
          * each \a K the class PermK will define an alias \a orderedSn
          * that references the list of all permutations PermK::orderedSK.
          */
-        static const Perm<5>* orderedSn;
+        static constexpr OrderedS5Lookup orderedSn {};
 
         /**
          * Contains the inverses of the permutations in the array \a S5.
@@ -862,11 +912,42 @@ class REGINA_API Perm<5> {
          */
         REGINA_INLINE_REQUIRED
         static int S5Index(int a, int b, int c, int d, int e);
+
+        /**
+         * Converts between an index into Perm<5>::S5 and an index into
+         * Perm<5>::orderedS5.  This conversion works in either direction.
+         *
+         * \tparam Int a native integer type; this would typically be
+         * either \c int or \a Code2.
+         */
+        template <typename Int>
+        static Int convOrderedUnordered(Int index);
 };
 
 /*@}*/
 
 // Inline functions for Perm<5>
+
+template <typename Int>
+inline Int Perm<5>::convOrderedUnordered(Int index) {
+    // S5 is almost the same as orderedS5, except that some pairs
+    // S5[2i] <--> S5[2i+1] have been swapped to ensure that all
+    // permutations S5[2i] are even and all permutations S5[2i+1] are odd.
+    //
+    // Specifically, we must flip between 2i <--> 2i+1 if and only if
+    // one but not both of (S5Index / 2) and (S5Index / 24) is even.
+    // Here we use (index >> 1), which is equivalent to (index / 2).
+    //
+    return ((((index >> 1) ^ (index / 24)) & 1) ? (index ^ 1) : index);
+}
+
+inline Perm<5> Perm<5>::S5Lookup::operator[] (int index) const {
+    return Perm<5>(static_cast<Code2>(index));
+}
+
+inline Perm<5> Perm<5>::OrderedS5Lookup::operator[] (int index) const {
+    return Perm<5>(static_cast<Code2>(convOrderedUnordered(index)));
+}
 
 inline Perm<5>::Perm() : code2_(0) {
 }
@@ -1009,14 +1090,7 @@ inline int Perm<5>::SnIndex() const {
 }
 
 inline int Perm<5>::orderedS5Index() const {
-    // S5 is almost the same as orderedS5, except that some pairs
-    // S5[2i] <--> S5[2i+1] have been swapped to ensure that all
-    // permutations S5[2i] are even and all permutations S5[2i+1] are odd.
-    //
-    // Specifically, we must flip between 2i <--> 2i+1 if and only if
-    // one but not both of (S5Index / 2) and (S5Index / 24) is even.
-    // Here we use (S5Index >> 1), which is equivalent to (S5Index / 2).
-    return ((((code2_ >> 1) ^ (code2_ / 24)) & 1) ? (code2_ ^ 1) : code2_);
+    return convOrderedUnordered(code2_);
 }
 
 inline int Perm<5>::S5Index(int a, int b, int c, int d, int e) {
@@ -1026,8 +1100,8 @@ inline int Perm<5>::S5Index(int a, int b, int c, int d, int e) {
               2 * (c - ((c > b ? 1 : 0) + (c > a ? 1 : 0))) +
                   (d > e ? 1 : 0);
 
-    // Then switch (2i, 2i+1) pairs as indicated above.
-    return ((((ans >> 1) ^ (ans / 24)) & 1) ? (ans ^ 1) : ans);
+    // Then switch to the plain (unordered) S5 index.
+    return convOrderedUnordered(ans);
 }
 
 inline int Perm<5>::orderedSnIndex() const {
