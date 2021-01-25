@@ -51,25 +51,15 @@ template REGINA_API void TriangulationBase<9>::clearBaseProperties();
 template REGINA_API void TriangulationBase<9>::swapBaseProperties(
     TriangulationBase<9>&);
 
-template REGINA_API bool PachnerHelper<9, 0>::pachner(
-    Triangulation<9>*, Face<9, 0>*, bool, bool);
-template REGINA_API bool PachnerHelper<9, 1>::pachner(
-    Triangulation<9>*, Face<9, 1>*, bool, bool);
-template REGINA_API bool PachnerHelper<9, 2>::pachner(
-    Triangulation<9>*, Face<9, 2>*, bool, bool);
-template REGINA_API bool PachnerHelper<9, 3>::pachner(
-    Triangulation<9>*, Face<9, 3>*, bool, bool);
-template REGINA_API bool PachnerHelper<9, 4>::pachner(
-    Triangulation<9>*, Face<9, 4>*, bool, bool);
-template REGINA_API bool PachnerHelper<9, 5>::pachner(
-    Triangulation<9>*, Face<9, 5>*, bool, bool);
-template REGINA_API bool PachnerHelper<9, 6>::pachner(
-    Triangulation<9>*, Face<9, 6>*, bool, bool);
-template REGINA_API bool PachnerHelper<9, 7>::pachner(
-    Triangulation<9>*, Face<9, 7>*, bool, bool);
-template REGINA_API bool PachnerHelper<9, 8>::pachner(
-    Triangulation<9>*, Face<9, 8>*, bool, bool);
-template REGINA_API bool PachnerHelper<9, 9>::pachner(
-    Triangulation<9>*, Face<9, 9>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 0>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 1>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 2>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 3>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 4>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 5>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 6>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 7>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 8>*, bool, bool);
+template REGINA_API bool TriangulationBase<9>::pachner(Face<9, 9>*, bool, bool);
 
 } }

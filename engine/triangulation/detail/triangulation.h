@@ -376,65 +376,6 @@ struct EulerCalculator<dim, dim> {
 #endif // __DOXYGEN
 
 /**
- * Internal class used to perform Pachner moves on a triangulation.
- *
- * Specifically, this class performs (\a dim - \a k + 1)-(\a k + 1) moves
- * about <i>k</i>-faces of <i>dim</i>-dimensional triangulations.
- *
- * Pachner moves are implemented in a separate class (i.e., this class)
- * instead of TriangulationBase because we wish to offer specialised
- * implementations for certain facial dimensions \a k, and C++ does not
- * allow partial specialisation of functions.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam k the dimension of the faces about which to perform Pachner moves.
- */
-template <int dim, int k>
-struct PachnerHelper {
-    static_assert(0 < k && k < dim,
-        "The generic PachnerHelper template cannot be used "
-        "for 0-faces or dim-faces.");
-    /**
-     * Performs a (\a dim - \a k + 1)-(\a k + 1) move about the given face.
-     *
-     * This routine contains the real implementation of
-     * TriangulationBase::pachner<k>(); see that routine for further details.
-     *
-     * \pre If the move is being performed and no check is being run,
-     * it must be known in advance that the move is legal.
-     * \pre The given <i>k</i>-face is a <i>k</i>-face of the given
-     * triangulation.
-     *
-     * @param tri the triangulation upon which to perform the Pachner move.
-     * @param f the specific <i>k</i>-face about which to perform the move.
-     * @param check \c true if the move should be tested for eligibility.
-     * @param perform \c true if the move should actually be performed.
-     * @return If \a check is \c true, this function returns \c true
-     * if and only if the requested move may be performed
-     * without changing the topology of the manifold.  If \a check
-     * is \c false, this function simply returns \c true.
-     */
-    static bool pachner(Triangulation<dim>* tri, Face<dim, k>* f,
-        bool check, bool perform);
-};
-
-#ifndef __DOXYGEN
-
-template <int dim>
-struct PachnerHelper<dim, 0> {
-    static bool pachner(Triangulation<dim>* tri, Vertex<dim>* v,
-        bool check, bool perform);
-};
-
-template <int dim>
-struct PachnerHelper<dim, dim> {
-    static bool pachner(Triangulation<dim>* tri, Simplex<dim>* s,
-        bool check, bool perform);
-};
-
-#endif // __DOXYGEN
-
-/**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
  *
  * Such a triangulation is represented by the class Triangulation<dim>,
@@ -2191,7 +2132,6 @@ class TriangulationBase :
 
     template <int, int, int> friend struct FaceCalculator;
     template <int, int> friend struct BoundaryComponentCalculator;
-    template <int, int> friend struct PachnerHelper;
     template <int, int> friend class WeakFaceList;
     friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
@@ -2821,14 +2761,6 @@ bool TriangulationBase<dim>::isOriented() const {
 template <int dim>
 inline long TriangulationBase<dim>::eulerCharTri() const {
     return EulerCalculator<dim, 0>::compute(*this);
-}
-
-template <int dim>
-template <int k>
-inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
-        bool perform) {
-    return PachnerHelper<dim, k>::pachner(
-        static_cast<Triangulation<dim>*>(this), f, check, perform);
 }
 
 template <int dim>

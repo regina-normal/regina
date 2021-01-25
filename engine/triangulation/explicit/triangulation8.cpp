@@ -51,23 +51,14 @@ template REGINA_API void TriangulationBase<8>::clearBaseProperties();
 template REGINA_API void TriangulationBase<8>::swapBaseProperties(
     TriangulationBase<8>&);
 
-template REGINA_API bool PachnerHelper<8, 0>::pachner(
-    Triangulation<8>*, Face<8, 0>*, bool, bool);
-template REGINA_API bool PachnerHelper<8, 1>::pachner(
-    Triangulation<8>*, Face<8, 1>*, bool, bool);
-template REGINA_API bool PachnerHelper<8, 2>::pachner(
-    Triangulation<8>*, Face<8, 2>*, bool, bool);
-template REGINA_API bool PachnerHelper<8, 3>::pachner(
-    Triangulation<8>*, Face<8, 3>*, bool, bool);
-template REGINA_API bool PachnerHelper<8, 4>::pachner(
-    Triangulation<8>*, Face<8, 4>*, bool, bool);
-template REGINA_API bool PachnerHelper<8, 5>::pachner(
-    Triangulation<8>*, Face<8, 5>*, bool, bool);
-template REGINA_API bool PachnerHelper<8, 6>::pachner(
-    Triangulation<8>*, Face<8, 6>*, bool, bool);
-template REGINA_API bool PachnerHelper<8, 7>::pachner(
-    Triangulation<8>*, Face<8, 7>*, bool, bool);
-template REGINA_API bool PachnerHelper<8, 8>::pachner(
-    Triangulation<8>*, Face<8, 8>*, bool, bool);
+template REGINA_API bool TriangulationBase<8>::pachner(Face<8, 0>*, bool, bool);
+template REGINA_API bool TriangulationBase<8>::pachner(Face<8, 1>*, bool, bool);
+template REGINA_API bool TriangulationBase<8>::pachner(Face<8, 2>*, bool, bool);
+template REGINA_API bool TriangulationBase<8>::pachner(Face<8, 3>*, bool, bool);
+template REGINA_API bool TriangulationBase<8>::pachner(Face<8, 4>*, bool, bool);
+template REGINA_API bool TriangulationBase<8>::pachner(Face<8, 5>*, bool, bool);
+template REGINA_API bool TriangulationBase<8>::pachner(Face<8, 6>*, bool, bool);
+template REGINA_API bool TriangulationBase<8>::pachner(Face<8, 7>*, bool, bool);
+template REGINA_API bool TriangulationBase<8>::pachner(Face<8, 8>*, bool, bool);
 
 } }
