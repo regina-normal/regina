@@ -1134,10 +1134,7 @@ inline bool FaceEmbeddingBase<dim, subdim>::operator != (
 template <int dim, int subdim>
 inline void FaceEmbeddingBase<dim, subdim>::writeTextShort(std::ostream& out)
         const {
-    // It seems C++ will not let us do a partial specialisation for dim = 0.
-    // Let's see if the compiler can optimise this code instead, given that
-    // the if(...) test is a compile-time constant.
-    if (subdim == 0)
+    if constexpr (subdim == 0)
         out << simplex_->index() << " (" << face_ << ')';
     else
         out << simplex_->index() << " ("
