@@ -426,10 +426,6 @@ class FaceNumberingImpl<dim, subdim, false> :
 
 template <int dim>
 class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
-    static_assert(! standardDim(dim),
-        "The specialisation FaceNumberingImpl<dim, 0, true> "
-        "should not be used for Regina's standard dimensions.");
-
     public:
         /**
          * The total number of vertices in each <i>dim</i>-dimensional simplex.
@@ -438,68 +434,30 @@ class FaceNumberingImpl<dim, 0, true> : public FaceNumberingAPI<dim, 0> {
 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static Perm<dim + 1> ordering(unsigned face) {
-            int p[dim + 1];
-            p[0] = face;
+        static constexpr Perm<dim + 1> ordering(unsigned face) {
+            if constexpr (dim == 3) {
+                switch (face) {
+                    case 1: return Perm<4>::fromPermCode2(6); // 1032
+                    case 2: return Perm<4>::fromPermCode2(16); // 2301
+                    case 3: return Perm<4>::fromPermCode2(22); // 3210
+                    default: return Perm<4>(); // 0123
+                }
+            } else if constexpr (dim <= 4) {
+                return Perm<dim + 1>::rot(face);
+            } else {
+                int p[dim + 1];
+                p[0] = face;
 
-            int i;
-            for (i = 0; i < face; ++i)
-                p[dim - i] = i;
-            for (i = face + 1; i <= dim; ++i)
-                p[dim - i + 1] = i;
+                for (int i = 0; i < face; ++i)
+                    p[dim - i] = i;
+                for (int i = face + 1; i <= dim; ++i)
+                    p[dim - i + 1] = i;
 
-            return Perm<dim + 1>(p);
+                return Perm<dim + 1>(p);
+            }
         }
 
         static unsigned faceNumber(Perm<dim + 1> vertices) {
-            return vertices[0];
-        }
-
-        static bool containsVertex(unsigned face, unsigned vertex) {
-            return (face == vertex);
-        }
-#endif // ! __DOXYGEN
-};
-
-template <>
-class REGINA_API FaceNumberingImpl<1, 0, true> : public FaceNumberingAPI<1, 0> {
-    public:
-        /**
-         * The total number of vertices in each edge.
-         */
-        static constexpr int nFaces = 2;
-
-#ifndef __DOXYGEN
-        // The following routines are documented in FaceNumberingAPI.
-        static Perm<2> ordering(unsigned face) {
-            return Perm<2>::fromPermCode(face);
-        }
-
-        static unsigned faceNumber(Perm<2> vertices) {
-            return vertices[0];
-        }
-
-        static bool containsVertex(unsigned face, unsigned vertex) {
-            return (face == vertex);
-        }
-#endif // ! __DOXYGEN
-};
-
-template <>
-class REGINA_API FaceNumberingImpl<2, 0, true> : public FaceNumberingAPI<2, 0> {
-    public:
-        /**
-         * The total number of vertices in each triangle.
-         */
-        static constexpr int nFaces = 3;
-
-#ifndef __DOXYGEN
-        // The following routines are documented in FaceNumberingAPI.
-        static Perm<3> ordering(unsigned face) {
-            return Perm<3>(face, (face + 1) % 3, (face + 2) % 3);
-        }
-
-        static unsigned faceNumber(Perm<3> vertices) {
             return vertices[0];
         }
 
@@ -533,32 +491,6 @@ class REGINA_API FaceNumberingImpl<2, 1, false> : public FaceNumberingAPI<2, 1> 
 
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face != vertex);
-        }
-#endif // ! __DOXYGEN
-};
-
-template <>
-class REGINA_API FaceNumberingImpl<3, 0, true> : public FaceNumberingAPI<3, 0> {
-    public:
-        /**
-         * The total number of vertices in each tetrahedron.
-         */
-        static constexpr int nFaces = 4;
-
-#ifndef __DOXYGEN
-        // The following routines are documented in FaceNumberingAPI.
-        static Perm<4> ordering(unsigned face) {
-            return (face % 2 == 0 ?
-                Perm<4>(face, (face + 1) % 4, (face + 2) % 4, (face + 3) % 4) :
-                Perm<4>(face, (face + 3) % 4, (face + 2) % 4, (face + 1) % 4));
-        }
-
-        static unsigned faceNumber(Perm<4> vertices) {
-            return vertices[0];
-        }
-
-        static bool containsVertex(unsigned face, unsigned vertex) {
-            return (face == vertex);
         }
 #endif // ! __DOXYGEN
 };
@@ -652,31 +584,6 @@ class REGINA_API FaceNumberingImpl<3, 2, false> : public FaceNumberingAPI<3, 2> 
 
         static bool containsVertex(unsigned face, unsigned vertex) {
             return (face != vertex);
-        }
-#endif // ! __DOXYGEN
-};
-
-template <>
-class REGINA_API FaceNumberingImpl<4, 0, true> : public FaceNumberingAPI<4, 0> {
-    public:
-        /**
-         * The total number of vertices in each pentachoron.
-         */
-        static constexpr int nFaces = 5;
-
-#ifndef __DOXYGEN
-        // The following routines are documented in FaceNumberingAPI.
-        static Perm<5> ordering(unsigned face) {
-            return Perm<5>(face, (face + 1) % 5, (face + 2) % 5,
-                (face + 3) % 5, (face + 4) % 5);
-        }
-
-        static unsigned faceNumber(Perm<5> vertices) {
-            return vertices[0];
-        }
-
-        static bool containsVertex(unsigned face, unsigned vertex) {
-            return (face == vertex);
         }
 #endif // ! __DOXYGEN
 };
