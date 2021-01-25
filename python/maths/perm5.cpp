@@ -101,6 +101,7 @@ void addPerm5(pybind11::module_& m) {
         .def("preImageOf", &Perm<5>::preImageOf)
         .def("compareWith", &Perm<5>::compareWith)
         .def("isIdentity", &Perm<5>::isIdentity)
+        .def_static("rot", &Perm<5>::rot)
         .def_static("atIndex", &Perm<5>::atIndex)
         .def("index", &Perm<5>::index)
         .def_static("rand", (Perm<5> (*)(bool))(&Perm<5>::rand),

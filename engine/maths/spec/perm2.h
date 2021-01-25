@@ -426,6 +426,16 @@ class REGINA_API Perm<2> {
         constexpr bool isIdentity() const;
 
         /**
+         * Returns the <i>i</i>th rotation.
+         * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod 2)
+         * for all \a k.
+         *
+         * @param i the image of 0; this must be 0 or 1.
+         * @return the <i>i</i>th rotation.
+         */
+        static constexpr Perm rot(int i);
+
+        /**
          * Returns the <i>i</i>th permutation on two elements, where
          * permutations are numbered lexicographically beginning at 0.
          *
@@ -684,6 +694,10 @@ inline constexpr int Perm<2>::compareWith(const Perm<2>& other) const {
 
 inline constexpr bool Perm<2>::isIdentity() const {
     return (code_ == 0);
+}
+
+inline constexpr Perm<2> Perm<2>::rot(int i) {
+    return Perm<2>(static_cast<Code>(i));
 }
 
 inline constexpr Perm<2> Perm<2>::atIndex(Index i) {

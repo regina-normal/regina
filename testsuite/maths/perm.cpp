@@ -53,6 +53,7 @@ class PermTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(comprehensive);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(rot);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -539,6 +540,20 @@ class PermTest : public CppUnit::TestFixture {
                 }
             }
             clearFrom<n - 2>();
+        }
+
+        void rot() {
+            int i, j;
+            for (i = 0; i < n; ++i) {
+                Perm p = Perm::rot(i);
+                for (j = 0; j < n; ++j)
+                    if (p[j] != (i + j) % n) {
+                        std::ostringstream msg;
+                        msg << "Rotation " << i << ", position " << j
+                            << " gives the wrong image " << p[j] << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+            }
         }
 };
 

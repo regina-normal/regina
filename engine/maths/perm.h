@@ -393,6 +393,17 @@ class Perm {
         constexpr bool isIdentity() const;
 
         /**
+         * Returns the <i>i</i>th rotation.
+         * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod \a n)
+         * for all \a k.
+         *
+         * @param i the image of 0; this must be between 0 and <i>n</i>-1
+         * inclusive.
+         * @return the <i>i</i>th rotation.
+         */
+        static constexpr Perm rot(int i);
+
+        /**
          * Returns the <i>i</i>th permutation on \a n elements, where
          * permutations are numbered lexicographically beginning at 0.
          *
@@ -726,6 +737,20 @@ constexpr int Perm<n>::compareWith(const Perm& other) const {
 template <int n>
 inline constexpr bool Perm<n>::isIdentity() const {
     return (code_ == idCode_);
+}
+
+template <int n>
+constexpr Perm<n> Perm<n>::rot(int i) {
+    Code code = 0;
+    Code src = 0;
+    Code dest = i;
+    while (src < n) {
+        code |= (dest << (imageBits * src));
+        ++src;
+        if (++dest == n)
+            dest = 0;
+    }
+    return Perm<n>(code);
 }
 
 template <int n>

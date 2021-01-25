@@ -51,6 +51,7 @@ class Perm2Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(rot);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -485,6 +486,20 @@ class Perm2Test : public CppUnit::TestFixture {
                 p.clear(2);
                 if (! looksEqual(p, Perm<2>::Sn[i]))
                     CPPUNIT_FAIL("Wrong result for clear(2).");
+            }
+        }
+
+        void rot() {
+            int i, j;
+            for (i = 0; i < 2; ++i) {
+                Perm<2> p = Perm<2>::rot(i);
+                for (j = 0; j < 2; ++j)
+                    if (p[j] != (i + j) % 2) {
+                        std::ostringstream msg;
+                        msg << "Rotation " << i << ", position " << j
+                            << " gives the wrong image " << p[j] << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
             }
         }
 };

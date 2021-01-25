@@ -52,6 +52,7 @@ class Perm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(S2);
+    CPPUNIT_TEST(rot);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -555,6 +556,20 @@ class Perm3Test : public CppUnit::TestFixture {
                 if (Perm<2>::S2[i] != Perm<2>::contract(Perm<3>::Sn_1[i]))
                     CPPUNIT_FAIL("Contracted S2 permutations do not "
                         "match Perm<2>.");
+            }
+        }
+
+        void rot() {
+            int i, j;
+            for (i = 0; i < 3; ++i) {
+                Perm<3> p = Perm<3>::rot(i);
+                for (j = 0; j < 3; ++j)
+                    if (p[j] != (i + j) % 3) {
+                        std::ostringstream msg;
+                        msg << "Rotation " << i << ", position " << j
+                            << " gives the wrong image " << p[j] << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
             }
         }
 };
