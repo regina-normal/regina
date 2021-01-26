@@ -149,7 +149,7 @@ void Triangulation<3>::calculateVertexLinks() {
                 vertex->link_ = Vertex<3>::DISC;
             else {
                 vertex->link_ = Vertex<3>::INVALID;
-                vertex->markBadLink();
+                vertex->whyInvalid_.value |= Vertex<3>::INVALID_LINK;
                 valid_ = vertex->component_->valid_ = false;
                 standard_ = false;
             }

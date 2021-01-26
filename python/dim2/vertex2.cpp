@@ -57,6 +57,8 @@ void addVertex2(pybind11::module_& m) {
     auto c = pybind11::class_<Face<2, 0>>(m, "Face2_0")
         .def("index", &Vertex<2>::index)
         .def("isValid", &Vertex<2>::isValid)
+        .def("hasBadIdentification", &Vertex<2>::hasBadIdentification)
+        .def("hasBadLink", &Vertex<2>::hasBadLink)
         .def("isLinkOrientable", &Vertex<2>::isLinkOrientable)
         .def("embeddings", [](const Vertex<2>& v) {
             pybind11::list ans;

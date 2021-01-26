@@ -149,7 +149,7 @@ void Triangulation<4>::calculateVertexLinks() {
             // It's a 3-ball or nothing.
             if ((! knownSimpleLinks_) && ! vertex->link_->isBall()) {
                 valid_ = vertex->component_->valid_ =  false;
-                vertex->markBadLink();
+                vertex->whyInvalid_.value |= Vertex<4>::INVALID_LINK;
                 foundNonSimpleLink = true;
                 // The vertex belongs to some pentachoron with boundary
                 // tetrahedra, and so already belongs to a boundary component.
@@ -161,7 +161,7 @@ void Triangulation<4>::calculateVertexLinks() {
             if ((! vertex->link_->isValid()) || vertex->link_->isIdeal()) {
                 // Bapow.
                 valid_ = vertex->component_->valid_ =  false;
-                vertex->markBadLink();
+                vertex->whyInvalid_.value |= Vertex<4>::INVALID_LINK;
                 foundNonSimpleLink = true;
                 vertex->boundaryComponent_ = new BoundaryComponent<4>();
                 vertex->boundaryComponent_->orientable_ =
@@ -223,7 +223,7 @@ void Triangulation<4>::calculateVertexLinks() {
                     // Got it!
                     vemb.pentachoron()->regina::detail::SimplexFaces<4, 1>::face_[
                         Edge<4>::edgeNumber[vemb.vertex()][otherEnd]
-                        ]->markBadLink();
+                        ]->whyInvalid_.value |= Edge<4>::INVALID_LINK;
                 }
             }
         }
@@ -245,7 +245,7 @@ void Triangulation<4>::calculateEdgeLinks() {
             const Triangulation<2>* link = e->buildLink();
             if ((link->isClosed() && link->eulerChar() != 2) ||
                     ((! link->isClosed()) && link->eulerChar() != 1))
-                e->markBadLink();
+                e->whyInvalid_.value |= Edge<4>::INVALID_LINK;
         }
 }
 

@@ -73,6 +73,8 @@ void addTriangle3(pybind11::module_& m) {
         .def("isMobiusBand", &Triangle<3>::isMobiusBand)
         .def("isCone", &Triangle<3>::isCone)
         .def("isValid", &Triangle<3>::isValid)
+        .def("hasBadIdentification", &Triangle<3>::hasBadIdentification)
+        .def("hasBadLink", &Triangle<3>::hasBadLink)
         .def("isLinkOrientable", &Triangle<3>::isLinkOrientable)
         .def("degree", &Triangle<3>::degree)
         .def("front", &Triangle<3>::front,

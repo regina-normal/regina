@@ -88,6 +88,8 @@ void addTetrahedron4(pybind11::module_& m) {
         .def("edgeMapping", &Tetrahedron<4>::edgeMapping)
         .def("triangleMapping", &Tetrahedron<4>::triangleMapping)
         .def("isValid", &Tetrahedron<4>::isValid)
+        .def("hasBadIdentification", &Tetrahedron<4>::hasBadIdentification)
+        .def("hasBadLink", &Tetrahedron<4>::hasBadLink)
         .def("isLinkOrientable", &Tetrahedron<4>::isLinkOrientable)
         .def("isBoundary", &Tetrahedron<4>::isBoundary)
         .def("inMaximalForest", &Tetrahedron<4>::inMaximalForest)

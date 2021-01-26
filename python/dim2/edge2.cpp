@@ -58,6 +58,8 @@ void addEdge2(pybind11::module_& m) {
     auto c = pybind11::class_<Face<2, 1>>(m, "Face2_1")
         .def("index", &Edge<2>::index)
         .def("isValid", &Edge<2>::isValid)
+        .def("hasBadIdentification", &Edge<2>::hasBadIdentification)
+        .def("hasBadLink", &Edge<2>::hasBadLink)
         .def("isLinkOrientable", &Edge<2>::isLinkOrientable)
         .def("embeddings", [](const Edge<2>& e) {
             pybind11::list ans;

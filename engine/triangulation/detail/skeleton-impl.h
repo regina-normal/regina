@@ -244,7 +244,11 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
                             if (adj->SimplexFaces<dim, dim-2>::mapping_[
                                     adjFace] != adjMap) {
                                 // You have chosen unwisely, my son.
-                                f->markBadIdentification();
+                                if constexpr (standardDim(dim))
+                                    f->whyInvalid_.value |=
+                                        Face<dim, dim-2>::INVALID_IDENTIFICATION;
+                                else
+                                    f->valid_.value = false;
                                 valid_ = s->component_->valid_ = false;
                             }
                         }
@@ -354,7 +358,11 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                                     if (adj->SimplexFaces<dim, subdim>::
                                             mapping_[adjFace][pos] !=
                                             adjMap[pos]) {
-                                        f->markBadIdentification();
+                                        if constexpr (standardDim(dim))
+                                            f->whyInvalid_.value |=
+                                                Face<dim, subdim>::INVALID_IDENTIFICATION;
+                                        else
+                                            f->valid_.value = false;
                                         valid_ = s->component_->valid_ = false;
                                         break;
                                     }
@@ -365,7 +373,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                                 if (adjMap.sign() !=
                                         adj->SimplexFaces<dim, subdim>::
                                         mapping_[adjFace].sign())
-                                    f->linkOrientable_ = false;
+                                    f->linkOrientable_.value = false;
                             }
                         } else {
                             adj->SimplexFaces<dim, subdim>::face_[adjFace] = f;

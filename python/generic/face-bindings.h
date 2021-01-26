@@ -86,23 +86,6 @@ namespace {
         }
     };
 
-    template <int dim, int subdim, int codim>
-    struct face_validity_types {
-        template <typename Class>
-        static void add(Class& c) {
-            // Only standard dimensions offer hasBadLink().
-            c.def("hasBadIdentification",
-                &Face<dim, subdim>::hasBadIdentification);
-        }
-    };
-
-    template <int dim, int subdim>
-    struct face_validity_types<dim, subdim, 1> {
-        template <typename Class>
-        static void add(Class&) {
-        }
-    };
-
     template <int dim, int subdim, int maxlower>
     struct subface_aliases {
         template <typename Class>
@@ -204,6 +187,8 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
 
     auto c = pybind11::class_<regina::Face<dim, subdim>>(m, name)
         .def("isValid", &Face<dim, subdim>::isValid)
+        // Only standard dimensions offer hasBadLink().
+        .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification)
         .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable)
         .def("degree", &Face<dim, subdim>::degree)
         .def("embeddings", [](const Face<dim, subdim>& f) {
@@ -235,7 +220,6 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-    face_validity_types<dim, subdim, dim - subdim>::add(c);
     face_in_maximal_forest<dim, subdim, dim - subdim>::add(c);
     subface_aliases<dim, subdim, subdim - 1>::add(c);
 }

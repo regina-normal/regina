@@ -58,11 +58,12 @@ namespace regina {
  * \a value of type \a T, which will be initialised on construction with
  * \a defaultValue.
  *
+ * The advantage to using this class over std::conditional is that it
+ * supports assigning a default value on construction.
+ *
  * \tparam condition \c true if the data member should be included, or
  * \c false if this struct should be empty.
- * \tparam T the data type to store.  This should be something that can
- * be passed by value and also used as a non-type template parameter,
- * such a native boolean or integer type.
+ * \tparam T the data type to store.
  * \tparam defaultValue the value to assign the data member upon construction.
  */
 template <bool condition, typename T, T defaultValue>
@@ -75,20 +76,11 @@ struct EnableIf {
      * is in fact stored.
      */
     EnableIf() : value(defaultValue) {}
-
-    /**
-     * Assigns the data member to \a rhs.
-     * This operator will only be present if \a condition is \c true.
-     *
-     * @param rhs the new value to assign to the data member.
-     * @return a reference to the data member.
-     */
-    T& operator = (T rhs) { return value = rhs };
 };
 
 #ifndef __DOXYGEN
-template <typename Type, Type defaultValue>
-struct EnableIf<false, Type, defaultValue> {
+template <typename T, T defaultValue>
+struct EnableIf<false, T, defaultValue> {
     EnableIf() {}
 };
 #endif // __DOXYGEN

@@ -64,25 +64,6 @@ template <int dim> class TriangulationBase;
  */
 
 /**
- * Indicates whether it is possible for a <i>subdim</i>-face of a
- * <i>dim</i>-dimensional triangulation to be invalid.
- *
- * This compile-time constant function is used to determine the first
- * template argument that should be passed to FaceValidity.
- *
- * \ifacespython Not present.
- *
- * @param dim the dimension of the underlying triangulations.
- * @param subdim the dimension of the faces in question.
- * @return \c true if such faces may be invalid, or \c false if
- * <i>subdim</i>-faces of <i>dim</i>-dimensional triangluations are
- * always valid.
- */
-constexpr bool allowsInvalidFaces(int dim, int subdim) {
-    return (dim >= 3 && subdim <= dim - 2);
-}
-
-/**
  * Helper class that provides core functionality for describing how a
  * <i>subdim</i>-face of a <i>dim</i>-dimensional triangulation appears within
  * each top-dimensional simplex.
@@ -496,259 +477,6 @@ class FaceStorage<dim, 1> {
 #endif // __DOXYGEN
 
 /**
- * Helper class that stores whether a face is valid.
- * Every class Face<dim, subdim> inherits from this class.
- *
- * See isValid() for details on what it means for a face to be valid.
- *
- * \tparam allowsInvalid \c true when this is used for dimensions
- * (\a dim, \a subdim) in which it is possible for faces to be invalid,
- * or \c false for dimensions in which faces are always valid.  If this
- * is \c false, then this class optimises away all the implementation
- * details to leave no overhead at all.
- *
- * \tparam testLinks \c true if the underlying dimension \a dim is one
- * of Regina's \ref stddim "standard dimensions", or \c false if not.
- * In non-standard dimensions, this class uses a more limited definition
- * of validity that does not test for validity of vertex links.  See
- * isValid() for details.
- */
-template <bool allowsInvalid, bool testLinks>
-class FaceValidity {
-    static_assert(allowsInvalid,
-        "The generic FaceValidity template should only be used with "
-        "allowsInvalid = true.");
-    static_assert(testLinks,
-        "The generic FaceValidity template should only be used with "
-        "testLinks = true.");
-
-    private:
-        enum {
-            INVALID_IDENTIFICATION = 1,
-                /**< Signifies that the face is identified with itself
-                     under a non-identity permutation. */
-            INVALID_LINK = 2
-                /**< Signifies that the link of the face does not obey
-                     the rules laid out by isValid(). */
-        };
-
-        unsigned invalid_;
-            /**< 0 if this face is valid, or a bitwise combination of
-                 INVALID_IDENTIFICATION and/or INVALID_LINK if this face is
-                 invalid. */
-
-    public:
-        /**
-         * Determines if this face is valid.
-         *
-         * There are several conditions that might make a <i>subdim</i>-face
-         * of a <i>dim</i>-dimensional triangulation invalid:
-         *
-         * 1. if the face is identified with itself under a non-identity
-         *    permutation (e.g., an edge is identified with itself in
-         *    reverse, or a triangle is identified with itself under a
-         *    rotation);
-         * 2. if the face does not have an appropriate link.  Here the
-         *    meaning of "appropriate" depends upon the type of face:
-         *    - for a face that belongs to some boundary facet(s) of the
-         *      triangulation, its link must be a topological ball;
-         *    - for a vertex that does not belong to any boundary facets,
-         *      its link must be a closed (\a dim - 1)-manifold;
-         *    - for a (\a subdim &ge; 1)-face that does not belong to any
-         *      boundary facets, its link must be a topological sphere.
-         *
-         * Condition (1) is tested for all dimensions \a subdim and \a dim.
-         * Condition (2) is more difficult, since it relies on undecidable
-         * problems.  As a result, (2) is \e only tested when \a dim is one
-         * of Regina's \ref stddim "standard dimensions".
-         *
-         * If this face is invalid, then it is possible to find out why.
-         * In non-standard dimensions, this must mean that the face fails
-         * condition (1) above.  In standard dimensions, you can call the
-         * functions hasBadIdentification() and/or hasBadLink() to determine
-         * whether the failure is due to conditions (1) or (2) respectively.
-         *
-         * @return for standard dimensions \a dim, returns \c true if and only
-         * if this face is valid according to both conditions (1) and (2) above;
-         * for non-standard dimensions \a dim, returns \c true if and only if
-         * this face is valid according to condition (1).
-         */
-        bool isValid() const;
-
-        /**
-         * Determines if this face is identified with itself under a
-         * non-identity permutation.  For example, if this face is an
-         * edge then this routine tests whether the edge is identified
-         * with itself in reverse.
-         *
-         * Such a face will always be marked as invalid.  Note that,
-         * for \ref stddim "standard dimensions" \a dim, there are other
-         * types of invalid faces also.  See isValid() for a full
-         * discussion of what it means for a face to be valid.
-         *
-         * @return \c true if and only if this face is identified with
-         * itself under a non-identity permutation.
-         */
-        bool hasBadIdentification() const;
-
-        /**
-         * Determines if this face does not have an appropriate link.
-         * See condition (2) in the documentation for isValid() for a
-         * full description of what "appropriate" means.
-         *
-         * This routine is only available where \a dim is one of Regina's
-         * \ref stddim "standard dimensions", since testing this
-         * condition in arbitrary dimensions is undecidable.  For higher
-         * dimensions \a dim, this routine is not present.
-         *
-         * A face whose link is not appropriate will always be marked as
-         * invalid.  Note that there are other types of invalid faces also.
-         * See isValid() for a full discussion of what it means for a
-         * face to be valid.
-         *
-         * @return \c true if and only if the link of this face is not
-         * appropriate.
-         */
-        bool hasBadLink() const;
-
-    protected:
-        /**
-         * Initialises this face as valid.
-         */
-        FaceValidity();
-
-        /**
-         * Marks this face as having a non-identity self-identification.
-         */
-        void markBadIdentification();
-
-        /**
-         * Marks this face as having a bad link.
-         */
-        void markBadLink();
-};
-
-/**
- * Helper class that stores whether a face is valid.
- * See the general FaceValidity template notes for further details.
- *
- * This specialisation is used for dimensions in which faces are never
- * invalid.  It optimises away all the implementation details (since
- * there is nothing to store and nothing to compute).
- */
-template <bool testLinks>
-class FaceValidity<false, testLinks> {
-    public:
-        /**
-         * Always returns \c true.
-         *
-         * In general, this routine determines whether a face is valid.
-         * However, this particular class is used for dimensions in which
-         * faces are always valid, and so this routine returns \c true always.
-         *
-         * See FaceValidity<true, true>::isValid() for a general
-         * discussion on what it means for a face to be valid.
-         *
-         * @return \c true.
-         */
-        bool isValid() const;
-
-    protected:
-        /**
-         * Marks this face as having a non-identity self-identification.
-         *
-         * This routine should never be called, since this specialisation
-         * of FaceValidity is for dimensions in which faces are always valid.
-         *
-         * It is provided to support dimension-agnostic code, but its
-         * implementation does nothing.
-         */
-        void markBadIdentification();
-
-        /**
-         * Marks this face as having a bad link.
-         *
-         * This routine should never be called, since this specialisation
-         * of FaceValidity is for dimensions in which faces are always valid.
-         *
-         * It is provided to support dimension-agnostic code, but its
-         * implementation does nothing.
-         */
-        void markBadLink();
-};
-
-/**
- * Helper class that stores whether a face is valid.
- * See the general FaceValidity template notes for further details.
- *
- * This specialisation is used for \ref stddim "non-standard dimensions",
- * where the definition of validity is weaker: we do test faces for bad
- * self-identifications, but we do not test faces for bad links.
- *
- * See FaceValidity<true, true>::isValid() for a full discussion of what
- * it means for a face to be valid, and how this differs between
- * standard and non-standard dimensions.
- */
-template <>
-class FaceValidity<true, false> {
-    private:
-        bool valid_;
-            /**< Is this face valid? */
-
-    public:
-        /**
-         * Determines if this face is valid.
-         *
-         * This class is used for \ref stddim "non-standard dimensions",
-         * where a face is defined to be valid if and only if it is not
-         * identified with itself under a non-identity permutation.
-         * For example, an edge is valid if and only if it is not identified
-         * with itself in reverse, and a triangle is valid if and only
-         * if it is is not identified with itself under a non-trivial
-         * rotation or reflection.
-         *
-         * Note that the definition of validity is richer in Regina's
-         * standard dimensions, where we also consider the topology of
-         * the link of a face.  See FaceValidity<true, true> for a full
-         * discussion of what it means for a face to be valid, and how
-         * this differs between standard and non-standard dimensions.
-         *
-         * @return \c true if and only if this face is not identified
-         * with itself under a non-identity permutation.
-         */
-        bool isValid() const;
-
-        /**
-         * Determines if this face is identified with itself under a
-         * non-identity permutation.  For example, if this face is an
-         * edge then this routine tests whether the edge is identified
-         * with itself in reverse.
-         *
-         * For this class, hasBadIdentification() returns \c true if and
-         * only if isValid() returns \c false.  This is in contrast to
-         * \ref stddim "standard dimensions", where there are other types of
-         * invalid faces also.  See FaceValidity<true, true>::isValid() for
-         * a full discussion of what it means for a face to be valid, and how
-         * this differs between standard and non-standard dimensions.
-         *
-         * @return \c true if and only if this face is identified with
-         * itself under a non-identity permutation.
-         */
-        bool hasBadIdentification() const;
-
-    protected:
-        /**
-         * Initialises this face as valid.
-         */
-        FaceValidity();
-
-        /**
-         * Marks this face as having a non-identity self-identification.
-         */
-        void markBadIdentification();
-};
-
-/**
  * Helper class that indicates what data type \a Base uses to store its
  * list of <i>subdim</i>-faces.
  *
@@ -789,7 +517,6 @@ struct FaceListHolder;
 template <int dim, int subdim>
 class FaceBase :
         public FaceStorage<dim, dim - subdim>,
-        public FaceValidity<allowsInvalidFaces(dim, subdim), standardDim(dim)>,
         public FaceNumbering<dim, subdim>,
         public MarkedElement,
         public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
@@ -798,8 +525,27 @@ class FaceBase :
         static constexpr bool allowsNonOrientableLinks = (subdim <= dim - 3);
             /**< Indicates whether it is possible for a face of this dimension
                  to have a non-orientable link. */
+        static constexpr bool allowsInvalidFaces =
+                (dim >= 3 && subdim <= dim - 2);
+            /**< Indicates whether it is possible for a face of this dimension
+                 to be invalid. */
 
     private:
+        /**
+         * Possible values of \a whyInvalid_.
+         * These can be combined using bitwise OR.
+         */
+        enum Validity {
+            VALID = 0,
+                /**< Signifies that this face is valid. */
+            INVALID_IDENTIFICATION = 1,
+                /**< Signifies that the face is identified with itself
+                     under a non-identity permutation. */
+            INVALID_LINK = 2
+                /**< Signifies that the link of the face does not obey
+                     the rules laid out by isValid(). */
+        };
+
         Component<dim>* component_;
             /**< The component that this face belongs to. */
         BoundaryComponent<dim>* boundaryComponent_;
@@ -807,6 +553,15 @@ class FaceBase :
                  or 0 if this face is internal. */
         EnableIf<allowsNonOrientableLinks, bool, true> linkOrientable_;
             /**< Is the link of this face orientable? */
+        EnableIf<allowsInvalidFaces && standardDim(dim), unsigned, VALID>
+                whyInvalid_;
+            /**< Indicates whether this face is valid and, if it is not,
+                 lists all the reasons why.  This should be a bitwise
+                 combination of Validity constants. */
+        EnableIf<allowsInvalidFaces && ! standardDim(dim), bool, true> valid_;
+            /**< Is this face valid?  This is for use in non-standard
+                 dimensions, where we only test for one type of validity
+                 (bad self-identifications). */
 
     public:
         /**
@@ -873,6 +628,80 @@ class FaceBase :
          * @return \c true if and only if the link is orientable.
          */
         bool isLinkOrientable() const;
+
+        /**
+         * Determines if this face is valid.
+         *
+         * There are several conditions that might make a <i>subdim</i>-face
+         * of a <i>dim</i>-dimensional triangulation invalid:
+         *
+         * 1. if the face is identified with itself under a non-identity
+         *    permutation (e.g., an edge is identified with itself in
+         *    reverse, or a triangle is identified with itself under a
+         *    rotation);
+         * 2. if the face does not have an appropriate link.  Here the
+         *    meaning of "appropriate" depends upon the type of face:
+         *    - for a face that belongs to some boundary facet(s) of the
+         *      triangulation, its link must be a topological ball;
+         *    - for a vertex that does not belong to any boundary facets,
+         *      its link must be a closed (\a dim - 1)-manifold;
+         *    - for a (\a subdim &ge; 1)-face that does not belong to any
+         *      boundary facets, its link must be a topological sphere.
+         *
+         * Condition (1) is tested for all dimensions \a subdim and \a dim.
+         * Condition (2) is more difficult, since it relies on undecidable
+         * problems.  As a result, (2) is \e only tested when \a dim is one
+         * of Regina's \ref stddim "standard dimensions".
+         *
+         * If this face is invalid, then it is possible to find out why.
+         * In non-standard dimensions, this must mean that the face fails
+         * condition (1) above.  In standard dimensions, you can call the
+         * functions hasBadIdentification() and/or hasBadLink() to determine
+         * whether the failure is due to conditions (1) or (2) respectively.
+         *
+         * @return for standard dimensions \a dim, returns \c true if and only
+         * if this face is valid according to both conditions (1) and (2) above;
+         * for non-standard dimensions \a dim, returns \c true if and only if
+         * this face is valid according to condition (1).
+         */
+        bool isValid() const;
+
+        /**
+         * Determines if this face is identified with itself under a
+         * non-identity permutation.  For example, if this face is an
+         * edge then this routine tests whether the edge is identified
+         * with itself in reverse.
+         *
+         * Such a face will always be marked as invalid.  Note that,
+         * for \ref stddim "standard dimensions" \a dim, there are other
+         * types of invalid faces also.  See isValid() for a full
+         * discussion of what it means for a face to be valid.
+         *
+         * @return \c true if and only if this face is identified with
+         * itself under a non-identity permutation.
+         */
+        bool hasBadIdentification() const;
+
+        /**
+         * Determines if this face does not have an appropriate link.
+         * See condition (2) in the documentation for isValid() for a
+         * full description of what "appropriate" means.
+         *
+         * A face whose link is not appropriate will always be marked as
+         * invalid.  Note that there are other types of invalid faces also.
+         * See isValid() for a full discussion of what it means for a
+         * face to be valid.
+         *
+         * \pre The dimension \a dim is one of Regina's
+         * \ref stddim "standard dimensions".  Any attempt to use this routine
+         * in higher dimensions \a dim will result in a compile-time error.
+         * This is because testing for bad links in higher dimensions can
+         * require solutions to problems that are proven to be undecidable.
+         *
+         * @return \c true if the link of this face is not appropriate (thereby
+         * making the face invalid), or \c false if the link is appropriate.
+         */
+        bool hasBadLink() const;
 
         /**
          * Returns the <i>lowerdim</i>-face of the underlying triangulation
@@ -1194,70 +1023,6 @@ inline void FaceStorage<dim, 2>::push_back(
 }
 #endif // ! __DOXYGEN
 
-// Inline functions for FaceValidity
-
-// We hide the specialised FaceValidity<true, true> implementations from
-// doxygen, since doxygen is confused by the fact that it doesn't see a
-// corresponding specialised FaceValidity<true, true> class.
-#ifndef __DOXYGEN
-template <>
-inline FaceValidity<true, true>::FaceValidity() : invalid_(0) {
-}
-
-template <>
-inline bool FaceValidity<true, true>::isValid() const {
-    return ! invalid_;
-}
-
-template <>
-inline bool FaceValidity<true, true>::hasBadIdentification() const {
-    return (invalid_ & INVALID_IDENTIFICATION);
-}
-
-template <>
-inline bool FaceValidity<true, true>::hasBadLink() const {
-    return (invalid_ & INVALID_LINK);
-}
-
-template <>
-inline void FaceValidity<true, true>::markBadIdentification() {
-    invalid_ |= INVALID_IDENTIFICATION;
-}
-
-template <>
-inline void FaceValidity<true, true>::markBadLink() {
-    invalid_ |= INVALID_LINK;
-}
-#endif // ! __DOXYGEN
-
-template <bool testLinks>
-inline bool FaceValidity<false, testLinks>::isValid() const {
-    return true;
-}
-
-template <bool testLinks>
-inline void FaceValidity<false, testLinks>::markBadIdentification() {
-}
-
-template <bool testLinks>
-inline void FaceValidity<false, testLinks>::markBadLink() {
-}
-
-inline FaceValidity<true, false>::FaceValidity() : valid_(true) {
-}
-
-inline bool FaceValidity<true, false>::isValid() const {
-    return valid_;
-}
-
-inline bool FaceValidity<true, false>::hasBadIdentification() const {
-    return ! valid_;
-}
-
-inline void FaceValidity<true, false>::markBadIdentification() {
-    valid_ = false;
-}
-
 // Inline functions for FaceBase
 
 template <int dim, int subdim>
@@ -1292,6 +1057,35 @@ inline bool FaceBase<dim, subdim>::isLinkOrientable() const {
         return linkOrientable_.value;
     else
         return true;
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::isValid() const {
+    if constexpr (! allowsInvalidFaces)
+        return true;
+    else if constexpr (standardDim(dim))
+        return ! whyInvalid_.value;
+    else
+        return valid_.value;
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::hasBadIdentification() const {
+    if constexpr (! allowsInvalidFaces)
+        return false;
+    else if constexpr (standardDim(dim))
+        return (whyInvalid_.value & INVALID_IDENTIFICATION);
+    else
+        return ! valid_.value;
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::hasBadLink() const {
+    static_assert(standardDim(dim), "The routine hasBadLink() is only available in Regina's standard dimensions.");
+    if constexpr (! allowsInvalidFaces)
+        return false;
+    else
+        return (whyInvalid_.value & INVALID_LINK);
 }
 
 template <int dim, int subdim>
