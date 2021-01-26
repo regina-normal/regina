@@ -238,7 +238,7 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
 
                     if (adj->SimplexFaces<dim, dim-2>::face_[adjFace]) {
                         // We looped right around.
-                        if (dim > 2) {
+                        if constexpr (dim > 2) {
                             // Check that we are not mapping the face to
                             // itself with a non-identity permutation.
                             if (adj->SimplexFaces<dim, dim-2>::mapping_[
@@ -343,7 +343,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                             // We have looped back around to where we've
                             // been before.
 
-                            if (subdim > 0) {
+                            if constexpr (subdim > 0) {
                                 // Have we mapped the face to itself with a
                                 // non-identity permutation?
                                 // Note that we only need to check the images
@@ -360,12 +360,12 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                                     }
                             }
 
-                            if (subdim <= dim - 3) {
+                            if constexpr (subdim <= dim - 3) {
                                 // Is the link non-orientable?
                                 if (adjMap.sign() !=
                                         adj->SimplexFaces<dim, subdim>::
                                         mapping_[adjFace].sign())
-                                    f->markLinkNonorientable();
+                                    f->linkOrientable_ = false;
                             }
                         } else {
                             adj->SimplexFaces<dim, subdim>::face_[adjFace] = f;
@@ -441,7 +441,7 @@ void TriangulationBase<dim>::calculateRealBoundary() {
 
             // Treat the vertices separately, since we can optimise the
             // vertex number calculations in this case.
-            if (dim >= 3)
+            if constexpr (dim >= 3)
                 for (i = 0; i <= dim; ++i)
                     if (i != facetNum) {
                         Face<dim, 0>* vertex = simp->vertex(i);

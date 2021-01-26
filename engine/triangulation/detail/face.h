@@ -49,6 +49,7 @@
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
+#include "utilities/typeutils.h"
 #include <deque>
 #include <vector>
 
@@ -79,25 +80,6 @@ template <int dim> class TriangulationBase;
  */
 constexpr bool allowsInvalidFaces(int dim, int subdim) {
     return (dim >= 3 && subdim <= dim - 2);
-}
-
-/**
- * Indicates whether it is possible for a <i>subdim</i>-face of a
- * <i>dim</i>-dimensional triangulation to have a non-orientable link.
- *
- * This compile-time constant function is used to determine the
- * template argument that should be passed to FaceOrientability.
- *
- * \ifacespython Not present.
- *
- * @param dim the dimension of the underlying triangulations.
- * @param subdim the dimension of the faces in question.
- * @return \c true if such faces may have non-orientable links, or \c false if
- * the links of <i>subdim</i>-faces of <i>dim</i>-dimensional triangluations
- * are always orientable.
- */
-constexpr bool allowsNonOrientableLinks(int dim, int subdim) {
-    return (dim >= 3 && subdim <= dim - 3);
 }
 
 /**
@@ -767,93 +749,6 @@ class FaceValidity<true, false> {
 };
 
 /**
- * Helper class that stores whether the link of a face is orientable.
- * Every class Face<dim, subdim> inherits from this class.
- *
- * This class takes a template argument to allow optimisation for those
- * dimensions in which face links are always orientable.  In particular, if
- * \a allowsNonorientable is \c false, then this class assumes that all faces
- * will always have orientable links, and it optimises away all the
- * implementation details to leave no overhead at all.
- *
- * \tparam allowsNonorientable \c true when this is used for dimensions in
- * which face links could potentially be non-orientable, or \c false when
- * this is used for dimensions in which face links are always orientable.
- */
-template <bool allowsNonorientable>
-class FaceOrientability {
-    static_assert(allowsNonorientable,
-        "The generic FaceOrientability template should only be used with "
-        "allowsNonorientable = true.");
-
-    private:
-        bool linkOrientable_;
-            /**< Is the link of this face orientable? */
-
-    public:
-        /**
-         * Determines if the link of this face is orientable.
-         *
-         * This routine is fast: it uses pre-computed information, and
-         * does not need to build a full triangulation of the link.
-         *
-         * \warning If this face is identified with itself under a
-         * non-identity permutation (which makes the face invalid), then
-         * the return value of this routine is undefined.
-         *
-         * @return \c true if and only if the link is orientable.
-         */
-        bool isLinkOrientable() const;
-
-    protected:
-        /**
-         * Initialises the link of this face as orientable.
-         */
-        FaceOrientability();
-
-        /**
-         * Marks the link of this face as non-orientable.
-         */
-        void markLinkNonorientable();
-};
-
-/**
- * Helper class that stores whether the link of a face is orientable.
- * See the general FaceOrientability template notes for further details.
- *
- * This specialisation is used for dimensions in which links of faces are
- * always orientable.  It optimises away all the implementation details
- * (since there is nothing to store and nothing to compute).
- */
-template <>
-class FaceOrientability<false> {
-    public:
-        /**
-         * Determines if the link of this face is orientable.
-         *
-         * This routine always returns \c true, since this specialisation
-         * of FaceOrientability is for dimensions in which links of faces
-         * are always orientable.
-         *
-         * @return \c true.
-         */
-        bool isLinkOrientable() const;
-
-    protected:
-        /**
-         * Marks the link of this face as non-orientable.
-         *
-         * This routine should never be called, since this specialisation
-         * of FaceOrientability is for dimensions in which links of faces
-         * are always orientable.
-         *
-         * It is provided to support dimension-agnostic code, but its
-         * implementation does nothing.
-         */
-        void markLinkNonorientable();
-};
-
-/**
  * Helper class that indicates what data type \a Base uses to store its
  * list of <i>subdim</i>-faces.
  *
@@ -895,17 +790,23 @@ template <int dim, int subdim>
 class FaceBase :
         public FaceStorage<dim, dim - subdim>,
         public FaceValidity<allowsInvalidFaces(dim, subdim), standardDim(dim)>,
-        public FaceOrientability<allowsNonOrientableLinks(dim, subdim)>,
         public FaceNumbering<dim, subdim>,
         public MarkedElement,
         public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
         public Output<Face<dim, subdim>> {
+    public:
+        static constexpr bool allowsNonOrientableLinks = (subdim <= dim - 3);
+            /**< Indicates whether it is possible for a face of this dimension
+                 to have a non-orientable link. */
+
     private:
         Component<dim>* component_;
             /**< The component that this face belongs to. */
         BoundaryComponent<dim>* boundaryComponent_;
             /**< The boundary component that this face is a part of,
                  or 0 if this face is internal. */
+        EnableIf<allowsNonOrientableLinks, bool, true> linkOrientable_;
+            /**< Is the link of this face orientable? */
 
     public:
         /**
@@ -958,6 +859,20 @@ class FaceBase :
          * @return \c true if and only if this face lies on the boundary.
          */
         bool isBoundary() const;
+
+        /**
+         * Determines if the link of this face is orientable.
+         *
+         * This routine is fast: it uses pre-computed information, and
+         * does not need to build a full triangulation of the link.
+         *
+         * \warning If this face is identified with itself under a
+         * non-identity permutation (which makes the face invalid), then
+         * the return value of this routine is undefined.
+         *
+         * @return \c true if and only if the link is orientable.
+         */
+        bool isLinkOrientable() const;
 
         /**
          * Returns the <i>lowerdim</i>-face of the underlying triangulation
@@ -1343,34 +1258,6 @@ inline void FaceValidity<true, false>::markBadIdentification() {
     valid_ = false;
 }
 
-// Inline functions for FaceOrientability
-
-// We hide the specialised FaceOrientability<true> implementations from
-// doxygen, since doxygen is confused by the fact that it doesn't see a
-// corresponding specialised FaceOrientability<true> class.
-#ifndef __DOXYGEN
-template <>
-inline FaceOrientability<true>::FaceOrientability() : linkOrientable_(true) {
-}
-
-template <>
-inline bool FaceOrientability<true>::isLinkOrientable() const {
-    return linkOrientable_;
-}
-
-template <>
-inline void FaceOrientability<true>::markLinkNonorientable() {
-    linkOrientable_ = false;
-}
-#endif // ! __DOXYGEN
-
-inline bool FaceOrientability<false>::isLinkOrientable() const {
-    return true;
-}
-
-inline void FaceOrientability<false>::markLinkNonorientable() {
-}
-
 // Inline functions for FaceBase
 
 template <int dim, int subdim>
@@ -1397,6 +1284,14 @@ inline BoundaryComponent<dim>* FaceBase<dim, subdim>::boundaryComponent()
 template <int dim, int subdim>
 inline bool FaceBase<dim, subdim>::isBoundary() const {
     return boundaryComponent_;
+}
+
+template <int dim, int subdim>
+inline bool FaceBase<dim, subdim>::isLinkOrientable() const {
+    if constexpr (allowsNonOrientableLinks)
+        return linkOrientable_.value;
+    else
+        return true;
 }
 
 template <int dim, int subdim>

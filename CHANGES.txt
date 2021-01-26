@@ -17,6 +17,12 @@ Version 6.1  [ TODO ]
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
     ENGINE:
+        Class EnableIf<condition, T, defaultValue>:
+            - Added to support data members that only appear for some
+              template parameters (such as validity and link orientability
+              for triangulation faces).
+        Class Face<dim, subdim>:
+            - Simplified the class hierarchy; FaceOrientability is now gone.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
@@ -43,6 +49,9 @@ Version 6.1  [ TODO ]
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.
+        Function allowsNonOrientableLinks(dim, subdim):
+            - Removed this global function (which was never available in
+              python). Use Face<dim, subdim>::allowsNonOrientableLinks instead.
     PYTHON:
         - Wrapped Perm<n>::SnIndex() for n=2,3,4,5; this alias has been present
           in C++ for a long time but was somehow never wrapped in Python.
