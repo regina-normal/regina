@@ -50,7 +50,7 @@ EdgeIntChooser::EdgeIntChooser(
         QComboBox(parent), tri_(tri), filter_(filter),
         argMin_(argMin), argMax_(argMax), argDesc_(argDesc) {
     setMinimumContentsLength(30);
-    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
         tri_->listen(this);
     fill();
