@@ -3333,10 +3333,8 @@ class Triangulation3Test : public TriangulationTest<3> {
             }
 
             // Are there any invalid vertices remaining?
-            for (Triangulation<3>::VertexIterator vit =
-                    finite.vertices().begin(); vit !=
-                    finite.vertices().end(); ++vit)
-                if ((*vit)->isBoundary() && ! (*vit)->isStandard()) {
+            for (Vertex<3>* v : finite.vertices())
+                if (v->isBoundary() && ! v->isStandard()) {
                     std::ostringstream msg;
                     msg << tri->label()
                         << ": idealToFinite() leaves "
@@ -3346,14 +3344,11 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
-            Triangulation<3>::EdgeIterator eit;
-            for (eit = tri->edges().begin();
-                    eit != tri->edges().end(); ++eit)
-                if (! (*eit)->isValid())
+            for (regina::Edge<3>* edge : tri->edges())
+                if (! edge->isValid())
                     ++oldInvEdges;
-            for (eit = finite.edges().begin();
-                    eit != finite.edges().end(); ++eit)
-                if (! (*eit)->isValid())
+            for (regina::Edge<3>* edge : finite.edges())
+                if (! edge->isValid())
                     ++newInvEdges;
             if (oldInvEdges != newInvEdges) {
                 std::ostringstream msg;
@@ -3422,14 +3417,11 @@ class Triangulation3Test : public TriangulationTest<3> {
 
             // Make sure the invalid edges are left alone.
             unsigned oldInvEdges = 0, newInvEdges = 0;
-            Triangulation<3>::EdgeIterator eit;
-            for (eit = tri->edges().begin();
-                    eit != tri->edges().end(); ++eit)
-                if (! (*eit)->isValid())
+            for (regina::Edge<3>* edge : tri->edges())
+                if (! edge->isValid())
                     ++oldInvEdges;
-            for (eit = ideal.edges().begin();
-                    eit != ideal.edges().end(); ++eit)
-                if (! (*eit)->isValid())
+            for (regina::Edge<3>* edge : ideal.edges())
+                if (! edge->isValid())
                     ++newInvEdges;
             if (oldInvEdges != newInvEdges) {
                 std::ostringstream msg;

@@ -58,11 +58,10 @@ MatrixInt* AngleStructureVector::makeAngleEquations(
     size_t row = 0;
 
     size_t index;
-    for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
-            eit != tri->edges().end(); eit++) {
-        if ((*eit)->isBoundary())
+    for (Edge<3>* edge : tri->edges()) {
+        if (edge->isBoundary())
             continue;
-        for (auto& emb : **eit) {
+        for (auto& emb : *edge) {
             index = emb.tetrahedron()->index();
             if (emb.edge() < 3)
                 eqns->entry(row, 3 * index + emb.edge()) += 1;

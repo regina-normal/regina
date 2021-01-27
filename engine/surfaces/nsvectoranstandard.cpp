@@ -100,13 +100,12 @@ MatrixInt* NSVectorANStandard::makeMatchingEquations(
     int i;
     size_t tet0, tet1;
     Perm<4> perm0, perm1;
-    for (auto fit = triangulation->triangles().begin();
-            fit != triangulation->triangles().end(); fit++) {
-        if (! (*fit)->isBoundary()) {
-            tet0 = (*fit)->embedding(0).tetrahedron()->index();
-            tet1 = (*fit)->embedding(1).tetrahedron()->index();
-            perm0 = (*fit)->embedding(0).vertices();
-            perm1 = (*fit)->embedding(1).vertices();
+    for (Triangle<3>* t : triangulation->triangles()) {
+        if (! t->isBoundary()) {
+            tet0 = t->embedding(0).tetrahedron()->index();
+            tet1 = t->embedding(1).tetrahedron()->index();
+            perm0 = t->embedding(0).vertices();
+            perm1 = t->embedding(1).vertices();
             for (i=0; i<3; i++) {
                 // Triangles:
                 ans->entry(row, 10*tet0 + perm0[i]) += 1;

@@ -175,19 +175,18 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
     // Write the pentachoron gluings.
-    PentachoronIterator it;
     Pentachoron<4>* adjPent;
     int facet;
 
     out << "  <pentachora npent=\"" << simplices_.size() << "\">\n";
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
+    for (Pentachoron<4>* p : simplices_) {
         out << "    <pent desc=\"" <<
-            xmlEncodeSpecialChars((*it)->description()) << "\"> ";
+            xmlEncodeSpecialChars(p->description()) << "\"> ";
         for (facet = 0; facet < 5; ++facet) {
-            adjPent = (*it)->adjacentPentachoron(facet);
+            adjPent = p->adjacentPentachoron(facet);
             if (adjPent) {
                 out << adjPent->index() << ' '
-                    << (*it)->adjacentGluing(facet).permCode() << ' ';
+                    << p->adjacentGluing(facet).permCode() << ' ';
             } else
                 out << "-1 -1 ";
         }

@@ -66,16 +66,14 @@ void Triangulation<3>::calculateSkeleton() {
 }
 
 void Triangulation<3>::checkPermutations() {
-    TetrahedronIterator it;
-
-    for (it = simplices_.begin(); it != simplices_.end(); it++)
+    for (Tetrahedron<3>* tet : simplices_)
         for (int face = 0; face < 4; face++) {
-            Tetrahedron<3> * adjacent = (*it) -> adjacentTetrahedron(face);
+            Tetrahedron<3> * adjacent = tet->adjacentTetrahedron(face);
 
             if (adjacent) {
-                Perm<4> perm = (*it) -> adjacentGluing(face);
+                Perm<4> perm = tet->adjacentGluing(face);
 
-                Perm<4> adj_perm = adjacent -> adjacentGluing(perm[face]);
+                Perm<4> adj_perm = adjacent->adjacentGluing(perm[face]);
 
                 if (!(perm*adj_perm).isIdentity()) {
                     valid_ = false;
@@ -86,7 +84,7 @@ void Triangulation<3>::checkPermutations() {
                                  "do not match in skeleton.cpp" << std::endl;
                 }
 
-                if ((*it) != adjacent -> adjacentTetrahedron(perm[face])) {
+                if (tet != adjacent->adjacentTetrahedron(perm[face])) {
                     valid_ = false;
 
                     // This printing statement is temporary code 

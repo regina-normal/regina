@@ -1165,16 +1165,12 @@ Triangulation<3>* NormalSurface::cutAlong() const {
     for (i = 0; i < nTet; ++i)
         sets[i] = new TetBlockSet(this, i, ans);
 
-    Triangulation<3>::TriangleIterator fit;
-    Triangle<3>* f;
     unsigned long tet0, tet1;
     int face0, face1;
     int fromVertex0, fromVertex1;
     Perm<4> gluing;
     unsigned long quadBlocks;
-    for (fit = triangulation()->triangles().begin();
-            fit != triangulation()->triangles().end(); ++fit) {
-        f = *fit;
+    for (Triangle<3>* f : triangulation()->triangles()) {
         if (f->isBoundary())
             continue;
 

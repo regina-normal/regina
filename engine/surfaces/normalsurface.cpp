@@ -438,13 +438,12 @@ MatrixInt* NormalSurface::boundaryIntersections() const {
         return 0;
     if (vector->allowsAlmostNormal())
         return 0;
-    for (Triangulation<3>::VertexIterator it = snapPea->vertices().begin();
-            it != snapPea->vertices().end(); ++it) {
-        if (! (*it)->isIdeal())
+    for (Vertex<3>* v : snapPea->vertices()) {
+        if (! v->isIdeal())
             return 0;
-        if (! (*it)->isLinkOrientable())
+        if (! v->isLinkOrientable())
             return 0;
-        if ((*it)->linkEulerChar() != 0)
+        if (v->linkEulerChar() != 0)
             return 0;
     }
 

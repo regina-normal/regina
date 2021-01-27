@@ -194,18 +194,16 @@ void Triangulation<4>::calculateVertexLinks() {
         // spherical double cover at the vertex link).  We detect these
         // cases separately under calculateEdgeLinks() below.
         if (! vertex->isValid()) {
-            Triangulation<3>::VertexIterator linkit;
             int type;
-            for (linkit = vertex->link_->vertices().begin();
-                    linkit != vertex->link_->vertices().end(); ++linkit) {
-                type = (*linkit)->link();
+            for (Vertex<3>* v : vertex->link_->vertices()) {
+                type = v->link();
                 if (type != Vertex<3>::SPHERE && type != Vertex<3>::DISC) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.
 
                     // Find a tetrahedron in the 3-manifold vertex link
                     // containing the bad 3-manifold vertex.
-                    const VertexEmbedding<3>& linkemb((*linkit)->front());
+                    const VertexEmbedding<3>& linkemb(v->front());
 
                     // Find the corresponding pentachoron in the 4-manifold
                     // triangulation.

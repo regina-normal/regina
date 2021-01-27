@@ -1292,12 +1292,11 @@ namespace {
         std::vector<std::vector<mpz_class> > input;
         unsigned long nTri = tri.countTriangles();
 
-        Triangulation<3>::EdgeIterator eit;
         const Tetrahedron<3>* tet;
         Perm<4> p;
         unsigned long i;
-        for (eit = tri.edges().begin(); eit != tri.edges().end(); ++eit) {
-            for (auto& emb : **eit) {
+        for (Edge<3>* edge : tri.edges()) {
+            for (auto& emb : *edge) {
                 input.push_back(std::vector<mpz_class>());
                 std::vector<mpz_class>& v(input.back());
                 v.reserve(3 * nTri);

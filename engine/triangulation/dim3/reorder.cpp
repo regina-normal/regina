@@ -266,13 +266,10 @@ Isomorphism<3>* ordering_iso(const Triangulation<3> &trig, bool force_oriented)
 } // End anonymous namespace
 
 bool Triangulation<3>::isOrdered() const {
-    TetrahedronIterator it;
-
-    for(it = simplices_.begin(); it != simplices_.end(); ++it)
+    for(Tetrahedron<3>* tet : simplices_)
         for(int face = 0; face < 4; face++)
-
-            if((*it)->adj_[face]) {
-                Perm<4> perm = (*it) -> gluing_[face];
+            if(tet->adj_[face]) {
+                Perm<4> perm = tet->gluing_[face];
 
                 // check that the permutation is order preserving on the face
                 int last = -1;

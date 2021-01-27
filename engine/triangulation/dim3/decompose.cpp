@@ -995,11 +995,9 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     use.intelligentSimplify();
 
     // Check to see whether any component is a one-tetrahedron solid torus.
-    for (ComponentIterator cit = use.components().begin();
-            cit != use.components().end(); ++cit)
-        if ((*cit)->size() == 1 &&
-                (*cit)->countTriangles() == 3 &&
-                (*cit)->countVertices() == 1) {
+    for (Component<3>* c : use.components())
+        if (c->size() == 1 && c->countTriangles() == 3 &&
+                c->countVertices() == 1) {
             // Because we know the triangulation is valid, this rules out
             // all one-tetrahedron triangulations except for LST(1,2,3).
             return (compressingDisc_ = true);
@@ -1007,12 +1005,11 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 
     // Open up as many boundary triangles as possible (to make it easier to
     // find simple compressing discs).
-    TriangleIterator fit;
     bool opened = true;
     while (opened) {
         opened = false;
-        for (fit = use.triangles().begin(); fit != use.triangles().end(); ++fit)
-            if (use.openBook(*fit, true, true)) {
+        for (Triangle<3>* t : use.triangles())
+            if (use.openBook(t, true, true)) {
                 opened = true;
                 break;
             }
@@ -1031,19 +1028,19 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // It doesn't matter whether the edges and/or vertices are distinct.
     Edge<3> *e0, *e1, *e2;
     unsigned long newSphereCount;
-    for (fit = use.triangles().begin(); fit != use.triangles().end(); ++fit) {
-        if ((*fit)->isBoundary())
+    for (Triangle<3>* t : use.triangles()) {
+        if (t->isBoundary())
             continue;
 
-        e0 = (*fit)->edge(0);
-        e1 = (*fit)->edge(1);
-        e2 = (*fit)->edge(2);
+        e0 = t->edge(0);
+        e1 = t->edge(1);
+        e2 = t->edge(2);
         if (! (e0->isBoundary() && e1->isBoundary() && e2->isBoundary()))
             continue;
 
         // This could be a compressing disc.
         // Cut along the triangle to be sure.
-        const TriangleEmbedding<3>& emb = (*fit)->front();
+        const TriangleEmbedding<3>& emb = t->front();
 
         Triangulation<3> cut(use, false);
         cut.tetrahedron(emb.tetrahedron()->markedIndex())->unjoin(
@@ -1069,15 +1066,14 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
     // degree-one edge on the inside and a boundary edge on the outside.
     // The boundary edge on the outside will surround a disc that cuts
     // right through the tetrahedron.
-    TetrahedronIterator tit;
     SnappedBall* ball;
-    for (tit = use.simplices_.begin(); tit != use.simplices_.end(); ++tit) {
-        ball = SnappedBall::formsSnappedBall(*tit);
+    for (Tetrahedron<3>* t : use.simplices_) {
+        ball = SnappedBall::formsSnappedBall(t);
         if (! ball)
             continue;
 
         int equator = ball->equatorEdge();
-        if (! (*tit)->edge(equator)->isBoundary()) {
+        if (! t->edge(equator)->isBoundary()) {
             delete ball;
             continue;
         }
@@ -1090,19 +1086,19 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
         int upper = ball->boundaryFace(0);
         delete ball;
 
-        Tetrahedron<3>* adj = (*tit)->adjacentTetrahedron(upper);
+        Tetrahedron<3>* adj = t->adjacentTetrahedron(upper);
         if (! adj) {
             // The disc is trivial.
             continue;
         }
 
         Triangulation<3> cut(use, false);
-        cut.tetrahedron((*tit)->markedIndex())->unjoin(upper);
+        cut.tetrahedron(t->markedIndex())->unjoin(upper);
         Tetrahedron<3>* tet = cut.newTetrahedron();
         tet->join(Edge<3>::edgeVertex[equator][0], tet, Perm<4>(
             Edge<3>::edgeVertex[equator][0], Edge<3>::edgeVertex[equator][1]));
         tet->join(upper, cut.tetrahedron(adj->markedIndex()),
-            (*tit)->adjacentGluing(upper));
+            t->adjacentGluing(upper));
 
         // If we don't see a new boundary component, the disc boundary is
         // non-separating in the manifold boundary and is therefore a

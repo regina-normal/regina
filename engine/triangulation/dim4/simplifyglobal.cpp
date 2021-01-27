@@ -58,9 +58,6 @@ bool Triangulation<4>::intelligentSimplify() {
         unsigned long threeThreeAttempts;
         unsigned long threeThreeCap;
 
-        Triangle<4>* triangle;
-        TriangleIterator fit;
-
         while (true) {
             // --- Random 3-3 moves ---
 
@@ -76,12 +73,9 @@ bool Triangulation<4>::intelligentSimplify() {
                 // Calculate the list of available 3-3 moves.
                 threeThreeAvailable.clear();
                 // Use triangles() to ensure the skeleton has been calculated.
-                for (fit = use->triangles().begin();
-                        fit != use->triangles().end(); ++fit) {
-                    triangle = *fit;
+                for (Triangle<4>* triangle : use->triangles())
                     if (use->pachner(triangle, true, false))
                         threeThreeAvailable.push_back(triangle);
-                }
 
                 // Increment threeThreeCap if needed.
                 if (threeThreeCap < COEFF_3_3 * threeThreeAvailable.size())
@@ -127,16 +121,13 @@ bool Triangulation<4>::intelligentSimplify() {
                 use = new Triangulation<4>(*this, false);
 
                 // Perform every book opening move we can find.
-                TetrahedronIterator tit;
-
                 bool opened = false;
                 bool openedNow = true;
                 while (openedNow) {
                     openedNow = false;
 
-                    for (tit = use->tetrahedra().begin();
-                            tit != use->tetrahedra().end(); ++tit)
-                        if (use->openBook(*tit, true, true)) {
+                    for (Tetrahedron<4>* tet : use->tetrahedra())
+                        if (use->openBook(tet, true, true)) {
                             opened = openedNow = true;
                             break;
                         }
