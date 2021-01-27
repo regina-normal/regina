@@ -117,10 +117,10 @@ void Triangulation<3>::calculateVertexLinks() {
         const EdgeEmbedding<3>& emb = e->front();
         tet = emb.tetrahedron();
 
-        end0 = std::get<0>(tet->faces_).face_[
-            std::get<1>(tet->faces_).mapping_[emb.edge()][0]];
-        end1 = std::get<0>(tet->faces_).face_[
-            std::get<1>(tet->faces_).mapping_[emb.edge()][1]];
+        end0 = std::get<0>(tet->faces_)[
+            std::get<1>(tet->mappings_)[emb.edge()][0]];
+        end1 = std::get<0>(tet->faces_)[
+            std::get<1>(tet->mappings_)[emb.edge()][1]];
 
         if (e->isBoundary()) {
             // Contribute to v_bdry.
