@@ -85,6 +85,36 @@ struct EnableIf<false, T, defaultValue> {
 };
 #endif // __DOXYGEN
 
+/**
+ * A helper class used in the implementation of ExpandSequence.
+ * No object of this class should ever be created.
+ */
+template <template <int, int...> class T, int arg>
+struct ExpandSequenceHelper {
+    /**
+     * A function whose declaration allows the compiler to convert a single
+     * std::integer_sequence into a full parameter pack for type \a T.
+     */
+    template <int... index>
+    static auto convert(std::integer_sequence<int, index...>) ->
+        T<arg, index...>;
+
+    ExpandSequenceHelper() = delete;
+};
+
+/**
+ * Offers a convenient way to pass an entire integer sequence as a
+ * parameter pack for the template type \a T.
+ *
+ * Specifically, the alias <tt>ExpandSequence&lt;T, arg, n&gt;</tt>
+ * represents the type <tt>T&lt;arg, 0, 1, ..., n-1&gt;</tt>.
+ *
+ * \apinotfinal
+ */
+template <template <int, int...> typename T, int arg, int n = arg>
+using ExpandSequence = decltype(ExpandSequenceHelper<T, arg>::convert(
+    std::make_integer_sequence<int, n>{}));
+
 /*@}*/
 
 } // namespace regina

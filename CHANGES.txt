@@ -21,6 +21,8 @@ Version 6.1  [ TODO ]
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
               for triangulation faces).
+        Class ExpandSequence:
+            - New type alias for working with integer parameter packs.
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
               allowsInvalidFaces.
