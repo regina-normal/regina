@@ -28,6 +28,8 @@ Version 6.1  [ TODO ]
               allowsInvalidFaces.
             - Simplified the class hierarchy; FaceOrientability,
               FaceValidity and FaceListHolder are now gone.
+        Class MarkedVector:
+            - New convenience routine clear_destructive().
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really

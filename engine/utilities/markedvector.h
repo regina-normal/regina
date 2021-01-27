@@ -133,7 +133,8 @@ class REGINA_API MarkedElement {
  * Note that, like its parent std::vector, this class performs no memory
  * management.  In particular, elements (which are pointers to real objects)
  * are not destroyed when they are removed from a vector or when the vector
- * is eventually destroyed.
+ * is eventually destroyed.  This class does, however, provide a convenience
+ * method clear_destructive() to assist other code with its memory cleanup.
  *
  * Since an object can only belong to one MarkedVector at a time, this
  * class does not offer a copy constructor or copy assignment.  Instead it
@@ -298,6 +299,18 @@ class MarkedVector : private std::vector<T*> {
             for (local = std::vector<T*>::begin();
                     local != std::vector<T*>::end(); ++local)
                 (*local)->marking_ = i++;
+        }
+
+        /**
+         * Empties this vector and destroys all of the object that it contains.
+         *
+         * This is a convenience method that simply calls \c delete on each
+         * element of the vector, and then calls clear().
+         */
+        void clear_destructive() {
+            for (auto elt : *this)
+                delete elt;
+            clear();
         }
 
         // Marked vectors cannot be copied, because elements should only
