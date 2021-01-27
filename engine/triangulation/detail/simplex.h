@@ -86,6 +86,11 @@ class SimplexFaces {
                  Simplex<dim>::faceMapping() for details. */
 
         /**
+         * Default constructor that leaves all arrays uninitialised.
+         */
+        SimplexFaces() = default;
+
+        /**
          * Tests whether the <i>useDim</i>-face degrees of this and the
          * given simplex are identical, under the given relabelling.
          *
@@ -114,6 +119,10 @@ class SimplexFaces {
          */
         template <int maxDim>
         bool sameDegreesTo(const SimplexFaces& other, Perm<dim+1> p) const;
+
+        // Make this class non-copyable.
+        SimplexFaces(const SimplexFaces&) = delete;
+        SimplexFaces& operator = (const SimplexFaces&) = delete;
 };
 
 /**
