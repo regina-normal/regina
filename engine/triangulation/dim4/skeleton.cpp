@@ -129,14 +129,14 @@ void Triangulation<4>::calculateVertexLinks() {
                 // tetrahedron.  Make the gluing.
                 adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
                 tet[index]->join(
-                    pent->regina::detail::SimplexFaces<4, 3>::mapping_[vertexIdx].
+                    std::get<3>(pent->faces_).mapping_[vertexIdx].
                         preImageOf(exitFacet),
                     tet[5 * adjPentIdx + adjVertexIdx],
                     Perm<4>::contract(
-                            adjPent->regina::detail::SimplexFaces<4, 3>::
+                            std::get<3>(adjPent->faces_).
                             mapping_[adjVertexIdx].inverse() *
                         pent->adjacentGluing(exitFacet) *
-                        pent->regina::detail::SimplexFaces<4, 3>::mapping_[vertexIdx]));
+                        std::get<3>(pent->faces_).mapping_[vertexIdx]));
             }
             ++index;
         }
@@ -216,12 +216,12 @@ void Triangulation<4>::calculateVertexLinks() {
                     // We have the pentachoron (vemb.pentachoron())
                     // and one of the endpoints of the edge (vemb.vertex()).
                     // Find the other endpoint of the edge.
-                    int otherEnd = vemb.pentachoron()->
-                        regina::detail::SimplexFaces<4, 3>::mapping_
+                    int otherEnd = std::get<3>(
+                        vemb.pentachoron()->faces_).mapping_
                         [vemb.vertex()][linkemb.vertex()];
 
                     // Got it!
-                    vemb.pentachoron()->regina::detail::SimplexFaces<4, 1>::face_[
+                    std::get<1>(vemb.pentachoron()->faces_).face_[
                         Edge<4>::edgeNumber[vemb.vertex()][otherEnd]
                         ]->whyInvalid_.value |= Edge<4>::INVALID_LINK;
                 }

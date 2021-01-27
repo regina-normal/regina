@@ -407,8 +407,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
             // If we are after a complete isomorphism, test whether the
             // simplices are a potential match.
             if (complete &&
-                    ! tri->SimplexFacesSuite<dim, dim - 2>::sameDegrees(
-                    *destSimp, myPerm)) {
+                    ! tri->template sameDegreesTo<dim - 2>(*destSimp, myPerm)) {
                 broken = true;
                 break;
             }

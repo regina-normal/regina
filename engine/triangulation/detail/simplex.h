@@ -46,7 +46,9 @@
 #include "triangulation/alias/face.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
+#include "utilities/typeutils.h"
 #include <cassert>
+#include <tuple>
 
 namespace regina {
 namespace detail {
@@ -69,45 +71,44 @@ template <int> class TriangulationBase;
  * <i>subdim</i>-faces which appear within a given simplex.
  */
 template <int dim, int subdim>
-class SimplexFaces {
-    protected:
-        Face<dim, subdim>* face_[FaceNumbering<dim, subdim>::nFaces];
-            /**< The faces of the underlying triangulation that form the
-                 individual <i>subdim</i>-faces of this simplex. */
+struct SimplexFaces {
+    Face<dim, subdim>* face_[FaceNumbering<dim, subdim>::nFaces];
+        /**< The faces of the underlying triangulation that form the
+             individual <i>subdim</i>-faces of this simplex. */
 
-        Perm<dim+1> mapping_[FaceNumbering<dim, subdim>::nFaces];
-            /**< For each <i>subdim</i>-face of this simplex, maps vertices
-                 (0,1,...,\a subdim) of the underlying <i>subdim</i>-face of
-                 the triangulation to the corresponding vertices of this
-                 simplex, as described by faceMapping(). */
-    protected:
-        SimplexFaces() = default;
+    Perm<dim+1> mapping_[FaceNumbering<dim, subdim>::nFaces];
+        /**< For each <i>subdim</i>-face of this simplex, maps vertices
+             (0,1,...,\a subdim) of the underlying <i>subdim</i>-face of
+             the triangulation to the corresponding vertices of this
+             simplex, as described by faceMapping(). */
 
-        /**
-         * Resets all face pointers to null.
-         *
-         * The faces themselves are not destroyed, and the mapping
-         * permutations are not touched.
-         */
-        void clear();
+    SimplexFaces() = default;
 
-        /**
-         * Tests whether the <i>subdim</i>-face degrees of this and the
-         * given simplex are identical, under the given relabelling.
-         *
-         * @param other the simplex to compare against this.
-         * @param p a mapping from the vertices of this simplex to the
-         * vertices of \a other.
-         * @return \c true if and only if, for every \a i,
-         * <i>subdim</i>-face number \a i of this simplex has the same degree
-         * as its image in \a other under the relabelling \a p.
-         */
-        bool sameDegrees(const SimplexFaces<dim, subdim>& other,
-            Perm<dim + 1> p) const;
+    /**
+     * Resets all face pointers to null.
+     *
+     * The faces themselves are not destroyed, and the mapping
+     * permutations are not touched.
+     */
+    void clear();
 
-        // Make this class non-copyable.
-        SimplexFaces(const SimplexFaces&) = delete;
-        SimplexFaces& operator = (const SimplexFaces&) = delete;
+    /**
+     * Tests whether the <i>subdim</i>-face degrees of this and the
+     * given simplex are identical, under the given relabelling.
+     *
+     * @param other the simplex to compare against this.
+     * @param p a mapping from the vertices of this simplex to the
+     * vertices of \a other.
+     * @return \c true if and only if, for every \a i,
+     * <i>subdim</i>-face number \a i of this simplex has the same degree
+     * as its image in \a other under the relabelling \a p.
+     */
+    bool sameDegrees(const SimplexFaces<dim, subdim>& other,
+        Perm<dim + 1> p) const;
+
+    // Make this class non-copyable.
+    SimplexFaces(const SimplexFaces&) = delete;
+    SimplexFaces& operator = (const SimplexFaces&) = delete;
 };
 
 /**
@@ -115,41 +116,30 @@ class SimplexFaces {
  * lower-dimensional faces.
  *
  * This class is used with <i>dim</i>-dimensional triangulations.  It provides
- * storage for all faces of dimension \a subdim and below.  The simplex
- * class Simplex<dim> then derives from SimplexFacesSuite<dim, dim-1>.
+ * storage for faces of all dimensions given in the parameter pack \a subdim.
  */
-template <int dim, int subdim>
-class SimplexFacesSuite :
-        protected SimplexFacesSuite<dim, subdim - 1>,
-        protected SimplexFaces<dim, subdim> {
+template <int dim, int... subdim>
+class SimplexFacesSuite {
     protected:
+        std::tuple<SimplexFaces<dim, subdim>...> faces_;
+            /**< Stores all faces of all requested dimensions. */
+
         /**
          * Tests whether the <i>k</i>-face degrees of this and the
          * given simplex are identical, under the given relabelling,
-         * for all faces of all dimensions \a k &le; \a subdim.
+         * for all faces of all dimensions \a k &le; \a maxDim.
          *
          * @param other the simplex to compare against this.
          * @param p a mapping from the vertices of this simplex to the
          * vertices of \a other.
          * @return \c true if and only if, for every \a i and every
-         * facial dimension \a k &le; \a subdim, <i>k</i>-face number \a i of
+         * facial dimension \a k &le; \a maxDim, <i>k</i>-face number \a i of
          * this simplex has the same degree as its image in \a other under
          * the relabelling \a p.
          */
-        bool sameDegrees(const SimplexFacesSuite<dim, subdim>& other,
-            Perm<dim + 1> p) const;
+        template <int maxDim>
+        bool sameDegreesTo(const SimplexFacesSuite& other, Perm<dim+1> p) const;
 };
-
-#ifndef __DOXYGEN
-
-template <int dim>
-class SimplexFacesSuite<dim, 0> : protected SimplexFaces<dim, 0> {
-    protected:
-        bool sameDegrees(const SimplexFacesSuite<dim, 0>& other,
-            Perm<dim + 1> p) const;
-};
-
-#endif // __DOXYGEN
 
 /**
  * Helper class that provides core functionality for a top-dimensional
@@ -172,7 +162,7 @@ template <int dim>
 class SimplexBase :
         public MarkedElement,
         public Output<SimplexBase<dim>>,
-        protected SimplexFacesSuite<dim, dim-1>,
+        public ExpandSequence<SimplexFacesSuite, dim>,
         public alias::FaceOfSimplex<SimplexBase<dim>, dim> {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
     public:
@@ -640,17 +630,12 @@ bool SimplexFaces<dim, subdim>::sameDegrees(
 
 // Inline functions for SimplexFacesSuite
 
-template <int dim, int subdim>
-inline bool SimplexFacesSuite<dim, subdim>::sameDegrees(
-        const SimplexFacesSuite<dim, subdim>& other, Perm<dim + 1> p) const {
-    return SimplexFacesSuite<dim, subdim - 1>::sameDegrees(other, p) &&
-        SimplexFaces<dim, subdim>::sameDegrees(other, p);
-}
-
-template <int dim>
-inline bool SimplexFacesSuite<dim, 0>::sameDegrees(
-        const SimplexFacesSuite<dim, 0>& other, Perm<dim + 1> p) const {
-    return SimplexFaces<dim, 0>::sameDegrees(other, p);
+template <int dim, int... subdim>
+template <int maxDim>
+inline bool SimplexFacesSuite<dim, subdim...>::sameDegreesTo(
+        const SimplexFacesSuite<dim, subdim...>& other, Perm<dim + 1> p) const {
+    return ((subdim > maxDim || std::get<subdim>(faces_).sameDegrees(
+        std::get<subdim>(other.faces_), p)) && ...);
 }
 
 // Inline functions for SimplexBase
@@ -715,14 +700,14 @@ template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
     triangulation()->ensureSkeleton();
-    return SimplexFaces<dim, subdim>::face_[face];
+    return std::get<subdim>(this->faces_).face_[face];
 }
 
 template <int dim>
 template <int subdim>
 inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
     triangulation()->ensureSkeleton();
-    return SimplexFaces<dim, subdim>::mapping_[face];
+    return std::get<subdim>(this->faces_).mapping_[face];
 }
 
 template <int dim>

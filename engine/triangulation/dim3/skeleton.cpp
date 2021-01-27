@@ -116,10 +116,11 @@ void Triangulation<3>::calculateVertexLinks() {
         // recompute the skeleton.
         const EdgeEmbedding<3>& emb = e->front();
         tet = emb.tetrahedron();
-        end0 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
-            [emb.edge()][0]];
-        end1 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
-            [emb.edge()][1]];
+
+        end0 = std::get<0>(tet->faces_).face_[
+            std::get<1>(tet->faces_).mapping_[emb.edge()][0]];
+        end1 = std::get<0>(tet->faces_).face_[
+            std::get<1>(tet->faces_).mapping_[emb.edge()][1]];
 
         if (e->isBoundary()) {
             // Contribute to v_bdry.

@@ -46,6 +46,8 @@ Version 6.1  [ TODO ]
               isPermCode()) are slower to work with, and should be avoided.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
+        Class Simplex<dim>:
+            - Simplified the class hierarchy.
         Class Triangulation<dim>:
             - Simplified the class hierarchy; PachnerHelper is now gone.
         Class Triangulation<3>:

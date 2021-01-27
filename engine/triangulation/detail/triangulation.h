@@ -2437,7 +2437,7 @@ template <int subdim>
 inline void TriangulationBase<dim>::relabelFace(Face<dim, subdim>* f,
         const Perm<dim + 1>& adjust) {
     for (const auto& emb : *f)
-        emb.simplex()->SimplexFaces<dim, subdim>::mapping_[emb.face()] =
+        std::get<subdim>(emb.simplex()->faces_).mapping_[emb.face()] =
             emb.vertices() * adjust;
 }
 

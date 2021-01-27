@@ -147,7 +147,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
 template <int dim>
 void TriangulationBase<dim>::calculateSkeletonCodim1() {
     for (auto s : simplices_)
-        s->SimplexFaces<dim, dim-1>::clear();
+        std::get<dim-1>(s->faces_).clear();
 
     Simplex<dim> *adj;
     Face<dim, dim-1>* f;
@@ -160,15 +160,15 @@ void TriangulationBase<dim>::calculateSkeletonCodim1() {
     for (auto s : simplices_) {
         for (facet = dim; facet >= 0; --facet) {
             // Have we already checked out this facet from the other side?
-            if (s->SimplexFaces<dim, dim-1>::face_[facet])
+            if (std::get<dim-1>(s->faces_).face_[facet])
                 continue;
 
             // A new face!
             f = new Face<dim, dim-1>(s->component_);
             FaceList<dim, dim-1>::push_back(f);
 
-            s->SimplexFaces<dim, dim-1>::face_[facet] = f;
-            s->SimplexFaces<dim, dim-1>::mapping_[facet] =
+            std::get<dim-1>(s->faces_).face_[facet] = f;
+            std::get<dim-1>(s->faces_).mapping_[facet] =
                 Face<dim, dim-1>::ordering(facet);
 
             adj = s->adjacentSimplex(facet);
@@ -176,10 +176,10 @@ void TriangulationBase<dim>::calculateSkeletonCodim1() {
                 // We have an adjacent simplex.
                 adjFacet = s->adjacentFacet(facet);
 
-                adj->SimplexFaces<dim, dim-1>::face_[adjFacet] = f;
-                adj->SimplexFaces<dim, dim-1>::mapping_[adjFacet] =
+                std::get<dim-1>(adj->faces_).face_[adjFacet] = f;
+                std::get<dim-1>(adj->faces_).mapping_[adjFacet] =
                     s->adjacentGluing(facet) *
-                    s->SimplexFaces<dim, dim-1>::mapping_[facet];
+                    std::get<dim-1>(s->faces_).mapping_[facet];
 
                 f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
                 f->push_back(FaceEmbedding<dim, dim-1>(adj, adjFacet));
@@ -194,7 +194,7 @@ void TriangulationBase<dim>::calculateSkeletonCodim1() {
 template <int dim>
 void TriangulationBase<dim>::calculateSkeletonCodim2() {
     for (auto s : simplices_)
-        s->SimplexFaces<dim, dim-2>::clear();
+        std::get<dim-2>(s->faces_).clear();
 
     int start;
     Face<dim, dim-2>* f;
@@ -204,7 +204,7 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
     int dir, exitFacet;
     for (auto s : simplices_) {
         for (start = 0; start < FaceNumbering<dim, dim-2>::nFaces; ++start) {
-            if (s->SimplexFaces<dim, dim-2>::face_[start])
+            if (std::get<dim-2>(s->faces_).face_[start])
                 continue;
 
             f = new Face<dim, dim-2>(s->component_);
@@ -215,15 +215,15 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
             // direction.  We therefore do away with the usual stack and
             // just keep track of the next simplex to process in the current
             // direction.
-            s->SimplexFaces<dim, dim-2>::face_[start] = f;
-            s->SimplexFaces<dim, dim-2>::mapping_[start] =
+            std::get<dim-2>(s->faces_).face_[start] = f;
+            std::get<dim-2>(s->faces_).mapping_[start] =
                 Face<dim, dim-2>::ordering(start);
             f->push_back(FaceEmbedding<dim, dim-2>(s, start));
 
             for (dir = 0; dir < 2; ++dir) {
                 // Start at the start and walk in one particular direction.
                 simp = s;
-                map = simp->SimplexFaces<dim, dim-2>::mapping_[start];
+                map = std::get<dim-2>(simp->faces_).mapping_[start];
 
                 while (true) {
                     // Move through to the next simplex.
@@ -236,12 +236,12 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
                         Perm<dim+1>(dim - 1, dim);
                     adjFace = Face<dim, dim-2>::faceNumber(adjMap);
 
-                    if (adj->SimplexFaces<dim, dim-2>::face_[adjFace]) {
+                    if (std::get<dim-2>(adj->faces_).face_[adjFace]) {
                         // We looped right around.
                         if constexpr (dim > 2) {
                             // Check that we are not mapping the face to
                             // itself with a non-identity permutation.
-                            if (adj->SimplexFaces<dim, dim-2>::mapping_[
+                            if (std::get<dim-2>(adj->faces_).mapping_[
                                     adjFace] != adjMap) {
                                 // You have chosen unwisely, my son.
                                 if constexpr (standardDim(dim))
@@ -256,9 +256,8 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
                     }
 
                     // We have not yet seen this face of this simplex.
-                    adj->SimplexFaces<dim, dim-2>::face_[adjFace] = f;
-                    adj->SimplexFaces<dim, dim-2>::mapping_[adjFace] =
-                        adjMap;
+                    std::get<dim-2>(adj->faces_).face_[adjFace] = f;
+                    std::get<dim-2>(adj->faces_).mapping_[adjFace] = adjMap;
 
                     if (dir == 0)
                         f->push_back(FaceEmbedding<dim, dim-2>(
@@ -284,7 +283,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
         "used for faces of codimension > 2.");
 
     for (auto s : simplices_)
-        s->SimplexFaces<dim, subdim>::clear();
+        std::get<subdim>(s->faces_).clear();
 
     int start;
     Face<dim, subdim>* f;
@@ -300,14 +299,14 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
 
     for (auto s : simplices_) {
         for (start = 0; start < FaceNumbering<dim, subdim>::nFaces; ++start) {
-            if (s->SimplexFaces<dim, subdim>::face_[start])
+            if (std::get<subdim>(s->faces_).face_[start])
                 continue;
 
             f = new Face<dim, subdim>(s->component_);
             FaceList<dim, subdim>::push_back(f);
 
-            s->SimplexFaces<dim, subdim>::face_[start] = f;
-            s->SimplexFaces<dim, subdim>::mapping_[start] =
+            std::get<subdim>(s->faces_).face_[start] = f;
+            std::get<subdim>(s->faces_).mapping_[start] =
                 Face<dim, subdim>::ordering(start);
             f->push_back(FaceEmbedding<dim, subdim>(s, start));
 
@@ -339,11 +338,11 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                         // of (subdim+1),...,dim.  Note that this is only
                         // possible if the link of the face is orientable.
                         adjMap = simp->adjacentGluing(facet) *
-                            simp->SimplexFaces<dim, subdim>::mapping_[face] *
+                            std::get<subdim>(simp->faces_).mapping_[face] *
                             Perm<dim + 1>(dim - 1, dim);
                         adjFace = Face<dim, subdim>::faceNumber(adjMap);
 
-                        if (adj->SimplexFaces<dim, subdim>::face_[adjFace]) {
+                        if (std::get<subdim>(adj->faces_).face_[adjFace]) {
                             // We have looped back around to where we've
                             // been before.
 
@@ -355,7 +354,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                                 // below, since p[subdim] will then come for
                                 // free.
                                 for (pos = 0; pos < subdim; ++pos)
-                                    if (adj->SimplexFaces<dim, subdim>::
+                                    if (std::get<subdim>(adj->faces_).
                                             mapping_[adjFace][pos] !=
                                             adjMap[pos]) {
                                         if constexpr (standardDim(dim))
@@ -371,13 +370,13 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                             if constexpr (subdim <= dim - 3) {
                                 // Is the link non-orientable?
                                 if (adjMap.sign() !=
-                                        adj->SimplexFaces<dim, subdim>::
+                                        std::get<subdim>(adj->faces_).
                                         mapping_[adjFace].sign())
                                     f->linkOrientable_.value = false;
                             }
                         } else {
-                            adj->SimplexFaces<dim, subdim>::face_[adjFace] = f;
-                            adj->SimplexFaces<dim, subdim>::mapping_[adjFace] =
+                            std::get<subdim>(adj->faces_).face_[adjFace] = f;
+                            std::get<subdim>(adj->faces_).mapping_[adjFace] =
                                 adjMap;
                             f->push_back(FaceEmbedding<dim, subdim>(
                                 adj, adjFace));
