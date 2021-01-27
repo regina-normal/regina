@@ -300,8 +300,8 @@ void ReginaMain::fileOpen() {
 
 void ReginaMain::fileOpenUrl(const QUrl& url) {
     // Can we read data from the file?
-    QString localFile = url.toLocalFile();
-    if (localFile.isEmpty()) {
+    QString f = url.toLocalFile();
+    if (f.isEmpty()) {
         ReginaSupport::warn(this,
             tr("The filename is empty."),
             tr("There may be a miscommunication between Regina and "
@@ -309,15 +309,15 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
         return;
     }
 
-    regina::Packet* packetTree = regina::open(
-        static_cast<const char*>(QFile::encodeName(localFile)));
+    regina::Packet* data = regina::open(
+        static_cast<const char*>(QFile::encodeName(f)));
 
-    if (! packetTree) {
+    if (! data) {
         ReginaSupport::sorry(this,
             tr("I could not open the selected file."),
             tr("<qt>Please check that the file <tt>%1</tt> "
             "is readable and in Regina format.</qt>").
-            arg(localFile.toHtmlEscaped()));
+            arg(f.toHtmlEscaped()));
         return;
     }
 
@@ -325,10 +325,10 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
 
     // As of Regina 4.95, the root packet is hidden.
     // If the root packet is not a container, create a new fake root above it.
-    if (packetTree->type() != regina::PACKET_CONTAINER) {
+    if (data->type() != regina::PACKET_CONTAINER) {
         regina::Container* newRoot = new regina::Container();
-        newRoot->insertChildLast(packetTree);
-        packetTree = newRoot;
+        newRoot->insertChildLast(data);
+        data = newRoot;
 
         // We will assume the user knows what (s)he is doing here, and so
         // we remember to "undo" this fake root when we save.
@@ -337,15 +337,15 @@ void ReginaMain::fileOpenUrl(const QUrl& url) {
 
     // If we already have a document open, make a new window.
     ReginaMain* useWindow = (starterWindow_ ? this : manager->newWindow(false));
-    useWindow->initData(packetTree, localFile, QString());
+    useWindow->initData(data, f, QString());
     useWindow->starterWindow_ = false;
 }
 
 void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
     // Same as fileOpenUrl(), but give a pleasant message if the file
     // doesn't seem to exist.
-    QString localFile = url.toLocalFile();
-    if (! QFile(localFile).exists()) {
+    QString f = url.toLocalFile();
+    if (! QFile(f).exists()) {
         ReginaSupport::warn(this,
             tr("I could not locate the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "
@@ -354,10 +354,10 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
         return;
     }
 
-    regina::Packet* packetTree = regina::open(
-        static_cast<const char*>(QFile::encodeName(localFile)));
+    regina::Packet* data = regina::open(
+        static_cast<const char*>(QFile::encodeName(f)));
 
-    if (! packetTree) {
+    if (! data) {
         ReginaSupport::warn(this,
             tr("I could not open the example that you requested."),
             tr("<qt>The example \"%1\" may not have been installed properly.  "
@@ -369,7 +369,7 @@ void ReginaMain::fileOpenExample(const QUrl& url, const QString& description) {
     // All good, we have some real data.  Let's go.
     // If we already have a document open, make a new window.
     ReginaMain* useWindow = (starterWindow_ ? this : manager->newWindow(false));
-    useWindow->initData(packetTree, QString(), description);
+    useWindow->initData(data, QString(), description);
     useWindow->starterWindow_ = false;
 }
 

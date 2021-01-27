@@ -1179,7 +1179,7 @@ bool Triangulation<3>::isHaken() const {
     }
     std::sort(id, id + list->size());
 
-    for (unsigned i = 0; i < list->size(); ++i) {
+    for (i = 0; i < list->size(); ++i) {
         // std::cout << "Testing surface " << i << "..." << std::endl;
         if (list->surface(id[i].index)->isIncompressible()) {
             delete[] id;

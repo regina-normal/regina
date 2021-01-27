@@ -124,151 +124,151 @@ class PolynomialTest : public CppUnit::TestFixture {
         }
 
         void set() {
-            Polynomial<Integer> a = { 1, 2, 1 };
+            Polynomial<Integer> x = { 1, 2, 1 };
 
-            verifyEqual<Integer>(a, {1, 2, 1});
-            a.set(1, 3);
-            verifyEqual<Integer>(a, {1, 3, 1});
-            a.set(2, 0);
-            verifyEqual<Integer>(a, {1, 3});
-            a.set(1, 0);
-            verifyEqual<Integer>(a, {1});
-            a.set(1, 0);
-            verifyEqual<Integer>(a, {1});
-            a.set(0, 0);
-            verifyEqual<Integer>(a, {});
-            a.set(0, 0);
-            verifyEqual<Integer>(a, {});
-            a.set(2, 1);
-            verifyEqual<Integer>(a, {0, 0, 1});
+            verifyEqual<Integer>(x, {1, 2, 1});
+            x.set(1, 3);
+            verifyEqual<Integer>(x, {1, 3, 1});
+            x.set(2, 0);
+            verifyEqual<Integer>(x, {1, 3});
+            x.set(1, 0);
+            verifyEqual<Integer>(x, {1});
+            x.set(1, 0);
+            verifyEqual<Integer>(x, {1});
+            x.set(0, 0);
+            verifyEqual<Integer>(x, {});
+            x.set(0, 0);
+            verifyEqual<Integer>(x, {});
+            x.set(2, 1);
+            verifyEqual<Integer>(x, {0, 0, 1});
         }
 
         template <typename T>
-        void verifyPlus(const Polynomial<T>& a, const Polynomial<T>& b,
+        void verifyPlus(const Polynomial<T>& x, const Polynomial<T>& y,
                 std::initializer_list<T> coeffs) {
-            verifyEqual(a + b, coeffs);
-            verifyEqual((a + zero) + b, coeffs);
-            verifyEqual(a + (b + zero), coeffs);
-            verifyEqual((a + zero) + (b + zero), coeffs);
+            verifyEqual(x + y, coeffs);
+            verifyEqual((x + zero) + y, coeffs);
+            verifyEqual(x + (y + zero), coeffs);
+            verifyEqual((x + zero) + (y + zero), coeffs);
 
-            verifyEqual(b + a, coeffs);
-            verifyEqual((b + zero) + a, coeffs);
-            verifyEqual(b + (a + zero), coeffs);
-            verifyEqual((b + zero) + (a + zero), coeffs);
-
-            {
-                Polynomial<T> x(a);
-                verifyEqual(x += b, coeffs);
-            }
-            {
-                Polynomial<T> x(a);
-                verifyEqual(x += (b + zero), coeffs);
-            }
-            {
-                Polynomial<T> x(b);
-                verifyEqual(x += a, coeffs);
-            }
-            {
-                Polynomial<T> x(b);
-                verifyEqual(x += (a + zero), coeffs);
-            }
-        }
-
-        template <typename T>
-        void verifyMinus(const Polynomial<T>& a, const Polynomial<T>& b,
-                std::initializer_list<T> coeffs) {
-            verifyEqual(a - b, coeffs);
-            verifyEqual((a + zero) - b, coeffs);
-            verifyEqual(a - (b + zero), coeffs);
-            verifyEqual((a + zero) - (b + zero), coeffs);
+            verifyEqual(y + x, coeffs);
+            verifyEqual((y + zero) + x, coeffs);
+            verifyEqual(y + (x + zero), coeffs);
+            verifyEqual((y + zero) + (x + zero), coeffs);
 
             {
-                Polynomial<T> x(a);
-                verifyEqual(x -= b, coeffs);
+                Polynomial<T> z(x);
+                verifyEqual(z += y, coeffs);
             }
             {
-                Polynomial<T> x(a);
-                verifyEqual(x -= (b + zero), coeffs);
+                Polynomial<T> z(x);
+                verifyEqual(z += (y + zero), coeffs);
             }
-
-            verifyPlus(a, -b, coeffs);
             {
-                Polynomial<T> x(b);
-                x.negate();
-                verifyPlus(a, x, coeffs);
+                Polynomial<T> z(y);
+                verifyEqual(z += x, coeffs);
+            }
+            {
+                Polynomial<T> z(y);
+                verifyEqual(z += (x + zero), coeffs);
             }
         }
 
         template <typename T>
-        void verifyMult(const Polynomial<T>& a, const T& b,
+        void verifyMinus(const Polynomial<T>& x, const Polynomial<T>& y,
                 std::initializer_list<T> coeffs) {
-            verifyEqual(a * b, coeffs);
-            verifyEqual((a + zero) * b, coeffs);
-            verifyEqual(b * a, coeffs);
-            verifyEqual(b * (a + zero), coeffs);
+            verifyEqual(x - y, coeffs);
+            verifyEqual((x + zero) - y, coeffs);
+            verifyEqual(x - (y + zero), coeffs);
+            verifyEqual((x + zero) - (y + zero), coeffs);
+
             {
-                Polynomial<T> x(a);
-                verifyEqual(x *= b, coeffs);
+                Polynomial<T> z(x);
+                verifyEqual(z -= y, coeffs);
+            }
+            {
+                Polynomial<T> z(x);
+                verifyEqual(z -= (y + zero), coeffs);
+            }
+
+            verifyPlus(x, -y, coeffs);
+            {
+                Polynomial<T> z(y);
+                z.negate();
+                verifyPlus(x, z, coeffs);
             }
         }
 
         template <typename T>
-        void verifyDiv(const Polynomial<T>& a, const T& b,
+        void verifyMult(const Polynomial<T>& x, const T& y,
                 std::initializer_list<T> coeffs) {
-            verifyEqual(a / b, coeffs);
-            verifyEqual((a + zero) / b, coeffs);
+            verifyEqual(x * y, coeffs);
+            verifyEqual((x + zero) * y, coeffs);
+            verifyEqual(y * x, coeffs);
+            verifyEqual(y * (x + zero), coeffs);
             {
-                Polynomial<T> x(a);
-                verifyEqual(x /= b, coeffs);
+                Polynomial<T> z(x);
+                verifyEqual(z *= y, coeffs);
             }
         }
 
         template <typename T>
-        void verifyMult(const Polynomial<T>& a, const Polynomial<T>& b,
+        void verifyDiv(const Polynomial<T>& x, const T& y,
                 std::initializer_list<T> coeffs) {
-            verifyEqual(a * b, coeffs);
-            verifyEqual((a + zero) * b, coeffs);
-            verifyEqual(a * (b + zero), coeffs);
-            verifyEqual((a + zero) * (b + zero), coeffs);
-
-            verifyEqual(b * a, coeffs);
-            verifyEqual((b + zero) * a, coeffs);
-            verifyEqual(b * (a + zero), coeffs);
-            verifyEqual((b + zero) * (a + zero), coeffs);
-
+            verifyEqual(x / y, coeffs);
+            verifyEqual((x + zero) / y, coeffs);
             {
-                Polynomial<T> x(a);
-                verifyEqual(x *= b, coeffs);
-            }
-            {
-                Polynomial<T> x(a);
-                verifyEqual(x *= (b + zero), coeffs);
-            }
-            {
-                Polynomial<T> x(b);
-                verifyEqual(x *= a, coeffs);
-            }
-            {
-                Polynomial<T> x(b);
-                verifyEqual(x *= (a + zero), coeffs);
+                Polynomial<T> z(x);
+                verifyEqual(z /= y, coeffs);
             }
         }
 
         template <typename T>
-        void verifyDiv(const Polynomial<T>& a, const Polynomial<T>& b,
+        void verifyMult(const Polynomial<T>& x, const Polynomial<T>& y,
                 std::initializer_list<T> coeffs) {
-            verifyEqual(a / b, coeffs);
-            verifyEqual((a + zero) / b, coeffs);
-            verifyEqual(a / (b + zero), coeffs);
-            verifyEqual((a + zero) / (b + zero), coeffs);
+            verifyEqual(x * y, coeffs);
+            verifyEqual((x + zero) * y, coeffs);
+            verifyEqual(x * (y + zero), coeffs);
+            verifyEqual((x + zero) * (y + zero), coeffs);
+
+            verifyEqual(y * x, coeffs);
+            verifyEqual((y + zero) * x, coeffs);
+            verifyEqual(y * (x + zero), coeffs);
+            verifyEqual((y + zero) * (x + zero), coeffs);
 
             {
-                Polynomial<T> x(a);
-                verifyEqual(x /= b, coeffs);
+                Polynomial<T> z(x);
+                verifyEqual(z *= y, coeffs);
             }
             {
-                Polynomial<T> x(a);
-                verifyEqual(x /= (b + zero), coeffs);
+                Polynomial<T> z(x);
+                verifyEqual(z *= (y + zero), coeffs);
+            }
+            {
+                Polynomial<T> z(y);
+                verifyEqual(z *= x, coeffs);
+            }
+            {
+                Polynomial<T> z(y);
+                verifyEqual(z *= (x + zero), coeffs);
+            }
+        }
+
+        template <typename T>
+        void verifyDiv(const Polynomial<T>& x, const Polynomial<T>& y,
+                std::initializer_list<T> coeffs) {
+            verifyEqual(x / y, coeffs);
+            verifyEqual((x + zero) / y, coeffs);
+            verifyEqual(x / (y + zero), coeffs);
+            verifyEqual((x + zero) / (y + zero), coeffs);
+
+            {
+                Polynomial<T> z(x);
+                verifyEqual(z /= y, coeffs);
+            }
+            {
+                Polynomial<T> z(x);
+                verifyEqual(z /= (y + zero), coeffs);
             }
         }
 

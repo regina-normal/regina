@@ -101,7 +101,7 @@ int runCensus();
 template <>
 inline void findAllPerms<2>(const regina::FacetPairing<2>* p,
         const regina::FacetPairing<2>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, regina::Packet* dest) {
+        bool finiteOnly, int /* usePurge */, regina::Packet* dest) {
     regina::GluingPermSearcher<2>::findAllPerms(p, autos,
         orientableOnly, foundGluingPerms<2>, dest);
 }
@@ -114,9 +114,9 @@ inline bool mightBeMinimal<2>(regina::Triangulation<2>* tri) {
 template <>
 inline void findAllPerms<3>(const regina::FacetPairing<3>* p,
         const regina::FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, regina::Packet* dest) {
+        bool finiteOnly, int usePurge, regina::Packet* dest) {
     regina::GluingPermSearcher<3>::findAllPerms(p, autos,
-        orientableOnly, finiteOnly, whichPurge, foundGluingPerms<3>, dest);
+        orientableOnly, finiteOnly, usePurge, foundGluingPerms<3>, dest);
 }
 
 template <>
@@ -127,7 +127,7 @@ inline bool mightBeMinimal<3>(regina::Triangulation<3>* tri) {
 template <>
 inline void findAllPerms<4>(const regina::FacetPairing<4>* p,
         const regina::FacetPairing<4>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int /* whichPurge */, regina::Packet* dest) {
+        bool finiteOnly, int /* usePurge */, regina::Packet* dest) {
     regina::GluingPermSearcher<4>::findAllPerms(p, autos,
         orientableOnly, finiteOnly, foundGluingPerms<4>, dest);
 }

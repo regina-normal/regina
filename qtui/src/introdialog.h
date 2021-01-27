@@ -48,9 +48,6 @@ class QPushButton;
 class IntroDialog : public QDialog {
     Q_OBJECT
 
-    private:
-        QPushButton* helpBtn;
-
     public:
         IntroDialog(QWidget *parent);
 

@@ -294,20 +294,20 @@ PythonConsole::~PythonConsole() {
         manager->deregisterConsole(this);
 }
 
-void PythonConsole::addInput(const QString& input) {
+void PythonConsole::addInput(const QString& s) {
     session->moveCursor(QTextCursor::End);
-    session->insertHtml("<b>" + encode(input) + "</b><br>");
+    session->insertHtml("<b>" + encode(s) + "</b><br>");
     QApplication::instance()->processEvents();
 }
 
-void PythonConsole::addOutput(const QString& output) {
+void PythonConsole::addOutput(const QString& s) {
     // Since empty output has no tags we need to be explicitly sure that
     // blank lines are still written.
     session->moveCursor(QTextCursor::End);
-    if (output.isEmpty())
+    if (s.isEmpty())
         session->insertHtml("<br>");
     else
-        session->insertHtml(encode(output) + "<br>");
+        session->insertHtml(encode(s) + "<br>");
     QApplication::instance()->processEvents();
 }
 
@@ -318,9 +318,9 @@ void PythonConsole::addInfo(const QString& info) {
     QApplication::instance()->processEvents();
 }
 
-void PythonConsole::addError(const QString& output) {
+void PythonConsole::addError(const QString& s) {
     session->moveCursor(QTextCursor::End);
-    session->insertHtml("<font color=\"dark red\">" + encode(output) +
+    session->insertHtml("<font color=\"dark red\">" + encode(s) +
         "</font><br>");
     QApplication::instance()->processEvents();
 }

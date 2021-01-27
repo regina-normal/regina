@@ -103,14 +103,14 @@ bool SpiralSolidTorus::makeCanonical(const Triangulation<3>* tri) {
     if (reverseAlso) {
         // Make baseTet into tetrahedron 0 and reverse.
         Perm<4> switchPerm(3, 2, 1, 0);
-        for (size_t i = 0; i < nTet; i++) {
+        for (i = 0; i < nTet; i++) {
             newTet[i] = tet[(baseTet + nTet - i) % nTet];
             newRoles[i] = vertexRoles_[(baseTet + nTet - i) % nTet] *
                 switchPerm;
         }
     } else {
         // Make baseTet into tetrahedron 0 but don't reverse.
-        for (size_t i = 0; i < nTet; i++) {
+        for (i = 0; i < nTet; i++) {
             newTet[i] = tet[(i + baseTet) % nTet];
             newRoles[i] = vertexRoles_[(i + baseTet) % nTet];
         }

@@ -351,21 +351,21 @@ class LinkTest : public CppUnit::TestFixture {
                 if (! start)
                     continue;
 
-                long writhe = 0;
+                long writeComp = 0;
                 StrandRef s = start;
                 do {
                     StrandRef t = s;
                     for (++t; t != start; ++t) {
                         if (t.crossing() == s.crossing()) {
-                            writhe += t.crossing()->sign();
+                            writeComp += t.crossing()->sign();
                             break;
                         }
                     }
                     ++s;
                 } while (s != start);
 
-                writheSame += writhe;
-                absWritheSame += (writhe >= 0 ? writhe : -writhe);
+                writheSame += writeComp;
+                absWritheSame += (writeComp >= 0 ? writeComp : -writeComp);
             }
 
             Link* p;

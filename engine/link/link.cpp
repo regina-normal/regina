@@ -843,8 +843,6 @@ std::string Link::dumpConstruction() const {
 }
 
 void Link::writeXMLPacketData(std::ostream& out) const {
-    StrandRef s;
-
     out << "  <crossings size=\"" << crossings_.size() << "\">\n ";
     for (const Crossing* c : crossings_)
         out << ' ' << (c->sign() == 1 ? '+' : '-');

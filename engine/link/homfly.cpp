@@ -983,8 +983,8 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
 
     // Count the number of 0-crossing unknot components separately.
     size_t unknots = 0;
-    for (StrandRef s : components_)
-        if (! s)
+    for (StrandRef c : components_)
+        if (! c)
             ++unknots;
 
     // The final polynomial will be sum_i (coeff[i] * delta^(i + unknots)).

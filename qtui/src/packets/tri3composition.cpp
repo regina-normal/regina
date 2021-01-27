@@ -330,9 +330,9 @@ void Tri3CompositionUI::viewIsomorphism() {
         return;
 
     QString title, msg;
-    QStringList details;
+    QStringList isoDetails;
 
-    details += QString("[%1]  &rarr;  [%2]").
+    isoDetails += QString("[%1]  &rarr;  [%2]").
         arg(QString(tri->humanLabel().c_str()).toHtmlEscaped()).
         arg(QString(comparingTri->humanLabel().c_str()).toHtmlEscaped());
 
@@ -347,7 +347,7 @@ void Tri3CompositionUI::viewIsomorphism() {
             arg(QString(comparingTri->humanLabel().c_str()).toHtmlEscaped());
 
         for (unsigned long i = 0; i < tri->size(); i++)
-            details += QString("%1 (0123)  &rarr;  %2 (%3)").
+            isoDetails += QString("%1 (0123)  &rarr;  %2 (%3)").
                 arg(i).
                 arg(isomorphism->tetImage(i)).
                 arg(isomorphism->facePerm(i).str().c_str())
@@ -365,7 +365,7 @@ void Tri3CompositionUI::viewIsomorphism() {
 
         if (isoType == IsSubcomplex)
             for (unsigned long i = 0; i < tri->size(); i++)
-                details += QString("%1 (0123)  &rarr;  %2 (%3)").
+                isoDetails += QString("%1 (0123)  &rarr;  %2 (%3)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
                     arg(isomorphism->facePerm(i).str().c_str())
@@ -373,19 +373,19 @@ void Tri3CompositionUI::viewIsomorphism() {
         else
             for (unsigned long i = 0;
                     i < comparingTri->size(); i++)
-                details += QString("%2 (%3)  &rarr;  %1 (0123)").
+                isoDetails += QString("%2 (%3)  &rarr;  %1 (0123)").
                     arg(i).
                     arg(isomorphism->tetImage(i)).
                     arg(isomorphism->facePerm(i).str().c_str())
                     ;
     }
 
-    if (details.size() == 1)
-        details += tr("(no tetrahedra)");
+    if (isoDetails.size() == 1)
+        isoDetails += tr("(no tetrahedra)");
 
     // Redo this to actually display information as a list?
     ReginaSupport::info(ui,
-        title, msg + "<p>" + details.join("<br>") + "<qt>");
+        title, msg + "<p>" + isoDetails.join("<br>") + "<qt>");
 }
 
 QTreeWidgetItem* Tri3CompositionUI::addComponentSection(const QString& text) {
@@ -397,8 +397,8 @@ QTreeWidgetItem* Tri3CompositionUI::addComponentSection(const QString& text) {
 void Tri3CompositionUI::findAugTriSolidTori() {
     unsigned long nComps = tri->countComponents();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     regina::AugTriSolidTorus* aug;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -408,12 +408,12 @@ void Tri3CompositionUI::findAugTriSolidTori() {
             id = addComponentSection(tr(
                 "Augmented triangular solid torus ") + aug->name().c_str());
 
-            details = new QTreeWidgetItem(id);
-            details->setText(0,tr("Component %1").arg(i));
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0,tr("Component %1").arg(i));
 
             const regina::TriSolidTorus& core = aug->core();
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0,tr("Core: tets %1, %2, %3").
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0,tr("Core: tets %1, %2, %3").
                 arg(core.tetrahedron(0)->index()).
                 arg(core.tetrahedron(1)->index()).
                 arg(core.tetrahedron(2)->index()));
@@ -429,13 +429,13 @@ void Tri3CompositionUI::findAugTriSolidTori() {
                 else
                     chainType = tr("unknown");
 
-                details = new QTreeWidgetItem(id, details);
-                details->setText(0,tr("Attached: layered chain (%1) + "
+                detailsItem = new QTreeWidgetItem(id, detailsItem);
+                detailsItem->setText(0,tr("Attached: layered chain (%1) + "
                     "layered solid torus").
                     arg(chainType));
             } else {
-                details = new QTreeWidgetItem(id, details);
-                details->setText(0,tr("Attached: 3 layered solid tori"));
+                detailsItem = new QTreeWidgetItem(id, detailsItem);
+                detailsItem->setText(0,tr("Attached: 3 layered solid tori"));
             }
 
             delete aug;
@@ -445,7 +445,7 @@ void Tri3CompositionUI::findAugTriSolidTori() {
 
 void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
         QTreeWidgetItem* parent) {
-    QTreeWidgetItem* details;
+    QTreeWidgetItem* detailsItem;
     QTreeWidgetItem* annuli;
 
     regina::SatBlockSpec spec;
@@ -456,13 +456,13 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
     QString thisAnnulus, adjAnnulus;
     for (b = region.numberOfBlocks() - 1; b >= 0; b--) {
         spec = region.block(b);
-        details = new QTreeWidgetItem(parent);
-        details->setText(0,tr("Block %1: %2").
+        detailsItem = new QTreeWidgetItem(parent);
+        detailsItem->setText(0,tr("Block %1: %2").
             arg(b).arg(spec.block->abbr().c_str()));
 
         nAnnuli = spec.block->nAnnuli();
 
-        annuli = new QTreeWidgetItem(details);
+        annuli = new QTreeWidgetItem(detailsItem);
         annuli->setText(0,tr("Adjacencies:"));
 
         for (a = nAnnuli - 1; a >= 0; a--) {
@@ -497,10 +497,10 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
         }
 
         if (nAnnuli == 1) {
-            annuli = new QTreeWidgetItem(details);
+            annuli = new QTreeWidgetItem(detailsItem);
             annuli->setText(0,tr("1 annulus"));
         } else {
-            annuli = new QTreeWidgetItem(details);
+            annuli = new QTreeWidgetItem(detailsItem);
             annuli->setText(0,tr("%1 annuli").arg(nAnnuli));
         }
         for (a = nAnnuli - 1; a >= 0; a--) {
@@ -521,26 +521,26 @@ void Tri3CompositionUI::describeSatRegion(const SatRegion& region,
         }
 
         if (spec.refVert && spec.refHoriz)
-            (new QTreeWidgetItem(details))->setText(0,
+            (new QTreeWidgetItem(detailsItem))->setText(0,
                 tr("Reflected vertically and horizontally"));
         else if (spec.refVert)
-            (new QTreeWidgetItem(details))->setText(0,
+            (new QTreeWidgetItem(detailsItem))->setText(0,
                 tr("Reflected vertically"));
         else if (spec.refHoriz)
-            (new QTreeWidgetItem(details))->setText(0,
+            (new QTreeWidgetItem(detailsItem))->setText(0,
                 tr("Reflected horizontally"));
         else
-            (new QTreeWidgetItem(details))->setText(0,
+            (new QTreeWidgetItem(detailsItem))->setText(0,
                 tr("No reflections"));
 
-        (new QTreeWidgetItem(details))->setText(0,
+        (new QTreeWidgetItem(detailsItem))->setText(0,
             spec.block->str().c_str());
     }
 }
 
 void Tri3CompositionUI::findBlockedTriangulations() {
     QTreeWidgetItem* id;
-    QTreeWidgetItem* details;
+    QTreeWidgetItem* detailsItem;
 
     regina::BlockedSFS* sfs = regina::BlockedSFS::isBlockedSFS(tri);
     if (sfs) {
@@ -554,9 +554,9 @@ void Tri3CompositionUI::findBlockedTriangulations() {
     if (loop) {
         id = addComponentSection(tr("Blocked SFS Loop"));
 
-        details = new QTreeWidgetItem(id);
-        details->setText(0,tr("Internal region:"));
-        describeSatRegion(loop->region(), details);
+        detailsItem = new QTreeWidgetItem(id);
+        detailsItem->setText(0,tr("Internal region:"));
+        describeSatRegion(loop->region(), detailsItem);
 
         (new QTreeWidgetItem(id))->setText(0, tr("Matching relation: %1").
             arg(matrixString(loop->matchingReln())));
@@ -569,13 +569,13 @@ void Tri3CompositionUI::findBlockedTriangulations() {
     if (pair) {
         id = addComponentSection(tr("Blocked SFS Pair"));
 
-        details = new QTreeWidgetItem(id);
-        details->setText(0, tr("Second region:"));
-        describeSatRegion(pair->region(1), details);
+        detailsItem = new QTreeWidgetItem(id);
+        detailsItem->setText(0, tr("Second region:"));
+        describeSatRegion(pair->region(1), detailsItem);
 
-        details = new QTreeWidgetItem(id);
-        details->setText(0, tr("First region:"));
-        describeSatRegion(pair->region(0), details);
+        detailsItem = new QTreeWidgetItem(id);
+        detailsItem->setText(0, tr("First region:"));
+        describeSatRegion(pair->region(0), detailsItem);
 
         (new QTreeWidgetItem(id))->setText(0, tr("Matching relation (first --> second): %1").
             arg(matrixString(pair->matchingReln())));
@@ -588,17 +588,17 @@ void Tri3CompositionUI::findBlockedTriangulations() {
     if (triple) {
         id = addComponentSection(tr("Blocked SFS Triple"));
 
-        details = new QTreeWidgetItem(id);
-        details->setText(0, tr("Second end region:"));
-        describeSatRegion(triple->end(1), details);
+        detailsItem = new QTreeWidgetItem(id);
+        detailsItem->setText(0, tr("Second end region:"));
+        describeSatRegion(triple->end(1), detailsItem);
 
-        details = new QTreeWidgetItem(id);
-        details->setText(0, tr("First end region:"));
-        describeSatRegion(triple->end(0), details);
+        detailsItem = new QTreeWidgetItem(id);
+        detailsItem->setText(0, tr("First end region:"));
+        describeSatRegion(triple->end(0), detailsItem);
 
-        details = new QTreeWidgetItem(id);
-        details->setText(0, tr("Central region:"));
-        describeSatRegion(triple->centre(), details);
+        detailsItem = new QTreeWidgetItem(id);
+        detailsItem->setText(0, tr("Central region:"));
+        describeSatRegion(triple->centre(), detailsItem);
 
         (new QTreeWidgetItem(id))->setText(0,
             tr("Matching relation (centre --> second end): %1").
@@ -636,9 +636,9 @@ void Tri3CompositionUI::findBlockedTriangulations() {
     if (pBundle) {
         id = addComponentSection(tr("Plugged Torus Bundle"));
 
-        details = new QTreeWidgetItem(id);
-        details->setText(0, tr("Saturated region:"));
-        describeSatRegion(pBundle->region(), details);
+        detailsItem = new QTreeWidgetItem(id);
+        detailsItem->setText(0, tr("Saturated region:"));
+        describeSatRegion(pBundle->region(), detailsItem);
 
         (new QTreeWidgetItem(id))->setText(0,
             tr("Matching relation (joining region boundaries): %1").
@@ -655,8 +655,8 @@ void Tri3CompositionUI::findBlockedTriangulations() {
 void Tri3CompositionUI::findL31Pillows() {
     unsigned long nComps = tri->countComponents();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     regina::L31Pillow* pillow;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -665,11 +665,11 @@ void Tri3CompositionUI::findL31Pillows() {
             id = addComponentSection(tr("L(3,1) pillow ") +
                 pillow->name().c_str());
 
-            details = new QTreeWidgetItem(id);
-            details->setText(0, tr("Component %1").arg(i));
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tr("Component %1").arg(i));
 
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, 
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, 
                 tr("Pillow interior vertex: %1").
                 arg(pillow->tetrahedron(0)->vertex(pillow->interiorVertex(0))->
                     index()));
@@ -682,8 +682,8 @@ void Tri3CompositionUI::findL31Pillows() {
 void Tri3CompositionUI::findLayeredChainPairs() {
     unsigned long nComps = tri->countComponents();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     regina::LayeredChainPair* pair;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -693,11 +693,11 @@ void Tri3CompositionUI::findLayeredChainPairs() {
             id = addComponentSection(tr("Layered chain pair ") +
                 pair->name().c_str());
 
-            details = new QTreeWidgetItem(id);
-            details->setText(0, tr("Component %1").arg(i));
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tr("Component %1").arg(i));
 
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0,
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0,
                 tr("Chain lengths: %1, %2").
                 arg(pair->chain(0)->index()).
                 arg(pair->chain(1)->index()));
@@ -710,8 +710,8 @@ void Tri3CompositionUI::findLayeredChainPairs() {
 void Tri3CompositionUI::findLayeredLensSpaces() {
     unsigned long nComps = tri->countComponents();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     regina::LayeredLensSpace* lens;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -721,12 +721,12 @@ void Tri3CompositionUI::findLayeredLensSpaces() {
             id = addComponentSection(tr("Layered lens space ") +
                 lens->name().c_str());
 
-            details = new QTreeWidgetItem(id);
-            details->setText(0, tr("Component %1").arg(i));
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tr("Component %1").arg(i));
 
             const regina::LayeredSolidTorus& torus(lens->torus());
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr(
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr(
                 "Layered %1-%2-%3 solid torus %4").
                 arg(torus.meridinalCuts(0)).
                 arg(torus.meridinalCuts(1)).
@@ -742,8 +742,8 @@ void Tri3CompositionUI::findLayeredLensSpaces() {
 void Tri3CompositionUI::findLayeredLoops() {
     unsigned long nComps = tri->countComponents();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     regina::LayeredLoop* loop;
     for (unsigned long i = 0; i < nComps; i++) {
@@ -752,22 +752,22 @@ void Tri3CompositionUI::findLayeredLoops() {
             id = addComponentSection(tr("Layered loop ") +
                 loop->name().c_str());
 
-            details = new QTreeWidgetItem(id);
-            details->setText(0, tr("Component %1").arg(i));
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tr("Component %1").arg(i));
 
             if (loop->isTwisted()) {
-                details = new QTreeWidgetItem(id, details);
-                details->setText(0, tr(
+                detailsItem = new QTreeWidgetItem(id, detailsItem);
+                detailsItem->setText(0, tr(
                     "Length %1, twisted").arg(loop->length()));
-                details = new QTreeWidgetItem(id, details);
-                details->setText(0, tr(
+                detailsItem = new QTreeWidgetItem(id, detailsItem);
+                detailsItem->setText(0, tr(
                     "Hinge: edge %1").arg(loop->hinge(0)->index()));
             } else {
-                details = new QTreeWidgetItem(id, details);
-                details->setText(0, tr(
+                detailsItem = new QTreeWidgetItem(id, detailsItem);
+                detailsItem->setText(0, tr(
                     "Length %1, not twisted").arg(loop->length()));
-                details = new QTreeWidgetItem(id);
-                details->setText(0, tr(
+                detailsItem = new QTreeWidgetItem(id);
+                detailsItem->setText(0, tr(
                     "Hinges: edge %1, %2").
                     arg(loop->hinge(0)->index()).
                     arg(loop->hinge(1)->index()));
@@ -781,8 +781,8 @@ void Tri3CompositionUI::findLayeredLoops() {
 void Tri3CompositionUI::findLayeredSolidTori() {
     unsigned long nTets = tri->size();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     regina::LayeredSolidTorus* torus;
     unsigned long topIndex;
@@ -793,25 +793,25 @@ void Tri3CompositionUI::findLayeredSolidTori() {
             id = addComponentSection(tr("Layered solid torus ") +
                 torus->name().c_str());
 
-            details = new QTreeWidgetItem(id);
-            details->setText(0, tr("Base: tet %1").arg(torus->base()->index()));
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tr("Base: tet %1").arg(torus->base()->index()));
             topIndex = torus->topLevel()->index();
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr("Top level: tet %1").
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Top level: tet %1").
                 arg(topIndex));
 
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr(
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr(
                 "Weight %1 edge: %2").arg(torus->meridinalCuts(0)).
                 arg(edgeString(topIndex, torus->topEdge(0, 0),
                     torus->topEdge(0, 1))));
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr(
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr(
                 "Weight %1 edge: %2").arg(torus->meridinalCuts(1)).
                 arg(edgeString(topIndex, torus->topEdge(1, 0),
                     torus->topEdge(1, 1))));
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr(
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr(
                 "Weight %1 edge: %2").arg(torus->meridinalCuts(2)).
                 arg(edgeString(topIndex, torus->topEdge(2, 0),
                     torus->topEdge(2, 1))));
@@ -824,8 +824,8 @@ void Tri3CompositionUI::findLayeredSolidTori() {
 void Tri3CompositionUI::findPillowSpheres() {
     unsigned long nTriangles = tri->countTriangles();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     unsigned long i, j;
     regina::Triangle<3>* f1;
@@ -839,12 +839,12 @@ void Tri3CompositionUI::findPillowSpheres() {
             if (pillow) {
                 id = addComponentSection(tr("Pillow 2-sphere"));
 
-                details = new QTreeWidgetItem(id);
-                details->setText(0, tr("Triangles: %1, %2").
+                detailsItem = new QTreeWidgetItem(id);
+                detailsItem->setText(0, tr("Triangles: %1, %2").
                     arg(i).arg(j));
 
-                details = new QTreeWidgetItem(id, details);
-                details->setText(0, tr(
+                detailsItem = new QTreeWidgetItem(id, detailsItem);
+                detailsItem->setText(0, tr(
                     "Equator: edges %1, %2, %3").
                      arg(f1->edge(0)->index()).
                      arg(f1->edge(1)->index()).
@@ -859,8 +859,8 @@ void Tri3CompositionUI::findPillowSpheres() {
 void Tri3CompositionUI::findPlugTriSolidTori() {
     unsigned long nComps = tri->countComponents();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     regina::PlugTriSolidTorus* plug;
     const regina::LayeredChain* chain;
@@ -871,12 +871,12 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
             id = addComponentSection(tr("Plugged triangular solid torus ") +
                 plug->name().c_str());
 
-            details = new QTreeWidgetItem(id);
-            details->setText(0, tr("Component %1").arg(i));
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tr("Component %1").arg(i));
 
             const regina::TriSolidTorus& core(plug->core());
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0,
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0,
                 tr("Core: tets %1, %2, %3").
                 arg(core.tetrahedron(0)->index()).
                 arg(core.tetrahedron(1)->index()).
@@ -895,11 +895,11 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
                 if (j < 2)
                     lengths += ", ";
             }
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, lengths);
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, lengths);
 
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr("Equator type: ") +
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Equator type: ") +
                 (plug->equatorType() ==
                 regina::PlugTriSolidTorus::EQUATOR_MAJOR ?
                 tr("major") : tr("minor")));
@@ -912,8 +912,8 @@ void Tri3CompositionUI::findPlugTriSolidTori() {
 void Tri3CompositionUI::findSnappedBalls() {
     unsigned long nTets = tri->size();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     regina::SnappedBall* ball;
     for (unsigned long i = 0; i < nTets; i++) {
@@ -922,11 +922,11 @@ void Tri3CompositionUI::findSnappedBalls() {
         if (ball) {
             id = addComponentSection(tr("Snapped 3-ball"));
 
-            details = new QTreeWidgetItem(id);
-            details->setText(0, tr("Tetrahedron %1").arg(i));
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tr("Tetrahedron %1").arg(i));
 
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr("Equator: edge %1%2").
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Equator: edge %1%2").
                 arg(ball->internalFace(0)).arg(ball->internalFace(1)));
 
             delete ball;
@@ -937,8 +937,8 @@ void Tri3CompositionUI::findSnappedBalls() {
 void Tri3CompositionUI::findSnappedSpheres() {
     unsigned long nTets = tri->size();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     unsigned long i, j;
     regina::Tetrahedron<3>* t1;
@@ -952,13 +952,13 @@ void Tri3CompositionUI::findSnappedSpheres() {
             if (sphere) {
                 id = addComponentSection(tr("Snapped 2-sphere"));
 
-                details = new QTreeWidgetItem(id);
-                details->setText(0, tr("Tetrahedra: %1, %2").
+                detailsItem = new QTreeWidgetItem(id);
+                detailsItem->setText(0, tr("Tetrahedra: %1, %2").
                     arg(i).arg(j));
 
                 const regina::SnappedBall* ball = sphere->snappedBall(0);
-                details = new QTreeWidgetItem(id, details);
-                details->setText(0, tr(
+                detailsItem = new QTreeWidgetItem(id, detailsItem);
+                detailsItem->setText(0, tr(
                     "Equator: edge %1").arg(
                     ball->tetrahedron()->edge(ball->equatorEdge())->index()));
 
@@ -971,8 +971,8 @@ void Tri3CompositionUI::findSnappedSpheres() {
 void Tri3CompositionUI::findSpiralSolidTori() {
     unsigned long nTets = tri->size();
 
-    QTreeWidgetItem* id = 0;
-    QTreeWidgetItem* details = 0;
+    QTreeWidgetItem* id = nullptr;
+    QTreeWidgetItem* detailsItem = nullptr;
 
     regina::SpiralSolidTorus* spiral;
     regina::Tetrahedron<3>* tet;
@@ -1009,13 +1009,13 @@ void Tri3CompositionUI::findSpiralSolidTori() {
                     tetSet += ", ";
                 tetSet += QString::number(tetIndex[j]);
             }
-            details = new QTreeWidgetItem(id);
-            details->setText(0, tetSet);
+            detailsItem = new QTreeWidgetItem(id);
+            detailsItem->setText(0, tetSet);
 
             QString data;
             QTreeWidgetItem* edge;
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr("Major edges:"));
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Major edges:"));
             edge = 0;
             for (j = 0; j < spiralTets; j++) {
                 data =
@@ -1028,15 +1028,15 @@ void Tri3CompositionUI::findSpiralSolidTori() {
                     edgeString(tetIndex[(j + 1) % spiralTets],
                         spiral->vertexRoles((j + 1) % spiralTets), 0, 1);
                 if (edge)
-                    edge = new QTreeWidgetItem(details, edge);
+                    edge = new QTreeWidgetItem(detailsItem, edge);
                 else
-                    edge = new QTreeWidgetItem(details);
+                    edge = new QTreeWidgetItem(detailsItem);
 
                 edge->setText(0, data);
             }
 
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr("Minor edges:"));
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Minor edges:"));
             edge = 0;
             for (j = 0; j < spiralTets; j++) {
                 data =
@@ -1045,23 +1045,23 @@ void Tri3CompositionUI::findSpiralSolidTori() {
                     edgeString(tetIndex[(j + 1) % spiralTets],
                         spiral->vertexRoles((j + 1) % spiralTets), 0, 2);
                 if (edge)
-                    edge = new QTreeWidgetItem(details, edge);
+                    edge = new QTreeWidgetItem(detailsItem, edge);
                 else
-                    edge = new QTreeWidgetItem(details);
+                    edge = new QTreeWidgetItem(detailsItem);
 
                 edge->setText(0, data);
             }
 
-            details = new QTreeWidgetItem(id, details);
-            details->setText(0, tr("Axis edges:"));
+            detailsItem = new QTreeWidgetItem(id, detailsItem);
+            detailsItem->setText(0, tr("Axis edges:"));
             edge = 0;
             for (j = 0; j < spiralTets; j++) {
                 data = edgeString(tetIndex[j], spiral->vertexRoles(j),
                     0, 3);
                 if (edge)
-                    edge = new QTreeWidgetItem(details, edge);
+                    edge = new QTreeWidgetItem(detailsItem, edge);
                 else
-                    edge = new QTreeWidgetItem(details);
+                    edge = new QTreeWidgetItem(detailsItem);
 
                 edge->setText(0, data);
             }

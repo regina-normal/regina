@@ -237,7 +237,7 @@ class PermTest : public CppUnit::TestFixture {
 
             for (int from = 0; from < n - 1; ++from) {
                 int image[n];
-                for (int i = 0; i < n; ++i)
+                for (i = 0; i < n; ++i)
                     image[i] = p[i];
                 std::swap(image[from], image[from + 1]);
                 if (! looksEqual(p * Perm(from, from + 1), Perm(image))) {

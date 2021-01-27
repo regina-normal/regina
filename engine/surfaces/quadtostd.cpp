@@ -596,11 +596,10 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
     }
 
     // All done!  Put the solutions into the normal surface list and clean up.
-    for (typename RaySpecList::iterator it = list[workingList].begin();
-            it != list[workingList].end(); ++it) {
-        surfaces.push_back((*it)->
+    for (auto ray : list[workingList]) {
+        surfaces.push_back(ray->
             template recover<typename Variant::StandardVector>(owner));
-        delete *it;
+        delete ray;
     }
 
     delete[] link;

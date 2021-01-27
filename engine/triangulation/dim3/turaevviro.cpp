@@ -1319,9 +1319,9 @@ namespace {
         }
 
         std::cout << "Equations:" << std::endl;
-        for (auto i = input.begin(); i != input.end(); ++i) {
-            for (auto j = i->begin(); j != i->end(); ++j) {
-                if (j != i->begin())
+        for (const auto& in : input) {
+            for (auto j = in.begin(); j != in.end(); ++j) {
+                if (j != in.begin())
                     std::cout << ' ';
                 std::cout << *j;
             }

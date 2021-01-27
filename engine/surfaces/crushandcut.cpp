@@ -1362,7 +1362,7 @@ namespace {
                     found_(false) {
                 t_[0] = t0;
                 t_[1] = t1;
-                currSearch_[0] = currSearch_[1] = 0;
+                currSearch_[0] = currSearch_[1] = nullptr;
             }
 
             inline bool hasFound() {
@@ -1371,8 +1371,12 @@ namespace {
             }
 
             inline void markFound() {
-                std::lock_guard<std::mutex> lock(foundMutex_);
+                std::lock_guard<std::mutex> flock(foundMutex_);
                 found_ = true;
+                // I believe there is no deadlock here, since no thread
+                // will hold searchMutex_ and *then* ask for foundMutex_.
+                // However, I also think that we can drop the lock on
+                // foundMutex_ at this point.  This should be checked and fixed.
                 for (int i = 0; i < 2; ++i)
                     if (t_[i]) {
                         std::lock_guard<std::mutex> lock(searchMutex_[i]);
@@ -1460,7 +1464,7 @@ namespace {
                     found = search.find();
                     {
                         std::lock_guard<std::mutex> lock(searchMutex_[side]);
-                        currSearch_[side] = 0;
+                        currSearch_[side] = nullptr;
                     }
 
                     if (hasFound()) {

@@ -224,7 +224,7 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
     Q1[0]=false;
     for (i=1; i < 2*n; ++i) {
         // Find the *other* occurrence of the crossing used at Q[i-1].
-        for (int j=0; j < 2*n; ++j) {
+        for (j=0; j < 2*n; ++j) {
             if (Q0[i-1] == S[j] && Q1[i-1] == ! J[j]) {
                 if (i % 2 == 1) {
                     Q0[i] = S[(j > 0 ? j-1 : 2*n-1)];
@@ -266,7 +266,7 @@ Link* Link::fromGauss(Iterator begin, Iterator end) {
         int index2 = -1;
         int temp1, temp2;
         // Find the two occurrences of crossing i in sequence Q0.
-        for (int j=0; j < 2*n; ++j) {
+        for (j=0; j < 2*n; ++j) {
             if (Q0[j]==i) {
                 if (j % 2 == 0) {
                     index1 = j;

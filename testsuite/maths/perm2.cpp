@@ -330,7 +330,7 @@ class Perm2Test : public CppUnit::TestFixture {
 
         void products() {
             // A direct test.
-            unsigned i, j, x;
+            unsigned i, j, k;
             Perm<2> p, q, r;
 
             for (i = 0; i < 2; ++i) {
@@ -339,8 +339,8 @@ class Perm2Test : public CppUnit::TestFixture {
                     q = Perm<2>::S2[j];
 
                     r = p * q;
-                    for (x = 0; x < 2; ++x) {
-                        if (r[x] != p[q[x]]) {
+                    for (k = 0; k < 2; ++k) {
+                        if (r[k] != p[q[k]]) {
                             std::ostringstream msg;
                             msg << "Multiplication fails for the product "
                                 << p.str() << " * " << q.str() << ".";

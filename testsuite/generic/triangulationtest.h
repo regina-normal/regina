@@ -748,8 +748,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 Isomorphism<dim>* relabelling;
                 tri->isoSig(&relabelling);
 
-                Triangulation<dim>* rebuild =
-                    Triangulation<dim>::fromIsoSig(sig);
+                rebuild = Triangulation<dim>::fromIsoSig(sig);
                 Triangulation<dim>* relabel = relabelling->apply(tri);
 
                 if (relabel->detail() != rebuild->detail()) {

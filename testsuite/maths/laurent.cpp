@@ -131,145 +131,145 @@ class LaurentTest : public CppUnit::TestFixture {
         }
 
         void set() {
-            Laurent<Integer> a = { -1, { 1, 2, 1 } };
+            Laurent<Integer> x = { -1, { 1, 2, 1 } };
 
-            verifyEqual<Integer>(a, -1, {1, 2, 1});
-            a.set(0, 3);
-            verifyEqual<Integer>(a, -1, {1, 3, 1});
-            a.set(1, 0);
-            verifyEqual<Integer>(a, -1, {1, 3});
-            a.set(0, 0);
-            verifyEqual<Integer>(a, -1, {1});
-            a.set(1, 0);
-            verifyEqual<Integer>(a, -1, {1});
-            a.set(-1, 0);
-            verifyEqual<Integer>(a, 0, {});
-            a.set(-1, 0);
-            verifyEqual<Integer>(a, 0, {});
-            a.set(2, 1);
-            verifyEqual<Integer>(a, 2, {1});
+            verifyEqual<Integer>(x, -1, {1, 2, 1});
+            x.set(0, 3);
+            verifyEqual<Integer>(x, -1, {1, 3, 1});
+            x.set(1, 0);
+            verifyEqual<Integer>(x, -1, {1, 3});
+            x.set(0, 0);
+            verifyEqual<Integer>(x, -1, {1});
+            x.set(1, 0);
+            verifyEqual<Integer>(x, -1, {1});
+            x.set(-1, 0);
+            verifyEqual<Integer>(x, 0, {});
+            x.set(-1, 0);
+            verifyEqual<Integer>(x, 0, {});
+            x.set(2, 1);
+            verifyEqual<Integer>(x, 2, {1});
 
-            Laurent<Integer> b = { -1, { 1, 2, 1 } };
-            b.set(-1, 0);
-            verifyEqual<Integer>(b, 0, {2, 1});
-            b.set(0, 0);
-            verifyEqual<Integer>(b, 1, {1});
-            b.set(-2, 3);
-            verifyEqual<Integer>(b, -2, {3, 0, 0, 1});
-            b.set(-2, 0);
-            verifyEqual<Integer>(b, 1, {1});
-            b.set(1, 0);
-            verifyEqual<Integer>(b, 0, {});
+            Laurent<Integer> y = { -1, { 1, 2, 1 } };
+            y.set(-1, 0);
+            verifyEqual<Integer>(y, 0, {2, 1});
+            y.set(0, 0);
+            verifyEqual<Integer>(y, 1, {1});
+            y.set(-2, 3);
+            verifyEqual<Integer>(y, -2, {3, 0, 0, 1});
+            y.set(-2, 0);
+            verifyEqual<Integer>(y, 1, {1});
+            y.set(1, 0);
+            verifyEqual<Integer>(y, 0, {});
         }
 
         template <typename T>
-        void verifyPlus(const Laurent<T>& a, const Laurent<T>& b,
+        void verifyPlus(const Laurent<T>& x, const Laurent<T>& y,
                 long minExp, std::initializer_list<T> coeffs) {
-            verifyEqual(a + b, minExp, coeffs);
-            verifyEqual((a + zero) + b, minExp, coeffs);
-            verifyEqual(a + (b + zero), minExp, coeffs);
-            verifyEqual((a + zero) + (b + zero), minExp, coeffs);
+            verifyEqual(x + y, minExp, coeffs);
+            verifyEqual((x + zero) + y, minExp, coeffs);
+            verifyEqual(x + (y + zero), minExp, coeffs);
+            verifyEqual((x + zero) + (y + zero), minExp, coeffs);
 
-            verifyEqual(b + a, minExp, coeffs);
-            verifyEqual((b + zero) + a, minExp, coeffs);
-            verifyEqual(b + (a + zero), minExp, coeffs);
-            verifyEqual((b + zero) + (a + zero), minExp, coeffs);
-
-            {
-                Laurent<T> x(a);
-                verifyEqual(x += b, minExp, coeffs);
-            }
-            {
-                Laurent<T> x(a);
-                verifyEqual(x += (b + zero), minExp, coeffs);
-            }
-            {
-                Laurent<T> x(b);
-                verifyEqual(x += a, minExp, coeffs);
-            }
-            {
-                Laurent<T> x(b);
-                verifyEqual(x += (a + zero), minExp, coeffs);
-            }
-        }
-
-        template <typename T>
-        void verifyMinus(const Laurent<T>& a, const Laurent<T>& b,
-                long minExp, std::initializer_list<T> coeffs) {
-            verifyEqual(a - b, minExp, coeffs);
-            verifyEqual((a + zero) - b, minExp, coeffs);
-            verifyEqual(a - (b + zero), minExp, coeffs);
-            verifyEqual((a + zero) - (b + zero), minExp, coeffs);
+            verifyEqual(y + x, minExp, coeffs);
+            verifyEqual((y + zero) + x, minExp, coeffs);
+            verifyEqual(y + (x + zero), minExp, coeffs);
+            verifyEqual((y + zero) + (x + zero), minExp, coeffs);
 
             {
-                Laurent<T> x(a);
-                verifyEqual(x -= b, minExp, coeffs);
+                Laurent<T> z(x);
+                verifyEqual(z += y, minExp, coeffs);
             }
             {
-                Laurent<T> x(a);
-                verifyEqual(x -= (b + zero), minExp, coeffs);
+                Laurent<T> z(x);
+                verifyEqual(z += (y + zero), minExp, coeffs);
             }
-
-            verifyPlus(a, -b, minExp, coeffs);
             {
-                Laurent<T> x(b);
-                x.negate();
-                verifyPlus(a, x, minExp, coeffs);
+                Laurent<T> z(y);
+                verifyEqual(z += x, minExp, coeffs);
+            }
+            {
+                Laurent<T> z(y);
+                verifyEqual(z += (x + zero), minExp, coeffs);
             }
         }
 
         template <typename T>
-        void verifyMult(const Laurent<T>& a, const T& b,
+        void verifyMinus(const Laurent<T>& x, const Laurent<T>& y,
                 long minExp, std::initializer_list<T> coeffs) {
-            verifyEqual(a * b, minExp, coeffs);
-            verifyEqual((a + zero) * b, minExp, coeffs);
-            verifyEqual(b * a, minExp, coeffs);
-            verifyEqual(b * (a + zero), minExp, coeffs);
+            verifyEqual(x - y, minExp, coeffs);
+            verifyEqual((x + zero) - y, minExp, coeffs);
+            verifyEqual(x - (y + zero), minExp, coeffs);
+            verifyEqual((x + zero) - (y + zero), minExp, coeffs);
+
             {
-                Laurent<T> x(a);
-                verifyEqual(x *= b, minExp, coeffs);
+                Laurent<T> z(x);
+                verifyEqual(z -= y, minExp, coeffs);
+            }
+            {
+                Laurent<T> z(x);
+                verifyEqual(z -= (y + zero), minExp, coeffs);
+            }
+
+            verifyPlus(x, -y, minExp, coeffs);
+            {
+                Laurent<T> z(y);
+                z.negate();
+                verifyPlus(x, z, minExp, coeffs);
             }
         }
 
         template <typename T>
-        void verifyDiv(const Laurent<T>& a, const T& b,
+        void verifyMult(const Laurent<T>& x, const T& y,
                 long minExp, std::initializer_list<T> coeffs) {
-            verifyEqual(a / b, minExp, coeffs);
-            verifyEqual((a + zero) / b, minExp, coeffs);
+            verifyEqual(x * y, minExp, coeffs);
+            verifyEqual((x + zero) * y, minExp, coeffs);
+            verifyEqual(y * x, minExp, coeffs);
+            verifyEqual(y * (x + zero), minExp, coeffs);
             {
-                Laurent<T> x(a);
-                verifyEqual(x /= b, minExp, coeffs);
+                Laurent<T> z(x);
+                verifyEqual(z *= y, minExp, coeffs);
             }
         }
 
         template <typename T>
-        void verifyMult(const Laurent<T>& a, const Laurent<T>& b,
+        void verifyDiv(const Laurent<T>& x, const T& y,
                 long minExp, std::initializer_list<T> coeffs) {
-            verifyEqual(a * b, minExp, coeffs);
-            verifyEqual((a + zero) * b, minExp, coeffs);
-            verifyEqual(a * (b + zero), minExp, coeffs);
-            verifyEqual((a + zero) * (b + zero), minExp, coeffs);
+            verifyEqual(x / y, minExp, coeffs);
+            verifyEqual((x + zero) / y, minExp, coeffs);
+            {
+                Laurent<T> z(x);
+                verifyEqual(z /= y, minExp, coeffs);
+            }
+        }
 
-            verifyEqual(b * a, minExp, coeffs);
-            verifyEqual((b + zero) * a, minExp, coeffs);
-            verifyEqual(b * (a + zero), minExp, coeffs);
-            verifyEqual((b + zero) * (a + zero), minExp, coeffs);
+        template <typename T>
+        void verifyMult(const Laurent<T>& x, const Laurent<T>& y,
+                long minExp, std::initializer_list<T> coeffs) {
+            verifyEqual(x * y, minExp, coeffs);
+            verifyEqual((x + zero) * y, minExp, coeffs);
+            verifyEqual(x * (y + zero), minExp, coeffs);
+            verifyEqual((x + zero) * (y + zero), minExp, coeffs);
+
+            verifyEqual(y * x, minExp, coeffs);
+            verifyEqual((y + zero) * x, minExp, coeffs);
+            verifyEqual(y * (x + zero), minExp, coeffs);
+            verifyEqual((y + zero) * (x + zero), minExp, coeffs);
 
             {
-                Laurent<T> x(a);
-                verifyEqual(x *= b, minExp, coeffs);
+                Laurent<T> z(x);
+                verifyEqual(z *= y, minExp, coeffs);
             }
             {
-                Laurent<T> x(a);
-                verifyEqual(x *= (b + zero), minExp, coeffs);
+                Laurent<T> z(x);
+                verifyEqual(z *= (y + zero), minExp, coeffs);
             }
             {
-                Laurent<T> x(b);
-                verifyEqual(x *= a, minExp, coeffs);
+                Laurent<T> z(y);
+                verifyEqual(z *= x, minExp, coeffs);
             }
             {
-                Laurent<T> x(b);
-                verifyEqual(x *= (a + zero), minExp, coeffs);
+                Laurent<T> z(y);
+                verifyEqual(z *= (x + zero), minExp, coeffs);
             }
         }
 

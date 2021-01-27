@@ -356,7 +356,7 @@ class Perm3Test : public CppUnit::TestFixture {
 
         void products() {
             // A direct test.
-            unsigned i, j, x;
+            unsigned i, j, k;
             Perm<3> p, q, r;
 
             for (i = 0; i < 6; ++i) {
@@ -365,8 +365,8 @@ class Perm3Test : public CppUnit::TestFixture {
                     q = Perm<3>::S3[j];
 
                     r = p * q;
-                    for (x = 0; x < 3; ++x) {
-                        if (r[x] != p[q[x]]) {
+                    for (k = 0; k < 3; ++k) {
+                        if (r[k] != p[q[k]]) {
                             std::ostringstream msg;
                             msg << "Multiplication fails for the product "
                                 << p.str() << " * " << q.str() << ".";
