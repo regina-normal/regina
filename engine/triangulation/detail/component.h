@@ -58,26 +58,6 @@ template <int> class TriangulationBase;
  */
 
 /**
- * Helper class that indicates what data type is used by a connected component
- * of a triangulation to store a list of <i>subdim</i>-faces.
- *
- * This is only relevant for components in Regina's
- * \ref stddim "standard dimensions", since components in higher dimensions
- * do not store their lower-dimensional faces.
- */
-template <int dim, int subdim>
-struct FaceListHolder<Component<dim>, subdim> {
-    /**
-     * The data type used by Component<dim> to store the list of all
-     * <i>subdim</i>-faces of the connected component.
-     *
-     * The function Component<dim>::faces<subdim>() returns a const
-     * reference to this type.
-     */
-    typedef std::vector<Face<dim, subdim>*> Holder;
-};
-
-/**
  * Helper class that provides core functionality for a connected component
  * of a <i>dim</i>-manifold triangulation.
  *

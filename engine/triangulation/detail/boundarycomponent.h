@@ -59,26 +59,6 @@ template <int, bool> class BoundaryComponentFaceStorage;
  */
 
 /**
- * Helper class that indicates what data type is used by a boundary
- * component class to store a list of <i>subdim</i>-faces.
- *
- * This is only relevant for boundary components in Regina's
- * \ref stddim "standard dimensions", since boundary components in
- * higher dimensions do not store their lower-dimensional faces.
- */
-template <int dim, int subdim>
-struct FaceListHolder<BoundaryComponentFaceStorage<dim, true>, subdim> {
-    /**
-     * The data type used by BoundaryComponent<dim> to store the list of all
-     * <i>subdim</i>-faces of the boundary component.
-     *
-     * The function BoundaryComponent<dim>::faces<subdim>() returns a const
-     * reference to this type.
-     */
-    typedef std::vector<Face<dim, subdim>*> Holder;
-};
-
-/**
  * Internal class that stores all <i>subdim</i>-faces in a component or
  * boundary component of a <i>dim</i>-dimensional triangulation.
  *

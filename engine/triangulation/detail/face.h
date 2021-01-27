@@ -477,26 +477,6 @@ class FaceStorage<dim, 1> {
 #endif // __DOXYGEN
 
 /**
- * Helper class that indicates what data type \a Base uses to store its
- * list of <i>subdim</i>-faces.
- *
- * Typically \a Base will represent a triangulation, or one of its components
- * or boundary components.  The typedef FaceListHolder<Base, subdim>::Holder
- * represents the type that \a Base uses to store its <i>subdim</i>-faces.
- *
- * \a Base should have a template function faces<subdim>() that returns a
- * const reference to this type.  That is, Base::faces<subdim> should have
- * return type <tt>const FaceListHolder<Base, subdim>::Holder&</tt>.
- *
- * For each such class \a Base, this FaceListHolder template should be
- * specialised in the same header where \a Base is defined.  For all
- * other types \a T, the template class FaceListHolder<T, subdim> will
- * remain undefined.
- */
-template <class Base, int subdim>
-struct FaceListHolder;
-
-/**
  * Helper class that provides core functionality for a <i>subdim</i>-face
  * in the skeleton of a <i>dim</i>-dimensional triangulation.
  *

@@ -26,8 +26,8 @@ Version 6.1  [ TODO ]
         Class Face<dim, subdim>:
             - New compile-time constants allowsNonOrientableLinks and
               allowsInvalidFaces.
-            - Simplified the class hierarchy; FaceOrientability and
-              FaceValidity are now gone.
+            - Simplified the class hierarchy; FaceOrientability,
+              FaceValidity and FaceListHolder are now gone.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
