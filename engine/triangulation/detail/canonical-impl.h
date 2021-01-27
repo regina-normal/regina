@@ -508,13 +508,13 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
             return false;
         if (isOrientable() ^ other.isOrientable())
             return false;
-        if (! FaceListSuite<dim, dim - 1>::sameFVector(other))
+        if (! this->sameFVector(other))
             return false;
 
         // TODO: Count boundary components and their sizes, once we have them.
 
         // Test degree sequences and the like.
-        if (! FaceListSuite<dim, dim - 2>::sameDegrees(other))
+        if (! this->template sameDegreesTo<dim - 2>(other))
             return false;
 
         // Test component sizes.

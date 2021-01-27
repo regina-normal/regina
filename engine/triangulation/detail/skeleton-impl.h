@@ -165,7 +165,7 @@ void TriangulationBase<dim>::calculateSkeletonCodim1() {
 
             // A new face!
             f = new Face<dim, dim-1>(s->component_);
-            FaceList<dim, dim-1>::push_back(f);
+            std::get<dim - 1>(this->faces_).push_back(f);
 
             std::get<dim-1>(s->faces_)[facet] = f;
             std::get<dim-1>(s->mappings_)[facet] =
@@ -208,7 +208,7 @@ void TriangulationBase<dim>::calculateSkeletonCodim2() {
                 continue;
 
             f = new Face<dim, dim-2>(s->component_);
-            FaceList<dim, dim-2>::push_back(f);
+            std::get<dim - 2>(this->faces_).push_back(f);
 
             // Since the link of a codimension-2-face is a path or loop, the
             // depth-first search is really just a straight line in either
@@ -303,7 +303,7 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                 continue;
 
             f = new Face<dim, subdim>(s->component_);
-            FaceList<dim, subdim>::push_back(f);
+            std::get<subdim>(this->faces_).push_back(f);
 
             std::get<subdim>(s->faces_)[start] = f;
             std::get<subdim>(s->mappings_)[start] =
@@ -550,7 +550,7 @@ void TriangulationBase<dim>::clearBaseProperties() {
         components_.clear();
         boundaryComponents_.clear();
 
-        FaceListSuite<dim, dim - 1>::deleteFaces();
+        this->deleteFaces();
 
         calculatedSkeleton_ = false;
     }
@@ -573,7 +573,7 @@ void TriangulationBase<dim>::swapBaseProperties(TriangulationBase<dim>& other) {
     components_.swap(other.components_);
     boundaryComponents_.swap(other.boundaryComponents_);
 
-    FaceListSuite<dim, dim - 1>::swapFaces(other);
+    this->swapFaces(other);
 
     // Properties stored using the Property<...> class template:
     fundGroup_.swap(other.fundGroup_);

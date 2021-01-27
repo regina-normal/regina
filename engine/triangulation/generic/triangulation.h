@@ -138,7 +138,8 @@ class FaceList {
         FaceList(const FaceList&) = delete;
         FaceList& operator = (const FaceList&) = delete;
 
-    protected:
+    public:
+        // TODO: Make non-public
         /**
          * Creates an empty list of <i>subdim</i>-faces.
          */
@@ -160,20 +161,6 @@ class FaceList {
          * @param other the list of faces to swap with this.
          */
         void swap(FaceList<dim, subdim>& other);
-        /**
-         * Tests whether this and the given triangulation have the same
-         * <i>subdim</i>-face degree sequences.
-         *
-         * For the purposes of this routine, degree sequences are
-         * considered to be unordered.
-         *
-         * \pre This and the given triangulation are known to have the
-         * same number of <i>subdim</i>-faces as each other.
-         *
-         * @param other the triangulation to compare against this.
-         * @return \c true if and only if the degree sequences are equal.
-         */
-        bool sameDegrees(const FaceList<dim, subdim>& other) const;
         /**
          * Reorders this list of faces.
          *
@@ -556,34 +543,6 @@ inline void FaceList<dim, subdim>::destroy() {
 template <int dim, int subdim>
 inline void FaceList<dim, subdim>::swap(FaceList<dim, subdim>& other) {
     faces_.swap(other.faces_);
-}
-
-template <int dim, int subdim>
-bool FaceList<dim, subdim>::sameDegrees(const FaceList<dim, subdim>& other)
-        const {
-    // We may assume that # faces is the same for both triangulations.
-    size_t n = faces_.size();
-
-    size_t* deg1 = new size_t[n];
-    size_t* deg2 = new size_t[n];
-
-    size_t* p;
-    p = deg1;
-    for (auto f : faces_)
-        *p++ = f->degree();
-    p = deg2;
-    for (auto f : other.faces_)
-        *p++ = f->degree();
-
-    std::sort(deg1, deg1 + n);
-    std::sort(deg2, deg2 + n);
-
-    bool ans = std::equal(deg1, deg1 + n, deg2);
-
-    delete[] deg1;
-    delete[] deg2;
-
-    return ans;
 }
 
 // Inline functions for Triangulation

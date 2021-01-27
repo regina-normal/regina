@@ -103,14 +103,20 @@ template <int dim> class XMLTriangulationReaderBase;
  * Internal class that helps a triangulation store its lists of faces.
  *
  * This class is used with <i>dim</i>-dimensional triangulations.  It provides
- * storage for all faces of dimension \a subdim and below.  The triangulation
- * class Triangulation<dim> then derives from FaceListSuite<dim, dim-1>.
+ * storage for faces of all dimensions given in the parameter pack \a subdim.
  */
-template <int dim, int subdim>
-class FaceListSuite :
-        protected FaceListSuite<dim, subdim - 1>,
-        protected FaceList<dim, subdim> {
+template <int dim, int... subdim>
+class FaceListSuite {
     protected:
+        std::tuple<FaceList<dim, subdim>...> faces_;
+            /**< Each element of this tuple stores all faces of
+                 dimension \a subdim. */
+
+        /**
+         * Default constructor that initialises all face lists as empty.
+         */
+        FaceListSuite() = default;
+
         /**
          * Deletes all faces of dimension \a subdim and below.
          * This routine destroys the corresponding Face objects and
@@ -124,19 +130,7 @@ class FaceListSuite :
          * @param other the face storage for the triangulation whose
          * faces are to be swapped with this.
          */
-        void swapFaces(FaceListSuite<dim, subdim>& other);
-        /**
-         * Fills the given vector with the first (\a subdim + 1)
-         * elements of the f-vector.
-         *
-         * Specifically, this routine pushes the values
-         * \a f[0], ..., \a f[\a subdim] onto the end of the given vector,
-         * where \a f[\a k] denotes the number of <i>k</i>-faces that
-         * this object stores.
-         *
-         * @param result the vector in which the results will be placed.
-         */
-        void fillFVector(std::vector<size_t>& result) const;
+        void swapFaces(FaceListSuite& other);
         /**
          * Tests whether this and the given triangulation have the same
          * number of <i>k</i>-faces, for each facial dimension
@@ -146,39 +140,46 @@ class FaceListSuite :
          * @return \c true if and only if the face counts considered are
          * identical for both triangluations.
          */
-        bool sameFVector(const FaceListSuite<dim, subdim>& other) const;
+        bool sameFVector(const FaceListSuite& other) const;
+        /**
+         * Tests whether this and the given triangulation have the same
+         * <i>useDim</i>-face degree sequences.
+         *
+         * For the purposes of this routine, degree sequences are
+         * considered to be unordered.
+         *
+         * \pre This and the given triangulation are known to have the
+         * same number of <i>useDim</i>-faces as each other.
+         *
+         * @param other the triangulation to compare against this.
+         * @return \c true if and only if the <i>useDim</i>-face
+         * degree sequences are equal.
+         */
+        template <int useDim>
+        bool sameDegreesAt(const FaceListSuite& other) const;
         /**
          * Tests whether this and the given triangulation have the same
          * <i>k</i>-face degree sequences, for each facial dimension
-         * \a k &le; \a subdim.
+         * \a k &le; \a maxDim.
          *
          * For the purposes of this routine, degree sequences are
          * considered to be unordered.
          *
          * \pre This and the given triangulation are known to have the
          * same number of <i>k</i>-faces as each other, for each facial
-         * dimension \a k &le; \a subdim.
+         * dimension \a k &le; \a maxDim.
          *
          * @param other the triangulation to compare against this.
          * @return \c true if and only if all degree sequences considered
          * are equal.
          */
-        bool sameDegrees(const FaceListSuite<dim, subdim>& other) const;
+        template <int maxDim>
+        bool sameDegreesTo(const FaceListSuite& other) const;
+
+        // Make this class non-copyable.
+        FaceListSuite(const FaceListSuite&) = delete;
+        FaceListSuite& operator = (const FaceListSuite&) = delete;
 };
-
-#ifndef __DOXYGEN
-
-template <int dim>
-class FaceListSuite<dim, 0> : protected FaceList<dim, 0> {
-    protected:
-        void deleteFaces();
-        void swapFaces(FaceListSuite<dim, 0>& other);
-        void fillFVector(std::vector<size_t>& result) const;
-        bool sameFVector(const FaceListSuite<dim, 0>& other) const;
-        bool sameDegrees(const FaceListSuite<dim, 0>& other) const;
-};
-
-#endif // __DOXYGEN
 
 /**
  * Internal class used to calculate lower-dimensional faces in a
@@ -384,7 +385,7 @@ struct EulerCalculator<dim, dim> {
  */
 template <int dim>
 class TriangulationBase :
-        protected FaceListSuite<dim, dim - 1>,
+        public ExpandSequence<FaceListSuite, dim>,
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
@@ -2124,66 +2125,58 @@ class TriangulationBase :
 
 // Inline functions for FaceListSuite
 
-template <int dim, int subdim>
-inline void FaceListSuite<dim, subdim>::deleteFaces() {
-    FaceList<dim, subdim>::destroy();
-    FaceListSuite<dim, subdim - 1>::deleteFaces();
+template <int dim, int... subdim>
+inline void FaceListSuite<dim, subdim...>::deleteFaces() {
+    (std::get<subdim>(faces_).destroy(), ...);
 }
 
-template <int dim, int subdim>
-inline void FaceListSuite<dim, subdim>::swapFaces(
-        FaceListSuite<dim, subdim>& other) {
-    FaceList<dim, subdim>::swap(other);
-    FaceListSuite<dim, subdim - 1>::swapFaces(other);
+template <int dim, int... subdim>
+inline void FaceListSuite<dim, subdim...>::swapFaces(
+        FaceListSuite<dim, subdim...>& other) {
+    (std::get<subdim>(faces_).swap(std::get<subdim>(other.faces_)), ...);
 }
 
-template <int dim>
-inline void FaceListSuite<dim, 0>::deleteFaces() {
-    FaceList<dim, 0>::destroy();
+template <int dim, int... subdim>
+inline bool FaceListSuite<dim, subdim...>::sameFVector(
+        const FaceListSuite<dim, subdim...>& other) const {
+    return ((std::get<subdim>(faces_).size() ==
+            std::get<subdim>(other.faces_).size()) && ...);
 }
 
-template <int dim>
-inline void FaceListSuite<dim, 0>::swapFaces(FaceListSuite<dim, 0>& other) {
-    FaceList<dim, 0>::swap(other);
+template <int dim, int... subdim>
+template <int useDim>
+bool FaceListSuite<dim, subdim...>::sameDegreesAt(
+        const FaceListSuite<dim, subdim...>& other) const {
+    // We may assume that # faces is the same for both triangulations.
+    size_t n = std::get<useDim>(this->faces_).size();
+
+    size_t* deg1 = new size_t[n];
+    size_t* deg2 = new size_t[n];
+
+    size_t* p;
+    p = deg1;
+    for (auto f : std::get<useDim>(this->faces_))
+        *p++ = f->degree();
+    p = deg2;
+    for (auto f : std::get<useDim>(other.faces_))
+        *p++ = f->degree();
+
+    std::sort(deg1, deg1 + n);
+    std::sort(deg2, deg2 + n);
+
+    bool ans = std::equal(deg1, deg1 + n, deg2);
+
+    delete[] deg1;
+    delete[] deg2;
+
+    return ans;
 }
 
-template <int dim, int subdim>
-inline void FaceListSuite<dim, subdim>::fillFVector(
-        std::vector<size_t>& result) const {
-    FaceListSuite<dim, subdim - 1>::fillFVector(result);
-    result.push_back(FaceList<dim, subdim>::size());
-}
-
-template <int dim>
-inline void FaceListSuite<dim, 0>::fillFVector(
-        std::vector<size_t>& result) const {
-    result.push_back(FaceList<dim, 0>::size());
-}
-
-template <int dim, int subdim>
-inline bool FaceListSuite<dim, subdim>::sameFVector(
-        const FaceListSuite<dim, subdim>& other) const {
-    return FaceListSuite<dim, subdim - 1>::sameFVector(other) &&
-        (FaceList<dim, subdim>::size() == other.FaceList<dim, subdim>::size());
-}
-
-template <int dim>
-inline bool FaceListSuite<dim, 0>::sameFVector(
-        const FaceListSuite<dim, 0>& other) const {
-    return (FaceList<dim, 0>::size() == other.FaceList<dim, 0>::size());
-}
-
-template <int dim, int subdim>
-inline bool FaceListSuite<dim, subdim>::sameDegrees(
-        const FaceListSuite<dim, subdim>& other) const {
-    return FaceListSuite<dim, subdim - 1>::sameDegrees(other) &&
-        FaceList<dim, subdim>::sameDegrees(other);
-}
-
-template <int dim>
-inline bool FaceListSuite<dim, 0>::sameDegrees(
-        const FaceListSuite<dim, 0>& other) const {
-    return FaceList<dim, 0>::sameDegrees(other);
+template <int dim, int... subdim>
+template <int maxDim>
+inline bool FaceListSuite<dim, subdim...>::sameDegreesTo(
+        const FaceListSuite<dim, subdim...>& other) const {
+    return ((subdim > maxDim || sameDegreesAt<subdim>(other)) && ...);
 }
 
 // Inline functions for TriangulationBase
@@ -2376,17 +2369,15 @@ template <int dim>
 template <int subdim>
 inline size_t TriangulationBase<dim>::countFaces() const {
     ensureSkeleton();
-    return FaceList<dim, subdim>::size();
+    return std::get<subdim>(this->faces_).size();
 }
 
 template <int dim>
 inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
     ensureSkeleton();
-
-    std::vector<size_t> ans;
-    FaceListSuite<dim, dim - 1>::fillFVector(ans);
-    ans.push_back(size());
-    return ans;
+    return std::apply([this](auto&&... kFaces){
+        return std::vector<size_t>{ kFaces.size()..., size() };
+    }, this->faces_);
 }
 
 template <int dim>
@@ -2407,13 +2398,13 @@ template <int dim>
 template <int subdim>
 inline const FaceList<dim, subdim>& TriangulationBase<dim>::faces() const {
     ensureSkeleton();
-    return *this;
+    return std::get<subdim>(this->faces_);
 }
 
 template <int dim>
 template <int subdim, typename Iterator>
 inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
-    FaceList<dim, subdim>::template reorderFaces<Iterator>(begin, end);
+    std::get<subdim>(this->faces_).template reorderFaces<Iterator>(begin, end);
 }
 
 template <int dim>
@@ -2442,7 +2433,7 @@ template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
     ensureSkeleton();
-    return FaceList<dim, subdim>::operator [](index);
+    return std::get<subdim>(this->faces_)[index];
 }
 
 template <int dim>
