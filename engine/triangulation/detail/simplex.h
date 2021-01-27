@@ -69,7 +69,7 @@ template <int> class TriangulationBase;
  * storage for faces of all dimensions given in the parameter pack \a subdim.
  */
 template <int dim, int... subdim>
-class SimplexFacesSuite {
+class SimplexFaces {
     protected:
         std::tuple<std::array<Face<dim, subdim>*,
                 FaceNumbering<dim, subdim>::nFaces>...> faces_;
@@ -97,7 +97,7 @@ class SimplexFacesSuite {
          * as its image in \a other under the relabelling \a p.
          */
         template <int useDim>
-        bool sameDegreesAt(const SimplexFacesSuite& other, Perm<dim+1> p) const;
+        bool sameDegreesAt(const SimplexFaces& other, Perm<dim+1> p) const;
 
         /**
          * Tests whether the <i>k</i>-face degrees of this and the
@@ -113,7 +113,7 @@ class SimplexFacesSuite {
          * the relabelling \a p.
          */
         template <int maxDim>
-        bool sameDegreesTo(const SimplexFacesSuite& other, Perm<dim+1> p) const;
+        bool sameDegreesTo(const SimplexFaces& other, Perm<dim+1> p) const;
 };
 
 /**
@@ -137,7 +137,7 @@ template <int dim>
 class SimplexBase :
         public MarkedElement,
         public Output<SimplexBase<dim>>,
-        public ExpandSequence<SimplexFacesSuite, dim>,
+        public ExpandSequence<SimplexFaces, dim>,
         public alias::FaceOfSimplex<SimplexBase<dim>, dim> {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
     public:
@@ -585,12 +585,12 @@ class SimplexBase :
 
 /*@}*/
 
-// Inline functions for SimplexFacesSuite
+// Inline functions for SimplexFaces
 
 template <int dim, int... subdim>
 template <int useDim>
-inline bool SimplexFacesSuite<dim, subdim...>::sameDegreesAt(
-        const SimplexFacesSuite<dim, subdim...>& other, Perm<dim + 1> p) const {
+inline bool SimplexFaces<dim, subdim...>::sameDegreesAt(
+        const SimplexFaces<dim, subdim...>& other, Perm<dim + 1> p) const {
     size_t i, j;
     for (i = 0; i < FaceNumbering<dim, useDim>::nFaces; ++i) {
         j = FaceNumbering<dim, useDim>::faceNumber(
@@ -604,8 +604,8 @@ inline bool SimplexFacesSuite<dim, subdim...>::sameDegreesAt(
 
 template <int dim, int... subdim>
 template <int maxDim>
-inline bool SimplexFacesSuite<dim, subdim...>::sameDegreesTo(
-        const SimplexFacesSuite<dim, subdim...>& other, Perm<dim + 1> p) const {
+inline bool SimplexFaces<dim, subdim...>::sameDegreesTo(
+        const SimplexFaces<dim, subdim...>& other, Perm<dim + 1> p) const {
     return ((subdim > maxDim || sameDegreesAt<subdim>(other, p)) && ...);
 }
 
