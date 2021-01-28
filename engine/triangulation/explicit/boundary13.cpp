@@ -36,13 +36,11 @@
 namespace regina { namespace detail {
 
 // Don't cascade instantiations all the way down through the dimensions...
-extern template REGINA_API BoundaryComponentStorage<12, false, true>::
-    ~BoundaryComponentStorage();
+extern template REGINA_API BoundaryComponentBase<12>::~BoundaryComponentBase();
 
-template REGINA_API BoundaryComponentStorage<13, false, true>::
-    ~BoundaryComponentStorage();
+template REGINA_API BoundaryComponentBase<13>::~BoundaryComponentBase();
 
 template REGINA_API Triangulation<12>*
-    BoundaryComponentStorage<13, false, true>::buildRealBoundary() const;
+    BoundaryComponentBase<13>::buildRealBoundary() const;
 
 } }

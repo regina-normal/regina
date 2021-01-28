@@ -47,6 +47,7 @@
 #include "triangulation/forward.h"
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
+#include "utilities/typeutils.h"
 
 namespace regina {
 namespace detail {
@@ -660,8 +661,9 @@ class BoundaryComponentFaceStorage :
          */
         const Triangulation<dim-1>* buildVertexLink() const {
             // Make sure we do not try to instantiate Triangulation<1>.
-            static_assert(dim > 2, "Routine buildVertexLink() should "
-                "not be called for dimension 2.");
+            static_assert(dim > 2,
+                "BoundaryComponent<dim>::buildVertexLink() can only "
+                "be used with dimensions dim > 2.");
 
             return WeakFaceList<dim, 0>::faces_.front()->buildLink();
         }
@@ -900,43 +902,38 @@ class BoundaryComponentFaceStorage<dim, false> {
 };
 
 /**
- * Helper class that manages all data storage for a boundary component of a
- * <i>dim</i>-dimensional triangulation.  Every class BoundaryComponent<dim>
- * inherits from this template.
+ * Helper class that provides core functionality for a boundary component
+ * of a <i>dim</i>-dimensional triangulation.
  *
- * \ifacespython This base class is not present, but the "end user" class
- * BoundaryComponent<dim> is.
+ * Each boundary component is represented by the class BoundaryComponent<dim>,
+ * which uses this as a base class.  End users should not need to refer to
+ * BoundaryComponentBase directly.
+ *
+ * See the BoundaryComponent class notes for further information.
+ *
+ * \ifacespython This base class is not present, but the "end user"
+ * class BoundaryComponent<dim> is.
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
- * \tparam allFaces \c true if this class should store all faces of all
- * dimensions 0,1,...,<i>dim</i>-1, or \c false if this class should only
- * store faces of dimension <i>dim</i>-1.
- * \tparam canBuild_ \c true if we support triangulating boundary components,
- * or \c false if this is not possible (i.e., the dimension is 2).
  */
-template <int dim, bool allFaces, bool canBuild_>
-class BoundaryComponentStorage :
-        public BoundaryComponentFaceStorage<dim, allFaces> {
-    static_assert(canBuild_,
-        "The generic BoundaryComponentStoarge template should only be "
-        "used with canBuild = true.");
-    static_assert(dim > 2,
-        "The generic BoundaryComponentStorage template cannot be used "
-        "for dimension 2.");
-
+template <int dim>
+class BoundaryComponentBase :
+        public Output<BoundaryComponentBase<dim>>,
+        public BoundaryComponentFaceStorage<dim, standardDim(dim)>,
+        public MarkedElement {
     public:
         /**
          * A compile-time constant indicating whether this boundary
          * component class supports triangulating boundary components.
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
          */
-        static constexpr bool canBuild = true;
+        static constexpr bool canBuild = (dim > 2);
 
     protected:
-        Triangulation<dim-1>* boundary_;
+        bool orientable_;
+            /**< Is this boundary component orientable? */
+
+        EnableIf<canBuild, Triangulation<dim-1>*, nullptr> boundary_;
             /**< A full triangulation of the boundary component.
                  This may be pre-computed when the triangulation skeleton
                  is constructed, or it may be \c null in which case it
@@ -945,14 +942,38 @@ class BoundaryComponentStorage :
                  the triangulation is cached by the vertex class instead.*/
 
     public:
-        using BoundaryComponentFaceStorage<dim, allFaces>::allowVertex;
-        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
+        using BoundaryComponentFaceStorage<dim, standardDim(dim)>::allowVertex;
 
         /**
          * Destroys this object.  The cached boundary component triangulation
          * will be destroyed also.
          */
-        ~BoundaryComponentStorage();
+        ~BoundaryComponentBase();
+
+        /**
+         * Returns the index of this boundary component in the underlying
+         * triangulation.
+         *
+         * @return the index of this boundary component.
+         */
+        size_t index() const {
+            return markedIndex();
+        }
+
+        /**
+         * Determines if this boundary component is orientable.  If this is
+         * an ideal or invalid vertex boundary component, then the
+         * orientability of the corresponding vertex link is returned.
+         *
+         * This routine is fast; in particular, it is pre-computed and
+         * does not build a full triangulation of the boundary component.
+         *
+         * @return \c true if and only if this boundary component is
+         * orientable.
+         */
+        bool isOrientable() const {
+            return orientable_;
+        }
 
         /**
          * Returns the full (<i>dim</i>-1)-dimensional triangulation of this
@@ -989,119 +1010,24 @@ class BoundaryComponentStorage :
          * (<i>dim</i>-1)-dimensional triangulation will have been generated
          * already.
          *
+         * \pre The dimension \a dim is greater than 2.
+         *
          * @return the triangulation of this boundary component.
          */
         const Triangulation<dim-1>* build() const {
-            if (boundary_)
-                return boundary_; // Already cached or pre-computed.
+            // Make sure we do not try to instantiate Triangulation<1>.
+            static_assert(canBuild,
+                "BoundaryComponent<dim>::build() can only "
+                "be used with dimensions dim > 2.");
+
+            if (boundary_.value)
+                return boundary_.value; // Already cached or pre-computed.
             if constexpr (allowVertex)
-                if (facets().empty())
+                if (this->facets().empty())
                     return this->buildVertexLink(); // Ideal or invalid vertex.
 
-            return (
-                const_cast<BoundaryComponentStorage<dim, allFaces, canBuild_>*>(
-                    this)->boundary_ = buildRealBoundary());
-        }
-
-    protected:
-        /**
-         * Initialises the cached boundary triangulation to \c null.
-         */
-        BoundaryComponentStorage() : boundary_(0) {
-        }
-
-    private:
-        /**
-         * Builds a new triangulation of this boundary component,
-         * assuming this is a real boundary component.
-         *
-         * \pre The number of (dim-1)-faces is strictly positive.
-         *
-         * @return the newly created boundary triangulation.
-         */
-        Triangulation<dim-1>* buildRealBoundary() const;
-};
-
-/**
- * Helper class that manages all data storage for a boundary component of a
- * <i>dim</i>-dimensional triangulation.  See the general
- * BoundaryComponentStorage template notes for further details.
- *
- * This specialisation is used for dimensions in which you cannot triangulate
- * boundary components (i.e., dimension 2).  It therefore removes the
- * member functions that work with boundary component triangulations.
- */
-template <int dim, bool allFaces>
-class BoundaryComponentStorage<dim, allFaces, false> :
-        public BoundaryComponentFaceStorage<dim, allFaces> {
-    static_assert(dim == 2,
-        "The BoundaryComponentStorage template should not set "
-        "canBuild = false for dimensions greater than 2.");
-
-    public:
-        /**
-         * A compile-time constant indicating whether this boundary
-         * component class supports triangulating boundary components.
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
-         */
-        static constexpr bool canBuild = false;
-};
-
-/**
- * Helper class that provides core functionality for a boundary component
- * of a <i>dim</i>-dimensional triangulation.
- *
- * Each boundary component is represented by the class BoundaryComponent<dim>,
- * which uses this as a base class.  End users should not need to refer to
- * BoundaryComponentBase directly.
- *
- * See the BoundaryComponent class notes for further information.
- *
- * \ifacespython This base class is not present, but the "end user"
- * class BoundaryComponent<dim> is.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- */
-template <int dim>
-class BoundaryComponentBase :
-        public Output<BoundaryComponentBase<dim>>,
-        public BoundaryComponentStorage<dim,
-            standardDim(dim) /* allFaces */,
-            (dim > 2) /* canBuild */>,
-        public MarkedElement {
-    protected:
-        bool orientable_;
-            /**< Is this boundary component orientable? */
-
-    public:
-        using BoundaryComponentFaceStorage<dim, standardDim(dim)>::allowVertex;
-
-        /**
-         * Returns the index of this boundary component in the underlying
-         * triangulation.
-         *
-         * @return the index of this boundary component.
-         */
-        size_t index() const {
-            return markedIndex();
-        }
-
-        /**
-         * Determines if this boundary component is orientable.  If this is
-         * an ideal or invalid vertex boundary component, then the
-         * orientability of the corresponding vertex link is returned.
-         *
-         * This routine is fast; in particular, it is pre-computed and
-         * does not build a full triangulation of the boundary component.
-         *
-         * @return \c true if and only if this boundary component is
-         * orientable.
-         */
-        bool isOrientable() const {
-            return orientable_;
+            return const_cast<BoundaryComponentBase<dim>*>(this)->
+                boundary_.value = buildRealBoundary();
         }
 
         /**
@@ -1165,6 +1091,18 @@ class BoundaryComponentBase :
          * Default constructor that leaves orientability uninitialised.
          */
         BoundaryComponentBase() = default;
+
+    private:
+        /**
+         * Builds a new triangulation of this boundary component,
+         * assuming this is a real boundary component.
+         *
+         * \pre The dimension \a dim is greater than 2.
+         * \pre The number of (dim-1)-faces is strictly positive.
+         *
+         * @return the newly created boundary triangulation.
+         */
+        Triangulation<dim-1>* buildRealBoundary() const;
 
     friend class Triangulation<dim>;
         /**< Allow access to private members. */

@@ -55,16 +55,16 @@
 namespace regina {
 namespace detail {
 
-template <int dim, bool allFaces, bool canBuild>
-BoundaryComponentStorage<dim, allFaces, canBuild>::~BoundaryComponentStorage() {
-    delete boundary_;
+template <int dim>
+BoundaryComponentBase<dim>::~BoundaryComponentBase() {
+    if constexpr (canBuild)
+        delete boundary_.value;
 }
 
-template <int dim, bool allFaces, bool canBuild_>
-Triangulation<dim-1>* BoundaryComponentStorage<dim, allFaces, canBuild_>::
-        buildRealBoundary() const {
+template <int dim>
+Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
     // From the precondition, there is a positive number of (dim-1)-faces.
-    const auto& allFacets = facets();
+    const auto& allFacets = this->facets();
 
     // Build a map from ((dim-1)-face index in underlying triangulation)
     // to ((dim-1)-face in boundary component).
@@ -148,7 +148,7 @@ Triangulation<dim-1>* BoundaryComponentStorage<dim, allFaces, canBuild_>::
      * computations are extended to do more than they do now.
      */
     ans->countComponents(); // ensures that the skeleton is calculated
-    BoundaryComponentFaceStorage<dim, allFaces>::reorderAndRelabelFaces(ans);
+    this->reorderAndRelabelFaces(ans);
 
     return ans;
 }
