@@ -397,16 +397,6 @@ class TriangulationBase :
             /**< A compile-time constant that gives the dimension of the
                  triangulation. */
 
-        typedef typename std::vector<Simplex<dim>*>::const_iterator
-                SimplexIterator;
-            /**< Used to iterate through top-dimensional simplices. */
-        typedef typename std::vector<Component<dim>*>::const_iterator
-                ComponentIterator;
-            /**< Used to iterate through connected components. */
-        typedef typename std::vector<BoundaryComponent<dim>*>::const_iterator
-                BoundaryComponentIterator;
-            /**< Used to iterate through boundary components. */
-
     protected:
         MarkedVector<Simplex<dim>> simplices_;
             /**< The top-dimensional simplices that form the triangulation. */
@@ -446,6 +436,16 @@ class TriangulationBase :
             /**< First homology group of the triangulation. */
 
     public:
+        typedef typename decltype(simplices_)::const_iterator
+                SimplexIterator;
+            /**< Used to iterate through top-dimensional simplices. */
+        typedef typename decltype(components_)::const_iterator
+                ComponentIterator;
+            /**< Used to iterate through connected components. */
+        typedef typename decltype(boundaryComponents_)::const_iterator
+                BoundaryComponentIterator;
+            /**< Used to iterate through boundary components. */
+
         /**
          * \name Constructors and Destructors
          */
@@ -520,6 +520,8 @@ class TriangulationBase :
          * as long as the triangulation exists: even as simplices are
          * added and/or removed, it will always reflect the simplices
          * that are currently in the triangulation.
+         * Nevertheless, it is recommended to treat this object as temporary
+         * only, and to call simplices() again each time you need it.
          *
          * \ifacespython This routine returns a Python list.
          * Be warned that, unlike in C++, this Python list will be a
@@ -716,25 +718,41 @@ class TriangulationBase :
         std::vector<size_t> fVector() const;
 
         /**
-         * Returns all connected components of this triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all components of this triangulation.
          *
-         * Note that each time the triangulation changes, all component
-         * objects will be deleted and replaced with new ones.
-         * Therefore these component objects should be considered temporary
-         * only.
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
          *
-         * In contrast, this reference to the \e list of all components
-         * will remain valid and up-to-date for as long as the triangulation
-         * exists.
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
          *
-         * \ifacespython This routine returns a python list.
+         * \code{.cpp}
+         * for (Component<dim>* c : tri.components()) { ... }
+         * \endcode
          *
-         * @return the list of all components.
+         * The object that is returned will remain up-to-date and valid for
+         * as long as the triangulation exists.  In contrast, however, remember
+         * that the individual component objects \e within this list will be
+         * deleted and replaced each time the triangulation changes.
+         * Therefore it is best to treat this object as temporary only,
+         * and to call components() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the components when this function is called, and will
+         * \e not be kept up-to-date as the triangulation changes.
+         *
+         * @return access to the list of all components.
          */
-        const std::vector<Component<dim>*>& components() const;
+        auto components() const;
 
         /**
-         * Returns all boundary components of this triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all boundary components of this triangulation.
          *
          * Note that, in Regina's \ref stddim "standard dimensions",
          * each ideal vertex forms its own boundary component, and
@@ -742,20 +760,34 @@ class TriangulationBase :
          * class notes for full details on what constitutes a boundary
          * component in standard and non-standard dimensions.
          *
-         * Bear in mind that each time the triangulation changes, all
-         * boundary component objects will be deleted and replaced with new
-         * ones.  Therefore these boundary component objects should be
-         * considered temporary only.
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
          *
-         * In contrast, this reference to the \e list of BoundaryComponent
-         * objects will remain valid and up-to-date for as long as the
-         * triangulation exists.
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
          *
-         * \ifacespython This routine returns a python list.
+         * \code{.cpp}
+         * for (BoundaryComponent<dim>* b : tri.boundaryComponents()) { ... }
+         * \endcode
          *
-         * @return the list of all boundary components.
+         * The object that is returned will remain up-to-date and valid for
+         * as long as the triangulation exists.  In contrast, however, remember
+         * that the individual boundary components \e within this list will be
+         * deleted and replaced each time the triangulation changes.
+         * Therefore it is best to treat this object as temporary only,
+         * and to call boundaryComponents() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the boundary components when this function is called,
+         * and will \e not be kept up-to-date as the triangulation changes.
+         *
+         * @return access to the list of all boundary components.
          */
-        const std::vector<BoundaryComponent<dim>*>& boundaryComponents() const;
+        auto boundaryComponents() const;
 
         /**
          * Returns an object that allows iteration through and random access
@@ -2410,17 +2442,15 @@ inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
 }
 
 template <int dim>
-inline const std::vector<Component<dim>*>& TriangulationBase<dim>::components()
-        const {
+inline auto TriangulationBase<dim>::components() const {
     ensureSkeleton();
-    return (const std::vector<Component<dim>*>&)(components_);
+    return ListView(components_);
 }
 
 template <int dim>
-inline const std::vector<BoundaryComponent<dim>*>& TriangulationBase<dim>::
-        boundaryComponents() const {
+inline auto TriangulationBase<dim>::boundaryComponents() const {
     ensureSkeleton();
-    return (const std::vector<BoundaryComponent<dim>*>&)(boundaryComponents_);
+    return ListView(boundaryComponents_);
 }
 
 template <int dim>

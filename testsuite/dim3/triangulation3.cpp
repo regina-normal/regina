@@ -3372,20 +3372,17 @@ class Triangulation3Test : public TriangulationTest<3> {
             // boundary components are topologically unchanged.
             if (tri->isValid()) {
                 typedef std::pair<long, bool> BCSpec;
-                Triangulation<3>::BoundaryComponentIterator bcit;
 
                 std::vector<BCSpec> bcOld;
-                for (bcit = tri->boundaryComponents().begin();
-                        bcit != tri->boundaryComponents().end(); ++bcit)
-                    bcOld.push_back(BCSpec((*bcit)->eulerChar(),
-                        (*bcit)->isOrientable()));
+                for (BoundaryComponent<3>* bc : tri->boundaryComponents())
+                    bcOld.push_back(BCSpec(bc->eulerChar(),
+                        bc->isOrientable()));
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
-                for (bcit = finite.boundaryComponents().begin();
-                        bcit != finite.boundaryComponents().end(); ++bcit)
-                    bcNew.push_back(BCSpec((*bcit)->eulerChar(),
-                        (*bcit)->isOrientable()));
+                for (BoundaryComponent<3>* bc : finite.boundaryComponents())
+                    bcNew.push_back(BCSpec(bc->eulerChar(),
+                        bc->isOrientable()));
                 std::sort(bcNew.begin(), bcNew.end());
 
                 if (bcOld != bcNew) {
@@ -3436,22 +3433,18 @@ class Triangulation3Test : public TriangulationTest<3> {
             // for sphere which must vanish.
             if (tri->isValid()) {
                 typedef std::pair<long, bool> BCSpec;
-                Triangulation<3>::BoundaryComponentIterator bcit;
 
                 std::vector<BCSpec> bcOld;
-                for (bcit = tri->boundaryComponents().begin();
-                        bcit != tri->boundaryComponents().end(); ++bcit)
-                    if ((*bcit)->eulerChar() != 2)
-                        bcOld.push_back(
-                            BCSpec((*bcit)->eulerChar(),
-                            (*bcit)->isOrientable()));
+                for (BoundaryComponent<3>* bc : tri->boundaryComponents())
+                    if (bc->eulerChar() != 2)
+                        bcOld.push_back(BCSpec(bc->eulerChar(),
+                            bc->isOrientable()));
                 std::sort(bcOld.begin(), bcOld.end());
 
                 std::vector<BCSpec> bcNew;
-                for (bcit = ideal.boundaryComponents().begin();
-                        bcit != ideal.boundaryComponents().end(); ++bcit)
-                    bcNew.push_back(BCSpec((*bcit)->eulerChar(),
-                        (*bcit)->isOrientable()));
+                for (BoundaryComponent<3>* bc : ideal.boundaryComponents())
+                    bcNew.push_back(BCSpec(bc->eulerChar(),
+                        bc->isOrientable()));
                 std::sort(bcNew.begin(), bcNew.end());
 
                 if (bcOld != bcNew) {

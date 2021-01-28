@@ -1304,10 +1304,8 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
     // Count the number of boundary spheres that our triangulation has
     // to begin with.
     unsigned long origSphereCount = 0;
-    Triangulation<3>::BoundaryComponentIterator bit;
-    for (bit = triangulation()->boundaryComponents().begin();
-            bit != triangulation()->boundaryComponents().end(); ++bit)
-        if ((*bit)->eulerChar() == 2)
+    for (BoundaryComponent<3>* bc : triangulation()->boundaryComponents())
+        if (bc->eulerChar() == 2)
             ++origSphereCount;
 
     // Now cut along the disc, and see if we get an extra sphere as a
@@ -1325,9 +1323,8 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
     }
 
     unsigned long newSphereCount = 0;
-    for (bit = cut->boundaryComponents().begin();
-            bit != cut->boundaryComponents().end(); ++bit)
-        if ((*bit)->eulerChar() == 2)
+    for (BoundaryComponent<3>* bc : cut->boundaryComponents())
+        if (bc->eulerChar() == 2)
             ++newSphereCount;
 
     if (newSphereCount == origSphereCount)

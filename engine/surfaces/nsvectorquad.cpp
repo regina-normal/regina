@@ -51,10 +51,8 @@ MatrixInt* NSVectorQuad::makeMatchingEquations(
     unsigned long nCoords = 3 * triangulation->size();
     // One equation per non-boundary edge.
     long nEquations = long(triangulation->countEdges());
-    for (Triangulation<3>::BoundaryComponentIterator bit = triangulation->
-            boundaryComponents().begin();
-            bit != triangulation->boundaryComponents().end(); bit++)
-        nEquations -= (*bit)->countEdges();
+    for (BoundaryComponent<3>* bc : triangulation->boundaryComponents())
+        nEquations -= bc->countEdges();
 
     MatrixInt* ans = new MatrixInt(nEquations, nCoords);
     unsigned long row = 0;

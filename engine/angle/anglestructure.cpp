@@ -49,10 +49,8 @@ MatrixInt* AngleStructureVector::makeAngleEquations(
 
     // We have one equation per non-boundary edge plus one per tetrahedron.
     long rows = long(tri->countEdges()) + long(tri->size());
-    for (Triangulation<3>::BoundaryComponentIterator bit =
-            tri->boundaryComponents().begin();
-            bit != tri->boundaryComponents().end(); bit++)
-        rows -= (*bit)->countEdges();
+    for (BoundaryComponent<3>* bc : tri->boundaryComponents())
+        rows -= bc->countEdges();
 
     MatrixInt* eqns = new MatrixInt(rows, cols);
     size_t row = 0;

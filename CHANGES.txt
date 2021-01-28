@@ -54,8 +54,8 @@ Version 6.1  [ TODO ]
             - Simplified the class hierarchy; SimplexFaces and
               SimplexFacesSuite are now merged.
         Class Triangulation<dim>:
-            - Routine simplices(), faces(), and the aliases vertices(), edges(),
-              triangles(), tetrahedra() and pentachora() no longer return a
+            - Routine simplices(), faces(), components(), boundaryComponents(),
+              and the aliases vertices(), edges(), etc. no longer return a
               const reference to a std::vector or FaceList.  Instead they
               return a lightweight ListView object by value: its full type is
               undefined (so you should use auto), and it supports at least the
