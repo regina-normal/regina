@@ -53,7 +53,6 @@ namespace regina {
 namespace detail {
 
 template <int> class TriangulationBase;
-template <int, bool> class BoundaryComponentFaceStorage;
 
 /**
  * \weakgroup detail
@@ -343,23 +342,21 @@ class WeakFaceListSuite<dim, 0> : public WeakFaceList<dim, 0> {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
- * \tparam allFaces_ \c true if this class should store all faces of all
- * dimensions 0,1,...,<i>dim</i>-1, or \c false if this class should only
- * store faces of dimension <i>dim</i>-1.
+ * \tparam subdim the dimensions of all faces that should be stored;
+ * for Regina's standard dimensions this must be exactly the sequence
+ * 0, 1, ..., <i>dim</i>-1, and for higher dimensions it must contain
+ * <i>dim</i>-1 and nothing else.
  */
-template <int dim, bool allFaces_>
+template <int dim, int... subdim>
 class BoundaryComponentFaceStorage :
         protected WeakFaceListSuite<dim, dim - 1>,
         public alias::FacesOfTriangulation<
-            BoundaryComponentFaceStorage<dim, true>, dim>,
+            BoundaryComponentFaceStorage<dim, subdim...>, dim>,
         public alias::FaceOfTriangulation<
-            BoundaryComponentFaceStorage<dim, true>, dim> {
-    static_assert(allFaces_,
-        "The generic BoundaryComponentFaceStorage template should "
-        "only be used with allFaces = true.");
+            BoundaryComponentFaceStorage<dim, subdim...>, dim> {
     static_assert(standardDim(dim),
-        "The BoundaryComponentFaceStorage template should only set "
-        "allFaces = true for Regina's standard dimensions.");
+        "The BoundaryComponentFaceStorage template should only use "
+        "a full set of face dimensions for Regina's standard dimensions.");
 
     public:
         /**
@@ -400,24 +397,24 @@ class BoundaryComponentFaceStorage :
         }
 
         /**
-         * Returns the number of <i>subdim</i>-faces in this boundary component.
+         * Returns the number of <i>useDim</i>-faces in this boundary component.
          *
          * This routine is only available where \a dim is one of Regina's
          * \ref stddim "standard dimensions".
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>countFaces(subdim)</tt>; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * <tt>countFaces(useDim)</tt>; that is, the template parameter
+         * \a useDim becomes the first argument of the function.
          *
-         * \tparam subdim the dimension of the faces to query.  This must
+         * \tparam useDim the dimension of the faces to query.  This must
          * be between 0 and <i>dim</i>-1 inclusive.
          *
-         * @return the number of <i>subdim</i>-faces.
+         * @return the number of <i>useDim</i>-faces.
          */
-        template <int subdim>
+        template <int useDim>
         size_t countFaces() const {
-            return WeakFaceList<dim, subdim>::faces_.size();
+            return WeakFaceList<dim, useDim>::faces_.size();
         }
 
         /**
@@ -455,7 +452,7 @@ class BoundaryComponentFaceStorage :
 
         /**
          * Returns an object that allows iteration through and random access
-         * to all <i>subdim</i>-faces in this boundary component.
+         * to all <i>useDim</i>-faces in this boundary component.
          *
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
@@ -467,7 +464,7 @@ class BoundaryComponentFaceStorage :
          * will be pointers, so your code might look like:
          *
          * \code{.cpp}
-         * for (Face<dim, subdim>* f : bc.faces<subdim>()) { ... }
+         * for (Face<dim, useDim>* f : bc.faces<useDim>()) { ... }
          * \endcode
          *
          * The object that is returned will remain valid only for as
@@ -479,20 +476,20 @@ class BoundaryComponentFaceStorage :
          * and to call faces() again each time you need it.
          *
          * \ifacespython Python users should call this function in the
-         * form <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the <i>subdim</i>-faces of the boundary component.
+         * form <tt>faces(useDim)</tt>.  It will then return a Python list
+         * containing all the <i>useDim</i>-faces of the boundary component.
          * Be warned that, unlike in C++, this Python list will be a
          * snapshot of the faces when this function is called, and will
          * \e not be kept up-to-date as the triangulation changes.
          *
-         * \tparam subdim the dimension of the faces to query.  This must
+         * \tparam useDim the dimension of the faces to query.  This must
          * be between 0 and <i>dim</i>-1 inclusive.
          *
-         * @return access to the list of all <i>subdim</i>-faces.
+         * @return access to the list of all <i>useDim</i>-faces.
          */
-        template <int subdim>
+        template <int useDim>
         auto faces() const {
-            return ListView(WeakFaceList<dim, subdim>::faces_);
+            return ListView(WeakFaceList<dim, useDim>::faces_);
         }
 
         /**
@@ -516,14 +513,14 @@ class BoundaryComponentFaceStorage :
         }
 
         /**
-         * Returns the requested <i>subdim</i>-face in this boundary component.
+         * Returns the requested <i>useDim</i>-face in this boundary component.
          *
          * Note that the index of a face in the boundary component need
          * not be the index of the same face in the overall triangulation.
          * However, if this is a real boundary component (i.e., it is built
          * from one or more (<i>dim</i>-1)-faces), then the index of each
-         * <i>subdim</i>-face in this boundary component will match the
-         * index of the corresponding <i>subdim</i>-face in the
+         * <i>useDim</i>-face in this boundary component will match the
+         * index of the corresponding <i>useDim</i>-face in the
          * (<i>dim</i>-1)-manifold triangulation returned by build().
          *
          * This routine is only available where \a dim is one of Regina's
@@ -531,19 +528,19 @@ class BoundaryComponentFaceStorage :
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(subdim, index)</tt>; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * <tt>face(useDim, index)</tt>; that is, the template parameter
+         * \a useDim becomes the first argument of the function.
          *
-         * \tparam subdim the dimension of the face to query.  This must
+         * \tparam useDim the dimension of the face to query.  This must
          * be between 0 and <i>dim</i>-1 inclusive.
          *
          * @param index the index of the desired face, ranging from 0 to
-         * countFaces<subdim>()-1 inclusive.
+         * countFaces<useDim>()-1 inclusive.
          * @return the requested face.
          */
-        template <int subdim>
-        Face<dim, subdim>* face(size_t index) const {
-            return WeakFaceList<dim, subdim>::faces_[index];
+        template <int useDim>
+        Face<dim, useDim>* face(size_t index) const {
+            return WeakFaceList<dim, useDim>::faces_[index];
         }
 
         /**
@@ -664,17 +661,17 @@ class BoundaryComponentFaceStorage :
 
         /**
          * Pushes the given face onto the end of the list of
-         * <i>subdim</i>-faces of this boundary component.
+         * <i>useDim</i>-faces of this boundary component.
          * This class does not take ownership of the given face.
          *
-         * \tparam subdim the dimension of the face to append.  This must
+         * \tparam useDim the dimension of the face to append.  This must
          * be between 0 and <i>dim</i>-1 inclusive.
          *
          * @param face the face to append to the list.
          */
-        template <int subdim>
-        void push_back(Face<dim, subdim>* face) {
-            WeakFaceList<dim, subdim>::faces_.push_back(face);
+        template <int useDim>
+        void push_back(Face<dim, useDim>* face) {
+            WeakFaceList<dim, useDim>::faces_.push_back(face);
         }
 
         /**
@@ -710,10 +707,10 @@ class BoundaryComponentFaceStorage :
  * member functions for accessing lower-dimensional faces.
  */
 template <int dim>
-class BoundaryComponentFaceStorage<dim, false> {
+class BoundaryComponentFaceStorage<dim, dim - 1> {
     static_assert(! standardDim(dim),
         "The BoundaryComponentFaceStorage template should not set "
-        "allFaces = false for Regina's standard dimensions.");
+        "face dimensions to only (dim-1) for Regina's standard dimensions.");
 
     public:
         /**
@@ -865,12 +862,12 @@ class BoundaryComponentFaceStorage<dim, false> {
          * Does nothing, since this boundary component does not store
          * lower-dimensional faces.
          *
-         * \tparam subdim the dimension of the given face.  This must
+         * \tparam useDim the dimension of the given face.  This must
          * be between 0 and <i>dim</i>-3 inclusive.
          */
-        template <int subdim>
-        void push_back(Face<dim, subdim>*) {
-            static_assert(subdim <= dim - 3,
+        template <int useDim>
+        void push_back(Face<dim, useDim>*) {
+            static_assert(useDim <= dim - 3,
                 "The no-op push_back() should only be called for "
                 "faces of dimension <= dim - 3.");
         }
@@ -908,7 +905,9 @@ class BoundaryComponentFaceStorage<dim, false> {
 template <int dim>
 class BoundaryComponentBase :
         public Output<BoundaryComponentBase<dim>>,
-        public BoundaryComponentFaceStorage<dim, standardDim(dim)>,
+        public std::conditional_t<standardDim(dim),
+            ExpandSequence<BoundaryComponentFaceStorage, dim> /* all faces */,
+            BoundaryComponentFaceStorage<dim, dim - 1> /* only facets */>,
         public MarkedElement {
     public:
         static constexpr int dimension = dim;
@@ -990,7 +989,7 @@ class BoundaryComponentBase :
          *   Simplex<dim>::faceMapping<dim-1>().
          *
          * - If this boundary component stores lower-dimensional faces (i.e.,
-         *   if the template argument \a allFaces is \c true), then a similar
+         *   if the class constant \a allFaces is \c true), then a similar
          *   correspondence holds for these lower-dimensional faces also:
          *   for each \a i, <i>k</i>-face \a i of the returned triangulation is
          *   a copy of <tt>face<k>(i)</tt> of this boundary component,
