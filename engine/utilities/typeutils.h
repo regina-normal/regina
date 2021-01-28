@@ -88,6 +88,8 @@ struct EnableIf<false, T, defaultValue> {
 /**
  * A helper class used in the implementation of ExpandSequence.
  * No object of this class should ever be created.
+ *
+ * \ifacespython Not present.
  */
 template <template <int, int...> class T, int arg>
 struct ExpandSequenceHelper {
@@ -110,6 +112,8 @@ struct ExpandSequenceHelper {
  * represents the type <tt>T&lt;arg, 0, 1, ..., n-1&gt;</tt>.
  *
  * \apinotfinal
+ *
+ * \ifacespython Not present.
  */
 template <template <int, int...> typename T, int arg, int n = arg>
 using ExpandSequence = decltype(ExpandSequenceHelper<T, arg>::convert(

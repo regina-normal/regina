@@ -59,6 +59,8 @@ namespace regina {
  *
  * Object of type ListView are designed to be copied by value.
  *
+ * \ifacespython Not present.
+ *
  * \tparam List the internal type of the list that this object grants access to.
  * This type must support at least the same operations as this class itself,
  * except for the copy semantics.  In particular, both std::vector and
