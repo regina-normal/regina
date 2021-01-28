@@ -54,15 +54,16 @@ Version 6.1  [ TODO ]
             - Simplified the class hierarchy; SimplexFaces and
               SimplexFacesSuite are now merged.
         Class Triangulation<dim>:
-            - Routine faces(), and the aliases vertices(), edges(), triangles(),
-              tetrahedra() and pentachora(), no longer return a const reference
-              to a FaceList.  Instead they return a lightweight object by value:
-              its type is undefined (so you should use auto), and it supports
-              the same operations and functions as the old FaceList (except
-              there is no Iterator typedef - use auto for this also).
-              C++ users who only ever used faces() as a temporary (as was
-              recommended) should be unaffected, and the Python behaviour of
-              faces() is completely unchanged.
+            - Routine simplices(), faces(), and the aliases vertices(), edges(),
+              triangles(), tetrahedra() and pentachora() no longer return a
+              const reference to a std::vector or FaceList.  Instead they
+              return a lightweight ListView object by value: its full type is
+              undefined (so you should use auto), and it supports at least the
+              same operations and functions as the old FaceList (except
+              there is no Iterator typedef - use iterator or auto instead).
+              C++ users who only ever used simplices(), faces(), etc. as a
+              temporary (as was recommended) should be unaffected, and the
+              Python behaviour of these functions is completely unchanged.
             - Simplified the class hierarchy; FaceList and PachnerHelper
               are now gone.
         Class Triangulation<3>:

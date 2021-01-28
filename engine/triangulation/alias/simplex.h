@@ -89,8 +89,7 @@ class Simplices {
  * where reasonable.
  *
  * This is inherited by the class \a Derived, which must provide routines of
- * the forms <tt>size_t size() const</tt>,
- * <tt>const std::vector<Simplex<dim>*>& simplices() const</tt>,
+ * the forms <tt>size_t size() const</tt>, <tt>auto simplices() const</tt>,
  * <tt>bool hasBoundaryFacets() const</tt>, and
  * <tt>size_t countBoundaryFacets() const</tt>.
  */
@@ -111,7 +110,7 @@ class Simplices<Derived, 2> {
          *
          * See simplices() for further information.
          */
-        const std::vector<Simplex<2>*>& triangles() const {
+        auto triangles() const {
             return static_cast<const Derived*>(this)->simplices();
         }
 
@@ -140,8 +139,7 @@ class Simplices<Derived, 2> {
  * where reasonable.
  *
  * This is inherited by the class \a Derived, which must provide routines of
- * the forms <tt>size_t size() const</tt>,
- * <tt>const std::vector<Simplex<dim>*>& simplices() const</tt>,
+ * the forms <tt>size_t size() const</tt>, <tt>auto simplices() const</tt>,
  * <tt>bool hasBoundaryFacets() const</tt>, and
  * <tt>size_t countBoundaryFacets() const</tt>.
  */
@@ -162,7 +160,7 @@ class Simplices<Derived, 3> {
          *
          * See simplices() for further information.
          */
-        const std::vector<Simplex<3>*>& tetrahedra() const {
+        auto tetrahedra() const {
             return static_cast<const Derived*>(this)->simplices();
         }
 
@@ -191,8 +189,7 @@ class Simplices<Derived, 3> {
  * where reasonable.
  *
  * This is inherited by the class \a Derived, which must provide routines of
- * the forms <tt>size_t size() const</tt>,
- * <tt>const std::vector<Simplex<dim>*>& simplices() const</tt>,
+ * the forms <tt>size_t size() const</tt>, <tt>auto simplices() const</tt>,
  * <tt>bool hasBoundaryFacets() const</tt>, and
  * <tt>size_t countBoundaryFacets() const</tt>.
  */
@@ -213,7 +210,7 @@ class Simplices<Derived, 4> {
          *
          * See simplices() for further information.
          */
-        const std::vector<Simplex<4>*>& pentachora() const {
+        auto pentachora() const {
             return static_cast<const Derived*>(this)->simplices();
         }
 

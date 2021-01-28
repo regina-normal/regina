@@ -500,18 +500,35 @@ class TriangulationBase :
          */
         size_t size() const;
         /**
-         * Returns all top-dimensional simplices in the triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all top-dimensional simplices in this triangulation.
          *
-         * The reference that is returned will remain valid for as long as
-         * the triangulation exists: even as simplices are added and/or
-         * removed, it will always reflect the simplices that are currently
-         * in the triangulation.
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
          *
-         * \ifacespython This routine returns a python list.
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
          *
-         * @return the list of all top-dimensional simplices.
+         * \code{.cpp}
+         * for (Simplex<dim>* s : tri.simplices()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for
+         * as long as the triangulation exists: even as simplices are
+         * added and/or removed, it will always reflect the simplices
+         * that are currently in the triangulation.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the simplices when this function is called, and will
+         * \e not be kept up-to-date as the triangulation changes.
+         *
+         * @return access to the list of all top-dimensional simplices.
          */
-        const std::vector<Simplex<dim>*>& simplices() const;
+        auto simplices() const;
         /**
          * Returns the top-dimensional simplex at the given index in the
          * triangulation.
@@ -2252,9 +2269,8 @@ inline size_t TriangulationBase<dim>::size() const {
 }
 
 template <int dim>
-inline const std::vector<Simplex<dim>*>& TriangulationBase<dim>::simplices()
-        const {
-    return (const std::vector<Simplex<dim>*>&)(simplices_);
+inline auto TriangulationBase<dim>::simplices() const {
+    return ListView(simplices_);
 }
 
 template <int dim>
