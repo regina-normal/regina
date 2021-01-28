@@ -439,9 +439,9 @@ class BoundaryComponentFaceStorage :
          * for (Face<dim, dim-1>* f : bc.facets()) { ... }
          * \endcode
          *
-         * The reference that is returned will remain valid only for as
+         * The object that is returned will remain valid only for as
          * long as this boundary component object exists.  In particular,
-         * the reference will become invalid any time that the triangulation
+         * the object will become invalid any time that the triangulation
          * changes (since all boundary component objects will be destroyed
          * and others rebuilt in their place).
          * Therefore it is best to treat this object as temporary only,
@@ -472,9 +472,9 @@ class BoundaryComponentFaceStorage :
          * for (Face<dim, subdim>* f : bc.faces<subdim>()) { ... }
          * \endcode
          *
-         * The reference that is returned will remain valid only for as
+         * The object that is returned will remain valid only for as
          * long as this boundary component object exists.  In particular,
-         * the reference will become invalid any time that the triangulation
+         * the object will become invalid any time that the triangulation
          * changes (since all boundary component objects will be destroyed
          * and others rebuilt in their place).
          * Therefore it is best to treat this object as temporary only,
@@ -684,9 +684,9 @@ class BoundaryComponentFaceStorage<dim, false> {
          * for (Face<dim, dim-1>* f : bc.facets()) { ... }
          * \endcode
          *
-         * The reference that is returned will remain valid only for as
+         * The object that is returned will remain valid only for as
          * long as this boundary component object exists.  In particular,
-         * the reference will become invalid any time that the triangulation
+         * the object will become invalid any time that the triangulation
          * changes (since all boundary component objects will be destroyed
          * and others rebuilt in their place).
          * Therefore it is best to treat this object as temporary only,

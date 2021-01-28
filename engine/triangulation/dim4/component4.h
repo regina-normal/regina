@@ -101,19 +101,41 @@ class REGINA_API Component<4> : public detail::ComponentBase<4>,
         size_t countFaces() const;
 
         /**
-         * Returns a reference to the list of all <i>subdim</i>-faces in
-         * this component.
+         * Returns an object that allows iteration through and random access
+         * to all <i>subdim</i>-faces in this component.
          *
-         * \pre The template argument \a subdim is between 0 and 3 inclusive.
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Face<dim, subdim>* f : comp.faces<subdim>()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
+         * long as this component object exists.  In particular,
+         * the object will become invalid any time that the triangulation
+         * changes (since all component objects will be destroyed
+         * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call faces() again each time you need it.
          *
          * \ifacespython Python users should call this function in the
          * form <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the <i>subdim</i>-faces of the triangulation.
+         * containing all the <i>subdim</i>-faces of the component.
          *
-         * @return the list of all <i>subdim</i>-faces.
+         * \tparam subdim the dimension of the faces to query.
+         * For 4-dimensional components, this must be between 0 and 3 inclusive.
+         *
+         * @return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
-        const std::vector<Face<4, subdim>*>& faces() const;
+        auto faces() const;
 
         /**
          * Returns the requested <i>subdim</i>-face in this component.
@@ -199,23 +221,23 @@ inline size_t Component<4>::countFaces<0>() const {
 }
 
 template <>
-inline const std::vector<Tetrahedron<4>*>& Component<4>::faces<3>() const {
-    return tetrahedra_;
+inline auto Component<4>::faces<3>() const {
+    return ListView(tetrahedra_);
 }
 
 template <>
-inline const std::vector<Triangle<4>*>& Component<4>::faces<2>() const {
-    return triangles_;
+inline auto Component<4>::faces<2>() const {
+    return ListView(triangles_);
 }
 
 template <>
-inline const std::vector<Edge<4>*>& Component<4>::faces<1>() const {
-    return edges_;
+inline auto Component<4>::faces<1>() const {
+    return ListView(edges_);
 }
 
 template <>
-inline const std::vector<Vertex<4>*>& Component<4>::faces<0>() const {
-    return vertices_;
+inline auto Component<4>::faces<0>() const {
+    return ListView(vertices_);
 }
 
 template <>

@@ -45,6 +45,7 @@
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/simplex.h"
 #include "triangulation/forward.h"
+#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
 namespace regina {
@@ -113,19 +114,35 @@ class ComponentBase :
          */
         size_t size() const;
         /**
-         * Returns all top-dimensional simplices in this component.
+         * Returns an object that allows iteration through and random access
+         * to all top-dimensional simplices in this component.
          *
-         * The reference that is returned will remain valid only for as long
-         * as this component object exists.  In particular, the reference
-         * will become invalid any time that the triangulation changes
-         * (since all component objects will be destroyed and others rebuilt
-         * in their place).
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
          *
-         * \ifacespython This routine returns a python list.
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
          *
-         * @return the list of all top-dimensional simplices.
+         * \code{.cpp}
+         * for (Simplex<dim>* s : comp.simplices()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
+         * long as this component object exists.  In particular,
+         * the object will become invalid any time that the triangulation
+         * changes (since all component objects will be destroyed
+         * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call simplices() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         *
+         * @return access to the list of all top-dimensional simplices.
          */
-        const std::vector<Simplex<dim>*>& simplices() const;
+        auto simplices() const;
         /**
          * Returns the top-dimensional simplex at the given index in
          * this component.
@@ -146,19 +163,35 @@ class ComponentBase :
          */
         size_t countBoundaryComponents() const;
         /**
-         * Returns all boundary components in this component.
+         * Returns an object that allows iteration through and random access
+         * to all boundary components in this component.
          *
-         * The reference that is returned will remain valid only for as long
-         * as this component object exists.  In particular, the reference
-         * will become invalid any time that the triangulation changes
-         * (since all component objects will be destroyed and others rebuilt
-         * in their place).
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
          *
-         * \ifacespython This routine returns a python list.
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
          *
-         * @return the list of all boundary components.
+         * \code{.cpp}
+         * for (BoundaryComponent<dim>* bc : comp.boundaryComponents()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
+         * long as this component object exists.  In particular,
+         * the object will become invalid any time that the triangulation
+         * changes (since all component objects will be destroyed
+         * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call boundaryComponents() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         *
+         * @return access to the list of all boundary components.
          */
-        const std::vector<BoundaryComponent<dim>*>& boundaryComponents() const;
+        auto boundaryComponents() const;
         /**
          * Returns the boundary component at the given index in this component.
          *
@@ -274,8 +307,8 @@ inline size_t ComponentBase<dim>::size() const {
 }
 
 template <int dim>
-inline const std::vector<Simplex<dim>*>& ComponentBase<dim>::simplices() const {
-    return simplices_;
+inline auto ComponentBase<dim>::simplices() const {
+    return ListView(simplices_);
 }
 
 template <int dim>
@@ -289,9 +322,8 @@ inline size_t ComponentBase<dim>::countBoundaryComponents() const {
 }
 
 template <int dim>
-const std::vector<BoundaryComponent<dim>*>& ComponentBase<dim>::
-        boundaryComponents() const {
-    return boundaryComponents_;
+inline auto ComponentBase<dim>::boundaryComponents() const {
+    return ListView(boundaryComponents_);
 }
 
 template <int dim>
