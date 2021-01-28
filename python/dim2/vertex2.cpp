@@ -82,6 +82,14 @@ void addVertex2(pybind11::module_& m) {
         .def_static("ordering", &Vertex<2>::ordering)
         .def_static("faceNumber", &Vertex<2>::faceNumber)
         .def_static("containsVertex", &Vertex<2>::containsVertex)
+        // We cannot take the addresses of the following properties, so we
+        // define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Vertex<2>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Vertex<2>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

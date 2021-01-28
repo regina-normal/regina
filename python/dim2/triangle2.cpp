@@ -73,6 +73,14 @@ void addTriangle2(pybind11::module_& m) {
         .def("edgeMapping", &Triangle<2>::edgeMapping)
         .def("orientation", &Triangle<2>::orientation)
         .def("facetInMaximalForest", &Triangle<2>::facetInMaximalForest)
+        // We cannot take the addresses of the following header-only properties,
+        // so we define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Triangle<2>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Triangle<2>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

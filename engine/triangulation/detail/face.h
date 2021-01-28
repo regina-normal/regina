@@ -502,6 +502,13 @@ class FaceBase :
         public alias::FaceOfSimplex<FaceBase<dim, subdim>, dim, subdim - 1>,
         public Output<Face<dim, subdim>> {
     public:
+        static constexpr int dimension = dim;
+            /**< A compile-time constant that gives the dimension of the
+                 triangulation containing this face. */
+        static constexpr int subdimension = subdim;
+            /**< A compile-time constant that gives the dimension of this
+                 face. */
+
         static constexpr bool allowsNonOrientableLinks = (subdim <= dim - 3);
             /**< Indicates whether it is possible for a face of this dimension
                  to have a non-orientable link. */

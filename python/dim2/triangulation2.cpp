@@ -185,7 +185,7 @@ void addTriangulation2(pybind11::module_& m) {
             return Triangulation<2>::typeID;
         })
         .def_property_readonly_static("dimension", [](pybind11::object) {
-            return 2;
+            return Triangulation<2>::dimension;
         })
     ;
 }

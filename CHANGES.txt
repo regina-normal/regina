@@ -18,8 +18,14 @@ Version 6.1  [ TODO ]
           these not compiled into Regina itself, and are not actively tested.
     ENGINE:
         Class BoundaryComponent<dim>:
+            - Routines faces(), facets(), and the aliases vertices(), edges(),
+              etc. no longer return a const reference to a std::vector, but
+              instead return a lightweight ListView object by value.
+              C++ users should just use auto, and Python users are unaffected.
+              See the analagous Triangulation<dim> changes for further details.
             - Simplified the class hierarchy; BoundaryComponentFaceInterface
               and BoundaryComponentStorage are now gone.
+            - New compile-time constant dimension.
         Class Component<dim>:
             - Routines simplices(), boundaryComponents(), faces(), and the
               aliases vertices(), edges(), etc. no longer return a
@@ -27,12 +33,7 @@ Version 6.1  [ TODO ]
               lightweight ListView object by value.
               C++ users should just use auto, and Python users are unaffected.
               See the analagous Triangulation<dim> changes for further details.
-        Class BoundaryComponent<dim>:
-            - Routines faces(), facets(), and the aliases vertices(), edges(),
-              etc. no longer return a const reference to a std::vector, but
-              instead return a lightweight ListView object by value.
-              C++ users should just use auto, and Python users are unaffected.
-              See the analagous Triangulation<dim> changes for further details.
+            - New compile-time constant dimension.
         Class EnableIf<condition, T, defaultValue>:
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
@@ -44,6 +45,7 @@ Version 6.1  [ TODO ]
               allowsInvalidFaces.
             - Simplified the class hierarchy; FaceOrientability,
               FaceValidity and FaceListHolder are now gone.
+            - New compile-time constants dimension and subdimension.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class MarkedVector:
@@ -69,6 +71,7 @@ Version 6.1  [ TODO ]
         Class Simplex<dim>:
             - Simplified the class hierarchy; SimplexFaces and
               SimplexFacesSuite are now merged.
+            - New compile-time constants dimension and subdimension.
         Class Triangulation<dim>:
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a

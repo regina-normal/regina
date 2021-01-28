@@ -196,7 +196,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             return Triangulation<dim>::typeID;
         })
         .def_property_readonly_static("dimension", [](pybind11::object) {
-            return dim;
+            return Triangulation<dim>::dimension;
         })
     ;
     add_pachner<dim>::add(c);

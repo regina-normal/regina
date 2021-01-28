@@ -80,6 +80,11 @@ class ComponentBase :
         public alias::Simplices<ComponentBase<dim>, dim>,
         public alias::SimplexAt<ComponentBase<dim>, dim, false>,
         public MarkedElement {
+    public:
+        static constexpr int dimension = dim;
+            /**< A compile-time constant that gives the dimension of the
+                 component. */
+
     private:
         std::vector<Simplex<dim>*> simplices_;
             /**< List of top-dimensional simplices in the component. */

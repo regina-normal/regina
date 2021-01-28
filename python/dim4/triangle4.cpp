@@ -102,6 +102,14 @@ void addTriangle4(pybind11::module_& m) {
         .def_static("containsVertex", &Triangle<4>::containsVertex)
         .def_readonly_static("triangleNumber", &Triangle4_triangleNumber)
         .def_readonly_static("triangleVertex", &Triangle4_triangleVertex)
+        // We cannot take the addresses of the following properties, so we
+        // define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Triangle<4>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Triangle<4>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

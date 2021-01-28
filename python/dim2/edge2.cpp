@@ -90,6 +90,14 @@ void addEdge2(pybind11::module_& m) {
         .def_static("ordering", &Edge<2>::ordering)
         .def_static("faceNumber", &Edge<2>::faceNumber)
         .def_static("containsVertex", &Edge<2>::containsVertex)
+        // We cannot take the addresses of the following properties, so we
+        // define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Edge<2>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Edge<2>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

@@ -151,7 +151,15 @@ class SimplexBase :
         public ExpandSequence<SimplexFaces, dim>,
         public alias::FaceOfSimplex<SimplexBase<dim>, dim> {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
+
     public:
+        static constexpr int dimension = dim;
+            /**< A compile-time constant that gives the dimension of the
+                 triangulation containing this simplex. */
+        static constexpr int subdimension = dim;
+            /**< A compile-time constant that gives the dimension of this
+                 simplex. */
+
         typedef typename IntOfMinSize<(dim / 8) + 1>::utype FacetMask;
             /**< An unsigned integer type with at least <i>dim</i>+1 bits.
                  This can be used as a bitmask for the <i>dim</i>+1 facets

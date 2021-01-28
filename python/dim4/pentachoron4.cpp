@@ -78,6 +78,14 @@ void addPentachoron4(pybind11::module_& m) {
         .def("tetrahedronMapping", &Pentachoron<4>::tetrahedronMapping)
         .def("orientation", &Pentachoron<4>::orientation)
         .def("facetInMaximalForest", &Pentachoron<4>::facetInMaximalForest)
+        // We cannot take the addresses of the following header-only properties,
+        // so we define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Pentachoron<4>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Pentachoron<4>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

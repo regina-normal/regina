@@ -89,6 +89,11 @@ void addComponent4(pybind11::module_& m) {
         .def("hasBoundaryTetrahedra", &Component<4>::hasBoundaryTetrahedra)
         .def("countBoundaryFacets", &Component<4>::countBoundaryFacets)
         .def("countBoundaryTetrahedra", &Component<4>::countBoundaryTetrahedra)
+        // We cannot take the addresses of the following header-only properties,
+        // so we define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Component<4>::dimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

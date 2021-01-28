@@ -71,6 +71,9 @@ void addBoundaryComponent2(pybind11::module_& m) {
         .def("isOrientable", &BoundaryComponent<2>::isOrientable)
         // We cannot take the addresses of the following header-only properties,
         // so we define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return BoundaryComponent<2>::dimension;
+        })
         .def_property_readonly_static("allFaces", [](pybind11::object) {
             return BoundaryComponent<2>::allFaces;
         })

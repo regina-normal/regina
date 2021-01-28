@@ -76,6 +76,14 @@ void addTetrahedron3(pybind11::module_& m) {
         .def("triangleMapping", &Tetrahedron<3>::triangleMapping)
         .def("orientation", &Tetrahedron<3>::orientation)
         .def("facetInMaximalForest", &Tetrahedron<3>::facetInMaximalForest)
+        // We cannot take the addresses of the following header-only properties,
+        // so we define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Tetrahedron<3>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Tetrahedron<3>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

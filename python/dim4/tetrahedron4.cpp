@@ -96,6 +96,14 @@ void addTetrahedron4(pybind11::module_& m) {
         .def_static("ordering", &Tetrahedron<4>::ordering)
         .def_static("faceNumber", &Tetrahedron<4>::faceNumber)
         .def_static("containsVertex", &Tetrahedron<4>::containsVertex)
+        // We cannot take the addresses of the following properties, so we
+        // define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Tetrahedron<4>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Tetrahedron<4>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

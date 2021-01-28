@@ -114,6 +114,14 @@ void addEdge4(pybind11::module_& m) {
         .def_static("containsVertex", &Edge<4>::containsVertex)
         .def_readonly_static("edgeNumber", &Edge4_edgeNumber)
         .def_readonly_static("edgeVertex", &Edge4_edgeVertex)
+        // We cannot take the addresses of the following properties, so we
+        // define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Edge<4>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Edge<4>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

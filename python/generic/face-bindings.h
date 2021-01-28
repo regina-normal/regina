@@ -217,6 +217,14 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def_static("ordering", &Face<dim, subdim>::ordering)
         .def_static("faceNumber", &Face<dim, subdim>::faceNumber)
         .def_static("containsVertex", &Face<dim, subdim>::containsVertex)
+        // We cannot take the addresses of the following properties, so we
+        // define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Face<dim, subdim>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Face<dim, subdim>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

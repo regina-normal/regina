@@ -923,6 +923,10 @@ class BoundaryComponentBase :
         public BoundaryComponentFaceStorage<dim, standardDim(dim)>,
         public MarkedElement {
     public:
+        static constexpr int dimension = dim;
+            /**< A compile-time constant that gives the dimension of the
+                 triangulation that contains this boundary component. */
+
         /**
          * A compile-time constant indicating whether this boundary
          * component class supports triangulating boundary components.
