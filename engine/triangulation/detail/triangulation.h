@@ -110,8 +110,8 @@ template <int dim> class XMLTriangulationReaderBase;
  * This must be between 0 and <i>dim</i>-1 inclusive.
  * \tparam List the internal type of the list that this object grants access to.
  * This type should support at least the same operations as this class itself,
- * except for the copy semantics and Iterator type (so in particular, \a List
- * needs to provide size(), begin(), end(), and a square bracket operator).
+ * except for the copy semantics (so in particular, \a List needs to provide
+ * size(), begin(), end(), and a square bracket operator).
  */
 template <int dim, int subdim, class List>
 class FaceListView {
@@ -119,11 +119,6 @@ class FaceListView {
         const List& faces_;
 
     public:
-        /**
-         * The iterator type returned by begin() and end().
-         */
-        typedef decltype(faces_.begin()) Iterator;
-
         /**
          * Returns a view for the given list of faces.
          *
@@ -155,13 +150,13 @@ class FaceListView {
          *
          * @return an iterator at the beginning of this list.
          */
-        Iterator begin() const;
+        auto begin() const;
         /**
          * Returns an iterator pointing beyond the last <i>subdim</i>-face.
          *
          * @return an iterator beyond the end of this list.
          */
-        Iterator end() const;
+        auto end() const;
 };
 
 /**
@@ -2224,14 +2219,12 @@ inline Face<dim, subdim>* FaceListView<dim, subdim, List>::operator [](
 }
 
 template <int dim, int subdim, class List>
-inline typename FaceListView<dim, subdim, List>::Iterator
-        FaceListView<dim, subdim, List>::begin() const {
+inline auto FaceListView<dim, subdim, List>::begin() const {
     return faces_.begin();
 }
 
 template <int dim, int subdim, class List>
-inline typename FaceListView<dim, subdim, List>::Iterator
-        FaceListView<dim, subdim, List>::end() const {
+inline auto FaceListView<dim, subdim, List>::end() const {
     return faces_.end();
 }
 

@@ -56,7 +56,8 @@ Version 6.1  [ TODO ]
               tetrahedra() and pentachora(), no longer return a const reference
               to a FaceList.  Instead they return a lightweight object by value:
               its type is undefined (so you should use auto), and it supports
-              the same operations and functions as the old FaceList.
+              the same operations and functions as the old FaceList (except
+              there is no Iterator typedef - use auto for this also).
               C++ users who only ever used faces() as a temporary (as was
               recommended) should be unaffected, and the Python behaviour of
               faces() is completely unchanged.
