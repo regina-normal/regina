@@ -368,12 +368,6 @@ class BoundaryComponentFaceStorage :
          * or only faces of dimension <i>dim</i>-1 (\c false).
          */
         static constexpr bool allFaces = true;
-        /**
-         * A compile-time constant indicating whether ideal and/or
-         * invalid vertex boundary components are both possible and
-         * recognised by this boundary component class.
-         */
-        static constexpr bool allowVertex = (dim > 2);
 
     public:
         /**
@@ -728,12 +722,6 @@ class BoundaryComponentFaceStorage<dim, false> {
          * or only faces of dimension <i>dim</i>-1 (\c false).
          */
         static constexpr bool allFaces = false;
-        /**
-         * A compile-time constant indicating whether ideal and/or
-         * invalid vertex boundary components are both possible and
-         * recognised by this boundary component class.
-         */
-        static constexpr bool allowVertex = false;
 
     protected:
         std::vector<Face<dim, dim-1>*> facets_;
@@ -928,6 +916,12 @@ class BoundaryComponentBase :
                  triangulation that contains this boundary component. */
 
         /**
+         * A compile-time constant indicating whether ideal and/or
+         * invalid vertex boundary components are both possible and
+         * recognised by this boundary component class.
+         */
+        static constexpr bool allowVertex = standardDim(dim) && (dim > 2);
+        /**
          * A compile-time constant indicating whether this boundary
          * component class supports triangulating boundary components.
          */
@@ -946,8 +940,6 @@ class BoundaryComponentBase :
                  the triangulation is cached by the vertex class instead.*/
 
     public:
-        using BoundaryComponentFaceStorage<dim, standardDim(dim)>::allowVertex;
-
         /**
          * Destroys this object.  The cached boundary component triangulation
          * will be destroyed also.
