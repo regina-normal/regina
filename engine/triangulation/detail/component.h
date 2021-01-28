@@ -81,7 +81,7 @@ class ComponentBase :
         public MarkedElement {
     private:
         std::vector<Simplex<dim>*> simplices_;
-            /**< List of triangles in the component. */
+            /**< List of top-dimensional simplices in the component. */
         std::vector<BoundaryComponent<dim>*> boundaryComponents_;
             /**< List of boundary components in the component. */
 
