@@ -105,6 +105,8 @@ template <int dim> class XMLTriangulationReaderBase;
  *
  * This class is used with <i>dim</i>-dimensional triangulations.  It provides
  * storage for faces of all dimensions given in the parameter pack \a subdim.
+ *
+ * \tparam subdim This must be exactly the sequence 0, 1, ..., <i>dim</i>-1.
  */
 template <int dim, int... subdim>
 class FaceListSuite {
@@ -113,6 +115,7 @@ class FaceListSuite {
             /**< Each element of this tuple stores all faces of a particular
                  dimension \a subdim. */
 
+    protected:
         /**
          * Default constructor that initialises all face lists as empty.
          */
@@ -314,47 +317,6 @@ struct BoundaryComponentCalculator<dim, 0> {
 template <int dim>
 struct BoundaryComponentCalculator<dim, -1> {
     static void identify(TriangulationBase<dim>&, void*, void*) {
-    }
-};
-
-#endif // __DOXYGEN
-
-/**
- * Internal class used to calculate the Euler characteristic of a
- * triangulation.
- *
- * Specifically, this class calculates the alternating sum of the number
- * of faces of dimensions \a subdim, ..., \a dim within a
- * <i>dim</i>-dimensional triangulation.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam subdim the minimum dimension of the faces to consider.
- */
-template <int dim, int subdim>
-struct EulerCalculator {
-    /**
-     * Computes the alternating sum of the number of faces of \a tri of
-     * dimensions \a subdim, ..., \a dim.  Specifically, this computes
-     * <tt>tri.countFaces<subdim>() - tri.countFaces<subdim+1>() + ...
-     * +/- tri.countFaces<dim>()</tt>.
-     *
-     * @param tri the triangulations whose face counts are to be computed.
-     * @return the resulting "partial" Euler characteristic.
-     */
-    static long compute(const TriangulationBase<dim>& tri) {
-        // Remember to cast away the unsignedness of size_t, since this
-        // is an alternating sum.
-        return static_cast<long>(tri.template countFaces<subdim>()) -
-            EulerCalculator<dim, subdim + 1>::compute(tri);
-    }
-};
-
-#ifndef __DOXYGEN
-
-template <int dim>
-struct EulerCalculator<dim, dim> {
-    static long compute(const TriangulationBase<dim>& tri) {
-        return tri.size();
     }
 };
 
@@ -2794,7 +2756,10 @@ bool TriangulationBase<dim>::isOriented() const {
 
 template <int dim>
 inline long TriangulationBase<dim>::eulerCharTri() const {
-    return EulerCalculator<dim, 0>::compute(*this);
+    ensureSkeleton();
+    return std::apply([this](const auto&... arg) -> long {
+        return (static_cast<long>(arg.size()) - ... - size());
+    }, this->faces_);
 }
 
 template <int dim>

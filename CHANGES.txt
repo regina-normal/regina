@@ -80,8 +80,8 @@ Version 6.1  [ TODO ]
               C++ users who only ever used simplices(), faces(), etc. as a
               temporary (as was recommended) should be unaffected, and the
               Python behaviour of these functions is completely unchanged.
-            - Simplified the class hierarchy; FaceList and PachnerHelper
-              are now gone.
+            - Simplified the class hierarchy; EulerCalculator, FaceList and
+              PachnerHelper are now gone.
         Class Triangulation<3>:
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as

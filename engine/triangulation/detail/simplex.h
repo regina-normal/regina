@@ -67,6 +67,8 @@ template <int> class TriangulationBase;
  *
  * This class is used with <i>dim</i>-dimensional triangulations.  It provides
  * storage for faces of all dimensions given in the parameter pack \a subdim.
+ *
+ * \tparam subdim This must be exactly the sequence 0, 1, ..., <i>dim</i>-1.
  */
 template <int dim, int... subdim>
 class SimplexFaces {
