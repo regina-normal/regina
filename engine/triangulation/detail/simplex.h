@@ -72,6 +72,11 @@ template <int> class TriangulationBase;
  */
 template <int dim, int... subdim>
 class SimplexFaces {
+    static_assert(sizeof...(subdim) == dim &&
+        (subdim + ...) == dim * (dim - 1) / 2,
+        "The SimplexFaces template has been given an unexpected set of "
+        "face dimensions.");
+
     protected:
         std::tuple<std::array<Face<dim, subdim>*,
                 FaceNumbering<dim, subdim>::nFaces>...> faces_;

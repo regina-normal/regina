@@ -357,6 +357,10 @@ class BoundaryComponentFaceStorage :
     static_assert(standardDim(dim),
         "The BoundaryComponentFaceStorage template should only use "
         "a full set of face dimensions for Regina's standard dimensions.");
+    static_assert(sizeof...(subdim) == dim &&
+        (subdim + ...) == dim * (dim - 1) / 2,
+        "The BoundaryComponentFaceStorage template has been given an "
+        "unexpected set of face dimensions.");
 
     public:
         /**

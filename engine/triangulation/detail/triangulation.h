@@ -110,6 +110,11 @@ template <int dim> class XMLTriangulationReaderBase;
  */
 template <int dim, int... subdim>
 class FaceListSuite {
+    static_assert(sizeof...(subdim) == dim &&
+        (subdim + ...) == dim * (dim - 1) / 2,
+        "The FaceListSuite template has been given an unexpected set of "
+        "face dimensions.");
+
     protected:
         std::tuple<MarkedVector<Face<dim, subdim>>...> faces_;
             /**< Each element of this tuple stores all faces of a particular
