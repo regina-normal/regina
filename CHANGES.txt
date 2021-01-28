@@ -23,8 +23,9 @@ Version 6.1  [ TODO ]
               instead return a lightweight ListView object by value.
               C++ users should just use auto, and Python users are unaffected.
               See the analagous Triangulation<dim> changes for further details.
-            - Simplified the class hierarchy; BoundaryComponentFaceInterface
-              and BoundaryComponentStorage are now gone.
+            - Simplified the class hierarchy; BoundaryComponentFaceInterface,
+              BoundaryComponentStorage, WeakFaceList and WeakFaceListSuite
+              are all gone.
             - New compile-time constant dimension.
         Class Component<dim>:
             - Routines simplices(), boundaryComponents(), faces(), and the

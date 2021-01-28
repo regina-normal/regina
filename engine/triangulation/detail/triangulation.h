@@ -2151,7 +2151,7 @@ class TriangulationBase :
 
     template <int, int, int> friend struct FaceCalculator;
     template <int, int> friend struct BoundaryComponentCalculator;
-    template <int, int> friend class WeakFaceList;
+    template <int, int...> friend class BoundaryComponentFaceStorage;
     friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
 
