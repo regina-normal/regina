@@ -100,6 +100,71 @@ template <int dim> class XMLTriangulationReaderBase;
  */
 
 /**
+ * A lightweight object that can be used to access and iterate through all
+ * <i>subdim</i>-dimensional faces of a <i>dim</i>-dimensional triangulation.
+ * Object of this type can be happily copied by value.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * This must be between 2 and 15 inclusive.
+ * \tparam subdim the dimension of the faces that this class stores.
+ * This must be between 0 and <i>dim</i>-1 inclusive.
+ * \tparam List the internal type of the list that this object grants access to.
+ * This type should support at least the same operations as this class itself,
+ * except for the copy semantics and Iterator type (so in particular, \a List
+ * needs to provide size(), begin(), end(), and a square bracket operator).
+ */
+template <int dim, int subdim, class List>
+class FaceListView {
+    private:
+        const List& faces_;
+
+    public:
+        /**
+         * The iterator type returned by begin() and end().
+         */
+        typedef decltype(faces_.begin()) Iterator;
+
+        /**
+         * Returns a view for the given list of faces.
+         *
+         * @param list the list that this object will access.
+         * Internally, this object will store a reference to \a list (which
+         * means \a list needs to exist for at least as long as this object).
+         */
+        FaceListView(const List& list);
+
+        FaceListView(const FaceListView&) = default;
+        FaceListView& operator = (const FaceListView&) = default;
+
+        /**
+         * Returns the number of <i>subdim</i>-faces in this list.
+         *
+         * @return the number of <i>subdim</i>-faces.
+         */
+        size_t size() const;
+        /**
+         * Returns the requested <i>subdim</i>-face in this list.
+         *
+         * @param index indicates which face to return; this must be
+         * between 0 and size()-1 inclusive.
+         * @return the (\a index)th <i>subdim</i>-face in this list.
+         */
+        Face<dim, subdim>* operator [](size_t index) const;
+        /**
+         * Returns an iterator pointing to the first <i>subdim</i>-face.
+         *
+         * @return an iterator at the beginning of this list.
+         */
+        Iterator begin() const;
+        /**
+         * Returns an iterator pointing beyond the last <i>subdim</i>-face.
+         *
+         * @return an iterator beyond the end of this list.
+         */
+        Iterator end() const;
+};
+
+/**
  * Internal class that helps a triangulation store its lists of faces.
  *
  * This class is used with <i>dim</i>-dimensional triangulations.  It provides
@@ -108,8 +173,8 @@ template <int dim> class XMLTriangulationReaderBase;
 template <int dim, int... subdim>
 class FaceListSuite {
     protected:
-        std::tuple<FaceList<dim, subdim>...> faces_;
-            /**< Each element of this tuple stores all faces of
+        std::tuple<MarkedVector<Face<dim, subdim>>...> faces_;
+            /**< Each element of this tuple stores all faces of a particular
                  dimension \a subdim. */
 
         /**
@@ -118,14 +183,14 @@ class FaceListSuite {
         FaceListSuite() = default;
 
         /**
-         * Deletes all faces of dimension \a subdim and below.
+         * Deletes all faces of all dimensions.
          * This routine destroys the corresponding Face objects and
          * clears the lists that contain them.
          */
         void deleteFaces();
         /**
-         * Swaps all faces of dimension \a subdim and below
-         * with those of the given triangulation.
+         * Swaps all faces of all dimensions with those of the given
+         * triangulation.
          *
          * @param other the face storage for the triangulation whose
          * faces are to be swapped with this.
@@ -133,8 +198,7 @@ class FaceListSuite {
         void swapFaces(FaceListSuite& other);
         /**
          * Tests whether this and the given triangulation have the same
-         * number of <i>k</i>-faces, for each facial dimension
-         * \a k &le; \a subdim.
+         * number of <i>k</i>-faces, for each facial dimension \a k.
          *
          * @param other the triangulation to compare against this.
          * @return \c true if and only if the face counts considered are
@@ -744,12 +808,31 @@ class TriangulationBase :
          * Returns an object that allows iteration through and random access
          * to all <i>subdim</i>-faces of this triangulation.
          *
-         * Bear in mind that each time the triangulation changes, all
-         * face objects will be deleted and replaced with new ones.
-         * Therefore these face objects should be considered temporary only.
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         * However, it is guaranteed to include:
          *
-         * In contrast, this reference to the FaceList object itself will
-         * remain valid and up-to-date for as long as the triangulation exists.
+         * - a square bracket operator to access individual faces,
+         *   which returns <tt>Face<dim, subdim>*</tt>;
+         * - a <tt>size()</tt> function, which returns the number of
+         *   faces as a \c size_t;
+         * - functions <tt>begin()</tt> and <tt>end()</tt>, which return
+         *   iterators for iterating through the face list.
+         *
+         * In particular, this object can be used with C++11 range-based
+         * \c for loops:
+         *
+         * \code{.cpp}
+         * for (Face<dim, subdim>* f : tri.faces<subdim>()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for
+         * as long as the triangulation exists.  In contrast, however,
+         * remember that the individual faces \e within this list will be
+         * deleted and replaced each time the triangulation changes.
+         * Therefore it is best to treat this object as temporary only,
+         * and to call faces() again each time you need it.
          *
          * \ifacespython Python users should call this function in the
          * form <tt>faces(subdim)</tt>.  It will then return a Python list
@@ -761,7 +844,7 @@ class TriangulationBase :
          * @return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
-        const FaceList<dim, subdim>& faces() const;
+        auto faces() const;
 
         /**
          * Returns the requested connected component of this triangulation.
@@ -2123,11 +2206,40 @@ class TriangulationBase :
 
 /*@}*/
 
+// Inline functions for FaceListView
+
+template <int dim, int subdim, class List>
+FaceListView<dim, subdim, List>::FaceListView(const List& list) : faces_(list) {
+}
+
+template <int dim, int subdim, class List>
+inline size_t FaceListView<dim, subdim, List>::size() const {
+    return faces_.size();
+}
+
+template <int dim, int subdim, class List>
+inline Face<dim, subdim>* FaceListView<dim, subdim, List>::operator [](
+        size_t index) const {
+    return faces_[index];
+}
+
+template <int dim, int subdim, class List>
+inline typename FaceListView<dim, subdim, List>::Iterator
+        FaceListView<dim, subdim, List>::begin() const {
+    return faces_.begin();
+}
+
+template <int dim, int subdim, class List>
+inline typename FaceListView<dim, subdim, List>::Iterator
+        FaceListView<dim, subdim, List>::end() const {
+    return faces_.end();
+}
+
 // Inline functions for FaceListSuite
 
 template <int dim, int... subdim>
 inline void FaceListSuite<dim, subdim...>::deleteFaces() {
-    (std::get<subdim>(faces_).destroy(), ...);
+    (std::get<subdim>(faces_).clear_destructive(), ...);
 }
 
 template <int dim, int... subdim>
@@ -2396,15 +2508,17 @@ inline const std::vector<BoundaryComponent<dim>*>& TriangulationBase<dim>::
 
 template <int dim>
 template <int subdim>
-inline const FaceList<dim, subdim>& TriangulationBase<dim>::faces() const {
+inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
-    return std::get<subdim>(this->faces_);
+    return FaceListView<dim, subdim,
+        typename std::tuple_element<subdim, decltype(this->faces_)>::type>(
+        std::get<subdim>(this->faces_));
 }
 
 template <int dim>
 template <int subdim, typename Iterator>
 inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
-    std::get<subdim>(this->faces_).template reorderFaces<Iterator>(begin, end);
+    std::get<subdim>(this->faces_).refill(begin, end);
 }
 
 template <int dim>

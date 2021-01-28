@@ -94,9 +94,11 @@ class REGINA_API Triangulation<2> :
         typedef std::vector<Triangle<2>*>::const_iterator TriangleIterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through triangles. */
-        typedef FaceList<2, 1>::Iterator EdgeIterator;
+        typedef decltype(detail::TriangulationBase<2>().faces<1>().begin())
+                EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef FaceList<2, 0>::Iterator VertexIterator;
+        typedef decltype(detail::TriangulationBase<2>().faces<0>().begin())
+                VertexIterator;
             /**< Used to iterate through vertices. */
 
     public:

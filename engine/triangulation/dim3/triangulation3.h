@@ -116,14 +116,18 @@ class REGINA_API Triangulation<3> :
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3)
 
     public:
-        typedef std::vector<Tetrahedron<3>*>::const_iterator TetrahedronIterator;
+        typedef std::vector<Tetrahedron<3>*>::const_iterator
+                TetrahedronIterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through tetrahedra. */
-        typedef FaceList<3, 2>::Iterator TriangleIterator;
+        typedef decltype(detail::TriangulationBase<3>().faces<2>().begin())
+                TriangleIterator;
             /**< Used to iterate through triangles. */
-        typedef FaceList<3, 1>::Iterator EdgeIterator;
+        typedef decltype(detail::TriangulationBase<3>().faces<1>().begin())
+                EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef FaceList<3, 0>::Iterator VertexIterator;
+        typedef decltype(detail::TriangulationBase<3>().faces<0>().begin())
+                VertexIterator;
             /**< Used to iterate through vertices. */
 
         typedef std::map<std::pair<unsigned long, bool>, Cyclotomic>

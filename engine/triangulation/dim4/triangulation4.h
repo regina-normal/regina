@@ -103,13 +103,17 @@ class REGINA_API Triangulation<4> :
                 PentachoronIterator;
             /**< A dimension-specific alias for SimplexIterator, used to
                  iterate through pentachora. */
-        typedef FaceList<4, 3>::Iterator TetrahedronIterator;
+        typedef decltype(detail::TriangulationBase<4>().faces<3>().begin())
+                TetrahedronIterator;
             /**< Used to iterate through tetrahedra. */
-        typedef FaceList<4, 2>::Iterator TriangleIterator;
+        typedef decltype(detail::TriangulationBase<4>().faces<2>().begin())
+                TriangleIterator;
             /**< Used to iterate through triangles. */
-        typedef FaceList<4, 1>::Iterator EdgeIterator;
+        typedef decltype(detail::TriangulationBase<4>().faces<1>().begin())
+                EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef FaceList<4, 0>::Iterator VertexIterator;
+        typedef decltype(detail::TriangulationBase<4>().faces<0>().begin())
+                VertexIterator;
             /**< Used to iterate through vertices. */
 
     private:

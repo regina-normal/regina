@@ -43,155 +43,22 @@
 #define __TRIANGULATION_H
 #endif
 
-// There are more #includes below - we need to define FaceList
-// before including triangulation/detail/triangulation.h.
+namespace regina {
+    template <int> class XMLTriangulationReader;
+}
+
 #include "packet/packet.h"
 #include "triangulation/forward.h"
 #include "utilities/markedvector.h"
 #include "utilities/xmlutils.h"
 #include <type_traits>
-
-namespace regina {
-
-template <int> class XMLTriangulationReader;
+#include "triangulation/detail/triangulation.h"
 
 /**
  * \addtogroup generic Generic triangulations
  * Details for implementing triangulations in arbitrary dimensions.
  * @{
  */
-
-/**
- * Stores the list of all <i>subdim</i>-faces of a <i>dim</i>-dimensional
- * triangulation.
- *
- * This object provides basic container-like behaviour.  It supports begin(),
- * end(), size(), and the random access operator <tt>[]</tt>.
- * In particular, you can iterate through all <i>subdim</i>-faces using C++11
- * range-based \c for loops:
- *
- * \code{.cpp}
- * for (Face<dim, subdim>* f : faceList) { ... }
- * \endcode
- *
- * Strictly speaking, this list holds \e pointers to Face<dim, subdim> objects.
- * So, for example, dereferencing an iterator will return a pointer of type
- * <tt>Face<dim, subdim>*</tt>.  Likewise, the variable \a f in the range-based
- * \c for loop above will be a pointer of type <tt>Face<dim, subdim>*</tt>.
- *
- * The routine Face::index() will always return the index of the
- * corresponding face in this list.
- *
- * \warning Face objects are highly temporary: whenever a triangulation
- * changes, all its face objects will be deleted and new ones will be
- * created in their place.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- * \tparam subdim the dimension of the faces that this class stores.
- * This must be between 0 and <i>dim</i>-1 inclusive.
- *
- * \headerfile triangulation/generic.h
- */
-template <int dim, int subdim>
-class FaceList {
-    public:
-        typedef typename std::vector<Face<dim, subdim>*>::const_iterator
-                Iterator;
-            /**< An iterator type for iterating through this list of faces.
-                 Dereferencing such an iterator will return a pointer of type
-                 <tt>Face<dim, subdim>*</tt>. */
-
-    private:
-        MarkedVector<Face<dim, subdim>> faces_;
-            /**< All <i>subdim</i>-faces of the underlying triangulation. */
-
-    public:
-        /**
-         * Returns the number of <i>subdim</i>-faces in the triangulation.
-         *
-         * @return the number of <i>subdim</i>-faces.
-         */
-        size_t size() const;
-        /**
-         * Returns the requested <i>subdim</i>-face.
-         *
-         * @param index indicates which face to return; this must be
-         * between 0 and size()-1 inclusive.
-         * @return the (\a index)th <i>subdim</i>-face.
-         */
-        Face<dim, subdim>* operator [](size_t index) const;
-        /**
-         * Returns an iterator pointing to the first <i>subdim</i>-face.
-         *
-         * @return an iterator at the beginning of this list.
-         */
-        Iterator begin() const;
-        /**
-         * Returns an iterator pointing beyond the last <i>subdim</i>-face.
-         *
-         * @return an iterator beyond the end of this list.
-         */
-        Iterator end() const;
-
-        // Make this class non-copyable.
-        FaceList(const FaceList&) = delete;
-        FaceList& operator = (const FaceList&) = delete;
-
-    public:
-        // TODO: Make non-public
-        /**
-         * Creates an empty list of <i>subdim</i>-faces.
-         */
-        FaceList() = default;
-        /**
-         * Pushes the given face onto the end of this list.
-         * This object will take ownership of the given face.
-         *
-         * @param face the face to push.
-         */
-        void push_back(Face<dim, subdim>* face);
-        /**
-         * Destroys all faces in this list, and clears the list itself.
-         */
-        void destroy();
-        /**
-         * Swaps all faces in this list with those in the given list.
-         *
-         * @param other the list of faces to swap with this.
-         */
-        void swap(FaceList<dim, subdim>& other);
-        /**
-         * Reorders this list of faces.
-         *
-         * The given range should contain exactly the faces in this list
-         * but in a (possibly) different order.  This routine will then
-         * replace the items in this list with the given range, which
-         * will therefore just reorder them.
-         *
-         * Note that the indices returned by Face<dim, subdim>::index()
-         * will change as a result.
-         *
-         * \pre The range of faces defined by \a begin and \a end contains
-         * exactly the faces in this list, but possibly in a different order.
-         *
-         * \tparam Iterator an input iterator type, whose dereference
-         * operator returns a pointer of type <tt>Face<dim, subdim>*</tt>.
-         *
-         * @param begin an iterator that points to the beginning of the range
-         * of reordered faces.
-         * @param end an iterator that points past the end of the range of
-         * reordered faces.
-         */
-        template <typename Iterator>
-        void reorderFaces(Iterator begin, Iterator end) {
-            faces_.refill(begin, end);
-        }
-};
-
-} // namespace regina
-
-#include "triangulation/detail/triangulation.h"
 
 namespace regina {
 
@@ -502,48 +369,6 @@ class DegreeGreaterThan {
 };
 
 /*@}*/
-
-// Inline functions for FaceList
-
-template <int dim, int subdim>
-inline size_t FaceList<dim, subdim>::size() const {
-    return faces_.size();
-}
-
-template <int dim, int subdim>
-inline Face<dim, subdim>* FaceList<dim, subdim>::operator [](size_t index)
-        const {
-    return faces_[index];
-}
-
-template <int dim, int subdim>
-inline typename FaceList<dim, subdim>::Iterator FaceList<dim, subdim>::begin()
-        const {
-    return faces_.begin();
-}
-
-template <int dim, int subdim>
-inline typename FaceList<dim, subdim>::Iterator FaceList<dim, subdim>::end()
-        const {
-    return faces_.end();
-}
-
-template <int dim, int subdim>
-inline void FaceList<dim, subdim>::push_back(Face<dim, subdim>* face) {
-    faces_.push_back(face);
-}
-
-template <int dim, int subdim>
-inline void FaceList<dim, subdim>::destroy() {
-    for (auto f : faces_)
-        delete f;
-    faces_.clear();
-}
-
-template <int dim, int subdim>
-inline void FaceList<dim, subdim>::swap(FaceList<dim, subdim>& other) {
-    faces_.swap(other.faces_);
-}
 
 // Inline functions for Triangulation
 

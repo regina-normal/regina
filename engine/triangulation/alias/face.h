@@ -453,7 +453,7 @@ class FacesOfTriangulation<Derived, dim, 0> {
          *
          * See faces() for further information.
          */
-        const auto& vertices() const {
+        auto vertices() const {
             return static_cast<const Derived*>(this)->template faces<0>();
         }
 };
@@ -474,7 +474,7 @@ class FacesOfTriangulation<Derived, dim, 1> :
          *
          * See faces() for further information.
          */
-        const auto& edges() const {
+        auto edges() const {
             return static_cast<const Derived*>(this)->template faces<1>();
         }
 };
@@ -495,7 +495,7 @@ class FacesOfTriangulation<Derived, dim, 2> :
          *
          * See faces() for further information.
          */
-        const auto& triangles() const {
+        auto triangles() const {
             return static_cast<const Derived*>(this)->template faces<2>();
         }
 };
@@ -516,7 +516,7 @@ class FacesOfTriangulation<Derived, dim, 3> :
          *
          * See faces() for further information.
          */
-        const auto& tetrahedra() const {
+        auto tetrahedra() const {
             return static_cast<const Derived*>(this)->template faces<3>();
         }
 };
@@ -537,7 +537,7 @@ class FacesOfTriangulation<Derived, dim, 4> :
          *
          * See faces() for further information.
          */
-        const auto& pentachora() const {
+        auto pentachora() const {
             return static_cast<const Derived*>(this)->template faces<4>();
         }
 };
