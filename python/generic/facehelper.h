@@ -42,10 +42,10 @@ namespace pybind11 { namespace detail {
  * values for functions such as vertices(), edges(), faces(subdim), etc.,
  * within C++ classes such as Triangulation<dim>.
  */
-template <int dim, int subdim, class List>
-struct type_caster<regina::detail::FaceListView<dim, subdim, List>> {
+template <class List>
+struct type_caster<regina::detail::FaceListView<List>> {
     private:
-        typedef regina::detail::FaceListView<dim, subdim, List> ReginaType;
+        typedef regina::detail::FaceListView<List> ReginaType;
 
     public:
         PYBIND11_TYPE_CASTER(ReginaType, _("FaceList"));

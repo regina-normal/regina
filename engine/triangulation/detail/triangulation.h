@@ -101,19 +101,15 @@ template <int dim> class XMLTriangulationReaderBase;
 
 /**
  * A lightweight object that can be used to access and iterate through all
- * <i>subdim</i>-dimensional faces of a <i>dim</i>-dimensional triangulation.
+ * faces of some fixed dimension in a triangulation.
  * Object of this type can be happily copied by value.
  *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- * \tparam subdim the dimension of the faces that this class stores.
- * This must be between 0 and <i>dim</i>-1 inclusive.
  * \tparam List the internal type of the list that this object grants access to.
  * This type should support at least the same operations as this class itself,
  * except for the copy semantics (so in particular, \a List needs to provide
  * size(), begin(), end(), and a square bracket operator).
  */
-template <int dim, int subdim, class List>
+template <class List>
 class FaceListView {
     private:
         const List& faces_;
@@ -132,27 +128,27 @@ class FaceListView {
         FaceListView& operator = (const FaceListView&) = default;
 
         /**
-         * Returns the number of <i>subdim</i>-faces in this list.
+         * Returns the number of faces in this list.
          *
-         * @return the number of <i>subdim</i>-faces.
+         * @return the number of faces.
          */
         size_t size() const;
         /**
-         * Returns the requested <i>subdim</i>-face in this list.
+         * Returns the requested face in this list.
          *
          * @param index indicates which face to return; this must be
          * between 0 and size()-1 inclusive.
-         * @return the (\a index)th <i>subdim</i>-face in this list.
+         * @return the (\a index)th face in this list.
          */
-        Face<dim, subdim>* operator [](size_t index) const;
+        auto* operator [](size_t index) const;
         /**
-         * Returns an iterator pointing to the first <i>subdim</i>-face.
+         * Returns an iterator pointing to the first face.
          *
          * @return an iterator at the beginning of this list.
          */
         auto begin() const;
         /**
-         * Returns an iterator pointing beyond the last <i>subdim</i>-face.
+         * Returns an iterator pointing beyond the last face.
          *
          * @return an iterator beyond the end of this list.
          */
@@ -2203,28 +2199,27 @@ class TriangulationBase :
 
 // Inline functions for FaceListView
 
-template <int dim, int subdim, class List>
-FaceListView<dim, subdim, List>::FaceListView(const List& list) : faces_(list) {
+template <class List>
+FaceListView<List>::FaceListView(const List& list) : faces_(list) {
 }
 
-template <int dim, int subdim, class List>
-inline size_t FaceListView<dim, subdim, List>::size() const {
+template <class List>
+inline size_t FaceListView<List>::size() const {
     return faces_.size();
 }
 
-template <int dim, int subdim, class List>
-inline Face<dim, subdim>* FaceListView<dim, subdim, List>::operator [](
-        size_t index) const {
+template <class List>
+inline auto* FaceListView<List>::operator [](size_t index) const {
     return faces_[index];
 }
 
-template <int dim, int subdim, class List>
-inline auto FaceListView<dim, subdim, List>::begin() const {
+template <class List>
+inline auto FaceListView<List>::begin() const {
     return faces_.begin();
 }
 
-template <int dim, int subdim, class List>
-inline auto FaceListView<dim, subdim, List>::end() const {
+template <class List>
+inline auto FaceListView<List>::end() const {
     return faces_.end();
 }
 
@@ -2503,9 +2498,7 @@ template <int dim>
 template <int subdim>
 inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
-    return FaceListView<dim, subdim,
-        typename std::tuple_element<subdim, decltype(this->faces_)>::type>(
-        std::get<subdim>(this->faces_));
+    return FaceListView(std::get<subdim>(this->faces_));
 }
 
 template <int dim>
