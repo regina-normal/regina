@@ -17,6 +17,12 @@ Version 6.1  [ TODO ]
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
     ENGINE:
+        Class BoundaryComponent<dim>:
+            - Routines faces(), facets(), and the aliases vertices(), edges(),
+              etc. no longer return a const reference to a std::vector, but
+              instead return a lightweight ListView object by value.
+              C++ users should just use auto, and Python users are unaffected.
+              See the analagous Triangulation<dim> changes for further details.
         Class EnableIf<condition, T, defaultValue>:
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability

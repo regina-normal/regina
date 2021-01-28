@@ -45,6 +45,7 @@
 #include "triangulation/alias/face.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
+#include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
 namespace regina {
@@ -422,30 +423,62 @@ class BoundaryComponentFaceStorage :
         }
 
         /**
-         * Returns all (<i>dim</i>-1)-faces in this boundary component.
+         * Returns an object that allows iteration through and random access
+         * to all (<i>dim</i>-1)-faces in this boundary component.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Face<dim, dim-1>* f : bc.facets()) { ... }
+         * \endcode
          *
          * The reference that is returned will remain valid only for as
          * long as this boundary component object exists.  In particular,
          * the reference will become invalid any time that the triangulation
          * changes (since all boundary component objects will be destroyed
          * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call facets() again each time you need it.
          *
-         * \ifacespython This routine returns a python list.
+         * \ifacespython This routine returns a Python list.
          *
-         * @return the list of all (<i>dim</i>-1)-faces.
+         * @return access to the list of all (<i>dim</i>-1)-faces.
          */
-        const std::vector<Face<dim, dim-1>*>& facets() const {
-            return WeakFaceList<dim, dim-1>::faces_;
+        auto facets() const {
+            return ListView(WeakFaceList<dim, dim-1>::faces_);
         }
 
         /**
-         * Returns all <i>subdim</i>-faces in this boundary component.
+         * Returns an object that allows iteration through and random access
+         * to all <i>subdim</i>-faces in this boundary component.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Face<dim, subdim>* f : bc.faces<subdim>()) { ... }
+         * \endcode
          *
          * The reference that is returned will remain valid only for as
          * long as this boundary component object exists.  In particular,
          * the reference will become invalid any time that the triangulation
          * changes (since all boundary component objects will be destroyed
          * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call faces() again each time you need it.
          *
          * \ifacespython Python users should call this function in the
          * form <tt>faces(subdim)</tt>.  It will then return a Python list
@@ -460,8 +493,8 @@ class BoundaryComponentFaceStorage :
          * @return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
-        const std::vector<Face<dim, subdim>*>& faces() const {
-            return WeakFaceList<dim, subdim>::faces_;
+        auto faces() const {
+            return ListView(WeakFaceList<dim, subdim>::faces_);
         }
 
         /**
@@ -635,20 +668,36 @@ class BoundaryComponentFaceStorage<dim, false> {
         }
 
         /**
-         * Returns all (<i>dim</i>-1)-faces in this boundary component.
+         * Returns an object that allows iteration through and random access
+         * to all (<i>dim</i>-1)-faces in this boundary component.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Face<dim, dim-1>* f : bc.facets()) { ... }
+         * \endcode
          *
          * The reference that is returned will remain valid only for as
          * long as this boundary component object exists.  In particular,
          * the reference will become invalid any time that the triangulation
          * changes (since all boundary component objects will be destroyed
          * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call facets() again each time you need it.
          *
-         * \ifacespython This routine returns a python list.
+         * \ifacespython This routine returns a Python list.
          *
-         * @return the list of all (<i>dim</i>-1)-faces.
+         * @return access to the list of all (<i>dim</i>-1)-faces.
          */
-        const std::vector<Face<dim, dim-1>*>& facets() const {
-            return facets_;
+        auto facets() const {
+            return ListView(facets_);
         }
 
         /**
