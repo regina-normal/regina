@@ -1966,6 +1966,11 @@ class TriangulationBase :
          * the given boundary facet.
          *
          * See calculateRealBoundary() for further details.
+         *
+         * \tparam subdim the dimension of faces to work with;
+         * this must be between 1 and (<i>dim</i>-3) inclusive.
+         * Vertices (dimension 0) and ridges (dimension <i>dim</i>-2)
+         * are handled separately by different sections of code.
          */
         template <int subdim>
         void calculateBoundaryFaces(BoundaryComponent<dim>* bc,

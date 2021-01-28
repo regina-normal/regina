@@ -445,14 +445,18 @@ void TriangulationBase<dim>::calculateRealBoundary() {
             // and include them in this boundary component.
 
             // Treat the vertices separately, since we can optimise the
-            // vertex number calculations in this case.
+            // vertex number calculations in this case.  However, if dim == 2
+            // then vertices are also ridges, so we handle them later instead.
             if constexpr (dim >= 3)
                 for (i = 0; i <= dim; ++i)
                     if (i != facetNum) {
                         Face<dim, 0>* vertex = simp->vertex(i);
                         if (vertex->boundaryComponent_ != label) {
                             vertex->boundaryComponent_ = label;
-                            label->push_back(vertex);
+                            // If allFaces is false, then a boundary component
+                            // only wants to know about ridges and facets.
+                            if constexpr (BoundaryComponent<dim>::allFaces)
+                                label->push_back(vertex);
                         }
                     }
 
@@ -530,11 +534,17 @@ template <int dim>
 template <int subdim>
 void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
         Face<dim, dim-1>* facet) {
+    static_assert(1 <= subdim && subdim <= dim - 3,
+        "TriangulationBase::calculateBoundaryFaces() must not be "
+        "used with vertices or ridges.");
     for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
         Face<dim, subdim>* f = facet->template face<subdim>(i);
         if (f->boundaryComponent_ != bc) {
             f->boundaryComponent_ = bc;
-            bc->push_back(f);
+            // If allFaces is false, then a boundary component only wants
+            // to know about ridges and facets.
+            if constexpr (BoundaryComponent<dim>::allFaces)
+                bc->push_back(f);
         }
     }
 }
