@@ -30,26 +30,42 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file python/helpers.h
- *  \brief Various tools to assist with Python bindings for Regina.
+/*! \file python/helpers/listview.h
+ *  \brief Assists with wrapping instances of Regina's lightweight ListView
+ *  template class.
  */
 
-#ifndef __HELPERS_H
-#ifndef __DOXYGEN
-#define __HELPERS_H
-#endif
+#include "utilities/listview.h"
 
-#include "pybind11/pybind11.h"
-#include "helpers/equality.h"
-#include "helpers/output.h"
-#include "helpers/listview.h"
+namespace pybind11 { namespace detail {
 
-// Inform pybind11 that SafePtr can be used as a holder type, and that it
-// is safe to construct multiple holders from the same T*.
+/**
+ * Tell pybind11 how to convert a C++ ListView into a Python list.
+ * This allows pybind11 to automagically convert the return values for
+ * functions such as Triangulation<dim>::faces<subdim>().
+ */
+template <class List>
+struct type_caster<regina::ListView<List>> {
+    private:
+        typedef regina::ListView<List> ReginaType;
 
-namespace regina {
-    template <typename T> class SafePtr;
-}
-PYBIND11_DECLARE_HOLDER_TYPE(T, regina::SafePtr<T>, true);
+    public:
+        PYBIND11_TYPE_CASTER(ReginaType, _("ListView"));
 
-#endif
+        bool load(handle, bool) {
+            // Never allow conversion from Python to a C++ ListView.
+            return false;
+        }
+
+        static handle cast(ReginaType src, return_value_policy policy,
+                handle parent) {
+            // Conversion from C++ to Python:
+            pybind11::list ans;
+            for (auto f : src)
+                ans.append(pybind11::cast(f, policy, parent));
+            return ans.release();
+        }
+};
+
+} } // namespace pybind11::detail
+

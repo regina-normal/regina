@@ -28,6 +28,8 @@ Version 6.1  [ TODO ]
               allowsInvalidFaces.
             - Simplified the class hierarchy; FaceOrientability,
               FaceValidity and FaceListHolder are now gone.
+        Class ListView:
+            - New lightweight objects for basic read-only access to lists.
         Class MarkedVector:
             - New convenience routine clear_destructive().
         Class Perm<n>:

@@ -34,39 +34,6 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 
-namespace pybind11 { namespace detail {
-
-/**
- * Tell pybind11 how to convert a C++ list of triangulation faces into a
- * Python list.  This allows pybind11 to automagically convert the return
- * values for functions such as vertices(), edges(), faces(subdim), etc.,
- * within C++ classes such as Triangulation<dim>.
- */
-template <class List>
-struct type_caster<regina::detail::FaceListView<List>> {
-    private:
-        typedef regina::detail::FaceListView<List> ReginaType;
-
-    public:
-        PYBIND11_TYPE_CASTER(ReginaType, _("FaceList"));
-
-        bool load(handle, bool) {
-            // Never allow conversion from Python to a C++ FaceList.
-            return false;
-        }
-
-        static handle cast(ReginaType src, return_value_policy policy,
-                handle parent) {
-            // Conversion from C++ to Python:
-            pybind11::list ans;
-            for (auto f : src)
-                ans.append(pybind11::cast(f, policy, parent));
-            return ans.release();
-        }
-};
-
-} } // namespace pybind11::detail
-
 namespace regina {
 namespace python {
 

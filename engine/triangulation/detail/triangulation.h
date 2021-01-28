@@ -57,6 +57,7 @@
 #include "triangulation/generic/simplex.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/simplex.h"
+#include "utilities/listview.h"
 #include "utilities/property.h"
 
 namespace regina {
@@ -98,62 +99,6 @@ template <int dim> class XMLTriangulationReaderBase;
  * Implementation details that end users should not need to reference directly.
  * @{
  */
-
-/**
- * A lightweight object that can be used to access and iterate through all
- * faces of some fixed dimension in a triangulation.
- * Object of this type can be happily copied by value.
- *
- * \tparam List the internal type of the list that this object grants access to.
- * This type should support at least the same operations as this class itself,
- * except for the copy semantics (so in particular, \a List needs to provide
- * size(), begin(), end(), and a square bracket operator).
- */
-template <class List>
-class FaceListView {
-    private:
-        const List& faces_;
-
-    public:
-        /**
-         * Returns a view for the given list of faces.
-         *
-         * @param list the list that this object will access.
-         * Internally, this object will store a reference to \a list (which
-         * means \a list needs to exist for at least as long as this object).
-         */
-        FaceListView(const List& list);
-
-        FaceListView(const FaceListView&) = default;
-        FaceListView& operator = (const FaceListView&) = default;
-
-        /**
-         * Returns the number of faces in this list.
-         *
-         * @return the number of faces.
-         */
-        size_t size() const;
-        /**
-         * Returns the requested face in this list.
-         *
-         * @param index indicates which face to return; this must be
-         * between 0 and size()-1 inclusive.
-         * @return the (\a index)th face in this list.
-         */
-        auto* operator [](size_t index) const;
-        /**
-         * Returns an iterator pointing to the first face.
-         *
-         * @return an iterator at the beginning of this list.
-         */
-        auto begin() const;
-        /**
-         * Returns an iterator pointing beyond the last face.
-         *
-         * @return an iterator beyond the end of this list.
-         */
-        auto end() const;
-};
 
 /**
  * Internal class that helps a triangulation store its lists of faces.
@@ -802,17 +747,11 @@ class TriangulationBase :
          * The object that is returned is lightweight, and can be happily
          * copied by value.  The C++ type of the object is subject to change,
          * so C++ users should use \c auto (just like this declaration does).
-         * However, it is guaranteed to include:
          *
-         * - a square bracket operator to access individual faces,
-         *   which returns <tt>Face<dim, subdim>*</tt>;
-         * - a <tt>size()</tt> function, which returns the number of
-         *   faces as a \c size_t;
-         * - functions <tt>begin()</tt> and <tt>end()</tt>, which return
-         *   iterators for iterating through the face list.
-         *
-         * In particular, this object can be used with C++11 range-based
-         * \c for loops:
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
          *
          * \code{.cpp}
          * for (Face<dim, subdim>* f : tri.faces<subdim>()) { ... }
@@ -2197,32 +2136,6 @@ class TriangulationBase :
 
 /*@}*/
 
-// Inline functions for FaceListView
-
-template <class List>
-FaceListView<List>::FaceListView(const List& list) : faces_(list) {
-}
-
-template <class List>
-inline size_t FaceListView<List>::size() const {
-    return faces_.size();
-}
-
-template <class List>
-inline auto* FaceListView<List>::operator [](size_t index) const {
-    return faces_[index];
-}
-
-template <class List>
-inline auto FaceListView<List>::begin() const {
-    return faces_.begin();
-}
-
-template <class List>
-inline auto FaceListView<List>::end() const {
-    return faces_.end();
-}
-
 // Inline functions for FaceListSuite
 
 template <int dim, int... subdim>
@@ -2498,7 +2411,7 @@ template <int dim>
 template <int subdim>
 inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
-    return FaceListView(std::get<subdim>(this->faces_));
+    return ListView(std::get<subdim>(this->faces_));
 }
 
 template <int dim>
