@@ -36,10 +36,10 @@
 
 namespace regina { namespace detail {
 
-template REGINA_API BoundaryComponentStorage<3, true, true, true>::
+template REGINA_API BoundaryComponentStorage<3, true, true>::
     ~BoundaryComponentStorage();
 
 template REGINA_API Triangulation<2>*
-    BoundaryComponentStorage<3, true, true, true>::buildRealBoundary() const;
+    BoundaryComponentStorage<3, true, true>::buildRealBoundary() const;
 
 } }

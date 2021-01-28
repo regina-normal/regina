@@ -55,15 +55,13 @@
 namespace regina {
 namespace detail {
 
-template <int dim, bool allFaces, bool allowVertex, bool canBuild>
-BoundaryComponentStorage<dim, allFaces, allowVertex, canBuild>::
-        ~BoundaryComponentStorage() {
+template <int dim, bool allFaces, bool canBuild>
+BoundaryComponentStorage<dim, allFaces, canBuild>::~BoundaryComponentStorage() {
     delete boundary_;
 }
 
-template <int dim, bool allFaces, bool allowVertex, bool canBuild_>
-Triangulation<dim-1>*
-        BoundaryComponentStorage<dim, allFaces, allowVertex, canBuild_>::
+template <int dim, bool allFaces, bool canBuild_>
+Triangulation<dim-1>* BoundaryComponentStorage<dim, allFaces, canBuild_>::
         buildRealBoundary() const {
     // From the precondition, there is a positive number of (dim-1)-faces.
     const auto& allFacets = facets();

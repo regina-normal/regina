@@ -17,6 +17,9 @@ Version 6.1  [ TODO ]
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
     ENGINE:
+        Class BoundaryComponent<dim>:
+            - Simplified the class hierarchy; BoundaryComponentFaceInterface
+              is now gone.
         Class Component<dim>:
             - Routines simplices(), boundaryComponents(), faces(), and the
               aliases vertices(), edges(), etc. no longer return a

@@ -365,11 +365,14 @@ class BoundaryComponentFaceStorage :
          * A compile-time constant indicating whether this boundary
          * component class stores all lower-dimensional faces (\c true),
          * or only faces of dimension <i>dim</i>-1 (\c false).
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
          */
         static constexpr bool allFaces = true;
+        /**
+         * A compile-time constant indicating whether ideal and/or
+         * invalid vertex boundary components are both possible and
+         * recognised by this boundary component class.
+         */
+        static constexpr bool allowVertex = (dim > 2);
 
     public:
         /**
@@ -569,7 +572,100 @@ class BoundaryComponentFaceStorage :
             return WeakFaceList<dim, 0>::faces_.front()->component();
         }
 
+        /**
+         * Determines if this boundary component is real.
+         * This is the case if and only if it is formed from one or more
+         * (dim-1)-faces.
+         *
+         * See the BoundaryComponent class notes for an overview of real,
+         * ideal, and invalid vertex boundary components.
+         *
+         * This routine is only available where \a dim is at least 3
+         * and is one of Regina's \ref stddim "standard dimensions".
+         * (In other dimensions, real boundary components are the only
+         * types of boundary component that Regina will recognise.)
+         *
+         * @return \c true if and only if this boundary component is real.
+         */
+        bool isReal() const {
+            return ! facets().empty();
+        }
+
+        /**
+         * Determines if this boundary component is ideal.
+         * This is the case if and only if it consists of a single
+         * ideal vertex and no faces of any other dimensions.
+         *
+         * See the BoundaryComponent class notes for an overview of ideal
+         * boundary components, which can only occur in dimensions &ge; 3,
+         * and which are only recognised where \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * Note that a boundary component formed from a single \e invalid
+         * vertex is \e not considered to be ideal.  This means that, if a
+         * boundary component contains no faces of positive dimension,
+         * then one and only one of isIdeal() and isInvalidVertex() will
+         * return \c true.
+         *
+         * This routine is only available where \a dim is at least 3
+         * and is one of Regina's \ref stddim "standard dimensions".
+         *
+         * @return \c true if and only if this boundary component is ideal.
+         */
+        bool isIdeal() const {
+            // Either of Vertex::isValid() or Vertex::isIdeal() will do here.
+            return (facets().empty() &&
+                WeakFaceList<dim, 0>::faces_.front()->isValid());
+        }
+
+        /**
+         * Determines if this boundary component consists of a single invalid
+         * vertex and nothing else.  In particular, such a boundary component
+         * must contain no faces of any positive dimension.
+         *
+         * See the BoundaryComponent class notes for an overview of
+         * invalid vertex boundary components, which can only occur in
+         * dimensions &ge; 4, and which are only recognised where \a dim is
+         * one of Regina's \ref stddim "standard dimensions".
+         *
+         * An invalid vertex is only placed in its own boundary component if
+         * it does not already belong to some larger boundary component
+         * (for instance, if its link is an ideal (<i>dim</i>-1)-manifold
+         * triangulation).  This means that, for a boundary component
+         * consisting of one or more (<i>dim</i>-1)-faces, this routine will
+         * return \c false even if the boundary component also includes
+         * one or more invalid vertices.
+         *
+         * Note that, if a boundary component contains no faces of positive
+         * dimension, then one and only one of isIdeal() and isInvalidVertex()
+         * will return \c true.
+         *
+         * This routine is only available where \a dim is at least 3
+         * and is one of Regina's \ref stddim "standard dimensions".
+         *
+         * @return \c true if and only if this boundary component consists of a
+         * single invalid vertex and nothing else.
+         */
+        bool isInvalidVertex() const {
+            return (facets().empty() &&
+                ! WeakFaceList<dim, 0>::faces_.front()->isValid());
+        }
+
     protected:
+        /**
+         * Triangulates the vertex link for an ideal or invalid vertex
+         * boundary component.
+         *
+         * @return the triangulated vertex link.
+         */
+        const Triangulation<dim-1>* buildVertexLink() const {
+            // Make sure we do not try to instantiate Triangulation<1>.
+            static_assert(dim > 2, "Routine buildVertexLink() should "
+                "not be called for dimension 2.");
+
+            return WeakFaceList<dim, 0>::faces_.front()->buildLink();
+        }
+
         /**
          * Pushes the given face onto the end of the list of
          * <i>subdim</i>-faces of this boundary component.
@@ -628,11 +724,14 @@ class BoundaryComponentFaceStorage<dim, false> {
          * A compile-time constant indicating whether this boundary
          * component class stores all lower-dimensional faces (\c true),
          * or only faces of dimension <i>dim</i>-1 (\c false).
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
          */
         static constexpr bool allFaces = false;
+        /**
+         * A compile-time constant indicating whether ideal and/or
+         * invalid vertex boundary components are both possible and
+         * recognised by this boundary component class.
+         */
+        static constexpr bool allowVertex = false;
 
     protected:
         std::vector<Face<dim, dim-1>*> facets_;
@@ -801,266 +900,6 @@ class BoundaryComponentFaceStorage<dim, false> {
 };
 
 /**
- * Helper class for querying the faces of a boundary component of a
- * <i>dim</i>-dimensional triangulation.  Every class BoundaryComponent<dim>
- * inherits from this template.
- *
- * \ifacespython This base class is not present, but the "end user" class
- * BoundaryComponent<dim> is.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- * \tparam allFaces \c true if this class should store all faces of all
- * dimensions 0,1,...,<i>dim</i>-1, or \c false if this class should only
- * store faces of dimension <i>dim</i>-1.
- * \tparam allowVertex_ \c true if ideal and/or invalid vertex boundary
- * components are both possible and recognised in dimension \a dim,
- * or \c false if only real boundary components are supported.
- */
-template <int dim, bool allFaces, bool allowVertex_>
-class BoundaryComponentFaceInterface :
-        public BoundaryComponentFaceStorage<dim, allFaces> {
-    static_assert(allFaces && allowVertex_,
-        "The generic BoundaryComponentFaceInterface template should "
-        "only be used with allFaces = true and allowVertex = true.");
-    // The face storage superclass already tests for standard dimension.
-    static_assert(dim > 2,
-        "The generic BoundaryComponentFaceInterface template should not "
-        "be used for dimension 2.");
-
-    public:
-        /**
-         * A compile-time constant indicating whether ideal and/or
-         * invalid vertex boundary components are both possible and
-         * recognised by this boundary component class.
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
-         */
-        static constexpr bool allowVertex = true;
-
-    public:
-        using BoundaryComponentFaceStorage<dim, allFaces>::size;
-        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
-
-        /**
-         * Determines if this boundary component is real.
-         * This is the case if and only if it is formed from one or more
-         * (dim-1)-faces.
-         *
-         * See the BoundaryComponent class notes for an overview of real,
-         * ideal, and invalid vertex boundary components.
-         *
-         * This routine is only available where \a dim is at least 3
-         * and is one of Regina's \ref stddim "standard dimensions".
-         * (In other dimensions, real boundary components are the only
-         * types of boundary component that Regina will recognise.)
-         *
-         * @return \c true if and only if this boundary component is real.
-         */
-        bool isReal() const {
-            return ! facets().empty();
-        }
-
-        /**
-         * Determines if this boundary component is ideal.
-         * This is the case if and only if it consists of a single
-         * ideal vertex and no faces of any other dimensions.
-         *
-         * See the BoundaryComponent class notes for an overview of ideal
-         * boundary components, which can only occur in dimensions &ge; 3,
-         * and which are only recognised where \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
-         *
-         * Note that a boundary component formed from a single \e invalid
-         * vertex is \e not considered to be ideal.  This means that, if a
-         * boundary component contains no faces of positive dimension,
-         * then one and only one of isIdeal() and isInvalidVertex() will
-         * return \c true.
-         *
-         * This routine is only available where \a dim is at least 3
-         * and is one of Regina's \ref stddim "standard dimensions".
-         *
-         * @return \c true if and only if this boundary component is ideal.
-         */
-        bool isIdeal() const {
-            // Either of Vertex::isValid() or Vertex::isIdeal() will do here.
-            return (facets().empty() &&
-                WeakFaceList<dim, 0>::faces_.front()->isValid());
-        }
-
-        /**
-         * Determines if this boundary component consists of a single invalid
-         * vertex and nothing else.  In particular, such a boundary component
-         * must contain no faces of any positive dimension.
-         *
-         * See the BoundaryComponent class notes for an overview of
-         * invalid vertex boundary components, which can only occur in
-         * dimensions &ge; 4, and which are only recognised where \a dim is
-         * one of Regina's \ref stddim "standard dimensions".
-         *
-         * An invalid vertex is only placed in its own boundary component if
-         * it does not already belong to some larger boundary component
-         * (for instance, if its link is an ideal (<i>dim</i>-1)-manifold
-         * triangulation).  This means that, for a boundary component
-         * consisting of one or more (<i>dim</i>-1)-faces, this routine will
-         * return \c false even if the boundary component also includes
-         * one or more invalid vertices.
-         *
-         * Note that, if a boundary component contains no faces of positive
-         * dimension, then one and only one of isIdeal() and isInvalidVertex()
-         * will return \c true.
-         *
-         * This routine is only available where \a dim is at least 3
-         * and is one of Regina's \ref stddim "standard dimensions".
-         *
-         * @return \c true if and only if this boundary component consists of a
-         * single invalid vertex and nothing else.
-         */
-        bool isInvalidVertex() const {
-            return (facets().empty() &&
-                ! WeakFaceList<dim, 0>::faces_.front()->isValid());
-        }
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const {
-            out << (isIdeal() ? "Ideal " : isInvalidVertex() ? "Invalid " :
-                "Finite ") << "boundary component";
-        }
-
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const {
-            writeTextShort(out);
-            out << std::endl;
-
-            if (isIdeal() || isInvalidVertex()) {
-                Face<dim, 0>* v = WeakFaceList<dim, 0>::faces_.front();
-                out << "Vertex: " << v->index() << std::endl;
-                out << "Appears as:" << std::endl;
-                for (auto& emb : *v)
-                    out << "  " << emb.simplex()->index()
-                        << " (" << emb.vertex() << ')' << std::endl;
-            } else {
-                out << (size() == 1 ? Strings<dim-1>::Face :
-                    Strings<dim-1>::Faces) << ':' << std::endl;
-                for (auto s : facets())
-                    out << "  " << s->front().simplex()->index() << " ("
-                        << s->front().vertices().trunc(dim) << ')' << std::endl;
-            }
-        }
-
-    protected:
-        /**
-         * Triangulates the vertex link for an ideal or invalid vertex
-         * boundary component.
-         *
-         * @return the triangulated vertex link.
-         */
-        const Triangulation<dim-1>* buildVertexLink() const {
-            return WeakFaceList<dim, 0>::faces_.front()->buildLink();
-        }
-};
-
-/**
- * Helper class for querying the faces of a boundary component of a
- * <i>dim</i>-dimensional triangulation.  See the general
- * BoundaryComponentFaceInterface template notes for further details.
- *
- * This specialisation is used for dimensions in which only real boundary
- * components are supported - that is, ideal and/or invalid vertex
- * boundary components are either not recognised or not possible.
- * It therefore removes the member functions that query ideal and/or
- * invalid vertices.
- */
-template <int dim, bool allFaces>
-class BoundaryComponentFaceInterface<dim, allFaces, false> :
-        public BoundaryComponentFaceStorage<dim, allFaces> {
-    static_assert(dim == 2 || ! standardDim(dim),
-        "The BoundaryComponentFaceInterface template should not set "
-        "allowVertex = false for standard dimensions greater than 2.");
-
-    public:
-        /**
-         * A compile-time constant indicating whether ideal and/or
-         * invalid vertex boundary components are both possible and
-         * recognised by this boundary component class.
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
-         */
-        static constexpr bool allowVertex = false;
-
-    public:
-        using BoundaryComponentFaceStorage<dim, allFaces>::size;
-        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const {
-            out << "Boundary component";
-        }
-
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const {
-            writeTextShort(out);
-            out << std::endl;
-
-            out << (size() == 1 ? Strings<dim-1>::Face :
-                Strings<dim-1>::Faces) << ':' << std::endl;
-            for (auto s : facets())
-                out << "  " << s->front().simplex()->index() << " ("
-                    << s->front().vertices().trunc(dim) << ')' << std::endl;
-        }
-
-    protected:
-        /**
-         * Always returns \c null.
-         *
-         * In general, this routine triangulates the vertex link for an
-         * ideal or invalid vertex boundary component.  However, this
-         * specialisation is used for cases where such boundary components
-         * are either not recognised or not possible, and so this routine
-         * returns \c null always.
-         *
-         * @return \c null.
-         */
-        constexpr const Triangulation<dim-1>* buildVertexLink() const {
-            // Make sure we do not try to instantiate Triangulation<1>.
-            static_assert(dim > 2, "Routine buildVertexLink() should "
-                "not be called for dimension 2.");
-
-            return 0;
-        }
-};
-
-/**
  * Helper class that manages all data storage for a boundary component of a
  * <i>dim</i>-dimensional triangulation.  Every class BoundaryComponent<dim>
  * inherits from this template.
@@ -1073,15 +912,12 @@ class BoundaryComponentFaceInterface<dim, allFaces, false> :
  * \tparam allFaces \c true if this class should store all faces of all
  * dimensions 0,1,...,<i>dim</i>-1, or \c false if this class should only
  * store faces of dimension <i>dim</i>-1.
- * \tparam allowVertex \c true if ideal and/or invalid vertex boundary
- * components are both possible and recognised in dimension \a dim,
- * or \c false if only real boundary components are supported.
  * \tparam canBuild_ \c true if we support triangulating boundary components,
  * or \c false if this is not possible (i.e., the dimension is 2).
  */
-template <int dim, bool allFaces, bool allowVertex, bool canBuild_>
+template <int dim, bool allFaces, bool canBuild_>
 class BoundaryComponentStorage :
-        public BoundaryComponentFaceInterface<dim, allFaces, allowVertex> {
+        public BoundaryComponentFaceStorage<dim, allFaces> {
     static_assert(canBuild_,
         "The generic BoundaryComponentStoarge template should only be "
         "used with canBuild = true.");
@@ -1109,6 +945,7 @@ class BoundaryComponentStorage :
                  the triangulation is cached by the vertex class instead.*/
 
     public:
+        using BoundaryComponentFaceStorage<dim, allFaces>::allowVertex;
         using BoundaryComponentFaceStorage<dim, allFaces>::facets;
 
         /**
@@ -1157,19 +994,16 @@ class BoundaryComponentStorage :
         const Triangulation<dim-1>* build() const {
             if (boundary_)
                 return boundary_; // Already cached or pre-computed.
-            if (facets().empty())
-                return buildVertexLink(); // Ideal or invalid vertex.
+            if constexpr (allowVertex)
+                if (facets().empty())
+                    return this->buildVertexLink(); // Ideal or invalid vertex.
 
             return (
-                const_cast<BoundaryComponentStorage<dim, allFaces,
-                    allowVertex, canBuild_>*>(this)->
-                boundary_ = buildRealBoundary());
+                const_cast<BoundaryComponentStorage<dim, allFaces, canBuild_>*>(
+                    this)->boundary_ = buildRealBoundary());
         }
 
     protected:
-        using BoundaryComponentFaceInterface<dim, allFaces, allowVertex>::
-            buildVertexLink;
-
         /**
          * Initialises the cached boundary triangulation to \c null.
          */
@@ -1197,9 +1031,9 @@ class BoundaryComponentStorage :
  * boundary components (i.e., dimension 2).  It therefore removes the
  * member functions that work with boundary component triangulations.
  */
-template <int dim, bool allFaces, bool allowVertex>
-class BoundaryComponentStorage<dim, allFaces, allowVertex, false> :
-        public BoundaryComponentFaceInterface<dim, allFaces, allowVertex> {
+template <int dim, bool allFaces>
+class BoundaryComponentStorage<dim, allFaces, false> :
+        public BoundaryComponentFaceStorage<dim, allFaces> {
     static_assert(dim == 2,
         "The BoundaryComponentStorage template should not set "
         "canBuild = false for dimensions greater than 2.");
@@ -1236,7 +1070,6 @@ class BoundaryComponentBase :
         public Output<BoundaryComponentBase<dim>>,
         public BoundaryComponentStorage<dim,
             standardDim(dim) /* allFaces */,
-            (standardDim(dim) && dim > 2) /* allowVertex */,
             (dim > 2) /* canBuild */>,
         public MarkedElement {
     protected:
@@ -1244,6 +1077,8 @@ class BoundaryComponentBase :
             /**< Is this boundary component orientable? */
 
     public:
+        using BoundaryComponentFaceStorage<dim, standardDim(dim)>::allowVertex;
+
         /**
          * Returns the index of this boundary component in the underlying
          * triangulation.
@@ -1267,6 +1102,57 @@ class BoundaryComponentBase :
          */
         bool isOrientable() const {
             return orientable_;
+        }
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const {
+            if constexpr (allowVertex) {
+                out << (this->isIdeal() ? "Ideal " :
+                        this->isInvalidVertex() ? "Invalid " :
+                        "Finite ") << "boundary component";
+            } else {
+                out << "Boundary component";
+            }
+        }
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const {
+            writeTextShort(out);
+            out << std::endl;
+
+            if constexpr (allowVertex) {
+                if (this->isIdeal() || this->isInvalidVertex()) {
+                    // We have no boundary facets.
+                    Face<dim, 0>* v = WeakFaceList<dim, 0>::faces_.front();
+                    out << "Vertex: " << v->index() << std::endl;
+                    out << "Appears as:" << std::endl;
+                    for (auto& emb : *v)
+                        out << "  " << emb.simplex()->index()
+                            << " (" << emb.vertex() << ')' << std::endl;
+                    return;
+                }
+            }
+
+            // We have boundary facets.
+            out << (this->size() == 1 ? Strings<dim-1>::Face :
+                Strings<dim-1>::Faces) << ':' << std::endl;
+            for (auto s : this->facets())
+                out << "  " << s->front().simplex()->index() << " ("
+                    << s->front().vertices().trunc(dim) << ')' << std::endl;
         }
 
         // Make this class non-copyable.
