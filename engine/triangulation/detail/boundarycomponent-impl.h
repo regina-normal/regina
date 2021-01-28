@@ -127,28 +127,36 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
 
     delete[] bdrySimplex;
 
-    /**
-     * Now the triangulation is built, we need to reorder its
-     * lower-dimensional faces to appear in the same order and with the
-     * same vertex numbers as they do in the boundary component face lists.
-     *
-     * A problem: this relabelling does happen immediately after ans is
-     * constructed, but not until *after* the skeletal calculations for ans.
-     * Therefore we have problems if the skeletal calculations for ans
-     * create additional structures that depend on this ordering/numbering.
-     *
-     * Currently the only such structures that we have to worry about are
-     * the triangulated edge/vertex links in Triangulation<4>.
-     * This means we only have problems in the case dim=5.
-     * However: for dim=5, boundary components do not store lower-dimensional
-     * faces, and so this ordering/numbering does not take place at all.
-     *
-     * TODO: Put in some kind of robust mechanism so that this issue
-     * does not come back and bite us at a later date if/when the skeletal
-     * computations are extended to do more than they do now.
-     */
-    ans->countComponents(); // ensures that the skeleton is calculated
-    this->reorderAndRelabelFaces(ans);
+    if constexpr (BoundaryComponent<dim>::allFaces) {
+        /**
+         * We are storing all faces of boundary components, not just the
+         * (dim-1)-dimensional facets.
+         *
+         * Now the triangulation is built, we need to reorder these lower-
+         * dimensional (<= dim-2)-faces to appear in the same order and with the
+         * same vertex numbers as they do in the boundary component face lists.
+         *
+         * A problem: this relabelling does happen immediately after ans is
+         * constructed, but not until *after* the skeletal calculations for ans.
+         * Therefore we have problems if the skeletal calculations for ans
+         * create additional structures that depend on this ordering/numbering.
+         *
+         * Currently the only such structures that we have to worry about are
+         * the triangulated edge/vertex links in Triangulation<4>.
+         * This means we only have problems in the case dim=5.
+         * However: for dim=5, boundary components don't store lower-dimensional
+         * faces, and so this ordering/numbering does not take place at all.
+         *
+         * TODO: Put in some kind of robust mechanism so that this issue
+         * does not come back and bite us at a later date if/when the skeletal
+         * computations are extended to do more than they do now.
+         */
+        static_assert(dim != 5,
+            "There is a problem with relabelling/reordering faces in "
+            "buildRealBoundary(); see the code comments for details.");
+        ans->countComponents(); // ensures that the skeleton is calculated
+        this->reorderAndRelabelFaces(ans);
+    }
 
     return ans;
 }

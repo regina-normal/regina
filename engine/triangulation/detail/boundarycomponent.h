@@ -842,51 +842,24 @@ class BoundaryComponentFaceStorage<dim, dim - 1> {
         }
 
         /**
-         * Pushes the given face onto the end of the list of
-         * (<i>dim</i>-1)-faces of this boundary component.
-         * This class does not take ownership of the given face.
+         * Pushes the given facet (that is, (<i>dim</i>-1)-face) onto the end
+         * of the list of facets of this boundary component.
+         * This class does not take ownership of the given facet.
          *
-         * @param face the face to append to the list.
+         * @param face the facet to append to the list.
          */
-        void push_back(Face<dim, dim-1>* face) {
-            facets_.push_back(face);
+        void push_back(Face<dim, dim-1>* facet) {
+            facets_.push_back(facet);
         }
 
         /**
-         * Increments the number of (<i>dim</i>-2)-faces in this
-         * boundary component.  Since this boundary component class does
+         * Increments the number of ridges (that is, (<i>dim</i>-2)-faces) in
+         * this boundary component.  Since this boundary component class does
          * not store any lower-dimensional faces, this routine does not
          * store the given face.
          */
         void push_back(Face<dim, dim-2>*) {
             ++nRidges_;
-        }
-
-        /**
-         * Does nothing, since this boundary component does not store
-         * lower-dimensional faces.
-         *
-         * \tparam useDim the dimension of the given face.  This must
-         * be between 0 and <i>dim</i>-3 inclusive.
-         */
-        template <int useDim>
-        void push_back(Face<dim, useDim>*) {
-            static_assert(useDim <= dim - 3,
-                "The no-op push_back() should only be called for "
-                "faces of dimension <= dim - 3.");
-        }
-
-        /**
-         * Reorders all lower-dimensional faces of the given triangulation
-         * so that they appear in the same order as the corresponding
-         * faces of this boundary component, and relabels these faces so
-         * that their vertices are numbered in a corresponding way.
-         * This affects all faces of dimensions 0,...,(<i>dim</i>-2).
-         *
-         * In this specialised class template, this function does nothing
-         * because faces of dimension 0,...,(<i>dim</i>-2) are not stored.
-         */
-        void reorderAndRelabelFaces(Triangulation<dim-1>*) const {
         }
 };
 
