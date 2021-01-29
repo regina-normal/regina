@@ -92,6 +92,7 @@ Version 6.1  [ TODO ]
               Python behaviour of these functions is completely unchanged.
             - Simplified the class hierarchy; EulerCalculator, FaceList and
               PachnerHelper are now gone.
+            - FaceListSuite has been renamed to TriangulationFaceStorage.
         Class Triangulation<3>:
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as

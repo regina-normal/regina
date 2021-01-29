@@ -109,11 +109,11 @@ template <int dim> class XMLTriangulationReaderBase;
  * \tparam subdim This must be exactly the sequence 0, 1, ..., <i>dim</i>-1.
  */
 template <int dim, int... subdim>
-class FaceListSuite {
+class TriangulationFaceStorage {
     static_assert(sizeof...(subdim) == dim &&
         (subdim + ...) == dim * (dim - 1) / 2,
-        "The FaceListSuite template has been given an unexpected set of "
-        "face dimensions.");
+        "The TriangulationFaceStorage template has been given an unexpected "
+        "set of face dimensions.");
 
     protected:
         std::tuple<MarkedVector<Face<dim, subdim>>...> faces_;
@@ -124,7 +124,7 @@ class FaceListSuite {
         /**
          * Default constructor that initialises all face lists as empty.
          */
-        FaceListSuite() = default;
+        TriangulationFaceStorage() = default;
 
         /**
          * Deletes all faces of all dimensions.
@@ -139,7 +139,7 @@ class FaceListSuite {
          * @param other the face storage for the triangulation whose
          * faces are to be swapped with this.
          */
-        void swapFaces(FaceListSuite& other);
+        void swapFaces(TriangulationFaceStorage& other);
         /**
          * Tests whether this and the given triangulation have the same
          * number of <i>k</i>-faces, for each facial dimension \a k.
@@ -148,7 +148,7 @@ class FaceListSuite {
          * @return \c true if and only if the face counts considered are
          * identical for both triangluations.
          */
-        bool sameFVector(const FaceListSuite& other) const;
+        bool sameFVector(const TriangulationFaceStorage& other) const;
         /**
          * Tests whether this and the given triangulation have the same
          * <i>useDim</i>-face degree sequences.
@@ -164,7 +164,7 @@ class FaceListSuite {
          * degree sequences are equal.
          */
         template <int useDim>
-        bool sameDegreesAt(const FaceListSuite& other) const;
+        bool sameDegreesAt(const TriangulationFaceStorage& other) const;
         /**
          * Tests whether this and the given triangulation have the same
          * <i>k</i>-face degree sequences, for each facial dimension
@@ -182,11 +182,12 @@ class FaceListSuite {
          * are equal.
          */
         template <int maxDim>
-        bool sameDegreesTo(const FaceListSuite& other) const;
+        bool sameDegreesTo(const TriangulationFaceStorage& other) const;
 
         // Make this class non-copyable.
-        FaceListSuite(const FaceListSuite&) = delete;
-        FaceListSuite& operator = (const FaceListSuite&) = delete;
+        TriangulationFaceStorage(const TriangulationFaceStorage&) = delete;
+        TriangulationFaceStorage& operator = (const TriangulationFaceStorage&)
+            = delete;
 };
 
 /**
@@ -352,7 +353,7 @@ struct BoundaryComponentCalculator<dim, -1> {
  */
 template <int dim>
 class TriangulationBase :
-        public ExpandSequence<FaceListSuite, dim>,
+        public ExpandSequence<TriangulationFaceStorage, dim>,
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
@@ -2157,30 +2158,30 @@ class TriangulationBase :
 
 /*@}*/
 
-// Inline functions for FaceListSuite
+// Inline functions for TriangulationFaceStorage
 
 template <int dim, int... subdim>
-inline void FaceListSuite<dim, subdim...>::deleteFaces() {
+inline void TriangulationFaceStorage<dim, subdim...>::deleteFaces() {
     (std::get<subdim>(faces_).clear_destructive(), ...);
 }
 
 template <int dim, int... subdim>
-inline void FaceListSuite<dim, subdim...>::swapFaces(
-        FaceListSuite<dim, subdim...>& other) {
+inline void TriangulationFaceStorage<dim, subdim...>::swapFaces(
+        TriangulationFaceStorage<dim, subdim...>& other) {
     (std::get<subdim>(faces_).swap(std::get<subdim>(other.faces_)), ...);
 }
 
 template <int dim, int... subdim>
-inline bool FaceListSuite<dim, subdim...>::sameFVector(
-        const FaceListSuite<dim, subdim...>& other) const {
+inline bool TriangulationFaceStorage<dim, subdim...>::sameFVector(
+        const TriangulationFaceStorage<dim, subdim...>& other) const {
     return ((std::get<subdim>(faces_).size() ==
             std::get<subdim>(other.faces_).size()) && ...);
 }
 
 template <int dim, int... subdim>
 template <int useDim>
-bool FaceListSuite<dim, subdim...>::sameDegreesAt(
-        const FaceListSuite<dim, subdim...>& other) const {
+bool TriangulationFaceStorage<dim, subdim...>::sameDegreesAt(
+        const TriangulationFaceStorage<dim, subdim...>& other) const {
     // We may assume that # faces is the same for both triangulations.
     size_t n = std::get<useDim>(this->faces_).size();
 
@@ -2208,8 +2209,8 @@ bool FaceListSuite<dim, subdim...>::sameDegreesAt(
 
 template <int dim, int... subdim>
 template <int maxDim>
-inline bool FaceListSuite<dim, subdim...>::sameDegreesTo(
-        const FaceListSuite<dim, subdim...>& other) const {
+inline bool TriangulationFaceStorage<dim, subdim...>::sameDegreesTo(
+        const TriangulationFaceStorage<dim, subdim...>& other) const {
     return ((subdim > maxDim || sameDegreesAt<subdim>(other)) && ...);
 }
 
