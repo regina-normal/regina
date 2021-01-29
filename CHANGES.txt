@@ -91,7 +91,8 @@ Version 6.1  [ TODO ]
               temporary (as was recommended) should be unaffected, and the
               Python behaviour of these functions is completely unchanged.
             - Simplified the class hierarchy; EulerCalculator, FaceList and
-              PachnerHelper are now gone.
+              PachnerHelper are now gone, and there are a lot fewer
+              regina::alias classes.
             - FaceListSuite has been renamed to TriangulationFaceStorage.
         Class Triangulation<3>:
             - Overhauled retriangulate() to be faster, more generic, and
