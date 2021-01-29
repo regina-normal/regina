@@ -228,6 +228,49 @@ struct BoundaryHelper {
             const Triangulation<dim-1>* built) {
         BoundaryHelper<dim, subdim-1>::verifyFaces(bc, built);
 
+        // The labelling and ordering of subdim-faces is only guaranteed if no
+        // subdim-face is pinched.  Conversely, if some subdim-face *is*
+        // pinched then that face will appear multiple times in the
+        // triangulated boundary, and so such a labelling / ordering
+        // will be impossible.
+
+        bool hasPinched = false;
+        if constexpr (subdim <= dim - 3) {
+            for (auto f : bc->template faces<subdim>()) {
+                const Triangulation<dim-1-subdim>* link = f->buildLink();
+                size_t realBdry = 0;
+                for (auto sub : link->boundaryComponents())
+                    if (sub->isReal())
+                        ++realBdry;
+                if (realBdry > 1) {
+                    hasPinched = true;
+                    break;
+                }
+            }
+        }
+
+        if (hasPinched) {
+            // The triangulated boundary component should have strictly
+            // more subdim-faces.
+            if (bc->template countFaces<subdim>() >=
+                    built->template countFaces<subdim>()) {
+                std::ostringstream msg;
+                msg << "Boundary component " << bc->index()
+                    << " of triangulation " << bc->triangulation()->label()
+                    << " does not give additional " << subdim << "-faces"
+                    << " when triangulated, even though a face is pinched."
+                    << std::endl;
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Since the labelling / ordering is impossible, there is
+            // nothing more to check.
+            return;
+        }
+
+        // There are no pinched faces; go ahead and verify the full
+        // labelling / ordering.
+
         if (bc->template countFaces<subdim>() !=
                 built->template countFaces<subdim>()) {
             std::ostringstream msg;
