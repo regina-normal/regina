@@ -304,6 +304,66 @@ class BoundaryComponentFaceStorage :
         }
 
         /**
+         * Returns the Euler characteristic of this boundary component.  If
+         * the boundary component consists of a single vertex and nothing else
+         * (e.g., it is an ideal vertex), then the Euler characteristic of
+         * the vertex link will be returned.
+         *
+         * This function is equivalent to triangulating the boundary component
+         * via build() and then calling Triangulation<dim-1>::eulerCharTri()
+         * on the result.
+         *
+         * \warning If the underlying triangulation contains "pinched" faces,
+         * whose links have multiple boundary components, then this routine
+         * will return a well-defined but topologically meaningless result.
+         * Essentially, the problem is that such faces appear only once in the
+         * surrounding triangulation, and are only counted once by this routine;
+         * however, they "should" be counted multiple times as boundary faces
+         * since they can be "seen" from multiple sections of the
+         * (<i>dim</i>-1)-dimensional boundary.  Of course a triangulation
+         * with such faces cannot represent a <i>dim</i>-manifold anyway,
+         * so if you have such faces then you almost certainly have
+         * bigger problems to deal with.
+         *
+         * \warning If this boundary component itself is an ideal triangulation,
+         * then again this routine gives a well-defined but topologically
+         * meaningless result (since it is equivalent to calling eulerCharTri(),
+         * not eulerCharManifold(), on the triangulated boundary).
+         * However, again a triangulation with such boundary components cannot
+         * represent a <i>dim</i>-manifold, and so in such a scenario you
+         * are likely to have bigger problems than this.
+         *
+         * @return the Euler characteristic of this boundary component.
+         */
+        long eulerChar() const {
+            if constexpr (dim == 2) {
+                // There is only one possible answer here.
+                return 0;
+            } else {
+                if (facets().empty()) {
+                    // We need the Euler characteristic of the vertex link.
+                    Vertex<dim>* vertex = std::get<0>(faces_).front();
+                    if constexpr (dim == 3) {
+                        return vertex->linkEulerChar();
+                    } else if constexpr (dim == 4) {
+                        // In dimension 4, the link triangulation is
+                        // already precomputed.
+                        return vertex->buildLink()->eulerCharTri();
+                    } else {
+                        // We should never reach this branch, since
+                        // higher-dimensional triangulations do not
+                        // understand single-vertex boundary components.
+                        return 0;
+                    }
+                } else {
+                    // We have a real boundary component.
+                    return (static_cast<long>(std::get<subdim>(faces_).size()) -
+                        ...);
+                }
+            }
+        }
+
+        /**
          * Determines if this boundary component is real.
          * This is the case if and only if it is formed from one or more
          * (dim-1)-faces.

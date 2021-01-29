@@ -65,6 +65,7 @@ void addBoundaryComponent2(pybind11::module_& m) {
         .def("component", &BoundaryComponent<2>::component,
             pybind11::return_value_policy::reference)
         .def("triangulation", &BoundaryComponent<2>::triangulation)
+        .def("eulerChar", &BoundaryComponent<2>::eulerChar)
         .def("isReal", &BoundaryComponent<2>::isReal)
         .def("isIdeal", &BoundaryComponent<2>::isIdeal)
         .def("isInvalidVertex", &BoundaryComponent<2>::isInvalidVertex)

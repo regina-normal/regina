@@ -27,6 +27,10 @@ Version 6.1  [ TODO ]
               BoundaryComponentStorage, WeakFaceList and WeakFaceListSuite
               are all gone.
             - New compile-time constant dimension.
+            - Dimension 3 is no longer specialised: all dimensions now share
+              the same generic code.
+        Class BoundaryComponent<4>:
+            - Added eulerChar().
         Class Component<dim>:
             - Routines simplices(), boundaryComponents(), faces(), and the
               aliases vertices(), edges(), etc. no longer return a

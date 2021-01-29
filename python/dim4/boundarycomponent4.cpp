@@ -83,6 +83,7 @@ void addBoundaryComponent4(pybind11::module_& m) {
             // any attempt to pass return_value_policy::reference_internal.
             return new regina::Triangulation<3>(*(b->build()));
         })
+        .def("eulerChar", &BoundaryComponent<4>::eulerChar)
         .def("isReal", &BoundaryComponent<4>::isReal)
         .def("isIdeal", &BoundaryComponent<4>::isIdeal)
         .def("isInvalidVertex", &BoundaryComponent<4>::isInvalidVertex)

@@ -3151,7 +3151,6 @@ class REGINA_API Triangulation<3> :
 #include "triangulation/dim3/triangle3.h"
 #include "triangulation/dim3/vertex3.h"
 #include "triangulation/dim3/component3.h"
-#include "triangulation/dim3/boundarycomponent3.h"
 namespace regina {
 
 // Inline functions for Triangulation<3>
