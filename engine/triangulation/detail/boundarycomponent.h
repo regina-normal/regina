@@ -309,29 +309,31 @@ class BoundaryComponentFaceStorage :
          * (e.g., it is an ideal vertex), then the Euler characteristic of
          * the vertex link will be returned.
          *
-         * This function is equivalent to triangulating the boundary component
-         * via build() and then calling Triangulation<dim-1>::eulerCharTri()
-         * on the result.
+         * This function is, in all "normal" cases, equivalent to
+         * triangulating the boundary component via build() and then calling
+         * Triangulation<dim-1>::eulerCharTri() on the result.
          *
-         * \warning If the underlying triangulation contains "pinched" faces,
-         * whose links have multiple boundary components, then this routine
-         * will return a well-defined but topologically meaningless result.
-         * Essentially, the problem is that such faces appear only once in the
-         * surrounding triangulation, and are only counted once by this routine;
-         * however, they "should" be counted multiple times as boundary faces
-         * since they can be "seen" from multiple sections of the
-         * (<i>dim</i>-1)-dimensional boundary.  Of course a triangulation
-         * with such faces cannot represent a <i>dim</i>-manifold anyway,
-         * so if you have such faces then you almost certainly have
-         * bigger problems to deal with.
+         * The exception comes from triangulations with "pinched" faces
+         * whose links have multiple boundary components (e.g., a vertex
+         * whose link is a multiply-punctured sphere, marking a point where
+         * different parts of the boundary are "pinched together").
+         * If there are such faces, then this routine will return a
+         * well-defined but topologically meaningless result.  Essentially,
+         * this routine only counts such faces once, even though they "should"
+         * be counted multiple times on the boundary since they can be "seen"
+         * from distinct sections of the (<i>dim</i>-1)-dimensional boundary.
+         * Of course such a triangulation cannot represent a
+         * <i>dim</i>-manifold anyway, and so if you do have pinched faces
+         * then you almost certainly have bigger problems to deal with.
          *
-         * \warning If this boundary component itself is an ideal triangulation,
-         * then again this routine gives a well-defined but topologically
-         * meaningless result (since it is equivalent to calling eulerCharTri(),
-         * not eulerCharManifold(), on the triangulated boundary).
-         * However, again a triangulation with such boundary components cannot
-         * represent a <i>dim</i>-manifold, and so in such a scenario you
-         * are likely to have bigger problems than this.
+         * \warning If this boundary component itself forms an ideal
+         * (<i>dim</i>-1)-dimensional triangulation, then again this result
+         * is well-defined but topologically meaningless (since it is
+         * equivalent to calling eulerCharTri() and not eulerCharManifold()
+         * on the triangulated boundary).
+         * However, again such boundary components cannot appear in a
+         * <i>dim</i>-manifold, and so if you have such boundary components
+         * then you almost certainly have bigger problems than this.
          *
          * @return the Euler characteristic of this boundary component.
          */
