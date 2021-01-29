@@ -275,60 +275,6 @@ struct FaceCalculator<dim, 0, 2> {
 #endif // __DOXYGEN
 
 /**
- * Internal class used to identify lower-dimensional faces in a boundary
- * component of a triangulation.
- *
- * Specifically, this class identifies and marks all faces of dimensions
- * 1,...,\a subdim within the given boundary facet of a
- * <i>dim</i>-dimensional triangulation.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam subdim the maximum dimension of the faces to identify.
- * This must be between -1 and (\a dim - 3) inclusive.  In the cases where
- * \a subdim = 0 or -1, the identify() routine for this class does nothing.
- */
-template <int dim, int subdim>
-struct BoundaryComponentCalculator {
-    static_assert(1 <= subdim && subdim <= dim - 3,
-        "The generic BoundaryComponentCalculator template can only be used "
-        "for faces of dimension 1 <= subdim <= (dim - 3).");
-
-    /**
-     * Identifies and marks all faces of dimension &le; \a subdim within the
-     * given boundary facet of the given <i>dim</i>-dimensional triangulation.
-     *
-     * This routine pushes all such <i>subdim</i>-faces onto the relevant list
-     * for the given boundary component, and also marks the boundary component
-     * within these <i>subdim</i>-faces themselves.
-     *
-     * @param t the underlying triangulation.
-     * @param bc the boundary component of \a t currently under construction.
-     * @param facet a boundary facet that belongs to \a bc.
-     */
-    static void identify(TriangulationBase<dim>& t,
-            BoundaryComponent<dim>* bc, Face<dim, dim-1>* facet) {
-        t.template calculateBoundaryFaces<subdim>(bc, facet);
-        BoundaryComponentCalculator<dim, subdim - 1>::identify(t, bc, facet);
-    }
-};
-
-#ifndef __DOXYGEN
-
-template <int dim>
-struct BoundaryComponentCalculator<dim, 0> {
-    static void identify(TriangulationBase<dim>&, void*, void*) {
-    }
-};
-
-template <int dim>
-struct BoundaryComponentCalculator<dim, -1> {
-    static void identify(TriangulationBase<dim>&, void*, void*) {
-    }
-};
-
-#endif // __DOXYGEN
-
-/**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
  *
  * Such a triangulation is represented by the class Triangulation<dim>,
@@ -1966,12 +1912,10 @@ class TriangulationBase :
          * This routine identifies and marks all <i>subdim</i>-faces within
          * the given boundary facet.
          *
-         * See calculateRealBoundary() for further details.
+         * It does not handle ridges or facets, so if \a subdim is greater
+         * than <i>dim</i>-3 then this routine just returns immediately.
          *
-         * \tparam subdim the dimension of faces to work with;
-         * this must be between 1 and (<i>dim</i>-3) inclusive.
-         * Vertices (dimension 0) and ridges (dimension <i>dim</i>-2)
-         * are handled separately by different sections of code.
+         * See calculateRealBoundary() for further details.
          */
         template <int subdim>
         void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
@@ -2151,7 +2095,6 @@ class TriangulationBase :
         };
 
     template <int, int, int> friend struct FaceCalculator;
-    template <int, int> friend struct BoundaryComponentCalculator;
     template <int, int...> friend class BoundaryComponentFaceStorage;
     friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
@@ -2409,7 +2352,7 @@ inline size_t TriangulationBase<dim>::countFaces() const {
 template <int dim>
 inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
     ensureSkeleton();
-    return std::apply([this](auto&&... kFaces){
+    return std::apply([this](auto&&... kFaces) {
         return std::vector<size_t>{ kFaces.size()..., size() };
     }, this->faces_);
 }
@@ -2768,8 +2711,8 @@ bool TriangulationBase<dim>::isOriented() const {
 template <int dim>
 inline long TriangulationBase<dim>::eulerCharTri() const {
     ensureSkeleton();
-    return std::apply([this](const auto&... arg) -> long {
-        return (static_cast<long>(arg.size()) - ... - size());
+    return std::apply([this](auto&&... kFaces) {
+        return (static_cast<long>(kFaces.size()) - ... - size());
     }, this->faces_);
 }
 

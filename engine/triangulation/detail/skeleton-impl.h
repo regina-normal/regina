@@ -441,28 +441,13 @@ void TriangulationBase<dim>::calculateRealBoundary() {
             simp = facet->front().simplex();
             facetNum = facet->front().face();
 
-            // Run through all faces of dimensions 0,...,(dim-2) within facet,
+            // Run through all faces of dimensions 0,...,(dim-3) within facet,
             // and include them in this boundary component.
-
-            // Treat the vertices separately, since we can optimise the
-            // vertex number calculations in this case.  However, if dim == 2
-            // then vertices are also ridges, so we handle them later instead.
-            if constexpr (dim >= 3)
-                for (i = 0; i <= dim; ++i)
-                    if (i != facetNum) {
-                        Face<dim, 0>* vertex = simp->vertex(i);
-                        if (vertex->boundaryComponent_ != label) {
-                            vertex->boundaryComponent_ = label;
-                            // If allFaces is false, then a boundary component
-                            // only wants to know about ridges and facets.
-                            if constexpr (BoundaryComponent<dim>::allFaces)
-                                label->push_back(vertex);
-                        }
-                    }
-
-            // Now for faces of dimension 1..(dim-3):
-            BoundaryComponentCalculator<dim, dim - 3>::identify(*this,
-                label, facet);
+            std::apply([=](auto&&... kFaces) {
+                (calculateBoundaryFaces<
+                    std::remove_reference_t<decltype(*kFaces.front())>::
+                    subdimension>(label, facet), ...);
+            }, this->faces_);
 
             // Finally we process the (dim-2)-faces, and also use these to
             // locate adjacent boundary facets.
@@ -534,17 +519,35 @@ template <int dim>
 template <int subdim>
 void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
         Face<dim, dim-1>* facet) {
-    static_assert(1 <= subdim && subdim <= dim - 3,
-        "TriangulationBase::calculateBoundaryFaces() must not be "
-        "used with vertices or ridges.");
-    for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
-        Face<dim, subdim>* f = facet->template face<subdim>(i);
-        if (f->boundaryComponent_ != bc) {
-            f->boundaryComponent_ = bc;
-            // If allFaces is false, then a boundary component only wants
-            // to know about ridges and facets.
-            if constexpr (BoundaryComponent<dim>::allFaces)
-                bc->push_back(f);
+    // We do not process ridges (dim-2) or facets (dim-1).
+    if constexpr (subdim <= dim - 3) {
+        if constexpr (subdim == 0) {
+            // Treat vertices separately, since we can optimise the
+            // vertex number calculations in this case.
+            Simplex<dim>* simp = facet->front().simplex();
+            int facetNum = facet->front().face();
+            for (int i = 0; i <= dim; ++i)
+                if (i != facetNum) {
+                    Vertex<dim>* v = simp->vertex(i);
+                    if (v->boundaryComponent_ != bc) {
+                        v->boundaryComponent_ = bc;
+                        // If allFaces is false, then the boundary component
+                        // only wants to know about ridges and facets.
+                        if constexpr (BoundaryComponent<dim>::allFaces)
+                            bc->push_back(v);
+                    }
+                }
+        } else {
+            for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
+                Face<dim, subdim>* f = facet->template face<subdim>(i);
+                if (f->boundaryComponent_ != bc) {
+                    f->boundaryComponent_ = bc;
+                    // If allFaces is false, then the boundary component only
+                    // wants to know about ridges and facets.
+                    if constexpr (BoundaryComponent<dim>::allFaces)
+                        bc->push_back(f);
+                }
+            }
         }
     }
 }
