@@ -136,7 +136,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // -----------------------------------------------------------------
 
     std::apply([=](auto&&... kFaces) {
-        (calculateSkeletonSubdim<subdimOf<decltype(kFaces)>()>(), ...);
+        (calculateFaces<subdimOf<decltype(kFaces)>()>(), ...);
     }, this->faces_);
 
     // -----------------------------------------------------------------
@@ -148,7 +148,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
 
 template <int dim>
 template <int subdim>
-void TriangulationBase<dim>::calculateSkeletonSubdim() {
+void TriangulationBase<dim>::calculateFaces() {
     // Clear out all subdim-faces of all simplices.
     // These simplex-based arrays will be our markers for what faces
     // have or have not been seen yet.
@@ -288,6 +288,10 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
 
         int start;
         Face<dim, subdim>* f;
+        Simplex<dim> *simp, *adj;
+        int face, adjFace;
+        Perm<dim + 1> adjMap;
+        int exitFacet;
 
         // The queue for our breadth-first search.
         // We can do this using simple arrays - since each subdim-face of each
@@ -319,27 +323,22 @@ void TriangulationBase<dim>::calculateSkeletonSubdim() {
                 queue[0].first = s;
                 queue[0].second = start;
 
-                Simplex<dim> *simp, *adj;
-                int face, adjFace;
-                Perm<dim + 1> adjMap;
-                int facet;
-
                 while (queueStart < queueEnd) {
                     simp = queue[queueStart].first;
                     face = queue[queueStart].second;
                     ++queueStart;
 
-                    for (facet = 0; facet <= dim; ++facet) {
-                        if (Face<dim, subdim>::containsVertex(face, facet))
+                    for (exitFacet = 0; exitFacet <= dim; ++exitFacet) {
+                        if (Face<dim, subdim>::containsVertex(face, exitFacet))
                             continue;
 
-                        adj = simp->adjacentSimplex(facet);
+                        adj = simp->adjacentSimplex(exitFacet);
                         if (adj) {
                             // When we choose an adjacent gluing map, throw in a
                             // swap to preserve the "orientation" of the images
                             // of (subdim+1),...,dim.  Note that this is only
                             // possible if the link of the face is orientable.
-                            adjMap = simp->adjacentGluing(facet) *
+                            adjMap = simp->adjacentGluing(exitFacet) *
                                 std::get<subdim>(simp->mappings_)[face] *
                                 Perm<dim + 1>(dim - 1, dim);
                             adjFace = Face<dim, subdim>::faceNumber(adjMap);

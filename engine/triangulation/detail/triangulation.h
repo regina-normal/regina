@@ -1822,7 +1822,7 @@ class TriangulationBase :
          * This must be between 0 and (\a dim - 1) inclusive.
          */
         template <int subdim>
-        void calculateSkeletonSubdim();
+        void calculateFaces();
 
         /**
          * Internal to calculateSkeleton().
