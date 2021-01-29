@@ -75,6 +75,11 @@ class ListView {
 
     public:
         /**
+         * The type of element that is stored in this list.
+         */
+        typedef typename List::value_type value_type;
+
+        /**
          * The type used for indexing into this list.
          */
         typedef typename List::size_type size_type;

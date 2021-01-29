@@ -57,6 +57,7 @@ Version 6.1  [ TODO ]
             - New lightweight objects for basic read-only access to lists.
         Class MarkedVector:
             - New convenience routine clear_destructive().
+            - New typedef value_type.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really

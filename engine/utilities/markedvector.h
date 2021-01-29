@@ -151,6 +151,7 @@ class MarkedVector : private std::vector<T*> {
         using typename std::vector<T*>::iterator;
         using typename std::vector<T*>::const_iterator;
 
+        using typename std::vector<T*>::value_type;
         using typename std::vector<T*>::size_type;
 
         using std::vector<T*>::begin;
