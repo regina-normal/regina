@@ -50,6 +50,7 @@ class Triangulation2Test : public TriangulationTest<2> {
     CPPUNIT_TEST(orient);
     CPPUNIT_TEST(doubleCover);
     CPPUNIT_TEST(boundaryEdges);
+    CPPUNIT_TEST(boundaryEuler);
     CPPUNIT_TEST(edgeAccess);
     CPPUNIT_TEST(pachner<0>);
     CPPUNIT_TEST(pachner<1>);
@@ -150,6 +151,18 @@ class Triangulation2Test : public TriangulationTest<2> {
 
         void boundaryEdges() {
             testManualAll(verifyBoundaryFacets);
+        }
+
+        void boundaryEuler() {
+            testManualAll([](Triangulation<2>* tri) {
+                for (auto bc : tri->boundaryComponents())
+                    if (bc->eulerChar() != 0) {
+                        std::ostringstream msg;
+                        msg << tri->label() << ": Contains boundary component "
+                            "with non-zero Euler characteristic.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
+            });
         }
 
         template <int k>

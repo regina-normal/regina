@@ -624,6 +624,9 @@ class Triangulation4Test : public TriangulationTest<4> {
 
         void verifyBoundaryEuler(const Triangulation<4>& tri,
                 std::initializer_list<int> expect) {
+            // The argument expect holds the Euler characteristics we would
+            // expect after triangulating the boundary components.
+
             if (tri.countBoundaryComponents() != expect.size()) {
                 std::ostringstream msg;
                 msg << "Triangulation " << tri.label()
@@ -636,24 +639,53 @@ class Triangulation4Test : public TriangulationTest<4> {
             size_t i = 0;
             for (auto eit = expect.begin(); eit != expect.end(); ++i, ++eit) {
                 BoundaryComponent<4>* bc = tri.boundaryComponent(i);
-                long foundEuler = bc->eulerChar();
 
-                if (foundEuler != *eit) {
+                // Do we have any pinched vertices or edges?
+                // If so, these interfere with the Euler characteristic count.
+                long vPinch = 0;
+                long ePinch = 0;
+                if (bc->isReal()) {
+                    for (auto v : bc->vertices())
+                        if (! v->isValid()) {
+                            // Beware: the vertex *link* is a 3-manifold
+                            // triangulation, and could itself have both real
+                            // and ideal boundary components.
+                            long realBdries = 0;
+                            for (auto p : v->buildLink()->boundaryComponents())
+                                if (p->isReal())
+                                    ++realBdries;
+                            if (realBdries > 1)
+                                vPinch += (realBdries - 1);
+                        }
+                    for (auto e : bc->edges())
+                        if (! e->isValid()) {
+                            long punctures = e->buildLink()->
+                                countBoundaryComponents();
+                            if (punctures > 1)
+                                ePinch += (punctures - 1);
+                        }
+                }
+
+                long foundEuler = bc->eulerChar();
+                long triEuler = bc->build()->eulerCharTri();
+
+                if (foundEuler != *eit - vPinch + ePinch) {
                     std::ostringstream msg;
                     msg << "Boundary component " << i
                         << " of triangulation " << tri.label()
                         << " reports Euler characteristic " << foundEuler
-                        << " instead of the expected " << *eit << ".";
+                        << " instead of the expected "
+                        << (*eit - vPinch + ePinch) << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                const Triangulation<3>* bdry = bc->build();
-                if (bdry->eulerCharTri() != *eit) {
+                if (triEuler != *eit) {
                     std::ostringstream msg;
                     msg << "Triangulated boundary component " << i
                         << " of triangulation " << tri.label()
-                        << " has Euler characteristic " << foundEuler
-                        << " instead of the expected " << *eit << ".";
+                        << " has Euler characteristic " << triEuler
+                        << " instead of the expected "
+                        << *eit << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

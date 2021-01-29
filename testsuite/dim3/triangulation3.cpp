@@ -732,6 +732,61 @@ class Triangulation3Test : public TriangulationTest<3> {
                 ! pinchedSolidKB.isStandard());
         }
 
+        void verifyBoundaryEuler(const Triangulation<3>& tri,
+                std::initializer_list<int> expect) {
+            // The argument expect holds the Euler characteristics we would
+            // expect after triangulating the boundary components.
+
+            if (tri.countBoundaryComponents() != expect.size()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label()
+                    << " has " << tri.countBoundaryComponents()
+                    << " boundary components instead of the expected "
+                    << expect.size() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            size_t i = 0;
+            for (auto eit = expect.begin(); eit != expect.end(); ++i, ++eit) {
+                BoundaryComponent<3>* bc = tri.boundaryComponent(i);
+
+                // Do we have any pinched vertices?
+                // If so, these interfere with the Euler characteristic count.
+                long vPinch = 0;
+                if (bc->isReal())
+                    for (auto v : bc->vertices())
+                        if (! v->isValid()) {
+                            long punctures = v->buildLink()->
+                                countBoundaryComponents();
+                            if (punctures > 1)
+                                vPinch += (punctures - 1);
+                        }
+
+                long foundEuler = bc->eulerChar();
+                long triEuler = bc->build()->eulerCharTri();
+
+                if (foundEuler != *eit - vPinch) {
+                    std::ostringstream msg;
+                    msg << "Boundary component " << i
+                        << " of triangulation " << tri.label()
+                        << " reports Euler characteristic " << foundEuler
+                        << " instead of the expected "
+                        << (*eit - vPinch) << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (triEuler != *eit) {
+                    std::ostringstream msg;
+                    msg << "Triangulated boundary component " << i
+                        << " of triangulation " << tri.label()
+                        << " has Euler characteristic " << triEuler
+                        << " instead of the expected "
+                        << *eit << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
         void boundaryComponents() {
             verifyBoundaryCount(empty, 0);
             verifyBoundaryCount(sphere, 0);
@@ -757,27 +812,50 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyBoundaryCount(q20_large, 0);
 
             verifyBoundaryCount(ball, 1);
+            verifyBoundaryEuler(ball, { 2 });
             verifyBoundaryCount(ballBundle, 1);
+            verifyBoundaryEuler(ballBundle, { 0 });
             verifyBoundaryCount(twistedBallBundle, 1);
+            verifyBoundaryEuler(twistedBallBundle, { 0 });
             verifyBoundaryCount(lst3_4_7, 1);
+            verifyBoundaryEuler(lst3_4_7, { 0 });
             verifyBoundaryCount(ball_large, 1);
+            verifyBoundaryEuler(ball_large, { 2 });
             verifyBoundaryCount(ball_large_pillows, 1);
+            verifyBoundaryEuler(ball_large_pillows, { 2 });
             verifyBoundaryCount(ball_large_snapped, 1);
+            verifyBoundaryEuler(ball_large_snapped, { 2 });
             verifyBoundaryCount(singleTet_bary, 1);
+            verifyBoundaryEuler(singleTet_bary, { 2 });
 
             verifyBoundaryCount(figure8, 0, 1);
+            verifyBoundaryEuler(figure8, { 0 });
             verifyBoundaryCount(trefoil, 0, 1);
+            verifyBoundaryEuler(trefoil, { 0 });
             verifyBoundaryCount(knot18, 0, 1);
+            verifyBoundaryEuler(knot18, { 0 });
             verifyBoundaryCount(gieseking, 0, 1);
+            verifyBoundaryEuler(gieseking, { 0 });
             verifyBoundaryCount(twoProjPlaneCusps, 0, 2);
+            verifyBoundaryEuler(twoProjPlaneCusps, { 1, 1 });
             verifyBoundaryCount(cuspedGenusTwoTorus, 0, 1);
+            verifyBoundaryEuler(cuspedGenusTwoTorus, { -2 });
             verifyBoundaryCount(fig8_bary, 0, 1);
+            verifyBoundaryEuler(fig8_bary, { 0 });
 
             verifyBoundaryCount(pinchedSolidTorus, 1, 0);
+            // The boundary triangulates to a sphere, but the pinched
+            // vertex gets duplicated when we triangulate this sphere.
+            verifyBoundaryEuler(pinchedSolidTorus, { 2 });
             verifyBoundaryCount(pinchedSolidKB, 1, 0);
+            // The boundary triangulates to RP2, and the pinched vertex
+            // does not get duplicated in the process.
+            verifyBoundaryEuler(pinchedSolidKB, { 1 });
 
             verifyBoundaryCount(disjoint2, 0, 2);
+            verifyBoundaryEuler(disjoint2, { 0, -2 });
             verifyBoundaryCount(disjoint3, 1, 1);
+            verifyBoundaryEuler(disjoint3, { 2, 0 });
         }
 
         void verifyVertexCount(Triangulation<3>& tri, unsigned nVertices,
