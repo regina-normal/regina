@@ -492,6 +492,10 @@ class BoundaryComponentFaceStorage :
          * corresponding faces of this boundary component, and so that their
          * vertices are numbered in a corresponding way.
          *
+         * If there are any \e pinched <i>useDim</i>-faces in this
+         * boundary component (so they appear multiple times when the
+         * boundary is triangulated), then this routine will do nothing.
+         *
          * \pre This is a real boundary component.
          * \pre \a tri is a triangulation of this boundary component.
          * \pre For each \a i, the <i>i</i>th top-dimensional simplex of
@@ -519,6 +523,13 @@ class BoundaryComponentFaceStorage :
             } else {
                 if (std::get<useDim>(faces_).empty())
                     return; // Should never happen.
+
+                // Check for pinched faces: if these are present then
+                // the situation is hopeless, since such faces are
+                // effectively duplicated when we triangulate the boundary,
+                // and so the numbers of faces do not match.
+                if (countFaces<useDim>() != tri->template countFaces<useDim>())
+                    return;
 
                 // Build a map from (useDim-face indices in the d-dim triang
                 // that owns this boundary component) to (useDim-faces in tri).
@@ -569,6 +580,12 @@ class BoundaryComponentFaceStorage :
          * corresponding faces of this boundary component, and so that their
          * vertices are numbered in a corresponding way.
          * This affects all faces of dimensions 0,...,(<i>dim</i>-2).
+         *
+         * If there are any \e pinched <i>k</i>-faces in this
+         * boundary component (so they appear multiple times when the
+         * boundary is triangulated), then this routine will not reorder
+         * and relabel the <i>k</i>-faces (but it will still reorder and
+         * relabel faces of other dimensions).
          *
          * \pre This is a real boundary component.
          * \pre \a tri is a triangulation of this boundary component.
@@ -906,7 +923,12 @@ class BoundaryComponentBase :
          *   correspondence holds for these lower-dimensional faces also:
          *   for each \a i, <i>k</i>-face \a i of the returned triangulation is
          *   a copy of <tt>face<k>(i)</tt> of this boundary component,
-         *   and its vertices are numbered in the same way.
+         *   and its vertices are numbered in the same way.  As an exception,
+         *   this correspondence will not hold for dimensions \a k where
+         *   there exist \e pinched <i>k</i>-faces on the boundary (i.e.,
+         *   faces where different sections of the boundary are pinched
+         *   together, meaning that these faces must be duplicated when the
+         *   boundary is triangulated).
          *
          * If this boundary component consists only of a single vertex
          * (i.e., this is an ideal or invalid vertex boundary component),
