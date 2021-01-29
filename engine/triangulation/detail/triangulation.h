@@ -191,90 +191,6 @@ class TriangulationFaceStorage {
 };
 
 /**
- * Internal class used to calculate lower-dimensional faces in a
- * triangulation.
- *
- * Specifically, this class is used to calculate all faces of dimension
- * &le; \a subdim in a <i>dim</i>-dimensional triangulation.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam subdim the maximum dimension of the faces to compute.
- * \tparam codim the minimum codimension of the faces to compute; this
- * must be equal to \a dim - \a subdim.  It is offered as a separate
- * parameter so that this template class can be independently specialised
- * on both \a subdim and \a codim.
- */
-template <int dim, int subdim, int codim>
-struct FaceCalculator {
-    static_assert(dim == subdim + codim,
-        "FaceCalculator template arguments violate subdim + codim = dim.");
-    static_assert(codim > 2 && subdim > 0,
-        "The generic FaceCalculator template cannot be used for "
-        "small face dimension or codimension.");
-    /**
-     * Calculates all faces of dimension &le; \a subdim in the given
-     * triangulation.
-     *
-     * @param t the triangulation whose faces should be calculated.
-     */
-    static void calculate(TriangulationBase<dim>& t) {
-        t.template calculateSkeletonSubdim<subdim>();
-        FaceCalculator<dim, subdim - 1, codim + 1>::calculate(t);
-    }
-};
-
-#ifndef __DOXYGEN
-
-template <int dim, int subdim>
-struct FaceCalculator<dim, subdim, 1> {
-    static_assert(dim == subdim + 1,
-        "FaceCalculator specialisation violates subdim + codim = dim.");
-    static_assert(subdim > 0,
-        "FaceCalculator<dim, subdim, 1> specialisation cannot be used "
-        "with subdim = 0.");
-    static void calculate(TriangulationBase<dim>& t) {
-        t.calculateSkeletonCodim1();
-        FaceCalculator<dim, subdim - 1, 2>::calculate(t);
-    }
-};
-
-template <int dim, int subdim>
-struct FaceCalculator<dim, subdim, 2> {
-    static_assert(dim == subdim + 2,
-        "FaceCalculator specialisation violates subdim + codim = dim.");
-    static_assert(subdim > 0,
-        "FaceCalculator<dim, subdim, 2> specialisation cannot be used "
-        "with subdim = 0.");
-    static void calculate(TriangulationBase<dim>& t) {
-        t.calculateSkeletonCodim2();
-        FaceCalculator<dim, subdim - 1, 3>::calculate(t);
-    }
-};
-
-template <int dim, int codim>
-struct FaceCalculator<dim, 0, codim> {
-    static_assert(dim == codim,
-        "FaceCalculator specialisation violates subdim + codim = dim.");
-    static_assert(codim > 2,
-        "FaceCalculator<dim, 0, codim> specialisation cannot be used "
-        "with codim <= 2.");
-    static void calculate(TriangulationBase<dim>& t) {
-        t.template calculateSkeletonSubdim<0>();
-    }
-};
-
-template <int dim>
-struct FaceCalculator<dim, 0, 2> {
-    static_assert(dim == 2,
-        "FaceCalculator specialisation violates subdim + codim = dim.");
-    static void calculate(TriangulationBase<dim>& t) {
-        t.calculateSkeletonCodim2();
-    }
-};
-
-#endif // __DOXYGEN
-
-/**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
  *
  * Such a triangulation is represented by the class Triangulation<dim>,
@@ -310,6 +226,35 @@ class TriangulationBase :
         static constexpr int dimension = dim;
             /**< A compile-time constant that gives the dimension of the
                  triangulation. */
+
+    protected:
+        /**
+         * A compile-time constant function that returns the facial dimension
+         * corresponding to an element of the \a faces_ tuple.
+         *
+         * This is to assist code that calls std::apply() on \a faces,
+         * since functions in TriangulationBase have easy access to the
+         * tuple type but not the corresponding integer parameter pack
+         * of face dimensions.
+         *
+         * If \a f is an element of \a faces, possibly with reference
+         * qualifiers, then the corresponding face dimension is:
+         *
+         * \code{.cpp}
+         * subdimOf<decltype(f)>()
+         * \endcode
+         *
+         * \tparam TupleElement the type of one of the members of \a faces,
+         * or a reference to such a type.
+         * @return the face dimension corresponding to \a TupleElement;
+         * this will be an integer between 0 and (<i>dim</i>-1) inclusive.
+         */
+        template <typename TupleElement>
+        static constexpr int subdimOf() {
+            return std::remove_pointer_t<
+                    typename std::remove_reference_t<TupleElement>::value_type
+                >::subdimension;
+        }
 
     protected:
         MarkedVector<Simplex<dim>> simplices_;
@@ -1869,30 +1814,12 @@ class TriangulationBase :
         /**
          * Internal to calculateSkeleton().
          *
-         * This routine calculates all codimension-1-faces.
-         *
-         * See calculateSkeleton() for further details.
-         */
-        void calculateSkeletonCodim1();
-
-        /**
-         * Internal to calculateSkeleton().
-         *
-         * This routine calculates all codimension-2-faces.
-         *
-         * See calculateSkeleton() for further details.
-         */
-        void calculateSkeletonCodim2();
-
-        /**
-         * Internal to calculateSkeleton().
-         *
          * This routine calculates all <i>subdim</i>-faces.
          *
          * See calculateSkeleton() for further details.
          *
          * \tparam subdim the dimension of the faces to compute.
-         * This must be between 0 and (\a dim - 3) inclusive.
+         * This must be between 0 and (\a dim - 1) inclusive.
          */
         template <int subdim>
         void calculateSkeletonSubdim();
@@ -1913,7 +1840,7 @@ class TriangulationBase :
          * the given boundary facet.
          *
          * It does not handle ridges or facets, so if \a subdim is greater
-         * than <i>dim</i>-3 then this routine just returns immediately.
+         * than <i>dim</i>-3 then this routine does nothing.
          *
          * See calculateRealBoundary() for further details.
          */
@@ -2094,7 +2021,6 @@ class TriangulationBase :
                 ~TopologyLock();
         };
 
-    template <int, int, int> friend struct FaceCalculator;
     template <int, int...> friend class BoundaryComponentFaceStorage;
     friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
