@@ -30,32 +30,66 @@
  *                                                                        *
  **************************************************************************/
 
-/**
- * This file allows all tests from this directory to be added to
- * the overall test runner, without requiring any further inclusion
- * of headers that define the specific corresponding test fixtures.
- *
- * The routines declared below (which should add tests to the given
- * test runner) should be implemented in this directory and then called
- * from the top-level test suite directory.
- */
+#include <sstream>
+#include <cppunit/extensions/HelperMacros.h>
+#include "maths/binom.h"
+#include "testsuite/maths/testmaths.h"
 
-#include <cppunit/ui/text/TestRunner.h>
+using regina::binomSmall;
+using regina::binomMedium;
+using regina::binomConst;
 
-void addBinomial(CppUnit::TextUi::TestRunner& runner);
-void addCyclotomic(CppUnit::TextUi::TestRunner& runner);
-void addMatrixOps(CppUnit::TextUi::TestRunner& runner);
-void addInteger(CppUnit::TextUi::TestRunner& runner);
-void addLaurent(CppUnit::TextUi::TestRunner& runner);
-void addLaurent2(CppUnit::TextUi::TestRunner& runner);
-void addPerm(CppUnit::TextUi::TestRunner& runner);
-void addPerm2(CppUnit::TextUi::TestRunner& runner);
-void addPerm3(CppUnit::TextUi::TestRunner& runner);
-void addPerm4(CppUnit::TextUi::TestRunner& runner);
-void addPerm5(CppUnit::TextUi::TestRunner& runner);
-void addPolynomial(CppUnit::TextUi::TestRunner& runner);
-void addPrimes(CppUnit::TextUi::TestRunner& runner);
-void addRational(CppUnit::TextUi::TestRunner& runner);
-void addNumberTheory(CppUnit::TextUi::TestRunner& runner);
-void addPermConv(CppUnit::TextUi::TestRunner& runner);
+class BinomialTest : public CppUnit::TestFixture {
+    CPPUNIT_TEST_SUITE(BinomialTest);
+
+    CPPUNIT_TEST(consistency);
+    CPPUNIT_TEST(relations);
+
+    CPPUNIT_TEST_SUITE_END();
+
+    private:
+        static constexpr int maxSmall = 16;
+        static constexpr int maxMedium = 29;
+
+    public:
+        void setUp() {
+        }
+
+        void tearDown() {
+        }
+
+        void consistency() {
+            int n, k;
+            for (n = 0; n <= maxSmall; ++n)
+                for (k = 0; k <= n; ++k) {
+                    CPPUNIT_ASSERT_EQUAL(
+                        static_cast<long>(binomSmall(n, k)),
+                        binomMedium(n, k));
+                }
+            for (n = 0; n <= maxMedium; ++n)
+                for (k = 0; k <= n; ++k) {
+                    CPPUNIT_ASSERT_EQUAL(binomMedium(n, k), binomConst(n, k));
+                }
+        }
+
+        void relations() {
+            int n, k;
+            for (n = 0; n <= maxMedium; ++n) {
+                CPPUNIT_ASSERT_EQUAL(binomMedium(n, 0), long(1));
+                CPPUNIT_ASSERT_EQUAL(binomMedium(n, n), long(1));
+                if (n > 0) {
+                    CPPUNIT_ASSERT_EQUAL(binomMedium(n, 1), long(n));
+                    CPPUNIT_ASSERT_EQUAL(binomMedium(n, n-1), long(n));
+
+                    for (k = 1; k < n; ++k)
+                        CPPUNIT_ASSERT_EQUAL(binomMedium(n, k),
+                            binomMedium(n-1, k-1) + binomMedium(n-1, k));
+                }
+            }
+        }
+};
+
+void addBinomial(CppUnit::TextUi::TestRunner& runner) {
+    runner.addTest(BinomialTest::suite());
+}
 

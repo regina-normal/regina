@@ -116,6 +116,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
     sets.insert(std::make_pair("bitmask", &addBitmask));
 
     // Maths:
+    sets.insert(std::make_pair("binomial", &addBinomial));
     sets.insert(std::make_pair("integer", &addInteger));
     sets.insert(std::make_pair("rational", &addRational));
     sets.insert(std::make_pair("perm2", &addPerm2));

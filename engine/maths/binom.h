@@ -49,15 +49,36 @@ namespace regina {
  */
 
 /**
+ * Compile-time access to the binomial coefficient \a n choose \a k.
+ *
+ * Unlike binomSmall(), this routine is not constant-time (since it computes
+ * coefficients using a linear-time recursion, not by table lookup).
+ *
+ * The main advantage of this routine is that it is constexpr, which
+ * means you can use it to define compile-time constants.
+ *
+ * The constraint \a n &le; 29 is designed to avoid overflow, since all
+ * intermediate results are guaranteed to stay below 2^31.
+ *
+ * \warning If you wish to compute binomial coefficients at runtime,
+ * you should use binomSmall() or binomMedium() instead.
+ *
+ * \ifacespython Not present; use binomSmall() or binomMedium() instead.
+ *
+ * @param n the parameter \a n in (\a n choose \a k); this must be
+ * between 0 and 29 inclusive.
+ * @param k the parameter \a k in (\a n choose \a k); this must be
+ * between 0 and \a n inclusive.
+ * @return the binomial coefficient \a n choose \a k.
+ */
+constexpr long binomConst(int n, int k);
+
+/**
  * Returns the binomial coefficient \a n choose \a k in constant time
  * for small arguments (\a n &le; 16).
  *
  * This routine is very fast, since it uses a constant-time lookup.
  * The trade-off is that it can only be used for \a n &le; 16.
- *
- * If you need a compile-time constant, you should use the constant
- * FaceNumbering<n-1, k-1>::nFaces instead.  This function is provided for
- * situations where \a n and/or \a k are not known until runtime.
  *
  * \note The constraint \a n &le; 16 is large enough for working with
  * triangulations in Regina, since Regina restricts its triangulations to
@@ -111,6 +132,14 @@ REGINA_API extern const int* const binomSmall_[17];
 } // namespace regina::detail
 
 // Inline functions
+
+inline constexpr long binomConst(int n, int k) {
+    return (
+        (k == 0 || k == n) ? 1 :
+        (k == 1 || k == n - 1) ? n :
+        ((binomConst(n - 1, k - 1) * n) / k)
+    );
+}
 
 inline int binomSmall(int n, int k) {
     return detail::binomSmall_[n][k];
