@@ -153,7 +153,13 @@ template <int dim>
 class SimplexBase :
         public MarkedElement,
         public Output<SimplexBase<dim>>,
+#ifdef __DOXYGEN
+        // Doxygen doesn't understand ExpandSequence.
+        // The syntax here is not valid C++ but for doxygen it's just fine.
+        public SimplexFaces<dim, 0, 1, ..., dim - 1>,
+#else
         public ExpandSequence<SimplexFaces, dim>,
+#endif
         public alias::FaceOfSimplex<SimplexBase<dim>, dim> {
     static_assert(dim >= 2, "Simplex requires dimension >= 2.");
 

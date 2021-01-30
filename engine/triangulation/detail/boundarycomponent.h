@@ -845,9 +845,15 @@ class BoundaryComponentFaceStorage<dim, dim - 1> {
 template <int dim>
 class BoundaryComponentBase :
         public Output<BoundaryComponentBase<dim>>,
+#ifdef __DOXYGEN
+        // Doxygen doesn't understand std::conditional_t or ExpandSequence.
+        // The syntax here is not valid C++ but for doxygen it's just fine.
+        public BoundaryComponentFaceStorage<dim, 0, 1, ..., dim - 1>,
+#else
         public std::conditional_t<standardDim(dim),
             ExpandSequence<BoundaryComponentFaceStorage, dim> /* all faces */,
             BoundaryComponentFaceStorage<dim, dim - 1> /* only facets */>,
+#endif
         public MarkedElement {
     public:
         static constexpr int dimension = dim;

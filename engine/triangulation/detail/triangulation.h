@@ -215,7 +215,13 @@ class TriangulationFaceStorage {
  */
 template <int dim>
 class TriangulationBase :
+#ifdef __DOXYGEN
+        // Doxygen doesn't understand ExpandSequence.
+        // The syntax here is not valid C++ but for doxygen it's just fine.
+        public TriangulationFaceStorage<dim, 0, 1, ..., dim - 1>,
+#else
         public ExpandSequence<TriangulationFaceStorage, dim>,
+#endif
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
