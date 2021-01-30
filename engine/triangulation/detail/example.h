@@ -156,7 +156,7 @@ class ExampleFromLowDim<dim, false> {
  * This must be between 2 and 15 inclusive.
  */
 template <int dim>
-class ExampleBase : public ExampleFromLowDim<dim, (dim > 2)> {
+class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
     static_assert(dim >= 2, "Example requires dimension >= 2.");
 
     public:
