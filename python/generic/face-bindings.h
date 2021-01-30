@@ -219,6 +219,15 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def_static("containsVertex", &Face<dim, subdim>::containsVertex)
         // We cannot take the addresses of the following properties, so we
         // define getter functions instead.
+        .def_property_readonly_static("nFaces", [](pybind11::object) {
+            return Face<dim, subdim>::nFaces;
+        })
+        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
+            return Face<dim, subdim>::lexNumbering;
+        })
+        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
+            return Face<dim, subdim>::oppositeDim;
+        })
         .def_property_readonly_static("dimension", [](pybind11::object) {
             return Face<dim, subdim>::dimension;
         })

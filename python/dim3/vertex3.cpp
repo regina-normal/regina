@@ -105,6 +105,15 @@ void addVertex3(pybind11::module_& m) {
         .def_static("containsVertex", &Vertex<3>::containsVertex)
         // We cannot take the addresses of the following properties, so we
         // define getter functions instead.
+        .def_property_readonly_static("nFaces", [](pybind11::object) {
+            return Vertex<3>::nFaces;
+        })
+        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
+            return Vertex<3>::lexNumbering;
+        })
+        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
+            return Vertex<3>::oppositeDim;
+        })
         .def_property_readonly_static("dimension", [](pybind11::object) {
             return Vertex<3>::dimension;
         })

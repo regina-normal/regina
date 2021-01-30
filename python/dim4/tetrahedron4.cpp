@@ -98,6 +98,15 @@ void addTetrahedron4(pybind11::module_& m) {
         .def_static("containsVertex", &Tetrahedron<4>::containsVertex)
         // We cannot take the addresses of the following properties, so we
         // define getter functions instead.
+        .def_property_readonly_static("nFaces", [](pybind11::object) {
+            return Tetrahedron<4>::nFaces;
+        })
+        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
+            return Tetrahedron<4>::lexNumbering;
+        })
+        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
+            return Tetrahedron<4>::oppositeDim;
+        })
         .def_property_readonly_static("dimension", [](pybind11::object) {
             return Tetrahedron<4>::dimension;
         })
