@@ -16,6 +16,9 @@ Version 6.1  [ TODO ]
         - Regina no longer needs boost to build. It still ships the
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
+        - Major simplifications to the triangulation template class hierarchies.
+          A consequence is that the API docs are much more usable, since
+          doxygen can finally understand the code again.
     ENGINE:
         Class BoundaryComponent<dim>:
             - Routines faces(), facets(), and the aliases vertices(), edges(),
