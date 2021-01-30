@@ -51,8 +51,7 @@
 
 using namespace boost::python;
 
-namespace regina {
-namespace python {
+namespace regina::python {
 
 // from_python conversion of python objects implementing PEP 357 to integer
 // type T. Calling the c'tor will register the conversion with boost::python.
@@ -204,7 +203,7 @@ struct register_int_from_py_index {
     }
 };
 
-} } // namespace regina::python
+} // namespace regina::python
 
 void addRegisterIntFromPyIndex() {
     regina::python::register_int_from_py_index<size_t>(m);

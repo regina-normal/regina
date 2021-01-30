@@ -34,8 +34,7 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 
-namespace regina {
-namespace python {
+namespace regina::python {
 
 /**
  * A helper class used to enforce return value policies for member functions
@@ -287,5 +286,5 @@ Perm<permSize> faceMapping(const T& t, int subdimArg, int f) {
         t, subdimArg, f);
 }
 
-} } // namespace regina::python
+} // namespace regina::python
 

@@ -36,8 +36,7 @@
 
 #include <type_traits>
 
-namespace regina {
-namespace python {
+namespace regina::python {
 
 /**
  * Indicates the different ways in which the equality (==) and inequality (!=)
@@ -248,4 +247,4 @@ inline void no_eq_operators(pybind11::class_<C, options...>& c) {
 
 #endif // __DOXYGEN
 
-} } // namespace regina::python
+} // namespace regina::python

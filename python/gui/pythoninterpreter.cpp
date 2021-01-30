@@ -84,8 +84,7 @@
  * operating system, we simply choose to ignore the problem.
  */
 
-namespace regina {
-namespace python {
+namespace regina::python {
 
 static PyCompilerFlags pyCompFlags = { PyCF_DONT_IMPLY_DEDENT };
 
@@ -670,4 +669,4 @@ bool PrefixCompleter::addCompletion(const std::string& s) {
     return ! prefix_.empty();
 }
 
-} } // namespace regina::python
+} // namespace regina::python
