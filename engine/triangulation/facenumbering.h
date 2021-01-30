@@ -94,8 +94,7 @@ namespace regina {
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
-class FaceNumbering : public detail::FaceNumberingImpl<
-        dim, subdim, ((dim + 1) >= 2 * (subdim + 1))> {
+class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
 };
 
 /**

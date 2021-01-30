@@ -53,6 +53,9 @@ Version 6.1  [ TODO ]
             - Simplified the class hierarchy; FaceOrientability,
               FaceValidity and FaceListHolder are now gone.
             - New compile-time constants dimension and subdimension.
+        Class FaceNumbering<dim, subdim>:
+            - New class constants lexNumbering and oppositeDim.
+            - Simplified the underlying web of template specialisations.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class MarkedVector:
