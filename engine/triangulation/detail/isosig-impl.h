@@ -347,7 +347,7 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
 template <int dim>
 std::string TriangulationBase<dim>::isoSigv0(ComponentIterator& it,
         Isomorphism<dim>** relabelling,
-        Isomorphism<dim>* currRelabelling) const { 
+        Isomorphism<dim>*& currRelabelling) const { 
     auto triangulation = *it;
     std::string ans;
     for (int simp = 0; simp < triangulation->size(); ++simp) {
@@ -372,7 +372,7 @@ std::string TriangulationBase<dim>::isoSigv0(ComponentIterator& it,
 template <int dim>
 std::string TriangulationBase<dim>::isoSigv1(ComponentIterator& it, 
         Isomorphism<dim>** relabelling, 
-        Isomorphism<dim>* currRelabelling) const {
+        Isomorphism<dim>*& currRelabelling) const {
     auto triangulation = *it;
     std::vector<SimplexInfo<dim>> properties;
     /**
@@ -382,7 +382,7 @@ std::string TriangulationBase<dim>::isoSigv1(ComponentIterator& it,
      */
     for (int i = 0; i < triangulation->size(); i++) {
         Simplex<dim>* tetrahedra = triangulation->simplex(i);
-        properties.emplace_back(SimplexInfo<dim>(tetrahedra, i, triangulation->size()));
+        properties.push_back(SimplexInfo<dim>(tetrahedra, i, triangulation->size()));
     }
     /**
      * Creates an ordering of simplices through sorting
@@ -480,7 +480,7 @@ std::string TriangulationBase<dim>::isoSig(
         // Different versions of isoSig
         if constexpr (version == 0) {
             comp[i] = isoSigv0(it, relabelling, currRelabelling);
-        } else if constexpr (version == 1 && dim < 8) {
+        } else if constexpr (version == 1) {
             comp[i] = isoSigv1(it, relabelling, currRelabelling);
         } else { //Default to version 0
             comp[i] = isoSigv0(it, relabelling, currRelabelling);

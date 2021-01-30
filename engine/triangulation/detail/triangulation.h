@@ -1786,7 +1786,7 @@ class TriangulationBase :
          * from fromIsoSig(), as described above.
          * @return the isomorphism signature of this triangulation.
          */
-        template <int version = 0>
+        template <int version = 1>
         std::string isoSig(Isomorphism<dim>** relabelling = 0) const;
 
         /**
@@ -2057,7 +2057,7 @@ class TriangulationBase :
          */
         std::string isoSigv0(ComponentIterator& it,
                 Isomorphism<dim>** relabelling, 
-                Isomorphism<dim>* currRelabelling) const;
+                Isomorphism<dim>*& currRelabelling) const;
 
         /**
          * An internal version of isoSig()
@@ -2081,7 +2081,7 @@ class TriangulationBase :
          */
         std::string isoSigv1(ComponentIterator& it,
                 Isomorphism<dim>** relabelling, 
-                Isomorphism<dim>* currRelabelling) const;             
+                Isomorphism<dim>*& currRelabelling) const;             
 
         /**
          * Internal to isoSig().

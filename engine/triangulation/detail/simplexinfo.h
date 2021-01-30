@@ -44,7 +44,8 @@
 #include <algorithm>
 
 namespace regina {
-
+namespace detail {
+#ifndef __DOXYGEN
 /**
  * Internal class that stores combinatorial information of a single simplex
  * in a triangulation and utilises it for comparisons.
@@ -68,19 +69,6 @@ class SimplexInfo {
         std::vector<std::vector<int>> simplexAnnotations;
 
         /**
-         * Compares two vectors to see which one is ranked higher. The higher
-         * ranked vector is defined as the vector which its lowest index value
-         * is greater then the other is less then the vector it is comparing
-         * against.
-         *
-         * @param v1 the first vector compared.
-         * @param v2 the second vector compared.
-         * @return \c true if and only if v2 is ranked higher then v1 otherwise
-         * returns false.
-         */
-        static bool compArr(const std::vector<int>& v1, const std::vector<int>& v2);
-
-        /**
          * Compares two vertices to check which one is ranked higher. The higher
          * ranked vertex is the vertex with higher ranked vector in vertexAnnotations
          * with lower subdimensional faces. 
@@ -93,34 +81,18 @@ class SimplexInfo {
         bool compVertex(int i, int j);
 
         /**
-         * Compares two simplices to check which one is ranked higher. The higher
-         * ranked simplex is simplex with the higher ranked simplexAnnotations in 
-         * the lower subdimensional faces.
-         *
-         * \tparam subdim the dimension of the faces to utilise in comparison
-         * 
-         * @param other the simplex compared against
-         * @return \c true if and only if the current simplex is ranked higher than
-         * the other simplex
-         */
-        template <int subdim>
-        bool compareSimplex(const SimplexInfo & other);
-
-        /**
          * Calling addVertexAnnotation with <i>subdim<i> adds vertex annotations for all vertices
          * for the dimension <i>subdim<i>. Vertex annotations of a specific subdimension for
          * a specific vertex are the degrees of all faces containing that vertex of that 
          * dimension in sorted format.
          * 
          * \tparam subdim the dimension of the faces to utilise in comparison
-         * \tparam numbering the face dimesnion value to add
-         * \tparam vertexCount the vertex number used to add annotation on
          * 
          * @param simplex The simplex used for annotations
          * @param size The size of the original triangulation
          * @param annotations The annotations for that specific subdimension
          */    
-        template <int subdim, int numbering = 0, int vertexCount = 0>
+        template <int subdim>
         void addVertexAnnotation(Simplex<dim>* simplex, int size, std::vector<std::vector<int>>& annotations);
 
         /**
@@ -135,7 +107,7 @@ class SimplexInfo {
          * @param size The size of the original triangulation
          * @param annotations The annotations for that specific subdimension
          */         
-        template <int subdim, int numbering = 0>
+        template <int subdim>
         void addSimplexAnnotation(Simplex<dim>* simplex, int size, std::vector<int>& annotations);   
 
         /**
@@ -161,6 +133,16 @@ class SimplexInfo {
             return label;
         }
 
+        void debug_print() const {
+            for(int subdim = 0; subdim < simplexAnnotations.size(); subdim++) {
+                std::cout << subdim << std::endl;
+                for (int i = 0; i < simplexAnnotations[subdim].size(); i++) {
+                    std::cout << simplexAnnotations[subdim][i] << " ";
+                }
+                std::cout << std::endl;
+            }            
+        }
+
         /**
          * Gets all permutations of vertices for a given simplex where each
          * vertex label in the comparison is ranked equal or higher then
@@ -177,20 +159,25 @@ class SimplexInfo {
          * @return \c true if and only if all combinatorial data of both
          * simplices are the same. Otherwise returns false.
          */
-        bool operator ==(const SimplexInfo & other);
+        bool operator ==(const SimplexInfo<dim> & other) const;
 
         /**
-         * Compares two simplices and checks if one is ranked higher
-         *
-         * @param other The simplex compared against
-         * @return \c true if and only if the simplex compared against is
-         * ranked higher. Otherwise returns false.
-         */        
-        bool operator <(SimplexInfo & other);
+         * Compares two simplices to check which one is ranked higher. The higher
+         * ranked simplex is simplex with the higher ranked simplexAnnotations in 
+         * the lower subdimensional faces.
+         * 
+         * @param other the simplex compared against
+         * @return \c true if and only if the current simplex is ranked higher than
+         * the other simplex
+         */      
+        bool operator <(const SimplexInfo<dim> & other) const;
 
         /**
          * Preprocesses combinatorial data for usage in further operations.
          * Constructor for the class.
+         * 
+         * Adds vertex and simplex annotations for all subdimensions of
+         * the given simplex and stores for usage in comparisons.
          *
          * @param simplex The simplex used for annotations
          * @param size The size of the original triangulation
@@ -198,7 +185,7 @@ class SimplexInfo {
          */
         SimplexInfo(Simplex<dim>* simplex, int simplexNum, int size);     
 };
-
-} // namespace regina
+#endif
+} } // namespace regina::detail
 
 #endif
