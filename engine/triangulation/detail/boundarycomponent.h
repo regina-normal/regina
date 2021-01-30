@@ -214,6 +214,9 @@ class BoundaryComponentFaceStorage :
          * Therefore it is best to treat this object as temporary only,
          * and to call faces() again each time you need it.
          *
+         * This routine is only available where \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
          * \ifacespython Python users should call this function in the
          * form <tt>faces(useDim)</tt>.  It will then return a Python list
          * containing all the <i>useDim</i>-faces of the boundary component.
@@ -326,6 +329,9 @@ class BoundaryComponentFaceStorage :
          * <i>dim</i>-manifold anyway, and so if you do have pinched faces
          * then you almost certainly have bigger problems to deal with.
          *
+         * This routine is only available where \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
          * \warning If this boundary component itself forms an ideal
          * (<i>dim</i>-1)-dimensional triangulation, then again this result
          * is well-defined but topologically meaningless (since it is
@@ -375,7 +381,7 @@ class BoundaryComponentFaceStorage :
          *
          * This routine is only available where \a dim is
          * one of Regina's \ref stddim "standard dimensions".
-         * (In other dimensions, real boundary components are the only
+         * (In higher dimensions, real boundary components are the only
          * types of boundary component that Regina will recognise.)
          *
          * @return \c true if and only if this boundary component is real.
@@ -402,6 +408,8 @@ class BoundaryComponentFaceStorage :
          *
          * This routine is only available where \a dim is
          * one of Regina's \ref stddim "standard dimensions".
+         * (In higher dimensions, Regina does not recognise ideal
+         * boundary components at all.)
          *
          * @return \c true if and only if this boundary component is ideal.
          */
@@ -435,6 +443,8 @@ class BoundaryComponentFaceStorage :
          *
          * This routine is only available where \a dim is
          * one of Regina's \ref stddim "standard dimensions".
+         * (In higher dimensions, Regina does not recognise invalid vertex
+         * boundary components at all.)
          *
          * @return \c true if and only if this boundary component consists of a
          * single invalid vertex and nothing else.

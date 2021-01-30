@@ -237,7 +237,7 @@ class TriangulationBase :
          * tuple type but not the corresponding integer parameter pack
          * of face dimensions.
          *
-         * If \a f is an element of \a faces, possibly with reference
+         * If \a f is an element of \a faces_, possibly with reference
          * qualifiers, then the corresponding face dimension is:
          *
          * \code{.cpp}
