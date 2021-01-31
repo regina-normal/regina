@@ -45,7 +45,10 @@ void addDiscType(pybind11::module_& m) {
         .def(pybind11::self < pybind11::self)
         .def_readwrite("tetIndex", &DiscType::tetIndex)
         .def_readwrite("type", &DiscType::type)
-        .def_readonly_static("NONE", &DiscType::NONE)
+        // We don't use the C++ NONE constant here because it is deprecated.
+        .def_property_readonly_static("NONE", [](pybind11::object) {
+            return DiscType();
+        })
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);
