@@ -85,6 +85,17 @@ def surfaceStats(tri):
 	dumpSurfaces('Fundamental surfaces (closed quad-oct)',
 		regina.NormalSurfaces.enumerate(tri, regina.NS_AN_QUAD_OCT_CLOSED, regina.NS_FUNDAMENTAL))
 
+# Start with the tables of constants for disc types.
+print(quadSeparating)
+print(quadMeeting)
+print(quadDefn)
+print(quadPartner)
+print(quadString)
+print(triDiscArcs)
+print(quadDiscArcs)
+print(octDiscArcs)
+print()
+
 t = regina.Triangulation3()
 t.setLabel("Empty triangulation")
 surfaceStats(t)
