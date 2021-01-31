@@ -33,48 +33,22 @@
 
 from __future__ import print_function
 
-for i in range(6):
-    p = Face5_0.ordering(i)
-    print(i, p, Face5_0.faceNumber(p))
-print()
-for i in range(15):
-    p = Face5_1.ordering(i)
-    print(i, p, Face5_1.faceNumber(p))
-print()
-for i in range(20):
-    p = Face5_2.ordering(i)
-    print(i, p, Face5_2.faceNumber(p))
-print()
-for i in range(15):
-    p = Face5_3.ordering(i)
-    print(i, p, Face5_3.faceNumber(p))
-print()
-for i in range(6):
-    p = Face5_4.ordering(i)
-    print(i, p, Face5_4.faceNumber(p))
-print()
+def testFaceClass(c):
+    for i in range(c.nFaces):
+        p = c.ordering(i)
+        print(i, p, c.faceNumber(p))
+    print()
 
-for i in range(7):
-    p = Face6_0.ordering(i)
-    print(i, p, Face6_0.faceNumber(p))
-print()
-for i in range(21):
-    p = Face6_1.ordering(i)
-    print(i, p, Face6_1.faceNumber(p))
-print()
-for i in range(35):
-    p = Face6_2.ordering(i)
-    print(i, p, Face6_2.faceNumber(p))
-print()
-for i in range(35):
-    p = Face6_3.ordering(i)
-    print(i, p, Face6_3.faceNumber(p))
-print()
-for i in range(21):
-    p = Face6_4.ordering(i)
-    print(i, p, Face6_4.faceNumber(p))
-print()
-for i in range(7):
-    p = Face6_5.ordering(i)
-    print(i, p, Face6_5.faceNumber(p))
-print()
+testFaceClass(Face5_0)
+testFaceClass(Face5_1)
+testFaceClass(Face5_2)
+testFaceClass(Face5_3)
+testFaceClass(Face5_4)
+
+testFaceClass(Face6_0)
+testFaceClass(Face6_1)
+testFaceClass(Face6_2)
+testFaceClass(Face6_3)
+testFaceClass(Face6_4)
+testFaceClass(Face6_5)
+
