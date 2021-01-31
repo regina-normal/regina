@@ -198,21 +198,29 @@ class REGINA_API Perm<4> {
          * Indicates the native unsigned integer type used to store a
          * first-generation permutation code.
          *
-         * Although types \a Code and \a Code2 are identical, they are
+         * Although types \a Code1 and \a Code2 are identical, they are
          * provided as separate typedefs to help communicate in your
          * source code which type of code is being used.
          */
-        typedef uint8_t Code;
+        typedef uint8_t Code1;
 
         /**
          * Indicates the native unsigned integer type used to store a
          * second-generation permutation code.
          *
-         * Although types \a Code and \a Code2 are identical, they are
+         * Although types \a Code1 and \a Code2 are identical, they are
          * provided as separate typedefs to help communicate in your
          * source code which type of code is being used.
          */
         typedef uint8_t Code2;
+
+        /**
+         * An alias for the first-generation code type Code1.
+         *
+         * Instead of Code, you should use either Code1 or Code2 to more
+         * clearly express which kind of permutation code you are using.
+         */
+        typedef Code1 Code [[deprecated]];
 
         /**
          * Gives array-like access to all possible permutations of
@@ -451,7 +459,7 @@ class REGINA_API Perm<4> {
          *
          * @return the first-generation permutation code.
          */
-        constexpr Code permCode() const;
+        constexpr Code1 permCode() const;
 
         /**
          * Returns the second-generation code representing this permutation.
@@ -481,7 +489,7 @@ class REGINA_API Perm<4> {
          * @param code the first-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(Code code);
+        void setPermCode(Code1 code);
 
         /**
          * Sets this permutation to that represented by the given
@@ -512,7 +520,7 @@ class REGINA_API Perm<4> {
          * @param code the first-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static constexpr Perm<4> fromPermCode(Code code);
+        static constexpr Perm<4> fromPermCode(Code1 code);
 
         /**
          * Creates a permutation from the given second-generation
@@ -542,7 +550,7 @@ class REGINA_API Perm<4> {
          * @return \c true if and only if the given code is a valid
          * first-generation permutation code.
          */
-        static constexpr bool isPermCode(Code code);
+        static constexpr bool isPermCode(Code1 code);
 
         /**
          * Determines whether the given character is a valid second-generation
@@ -1061,8 +1069,8 @@ inline constexpr Perm<4>::Perm(const int* image) :
         image[0], image[1], image[2], image[3]))) {
 }
 
-inline constexpr Perm<4>::Code Perm<4>::permCode() const {
-    return static_cast<Code>(
+inline constexpr Perm<4>::Code1 Perm<4>::permCode() const {
+    return static_cast<Code1>(
         imageTable[code_][0] |
         (imageTable[code_][1] << 2) |
         (imageTable[code_][2] << 4) |
@@ -1073,7 +1081,7 @@ inline constexpr Perm<4>::Code2 Perm<4>::permCode2() const {
     return code_;
 }
 
-inline void Perm<4>::setPermCode(Code code) {
+inline void Perm<4>::setPermCode(Code1 code) {
     code_ = static_cast<Code2>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
@@ -1085,7 +1093,7 @@ inline void Perm<4>::setPermCode2(Code2 code) {
     code_ = code;
 }
 
-inline constexpr Perm<4> Perm<4>::fromPermCode(Code code) {
+inline constexpr Perm<4> Perm<4>::fromPermCode(Code1 code) {
     return Perm<4>(static_cast<Code2>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
@@ -1097,7 +1105,7 @@ inline constexpr Perm<4> Perm<4>::fromPermCode2(Code2 code) {
     return Perm<4>(code);
 }
 
-inline constexpr bool Perm<4>::isPermCode(Code code) {
+inline constexpr bool Perm<4>::isPermCode(Code1 code) {
     unsigned mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));

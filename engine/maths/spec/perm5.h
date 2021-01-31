@@ -234,13 +234,21 @@ class REGINA_API Perm<5> {
          * Indicates the native unsigned integer type used to store a
          * first-generation permutation code.
          */
-        typedef uint16_t Code;
+        typedef uint16_t Code1;
 
         /**
          * Indicates the native unsigned integer type used to store a
          * second-generation permutation code.
          */
         typedef uint8_t Code2;
+
+        /**
+         * An alias for the first-generation code type Code1.
+         *
+         * Instead of Code, you should use either Code1 or Code2 to more
+         * clearly express which kind of permutation code you are using.
+         */
+        typedef Code1 Code [[deprecated]];
 
         /**
          * Gives array-like access to all possible permutations of
@@ -524,7 +532,7 @@ class REGINA_API Perm<5> {
          *
          * @return the first-generation permutation code.
          */
-        constexpr Code permCode() const;
+        constexpr Code1 permCode() const;
 
         /**
          * Returns the second-generation code representing this permutation.
@@ -554,7 +562,7 @@ class REGINA_API Perm<5> {
          * @param code the first-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(Code code);
+        void setPermCode(Code1 code);
 
         /**
          * Sets this permutation to that represented by the given
@@ -585,7 +593,7 @@ class REGINA_API Perm<5> {
          * @param code the first-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static constexpr Perm<5> fromPermCode(Code code);
+        static constexpr Perm<5> fromPermCode(Code1 code);
 
         /**
          * Creates a permutation from the given second-generation
@@ -615,7 +623,7 @@ class REGINA_API Perm<5> {
          * @return \c true if and only if the given code is a valid
          * first-generation permutation code.
          */
-        static constexpr bool isPermCode(Code code);
+        static constexpr bool isPermCode(Code1 code);
 
         /**
          * Determines whether the given character is a valid second-generation
@@ -1177,7 +1185,7 @@ class REGINA_API Perm<5> {
          * Contains the S5 indices of the elements of S4, where the
          * element 4 maps to itself.
          */
-        static constexpr Code S4Table[24] = {
+        static constexpr Code2 S4Table[24] = {
             0, 3, 8, 7, 12, 15, 26, 25, 30, 33, 38, 37,
             48, 51, 56, 55, 60, 63, 74, 73, 78, 81, 86, 85
         };
@@ -1186,7 +1194,7 @@ class REGINA_API Perm<5> {
          * Contains the S5 indices of the elements of S3, where the
          * elements 3 and 4 map to themselves.
          */
-        static constexpr Code S3Table[6] = { 0, 7, 30, 25, 48, 55 };
+        static constexpr Code2 S3Table[6] = { 0, 7, 30, 25, 48, 55 };
 
     private:
         /**
@@ -1295,8 +1303,8 @@ inline constexpr Perm<5>::Perm(const int* image) :
             image[0], image[1], image[2], image[3], image[4]))) {
 }
 
-inline constexpr Perm<5>::Code Perm<5>::permCode() const {
-    return static_cast<Code>(
+inline constexpr Perm<5>::Code1 Perm<5>::permCode() const {
+    return static_cast<Code1>(
         imageTable[code2_][0] |
         (imageTable[code2_][1] << 3) |
         (imageTable[code2_][2] << 6) |
@@ -1308,7 +1316,7 @@ inline constexpr Perm<5>::Code2 Perm<5>::permCode2() const {
     return code2_;
 }
 
-inline void Perm<5>::setPermCode(Code code) {
+inline void Perm<5>::setPermCode(Code1 code) {
     code2_ = static_cast<Code2>(S5Index(
         code & 0x07,
         (code >> 3) & 0x07,
@@ -1321,7 +1329,7 @@ inline void Perm<5>::setPermCode2(Code2 code) {
     code2_ = code;
 }
 
-inline constexpr Perm<5> Perm<5>::fromPermCode(Code code) {
+inline constexpr Perm<5> Perm<5>::fromPermCode(Code1 code) {
     return Perm<5>(static_cast<Code2>(S5Index(
         code & 0x07,
         (code >> 3) & 0x07,
@@ -1334,7 +1342,7 @@ inline constexpr Perm<5> Perm<5>::fromPermCode2(Code2 code) {
     return Perm<5>(code);
 }
 
-inline constexpr bool Perm<5>::isPermCode(Code code) {
+inline constexpr bool Perm<5>::isPermCode(Code1 code) {
     unsigned mask = 0;
     for (int i = 0; i < 5; i++)
         mask |= (1 << ((code >> (3 * i)) & 7));

@@ -78,6 +78,8 @@ Version 6.1  [ TODO ]
             - Added a new typedef Code2; this is identical to Code, but
               it allows you to express more clearly in your source code
               which generation of code is being used.
+            - Renamed Code to Code1, to clearly indicate that this is an old
+              code type; the old typedef Code is still present but deprecated.
         Class Perm<5>:
             - All of the changes listed for Perm<n> above.
             - Changed the internal representation; as a result there are new
@@ -85,6 +87,8 @@ Version 6.1  [ TODO ]
               isPermCode2(), and a new type Code2.  The old first-generation
               codes (used by permCode(), fromPermCode(), setPermCode() and
               isPermCode()) are slower to work with, and should be avoided.
+            - Renamed Code to Code1, to clearly indicate that this is an old
+              code type; the old typedef Code is still present but deprecated.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
         Class Simplex<dim>:

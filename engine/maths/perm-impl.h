@@ -112,7 +112,7 @@ inline void Perm<3>::clear(unsigned from) {
 
 template <>
 inline constexpr Perm<4> Perm<4>::extend(Perm<2> p) {
-    return Perm<4>(static_cast<Code>(p.permCode() == 0 ? 0 : 7));
+    return Perm<4>(static_cast<Code2>(p.permCode() == 0 ? 0 : 7));
 }
 
 template <>
@@ -138,7 +138,7 @@ inline void Perm<4>::clear(unsigned from) {
 
 template <>
 inline constexpr Perm<5> Perm<5>::extend(Perm<2> p) {
-    return Perm<5>(static_cast<Code>(p.permCode() == 0 ? 0 : 25));
+    return Perm<5>(static_cast<Code2>(p.permCode() == 0 ? 0 : 25));
 }
 
 template <>

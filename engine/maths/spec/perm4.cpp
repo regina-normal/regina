@@ -41,7 +41,7 @@ Perm<4>::Perm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1) {
     image[b0] = b1;
     image[c0] = c1;
     image[d0] = d1;
-    code_ = static_cast<Code>(S4Index(image[0], image[1], image[2], image[3]));
+    code_ = static_cast<Code2>(S4Index(image[0], image[1], image[2], image[3]));
 }
 
 Perm<4>::Perm(const int* a, const int* b) {
@@ -50,7 +50,7 @@ Perm<4>::Perm(const int* a, const int* b) {
     image[a[1]] = b[1];
     image[a[2]] = b[2];
     image[a[3]] = b[3];
-    code_ = static_cast<Code>(S4Index(image[0], image[1], image[2], image[3]));
+    code_ = static_cast<Code2>(S4Index(image[0], image[1], image[2], image[3]));
 }
 
 std::string Perm<4>::str() const {
