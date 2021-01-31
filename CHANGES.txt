@@ -173,6 +173,9 @@ Version 6.1  [ TODO ]
               backward compatible: you must now use foo[i][j], not foo(i,j).
               Python users are unaffected.
     PYTHON:
+        - All face embedding classes now have a __repr__() for easier printing.
+          This means, for instance, that print(face.embeddings()) is now useful.
+        - Likewise, BoolSet and DiscType now have __repr__().
         - Wrapped Perm<n>::SnIndex() for n=2,3,4,5; this alias has been present
           in C++ for a long time but was somehow never wrapped in Python.
     USER INTERFACES:
