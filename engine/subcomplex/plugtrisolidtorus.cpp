@@ -37,12 +37,6 @@
 
 namespace regina {
 
-const int PlugTriSolidTorus::CHAIN_NONE = 0;
-const int PlugTriSolidTorus::CHAIN_MAJOR = 1;
-const int PlugTriSolidTorus::CHAIN_MINOR = 3;
-const int PlugTriSolidTorus::EQUATOR_MAJOR = 1;
-const int PlugTriSolidTorus::EQUATOR_MINOR = 3;
-
 PlugTriSolidTorus::~PlugTriSolidTorus() {
     if (core_)
         delete core_;

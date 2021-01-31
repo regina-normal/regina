@@ -20,6 +20,8 @@ Version 6.1  [ TODO ]
           A consequence is that the API docs are much more usable, since
           doxygen can finally understand the code again.
     ENGINE:
+        Class AugTriSolidTorus:
+            - Class constants are now constexpr.
         Class BoolSet:
             - Almost everything in this class is now constexpr.
             - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
@@ -65,6 +67,8 @@ Version 6.1  [ TODO ]
         Class FaceNumbering<dim, subdim>:
             - New class constants lexNumbering and oppositeDim.
             - Simplified the underlying web of template specialisations.
+        Class FileInfo:
+            - Class constant TYPE_XML is now constexpr.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class MarkedVector:
@@ -97,6 +101,10 @@ Version 6.1  [ TODO ]
               code type; the old typedef Code is still present but deprecated.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
+        Class PlugTriSolidTorus:
+            - Class constants are now constexpr.
+        Class SimpleSurfaceBundle:
+            - Class constants are now constexpr.
         Class Simplex<dim>:
             - Simplified the class hierarchy; SimplexFaces and
               SimplexFacesSuite are now merged.
@@ -129,6 +137,8 @@ Version 6.1  [ TODO ]
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.
+        Class TrivialTri:
+            - Class constants are now constexpr.
         Class XMLCallback:
             - The state constants have now been rolled into a State enum type.
         Function allowsNonOrientableLinks(), allowsInvalidFaces():

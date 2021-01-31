@@ -40,10 +40,6 @@
 
 namespace regina {
 
-const int AugTriSolidTorus::CHAIN_NONE = 0;
-const int AugTriSolidTorus::CHAIN_MAJOR = 1;
-const int AugTriSolidTorus::CHAIN_AXIS = 2;
-
 AugTriSolidTorus::~AugTriSolidTorus() {
     if (core_)
         delete core_;
