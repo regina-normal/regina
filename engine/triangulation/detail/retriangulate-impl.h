@@ -74,10 +74,9 @@ namespace regina::detail {
  *   <tt>static void propagateFrom<T>(sig, max, retriangulator)</tt>,
  *   as described below;
  *
- * - a function <tt>static const char* progressStage()</tt>, which returns
- *   the human-readable description of the processing stage that will be set
- *   up in the progress tracker (but note that when Regina moves to C++17,
- *   this will become an inline static std::string constant);
+ * - a static constexpr member <tt>const char* progressStage</tt>, which
+ *   returns the human-readable description of the processing stage that
+ *   will be set up in the progress tracker;
  *
  * - a function <tt>static std::string sig(const Object&)</tt>, which
  *   returns the text signature that is used to identify a triangulation
@@ -554,7 +553,7 @@ bool enumerateDetail(const Object& obj, int height, unsigned nThreads,
         ProgressTrackerOpen* tracker,
         RetriangulateActionFunc<Object, withSig>&& action) {
     if (tracker)
-        tracker->newStage(RetriangulateParams<Object>::progressStage());
+        tracker->newStage(RetriangulateParams<Object>::progressStage);
 
     if (! RetriangulateParams<Object>::satisfiesPreconditions(obj)) {
         if (tracker)
