@@ -72,7 +72,9 @@ namespace regina {
  * edge \a i together (and will therefore also keep the vertices of edge
  * \a 5-i together).
  */
-REGINA_API extern const int quadSeparating[4][4];
+inline constexpr int quadSeparating[4][4] = {
+    { -1, 0, 1, 2 }, {  0,-1, 2, 1 }, {  1, 2,-1, 0 }, {  2, 1, 0,-1 }
+};
 
 /**
  * Lists which quadrilateral types meet which edges in a tetrahedron.
@@ -83,7 +85,12 @@ REGINA_API extern const int quadSeparating[4][4];
  * quadrilateral types that meet the edge joining tetrahedron vertices
  * <tt>i</tt> and <tt>j</tt>.
  */
-REGINA_API extern const int quadMeeting[4][4][2];
+inline constexpr int quadMeeting[4][4][2] = {
+    { {-1,-1}, { 1, 2}, { 0, 2}, { 0, 1} },
+    { { 1, 2}, {-1,-1}, { 0, 1}, { 0, 2} },
+    { { 0, 2}, { 0, 1}, {-1,-1}, { 1, 2} },
+    { { 0, 1}, { 0, 2}, { 1, 2}, {-1,-1} }
+};
 
 /**
  * Lists which vertices each quadrilateral type separates in a tetrahedron.
@@ -105,7 +112,9 @@ REGINA_API extern const int quadMeeting[4][4][2];
  * this will give the same results for \a j = 0 and 1, but it might
  * switch the results for \a j = 2 and 3.
  */
-REGINA_API extern const int quadDefn[3][4];
+inline constexpr int quadDefn[3][4] = {
+    { 0, 1, 2, 3 }, { 0, 2, 1, 3 }, { 0, 3, 1, 2 }
+};
 
 /**
  * Lists the second vertex with which each vertex is paired under each
@@ -116,7 +125,9 @@ REGINA_API extern const int quadDefn[3][4];
  * Quadrilateral type \c i pairs vertex \c v with
  * vertex <tt>quadPartner[i][v]</tt>.
  */
-REGINA_API extern const int quadPartner[3][4];
+inline constexpr int quadPartner[3][4] = {
+    { 1, 0, 3, 2}, { 2, 3, 0, 1}, { 3, 2, 1, 0}
+};
 
 /**
  * Contains strings that can be used to represent each quadrilateral type
@@ -128,7 +139,7 @@ REGINA_API extern const int quadPartner[3][4];
  * is of the form <tt>02/13</tt>, which in this case is the quadrilateral type
  * that splits vertices 0,2 from vertices 1,3.
  */
-REGINA_API extern const char quadString[3][6];
+inline constexpr char quadString[3][6] = { "01/23", "02/13", "03/12" };
 
 /**
  * Lists in consecutive order the directed normal arcs that form the
@@ -141,17 +152,13 @@ REGINA_API extern const char quadString[3][6];
  * for further details.
  *
  * Note that every permutation in this array is even.
- *
- * \ifacescpp This array is replaced by a macro
- * <tt>triDiscArcs(discType, arcIndex)</tt> that essentially looks up
- * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
-#ifdef __DOXYGEN
-REGINA_API extern const Perm<4> triDiscArcs[4][3];
-#else
-REGINA_API extern const Perm<4> __triDiscArcs[12];
-#define triDiscArcs(i, j) __triDiscArcs[(3 * (i)) + (j)]
-#endif
+inline constexpr Perm<4> triDiscArcs[4][3] = {
+    Perm<4>(0,1,2,3), Perm<4>(0,2,3,1), Perm<4>(0,3,1,2),
+    Perm<4>(1,0,3,2), Perm<4>(1,3,2,0), Perm<4>(1,2,0,3),
+    Perm<4>(2,3,0,1), Perm<4>(2,0,1,3), Perm<4>(2,1,3,0),
+    Perm<4>(3,2,1,0), Perm<4>(3,1,0,2), Perm<4>(3,0,2,1)
+};
 
 /**
  * Lists in consecutive order the directed normal arcs that form the
@@ -165,17 +172,12 @@ REGINA_API extern const Perm<4> __triDiscArcs[12];
  *
  * Note that permutation <tt>quadDiscArcs[i][j]</tt> will be even
  * precisely when <tt>j</tt> is even.
- *
- * \ifacescpp This array is replaced by a macro
- * <tt>quadDiscArcs(discType, arcIndex)</tt> that essentially looks up
- * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
-#ifdef __DOXYGEN
-REGINA_API extern const Perm<4> quadDiscArcs[3][4];
-#else
-REGINA_API extern const Perm<4> __quadDiscArcs[12];
-#define quadDiscArcs(i, j) __quadDiscArcs[(4 * (i)) + (j)]
-#endif
+inline constexpr Perm<4> quadDiscArcs[3][4] = {
+    Perm<4>(0,2,3,1), Perm<4>(3,0,1,2), Perm<4>(1,3,2,0), Perm<4>(2,1,0,3),
+    Perm<4>(0,3,1,2), Perm<4>(1,0,2,3), Perm<4>(2,1,3,0), Perm<4>(3,2,0,1),
+    Perm<4>(0,1,2,3), Perm<4>(2,0,3,1), Perm<4>(3,2,1,0), Perm<4>(1,3,0,2)
+};
 
 /**
  * Lists in consecutive order the directed normal arcs that form the
@@ -189,17 +191,15 @@ REGINA_API extern const Perm<4> __quadDiscArcs[12];
  *
  * Note that permutation <tt>octDiscArcs[i][j]</tt> will be even
  * precisely when <tt>j</tt> is 0, 1, 4 or 5.
- *
- * \ifacescpp This array is replaced by a macro
- * <tt>octDiscArcs(discType, arcIndex)</tt> that essentially looks up
- * the corresponding array.  This is necessary because of a bug in gcc 2.95.
  */
-#ifdef __DOXYGEN
-REGINA_API extern const Perm<4> octDiscArcs[3][8];
-#else
-REGINA_API extern const Perm<4> __octDiscArcs[24];
-#define octDiscArcs(i, j) __octDiscArcs[(8 * (i)) + (j)]
-#endif
+inline constexpr Perm<4> octDiscArcs[3][8] = {
+    Perm<4>(0,3,1,2), Perm<4>(0,1,2,3), Perm<4>(2,0,3,1), Perm<4>(2,3,1,0),
+    Perm<4>(1,2,0,3), Perm<4>(1,0,3,2), Perm<4>(3,1,2,0), Perm<4>(3,2,0,1),
+    Perm<4>(0,1,2,3), Perm<4>(0,2,3,1), Perm<4>(3,0,1,2), Perm<4>(3,1,2,0),
+    Perm<4>(2,3,0,1), Perm<4>(2,0,1,3), Perm<4>(1,2,3,0), Perm<4>(1,3,0,2),
+    Perm<4>(0,2,3,1), Perm<4>(0,3,1,2), Perm<4>(1,0,2,3), Perm<4>(1,2,3,0),
+    Perm<4>(3,1,0,2), Perm<4>(3,0,2,1), Perm<4>(2,3,1,0), Perm<4>(2,1,0,3)
+};
 
 template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;

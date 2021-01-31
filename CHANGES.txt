@@ -153,6 +153,15 @@ Version 6.1  [ TODO ]
         Function binomConst():
             - New alternative to binomMedium() that is slower, but has
               the advantage of being able to generate compile-time constants.
+        Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
+                quadString:
+            - These are all now inline constexpr.
+        Global arrays triDiscArcs, quadDiscArcs, octDiscArcs:
+            - These are all now inline constexpr.
+            - For C++ users, these are no longer macros; instead they are
+              once again genuine 2-D arrays.  Unfortunately this change is not
+              backward compatible: you must now use foo[i][j], not foo(i,j).
+              Python users are unaffected.
     PYTHON:
         - Wrapped Perm<n>::SnIndex() for n=2,3,4,5; this alias has been present
           in C++ for a long time but was somehow never wrapped in Python.

@@ -54,25 +54,25 @@ bool discOrientationFollowsEdge(int discType, int vertex, int edgeStart,
 
     if (discType < 4) {
         for (int i = 0; i < 3; i++) {
-            if (triDiscArcs(discType, i) == forwards)
+            if (triDiscArcs[discType][i] == forwards)
                 return true;
-            if (triDiscArcs(discType, i) == reverse)
+            if (triDiscArcs[discType][i] == reverse)
                 return false;
         }
     }
     else if (discType < 7) {
         for (int i = 0; i < 4; i++) {
-            if (quadDiscArcs(discType - 4, i) == forwards)
+            if (quadDiscArcs[discType - 4][i] == forwards)
                 return true;
-            if (quadDiscArcs(discType - 4, i) == reverse)
+            if (quadDiscArcs[discType - 4][i] == reverse)
                 return false;
         }
     }
     else {
         for (int i = 0; i < 8; i++) {
-            if (octDiscArcs(discType - 7, i) == forwards)
+            if (octDiscArcs[discType - 7][i] == forwards)
                 return true;
-            if (octDiscArcs(discType - 7, i) == reverse)
+            if (octDiscArcs[discType - 7][i] == reverse)
                 return false;
         }
     }
