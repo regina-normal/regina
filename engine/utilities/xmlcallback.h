@@ -61,15 +61,19 @@ namespace regina {
  */
 class REGINA_API XMLCallback : public regina::xml::XMLParserCallback {
     public:
-        static const int WAITING;
-            /**< Signifies that the top-level XML element has not yet been
-                 seen. */
-        static const int WORKING;
-            /**< Signifies that XML elements are currently being processed. */
-        static const int DONE;
-            /**< Signifies that processing of all XML elements has finished. */
-        static const int ABORTED;
-            /**< Signifies that XML processing was aborted. */
+        /**
+         * Used to indicate the state of a callback object.
+         */
+        enum State {
+            WAITING = 1,
+                /**< The top-level XML element has not yet been seen. */
+            WORKING = 2,
+                /**< XML elements are currently being processed. */
+            DONE = 3,
+                /**< Processing of all XML elements has finished. */
+            ABORTED = 4
+                /**< XML processing was aborted. */
+        };
 
     private:
         XMLElementReader& topReader;
@@ -85,7 +89,7 @@ class REGINA_API XMLCallback : public regina::xml::XMLParserCallback {
             /**< \c true if and only if we have not yet finished
                  receiving initial characters for the current deepest-level
                  XML element. */
-        int state_;
+        State state_;
             /**< The current state of this callback object; this will be
                  one of the state constants defined in this class. */
 
@@ -115,7 +119,7 @@ class REGINA_API XMLCallback : public regina::xml::XMLParserCallback {
          *
          * @return the current state of this callback object.
          */
-        int state() const;
+        State state() const;
 
         /**
          * Aborts processing of the XML file completely.  The XMLParser
@@ -165,7 +169,7 @@ inline XMLElementReader* XMLCallback::currentReader() {
     return (readers.empty() ? &topReader : readers.top());
 }
 
-inline int XMLCallback::state() const {
+inline XMLCallback::State XMLCallback::state() const {
     return state_;
 }
 

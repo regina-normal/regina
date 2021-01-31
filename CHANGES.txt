@@ -118,6 +118,8 @@ Version 6.1  [ TODO ]
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.
+        Class XMLCallback:
+            - The state constants have now been rolled into a State enum type.
         Function allowsNonOrientableLinks(), allowsInvalidFaces():
             - Removed these global functions (which were never available in
               python). Use Face<dim, subdim>::allowsNonOrientableLinks
