@@ -37,12 +37,6 @@
 
 namespace regina {
 
-const char SnapPeaCensusTri::SEC_5 = 'm';
-const char SnapPeaCensusTri::SEC_6_OR = 's';
-const char SnapPeaCensusTri::SEC_6_NOR = 'x';
-const char SnapPeaCensusTri::SEC_7_OR = 'v';
-const char SnapPeaCensusTri::SEC_7_NOR = 'y';
-
 SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
         const Component<3>* comp) {
     // Currently this routine can recognise SnapPea triangulations

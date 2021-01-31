@@ -101,6 +101,8 @@ Version 6.1  [ TODO ]
             - Simplified the class hierarchy; SimplexFaces and
               SimplexFacesSuite are now merged.
             - New compile-time constants dimension and subdimension.
+        Class SnapPeaCensusManifold, SnapPeaCensusTri:
+            - Class constants for the census sections are now constexpr.
         Class SurfaceFilterProperties:
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.

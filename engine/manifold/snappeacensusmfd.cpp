@@ -51,12 +51,6 @@ namespace {
     }
 }
 
-const char SnapPeaCensusManifold::SEC_5 = 'm';
-const char SnapPeaCensusManifold::SEC_6_OR = 's';
-const char SnapPeaCensusManifold::SEC_6_NOR = 'x';
-const char SnapPeaCensusManifold::SEC_7_OR = 'v';
-const char SnapPeaCensusManifold::SEC_7_NOR = 'y';
-
 Triangulation<3>* SnapPeaCensusManifold::construct() const {
     Triangulation<3>* ans = 0;
 
