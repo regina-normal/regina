@@ -588,8 +588,7 @@ void TriangulationBase<dim>::swapBaseProperties(TriangulationBase<dim>& other) {
     // Properties stored using std::... containers or MarkedVector:
     components_.swap(other.components_);
     boundaryComponents_.swap(other.boundaryComponents_);
-
-    this->swapFaces(other);
+    this->faces_.swap(other.faces_);
 
     // Properties stored using the Property<...> class template:
     fundGroup_.swap(other.fundGroup_);

@@ -131,14 +131,6 @@ class TriangulationFaceStorage {
          */
         void deleteFaces();
         /**
-         * Swaps all faces of all dimensions with those of the given
-         * triangulation.
-         *
-         * @param other the face storage for the triangulation whose
-         * faces are to be swapped with this.
-         */
-        void swapFaces(TriangulationFaceStorage& other);
-        /**
          * Tests whether this and the given triangulation have the same
          * number of <i>k</i>-faces, for each facial dimension \a k.
          *
@@ -2036,12 +2028,6 @@ class TriangulationBase :
 template <int dim, int... subdim>
 inline void TriangulationFaceStorage<dim, subdim...>::deleteFaces() {
     (std::get<subdim>(faces_).clear_destructive(), ...);
-}
-
-template <int dim, int... subdim>
-inline void TriangulationFaceStorage<dim, subdim...>::swapFaces(
-        TriangulationFaceStorage<dim, subdim...>& other) {
-    (std::get<subdim>(faces_).swap(std::get<subdim>(other.faces_)), ...);
 }
 
 template <int dim, int... subdim>

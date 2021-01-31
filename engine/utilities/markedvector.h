@@ -139,7 +139,8 @@ class REGINA_API MarkedElement {
  * Since an object can only belong to one MarkedVector at a time, this
  * class does not offer a copy constructor or copy assignment.  Instead it
  * supports a move constructor and move assignment, as well as a swap()
- * function, all of which preserve this constraint.
+ * member function and a global swap() function, all of which preserve this
+ * constraint.
  *
  * \pre The type \a T is a class derived from MarkedElement.
  *
@@ -259,6 +260,8 @@ class MarkedVector : private std::vector<T*> {
         /**
          * Swaps the contents of this and the given vector.
          *
+         * This behaves correctly if \other is this vector.
+         *
          * @param other the vector whose contents are to be swapped with this.
          */
         inline void swap(MarkedVector<T>& other) {
@@ -320,12 +323,28 @@ class MarkedVector : private std::vector<T*> {
         MarkedVector& operator = (const MarkedVector&) = delete;
 };
 
+/**
+ * Swaps the contents of the given vectors.
+ *
+ * This behaves correctly if \a and \a b are the same vector.
+ *
+ * @param a the first vector whose contents should be swapped.
+ * @param b the second vector whose contents should be swapped.
+ */
+template <typename T>
+void swap(MarkedVector<T>& a, MarkedVector<T>& b);
+
 /*@}*/
 
 // Inline functions for MarkedElement
 
 inline size_t MarkedElement::markedIndex() const {
     return marking_;
+}
+
+template <typename T>
+inline void swap(MarkedVector<T>& a, MarkedVector<T>& b) {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -83,6 +83,7 @@ Version 6.1  [ TODO ]
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.
+            - New global swap() routine, which will be used by std::swap().
         Class NormalInfo<...>:
             - Routine name() is now constexpr.
         Class PacketInfo<...>:
