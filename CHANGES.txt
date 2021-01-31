@@ -69,6 +69,8 @@ Version 6.1  [ TODO ]
             - Simplified the underlying web of template specialisations.
         Class FileInfo:
             - Class constant TYPE_XML is now constexpr.
+        Class GluingPermSearcher<dim> and subclasses:
+            - Several class constants are now constexpr.
         Class Link:
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.

@@ -37,11 +37,6 @@
 
 namespace regina {
 
-const char HyperbolicMinSearcher::ECLASS_TWISTED = 1;
-const char HyperbolicMinSearcher::ECLASS_LOWDEG = 2;
-
-const char HyperbolicMinSearcher::dataTag_ = 'h';
-
 HyperbolicMinSearcher::HyperbolicMinSearcher(const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,
         GluingPermSearcher<3>::Use use, void* useArgs) :

@@ -417,7 +417,7 @@ class REGINA_API GluingPermSearcher<4> : public GluingPerms<4> {
         };
 
     public:
-        static const char dataTag_;
+        static constexpr char dataTag_ = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 

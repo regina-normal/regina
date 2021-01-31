@@ -124,7 +124,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
          */
         typedef void (*Use)(const GluingPermSearcher<3>*, void*);
 
-        static const char dataTag_;
+        static constexpr char dataTag_ = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -627,10 +627,10 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
  */
 class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
     protected:
-        static const char VLINK_CLOSED;
+        static constexpr char VLINK_CLOSED = 1;
             /**< Signifies that a vertex link has been closed off (i.e.,
                  the link has no remaining boundary edges). */
-        static const char VLINK_BAD_EULER;
+        static constexpr char VLINK_BAD_EULER = 2;
             /**< Signifies that a vertex link has either (i) accumulated too
                  high a genus (so when its punctures are filled the Euler
                  characteristic will be too low), or has (ii) been closed
@@ -1007,7 +1007,7 @@ class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
         };
 
     public:
-        static const char dataTag_;
+        static constexpr char dataTag_ = 'e';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -1470,10 +1470,10 @@ class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
  */
 class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
     protected:
-        static const char VLINK_CLOSED;
+        static constexpr char VLINK_CLOSED = 1;
             /**< Signifies that a vertex link has been closed off (i.e.,
                  the link has no remaining boundary edges). */
-        static const char VLINK_NON_SPHERE;
+        static constexpr char VLINK_NON_SPHERE = 2;
             /**< Signifies that a vertex link has been made into something
                  other than a 2-sphere with zero or more punctures. */
 
@@ -1819,7 +1819,7 @@ class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
         };
 
     public:
-        static const char dataTag_;
+        static constexpr char dataTag_ = 'f';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -2258,51 +2258,51 @@ class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
  */
 class REGINA_API ClosedPrimeMinSearcher : public CompactSearcher {
     private:
-        static const unsigned EDGE_CHAIN_END;
+        static constexpr unsigned EDGE_CHAIN_END = 1;
             /**< Represents the end of a one-ended chain in a face
                  pairing graph. */
-        static const unsigned EDGE_CHAIN_INTERNAL_FIRST;
+        static constexpr unsigned EDGE_CHAIN_INTERNAL_FIRST = 2;
             /**< Represents the first edge of a double edge within a
                  one-ended chain in a face pairing graph.  The corresponding
                  element of order[] stores the face closest to the loop at
                  the end of this chain. */
-        static const unsigned EDGE_CHAIN_INTERNAL_SECOND;
+        static constexpr unsigned EDGE_CHAIN_INTERNAL_SECOND = 3;
             /**< Represents the second edge of a double edge within a
                  one-ended chain in a face pairing graph.  The corresponding
                  element of order[] stores the face closest to the loop at
                  the end of this chain. */
-        static const unsigned EDGE_DOUBLE_FIRST;
+        static constexpr unsigned EDGE_DOUBLE_FIRST = 4;
             /**< Represents the first edge of a miscellaneous double
                  edge in a face pairing graph.  The corresponding element of
                  order[] stores the face belonging to the lower numbered
                  tetrahedron. */
-        static const unsigned EDGE_DOUBLE_SECOND;
+        static constexpr unsigned EDGE_DOUBLE_SECOND = 5;
             /**< Represents the second edge of a miscellaneous double
                  edge in a face pairing graph.  The corresponding element of
                  order[] stores the face belonging to the lower numbered
                  tetrahedron. */
-        static const unsigned EDGE_MISC;
+        static constexpr unsigned EDGE_MISC = 6;
             /**< Represents a miscellaneous edge in a face pairing graph. */
 
     private:
-        static const char ECLASS_TWISTED;
+        static constexpr char ECLASS_TWISTED = 1;
             /**< Signifies that an edge has been identified with itself
                  in reverse. */
-        static const char ECLASS_LOWDEG;
+        static constexpr char ECLASS_LOWDEG = 2;
             /**< Signifies that a set of tetrahedron edges have been
                  identified to form an internal edge of low degree
                  (degree 1 or 2 of any type, or degree 3 with three
                  distinct tetrahedra). */
-        static const char ECLASS_HIGHDEG;
+        static constexpr char ECLASS_HIGHDEG = 4;
             /**< Signifies that a set of tetrahedron edges have been
                  identified to form an edge of such a high degree that
                  either a degree 1 or 2 edge must be formed elsewhere,
                  or else the final number of edges must be too low. */
-        static const char ECLASS_CONE;
+        static constexpr char ECLASS_CONE = 8;
             /**< Signifies that two edges of a face have been identified
                  to form a cone (with no constraints on any additional
                  identifications that might be taking place). */
-        static const char ECLASS_L31;
+        static constexpr char ECLASS_L31 = 16;
             /**< Signifies that all three edges of a face have been
                  identified to form an L(3,1) spine. */
 
@@ -2329,7 +2329,7 @@ class REGINA_API ClosedPrimeMinSearcher : public CompactSearcher {
                  the TetEdgeState class. */
 
     public:
-        static const char dataTag_;
+        static constexpr char dataTag_ = 'c';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 
@@ -2510,17 +2510,17 @@ class REGINA_API ClosedPrimeMinSearcher : public CompactSearcher {
  */
 class REGINA_API HyperbolicMinSearcher : public EulerSearcher {
     private:
-        static const char ECLASS_TWISTED;
+        static constexpr char ECLASS_TWISTED = 1;
             /**< Signifies that an edge has been identified with itself
                  in reverse. */
-        static const char ECLASS_LOWDEG;
+        static constexpr char ECLASS_LOWDEG = 2;
             /**< Signifies that a set of tetrahedron edges have been
                  identified to form an internal edge of low degree
                  (degree 1 or 2 of any type, or degree 3 with three
                  distinct tetrahedra). */
 
     public:
-        static const char dataTag_;
+        static constexpr char dataTag_ = 'h';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 

@@ -37,9 +37,6 @@
 
 namespace regina {
 
-const char CompactSearcher::VLINK_CLOSED = 1;
-const char CompactSearcher::VLINK_NON_SPHERE = 2;
-
 const int CompactSearcher::vertexLinkNextFace[4][4] = {
     { -1, 2, 3, 1},
     { 3, -1, 0, 2},
@@ -53,8 +50,6 @@ const int CompactSearcher::vertexLinkPrevFace[4][4] = {
     { 3, 0, -1, 1},
     { 2, 0, 1, -1}
 };
-
-const char CompactSearcher::dataTag_ = 'f';
 
 void CompactSearcher::TetVertexState::dumpData(std::ostream& out)
         const {

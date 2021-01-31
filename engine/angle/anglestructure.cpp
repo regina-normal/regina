@@ -37,11 +37,6 @@
 
 namespace regina {
 
-const unsigned long AngleStructure::flagStrict = 1;
-const unsigned long AngleStructure::flagTaut = 2;
-const unsigned long AngleStructure::flagCalculatedType = 4;
-const unsigned long AngleStructure::flagVeering = 8;
-
 MatrixInt* AngleStructureVector::makeAngleEquations(
         const Triangulation<3>* tri) {
     size_t n = tri->size();

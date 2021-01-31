@@ -37,9 +37,6 @@
 
 namespace regina {
 
-const char EulerSearcher::VLINK_CLOSED = 1;
-const char EulerSearcher::VLINK_BAD_EULER = 2;
-
 const int EulerSearcher::vertexLinkNextFace[4][4] = {
     { -1, 2, 3, 1},
     { 3, -1, 0, 2},
@@ -53,8 +50,6 @@ const int EulerSearcher::vertexLinkPrevFace[4][4] = {
     { 3, 0, -1, 1},
     { 2, 0, 1, -1}
 };
-
-const char EulerSearcher::dataTag_ = 'e';
 
 void EulerSearcher::TetVertexState::dumpData(std::ostream& out)
         const {
