@@ -171,6 +171,9 @@
 		051691BF1C5AD60D00DC69EC /* hypersummaryui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AA1C5AD59000DC69EC /* hypersummaryui.h */; };
 		051691C01C5AD61200DC69EC /* hyperui.h in Sources */ = {isa = PBXBuildFile; fileRef = 051691AC1C5AD59000DC69EC /* hyperui.h */; };
 		051806D4181202BD008EBB01 /* icons in Resources */ = {isa = PBXBuildFile; fileRef = 051806D3181202BD008EBB01 /* icons */; };
+		05199A3925C63BEA0006B8FA /* sageSetup.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 05199A2D25C63B3C0006B8FA /* sageSetup.py */; };
+		05199A5C25C63CCE0006B8FA /* listview.h in Headers */ = {isa = PBXBuildFile; fileRef = 05199A5A25C63CCE0006B8FA /* listview.h */; };
+		05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05199A5B25C63CCE0006B8FA /* typeutils.h */; };
 		051A656C2594277900A52E30 /* popt.xcframework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 0567B5702581ACE50022EA5D /* popt.xcframework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		051B97F52321C91A000A2DCA /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051B97F42321C91A000A2DCA /* boundaries.cpp */; };
 		051B97F62321C91A000A2DCA /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051B97F42321C91A000A2DCA /* boundaries.cpp */; };
@@ -2215,6 +2218,7 @@
 				050BEA361D9C8B6700B96DB8 /* __init__.py in Copy Python Scripts */,
 				05D047062599F5AE00FA2B3E /* plainCompleter.py in Copy Python Scripts */,
 				05D322DF1FA606E200E5F9B8 /* purePyMethods.py in Copy Python Scripts */,
+				05199A3925C63BEA0006B8FA /* sageSetup.py in Copy Python Scripts */,
 			);
 			name = "Copy Python Scripts";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2644,6 +2648,21 @@
 		051691AC1C5AD59000DC69EC /* hyperui.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyperui.h; sourceTree = "<group>"; };
 		051806D3181202BD008EBB01 /* icons */ = {isa = PBXFileReference; lastKnownFileType = folder; name = icons; path = src/icons; sourceTree = "<group>"; };
 		051806D5181202E0008EBB01 /* examples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = examples; sourceTree = SOURCE_ROOT; };
+		05199A2C25C63AED0006B8FA /* listview.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = listview.h; sourceTree = "<group>"; };
+		05199A2D25C63B3C0006B8FA /* sageSetup.py */ = {isa = PBXFileReference; lastKnownFileType = text.script.python; name = sageSetup.py; path = regina/sageSetup.py; sourceTree = "<group>"; };
+		05199A2E25C63B7E0006B8FA /* memory3.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = memory3.test; sourceTree = "<group>"; };
+		05199A2F25C63B7F0006B8FA /* file3.rga */ = {isa = PBXFileReference; lastKnownFileType = text.xml; path = file3.rga; sourceTree = "<group>"; };
+		05199A3025C63B7F0006B8FA /* integer.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = integer.out; sourceTree = "<group>"; };
+		05199A3125C63B7F0006B8FA /* perm.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = perm.out; sourceTree = "<group>"; };
+		05199A3225C63B7F0006B8FA /* listener.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = listener.out; sourceTree = "<group>"; };
+		05199A3325C63B7F0006B8FA /* iterators.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = iterators.out; sourceTree = "<group>"; };
+		05199A3425C63B7F0006B8FA /* memory3.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = memory3.out; sourceTree = "<group>"; };
+		05199A3525C63B7F0006B8FA /* perm.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = perm.test; sourceTree = "<group>"; };
+		05199A3625C63B7F0006B8FA /* integer.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = integer.test; sourceTree = "<group>"; };
+		05199A3725C63B7F0006B8FA /* listener.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = listener.test; sourceTree = "<group>"; };
+		05199A3825C63B7F0006B8FA /* iterators.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = iterators.test; sourceTree = "<group>"; };
+		05199A5A25C63CCE0006B8FA /* listview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = listview.h; sourceTree = "<group>"; };
+		05199A5B25C63CCE0006B8FA /* typeutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = typeutils.h; sourceTree = "<group>"; };
 		051B97F42321C91A000A2DCA /* boundaries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundaries.cpp; sourceTree = "<group>"; };
 		051CEA8B1F98969500971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Hypersurfaces.storyboard; sourceTree = "<group>"; };
 		051CEA951F98995D00971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Link.storyboard; sourceTree = "<group>"; };
@@ -4681,6 +4700,7 @@
 				050F5E6B1B9BD30700C1F681 /* __init__.py */,
 				05D046E62599F58A00FA2B3E /* plainCompleter.py */,
 				05D322DE1FA606D100E5F9B8 /* purePyMethods.py */,
+				05199A2D25C63B3C0006B8FA /* sageSetup.py */,
 				05617AD51D9D3C5400B1E33B /* regina-python.in */,
 				050F5D001B9BAB9C00C1F681 /* algebra */,
 				050F5D071B9BAB9C00C1F681 /* angle */,
@@ -4936,6 +4956,7 @@
 				050F5D8B1B9BAB9C00C1F681 /* file.test */,
 				050F5D8C1B9BAB9C00C1F681 /* file1.rga */,
 				050F5D8D1B9BAB9C00C1F681 /* file2.rga */,
+				05199A2F25C63B7F0006B8FA /* file3.rga */,
 				0577E6DD1F97087900CBDF15 /* generic.out */,
 				0577E6E81F97087F00CBDF15 /* generic.test */,
 				050F5D8E1B9BAB9C00C1F681 /* groups.out */,
@@ -4946,18 +4967,28 @@
 				050F5D911B9BAB9C00C1F681 /* i18n-utf8.rga */,
 				050F5D921B9BAB9C00C1F681 /* i18n.out */,
 				050F5D931B9BAB9C00C1F681 /* i18n.test */,
+				05199A3025C63B7F0006B8FA /* integer.out */,
+				05199A3625C63B7F0006B8FA /* integer.test */,
 				050F5D941B9BAB9C00C1F681 /* italian.orb */,
+				05199A3325C63B7F0006B8FA /* iterators.out */,
+				05199A3825C63B7F0006B8FA /* iterators.test */,
 				050F5D951B9BAB9C00C1F681 /* knotted-Y.orb */,
+				05199A3225C63B7F0006B8FA /* listener.out */,
+				05199A3725C63B7F0006B8FA /* listener.test */,
 				0577E6E11F97087B00CBDF15 /* memory1.out */,
 				0577E6E21F97087B00CBDF15 /* memory1.test */,
 				0577E6EC1F97088100CBDF15 /* memory2.out */,
 				0577E6EE1F97088300CBDF15 /* memory2.test */,
+				05199A3425C63B7F0006B8FA /* memory3.out */,
+				05199A2E25C63B7E0006B8FA /* memory3.test */,
 				050F5D961B9BAB9C00C1F681 /* misc.out */,
 				050F5D971B9BAB9C00C1F681 /* misc.test */,
 				050F5D981B9BAB9C00C1F681 /* O2_1.rga */,
 				050F5D991B9BAB9C00C1F681 /* O2_1.tri */,
 				050F5D9A1B9BAB9C00C1F681 /* orb.out */,
 				050F5D9B1B9BAB9C00C1F681 /* orb.test */,
+				05199A3125C63B7F0006B8FA /* perm.out */,
+				05199A3525C63B7F0006B8FA /* perm.test */,
 				050F5D9C1B9BAB9C00C1F681 /* pdf.out */,
 				050F5D9D1B9BAB9C00C1F681 /* pdf.test */,
 				050F5D9E1B9BAB9C00C1F681 /* README.txt */,
@@ -5820,6 +5851,7 @@
 				052F9E66180600FB00FAE4DF /* i18nutils.h */,
 				052F9E67180600FB00FAE4DF /* intutils.h */,
 				052F9E6C180600FB00FAE4DF /* listoncall.h */,
+				05199A5A25C63CCE0006B8FA /* listview.h */,
 				052F9E6D180600FB00FAE4DF /* markedvector.h */,
 				0534FADF22DFDDA6000A96A3 /* memstream.cpp */,
 				0534FAE122DFDDA7000A96A3 /* memstream.h */,
@@ -5840,6 +5872,7 @@
 				052F9E7D180600FB00FAE4DF /* stringutils.h */,
 				052F9E75180600FB00FAE4DF /* trieset.h */,
 				052F9E76180600FB00FAE4DF /* tritmask.h */,
+				05199A5B25C63CCE0006B8FA /* typeutils.h */,
 				05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */,
 				05A73C7819B2EDFC0099C617 /* xmlcallback.h */,
 				05A73C7919B2EDFC0099C617 /* xmlelementreader.h */,
@@ -6375,6 +6408,7 @@
 			isa = PBXGroup;
 			children = (
 				05431FC81C40F607009BC072 /* equality.h */,
+				05199A2C25C63AED0006B8FA /* listview.h */,
 				05D81A8B1C66B0E500DDCE64 /* output.h */,
 			);
 			path = helpers;
@@ -7546,6 +7580,7 @@
 				052F9F40180600FB00FAE4DF /* matrix2.h in Headers */,
 				058C305F1DCAF6F8006162D2 /* forward.h in Headers */,
 				054209231DF28C990018AB24 /* context.h in Headers */,
+				05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */,
 				05A0671D1DFA68190047872E /* layeredsolidtorus.h in Headers */,
 				052FA088180600FB00FAE4DF /* i18nutils.h in Headers */,
 				054209271DF28C990018AB24 /* rule.h in Headers */,
@@ -7626,6 +7661,7 @@
 				05721EE31F97153E00A83FFC /* data-impl.h in Headers */,
 				05A067091DFA68190047872E /* augtrisolidtorus.h in Headers */,
 				054208861DF0D0B50018AB24 /* textstyledata_p.h in Headers */,
+				05199A5C25C63CCE0006B8FA /* listview.h in Headers */,
 				0541AF4C1B8BE2F5002E166B /* cyclotomic.h in Headers */,
 				05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */,
 				054208B81DF0D2740018AB24 /* handlebody.h in Headers */,
@@ -8187,7 +8223,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py purePyMethods.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py purePyMethods.py sageSetup.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
 		};
 		0514CAE31D9C9A5800EDB2E6 /* Sign Qt */ = {
 			isa = PBXShellScriptBuildPhase;
