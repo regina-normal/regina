@@ -39,6 +39,18 @@ def testFaceClass(c):
         print(i, p, c.faceNumber(p))
     print()
 
+testFaceClass(Face2_0)
+testFaceClass(Face2_1)
+
+testFaceClass(Face3_0)
+testFaceClass(Face3_1)
+testFaceClass(Face3_2)
+
+testFaceClass(Face4_0)
+testFaceClass(Face4_1)
+testFaceClass(Face4_2)
+testFaceClass(Face4_3)
+
 testFaceClass(Face5_0)
 testFaceClass(Face5_1)
 testFaceClass(Face5_2)
