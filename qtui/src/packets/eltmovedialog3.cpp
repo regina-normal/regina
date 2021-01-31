@@ -48,19 +48,6 @@
 #include <QWhatsThis>
 
 namespace {
-    const int ID_41 = 0;
-    const int ID_32 = 1;
-    const int ID_23 = 2;
-    const int ID_14 = 3;
-    const int ID_44 = 4;
-    const int ID_20E = 5;
-    const int ID_20V = 6;
-    const int ID_21 = 7;
-    const int ID_OPENBOOK = 8;
-    const int ID_CLOSEBOOK = 9;
-    const int ID_SHELLBDRY = 10;
-    const int ID_COLLAPSEEDGE = 11;
-
     bool has41(regina::Vertex<3>* v) {
         return v->triangulation()->pachner(v, true, false);
     }
@@ -331,18 +318,18 @@ EltMoveDialog3::EltMoveDialog3(QWidget* parent, regina::Triangulation<3>* useTri
     layout->addWidget(boxCollapseEdge, 11, 1);
 
     moveTypes = new QButtonGroup();
-    moveTypes->addButton(use41, ID_41);
-    moveTypes->addButton(use32, ID_32);
-    moveTypes->addButton(use23, ID_23);
-    moveTypes->addButton(use14, ID_14);
-    moveTypes->addButton(use44, ID_44);
-    moveTypes->addButton(use20e, ID_20E);
-    moveTypes->addButton(use20v, ID_20V);
-    moveTypes->addButton(use21, ID_21);
-    moveTypes->addButton(useOpenBook, ID_OPENBOOK);
-    moveTypes->addButton(useCloseBook, ID_CLOSEBOOK);
-    moveTypes->addButton(useShellBdry, ID_SHELLBDRY);
-    moveTypes->addButton(useCollapseEdge, ID_COLLAPSEEDGE);
+    moveTypes->addButton(use41);
+    moveTypes->addButton(use32);
+    moveTypes->addButton(use23);
+    moveTypes->addButton(use14);
+    moveTypes->addButton(use44);
+    moveTypes->addButton(use20e);
+    moveTypes->addButton(use20v);
+    moveTypes->addButton(use21);
+    moveTypes->addButton(useOpenBook);
+    moveTypes->addButton(useCloseBook);
+    moveTypes->addButton(useShellBdry);
+    moveTypes->addButton(useCollapseEdge);
 
     buttons = new QDialogButtonBox(
         QDialogButtonBox::Apply | QDialogButtonBox::Close);
