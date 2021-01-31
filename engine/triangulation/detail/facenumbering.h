@@ -535,7 +535,9 @@ class REGINA_API FaceNumberingImpl<3, 1> : public FaceNumberingAPI<3, 1> {
          * <tt>faceNumber(p)</tt>, where \a p is a permutation that maps 
          * 0,1 to \a i,\a j in some order.
          */
-        static const int edgeNumber[4][4];
+        static constexpr int edgeNumber[4][4] = {
+            { -1, 0, 1, 2 }, { 0, -1, 3, 4 }, { 1, 3, -1, 5 }, { 2, 4, 5, -1 }
+        };
 
         /**
          * A table that maps edges of a tetrahedron to vertex numbers.
@@ -553,7 +555,9 @@ class REGINA_API FaceNumberingImpl<3, 1> : public FaceNumberingAPI<3, 1> {
          * \note Accessing <tt>edgeVertex[i][j]</tt> is equivalent to
          * calling <tt>ordering(i)[j]</tt>.
          */
-        static const int edgeVertex[6][2];
+        static constexpr int edgeVertex[6][2] = {
+            { 0, 1 }, { 0, 2 }, { 0, 3 }, { 1, 2 }, { 1, 3 }, { 2, 3 }
+        };
 
     private:
         /**
@@ -624,7 +628,10 @@ class REGINA_API FaceNumberingImpl<4, 1> : public FaceNumberingAPI<4, 1> {
          * <tt>faceNumber(p)</tt>, where \a p is a permutation that maps 
          * 0,1 to \a i,\a j in some order.
          */
-        static const int edgeNumber[5][5];
+        static constexpr int edgeNumber[5][5] = {
+            { -1, 0, 1, 2, 3 }, { 0, -1, 4, 5, 6 }, { 1, 4, -1, 7, 8 },
+            { 2, 5, 7, -1, 9 }, { 3, 6, 8, 9, -1 }
+        };
 
         /**
          * A table that maps edges of a pentachoron to vertex numbers.
@@ -642,7 +649,10 @@ class REGINA_API FaceNumberingImpl<4, 1> : public FaceNumberingAPI<4, 1> {
          * \note Accessing <tt>edgeVertex[i][j]</tt> is equivalent to
          * calling <tt>ordering(i)[j]</tt>.
          */
-        static const int edgeVertex[10][2];
+        static constexpr int edgeVertex[10][2] = {
+            { 0, 1 }, { 0, 2 }, { 0, 3 }, { 0, 4 }, { 1, 2 },
+            { 1, 3 }, { 1, 4 }, { 2, 3 }, { 2, 4 }, { 3, 4 }
+        };
 
     private:
         /**
@@ -689,7 +699,18 @@ class REGINA_API FaceNumberingImpl<4, 2> : public FaceNumberingAPI<4, 2> {
          * calling <tt>faceNumber(p)</tt>, where \a p is a permutation that
          * maps 0,1,2 to \a i,\a j,\a k in some order.
          */
-        static const int triangleNumber[5][5][5];
+        static constexpr int triangleNumber[5][5][5] = {
+            { { -1,-1,-1,-1,-1 }, { -1,-1, 9, 8, 7 }, { -1, 9,-1, 6, 5 },
+              { -1, 8, 6,-1, 4 }, { -1, 7, 5, 4,-1 } },
+            { { -1,-1, 9, 8, 7 }, { -1,-1,-1,-1,-1 }, {  9,-1,-1, 3, 2 },
+              {  8,-1, 3,-1, 1 }, {  7,-1, 2, 1,-1 } },
+            { { -1, 9,-1, 6, 5 }, {  9,-1,-1, 3, 2 }, { -1,-1,-1,-1,-1 },
+              {  6, 3,-1,-1, 0 }, {  5, 2,-1, 0,-1 } },
+            { { -1, 8, 6,-1, 4 }, {  8,-1, 3,-1, 1 }, {  6, 3,-1,-1, 0 },
+              { -1,-1,-1,-1,-1 }, {  4, 1, 0,-1,-1 } },
+            { { -1, 7, 5, 4,-1 }, {  7,-1, 2, 1,-1 }, {  5, 2,-1, 0,-1 },
+              {  4, 1, 0,-1,-1 }, { -1,-1,-1,-1,-1 } }
+        };
 
         /**
          * A table that maps triangles of a pentachoron to vertex numbers.
@@ -708,7 +729,10 @@ class REGINA_API FaceNumberingImpl<4, 2> : public FaceNumberingAPI<4, 2> {
          * \note Accessing <tt>triangleVertex[i][j]</tt> is equivalent to
          * calling <tt>ordering(i)[j]</tt>.
          */
-        static const int triangleVertex[10][3];
+        static constexpr int triangleVertex[10][3] = {
+            { 2, 3, 4 }, { 1, 3, 4 }, { 1, 2, 4 }, { 1, 2, 3 }, { 0, 3, 4 },
+            { 0, 2, 4 }, { 0, 2, 3 }, { 0, 1, 4 }, { 0, 1, 3 }, { 0, 1, 2 }
+        };
 
     private:
         /**

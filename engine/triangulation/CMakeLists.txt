@@ -5,7 +5,6 @@ SET ( FILES
   example2
   example3
   example4
-  facenumbering
   facetpairing3
   facepair
   homologicaldata

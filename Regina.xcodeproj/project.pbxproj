@@ -993,11 +993,9 @@
 		055114C91DCC460600EC753C /* example2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114C11DCC45FD00EC753C /* example2.cpp */; };
 		055114CA1DCC460900EC753C /* example4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114C31DCC45FD00EC753C /* example4.cpp */; };
 		055114CE1DCC476A00EC753C /* pachner.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114CC1DCC476A00EC753C /* pachner.h */; };
-		055114D31DCC71A700EC753C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114CF1DCC71A700EC753C /* facenumbering.cpp */; };
 		055114D41DCC71A700EC753C /* facenumbering.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D01DCC71A700EC753C /* facenumbering.h */; };
 		055114D51DCC71A700EC753C /* facetspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D11DCC71A700EC753C /* facetspec.h */; };
 		055114D61DCC71A700EC753C /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D21DCC71A700EC753C /* xmltrireader.h */; };
-		055114D71DCC71AE00EC753C /* facenumbering.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114CF1DCC71A700EC753C /* facenumbering.cpp */; };
 		055114DE1DCC85F200EC753C /* xmltrireader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114D81DCC85F100EC753C /* xmltrireader2.cpp */; };
 		055114DF1DCC85F200EC753C /* xmltrireader2.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D91DCC85F200EC753C /* xmltrireader2.h */; };
 		055114E01DCC85F200EC753C /* xmltrireader3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114DA1DCC85F200EC753C /* xmltrireader3.cpp */; };
@@ -3241,7 +3239,6 @@
 		055114C31DCC45FD00EC753C /* example4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = example4.cpp; sourceTree = "<group>"; };
 		055114C41DCC45FD00EC753C /* example4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = example4.h; sourceTree = "<group>"; };
 		055114CC1DCC476A00EC753C /* pachner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pachner.h; sourceTree = "<group>"; };
-		055114CF1DCC71A700EC753C /* facenumbering.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facenumbering.cpp; sourceTree = "<group>"; };
 		055114D01DCC71A700EC753C /* facenumbering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
 		055114D11DCC71A700EC753C /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
 		055114D21DCC71A700EC753C /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
@@ -5879,7 +5876,6 @@
 				052F9E3F180600FB00FAE4DF /* example3.h */,
 				055114C31DCC45FD00EC753C /* example4.cpp */,
 				055114C41DCC45FD00EC753C /* example4.h */,
-				055114CF1DCC71A700EC753C /* facenumbering.cpp */,
 				055114D01DCC71A700EC753C /* facenumbering.h */,
 				052F9E41180600FB00FAE4DF /* facepair.cpp */,
 				052F9E42180600FB00FAE4DF /* facepair.h */,
@@ -9484,7 +9480,6 @@
 				05FEA07B19C1890900A31924 /* examplesnappea.cpp in Sources */,
 				052FA238180612DD00FAE4DF /* tidy_peripheral_curves.c in Sources */,
 				05A067421DFA68470047872E /* augtrisolidtorus.cpp in Sources */,
-				055114D71DCC71AE00EC753C /* facenumbering.cpp in Sources */,
 				05A066BB1DFA67D50047872E /* layeredloop.cpp in Sources */,
 				05DADB1921928EC500DC80E1 /* binom.cpp in Sources */,
 				05A066C31DFA67D50047872E /* satblock.cpp in Sources */,
@@ -9846,7 +9841,6 @@
 				05FB46EC1DD92D4A00BB00E5 /* xmlalgebrareader.cpp in Sources */,
 				05B7FF8825AC22AA003BAF5C /* automorph.cpp in Sources */,
 				05F0A03B1DBF0B5E00117BFC /* decompose.cpp in Sources */,
-				055114D31DCC71A700EC753C /* facenumbering.cpp in Sources */,
 				05FB46E41DD92D4A00BB00E5 /* abeliangroup.cpp in Sources */,
 				05F0A04D1DBF0B5E00117BFC /* triangulation3.cpp in Sources */,
 				05A067121DFA68190047872E /* l31pillow.cpp in Sources */,
