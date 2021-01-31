@@ -34,6 +34,7 @@
 #include "packet/packet.h"
 #include "reginamain.h"
 #include "reginasupport.h"
+#include <array>
 #include <QFile>
 #include <QIcon>
 #include <QMessageBox>
@@ -43,7 +44,7 @@ namespace {
     // These are the possible icon sizes as measured in points (not pixels).
     // We list icon sizes in descending order so that icon-{k}@2x.png
     // takes priority over icon-{2k}.png.
-    const int iconSizes[] = { 128, 64, 48, 32, 22, 16, 0 /* terminator */ };
+    constexpr std::array iconSizes { 128, 64, 48, 32, 22, 16 };
 }
 
 QString ReginaSupport::home_;
@@ -152,9 +153,8 @@ const QString& ReginaSupport::home() {
 QIcon ReginaSupport::regIcon(const QString& name) {
     QIcon icon;
     QString filename = home() + "/icons/" + name + "-%1.png";
-    for (int i = 0; iconSizes[i]; ++i) {
-        icon.addFile(filename.arg(iconSizes[i]));
-    }
+    for (int size : iconSizes)
+        icon.addFile(filename.arg(size));
     return icon;
 }
 
@@ -164,9 +164,8 @@ QIcon ReginaSupport::themeIcon(const QString& name) {
         return icon;
 
     QString filename = home() + "/icons/system/" + name + "-%1.png";
-    for (int i = 0; iconSizes[i]; ++i) {
-        icon.addFile(filename.arg(iconSizes[i]));
-    }
+    for (int size : iconSizes)
+        icon.addFile(filename.arg(size));
     return icon;
 }
 
