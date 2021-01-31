@@ -69,6 +69,9 @@ Version 6.1  [ TODO ]
             - Simplified the underlying web of template specialisations.
         Class FileInfo:
             - Class constant TYPE_XML is now constexpr.
+        Class Link:
+            - Class constants for Jones / HOMFLY-PT variable strings are
+              now constexpr.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class MarkedVector:
