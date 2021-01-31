@@ -34,6 +34,8 @@
 from __future__ import print_function
 
 def testFaceClass(c):
+    print(c.dimension, c.subdimension, '->', \
+        c.nFaces, c.lexNumbering, c.oppositeDim)
     for i in range(c.nFaces):
         p = c.ordering(i)
         print(i, p, c.faceNumber(p))
