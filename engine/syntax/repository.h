@@ -56,18 +56,14 @@
 #include <memory>
 #include <vector>
 
-namespace regina {
-
 /**
- * @namespace syntax
- *
  * Syntax highlighting engine for Kate syntax definitions.
  * In order to access the syntax highlighting Definition files, use the
  * class Repository.
  *
  * @see Repository
  */
-namespace syntax {
+namespace regina::syntax {
 
 class Definition;
 class RepositoryPrivate;
@@ -173,6 +169,6 @@ private:
     std::unique_ptr<RepositoryPrivate> d;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

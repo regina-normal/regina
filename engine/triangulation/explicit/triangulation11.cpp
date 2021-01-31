@@ -35,7 +35,7 @@
 #include "triangulation/detail/skeleton-impl.h"
 #include "triangulation/generic.h"
 
-namespace regina { namespace detail {
+namespace regina::detail {
 
 template REGINA_API std::string TriangulationBase<11>::isoSigFrom(
     size_t, const Perm<12>&, Isomorphism<11>*) const;
@@ -76,4 +76,4 @@ template REGINA_API bool TriangulationBase<11>::pachner(
 template REGINA_API bool TriangulationBase<11>::pachner(
     Face<11, 11>*, bool, bool);
 
-} }
+} // namespace regina::detail

@@ -43,8 +43,6 @@
 #include "triangulation/forward.h"
 #include <vector>
 
-namespace regina {
-
 /**
  * Contains helper classes that provide dimension-specific aliases for
  * generic functions.
@@ -56,7 +54,7 @@ namespace regina {
  * these aliases through inheritance.  There is typically no need for
  * end users to explicitly refer to the namespace regina::alias.
  */
-namespace alias {
+namespace regina::alias {
 
 /**
  * \addtogroup alias Dimension-Specific Aliases
@@ -470,7 +468,7 @@ class SimplexVoid<Derived, 4> {
 
 /*@}*/
 
-} } // namespace regina::alias
+} // namespace regina::alias
 
 #endif
 

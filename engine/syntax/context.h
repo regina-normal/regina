@@ -60,8 +60,7 @@
 
 #include <libxml/xmlreader.h>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class REGINA_API Context
 {
@@ -118,6 +117,6 @@ private:
     bool m_fallthrough;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

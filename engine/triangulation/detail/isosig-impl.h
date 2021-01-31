@@ -47,8 +47,7 @@
 #include <algorithm>
 #include "triangulation/generic/triangulation.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 #ifndef __DOXYGEN
 struct IsoSigHelper {
@@ -603,6 +602,6 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     return IsoSigHelper::SREAD<unsigned>(c, nChars);
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

@@ -43,10 +43,10 @@
 #include "maths/perm.h"
 
 namespace regina {
+    template <int> class Perm;
+}
 
-template <int> class Perm;
-
-namespace alias {
+namespace regina::alias {
 
 /**
  * \weakgroup alias
@@ -200,7 +200,7 @@ class IsomorphismImage<Derived, 4> {
 
 /*@}*/
 
-} } // namespace regina::alias
+} // namespace regina::alias
 
 #endif
 

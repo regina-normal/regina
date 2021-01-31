@@ -45,8 +45,7 @@
 #include "maths/binom.h"
 #include "maths/perm.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 /**
  * \weakgroup detail
@@ -745,7 +744,7 @@ class REGINA_API FaceNumberingImpl<4, 3> : public FaceNumberingAPI<4, 3> {
 
 /*@}*/
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

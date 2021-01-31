@@ -44,8 +44,7 @@
 #include "packet/packet.h"
 #include "triangulation/detail/strings.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 /**
  * \weakgroup detail
@@ -527,7 +526,7 @@ Triangulation<dim>* ExampleBase<dim>::twistedBallBundle() {
     return ans;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

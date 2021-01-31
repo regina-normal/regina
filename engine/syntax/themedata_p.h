@@ -58,8 +58,7 @@
 
 #include <string>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 /**
  * Data container for a Theme.
@@ -178,6 +177,6 @@ private:
     unsigned m_editorColors[Theme::TemplateReadOnlyPlaceholder + 1];
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

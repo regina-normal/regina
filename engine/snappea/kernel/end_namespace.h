@@ -6,4 +6,4 @@
  *  you can close the block here.
  */
 
-} }
+} // namespace regina::snappea

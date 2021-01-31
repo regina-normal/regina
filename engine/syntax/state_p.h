@@ -55,8 +55,7 @@
 #include "regina-core.h"
 #include <deque>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class Context;
 class DefinitionData;
@@ -83,6 +82,6 @@ private:
     std::deque<Context*> m_contextStack;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

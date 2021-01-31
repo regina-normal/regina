@@ -37,7 +37,7 @@
 
 #include "utilities/listview.h"
 
-namespace pybind11 { namespace detail {
+namespace pybind11::detail {
 
 /**
  * Tell pybind11 how to convert a C++ ListView into a Python list.
@@ -67,5 +67,5 @@ struct type_caster<regina::ListView<List>> {
         }
 };
 
-} } // namespace pybind11::detail
+} // namespace pybind11::detail
 

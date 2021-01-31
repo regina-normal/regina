@@ -60,8 +60,6 @@
 #include "utilities/listview.h"
 #include "utilities/property.h"
 
-namespace regina {
-
 /**
  * Contains implementation details and common functionality for Regina's
  * dimension-agnostic classes.
@@ -90,7 +88,7 @@ namespace regina {
  *   (including the names and inheritance structure of classes within
  *   regina::detail) might change in subsequent releases without notice.
  */
-namespace detail {
+namespace regina::detail {
 
 template <int dim> class XMLTriangulationReaderBase;
 
@@ -3200,7 +3198,7 @@ TriangulationBase<dim>::TopologyLock::~TopologyLock() {
         --tri_->topologyLock_;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #include "triangulation/detail/canonical-impl.h"
 

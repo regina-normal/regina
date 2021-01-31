@@ -49,8 +49,7 @@
 #include "utilities/randutils.h"
 #include <algorithm>
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 /**
  * \weakgroup detail
@@ -576,7 +575,7 @@ Isomorphism<dim> IsomorphismBase<dim>::random(unsigned nSimplices, bool even) {
     return ans;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

@@ -47,11 +47,11 @@
 #include <string>
 
 namespace regina {
+    class Packet;
+    class Script;
+}
 
-class Packet;
-class Script;
-
-namespace python {
+namespace regina::python {
 
 class PythonOutputStream;
 
@@ -308,6 +308,6 @@ inline bool PythonInterpreter::exitAttempted() const {
     return caughtSystemExit;
 }
 
-} } // namespace regina::python
+} // namespace regina::python
 
 #endif

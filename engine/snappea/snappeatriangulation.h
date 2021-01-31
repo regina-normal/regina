@@ -43,12 +43,12 @@
 #include "triangulation/dim3.h"
 #include <complex>
 
-namespace regina {
-
 // Forward declaration of SnapPea structures.
-namespace snappea {
+namespace regina::snappea {
     struct Triangulation;
 }
+
+namespace regina {
 
 class SnapPeaTriangulation;
 class XMLSnapPeaReader;

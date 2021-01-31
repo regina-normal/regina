@@ -52,8 +52,7 @@
 
 #include "triangulation/generic/boundarycomponent.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 template <int dim>
 BoundaryComponentBase<dim>::~BoundaryComponentBase() {
@@ -161,7 +160,7 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
     return ans;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

@@ -38,7 +38,7 @@
 
 bool regina::SnapPeaTriangulation::kernelMessages_ = false;
 
-namespace regina { namespace snappea {
+namespace regina::snappea {
 
 /**
  * Supply bare-bones UI messaging functions for the SnapPea kernel to use.
@@ -92,4 +92,4 @@ FuncResult uLongComputationContinues() {
 void uLongComputationEnds() {
 }
 
-} } // namespaces
+} // namespace regina::snappea

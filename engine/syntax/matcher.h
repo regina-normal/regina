@@ -49,8 +49,7 @@
 #include "regina-core.h"
 #include <cstddef>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class Rule;
 
@@ -147,7 +146,7 @@ inline int MatchResult::skipOffset() const {
     return m_skipOffset;
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif
 

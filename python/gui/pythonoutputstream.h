@@ -45,10 +45,10 @@
 #include <string>
 
 namespace regina {
+    class Packet;
+}
 
-class Packet;
-
-namespace python {
+namespace regina::python {
 
 /**
  * A custom output stream that can be used by python as sys.stdout or
@@ -123,6 +123,6 @@ class PythonOutputStream {
 inline PythonOutputStream::~PythonOutputStream() {
 }
 
-} } // namespace regina::python
+} // namespace regina::python
 
 #endif

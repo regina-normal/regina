@@ -43,10 +43,10 @@
 #include "triangulation/forward.h"
 
 namespace regina {
+    template <int> class Perm;
+}
 
-template <int> class Perm;
-
-namespace alias {
+namespace regina::alias {
 
 /**
  * \weakgroup alias
@@ -510,7 +510,7 @@ class FacesOfTriangulation<Derived, dim, 0> {
 
 /*@}*/
 
-} } // namespace regina::alias
+} // namespace regina::alias
 
 #endif
 

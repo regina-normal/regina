@@ -48,8 +48,7 @@
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 /**
  * \weakgroup detail
@@ -766,7 +765,7 @@ inline void FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
     pairing.enumerateInternal(boundary, nBdryFacets, use, useArgs);
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #include "triangulation/detail/facetpairing-impl.h"
 

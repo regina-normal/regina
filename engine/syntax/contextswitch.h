@@ -55,8 +55,7 @@
 #include "regina-core.h"
 #include <string>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class Context;
 class Definition;
@@ -86,6 +85,6 @@ private:
     int m_popCount;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

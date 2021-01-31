@@ -46,8 +46,7 @@
 
 #include "triangulation/generic/triangulation.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 template <int dim>
 void TriangulationBase<dim>::calculateSkeleton() {
@@ -597,6 +596,6 @@ void TriangulationBase<dim>::swapBaseProperties(TriangulationBase<dim>& other) {
     H1_.swap(other.H1_);
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

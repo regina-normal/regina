@@ -50,8 +50,7 @@
 #include "utilities/markedvector.h"
 #include "utilities/typeutils.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 template <int> class TriangulationBase;
 
@@ -1056,6 +1055,6 @@ class BoundaryComponentBase :
 
 /*@}*/
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

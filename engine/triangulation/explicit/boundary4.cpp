@@ -34,7 +34,7 @@
 #include "triangulation/dim4.h"
 #include "triangulation/dim3.h" // for deleting boundary components
 
-namespace regina { namespace detail {
+namespace regina::detail {
 
 // Don't cascade instantiations all the way down through the dimensions...
 extern template REGINA_API BoundaryComponentBase<3>::~BoundaryComponentBase();
@@ -44,4 +44,4 @@ template REGINA_API BoundaryComponentBase<4>::~BoundaryComponentBase();
 template REGINA_API Triangulation<3>*
     BoundaryComponentBase<4>::buildRealBoundary() const;
 
-} }
+} // namespace regina::detail

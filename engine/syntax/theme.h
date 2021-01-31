@@ -56,8 +56,7 @@
 #include <memory>
 #include <string>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class ThemeData;
 class RepositoryPrivate;
@@ -382,6 +381,6 @@ inline bool Theme::operator < (const Theme& rhs) const {
     return name() < rhs.name();
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

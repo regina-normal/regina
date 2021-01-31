@@ -129,7 +129,7 @@ REGINA_API extern const int* const binomSmall_[17];
 
 /*@}*/
 
-} // namespace regina::detail
+} // namespace detail
 
 // Inline functions
 

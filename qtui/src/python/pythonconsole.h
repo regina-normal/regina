@@ -52,10 +52,9 @@ class QTextEdit;
 
 namespace regina {
     class Script;
-
-    namespace python {
-        class PythonInterpreter;
-    }
+}
+namespace regina::python {
+    class PythonInterpreter;
 }
 
 /**

@@ -32,7 +32,7 @@
 
 #include "triangulation/facenumbering.h"
 
-namespace regina { namespace detail {
+namespace regina::detail {
 
     const Perm<3> FaceNumberingImpl<2, 1>::ordering_[3] = {
         Perm<3>(1,2,0),
@@ -168,5 +168,5 @@ namespace regina { namespace detail {
         Perm<5>(0,1,2,3,4)
     };
 
-} } // namespace regina::detail
+} // namespace regina::detail
 

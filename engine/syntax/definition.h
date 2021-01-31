@@ -57,8 +57,7 @@
 #include <string>
 #include <vector>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class Context;
 class Format;
@@ -156,6 +155,6 @@ private:
     std::shared_ptr<DefinitionData> d;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

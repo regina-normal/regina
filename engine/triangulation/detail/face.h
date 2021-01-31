@@ -53,8 +53,7 @@
 #include <deque>
 #include <vector>
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 template <int dim> class TriangulationBase;
 
@@ -1154,7 +1153,7 @@ void FaceBase<dim, subdim>::writeTextLong(std::ostream& out) const {
         out << "  " << emb << std::endl;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

@@ -48,8 +48,7 @@
 #include "utilities/listview.h"
 #include "utilities/markedvector.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 template <int> class TriangulationBase;
 
@@ -377,7 +376,7 @@ void ComponentBase<dim>::writeTextLong(std::ostream& out) const {
     out << std::endl;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

@@ -53,8 +53,7 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 const KeywordList nullList;
 
@@ -466,4 +465,4 @@ Definition DefinitionRef::definition() const
     return Definition();
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax

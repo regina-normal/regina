@@ -45,8 +45,7 @@
 
 #include <queue>
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 #ifndef __DOXYGEN
 struct CanonicalHelper {
@@ -553,6 +552,6 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
     return true;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

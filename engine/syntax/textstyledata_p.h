@@ -54,8 +54,7 @@
 
 #include "regina-core.h"
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class REGINA_API TextStyleData
 {
@@ -96,6 +95,6 @@ public:
     TextStyleData& operator = (const TextStyleData&) = delete;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

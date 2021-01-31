@@ -46,8 +46,7 @@
 
 #include "triangulation/generic/triangulation.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 #ifndef __DOXYGEN
     // The template function movePerm(), which is implemented and then
@@ -560,6 +559,6 @@ inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
     }
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

@@ -63,8 +63,7 @@
 #include <vector>
 #include <libxml/xmlreader.h>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class REGINA_API Rule
 {
@@ -452,6 +451,6 @@ inline MatchResult WordDetect::doMatch(Matcher& m, int offset) {
     return m.match(*this, offset);
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

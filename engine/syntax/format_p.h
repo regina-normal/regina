@@ -60,8 +60,7 @@
 #include <string>
 #include <libxml/xmlreader.h>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class REGINA_API FormatPrivate
 {
@@ -83,6 +82,6 @@ public:
     FormatPrivate& operator = (const FormatPrivate&) = delete;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

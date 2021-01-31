@@ -56,8 +56,7 @@
 #include "progress/progresstracker.h"
 #include "triangulation/detail/retriangulate.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 #ifndef __DOXYGEN
 
@@ -594,6 +593,6 @@ bool enumerate(const Object& obj, int height, unsigned nThreads,
 
 #endif // __DOXYGEN
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

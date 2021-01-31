@@ -48,10 +48,10 @@
 #include <vector>
 
 namespace regina {
+    template <int> class XMLTriangulationReader;
+}
 
-template <int> class XMLTriangulationReader;
-
-namespace detail {
+namespace regina::detail {
 
 /**
  * \weakgroup detail
@@ -523,7 +523,7 @@ inline XMLElementReader* XMLTriangulationReaderBase<dim>::propertyReader(
     return 0;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

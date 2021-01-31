@@ -51,8 +51,6 @@
 #include "regina-core.h"
 #include "utilities/boolset.h"
 
-namespace regina {
-
 /**
  * Various classes and routines for XML manipulation, some taken or
  * modified from the libxml++ library.  The libxml2 library is used
@@ -60,7 +58,7 @@ namespace regina {
  *
  * See the xmlutils.h file documentation for libxml++ license details.
  */
-namespace xml {
+namespace regina::xml {
 
 /**
  * \weakgroup utilities
@@ -447,7 +445,7 @@ inline std::string xmlString(xmlChar* str, bool free) {
     return ans;
 }
 
-} } // namespace regina::xml
+} // namespace regina::xml
 
 #endif
 

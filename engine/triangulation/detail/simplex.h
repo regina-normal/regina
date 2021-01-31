@@ -51,8 +51,7 @@
 #include <cassert>
 #include <tuple>
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 template <int> class TriangulationBase;
 
@@ -807,7 +806,7 @@ void SimplexBase<dim>::writeTextLong(std::ostream& out) const {
     }
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

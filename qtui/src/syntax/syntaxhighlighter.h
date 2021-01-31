@@ -45,11 +45,11 @@
 
 #include <QSyntaxHighlighter>
 
-namespace regina { namespace syntax {
+namespace regina::syntax {
     class ContextSwitch;
     class State;
     class StateData;
-} }
+}
 
 /**
  * The SyntaxHighlighter provides an interface to highlight text.

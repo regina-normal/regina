@@ -52,31 +52,28 @@ namespace {
     const int choose16[17] = { 1,16,120,560,1820,4368,8008,11440,12870,11440,8008,4368,1820,560,120,16,1 };
 }
 
-namespace regina {
-namespace detail {
-
+namespace regina::detail {
     const int* const binomSmall_[17] = {
         choose0, choose1, choose2, choose3, choose4, choose5, choose6, choose7,
         choose8, choose9, choose10, choose11, choose12, choose13, choose14,
         choose15, choose16
     };
-
 } // namespace regina::detail
 
-long binomMedium(int n, int k) {
-    if (n <= 16)
-        return binomSmall(n, k);
+namespace regina {
+    long binomMedium(int n, int k) {
+        if (n <= 16)
+            return binomSmall(n, k);
 
-    if (k + k > n)
-        k = n - k;
+        if (k + k > n)
+            k = n - k;
 
-    long ans = 1;
-    for (int i = 1; i <= k; ++i) {
-        ans *= (n + 1 - i);
-        ans /= i;
+        long ans = 1;
+        for (int i = 1; i <= k; ++i) {
+            ans *= (n + 1 - i);
+            ans /= i;
+        }
+        return ans;
     }
-    return ans;
-}
-
 } // namespace regina
 
