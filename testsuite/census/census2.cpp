@@ -63,23 +63,23 @@ class Census2Test : public CppUnit::TestFixture {
             // All counts taken from an enumeration using Regina 4.94.
             unsigned nAll[] = { 1, 0, 7, 0, 51, 0, 738, 0, 20540, 0, 911677 };
             rawCountsCompare(1, 8, nAll, "closed",
-                BoolSet::sBoth, BoolSet::sFalse, 0, false);
+                BoolSet(true, true), false, 0, false);
 
             unsigned nOrientable[] = { 1, 0, 3, 0, 11, 0, 73, 0, 838, 0, 15840};
             rawCountsCompare(1, 10, nOrientable, "closed orbl",
-                BoolSet::sTrue, BoolSet::sFalse, 0, false);
+                true, false, 0, false);
         }
 
         void rawCountsBounded() {
             // All counts taken from an enumeration using Regina 4.94.
             unsigned nAll[] = { 1, 3, 6, 26, 105, 622, 3589, 28031, 202169 };
             rawCountsCompare(1, 7, nAll, "bounded",
-                BoolSet::sBoth, BoolSet::sTrue, -1, false);
+                BoolSet(true, true), true, -1, false);
 
             unsigned nOrientable[] =
                 { 1, 2, 4, 11, 41, 155, 750, 3967, 23260, 148885, 992299 };
             rawCountsCompare(1, 8, nOrientable, "bounded orbl",
-                BoolSet::sTrue, BoolSet::sTrue, -1, false);
+                true, true, -1, false);
         }
 
         void rawCountsClosedMinimal() {
@@ -87,12 +87,12 @@ class Census2Test : public CppUnit::TestFixture {
             unsigned nOrientable[] = { 1, 0, 3 /* sphere + torus */, 0, 0, 0,
                 8, 0, 0, 0, 927 };
             rawCountsCompare(1, 10, nOrientable, "closed orbl minimal",
-                BoolSet::sTrue, BoolSet::sFalse, 0, true);
+                true, false, 0, true);
 
             unsigned nNonOrientable[] = { 1, 0, 4 /* PP + KB */, 0, 11, 0,
                 144, 0, 3627, 0, 149288 };
             rawCountsCompare(1, 8, nNonOrientable, "closed non-orbl minimal",
-                BoolSet::sFalse, BoolSet::sFalse, 0, true);
+                false, false, 0, true);
         }
 
         struct CensusSpec {
@@ -110,10 +110,8 @@ class Census2Test : public CppUnit::TestFixture {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 Triangulation<2>* tri = perms->triangulate();
                 if ((! (s->minimal_ && ! tri->isMinimal())) &&
-                        (! (s->orbl_ == BoolSet::sTrue &&
-                            ! tri->isOrientable())) &&
-                        (! (s->orbl_ == BoolSet::sFalse &&
-                            tri->isOrientable())))
+                        (! (s->orbl_ == true && ! tri->isOrientable())) &&
+                        (! (s->orbl_ == false && tri->isOrientable())))
                     ++s->count_;
                 delete tri;
             }

@@ -66,10 +66,20 @@ void addBoolSet(pybind11::module_& m) {
         .def("byteCode", &BoolSet::byteCode)
         .def("setByteCode", &BoolSet::setByteCode)
         .def_static("fromByteCode", &BoolSet::fromByteCode)
-        .def_readonly_static("sNone", &BoolSet::sNone)
-        .def_readonly_static("sTrue", &BoolSet::sTrue)
-        .def_readonly_static("sFalse", &BoolSet::sFalse)
-        .def_readonly_static("sBoth", &BoolSet::sBoth)
+        // We don't use the C++ sNone, sTrue, sFalse, sBoth constants here
+        // because they are deprecated.
+        .def_property_readonly_static("sNone", [](pybind11::object) {
+            return BoolSet();
+        })
+        .def_property_readonly_static("sTrue", [](pybind11::object) {
+            return BoolSet(true);
+        })
+        .def_property_readonly_static("sFalse", [](pybind11::object) {
+            return BoolSet(false);
+        })
+        .def_property_readonly_static("sBoth", [](pybind11::object) {
+            return BoolSet(true, true);
+        })
     ;
     regina::python::add_output_ostream(c);
     regina::python::add_eq_operators(c);

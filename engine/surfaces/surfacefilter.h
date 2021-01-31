@@ -473,14 +473,14 @@ class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
          *
          * @param value the new set of allowable orientabilities.
          */
-        void setOrientability(const BoolSet& value);
+        void setOrientability(BoolSet value);
         /**
          * Sets the set of allowable compactness properties.
          * See compactness() for further details.
          *
          * @param value the new set of allowable compactness properties.
          */
-        void setCompactness(const BoolSet& value);
+        void setCompactness(BoolSet value);
         /**
          * Sets the set of allowable has-real-boundary properties.
          * See realBoundary() for further details.
@@ -488,7 +488,7 @@ class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
          * @param value the new set of allowable has-real-boundary
          * properties.
          */
-        void setRealBoundary(const BoolSet& value);
+        void setRealBoundary(BoolSet value);
 
         virtual bool accept(const NormalSurface& surface) const override;
         virtual void writeTextLong(std::ostream& out) const override;
@@ -567,9 +567,9 @@ inline Packet* SurfaceFilterCombination::internalClonePacket(Packet*) const {
 // Inline functions for SurfaceFilterProperties
 
 inline SurfaceFilterProperties::SurfaceFilterProperties() :
-        orientability_(BoolSet::sBoth),
-        compactness_(BoolSet::sBoth),
-        realBoundary_(BoolSet::sBoth) {
+        orientability_(true, true),
+        compactness_(true, true),
+        realBoundary_(true, true) {
 }
 inline SurfaceFilterProperties::SurfaceFilterProperties(
         const SurfaceFilterProperties& cloneMe) :
@@ -616,19 +616,19 @@ inline void SurfaceFilterProperties::removeAllEulerChars() {
     ChangeEventSpan span(this);
     eulerChar_.clear();
 }
-inline void SurfaceFilterProperties::setOrientability(const BoolSet& value) {
+inline void SurfaceFilterProperties::setOrientability(BoolSet value) {
     if (orientability_ != value) {
         ChangeEventSpan span(this);
         orientability_ = value;
     }
 }
-inline void SurfaceFilterProperties::setCompactness(const BoolSet& value) {
+inline void SurfaceFilterProperties::setCompactness(BoolSet value) {
     if (compactness_ != value) {
         ChangeEventSpan span(this);
         compactness_ = value;
     }
 }
-inline void SurfaceFilterProperties::setRealBoundary(const BoolSet& value) {
+inline void SurfaceFilterProperties::setRealBoundary(BoolSet value) {
     if (realBoundary_ != value) {
         ChangeEventSpan span(this);
         realBoundary_ = value;

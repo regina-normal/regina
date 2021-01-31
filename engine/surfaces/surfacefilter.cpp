@@ -113,11 +113,11 @@ void SurfaceFilterProperties::writeTextLong(std::ostream& o) const {
             o << ' ' << *it;
         o << '\n';
     }
-    if (orientability_ != BoolSet::sBoth)
+    if (orientability_ != BoolSet(true, true))
         o << "    Orientability: " << orientability_ << '\n';
-    if (compactness_ != BoolSet::sBoth)
+    if (compactness_ != BoolSet(true, true))
         o << "    Compactness: " << compactness_ << '\n';
-    if (realBoundary_ != BoolSet::sBoth)
+    if (realBoundary_ != BoolSet(true, true))
         o << "    Has real boundary: " << realBoundary_ << '\n';
 }
 
@@ -131,11 +131,11 @@ void SurfaceFilterProperties::writeXMLFilterData(std::ostream& out) const {
         out << "</euler>\n";
     }
 
-    if (orientability_ != BoolSet::sBoth)
+    if (orientability_ != BoolSet(true, true))
         out << "    " << xmlValueTag("orbl", orientability_) << '\n';
-    if (compactness_ != BoolSet::sBoth)
+    if (compactness_ != BoolSet(true, true))
         out << "    " << xmlValueTag("compact", compactness_) << '\n';
-    if (realBoundary_ != BoolSet::sBoth)
+    if (realBoundary_ != BoolSet(true, true))
         out << "    " << xmlValueTag("realbdry", realBoundary_) << '\n';
 }
 

@@ -251,9 +251,9 @@ regina::Text* parameterPacket() {
         descStream << nTet << ' ' <<
             (nTet == 1 ? WORD_tetrahedron : WORD_tetrahedra) << "\n";
 
-        if (boundary == regina::BoolSet::sTrue)
+        if (boundary == true)
             descStream << "Boundary " << WORD_faces << " only\n";
-        else if (boundary == regina::BoolSet::sFalse)
+        else if (boundary == false)
             descStream << "No boundary " << WORD_faces << " only\n";
         else
             descStream << "With and without boundary " << WORD_faces << "\n";
@@ -263,16 +263,16 @@ regina::Text* parameterPacket() {
                 " boundary " << WORD_faces << "\n";
     }
 
-    if (finiteness == regina::BoolSet::sTrue)
+    if (finiteness == true)
         descStream << "Finite only\n";
-    else if (finiteness == regina::BoolSet::sFalse)
+    else if (finiteness == false)
         descStream << "Ideal only\n";
     else
         descStream << "Finite and ideal\n";
 
-    if (orientability == regina::BoolSet::sTrue)
+    if (orientability == true)
         descStream << "Orientable only\n";
-    else if (orientability == regina::BoolSet::sFalse)
+    else if (orientability == false)
         descStream << "Non-orientable only\n";
     else
         descStream << "Orientable and non-orientable\n";

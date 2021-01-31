@@ -161,17 +161,17 @@ bool valueOf(const std::string& str, bool& dest) {
 
 bool valueOf(const std::string& str, BoolSet& dest) {
     if (str.length() != 2) {
-        dest = BoolSet::sNone;
+        dest.empty();
         return false;
     }
     char t = str[0];
     char f = str[1];
     if (t != '-' && t != 'T' && t != 't') {
-        dest = BoolSet::sNone;
+        dest.empty();
         return false;
     }
     if (f != '-' && f != 'F' && f != 'f') {
-        dest = BoolSet::sNone;
+        dest.empty();
         return false;
     }
 

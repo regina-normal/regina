@@ -22,6 +22,10 @@ Version 6.1  [ TODO ]
     ENGINE:
         Class BoolSet:
             - Almost everything in this class is now constexpr.
+            - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
+              Just use BoolSet(), true, false, or BoolSet(true, true).
+            - Most routines that took a (const BoolSet&) now just take a
+              BoolSet by value.
         Class BoundaryComponent<dim>:
             - Routines faces(), facets(), and the aliases vertices(), edges(),
               etc. no longer return a const reference to a std::vector, but
@@ -97,6 +101,9 @@ Version 6.1  [ TODO ]
             - Simplified the class hierarchy; SimplexFaces and
               SimplexFacesSuite are now merged.
             - New compile-time constants dimension and subdimension.
+        Class SurfaceFilterProperties:
+            - Routines that took a (const BoolSet&) now just take a
+              BoolSet by value.
         Class Triangulation<dim>:
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a

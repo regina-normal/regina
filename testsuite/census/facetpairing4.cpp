@@ -76,7 +76,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
             unsigned size;
             for (size = 0; size <= 5; ++size) {
                 count = 0;
-                FacetPairing<4>::findAllPairings(size, BoolSet::sFalse,
+                FacetPairing<4>::findAllPairings(size, false,
                     0, countFacetPairings, &count);
 
                 if (count != nPairs[size]) {
@@ -101,7 +101,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
 
             for (size = 0; size <= 6; ++size) {
                 count = 0;
-                FacetPairing<4>::findAllPairings(size, BoolSet::sTrue,
+                FacetPairing<4>::findAllPairings(size, true,
                     1, countFacetPairings, &count);
 
                 if (count != nBdry1[size]) {
@@ -116,7 +116,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
 
             for (size = 0; size <= 5; ++size) {
                 count = 0;
-                FacetPairing<4>::findAllPairings(size, BoolSet::sTrue,
+                FacetPairing<4>::findAllPairings(size, true,
                     2, countFacetPairings, &count);
 
                 if (count != nBdry2[size]) {
@@ -131,7 +131,7 @@ class FacetPairing4Test : public CppUnit::TestFixture {
 
             for (size = 0; size <= 4; ++size) {
                 count = 0;
-                FacetPairing<4>::findAllPairings(size, BoolSet::sTrue,
+                FacetPairing<4>::findAllPairings(size, true,
                     -1, countFacetPairings, &count);
 
                 if (count != nBdry[size]) {

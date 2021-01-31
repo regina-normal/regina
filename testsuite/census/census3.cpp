@@ -160,31 +160,31 @@ class Census3Test : public CppUnit::TestFixture {
         void rawCounts() {
             unsigned nAll[] = { 1, 5, 61, 1581 };
             rawCountsCompare(1, 3, nAll, "closed/ideal",
-                BoolSet::sBoth, BoolSet::sBoth, BoolSet::sFalse,
+                BoolSet(true, true), BoolSet(true, true), false,
                 0, 0, false);
 
             unsigned nOrientable[] = { 1, 4, 35, 454, 13776 };
             rawCountsCompare(1, 3, nOrientable, "closed/ideal orbl",
-                BoolSet::sBoth, BoolSet::sTrue, BoolSet::sFalse,
+                BoolSet(true, true), true, false,
                 0, 0, false);
         }
 
         void rawCountsCompact() {
             unsigned nAll[] = { 1, 4, 17, 81, 577, 5184, 57753 };
             rawCountsCompare(1, 4, nAll, "closed compact",
-                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sFalse,
+                true, BoolSet(true, true), false,
                 0, 0, false);
 
             unsigned nOrientable[] = { 1, 4, 16, 76, 532, 4807, 52946 };
             rawCountsCompare(1, 4, nOrientable, "closed compact orbl",
-                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sFalse,
+                true, true, false,
                 0, 0, false);
         }
 
         void rawCountsPrimeMinimalOr() {
             unsigned nOrientable[] = { 1, 4, 11, 7, 17, 50 };
             rawCountsCompare(1, 4, nOrientable, "closed orbl prime minimal",
-                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sFalse, 0,
+                true, true, false, 0,
                 GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME, true);
         }
 
@@ -192,7 +192,7 @@ class Census3Test : public CppUnit::TestFixture {
             unsigned nNonOrientable[] = { 0, 0, 1, 0, 2, 4 };
             rawCountsCompare(1, 4, nNonOrientable,
                 "closed non-orbl prime minimal P2-irreducible",
-                BoolSet::sTrue, BoolSet::sFalse, BoolSet::sFalse, 0,
+                true, false, false, 0,
                 GluingPermSearcher<3>::PURGE_NON_MINIMAL_PRIME |
                 GluingPermSearcher<3>::PURGE_P2_REDUCIBLE, true);
         }
@@ -200,12 +200,12 @@ class Census3Test : public CppUnit::TestFixture {
         void rawCountsBounded() {
             unsigned nAll[] = { 1, 3, 17, 156, 2308 };
             rawCountsCompare(1, 3, nAll, "bounded compact",
-                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sTrue,
+                true, BoolSet(true, true), true,
                 -1, 0, false);
 
             unsigned nOrientable[] = { 1, 3, 14, 120, 1531 };
             rawCountsCompare(1, 3, nOrientable, "bounded compact orbl",
-                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sTrue,
+                true, true, true,
                 -1, 0, false);
         }
 
@@ -213,13 +213,13 @@ class Census3Test : public CppUnit::TestFixture {
             // Enforced: all vertices torus/KB, no low-degree edges.
             unsigned nAll[] = { 1, 1, 7, 31, 224, 1075, 6348 };
             rawCountsCompare(1, 4, nAll, "candidate minimal cusped hyperbolic",
-                BoolSet::sFalse, BoolSet::sBoth, BoolSet::sFalse, -1,
+                false, BoolSet(true, true), false, -1,
                 GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP, false);
 
             unsigned nOrientable[] = { 1, 0, 3, 14, 113, 590, 3481 };
             rawCountsCompare(1, 5, nOrientable,
                 "candidate minimal cusped hyperbolic orbl",
-                BoolSet::sFalse, BoolSet::sTrue, BoolSet::sFalse, -1,
+                false, true, false, -1,
                 GluingPermSearcher<3>::PURGE_NON_MINIMAL_HYP, false);
         }
 
@@ -244,14 +244,10 @@ class Census3Test : public CppUnit::TestFixture {
                 if (tri->isValid() &&
                         (! (s->minimal_ &&
                             tri->simplifyToLocalMinimum(false))) &&
-                        (! (s->orbl_ == BoolSet::sTrue &&
-                            ! tri->isOrientable())) &&
-                        (! (s->orbl_ == BoolSet::sFalse &&
-                            tri->isOrientable())) &&
-                        (! (s->finite_ == BoolSet::sTrue &&
-                            tri->isIdeal())) &&
-                        (! (s->finite_ == BoolSet::sFalse &&
-                            ! tri->isIdeal())))
+                        (! (s->orbl_ == true && ! tri->isOrientable())) &&
+                        (! (s->orbl_ == false && tri->isOrientable())) &&
+                        (! (s->finite_ == true && tri->isIdeal())) &&
+                        (! (s->finite_ == false && ! tri->isIdeal())))
                     ++s->count_;
                 delete tri;
             }

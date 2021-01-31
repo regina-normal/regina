@@ -331,7 +331,7 @@ REGINA_API bool valueOf(const std::string& str, bool& dest);
  * A set of booleans is represented by one of the four strings
  * <tt>--</tt>, <tt>T-</tt>, <tt>-F</tt> or <tt>TF</tt>.  If the
  * conversion is unsuccessful, argument \a dest will be set to
- * BoolSet::sNone and \c false will be returned.
+ * the empty set and \c false will be returned.
  *
  * \ifacespython Not present.
  *
