@@ -52,6 +52,10 @@ Version 6.1  [ TODO ]
               C++ users should just use auto, and Python users are unaffected.
               See the analagous Triangulation<dim> changes for further details.
             - New compile-time constant dimension.
+        Class DiscType:
+            - Almost everything in this class is now constexpr.
+            - The class constant NONE is deprecated.  Just use DiscType().
+            - Added a bool() operator that tests for a null disc type.
         Class EnableIf<condition, T, defaultValue>:
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
@@ -79,6 +83,10 @@ Version 6.1  [ TODO ]
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.
+        Class NormalInfo<...>:
+            - Routine name() is now constexpr.
+        Class PacketInfo<...>:
+            - Routine name() is now constexpr.
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
@@ -116,6 +124,8 @@ Version 6.1  [ TODO ]
             - New compile-time constants dimension and subdimension.
         Class SnapPeaCensusManifold, SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
+        Class SurfaceFilterInfo<...>:
+            - Routine name() is now constexpr.
         Class SurfaceFilterProperties:
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.

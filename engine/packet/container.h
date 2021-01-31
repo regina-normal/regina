@@ -57,7 +57,7 @@ class Container;
 template <>
 struct PacketInfo<PACKET_CONTAINER> {
     typedef Container Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Container";
     }
 };

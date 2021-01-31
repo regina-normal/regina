@@ -135,7 +135,7 @@ enum SurfaceExportFields {
 template <>
 struct PacketInfo<PACKET_NORMALSURFACES> {
     typedef NormalSurfaces Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Normal Surface List";
     }
 };

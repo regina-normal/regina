@@ -59,7 +59,7 @@ struct NormalInfo<NS_AN_STANDARD> {
     typedef NSVectorANStandard Class;
     typedef NormalInfo<NS_AN_STANDARD> Standard;
     typedef NormalInfo<NS_AN_QUAD_OCT> Reduced;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Standard almost normal (tri-quad-oct)";
     }
     enum {

@@ -63,17 +63,23 @@ namespace regina {
  * specific meaning of \a type is left to the user.
  *
  * It is however assumed that \a type will always be non-negative for
- * "meaningful" disc types; this is to ensure that the constant NONE
- * does not clash with any meaningful values.
+ * "meaningful" disc types.
+ *
+ * This class can also store a \e null disc type; this is obtained by calling
+ * the default constructor, and it will have a type of -1 and a tetrahedron
+ * index of 0.  You can test for a null disc type by casting to \c bool.
  *
  * Note that this class tracks disc \a types, not discs themselves.
  * To track individual normal discs, see the DiscSpec class instead.
  */
 struct REGINA_API DiscType {
-    static const DiscType NONE;
-        /**< Represents a "null" disc type.  Here the \a type member is
-             negative, to distinguish it from "meaningful" disc types
-             in which \a type is always zero or positive. */
+    /**
+     * Represents a null disc type, as described in the class notes.
+     *
+     * \deprecated You can create a new null disc type using the default
+     * constructor, and you can test for null disc types by casting to \c bool.
+     */
+    static const DiscType NONE [[deprecated]];
 
     size_t tetIndex;
         /**< The index within the triangulation of the tetrahedron
@@ -86,9 +92,9 @@ struct REGINA_API DiscType {
              See the DiscType class notes for details. */
 
     /**
-     * Creates a new disc type initialised to NONE.
+     * Creates a new null disc type, as described in the class notes.
      */
-    DiscType();
+    constexpr DiscType();
     /**
      * Creates a new disc type initialised with the given values.
      *
@@ -97,13 +103,26 @@ struct REGINA_API DiscType {
      * @param newType the specific disc type within the given
      * tetrahedron; see the class notes for the meaning of this field.
      */
-    DiscType(size_t newTetIndex, int newType);
+    constexpr DiscType(size_t newTetIndex, int newType);
     /**
      * Creates a copy of the given disc type.
      *
      * @param cloneMe the disc type to clone.
      */
-    DiscType(const DiscType& cloneMe) = default;
+    constexpr DiscType(const DiscType& cloneMe) = default;
+
+    /**
+     * Returns \c true if this disc type is non-null.
+     *
+     * The implementation will assume that a non-null disc type
+     * has non-negative \a type (as explained in the class notes).
+     *
+     * \ifacespython This is not available to python users.
+     * Instead you can simply test whether \a type is negative.
+     *
+     * @return \c true if and only if this is not a null disc type.
+     */
+    constexpr operator bool() const;
 
     /**
      * Sets this to a copy of the given disc type.
@@ -115,14 +134,15 @@ struct REGINA_API DiscType {
     /**
      * Determines if this and the given disc type are identical.
      *
-     * Note that NONE is considered identical to NONE, and that NONE will
-     * not be equal to any "meaningful" disc type (specifically, a disc type
-     * for which \a type is non-negative).
+     * Regarding null disc types: two null DiscType objects that were both
+     * created using the default constructor will be considered equal to
+     * each other, and will not be equal to any "meaningful" disc type
+     * (where \a type is non-negative).
      *
      * @return \c true if this and the given disc type are identical, or
      * \c false if they are different.
      */
-    bool operator == (const DiscType& compare) const;
+    constexpr bool operator == (const DiscType& compare) const;
     /**
      * Determines if this and the given disc type are different.
      *
@@ -132,7 +152,7 @@ struct REGINA_API DiscType {
      * @return \c true if this and the given disc type are different, or
      * \c false if they are identical.
      */
-    bool operator != (const DiscType& compare) const;
+    constexpr bool operator != (const DiscType& compare) const;
     /**
      * Provides an ordering of disc types.  Types are ordered first by
      * \a tetrahedron and then by \a type.  NONE is considered less than
@@ -141,7 +161,7 @@ struct REGINA_API DiscType {
      * @return \c true if this disc type appears before the given disc type
      * in the ordering, or \c false if not.
      */
-    bool operator < (const DiscType& compare) const;
+    constexpr bool operator < (const DiscType& compare) const;
 };
 
 /**
@@ -158,22 +178,27 @@ REGINA_API std::ostream& operator << (std::ostream& out, const DiscType& type);
 
 // Inline functions for DiscType
 
-inline DiscType::DiscType() : tetIndex(0), type(-1) {
+inline constexpr DiscType::DiscType() : tetIndex(0), type(-1) {
 }
 
-inline DiscType::DiscType(size_t newTetIndex, int newType) :
+inline constexpr DiscType::DiscType(size_t newTetIndex, int newType) :
         tetIndex(newTetIndex), type(newType) {
 }
 
-inline bool DiscType::operator == (const DiscType& compare) const {
+inline constexpr DiscType::operator bool() const {
+    return (type >= 0);
+}
+
+inline constexpr bool DiscType::operator == (const DiscType& compare) const {
     return (tetIndex == compare.tetIndex && type == compare.type);
 }
 
-inline bool DiscType::operator != (const DiscType& compare) const {
+inline constexpr bool DiscType::operator != (const DiscType& compare) const {
     return (tetIndex != compare.tetIndex || type != compare.type);
 }
 
-inline bool DiscType::operator < (const DiscType& compare) const {
+inline constexpr bool DiscType::operator < (const DiscType& compare) const {
+    // A null type will have tetIndex = 0, and so will be sorted first.
     return (tetIndex < compare.tetIndex ||
         (tetIndex == compare.tetIndex && type < compare.type));
 }

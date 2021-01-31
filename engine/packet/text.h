@@ -56,7 +56,7 @@ class Text;
 template <>
 struct PacketInfo<PACKET_TEXT> {
     typedef Text Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Text";
     }
 };

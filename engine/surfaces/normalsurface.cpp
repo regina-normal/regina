@@ -280,7 +280,7 @@ bool NormalSurface::locallyCompatible(const NormalSurface& other) const {
 
 void NormalSurface::calculateOctPosition() const {
     if (! vector->allowsAlmostNormal()) {
-        octPosition_ = DiscType::NONE;
+        octPosition_ = DiscType();
         return;
     }
 
@@ -294,7 +294,7 @@ void NormalSurface::calculateOctPosition() const {
                 return;
             }
 
-    octPosition_ = DiscType::NONE;
+    octPosition_ = DiscType();
     return;
 }
 

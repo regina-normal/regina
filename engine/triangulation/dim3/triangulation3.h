@@ -80,7 +80,7 @@ template <int> class XMLTriangulationReader;
 template <>
 struct PacketInfo<PACKET_TRIANGULATION3> {
     typedef Triangulation<3> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "3-Manifold Triangulation";
     }
 };

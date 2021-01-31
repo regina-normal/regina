@@ -61,7 +61,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     private:
-        static const int n = dim + 1;
+        static constexpr int n = dim + 1;
 
         typedef regina::Perm<n> Perm;
         typedef typename Perm::Index Index;

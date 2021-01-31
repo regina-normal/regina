@@ -85,77 +85,77 @@ namespace regina {
 template <>
 struct PacketInfo<PACKET_TRIANGULATION5> {
     typedef Triangulation<5> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "5-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION6> {
     typedef Triangulation<6> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "6-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION7> {
     typedef Triangulation<7> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "7-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION8> {
     typedef Triangulation<8> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "8-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION9> {
     typedef Triangulation<9> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "9-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION10> {
     typedef Triangulation<10> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "10-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION11> {
     typedef Triangulation<11> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "11-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION12> {
     typedef Triangulation<12> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "12-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION13> {
     typedef Triangulation<13> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "13-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION14> {
     typedef Triangulation<14> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "14-Manifold Triangulation";
     }
 };
 template <>
 struct PacketInfo<PACKET_TRIANGULATION15> {
     typedef Triangulation<15> Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "15-Manifold Triangulation";
     }
 };

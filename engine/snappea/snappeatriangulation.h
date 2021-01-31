@@ -120,7 +120,7 @@ struct SnapPeaMemoryFull : public SnapPeaException {
 template <>
 struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
     typedef SnapPeaTriangulation Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "SnapPea Triangulation";
     }
 };

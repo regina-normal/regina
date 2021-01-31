@@ -62,7 +62,7 @@ namespace {
     template <NormalCoords coords>
     struct LPArgs<NormalInfo<coords>> {
         typedef LPConstraintNone Constraint;
-        static const NormalCoords coords_ = coords;
+        static constexpr NormalCoords coords_ = coords;
     };
 
     template <>
@@ -73,14 +73,14 @@ namespace {
         // equations as the first step of the enumeration process, we are
         // assured that LPConstraintNonSpun can be used without problems.
         typedef LPConstraintNonSpun Constraint;
-        static const NormalCoords coords_ = NS_QUAD;
+        static constexpr NormalCoords coords_ = NS_QUAD;
     };
 
     template <>
     struct LPArgs<NormalInfo<NS_AN_QUAD_OCT_CLOSED>> {
         // See comment for LPArgs<NormalInfo<NS_QUAD_CLOSED>>
         typedef LPConstraintNonSpun Constraint;
-        static const NormalCoords coords_ = NS_AN_QUAD_OCT;
+        static constexpr NormalCoords coords_ = NS_AN_QUAD_OCT;
     };
 }
 

@@ -58,7 +58,7 @@ struct NormalInfo<NS_ORIENTED> {
     typedef NSVectorOriented Class;
     typedef NormalInfo<NS_ORIENTED> Standard;
     typedef NormalInfo<NS_ORIENTED_QUAD> Reduced;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Transversely oriented standard normal";
     }
     enum {

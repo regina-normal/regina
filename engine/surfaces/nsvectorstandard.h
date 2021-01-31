@@ -59,7 +59,7 @@ struct NormalInfo<NS_STANDARD> {
     typedef NSVectorStandard Class;
     typedef NormalInfo<NS_STANDARD> Standard;
     typedef NormalInfo<NS_QUAD> Reduced;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Standard normal (tri-quad)";
     }
     enum {

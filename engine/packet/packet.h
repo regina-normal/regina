@@ -78,8 +78,8 @@ class XMLTreeResolver;
  * At a bare minimum, each specialisation of this template must provide:
  *
  * - a typedef \a Class that represents the corresponding Packet subclass;
- * - a static function name() that returns a C-style string giving the
- *   human-readable name of the packet type.
+ * - a static constexpr function name() that returns a C-style string giving
+ *   the human-readable name of the packet type.
  *
  * \ifacespython Not present.
  *

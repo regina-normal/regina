@@ -82,40 +82,36 @@ struct REGINA_API NormalSurfaces::NormalSpec {
      * This has been made a routine (not a constant) to ensure the
      * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static NormalCoords standardCoords() {
-        return NS_STANDARD;
-    }
+    static constexpr NormalCoords standardCoords = NS_STANDARD;
     /**
      * Returns the coordinate system constant corresponding to reduced form.
      *
      * This has been made a routine (not a constant) to ensure the
      * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static NormalCoords reducedCoords() {
-        return NS_QUAD;
-    }
+    static constexpr NormalCoords reducedCoords = NS_QUAD;
 
     /**
      * Returns the number of coordinates per tetrahedron in standard form.
      */
-    static const unsigned totalPerTet = 7;
+    static constexpr unsigned totalPerTet = 7;
     /**
      * Returns the number of coordinates per tetrahedron in reduced form.
      */
-    static const unsigned reducedPerTet = 3;
+    static constexpr unsigned reducedPerTet = 3;
 
     /**
      * Returns the total length of a vector in standard form for the
      * given number of tetrahedra.
      */
-    inline static size_t stdLen(size_t nTet) {
+    inline static constexpr size_t stdLen(size_t nTet) {
         return 7 * nTet;
     }
     /**
      * Returns the total length of a vector in reduced form for the
      * given number of tetrahedra.
      */
-    inline static size_t redLen(size_t nTet) {
+    inline static constexpr size_t redLen(size_t nTet) {
         return 3 * nTet;
     }
 
@@ -123,14 +119,14 @@ struct REGINA_API NormalSurfaces::NormalSpec {
      * Returns the coordinate number in standard form that corresponds
      * to the given disc type within the given tetrahedron.
      */
-    inline static size_t stdPos(size_t tet, unsigned discType) {
+    inline static constexpr size_t stdPos(size_t tet, unsigned discType) {
         return 7 * tet + discType;
     }
     /**
      * Returns the coordinate number in reduced form that corresponds
      * to the given disc type within the given tetrahedron.
      */
-    inline static size_t redPos(size_t tet, unsigned discType) {
+    inline static constexpr size_t redPos(size_t tet, unsigned discType) {
         return 3 * tet + discType;
     }
 };
@@ -165,9 +161,7 @@ struct REGINA_API NormalSurfaces::AlmostNormalSpec {
      * This has been made a routine (not a constant) to ensure the
      * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static NormalCoords standardCoords() {
-        return NS_AN_STANDARD;
-    }
+    static constexpr NormalCoords standardCoords = NS_AN_STANDARD;
 
     /**
      * Returns the coordinate system constant corresponding to reduced form.
@@ -175,31 +169,29 @@ struct REGINA_API NormalSurfaces::AlmostNormalSpec {
      * This has been made a routine (not a constant) to ensure the
      * correct return type.  Perhaps this can be changed to an enum some day...
      */
-    inline static NormalCoords reducedCoords() {
-        return NS_AN_QUAD_OCT;
-    }
+    static constexpr NormalCoords reducedCoords = NS_AN_QUAD_OCT;
 
     /**
      * Returns the number of coordinates per tetrahedron in standard form.
      */
-    static const unsigned totalPerTet = 10;
+    static constexpr unsigned totalPerTet = 10;
     /**
      * Returns the number of coordinates per tetrahedron in reduced form.
      */
-    static const unsigned reducedPerTet = 6;
+    static constexpr unsigned reducedPerTet = 6;
 
     /**
      * Returns the total length of a vector in standard form for the
      * given number of tetrahedra.
      */
-    inline static size_t stdLen(size_t nTet) {
+    inline static constexpr size_t stdLen(size_t nTet) {
         return 10 * nTet;
     }
     /**
      * Returns the total length of a vector in reduced form for the
      * given number of tetrahedra.
      */
-    inline static size_t redLen(size_t nTet) {
+    inline static constexpr size_t redLen(size_t nTet) {
         return 6 * nTet;
     }
 
@@ -207,14 +199,14 @@ struct REGINA_API NormalSurfaces::AlmostNormalSpec {
      * Returns the coordinate number in standard form that corresponds
      * to the given disc type within the given tetrahedron.
      */
-    inline static size_t stdPos(size_t tet, unsigned discType) {
+    inline static constexpr size_t stdPos(size_t tet, unsigned discType) {
         return 10 * tet + discType;
     }
     /**
      * Returns the coordinate number in reduced form that corresponds
      * to the given disc type within the given tetrahedron.
      */
-    inline static size_t redPos(size_t tet, unsigned discType) {
+    inline static constexpr size_t redPos(size_t tet, unsigned discType) {
         return 6 * tet + discType;
     }
 };

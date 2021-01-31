@@ -66,7 +66,7 @@ class XMLPacketReader;
 template <>
 struct PacketInfo<PACKET_NORMALHYPERSURFACES> {
     typedef NormalHypersurfaces Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Normal Hypersurface List";
     }
 };

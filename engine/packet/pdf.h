@@ -58,7 +58,7 @@ class PDF;
 template <>
 struct PacketInfo<PACKET_PDF> {
     typedef PDF Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "PDF";
     }
 };

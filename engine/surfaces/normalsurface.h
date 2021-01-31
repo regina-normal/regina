@@ -228,8 +228,8 @@ typedef Matrix<Integer, true> MatrixInt;
  * - enum constants \a almostNormal, \a spun and \a oriented, which indicate
  *   whether the coordinate system allows almost normal, spun and/or
  *   transversely oriented surfaces;
- * - a static function name() that returns a C-style string giving the
- *   human-readable name of the coordinate system.
+ * - a static constexpr function name() that returns a C-style string giving
+ *   the human-readable name of the coordinate system.
  *
  * \ifacespython Not present.
  *
@@ -824,7 +824,7 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
 
         mutable Property<DiscType> octPosition_;
             /**< The position of the first non-zero octagonal coordinate,
-                 or DiscType::NONE if there is no non-zero octagonal
+                 or a null disc type if there is no non-zero octagonal
                  coordinate.  Here DiscType::type is an octagon type
                  between 0 and 2 inclusive. */
         mutable Property<LargeInteger> eulerChar_;
@@ -1091,16 +1091,16 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          * tetrahedron, and takes values between 0 and 2 inclusive.
          *
          * If this surface does not contain any octagons, this routine
-         * returns DiscType::NONE instead.
+         * returns a null disc type instead.
          *
          * This routine caches its results, which means that once it has
          * been called for a particular surface, subsequent calls return
          * the answer immediately.  Moreover, if the underlying coordinate
          * system does not support almost normal surfaces, then even the
-         * first call is fast (it returns DiscType::NONE immediately).
+         * first call is fast (it returns a null disc type immediately).
          *
          * @return the position of the first non-zero octagonal coordinate,
-         * or DiscType::NONE if there is no such coordinate.
+         * or a null disc type if there is no such coordinate.
          */
         DiscType octPosition() const;
 
@@ -1938,7 +1938,7 @@ inline LargeInteger NormalSurface::isCentral() const {
 }
 
 inline bool NormalSurface::normal() const {
-    return (octPosition() == DiscType::NONE);
+    return ! octPosition();
 }
 
 inline const Ray& NormalSurface::rawVector() const {

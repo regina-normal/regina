@@ -74,8 +74,8 @@ class XMLFilterReader;
  *
  * - a typedef \a Class that represents the corresponding
  *   SurfaceFilter descendant class;
- * - a static function name() that returns a C-style string giving the
- *   human-readable name of the filter type.
+ * - a static constexpr function name() that returns a C-style string giving
+ *   the human-readable name of the filter type.
  *
  * \ifacespython Not present.
  *
@@ -116,7 +116,7 @@ struct SurfaceFilterInfo;
 template <>
 struct PacketInfo<PACKET_SURFACEFILTER> {
     typedef SurfaceFilter Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Surface Filter";
     }
 };
@@ -124,7 +124,7 @@ struct PacketInfo<PACKET_SURFACEFILTER> {
 template <>
 struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
     typedef SurfaceFilter Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Default filter";
     }
 };
@@ -132,7 +132,7 @@ struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
 template <>
 struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
     typedef SurfaceFilterCombination Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Combination filter";
     }
 };
@@ -140,7 +140,7 @@ struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
 template <>
 struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
     typedef SurfaceFilterProperties Class;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Filter by basic properties";
     }
 };

@@ -58,7 +58,7 @@ struct NormalInfo<NS_AN_QUAD_OCT_CLOSED> {
     typedef NSVectorQuadOctClosed Class;
     typedef NormalInfo<NS_AN_STANDARD> Standard;
     typedef NormalInfo<NS_AN_QUAD_OCT_CLOSED> Reduced;
-    inline static const char* name() {
+    inline static constexpr const char* name() {
         return "Closed quad-oct almost normal";
     }
     enum {

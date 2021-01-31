@@ -56,11 +56,10 @@ class RationalTest : public CppUnit::TestFixture {
     CPPUNIT_TEST_SUITE_END();
 
     public:
-        static const double epsilon;
+        static constexpr double epsilon = 0.0000001;
             /** Used for determining whether a number is "close enough"
                 to zero.  This helps avoid the inaccuracies inherent in
-                using == with floating point numbers.  See the bottom
-                of this file for its definition. */
+                using == with floating point numbers. */
 
     public:
         void setUp() {
@@ -439,8 +438,6 @@ class RationalTest : public CppUnit::TestFixture {
                 "-2/13^2702");
         }
 };
-
-const double RationalTest::epsilon = 0.0000001;
 
 void addRational(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(RationalTest::suite());
