@@ -312,8 +312,7 @@ void MarkedAbelianGroup::writeTextShort(std::ostream& out, bool utf8) const {
  */
 std::vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index)
         const {
-    static const std::vector<Integer> nullvec;
-    if (index >= snfrank) return nullvec;
+    if (index >= snfrank) return {};
 
     std::vector<Integer> retval(OM.columns(),Integer::zero);
     // index corresponds to the (index+snffreeindex)-th column of ornCi
@@ -340,8 +339,7 @@ std::vector<Integer> MarkedAbelianGroup::freeRep(unsigned long index)
  */
 std::vector<Integer> MarkedAbelianGroup::torsionRep(
         unsigned long index) const {
-    static const std::vector<Integer> nullvec;
-    if (index >= ifNum) return nullvec;
+    if (index >= ifNum) return {};
     std::vector<Integer> retval(OM.columns(),Integer::zero);
 
     if (coeff == 0)
@@ -390,8 +388,7 @@ std::vector<Integer> MarkedAbelianGroup::torsionRep(
 
 std::vector<Integer> MarkedAbelianGroup::ccRep(const std::vector<Integer>& SNFRep) const
 {
-    static const std::vector<Integer> nullV;
-    if (SNFRep.size() != snfrank + ifNum) return nullV;
+    if (SNFRep.size() != snfrank + ifNum) return {};
 
     std::vector<Integer> retval(OM.columns(),Integer::zero);
     std::vector<Integer> temp(ornCi->rows()+TORLoc,Integer::zero);
@@ -438,8 +435,7 @@ std::vector<Integer> MarkedAbelianGroup::ccRep(const std::vector<Integer>& SNFRe
 std::vector<Integer> MarkedAbelianGroup::ccRep(
      unsigned long SNFRep) const
 {
- static const std::vector<Integer> nullV;
- if (SNFRep >= snfrank + ifNum) return nullV;
+ if (SNFRep >= snfrank + ifNum) return {};
 
  std::vector<Integer> retval(OM.columns(),Integer::zero);
  std::vector<Integer> temp(ornCi->rows()+TORLoc,Integer::zero);
@@ -499,10 +495,8 @@ std::vector<Integer> MarkedAbelianGroup::snfRep(
     std::vector<Integer> retval(snfrank+ifNum,
             Integer::zero);
     // apply OMRi, crop, then apply ornC, tidy up and return.
-    static const std::vector<Integer> nullvec; // this is returned if
-    // element not in ker(M)
     // first, does element have the right dimensions? if not, abort.
-    if (element.size() != OM.columns()) return nullvec;
+    if (element.size() != OM.columns()) return {};
     // this holds OMRi * element which we will use to check first if
     // element is in the kernel, and then to construct its SNF rep. 
     std::vector<Integer> temp(ON.rows(), Integer::zero); 
@@ -513,7 +507,7 @@ std::vector<Integer> MarkedAbelianGroup::snfRep(
     // make judgement on if in kernel.
     // needs to be tweaked for mod p coefficients.
     if (coeff == 0)
-    { for (unsigned long i=0;i<rankOM;i++) if (temp[i] != 0) return nullvec; }
+    { for (unsigned long i=0;i<rankOM;i++) if (temp[i] != 0) return {}; }
     else
     { // the first TORLoc-1 terms of tM were units mod p so we need only 
       // check divisibility by p for temp[i] the remaining terms of tM were 
@@ -521,8 +515,8 @@ std::vector<Integer> MarkedAbelianGroup::snfRep(
       // for element to be in ker(M), we need temp[i]*TORVec[i-TORLoc] % p == 0 
       for (unsigned long i=0; i<rankOM; i++) 
       { 
-        if (i<TORLoc) { if (temp[i] % coeff != 0) return nullvec; }
-        else { if ((temp[i]*TORVec[i-TORLoc]) % coeff != 0) return nullvec; 
+        if (i<TORLoc) { if (temp[i] % coeff != 0) return {}; }
+        else { if ((temp[i]*TORVec[i-TORLoc]) % coeff != 0) return {}; 
             temp[i] = temp[i].divExact(coeff.divExact(
                coeff.gcd(TORVec[i-TORLoc])));  }
       }
@@ -613,15 +607,14 @@ std::vector<Integer> MarkedAbelianGroup::boundaryMap(
 std::vector<Integer> MarkedAbelianGroup::writeAsBoundary(
     const std::vector<Integer> &input) const
 {  
-    static const std::vector<Integer> nullvec;
-    if ( !isCycle(input) ) return nullvec;
+    if ( !isCycle(input) ) return {};
     // okay, it's a cycle so lets determine whether or not it is a boundary. 
     std::vector<Integer> temp(ON.rows(), Integer::zero); 
     for (unsigned long i=0; i<OMRi.rows(); i++) 
       for (unsigned long j=0;j<OMRi.columns();j++)
         temp[i] += OMRi.entry(i,j)*input[j];
     for (unsigned long i=0; i<TORVec.size(); i++)
-        if (temp[TORLoc + i] % coeff != 0) return nullvec;
+        if (temp[TORLoc + i] % coeff != 0) return {};
     // now we know we're dealing with a cycle with zero TOR part (if coeff != 0) 
     // convert into the diagPres coordinates / standard snfcoords if p==0. 
     std::vector<Integer> retval(ON.columns(), Integer::zero);
@@ -633,11 +626,11 @@ std::vector<Integer> MarkedAbelianGroup::writeAsBoundary(
             snfV[i] += ornC->entry(i,j)*temp[j+rankOM];
         // check divisibility in the invFac coords
         for (unsigned long i=0; i<ifNum; i++)
-        { if (snfV[i+ifLoc] % InvFacList[i] != 0) return nullvec;
+        { if (snfV[i+ifLoc] % InvFacList[i] != 0) return {};
             snfV[i+ifLoc] /= InvFacList[i]; }
             // check that it's zero on coords missed by N...
             for (unsigned long i=0; i<snfrank; i++)
-                if (snfV[i+snffreeindex] != 0) return nullvec;
+                if (snfV[i+snffreeindex] != 0) return {};
             // we know it's in the image now. 
             for (unsigned long i=0; i<ornR->rows(); i++) 
               for (unsigned long j=0; j<snffreeindex; j++)
@@ -652,7 +645,7 @@ std::vector<Integer> MarkedAbelianGroup::writeAsBoundary(
         for (unsigned long i=0; i<tensorIfNum; i++)
         {
             if (tensorV[i+tensorIfLoc] % tensorInvFacList[i] != 0) 
-              return nullvec;
+              return {};
             tensorV[i+tensorIfLoc] /= tensorInvFacList[i];
         }
         // so we know it's where it comes from now...
@@ -668,8 +661,7 @@ std::vector<Integer> MarkedAbelianGroup::writeAsBoundary(
 //  if it corresponds to a TOR vector.  
 std::vector<Integer> MarkedAbelianGroup::cycleGen(unsigned long j) const
 {
-    static const std::vector<Integer> nullv;
-    if (j >= minNumberCycleGens()) return nullv;
+    if (j >= minNumberCycleGens()) return {};
     std::vector<Integer> retval( OM.columns(), Integer::zero);
     for (unsigned long i=0; i<retval.size(); i++) 
      retval[i] = OMR.entry(i, j+TORLoc);
@@ -683,8 +675,7 @@ std::vector<Integer> MarkedAbelianGroup::cycleProjection(
      const std::vector<Integer> &ccelt ) const
 {
     // multiply by OMRi, truncate, multiply by OMR
-    static const std::vector<Integer> nullv;
-    if (ccelt.size() != OMRi.columns()) return nullv;
+    if (ccelt.size() != OMRi.columns()) return {};
     std::vector<Integer> retval( OMRi.columns(), Integer::zero );
     for (unsigned long i=0; i<retval.size(); i++)
     {
@@ -699,8 +690,7 @@ std::vector<Integer> MarkedAbelianGroup::cycleProjection(
       unsigned long ccindx ) const
 {
     // truncate column cyclenum of OMRi, multiply by OMR
-    static const std::vector<Integer> nullv;
-    if (ccindx >= OMRi.columns()) return nullv;
+    if (ccindx >= OMRi.columns()) return {};
     std::vector<Integer> retval( OMRi.columns(), Integer::zero );
     for (unsigned long i=0; i<retval.size(); i++)
     {
@@ -1000,8 +990,7 @@ std::vector<Integer> HomMarkedAbelianGroup::evalSNF(
     const std::vector<Integer> &input) const
 {
     const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
-    static const std::vector<Integer> nullV; 
-    if (input.size() != domain_.minNumberOfGenerators() ) return nullV;
+    if (input.size() != domain_.minNumberOfGenerators() ) return {};
     std::vector<Integer> retval( 
           range_.minNumberOfGenerators(), Integer::zero );
 
