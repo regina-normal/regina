@@ -808,7 +808,7 @@ class BoundaryComponentFaceStorage<dim, dim - 1> {
          * of the list of facets of this boundary component.
          * This class does not take ownership of the given facet.
          *
-         * @param face the facet to append to the list.
+         * @param facet the facet to append to the list.
          */
         void push_back(Face<dim, dim-1>* facet) {
             facets_.push_back(facet);
