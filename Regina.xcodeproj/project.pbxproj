@@ -1964,7 +1964,6 @@
 		05F0A0171DBF079600117BFC /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FF51DBF078800117BFC /* triangulation4.cpp */; };
 		05F0A0181DBF079600117BFC /* vertex4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F09FF71DBF078800117BFC /* vertex4.cpp */; };
 		05F0A0361DBF0B5E00117BFC /* angle.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A0191DBF0B5E00117BFC /* angle.cpp */; };
-		05F0A0381DBF0B5E00117BFC /* boundarycomponent3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F0A01B1DBF0B5E00117BFC /* boundarycomponent3.h */; };
 		05F0A0391DBF0B5E00117BFC /* component3.h in Headers */ = {isa = PBXBuildFile; fileRef = 05F0A01D1DBF0B5E00117BFC /* component3.h */; };
 		05F0A03A1DBF0B5E00117BFC /* crushtri.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */; };
 		05F0A03B1DBF0B5E00117BFC /* decompose.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05F0A01F1DBF0B5E00117BFC /* decompose.cpp */; };
@@ -4291,7 +4290,6 @@
 		05F09FF71DBF078800117BFC /* vertex4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = vertex4.cpp; sourceTree = "<group>"; };
 		05F09FF81DBF078800117BFC /* vertex4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vertex4.h; sourceTree = "<group>"; };
 		05F0A0191DBF0B5E00117BFC /* angle.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = angle.cpp; sourceTree = "<group>"; };
-		05F0A01B1DBF0B5E00117BFC /* boundarycomponent3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundarycomponent3.h; sourceTree = "<group>"; };
 		05F0A01C1DBF0B5E00117BFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05F0A01D1DBF0B5E00117BFC /* component3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component3.h; sourceTree = "<group>"; };
 		05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = crushtri.cpp; sourceTree = "<group>"; };
@@ -7320,7 +7318,6 @@
 			children = (
 				05FF74E31DCB12F700FC2CB4 /* 600cell.py */,
 				05F0A0191DBF0B5E00117BFC /* angle.cpp */,
-				05F0A01B1DBF0B5E00117BFC /* boundarycomponent3.h */,
 				05F0A01C1DBF0B5E00117BFC /* CMakeLists.txt */,
 				05F0A01D1DBF0B5E00117BFC /* component3.h */,
 				05F0A01E1DBF0B5E00117BFC /* crushtri.cpp */,
@@ -7483,7 +7480,6 @@
 				052F9F8C180600FB00FAE4DF /* kernel.h in Headers */,
 				054208741DF0D0B50018AB24 /* definition_p.h in Headers */,
 				05F09FC01DBEF01800117BFC /* dim3.h in Headers */,
-				05F0A0381DBF0B5E00117BFC /* boundarycomponent3.h in Headers */,
 				05FB46EB1DD92D4A00BB00E5 /* markedabeliangroup.h in Headers */,
 				05FB46E71DD92D4A00BB00E5 /* grouppresentation.h in Headers */,
 				05431F7A1C40F3C9009BC072 /* matrix.h in Headers */,
