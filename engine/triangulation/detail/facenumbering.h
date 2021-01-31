@@ -494,14 +494,17 @@ class FaceNumberingImpl<1, 0> : public FaceNumberingAPI<1, 0> {
 template <>
 class REGINA_API FaceNumberingImpl<2, 1> : public FaceNumberingAPI<2, 1> {
     private:
-        static const Perm<3> ordering_[3];
-            /**< A hard-coded list of all return values for ordering(). */
+        /**
+         * A hard-coded list of all return values for ordering(),
+         * given by permutation code.
+         */
+        static constexpr Perm<3>::Code ordering_[3] = { 2, 1, 0 };
 
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static Perm<3> ordering(unsigned face) {
-            return ordering_[face];
+            return Perm<3>::fromPermCode(ordering_[face]);
         }
 
         static unsigned faceNumber(Perm<3> vertices) {
@@ -553,14 +556,17 @@ class REGINA_API FaceNumberingImpl<3, 1> : public FaceNumberingAPI<3, 1> {
         static const int edgeVertex[6][2];
 
     private:
-        static const Perm<4> ordering_[6];
-            /**< A hard-coded list of all return values for ordering(). */
+        /**
+         * A hard-coded list of all return values for ordering(),
+         * given by permutation code.
+         */
+        static constexpr Perm<4>::Code2 ordering_[6] = { 0, 2, 4, 8, 10, 16 };
 
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static Perm<4> ordering(unsigned face) {
-            return ordering_[face];
+            return Perm<4>::fromPermCode2(ordering_[face]);
         }
 
         static unsigned faceNumber(Perm<4> vertices) {
@@ -577,14 +583,17 @@ class REGINA_API FaceNumberingImpl<3, 1> : public FaceNumberingAPI<3, 1> {
 template <>
 class REGINA_API FaceNumberingImpl<3, 2> : public FaceNumberingAPI<3, 2> {
     private:
-        static const Perm<4> ordering_[4];
-            /**< A hard-coded list of all return values for ordering(). */
+        /**
+         * A hard-coded list of all return values for ordering(),
+         * given by permutation code.
+         */
+        static constexpr Perm<4>::Code2 ordering_[4] = { 9, 2, 1, 0 };
 
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static Perm<4> ordering(unsigned face) {
-            return ordering_[face];
+            return Perm<4>::fromPermCode2(ordering_[face]);
         }
 
         static unsigned faceNumber(Perm<4> vertices) {
@@ -636,14 +645,19 @@ class REGINA_API FaceNumberingImpl<4, 1> : public FaceNumberingAPI<4, 1> {
         static const int edgeVertex[10][2];
 
     private:
-        static const Perm<5> ordering_[10];
-            /**< A hard-coded list of all return values for ordering(). */
+        /**
+         * A hard-coded list of all return values for ordering(),
+         * given by permutation code.
+         */
+        static constexpr Perm<5>::Code2 ordering_[10] = {
+            0, 6, 12, 18, 30, 36, 42, 60, 66, 90
+        };
 
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static Perm<5> ordering(unsigned face) {
-            return ordering_[face];
+            return Perm<5>::fromPermCode2(ordering_[face]);
         }
 
         static unsigned faceNumber(Perm<5> vertices) {
@@ -697,14 +711,19 @@ class REGINA_API FaceNumberingImpl<4, 2> : public FaceNumberingAPI<4, 2> {
         static const int triangleVertex[10][3];
 
     private:
-        static const Perm<5> ordering_[10];
-            /**< A hard-coded list of all return values for ordering(). */
+        /**
+         * A hard-coded list of all return values for ordering(),
+         * given by permutation code.
+         */
+        static constexpr Perm<5>::Code2 ordering_[10] = {
+            64, 40, 34, 32, 16, 10, 8, 4, 2, 0
+        };
 
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static Perm<5> ordering(unsigned face) {
-            return ordering_[face];
+            return Perm<5>::fromPermCode2(ordering_[face]);
         }
 
         static unsigned faceNumber(Perm<5> vertices) {
@@ -722,14 +741,17 @@ class REGINA_API FaceNumberingImpl<4, 2> : public FaceNumberingAPI<4, 2> {
 template <>
 class REGINA_API FaceNumberingImpl<4, 3> : public FaceNumberingAPI<4, 3> {
     private:
-        static const Perm<5> ordering_[5];
-            /**< A hard-coded list of all return values for ordering(). */
+        /**
+         * A hard-coded list of all return values for ordering(),
+         * given by permutation code.
+         */
+        static constexpr Perm<5>::Code2 ordering_[5] = { 32, 9, 2, 1, 0 };
 
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static Perm<5> ordering(unsigned face) {
-            return ordering_[face];
+            return Perm<5>::fromPermCode2(ordering_[face]);
         }
 
         static unsigned faceNumber(Perm<5> vertices) {
