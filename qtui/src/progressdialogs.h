@@ -78,7 +78,7 @@ class ProgressDialogNumeric : public QProgressDialog {
          * <tt>tracker->isStarted()</tt> must return \c false.
          */
         ProgressDialogNumeric(regina::ProgressTracker* tracker,
-                const QString& displayText, QWidget* parent = 0);
+                const QString& displayText, QWidget* parent = nullptr);
 
         /**
          * Displays the dialog and follows the progress of the
@@ -121,7 +121,7 @@ class ProgressDialogMessage : public QDialog {
          * <tt>tracker->isStarted()</tt> must return \c false.
          */
         ProgressDialogMessage(regina::ProgressTracker* tracker,
-                const QString& displayText, QWidget* parent = 0);
+                const QString& displayText, QWidget* parent = nullptr);
 
         /**
          * Displays the dialog and follows the progress of the
@@ -171,7 +171,7 @@ class ProgressDialogOpen : public QDialog {
          */
         ProgressDialogOpen(regina::ProgressTrackerOpen* tracker,
                 const QString& displayText, const QString& detailTemplate,
-                QWidget* parent = 0);
+                QWidget* parent = nullptr);
 
         /**
          * Displays the dialog and follows the progress of the
