@@ -195,10 +195,24 @@ class REGINA_API Perm<4> {
         static constexpr Index nPerms_1 = 6;
 
         /**
-         * Indicates the native unsigned integer type used to store the
-         * internal permutation code.
+         * Indicates the native unsigned integer type used to store a
+         * first-generation permutation code.
+         *
+         * Although types \a Code and \a Code2 are identical, they are
+         * provided as separate typedefs to help communicate in your
+         * source code which type of code is being used.
          */
         typedef uint8_t Code;
+
+        /**
+         * Indicates the native unsigned integer type used to store a
+         * second-generation permutation code.
+         *
+         * Although types \a Code and \a Code2 are identical, they are
+         * provided as separate typedefs to help communicate in your
+         * source code which type of code is being used.
+         */
+        typedef uint8_t Code2;
 
         /**
          * Gives array-like access to all possible permutations of
@@ -334,7 +348,7 @@ class REGINA_API Perm<4> {
         static constexpr S2Lookup S2 {};
 
     private:
-        Code code_;
+        Code2 code_;
             /**< The internal second-generation permutation code
                  representing this permutation. */
 
@@ -451,7 +465,7 @@ class REGINA_API Perm<4> {
          *
          * @return the second-generation permutation code.
          */
-        constexpr Code permCode2() const;
+        constexpr Code2 permCode2() const;
 
         /**
          * Sets this permutation to that represented by the given
@@ -482,7 +496,7 @@ class REGINA_API Perm<4> {
          * @param code the second-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode2(Code code);
+        void setPermCode2(Code2 code);
 
         /**
          * Creates a permutation from the given first-generation
@@ -513,7 +527,7 @@ class REGINA_API Perm<4> {
          * @param code the second-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static constexpr Perm<4> fromPermCode2(Code code);
+        static constexpr Perm<4> fromPermCode2(Code2 code);
 
         /**
          * Determines whether the given character is a valid first-generation
@@ -542,7 +556,7 @@ class REGINA_API Perm<4> {
          * @return \c true if and only if the given code is a valid
          * second-generation permutation code.
          */
-        static constexpr bool isPermCode2(Code code);
+        static constexpr bool isPermCode2(Code2 code);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -874,7 +888,7 @@ class REGINA_API Perm<4> {
          * Specifically, the image of \a x under the permutation <tt>S4[i]</tt>
          * is <tt>imageTable[i][x]</tt>.
          */
-        static constexpr Code imageTable[24][4] = {
+        static constexpr int imageTable[24][4] = {
             { 0, 1, 2, 3 }, { 0, 1, 3, 2 }, { 0, 2, 3, 1 }, { 0, 2, 1, 3 },
             { 0, 3, 1, 2 }, { 0, 3, 2, 1 }, { 1, 0, 3, 2 }, { 1, 0, 2, 3 },
             { 1, 2, 0, 3 }, { 1, 2, 3, 0 }, { 1, 3, 2, 0 }, { 1, 3, 0, 2 },
@@ -889,7 +903,7 @@ class REGINA_API Perm<4> {
          * Specifically, the inverse of permutation <tt>S4[i]</tt> is
          * the permutation <tt>S4[ invS4[i] ]</tt>.
          */
-        static constexpr Code invS4[24] = {
+        static constexpr Code2 invS4[24] = {
             0, 1, 4, 3, 2, 5, 6, 7, 12, 19, 18, 13,
             8, 11, 20, 15, 16, 23, 10, 9, 14, 21, 22, 17
         };
@@ -901,7 +915,7 @@ class REGINA_API Perm<4> {
          * Specifically, the product <tt>S4[x] * S4[y]</tt> is the
          * permutation <tt>S4[product[x][y]]</tt>.
          */
-        static constexpr Code productTable[24][24] = {
+        static constexpr Code2 productTable[24][24] = {
             // Generated using an older version of Regina in which products
             // were computed (not simply looked up from a dictionary like here).
             { 0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23 },
@@ -936,7 +950,7 @@ class REGINA_API Perm<4> {
          * Specifically, the permutation that swaps \a x and \a y is
          * <tt>S4[swapTable[x][y]]</tt>.  Here \a x and \a y may be equal.
          */
-        static constexpr Code swapTable[4][4] = {
+        static constexpr Code2 swapTable[4][4] = {
             {  0, 7, 15, 21 },
             {  7, 0,  3,  5 },
             { 15, 3,  0,  1 },
@@ -947,7 +961,7 @@ class REGINA_API Perm<4> {
          * Contains the S4 indices of the elements of S3, where the
          * element 3 maps to itself.
          */
-        static constexpr Code S3Table[6] = { 0, 3, 8, 7, 12, 15 };
+        static constexpr Code2 S3Table[6] = { 0, 3, 8, 7, 12, 15 };
 
     private:
         /**
@@ -960,7 +974,7 @@ class REGINA_API Perm<4> {
          * @param code the second-generation code from which the new
          * permutation will be created.
          */
-        constexpr Perm<4>(Code code);
+        constexpr Perm<4>(Code2 code);
 
         /**
          * Returns the index into the Perm<4>::S4 array of the permutation that
@@ -983,7 +997,7 @@ class REGINA_API Perm<4> {
          * Perm<4>::orderedS4.  This conversion works in either direction.
          *
          * \tparam Int a native integer type; this would typically be
-         * either \c int or \a Code.
+         * either \c int or \a Code2.
          */
         template <typename Int>
         static constexpr Int convOrderedUnordered(Int index);
@@ -1008,12 +1022,12 @@ inline constexpr Int Perm<4>::convOrderedUnordered(Int index) {
 }
 
 inline constexpr Perm<4> Perm<4>::S4Lookup::operator[] (int index) const {
-    return Perm<4>(static_cast<Code>(index));
+    return Perm<4>(static_cast<Code2>(index));
 }
 
 inline constexpr Perm<4> Perm<4>::OrderedS4Lookup::operator[] (int index)
         const {
-    return Perm<4>(static_cast<Code>(convOrderedUnordered(index)));
+    return Perm<4>(static_cast<Code2>(convOrderedUnordered(index)));
 }
 
 inline constexpr Perm<4> Perm<4>::S3Lookup::operator[] (int index) const {
@@ -1032,18 +1046,18 @@ inline constexpr Perm<4> Perm<4>::S2Lookup::operator[] (int index) const {
 inline constexpr Perm<4>::Perm() : code_(0) {
 }
 
-inline constexpr Perm<4>::Perm(Code code) : code_(code) {
+inline constexpr Perm<4>::Perm(Code2 code) : code_(code) {
 }
 
 inline constexpr Perm<4>::Perm(int a, int b) : code_(swapTable[a][b]) {
 }
 
 inline constexpr Perm<4>::Perm(int a, int b, int c, int d) :
-        code_(static_cast<Code>(S4Index(a, b, c, d))) {
+        code_(static_cast<Code2>(S4Index(a, b, c, d))) {
 }
 
 inline constexpr Perm<4>::Perm(const int* image) :
-        code_(static_cast<Code>(S4Index(
+        code_(static_cast<Code2>(S4Index(
         image[0], image[1], image[2], image[3]))) {
 }
 
@@ -1055,31 +1069,31 @@ inline constexpr Perm<4>::Code Perm<4>::permCode() const {
         (imageTable[code_][3] << 6));
 }
 
-inline constexpr Perm<4>::Code Perm<4>::permCode2() const {
+inline constexpr Perm<4>::Code2 Perm<4>::permCode2() const {
     return code_;
 }
 
 inline void Perm<4>::setPermCode(Code code) {
-    code_ = static_cast<Code>(S4Index(
+    code_ = static_cast<Code2>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
         (code >> 4) & 0x03,
         (code >> 6) & 0x03));
 }
 
-inline void Perm<4>::setPermCode2(Code code) {
+inline void Perm<4>::setPermCode2(Code2 code) {
     code_ = code;
 }
 
 inline constexpr Perm<4> Perm<4>::fromPermCode(Code code) {
-    return Perm<4>(static_cast<Code>(S4Index(
+    return Perm<4>(static_cast<Code2>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
         (code >> 4) & 0x03,
         (code >> 6) & 0x03)));
 }
 
-inline constexpr Perm<4> Perm<4>::fromPermCode2(Code code) {
+inline constexpr Perm<4> Perm<4>::fromPermCode2(Code2 code) {
     return Perm<4>(code);
 }
 
@@ -1091,7 +1105,7 @@ inline constexpr bool Perm<4>::isPermCode(Code code) {
     return (mask == 15);
 }
 
-inline constexpr bool Perm<4>::isPermCode2(Code code) {
+inline constexpr bool Perm<4>::isPermCode2(Code2 code) {
     // code >= 0 is automatic because we are using an unsigned data type.
     return (code < 24);
 }
@@ -1136,9 +1150,9 @@ inline constexpr bool Perm<4>::isIdentity() const {
 
 inline constexpr Perm<4> Perm<4>::rot(int i) {
     switch (i) {
-        case 1: return Perm<4>(static_cast<Code>(9));
-        case 2: return Perm<4>(static_cast<Code>(16));
-        case 3: return Perm<4>(static_cast<Code>(19));
+        case 1: return Perm<4>(static_cast<Code2>(9));
+        case 2: return Perm<4>(static_cast<Code2>(16));
+        case 3: return Perm<4>(static_cast<Code2>(19));
         default: return Perm<4>(); // Identity
     }
 }

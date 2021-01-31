@@ -73,6 +73,11 @@ Version 6.1  [ TODO ]
               and/or look up the relevant permutations on the fly.
             - New static routine rot().
             - Almost everything in the permutation classes is now constexpr.
+        Class Perm<4>:
+            - All of the changes listed for Perm<n> above.
+            - Added a new typedef Code2; this is identical to Code, but
+              it allows you to express more clearly in your source code
+              which generation of code is being used.
         Class Perm<5>:
             - All of the changes listed for Perm<n> above.
             - Changed the internal representation; as a result there are new

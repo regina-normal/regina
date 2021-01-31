@@ -101,7 +101,7 @@ inline constexpr Perm<3> Perm<3>::contract(Perm<k> p) {
 template <>
 inline constexpr Perm<3> Perm<3>::contract(Perm<4> p) {
     // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
-    Perm<4>::Code c = p.permCode2();
+    Perm<4>::Code2 c = p.permCode2();
     return Perm<3>::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
 }
 
