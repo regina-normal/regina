@@ -20,6 +20,8 @@ Version 6.1  [ TODO ]
           A consequence is that the API docs are much more usable, since
           doxygen can finally understand the code again.
     ENGINE:
+        Class BoolSet:
+            - Almost everything in this class is now constexpr.
         Class BoundaryComponent<dim>:
             - Routines faces(), facets(), and the aliases vertices(), edges(),
               etc. no longer return a const reference to a std::vector, but

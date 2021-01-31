@@ -60,9 +60,9 @@ class REGINA_API BoolSet {
             /**< The first two bits of this character represent whether
                  or not \c true or \c false belongs to this set. */
 
-        static const unsigned char eltTrue;
+        static constexpr unsigned char eltTrue = 1;
             /**< A character with only the \c true member bit set. */
-        static const unsigned char eltFalse;
+        static constexpr unsigned char eltFalse = 2;
             /**< A character with only the \c false member bit set. */
 
     public:
@@ -79,19 +79,19 @@ class REGINA_API BoolSet {
         /**
          * Creates a new empty set.
          */
-        BoolSet();
+        constexpr BoolSet();
         /**
          * Creates a set containing a single member as given.
          *
          * @param member the single element to include in this set.
          */
-        BoolSet(bool member);
+        constexpr BoolSet(bool member);
         /**
          * Creates a set equal to the given set.
          *
          * @param cloneMe the set upon which we will base the new set.
          */
-        BoolSet(const BoolSet& cloneMe) = default;
+        constexpr BoolSet(const BoolSet& cloneMe) = default;
         /**
          * Creates a set specifying whether \c true and/or \c false
          * should be a member.
@@ -101,7 +101,7 @@ class REGINA_API BoolSet {
          * @param insertFalse should the new set include the element
          * <tt>false</tt>?
          */
-        BoolSet(bool insertTrue, bool insertFalse);
+        constexpr BoolSet(bool insertTrue, bool insertFalse);
 
         /**
          * Determines if \c true is a member of this set.
@@ -109,14 +109,14 @@ class REGINA_API BoolSet {
          * @return \c true if and only if \c true is a member of this
          * set.
          */
-        bool hasTrue() const;
+        constexpr bool hasTrue() const;
         /**
          * Determines if \c false is a member of this set.
          *
          * @return \c true if and only if \c false is a member of this
          * set.
          */
-        bool hasFalse() const;
+        constexpr bool hasFalse() const;
         /**
          * Determines if the given boolean is a member of this set.
          *
@@ -124,7 +124,7 @@ class REGINA_API BoolSet {
          * @return \c true if and only if the given boolean is a member
          * of this set.
          */
-        bool contains(bool value) const;
+        constexpr bool contains(bool value) const;
 
         /**
          * Inserts \c true into this set if it is not already present.
@@ -159,7 +159,7 @@ class REGINA_API BoolSet {
          * @return \c true if and only if this and the given set are
          * equal.
          */
-        bool operator == (const BoolSet& other) const;
+        constexpr bool operator == (const BoolSet& other) const;
         /**
          * Determines if this set is not equal to the given set.
          *
@@ -167,7 +167,7 @@ class REGINA_API BoolSet {
          * @return \c true if and only if this and the given set are
          * not equal.
          */
-        bool operator != (const BoolSet& other) const;
+        constexpr bool operator != (const BoolSet& other) const;
         /**
          * Determines if this set is a proper subset of the given set.
          *
@@ -175,7 +175,7 @@ class REGINA_API BoolSet {
          * @return \c true if and only if this is a proper subset of the
          * given set.
          */
-        bool operator < (const BoolSet& other) const;
+        constexpr bool operator < (const BoolSet& other) const;
         /**
          * Determines if this set is a proper superset of the given set.
          *
@@ -183,7 +183,7 @@ class REGINA_API BoolSet {
          * @return \c true if and only if this is a proper superset of the
          * given set.
          */
-        bool operator > (const BoolSet& other) const;
+        constexpr bool operator > (const BoolSet& other) const;
         /**
          * Determines if this set is a subset of (possibly equal to)
          * the given set.
@@ -192,7 +192,7 @@ class REGINA_API BoolSet {
          * @return \c true if and only if this is a subset of the
          * given set.
          */
-        bool operator <= (const BoolSet& other) const;
+        constexpr bool operator <= (const BoolSet& other) const;
         /**
          * Determines if this set is a superset of (possibly equal to)
          * the given set.
@@ -201,7 +201,7 @@ class REGINA_API BoolSet {
          * @return \c true if and only if this is a superset of the
          * given set.
          */
-        bool operator >= (const BoolSet& other) const;
+        constexpr bool operator >= (const BoolSet& other) const;
 
         /**
          * Sets this set to be identical to the given set.
@@ -260,7 +260,7 @@ class REGINA_API BoolSet {
          * @param other the set to union with this set.
          * @return the union of this and the given set.
          */
-        BoolSet operator | (const BoolSet& other) const;
+        constexpr BoolSet operator | (const BoolSet& other) const;
         /**
          * Returns the intersection of this set with the given set.
          * The result is a set containing precisely the elements that
@@ -270,7 +270,7 @@ class REGINA_API BoolSet {
          * @param other the set to intersect with this set.
          * @return the intersection of this and the given set.
          */
-        BoolSet operator & (const BoolSet& other) const;
+        constexpr BoolSet operator & (const BoolSet& other) const;
         /**
          * Returns the symmetric difference of this set and the given set.
          * The result is a set containing precisely the elements that
@@ -281,7 +281,7 @@ class REGINA_API BoolSet {
          * is to be found.
          * @return the symmetric difference of this and the given set.
          */
-        BoolSet operator ^ (const BoolSet& other) const;
+        constexpr BoolSet operator ^ (const BoolSet& other) const;
         /**
          * Returns the complement of this set.
          * The result is a set containing precisely the elements that
@@ -290,7 +290,7 @@ class REGINA_API BoolSet {
          *
          * @return the complement of this set.
          */
-        BoolSet operator ~ () const;
+        constexpr BoolSet operator ~ () const;
 
         /**
          * Returns the byte code representing this boolean set.
@@ -306,7 +306,7 @@ class REGINA_API BoolSet {
          *
          * @return the byte code representing this set.
          */
-        unsigned char byteCode() const;
+        constexpr unsigned char byteCode() const;
         /**
          * Sets this boolean set to that represented by the given byte
          * code.  See byteCode() for more information on byte codes.
@@ -326,7 +326,7 @@ class REGINA_API BoolSet {
          * @param code the byte code from which the new set will be
          * created.
          */
-        static BoolSet fromByteCode(unsigned char code);
+        constexpr static BoolSet fromByteCode(unsigned char code);
 
     friend std::ostream& operator << (std::ostream& out, const BoolSet& set);
 };
@@ -347,25 +347,26 @@ REGINA_API std::ostream& operator << (std::ostream& out, const BoolSet& set);
 
 // Inline functions for BoolSet
 
-inline BoolSet::BoolSet() : elements(0) {
+inline constexpr BoolSet::BoolSet() : elements(0) {
 }
-inline BoolSet::BoolSet(bool member) :
+inline constexpr BoolSet::BoolSet(bool member) :
         elements(member ? eltTrue : eltFalse) {
 }
-inline BoolSet::BoolSet(bool insertTrue, bool insertFalse) : elements(0) {
+inline constexpr BoolSet::BoolSet(bool insertTrue, bool insertFalse) :
+        elements(0) {
     if (insertTrue)
         elements = static_cast<unsigned char>(elements | eltTrue);
     if (insertFalse)
         elements = static_cast<unsigned char>(elements | eltFalse);
 }
 
-inline bool BoolSet::hasTrue() const {
+inline constexpr bool BoolSet::hasTrue() const {
     return (elements & eltTrue);
 }
-inline bool BoolSet::hasFalse() const {
+inline constexpr bool BoolSet::hasFalse() const {
     return (elements & eltFalse);
 }
-inline bool BoolSet::contains(bool value) const {
+inline constexpr bool BoolSet::contains(bool value) const {
     return (elements & (value ? eltTrue : eltFalse));
 }
 
@@ -388,24 +389,24 @@ inline void BoolSet::fill() {
     elements = static_cast<unsigned char>(eltTrue | eltFalse);
 }
 
-inline bool BoolSet::operator == (const BoolSet& other) const {
+inline constexpr bool BoolSet::operator == (const BoolSet& other) const {
     return (elements == other.elements);
 }
-inline bool BoolSet::operator != (const BoolSet& other) const {
+inline constexpr bool BoolSet::operator != (const BoolSet& other) const {
     return (elements != other.elements);
 }
-inline bool BoolSet::operator < (const BoolSet& other) const {
+inline constexpr bool BoolSet::operator < (const BoolSet& other) const {
     return ((elements & other.elements) == elements) &&
         (elements != other.elements);
 }
-inline bool BoolSet::operator > (const BoolSet& other) const {
+inline constexpr bool BoolSet::operator > (const BoolSet& other) const {
     return ((elements & other.elements) == other.elements) &&
         (elements != other.elements);
 }
-inline bool BoolSet::operator <= (const BoolSet& other) const {
+inline constexpr bool BoolSet::operator <= (const BoolSet& other) const {
     return ((elements & other.elements) == elements);
 }
-inline bool BoolSet::operator >= (const BoolSet& other) const {
+inline constexpr bool BoolSet::operator >= (const BoolSet& other) const {
     return ((elements & other.elements) == other.elements);
 }
 
@@ -426,32 +427,32 @@ inline BoolSet& BoolSet::operator ^= (const BoolSet& other) {
     return *this;
 }
 
-inline BoolSet BoolSet::operator | (const BoolSet& other) const {
+inline constexpr BoolSet BoolSet::operator | (const BoolSet& other) const {
     BoolSet ans;
     ans.elements = static_cast<unsigned char>(elements | other.elements);
     return ans;
 }
-inline BoolSet BoolSet::operator & (const BoolSet& other) const {
+inline constexpr BoolSet BoolSet::operator & (const BoolSet& other) const {
     BoolSet ans;
     ans.elements = static_cast<unsigned char>(elements & other.elements);
     return ans;
 }
-inline BoolSet BoolSet::operator ^ (const BoolSet& other) const {
+inline constexpr BoolSet BoolSet::operator ^ (const BoolSet& other) const {
     BoolSet ans;
     ans.elements = static_cast<unsigned char>(elements ^ other.elements);
     return ans;
 }
-inline BoolSet BoolSet::operator ~ () const {
+inline constexpr BoolSet BoolSet::operator ~ () const {
     return BoolSet(! hasTrue(), ! hasFalse());
 }
 
-inline unsigned char BoolSet::byteCode() const {
+inline constexpr unsigned char BoolSet::byteCode() const {
     return elements;
 }
 inline void BoolSet::setByteCode(unsigned char code) {
     elements = code;
 }
-inline BoolSet BoolSet::fromByteCode(unsigned char code) {
+inline constexpr BoolSet BoolSet::fromByteCode(unsigned char code) {
     return BoolSet(code & eltTrue, code & eltFalse);
 }
 

@@ -36,8 +36,6 @@
 
 namespace regina {
 
-const unsigned char BoolSet::eltTrue = 1;
-const unsigned char BoolSet::eltFalse = 2;
 const BoolSet BoolSet::sNone;
 const BoolSet BoolSet::sTrue(true);
 const BoolSet BoolSet::sFalse(false);
