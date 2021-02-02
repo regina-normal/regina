@@ -785,31 +785,34 @@ constexpr Perm<n> Perm<n>::rot(int i) {
 
 template <int n>
 constexpr Perm<n> Perm<n>::atIndex(Index i) {
-    int image[n];
+    Code code = 0;
     for (int p = 0; p < n; ++p) {
-        image[n - p - 1] = i % (p + 1);
+        // n - p - 1 -> i % (p + 1);
+        code |= (static_cast<Code>(i % (p + 1)) << ((n - p - 1) * imageBits));
         i /= (p + 1);
     }
-    for (int p = n - 1; p >= 0; --p)
-        for (int q = p + 1; q < n; ++q)
-            if (image[q] >= image[p])
-                ++image[q];
-    return Perm<n>(image);
+    for (int pos1 = imageBits * (n - 1); pos1 >= 0; pos1 -= imageBits)
+        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
+                pos2 += imageBits)
+            if (((code >> pos2) & imageMask) >= ((code >> pos1) & imageMask))
+                code += (Code(1) << pos2); // increment image at pos2
+    return Perm<n>(code);
 }
 
 template <int n>
 constexpr typename Perm<n>::Index Perm<n>::index() const {
-    int image[n];
-    for (int p = 0; p < n; ++p)
-        image[p] = (*this)[p];
-    for (int p = 0; p < n; ++p)
-        for (int q = p + 1; q < n; ++q)
-            if (image[q] > image[p])
-                --image[q];
     Index ans = 0;
-    for (int p = 0; p < n - 1; ++p) {
+    Code c = code_;
+    int p = 0, pos1 = 0;
+    for ( ; p < n - 1; ++p, pos1 += imageBits) {
+        // position pos1 holds the (p)th image
+        int pImg = (c >> pos1) & imageMask; // image at pos1
+        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
+                pos2 += imageBits)
+            if (((c >> pos2) & imageMask) > pImg)
+                c -= (Code(1) << pos2); // decrement image at pos2
         ans *= (n - p);
-        ans += image[p];
+        ans += pImg;
     }
     return ans;
 }
