@@ -43,6 +43,7 @@
 #include "regina-core.h"
 #include "regina-config.h"
 #include <stdint.h>
+#include <type_traits>
 
 namespace regina {
 
