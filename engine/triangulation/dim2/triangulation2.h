@@ -304,7 +304,7 @@ class REGINA_API Triangulation<2> :
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
-        REGINA_INLINE_REQUIRED void clearAllProperties();
+        void clearAllProperties();
         /**
          * Swaps all calculated properties, including skeletal data,
          * with the given triangulation.  This is called by

@@ -44,31 +44,6 @@
  * @{
  */
 
-/**
- * A synonym for \c inline, used in some special cases to avoid
- * noisy warnings under Windows.
- *
- * Typically this macro is used with inline functions of some class or struct
- * that are called by \e other inline function(s).
- *
- * Such a function should:
- *
- * - be declared as \c REGINA_INLINE_REQUIRED at the point where the function
- *   is first declared inside the class definition;
- *
- * - be declared again as \c inline when the function is later defined
- *   (as Regina does with all its inline functions).
- *
- * The reason for using REGINA_INLINE_REQUIRED in such situations is to
- * avoid noisy warnings about \c dllimport attributes under Windows.
- * The reason for using this particular macro instead of just the
- * keyword \c inline is to remind the Regina developers not to remove it.
- *
- * This is not the first, and will surely not be the last, piece of code
- * bloat that Windows forces upon us.  Sigh.
- */
-#define REGINA_INLINE_REQUIRED inline
-
 #ifdef __DOXYGEN
   // Fake definitions just for doxygen.
 
