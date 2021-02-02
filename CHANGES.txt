@@ -43,6 +43,7 @@ Version 6.1  [ TODO ]
             - Dimension 3 is no longer specialised: all dimensions now share
               the same generic code.
         Class BoundaryComponent<4>:
+            - All of the changes listed for BoundaryComponent<dim> above.
             - Added eulerChar().
         Class Component<dim>:
             - Routines simplices(), boundaryComponents(), faces(), and the
@@ -152,10 +153,12 @@ Version 6.1  [ TODO ]
               now gone, and there are a lot fewer regina::alias classes.
             - FaceListSuite has been renamed to TriangulationFaceStorage.
         Class Triangulation<3>:
+            - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.
         Class Triangluation<4>:
+            - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.
