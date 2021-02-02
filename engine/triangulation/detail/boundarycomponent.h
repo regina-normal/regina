@@ -85,8 +85,8 @@ class BoundaryComponentFaceStorage :
         "a full set of face dimensions for Regina's standard dimensions.");
     static_assert(sizeof...(subdim) == dim &&
         (subdim + ...) == dim * (dim - 1) / 2,
-        "The BoundaryComponentFaceStorage template has been given an "
-        "unexpected set of face dimensions.");
+        "The many-argument BoundaryComponentFaceStorage template has been "
+        "given an unexpected set of face dimensions.");
 
     public:
         /**
@@ -672,12 +672,21 @@ class BoundaryComponentFaceStorage :
  * This specialisation is used for dimensions in which only
  * (<i>dim</i>-1)-dimensional faces are stored.  It therefore removes the
  * member functions for accessing lower-dimensional faces.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * \tparam facetDim the boundary facet dimension <i>dim</i>-1.
+ * Ideally this would be specified directly as <tt>dim-1</tt> in the partial
+ * template specialisation, and this \e should be legal according to CWG1315;
+ * however, it fails to build under some versions of gcc (e.g., 10.2.0).
  */
-template <int dim>
-class BoundaryComponentFaceStorage<dim, dim - 1> {
+template <int dim, int facetDim>
+class BoundaryComponentFaceStorage<dim, facetDim> {
     static_assert(! standardDim(dim),
         "The BoundaryComponentFaceStorage template should not set "
         "face dimensions to only (dim-1) for Regina's standard dimensions.");
+    static_assert(facetDim == dim - 1,
+        "The two-argument BoundaryComponentFaceStorage template has been "
+        "given an unexpected boundary facet dimension.");
 
     public:
         /**
