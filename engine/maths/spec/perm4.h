@@ -839,7 +839,6 @@ class REGINA_API Perm<4> {
          * @return the index \a i for which this permutation is equal to
          * Perm<4>::orderedS4[i].  This will be between 0 and 23 inclusive.
          */
-        REGINA_INLINE_REQUIRED
         constexpr int orderedS4Index() const;
 
         /**
@@ -998,7 +997,6 @@ class REGINA_API Perm<4> {
          * @return the index \a i for which the given permutation is equal to
          * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
          */
-        REGINA_INLINE_REQUIRED
         static constexpr int S4Index(int a, int b, int c, int d);
 
         /**

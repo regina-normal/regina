@@ -289,7 +289,7 @@ class REGINA_API Triangulation<3> :
          * The constituent tetrahedra, the cellular structure and all other
          * properties will also be destroyed.
          */
-        REGINA_INLINE_REQUIRED virtual ~Triangulation();
+        virtual ~Triangulation();
 
         /*@}*/
         /**

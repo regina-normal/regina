@@ -267,7 +267,6 @@ class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0> {
          *
          * @return the Euler characteristic of the vertex link.
          */
-        REGINA_INLINE_REQUIRED
         long linkEulerChar() const;
 
         /**

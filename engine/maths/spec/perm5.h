@@ -691,7 +691,6 @@ class REGINA_API Perm<5> {
          * should be between 0 and 4 inclusive.
          * @return the image of \a source.
          */
-        REGINA_INLINE_REQUIRED
         constexpr int operator[](int source) const;
 
         /**
@@ -1223,7 +1222,6 @@ class REGINA_API Perm<5> {
          * @return the index \a i for which the given permutation is equal to
          * Perm<5>::S5[i].  This will be between 0 and 119 inclusive.
          */
-        REGINA_INLINE_REQUIRED
         static constexpr int S5Index(int a, int b, int c, int d, int e);
 
         /**

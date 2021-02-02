@@ -657,7 +657,6 @@ class REGINA_API Perm<3> {
          * @return the index \a i for which this permutation is equal to
          * Perm<3>::orderedS3[i].  This will be between 0 and 5 inclusive.
          */
-        REGINA_INLINE_REQUIRED
         constexpr int orderedS3Index() const;
 
         /**
