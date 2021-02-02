@@ -634,17 +634,6 @@ template <> class Perm<5>;
 
 /*@}*/
 
-// Static constants for Perm
-
-template <int n>
-constexpr int Perm<n>::imageBits;
-
-template <int n>
-constexpr typename Perm<n>::Code Perm<n>::idCode_;
-
-template <int n>
-constexpr typename Perm<n>::Code Perm<n>::imageMask_;
-
 // Inline functions for Perm
 
 template <int n>
