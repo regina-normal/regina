@@ -111,7 +111,7 @@ void SimplexInfo<dim>::addSimplexAnnotation(Simplex<dim>* simplex, int size, std
 }   
 
 template <int dim> template <int subdim>
-void SimplexInfo<dim>::init(Simplex<dim>* simplex, int size) {
+void SimplexInfo<dim>::init(std::true_type, Simplex<dim>* simplex, int size) {
     /**
      * Adds simplex annotations for subdim-faces
      */     
@@ -129,9 +129,7 @@ void SimplexInfo<dim>::init(Simplex<dim>* simplex, int size) {
      * specific permutation in the input.
      */    
     std::sort(simplexAnnotations[subdim].begin(), simplexAnnotations[subdim].end());
-    if constexpr (subdim + 1 < (dim + 1) / 2) {
-        init<subdim + 1>(simplex, size);
-    } 
+    init<subdim + 1>(std::integral_constant<bool, subdim + 1 < (dim + 1) / 2>{}, simplex, size);
 } 
 
 template <int dim>
@@ -168,7 +166,7 @@ bool SimplexInfo<dim>::operator <(const SimplexInfo<dim> & other) const {
 template <int dim>
 SimplexInfo<dim>::SimplexInfo(Simplex<dim>* simplex, int simplexNum, int size) {
     label = simplexNum;
-    init(simplex, size);
+    init(std::integral_constant<bool, true>{}, simplex, size);
 }
 
 } }// namespace regina::detail

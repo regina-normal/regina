@@ -121,7 +121,10 @@ class SimplexInfo {
          * @param size The size of the original triangulation
          */          
         template <int subdim = 0>
-        void init(Simplex<dim>* simplex, int size);      
+        void init(std::true_type, Simplex<dim>* simplex, int size);      
+
+        template <int subdim>
+        void init(std::false_type, Simplex<dim>* simplex, int size) {}   
     public:
         /**
          * Gets the original label of a simplex in a triangulation before
