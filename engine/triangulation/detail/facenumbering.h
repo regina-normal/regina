@@ -201,8 +201,13 @@ class FaceNumberingAPI {
  * This must be between 1 and 15 inclusive.
  * \tparam subdim the dimension of the faces being numbered.
  * This must be between 0 and <i>dim</i>-1 inclusive.
+ * \tparam codim the codimension (<i>dim</i>-<i>subdim</i>-1) of the
+ * faces being numbered.  Ideally this would be specified directly as
+ * <tt>dim-subdim-1</tt> in the partial template specialisation, and this
+ * \e should be legal according to CWG1315; however, it fails to build
+ * under some versions of gcc (e.g., 10.2.0).
  */
-template <int dim, int subdim>
+template <int dim, int subdim, int codim = dim - subdim - 1>
 class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
     static_assert(subdim > 0,
         "The generic FaceNumberingImpl<dim, subdim> class "
@@ -213,6 +218,9 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
     static_assert(! standardDim(dim),
         "The generic FaceNumberingImpl<dim, subdim> class "
         "should not be used for Regina's standard dimensions.");
+    static_assert(subdim + codim + 1 == dim,
+        "The FaceNumberingImpl<dim, subdim, codim> template class "
+        "has mismatched face dimension and codimension.");
 
 #ifndef __DOXYGEN
     public:
@@ -398,8 +406,12 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 #endif // ! __DOXYGEN
 };
 
-template <int dim>
-class FaceNumberingImpl<dim, 0> : public FaceNumberingAPI<dim, 0> {
+template <int dim, int codim>
+class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
+    static_assert(codim + 1 == dim,
+        "The FaceNumberingImpl<dim, 0, codim> template specialisation "
+        "has mismatched face dimension and codimension.");
+
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
@@ -436,11 +448,14 @@ class FaceNumberingImpl<dim, 0> : public FaceNumberingAPI<dim, 0> {
 #endif // ! __DOXYGEN
 };
 
-template <int dim>
-class FaceNumberingImpl<dim, dim - 1> : public FaceNumberingAPI<dim, dim - 1> {
+template <int dim, int subdim>
+class FaceNumberingImpl<dim, subdim, 0> : public FaceNumberingAPI<dim, dim - 1> {
     static_assert(! standardDim(dim),
         "The specialisation FaceNumberingImpl<dim, dim-1> "
         "should not be used for Regina's standard dimensions.");
+    static_assert(subdim + 1 == dim,
+        "The FaceNumberingImpl<dim, subdim, 0> template specialisation "
+        "has mismatched face dimension and codimension.");
 
     public:
 #ifndef __DOXYGEN
@@ -468,7 +483,7 @@ class FaceNumberingImpl<dim, dim - 1> : public FaceNumberingAPI<dim, dim - 1> {
 };
 
 template <>
-class FaceNumberingImpl<1, 0> : public FaceNumberingAPI<1, 0> {
+class FaceNumberingImpl<1, 0, 0> : public FaceNumberingAPI<1, 0> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
@@ -487,7 +502,7 @@ class FaceNumberingImpl<1, 0> : public FaceNumberingAPI<1, 0> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<2, 1> : public FaceNumberingAPI<2, 1> {
+class REGINA_API FaceNumberingImpl<2, 1, 0> : public FaceNumberingAPI<2, 1> {
     private:
         /**
          * A hard-coded list of all return values for ordering(),
@@ -513,7 +528,7 @@ class REGINA_API FaceNumberingImpl<2, 1> : public FaceNumberingAPI<2, 1> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<3, 1> : public FaceNumberingAPI<3, 1> {
+class REGINA_API FaceNumberingImpl<3, 1, 1> : public FaceNumberingAPI<3, 1> {
     public:
         /**
          * A table that maps vertices of a tetrahedron to edge numbers.
@@ -580,7 +595,7 @@ class REGINA_API FaceNumberingImpl<3, 1> : public FaceNumberingAPI<3, 1> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<3, 2> : public FaceNumberingAPI<3, 2> {
+class REGINA_API FaceNumberingImpl<3, 2, 0> : public FaceNumberingAPI<3, 2> {
     private:
         /**
          * A hard-coded list of all return values for ordering(),
@@ -606,7 +621,7 @@ class REGINA_API FaceNumberingImpl<3, 2> : public FaceNumberingAPI<3, 2> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<4, 1> : public FaceNumberingAPI<4, 1> {
+class REGINA_API FaceNumberingImpl<4, 1, 2> : public FaceNumberingAPI<4, 1> {
     public:
         /**
          * A table that maps vertices of a pentachoron to edge numbers.
@@ -677,7 +692,7 @@ class REGINA_API FaceNumberingImpl<4, 1> : public FaceNumberingAPI<4, 1> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<4, 2> : public FaceNumberingAPI<4, 2> {
+class REGINA_API FaceNumberingImpl<4, 2, 1> : public FaceNumberingAPI<4, 2> {
     public:
         /**
          * A table that maps vertices of a pentachoron to triangle numbers.
@@ -758,7 +773,7 @@ class REGINA_API FaceNumberingImpl<4, 2> : public FaceNumberingAPI<4, 2> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<4, 3> : public FaceNumberingAPI<4, 3> {
+class REGINA_API FaceNumberingImpl<4, 3, 0> : public FaceNumberingAPI<4, 3> {
     private:
         /**
          * A hard-coded list of all return values for ordering(),
