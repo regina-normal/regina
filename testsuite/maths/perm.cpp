@@ -461,59 +461,58 @@ class PermTest : public CppUnit::TestFixture {
         void clearFrom() {
             Perm rev = Perm().reverse();
 
-            typename regina::Perm<from>::Index i;
-            typename regina::Perm<n-from>::Index j;
-            for (i = 0; i < regina::Perm<from>::nPerms; i += increment[from])
-                for (j = 0; j < regina::Perm<n-from>::nPerms;
-                        j += increment[n-from]) {
-                    Perm left = Perm::extend(regina::Perm<from>::atIndex(i));
-                    Perm right = rev *
-                        Perm::extend(regina::Perm<n-from>::atIndex(j)) * rev;
-                    Perm p = left * right;
-                    p.clear(from);
-                    if (! looksEqual(p, left)) {
-                        std::ostringstream msg;
-                        msg << "Clearing from position " << from
-                            << " gives the wrong result.";
-                        CPPUNIT_FAIL(msg.str());
+            // Some compilers will not let us specialise this template here
+            // (they complain about explicit specialisation in non-namespace
+            // scope), but we would like to keep all the code together here.
+            // We therefore fall back to if constexpr (...) instead.
+            //
+            // Note that the specialisations *should* be legal (CWG727);
+            // however, they fail to compile on some gcc versions (observed
+            // with gcc 10.2.0); this might be gcc bug 85282 we are hitting.
+
+            if constexpr (from == 0) {
+                for (Index j = 0; j < Perm::nPerms; j += increment[n]) {
+                    Perm p = Perm::atIndex(j);
+                    p.clear(0);
+                    if (! looksLikeIdentity(p))
+                        CPPUNIT_FAIL(
+                            "Clearing from position 0 gives the wrong result.");
+                }
+            } else if constexpr (from == 1) {
+                for (typename regina::Perm<n-1>::Index j = 0;
+                        j < regina::Perm<n-1>::nPerms; j += increment[n-1]) {
+                    Perm p = rev *
+                        Perm::extend(regina::Perm<n-1>::atIndex(j)) * rev;
+                    p.clear(1);
+                    if (! looksLikeIdentity(p))
+                        CPPUNIT_FAIL(
+                            "Clearing from position 1 gives the wrong result.");
+                }
+            } else {
+                typename regina::Perm<from>::Index i;
+                typename regina::Perm<n-from>::Index j;
+                for (i = 0; i < regina::Perm<from>::nPerms;
+                        i += increment[from])
+                    for (j = 0; j < regina::Perm<n-from>::nPerms;
+                            j += increment[n-from]) {
+                        Perm left =
+                            Perm::extend(regina::Perm<from>::atIndex(i));
+                        Perm right = rev *
+                            Perm::extend(regina::Perm<n-from>::atIndex(j)) *
+                            rev;
+                        Perm p = left * right;
+                        p.clear(from);
+                        if (! looksEqual(p, left)) {
+                            std::ostringstream msg;
+                            msg << "Clearing from position " << from
+                                << " gives the wrong result.";
+                            CPPUNIT_FAIL(msg.str());
+                        }
                     }
-                }
-
-            clearFrom<from - 1>();
-        }
-
-        template <>
-        void clearFrom<0>() {
-            Perm rev = Perm().reverse();
-
-            for (Index j = 0; j < Perm::nPerms; j += increment[n]) {
-                Perm p = Perm::atIndex(j);
-                p.clear(0);
-                if (! looksLikeIdentity(p)) {
-                    std::ostringstream msg;
-                    msg << "Clearing from position 0 gives the wrong result.";
-                    CPPUNIT_FAIL(msg.str());
-                }
-            }
-        }
-
-        template <>
-        void clearFrom<1>() {
-            Perm rev = Perm().reverse();
-
-            for (typename regina::Perm<n-1>::Index j = 0;
-                    j < regina::Perm<n-1>::nPerms; j += increment[n-1]) {
-                Perm p = rev *
-                    Perm::extend(regina::Perm<n-1>::atIndex(j)) * rev;
-                p.clear(1);
-                if (! looksLikeIdentity(p)) {
-                    std::ostringstream msg;
-                    msg << "Clearing from position 1 gives the wrong result.";
-                    CPPUNIT_FAIL(msg.str());
-                }
             }
 
-            clearFrom<0>();
+            if constexpr (from > 0)
+                clearFrom<from - 1>();
         }
 
         void clear() {
