@@ -78,8 +78,8 @@ typedef Matrix<Integer, true> MatrixInt;
  *
  * - a typedef \a Class that represents the corresponding
  *   NormalHypersurfaceVector subclass;
- * - a static function name() that returns a C-style string giving the
- *   human-readable name of the coordinate system.
+ * - a static constexpr member <tt>const char* name</tt>, which gives
+ *   the human-readable name of the coordinate system.
  *
  * \ifacespython Not present.
  *

@@ -78,7 +78,7 @@ class XMLTreeResolver;
  * At a bare minimum, each specialisation of this template must provide:
  *
  * - a typedef \a Class that represents the corresponding Packet subclass;
- * - a static constexpr function name() that returns a C-style string giving
+ * - a static constexpr member <tt>const char* name</tt>, which gives
  *   the human-readable name of the packet type.
  *
  * \ifacespython Not present.
@@ -119,7 +119,7 @@ struct PacketInfo;
             return id; \
         } \
         inline virtual std::string typeName() const override { \
-            return PacketInfo<id>::name(); \
+            return PacketInfo<id>::name; \
         }
 
 /**

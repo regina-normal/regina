@@ -228,7 +228,7 @@ typedef Matrix<Integer, true> MatrixInt;
  * - enum constants \a almostNormal, \a spun and \a oriented, which indicate
  *   whether the coordinate system allows almost normal, spun and/or
  *   transversely oriented surfaces;
- * - a static constexpr function name() that returns a C-style string giving
+ * - a static constexpr member <tt>const char* name</tt>, which gives
  *   the human-readable name of the coordinate system.
  *
  * \ifacespython Not present.

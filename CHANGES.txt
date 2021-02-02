@@ -75,6 +75,9 @@ Version 6.1  [ TODO ]
             - Class constant TYPE_XML is now constexpr.
         Class GluingPermSearcher<dim> and subclasses:
             - Several class constants are now constexpr.
+        Class HyperInfo<...>:
+            - Routine name() has been changed to a class constant.
+              This change is backward incompatible (but probably affects noone).
         Class Link:
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.
@@ -85,9 +88,11 @@ Version 6.1  [ TODO ]
             - New typedef value_type.
             - New global swap() routine, which will be used by std::swap().
         Class NormalInfo<...>:
-            - Routine name() is now constexpr.
+            - Routine name() has been changed to a class constant.
+              This change is backward incompatible (but probably affects noone).
         Class PacketInfo<...>:
-            - Routine name() is now constexpr.
+            - Routine name() has been changed to a class constant.
+              This change is backward incompatible (but probably affects noone).
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
@@ -126,7 +131,8 @@ Version 6.1  [ TODO ]
         Class SnapPeaCensusManifold, SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
         Class SurfaceFilterInfo<...>:
-            - Routine name() is now constexpr.
+            - Routine name() has been changed to a class constant.
+              This change is backward incompatible (but probably affects noone).
         Class SurfaceFilterProperties:
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.

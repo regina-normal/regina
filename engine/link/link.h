@@ -586,9 +586,7 @@ class REGINA_API Crossing : public MarkedElement, public Output<Crossing> {
 template <>
 struct PacketInfo<PACKET_LINK> {
     typedef Link Class;
-    inline static constexpr const char* name() {
-        return "Link";
-    }
+    static constexpr const char* name = "Link";
 };
 #endif
 

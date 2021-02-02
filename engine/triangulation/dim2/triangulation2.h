@@ -66,9 +66,7 @@ class XMLPacketReader;
 template <>
 struct PacketInfo<PACKET_TRIANGULATION2> {
     typedef Triangulation<2> Class;
-    inline static constexpr const char* name() {
-        return "2-Manifold Triangulation";
-    }
+    static constexpr const char* name = "2-Manifold Triangulation";
 };
 #endif
 

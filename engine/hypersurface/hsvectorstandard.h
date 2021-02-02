@@ -57,9 +57,7 @@ class HSVectorStandard;
 template <>
 struct HyperInfo<HS_STANDARD> {
     typedef HSVectorStandard Class;
-    inline static constexpr const char* name() {
-        return "Standard normal (tet-prism)";
-    }
+    static constexpr const char* name = "Standard normal (tet-prism)";
 };
 #endif
 

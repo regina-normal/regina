@@ -149,7 +149,7 @@ bool NormalSurfaces::allowsOriented() const {
 namespace {
     struct NameFunction : public Returns<const char*> {
         template <typename Coords>
-        inline const char* operator() () { return Coords::name(); }
+        inline const char* operator() () { return Coords::name; }
     };
 }
 

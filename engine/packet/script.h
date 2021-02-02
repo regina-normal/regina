@@ -59,9 +59,7 @@ class Script;
 template <>
 struct PacketInfo<PACKET_SCRIPT> {
     typedef Script Class;
-    inline static constexpr const char* name() {
-        return "Script";
-    }
+    static constexpr const char* name = "Script";
 };
 #endif
 

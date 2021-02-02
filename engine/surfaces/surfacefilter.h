@@ -74,7 +74,7 @@ class XMLFilterReader;
  *
  * - a typedef \a Class that represents the corresponding
  *   SurfaceFilter descendant class;
- * - a static constexpr function name() that returns a C-style string giving
+ * - a static constexpr member <tt>const char* name</tt>, which gives
  *   the human-readable name of the filter type.
  *
  * \ifacespython Not present.
@@ -109,40 +109,32 @@ struct SurfaceFilterInfo;
             return id; \
         } \
         inline virtual std::string filterTypeName() const override { \
-            return SurfaceFilterInfo<id>::name(); \
+            return SurfaceFilterInfo<id>::name; \
         }
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_SURFACEFILTER> {
     typedef SurfaceFilter Class;
-    inline static constexpr const char* name() {
-        return "Surface Filter";
-    }
+    static constexpr const char* name = "Surface Filter";
 };
 
 template <>
 struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
     typedef SurfaceFilter Class;
-    inline static constexpr const char* name() {
-        return "Default filter";
-    }
+    static constexpr const char* name = "Default filter";
 };
 
 template <>
 struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
     typedef SurfaceFilterCombination Class;
-    inline static constexpr const char* name() {
-        return "Combination filter";
-    }
+    static constexpr const char* name = "Combination filter";
 };
 
 template <>
 struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
     typedef SurfaceFilterProperties Class;
-    inline static constexpr const char* name() {
-        return "Filter by basic properties";
-    }
+    static constexpr const char* name = "Filter by basic properties";
 };
 #endif
 
@@ -519,7 +511,7 @@ inline SurfaceFilterType SurfaceFilter::filterType() const {
 }
 
 inline std::string SurfaceFilter::filterTypeName() const {
-    return SurfaceFilterInfo<NS_FILTER_DEFAULT>::name();
+    return SurfaceFilterInfo<NS_FILTER_DEFAULT>::name;
 }
 
 inline void SurfaceFilter::writeXMLFilterData(std::ostream&) const {
