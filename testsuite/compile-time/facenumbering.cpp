@@ -55,6 +55,19 @@ void testFaceNumbering() {
             FaceNumbering<dim, subdim>::ordering(face).reverse()) ==
             FaceNumbering<dim, subdim>::nFaces - 1 - face);
     }
+
+    if constexpr (subdim == 1) {
+        if constexpr (subdim + subdim + 1 != dim) {
+            static_assert(regina::faceOppositeEdge<dim>(
+                FaceNumbering<dim, subdim>::ordering(face)[0],
+                FaceNumbering<dim, subdim>::ordering(face)[1]) == face);
+        } else {
+            static_assert(regina::faceOppositeEdge<dim>(
+                FaceNumbering<dim, subdim>::ordering(face)[0],
+                FaceNumbering<dim, subdim>::ordering(face)[1]) ==
+                FaceNumbering<dim, subdim>::nFaces - 1 - face);
+        }
+    }
 }
 
 template void testFaceNumbering<1, 0, 1>();
@@ -70,3 +83,19 @@ template void testFaceNumbering<4, 0, 2>();
 template void testFaceNumbering<4, 1, 7>();
 template void testFaceNumbering<4, 2, 8>();
 template void testFaceNumbering<4, 3, 3>();
+
+template void testFaceNumbering<5, 0, 3>();
+template void testFaceNumbering<5, 1, 7>();
+template void testFaceNumbering<5, 2, 11>();
+template void testFaceNumbering<5, 3, 8>();
+template void testFaceNumbering<5, 4, 4>();
+
+template void testFaceNumbering<15, 0, 9>();
+template void testFaceNumbering<15, 1, 20>();
+template void testFaceNumbering<15, 2, 40>();
+template void testFaceNumbering<15, 5, 100>();
+template void testFaceNumbering<15, 7, 1000>();
+template void testFaceNumbering<15, 10, 120>();
+template void testFaceNumbering<15, 12, 45>();
+template void testFaceNumbering<15, 13, 27>();
+template void testFaceNumbering<15, 14, 8>();

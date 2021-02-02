@@ -70,6 +70,7 @@ Version 6.1  [ TODO ]
               FaceValidity and FaceListHolder are now gone.
             - New compile-time constants dimension and subdimension.
         Class FaceNumbering<dim, subdim>:
+            - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.
             - Simplified the underlying web of template specialisations.
         Class FileInfo:
@@ -172,6 +173,8 @@ Version 6.1  [ TODO ]
               and Face<dim, subdim>::allowsInvalidFaces instead.
         Function binomSmall(), binomMedium():
             - Both these functions are now inline and constexpr.
+        Function faceOppositeEdge<dim>():
+            - These functions are now constexpr.
         Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
                 quadString:
             - These are all now inline constexpr.

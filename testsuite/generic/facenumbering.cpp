@@ -41,6 +41,7 @@
 #include "triangulation/dim4.h"
 
 using regina::FaceNumbering;
+using regina::Perm;
 
 static const int64_t increment[] = {
     // Used to iterate through permutations on n elements.
@@ -63,20 +64,19 @@ class FaceNumberingTest : public CppUnit::TestFixture {
     private:
         static constexpr int n = dim + 1;
 
-        typedef regina::Perm<n> Perm;
-        typedef typename Perm::Index Index;
+        typedef typename Perm<dim + 1>::Index Index;
 
         Index* idx;
         Index nIdx;
 
     public:
         void setUp() {
-            idx = new Index[(Perm::nPerms / increment[n]) + 2];
+            idx = new Index[(Perm<dim + 1>::nPerms / increment[n]) + 2];
             nIdx = 0;
-            for (Index i = 0; i < Perm::nPerms; i += increment[n])
+            for (Index i = 0; i < Perm<dim + 1>::nPerms; i += increment[n])
                 idx[nIdx++] = i;
-            if (idx[nIdx - 1] != Perm::nPerms - 1)
-                idx[nIdx++] = Perm::nPerms - 1;
+            if (idx[nIdx - 1] != Perm<dim + 1>::nPerms - 1)
+                idx[nIdx++] = Perm<dim + 1>::nPerms - 1;
         }
 
         void tearDown() {
@@ -85,7 +85,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
 
         void ordering() {
             for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
-                Perm p = FaceNumbering<dim, subdim>::ordering(f);
+                Perm<dim + 1> p = FaceNumbering<dim, subdim>::ordering(f);
 
                 for (int i = 0; i < subdim; ++i)
                     if (p[i] >= p[i + 1]) {
@@ -99,16 +99,67 @@ class FaceNumberingTest : public CppUnit::TestFixture {
             }
         }
 
-        void faceNumber() {
-            for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
-                Perm p = FaceNumbering<dim, subdim>::ordering(f);
+        void verifyFaceNumber(int face, Perm<dim + 1> reorder) {
+            Perm<dim + 1> p =
+                FaceNumbering<dim, subdim>::ordering(face) * reorder;
 
-                if (FaceNumbering<dim, subdim>::faceNumber(p) != f) {
-                    std::ostringstream msg;
-                    msg << "Face<" << dim << ", " << subdim
-                        << "> does not have faceNumber(ordering(" << f
-                        << ")) == " << f << '.';
-                    CPPUNIT_FAIL(msg.str());
+            if (FaceNumbering<dim, subdim>::faceNumber(p) != face) {
+                std::ostringstream msg;
+                msg << "Face<" << dim << ", " << subdim
+                    << "> does not have faceNumber(ordering(" << face
+                    << ")) == " << face
+                    << " with reordering " << reorder << '.';
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void faceNumber() {
+            Perm<dim + 1> rev = Perm<dim + 1>().reverse();
+
+            for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
+                // Check that we can correctly identify face number f
+                // under many possible permutations of the vertices
+                // in the face and many possible permutations of the vertices
+                // not in the face.
+                if constexpr (subdim == 0) {
+                    for (int upper = 0; upper < dim; ++upper) {
+                        Perm<dim> u = Perm<dim>::rot(upper);
+
+                        verifyFaceNumber(f,
+                            rev * Perm<dim + 1>::extend(u) * rev);
+                        verifyFaceNumber(f,
+                            rev * Perm<dim + 1>::extend(u.reverse()) * rev);
+                    }
+                    verifyFaceNumber(f, Perm<dim + 1>());
+                } else if constexpr (subdim == dim - 1) {
+                    for (int lower = 0; lower <= subdim; ++lower) {
+                        Perm<subdim + 1> l = Perm<subdim + 1>::rot(lower);
+
+                        verifyFaceNumber(f,
+                            Perm<dim + 1>::extend(l));
+                        verifyFaceNumber(f,
+                            Perm<dim + 1>::extend(l.reverse()));
+                    }
+                } else {
+                    for (int lower = 0; lower <= subdim; ++lower)
+                        for (int upper = 0; upper < dim - subdim; ++upper) {
+                            Perm<subdim + 1> l = Perm<subdim + 1>::rot(lower);
+                            Perm<dim - subdim> u =
+                                Perm<dim - subdim>::rot(upper);
+
+                            verifyFaceNumber(f,
+                                Perm<dim + 1>::extend(l) *
+                                rev * Perm<dim + 1>::extend(u) * rev);
+                            verifyFaceNumber(f,
+                                Perm<dim + 1>::extend(l) *
+                                rev * Perm<dim + 1>::extend(u.reverse()) * rev);
+                            verifyFaceNumber(f,
+                                Perm<dim + 1>::extend(l.reverse()) *
+                                rev * Perm<dim + 1>::extend(u) * rev);
+                            verifyFaceNumber(f,
+                                Perm<dim + 1>::extend(l.reverse()) *
+                                rev * Perm<dim + 1>::extend(u.reverse()) * rev);
+                        }
                 }
             }
         }
@@ -116,7 +167,7 @@ class FaceNumberingTest : public CppUnit::TestFixture {
         void containsVertex() {
             int v;
             for (int f = 0; f < FaceNumbering<dim, subdim>::nFaces; ++f) {
-                Perm p = FaceNumbering<dim, subdim>::ordering(f);
+                Perm<dim + 1> p = FaceNumbering<dim, subdim>::ordering(f);
 
                 for (v = 0; v <= subdim; ++v)
                     if (! FaceNumbering<dim, subdim>::containsVertex(f, p[v])) {

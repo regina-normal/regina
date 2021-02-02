@@ -144,7 +144,7 @@ class FaceNumberingAPI {
          * 0 and (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
          * @return the corresponding canonical ordering of the simplex vertices.
          */
-        static Perm<dim + 1> ordering(unsigned face);
+        static constexpr Perm<dim + 1> ordering(unsigned face);
 
         /**
          * Identifies which <i>subdim</i>-face in a <i>dim</i>-dimensional
@@ -161,7 +161,7 @@ class FaceNumberingAPI {
          * <i>dim</i>-simplex.  This will be between 0 and
          * (<i>dim</i>+1 choose <i>subdim</i>+1)-1 inclusive.
          */
-        static unsigned faceNumber(Perm<dim + 1> vertices);
+        static constexpr unsigned faceNumber(Perm<dim + 1> vertices);
 
         /**
          * Tests whether the given <i>subdim</i>-face of a
@@ -176,7 +176,7 @@ class FaceNumberingAPI {
          * @return \c true if and only if the given <i>subdim</i>-face
          * contains the given vertex.
          */
-        static bool containsVertex(unsigned face, unsigned vertex);
+        static constexpr bool containsVertex(unsigned face, unsigned vertex);
 #endif // __DOXYGEN
 };
 
@@ -221,7 +221,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
     public:
         // The following routines are documented in FaceNumberingAPI.
-        static Perm<dim + 1> ordering(unsigned face) {
+        static constexpr Perm<dim + 1> ordering(unsigned face) {
             // We always compute face numbering in dimension lexDim,
             // where faces are numbered in forward lexicographial order.
 
@@ -230,10 +230,9 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             // higher-dimensional faces (lexDim != subdim) we will
             // reverse the permutation before returning.
 
-            // This implementation runs in linear time in dim (assuming binomial
-            // coefficients are precomputed)
+            // This implementation runs in linear time in dim
+            // (since binomial coefficients are precomputed).
             int perm[dim + 1];
-            unsigned val;
 
             // IDEA: use the combinatorial number system which associates 
             //       numbers face = 0, 1, .... , binom(dim+1,lexDim+1)-1 
@@ -259,41 +258,34 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             unsigned k = lexDim+1;
             unsigned max = dim;
-            unsigned done, pos, idx;
-            int i;
 
             while (remaining > 0) {
-              done = 0;
-              while (done == 0) {
-                if (max < k) {
-                  val = 0;
-                } else {
-                  val = binomSmall_[max][k];
-                }
+              bool done = false;
+              while (! done) {
+                unsigned val = (max < k ? 0 : binomSmall_[max][k]);
                 if (val <= remaining) {
-                  k--;
+                  --k;
                   perm[lexDim-k] = dim-max;
                   remaining = remaining - val;
-                  done = 1;
+                  done = true;
                 }
-                max--;
+                --max;
               }
-
             }
             while (k > 0) {
-              k--;
+              --k;
               perm[lexDim-k]=dim-k;
             }
 
-            pos = lexDim;
-            idx = lexDim+1;
-            done = 0;
-            for (i=dim; i>=0; i--) {
-              if (done == 0 && perm[pos] == i) {
+            unsigned pos = lexDim;
+            unsigned idx = lexDim+1;
+            bool done = false;
+            for (int i=dim; i>=0; i--) {
+              if ((! done) && perm[pos] == i) {
                 if (pos>0) {
-                  pos--;
+                  --pos;
                 } else {
-                  done = 1;
+                  done = true;
                 }
                 continue;
               }
@@ -307,7 +299,7 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                 return Perm<dim + 1>(perm).reverse();
         }
 
-        static unsigned faceNumber(Perm<dim + 1> vertices) {
+        static constexpr unsigned faceNumber(Perm<dim + 1> vertices) {
             // We always compute face numbering in dimension lexDim,
             // where faces are numbered in forward lexicographial order.
             //
@@ -337,25 +329,32 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //       so we must reverse the ordering and apply the
             //       transformation c_i \mapsto d_i = dim-c_i
 
-            unsigned i;
+            // The (i)th bit of v will indicate whether i is a vertex of
+            // this face.  We are using a bitmask here to avoid the need
+            // to call std::sort(), which will not be constexpr until C++20
+            // (and possibly using a bitmask will end up faster anyway, since
+            // we know we are sorting distinct integers in the range [0, dim].
+            static_assert(sizeof(unsigned) * 8 >= dim + 1);
+            unsigned v = 0;
+            for (int i = 0; i <= lexDim; ++i)
+                v |= (1 << vertices[i]);
 
-            int v[dim + 1];
-            for (i = 0; i <= lexDim; ++i)
-                v[i] = vertices[i];
-
-            // Sort the vertices of the face in increasing order.
-            std::sort(v, v + lexDim + 1);
-
+            // Walk through the vertices from highest to lowest.
             unsigned val = 0;
-            for (i=0; i<=lexDim; i++) {
-              if (dim - v[lexDim-i] >= i+1) {
-                val += binomSmall_[dim-v[lexDim-i]][i+1];
+            int pos = 0;
+            for (int i = dim; pos <= lexDim; --i) {
+              if (v & (1 << i)) {
+                // Vertex i is the (pos)th last vertex of this face.
+                if (dim - i > pos) {
+                  val += binomSmall_[dim-i][pos+1];
+                }
+                ++pos;
               }
             }
             return binomSmall_[dim+1][lexDim+1]-1-val;
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             // We always compute face numbering in dimension lexDim,
             // where faces are numbered in forward lexicographial order.
             //
@@ -373,28 +372,24 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             unsigned k = lexDim+1;
             unsigned max = dim;
-            unsigned done,val;
 
             while (remaining > 0) {
-              done = 0;
-              while (done == 0) {
-                if (max < k) {
-                  val = 0;
-                } else {
-                  val = binomSmall_[max][k];
-                }
+              bool done = false;
+              while (! done) {
+                unsigned val = (max < k ? 0 : binomSmall_[max][k]);
                 if (val <= remaining) {
-                  k--;
-                  if (vertex == dim-max) return lexNumbering;
+                  --k;
+                  if (vertex == dim-max)
+                    return lexNumbering;
                   remaining = remaining - val;
-                  done = 1;
+                  done = true;
                 }
-                max--;
+                --max;
               }
 
             }
             while (k > 0) {
-              k--;
+              --k;
               if (vertex == dim-k) return lexNumbering;
             }
 
