@@ -431,11 +431,11 @@ class FaceNumberingImpl<dim, 0> : public FaceNumberingAPI<dim, 0> {
             }
         }
 
-        static unsigned faceNumber(Perm<dim + 1> vertices) {
+        static constexpr unsigned faceNumber(Perm<dim + 1> vertices) {
             return vertices[0];
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             return (face == vertex);
         }
 #endif // ! __DOXYGEN
@@ -462,11 +462,11 @@ class FaceNumberingImpl<dim, dim - 1> : public FaceNumberingAPI<dim, dim - 1> {
             return Perm<dim + 1>(p);
         }
 
-        static unsigned faceNumber(Perm<dim + 1> vertices) {
+        static constexpr unsigned faceNumber(Perm<dim + 1> vertices) {
             return vertices[dim];
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             return (face != vertex);
         }
 #endif // ! __DOXYGEN
@@ -481,11 +481,11 @@ class FaceNumberingImpl<1, 0> : public FaceNumberingAPI<1, 0> {
             return Perm<2>::rot(face);
         }
 
-        static unsigned faceNumber(Perm<2> vertices) {
+        static constexpr unsigned faceNumber(Perm<2> vertices) {
             return vertices[0];
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             return (face == vertex);
         }
 #endif // ! __DOXYGEN
@@ -503,15 +503,15 @@ class REGINA_API FaceNumberingImpl<2, 1> : public FaceNumberingAPI<2, 1> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static Perm<3> ordering(unsigned face) {
+        static constexpr Perm<3> ordering(unsigned face) {
             return Perm<3>::fromPermCode(ordering_[face]);
         }
 
-        static unsigned faceNumber(Perm<3> vertices) {
+        static constexpr unsigned faceNumber(Perm<3> vertices) {
             return vertices[2];
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             return (face != vertex);
         }
 #endif // ! __DOXYGEN
@@ -569,15 +569,15 @@ class REGINA_API FaceNumberingImpl<3, 1> : public FaceNumberingAPI<3, 1> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static Perm<4> ordering(unsigned face) {
+        static constexpr Perm<4> ordering(unsigned face) {
             return Perm<4>::fromPermCode2(ordering_[face]);
         }
 
-        static unsigned faceNumber(Perm<4> vertices) {
+        static constexpr unsigned faceNumber(Perm<4> vertices) {
             return edgeNumber[vertices[0]][vertices[1]];
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             return (vertex == edgeVertex[face][0] ||
                     vertex == edgeVertex[face][1]);
         }
@@ -596,15 +596,15 @@ class REGINA_API FaceNumberingImpl<3, 2> : public FaceNumberingAPI<3, 2> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static Perm<4> ordering(unsigned face) {
+        static constexpr Perm<4> ordering(unsigned face) {
             return Perm<4>::fromPermCode2(ordering_[face]);
         }
 
-        static unsigned faceNumber(Perm<4> vertices) {
+        static constexpr unsigned faceNumber(Perm<4> vertices) {
             return vertices[3];
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             return (face != vertex);
         }
 #endif // ! __DOXYGEN
@@ -666,15 +666,15 @@ class REGINA_API FaceNumberingImpl<4, 1> : public FaceNumberingAPI<4, 1> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static Perm<5> ordering(unsigned face) {
+        static constexpr Perm<5> ordering(unsigned face) {
             return Perm<5>::fromPermCode2(ordering_[face]);
         }
 
-        static unsigned faceNumber(Perm<5> vertices) {
+        static constexpr unsigned faceNumber(Perm<5> vertices) {
             return edgeNumber[vertices[0]][vertices[1]];
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             return (vertex == edgeVertex[face][0] ||
                     vertex == edgeVertex[face][1]);
         }
@@ -746,15 +746,15 @@ class REGINA_API FaceNumberingImpl<4, 2> : public FaceNumberingAPI<4, 2> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static Perm<5> ordering(unsigned face) {
+        static constexpr Perm<5> ordering(unsigned face) {
             return Perm<5>::fromPermCode2(ordering_[face]);
         }
 
-        static unsigned faceNumber(Perm<5> vertices) {
+        static constexpr unsigned faceNumber(Perm<5> vertices) {
             return triangleNumber[vertices[0]][vertices[1]][vertices[2]];
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             return (vertex == triangleVertex[face][0] ||
                     vertex == triangleVertex[face][1] ||
                     vertex == triangleVertex[face][2]);
@@ -774,15 +774,15 @@ class REGINA_API FaceNumberingImpl<4, 3> : public FaceNumberingAPI<4, 3> {
     public:
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
-        static Perm<5> ordering(unsigned face) {
+        static constexpr Perm<5> ordering(unsigned face) {
             return Perm<5>::fromPermCode2(ordering_[face]);
         }
 
-        static unsigned faceNumber(Perm<5> vertices) {
+        static constexpr unsigned faceNumber(Perm<5> vertices) {
             return vertices[4];
         }
 
-        static bool containsVertex(unsigned face, unsigned vertex) {
+        static constexpr bool containsVertex(unsigned face, unsigned vertex) {
             return (face != vertex);
         }
 #endif // ! __DOXYGEN

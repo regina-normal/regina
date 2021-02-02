@@ -5,6 +5,7 @@ SET ( FILES
   binom
   boolset
   disctype
+  facenumbering
   intutils
   perm
   triangulation
