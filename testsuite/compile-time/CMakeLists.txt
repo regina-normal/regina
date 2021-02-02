@@ -3,7 +3,9 @@
 # Files to compile
 SET ( FILES
   boolset
+  intutils
   perm
+  triangulation
   )
 
 # Prepend folder name
