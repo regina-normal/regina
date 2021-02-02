@@ -104,6 +104,8 @@ Version 6.1  [ TODO ]
               and/or look up the relevant permutations on the fly.
             - New static routine rot().
             - New class constant codeType.
+            - For classes whose permutation codes are packed image sequences
+              (n > 5), added a helper class constant imageMask.
             - Almost everything in the permutation classes is now constexpr.
         Class Perm<4>:
             - All of the changes listed for Perm<n> above.

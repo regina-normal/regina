@@ -126,7 +126,10 @@ void addPerm(pybind11::module_& m, const char* name) {
             [](pybind11::object /* self */) { return Perm<n>::nPerms; })
         .def_property_readonly_static("nPerms_1",
             [](pybind11::object /* self */) { return Perm<n>::nPerms_1; })
-        .def_readonly_static("imageBits", &Perm<n>::imageBits)
+        .def_property_readonly_static("imageBits",
+            [](pybind11::object /* self */) { return Perm<n>::imageBits; })
+        .def_property_readonly_static("imageMask",
+            [](pybind11::object /* self */) { return Perm<n>::imageMask; })
     ;
     Perm_extend<n, n-1>::add_bindings(c);
     Perm_contract<n, n+1>::add_bindings(c);

@@ -208,6 +208,14 @@ class Perm {
          */
         static constexpr Index nPerms_1 = factorial(n-1);
 
+        /**
+         * A bitmask whose lowest \a imageBits bits are 1, and whose
+         * remaining higher order bits are all 0.
+         * This may be useful when creating or analysing permutation codes.
+         */
+        static constexpr Code imageMask =
+            (static_cast<Code>(1) << Perm<n>::imageBits) - 1;
+
     private:
         Code code_;
             /**< The internal code representing this permutation. */
@@ -220,11 +228,6 @@ class Perm {
 
         static constexpr Code idCode_ = idCodePartial(n - 1);
             /**< The internal code for the identity permutation. */
-
-        static constexpr Code imageMask_ = (static_cast<
-                typename Perm<n>::Code>(1) << Perm<n>::imageBits) - 1;
-            /**< A bitmask whose lowest \a imageBits are 1, and whose
-                 remaining higher order bits are all 0. */
 
     public:
         /**
@@ -657,8 +660,8 @@ inline constexpr Perm<n>::Perm() : code_(idCode_) {
 
 template <int n>
 inline constexpr Perm<n>::Perm(int a, int b) : code_(idCode_) {
-    code_ &= ~(imageMask_ << (imageBits * a));
-    code_ &= ~(imageMask_ << (imageBits * b));
+    code_ &= ~(imageMask << (imageBits * a));
+    code_ &= ~(imageMask << (imageBits * b));
     code_ |= (static_cast<Code>(a) << (imageBits * b));
     code_ |= (static_cast<Code>(b) << (imageBits * a));
 }
@@ -698,7 +701,7 @@ template <int n>
 constexpr bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < n; ++i)
-        mask |= (1 << ((code >> (imageBits * i)) & imageMask_));
+        mask |= (1 << ((code >> (imageBits * i)) & imageMask));
     return (mask + 1 == (1 << n));
 }
 
@@ -739,13 +742,13 @@ constexpr int Perm<n>::sign() const {
 
 template <int n>
 inline constexpr int Perm<n>::operator[](int source) const {
-    return (code_ >> (imageBits * source)) & imageMask_;
+    return (code_ >> (imageBits * source)) & imageMask;
 }
 
 template <int n>
 inline constexpr int Perm<n>::preImageOf(int image) const {
     for (int i = 0; i < n; ++i)
-        if (((code_ >> (imageBits * i)) & imageMask_) == image)
+        if (((code_ >> (imageBits * i)) & imageMask) == image)
             return i;
     // We should never reach this point.
     return -1;
@@ -858,7 +861,7 @@ template <int n>
 std::string Perm<n>::str() const {
     char ans[n + 1];
     for (int i = 0; i < n; ++i)
-        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
+        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask);
     ans[n] = 0;
 
     return ans;
@@ -868,7 +871,7 @@ template <int n>
 std::string Perm<n>::trunc(unsigned len) const {
     char ans[n + 1];
     for (int i = 0; i < len; ++i)
-        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
+        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask);
     ans[len] = 0;
 
     return ans;

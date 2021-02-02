@@ -210,7 +210,7 @@ constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
 template <int n>
 inline void Perm<n>::clear(unsigned from) {
     for (int i = from; i < n; ++i) {
-        code_ &= ~(imageMask_ << (imageBits * i));
+        code_ &= ~(imageMask << (imageBits * i));
         code_ |= (static_cast<Code>(i) << (imageBits * i));
     }
 }
