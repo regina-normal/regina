@@ -116,7 +116,6 @@ void testPermArrays() {
     static_assert(Perm<3>(a3) != Perm<3>());
     static_assert(Perm<3>(a3, a3) == Perm<3>());
     static_assert(Perm<3>(a3) == Perm<3>(1, 2, 0));
-    static_assert(Perm<3>(a3).inverse() == Perm<3>(1,0, 2,1, 0,2));
 
     constexpr int a4[4] = { 1, 3, 2, 0 };
     static_assert(Perm<4>(a4) != Perm<4>());
