@@ -240,7 +240,6 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
 
             // This implementation runs in linear time in dim
             // (since binomial coefficients are precomputed).
-            int perm[dim + 1];
 
             // IDEA: use the combinatorial number system which associates 
             //       numbers face = 0, 1, .... , binom(dim+1,lexDim+1)-1 
@@ -261,6 +260,13 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             //       so we must reverse the ordering and apply the
             //       transformation c_i \mapsto d_i = dim-c_i
 
+            // We construct a permutation code from the individual images.
+            static_assert(Perm<dim + 1>::codeType == PERM_CODE_IMAGES);
+
+            typedef typename Perm<dim + 1>::Code Code;
+            Code code = 0;
+            int shift = 0;
+
             // reverse ordering
             unsigned remaining = binomSmall_[dim+1][lexDim+1] - face - 1;
 
@@ -273,7 +279,9 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
                 unsigned val = (max < k ? 0 : binomSmall_[max][k]);
                 if (val <= remaining) {
                   --k;
-                  perm[lexDim-k] = dim-max;
+                  // lexDim-k -> dim-max
+                  code |= (static_cast<Code>(dim-max) << shift);
+                  shift += Perm<dim + 1>::imageBits;
                   remaining = remaining - val;
                   done = true;
                 }
@@ -282,29 +290,34 @@ class FaceNumberingImpl : public FaceNumberingAPI<dim, subdim> {
             }
             while (k > 0) {
               --k;
-              perm[lexDim-k]=dim-k;
+              // lexDim-k -> dim-k
+              code |= (static_cast<Code>(dim-k) << shift);
+              shift += Perm<dim + 1>::imageBits;
             }
 
-            unsigned pos = lexDim;
-            unsigned idx = lexDim+1;
+            // At this point, shift == (lexDim + 1) * imageBits.
+
+            int shiftBack = shift - Perm<dim + 1>::imageBits;
             bool done = false;
             for (int i=dim; i>=0; i--) {
-              if ((! done) && perm[pos] == i) {
-                if (pos>0) {
-                  --pos;
+              if ((! done) &&
+                  ((code >> shiftBack) & Perm<dim + 1>::imageMask) == i) {
+                if (shiftBack>0) {
+                  shiftBack -= Perm<dim + 1>::imageBits;
                 } else {
                   done = true;
                 }
                 continue;
               }
-              perm[idx] = i;
-              idx++;
+              // next index -> i
+              code |= (static_cast<Code>(i) << shift);
+              shift += Perm<dim + 1>::imageBits;
             }
 
             if constexpr (lexNumbering)
-                return Perm<dim + 1>(perm);
+                return Perm<dim + 1>::fromPermCode(code);
             else
-                return Perm<dim + 1>(perm).reverse();
+                return Perm<dim + 1>::fromPermCode(code).reverse();
         }
 
         static constexpr unsigned faceNumber(Perm<dim + 1> vertices) {
