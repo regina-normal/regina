@@ -196,6 +196,14 @@ class REGINA_API SnapPeaCensusTri: public StandardTriangulation {
 
 /*@}*/
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline SnapPeaCensusTri::SnapPeaCensusTri(char newSection,
+        unsigned long newIndex) :
+        section_(newSection), index_(newIndex) {
+}
+
 // Inline functions for SnapPeaCensusTri
 
 inline SnapPeaCensusTri* SnapPeaCensusTri::clone() const {
@@ -218,11 +226,6 @@ inline bool SnapPeaCensusTri::operator == (const SnapPeaCensusTri& compare)
 inline bool SnapPeaCensusTri::operator != (const SnapPeaCensusTri& compare)
         const {
     return (section_ != compare.section_ || index_ != compare.index_);
-}
-
-inline SnapPeaCensusTri::SnapPeaCensusTri(char newSection,
-        unsigned long newIndex) :
-        section_(newSection), index_(newIndex) {
 }
 
 } // namespace regina

@@ -3143,6 +3143,13 @@ class REGINA_API Triangulation<3> :
 
 /*@}*/
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline Triangulation<3>::~Triangulation() {
+    clearAllProperties();
+}
+
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim3/tetrahedron3.h"
@@ -3158,10 +3165,6 @@ inline Triangulation<3>::Triangulation() {
 
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
-}
-
-inline Triangulation<3>::~Triangulation() {
-    clearAllProperties();
 }
 
 inline Packet* Triangulation<3>::internalClonePacket(Packet*) const {

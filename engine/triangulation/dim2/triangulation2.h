@@ -321,6 +321,13 @@ class REGINA_API Triangulation<2> :
 
 /*@}*/
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline void Triangulation<2>::clearAllProperties() {
+    clearBaseProperties();
+}
+
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim2/triangle2.h"
@@ -400,10 +407,6 @@ inline bool Triangulation<2>::isIdeal() const {
 
 inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
     return new Triangulation(*this);
-}
-
-inline void Triangulation<2>::clearAllProperties() {
-    clearBaseProperties();
 }
 
 inline void Triangulation<2>::swapAllProperties(Triangulation<2>& other) {

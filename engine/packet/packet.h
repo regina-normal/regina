@@ -2517,6 +2517,12 @@ inline PacketDescendants::PacketDescendants(const Packet* subtree) :
         subtree_(subtree) {
 }
 
+inline void PacketListener::packetToBeChanged(Packet*) {
+}
+
+inline void PacketListener::packetWasChanged(Packet*) {
+}
+
 // Inline functions for Packet
 
 inline Packet::Packet(Packet* parent) :
@@ -2764,12 +2770,6 @@ inline bool operator != (const Packet* packet, PacketShell shell) {
 }
 
 // Inline functions for PacketListener
-
-inline void PacketListener::packetToBeChanged(Packet*) {
-}
-
-inline void PacketListener::packetWasChanged(Packet*) {
-}
 
 inline void PacketListener::packetToBeRenamed(Packet*) {
 }

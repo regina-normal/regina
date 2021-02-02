@@ -1136,6 +1136,16 @@ class REGINA_API ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
 
 /*@}*/
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline ModelLinkGraphCells::~ModelLinkGraphCells() {
+    delete[] arcs_;
+    delete[] start_;
+    delete[] cell_;
+    delete[] step_;
+}
+
 // Inline functions for ModelLinkGraphArc
 
 inline ModelLinkGraphArc::ModelLinkGraphArc() : node_(0), arc_(0) {
@@ -1291,13 +1301,6 @@ inline ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from)
 }
 
 // Inline functions for ModelLinkGraphCells
-
-inline ModelLinkGraphCells::~ModelLinkGraphCells() {
-    delete[] arcs_;
-    delete[] start_;
-    delete[] cell_;
-    delete[] step_;
-}
 
 inline size_t ModelLinkGraphCells::countCells() const {
     return nCells_;
