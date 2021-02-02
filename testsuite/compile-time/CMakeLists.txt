@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   boolset
+  disctype
   intutils
   perm
   triangulation
