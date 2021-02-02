@@ -92,6 +92,8 @@ void addPerm2(pybind11::module_& m) {
         .def("SnIndex", &Perm<2>::SnIndex)
         .def("orderedS2Index", &Perm<2>::orderedS2Index)
         .def("orderedSnIndex", &Perm<2>::orderedS2Index)
+        .def_property_readonly_static("codeType",
+            [](pybind11::object /* self */) { return Perm<2>::codeType; })
         .def_property_readonly_static("nPerms",
             [](pybind11::object /* self */) { return Perm<2>::nPerms; })
         .def_property_readonly_static("nPerms_1",

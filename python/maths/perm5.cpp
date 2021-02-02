@@ -118,6 +118,8 @@ void addPerm5(pybind11::module_& m) {
         .def_static("extend", &Perm<5>::extend<2>)
         .def_static("extend", &Perm<5>::extend<3>)
         .def_static("extend", &Perm<5>::extend<4>)
+        .def_property_readonly_static("codeType",
+            [](pybind11::object /* self */) { return Perm<5>::codeType; })
         .def_property_readonly_static("imageBits",
             [](pybind11::object /* self */) { return Perm<5>::imageBits; })
         .def_property_readonly_static("nPerms",

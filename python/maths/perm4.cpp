@@ -111,6 +111,8 @@ void addPerm4(pybind11::module_& m) {
         .def("orderedSnIndex", &Perm<4>::orderedS4Index)
         .def_static("extend", &Perm<4>::extend<2>)
         .def_static("extend", &Perm<4>::extend<3>)
+        .def_property_readonly_static("codeType",
+            [](pybind11::object /* self */) { return Perm<4>::codeType; })
         .def_property_readonly_static("nPerms",
             [](pybind11::object /* self */) { return Perm<4>::nPerms; })
         .def_property_readonly_static("nPerms_1",

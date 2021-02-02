@@ -86,6 +86,38 @@ inline constexpr int64_t factorial(int n) {
 }
 
 /**
+ * Represents the different kinds of internal permutation codes that are
+ * used in Regina's various Perm<n> template classes.  See the Perm<n>
+ * class notes for more information on exactly how these codes are constructed.
+ * The class constant Perm<n>::codeType indicates which type of code is used
+ * for which \a n.
+ */
+enum PermCodeType {
+    /**
+     * This is a permutation code that packs the images of 0,...,<i>n</i>-1
+     * into a single native integer using a handful of bits per image.
+     * Such codes are easier to manipulate on an element-by-element basis.
+     *
+     * Codes of this type can always be queried using Perm<n>::permCode(), and
+     * permutations can be recreated from them using Perm<n>::fromPermCode().
+     */
+    PERM_CODE_IMAGES = 1,
+    /**
+     * This is a permutation code that stores the index into the full
+     * permutation group \a S_n.  Such codes typically require fewer bytes and
+     * are packed together, making them ideal for working with lookup tables.
+     *
+     * Codes of this type can be queried using Perm<n>::SnIndex(), and
+     * permutations can be recreated from them by indexing into Perm<n>::Sn.
+     *
+     * \warning The routines Perm<n>::permCode() and Perm<n>::fromPermCode()
+     * will still be present, but in some classes (e.g., Perm<4> and Perm<5>),
+     * these are legacy routines that refer to different types of codes.
+     */
+    PERM_CODE_INDEX = 2
+};
+
+/**
  * Represents a permutation of {0,1,...,<i>n</i>-1}.
  * Amongst other things, such permutations are used to describe
  * simplex gluings in (<i>n</i>-1)-manifold triangulations.
@@ -105,10 +137,10 @@ inline constexpr int64_t factorial(int n) {
  *   whose lowest \a imageBits bits represent the image of 0, whose next
  *   lowest \a imageBits bits represent the image of 1, and so on.
  *
- * - For \a n &le; 4, the code is an index into a hard-coded list of
+ * - For \a n &le; 5, the code is an index into a hard-coded list of
  *   all possible permutations (i.e., an index into the symmetric group
  *   <i>S<sub>n</sub></i>).  For details, see the documentation for
- *   the specialisations Perm<2>, Perm<3> and Perm<4> respectively.
+ *   the specialisations Perm<2>, Perm<3>, Perm<4> and Perm<5> respectively.
  *
  * For \a n = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
  * triangulations), this template is specialised: the code is highly optimised
@@ -157,6 +189,12 @@ class Perm {
          * for \a n &le; 4 than for \a n &ge; 5.
          */
         typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype Code;
+
+        /**
+         * Indicates what type of internal permutation code is used by
+         * this instance of the Perm class template.
+         */
+        static constexpr PermCodeType codeType = PERM_CODE_IMAGES;
 
         /**
          * The total number of permutations on \a n elements.

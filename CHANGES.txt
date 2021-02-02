@@ -103,6 +103,7 @@ Version 6.1  [ TODO ]
               with lightweight objects whose square bracket operators compute
               and/or look up the relevant permutations on the fly.
             - New static routine rot().
+            - New class constant codeType.
             - Almost everything in the permutation classes is now constexpr.
         Class Perm<4>:
             - All of the changes listed for Perm<n> above.

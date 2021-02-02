@@ -120,6 +120,8 @@ void addPerm(pybind11::module_& m, const char* name) {
             pybind11::arg("even") = false)
         .def("trunc", &Perm<n>::trunc)
         .def("clear", &Perm<n>::clear)
+        .def_property_readonly_static("codeType",
+            [](pybind11::object /* self */) { return Perm<n>::codeType; })
         .def_property_readonly_static("nPerms",
             [](pybind11::object /* self */) { return Perm<n>::nPerms; })
         .def_property_readonly_static("nPerms_1",
@@ -135,6 +137,12 @@ void addPerm(pybind11::module_& m, const char* name) {
 void addPerm(pybind11::module_& m) {
     m.def("digit", regina::digit);
     m.def("factorial", regina::factorial);
+
+    pybind11::enum_<regina::PermCodeType>(m, "PermCodeType")
+        .value("PERM_CODE_IMAGES", regina::PERM_CODE_IMAGES)
+        .value("PERM_CODE_INDEX", regina::PERM_CODE_INDEX)
+        .export_values()
+        ;
 
     addPerm<6>(m, "Perm6");
     addPerm<7>(m, "Perm7");
