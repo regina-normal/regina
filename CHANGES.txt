@@ -170,9 +170,8 @@ Version 6.1  [ TODO ]
             - Removed these global functions (which were never available in
               python). Use Face<dim, subdim>::allowsNonOrientableLinks
               and Face<dim, subdim>::allowsInvalidFaces instead.
-        Function binomConst():
-            - New alternative to binomMedium() that is slower, but has
-              the advantage of being able to generate compile-time constants.
+        Function binomSmall(), binomMedium():
+            - Both these functions are now inline and constexpr.
         Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
                 quadString:
             - These are all now inline constexpr.

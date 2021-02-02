@@ -1701,8 +1701,6 @@
 		05B27D531E96681D00E2B7C4 /* nsvectorquadclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */; };
 		05B27D541E96682200E2B7C4 /* nsvectorquadclosed.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */; };
 		05B44D1521914FA300B1D343 /* binom.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B44D1321914FA200B1D343 /* binom.h */; };
-		05B44D1621914FA300B1D343 /* binom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B44D1421914FA300B1D343 /* binom.cpp */; };
-		05B44D1721914FAA00B1D343 /* binom.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05B44D1421914FA300B1D343 /* binom.cpp */; };
 		05B4D2BA229F376B00B7B11C /* project_and_lift.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2A8229F376700B7B11C /* project_and_lift.h */; };
 		05B4D2BB229F376B00B7B11C /* nmz_integrate.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2A9229F376800B7B11C /* nmz_integrate.h */; };
 		05B4D2C0229F376B00B7B11C /* nmz_config.h in Headers */ = {isa = PBXBuildFile; fileRef = 05B4D2AC229F376800B7B11C /* nmz_config.h */; };
@@ -4140,7 +4138,6 @@
 		05B27D501E96681D00E2B7C4 /* nsvectorquadclosed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorquadclosed.h; sourceTree = "<group>"; };
 		05B27D511E96681D00E2B7C4 /* nsvectorquadclosed.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = nsvectorquadclosed.cpp; sourceTree = "<group>"; };
 		05B44D1321914FA200B1D343 /* binom.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = binom.h; sourceTree = "<group>"; };
-		05B44D1421914FA300B1D343 /* binom.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = binom.cpp; sourceTree = "<group>"; };
 		05B4D2A7229F376700B7B11C /* descent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = descent.cpp; sourceTree = "<group>"; };
 		05B4D2A8229F376700B7B11C /* project_and_lift.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = project_and_lift.h; sourceTree = "<group>"; };
 		05B4D2A9229F376800B7B11C /* nmz_integrate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nmz_integrate.h; sourceTree = "<group>"; };
@@ -5506,7 +5503,6 @@
 			isa = PBXGroup;
 			children = (
 				053CAB261DA7108F00A92F98 /* spec */,
-				05B44D1421914FA300B1D343 /* binom.cpp */,
 				05B44D1321914FA200B1D343 /* binom.h */,
 				052F9CE0180600FA00FAE4DF /* CMakeLists.txt */,
 				0541AF481B8BE2F5002E166B /* cyclotomic.cpp */,
@@ -9173,7 +9169,6 @@
 				05C0645F1C56B1F7006E6483 /* Tri4Gluings.mm in Sources */,
 				054C6A7B1DCC1FF4005373F0 /* example15.cpp in Sources */,
 				05D1173519EE018A003BEC55 /* incompressible.cpp in Sources */,
-				05B44D1721914FAA00B1D343 /* binom.cpp in Sources */,
 				05D1172D19EE0172003BEC55 /* connectedsumdecomp.cpp in Sources */,
 				05249EDC1DBC16E4001FE29E /* face6.cpp in Sources */,
 				05F0A0111DBF079600117BFC /* simplify.cpp in Sources */,
@@ -9958,7 +9953,6 @@
 				05C1BEB01DCA7CA9007C946B /* boundary8.cpp in Sources */,
 				05F0A0441DBF0B5E00117BFC /* simplify.cpp in Sources */,
 				05A73CA019B2EF5A0099C617 /* matrix_conversion.c in Sources */,
-				05B44D1621914FA300B1D343 /* binom.cpp in Sources */,
 				05F0A0481DBF0B5E00117BFC /* subdivide.cpp in Sources */,
 				052F9F89180600FB00FAE4DF /* interface.c in Sources */,
 				052F9F6E180600FB00FAE4DF /* canonize_part_1.c in Sources */,

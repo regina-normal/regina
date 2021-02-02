@@ -106,7 +106,7 @@ class FaceNumberingAPI {
                  face numbering. */
 
     public:
-        static constexpr int nFaces = binomConst(dim + 1, lexDim + 1);
+        static constexpr int nFaces = binomSmall(dim + 1, lexDim + 1);
             /**< The total number of <i>subdim</i>-dimensional faces in each
                  <i>dim</i>-dimensional simplex. */
 
