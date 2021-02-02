@@ -30,61 +30,11 @@
  *                                                                        *
  **************************************************************************/
 
-#include <sstream>
-#include <cppunit/extensions/HelperMacros.h>
 #include "maths/binom.h"
-#include "testsuite/maths/testmaths.h"
 
-using regina::binomSmall;
-using regina::binomMedium;
-
-class BinomialTest : public CppUnit::TestFixture {
-    CPPUNIT_TEST_SUITE(BinomialTest);
-
-    CPPUNIT_TEST(consistency);
-    CPPUNIT_TEST(relations);
-
-    CPPUNIT_TEST_SUITE_END();
-
-    private:
-        static constexpr int maxSmall = 16;
-        static constexpr int maxMedium = 29;
-
-    public:
-        void setUp() {
-        }
-
-        void tearDown() {
-        }
-
-        void consistency() {
-            int n, k;
-            for (n = 0; n <= maxSmall; ++n)
-                for (k = 0; k <= n; ++k) {
-                    CPPUNIT_ASSERT_EQUAL(
-                        static_cast<long>(binomSmall(n, k)),
-                        binomMedium(n, k));
-                }
-        }
-
-        void relations() {
-            int n, k;
-            for (n = 0; n <= maxMedium; ++n) {
-                CPPUNIT_ASSERT_EQUAL(binomMedium(n, 0), long(1));
-                CPPUNIT_ASSERT_EQUAL(binomMedium(n, n), long(1));
-                if (n > 0) {
-                    CPPUNIT_ASSERT_EQUAL(binomMedium(n, 1), long(n));
-                    CPPUNIT_ASSERT_EQUAL(binomMedium(n, n-1), long(n));
-
-                    for (k = 1; k < n; ++k)
-                        CPPUNIT_ASSERT_EQUAL(binomMedium(n, k),
-                            binomMedium(n-1, k-1) + binomMedium(n-1, k));
-                }
-            }
-        }
-};
-
-void addBinomial(CppUnit::TextUi::TestRunner& runner) {
-    runner.addTest(BinomialTest::suite());
-}
+static_assert(regina::binomSmall(5, 3) == 10);
+static_assert(regina::binomMedium(5, 3) == 10);
+static_assert(regina::binomSmall(16, 8) == 12870);
+static_assert(regina::binomMedium(16, 8) == 12870);
+static_assert(regina::binomMedium(29, 14) == 77558760);
 
