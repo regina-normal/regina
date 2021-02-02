@@ -97,8 +97,9 @@ void addEdge3(pybind11::module_& m) {
         .def_static("containsVertex", &Edge<3>::containsVertex)
         .def_readonly_static("edgeNumber", &Edge3_edgeNumber)
         .def_readonly_static("edgeVertex", &Edge3_edgeVertex)
-        // We cannot take the addresses of the following properties, so we
-        // define getter functions instead.
+        // On some systems we cannot take addresses of the following
+        // inline class constants (e.g., this fails with gcc10 on windows).
+        // We therefore define getter functions instead.
         .def_property_readonly_static("nFaces", [](pybind11::object) {
             return Edge<3>::nFaces;
         })

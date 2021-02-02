@@ -46,7 +46,12 @@ void addFileInfo(pybind11::module_& m) {
         .def("isCompressed", &FileInfo::isCompressed)
         .def("isInvalid", &FileInfo::isInvalid)
         .def_static("identify", &FileInfo::identify)
-        .def_readonly_static("TYPE_XML", &FileInfo::TYPE_XML)
+        // On some systems we cannot take addresses of the following
+        // inline class constants (e.g., this fails with gcc10 on windows).
+        // We therefore define getter functions instead.
+        .def_property_readonly_static("TYPE_XML", [](pybind11::object) {
+            return FileInfo::TYPE_XML;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

@@ -76,8 +76,9 @@ void addTetrahedron3(pybind11::module_& m) {
         .def("triangleMapping", &Tetrahedron<3>::triangleMapping)
         .def("orientation", &Tetrahedron<3>::orientation)
         .def("facetInMaximalForest", &Tetrahedron<3>::facetInMaximalForest)
-        // We cannot take the addresses of the following header-only properties,
-        // so we define getter functions instead.
+        // On some systems we cannot take addresses of the following
+        // inline class constants (e.g., this fails with gcc10 on windows).
+        // We therefore define getter functions instead.
         .def_property_readonly_static("dimension", [](pybind11::object) {
             return Tetrahedron<3>::dimension;
         })
