@@ -426,15 +426,24 @@ class FaceNumberingImpl<dim, 0, codim> : public FaceNumberingAPI<dim, 0> {
             } else if constexpr (dim <= 4) {
                 return Perm<dim + 1>::rot(face);
             } else {
-                int p[dim + 1];
-                p[0] = face;
+                // Construct a permutation code from the individual images.
+                static_assert(Perm<dim + 1>::codeType == PERM_CODE_IMAGES);
 
-                for (int i = 0; i < face; ++i)
-                    p[dim - i] = i;
-                for (int i = face + 1; i <= dim; ++i)
-                    p[dim - i + 1] = i;
+                typedef typename Perm<dim + 1>::Code Code;
+                Code code = face; // 0 -> face
 
-                return Perm<dim + 1>(p);
+                int shift = Perm<dim + 1>::imageBits;
+                for (int i = dim; i >= static_cast<int>(face) + 1; --i) {
+                    // dim - i + 1 -> i;
+                    code |= (static_cast<Code>(i) << shift);
+                    shift += Perm<dim + 1>::imageBits;
+                }
+                for (int i = static_cast<int>(face) - 1; i >= 0; --i) {
+                    // dim - i -> i
+                    code |= (static_cast<Code>(i) << shift);
+                    shift += Perm<dim + 1>::imageBits;
+                }
+                return Perm<dim + 1>::fromPermCode(code);
             }
         }
 
@@ -461,15 +470,28 @@ class FaceNumberingImpl<dim, subdim, 0> : public FaceNumberingAPI<dim, dim - 1> 
 #ifndef __DOXYGEN
         // The following routines are documented in FaceNumberingAPI.
         static constexpr Perm<dim + 1> ordering(unsigned face) {
-            int p[dim + 1];
+            // Construct a permutation code from the individual images.
+            static_assert(Perm<dim + 1>::codeType == PERM_CODE_IMAGES);
 
-            for (int i = 0; i < face; ++i)
-                p[i] = i;
-            for (int i = face + 1; i <= dim; ++i)
-                p[i - 1] = i;
-            p[dim] = face;
+            typedef typename Perm<dim + 1>::Code Code;
+            Code code = 0;
 
-            return Perm<dim + 1>(p);
+            int shift = 0;
+            for (int i = 0; i < face; ++i) {
+                // i -> i
+                code |= (static_cast<Code>(i) << shift);
+                shift += Perm<dim + 1>::imageBits;
+            }
+            for (int i = face + 1; i <= dim; ++i) {
+                // i - 1 -> i
+                code |= (static_cast<Code>(i) << shift);
+                shift += Perm<dim + 1>::imageBits;
+            }
+            // dim -> face
+            code |= (static_cast<Code>(face) << shift);
+
+            return Perm<dim + 1>::fromPermCode(code);
+
         }
 
         static constexpr unsigned faceNumber(Perm<dim + 1> vertices) {
