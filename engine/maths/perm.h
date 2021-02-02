@@ -414,7 +414,7 @@ class Perm {
          * must be between 0 and <i>n</i>!-1 inclusive.
          * @return the <i>i</i>th permutation.
          */
-        static Perm atIndex(Index i);
+        static constexpr Perm atIndex(Index i);
 
         /**
          * Returns the lexicographical index of this permutation.  This
@@ -430,7 +430,7 @@ class Perm {
          * @return the index of this permutation, which will be between
          * 0 and <i>n</i>!-1 inclusive.
          */
-        Index index() const;
+        constexpr Index index() const;
 
         /**
          * Returns a random permutation on \a n elements.
@@ -754,32 +754,30 @@ constexpr Perm<n> Perm<n>::rot(int i) {
 }
 
 template <int n>
-Perm<n> Perm<n>::atIndex(Index i) {
+constexpr Perm<n> Perm<n>::atIndex(Index i) {
     int image[n];
-    int p, q;
-    for (p = 0; p < n; ++p) {
+    for (int p = 0; p < n; ++p) {
         image[n - p - 1] = i % (p + 1);
         i /= (p + 1);
     }
-    for (p = n - 1; p >= 0; --p)
-        for (q = p + 1; q < n; ++q)
+    for (int p = n - 1; p >= 0; --p)
+        for (int q = p + 1; q < n; ++q)
             if (image[q] >= image[p])
                 ++image[q];
     return Perm<n>(image);
 }
 
 template <int n>
-typename Perm<n>::Index Perm<n>::index() const {
+constexpr typename Perm<n>::Index Perm<n>::index() const {
     int image[n];
-    int p, q;
-    for (p = 0; p < n; ++p)
+    for (int p = 0; p < n; ++p)
         image[p] = (*this)[p];
-    for (p = 0; p < n; ++p)
-        for (q = p + 1; q < n; ++q)
+    for (int p = 0; p < n; ++p)
+        for (int q = p + 1; q < n; ++q)
             if (image[q] > image[p])
                 --image[q];
     Index ans = 0;
-    for (p = 0; p < n - 1; ++p) {
+    for (int p = 0; p < n - 1; ++p) {
         ans *= (n - p);
         ans += image[p];
     }

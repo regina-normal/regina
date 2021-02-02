@@ -341,7 +341,7 @@ class REGINA_API Perm<3> {
          * @param b the corresponding array of images; this must also have
          * length 3.
          */
-        Perm(const int* a, const int* b);
+        constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -821,6 +821,23 @@ inline constexpr Perm<3>::Perm(const int* image) :
         code_(image[0] == 0 ? (image[1] == 1 ? 0 : 1) :
               image[0] == 1 ? (image[1] == 2 ? 2 : 3) :
                               (image[1] == 0 ? 4 : 5)) {
+}
+
+inline constexpr Perm<3>::Perm(const int* a, const int* b) : code_(0) {
+    // TODO: When we move to C++20, we can get rid of the zero initialisers.
+    int image[3] = { 0, 0, 0 };
+    image[a[0]] = b[0];
+    image[a[1]] = b[1];
+    image[a[2]] = b[2];
+
+    switch (image[0]) {
+        case 0:
+            code_ = static_cast<Code>(image[1] == 1 ? 0 : 1); break;
+        case 1:
+            code_ = static_cast<Code>(image[1] == 2 ? 2 : 3); break;
+        case 2:
+            code_ = static_cast<Code>(image[1] == 0 ? 4 : 5); break;
+    }
 }
 
 inline constexpr Perm<3>::Code Perm<3>::permCode() const {

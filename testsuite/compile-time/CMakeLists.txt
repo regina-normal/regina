@@ -3,6 +3,7 @@
 # Files to compile
 SET ( FILES
   boolset
+  perm
   )
 
 # Prepend folder name

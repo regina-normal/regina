@@ -486,7 +486,7 @@ class REGINA_API Perm<5> {
          * @param b the corresponding array of images; this must also have
          * length 5.
          */
-        Perm(const int* a, const int* b);
+        constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -508,8 +508,8 @@ class REGINA_API Perm<5> {
          * @param d1 the desired image of <i>d0</i>.
          * @param e1 the desired image of <i>e0</i>.
          */
-        Perm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1,
-            int e0, int e1);
+        constexpr Perm(int a0, int a1, int b0, int b1, int c0, int c1,
+            int d0, int d1, int e0, int e1);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -1301,6 +1301,31 @@ inline constexpr Perm<5>::Perm(int a, int b, int c, int d, int e) :
 inline constexpr Perm<5>::Perm(const int* image) :
         code2_(static_cast<Code2>(S5Index(
             image[0], image[1], image[2], image[3], image[4]))) {
+}
+
+inline constexpr Perm<5>::Perm(int a0, int a1, int b0, int b1,
+        int c0, int c1, int d0, int d1, int e0, int e1) : code2_(0) {
+    // TODO: When we move to C++20, we can get rid of the zero initialisers.
+    int image[5] = { 0, 0, 0, 0, 0 };
+    image[a0] = a1;
+    image[b0] = b1;
+    image[c0] = c1;
+    image[d0] = d1;
+    image[e0] = e1;
+    code2_ = static_cast<Code2>(S5Index(
+        image[0], image[1], image[2], image[3], image[4]));
+}
+
+inline constexpr Perm<5>::Perm(const int* a, const int* b) : code2_(0) {
+    // TODO: When we move to C++20, we can get rid of the zero initialisers.
+    int image[5] = { 0, 0, 0, 0, 0 };
+    image[a[0]] = b[0];
+    image[a[1]] = b[1];
+    image[a[2]] = b[2];
+    image[a[3]] = b[3];
+    image[a[4]] = b[4];
+    code2_ = static_cast<Code2>(S5Index(
+        image[0], image[1], image[2], image[3], image[4]));
 }
 
 inline constexpr Perm<5>::Code1 Perm<5>::permCode() const {

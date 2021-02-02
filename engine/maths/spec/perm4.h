@@ -416,7 +416,7 @@ class REGINA_API Perm<4> {
          * @param b the corresponding array of images; this must also have
          * length 4.
          */
-        Perm(const int* a, const int* b);
+        constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation mapping
@@ -436,7 +436,8 @@ class REGINA_API Perm<4> {
          * @param c1 the desired image of <i>c0</i>.
          * @param d1 the desired image of <i>d0</i>.
          */
-        Perm(int a0, int a1, int b0, int b1, int c0, int c1, int d0, int d1);
+        constexpr Perm(int a0, int a1, int b0, int b1, int c0, int c1,
+            int d0, int d1);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -1067,6 +1068,27 @@ inline constexpr Perm<4>::Perm(int a, int b, int c, int d) :
 inline constexpr Perm<4>::Perm(const int* image) :
         code_(static_cast<Code2>(S4Index(
         image[0], image[1], image[2], image[3]))) {
+}
+
+inline constexpr Perm<4>::Perm(int a0, int a1, int b0, int b1, int c0, int c1,
+        int d0, int d1) : code_(0) {
+    // TODO: When we move to C++20, we can get rid of the zero initialisers.
+    int image[4] = { 0, 0, 0, 0 };
+    image[a0] = a1;
+    image[b0] = b1;
+    image[c0] = c1;
+    image[d0] = d1;
+    code_ = static_cast<Code2>(S4Index(image[0], image[1], image[2], image[3]));
+}
+
+inline constexpr Perm<4>::Perm(const int* a, const int* b) : code_(0) {
+    // TODO: When we move to C++20, we can get rid of the zero initialisers.
+    int image[4] = { 0, 0, 0, 0 };
+    image[a[0]] = b[0];
+    image[a[1]] = b[1];
+    image[a[2]] = b[2];
+    image[a[3]] = b[3];
+    code_ = static_cast<Code2>(S4Index(image[0], image[1], image[2], image[3]));
 }
 
 inline constexpr Perm<4>::Code1 Perm<4>::permCode() const {
