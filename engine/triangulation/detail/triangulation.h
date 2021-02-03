@@ -1810,15 +1810,21 @@ class TriangulationBase :
         /**
          * Internal to calculateSkeleton().
          *
-         * This routine calculates all <i>subdim</i>-faces.
+         * This routine calculates all <i>subdim</i>-faces for the given
+         * triangulation.
          *
          * See calculateSkeleton() for further details.
+         *
+         * This \e should have been an ordinary member function (not static),
+         * but it caused an internal compiler error in gcc8 (see gcc bug #86594,
+         * which is fixed in gcc9).  Making the function static is a workaround
+         * that we will need to keep until we drop support for gcc8.
          *
          * \tparam subdim the dimension of the faces to compute.
          * This must be between 0 and (\a dim - 1) inclusive.
          */
         template <int subdim>
-        void calculateFaces();
+        static void calculateFaces(TriangulationBase<dim>* tri);
 
         /**
          * Internal to calculateSkeleton().
@@ -1839,9 +1845,14 @@ class TriangulationBase :
          * than <i>dim</i>-3 then this routine does nothing.
          *
          * See calculateRealBoundary() for further details.
+         *
+         * Like calculateFaces(), this was made a static member function to
+         * work around a gcc8 bug (#86594, fixed in gcc9).  However, everything
+         * this function needs is passed via \a bc and \a facet, so being
+         * static is harmless (and required no changes to the source code).
          */
         template <int subdim>
-        void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
+        static void calculateBoundaryFaces(BoundaryComponent<dim>* bc,
             Face<dim, dim-1>* facet);
 
         /**
