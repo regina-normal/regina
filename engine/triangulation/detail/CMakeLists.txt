@@ -1,6 +1,5 @@
 # Files to compile
 SET ( FILES
-  pachner
   )
 
 # Prepend folder name

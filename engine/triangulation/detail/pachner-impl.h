@@ -127,47 +127,66 @@ namespace regina::detail {
     }
 
     // Precalculated values of movePerm() for use in standard dimensions.
-    // These are not marked REGINA_API, since they should not be considered
-    // a part of Regina's public API.  The calculation engine already
-    // links in implementations of all possible Pachner moves, and so the
-    // end user should have no need to refer to these arrays.
-    extern const Perm<3> movePerm_2_1[2][2];
-    extern const Perm<4> movePerm_3_1[3][2];
-    extern const Perm<4> movePerm_3_2[2][3];
-    extern const Perm<5> movePerm_4_1[4][2];
-    extern const Perm<5> movePerm_4_2[3][3];
-    extern const Perm<5> movePerm_4_3[2][4];
+    // These are not part of Regina's public API.  The calculation engine
+    // already links in implementations of all possible Pachner moves, and
+    // so the end user should have no need to refer to these arrays.
+    inline constexpr Perm<3>::Code movePerm_2_1[2][2] = {
+        { 1 /* 021 */, 3 /* 102 */ }, { 3 /* 102 */, 3 /* 102 */ } };
+
+    inline constexpr Perm<4>::Code2 movePerm_3_1[3][2] = {
+        { 4  /* 0312 */, 12 /* 2013 */ },
+        { 6  /* 1032 */, 12 /* 2013 */ },
+        { 12 /* 2013 */, 12 /* 2013 */ } };
+
+    inline constexpr Perm<4>::Code2 movePerm_3_2[2][3] = {
+        { 2 /* 0231 */, 6 /* 1032 */, 8 /* 1203 */ },
+        { 8 /* 1203 */, 8 /* 1203 */, 8 /* 1203 */ } };
+
+    inline constexpr Perm<5>::Code2 movePerm_4_1[4][2] = {
+        { 19 /* 04123 */, 73 /* 30124 */ },
+        { 29 /* 10423 */, 73 /* 30124 */ },
+        { 49 /* 20143 */, 73 /* 30124 */ },
+        { 73 /* 30124 */, 73 /* 30124 */ } };
+
+    inline constexpr Perm<5>::Code2 movePerm_4_2[3][3] = {
+        { 16 /* 03412 */ , 52 /* 20413 */, 60 /* 23014 */ },
+        { 36 /* 13042 */ , 54 /* 21043 */, 60 /* 23014 */ },
+        { 60 /* 23014 */ , 60 /* 23014 */, 60 /* 23014 */ } };
+
+    inline constexpr Perm<5>::Code2 movePerm_4_3[2][4] = {
+        { 9  /* 02341 */, 27 /* 10342 */, 31 /* 12043 */, 33 /* 12304 */ },
+        { 33 /* 12304 */, 33 /* 12304 */, 33 /* 12304 */, 33 /* 12304 */ } };
 
     // Specialised implementations of movePerm() that use these
     // precalculated values.
     template <>
     inline Perm<3> movePerm<2, 1>(int oldSimp, int newSimp) {
-        return movePerm_2_1[oldSimp][newSimp];
+        return Perm<3>::fromPermCode(movePerm_2_1[oldSimp][newSimp]);
     }
 
     template <>
     inline Perm<4> movePerm<3, 1>(int oldSimp, int newSimp) {
-        return movePerm_3_1[oldSimp][newSimp];
+        return Perm<4>::fromPermCode2(movePerm_3_1[oldSimp][newSimp]);
     }
 
     template <>
     inline Perm<4> movePerm<3, 2>(int oldSimp, int newSimp) {
-        return movePerm_3_2[oldSimp][newSimp];
+        return Perm<4>::fromPermCode2(movePerm_3_2[oldSimp][newSimp]);
     }
 
     template <>
     inline Perm<5> movePerm<4, 1>(int oldSimp, int newSimp) {
-        return movePerm_4_1[oldSimp][newSimp];
+        return Perm<5>::fromPermCode2(movePerm_4_1[oldSimp][newSimp]);
     }
 
     template <>
     inline Perm<5> movePerm<4, 2>(int oldSimp, int newSimp) {
-        return movePerm_4_2[oldSimp][newSimp];
+        return Perm<5>::fromPermCode2(movePerm_4_2[oldSimp][newSimp]);
     }
 
     template <>
     inline Perm<5> movePerm<4, 3>(int oldSimp, int newSimp) {
-        return movePerm_4_3[oldSimp][newSimp];
+        return Perm<5>::fromPermCode2(movePerm_4_3[oldSimp][newSimp]);
     }
 #endif // __DOXYGEN
 
