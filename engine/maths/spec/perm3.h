@@ -93,6 +93,8 @@ class REGINA_API Perm<3> {
              * Returns the permutation at the given index in the array S3.
              * See Perm<3>::S3 for details.
              *
+             * This operation is extremely fast (and constant time).
+             *
              * @param index an index between 0 and 5 inclusive.
              * @return the corresponding permutation in S3.
              */
@@ -107,6 +109,8 @@ class REGINA_API Perm<3> {
              * Returns the permutation at the given index in the array
              * orderedS3.  See Perm<3>::orderedS3 for details.
              *
+             * This operation is extremely fast (and constant time).
+             *
              * @param index an index between 0 and 5 inclusive.
              * @return the corresponding permutation in orderedS3.
              */
@@ -120,6 +124,8 @@ class REGINA_API Perm<3> {
             /**
              * Returns the permutation at the given index in the array S2.
              * See Perm<3>::S2 for details.
+             *
+             * This operation is extremely fast (and constant time).
              *
              * @param index an index between 0 and 1 inclusive.
              * @return the corresponding permutation in S2.
@@ -164,7 +170,7 @@ class REGINA_API Perm<3> {
          * three elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>S3[i]</tt>.  The index \a i must be
+         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 5 inclusive.
          *
          * In Regina 6.0 and earlier, this was a hard-coded C-style array;
@@ -177,51 +183,68 @@ class REGINA_API Perm<3> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (Perm<3>, Perm<4> and so on),
-         * the S3 array stores the same permutations in the same order
-         * (but of course using different data types).
-         *
-         * Note that these permutations are not necessarily in
-         * lexicographical order.
-         */
-        static constexpr S3Lookup S3 {};
-
-        /**
-         * A dimension-agnostic alias for Perm<3>::S3.  In general, for
-         * each \a K the class PermK will define an alias \a Sn
-         * that references the list of all permutations PermK::SK.
+         * This is different from Perm<3>::orderedSn, since this array \a Sn
+         * alternates between even and odd permutations, whereas \a orderedSn
+         * stores permutations in lexicographical order.
          */
         static constexpr S3Lookup Sn {};
+
+        /**
+         * Gives array-like access to all possible permutations of
+         * three elements.
+         *
+         * This is a dimension-specific alias for Perm<3>::Sn; see that member
+         * for further information.  In general, for every \a n there will be
+         * a static member Perm<n>::Sn; however, these numerical aliases
+         * Perm<2>::S2, ..., Perm<5>::S5 are only available for small \a n.
+         *
+         * Note that small permutation classes (Perm<3>, Perm<4>, Perm<5>)
+         * have an \a S3 array: these all store the same six permutations in
+         * the same order (but of course using different data types).
+         */
+        static constexpr S3Lookup S3 {};
 
         /**
          * Gives array-like access to all possible permutations of three
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedS3[i]</tt>.  The index \a i
+         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
          * must be between 0 and 5 inclusive.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * ordered pair (\a p[0], \a p[1], \a p[2]).
          *
          * In Regina 6.0 and earlier, this was a hard-coded C-style array;
          * since Regina 6.1 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
-         */
-        static constexpr OrderedS3Lookup orderedS3 {};
-
-        /**
-         * A dimension-agnostic alias for Perm<3>::orderedS3.  In general, for
-         * each \a K the class PermK will define an alias \a orderedSn
-         * that references the list of all permutations PermK::orderedSK.
+         *
+         * This is different from Perm<3>::Sn, since this array \a orderedSn
+         * stores permutations in lexicographical order, whereas \a Sn
+         * alternates between even and odd permutations.
          */
         static constexpr OrderedS3Lookup orderedSn {};
+
+        /**
+         * Gives array-like access to all possible permutations of three
+         * elements in lexicographical order.
+         *
+         * This is a dimension-specific alias for Perm<3>::orderedSn; see that
+         * member for further information.  In general, for every \a n there
+         * will be a static member Perm<n>::orderedSn; however, these numerical
+         * aliases Perm<2>::orderedS2, ..., Perm<5>::orderedS5 are only
+         * available for small \a n.
+         */
+        static constexpr OrderedS3Lookup orderedS3 {};
 
         /**
          * Gives array-like access to all possible permutations of
          * two elements.  In each permutation, 2 maps to 2.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>S2[i]</tt>.  The index \a i must be
+         * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be
          * between 0 and 1 inclusive.
          *
          * In Regina 6.0 and earlier, this was a hard-coded C-style array;
@@ -233,21 +256,24 @@ class REGINA_API Perm<3> {
          * The permutations with even indices in the array are the even
          * permutations, and those with odd indices in the array are the
          * odd permutations.
-         *
-         * For all permutation classes (Perm<3>, Perm<4> and so on),
-         * the S2 array stores the same permutations in the same order
-         * (but of course using different data types).
-         *
-         * Note that these permutations are already in lexicographical order.
-         */
-        static constexpr S2Lookup S2 {};
-
-        /**
-         * A dimension-agnostic alias for Perm<3>::S2.  In general, for
-         * each \a K the class PermK will define an alias \a Sn_1
-         * that references the list of all permutations PermK::S(K-1).
          */
         static constexpr S2Lookup Sn_1 {};
+
+        /**
+         * Gives array-like access to all possible permutations of
+         * two elements.
+         *
+         * This is a dimension-specific alias for Perm<3>::Sn_1; see that
+         * member for further information.
+         *
+         * Note that all small permutation classes (Perm<2>, ..., Perm<5>)
+         * have an \a S2 array: these all store the same two permutations in
+         * the same order (but of course using different data types).
+         *
+         * There is no corresponding \a orderedS2 array, since the
+         * (trivial) arrays \a S2 and \a orderedS2 are identical.
+         */
+        static constexpr S2Lookup S2 {};
 
         enum {
             /**
@@ -518,21 +544,6 @@ class REGINA_API Perm<3> {
         static constexpr Perm rot(int i);
 
         /**
-         * Returns the <i>i</i>th permutation on three elements, where
-         * permutations are numbered lexicographically beginning at 0.
-         *
-         * Lexicographical ordering treats each permutation \a p as the
-         * 3-tuple (\a p[0], \a p[1], \a p[2]).
-         *
-         * The return value will be identical to orderedS3[\a i].
-         *
-         * @param i the lexicographical index of the permutation; this
-         * must be between 0 and 5 inclusive.
-         * @return the <i>i</i>th permutation.
-         */
-        static constexpr Perm atIndex(Index i);
-
-        /**
          * Returns a random permutation on three elements.
          * All permutations are returned with equal probability.
          *
@@ -575,24 +586,6 @@ class REGINA_API Perm<3> {
          */
         template <class URBG>
         static Perm rand(URBG&& gen, bool even = false);
-
-        /**
-         * Returns the lexicographical index of this permutation.  This
-         * indicates where this permutation sits within a full lexicographical
-         * ordering of all 3! permutations on three elements.
-         *
-         * Lexicographical ordering treats each permutation \a p as the
-         * 3-tuple (\a p[0], \a p[1], \a p[2]).
-         * In particular, the identity permutation has index 0, and the
-         * "reverse" permutation (which maps each \a i to 2-<i>i</i>)
-         * has index 5 = 3!-1.
-         *
-         * This routine is identical to orderedS3Index().
-         *
-         * @return the index of this permutation, which will be between
-         * 0 and 5 inclusive.
-         */
-        constexpr Index index() const;
 
         /**
          * Returns a string representation of this permutation.
@@ -641,38 +634,79 @@ class REGINA_API Perm<3> {
         void clear(unsigned from);
 
         /**
+         * Returns the index of this permutation in the Perm<3>::Sn array.
+         *
+         * See Sn for further information on how these permutations are indexed.
+         *
+         * @return the index \a i for which this permutation is equal to
+         * Perm<3>::Sn[i].  This will be between 0 and 5 inclusive.
+         */
+        constexpr Index SnIndex() const;
+
+        /**
          * Returns the index of this permutation in the Perm<3>::S3 array.
+         *
+         * This is a dimension-specific alias for SnIndex().  In general,
+         * for every \a n there will be a member function Perm<n>::SnIndex();
+         * however, these numerical aliases Perm<2>::S2Index(), ...,
+         * Perm<5>::S5Index() are only available for small \a n.
+         *
+         * See Sn for further information on how these permutations are indexed.
          *
          * @return the index \a i for which this permutation is equal to
          * Perm<3>::S3[i].  This will be between 0 and 5 inclusive.
          */
-        constexpr int S3Index() const;
+        constexpr Index S3Index() const;
 
         /**
-         * Returns the index of this permutation in the Perm<3>::S3 array.
-         * This is a dimension-agnostic alias for S3Index().
+         * Returns the lexicographical index of this permutation.  This will
+         * be the index of this permutation in the Perm<3>::orderedSn array.
          *
-         * @return the index \a i for which this permutation is equal to
-         * Perm<3>::S3[i].  This will be between 0 and 5 inclusive.
+         * See orderedSn for further information on lexicographical ordering.
+         *
+         * @return the lexicographical index of this permutation.
+         * This will be between 0 and 5 inclusive.
          */
-        constexpr int SnIndex() const;
+        constexpr Index orderedSnIndex() const;
 
         /**
-         * Returns the index of this permutation in the Perm<3>::orderedS3 array.
+         * Returns the lexicographical index of this permutation.  This will
+         * be the index of this permutation in the Perm<3>::orderedSn array.
          *
-         * @return the index \a i for which this permutation is equal to
-         * Perm<3>::orderedS3[i].  This will be between 0 and 5 inclusive.
+         * This is a dimension-specific alias for orderedSnIndex().
+         * In general, for every \a n there will be a member function
+         * Perm<n>::orderedSnIndex(); however, these numerical aliases
+         * Perm<2>::orderedS2Index(), ..., Perm<5>::orderedS5Index() are
+         * only available for small \a n.
+         *
+         * See orderedSn for further information on lexicographical ordering.
+         *
+         * @return the lexicographical index of this permutation.
+         * This will be between 0 and 5 inclusive.
          */
-        constexpr int orderedS3Index() const;
+        constexpr Index orderedS3Index() const;
 
         /**
-         * Returns the index of this permutation in the Perm<3>::orderedS3 array.
-         * This is a dimension-agnostic alias for orderedS3Index().
+         * Deprecated routine that returns the lexicographical index of this
+         * permutation.
          *
-         * @return the index \a i for which this permutation is equal to
-         * Perm<3>::orderedS3[i].  This will be between 0 and 5 inclusive.
+         * \deprecated Use the equivalent routine orderedSnIndex() instead.
+         *
+         * @return the lexicographical index of this permutation.
          */
-        constexpr int orderedSnIndex() const;
+        [[deprecated]] constexpr Index index() const;
+
+        /**
+         * Deprecated routine that returns the <i>i</i>th permutation on
+         * three elements, where permutations are numbered lexicographically.
+         *
+         * \deprecated Use orderedSn[\a i] instead.
+         *
+         * @param i the lexicographical index of the permutation; this
+         * must be between 0 and 5 inclusive.
+         * @return the <i>i</i>th permutation.
+         */
+        [[deprecated]] static constexpr Perm atIndex(Index i);
 
         /**
          * Extends a <i>k</i>-element permutation to an 3-element permutation.
@@ -915,14 +949,6 @@ inline constexpr Perm<3> Perm<3>::rot(int i) {
     }
 }
 
-inline constexpr Perm<3> Perm<3>::atIndex(Index i) {
-    return orderedS3[i];
-}
-
-inline constexpr Perm<3>::Index Perm<3>::index() const {
-    return orderedS3Index();
-}
-
 inline Perm<3> Perm<3>::rand(bool even) {
     RandomEngine engine;
     return rand(engine.engine(), even);
@@ -939,20 +965,28 @@ inline Perm<3> Perm<3>::rand(URBG&& gen, bool even) {
     }
 }
 
-inline constexpr int Perm<3>::S3Index() const {
+inline constexpr Perm<3>::Index Perm<3>::S3Index() const {
     return code_;
 }
 
-inline constexpr int Perm<3>::SnIndex() const {
+inline constexpr Perm<3>::Index Perm<3>::SnIndex() const {
     return code_;
 }
 
-inline constexpr int Perm<3>::orderedS3Index() const {
+inline constexpr Perm<3>::Index Perm<3>::orderedS3Index() const {
     return convOrderedUnordered(code_);
 }
 
-inline constexpr int Perm<3>::orderedSnIndex() const {
-    return orderedS3Index();
+inline constexpr Perm<3>::Index Perm<3>::orderedSnIndex() const {
+    return convOrderedUnordered(code_);
+}
+
+inline constexpr Perm<3>::Index Perm<3>::index() const {
+    return convOrderedUnordered(code_);
+}
+
+inline constexpr Perm<3> Perm<3>::atIndex(Index i) {
+    return orderedS3[i];
 }
 
 } // namespace regina

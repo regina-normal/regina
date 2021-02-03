@@ -59,7 +59,7 @@ class PermConvTest : public CppUnit::TestFixture {
             {
                 Perm<a> p, q;
                 for (i = 0; i < Perm<a>::nPerms; ++i) {
-                    p = Perm<a>::atIndex(i);
+                    p = Perm<a>::orderedSn[i];
                     q = regina::Perm<a>::contract(Perm<b>::extend(p));
                     if (! (p == q && p.str() == q.str())) {
                         std::ostringstream msg;
@@ -76,7 +76,7 @@ class PermConvTest : public CppUnit::TestFixture {
                 int done = 0;
                 bool id;
                 for (i = 0; i < Perm<b>::nPerms; ++i) {
-                    p = Perm<b>::atIndex(i);
+                    p = Perm<b>::orderedSn[i];
 
                     id = true;
                     for (j = a; j < b; ++j)
@@ -125,7 +125,7 @@ class PermConvTest : public CppUnit::TestFixture {
             {
                 Perm<a> p;
                 for (i = 0; i < Perm<a>::nPerms; ++i) {
-                    p = Perm<a>::atIndex(i);
+                    p = Perm<a>::orderedSn[i];
                     s1 = p.str();
                     for (j = a; j < b; ++j)
                         s1 += (j < 10 ? ('0' + j) : ('a' + j - 10));
@@ -145,7 +145,7 @@ class PermConvTest : public CppUnit::TestFixture {
                 int done = 0;
                 bool id;
                 for (i = 0; i < Perm<b>::nPerms; ++i) {
-                    p = Perm<b>::atIndex(i);
+                    p = Perm<b>::orderedSn[i];
 
                     id = true;
                     for (j = a; j < b; ++j)

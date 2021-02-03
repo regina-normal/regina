@@ -94,19 +94,37 @@ class Perm5Test : public CppUnit::TestFixture {
 
         void index() {
             for (int i = 0; i < 120; ++i) {
-                if (Perm<5>::S5[i].S5Index() != i) {
+                Perm osn = Perm<5>::orderedS5[i];
+                Perm sn = Perm<5>::S5[i];
+
+                if (sn.S5Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation S5[" << i << "] gives an "
                         "incorrect S5 index of "
-                        << Perm<5>::S5[i].S5Index() << ".";
+                        << sn.S5Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (Perm<5>::orderedS5[i].orderedS5Index() != i) {
+                if (osn.orderedS5Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation orderedS5[" << i << "] gives an "
                         "incorrect orderedS5 index of "
-                        << Perm<5>::orderedS5[i].orderedS5Index() << ".";
+                        << osn.orderedS5Index() << ".";
                     CPPUNIT_FAIL(msg.str());
+                }
+
+                if (sn.sign() != (i % 2 == 0 ? 1 : -1)) {
+                    std::ostringstream msg;
+                    msg << "Permutation S5[" << i << "] has the wrong sign.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (sn != osn) {
+                    if (sn.orderedS5Index() != (i ^ 1) ||
+                            osn.S5Index() != (i ^ 1)) {
+                        std::ostringstream msg;
+                        msg << "Permutation S5/orderedS5[" << i << "] "
+                            "differ by more than the last index bit.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
             }
         }

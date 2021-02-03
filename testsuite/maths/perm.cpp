@@ -87,12 +87,38 @@ class PermTest : public CppUnit::TestFixture {
         void index() {
             Index i;
             for (i = 0; i < nIdx; ++i) {
-                if (Perm::atIndex(idx[i]).index() != idx[i]) {
+                Perm osn = Perm::orderedSn[idx[i]];
+                Perm sn = Perm::Sn[idx[i]];
+
+                if (osn.orderedSnIndex() != idx[i]) {
                     std::ostringstream msg;
                     msg << "Permutation #" << idx[i] << " gives an "
-                        "incorrect index of "
-                        << Perm::atIndex(idx[i]).index() << ".";
+                        "incorrect orderedSn index of "
+                        << osn.orderedSnIndex() << ".";
                     CPPUNIT_FAIL(msg.str());
+                }
+                if (sn.SnIndex() != idx[i]) {
+                    std::ostringstream msg;
+                    msg << "Permutation #" << idx[i] << " gives an "
+                        "incorrect Sn index of "
+                        << sn.SnIndex() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (sn.sign() != (idx[i] % 2 == 0 ? 1 : -1)) {
+                    std::ostringstream msg;
+                    msg << "Permutation Sn[" << idx[i]
+                        << "] has the wrong sign.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (sn != osn) {
+                    if (sn.orderedSnIndex() != (idx[i] ^ 1) ||
+                            osn.SnIndex() != (idx[i] ^ 1)) {
+                        std::ostringstream msg;
+                        msg << "Permutation Sn/orderedSn[" << idx[i] << "] "
+                            "differ by more than the last index bit.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
             }
         }
@@ -354,7 +380,7 @@ class PermTest : public CppUnit::TestFixture {
 
             // Test all possible permutations.
             for (Index i = 0; i < nIdx; ++i)
-                testPerm(Perm::atIndex(idx[i]), i == 0, i == nIdx - 1);
+                testPerm(Perm::orderedSn[idx[i]], i == 0, i == nIdx - 1);
         }
 
         void products() {
@@ -363,9 +389,9 @@ class PermTest : public CppUnit::TestFixture {
             Perm p, q, r;
 
             for (i = 0; i < nIdx; ++i) {
-                p = Perm::atIndex(idx[i]);
+                p = Perm::orderedSn[idx[i]];
                 for (j = 0; j < nIdx; ++j) {
-                    q = Perm::atIndex(idx[j]);
+                    q = Perm::orderedSn[idx[j]];
 
                     r = p * q;
                     for (x = 0; x < n; ++x) {
@@ -385,7 +411,7 @@ class PermTest : public CppUnit::TestFixture {
             Perm p, q;
 
             for (i = 0; i < nIdx; ++i) {
-                p = Perm::atIndex(idx[i]);
+                p = Perm::orderedSn[idx[i]];
                 if (p.compareWith(p) != 0) {
                     std::ostringstream msg;
                     msg << "Routine compareWith() does not conclude that "
@@ -401,9 +427,9 @@ class PermTest : public CppUnit::TestFixture {
             }
 
             for (i = 0; i < nIdx; ++i) {
-                p = Perm::atIndex(idx[i]);
+                p = Perm::orderedSn[idx[i]];
                 for (j = i + 1; j < nIdx; ++j) {
-                    q = Perm::atIndex(idx[j]);
+                    q = Perm::orderedSn[idx[j]];
 
                     if (p.compareWith(q) != -1) {
                         std::ostringstream msg;
@@ -429,7 +455,7 @@ class PermTest : public CppUnit::TestFixture {
 
         void reverse() {
             for (int i = 0; i < nIdx; ++i) {
-                Perm p = Perm::atIndex(idx[i]);
+                Perm p = Perm::orderedSn[idx[i]];
                 Perm r = p.reverse();
 
                 if (! looksEqual(p, r.reverse())) {
@@ -472,7 +498,7 @@ class PermTest : public CppUnit::TestFixture {
 
             if constexpr (from == 0) {
                 for (Index j = 0; j < Perm::nPerms; j += increment[n]) {
-                    Perm p = Perm::atIndex(j);
+                    Perm p = Perm::orderedSn[j];
                     p.clear(0);
                     if (! looksLikeIdentity(p))
                         CPPUNIT_FAIL(
@@ -482,7 +508,7 @@ class PermTest : public CppUnit::TestFixture {
                 for (typename regina::Perm<n-1>::Index j = 0;
                         j < regina::Perm<n-1>::nPerms; j += increment[n-1]) {
                     Perm p = rev *
-                        Perm::extend(regina::Perm<n-1>::atIndex(j)) * rev;
+                        Perm::extend(regina::Perm<n-1>::orderedSn[j]) * rev;
                     p.clear(1);
                     if (! looksLikeIdentity(p))
                         CPPUNIT_FAIL(
@@ -496,9 +522,9 @@ class PermTest : public CppUnit::TestFixture {
                     for (j = 0; j < regina::Perm<n-from>::nPerms;
                             j += increment[n-from]) {
                         Perm left =
-                            Perm::extend(regina::Perm<from>::atIndex(i));
+                            Perm::extend(regina::Perm<from>::orderedSn[i]);
                         Perm right = rev *
-                            Perm::extend(regina::Perm<n-from>::atIndex(j)) *
+                            Perm::extend(regina::Perm<n-from>::orderedSn[j]) *
                             rev;
                         Perm p = left * right;
                         p.clear(from);
@@ -517,9 +543,9 @@ class PermTest : public CppUnit::TestFixture {
 
         void clear() {
             for (Index i = 0; i < Perm::nPerms; i += increment[n]) {
-                Perm p = Perm::atIndex(i);
+                Perm p = Perm::orderedSn[i];
                 p.clear(n);
-                if (! looksEqual(p, Perm::atIndex(i))) {
+                if (! looksEqual(p, Perm::orderedSn[i])) {
                     std::ostringstream msg;
                     msg << "Clearing from position " << n
                         << " gives the wrong result.";
@@ -528,7 +554,7 @@ class PermTest : public CppUnit::TestFixture {
             }
             for (typename regina::Perm<n-1>::Index i = 0;
                     i < regina::Perm<n-1>::nPerms; i += increment[n-1]) {
-                Perm left = Perm::extend(regina::Perm<n-1>::atIndex(i));
+                Perm left = Perm::extend(regina::Perm<n-1>::orderedSn[i]);
                 Perm p = left;
                 p.clear(n-1);
                 if (! looksEqual(p, left)) {

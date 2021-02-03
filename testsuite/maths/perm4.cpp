@@ -93,19 +93,37 @@ class Perm4Test : public CppUnit::TestFixture {
 
         void index() {
             for (int i = 0; i < 24; ++i) {
-                if (Perm<4>::S4[i].S4Index() != i) {
+                Perm osn = Perm<4>::orderedS4[i];
+                Perm sn = Perm<4>::S4[i];
+
+                if (sn.S4Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation S4[" << i << "] gives an "
                         "incorrect S4 index of "
-                        << Perm<4>::S4[i].S4Index() << ".";
+                        << sn.S4Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (Perm<4>::orderedS4[i].orderedS4Index() != i) {
+                if (osn.orderedS4Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation orderedS4[" << i << "] gives an "
                         "incorrect orderedS4 index of "
-                        << Perm<4>::orderedS4[i].orderedS4Index() << ".";
+                        << osn.orderedS4Index() << ".";
                     CPPUNIT_FAIL(msg.str());
+                }
+
+                if (sn.sign() != (i % 2 == 0 ? 1 : -1)) {
+                    std::ostringstream msg;
+                    msg << "Permutation S4[" << i << "] has the wrong sign.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (sn != osn) {
+                    if (sn.orderedS4Index() != (i ^ 1) ||
+                            osn.S4Index() != (i ^ 1)) {
+                        std::ostringstream msg;
+                        msg << "Permutation S4/orderedS4[" << i << "] "
+                            "differ by more than the last index bit.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
             }
         }

@@ -90,18 +90,33 @@ class Perm2Test : public CppUnit::TestFixture {
 
         void index() {
             for (int i = 0; i < 2; ++i) {
-                if (Perm<2>::S2[i].S2Index() != i) {
+                Perm osn = Perm<2>::orderedS2[i];
+                Perm sn = Perm<2>::S2[i];
+
+                if (sn.S2Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation S2[" << i << "] gives an "
                         "incorrect S2 index of "
-                        << Perm<2>::S2[i].S2Index() << ".";
+                        << sn.S2Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (Perm<2>::orderedS2[i].orderedS2Index() != i) {
+                if (osn.orderedS2Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation orderedS2[" << i << "] gives an "
                         "incorrect orderedS2 index of "
-                        << Perm<2>::orderedS2[i].orderedS2Index() << ".";
+                        << osn.orderedS2Index() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (sn.sign() != (i % 2 == 0 ? 1 : -1)) {
+                    std::ostringstream msg;
+                    msg << "Permutation S2[" << i << "] has the wrong sign.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (sn != osn) {
+                    std::ostringstream msg;
+                    msg << "Permutations S2[" << i << "] and "
+                           "orderedS2[" << i << "] are different.";
                     CPPUNIT_FAIL(msg.str());
                 }
             }

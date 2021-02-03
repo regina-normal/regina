@@ -285,7 +285,7 @@ bool FacetPairingBase<dim>::isCanonicalInternal(
         for (int i = 0; i < Perm<dim+1>::nPerms; ++i) {
             ans = new Isomorphism<dim>(1);
             ans->simpImage(0) = 0;
-            ans->facetPerm(0) = Perm<dim+1>::atIndex(i);
+            ans->facetPerm(0) = Perm<dim+1>::orderedSn[i];
             list.push_back(ans);
         }
         return true;

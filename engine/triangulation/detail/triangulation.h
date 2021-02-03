@@ -1130,10 +1130,11 @@ class TriangulationBase :
          *
          * If simplex \a s has index \a i in the original triangulation, then
          * its sub-simplex corresponding to permutation \a p will have index
-         * <tt>((dim + 1)! * i + p.index())</tt> in the resulting triangulation.
-         * In other words: sub-simplices are ordered first according to the
-         * original simplex that contains them, and then according to the
-         * lexicographical ordering of the corresponding permutations \a p.
+         * <tt>((dim + 1)! * i + p.orderedSnIndex())</tt> in the resulting
+         * triangulation.  In other words: sub-simplices are ordered first
+         * according to the original simplex that contains them, and then
+         * according to the lexicographical ordering of the corresponding
+         * permutations \a p.
          *
          * \pre \a dim is one of Regina's standard dimensions.
          * This precondition is a safety net, since in higher dimensions the
@@ -2848,13 +2849,13 @@ void TriangulationBase<dim>::barycentricSubdivision() {
     int i;
     for (simp=0; simp < nOld; ++simp)
         for (permIdx = 0; permIdx < Perm<dim+1>::nPerms; ++permIdx) {
-            perm = Perm<dim+1>::atIndex(permIdx);
+            perm = Perm<dim+1>::orderedSn[permIdx];
 
             // Internal gluings within the old simplex:
             for (i = 0; i < dim; ++i)
                 newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[i],
                     newSimp[Perm<dim+1>::nPerms * simp +
-                        (perm * Perm<dim+1>(i, i+1)).index()],
+                        (perm * Perm<dim+1>(i, i+1)).orderedSnIndex()],
                     Perm<dim+1>(perm[i], perm[i+1]));
 
             // Adjacent gluings to the adjacent simplex:
@@ -2868,7 +2869,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
             glue = oldSimp->adjacentGluing(perm[dim]);
             newSimp[Perm<dim+1>::nPerms * simp + permIdx]->join(perm[dim],
                 newSimp[Perm<dim+1>::nPerms * oldSimp->adjacentSimplex(
-                    perm[dim])->index() + (glue * perm).index()],
+                    perm[dim])->index() + (glue * perm).orderedSnIndex()],
                 glue);
         }
 

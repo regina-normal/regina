@@ -273,7 +273,7 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
             joinDest[joinPos] = image[dest];
             joinGluing[joinPos] = (vertexMap[dest] *
                 s->adjacentGluing(facetSrc) * vertexMap[simpSrc].inverse()).
-                index();
+                orderedSnIndex();
             ++joinPos;
 
             facetAction[facetPos++] = 2;
@@ -373,7 +373,7 @@ std::string TriangulationBase<dim>::isoSig(
         for (simp = 0; simp < (*it)->size(); ++simp)
             for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
                 curr = isoSigFrom((*it)->simplex(simp)->index(),
-                    Perm<dim+1>::atIndex(perm), currRelabelling);
+                    Perm<dim+1>::orderedSn[perm], currRelabelling);
                 if ((simp == 0 && perm == 0) || (curr < comp[i])) {
                     comp[i].swap(curr);
                     if (relabelling)
@@ -549,7 +549,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                     simp[pos]->join(j, simp[nextUnused++], Perm<dim+1>());
                 } else {
                     // Join to existing simplex.
-                    gluing = Perm<dim+1>::atIndex(joinGluing[joinPos]);
+                    gluing = Perm<dim+1>::orderedSn[joinGluing[joinPos]];
                     if (joinDest[joinPos] >= nextUnused ||
                             simp[joinDest[joinPos]]->adjacentSimplex(
                             gluing[j])) {

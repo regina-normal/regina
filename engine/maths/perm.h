@@ -157,6 +157,7 @@ template <int n>
 class Perm {
     static_assert(n >= 6 && n <= 16,
         "The generic Perm<n> template is only available for 6 <= n <= 16.");
+
     public:
         /**
          * Indicates the number of bits used by the permutation code
@@ -215,6 +216,97 @@ class Perm {
          */
         static constexpr Code imageMask =
             (static_cast<Code>(1) << Perm<n>::imageBits) - 1;
+
+    private:
+        /**
+         * An array-like object used to implement Perm<n>::Sn.
+         */
+        struct SnLookup {
+            /**
+             * Returns the permutation at the given index in the array Sn.
+             * See Perm<n>::Sn for details.
+             *
+             * For \a n &le; 5, this operator is very fast (and constant time).
+             * However, for \a n &ge; 6 it is not constant time; the current
+             * implementation is quadratic in \a n.
+             *
+             * @param index an index between 0 and <i>n</i>!-1 inclusive.
+             * @return the corresponding permutation in Sn.
+             */
+            constexpr Perm<n> operator[] (Index index) const;
+        };
+
+        /**
+         * An array-like object used to implement Perm<n>::orderedSn.
+         */
+        struct OrderedSnLookup {
+            /**
+             * Returns the permutation at the given index in the array
+             * orderedSn.  See Perm<n>::orderedSn for details.
+             *
+             * For \a n &le; 5, this operator is very fast (and constant time).
+             * However, for \a n &ge; 6 it is not constant time; the current
+             * implementation is quadratic in \a n.
+             *
+             * @param index an index between 0 and <i>n</i>!-1 inclusive.
+             * @return the corresponding permutation in orderedSn.
+             */
+            constexpr Perm<n> operator[] (Index index) const;
+        };
+
+    public:
+        /**
+         * Gives array-like access to all possible permutations of
+         * \a n elements.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
+         * between 0 and <i>n</i>!-1 inclusive.
+         *
+         * The object that is returned is lightweight and is defined in the
+         * headers only.  In particular, you cannot make a reference to it
+         * (but you can always make a copy).
+         *
+         * The permutations with even indices in the array are the even
+         * permutations, and those with odd indices in the array are the
+         * odd permutations.
+         *
+         * This is different from Perm<n>::orderedSn, since this array \a Sn
+         * alternates between even and odd permutations, whereas \a orderedSn
+         * stores permutations in lexicographical order.
+         *
+         * \warning For \a n &le; 5, the square bracket operator is a
+         * very fast constant-time routine.  However, for \a n &ge; 6,
+         * this is not constant time; the current implementation is
+         * quadratic in \a n.
+         */
+        static constexpr SnLookup Sn {};
+
+        /**
+         * Gives array-like access to all possible permutations of
+         * \a n elements in lexicographical order.
+         *
+         * To access the permutation at index \a i, you simply use the
+         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
+         * must be between 0 and <i>n</i>!-1 inclusive.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * <i>n</i>-tuple (\a p[0], \a p[1], ..., \a p[<i>n</i>-1]).
+         *
+         * The object that is returned is lightweight and is defined in the
+         * headers only.  In particular, you cannot make a reference to it
+         * (but you can always make a copy).
+         *
+         * This is different from Perm<n>::Sn, since this array \a orderedSn
+         * stores permutations in lexicographical order, whereas \a Sn
+         * alternates between even and odd permutations.
+         *
+         * \warning For \a n &le; 5, the square bracket operator is a
+         * very fast constant-time routine.  However, for \a n &ge; 6,
+         * this is not constant time; the current implementation is
+         * quadratic in \a n.
+         */
+        static constexpr OrderedSnLookup orderedSn {};
 
     private:
         Code code_;
@@ -445,33 +537,47 @@ class Perm {
         static constexpr Perm rot(int i);
 
         /**
-         * Returns the <i>i</i>th permutation on \a n elements, where
-         * permutations are numbered lexicographically beginning at 0.
+         * Returns the index of this permutation in the Perm<n>::Sn array.
          *
-         * Lexicographical ordering treats each permutation \a p as the
-         * <i>n</i>-tuple (\a p[0], \a p[1], ..., \a p[<i>n</i>-1]).
+         * See Sn for further information on how these permutations are indexed.
+         *
+         * @return the index \a i for which this permutation is equal to
+         * Perm<n>::Sn[i].  This will be between 0 and <i>n</i>!-1 inclusive.
+         */
+        constexpr Index SnIndex() const;
+
+        /**
+         * Returns the lexicographical index of this permutation.  This will
+         * be the index of this permutation in the Perm<n>::orderedSn array.
+         *
+         * See orderedSn for further information on lexicographical ordering.
+         *
+         * @return the lexicographical index of this permutation.
+         * This will be between 0 and <i>n</i>!-1 inclusive.
+         */
+        constexpr Index orderedSnIndex() const;
+
+        /**
+         * Deprecated routine that returns the lexicographical index of this
+         * permutation.
+         *
+         * \deprecated Use the equivalent routine orderedSnIndex() instead.
+         *
+         * @return the lexicographical index of this permutation.
+         */
+        [[deprecated]] constexpr Index index() const;
+
+        /**
+         * Deprecated routine that returns the <i>i</i>th permutation on
+         * \a n elements, where permutations are numbered lexicographically.
+         *
+         * \deprecated Use orderedSn[\a i] instead.
          *
          * @param i the lexicographical index of the permutation; this
          * must be between 0 and <i>n</i>!-1 inclusive.
          * @return the <i>i</i>th permutation.
          */
-        static constexpr Perm atIndex(Index i);
-
-        /**
-         * Returns the lexicographical index of this permutation.  This
-         * indicates where this permutation sits within a full lexicographical
-         * ordering of all <i>n</i>! permutations on \a n elements.
-         *
-         * Lexicographical ordering treats each permutation \a p as the
-         * <i>n</i>-tuple (\a p[0], \a p[1], ..., \a p[<i>n</i>-1]).
-         * In particular, the identity permutation has index 0, and the
-         * "reverse" permutation (which maps each \a i to <i>n</i>-<i>i</i>-1)
-         * has index <i>n</i>!-1.
-         *
-         * @return the index of this permutation, which will be between
-         * 0 and <i>n</i>!-1 inclusive.
-         */
-        constexpr Index index() const;
+        [[deprecated]] static constexpr Perm atIndex(Index i);
 
         /**
          * Returns a random permutation on \a n elements.
@@ -637,6 +743,90 @@ template <> class Perm<5>;
 // Inline functions for Perm
 
 template <int n>
+constexpr Perm<n> Perm<n>::OrderedSnLookup::operator[] (
+        Perm<n>::Index i) const {
+    Code code = 0;
+    for (int p = 1; p <= n; ++p) {
+        // n - p -> i % p;
+        code |= (static_cast<Code>(i % p) << ((n - p) * imageBits));
+        i /= p;
+    }
+    for (int pos1 = imageBits * (n - 1); pos1 >= 0; pos1 -= imageBits) {
+        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
+                pos2 += imageBits) {
+            if (((code >> pos2) & imageMask) >= ((code >> pos1) & imageMask))
+                code += (Code(1) << pos2); // increment image at pos2
+        }
+    }
+    return Perm<n>(code);
+}
+
+template <int n>
+constexpr Perm<n> Perm<n>::SnLookup::operator[] (Perm<n>::Index i) const {
+    Code code = 0;
+
+    // We begin by constructing a code whose successive digits are "base"
+    // n, n-1, ... 2, 1.
+    // We can already see whether the resulting permutation will be even
+    // or odd just from the parity of the sum of these "digits".
+    bool parity = (i % 2 == 0);
+    bool even = true;
+    for (int p = 1; p <= n; ++p) {
+        // Here p tells us how far back from the *end* of the code we are.
+        int digit = i % p;
+        // n - p -> digit
+        code |= (static_cast<Code>(digit) << ((n - p) * imageBits));
+        if (digit % 2)
+            even = ! even;
+        i /= p;
+    }
+
+    if (even != parity) {
+        // Our algorithm below computes orderedSn, not Sn, and these
+        // differ at index i.  We adjust the code now to compensate.
+        if (even) {
+            // i is odd: move to the previous permutation.
+            for (int p = 1; p <= n; ++p) {
+                int digit = ((code >> ((n - p) * imageBits)) & imageMask);
+                // This digit is treated mod p.
+                if (digit > 0) {
+                    // Decrement digit and stop.
+                    code -= (Code(1) << ((n - p) * imageBits));
+                    break;
+                } else {
+                    // Set digit to (p-1) and carry.
+                    code |= ((p - 1) << ((n - p) * imageBits));
+                }
+            }
+        } else {
+            // i is even: move to the next permutation.
+            for (int p = 1; p <= n; ++p) {
+                int digit = ((code >> ((n - p) * imageBits)) & imageMask);
+                // This digit is treated mod p.
+                if (digit < p - 1) {
+                    // Increment digit and stop.
+                    code += (Code(1) << ((n - p) * imageBits));
+                    break;
+                } else {
+                    // Set digit to zero and carry.
+                    code ^= (static_cast<Code>(digit) << ((n - p) * imageBits));
+                }
+            }
+        }
+    }
+
+    // Carry on as with do with orderedSn.
+    for (int pos1 = imageBits * (n - 1); pos1 >= 0; pos1 -= imageBits) {
+        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
+                pos2 += imageBits) {
+            if (((code >> pos2) & imageMask) >= ((code >> pos1) & imageMask))
+                code += (Code(1) << pos2); // increment image at pos2
+        }
+    }
+    return Perm<n>(code);
+}
+
+template <int n>
 inline constexpr typename Perm<n>::Code Perm<n>::idCodePartial(int k) {
     return (k == 0 ? 0 :
         (static_cast<Code>(k) << (Perm<n>::imageBits * k)) |
@@ -784,23 +974,7 @@ constexpr Perm<n> Perm<n>::rot(int i) {
 }
 
 template <int n>
-constexpr Perm<n> Perm<n>::atIndex(Index i) {
-    Code code = 0;
-    for (int p = 0; p < n; ++p) {
-        // n - p - 1 -> i % (p + 1);
-        code |= (static_cast<Code>(i % (p + 1)) << ((n - p - 1) * imageBits));
-        i /= (p + 1);
-    }
-    for (int pos1 = imageBits * (n - 1); pos1 >= 0; pos1 -= imageBits)
-        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
-                pos2 += imageBits)
-            if (((code >> pos2) & imageMask) >= ((code >> pos1) & imageMask))
-                code += (Code(1) << pos2); // increment image at pos2
-    return Perm<n>(code);
-}
-
-template <int n>
-constexpr typename Perm<n>::Index Perm<n>::index() const {
+constexpr typename Perm<n>::Index Perm<n>::orderedSnIndex() const {
     Index ans = 0;
     Code c = code_;
     int p = 0, pos1 = 0;
@@ -815,6 +989,42 @@ constexpr typename Perm<n>::Index Perm<n>::index() const {
         ans += pImg;
     }
     return ans;
+}
+
+template <int n>
+constexpr typename Perm<n>::Index Perm<n>::SnIndex() const {
+    Index ans = 0;
+    bool even = true;
+    Code c = code_;
+    int p = 0, pos1 = 0;
+    for ( ; p < n - 1; ++p, pos1 += imageBits) {
+        // position pos1 holds the (p)th image
+        int pImg = (c >> pos1) & imageMask; // image at pos1
+        // The following loop preserves the relative order of the images
+        // at positions *after* pos1.
+        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
+                pos2 += imageBits) {
+            // Compare image at pos2 with image at pos1.
+            if (((c >> pos2) & imageMask) > pImg)
+                c -= (Code(1) << pos2); // decrement image at pos2
+            else
+                even = ! even; // an inversion for the sign computation
+        }
+        ans *= (n - p);
+        ans += pImg;
+        // From this point we never look at positions 0..pos1 again.
+    }
+    return (even == (ans % 2 == 0) ? ans : (ans ^ 1));
+}
+
+template <int n>
+inline constexpr typename Perm<n>::Index Perm<n>::index() const {
+    return orderedSnIndex();
+}
+
+template <int n>
+inline constexpr Perm<n> Perm<n>::atIndex(Index i) {
+    return orderedSn[i];
 }
 
 template <int n>
@@ -838,15 +1048,14 @@ Perm<n> Perm<n>::rand(URBG&& gen, bool even) {
         typename std::conditional<sizeof(Index) <= sizeof(long), long,
         long long>::type>::type>::type Arg;
 
-    std::uniform_int_distribution<Arg> d(0, nPerms - 1);
     if (even) {
-        Perm<n> result = atIndex(d(gen));
-        if (result.sign() > 0)
-            return result;
-        else
-            return result * Perm<n>(0, 1);
-    } else
-        return atIndex(d(gen));
+        std::uniform_int_distribution<Arg> d(0, (nPerms / 2) - 1);
+        return Sn[2 * d(gen)];
+    } else {
+        // Computing orderedSn is faster than computing Sn.
+        std::uniform_int_distribution<Arg> d(0, nPerms - 1);
+        return orderedSn[d(gen)];
+    }
 }
 
 template <int n>

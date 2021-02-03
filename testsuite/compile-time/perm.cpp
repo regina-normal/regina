@@ -40,11 +40,12 @@ static_assert(regina::factorial(5) == 120);
 
 template <int n,
           int pos /* in (0,n) */,
-          int index /* in (0,n!) */>
+          int index /* in (0,n!), Sn[index] != orderedSn[index] */>
 void testPerm() {
     constexpr Perm<n> swap(pos-1, pos);
 
     static_assert(0 < pos && pos < n);
+    static_assert(0 < index && index < regina::factorial(n));
 
     static_assert(Perm<n>().isIdentity());
     static_assert(Perm<n>(pos-1, pos) == swap);
@@ -79,25 +80,26 @@ void testPerm() {
     static_assert(! Perm<n>().reverse().isIdentity());
     static_assert(Perm<n>().reverse().reverse().isIdentity());
 
-    static_assert(Perm<n>::atIndex(index).index() == index);
-}
-
-template <int n /* in [2,5] */,
-          int index /* in (0,n!), Sn[index] != orderedSn[index] */>
-void testSn() {
-    static_assert(n <= 5);
-    static_assert(0 < index && index < regina::factorial(n));
-
-    static_assert(n == 2 || Perm<n>::Sn[index] != Perm<n>::orderedSn[index]);
-
     static_assert(Perm<n>::Sn[0] == Perm<n>());
     static_assert(Perm<n>::orderedSn[0] == Perm<n>());
-    static_assert(Perm<n>::Sn_1[0] == Perm<n>());
+    if constexpr (n <= 5) {
+        static_assert(Perm<n>::Sn_1[0] == Perm<n>());
+    }
 
-    static_assert(Perm<n>::Sn[index].SnIndex() == index);
-    static_assert(Perm<n>::orderedSn[index].index() == index);
-    static_assert(Perm<n>::orderedSn[index].orderedSnIndex() == index);
-    static_assert(Perm<n>::atIndex(index) == Perm<n>::orderedSn[index]);
+    if constexpr (n == 2) {
+        // For n = 2, Sn and orderedSn are identical.
+        static_assert(Perm<n>::Sn[index] == Perm<n>::orderedSn[index]);
+        static_assert(Perm<n>::Sn[index].SnIndex() == index);
+        static_assert(Perm<n>::orderedSn[index].orderedSnIndex() == index);
+        static_assert(Perm<n>::Sn[index].orderedSnIndex() == index);
+        static_assert(Perm<n>::orderedSn[index].SnIndex() == index);
+    } else {
+        static_assert(Perm<n>::Sn[index] != Perm<n>::orderedSn[index]);
+        static_assert(Perm<n>::Sn[index].SnIndex() == index);
+        static_assert(Perm<n>::orderedSn[index].orderedSnIndex() == index);
+        static_assert(Perm<n>::Sn[index].orderedSnIndex() == (index ^ 1));
+        static_assert(Perm<n>::orderedSn[index].SnIndex() == (index ^ 1));
+    }
 }
 
 template <int a, int b>
@@ -138,14 +140,9 @@ template void testPerm<2, 1, 1>();
 template void testPerm<3, 2, 3>();
 template void testPerm<4, 2, 14>();
 template void testPerm<5, 3, 50>();
-template void testPerm<6, 4, 300>();
-template void testPerm<8, 5, 1000>();
+template void testPerm<6, 4, 302>();
+template void testPerm<8, 5, 1002>();
 template void testPerm<16, 9, 3000>();
-
-template void testSn<2, 1>();
-template void testSn<3, 3>();
-template void testSn<4, 14>();
-template void testSn<5, 50>();
 
 template void testConvert<2, 3>();
 template void testConvert<2, 4>();
