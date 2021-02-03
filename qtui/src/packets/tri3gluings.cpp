@@ -767,7 +767,7 @@ void Tri3GluingsUI::removeSelectedTets() {
         tri->removeAllSimplices();
     else {
         regina::Packet::ChangeEventSpan span(tri);
-        for (int i = last; i >= first; --i)
+        for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
 }

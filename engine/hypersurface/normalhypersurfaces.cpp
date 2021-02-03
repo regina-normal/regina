@@ -94,7 +94,7 @@ Triangulation<4>* NormalHypersurfaces::triangulation() const {
 namespace {
     struct NameFunction : public Returns<const char*> {
         template <typename Coords>
-        inline const char* operator() () { return Coords::name(); }
+        inline const char* operator() () { return Coords::name; }
     };
 }
 

@@ -39,317 +39,25 @@
  *  \brief Implementation details for boundary components of triangulations.
  */
 
+#include <tuple>
 #include <vector>
 #include "regina-core.h"
 #include "core/output.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/detail/strings.h"
 #include "triangulation/forward.h"
+#include "utilities/listview.h"
 #include "utilities/markedvector.h"
+#include "utilities/typeutils.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 template <int> class TriangulationBase;
-template <int, bool> class BoundaryComponentFaceStorage;
 
 /**
  * \weakgroup detail
  * @{
  */
-
-/**
- * Helper class that indicates what data type is used by a boundary
- * component class to store a list of <i>subdim</i>-faces.
- *
- * This is only relevant for boundary components in Regina's
- * \ref stddim "standard dimensions", since boundary components in
- * higher dimensions do not store their lower-dimensional faces.
- */
-template <int dim, int subdim>
-struct FaceListHolder<BoundaryComponentFaceStorage<dim, true>, subdim> {
-    /**
-     * The data type used by BoundaryComponent<dim> to store the list of all
-     * <i>subdim</i>-faces of the boundary component.
-     *
-     * The function BoundaryComponent<dim>::faces<subdim>() returns a const
-     * reference to this type.
-     */
-    typedef std::vector<Face<dim, subdim>*> Holder;
-};
-
-/**
- * Internal class that stores all <i>subdim</i>-faces in a component or
- * boundary component of a <i>dim</i>-dimensional triangulation.
- *
- * This class is very basic (hence the name "weak").  In particular:
- *
- * - the integer returned by Face::index() has no relation to the index
- *   of the corresponding face in this list;
- *
- * - this list makes no attempt to claim and/or manage ownership of the
- *   faces that it stores.
- *
- * \ifacespython Not present.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- * \tparam subdim the dimension of the faces that this class stores.
- * This must be between 0 and <i>dim</i>-1 inclusive.
- */
-template <int dim, int subdim>
-class WeakFaceList {
-    protected:
-        std::vector<Face<dim, subdim>*> faces_;
-            /**< The list of faces. */
-
-    private:
-        /**
-         * An input iterator that runs through the faces of this list in
-         * order and converts them to the corresponding faces from some
-         * other triangulation \a tri.
-         *
-         * The iterator relies on an array \a map, where for each face
-         * \a f in this list, <tt>map[f->index()]</tt> is the corresponding
-         * face of \a tri.  Note that <tt>f->index()</tt> is the index of
-         * \a f in its underlying <i>dim</i>-dimensional triangulation,
-         * \e not the index of \a f in this list.
-         */
-        template <int tridim>
-        class ReorderIterator {
-            private:
-                typename std::vector<Face<dim, subdim>*>::const_iterator it_;
-                    /**< Points to the current face of this list. */
-                Face<tridim, subdim>** map_;
-                    /**< The map that converts faces of this list to faces of
-                         the other triangulation \a tri, as described in the
-                         class notes. */
-
-            public:
-                /**
-                 * Creates an uninitialised iterator.
-                 */
-                ReorderIterator() : it_(), map_(0) {
-                }
-
-                /**
-                 * Creates an iterator that points to the given face of
-                 * this list, using the given map to convert faces of
-                 * this list to faces of the other triangulation \a tri.
-                 * See the iterator class notes for details.
-                 */
-                ReorderIterator(
-                        typename std::vector<Face<dim, subdim>*>::
-                            const_iterator it,
-                        Face<tridim, subdim>** map) : it_(it), map_(map) {
-                }
-
-                /**
-                 * Copy constructor.
-                 */
-                ReorderIterator(const ReorderIterator&) = default;
-
-                /**
-                 * Assignment operator.
-                 */
-                ReorderIterator& operator = (const ReorderIterator&) = default;
-
-                /**
-                 * Tests whether this and the given iterator point to
-                 * the same face.
-                 */
-                bool operator == (const ReorderIterator& rhs) const {
-                    return it_ == rhs.it_;
-                }
-
-                /**
-                 * Tests whether this and the given iterator point to
-                 * different faces.
-                 */
-                bool operator != (const ReorderIterator& rhs) const {
-                    return it_ != rhs.it_;
-                }
-
-                /**
-                 * Preincrement operator that steps to the next face in this
-                 * list.
-                 */
-                ReorderIterator& operator ++() {
-                    ++it_;
-                    return *this;
-                }
-
-                /**
-                 * Postincrement operator that steps to the next face in this
-                 * list.
-                 */
-                ReorderIterator operator ++(int) {
-                    ReorderIterator prev(*this);
-                    ++it_;
-                    return prev;
-                }
-
-                /**
-                 * Returns the face of the other triangulation \a tri that
-                 * corresponds to the current face in this list.  See
-                 * the iterator class notes for details.
-                 */
-                Face<tridim, subdim>* operator * () const {
-                    return map_[(*it_)->index()];
-                }
-        };
-
-    protected:
-        /**
-         * Default constructor that leaves the list of faces empty.
-         */
-        WeakFaceList() = default;
-
-        /**
-         * Reorders and relabels all <i>subdim</i>-faces of the given
-         * triangulation so that they appear in the same order as the
-         * corresponding faces in this list, and so that their vertices
-         * are numbered in a corresponding way.
-         *
-         * \pre The <i>subdim</i>-faces of the given triangulation \a tri
-         * are in one-to-one correspondence with the <i>subdim</i>-faces in
-         * this list, though not necessarily in the same order.  Moreover,
-         * for each \a i and \a j, this correspondence maps the <i>i</i>th
-         * <i>subdim</i>-face of <tt>tri->simplex(j)</tt> to the <i>i</i>th
-         * <i>subdim</i>-face of <tt>tridimFaces[j]</tt>.
-         *
-         * \tparam tridim the dimension of the given triangulation.
-         * This must be strictly larger than \a subdim, but it need not
-         * be equal to \a dim.
-         *
-         * @param tri a <i>tridim</i>-dimensional triangulation, as
-         * described above.
-         * @param tridimFaces a list of <i>tridim</i>-faces that together
-         * contain all of the faces in this list, and that are in an
-         * \e ordered one-to-one correspondence with the top-dimensional
-         * simplices of \a tri as described in the precondition above.
-         */
-        template <int tridim>
-        void reorderAndRelabelFaces(Triangulation<tridim>* tri,
-                const std::vector<Face<dim, tridim>*>& tridimFaces) const {
-            static_assert(tridim > subdim,
-                "reorderAndRelabelFaces() should only be used with "
-                "triangulations of dimension tridim > subdim.");
-
-            if (faces_.empty())
-                return; // Should never happen.
-
-            // Build a map from
-            // subdim-face indices in the d-dim triang -> subdim-faces in tri.
-            //
-            // This is a partial function: it is only defined for indices
-            // of *boundary* subdim-faces in the d-dim triang.
-            // We leave the other values of the map uninitialised.
-            Face<tridim, subdim>** map = new Face<tridim, subdim>*[
-                faces_.front()->triangulation()->template countFaces<subdim>()];
-
-            for (Face<tridim, subdim>* f : tri->template faces<subdim>()) {
-                const auto& emb = f->front();
-                Face<dim, tridim>* outer = tridimFaces[emb.simplex()->index()];
-                map[outer->template face<subdim>(emb.face())->index()] = f;
-
-                // While we have the two corresponding faces in front of us,
-                // relabel the vertices of f now.
-                //
-                // The following two permutations should be equal:
-                //
-                // - in tridim: emb.simplex()->faceMapping<subdim>(emb.face())
-                // - in dim: outer->faceMapping<subdim>(emb.face())
-                //
-                // The mapping we need to adjust is in tridim.
-
-                Perm<tridim+1> adjust =
-                    emb.simplex()->template faceMapping<subdim>(
-                        emb.face()).inverse() *
-                    Perm<tridim+1>::contract(
-                        outer->template faceMapping<subdim>(emb.face()));
-                adjust.clear(subdim + 1);
-                tri->relabelFace(f, adjust);
-            }
-
-            tri->template reorderFaces<subdim>(
-                ReorderIterator<tridim>(faces_.begin(), map),
-                ReorderIterator<tridim>(faces_.end(), map));
-
-            delete[] map;
-        }
-
-        // Make this class non-copyable.
-        WeakFaceList(const WeakFaceList&) = delete;
-        WeakFaceList& operator = (const WeakFaceList&) = delete;
-};
-
-/**
- * Internal class that helps a component or boundary component store its
- * lists of faces.
- *
- * This class is used with <i>dim</i>-dimensional triangulations.  It provides
- * storage for faces of all dimensions \a subdim and below.
- *
- * \ifacespython Not present.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- * \tparam subdim the maximum dimension of the faces that this class stores.
- * This must be between 0 and <i>dim</i>-1 inclusive.
- */
-template <int dim, int subdim>
-class WeakFaceListSuite :
-        public WeakFaceListSuite<dim, subdim - 1>,
-        public WeakFaceList<dim, subdim> {
-    protected:
-        /**
-         * Reorders and relabels all faces of all dimensions 0,...,\a subdim of
-         * the given triangulation, so that for each \a k, the <i>k</i>-faces of
-         * the given triangulation appear in the same order as the corresponding
-         * <i>k</i>-faces in this suite, and have their vertices numbered
-         * in a corresponding way.
-         *
-         * \pre For each dimension \a k = 0,...,\a subdim, the <i>k</i>-faces
-         * of the given triangulation \a tri are in one-to-one correspondence
-         * with the <i>k</i>-faces in this suite, though not necessarily in the
-         * same order.  Moreover, for each \a i and \a j, this correspondence
-         * maps the <i>i</i>th <i>k</i>-face of <tt>tri->simplex(j)</tt> to the
-         * <i>i</i>th <i>k</i>-face of <tt>tridimFaces[j]</tt>.
-         *
-         * \tparam tridim the dimension of the given triangulation.
-         * This must be strictly larger than \a subdim, but it need not
-         * be equal to \a dim.
-         *
-         * @param tri a <i>tridim</i>-dimensional triangulation, as
-         * described above.
-         * @param tridimFaces a list of <i>tridim</i>-faces that together
-         * contain all of the faces in this suite, and that are in an
-         * \e ordered one-to-one correspondence with the top-dimensional
-         * simplices of \a tri as described in the precondition above.
-         */
-        template <int tridim>
-        void reorderAndRelabelFaces(Triangulation<tridim>* tri,
-                const std::vector<Face<dim, tridim>*>& tridimFaces) const {
-            WeakFaceListSuite<dim, subdim - 1>::reorderAndRelabelFaces(
-                tri, tridimFaces);
-            WeakFaceList<dim, subdim>::reorderAndRelabelFaces(tri, tridimFaces);
-        }
-};
-
-#ifndef __DOXYGEN
-
-template <int dim>
-class WeakFaceListSuite<dim, 0> : public WeakFaceList<dim, 0> {
-    protected:
-        template <int tridim>
-        void reorderAndRelabelFaces(Triangulation<tridim>* tri,
-                const std::vector<Face<dim, tridim>*>& tridimFaces) const {
-            WeakFaceList<dim, 0>::reorderAndRelabelFaces(tri, tridimFaces);
-        }
-};
-
-#endif // __DOXYGEN
 
 /**
  * Helper class for storing the necessary faces of a boundary component of a
@@ -361,34 +69,40 @@ class WeakFaceListSuite<dim, 0> : public WeakFaceList<dim, 0> {
  *
  * \tparam dim the dimension of the underlying triangulation.
  * This must be between 2 and 15 inclusive.
- * \tparam allFaces_ \c true if this class should store all faces of all
- * dimensions 0,1,...,<i>dim</i>-1, or \c false if this class should only
- * store faces of dimension <i>dim</i>-1.
+ * \tparam subdim the dimensions of all faces that should be stored;
+ * for Regina's standard dimensions this must be exactly the sequence
+ * 0, 1, ..., <i>dim</i>-1, and for higher dimensions it must contain
+ * <i>dim</i>-1 and nothing else.
  */
-template <int dim, bool allFaces_>
+template <int dim, int... subdim>
 class BoundaryComponentFaceStorage :
-        protected WeakFaceListSuite<dim, dim - 1>,
         public alias::FacesOfTriangulation<
-            BoundaryComponentFaceStorage<dim, true>, dim>,
+            BoundaryComponentFaceStorage<dim, subdim...>, dim>,
         public alias::FaceOfTriangulation<
-            BoundaryComponentFaceStorage<dim, true>, dim> {
-    static_assert(allFaces_,
-        "The generic BoundaryComponentFaceStorage template should "
-        "only be used with allFaces = true.");
+            BoundaryComponentFaceStorage<dim, subdim...>, dim> {
     static_assert(standardDim(dim),
-        "The BoundaryComponentFaceStorage template should only set "
-        "allFaces = true for Regina's standard dimensions.");
+        "The BoundaryComponentFaceStorage template should only use "
+        "a full set of face dimensions for Regina's standard dimensions.");
+    static_assert(sizeof...(subdim) == dim &&
+        (subdim + ...) == dim * (dim - 1) / 2,
+        "The many-argument BoundaryComponentFaceStorage template has been "
+        "given an unexpected set of face dimensions.");
 
     public:
         /**
          * A compile-time constant indicating whether this boundary
          * component class stores all lower-dimensional faces (\c true),
          * or only faces of dimension <i>dim</i>-1 (\c false).
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
          */
         static constexpr bool allFaces = true;
+
+    protected:
+        std::tuple<std::vector<Face<dim, subdim>*>...> faces_;
+            /**< Each element of this tuple stores all faces of a
+                 particular dimension \a subdim. */
+
+    private:
+        template <int useDim> class ReorderIterator;
 
     public:
         /**
@@ -403,7 +117,7 @@ class BoundaryComponentFaceStorage :
          * component.
          */
         size_t size() const {
-            return WeakFaceList<dim, dim-1>::faces_.size();
+            return std::get<dim - 1>(faces_).size();
         }
 
         /**
@@ -417,71 +131,106 @@ class BoundaryComponentFaceStorage :
          * component.
          */
         size_t countRidges() const {
-            return WeakFaceList<dim, dim-2>::faces_.size();
+            return std::get<dim - 2>(faces_).size();
         }
 
         /**
-         * Returns the number of <i>subdim</i>-faces in this boundary component.
+         * Returns the number of <i>useDim</i>-faces in this boundary component.
          *
          * This routine is only available where \a dim is one of Regina's
          * \ref stddim "standard dimensions".
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>countFaces(subdim)</tt>; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * <tt>countFaces(useDim)</tt>; that is, the template parameter
+         * \a useDim becomes the first argument of the function.
          *
-         * \tparam subdim the dimension of the faces to query.  This must
+         * \tparam useDim the dimension of the faces to query.  This must
          * be between 0 and <i>dim</i>-1 inclusive.
          *
-         * @return the number of <i>subdim</i>-faces.
+         * @return the number of <i>useDim</i>-faces.
          */
-        template <int subdim>
+        template <int useDim>
         size_t countFaces() const {
-            return WeakFaceList<dim, subdim>::faces_.size();
+            return std::get<useDim>(faces_).size();
         }
 
         /**
-         * Returns all (<i>dim</i>-1)-faces in this boundary component.
+         * Returns an object that allows iteration through and random access
+         * to all (<i>dim</i>-1)-faces in this boundary component.
          *
-         * The reference that is returned will remain valid only for as
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Face<dim, dim-1>* f : bc.facets()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
          * long as this boundary component object exists.  In particular,
-         * the reference will become invalid any time that the triangulation
+         * the object will become invalid any time that the triangulation
          * changes (since all boundary component objects will be destroyed
          * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call facets() again each time you need it.
          *
-         * \ifacespython This routine returns a python list.
+         * \ifacespython This routine returns a Python list.
          *
-         * @return the list of all (<i>dim</i>-1)-faces.
+         * @return access to the list of all (<i>dim</i>-1)-faces.
          */
-        const std::vector<Face<dim, dim-1>*>& facets() const {
-            return WeakFaceList<dim, dim-1>::faces_;
+        auto facets() const {
+            return ListView(std::get<dim - 1>(faces_));
         }
 
         /**
-         * Returns all <i>subdim</i>-faces in this boundary component.
+         * Returns an object that allows iteration through and random access
+         * to all <i>useDim</i>-faces in this boundary component.
          *
-         * The reference that is returned will remain valid only for as
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Face<dim, useDim>* f : bc.faces<useDim>()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
          * long as this boundary component object exists.  In particular,
-         * the reference will become invalid any time that the triangulation
+         * the object will become invalid any time that the triangulation
          * changes (since all boundary component objects will be destroyed
          * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call faces() again each time you need it.
+         *
+         * This routine is only available where \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
          *
          * \ifacespython Python users should call this function in the
-         * form <tt>faces(subdim)</tt>.  It will then return a Python list
-         * containing all the <i>subdim</i>-faces of the boundary component.
+         * form <tt>faces(useDim)</tt>.  It will then return a Python list
+         * containing all the <i>useDim</i>-faces of the boundary component.
          * Be warned that, unlike in C++, this Python list will be a
          * snapshot of the faces when this function is called, and will
          * \e not be kept up-to-date as the triangulation changes.
          *
-         * \tparam subdim the dimension of the faces to query.  This must
+         * \tparam useDim the dimension of the faces to query.  This must
          * be between 0 and <i>dim</i>-1 inclusive.
          *
-         * @return access to the list of all <i>subdim</i>-faces.
+         * @return access to the list of all <i>useDim</i>-faces.
          */
-        template <int subdim>
-        const std::vector<Face<dim, subdim>*>& faces() const {
-            return WeakFaceList<dim, subdim>::faces_;
+        template <int useDim>
+        auto faces() const {
+            return ListView(std::get<useDim>(faces_));
         }
 
         /**
@@ -501,18 +250,18 @@ class BoundaryComponentFaceStorage :
          * @return the requested face.
          */
         Face<dim, dim-1>* facet(size_t index) const {
-            return WeakFaceList<dim, dim-1>::faces_[index];
+            return std::get<dim - 1>(faces_)[index];
         }
 
         /**
-         * Returns the requested <i>subdim</i>-face in this boundary component.
+         * Returns the requested <i>useDim</i>-face in this boundary component.
          *
          * Note that the index of a face in the boundary component need
          * not be the index of the same face in the overall triangulation.
          * However, if this is a real boundary component (i.e., it is built
          * from one or more (<i>dim</i>-1)-faces), then the index of each
-         * <i>subdim</i>-face in this boundary component will match the
-         * index of the corresponding <i>subdim</i>-face in the
+         * <i>useDim</i>-face in this boundary component will match the
+         * index of the corresponding <i>useDim</i>-face in the
          * (<i>dim</i>-1)-manifold triangulation returned by build().
          *
          * This routine is only available where \a dim is one of Regina's
@@ -520,19 +269,19 @@ class BoundaryComponentFaceStorage :
          *
          * \ifacespython Python does not support templates.  Instead,
          * Python users should call this function in the form
-         * <tt>face(subdim, index)</tt>; that is, the template parameter
-         * \a subdim becomes the first argument of the function.
+         * <tt>face(useDim, index)</tt>; that is, the template parameter
+         * \a useDim becomes the first argument of the function.
          *
-         * \tparam subdim the dimension of the face to query.  This must
+         * \tparam useDim the dimension of the face to query.  This must
          * be between 0 and <i>dim</i>-1 inclusive.
          *
          * @param index the index of the desired face, ranging from 0 to
-         * countFaces<subdim>()-1 inclusive.
+         * countFaces<useDim>()-1 inclusive.
          * @return the requested face.
          */
-        template <int subdim>
-        Face<dim, subdim>* face(size_t index) const {
-            return WeakFaceList<dim, subdim>::faces_[index];
+        template <int useDim>
+        Face<dim, useDim>* face(size_t index) const {
+            return std::get<useDim>(faces_)[index];
         }
 
         /**
@@ -542,7 +291,7 @@ class BoundaryComponentFaceStorage :
          */
         Triangulation<dim>* triangulation() const {
             // There may be no (dim-1)-simplices, but there is always a vertex.
-            return WeakFaceList<dim, 0>::faces_.front()->triangulation();
+            return std::get<0>(faces_).front()->triangulation();
         }
 
         /**
@@ -553,31 +302,299 @@ class BoundaryComponentFaceStorage :
          */
         Component<dim>* component() const {
             // There may be no (dim-1)-simplices, but there is always a vertex.
-            return WeakFaceList<dim, 0>::faces_.front()->component();
+            return std::get<0>(faces_).front()->component();
         }
+
+        /**
+         * Returns the Euler characteristic of this boundary component.  If
+         * the boundary component consists of a single vertex and nothing else
+         * (e.g., it is an ideal vertex), then the Euler characteristic of
+         * the vertex link will be returned.
+         *
+         * This function is, in all "normal" cases, equivalent to
+         * triangulating the boundary component via build() and then calling
+         * Triangulation<dim-1>::eulerCharTri() on the result.
+         *
+         * The exception comes from triangulations with "pinched" faces
+         * whose links have multiple boundary components (e.g., a vertex
+         * whose link is a multiply-punctured sphere, marking a point where
+         * different parts of the boundary are "pinched together").
+         * If there are such faces, then this routine will return a
+         * well-defined but topologically meaningless result.  Essentially,
+         * this routine only counts such faces once, even though they "should"
+         * be counted multiple times on the boundary since they can be "seen"
+         * from distinct sections of the (<i>dim</i>-1)-dimensional boundary.
+         * Of course such a triangulation cannot represent a
+         * <i>dim</i>-manifold anyway, and so if you do have pinched faces
+         * then you almost certainly have bigger problems to deal with.
+         *
+         * This routine is only available where \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * \warning If this boundary component itself forms an ideal
+         * (<i>dim</i>-1)-dimensional triangulation, then again this result
+         * is well-defined but topologically meaningless (since it is
+         * equivalent to calling eulerCharTri() and not eulerCharManifold()
+         * on the triangulated boundary).
+         * However, again such boundary components cannot appear in a
+         * <i>dim</i>-manifold, and so if you have such boundary components
+         * then you almost certainly have bigger problems than this.
+         *
+         * @return the Euler characteristic of this boundary component.
+         */
+        long eulerChar() const {
+            if constexpr (dim == 2) {
+                // There is only one possible answer here.
+                return 0;
+            } else {
+                if (facets().empty()) {
+                    // We need the Euler characteristic of the vertex link.
+                    Vertex<dim>* vertex = std::get<0>(faces_).front();
+                    if constexpr (dim == 3) {
+                        return vertex->linkEulerChar();
+                    } else if constexpr (dim == 4) {
+                        // In dimension 4, the link triangulation is
+                        // already precomputed.
+                        return vertex->buildLink()->eulerCharTri();
+                    } else {
+                        // We should never reach this branch, since
+                        // higher-dimensional triangulations do not
+                        // understand single-vertex boundary components.
+                        return 0;
+                    }
+                } else {
+                    // We have a real boundary component.
+                    return (static_cast<long>(std::get<subdim>(faces_).size()) -
+                        ...);
+                }
+            }
+        }
+
+        /**
+         * Determines if this boundary component is real.
+         * This is the case if and only if it is formed from one or more
+         * (dim-1)-faces.
+         *
+         * See the BoundaryComponent class notes for an overview of real,
+         * ideal, and invalid vertex boundary components.
+         *
+         * This routine is only available where \a dim is
+         * one of Regina's \ref stddim "standard dimensions".
+         * (In higher dimensions, real boundary components are the only
+         * types of boundary component that Regina will recognise.)
+         *
+         * @return \c true if and only if this boundary component is real.
+         */
+        bool isReal() const {
+            return ! facets().empty();
+        }
+
+        /**
+         * Determines if this boundary component is ideal.
+         * This is the case if and only if it consists of a single
+         * ideal vertex and no faces of any other dimensions.
+         *
+         * See the BoundaryComponent class notes for an overview of ideal
+         * boundary components, which can only occur in dimensions &ge; 3,
+         * and which are only recognised where \a dim is one of Regina's
+         * \ref stddim "standard dimensions".
+         *
+         * Note that a boundary component formed from a single \e invalid
+         * vertex is \e not considered to be ideal.  This means that, if a
+         * boundary component contains no faces of positive dimension,
+         * then one and only one of isIdeal() and isInvalidVertex() will
+         * return \c true.
+         *
+         * This routine is only available where \a dim is
+         * one of Regina's \ref stddim "standard dimensions".
+         * (In higher dimensions, Regina does not recognise ideal
+         * boundary components at all.)
+         *
+         * @return \c true if and only if this boundary component is ideal.
+         */
+        bool isIdeal() const {
+            // Either of Vertex::isValid() or Vertex::isIdeal() will do here.
+            return (facets().empty() &&
+                std::get<0>(faces_).front()->isValid());
+        }
+
+        /**
+         * Determines if this boundary component consists of a single invalid
+         * vertex and nothing else.  In particular, such a boundary component
+         * must contain no faces of any positive dimension.
+         *
+         * See the BoundaryComponent class notes for an overview of
+         * invalid vertex boundary components, which can only occur in
+         * dimensions &ge; 4, and which are only recognised where \a dim is
+         * one of Regina's \ref stddim "standard dimensions".
+         *
+         * An invalid vertex is only placed in its own boundary component if
+         * it does not already belong to some larger boundary component
+         * (for instance, if its link is an ideal (<i>dim</i>-1)-manifold
+         * triangulation).  This means that, for a boundary component
+         * consisting of one or more (<i>dim</i>-1)-faces, this routine will
+         * return \c false even if the boundary component also includes
+         * one or more invalid vertices.
+         *
+         * Note that, if a boundary component contains no faces of positive
+         * dimension, then one and only one of isIdeal() and isInvalidVertex()
+         * will return \c true.
+         *
+         * This routine is only available where \a dim is
+         * one of Regina's \ref stddim "standard dimensions".
+         * (In higher dimensions, Regina does not recognise invalid vertex
+         * boundary components at all.)
+         *
+         * @return \c true if and only if this boundary component consists of a
+         * single invalid vertex and nothing else.
+         */
+        bool isInvalidVertex() const {
+            return (facets().empty() &&
+                ! std::get<0>(faces_).front()->isValid());
+        }
+
+        // Make this class non-copyable.
+        BoundaryComponentFaceStorage(const BoundaryComponentFaceStorage&) =
+            delete;
+        BoundaryComponentFaceStorage& operator = (
+            const BoundaryComponentFaceStorage&) = delete;
 
     protected:
         /**
+         * Default constructor that leaves all face lists empty.
+         */
+        BoundaryComponentFaceStorage() = default;
+
+        /**
+         * Triangulates the vertex link for an ideal or invalid vertex
+         * boundary component.
+         *
+         * @return the triangulated vertex link.
+         */
+        const Triangulation<dim-1>* buildVertexLink() const {
+            // Make sure we do not try to instantiate Triangulation<1>.
+            static_assert(dim > 2,
+                "BoundaryComponent<dim>::buildVertexLink() can only "
+                "be used with dimensions dim > 2.");
+
+            return std::get<0>(faces_).front()->buildLink();
+        }
+
+        /**
          * Pushes the given face onto the end of the list of
-         * <i>subdim</i>-faces of this boundary component.
+         * <i>useDim</i>-faces of this boundary component.
          * This class does not take ownership of the given face.
          *
-         * \tparam subdim the dimension of the face to append.  This must
+         * \tparam useDim the dimension of the face to append.  This must
          * be between 0 and <i>dim</i>-1 inclusive.
          *
          * @param face the face to append to the list.
          */
-        template <int subdim>
-        void push_back(Face<dim, subdim>* face) {
-            WeakFaceList<dim, subdim>::faces_.push_back(face);
+        template <int useDim>
+        void push_back(Face<dim, useDim>* face) {
+            std::get<useDim>(faces_).push_back(face);
         }
 
         /**
-         * Reorders all lower-dimensional faces of the given triangulation
-         * so that they appear in the same order as the corresponding
-         * faces of this boundary component, and relabels these faces so
-         * that their vertices are numbered in a corresponding way.
+         * Reorders and relabels all <i>useDim</i>-faces of the given
+         * triangulation so that they appear in the same order as the
+         * corresponding faces of this boundary component, and so that their
+         * vertices are numbered in a corresponding way.
+         *
+         * If there are any \e pinched <i>useDim</i>-faces in this
+         * boundary component (so they appear multiple times when the
+         * boundary is triangulated), then this routine will do nothing.
+         *
+         * \pre This is a real boundary component.
+         * \pre \a tri is a triangulation of this boundary component.
+         * \pre For each \a i, the <i>i</i>th top-dimensional simplex of
+         * \a tri corresponds to the <i>i</i>th (<i>dim</i>-1)-face of
+         * this boundary component, and has its vertices 0,...,(<i>dim</i>-1)
+         * labelled in the same way.
+         *
+         * \tparam useDim the dimension of the faces to reorder and relabel.
+         * This must be between 0 and (<i>dim</i>-1) inclusive, though if it
+         * is equal to (<i>dim</i>-1) then it will do nothing (since the
+         * (<i>dim</i>-1)-faces are already in perfect correspondence).
+         *
+         * @param tri a triangulation of this boundary component, as
+         * described above.
+         */
+        template <int useDim>
+        void reorderAndRelabelFacesAt(Triangulation<dim - 1>* tri) const {
+            static_assert(useDim >= 0 && useDim < dim,
+                "An invalid face dimension was given to "
+                "BoundaryComponentFaceStorage::reorderAndRelabelFacesAt().");
+
+            if constexpr (useDim == dim - 1) {
+                // The (dim-1) faces are already in perfect correspondence.
+                return;
+            } else {
+                if (std::get<useDim>(faces_).empty())
+                    return; // Should never happen.
+
+                // Check for pinched faces: if these are present then
+                // the situation is hopeless, since such faces are
+                // effectively duplicated when we triangulate the boundary,
+                // and so the numbers of faces do not match.
+                if (countFaces<useDim>() != tri->template countFaces<useDim>())
+                    return;
+
+                // Build a map from (useDim-face indices in the d-dim triang
+                // that owns this boundary component) to (useDim-faces in tri).
+                //
+                // This is a partial function: it is only defined for indices
+                // of *boundary* useDim-faces in this d-dim triang.
+                // We leave the other values of the map uninitialised.
+                Face<dim - 1, useDim>** map = new Face<dim - 1, useDim>*[
+                    std::get<useDim>(faces_).front()->triangulation()->
+                    template countFaces<useDim>()];
+
+                for (Face<dim - 1, useDim>* f : tri->template faces<useDim>()) {
+                    const auto& emb = f->front();
+                    Face<dim, dim - 1>* outer =
+                        std::get<dim-1>(faces_)[emb.simplex()->index()];
+                    map[outer->template face<useDim>(emb.face())->index()] = f;
+
+                    // While we have the two corresponding faces in front of us,
+                    // relabel the vertices of f now.
+                    //
+                    // The following two permutations should be made equal:
+                    //
+                    // - emb.simplex()->faceMapping<useDim>(emb.face())
+                    // - outer->faceMapping<useDim>(emb.face())
+                    //
+                    Perm<dim> adjust =
+                        emb.simplex()->template faceMapping<useDim>(
+                            emb.face()).inverse() *
+                        Perm<dim>::contract(
+                            outer->template faceMapping<useDim>(emb.face()));
+                    adjust.clear(useDim + 1);
+                    tri->relabelFace(f, adjust);
+                }
+
+                tri->template reorderFaces<useDim>(
+                    ReorderIterator<useDim>(
+                        std::get<useDim>(faces_).begin(), map),
+                    ReorderIterator<useDim>(
+                        std::get<useDim>(faces_).end(), map));
+
+                delete[] map;
+            }
+        }
+
+        /**
+         * Reorders and relabels all lower-dimensional faces of the given
+         * triangulation so that they appear in the same order as the
+         * corresponding faces of this boundary component, and so that their
+         * vertices are numbered in a corresponding way.
          * This affects all faces of dimensions 0,...,(<i>dim</i>-2).
+         *
+         * If there are any \e pinched <i>k</i>-faces in this
+         * boundary component (so they appear multiple times when the
+         * boundary is triangulated), then this routine will not reorder
+         * and relabel the <i>k</i>-faces (but it will still reorder and
+         * relabel faces of other dimensions).
          *
          * \pre This is a real boundary component.
          * \pre \a tri is a triangulation of this boundary component.
@@ -590,9 +607,61 @@ class BoundaryComponentFaceStorage :
          * described above.
          */
         void reorderAndRelabelFaces(Triangulation<dim-1>* tri) const {
-            WeakFaceListSuite<dim, dim - 2>::reorderAndRelabelFaces(tri,
-                WeakFaceList<dim, dim - 1>::faces_);
+            (reorderAndRelabelFacesAt<subdim>(tri), ...);
         }
+
+    private:
+        /**
+         * An input iterator that runs through the <i>useDim</i>-faces of
+         * this boundary component in order and (when dereferenced) converts
+         * them to the corresponding faces from some other triangulation \a tri.
+         *
+         * The iterator relies on an array \a map, where for each face \a f
+         * of this boundary component, <tt>map[f->index()]</tt> is the
+         * corresponding face of \a tri.  Note that <tt>f->index()</tt> is the
+         * index of \a f in the underlying <i>dim</i>-dimensional triangulation,
+         * \e not the index of \a f in this boundary component's facet list.
+         */
+        template <int useDim>
+        class ReorderIterator {
+            private:
+                typedef typename std::vector<Face<dim, useDim>*>::const_iterator
+                    InternalIterator;
+                InternalIterator it_;
+                    /**< The current face of this boundary component. */
+                Face<dim - 1, useDim>** map_;
+
+            public:
+                ReorderIterator() : it_(), map_(0) {
+                }
+                ReorderIterator(InternalIterator it,
+                        Face<dim - 1, useDim>** map) : it_(it), map_(map) {
+                }
+
+                ReorderIterator(const ReorderIterator&) = default;
+                ReorderIterator& operator = (const ReorderIterator&) = default;
+
+                bool operator == (const ReorderIterator& rhs) const {
+                    return it_ == rhs.it_;
+                }
+                bool operator != (const ReorderIterator& rhs) const {
+                    return it_ != rhs.it_;
+                }
+
+                ReorderIterator& operator ++() {
+                    ++it_;
+                    return *this;
+                }
+                ReorderIterator operator ++(int) {
+                    ReorderIterator prev(*this);
+                    ++it_;
+                    return prev;
+                }
+
+                Face<dim - 1, useDim>* operator * () const {
+                    return map_[(*it_)->index()];
+                }
+        };
 };
 
 /**
@@ -603,21 +672,27 @@ class BoundaryComponentFaceStorage :
  * This specialisation is used for dimensions in which only
  * (<i>dim</i>-1)-dimensional faces are stored.  It therefore removes the
  * member functions for accessing lower-dimensional faces.
+ *
+ * \tparam dim the dimension of the underlying triangulation.
+ * \tparam facetDim the boundary facet dimension <i>dim</i>-1.
+ * Ideally this would be specified directly as <tt>dim-1</tt> in the partial
+ * template specialisation, and this \e should be legal according to CWG1315;
+ * however, it fails to build under some versions of gcc (e.g., 10.2.0).
  */
-template <int dim>
-class BoundaryComponentFaceStorage<dim, false> {
+template <int dim, int facetDim>
+class BoundaryComponentFaceStorage<dim, facetDim> {
     static_assert(! standardDim(dim),
         "The BoundaryComponentFaceStorage template should not set "
-        "allFaces = false for Regina's standard dimensions.");
+        "face dimensions to only (dim-1) for Regina's standard dimensions.");
+    static_assert(facetDim == dim - 1,
+        "The two-argument BoundaryComponentFaceStorage template has been "
+        "given an unexpected boundary facet dimension.");
 
     public:
         /**
          * A compile-time constant indicating whether this boundary
          * component class stores all lower-dimensional faces (\c true),
          * or only faces of dimension <i>dim</i>-1 (\c false).
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
          */
         static constexpr bool allFaces = false;
 
@@ -655,20 +730,36 @@ class BoundaryComponentFaceStorage<dim, false> {
         }
 
         /**
-         * Returns all (<i>dim</i>-1)-faces in this boundary component.
+         * Returns an object that allows iteration through and random access
+         * to all (<i>dim</i>-1)-faces in this boundary component.
          *
-         * The reference that is returned will remain valid only for as
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Face<dim, dim-1>* f : bc.facets()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
          * long as this boundary component object exists.  In particular,
-         * the reference will become invalid any time that the triangulation
+         * the object will become invalid any time that the triangulation
          * changes (since all boundary component objects will be destroyed
          * and others rebuilt in their place).
+         * Therefore it is best to treat this object as temporary only,
+         * and to call facets() again each time you need it.
          *
-         * \ifacespython This routine returns a python list.
+         * \ifacespython This routine returns a Python list.
          *
-         * @return the list of all (<i>dim</i>-1)-faces.
+         * @return access to the list of all (<i>dim</i>-1)-faces.
          */
-        const std::vector<Face<dim, dim-1>*>& facets() const {
-            return facets_;
+        auto facets() const {
+            return ListView(facets_);
         }
 
         /**
@@ -708,8 +799,7 @@ class BoundaryComponentFaceStorage<dim, false> {
             return facets_.front()->component();
         }
 
-        // Make this class non-copyable, since we do not inherit
-        // non-copyability from WeakFaceList.
+        // Make this class non-copyable.
         BoundaryComponentFaceStorage(const BoundaryComponentFaceStorage&) =
             delete;
         BoundaryComponentFaceStorage& operator = (
@@ -723,467 +813,25 @@ class BoundaryComponentFaceStorage<dim, false> {
         }
 
         /**
-         * Pushes the given face onto the end of the list of
-         * (<i>dim</i>-1)-faces of this boundary component.
-         * This class does not take ownership of the given face.
+         * Pushes the given facet (that is, (<i>dim</i>-1)-face) onto the end
+         * of the list of facets of this boundary component.
+         * This class does not take ownership of the given facet.
          *
-         * @param face the face to append to the list.
+         * @param facet the facet to append to the list.
          */
-        void push_back(Face<dim, dim-1>* face) {
-            facets_.push_back(face);
+        void push_back(Face<dim, dim-1>* facet) {
+            facets_.push_back(facet);
         }
 
         /**
-         * Increments the number of (<i>dim</i>-2)-faces in this
-         * boundary component.  Since this boundary component class does
+         * Increments the number of ridges (that is, (<i>dim</i>-2)-faces) in
+         * this boundary component.  Since this boundary component class does
          * not store any lower-dimensional faces, this routine does not
          * store the given face.
          */
         void push_back(Face<dim, dim-2>*) {
             ++nRidges_;
         }
-
-        /**
-         * Does nothing, since this boundary component does not store
-         * lower-dimensional faces.
-         *
-         * \tparam subdim the dimension of the given face.  This must
-         * be between 0 and <i>dim</i>-3 inclusive.
-         */
-        template <int subdim>
-        void push_back(Face<dim, subdim>*) {
-            static_assert(subdim <= dim - 3,
-                "The no-op push_back() should only be called for "
-                "faces of dimension <= dim - 3.");
-        }
-
-        /**
-         * Reorders all lower-dimensional faces of the given triangulation
-         * so that they appear in the same order as the corresponding
-         * faces of this boundary component, and relabels these faces so
-         * that their vertices are numbered in a corresponding way.
-         * This affects all faces of dimensions 0,...,(<i>dim</i>-2).
-         *
-         * In this specialised class template, this function does nothing
-         * because faces of dimension 0,...,(<i>dim</i>-2) are not stored.
-         */
-        void reorderAndRelabelFaces(Triangulation<dim-1>*) const {
-        }
-};
-
-/**
- * Helper class for querying the faces of a boundary component of a
- * <i>dim</i>-dimensional triangulation.  Every class BoundaryComponent<dim>
- * inherits from this template.
- *
- * \ifacespython This base class is not present, but the "end user" class
- * BoundaryComponent<dim> is.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- * \tparam allFaces \c true if this class should store all faces of all
- * dimensions 0,1,...,<i>dim</i>-1, or \c false if this class should only
- * store faces of dimension <i>dim</i>-1.
- * \tparam allowVertex_ \c true if ideal and/or invalid vertex boundary
- * components are both possible and recognised in dimension \a dim,
- * or \c false if only real boundary components are supported.
- */
-template <int dim, bool allFaces, bool allowVertex_>
-class BoundaryComponentFaceInterface :
-        public BoundaryComponentFaceStorage<dim, allFaces> {
-    static_assert(allFaces && allowVertex_,
-        "The generic BoundaryComponentFaceInterface template should "
-        "only be used with allFaces = true and allowVertex = true.");
-    // The face storage superclass already tests for standard dimension.
-    static_assert(dim > 2,
-        "The generic BoundaryComponentFaceInterface template should not "
-        "be used for dimension 2.");
-
-    public:
-        /**
-         * A compile-time constant indicating whether ideal and/or
-         * invalid vertex boundary components are both possible and
-         * recognised by this boundary component class.
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
-         */
-        static constexpr bool allowVertex = true;
-
-    public:
-        using BoundaryComponentFaceStorage<dim, allFaces>::size;
-        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
-
-        /**
-         * Determines if this boundary component is real.
-         * This is the case if and only if it is formed from one or more
-         * (dim-1)-faces.
-         *
-         * See the BoundaryComponent class notes for an overview of real,
-         * ideal, and invalid vertex boundary components.
-         *
-         * This routine is only available where \a dim is at least 3
-         * and is one of Regina's \ref stddim "standard dimensions".
-         * (In other dimensions, real boundary components are the only
-         * types of boundary component that Regina will recognise.)
-         *
-         * @return \c true if and only if this boundary component is real.
-         */
-        bool isReal() const {
-            return ! facets().empty();
-        }
-
-        /**
-         * Determines if this boundary component is ideal.
-         * This is the case if and only if it consists of a single
-         * ideal vertex and no faces of any other dimensions.
-         *
-         * See the BoundaryComponent class notes for an overview of ideal
-         * boundary components, which can only occur in dimensions &ge; 3,
-         * and which are only recognised where \a dim is one of Regina's
-         * \ref stddim "standard dimensions".
-         *
-         * Note that a boundary component formed from a single \e invalid
-         * vertex is \e not considered to be ideal.  This means that, if a
-         * boundary component contains no faces of positive dimension,
-         * then one and only one of isIdeal() and isInvalidVertex() will
-         * return \c true.
-         *
-         * This routine is only available where \a dim is at least 3
-         * and is one of Regina's \ref stddim "standard dimensions".
-         *
-         * @return \c true if and only if this boundary component is ideal.
-         */
-        bool isIdeal() const {
-            // Either of Vertex::isValid() or Vertex::isIdeal() will do here.
-            return (facets().empty() &&
-                WeakFaceList<dim, 0>::faces_.front()->isValid());
-        }
-
-        /**
-         * Determines if this boundary component consists of a single invalid
-         * vertex and nothing else.  In particular, such a boundary component
-         * must contain no faces of any positive dimension.
-         *
-         * See the BoundaryComponent class notes for an overview of
-         * invalid vertex boundary components, which can only occur in
-         * dimensions &ge; 4, and which are only recognised where \a dim is
-         * one of Regina's \ref stddim "standard dimensions".
-         *
-         * An invalid vertex is only placed in its own boundary component if
-         * it does not already belong to some larger boundary component
-         * (for instance, if its link is an ideal (<i>dim</i>-1)-manifold
-         * triangulation).  This means that, for a boundary component
-         * consisting of one or more (<i>dim</i>-1)-faces, this routine will
-         * return \c false even if the boundary component also includes
-         * one or more invalid vertices.
-         *
-         * Note that, if a boundary component contains no faces of positive
-         * dimension, then one and only one of isIdeal() and isInvalidVertex()
-         * will return \c true.
-         *
-         * This routine is only available where \a dim is at least 3
-         * and is one of Regina's \ref stddim "standard dimensions".
-         *
-         * @return \c true if and only if this boundary component consists of a
-         * single invalid vertex and nothing else.
-         */
-        bool isInvalidVertex() const {
-            return (facets().empty() &&
-                ! WeakFaceList<dim, 0>::faces_.front()->isValid());
-        }
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const {
-            out << (isIdeal() ? "Ideal " : isInvalidVertex() ? "Invalid " :
-                "Finite ") << "boundary component";
-        }
-
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const {
-            writeTextShort(out);
-            out << std::endl;
-
-            if (isIdeal() || isInvalidVertex()) {
-                Face<dim, 0>* v = WeakFaceList<dim, 0>::faces_.front();
-                out << "Vertex: " << v->index() << std::endl;
-                out << "Appears as:" << std::endl;
-                for (auto& emb : *v)
-                    out << "  " << emb.simplex()->index()
-                        << " (" << emb.vertex() << ')' << std::endl;
-            } else {
-                out << (size() == 1 ? Strings<dim-1>::Face :
-                    Strings<dim-1>::Faces) << ':' << std::endl;
-                for (auto s : facets())
-                    out << "  " << s->front().simplex()->index() << " ("
-                        << s->front().vertices().trunc(dim) << ')' << std::endl;
-            }
-        }
-
-    protected:
-        /**
-         * Triangulates the vertex link for an ideal or invalid vertex
-         * boundary component.
-         *
-         * @return the triangulated vertex link.
-         */
-        const Triangulation<dim-1>* buildVertexLink() const {
-            return WeakFaceList<dim, 0>::faces_.front()->buildLink();
-        }
-};
-
-/**
- * Helper class for querying the faces of a boundary component of a
- * <i>dim</i>-dimensional triangulation.  See the general
- * BoundaryComponentFaceInterface template notes for further details.
- *
- * This specialisation is used for dimensions in which only real boundary
- * components are supported - that is, ideal and/or invalid vertex
- * boundary components are either not recognised or not possible.
- * It therefore removes the member functions that query ideal and/or
- * invalid vertices.
- */
-template <int dim, bool allFaces>
-class BoundaryComponentFaceInterface<dim, allFaces, false> :
-        public BoundaryComponentFaceStorage<dim, allFaces> {
-    static_assert(dim == 2 || ! standardDim(dim),
-        "The BoundaryComponentFaceInterface template should not set "
-        "allowVertex = false for standard dimensions greater than 2.");
-
-    public:
-        /**
-         * A compile-time constant indicating whether ideal and/or
-         * invalid vertex boundary components are both possible and
-         * recognised by this boundary component class.
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
-         */
-        static constexpr bool allowVertex = false;
-
-    public:
-        using BoundaryComponentFaceStorage<dim, allFaces>::size;
-        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
-
-        /**
-         * Writes a short text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextShort(std::ostream& out) const {
-            out << "Boundary component";
-        }
-
-        /**
-         * Writes a detailed text representation of this object to the
-         * given output stream.
-         *
-         * \ifacespython Not present.
-         *
-         * @param out the output stream to which to write.
-         */
-        void writeTextLong(std::ostream& out) const {
-            writeTextShort(out);
-            out << std::endl;
-
-            out << (size() == 1 ? Strings<dim-1>::Face :
-                Strings<dim-1>::Faces) << ':' << std::endl;
-            for (auto s : facets())
-                out << "  " << s->front().simplex()->index() << " ("
-                    << s->front().vertices().trunc(dim) << ')' << std::endl;
-        }
-
-    protected:
-        /**
-         * Always returns \c null.
-         *
-         * In general, this routine triangulates the vertex link for an
-         * ideal or invalid vertex boundary component.  However, this
-         * specialisation is used for cases where such boundary components
-         * are either not recognised or not possible, and so this routine
-         * returns \c null always.
-         *
-         * @return \c null.
-         */
-        constexpr const Triangulation<dim-1>* buildVertexLink() const {
-            // Make sure we do not try to instantiate Triangulation<1>.
-            static_assert(dim > 2, "Routine buildVertexLink() should "
-                "not be called for dimension 2.");
-
-            return 0;
-        }
-};
-
-/**
- * Helper class that manages all data storage for a boundary component of a
- * <i>dim</i>-dimensional triangulation.  Every class BoundaryComponent<dim>
- * inherits from this template.
- *
- * \ifacespython This base class is not present, but the "end user" class
- * BoundaryComponent<dim> is.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * This must be between 2 and 15 inclusive.
- * \tparam allFaces \c true if this class should store all faces of all
- * dimensions 0,1,...,<i>dim</i>-1, or \c false if this class should only
- * store faces of dimension <i>dim</i>-1.
- * \tparam allowVertex \c true if ideal and/or invalid vertex boundary
- * components are both possible and recognised in dimension \a dim,
- * or \c false if only real boundary components are supported.
- * \tparam canBuild_ \c true if we support triangulating boundary components,
- * or \c false if this is not possible (i.e., the dimension is 2).
- */
-template <int dim, bool allFaces, bool allowVertex, bool canBuild_>
-class BoundaryComponentStorage :
-        public BoundaryComponentFaceInterface<dim, allFaces, allowVertex> {
-    static_assert(canBuild_,
-        "The generic BoundaryComponentStoarge template should only be "
-        "used with canBuild = true.");
-    static_assert(dim > 2,
-        "The generic BoundaryComponentStorage template cannot be used "
-        "for dimension 2.");
-
-    public:
-        /**
-         * A compile-time constant indicating whether this boundary
-         * component class supports triangulating boundary components.
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
-         */
-        static constexpr bool canBuild = true;
-
-    protected:
-        Triangulation<dim-1>* boundary_;
-            /**< A full triangulation of the boundary component.
-                 This may be pre-computed when the triangulation skeleton
-                 is constructed, or it may be \c null in which case it
-                 will be built on demand.
-                 For ideal or invalid vertices, this is always \c null since
-                 the triangulation is cached by the vertex class instead.*/
-
-    public:
-        using BoundaryComponentFaceStorage<dim, allFaces>::facets;
-
-        /**
-         * Destroys this object.  The cached boundary component triangulation
-         * will be destroyed also.
-         */
-        ~BoundaryComponentStorage();
-
-        /**
-         * Returns the full (<i>dim</i>-1)-dimensional triangulation of this
-         * boundary component.  Note that this triangulation is read-only
-         * (though of course you can clone it and then operate upon the clone).
-         *
-         * If this is a real boundary component (i.e., it is built from
-         * one or more (<i>dim</i>-1)-faces), then the triangulation of this
-         * boundary component is as follows:
-         *
-         * - Let \a i lie between 0 and size()-1 inclusive.  Then simplex \a i
-         *   of the returned (<i>dim</i>-1)-dimensional triangulation is
-         *   a copy of <tt>facet(i)</tt> of this boundary component,
-         *   and its vertices 0,...,<i>dim</i>-1 are numbered in the
-         *   same way.  To relate these (<i>dim</i>-1)-face vertex numbers to
-         *   the vertex numbers of top-dimensional simplices in the overall
-         *   <i>dim</i>-dimensional triangulation, see
-         *   Simplex<dim>::faceMapping<dim-1>().
-         *
-         * - If this boundary component stores lower-dimensional faces (i.e.,
-         *   if the template argument \a allFaces is \c true), then a similar
-         *   correspondence holds for these lower-dimensional faces also:
-         *   for each \a i, <i>k</i>-face \a i of the returned triangulation is
-         *   a copy of <tt>face<k>(i)</tt> of this boundary component,
-         *   and its vertices are numbered in the same way.
-         *
-         * If this boundary component consists only of a single vertex
-         * (i.e., this is an ideal or invalid vertex boundary component),
-         * then this routine returns the triangulation of the corresponding
-         * vertex link.  See Vertex::link() for details.
-         *
-         * This routine is fast, since it caches the boundary triangulation.
-         * Moreover, it is guaranteed that the full skeleton of this
-         * (<i>dim</i>-1)-dimensional triangulation will have been generated
-         * already.
-         *
-         * @return the triangulation of this boundary component.
-         */
-        const Triangulation<dim-1>* build() const {
-            if (boundary_)
-                return boundary_; // Already cached or pre-computed.
-            if (facets().empty())
-                return buildVertexLink(); // Ideal or invalid vertex.
-
-            return (
-                const_cast<BoundaryComponentStorage<dim, allFaces,
-                    allowVertex, canBuild_>*>(this)->
-                boundary_ = buildRealBoundary());
-        }
-
-    protected:
-        using BoundaryComponentFaceInterface<dim, allFaces, allowVertex>::
-            buildVertexLink;
-
-        /**
-         * Initialises the cached boundary triangulation to \c null.
-         */
-        BoundaryComponentStorage() : boundary_(0) {
-        }
-
-    private:
-        /**
-         * Builds a new triangulation of this boundary component,
-         * assuming this is a real boundary component.
-         *
-         * \pre The number of (dim-1)-faces is strictly positive.
-         *
-         * @return the newly created boundary triangulation.
-         */
-        Triangulation<dim-1>* buildRealBoundary() const;
-};
-
-/**
- * Helper class that manages all data storage for a boundary component of a
- * <i>dim</i>-dimensional triangulation.  See the general
- * BoundaryComponentStorage template notes for further details.
- *
- * This specialisation is used for dimensions in which you cannot triangulate
- * boundary components (i.e., dimension 2).  It therefore removes the
- * member functions that work with boundary component triangulations.
- */
-template <int dim, bool allFaces, bool allowVertex>
-class BoundaryComponentStorage<dim, allFaces, allowVertex, false> :
-        public BoundaryComponentFaceInterface<dim, allFaces, allowVertex> {
-    static_assert(dim == 2,
-        "The BoundaryComponentStorage template should not set "
-        "canBuild = false for dimensions greater than 2.");
-
-    public:
-        /**
-         * A compile-time constant indicating whether this boundary
-         * component class supports triangulating boundary components.
-         *
-         * This is a compile-time constant only, with no linkage - any attempt
-         * to create a reference or pointer to it will give a linker error.
-         */
-        static constexpr bool canBuild = false;
 };
 
 /**
@@ -1205,16 +853,52 @@ class BoundaryComponentStorage<dim, allFaces, allowVertex, false> :
 template <int dim>
 class BoundaryComponentBase :
         public Output<BoundaryComponentBase<dim>>,
-        public BoundaryComponentStorage<dim,
-            standardDim(dim) /* allFaces */,
-            (standardDim(dim) && dim > 2) /* allowVertex */,
-            (dim > 2) /* canBuild */>,
+#ifdef __DOXYGEN
+        // Doxygen doesn't understand std::conditional_t or ExpandSequence.
+        // The syntax here is not valid C++ but for doxygen it's just fine.
+        public BoundaryComponentFaceStorage<dim, 0, 1, ..., dim - 1>,
+#else
+        public std::conditional_t<standardDim(dim),
+            ExpandSequence<BoundaryComponentFaceStorage, dim> /* all faces */,
+            BoundaryComponentFaceStorage<dim, dim - 1> /* only facets */>,
+#endif
         public MarkedElement {
+    public:
+        static constexpr int dimension = dim;
+            /**< A compile-time constant that gives the dimension of the
+                 triangulation that contains this boundary component. */
+
+        /**
+         * A compile-time constant indicating whether ideal and/or
+         * invalid vertex boundary components are both possible and
+         * recognised by this boundary component class.
+         */
+        static constexpr bool allowVertex = standardDim(dim) && (dim > 2);
+        /**
+         * A compile-time constant indicating whether this boundary
+         * component class supports triangulating boundary components.
+         */
+        static constexpr bool canBuild = (dim > 2);
+
     protected:
         bool orientable_;
             /**< Is this boundary component orientable? */
 
+        EnableIf<canBuild, Triangulation<dim-1>*, nullptr> boundary_;
+            /**< A full triangulation of the boundary component.
+                 This may be pre-computed when the triangulation skeleton
+                 is constructed, or it may be \c null in which case it
+                 will be built on demand.
+                 For ideal or invalid vertices, this is always \c null since
+                 the triangulation is cached by the vertex class instead.*/
+
     public:
+        /**
+         * Destroys this object.  The cached boundary component triangulation
+         * will be destroyed also.
+         */
+        ~BoundaryComponentBase();
+
         /**
          * Returns the index of this boundary component in the underlying
          * triangulation.
@@ -1240,6 +924,117 @@ class BoundaryComponentBase :
             return orientable_;
         }
 
+        /**
+         * Returns the full (<i>dim</i>-1)-dimensional triangulation of this
+         * boundary component.  Note that this triangulation is read-only
+         * (though of course you can clone it and then operate upon the clone).
+         *
+         * If this is a real boundary component (i.e., it is built from
+         * one or more (<i>dim</i>-1)-faces), then the triangulation of this
+         * boundary component is as follows:
+         *
+         * - Let \a i lie between 0 and size()-1 inclusive.  Then simplex \a i
+         *   of the returned (<i>dim</i>-1)-dimensional triangulation is
+         *   a copy of <tt>facet(i)</tt> of this boundary component,
+         *   and its vertices 0,...,<i>dim</i>-1 are numbered in the
+         *   same way.  To relate these (<i>dim</i>-1)-face vertex numbers to
+         *   the vertex numbers of top-dimensional simplices in the overall
+         *   <i>dim</i>-dimensional triangulation, see
+         *   Simplex<dim>::faceMapping<dim-1>().
+         *
+         * - If this boundary component stores lower-dimensional faces (i.e.,
+         *   if the class constant \a allFaces is \c true), then a similar
+         *   correspondence holds for these lower-dimensional faces also:
+         *   for each \a i, <i>k</i>-face \a i of the returned triangulation is
+         *   a copy of <tt>face<k>(i)</tt> of this boundary component,
+         *   and its vertices are numbered in the same way.  As an exception,
+         *   this correspondence will not hold for dimensions \a k where
+         *   there exist \e pinched <i>k</i>-faces on the boundary (i.e.,
+         *   faces where different sections of the boundary are pinched
+         *   together, meaning that these faces must be duplicated when the
+         *   boundary is triangulated).
+         *
+         * If this boundary component consists only of a single vertex
+         * (i.e., this is an ideal or invalid vertex boundary component),
+         * then this routine returns the triangulation of the corresponding
+         * vertex link.  See Vertex::link() for details.
+         *
+         * This routine is fast, since it caches the boundary triangulation.
+         * Moreover, it is guaranteed that the full skeleton of this
+         * (<i>dim</i>-1)-dimensional triangulation will have been generated
+         * already.
+         *
+         * \pre The dimension \a dim is greater than 2.
+         *
+         * @return the triangulation of this boundary component.
+         */
+        const Triangulation<dim-1>* build() const {
+            // Make sure we do not try to instantiate Triangulation<1>.
+            static_assert(canBuild,
+                "BoundaryComponent<dim>::build() can only "
+                "be used with dimensions dim > 2.");
+
+            if (boundary_.value)
+                return boundary_.value; // Already cached or pre-computed.
+            if constexpr (allowVertex)
+                if (this->facets().empty())
+                    return this->buildVertexLink(); // Ideal or invalid vertex.
+
+            return const_cast<BoundaryComponentBase<dim>*>(this)->
+                boundary_.value = buildRealBoundary();
+        }
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const {
+            if constexpr (allowVertex) {
+                out << (this->isIdeal() ? "Ideal " :
+                        this->isInvalidVertex() ? "Invalid " :
+                        "Finite ") << "boundary component";
+            } else {
+                out << "Boundary component";
+            }
+        }
+
+        /**
+         * Writes a detailed text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextLong(std::ostream& out) const {
+            writeTextShort(out);
+            out << std::endl;
+
+            if constexpr (allowVertex) {
+                if (this->isIdeal() || this->isInvalidVertex()) {
+                    // We have no boundary facets.
+                    Face<dim, 0>* v = std::get<0>(this->faces_).front();
+                    out << "Vertex: " << v->index() << std::endl;
+                    out << "Appears as:" << std::endl;
+                    for (auto& emb : *v)
+                        out << "  " << emb.simplex()->index()
+                            << " (" << emb.vertex() << ')' << std::endl;
+                    return;
+                }
+            }
+
+            // We have boundary facets.
+            out << (this->size() == 1 ? Strings<dim-1>::Face :
+                Strings<dim-1>::Faces) << ':' << std::endl;
+            for (auto s : this->facets())
+                out << "  " << s->front().simplex()->index() << " ("
+                    << s->front().vertices().trunc(dim) << ')' << std::endl;
+        }
+
         // Make this class non-copyable.
         BoundaryComponentBase(const BoundaryComponentBase&) = delete;
         BoundaryComponentBase& operator = (const BoundaryComponentBase&) =
@@ -1251,12 +1046,24 @@ class BoundaryComponentBase :
          */
         BoundaryComponentBase() = default;
 
+    private:
+        /**
+         * Builds a new triangulation of this boundary component,
+         * assuming this is a real boundary component.
+         *
+         * \pre The dimension \a dim is greater than 2.
+         * \pre The number of (dim-1)-faces is strictly positive.
+         *
+         * @return the newly created boundary triangulation.
+         */
+        Triangulation<dim-1>* buildRealBoundary() const;
+
     friend class Triangulation<dim>;
         /**< Allow access to private members. */
 };
 
 /*@}*/
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

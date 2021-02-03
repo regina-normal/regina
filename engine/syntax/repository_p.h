@@ -55,8 +55,7 @@
 #include "regina-core.h"
 #include <map>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class Definition;
 class Repository;
@@ -87,6 +86,6 @@ public:
     RepositoryPrivate& operator = (const RepositoryPrivate&) = delete;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

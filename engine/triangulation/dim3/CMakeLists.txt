@@ -31,7 +31,6 @@ SET( SOURCES ${SOURCES} PARENT_SCOPE)
 
 if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
-    boundarycomponent3.h
     component3.h
     tetrahedron3.h
     triangle3.h

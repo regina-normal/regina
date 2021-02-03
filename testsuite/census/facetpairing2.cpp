@@ -75,7 +75,7 @@ class FacetPairing2Test : public CppUnit::TestFixture {
             unsigned nTri;
             for (nTri = 0; nTri <= 12; nTri++) {
                 count = 0;
-                FacetPairing<2>::findAllPairings(nTri, BoolSet::sFalse,
+                FacetPairing<2>::findAllPairings(nTri, false,
                     0, countEdgePairings, &count);
 
                 std::ostringstream msg;

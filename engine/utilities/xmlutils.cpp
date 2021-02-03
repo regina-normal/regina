@@ -37,8 +37,7 @@
 
 #define ERROR_BUFF_SIZE 1024
 
-namespace regina {
-namespace xml {
+namespace regina::xml {
 
 const std::string XMLPropertyDict::empty_;
 
@@ -194,4 +193,4 @@ std::string xmlEncodeComment(const std::string& original) {
     return ansStr;
 }
 
-} } // namespace regina::xml
+} // namespace regina::xml

@@ -37,12 +37,6 @@
 
 namespace regina {
 
-const char SnapPeaCensusTri::SEC_5 = 'm';
-const char SnapPeaCensusTri::SEC_6_OR = 's';
-const char SnapPeaCensusTri::SEC_6_NOR = 'x';
-const char SnapPeaCensusTri::SEC_7_OR = 'v';
-const char SnapPeaCensusTri::SEC_7_NOR = 'y';
-
 SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
         const Component<3>* comp) {
     // Currently this routine can recognise SnapPea triangulations
@@ -119,8 +113,8 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
                         comp->edge(1)->degree() == 4)))
                     return 0;
                 // Census says it's m001 if no triangle forms a dunce hat.
-                for (int i = 0; i < 4; i++)
-                    if (comp->triangle(i)->type() == Triangle<3>::DUNCEHAT)
+                for (int t = 0; t < 4; ++t)
+                    if (comp->triangle(t)->type() == Triangle<3>::DUNCEHAT)
                         return 0;
                 return new SnapPeaCensusTri(SEC_5, 1);
             } else if (comp->countVertices() == 2) {
@@ -131,8 +125,8 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
                         comp->edge(1)->degree() != 6)
                     return 0;
                 // Census says it's m002 if some triangle forms a dunce hat.
-                for (int i = 0; i < 4; i++)
-                    if (comp->triangle(i)->type() == Triangle<3>::DUNCEHAT)
+                for (int t = 0; t < 4; ++t)
+                    if (comp->triangle(t)->type() == Triangle<3>::DUNCEHAT)
                         return new SnapPeaCensusTri(SEC_5, 2);
                 return 0;
             }
@@ -157,8 +151,8 @@ SnapPeaCensusTri* SnapPeaCensusTri::isSmallSnapPeaCensusTri(
                 return 0;
             // Census says it's the Whitehead link if some edge has
             // degree 8.
-            for (int i = 0; i < 4; i++)
-                if (comp->edge(i)->degree() == 8)
+            for (int t = 0; t < 4; ++t)
+                if (comp->edge(t)->degree() == 8)
                     return new SnapPeaCensusTri(SEC_5, 129);
             return 0;
         }

@@ -80,10 +80,9 @@ MatrixInt* NSVectorQuadOctClosed::makeMatchingEquations(
     // equation.
     Perm<4> perm;
     unsigned long tetIndex;
-    for (Triangulation<3>::EdgeIterator eit = triangulation->edges().begin();
-            eit != triangulation->edges().end(); eit++) {
-        if (! (*eit)->isBoundary()) {
-            for (auto& emb : **eit) {
+    for (Edge<3>* e : triangulation->edges()) {
+        if (! e->isBoundary()) {
+            for (auto& emb : *e) {
                 tetIndex = emb.tetrahedron()->index();
                 perm = emb.vertices();
                 ans->entry(row, 6 * tetIndex +

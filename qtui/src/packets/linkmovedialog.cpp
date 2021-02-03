@@ -236,7 +236,7 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
 
     box1up = new QComboBox(this);
     box1up->setMinimumContentsLength(30);
-    box1up->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    box1up->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     box1up->setWhatsThis(tr("Select how to add a new twist, by "
         "choosing (i) in which strand to insert the new twist; "
         "(ii) on which the side of the strand the twist should appear (as "
@@ -246,7 +246,7 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
     layout->addWidget(box1up, 0, 1);
     box1down = new QComboBox(this);
     box1down->setMinimumContentsLength(30);
-    box1down->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    box1down->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     box1down->setWhatsThis(tr("Select which twist to undo, by choosing the "
         "crossing at which the twist appears."));
     layout->addWidget(box1down, 1, 1);
@@ -257,7 +257,7 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
     sublayout->addWidget(new QLabel(tr("Under:")), 1, 0);
     box2upOver = new QComboBox(this);
     box2upOver->setMinimumContentsLength(20);
-    box2upOver->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    box2upOver->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     box2upOver->setWhatsThis(tr("Select how to pass one strand over "
         "another.  First you should use this drop-down box to "
         "choose (i) which strand will be passed <i>over</i> the other "
@@ -272,7 +272,7 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
     sublayout->addWidget(box2upOver, 0, 1);
     box2upUnder = new QComboBox(this);
     box2upUnder->setMinimumContentsLength(20);
-    box2upUnder->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    box2upUnder->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     box2upUnder->setWhatsThis(tr("Select how to pass one strand over "
         "another.  First you should use the drop-down box above this to "
         "choose (i) which strand will be passed <i>over</i> the other "
@@ -288,13 +288,13 @@ LinkMoveDialog::LinkMoveDialog(QWidget* parent, regina::Link* useLink) :
     layout->addLayout(sublayout, 2, 1);
     box2down = new QComboBox(this);
     box2down->setMinimumContentsLength(30);
-    box2down->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    box2down->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     box2down->setWhatsThis(tr("Select which two strands to pull apart, "
         "by choosing the two adjacent crossings at which they meet."));
     layout->addWidget(box2down, 3, 1);
     box3 = new QComboBox(this);
     box3->setMinimumContentsLength(30);
-    box3->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    box3->setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     box3->setWhatsThis(tr("Select which triangular region to "
         "reorganise, by choosing the three crossings that surround it."));
     layout->addWidget(box3, 4, 1);

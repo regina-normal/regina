@@ -51,10 +51,8 @@ MatrixInt* NSVectorOrientedQuad::makeMatchingEquations(
     size_t nCoords = 6 * triangulation->size();
     // Two equation per non-boundary edge.
     long nEquations = 2*long(triangulation->countEdges());
-    for (Triangulation<3>::BoundaryComponentIterator bit = triangulation->
-            boundaryComponents().begin();
-            bit != triangulation->boundaryComponents().end(); bit++)
-        nEquations -= 2*(*bit)->countEdges();
+    for (BoundaryComponent<3>* bc : triangulation->boundaryComponents())
+        nEquations -= 2*bc->countEdges();
 
     MatrixInt* ans = new MatrixInt(nEquations, nCoords);
     size_t row = 0;
@@ -64,10 +62,9 @@ MatrixInt* NSVectorOrientedQuad::makeMatchingEquations(
     Perm<4> perm;
     size_t tetIndex;
     bool flip;
-    for (Triangulation<3>::EdgeIterator eit = triangulation->edges().begin();
-            eit != triangulation->edges().end(); eit++) {
-        if (! (*eit)->isBoundary()) {
-            for (auto& emb : **eit) {
+    for (Edge<3>* e : triangulation->edges()) {
+        if (! e->isBoundary()) {
+            for (auto& emb : *e) {
                 tetIndex = emb.tetrahedron()->index();
                 perm = emb.vertices();
 
@@ -176,14 +173,13 @@ NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
         Perm<4> tetPerm, adjPerm;
         size_t tetIndex, adjIndex;
         LargeInteger expect;
-        for (Triangulation<3>::VertexIterator vit = triang->vertices().begin();
-                vit != triang->vertices().end(); vit++) {
+        for (Vertex<3>* v : triang->vertices()) {
             usedEdges[0].clear(); usedEdges[1].clear();
             examine.clear();
             broken = false;
 
             // Pick some triangular disc and set it to zero.
-            const VertexEmbedding<3>& vemb = (*vit)->front();
+            const VertexEmbedding<3>& vemb = v->front();
             row = 14 * vemb.tetrahedron()->index() + 2 * vemb.vertex() + orient;
             ans->setElement(row, LargeInteger::zero);
 
@@ -318,7 +314,7 @@ NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
             // If the matching equations were broken, set every coordinate
             // to infinity.  Otherwise subtract min from every coordinate to
             // make the values as small as possible.
-            for (auto& emb : **vit) {
+            for (auto& emb : *v) {
                 row = 14 * emb.tetrahedron()->index()
                     + 2 * emb.vertex() + orient;
                 if (broken)

@@ -136,23 +136,20 @@ static NSMutableCharacterSet* eulerSeparators;
 + (regina::BoolSet)setFromSelection:(long)selection
 {
     switch (selection) {
-        case 0: return regina::BoolSet::sBoth;
-        case 1: return regina::BoolSet::sTrue;
-        case 2: return regina::BoolSet::sFalse;
-        default: return regina::BoolSet::sNone;
+        case 0: return regina::BoolSet(true, true);
+        case 1: return true;
+        case 2: return false;
+        default: return regina::BoolSet();
     }
 }
 
-+ (long)selectionFromSet:(const regina::BoolSet&)set
++ (long)selectionFromSet:(regina::BoolSet)set
 {
-    if (set == regina::BoolSet::sBoth)
-        return 0;
-    if (set == regina::BoolSet::sTrue)
+    if (set == true)
         return 1;
-    if (set == regina::BoolSet::sFalse)
+    if (set == false)
         return 2;
-    // Hmm?
-    NSLog(@"Filter-by-properties: some property was set to sNone, changing to sBoth.");
+    // Regardless of whether we have {} or {true, false}, treat it as {true, false}.
     return 0;
 }
 

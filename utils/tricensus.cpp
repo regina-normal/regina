@@ -101,7 +101,7 @@ int runCensus();
 template <>
 inline void findAllPerms<2>(const regina::FacetPairing<2>* p,
         const regina::FacetPairing<2>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, regina::Packet* dest) {
+        bool finiteOnly, int /* usePurge */, regina::Packet* dest) {
     regina::GluingPermSearcher<2>::findAllPerms(p, autos,
         orientableOnly, foundGluingPerms<2>, dest);
 }
@@ -114,9 +114,9 @@ inline bool mightBeMinimal<2>(regina::Triangulation<2>* tri) {
 template <>
 inline void findAllPerms<3>(const regina::FacetPairing<3>* p,
         const regina::FacetPairing<3>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int whichPurge, regina::Packet* dest) {
+        bool finiteOnly, int usePurge, regina::Packet* dest) {
     regina::GluingPermSearcher<3>::findAllPerms(p, autos,
-        orientableOnly, finiteOnly, whichPurge, foundGluingPerms<3>, dest);
+        orientableOnly, finiteOnly, usePurge, foundGluingPerms<3>, dest);
 }
 
 template <>
@@ -127,7 +127,7 @@ inline bool mightBeMinimal<3>(regina::Triangulation<3>* tri) {
 template <>
 inline void findAllPerms<4>(const regina::FacetPairing<4>* p,
         const regina::FacetPairing<4>::IsoList* autos, bool orientableOnly,
-        bool finiteOnly, int /* whichPurge */, regina::Packet* dest) {
+        bool finiteOnly, int /* usePurge */, regina::Packet* dest) {
     regina::GluingPermSearcher<4>::findAllPerms(p, autos,
         orientableOnly, finiteOnly, foundGluingPerms<4>, dest);
 }
@@ -251,9 +251,9 @@ regina::Text* parameterPacket() {
         descStream << nTet << ' ' <<
             (nTet == 1 ? WORD_tetrahedron : WORD_tetrahedra) << "\n";
 
-        if (boundary == regina::BoolSet::sTrue)
+        if (boundary == true)
             descStream << "Boundary " << WORD_faces << " only\n";
-        else if (boundary == regina::BoolSet::sFalse)
+        else if (boundary == false)
             descStream << "No boundary " << WORD_faces << " only\n";
         else
             descStream << "With and without boundary " << WORD_faces << "\n";
@@ -263,16 +263,16 @@ regina::Text* parameterPacket() {
                 " boundary " << WORD_faces << "\n";
     }
 
-    if (finiteness == regina::BoolSet::sTrue)
+    if (finiteness == true)
         descStream << "Finite only\n";
-    else if (finiteness == regina::BoolSet::sFalse)
+    else if (finiteness == false)
         descStream << "Ideal only\n";
     else
         descStream << "Finite and ideal\n";
 
-    if (orientability == regina::BoolSet::sTrue)
+    if (orientability == true)
         descStream << "Orientable only\n";
-    else if (orientability == regina::BoolSet::sFalse)
+    else if (orientability == false)
         descStream << "Non-orientable only\n";
     else
         descStream << "Orientable and non-orientable\n";

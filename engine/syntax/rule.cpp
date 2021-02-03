@@ -45,8 +45,7 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 Rule::Rule() :
     m_column(-1),
@@ -356,4 +355,4 @@ bool WordDetect::doLoad(xmlTextReaderPtr reader)
     return !m_word.empty();
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax

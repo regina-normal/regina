@@ -33,16 +33,14 @@
 #include "triangulation/detail/boundarycomponent-impl.h"
 #include "triangulation/generic.h"
 
-namespace regina { namespace detail {
+namespace regina::detail {
 
 // Don't cascade instantiations all the way down through the dimensions...
-extern template REGINA_API BoundaryComponentStorage<9, false, false, true>::
-    ~BoundaryComponentStorage();
+extern template REGINA_API BoundaryComponentBase<9>::~BoundaryComponentBase();
 
-template REGINA_API BoundaryComponentStorage<10, false, false, true>::
-    ~BoundaryComponentStorage();
+template REGINA_API BoundaryComponentBase<10>::~BoundaryComponentBase();
 
 template REGINA_API Triangulation<9>*
-    BoundaryComponentStorage<10, false, false, true>::buildRealBoundary() const;
+    BoundaryComponentBase<10>::buildRealBoundary() const;
 
-} }
+} // namespace regina::detail

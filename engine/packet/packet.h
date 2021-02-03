@@ -78,8 +78,8 @@ class XMLTreeResolver;
  * At a bare minimum, each specialisation of this template must provide:
  *
  * - a typedef \a Class that represents the corresponding Packet subclass;
- * - a static function name() that returns a C-style string giving the
- *   human-readable name of the packet type.
+ * - a static constexpr member <tt>const char* name</tt>, which gives
+ *   the human-readable name of the packet type.
  *
  * \ifacespython Not present.
  *
@@ -119,7 +119,7 @@ struct PacketInfo;
             return id; \
         } \
         inline virtual std::string typeName() const override { \
-            return PacketInfo<id>::name(); \
+            return PacketInfo<id>::name; \
         }
 
 /**
@@ -2517,6 +2517,12 @@ inline PacketDescendants::PacketDescendants(const Packet* subtree) :
         subtree_(subtree) {
 }
 
+inline void PacketListener::packetToBeChanged(Packet*) {
+}
+
+inline void PacketListener::packetWasChanged(Packet*) {
+}
+
 // Inline functions for Packet
 
 inline Packet::Packet(Packet* parent) :
@@ -2764,12 +2770,6 @@ inline bool operator != (const Packet* packet, PacketShell shell) {
 }
 
 // Inline functions for PacketListener
-
-inline void PacketListener::packetToBeChanged(Packet*) {
-}
-
-inline void PacketListener::packetWasChanged(Packet*) {
-}
 
 inline void PacketListener::packetToBeRenamed(Packet*) {
 }

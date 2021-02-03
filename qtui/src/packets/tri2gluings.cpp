@@ -552,7 +552,7 @@ void Tri2GluingsUI::removeSelectedTris() {
         tri->removeAllSimplices();
     else {
         regina::Packet::ChangeEventSpan span(tri);
-        for (int i = last; i >= first; --i)
+        for (i = last; i >= first; --i)
             tri->removeSimplexAt(i);
     }
 }

@@ -559,7 +559,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * variable \c x will be used.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
-            const char* variable = 0) const;
+            const char* variable = nullptr) const;
 
         /**
          * Returns this polynomial as a human-readable string, using the

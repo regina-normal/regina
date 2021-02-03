@@ -112,7 +112,7 @@ namespace Coordinates {
      * well without it.
      */
     QString columnName(regina::NormalCoords coordSystem,
-        size_t whichCoord, regina::Triangulation<3>* tri = 0);
+        size_t whichCoord, regina::Triangulation<3>* tri = nullptr);
 
     /**
      * Return a column header for the given coordinate of the given
@@ -123,7 +123,7 @@ namespace Coordinates {
      * well without it.
      */
     QString columnName(regina::HyperCoords coordSystem,
-        size_t whichCoord, regina::Triangulation<4>* tri = 0);
+        size_t whichCoord, regina::Triangulation<4>* tri = nullptr);
 
     /**
      * Return a column description for the given coordinate of the given
@@ -134,7 +134,7 @@ namespace Coordinates {
      * well without it.
      */
     QString columnDesc(regina::NormalCoords coordSystem, size_t whichCoord,
-        const QObject *context, regina::Triangulation<3>* tri = 0);
+        const QObject *context, regina::Triangulation<3>* tri = nullptr);
 
     /**
      * Return a column description for the given coordinate of the given
@@ -145,7 +145,7 @@ namespace Coordinates {
      * well without it.
      */
     QString columnDesc(regina::HyperCoords coordSystem, size_t whichCoord,
-        const QObject *context, regina::Triangulation<4>* tri = 0);
+        const QObject *context, regina::Triangulation<4>* tri = nullptr);
 
     /**
      * Return a particular coordinate of a normal surface in the given

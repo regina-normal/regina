@@ -59,8 +59,6 @@ class PacketWindow : public QMainWindow {
         ReginaMain* mainWindow;
             /**< The main window for the corresponding data file. */
 
-        QAction* packetMenu;
-            /**< The menu of actions for this packet type. */
         QAction* windowAction;
             /**< The "window menu" item that refers to this specific window.
                  This action is owned by the window itself, and will be

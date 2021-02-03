@@ -64,9 +64,7 @@ class XMLAngleStructuresReader;
 template <>
 struct PacketInfo<PACKET_ANGLESTRUCTURES> {
     typedef AngleStructures Class;
-    inline static const char* name() {
-        return "Angle Structure List";
-    }
+    static constexpr const char* name = "Angle Structure List";
 };
 #endif
 

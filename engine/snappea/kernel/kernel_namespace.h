@@ -17,4 +17,4 @@
 #endif
 #endif
 
-namespace regina { namespace snappea {
+namespace regina::snappea {

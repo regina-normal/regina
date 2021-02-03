@@ -41,8 +41,7 @@
 
 #include "regina-core.h"
 
-namespace regina {
-namespace alias {
+namespace regina::alias {
 
 /**
  * \weakgroup alias
@@ -161,7 +160,7 @@ class FaceNumber<Derived, 4> {
 
 /*@}*/
 
-} } // namespace regina::alias
+} // namespace regina::alias
 
 #endif
 

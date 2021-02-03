@@ -62,35 +62,35 @@ class Census4Test : public CppUnit::TestFixture {
         void rawCounts() {
             unsigned nAll[] = { 1, 0, 23, 0, 8656, 0 };
             rawCountsCompare(1, 3, nAll, "closed/ideal",
-                BoolSet::sBoth, BoolSet::sBoth, BoolSet::sFalse, 0);
+                BoolSet(true, true), BoolSet(true, true), false, 0);
 
             unsigned nOrientable[] = { 1, 0, 15, 0, 4150, 0 };
             rawCountsCompare(1, 3, nOrientable, "closed/ideal",
-                BoolSet::sBoth, BoolSet::sTrue, BoolSet::sFalse, 0);
+                BoolSet(true, true), true, false, 0);
         }
 
         void rawCountsCompact() {
             unsigned nAll[] = { 1, 0, 10, 0 };
             rawCountsCompare(1, 3, nAll, "closed compact",
-                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sFalse, 0);
+                true, BoolSet(true, true), false, 0);
 
             unsigned nOrientable[] = { 1, 0, 8, 0 };
             rawCountsCompare(1, 3, nOrientable, "closed compact orbl",
-                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sFalse, 0);
+                true, true, false, 0);
         }
 
         void rawCountsBounded() {
             unsigned nAll[] = { 1, 7, 51, 939, 25265 };
             rawCountsCompare(1, 2, nAll, "bounded",
-                BoolSet::sBoth, BoolSet::sBoth, BoolSet::sTrue, -1);
+                BoolSet(true, true), BoolSet(true, true), true, -1);
 
             unsigned nCompact[] = { 1, 5, 38, 782 };
             rawCountsCompare(1, 2, nCompact, "bounded compact",
-                BoolSet::sTrue, BoolSet::sBoth, BoolSet::sTrue, -1);
+                true, BoolSet(true, true), true, -1);
 
             unsigned nOrientable[] = { 1, 4, 27, 457 };
             rawCountsCompare(1, 2, nOrientable, "bounded compact orbl",
-                BoolSet::sTrue, BoolSet::sTrue, BoolSet::sTrue, -1);
+                true, true, true, -1);
         }
 
         struct CensusSpec {
@@ -108,14 +108,10 @@ class Census4Test : public CppUnit::TestFixture {
                 CensusSpec* s = static_cast<CensusSpec*>(spec);
                 Triangulation<4>* tri = perms->triangulate();
                 if (tri->isValid() &&
-                        (! (s->orbl_ == BoolSet::sTrue &&
-                            ! tri->isOrientable())) &&
-                        (! (s->orbl_ == BoolSet::sFalse &&
-                            tri->isOrientable())) &&
-                        (! (s->finite_ == BoolSet::sTrue &&
-                            tri->isIdeal())) &&
-                        (! (s->finite_ == BoolSet::sFalse &&
-                            ! tri->isIdeal())))
+                        (! (s->orbl_ == true && ! tri->isOrientable())) &&
+                        (! (s->orbl_ == false && tri->isOrientable())) &&
+                        (! (s->finite_ == true && tri->isIdeal())) &&
+                        (! (s->finite_ == false && ! tri->isIdeal())))
                     ++s->count_;
                 delete tri;
             }

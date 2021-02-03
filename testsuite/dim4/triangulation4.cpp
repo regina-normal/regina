@@ -622,6 +622,75 @@ class Triangulation4Test : public TriangulationTest<4> {
             }
         }
 
+        void verifyBoundaryEuler(const Triangulation<4>& tri,
+                std::initializer_list<int> expect) {
+            // The argument expect holds the Euler characteristics we would
+            // expect after triangulating the boundary components.
+
+            if (tri.countBoundaryComponents() != expect.size()) {
+                std::ostringstream msg;
+                msg << "Triangulation " << tri.label()
+                    << " has " << tri.countBoundaryComponents()
+                    << " boundary components instead of the expected "
+                    << expect.size() << ".";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            size_t i = 0;
+            for (auto eit = expect.begin(); eit != expect.end(); ++i, ++eit) {
+                BoundaryComponent<4>* bc = tri.boundaryComponent(i);
+
+                // Do we have any pinched vertices or edges?
+                // If so, these interfere with the Euler characteristic count.
+                long vPinch = 0;
+                long ePinch = 0;
+                if (bc->isReal()) {
+                    for (auto v : bc->vertices())
+                        if (! v->isValid()) {
+                            // Beware: the vertex *link* is a 3-manifold
+                            // triangulation, and could itself have both real
+                            // and ideal boundary components.
+                            long realBdries = 0;
+                            for (auto p : v->buildLink()->boundaryComponents())
+                                if (p->isReal())
+                                    ++realBdries;
+                            if (realBdries > 1)
+                                vPinch += (realBdries - 1);
+                        }
+                    for (auto e : bc->edges())
+                        if (! e->isValid()) {
+                            long punctures = e->buildLink()->
+                                countBoundaryComponents();
+                            if (punctures > 1)
+                                ePinch += (punctures - 1);
+                        }
+                }
+
+                long foundEuler = bc->eulerChar();
+                long triEuler = bc->build()->eulerCharTri();
+
+                if (foundEuler != *eit - vPinch + ePinch) {
+                    std::ostringstream msg;
+                    msg << "Boundary component " << i
+                        << " of triangulation " << tri.label()
+                        << " reports Euler characteristic " << foundEuler
+                        << " instead of the expected "
+                        << (*eit - vPinch + ePinch) << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (triEuler != *eit) {
+                    std::ostringstream msg;
+                    msg << "Triangulated boundary component " << i
+                        << " of triangulation " << tri.label()
+                        << " has Euler characteristic " << triEuler
+                        << " instead of the expected "
+                        << *eit << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
         void boundaryComponents() {
             verifyBoundaryCount(empty, 0);
             verifyBoundaryCount(sphere, 0);
@@ -631,28 +700,38 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryCount(rp4, 0);
             verifyBoundaryCount(twistedSphereBundle, 0);
             verifyBoundaryCount(ball, 1);
+            verifyBoundaryEuler(ball, { 0 });
             verifyBoundaryTri(ball, 0, "S3");
             verifyBoundaryCount(ball_foldedPent, 1);
+            verifyBoundaryEuler(ball_foldedPent, { 0 });
             verifyBoundaryTri(ball_foldedPent, 0, "S3");
             verifyBoundaryCount(ball_singleConeS3, 1);
+            verifyBoundaryEuler(ball_singleConeS3, { 0 });
             verifyBoundaryTri(ball_singleConeS3, 0, "S3");
             verifyBoundaryCount(ball_layerAndFold, 1);
+            verifyBoundaryEuler(ball_layerAndFold, { 0 });
             verifyBoundaryTri(ball_layerAndFold, 0, "S3");
             verifyBoundaryCount(ballBundle, 1);
+            verifyBoundaryEuler(ballBundle, { 0 });
             verifyBoundaryTri(ballBundle, 0, "S2 x S1");
             verifyBoundaryCount(twistedBallBundle, 1);
+            verifyBoundaryEuler(twistedBallBundle, { 0 });
             verifyBoundaryTri(twistedBallBundle, 0, "S2 x~ S1");
             verifyBoundaryCount(idealPoincareProduct, 0, 2);
+            verifyBoundaryEuler(idealPoincareProduct, { 0, 0 });
             verifyBoundaryTri(idealPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(idealPoincareProduct, 1, "S3/P120");
             verifyBoundaryCount(idealCappellShaneson, 0, 1);
+            verifyBoundaryEuler(idealCappellShaneson, { 0 });
             verifyBoundaryTri(idealCappellShaneson, 0, "S2 x S1");
             verifyBoundaryCount(mixedPoincareProduct, 1, 1);
+            verifyBoundaryEuler(mixedPoincareProduct, { 0, 0 });
             verifyBoundaryTri(mixedPoincareProduct, 0, "S3/P120");
             verifyBoundaryTri(mixedPoincareProduct, 1, "S3/P120");
             verifyBoundaryCount(idealFigEightProduct, 0, 0, 3);
             // Boundary 0 of idealFigEightProduct should be the
             // suspension of a torus.  I think.
+            verifyBoundaryEuler(idealFigEightProduct, { 2, 1, 1 });
             verifyBoundaryTri(idealFigEightProduct, 0,
                 "<unrecognised triangulation>");
             verifyBoundaryH1(idealFigEightProduct, 0, "2 Z");
@@ -661,6 +740,7 @@ class Triangulation4Test : public TriangulationTest<4> {
             verifyBoundaryTri(idealFigEightProduct, 2,
                 "Figure eight knot complement");
             verifyBoundaryCount(mixedFigEightProduct, 1, 0, 1);
+            verifyBoundaryEuler(mixedFigEightProduct, { 1, 1 });
             verifyBoundaryTri(mixedFigEightProduct, 0,
                 "Figure eight knot complement");
             verifyBoundaryTri(mixedFigEightProduct, 1,
@@ -669,6 +749,9 @@ class Triangulation4Test : public TriangulationTest<4> {
             // I *think* the links of the two invalid vertices for
             // pillow_twoCycle are (RP2 x I), but with one RP2 cusp and
             // one invalid edge (as opposed to two RP2 cusps).
+            // Think of a triangular pillow with its two triangular
+            // faces glued together via a reflection.
+            verifyBoundaryEuler(pillow_twoCycle, { 0, 0 });
             verifyBoundaryTri(pillow_twoCycle, 0,
                 "<unrecognised triangulation>", true);
             verifyBoundaryH1(pillow_twoCycle, 0, "Z_2");
@@ -676,6 +759,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                 "<unrecognised triangulation>", true);
             verifyBoundaryH1(pillow_twoCycle, 1, "Z_2");
             verifyBoundaryCount(pillow_threeCycle, 0, 1);
+            verifyBoundaryEuler(pillow_threeCycle, { 0 });
             verifyBoundaryTri(pillow_threeCycle, 0, "L(3,1)");
             verifyBoundaryCount(pillow_fourCycle, 0);
         }

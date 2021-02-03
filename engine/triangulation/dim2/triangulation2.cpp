@@ -137,19 +137,18 @@ void Triangulation<2>::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
     // Write the triangle gluings.
-    TriangleIterator it;
     Triangle<2>* adjTri;
     int edge;
 
     out << "  <triangles ntriangles=\"" << simplices_.size() << "\">\n";
-    for (it = simplices_.begin(); it != simplices_.end(); ++it) {
+    for (Triangle<2>* t : simplices_) {
         out << "    <triangle desc=\"" <<
-            xmlEncodeSpecialChars((*it)->description()) << "\"> ";
+            xmlEncodeSpecialChars(t->description()) << "\"> ";
         for (edge = 0; edge < 3; ++edge) {
-            adjTri = (*it)->adjacentTriangle(edge);
+            adjTri = t->adjacentTriangle(edge);
             if (adjTri) {
                 out << adjTri->index() << ' '
-                    << static_cast<int>((*it)->
+                    << static_cast<int>(t->
                         adjacentGluing(edge).permCode()) << ' ';
             } else
                 out << "-1 -1 ";

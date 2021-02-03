@@ -40,7 +40,7 @@ namespace regina {
 namespace {
     // Since legacy coordinate systems don't appear in the coordinate system
     // registry, give them a consistent name here.
-    const char* AN_LEGACY_NAME =
+    constexpr const char* AN_LEGACY_NAME =
         "Legacy standard almost normal (pruned tri-quad-oct)";
 }
 
@@ -149,7 +149,7 @@ bool NormalSurfaces::allowsOriented() const {
 namespace {
     struct NameFunction : public Returns<const char*> {
         template <typename Coords>
-        inline const char* operator() () { return Coords::name(); }
+        inline const char* operator() () { return Coords::name; }
     };
 }
 

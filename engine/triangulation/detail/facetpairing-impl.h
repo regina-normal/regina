@@ -51,8 +51,7 @@
 #include "maths/perm.h"
 #include "utilities/stringutils.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 template <int dim>
 FacetPairingBase<dim>::FacetPairingBase(
@@ -557,7 +556,7 @@ template <int dim>
 void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
         int nBdryFacets, Use use, void* useArgs) {
     // Bail if it's obvious that nothing will happen.
-    if (boundary == BoolSet::sNone || size_ == 0) {
+    if (boundary == BoolSet() || size_ == 0) {
         use(0, 0, useArgs);
         return;
     }
@@ -802,6 +801,6 @@ void FacetPairingBase<dim>::enumerateInternal(BoolSet boundary,
     return;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

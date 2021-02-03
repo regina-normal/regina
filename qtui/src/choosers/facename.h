@@ -49,13 +49,13 @@ struct FaceName {
      * This function is specialised for dimensions <= 4, and (for the
      * time being) is left undefined for dimensions > 5.
      */
-    static const char* upper();
+    static constexpr const char* upper();
 };
 
-template <> inline const char* FaceName<0>::upper() { return "Vertex"; }
-template <> inline const char* FaceName<1>::upper() { return "Edge"; }
-template <> inline const char* FaceName<2>::upper() { return "Triangle"; }
-template <> inline const char* FaceName<3>::upper() { return "Tetrahedron"; }
-template <> inline const char* FaceName<4>::upper() { return "Pentachoron"; }
+template <> inline constexpr const char* FaceName<0>::upper() { return "Vertex"; }
+template <> inline constexpr const char* FaceName<1>::upper() { return "Edge"; }
+template <> inline constexpr const char* FaceName<2>::upper() { return "Triangle"; }
+template <> inline constexpr const char* FaceName<3>::upper() { return "Tetrahedron"; }
+template <> inline constexpr const char* FaceName<4>::upper() { return "Pentachoron"; }
 
 #endif

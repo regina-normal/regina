@@ -1165,16 +1165,12 @@ Triangulation<3>* NormalSurface::cutAlong() const {
     for (i = 0; i < nTet; ++i)
         sets[i] = new TetBlockSet(this, i, ans);
 
-    Triangulation<3>::TriangleIterator fit;
-    Triangle<3>* f;
     unsigned long tet0, tet1;
     int face0, face1;
     int fromVertex0, fromVertex1;
     Perm<4> gluing;
     unsigned long quadBlocks;
-    for (fit = triangulation()->triangles().begin();
-            fit != triangulation()->triangles().end(); ++fit) {
-        f = *fit;
+    for (Triangle<3>* f : triangulation()->triangles()) {
         if (f->isBoundary())
             continue;
 
@@ -1308,10 +1304,8 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
     // Count the number of boundary spheres that our triangulation has
     // to begin with.
     unsigned long origSphereCount = 0;
-    Triangulation<3>::BoundaryComponentIterator bit;
-    for (bit = triangulation()->boundaryComponents().begin();
-            bit != triangulation()->boundaryComponents().end(); ++bit)
-        if ((*bit)->eulerChar() == 2)
+    for (BoundaryComponent<3>* bc : triangulation()->boundaryComponents())
+        if (bc->eulerChar() == 2)
             ++origSphereCount;
 
     // Now cut along the disc, and see if we get an extra sphere as a
@@ -1329,9 +1323,8 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
     }
 
     unsigned long newSphereCount = 0;
-    for (bit = cut->boundaryComponents().begin();
-            bit != cut->boundaryComponents().end(); ++bit)
-        if ((*bit)->eulerChar() == 2)
+    for (BoundaryComponent<3>* bc : cut->boundaryComponents())
+        if (bc->eulerChar() == 2)
             ++newSphereCount;
 
     if (newSphereCount == origSphereCount)
@@ -1366,7 +1359,7 @@ namespace {
                     found_(false) {
                 t_[0] = t0;
                 t_[1] = t1;
-                currSearch_[0] = currSearch_[1] = 0;
+                currSearch_[0] = currSearch_[1] = nullptr;
             }
 
             inline bool hasFound() {
@@ -1375,8 +1368,12 @@ namespace {
             }
 
             inline void markFound() {
-                std::lock_guard<std::mutex> lock(foundMutex_);
+                std::lock_guard<std::mutex> flock(foundMutex_);
                 found_ = true;
+                // I believe there is no deadlock here, since no thread
+                // will hold searchMutex_ and *then* ask for foundMutex_.
+                // However, I also think that we can drop the lock on
+                // foundMutex_ at this point.  This should be checked and fixed.
                 for (int i = 0; i < 2; ++i)
                     if (t_[i]) {
                         std::lock_guard<std::mutex> lock(searchMutex_[i]);
@@ -1464,7 +1461,7 @@ namespace {
                     found = search.find();
                     {
                         std::lock_guard<std::mutex> lock(searchMutex_[side]);
-                        currSearch_[side] = 0;
+                        currSearch_[side] = nullptr;
                     }
 
                     if (hasFound()) {

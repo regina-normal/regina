@@ -46,8 +46,7 @@
 
 #include "triangulation/generic/triangulation.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 template <int dim>
 void TriangulationBase<dim>::calculateSkeleton() {
@@ -132,10 +131,12 @@ void TriangulationBase<dim>::calculateSkeleton() {
     delete[] queue;
 
     // -----------------------------------------------------------------
-    // Faces of all dimensions
+    // Faces of all dimensions 0, ..., dim-1
     // -----------------------------------------------------------------
 
-    FaceCalculator<dim, dim - 1, 1>::calculate(*this);
+    std::apply([=](auto&&... kFaces) {
+        (calculateFaces<subdimOf<decltype(kFaces)>()>(), ...);
+    }, this->faces_);
 
     // -----------------------------------------------------------------
     // Real boundary components
@@ -145,246 +146,254 @@ void TriangulationBase<dim>::calculateSkeleton() {
 }
 
 template <int dim>
-void TriangulationBase<dim>::calculateSkeletonCodim1() {
+template <int subdim>
+void TriangulationBase<dim>::calculateFaces() {
+    // Clear out all subdim-faces of all simplices.
+    // These simplex-based arrays will be our markers for what faces
+    // have or have not been seen yet.
+    //
     for (auto s : simplices_)
-        s->SimplexFaces<dim, dim-1>::clear();
+        std::get<subdim>(s->faces_).fill(nullptr);
 
-    Simplex<dim> *adj;
-    Face<dim, dim-1>* f;
-    int facet, adjFacet;
+    if constexpr (subdim == dim - 1) {
+        // Faces of codimension 1
+        // ----------------------
 
-    // We process the facets of each simplex in lexicographical order,
-    // according to the truncated permutation labels that are displayed to
-    // the user.  This means working through the faces of each simplex
-    // in *reverse*.
-    for (auto s : simplices_) {
-        for (facet = dim; facet >= 0; --facet) {
-            // Have we already checked out this facet from the other side?
-            if (s->SimplexFaces<dim, dim-1>::face_[facet])
-                continue;
+        Simplex<dim> *adj;
+        Face<dim, dim-1>* f;
+        int facet, adjFacet;
 
-            // A new face!
-            f = new Face<dim, dim-1>(s->component_);
-            FaceList<dim, dim-1>::push_back(f);
+        // We process the facets of each simplex in lexicographical order,
+        // according to the truncated permutation labels that are displayed to
+        // the user.  This means working through the faces of each simplex
+        // in *reverse*.
+        for (auto s : simplices_) {
+            for (facet = dim; facet >= 0; --facet) {
+                // Have we already checked out this facet from the other side?
+                if (std::get<dim-1>(s->faces_)[facet])
+                    continue;
 
-            s->SimplexFaces<dim, dim-1>::face_[facet] = f;
-            s->SimplexFaces<dim, dim-1>::mapping_[facet] =
-                Face<dim, dim-1>::ordering(facet);
+                // A new face!
+                f = new Face<dim, dim-1>(s->component_);
+                std::get<dim - 1>(this->faces_).push_back(f);
 
-            adj = s->adjacentSimplex(facet);
-            if (adj) {
-                // We have an adjacent simplex.
-                adjFacet = s->adjacentFacet(facet);
+                std::get<dim-1>(s->faces_)[facet] = f;
+                std::get<dim-1>(s->mappings_)[facet] =
+                    Face<dim, dim-1>::ordering(facet);
 
-                adj->SimplexFaces<dim, dim-1>::face_[adjFacet] = f;
-                adj->SimplexFaces<dim, dim-1>::mapping_[adjFacet] =
-                    s->adjacentGluing(facet) *
-                    s->SimplexFaces<dim, dim-1>::mapping_[facet];
+                adj = s->adjacentSimplex(facet);
+                if (adj) {
+                    // We have an adjacent simplex.
+                    adjFacet = s->adjacentFacet(facet);
 
-                f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
-                f->push_back(FaceEmbedding<dim, dim-1>(adj, adjFacet));
-            } else {
-                // This is a boundary facet.
-                f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
-            }
-        }
-    }
-}
+                    std::get<dim-1>(adj->faces_)[adjFacet] = f;
+                    std::get<dim-1>(adj->mappings_)[adjFacet] =
+                        s->adjacentGluing(facet) *
+                        std::get<dim-1>(s->mappings_)[facet];
 
-template <int dim>
-void TriangulationBase<dim>::calculateSkeletonCodim2() {
-    for (auto s : simplices_)
-        s->SimplexFaces<dim, dim-2>::clear();
-
-    int start;
-    Face<dim, dim-2>* f;
-    Simplex<dim> *simp, *adj;
-    int adjFace;
-    Perm<dim+1> map, adjMap;
-    int dir, exitFacet;
-    for (auto s : simplices_) {
-        for (start = 0; start < FaceNumbering<dim, dim-2>::nFaces; ++start) {
-            if (s->SimplexFaces<dim, dim-2>::face_[start])
-                continue;
-
-            f = new Face<dim, dim-2>(s->component_);
-            FaceList<dim, dim-2>::push_back(f);
-
-            // Since the link of a codimension-2-face is a path or loop, the
-            // depth-first search is really just a straight line in either
-            // direction.  We therefore do away with the usual stack and
-            // just keep track of the next simplex to process in the current
-            // direction.
-            s->SimplexFaces<dim, dim-2>::face_[start] = f;
-            s->SimplexFaces<dim, dim-2>::mapping_[start] =
-                Face<dim, dim-2>::ordering(start);
-            f->push_back(FaceEmbedding<dim, dim-2>(s, start));
-
-            for (dir = 0; dir < 2; ++dir) {
-                // Start at the start and walk in one particular direction.
-                simp = s;
-                map = simp->SimplexFaces<dim, dim-2>::mapping_[start];
-
-                while (true) {
-                    // Move through to the next simplex.
-                    exitFacet = map[dir == 0 ? dim - 1 : dim];
-                    adj = simp->adjacentSimplex(exitFacet);
-                    if (! adj)
-                        break;
-
-                    adjMap = simp->adjacentGluing(exitFacet) * map *
-                        Perm<dim+1>(dim - 1, dim);
-                    adjFace = Face<dim, dim-2>::faceNumber(adjMap);
-
-                    if (adj->SimplexFaces<dim, dim-2>::face_[adjFace]) {
-                        // We looped right around.
-                        if (dim > 2) {
-                            // Check that we are not mapping the face to
-                            // itself with a non-identity permutation.
-                            if (adj->SimplexFaces<dim, dim-2>::mapping_[
-                                    adjFace] != adjMap) {
-                                // You have chosen unwisely, my son.
-                                f->markBadIdentification();
-                                valid_ = s->component_->valid_ = false;
-                            }
-                        }
-                        break;
-                    }
-
-                    // We have not yet seen this face of this simplex.
-                    adj->SimplexFaces<dim, dim-2>::face_[adjFace] = f;
-                    adj->SimplexFaces<dim, dim-2>::mapping_[adjFace] =
-                        adjMap;
-
-                    if (dir == 0)
-                        f->push_back(FaceEmbedding<dim, dim-2>(
-                            adj, adjFace));
-                    else
-                        f->push_front(FaceEmbedding<dim, dim-2>(
-                            adj, adjFace));
-
-                    simp = adj;
-                    map = adjMap;
+                    f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
+                    f->push_back(FaceEmbedding<dim, dim-1>(adj, adjFacet));
+                } else {
+                    // This is a boundary facet.
+                    f->push_back(FaceEmbedding<dim, dim-1>(s, facet));
                 }
             }
         }
-    }
-}
+    } else if constexpr (subdim == dim - 2) {
+        // Faces of codimension 2
+        // ----------------------
 
-template <int dim>
-template <int subdim>
-void TriangulationBase<dim>::calculateSkeletonSubdim() {
-    static_assert(subdim < dim - 2,
-        "The generic implementation of "
-        "TriangulationBase::calculateSkeletonSubdim() should only be "
-        "used for faces of codimension > 2.");
+        int start;
+        Face<dim, dim-2>* f;
+        Simplex<dim> *simp, *adj;
+        int adjFace;
+        Perm<dim+1> map, adjMap;
+        int dir, exitFacet;
+        for (auto s : simplices_) {
+            for (start = 0; start < FaceNumbering<dim, dim-2>::nFaces;
+                    ++start) {
+                if (std::get<dim-2>(s->faces_)[start])
+                    continue;
 
-    for (auto s : simplices_)
-        s->SimplexFaces<dim, subdim>::clear();
+                f = new Face<dim, dim-2>(s->component_);
+                std::get<dim - 2>(this->faces_).push_back(f);
 
-    int start;
-    Face<dim, subdim>* f;
+                // Since the link of a codimension-2-face is a path or loop, the
+                // depth-first search is really just a straight line in either
+                // direction.  We therefore do away with the usual stack and
+                // just keep track of the next simplex to process in the current
+                // direction.
+                std::get<dim-2>(s->faces_)[start] = f;
+                std::get<dim-2>(s->mappings_)[start] =
+                    Face<dim, dim-2>::ordering(start);
+                f->push_back(FaceEmbedding<dim, dim-2>(s, start));
 
-    // The queue for our breadth-first search.
-    // We can do this using simple arrays - since each subdim-face of each
-    // simplex is pushed on at most once, the array size does not need to
-    // be very large.
-    typedef std::pair<Simplex<dim>*, int> Spec; /* (simplex, face) */
-    Spec* queue = new Spec[size() * FaceNumbering<dim, subdim>::nFaces];
-    unsigned queueStart, queueEnd;
-    unsigned pos;
+                for (dir = 0; dir < 2; ++dir) {
+                    // Start at the start and walk in one particular direction.
+                    simp = s;
+                    map = std::get<dim-2>(simp->mappings_)[start];
 
-    for (auto s : simplices_) {
-        for (start = 0; start < FaceNumbering<dim, subdim>::nFaces; ++start) {
-            if (s->SimplexFaces<dim, subdim>::face_[start])
-                continue;
+                    while (true) {
+                        // Move through to the next simplex.
+                        exitFacet = map[dir == 0 ? dim - 1 : dim];
+                        adj = simp->adjacentSimplex(exitFacet);
+                        if (! adj)
+                            break;
 
-            f = new Face<dim, subdim>(s->component_);
-            FaceList<dim, subdim>::push_back(f);
+                        adjMap = simp->adjacentGluing(exitFacet) * map *
+                            Perm<dim+1>(dim - 1, dim);
+                        adjFace = Face<dim, dim-2>::faceNumber(adjMap);
 
-            s->SimplexFaces<dim, subdim>::face_[start] = f;
-            s->SimplexFaces<dim, subdim>::mapping_[start] =
-                Face<dim, subdim>::ordering(start);
-            f->push_back(FaceEmbedding<dim, subdim>(s, start));
-
-            // Run a breadth-first search from this vertex to completely
-            // enumerate all identifications.
-            queueStart = 0;
-            queueEnd = 1;
-            queue[0].first = s;
-            queue[0].second = start;
-
-            Simplex<dim> *simp, *adj;
-            int face, adjFace;
-            Perm<dim + 1> adjMap;
-            int facet;
-
-            while (queueStart < queueEnd) {
-                simp = queue[queueStart].first;
-                face = queue[queueStart].second;
-                ++queueStart;
-
-                for (facet = 0; facet <= dim; ++facet) {
-                    if (Face<dim, subdim>::containsVertex(face, facet))
-                        continue;
-
-                    adj = simp->adjacentSimplex(facet);
-                    if (adj) {
-                        // When we choose an adjacent gluing map, throw in a
-                        // swap to preserve the "orientation" of the images
-                        // of (subdim+1),...,dim.  Note that this is only
-                        // possible if the link of the face is orientable.
-                        adjMap = simp->adjacentGluing(facet) *
-                            simp->SimplexFaces<dim, subdim>::mapping_[face] *
-                            Perm<dim + 1>(dim - 1, dim);
-                        adjFace = Face<dim, subdim>::faceNumber(adjMap);
-
-                        if (adj->SimplexFaces<dim, subdim>::face_[adjFace]) {
-                            // We have looped back around to where we've
-                            // been before.
-
-                            if (subdim > 0) {
-                                // Have we mapped the face to itself with a
-                                // non-identity permutation?
-                                // Note that we only need to check the images
-                                // p[0,...,(subdim-1)] in the permutations
-                                // below, since p[subdim] will then come for
-                                // free.
-                                for (pos = 0; pos < subdim; ++pos)
-                                    if (adj->SimplexFaces<dim, subdim>::
-                                            mapping_[adjFace][pos] !=
-                                            adjMap[pos]) {
-                                        f->markBadIdentification();
-                                        valid_ = s->component_->valid_ = false;
-                                        break;
-                                    }
+                        if (std::get<dim-2>(adj->faces_)[adjFace]) {
+                            // We looped right around.
+                            if constexpr (dim > 2) {
+                                // Check that we are not mapping the face to
+                                // itself with a non-identity permutation.
+                                if (std::get<dim-2>(adj->mappings_)[
+                                        adjFace] != adjMap) {
+                                    // You have chosen unwisely, my son.
+                                    if constexpr (standardDim(dim))
+                                        f->whyInvalid_.value |=
+                                            Face<dim, dim-2>::
+                                            INVALID_IDENTIFICATION;
+                                    else
+                                        f->valid_.value = false;
+                                    valid_ = s->component_->valid_ = false;
+                                }
                             }
+                            break;
+                        }
 
-                            if (subdim <= dim - 3) {
-                                // Is the link non-orientable?
-                                if (adjMap.sign() !=
-                                        adj->SimplexFaces<dim, subdim>::
-                                        mapping_[adjFace].sign())
-                                    f->markLinkNonorientable();
-                            }
-                        } else {
-                            adj->SimplexFaces<dim, subdim>::face_[adjFace] = f;
-                            adj->SimplexFaces<dim, subdim>::mapping_[adjFace] =
-                                adjMap;
-                            f->push_back(FaceEmbedding<dim, subdim>(
+                        // We have not yet seen this face of this simplex.
+                        std::get<dim-2>(adj->faces_)[adjFace] = f;
+                        std::get<dim-2>(adj->mappings_)[adjFace] = adjMap;
+
+                        if (dir == 0)
+                            f->push_back(FaceEmbedding<dim, dim-2>(
+                                adj, adjFace));
+                        else
+                            f->push_front(FaceEmbedding<dim, dim-2>(
                                 adj, adjFace));
 
-                            queue[queueEnd].first = adj;
-                            queue[queueEnd].second = adjFace;
-                            ++queueEnd;
+                        simp = adj;
+                        map = adjMap;
+                    }
+                }
+            }
+        }
+    } else {
+        // Faces of codimension > 2
+        // ------------------------
+
+        int start;
+        Face<dim, subdim>* f;
+        Simplex<dim> *simp, *adj;
+        int face, adjFace;
+        Perm<dim + 1> adjMap;
+        int exitFacet;
+
+        // The queue for our breadth-first search.
+        // We can do this using simple arrays - since each subdim-face of each
+        // simplex is pushed on at most once, the array size does not need to
+        // be very large.
+        typedef std::pair<Simplex<dim>*, int> Spec; /* (simplex, face) */
+        Spec* queue = new Spec[size() * FaceNumbering<dim, subdim>::nFaces];
+        unsigned queueStart, queueEnd;
+        unsigned pos;
+
+        for (auto s : simplices_) {
+            for (start = 0; start < FaceNumbering<dim, subdim>::nFaces;
+                    ++start) {
+                if (std::get<subdim>(s->faces_)[start])
+                    continue;
+
+                f = new Face<dim, subdim>(s->component_);
+                std::get<subdim>(this->faces_).push_back(f);
+
+                std::get<subdim>(s->faces_)[start] = f;
+                std::get<subdim>(s->mappings_)[start] =
+                    Face<dim, subdim>::ordering(start);
+                f->push_back(FaceEmbedding<dim, subdim>(s, start));
+
+                // Run a breadth-first search from this vertex to completely
+                // enumerate all identifications.
+                queueStart = 0;
+                queueEnd = 1;
+                queue[0].first = s;
+                queue[0].second = start;
+
+                while (queueStart < queueEnd) {
+                    simp = queue[queueStart].first;
+                    face = queue[queueStart].second;
+                    ++queueStart;
+
+                    for (exitFacet = 0; exitFacet <= dim; ++exitFacet) {
+                        if (Face<dim, subdim>::containsVertex(face, exitFacet))
+                            continue;
+
+                        adj = simp->adjacentSimplex(exitFacet);
+                        if (adj) {
+                            // When we choose an adjacent gluing map, throw in a
+                            // swap to preserve the "orientation" of the images
+                            // of (subdim+1),...,dim.  Note that this is only
+                            // possible if the link of the face is orientable.
+                            adjMap = simp->adjacentGluing(exitFacet) *
+                                std::get<subdim>(simp->mappings_)[face] *
+                                Perm<dim + 1>(dim - 1, dim);
+                            adjFace = Face<dim, subdim>::faceNumber(adjMap);
+
+                            if (std::get<subdim>(adj->faces_)[adjFace]) {
+                                // We have looped back around to where we've
+                                // been before.
+
+                                if constexpr (subdim > 0) {
+                                    // Have we mapped the face to itself with a
+                                    // non-identity permutation?
+                                    // Note that we only need to check
+                                    // p[0,...,(subdim-1)] in the permutations
+                                    // below, since p[subdim] then comes for
+                                    // free.
+                                    for (pos = 0; pos < subdim; ++pos)
+                                        if (std::get<subdim>(adj->mappings_)
+                                                [adjFace][pos] != adjMap[pos]) {
+                                            if constexpr (standardDim(dim))
+                                                f->whyInvalid_.value |=
+                                                    Face<dim, subdim>::
+                                                    INVALID_IDENTIFICATION;
+                                            else
+                                                f->valid_.value = false;
+                                            valid_ =
+                                                s->component_->valid_ = false;
+                                            break;
+                                        }
+                                }
+
+                                if constexpr (subdim <= dim - 3) {
+                                    // Is the link non-orientable?
+                                    if (adjMap.sign() !=
+                                            std::get<subdim>(adj->mappings_)
+                                            [adjFace].sign())
+                                        f->linkOrientable_.value = false;
+                                }
+                            } else {
+                                std::get<subdim>(adj->faces_)[adjFace] = f;
+                                std::get<subdim>(adj->mappings_)[adjFace] =
+                                    adjMap;
+                                f->push_back(FaceEmbedding<dim, subdim>(
+                                    adj, adjFace));
+
+                                queue[queueEnd].first = adj;
+                                queue[queueEnd].second = adjFace;
+                                ++queueEnd;
+                            }
                         }
                     }
                 }
             }
         }
-    }
 
-    delete[] queue;
+        delete[] queue;
+    }
 }
 
 template <int dim>
@@ -436,24 +445,12 @@ void TriangulationBase<dim>::calculateRealBoundary() {
             simp = facet->front().simplex();
             facetNum = facet->front().face();
 
-            // Run through all faces of dimensions 0,...,(dim-2) within facet,
+            // Run through all faces of dimensions 0,...,(dim-3) within facet,
             // and include them in this boundary component.
-
-            // Treat the vertices separately, since we can optimise the
-            // vertex number calculations in this case.
-            if (dim >= 3)
-                for (i = 0; i <= dim; ++i)
-                    if (i != facetNum) {
-                        Face<dim, 0>* vertex = simp->vertex(i);
-                        if (vertex->boundaryComponent_ != label) {
-                            vertex->boundaryComponent_ = label;
-                            label->push_back(vertex);
-                        }
-                    }
-
-            // Now for faces of dimension 1..(dim-3):
-            BoundaryComponentCalculator<dim, dim - 3>::identify(*this,
-                label, facet);
+            std::apply([=](auto&&... kFaces) {
+                (calculateBoundaryFaces<subdimOf<decltype(kFaces)>()>(
+                    label, facet), ...);
+            }, this->faces_);
 
             // Finally we process the (dim-2)-faces, and also use these to
             // locate adjacent boundary facets.
@@ -525,11 +522,35 @@ template <int dim>
 template <int subdim>
 void TriangulationBase<dim>::calculateBoundaryFaces(BoundaryComponent<dim>* bc,
         Face<dim, dim-1>* facet) {
-    for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
-        Face<dim, subdim>* f = facet->template face<subdim>(i);
-        if (f->boundaryComponent_ != bc) {
-            f->boundaryComponent_ = bc;
-            bc->push_back(f);
+    // We do not process ridges (dim-2) or facets (dim-1).
+    if constexpr (subdim <= dim - 3) {
+        if constexpr (subdim == 0) {
+            // Treat vertices separately, since we can optimise the
+            // vertex number calculations in this case.
+            Simplex<dim>* simp = facet->front().simplex();
+            int facetNum = facet->front().face();
+            for (int i = 0; i <= dim; ++i)
+                if (i != facetNum) {
+                    Vertex<dim>* v = simp->vertex(i);
+                    if (v->boundaryComponent_ != bc) {
+                        v->boundaryComponent_ = bc;
+                        // If allFaces is false, then the boundary component
+                        // only wants to know about ridges and facets.
+                        if constexpr (BoundaryComponent<dim>::allFaces)
+                            bc->push_back(v);
+                    }
+                }
+        } else {
+            for (unsigned i = 0; i < binomSmall(dim, subdim + 1); ++i) {
+                Face<dim, subdim>* f = facet->template face<subdim>(i);
+                if (f->boundaryComponent_ != bc) {
+                    f->boundaryComponent_ = bc;
+                    // If allFaces is false, then the boundary component only
+                    // wants to know about ridges and facets.
+                    if constexpr (BoundaryComponent<dim>::allFaces)
+                        bc->push_back(f);
+                }
+            }
         }
     }
 }
@@ -545,7 +566,7 @@ void TriangulationBase<dim>::clearBaseProperties() {
         components_.clear();
         boundaryComponents_.clear();
 
-        FaceListSuite<dim, dim - 1>::deleteFaces();
+        this->deleteFaces();
 
         calculatedSkeleton_ = false;
     }
@@ -567,14 +588,13 @@ void TriangulationBase<dim>::swapBaseProperties(TriangulationBase<dim>& other) {
     // Properties stored using std::... containers or MarkedVector:
     components_.swap(other.components_);
     boundaryComponents_.swap(other.boundaryComponents_);
-
-    FaceListSuite<dim, dim - 1>::swapFaces(other);
+    this->faces_.swap(other.faces_);
 
     // Properties stored using the Property<...> class template:
     fundGroup_.swap(other.fundGroup_);
     H1_.swap(other.H1_);
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

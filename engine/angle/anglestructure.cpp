@@ -37,11 +37,6 @@
 
 namespace regina {
 
-const unsigned long AngleStructure::flagStrict = 1;
-const unsigned long AngleStructure::flagTaut = 2;
-const unsigned long AngleStructure::flagCalculatedType = 4;
-const unsigned long AngleStructure::flagVeering = 8;
-
 MatrixInt* AngleStructureVector::makeAngleEquations(
         const Triangulation<3>* tri) {
     size_t n = tri->size();
@@ -49,20 +44,17 @@ MatrixInt* AngleStructureVector::makeAngleEquations(
 
     // We have one equation per non-boundary edge plus one per tetrahedron.
     long rows = long(tri->countEdges()) + long(tri->size());
-    for (Triangulation<3>::BoundaryComponentIterator bit =
-            tri->boundaryComponents().begin();
-            bit != tri->boundaryComponents().end(); bit++)
-        rows -= (*bit)->countEdges();
+    for (BoundaryComponent<3>* bc : tri->boundaryComponents())
+        rows -= bc->countEdges();
 
     MatrixInt* eqns = new MatrixInt(rows, cols);
     size_t row = 0;
 
     size_t index;
-    for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
-            eit != tri->edges().end(); eit++) {
-        if ((*eit)->isBoundary())
+    for (Edge<3>* edge : tri->edges()) {
+        if (edge->isBoundary())
             continue;
-        for (auto& emb : **eit) {
+        for (auto& emb : *edge) {
             index = emb.tetrahedron()->index();
             if (emb.edge() < 3)
                 eqns->entry(row, 3 * index + emb.edge()) += 1;

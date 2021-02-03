@@ -50,7 +50,7 @@ EdgeIntChooser::EdgeIntChooser(
         QComboBox(parent), tri_(tri), filter_(filter),
         argMin_(argMin), argMax_(argMax), argDesc_(argDesc) {
     setMinimumContentsLength(30);
-    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
         tri_->listen(this);
     fill();
@@ -111,13 +111,12 @@ QString EdgeIntChooser::description(regina::Edge<3>* option, int arg) {
 }
 
 void EdgeIntChooser::fill() {
-    regina::Triangulation<3>::EdgeIterator it;
     int i;
-    for (it = tri_->edges().begin(); it != tri_->edges().end(); ++it)
+    for (Edge<3>* e : tri_->edges())
         for (i = argMin_; i <= argMax_; ++i)
-            if ((! filter_) || (*filter_)(*it, i)) {
-                addItem(description(*it, i));
-                options_.push_back(std::make_pair(*it, i));
+            if ((! filter_) || (*filter_)(e, i)) {
+                addItem(description(e, i));
+                options_.push_back(std::make_pair(e, i));
             }
 }
 

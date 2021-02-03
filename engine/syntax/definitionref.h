@@ -55,8 +55,7 @@
 #include "regina-core.h"
 #include <memory>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class Definition;
 class DefinitionData;
@@ -85,7 +84,7 @@ private:
     std::weak_ptr<DefinitionData> d;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif
 

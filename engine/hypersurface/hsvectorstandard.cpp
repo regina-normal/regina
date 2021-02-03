@@ -82,14 +82,12 @@ MatrixInt* HSVectorStandard::makeMatchingEquations(
     int i;
     size_t pent0, pent1;
     Perm<5> perm0, perm1;
-    for (Triangulation<4>::TetrahedronIterator tit =
-            triangulation->tetrahedra().begin();
-            tit != triangulation->tetrahedra().end(); tit++) {
-        if (! (*tit)->isBoundary()) {
-            pent0 = (*tit)->embedding(0).pentachoron()->index();
-            pent1 = (*tit)->embedding(1).pentachoron()->index();
-            perm0 = (*tit)->embedding(0).vertices();
-            perm1 = (*tit)->embedding(1).vertices();
+    for (Tetrahedron<4>* tet : triangulation->tetrahedra()) {
+        if (! tet->isBoundary()) {
+            pent0 = tet->embedding(0).pentachoron()->index();
+            pent1 = tet->embedding(1).pentachoron()->index();
+            perm0 = tet->embedding(0).vertices();
+            perm1 = tet->embedding(1).vertices();
 
             // Triangles:
             for (i=0; i<4; i++) {

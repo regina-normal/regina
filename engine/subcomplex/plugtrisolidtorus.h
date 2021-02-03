@@ -95,23 +95,23 @@ namespace regina {
  */
 class REGINA_API PlugTriSolidTorus : public StandardTriangulation {
     public:
-        static const int CHAIN_NONE;
+        static constexpr int CHAIN_NONE = 0;
             /**< Indicates an annulus on the triangular solid torus
                  boundary with no attached layered chain. */
-        static const int CHAIN_MAJOR;
+        static constexpr int CHAIN_MAJOR = 1;
             /**< Indicates an annulus on the triangular solid torus
                  boundary with an attached layered chain layered over
                  the major edge of the annulus. */
-        static const int CHAIN_MINOR;
+        static constexpr int CHAIN_MINOR = 3;
             /**< Indicates an annulus on the triangular solid torus
                  boundary with an attached layered chain layered over
                  the minor edge of the annulus. */
 
-        static const int EQUATOR_MAJOR;
+        static constexpr int EQUATOR_MAJOR = 1;
             /**< Indicates that, if no layered chains were present, the
                  equator of the plug would consist of major edges of the
                  core triangular solid torus. */
-        static const int EQUATOR_MINOR;
+        static constexpr int EQUATOR_MINOR = 3;
             /**< Indicates that, if no layered chains were present, the
                  equator of the plug would consist of minor edges of the
                  core triangular solid torus. */

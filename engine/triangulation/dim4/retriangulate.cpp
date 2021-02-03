@@ -42,9 +42,7 @@ namespace detail {
             return tri.isoSig();
         }
 
-        static const char* progressStage() {
-            return "Exploring triangulations";
-        }
+        static constexpr const char* progressStage = "Exploring triangulations";
 
         static bool satisfiesPreconditions(const Triangulation<4>&) {
             return true;

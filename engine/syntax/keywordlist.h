@@ -58,8 +58,7 @@
 #include <vector>
 #include <libxml/xmlreader.h>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class REGINA_API KeywordList
 {
@@ -97,6 +96,6 @@ inline bool KeywordList::caseSensitive() const {
     return m_caseSensitive;
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

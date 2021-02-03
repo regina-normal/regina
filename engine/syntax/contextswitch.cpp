@@ -45,8 +45,7 @@
 
 #include <iostream>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 ContextSwitch::ContextSwitch() :
     m_context(nullptr),
@@ -117,4 +116,4 @@ void ContextSwitch::resolve(const Definition &def)
     }
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax

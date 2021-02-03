@@ -40,13 +40,6 @@
 
 namespace regina {
 
-const int TrivialTri::N2 = 200;
-const int TrivialTri::N3_1 = 301;
-const int TrivialTri::N3_2 = 302;
-const int TrivialTri::SPHERE_4_VERTEX = 5000;
-const int TrivialTri::BALL_3_VERTEX = 5100;
-const int TrivialTri::BALL_4_VERTEX = 5101;
-
 TrivialTri* TrivialTri::isTrivialTriangulation(const Component<3>* comp) {
     // Since the triangulations are so small we can use census results
     // to recognise the triangulations by properties alone.

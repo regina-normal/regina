@@ -136,6 +136,12 @@ class REGINA_API Perm<3> {
         typedef int Index;
 
         /**
+         * Indicates what type of internal permutation code is used by
+         * this instance of the Perm class template.
+         */
+        static constexpr PermCodeType codeType = PERM_CODE_INDEX;
+
+        /**
          * The total number of permutations on three elements.
          * This is the size of the array Sn.
          */
@@ -341,7 +347,7 @@ class REGINA_API Perm<3> {
          * @param b the corresponding array of images; this must also have
          * length 3.
          */
-        Perm(const int* a, const int* b);
+        constexpr Perm(const int* a, const int* b);
 
         /**
          * Creates a permutation that is a clone of the given
@@ -502,6 +508,16 @@ class REGINA_API Perm<3> {
         constexpr bool isIdentity() const;
 
         /**
+         * Returns the <i>i</i>th rotation.
+         * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod 3)
+         * for all \a k.
+         *
+         * @param i the image of 0; this must be between 0 and 2 inclusive.
+         * @return the <i>i</i>th rotation.
+         */
+        static constexpr Perm rot(int i);
+
+        /**
          * Returns the <i>i</i>th permutation on three elements, where
          * permutations are numbered lexicographically beginning at 0.
          *
@@ -647,7 +663,6 @@ class REGINA_API Perm<3> {
          * @return the index \a i for which this permutation is equal to
          * Perm<3>::orderedS3[i].  This will be between 0 and 5 inclusive.
          */
-        REGINA_INLINE_REQUIRED
         constexpr int orderedS3Index() const;
 
         /**
@@ -813,6 +828,23 @@ inline constexpr Perm<3>::Perm(const int* image) :
                               (image[1] == 0 ? 4 : 5)) {
 }
 
+inline constexpr Perm<3>::Perm(const int* a, const int* b) : code_(0) {
+    // TODO: When we move to C++20, we can get rid of the zero initialisers.
+    int image[3] = { 0, 0, 0 };
+    image[a[0]] = b[0];
+    image[a[1]] = b[1];
+    image[a[2]] = b[2];
+
+    switch (image[0]) {
+        case 0:
+            code_ = static_cast<Code>(image[1] == 1 ? 0 : 1); break;
+        case 1:
+            code_ = static_cast<Code>(image[1] == 2 ? 2 : 3); break;
+        case 2:
+            code_ = static_cast<Code>(image[1] == 0 ? 4 : 5); break;
+    }
+}
+
 inline constexpr Perm<3>::Code Perm<3>::permCode() const {
     return code_;
 }
@@ -873,6 +905,14 @@ inline constexpr int Perm<3>::compareWith(const Perm<3>& other) const {
 
 inline constexpr bool Perm<3>::isIdentity() const {
     return (code_ == 0);
+}
+
+inline constexpr Perm<3> Perm<3>::rot(int i) {
+    switch (i) {
+        case 1: return Perm<3>(static_cast<Code>(code120));
+        case 2: return Perm<3>(static_cast<Code>(code201));
+        default: return Perm<3>(); // Identity
+    }
 }
 
 inline constexpr Perm<3> Perm<3>::atIndex(Index i) {

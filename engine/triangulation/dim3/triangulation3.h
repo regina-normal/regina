@@ -80,9 +80,7 @@ template <int> class XMLTriangulationReader;
 template <>
 struct PacketInfo<PACKET_TRIANGULATION3> {
     typedef Triangulation<3> Class;
-    inline static const char* name() {
-        return "3-Manifold Triangulation";
-    }
+    static constexpr const char* name = "3-Manifold Triangulation";
 };
 #endif
 
@@ -116,14 +114,18 @@ class REGINA_API Triangulation<3> :
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3)
 
     public:
-        typedef std::vector<Tetrahedron<3>*>::const_iterator TetrahedronIterator;
+        typedef std::vector<Tetrahedron<3>*>::const_iterator
+                TetrahedronIterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through tetrahedra. */
-        typedef FaceList<3, 2>::Iterator TriangleIterator;
+        typedef decltype(detail::TriangulationBase<3>().faces<2>().begin())
+                TriangleIterator;
             /**< Used to iterate through triangles. */
-        typedef FaceList<3, 1>::Iterator EdgeIterator;
+        typedef decltype(detail::TriangulationBase<3>().faces<1>().begin())
+                EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef FaceList<3, 0>::Iterator VertexIterator;
+        typedef decltype(detail::TriangulationBase<3>().faces<0>().begin())
+                VertexIterator;
             /**< Used to iterate through vertices. */
 
         typedef std::map<std::pair<unsigned long, bool>, Cyclotomic>
@@ -287,7 +289,7 @@ class REGINA_API Triangulation<3> :
          * The constituent tetrahedra, the cellular structure and all other
          * properties will also be destroyed.
          */
-        REGINA_INLINE_REQUIRED virtual ~Triangulation();
+        virtual ~Triangulation();
 
         /*@}*/
         /**
@@ -3141,13 +3143,19 @@ class REGINA_API Triangulation<3> :
 
 /*@}*/
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline Triangulation<3>::~Triangulation() {
+    clearAllProperties();
+}
+
 } // namespace regina
 // Some more headers that are required for inline functions:
 #include "triangulation/dim3/tetrahedron3.h"
 #include "triangulation/dim3/triangle3.h"
 #include "triangulation/dim3/vertex3.h"
 #include "triangulation/dim3/component3.h"
-#include "triangulation/dim3/boundarycomponent3.h"
 namespace regina {
 
 // Inline functions for Triangulation<3>
@@ -3157,10 +3165,6 @@ inline Triangulation<3>::Triangulation() {
 
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
         Triangulation<3>(copy, true) {
-}
-
-inline Triangulation<3>::~Triangulation() {
-    clearAllProperties();
 }
 
 inline Packet* Triangulation<3>::internalClonePacket(Packet*) const {

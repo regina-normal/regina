@@ -45,11 +45,24 @@ void addSnapPeaCensusTri(pybind11::module_& m) {
         .def("index", &SnapPeaCensusTri::index)
         .def_static("isSmallSnapPeaCensusTri",
             &SnapPeaCensusTri::isSmallSnapPeaCensusTri)
-        .def_readonly_static("SEC_5", &SnapPeaCensusTri::SEC_5)
-        .def_readonly_static("SEC_6_OR", &SnapPeaCensusTri::SEC_6_OR)
-        .def_readonly_static("SEC_6_NOR", &SnapPeaCensusTri::SEC_6_NOR)
-        .def_readonly_static("SEC_7_OR", &SnapPeaCensusTri::SEC_7_OR)
-        .def_readonly_static("SEC_7_NOR", &SnapPeaCensusTri::SEC_7_NOR)
+        // On some systems we cannot take addresses of the following
+        // inline class constants (e.g., this fails with gcc10 on windows).
+        // We therefore define getter functions instead.
+        .def_property_readonly_static("SEC_5", [](pybind11::object) {
+            return SnapPeaCensusTri::SEC_5;
+        })
+        .def_property_readonly_static("SEC_6_OR", [](pybind11::object) {
+            return SnapPeaCensusTri::SEC_6_OR;
+        })
+        .def_property_readonly_static("SEC_6_NOR", [](pybind11::object) {
+            return SnapPeaCensusTri::SEC_6_NOR;
+        })
+        .def_property_readonly_static("SEC_7_OR", [](pybind11::object) {
+            return SnapPeaCensusTri::SEC_7_OR;
+        })
+        .def_property_readonly_static("SEC_7_NOR", [](pybind11::object) {
+            return SnapPeaCensusTri::SEC_7_NOR;
+        })
     ;
     // The SnapPeaCensusTri subclass defines its own equality tests, so
     // we should override the compare-by-pointer test that we inherit from

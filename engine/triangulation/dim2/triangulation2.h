@@ -66,9 +66,7 @@ class XMLPacketReader;
 template <>
 struct PacketInfo<PACKET_TRIANGULATION2> {
     typedef Triangulation<2> Class;
-    inline static const char* name() {
-        return "2-Manifold Triangulation";
-    }
+    static constexpr const char* name = "2-Manifold Triangulation";
 };
 #endif
 
@@ -94,9 +92,11 @@ class REGINA_API Triangulation<2> :
         typedef std::vector<Triangle<2>*>::const_iterator TriangleIterator;
             /**< A dimension-specific alias for SimplexIterator,
                  used to iterate through triangles. */
-        typedef FaceList<2, 1>::Iterator EdgeIterator;
+        typedef decltype(detail::TriangulationBase<2>().faces<1>().begin())
+                EdgeIterator;
             /**< Used to iterate through edges. */
-        typedef FaceList<2, 0>::Iterator VertexIterator;
+        typedef decltype(detail::TriangulationBase<2>().faces<0>().begin())
+                VertexIterator;
             /**< Used to iterate through vertices. */
 
     public:
@@ -304,7 +304,7 @@ class REGINA_API Triangulation<2> :
          * In most cases this routine is followed immediately by firing
          * a packet change event.
          */
-        REGINA_INLINE_REQUIRED void clearAllProperties();
+        void clearAllProperties();
         /**
          * Swaps all calculated properties, including skeletal data,
          * with the given triangulation.  This is called by
@@ -320,6 +320,13 @@ class REGINA_API Triangulation<2> :
 };
 
 /*@}*/
+
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline void Triangulation<2>::clearAllProperties() {
+    clearBaseProperties();
+}
 
 } // namespace regina
 // Some more headers that are required for inline functions:
@@ -400,10 +407,6 @@ inline bool Triangulation<2>::isIdeal() const {
 
 inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
     return new Triangulation(*this);
-}
-
-inline void Triangulation<2>::clearAllProperties() {
-    clearBaseProperties();
 }
 
 inline void Triangulation<2>::swapAllProperties(Triangulation<2>& other) {

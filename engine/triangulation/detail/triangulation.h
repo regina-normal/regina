@@ -57,9 +57,8 @@
 #include "triangulation/generic/simplex.h"
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/simplex.h"
+#include "utilities/listview.h"
 #include "utilities/property.h"
-
-namespace regina {
 
 /**
  * Contains implementation details and common functionality for Regina's
@@ -89,7 +88,7 @@ namespace regina {
  *   (including the names and inheritance structure of classes within
  *   regina::detail) might change in subsequent releases without notice.
  */
-namespace detail {
+namespace regina::detail {
 
 template <int dim> class XMLTriangulationReaderBase;
 
@@ -103,336 +102,83 @@ template <int dim> class XMLTriangulationReaderBase;
  * Internal class that helps a triangulation store its lists of faces.
  *
  * This class is used with <i>dim</i>-dimensional triangulations.  It provides
- * storage for all faces of dimension \a subdim and below.  The triangulation
- * class Triangulation<dim> then derives from FaceListSuite<dim, dim-1>.
+ * storage for faces of all dimensions given in the parameter pack \a subdim.
+ *
+ * \tparam subdim This must be exactly the sequence 0, 1, ..., <i>dim</i>-1.
  */
-template <int dim, int subdim>
-class FaceListSuite :
-        protected FaceListSuite<dim, subdim - 1>,
-        protected FaceList<dim, subdim> {
+template <int dim, int... subdim>
+class TriangulationFaceStorage {
+    static_assert(sizeof...(subdim) == dim &&
+        (subdim + ...) == dim * (dim - 1) / 2,
+        "The TriangulationFaceStorage template has been given an unexpected "
+        "set of face dimensions.");
+
+    protected:
+        std::tuple<MarkedVector<Face<dim, subdim>>...> faces_;
+            /**< Each element of this tuple stores all faces of a particular
+                 dimension \a subdim. */
+
     protected:
         /**
-         * Deletes all faces of dimension \a subdim and below.
+         * Default constructor that initialises all face lists as empty.
+         */
+        TriangulationFaceStorage() = default;
+
+        /**
+         * Deletes all faces of all dimensions.
          * This routine destroys the corresponding Face objects and
          * clears the lists that contain them.
          */
         void deleteFaces();
         /**
-         * Swaps all faces of dimension \a subdim and below
-         * with those of the given triangulation.
-         *
-         * @param other the face storage for the triangulation whose
-         * faces are to be swapped with this.
-         */
-        void swapFaces(FaceListSuite<dim, subdim>& other);
-        /**
-         * Fills the given vector with the first (\a subdim + 1)
-         * elements of the f-vector.
-         *
-         * Specifically, this routine pushes the values
-         * \a f[0], ..., \a f[\a subdim] onto the end of the given vector,
-         * where \a f[\a k] denotes the number of <i>k</i>-faces that
-         * this object stores.
-         *
-         * @param result the vector in which the results will be placed.
-         */
-        void fillFVector(std::vector<size_t>& result) const;
-        /**
          * Tests whether this and the given triangulation have the same
-         * number of <i>k</i>-faces, for each facial dimension
-         * \a k &le; \a subdim.
+         * number of <i>k</i>-faces, for each facial dimension \a k.
          *
          * @param other the triangulation to compare against this.
          * @return \c true if and only if the face counts considered are
          * identical for both triangluations.
          */
-        bool sameFVector(const FaceListSuite<dim, subdim>& other) const;
+        bool sameFVector(const TriangulationFaceStorage& other) const;
+        /**
+         * Tests whether this and the given triangulation have the same
+         * <i>useDim</i>-face degree sequences.
+         *
+         * For the purposes of this routine, degree sequences are
+         * considered to be unordered.
+         *
+         * \pre This and the given triangulation are known to have the
+         * same number of <i>useDim</i>-faces as each other.
+         *
+         * @param other the triangulation to compare against this.
+         * @return \c true if and only if the <i>useDim</i>-face
+         * degree sequences are equal.
+         */
+        template <int useDim>
+        bool sameDegreesAt(const TriangulationFaceStorage& other) const;
         /**
          * Tests whether this and the given triangulation have the same
          * <i>k</i>-face degree sequences, for each facial dimension
-         * \a k &le; \a subdim.
+         * \a k &le; \a maxDim.
          *
          * For the purposes of this routine, degree sequences are
          * considered to be unordered.
          *
          * \pre This and the given triangulation are known to have the
          * same number of <i>k</i>-faces as each other, for each facial
-         * dimension \a k &le; \a subdim.
+         * dimension \a k &le; \a maxDim.
          *
          * @param other the triangulation to compare against this.
          * @return \c true if and only if all degree sequences considered
          * are equal.
          */
-        bool sameDegrees(const FaceListSuite<dim, subdim>& other) const;
+        template <int maxDim>
+        bool sameDegreesTo(const TriangulationFaceStorage& other) const;
+
+        // Make this class non-copyable.
+        TriangulationFaceStorage(const TriangulationFaceStorage&) = delete;
+        TriangulationFaceStorage& operator = (const TriangulationFaceStorage&)
+            = delete;
 };
-
-#ifndef __DOXYGEN
-
-template <int dim>
-class FaceListSuite<dim, 0> : protected FaceList<dim, 0> {
-    protected:
-        void deleteFaces();
-        void swapFaces(FaceListSuite<dim, 0>& other);
-        void fillFVector(std::vector<size_t>& result) const;
-        bool sameFVector(const FaceListSuite<dim, 0>& other) const;
-        bool sameDegrees(const FaceListSuite<dim, 0>& other) const;
-};
-
-#endif // __DOXYGEN
-
-/**
- * Helper class that indicates what data type is used by a triangulation
- * class to store a list of <i>subdim</i>-faces.
- */
-template <int dim, int subdim>
-struct FaceListHolder<detail::TriangulationBase<dim>, subdim> {
-    /**
-     * The data type used by Triangulation<dim> to store the list of all
-     * <i>subdim</i>-faces of the triangulation.
-     *
-     * The function Triangulation<dim>::faces<subdim>() returns a const
-     * reference to this type.
-     */
-    typedef FaceList<dim, subdim> Holder;
-};
-
-/**
- * Internal class used to calculate lower-dimensional faces in a
- * triangulation.
- *
- * Specifically, this class is used to calculate all faces of dimension
- * &le; \a subdim in a <i>dim</i>-dimensional triangulation.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam subdim the maximum dimension of the faces to compute.
- * \tparam codim the minimum codimension of the faces to compute; this
- * must be equal to \a dim - \a subdim.  It is offered as a separate
- * parameter so that this template class can be independently specialised
- * on both \a subdim and \a codim.
- */
-template <int dim, int subdim, int codim>
-struct FaceCalculator {
-    static_assert(dim == subdim + codim,
-        "FaceCalculator template arguments violate subdim + codim = dim.");
-    static_assert(codim > 2 && subdim > 0,
-        "The generic FaceCalculator template cannot be used for "
-        "small face dimension or codimension.");
-    /**
-     * Calculates all faces of dimension &le; \a subdim in the given
-     * triangulation.
-     *
-     * @param t the triangulation whose faces should be calculated.
-     */
-    static void calculate(TriangulationBase<dim>& t) {
-        t.template calculateSkeletonSubdim<subdim>();
-        FaceCalculator<dim, subdim - 1, codim + 1>::calculate(t);
-    }
-};
-
-#ifndef __DOXYGEN
-
-template <int dim, int subdim>
-struct FaceCalculator<dim, subdim, 1> {
-    static_assert(dim == subdim + 1,
-        "FaceCalculator specialisation violates subdim + codim = dim.");
-    static_assert(subdim > 0,
-        "FaceCalculator<dim, subdim, 1> specialisation cannot be used "
-        "with subdim = 0.");
-    static void calculate(TriangulationBase<dim>& t) {
-        t.calculateSkeletonCodim1();
-        FaceCalculator<dim, subdim - 1, 2>::calculate(t);
-    }
-};
-
-template <int dim, int subdim>
-struct FaceCalculator<dim, subdim, 2> {
-    static_assert(dim == subdim + 2,
-        "FaceCalculator specialisation violates subdim + codim = dim.");
-    static_assert(subdim > 0,
-        "FaceCalculator<dim, subdim, 2> specialisation cannot be used "
-        "with subdim = 0.");
-    static void calculate(TriangulationBase<dim>& t) {
-        t.calculateSkeletonCodim2();
-        FaceCalculator<dim, subdim - 1, 3>::calculate(t);
-    }
-};
-
-template <int dim, int codim>
-struct FaceCalculator<dim, 0, codim> {
-    static_assert(dim == codim,
-        "FaceCalculator specialisation violates subdim + codim = dim.");
-    static_assert(codim > 2,
-        "FaceCalculator<dim, 0, codim> specialisation cannot be used "
-        "with codim <= 2.");
-    static void calculate(TriangulationBase<dim>& t) {
-        t.template calculateSkeletonSubdim<0>();
-    }
-};
-
-template <int dim>
-struct FaceCalculator<dim, 0, 2> {
-    static_assert(dim == 2,
-        "FaceCalculator specialisation violates subdim + codim = dim.");
-    static void calculate(TriangulationBase<dim>& t) {
-        t.calculateSkeletonCodim2();
-    }
-};
-
-#endif // __DOXYGEN
-
-/**
- * Internal class used to identify lower-dimensional faces in a boundary
- * component of a triangulation.
- *
- * Specifically, this class identifies and marks all faces of dimensions
- * 1,...,\a subdim within the given boundary facet of a
- * <i>dim</i>-dimensional triangulation.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam subdim the maximum dimension of the faces to identify.
- * This must be between -1 and (\a dim - 3) inclusive.  In the cases where
- * \a subdim = 0 or -1, the identify() routine for this class does nothing.
- */
-template <int dim, int subdim>
-struct BoundaryComponentCalculator {
-    static_assert(1 <= subdim && subdim <= dim - 3,
-        "The generic BoundaryComponentCalculator template can only be used "
-        "for faces of dimension 1 <= subdim <= (dim - 3).");
-
-    /**
-     * Identifies and marks all faces of dimension &le; \a subdim within the
-     * given boundary facet of the given <i>dim</i>-dimensional triangulation.
-     *
-     * This routine pushes all such <i>subdim</i>-faces onto the relevant list
-     * for the given boundary component, and also marks the boundary component
-     * within these <i>subdim</i>-faces themselves.
-     *
-     * @param t the underlying triangulation.
-     * @param bc the boundary component of \a t currently under construction.
-     * @param facet a boundary facet that belongs to \a bc.
-     */
-    static void identify(TriangulationBase<dim>& t,
-            BoundaryComponent<dim>* bc, Face<dim, dim-1>* facet) {
-        t.template calculateBoundaryFaces<subdim>(bc, facet);
-        BoundaryComponentCalculator<dim, subdim - 1>::identify(t, bc, facet);
-    }
-};
-
-#ifndef __DOXYGEN
-
-template <int dim>
-struct BoundaryComponentCalculator<dim, 0> {
-    static void identify(TriangulationBase<dim>&, void*, void*) {
-    }
-};
-
-template <int dim>
-struct BoundaryComponentCalculator<dim, -1> {
-    static void identify(TriangulationBase<dim>&, void*, void*) {
-    }
-};
-
-#endif // __DOXYGEN
-
-/**
- * Internal class used to calculate the Euler characteristic of a
- * triangulation.
- *
- * Specifically, this class calculates the alternating sum of the number
- * of faces of dimensions \a subdim, ..., \a dim within a
- * <i>dim</i>-dimensional triangulation.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam subdim the minimum dimension of the faces to consider.
- */
-template <int dim, int subdim>
-struct EulerCalculator {
-    /**
-     * Computes the alternating sum of the number of faces of \a tri of
-     * dimensions \a subdim, ..., \a dim.  Specifically, this computes
-     * <tt>tri.countFaces<subdim>() - tri.countFaces<subdim+1>() + ...
-     * +/- tri.countFaces<dim>()</tt>.
-     *
-     * @param tri the triangulations whose face counts are to be computed.
-     * @return the resulting "partial" Euler characteristic.
-     */
-    static long compute(const TriangulationBase<dim>& tri) {
-        // Remember to cast away the unsignedness of size_t, since this
-        // is an alternating sum.
-        return static_cast<long>(tri.template countFaces<subdim>()) -
-            EulerCalculator<dim, subdim + 1>::compute(tri);
-    }
-};
-
-#ifndef __DOXYGEN
-
-template <int dim>
-struct EulerCalculator<dim, dim> {
-    static long compute(const TriangulationBase<dim>& tri) {
-        return tri.size();
-    }
-};
-
-#endif // __DOXYGEN
-
-/**
- * Internal class used to perform Pachner moves on a triangulation.
- *
- * Specifically, this class performs (\a dim - \a k + 1)-(\a k + 1) moves
- * about <i>k</i>-faces of <i>dim</i>-dimensional triangulations.
- *
- * Pachner moves are implemented in a separate class (i.e., this class)
- * instead of TriangulationBase because we wish to offer specialised
- * implementations for certain facial dimensions \a k, and C++ does not
- * allow partial specialisation of functions.
- *
- * \tparam dim the dimension of the underlying triangulation.
- * \tparam k the dimension of the faces about which to perform Pachner moves.
- */
-template <int dim, int k>
-struct PachnerHelper {
-    static_assert(0 < k && k < dim,
-        "The generic PachnerHelper template cannot be used "
-        "for 0-faces or dim-faces.");
-    /**
-     * Performs a (\a dim - \a k + 1)-(\a k + 1) move about the given face.
-     *
-     * This routine contains the real implementation of
-     * TriangulationBase::pachner<k>(); see that routine for further details.
-     *
-     * \pre If the move is being performed and no check is being run,
-     * it must be known in advance that the move is legal.
-     * \pre The given <i>k</i>-face is a <i>k</i>-face of the given
-     * triangulation.
-     *
-     * @param tri the triangulation upon which to perform the Pachner move.
-     * @param f the specific <i>k</i>-face about which to perform the move.
-     * @param check \c true if the move should be tested for eligibility.
-     * @param perform \c true if the move should actually be performed.
-     * @return If \a check is \c true, this function returns \c true
-     * if and only if the requested move may be performed
-     * without changing the topology of the manifold.  If \a check
-     * is \c false, this function simply returns \c true.
-     */
-    static bool pachner(Triangulation<dim>* tri, Face<dim, k>* f,
-        bool check, bool perform);
-};
-
-#ifndef __DOXYGEN
-
-template <int dim>
-struct PachnerHelper<dim, 0> {
-    static bool pachner(Triangulation<dim>* tri, Vertex<dim>* v,
-        bool check, bool perform);
-};
-
-template <int dim>
-struct PachnerHelper<dim, dim> {
-    static bool pachner(Triangulation<dim>* tri, Simplex<dim>* s,
-        bool check, bool perform);
-};
-
-#endif // __DOXYGEN
 
 /**
  * Provides core functionality for <i>dim</i>-dimensional triangulations.
@@ -459,7 +205,13 @@ struct PachnerHelper<dim, dim> {
  */
 template <int dim>
 class TriangulationBase :
-        protected FaceListSuite<dim, dim - 1>,
+#ifdef __DOXYGEN
+        // Doxygen doesn't understand ExpandSequence.
+        // The syntax here is not valid C++ but for doxygen it's just fine.
+        public TriangulationFaceStorage<dim, 0, 1, ..., dim - 1>,
+#else
+        public ExpandSequence<TriangulationFaceStorage, dim>,
+#endif
         public alias::Simplices<TriangulationBase<dim>, dim>,
         public alias::SimplexAt<TriangulationBase<dim>, dim, true>,
         public alias::FaceOfTriangulation<TriangulationBase<dim>, dim>,
@@ -471,15 +223,34 @@ class TriangulationBase :
             /**< A compile-time constant that gives the dimension of the
                  triangulation. */
 
-        typedef typename std::vector<Simplex<dim>*>::const_iterator
-                SimplexIterator;
-            /**< Used to iterate through top-dimensional simplices. */
-        typedef typename std::vector<Component<dim>*>::const_iterator
-                ComponentIterator;
-            /**< Used to iterate through connected components. */
-        typedef typename std::vector<BoundaryComponent<dim>*>::const_iterator
-                BoundaryComponentIterator;
-            /**< Used to iterate through boundary components. */
+    protected:
+        /**
+         * A compile-time constant function that returns the facial dimension
+         * corresponding to an element of the \a faces_ tuple.
+         *
+         * This is to assist code that calls std::apply() on \a faces,
+         * since functions in TriangulationBase have easy access to the
+         * tuple type but not the corresponding integer parameter pack
+         * of face dimensions.
+         *
+         * If \a f is an element of \a faces_, possibly with reference
+         * qualifiers, then the corresponding face dimension is:
+         *
+         * \code{.cpp}
+         * subdimOf<decltype(f)>()
+         * \endcode
+         *
+         * \tparam TupleElement the type of one of the members of \a faces,
+         * or a reference to such a type.
+         * @return the face dimension corresponding to \a TupleElement;
+         * this will be an integer between 0 and (<i>dim</i>-1) inclusive.
+         */
+        template <typename TupleElement>
+        static constexpr int subdimOf() {
+            return std::remove_pointer_t<
+                    typename std::remove_reference_t<TupleElement>::value_type
+                >::subdimension;
+        }
 
     protected:
         MarkedVector<Simplex<dim>> simplices_;
@@ -520,6 +291,16 @@ class TriangulationBase :
             /**< First homology group of the triangulation. */
 
     public:
+        typedef typename decltype(simplices_)::const_iterator
+                SimplexIterator;
+            /**< Used to iterate through top-dimensional simplices. */
+        typedef typename decltype(components_)::const_iterator
+                ComponentIterator;
+            /**< Used to iterate through connected components. */
+        typedef typename decltype(boundaryComponents_)::const_iterator
+                BoundaryComponentIterator;
+            /**< Used to iterate through boundary components. */
+
         /**
          * \name Constructors and Destructors
          */
@@ -574,18 +355,37 @@ class TriangulationBase :
          */
         size_t size() const;
         /**
-         * Returns all top-dimensional simplices in the triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all top-dimensional simplices in this triangulation.
          *
-         * The reference that is returned will remain valid for as long as
-         * the triangulation exists: even as simplices are added and/or
-         * removed, it will always reflect the simplices that are currently
-         * in the triangulation.
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
          *
-         * \ifacespython This routine returns a python list.
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
          *
-         * @return the list of all top-dimensional simplices.
+         * \code{.cpp}
+         * for (Simplex<dim>* s : tri.simplices()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for
+         * as long as the triangulation exists: even as simplices are
+         * added and/or removed, it will always reflect the simplices
+         * that are currently in the triangulation.
+         * Nevertheless, it is recommended to treat this object as temporary
+         * only, and to call simplices() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the simplices when this function is called, and will
+         * \e not be kept up-to-date as the triangulation changes.
+         *
+         * @return access to the list of all top-dimensional simplices.
          */
-        const std::vector<Simplex<dim>*>& simplices() const;
+        auto simplices() const;
         /**
          * Returns the top-dimensional simplex at the given index in the
          * triangulation.
@@ -773,25 +573,41 @@ class TriangulationBase :
         std::vector<size_t> fVector() const;
 
         /**
-         * Returns all connected components of this triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all components of this triangulation.
          *
-         * Note that each time the triangulation changes, all component
-         * objects will be deleted and replaced with new ones.
-         * Therefore these component objects should be considered temporary
-         * only.
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
          *
-         * In contrast, this reference to the \e list of all components
-         * will remain valid and up-to-date for as long as the triangulation
-         * exists.
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
          *
-         * \ifacespython This routine returns a python list.
+         * \code{.cpp}
+         * for (Component<dim>* c : tri.components()) { ... }
+         * \endcode
          *
-         * @return the list of all components.
+         * The object that is returned will remain up-to-date and valid for
+         * as long as the triangulation exists.  In contrast, however, remember
+         * that the individual component objects \e within this list will be
+         * deleted and replaced each time the triangulation changes.
+         * Therefore it is best to treat this object as temporary only,
+         * and to call components() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the components when this function is called, and will
+         * \e not be kept up-to-date as the triangulation changes.
+         *
+         * @return access to the list of all components.
          */
-        const std::vector<Component<dim>*>& components() const;
+        auto components() const;
 
         /**
-         * Returns all boundary components of this triangulation.
+         * Returns an object that allows iteration through and random access
+         * to all boundary components of this triangulation.
          *
          * Note that, in Regina's \ref stddim "standard dimensions",
          * each ideal vertex forms its own boundary component, and
@@ -799,31 +615,58 @@ class TriangulationBase :
          * class notes for full details on what constitutes a boundary
          * component in standard and non-standard dimensions.
          *
-         * Bear in mind that each time the triangulation changes, all
-         * boundary component objects will be deleted and replaced with new
-         * ones.  Therefore these boundary component objects should be
-         * considered temporary only.
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
          *
-         * In contrast, this reference to the \e list of BoundaryComponent
-         * objects will remain valid and up-to-date for as long as the
-         * triangulation exists.
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
          *
-         * \ifacespython This routine returns a python list.
+         * \code{.cpp}
+         * for (BoundaryComponent<dim>* b : tri.boundaryComponents()) { ... }
+         * \endcode
          *
-         * @return the list of all boundary components.
+         * The object that is returned will remain up-to-date and valid for
+         * as long as the triangulation exists.  In contrast, however, remember
+         * that the individual boundary components \e within this list will be
+         * deleted and replaced each time the triangulation changes.
+         * Therefore it is best to treat this object as temporary only,
+         * and to call boundaryComponents() again each time you need it.
+         *
+         * \ifacespython This routine returns a Python list.
+         * Be warned that, unlike in C++, this Python list will be a
+         * snapshot of the boundary components when this function is called,
+         * and will \e not be kept up-to-date as the triangulation changes.
+         *
+         * @return access to the list of all boundary components.
          */
-        const std::vector<BoundaryComponent<dim>*>& boundaryComponents() const;
+        auto boundaryComponents() const;
 
         /**
          * Returns an object that allows iteration through and random access
          * to all <i>subdim</i>-faces of this triangulation.
          *
-         * Bear in mind that each time the triangulation changes, all
-         * face objects will be deleted and replaced with new ones.
-         * Therefore these face objects should be considered temporary only.
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
          *
-         * In contrast, this reference to the FaceList object itself will
-         * remain valid and up-to-date for as long as the triangulation exists.
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (Face<dim, subdim>* f : tri.faces<subdim>()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain up-to-date and valid for
+         * as long as the triangulation exists.  In contrast, however,
+         * remember that the individual faces \e within this list will be
+         * deleted and replaced each time the triangulation changes.
+         * Therefore it is best to treat this object as temporary only,
+         * and to call faces() again each time you need it.
          *
          * \ifacespython Python users should call this function in the
          * form <tt>faces(subdim)</tt>.  It will then return a Python list
@@ -835,7 +678,7 @@ class TriangulationBase :
          * @return access to the list of all <i>subdim</i>-faces.
          */
         template <int subdim>
-        const FaceList<dim, subdim>& faces() const;
+        auto faces() const;
 
         /**
          * Returns the requested connected component of this triangulation.
@@ -1967,33 +1810,15 @@ class TriangulationBase :
         /**
          * Internal to calculateSkeleton().
          *
-         * This routine calculates all codimension-1-faces.
-         *
-         * See calculateSkeleton() for further details.
-         */
-        void calculateSkeletonCodim1();
-
-        /**
-         * Internal to calculateSkeleton().
-         *
-         * This routine calculates all codimension-2-faces.
-         *
-         * See calculateSkeleton() for further details.
-         */
-        void calculateSkeletonCodim2();
-
-        /**
-         * Internal to calculateSkeleton().
-         *
          * This routine calculates all <i>subdim</i>-faces.
          *
          * See calculateSkeleton() for further details.
          *
          * \tparam subdim the dimension of the faces to compute.
-         * This must be between 0 and (\a dim - 3) inclusive.
+         * This must be between 0 and (\a dim - 1) inclusive.
          */
         template <int subdim>
-        void calculateSkeletonSubdim();
+        void calculateFaces();
 
         /**
          * Internal to calculateSkeleton().
@@ -2009,6 +1834,9 @@ class TriangulationBase :
          *
          * This routine identifies and marks all <i>subdim</i>-faces within
          * the given boundary facet.
+         *
+         * It does not handle ridges or facets, so if \a subdim is greater
+         * than <i>dim</i>-3 then this routine does nothing.
          *
          * See calculateRealBoundary() for further details.
          */
@@ -2189,77 +2017,60 @@ class TriangulationBase :
                 ~TopologyLock();
         };
 
-    template <int, int, int> friend struct FaceCalculator;
-    template <int, int> friend struct BoundaryComponentCalculator;
-    template <int, int> friend struct PachnerHelper;
-    template <int, int> friend class WeakFaceList;
+    template <int, int...> friend class BoundaryComponentFaceStorage;
     friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
 
 /*@}*/
 
-// Inline functions for FaceListSuite
+// Inline functions for TriangulationFaceStorage
 
-template <int dim, int subdim>
-inline void FaceListSuite<dim, subdim>::deleteFaces() {
-    FaceList<dim, subdim>::destroy();
-    FaceListSuite<dim, subdim - 1>::deleteFaces();
+template <int dim, int... subdim>
+inline void TriangulationFaceStorage<dim, subdim...>::deleteFaces() {
+    (std::get<subdim>(faces_).clear_destructive(), ...);
 }
 
-template <int dim, int subdim>
-inline void FaceListSuite<dim, subdim>::swapFaces(
-        FaceListSuite<dim, subdim>& other) {
-    FaceList<dim, subdim>::swap(other);
-    FaceListSuite<dim, subdim - 1>::swapFaces(other);
+template <int dim, int... subdim>
+inline bool TriangulationFaceStorage<dim, subdim...>::sameFVector(
+        const TriangulationFaceStorage<dim, subdim...>& other) const {
+    return ((std::get<subdim>(faces_).size() ==
+            std::get<subdim>(other.faces_).size()) && ...);
 }
 
-template <int dim>
-inline void FaceListSuite<dim, 0>::deleteFaces() {
-    FaceList<dim, 0>::destroy();
+template <int dim, int... subdim>
+template <int useDim>
+bool TriangulationFaceStorage<dim, subdim...>::sameDegreesAt(
+        const TriangulationFaceStorage<dim, subdim...>& other) const {
+    // We may assume that # faces is the same for both triangulations.
+    size_t n = std::get<useDim>(this->faces_).size();
+
+    size_t* deg1 = new size_t[n];
+    size_t* deg2 = new size_t[n];
+
+    size_t* p;
+    p = deg1;
+    for (auto f : std::get<useDim>(this->faces_))
+        *p++ = f->degree();
+    p = deg2;
+    for (auto f : std::get<useDim>(other.faces_))
+        *p++ = f->degree();
+
+    std::sort(deg1, deg1 + n);
+    std::sort(deg2, deg2 + n);
+
+    bool ans = std::equal(deg1, deg1 + n, deg2);
+
+    delete[] deg1;
+    delete[] deg2;
+
+    return ans;
 }
 
-template <int dim>
-inline void FaceListSuite<dim, 0>::swapFaces(FaceListSuite<dim, 0>& other) {
-    FaceList<dim, 0>::swap(other);
-}
-
-template <int dim, int subdim>
-inline void FaceListSuite<dim, subdim>::fillFVector(
-        std::vector<size_t>& result) const {
-    FaceListSuite<dim, subdim - 1>::fillFVector(result);
-    result.push_back(FaceList<dim, subdim>::size());
-}
-
-template <int dim>
-inline void FaceListSuite<dim, 0>::fillFVector(
-        std::vector<size_t>& result) const {
-    result.push_back(FaceList<dim, 0>::size());
-}
-
-template <int dim, int subdim>
-inline bool FaceListSuite<dim, subdim>::sameFVector(
-        const FaceListSuite<dim, subdim>& other) const {
-    return FaceListSuite<dim, subdim - 1>::sameFVector(other) &&
-        (FaceList<dim, subdim>::size() == other.FaceList<dim, subdim>::size());
-}
-
-template <int dim>
-inline bool FaceListSuite<dim, 0>::sameFVector(
-        const FaceListSuite<dim, 0>& other) const {
-    return (FaceList<dim, 0>::size() == other.FaceList<dim, 0>::size());
-}
-
-template <int dim, int subdim>
-inline bool FaceListSuite<dim, subdim>::sameDegrees(
-        const FaceListSuite<dim, subdim>& other) const {
-    return FaceListSuite<dim, subdim - 1>::sameDegrees(other) &&
-        FaceList<dim, subdim>::sameDegrees(other);
-}
-
-template <int dim>
-inline bool FaceListSuite<dim, 0>::sameDegrees(
-        const FaceListSuite<dim, 0>& other) const {
-    return FaceList<dim, 0>::sameDegrees(other);
+template <int dim, int... subdim>
+template <int maxDim>
+inline bool TriangulationFaceStorage<dim, subdim...>::sameDegreesTo(
+        const TriangulationFaceStorage<dim, subdim...>& other) const {
+    return ((subdim > maxDim || sameDegreesAt<subdim>(other)) && ...);
 }
 
 // Inline functions for TriangulationBase
@@ -2322,9 +2133,8 @@ inline size_t TriangulationBase<dim>::size() const {
 }
 
 template <int dim>
-inline const std::vector<Simplex<dim>*>& TriangulationBase<dim>::simplices()
-        const {
-    return (const std::vector<Simplex<dim>*>&)(simplices_);
+inline auto TriangulationBase<dim>::simplices() const {
+    return ListView(simplices_);
 }
 
 template <int dim>
@@ -2452,44 +2262,40 @@ template <int dim>
 template <int subdim>
 inline size_t TriangulationBase<dim>::countFaces() const {
     ensureSkeleton();
-    return FaceList<dim, subdim>::size();
+    return std::get<subdim>(this->faces_).size();
 }
 
 template <int dim>
 inline std::vector<size_t> TriangulationBase<dim>::fVector() const {
     ensureSkeleton();
-
-    std::vector<size_t> ans;
-    FaceListSuite<dim, dim - 1>::fillFVector(ans);
-    ans.push_back(size());
-    return ans;
+    return std::apply([this](auto&&... kFaces) {
+        return std::vector<size_t>{ kFaces.size()..., size() };
+    }, this->faces_);
 }
 
 template <int dim>
-inline const std::vector<Component<dim>*>& TriangulationBase<dim>::components()
-        const {
+inline auto TriangulationBase<dim>::components() const {
     ensureSkeleton();
-    return (const std::vector<Component<dim>*>&)(components_);
+    return ListView(components_);
 }
 
 template <int dim>
-inline const std::vector<BoundaryComponent<dim>*>& TriangulationBase<dim>::
-        boundaryComponents() const {
+inline auto TriangulationBase<dim>::boundaryComponents() const {
     ensureSkeleton();
-    return (const std::vector<BoundaryComponent<dim>*>&)(boundaryComponents_);
+    return ListView(boundaryComponents_);
 }
 
 template <int dim>
 template <int subdim>
-inline const FaceList<dim, subdim>& TriangulationBase<dim>::faces() const {
+inline auto TriangulationBase<dim>::faces() const {
     ensureSkeleton();
-    return *this;
+    return ListView(std::get<subdim>(this->faces_));
 }
 
 template <int dim>
 template <int subdim, typename Iterator>
 inline void TriangulationBase<dim>::reorderFaces(Iterator begin, Iterator end) {
-    FaceList<dim, subdim>::template reorderFaces<Iterator>(begin, end);
+    std::get<subdim>(this->faces_).refill(begin, end);
 }
 
 template <int dim>
@@ -2497,7 +2303,7 @@ template <int subdim>
 inline void TriangulationBase<dim>::relabelFace(Face<dim, subdim>* f,
         const Perm<dim + 1>& adjust) {
     for (const auto& emb : *f)
-        emb.simplex()->SimplexFaces<dim, subdim>::mapping_[emb.face()] =
+        std::get<subdim>(emb.simplex()->mappings_)[emb.face()] =
             emb.vertices() * adjust;
 }
 
@@ -2518,7 +2324,7 @@ template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* TriangulationBase<dim>::face(size_t index) const {
     ensureSkeleton();
-    return FaceList<dim, subdim>::operator [](index);
+    return std::get<subdim>(this->faces_)[index];
 }
 
 template <int dim>
@@ -2820,15 +2626,10 @@ bool TriangulationBase<dim>::isOriented() const {
 
 template <int dim>
 inline long TriangulationBase<dim>::eulerCharTri() const {
-    return EulerCalculator<dim, 0>::compute(*this);
-}
-
-template <int dim>
-template <int k>
-inline bool TriangulationBase<dim>::pachner(Face<dim, k>* f, bool check,
-        bool perform) {
-    return PachnerHelper<dim, k>::pachner(
-        static_cast<Triangulation<dim>*>(this), f, check, perform);
+    ensureSkeleton();
+    return std::apply([this](auto&&... kFaces) {
+        return (static_cast<long>(kFaces.size()) - ... - size());
+    }, this->faces_);
 }
 
 template <int dim>
@@ -3383,7 +3184,7 @@ TriangulationBase<dim>::TopologyLock::~TopologyLock() {
         --tri_->topologyLock_;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #include "triangulation/detail/canonical-impl.h"
 

@@ -53,7 +53,7 @@ void addTriangle3(pybind11::module_& m) {
         .def("triangle", &TriangleEmbedding<3>::triangle)
         .def("vertices", &TriangleEmbedding<3>::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output(e, true /* __repr__ */);
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<3, 2>>(m, "Face3_2")
@@ -73,6 +73,8 @@ void addTriangle3(pybind11::module_& m) {
         .def("isMobiusBand", &Triangle<3>::isMobiusBand)
         .def("isCone", &Triangle<3>::isCone)
         .def("isValid", &Triangle<3>::isValid)
+        .def("hasBadIdentification", &Triangle<3>::hasBadIdentification)
+        .def("hasBadLink", &Triangle<3>::hasBadLink)
         .def("isLinkOrientable", &Triangle<3>::isLinkOrientable)
         .def("degree", &Triangle<3>::degree)
         .def("front", &Triangle<3>::front,
@@ -96,6 +98,24 @@ void addTriangle3(pybind11::module_& m) {
         .def_static("ordering", &Triangle<3>::ordering)
         .def_static("faceNumber", &Triangle<3>::faceNumber)
         .def_static("containsVertex", &Triangle<3>::containsVertex)
+        // On some systems we cannot take addresses of the following
+        // inline class constants (e.g., this fails with gcc10 on windows).
+        // We therefore define getter functions instead.
+        .def_property_readonly_static("nFaces", [](pybind11::object) {
+            return Triangle<3>::nFaces;
+        })
+        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
+            return Triangle<3>::lexNumbering;
+        })
+        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
+            return Triangle<3>::oppositeDim;
+        })
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Triangle<3>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Triangle<3>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

@@ -63,16 +63,16 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     Triangulation<3>* owner = triangulation();
 
     // Basic sanity checks:
-    if (coords_ != Variant::standardCoords())
-        return 0;
+    if (coords_ != Variant::standardCoords)
+        return nullptr;
     if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
-        return 0;
+        return nullptr;
     if (owner->isIdeal() || ! owner->isValid())
-        return 0;
+        return nullptr;
 
     // Prepare a final surface list.
     NormalSurfaces* ans = new NormalSurfaces(
-        Variant::reducedCoords(), NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
+        Variant::reducedCoords, NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
 
     // Get the empty triangulation out of the way now.
     unsigned long n = owner->size();

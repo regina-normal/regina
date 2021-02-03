@@ -255,7 +255,7 @@ private:
     bool auto_detect_run;
     bool is_text;
 
-    static const std::size_t default_buff_size = (std::size_t)1 << 20;
+    static constexpr std::size_t default_buff_size = (std::size_t)1 << 20;
 }; // class istreambuf
 
 class ostreambuf
@@ -351,7 +351,7 @@ private:
     detail::z_stream_wrapper * zstrm_p;
     std::size_t buff_size;
 
-    static const std::size_t default_buff_size = (std::size_t)1 << 20;
+    static constexpr std::size_t default_buff_size = (std::size_t)1 << 20;
 }; // class ostreambuf
 
 class istream

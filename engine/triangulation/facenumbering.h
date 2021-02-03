@@ -94,8 +94,7 @@ namespace regina {
  * This must be between 0 and <i>dim</i>-1 inclusive.
  */
 template <int dim, int subdim>
-class FaceNumbering : public detail::FaceNumberingImpl<
-        dim, subdim, ((dim + 1) >= 2 * (subdim + 1))> {
+class FaceNumbering : public detail::FaceNumberingImpl<dim, subdim> {
 };
 
 /**
@@ -114,14 +113,14 @@ class FaceNumbering : public detail::FaceNumberingImpl<
  * @return the number of the (<i>dim</i>-2)-face opposite the given edge.
  */
 template <int dim>
-inline int faceOppositeEdge(int i, int j);
+constexpr inline int faceOppositeEdge(int i, int j);
 
 /*@}*/
 
 // Inline functions
 
 template <int dim>
-int faceOppositeEdge(int i, int j) {
+constexpr int faceOppositeEdge(int i, int j) {
     static_assert(dim >= 5,
         "The generic implementation of faceOpposite() can only be used "
         "for dimensions dim >= 5.");
@@ -141,20 +140,20 @@ int faceOppositeEdge(int i, int j) {
 #ifndef __DOXYGEN
 
 template <>
-inline int faceOppositeEdge<2>(int i, int j) {
+inline constexpr int faceOppositeEdge<2>(int i, int j) {
     // We want the vertex number opposite edge (i, j).
     return (3 - i - j);
 }
 
 template <>
-inline int faceOppositeEdge<3>(int i, int j) {
+inline constexpr int faceOppositeEdge<3>(int i, int j) {
     // We want the edge number opposite edge (i, j).
     // We can get this using the 3-D lookup table.
     return 5 - FaceNumbering<3, 1>::edgeNumber[i][j];
 }
 
 template <>
-inline int faceOppositeEdge<4>(int i, int j) {
+inline constexpr int faceOppositeEdge<4>(int i, int j) {
     // The triangle opposite edge (i, j) has the same number as edge(i, j).
     // We can get this using the 4-D lookup table.
     return FaceNumbering<4, 1>::edgeNumber[i][j];

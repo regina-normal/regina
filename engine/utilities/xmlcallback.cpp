@@ -35,16 +35,11 @@
 
 namespace regina {
 
-const int XMLCallback::WAITING = 1;
-const int XMLCallback::WORKING = 2;
-const int XMLCallback::DONE = 3;
-const int XMLCallback::ABORTED = 4;
-    
 XMLCallback::~XMLCallback() {
     if (! readers.empty())
         abort();
 }
-    
+
 void XMLCallback::start_document(regina::xml::XMLParser* parser) {
     topReader.usingParser(parser);
 }

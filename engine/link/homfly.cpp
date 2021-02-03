@@ -56,15 +56,6 @@ static constexpr int PROGRESS_TOT = (1 << PROGRESS_POS);
 
 namespace regina {
 
-const char* Link::homflyAZVarX = "\u03B1"; // alpha
-const char* Link::homflyAZVarY = "z";
-
-const char* Link::homflyLMVarX = "\U0001D4C1"; // mathematical script small l
-const char* Link::homflyLMVarY = "m";
-
-const char* Link::homflyVarX = homflyAZVarX;
-const char* Link::homflyVarY = homflyAZVarY;
-
 namespace {
     /**
      * Used as a return value when the HOMFLY calculation is running in
@@ -983,8 +974,8 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
 
     // Count the number of 0-crossing unknot components separately.
     size_t unknots = 0;
-    for (StrandRef s : components_)
-        if (! s)
+    for (StrandRef c : components_)
+        if (! c)
             ++unknots;
 
     // The final polynomial will be sum_i (coeff[i] * delta^(i + unknots)).

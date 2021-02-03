@@ -86,6 +86,38 @@ inline constexpr int64_t factorial(int n) {
 }
 
 /**
+ * Represents the different kinds of internal permutation codes that are
+ * used in Regina's various Perm<n> template classes.  See the Perm<n>
+ * class notes for more information on exactly how these codes are constructed.
+ * The class constant Perm<n>::codeType indicates which type of code is used
+ * for which \a n.
+ */
+enum PermCodeType {
+    /**
+     * This is a permutation code that packs the images of 0,...,<i>n</i>-1
+     * into a single native integer using a handful of bits per image.
+     * Such codes are easier to manipulate on an element-by-element basis.
+     *
+     * Codes of this type can always be queried using Perm<n>::permCode(), and
+     * permutations can be recreated from them using Perm<n>::fromPermCode().
+     */
+    PERM_CODE_IMAGES = 1,
+    /**
+     * This is a permutation code that stores the index into the full
+     * permutation group \a S_n.  Such codes typically require fewer bytes and
+     * are packed together, making them ideal for working with lookup tables.
+     *
+     * Codes of this type can be queried using Perm<n>::SnIndex(), and
+     * permutations can be recreated from them by indexing into Perm<n>::Sn.
+     *
+     * \warning The routines Perm<n>::permCode() and Perm<n>::fromPermCode()
+     * will still be present, but in some classes (e.g., Perm<4> and Perm<5>),
+     * these are legacy routines that refer to different types of codes.
+     */
+    PERM_CODE_INDEX = 2
+};
+
+/**
  * Represents a permutation of {0,1,...,<i>n</i>-1}.
  * Amongst other things, such permutations are used to describe
  * simplex gluings in (<i>n</i>-1)-manifold triangulations.
@@ -105,10 +137,10 @@ inline constexpr int64_t factorial(int n) {
  *   whose lowest \a imageBits bits represent the image of 0, whose next
  *   lowest \a imageBits bits represent the image of 1, and so on.
  *
- * - For \a n &le; 4, the code is an index into a hard-coded list of
+ * - For \a n &le; 5, the code is an index into a hard-coded list of
  *   all possible permutations (i.e., an index into the symmetric group
  *   <i>S<sub>n</sub></i>).  For details, see the documentation for
- *   the specialisations Perm<2>, Perm<3> and Perm<4> respectively.
+ *   the specialisations Perm<2>, Perm<3>, Perm<4> and Perm<5> respectively.
  *
  * For \a n = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
  * triangulations), this template is specialised: the code is highly optimised
@@ -159,6 +191,12 @@ class Perm {
         typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype Code;
 
         /**
+         * Indicates what type of internal permutation code is used by
+         * this instance of the Perm class template.
+         */
+        static constexpr PermCodeType codeType = PERM_CODE_IMAGES;
+
+        /**
          * The total number of permutations on \a n elements.
          * This is the size of the symmetric group <i>S<sub>n</sub></i>.
          */
@@ -169,6 +207,14 @@ class Perm {
          * the size of the symmetric group <i>S</i><sub><i>n</i>-1</sub>.
          */
         static constexpr Index nPerms_1 = factorial(n-1);
+
+        /**
+         * A bitmask whose lowest \a imageBits bits are 1, and whose
+         * remaining higher order bits are all 0.
+         * This may be useful when creating or analysing permutation codes.
+         */
+        static constexpr Code imageMask =
+            (static_cast<Code>(1) << Perm<n>::imageBits) - 1;
 
     private:
         Code code_;
@@ -182,11 +228,6 @@ class Perm {
 
         static constexpr Code idCode_ = idCodePartial(n - 1);
             /**< The internal code for the identity permutation. */
-
-        static constexpr Code imageMask_ = (static_cast<
-                typename Perm<n>::Code>(1) << Perm<n>::imageBits) - 1;
-            /**< A bitmask whose lowest \a imageBits are 1, and whose
-                 remaining higher order bits are all 0. */
 
     public:
         /**
@@ -393,6 +434,17 @@ class Perm {
         constexpr bool isIdentity() const;
 
         /**
+         * Returns the <i>i</i>th rotation.
+         * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod \a n)
+         * for all \a k.
+         *
+         * @param i the image of 0; this must be between 0 and <i>n</i>-1
+         * inclusive.
+         * @return the <i>i</i>th rotation.
+         */
+        static constexpr Perm rot(int i);
+
+        /**
          * Returns the <i>i</i>th permutation on \a n elements, where
          * permutations are numbered lexicographically beginning at 0.
          *
@@ -403,7 +455,7 @@ class Perm {
          * must be between 0 and <i>n</i>!-1 inclusive.
          * @return the <i>i</i>th permutation.
          */
-        static Perm atIndex(Index i);
+        static constexpr Perm atIndex(Index i);
 
         /**
          * Returns the lexicographical index of this permutation.  This
@@ -419,7 +471,7 @@ class Perm {
          * @return the index of this permutation, which will be between
          * 0 and <i>n</i>!-1 inclusive.
          */
-        Index index() const;
+        constexpr Index index() const;
 
         /**
          * Returns a random permutation on \a n elements.
@@ -582,17 +634,6 @@ template <> class Perm<5>;
 
 /*@}*/
 
-// Static constants for Perm
-
-template <int n>
-constexpr int Perm<n>::imageBits;
-
-template <int n>
-constexpr typename Perm<n>::Code Perm<n>::idCode_;
-
-template <int n>
-constexpr typename Perm<n>::Code Perm<n>::imageMask_;
-
 // Inline functions for Perm
 
 template <int n>
@@ -608,8 +649,8 @@ inline constexpr Perm<n>::Perm() : code_(idCode_) {
 
 template <int n>
 inline constexpr Perm<n>::Perm(int a, int b) : code_(idCode_) {
-    code_ &= ~(imageMask_ << (imageBits * a));
-    code_ &= ~(imageMask_ << (imageBits * b));
+    code_ &= ~(imageMask << (imageBits * a));
+    code_ &= ~(imageMask << (imageBits * b));
     code_ |= (static_cast<Code>(a) << (imageBits * b));
     code_ |= (static_cast<Code>(b) << (imageBits * a));
 }
@@ -649,7 +690,7 @@ template <int n>
 constexpr bool Perm<n>::isPermCode(Code code) {
     unsigned mask = 0;
     for (int i = 0; i < n; ++i)
-        mask |= (1 << ((code >> (imageBits * i)) & imageMask_));
+        mask |= (1 << ((code >> (imageBits * i)) & imageMask));
     return (mask + 1 == (1 << n));
 }
 
@@ -690,13 +731,13 @@ constexpr int Perm<n>::sign() const {
 
 template <int n>
 inline constexpr int Perm<n>::operator[](int source) const {
-    return (code_ >> (imageBits * source)) & imageMask_;
+    return (code_ >> (imageBits * source)) & imageMask;
 }
 
 template <int n>
 inline constexpr int Perm<n>::preImageOf(int image) const {
     for (int i = 0; i < n; ++i)
-        if (((code_ >> (imageBits * i)) & imageMask_) == image)
+        if (((code_ >> (imageBits * i)) & imageMask) == image)
             return i;
     // We should never reach this point.
     return -1;
@@ -729,34 +770,49 @@ inline constexpr bool Perm<n>::isIdentity() const {
 }
 
 template <int n>
-Perm<n> Perm<n>::atIndex(Index i) {
-    int image[n];
-    int p, q;
-    for (p = 0; p < n; ++p) {
-        image[n - p - 1] = i % (p + 1);
-        i /= (p + 1);
+constexpr Perm<n> Perm<n>::rot(int i) {
+    Code code = 0;
+    Code src = 0;
+    Code dest = i;
+    while (src < n) {
+        code |= (dest << (imageBits * src));
+        ++src;
+        if (++dest == n)
+            dest = 0;
     }
-    for (p = n - 1; p >= 0; --p)
-        for (q = p + 1; q < n; ++q)
-            if (image[q] >= image[p])
-                ++image[q];
-    return Perm<n>(image);
+    return Perm<n>(code);
 }
 
 template <int n>
-typename Perm<n>::Index Perm<n>::index() const {
-    int image[n];
-    int p, q;
-    for (p = 0; p < n; ++p)
-        image[p] = (*this)[p];
-    for (p = 0; p < n; ++p)
-        for (q = p + 1; q < n; ++q)
-            if (image[q] > image[p])
-                --image[q];
+constexpr Perm<n> Perm<n>::atIndex(Index i) {
+    Code code = 0;
+    for (int p = 0; p < n; ++p) {
+        // n - p - 1 -> i % (p + 1);
+        code |= (static_cast<Code>(i % (p + 1)) << ((n - p - 1) * imageBits));
+        i /= (p + 1);
+    }
+    for (int pos1 = imageBits * (n - 1); pos1 >= 0; pos1 -= imageBits)
+        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
+                pos2 += imageBits)
+            if (((code >> pos2) & imageMask) >= ((code >> pos1) & imageMask))
+                code += (Code(1) << pos2); // increment image at pos2
+    return Perm<n>(code);
+}
+
+template <int n>
+constexpr typename Perm<n>::Index Perm<n>::index() const {
     Index ans = 0;
-    for (p = 0; p < n - 1; ++p) {
+    Code c = code_;
+    int p = 0, pos1 = 0;
+    for ( ; p < n - 1; ++p, pos1 += imageBits) {
+        // position pos1 holds the (p)th image
+        int pImg = (c >> pos1) & imageMask; // image at pos1
+        for (int pos2 = pos1 + imageBits; pos2 < n * imageBits;
+                pos2 += imageBits)
+            if (((c >> pos2) & imageMask) > pImg)
+                c -= (Code(1) << pos2); // decrement image at pos2
         ans *= (n - p);
-        ans += image[p];
+        ans += pImg;
     }
     return ans;
 }
@@ -797,7 +853,7 @@ template <int n>
 std::string Perm<n>::str() const {
     char ans[n + 1];
     for (int i = 0; i < n; ++i)
-        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
+        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask);
     ans[n] = 0;
 
     return ans;
@@ -807,7 +863,7 @@ template <int n>
 std::string Perm<n>::trunc(unsigned len) const {
     char ans[n + 1];
     for (int i = 0; i < len; ++i)
-        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask_);
+        ans[i] = regina::digit((code_ >> (imageBits * i)) & imageMask);
     ans[len] = 0;
 
     return ans;

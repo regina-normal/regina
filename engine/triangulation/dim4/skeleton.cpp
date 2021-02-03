@@ -129,14 +129,13 @@ void Triangulation<4>::calculateVertexLinks() {
                 // tetrahedron.  Make the gluing.
                 adjVertexIdx = pent->adjacentGluing(exitFacet)[vertexIdx];
                 tet[index]->join(
-                    pent->regina::detail::SimplexFaces<4, 3>::mapping_[vertexIdx].
+                    std::get<3>(pent->mappings_)[vertexIdx].
                         preImageOf(exitFacet),
                     tet[5 * adjPentIdx + adjVertexIdx],
                     Perm<4>::contract(
-                            adjPent->regina::detail::SimplexFaces<4, 3>::
-                            mapping_[adjVertexIdx].inverse() *
+                        std::get<3>(adjPent->mappings_)[adjVertexIdx].inverse() *
                         pent->adjacentGluing(exitFacet) *
-                        pent->regina::detail::SimplexFaces<4, 3>::mapping_[vertexIdx]));
+                        std::get<3>(pent->mappings_)[vertexIdx]));
             }
             ++index;
         }
@@ -149,7 +148,7 @@ void Triangulation<4>::calculateVertexLinks() {
             // It's a 3-ball or nothing.
             if ((! knownSimpleLinks_) && ! vertex->link_->isBall()) {
                 valid_ = vertex->component_->valid_ =  false;
-                vertex->markBadLink();
+                vertex->whyInvalid_.value |= Vertex<4>::INVALID_LINK;
                 foundNonSimpleLink = true;
                 // The vertex belongs to some pentachoron with boundary
                 // tetrahedra, and so already belongs to a boundary component.
@@ -161,7 +160,7 @@ void Triangulation<4>::calculateVertexLinks() {
             if ((! vertex->link_->isValid()) || vertex->link_->isIdeal()) {
                 // Bapow.
                 valid_ = vertex->component_->valid_ =  false;
-                vertex->markBadLink();
+                vertex->whyInvalid_.value |= Vertex<4>::INVALID_LINK;
                 foundNonSimpleLink = true;
                 vertex->boundaryComponent_ = new BoundaryComponent<4>();
                 vertex->boundaryComponent_->orientable_ =
@@ -195,18 +194,16 @@ void Triangulation<4>::calculateVertexLinks() {
         // spherical double cover at the vertex link).  We detect these
         // cases separately under calculateEdgeLinks() below.
         if (! vertex->isValid()) {
-            Triangulation<3>::VertexIterator linkit;
             int type;
-            for (linkit = vertex->link_->vertices().begin();
-                    linkit != vertex->link_->vertices().end(); ++linkit) {
-                type = (*linkit)->link();
+            for (Vertex<3>* v : vertex->link_->vertices()) {
+                type = v->link();
                 if (type != Vertex<3>::SPHERE && type != Vertex<3>::DISC) {
                     // This 3-manifold vertex is at the end of an
                     // invalid 4-manifold edge.
 
                     // Find a tetrahedron in the 3-manifold vertex link
                     // containing the bad 3-manifold vertex.
-                    const VertexEmbedding<3>& linkemb((*linkit)->front());
+                    const VertexEmbedding<3>& linkemb(v->front());
 
                     // Find the corresponding pentachoron in the 4-manifold
                     // triangulation.
@@ -216,14 +213,13 @@ void Triangulation<4>::calculateVertexLinks() {
                     // We have the pentachoron (vemb.pentachoron())
                     // and one of the endpoints of the edge (vemb.vertex()).
                     // Find the other endpoint of the edge.
-                    int otherEnd = vemb.pentachoron()->
-                        regina::detail::SimplexFaces<4, 3>::mapping_
+                    int otherEnd = std::get<3>(vemb.pentachoron()->mappings_)
                         [vemb.vertex()][linkemb.vertex()];
 
                     // Got it!
-                    vemb.pentachoron()->regina::detail::SimplexFaces<4, 1>::face_[
+                    std::get<1>(vemb.pentachoron()->faces_)[
                         Edge<4>::edgeNumber[vemb.vertex()][otherEnd]
-                        ]->markBadLink();
+                        ]->whyInvalid_.value |= Edge<4>::INVALID_LINK;
                 }
             }
         }
@@ -245,7 +241,7 @@ void Triangulation<4>::calculateEdgeLinks() {
             const Triangulation<2>* link = e->buildLink();
             if ((link->isClosed() && link->eulerChar() != 2) ||
                     ((! link->isClosed()) && link->eulerChar() != 1))
-                e->markBadLink();
+                e->whyInvalid_.value |= Edge<4>::INVALID_LINK;
         }
 }
 

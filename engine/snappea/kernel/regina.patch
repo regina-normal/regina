@@ -35,7 +35,7 @@ index 7f7c29f1b..c0911805e 100644
   *  you can close the block here.
   */
 +
-+} }
++} // namespace regina::snappea
 diff --git a/engine/snappea/kernel/kernel.h b/engine/snappea/kernel/kernel.h
 index 7b97fd785..837f6d1c7 100644
 --- a/engine/snappea/kernel/kernel.h
@@ -73,7 +73,7 @@ index c24d6199e..ef142f978 100644
  #endif
  #endif
 +
-+namespace regina { namespace snappea {
++namespace regina::snappea {
 diff --git a/engine/snappea/kernel/SnapPea.h b/engine/snappea/kernel/SnapPea.h
 index 6fa6aaa96..469223e71 100644
 --- a/engine/snappea/kernel/SnapPea.h

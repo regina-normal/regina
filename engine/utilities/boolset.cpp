@@ -36,19 +36,17 @@
 
 namespace regina {
 
-const unsigned char BoolSet::eltTrue = 1;
-const unsigned char BoolSet::eltFalse = 2;
 const BoolSet BoolSet::sNone;
 const BoolSet BoolSet::sTrue(true);
 const BoolSet BoolSet::sFalse(false);
 const BoolSet BoolSet::sBoth(true, true);
 
-std::ostream& operator << (std::ostream& out, const BoolSet& set) {
-    if (set == BoolSet::sNone)
+std::ostream& operator << (std::ostream& out, BoolSet set) {
+    if (set == BoolSet())
         out << "{ }";
-    else if (set == BoolSet::sTrue)
+    else if (set == true)
         out << "{ true }";
-    else if (set == BoolSet::sFalse)
+    else if (set == false)
         out << "{ false }";
     else
         out << "{ true, false }";

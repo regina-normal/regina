@@ -119,77 +119,75 @@ void HomologicalData::computeccIndexing() {
     // Off we go...
 
     unsigned long i=0;
-    unsigned long j=0;
-
-    for (Triangulation<3>::VertexIterator vit = tri->vertices().begin();
-            vit != tri->vertices().end(); vit++) {
-        if (!((*vit)->isIdeal())) sNIV.push_back(i);
+    for (Vertex<3>* v : tri->vertices()) {
+        if (!(v->isIdeal()))
+            sNIV.push_back(i);
         i++;
     } // sNIV
 
-    for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
-            eit != tri->edges().end(); eit++) {
+    unsigned long j=0;
+    for (Edge<3>* e : tri->edges()) {
         for (i=0;i<2;i++) {
-            if ((*eit)->vertex(i)->isIdeal()) sIEOE.push_back(2*j+i);
+            if (e->vertex(i)->isIdeal())
+                sIEOE.push_back(2*j+i);
         }
         j++;
     }
+
     j=0; // sIEOE
-
-    for (Triangulation<3>::TriangleIterator fit = tri->triangles().begin();
-            fit != tri->triangles().end(); fit++) {
+    for (Triangle<3>* t : tri->triangles()) {
         for (i=0;i<3;i++) {
-            if ((*fit)->vertex(i)->isIdeal()) sIEEOF.push_back(3*j+i);
+            if (t->vertex(i)->isIdeal())
+                sIEEOF.push_back(3*j+i);
         }
         j++;
     }
-    j=0; // sIEEOF
 
-    for (Triangulation<3>::TetrahedronIterator tit = tri->tetrahedra().begin();
-            tit != tri->tetrahedra().end(); tit++) {
+    j=0; // sIEEOF
+    for (Tetrahedron<3>* tet : tri->tetrahedra()) {
         for (i=0;i<4;i++)  {
-            if ((*tit)->vertex(i)->isIdeal()) {
+            if (tet->vertex(i)->isIdeal()) {
                 sIEFOT.push_back(4*j+i);
             }
         }
         j++;
     }
-    j=0;// sIEFOT
 
-    for (Triangulation<3>::VertexIterator vit = tri->vertices().begin();
-            vit != tri->vertices().end(); vit++) // dNINBV
-    {if ((!((*vit)->isIdeal())) &&
-            (!((*vit)->isBoundary()))) dNINBV.push_back(j);
+    j=0;// sIEFOT
+    for (Vertex<3>* v : tri->vertices()) { // dNINBV
+        if ((!(v->isIdeal())) && (!(v->isBoundary())))
+            dNINBV.push_back(j);
         j++;
-    } j=0;
-    for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
-            eit != tri->edges().end(); eit++) {
-        if (!((*eit)->isBoundary()))
+    }
+    j=0;
+    for (Edge<3>* e : tri->edges()) {
+        if (!(e->isBoundary()))
             dNBE.push_back(j);
         j++;
     }
     j=0; // dNBE
-    for (Triangulation<3>::TriangleIterator fit = tri->triangles().begin();
-            fit != tri->triangles().end(); fit++) {
-        if (!((*fit)->isBoundary()))        dNBF.push_back(j);
+    for (Triangle<3>* t : tri->triangles()) {
+        if (!(t->isBoundary()))
+            dNBF.push_back(j);
         j++;
     }
-    i=0; // dNBF
 
-    for (Triangulation<3>::VertexIterator vit = tri->vertices().begin();
-            vit != tri->vertices().end(); vit++) // sBNIV
-    {if ( (!((*vit)->isIdeal())) &&
-            ((*vit)->isBoundary())) sBNIV.push_back(i);
+    i=0;
+    for (Vertex<3>* v : tri->vertices()) { // sBNIV
+        if ( (!(v->isIdeal())) && (v->isBoundary()))
+            sBNIV.push_back(i);
         i++;
-    } i=0;
-    for (Triangulation<3>::EdgeIterator eit = tri->edges().begin();
-            eit != tri->edges().end(); eit++) // sBNIE
-    {if ((*eit)->isBoundary()) sBNIE.push_back(i);
+    }
+    i=0;
+    for (Edge<3>* e : tri->edges()) { // sBNIE
+        if (e->isBoundary())
+            sBNIE.push_back(i);
         i++;
-    } i=0;
-    for (Triangulation<3>::TriangleIterator fit = tri->triangles().begin();
-            fit != tri->triangles().end(); fit++) // sBNIF
-    {if ((*fit)->isBoundary()) sBNIF.push_back(i);
+    }
+    i=0;
+    for (Triangle<3>* t : tri->triangles()) { // sBNIF
+        if (t->isBoundary())
+            sBNIF.push_back(i);
         i++;
     }
 

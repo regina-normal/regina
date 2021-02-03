@@ -53,7 +53,7 @@ void addVertex3(pybind11::module_& m) {
         .def("vertex", &VertexEmbedding<3>::vertex)
         .def("vertices", &VertexEmbedding<3>::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output(e, true /* __repr__ */);
     regina::python::add_eq_operators(e);
 
     auto c = pybind11::class_<Face<3, 0>>(m, "Face3_0")
@@ -103,6 +103,24 @@ void addVertex3(pybind11::module_& m) {
         .def_static("ordering", &Vertex<3>::ordering)
         .def_static("faceNumber", &Vertex<3>::faceNumber)
         .def_static("containsVertex", &Vertex<3>::containsVertex)
+        // On some systems we cannot take addresses of the following
+        // inline class constants (e.g., this fails with gcc10 on windows).
+        // We therefore define getter functions instead.
+        .def_property_readonly_static("nFaces", [](pybind11::object) {
+            return Vertex<3>::nFaces;
+        })
+        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
+            return Vertex<3>::lexNumbering;
+        })
+        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
+            return Vertex<3>::oppositeDim;
+        })
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Vertex<3>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Vertex<3>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

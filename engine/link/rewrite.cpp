@@ -42,9 +42,7 @@ namespace detail {
             return link.knotSig();
         }
 
-        static const char* progressStage() {
-            return "Exploring diagrams";
-        }
+        static constexpr const char* progressStage = "Exploring diagrams";
 
         static bool satisfiesPreconditions(const Link& link) {
             return link.countComponents() == 1;

@@ -66,16 +66,14 @@ void Triangulation<3>::calculateSkeleton() {
 }
 
 void Triangulation<3>::checkPermutations() {
-    TetrahedronIterator it;
-
-    for (it = simplices_.begin(); it != simplices_.end(); it++)
+    for (Tetrahedron<3>* tet : simplices_)
         for (int face = 0; face < 4; face++) {
-            Tetrahedron<3> * adjacent = (*it) -> adjacentTetrahedron(face);
+            Tetrahedron<3> * adjacent = tet->adjacentTetrahedron(face);
 
             if (adjacent) {
-                Perm<4> perm = (*it) -> adjacentGluing(face);
+                Perm<4> perm = tet->adjacentGluing(face);
 
-                Perm<4> adj_perm = adjacent -> adjacentGluing(perm[face]);
+                Perm<4> adj_perm = adjacent->adjacentGluing(perm[face]);
 
                 if (!(perm*adj_perm).isIdentity()) {
                     valid_ = false;
@@ -86,7 +84,7 @@ void Triangulation<3>::checkPermutations() {
                                  "do not match in skeleton.cpp" << std::endl;
                 }
 
-                if ((*it) != adjacent -> adjacentTetrahedron(perm[face])) {
+                if (tet != adjacent->adjacentTetrahedron(perm[face])) {
                     valid_ = false;
 
                     // This printing statement is temporary code 
@@ -116,10 +114,11 @@ void Triangulation<3>::calculateVertexLinks() {
         // recompute the skeleton.
         const EdgeEmbedding<3>& emb = e->front();
         tet = emb.tetrahedron();
-        end0 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
-            [emb.edge()][0]];
-        end1 = tet->regina::detail::SimplexFaces<3, 0>::face_[tet->regina::detail::SimplexFaces<3, 1>::mapping_
-            [emb.edge()][1]];
+
+        end0 = std::get<0>(tet->faces_)[
+            std::get<1>(tet->mappings_)[emb.edge()][0]];
+        end1 = std::get<0>(tet->faces_)[
+            std::get<1>(tet->mappings_)[emb.edge()][1]];
 
         if (e->isBoundary()) {
             // Contribute to v_bdry.
@@ -149,7 +148,7 @@ void Triangulation<3>::calculateVertexLinks() {
                 vertex->link_ = Vertex<3>::DISC;
             else {
                 vertex->link_ = Vertex<3>::INVALID;
-                vertex->markBadLink();
+                vertex->whyInvalid_.value |= Vertex<3>::INVALID_LINK;
                 valid_ = vertex->component_->valid_ = false;
                 standard_ = false;
             }

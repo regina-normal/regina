@@ -113,17 +113,23 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("preImageOf", &Perm<n>::preImageOf)
         .def("compareWith", &Perm<n>::compareWith)
         .def("isIdentity", &Perm<n>::isIdentity)
+        .def_static("rot", &Perm<n>::rot)
         .def_static("atIndex", &Perm<n>::atIndex)
         .def("index", &Perm<n>::index)
         .def_static("rand", (Perm<n> (*)(bool))(&Perm<n>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<n>::trunc)
         .def("clear", &Perm<n>::clear)
+        .def_property_readonly_static("codeType",
+            [](pybind11::object /* self */) { return Perm<n>::codeType; })
         .def_property_readonly_static("nPerms",
             [](pybind11::object /* self */) { return Perm<n>::nPerms; })
         .def_property_readonly_static("nPerms_1",
             [](pybind11::object /* self */) { return Perm<n>::nPerms_1; })
-        .def_readonly_static("imageBits", &Perm<n>::imageBits)
+        .def_property_readonly_static("imageBits",
+            [](pybind11::object /* self */) { return Perm<n>::imageBits; })
+        .def_property_readonly_static("imageMask",
+            [](pybind11::object /* self */) { return Perm<n>::imageMask; })
     ;
     Perm_extend<n, n-1>::add_bindings(c);
     Perm_contract<n, n+1>::add_bindings(c);
@@ -134,6 +140,12 @@ void addPerm(pybind11::module_& m, const char* name) {
 void addPerm(pybind11::module_& m) {
     m.def("digit", regina::digit);
     m.def("factorial", regina::factorial);
+
+    pybind11::enum_<regina::PermCodeType>(m, "PermCodeType")
+        .value("PERM_CODE_IMAGES", regina::PERM_CODE_IMAGES)
+        .value("PERM_CODE_INDEX", regina::PERM_CODE_INDEX)
+        .export_values()
+        ;
 
     addPerm<6>(m, "Perm6");
     addPerm<7>(m, "Perm7");

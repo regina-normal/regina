@@ -33,8 +33,7 @@
 #include "pythonoutputstream.h"
 #include "../pybind11/pybind11.h"
 
-namespace regina {
-namespace python {
+namespace regina::python {
 
 void PythonOutputStream::write(const std::string& data) {
     buffer.append(data);
@@ -78,4 +77,4 @@ void PythonOutputStream::install(const char* streamName) {
     }
 }
 
-} } // namespace regina::python
+} // namespace regina::python

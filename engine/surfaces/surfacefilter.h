@@ -74,8 +74,8 @@ class XMLFilterReader;
  *
  * - a typedef \a Class that represents the corresponding
  *   SurfaceFilter descendant class;
- * - a static function name() that returns a C-style string giving the
- *   human-readable name of the filter type.
+ * - a static constexpr member <tt>const char* name</tt>, which gives
+ *   the human-readable name of the filter type.
  *
  * \ifacespython Not present.
  *
@@ -109,40 +109,32 @@ struct SurfaceFilterInfo;
             return id; \
         } \
         inline virtual std::string filterTypeName() const override { \
-            return SurfaceFilterInfo<id>::name(); \
+            return SurfaceFilterInfo<id>::name; \
         }
 
 #ifndef __DOXYGEN // Doxygen complains about undocumented specialisations.
 template <>
 struct PacketInfo<PACKET_SURFACEFILTER> {
     typedef SurfaceFilter Class;
-    inline static const char* name() {
-        return "Surface Filter";
-    }
+    static constexpr const char* name = "Surface Filter";
 };
 
 template <>
 struct SurfaceFilterInfo<NS_FILTER_DEFAULT> {
     typedef SurfaceFilter Class;
-    inline static const char* name() {
-        return "Default filter";
-    }
+    static constexpr const char* name = "Default filter";
 };
 
 template <>
 struct SurfaceFilterInfo<NS_FILTER_COMBINATION> {
     typedef SurfaceFilterCombination Class;
-    inline static const char* name() {
-        return "Combination filter";
-    }
+    static constexpr const char* name = "Combination filter";
 };
 
 template <>
 struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
     typedef SurfaceFilterProperties Class;
-    inline static const char* name() {
-        return "Filter by basic properties";
-    }
+    static constexpr const char* name = "Filter by basic properties";
 };
 #endif
 
@@ -473,14 +465,14 @@ class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
          *
          * @param value the new set of allowable orientabilities.
          */
-        void setOrientability(const BoolSet& value);
+        void setOrientability(BoolSet value);
         /**
          * Sets the set of allowable compactness properties.
          * See compactness() for further details.
          *
          * @param value the new set of allowable compactness properties.
          */
-        void setCompactness(const BoolSet& value);
+        void setCompactness(BoolSet value);
         /**
          * Sets the set of allowable has-real-boundary properties.
          * See realBoundary() for further details.
@@ -488,7 +480,7 @@ class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
          * @param value the new set of allowable has-real-boundary
          * properties.
          */
-        void setRealBoundary(const BoolSet& value);
+        void setRealBoundary(BoolSet value);
 
         virtual bool accept(const NormalSurface& surface) const override;
         virtual void writeTextLong(std::ostream& out) const override;
@@ -519,7 +511,7 @@ inline SurfaceFilterType SurfaceFilter::filterType() const {
 }
 
 inline std::string SurfaceFilter::filterTypeName() const {
-    return SurfaceFilterInfo<NS_FILTER_DEFAULT>::name();
+    return SurfaceFilterInfo<NS_FILTER_DEFAULT>::name;
 }
 
 inline void SurfaceFilter::writeXMLFilterData(std::ostream&) const {
@@ -567,9 +559,9 @@ inline Packet* SurfaceFilterCombination::internalClonePacket(Packet*) const {
 // Inline functions for SurfaceFilterProperties
 
 inline SurfaceFilterProperties::SurfaceFilterProperties() :
-        orientability_(BoolSet::sBoth),
-        compactness_(BoolSet::sBoth),
-        realBoundary_(BoolSet::sBoth) {
+        orientability_(true, true),
+        compactness_(true, true),
+        realBoundary_(true, true) {
 }
 inline SurfaceFilterProperties::SurfaceFilterProperties(
         const SurfaceFilterProperties& cloneMe) :
@@ -616,19 +608,19 @@ inline void SurfaceFilterProperties::removeAllEulerChars() {
     ChangeEventSpan span(this);
     eulerChar_.clear();
 }
-inline void SurfaceFilterProperties::setOrientability(const BoolSet& value) {
+inline void SurfaceFilterProperties::setOrientability(BoolSet value) {
     if (orientability_ != value) {
         ChangeEventSpan span(this);
         orientability_ = value;
     }
 }
-inline void SurfaceFilterProperties::setCompactness(const BoolSet& value) {
+inline void SurfaceFilterProperties::setCompactness(BoolSet value) {
     if (compactness_ != value) {
         ChangeEventSpan span(this);
         compactness_ = value;
     }
 }
-inline void SurfaceFilterProperties::setRealBoundary(const BoolSet& value) {
+inline void SurfaceFilterProperties::setRealBoundary(BoolSet value) {
     if (realBoundary_ != value) {
         ChangeEventSpan span(this);
         realBoundary_ = value;

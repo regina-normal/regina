@@ -317,16 +317,16 @@ NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
     Triangulation<3>* owner = triangulation();
 
     // Basic sanity checks:
-    if (coords_ != Variant::reducedCoords())
-        return 0;
+    if (coords_ != Variant::reducedCoords)
+        return nullptr;
     if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
-        return 0;
+        return nullptr;
     if (owner->isIdeal() || ! owner->isValid())
-        return 0;
+        return nullptr;
 
     // Prepare a final surface list.
     NormalSurfaces* ans = new NormalSurfaces(
-        Variant::standardCoords(), NS_EMBEDDED_ONLY | NS_VERTEX,
+        Variant::standardCoords, NS_EMBEDDED_ONLY | NS_VERTEX,
         algorithm_ | NS_VERTEX_VIA_REDUCED);
 
     if (! owner->isEmpty()) {
@@ -596,11 +596,10 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
     }
 
     // All done!  Put the solutions into the normal surface list and clean up.
-    for (typename RaySpecList::iterator it = list[workingList].begin();
-            it != list[workingList].end(); ++it) {
-        surfaces.push_back((*it)->
+    for (auto ray : list[workingList]) {
+        surfaces.push_back(ray->
             template recover<typename Variant::StandardVector>(owner));
-        delete *it;
+        delete ray;
     }
 
     delete[] link;

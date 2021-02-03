@@ -193,9 +193,9 @@ Triangulation<3>* Link::complement(bool simplify) const {
         // our link is a k-component unlink for some k).
         // Build a 3-sphere for now; we will pick up the missing unknot
         // components shortly.
-        Tetrahedron<3>* t = ans->newTetrahedron();
-        t->join(0, t, Perm<4>(0,1));
-        t->join(2, t, Perm<4>(2,3));
+        Tetrahedron<3>* tet = ans->newTetrahedron();
+        tet->join(0, tet, Perm<4>(0,1));
+        tet->join(2, tet, Perm<4>(2,3));
     }
 
     if (! ans->isConnected()) {

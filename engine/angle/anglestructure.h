@@ -139,16 +139,16 @@ class REGINA_API AngleStructure :
             /**< Stores a variety of angle structure properties as
              *   described by the flag constants in this class.
              *   Flags can be combined using bitwise OR. */
-        static const unsigned long flagStrict;
+        static constexpr unsigned long flagStrict = 1;
             /**< Signals that this angle structure is strict. */
-        static const unsigned long flagTaut;
+        static constexpr unsigned long flagTaut = 2;
             /**< Signals that this angle structure is taut.  A taut
                  structure might also be veering, in which case the
                  flag \a flagVeering will be set also. */
-        static const unsigned long flagVeering;
+        static constexpr unsigned long flagVeering = 8;
             /**< Signals that this angle structure is veering (in which
                  case that the \a flagTaut flag must be set also). */
-        static const unsigned long flagCalculatedType;
+        static constexpr unsigned long flagCalculatedType = 4;
             /**< Signals that the type (strict/taut/veering) has been
                  calculated. */
 

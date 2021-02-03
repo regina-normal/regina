@@ -182,7 +182,7 @@ const AbelianGroup& Triangulation<4>::homologyH2() const {
         bdry21.rows() : bdry21.columns());
 
     unsigned long extra = lim;
-    for (unsigned long i = 0; i < lim; ++i)
+    for (i = 0; i < lim; ++i)
         if (bdry21.entry(i, i) == 0) {
             extra = i;
             break;

@@ -40,8 +40,7 @@
 #define __STRINGS_H_DETAIL
 #endif
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 /**
  * \weakgroup detail
@@ -294,7 +293,7 @@ struct Strings<15> {
 
 /*@}*/
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

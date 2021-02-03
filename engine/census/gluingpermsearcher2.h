@@ -98,7 +98,7 @@ class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
          */
         typedef void (*Use)(const GluingPermSearcher<2>*, void*);
 
-        static const char dataTag_;
+        static constexpr char dataTag_ = 'g';
             /**< A character used to identify this class when reading
                  and writing tagged data in text format. */
 

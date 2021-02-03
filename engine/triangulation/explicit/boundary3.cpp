@@ -34,12 +34,11 @@
 #include "triangulation/dim3.h"
 #include "triangulation/dim2.h" // for deleting boundary components
 
-namespace regina { namespace detail {
+namespace regina::detail {
 
-template REGINA_API BoundaryComponentStorage<3, true, true, true>::
-    ~BoundaryComponentStorage();
+template REGINA_API BoundaryComponentBase<3>::~BoundaryComponentBase();
 
 template REGINA_API Triangulation<2>*
-    BoundaryComponentStorage<3, true, true, true>::buildRealBoundary() const;
+    BoundaryComponentBase<3>::buildRealBoundary() const;
 
-} }
+} // namespace regina::detail

@@ -34,41 +34,16 @@
 #include "triangulation/generic.h"
 #include "../helpers.h"
 
-namespace pybind11 { namespace detail {
+// On some systems we get warnings about regina's helper classes having
+// greater visibility than the pybind11 code that it uses.  We can fix
+// this by setting the same visibility attributes that pybind11 uses.
+#ifdef __GNUG__
+    #define MATCH_PYBIND11_VISIBILITY __attribute__((visibility("hidden")))
+#else
+    #define MATCH_PYBIND11_VISIBILITY
+#endif
 
-/**
- * Tell pybind11 how to convert a C++ list of triangulation faces into a
- * Python list.  This allows pybind11 to automagically convert the return
- * values for functions such as vertices(), edges(), faces(subdim), etc.,
- * within the C++ classes Triangulation<dim> and Component<dim>.
- */
-template <int dim, int subdim>
-struct type_caster<regina::FaceList<dim, subdim>> {
-    private:
-        typedef regina::FaceList<dim, subdim> FaceListType;
-
-    public:
-        PYBIND11_TYPE_CASTER(FaceListType, _("FaceList"));
-
-        bool load(handle, bool) {
-            // Never allow conversion from Python to a C++ FaceList.
-            return false;
-        }
-
-        static handle cast(const FaceListType& src, return_value_policy policy,
-                handle parent) {
-            // Conversion from C++ to Python:
-            pybind11::list ans;
-            for (auto f : src)
-                ans.append(pybind11::cast(f, policy, parent));
-            return ans.release();
-        }
-};
-
-} } // namespace pybind11::detail
-
-namespace regina {
-namespace python {
+namespace regina::python {
 
 /**
  * A helper class used to enforce return value policies for member functions
@@ -93,10 +68,11 @@ namespace python {
  * this class to adjust the return value policy if necessary afterwards.
  */
 template <pybind11::return_value_policy policy>
-class PatientManager;
+class MATCH_PYBIND11_VISIBILITY PatientManager;
 
 template <>
-class PatientManager<pybind11::return_value_policy::reference> {
+class MATCH_PYBIND11_VISIBILITY
+        PatientManager<pybind11::return_value_policy::reference> {
     // Nothing to do, since pybind11::cast() already uses this policy
     // when given a C++ pointer.
     public:
@@ -107,7 +83,8 @@ class PatientManager<pybind11::return_value_policy::reference> {
 };
 
 template <>
-class PatientManager<pybind11::return_value_policy::reference_internal> {
+class MATCH_PYBIND11_VISIBILITY
+        PatientManager<pybind11::return_value_policy::reference_internal> {
     // This policy requires us to add an extra keep_alive for each nurse.
     private:
         pybind11::handle patient_;
@@ -320,5 +297,5 @@ Perm<permSize> faceMapping(const T& t, int subdimArg, int f) {
         t, subdimArg, f);
 }
 
-} } // namespace regina::python
+} // namespace regina::python
 

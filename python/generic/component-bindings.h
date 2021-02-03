@@ -56,6 +56,11 @@ void addComponent(pybind11::module_& m, const char* name) {
         .def("isOrientable", &Component<dim>::isOrientable)
         .def("hasBoundaryFacets", &Component<dim>::hasBoundaryFacets)
         .def("countBoundaryFacets", &Component<dim>::countBoundaryFacets)
+        // We cannot take the addresses of the following header-only properties,
+        // so we define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Component<dim>::dimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

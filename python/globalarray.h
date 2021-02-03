@@ -42,13 +42,7 @@
 #include "pybind11/pybind11.h"
 #include "helpers.h"
 
-namespace regina {
-
-/**
- * Utility classes and routines to assist with Python bindings for
- * the calculation engine.
- */
-namespace python {
+namespace regina::python {
 
 template <typename T, pybind11::return_value_policy rvp>
 class GlobalArray2D;
@@ -622,6 +616,6 @@ std::ostream& operator << (std::ostream& out,
     return arr.writeText(out);
 }
 
-} } // namespace regina::python
+} // namespace regina::python
 
 #endif

@@ -69,12 +69,6 @@ const int GluingPermSearcher<4>::edgeLinkPrevFacet[10][5] = {
     {  2,  0,  1, -1, -1 }
 };
 
-#ifdef DIM4_NO_UNION_FIND
-const char GluingPermSearcher<4>::dataTag_ = 'b';
-#else
-const char GluingPermSearcher<4>::dataTag_ = 'g';
-#endif
-
 void GluingPermSearcher<4>::PentEdgeState::dumpData(std::ostream& out) const {
     // Be careful with the twisting fields, which are chars but which should
     // be written as ints.

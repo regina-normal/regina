@@ -208,7 +208,9 @@ namespace graph {
     template <int dim>
     class DualEdgeIterator {
         public:
-            typedef typename FaceList<dim, dim-1>::Iterator InternalIterator;
+            typedef decltype(regina::detail::TriangulationBase<dim>().
+                    faces<dim - 1>().begin())
+                InternalIterator;
                 /**< The type used to iterate through (<i>dim</i>-1)-faces
                      of the underlying triangulation. */
 

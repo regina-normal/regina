@@ -586,9 +586,7 @@ class REGINA_API Crossing : public MarkedElement, public Output<Crossing> {
 template <>
 struct PacketInfo<PACKET_LINK> {
     typedef Link Class;
-    inline static const char* name() {
-        return "Link";
-    }
+    static constexpr const char* name = "Link";
 };
 #endif
 
@@ -643,7 +641,7 @@ class REGINA_API Link : public Packet {
          * To pretty-print the Jones polynomial for human consumption,
          * you can call <tt>Laurent::str(Link::jonesVar)</tt>.
          */
-        static const char* jonesVar;
+        static constexpr const char* jonesVar = "\u221At"; // \u221A = root
 
         /**
          * The name of the first variable used in the variant of the
@@ -657,7 +655,7 @@ class REGINA_API Link : public Packet {
          * To pretty-print this HOMFLY polynomial for human consumption, you can
          * call <tt>Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
          */
-        static const char* homflyAZVarX;
+        static constexpr const char* homflyAZVarX = "\u03B1"; // alpha
 
         /**
          * The name of the second variable used in the variant of the
@@ -670,7 +668,7 @@ class REGINA_API Link : public Packet {
          * To pretty-print this HOMFLY polynomial for human consumption, you can
          * call <tt>Laurent2::str(Link::homflyAZVarX, Link::homflyAZVarY)</tt>.
          */
-        static const char* homflyAZVarY;
+        static constexpr const char* homflyAZVarY = "z";
 
         /**
          * The name of the first variable used in the variant of the
@@ -684,7 +682,7 @@ class REGINA_API Link : public Packet {
          * To pretty-print this HOMFLY polynomial for human consumption, you can
          * call <tt>Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
          */
-        static const char* homflyLMVarX;
+        static constexpr const char* homflyLMVarX = "\U0001D4C1"; // $\ell$
 
         /**
          * The name of the second variable used in the variant of the
@@ -697,7 +695,7 @@ class REGINA_API Link : public Packet {
          * To pretty-print this HOMFLY polynomial for human consumption, you can
          * call <tt>Laurent2::str(Link::homflyLMVarX, Link::homflyLMVarY)</tt>.
          */
-        static const char* homflyLMVarY;
+        static constexpr const char* homflyLMVarY = "m";
 
         /**
          * The name of the first variable used in the variant of the
@@ -706,7 +704,7 @@ class REGINA_API Link : public Packet {
          * This is simply an alias for homflyAZVarX.  See the documentation
          * for homflyAZVarX for further details.
          */
-        static const char* homflyVarX;
+        static constexpr const char* homflyVarX = homflyAZVarX;
 
         /**
          * The name of the second variable used in the variant of the
@@ -715,7 +713,7 @@ class REGINA_API Link : public Packet {
          * This is simply an alias for homflyAZVarY.  See the documentation
          * for homflyAZVarY for further details.
          */
-        static const char* homflyVarY;
+        static constexpr const char* homflyVarY = homflyAZVarY;
 
     public:
         /**

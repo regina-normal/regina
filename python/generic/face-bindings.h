@@ -86,23 +86,6 @@ namespace {
         }
     };
 
-    template <int dim, int subdim, int codim>
-    struct face_validity_types {
-        template <typename Class>
-        static void add(Class& c) {
-            // Only standard dimensions offer hasBadLink().
-            c.def("hasBadIdentification",
-                &Face<dim, subdim>::hasBadIdentification);
-        }
-    };
-
-    template <int dim, int subdim>
-    struct face_validity_types<dim, subdim, 1> {
-        template <typename Class>
-        static void add(Class&) {
-        }
-    };
-
     template <int dim, int subdim, int maxlower>
     struct subface_aliases {
         template <typename Class>
@@ -198,12 +181,14 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def("face", &FaceEmbedding<dim, subdim>::face)
         .def("vertices", &FaceEmbedding<dim, subdim>::vertices)
     ;
-    regina::python::add_output(e);
+    regina::python::add_output(e, true /* __repr__ */);
     regina::python::add_eq_operators(e);
     embedding_aliases<dim, subdim>::add(e);
 
     auto c = pybind11::class_<regina::Face<dim, subdim>>(m, name)
         .def("isValid", &Face<dim, subdim>::isValid)
+        // Only standard dimensions offer hasBadLink().
+        .def("hasBadIdentification", &Face<dim, subdim>::hasBadIdentification)
         .def("isLinkOrientable", &Face<dim, subdim>::isLinkOrientable)
         .def("degree", &Face<dim, subdim>::degree)
         .def("embeddings", [](const Face<dim, subdim>& f) {
@@ -232,10 +217,27 @@ void addFace(pybind11::module_& m, const char* name, const char* embName) {
         .def_static("ordering", &Face<dim, subdim>::ordering)
         .def_static("faceNumber", &Face<dim, subdim>::faceNumber)
         .def_static("containsVertex", &Face<dim, subdim>::containsVertex)
+        // On some systems we cannot take addresses of the following
+        // inline class constants (e.g., this fails with gcc10 on windows).
+        // We therefore define getter functions instead.
+        .def_property_readonly_static("nFaces", [](pybind11::object) {
+            return Face<dim, subdim>::nFaces;
+        })
+        .def_property_readonly_static("lexNumbering", [](pybind11::object) {
+            return Face<dim, subdim>::lexNumbering;
+        })
+        .def_property_readonly_static("oppositeDim", [](pybind11::object) {
+            return Face<dim, subdim>::oppositeDim;
+        })
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return Face<dim, subdim>::dimension;
+        })
+        .def_property_readonly_static("subdimension", [](pybind11::object) {
+            return Face<dim, subdim>::subdimension;
+        })
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
-    face_validity_types<dim, subdim, dim - subdim>::add(c);
     face_in_maximal_forest<dim, subdim, dim - subdim>::add(c);
     subface_aliases<dim, subdim, subdim - 1>::add(c);
 }

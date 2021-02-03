@@ -55,8 +55,7 @@
 #include "regina-core.h"
 #include <memory>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class StateData;
 
@@ -99,6 +98,6 @@ private:
     std::shared_ptr<StateData> d;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

@@ -101,7 +101,7 @@ inline constexpr Perm<3> Perm<3>::contract(Perm<k> p) {
 template <>
 inline constexpr Perm<3> Perm<3>::contract(Perm<4> p) {
     // Code map: 0,3,8,7,12,15 -> 0,1,2,3,4,5.
-    Perm<4>::Code c = p.permCode2();
+    Perm<4>::Code2 c = p.permCode2();
     return Perm<3>::fromPermCode(c == 8 ? 2 : c == 7 ? 3 : c / 3);
 }
 
@@ -112,7 +112,7 @@ inline void Perm<3>::clear(unsigned from) {
 
 template <>
 inline constexpr Perm<4> Perm<4>::extend(Perm<2> p) {
-    return Perm<4>(static_cast<Code>(p.permCode() == 0 ? 0 : 7));
+    return Perm<4>(static_cast<Code2>(p.permCode() == 0 ? 0 : 7));
 }
 
 template <>
@@ -138,7 +138,7 @@ inline void Perm<4>::clear(unsigned from) {
 
 template <>
 inline constexpr Perm<5> Perm<5>::extend(Perm<2> p) {
-    return Perm<5>(static_cast<Code>(p.permCode() == 0 ? 0 : 25));
+    return Perm<5>(static_cast<Code2>(p.permCode() == 0 ? 0 : 25));
 }
 
 template <>
@@ -210,7 +210,7 @@ constexpr Perm<n> Perm<n>::contract(Perm<k> p) {
 template <int n>
 inline void Perm<n>::clear(unsigned from) {
     for (int i = from; i < n; ++i) {
-        code_ &= ~(imageMask_ << (imageBits * i));
+        code_ &= ~(imageMask << (imageBits * i));
         code_ |= (static_cast<Code>(i) << (imageBits * i));
     }
 }

@@ -35,13 +35,13 @@
 #include <sstream>
 #include <stack>
 
-static const char TANGLE_HORIZONTAL = '-';
-static const char TANGLE_VERTICAL = '|';
-static const char TANGLE_DIAGONAL = 'x';
+static constexpr char TANGLE_HORIZONTAL = '-';
+static constexpr char TANGLE_VERTICAL = '|';
+static constexpr char TANGLE_DIAGONAL = 'x';
 
-static const char OP_POS_TWIST = '+';
-static const char OP_NEG_TWIST = '-';
-static const char OP_TURN = 'o';
+static constexpr char OP_POS_TWIST = '+';
+static constexpr char OP_NEG_TWIST = '-';
+static constexpr char OP_TURN = 'o';
 
 namespace regina {
 

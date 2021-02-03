@@ -53,6 +53,7 @@ class Perm4Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(S2);
     CPPUNIT_TEST(S3);
+    CPPUNIT_TEST(rot);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -642,6 +643,20 @@ class Perm4Test : public CppUnit::TestFixture {
                         Perm<3>::contract(Perm<4>::orderedS3[i]))
                     CPPUNIT_FAIL("Contracted S3 permutations do not "
                         "match Perm<3>.");
+            }
+        }
+
+        void rot() {
+            int i, j;
+            for (i = 0; i < 4; ++i) {
+                Perm<4> p = Perm<4>::rot(i);
+                for (j = 0; j < 4; ++j)
+                    if (p[j] != (i + j) % 4) {
+                        std::ostringstream msg;
+                        msg << "Rotation " << i << ", position " << j
+                            << " gives the wrong image " << p[j] << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
             }
         }
 };

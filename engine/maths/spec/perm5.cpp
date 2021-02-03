@@ -35,29 +35,6 @@
 
 namespace regina {
 
-Perm<5>::Perm(const int* a, const int* b) {
-    int image[5];
-    image[a[0]] = b[0];
-    image[a[1]] = b[1];
-    image[a[2]] = b[2];
-    image[a[3]] = b[3];
-    image[a[4]] = b[4];
-    code2_ = static_cast<Code2>(S5Index(
-        image[0], image[1], image[2], image[3], image[4]));
-}
-
-Perm<5>::Perm(int a0, int a1, int b0, int b1,
-        int c0, int c1, int d0, int d1, int e0, int e1) {
-    int image[5];
-    image[a0] = a1;
-    image[b0] = b1;
-    image[c0] = c1;
-    image[d0] = d1;
-    image[e0] = e1;
-    code2_ = static_cast<Code2>(S5Index(
-        image[0], image[1], image[2], image[3], image[4]));
-}
-
 std::string Perm<5>::str() const {
     char ans[6];
     for (int i = 0; i < 5; i++)

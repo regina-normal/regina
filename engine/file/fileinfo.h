@@ -64,7 +64,7 @@ namespace regina {
  */
 class REGINA_API FileInfo : public Output<FileInfo> {
     public:
-        static const int TYPE_XML;
+        static constexpr int TYPE_XML = 2;
             /**< Represents a new-style XML data file. */
 
     private:

@@ -62,8 +62,7 @@
 #include <vector>
 #include <libxml/xmlreader.h>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 class Definition;
 class Repository;
@@ -119,6 +118,6 @@ public:
     DefinitionData& operator = (const DefinitionData&) = delete;
 };
 
-} } // namespace regina::syntax
+} // namespace regina::syntax
 
 #endif

@@ -51,6 +51,7 @@ class Perm2Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(reverse);
     CPPUNIT_TEST(aliases);
     CPPUNIT_TEST(clear);
+    CPPUNIT_TEST(rot);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -329,7 +330,7 @@ class Perm2Test : public CppUnit::TestFixture {
 
         void products() {
             // A direct test.
-            unsigned i, j, x;
+            unsigned i, j, k;
             Perm<2> p, q, r;
 
             for (i = 0; i < 2; ++i) {
@@ -338,8 +339,8 @@ class Perm2Test : public CppUnit::TestFixture {
                     q = Perm<2>::S2[j];
 
                     r = p * q;
-                    for (x = 0; x < 2; ++x) {
-                        if (r[x] != p[q[x]]) {
+                    for (k = 0; k < 2; ++k) {
+                        if (r[k] != p[q[k]]) {
                             std::ostringstream msg;
                             msg << "Multiplication fails for the product "
                                 << p.str() << " * " << q.str() << ".";
@@ -485,6 +486,20 @@ class Perm2Test : public CppUnit::TestFixture {
                 p.clear(2);
                 if (! looksEqual(p, Perm<2>::Sn[i]))
                     CPPUNIT_FAIL("Wrong result for clear(2).");
+            }
+        }
+
+        void rot() {
+            int i, j;
+            for (i = 0; i < 2; ++i) {
+                Perm<2> p = Perm<2>::rot(i);
+                for (j = 0; j < 2; ++j)
+                    if (p[j] != (i + j) % 2) {
+                        std::ostringstream msg;
+                        msg << "Rotation " << i << ", position " << j
+                            << " gives the wrong image " << p[j] << ".";
+                        CPPUNIT_FAIL(msg.str());
+                    }
             }
         }
 };

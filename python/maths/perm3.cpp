@@ -87,6 +87,7 @@ void addPerm3(pybind11::module_& m) {
         .def("preImageOf", &Perm<3>::preImageOf)
         .def("compareWith", &Perm<3>::compareWith)
         .def("isIdentity", &Perm<3>::isIdentity)
+        .def_static("rot", &Perm<3>::rot)
         .def_static("atIndex", &Perm<3>::atIndex)
         .def("index", &Perm<3>::index)
         .def_static("rand", (Perm<3> (*)(bool))(&Perm<3>::rand),
@@ -99,6 +100,8 @@ void addPerm3(pybind11::module_& m) {
         .def("orderedS3Index", &Perm<3>::orderedS3Index)
         .def("orderedSnIndex", &Perm<3>::orderedS3Index)
         .def_static("extend", &Perm<3>::extend<2>)
+        .def_property_readonly_static("codeType",
+            [](pybind11::object /* self */) { return Perm<3>::codeType; })
         .def_property_readonly_static("nPerms",
             [](pybind11::object /* self */) { return Perm<3>::nPerms; })
         .def_property_readonly_static("nPerms_1",

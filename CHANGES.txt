@@ -16,7 +16,85 @@ Version 6.1  [ TODO ]
         - Regina no longer needs boost to build. It still ships the
           Boost.Graph headers (link/graph.h and triangulation/graph.h), but
           these not compiled into Regina itself, and are not actively tested.
+        - Major simplifications to the triangulation template class hierarchies.
+          A consequence is that the API docs are much more usable, since
+          doxygen can finally understand the code again.
     ENGINE:
+        Class AugTriSolidTorus:
+            - Class constants are now constexpr.
+        Class BoolSet:
+            - Almost everything in this class is now constexpr.
+            - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
+              Just use BoolSet(), true, false, or BoolSet(true, true).
+            - Most routines that took a (const BoolSet&) now just take a
+              BoolSet by value.
+        Class BoundaryComponent<dim>:
+            - Routines faces(), facets(), and the aliases vertices(), edges(),
+              etc. no longer return a const reference to a std::vector, but
+              instead return a lightweight ListView object by value.
+              C++ users should just use auto, and Python users are unaffected.
+              See the analagous Triangulation<dim> changes for further details.
+            - Routine build() now behaves correctly in the presence of
+              pinched faces (which only appear in invalid triangulations).
+            - Simplified the class hierarchy; BoundaryComponentFaceInterface,
+              BoundaryComponentStorage, WeakFaceList and WeakFaceListSuite
+              are all gone.
+            - New compile-time constant dimension.
+            - Dimension 3 is no longer specialised: all dimensions now share
+              the same generic code.
+        Class BoundaryComponent<4>:
+            - All of the changes listed for BoundaryComponent<dim> above.
+            - Added eulerChar().
+        Class Component<dim>:
+            - Routines simplices(), boundaryComponents(), faces(), and the
+              aliases vertices(), edges(), etc. no longer return a
+              const reference to a std::vector, but instead return a
+              lightweight ListView object by value.
+              C++ users should just use auto, and Python users are unaffected.
+              See the analagous Triangulation<dim> changes for further details.
+            - New compile-time constant dimension.
+        Class DiscType:
+            - Almost everything in this class is now constexpr.
+            - The class constant NONE is deprecated.  Just use DiscType().
+            - Added a bool() operator that tests for a null disc type.
+        Class EnableIf<condition, T, defaultValue>:
+            - Added to support data members that only appear for some
+              template parameters (such as validity and link orientability
+              for triangulation faces).
+        Class ExpandSequence:
+            - New type alias for working with integer parameter packs.
+        Class Face<dim, subdim>:
+            - New compile-time constants allowsNonOrientableLinks and
+              allowsInvalidFaces.
+            - Simplified the class hierarchy; FaceOrientability,
+              FaceValidity and FaceListHolder are now gone.
+            - New compile-time constants dimension and subdimension.
+        Class FaceNumbering<dim, subdim>:
+            - Everything in this class is now constexpr.
+            - New class constants lexNumbering and oppositeDim.
+            - Simplified the underlying web of template specialisations.
+        Class FileInfo:
+            - Class constant TYPE_XML is now constexpr.
+        Class GluingPermSearcher<dim> and subclasses:
+            - Several class constants are now constexpr.
+        Class HyperInfo<...>:
+            - Routine name() has been changed to a class constant.
+              This change is backward incompatible (but probably affects noone).
+        Class Link:
+            - Class constants for Jones / HOMFLY-PT variable strings are
+              now constexpr.
+        Class ListView:
+            - New lightweight objects for basic read-only access to lists.
+        Class MarkedVector:
+            - New convenience routine clear_destructive().
+            - New typedef value_type.
+            - New global swap() routine, which will be used by std::swap().
+        Class NormalInfo<...>:
+            - Routine name() has been changed to a class constant.
+              This change is backward incompatible (but probably affects noone).
+        Class PacketInfo<...>:
+            - Routine name() has been changed to a class constant.
+              This change is backward incompatible (but probably affects noone).
         Class Perm<n>:
             - Constant arrays invS2, invS3, ... have been removed completely.
               Calling perm.inverse() directly is just as fast.  If you really
@@ -24,7 +102,18 @@ Version 6.1  [ TODO ]
             - Replaced lookup tables S1, S2, S3, ..., orderedS2, orderedS3, ...
               with lightweight objects whose square bracket operators compute
               and/or look up the relevant permutations on the fly.
+            - New static routine rot().
+            - New class constant codeType.
+            - For classes whose permutation codes are packed image sequences
+              (n > 5), added a helper class constant imageMask.
             - Almost everything in the permutation classes is now constexpr.
+        Class Perm<4>:
+            - All of the changes listed for Perm<n> above.
+            - Added a new typedef Code2; this is identical to Code, but
+              it allows you to express more clearly in your source code
+              which generation of code is being used.
+            - Renamed Code to Code1, to clearly indicate that this is an old
+              code type; the old typedef Code is still present but deprecated.
         Class Perm<5>:
             - All of the changes listed for Perm<n> above.
             - Changed the internal representation; as a result there are new
@@ -32,17 +121,76 @@ Version 6.1  [ TODO ]
               isPermCode2(), and a new type Code2.  The old first-generation
               codes (used by permCode(), fromPermCode(), setPermCode() and
               isPermCode()) are slower to work with, and should be avoided.
+            - Renamed Code to Code1, to clearly indicate that this is an old
+              code type; the old typedef Code is still present but deprecated.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
+        Class PlugTriSolidTorus:
+            - Class constants are now constexpr.
+        Class SimpleSurfaceBundle:
+            - Class constants are now constexpr.
+        Class Simplex<dim>:
+            - Simplified the class hierarchy; SimplexFaces and
+              SimplexFacesSuite are now merged.
+            - New compile-time constants dimension and subdimension.
+        Class SnapPeaCensusManifold, SnapPeaCensusTri:
+            - Class constants for the census sections are now constexpr.
+        Class SurfaceFilterInfo<...>:
+            - Routine name() has been changed to a class constant.
+              This change is backward incompatible (but probably affects noone).
+        Class SurfaceFilterProperties:
+            - Routines that took a (const BoolSet&) now just take a
+              BoolSet by value.
+        Class Triangulation<dim>:
+            - Routine simplices(), faces(), components(), boundaryComponents(),
+              and the aliases vertices(), edges(), etc. no longer return a
+              const reference to a std::vector or FaceList.  Instead they
+              return a lightweight ListView object by value: its full type is
+              undefined (so you should use auto), and it supports at least the
+              same operations and functions as the old FaceList (except
+              there is no Iterator typedef - use iterator or auto instead).
+              C++ users who only ever used simplices(), faces(), etc. as a
+              temporary (as was recommended) should be unaffected, and the
+              Python behaviour of these functions is completely unchanged.
+            - Simplified the class hierarchy; BoundaryComponentCalculator,
+              EulerCalculator, FaceCalculator, FaceList and PachnerHelper are
+              now gone, and there are a lot fewer regina::alias classes.
+            - FaceListSuite has been renamed to TriangulationFaceStorage.
         Class Triangulation<3>:
+            - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.
         Class Triangluation<4>:
+            - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.
+        Class TrivialTri:
+            - Class constants are now constexpr.
+        Class XMLCallback:
+            - The state constants have now been rolled into a State enum type.
+        Function allowsNonOrientableLinks(), allowsInvalidFaces():
+            - Removed these global functions (which were never available in
+              python). Use Face<dim, subdim>::allowsNonOrientableLinks
+              and Face<dim, subdim>::allowsInvalidFaces instead.
+        Function binomSmall(), binomMedium():
+            - Both these functions are now inline and constexpr.
+        Function faceOppositeEdge<dim>():
+            - These functions are now constexpr.
+        Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
+                quadString:
+            - These are all now inline constexpr.
+        Global arrays triDiscArcs, quadDiscArcs, octDiscArcs:
+            - These are all now inline constexpr.
+            - For C++ users, these are no longer macros; instead they are
+              once again genuine 2-D arrays.  Unfortunately this change is not
+              backward compatible: you must now use foo[i][j], not foo(i,j).
+              Python users are unaffected.
     PYTHON:
+        - All face embedding classes now have a __repr__() for easier printing.
+          This means, for instance, that print(face.embeddings()) is now useful.
+        - Likewise, BoolSet and DiscType now have __repr__().
         - Wrapped Perm<n>::SnIndex() for n=2,3,4,5; this alias has been present
           in C++ for a long time but was somehow never wrapped in Python.
     USER INTERFACES:

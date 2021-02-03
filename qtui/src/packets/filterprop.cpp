@@ -297,15 +297,15 @@ BoolSet FilterPropUI::getBoolSet(QCheckBox* use, QComboBox* opt) {
         return BoolSet(opt->currentIndex() == 0);
     } else {
         // No restrictions.
-        return BoolSet::sBoth;
+        return BoolSet(true, true);
     }
 }
 
 void FilterPropUI::setBoolSet(QCheckBox* use, QComboBox* opt,
         BoolSet set) {
-    if (set == BoolSet::sBoth || set == BoolSet::sNone) {
+    if (set == BoolSet() || set == BoolSet(true, true)) {
         // No restrictions.
-        // Note that we're essentially ignoring sNone, which should
+        // Note that we're essentially ignoring the empty set, which should
         // never occur (and is useless) anyway.
         use->setChecked(false);
         opt->setEnabled(false);

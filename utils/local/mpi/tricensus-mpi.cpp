@@ -733,16 +733,16 @@ void slaveDescribeCensusParameters(std::ostream& out) {
     else
         out << "Searching for 3-manifold triangulations\n";
 
-    if (finiteness == regina::BoolSet::sTrue)
+    if (finiteness == true)
         out << "Finite only\n";
-    else if (finiteness == regina::BoolSet::sFalse)
+    else if (finiteness == false)
         out << "Ideal only\n";
     else
         out << "Finite and ideal\n";
 
-    if (orientability == regina::BoolSet::sTrue)
+    if (orientability == true)
         out << "Orientable only\n";
-    else if (orientability == regina::BoolSet::sFalse)
+    else if (orientability == false)
         out << "Non-orientable only\n";
     else
         out << "Orientable and non-orientable\n";

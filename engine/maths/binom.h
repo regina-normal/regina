@@ -55,10 +55,6 @@ namespace regina {
  * This routine is very fast, since it uses a constant-time lookup.
  * The trade-off is that it can only be used for \a n &le; 16.
  *
- * If you need a compile-time constant, you should use the constant
- * FaceNumbering<n-1, k-1>::nFaces instead.  This function is provided for
- * situations where \a n and/or \a k are not known until runtime.
- *
  * \note The constraint \a n &le; 16 is large enough for working with
  * triangulations in Regina, since Regina restricts its triangulations to
  * dimension &le; 15 (where each simplex has 16 vertices).
@@ -69,7 +65,7 @@ namespace regina {
  * between 0 and \a n inclusive.
  * @return the binomial coefficient \a n choose \a k.
  */
-int binomSmall(int n, int k);
+constexpr int binomSmall(int n, int k);
 
 /**
  * Returns the binomial coefficient \a n choose \a k in linear time
@@ -90,7 +86,7 @@ int binomSmall(int n, int k);
  * between 0 and \a n inclusive.
  * @return the binomial coefficient \a n choose \a k.
  */
-REGINA_API long binomMedium(int n, int k);
+constexpr long binomMedium(int n, int k);
 
 namespace detail {
 
@@ -104,16 +100,49 @@ namespace detail {
  * End users should call binomSmall() instead of referring to this array
  * directly.
  */
-REGINA_API extern const int* const binomSmall_[17];
+inline constexpr int binomSmall_[17][17] = {
+    {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,2,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,3,3,1,0,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,4,6,4,1,0,0,0,0,0,0,0,0,0,0,0,0},
+    {1,5,10,10,5,1,0,0,0,0,0,0,0,0,0,0,0},
+    {1,6,15,20,15,6,1,0,0,0,0,0,0,0,0,0,0},
+    {1,7,21,35,35,21,7,1,0,0,0,0,0,0,0,0,0},
+    {1,8,28,56,70,56,28,8,1,0,0,0,0,0,0,0,0},
+    {1,9,36,84,126,126,84,36,9,1,0,0,0,0,0,0,0},
+    {1,10,45,120,210,252,210,120,45,10,1,0,0,0,0,0,0},
+    {1,11,55,165,330,462,462,330,165,55,11,1,0,0,0,0,0},
+    {1,12,66,220,495,792,924,792,495,220,66,12,1,0,0,0,0},
+    {1,13,78,286,715,1287,1716,1716,1287,715,286,78,13,1,0,0,0},
+    {1,14,91,364,1001,2002,3003,3432,3003,2002,1001,364,91,14,1,0,0},
+    {1,15,105,455,1365,3003,5005,6435,6435,5005,3003,1365,455,105,15,1,0},
+    {1,16,120,560,1820,4368,8008,11440,12870,11440,8008,4368,1820,560,120,16,1}
+};
 
 /*@}*/
 
-} // namespace regina::detail
+} // namespace detail
 
 // Inline functions
 
-inline int binomSmall(int n, int k) {
+inline constexpr int binomSmall(int n, int k) {
     return detail::binomSmall_[n][k];
+}
+
+inline constexpr long binomMedium(int n, int k) {
+    if (n <= 16)
+        return detail::binomSmall_[n][k];
+
+    if (k + k > n)
+        k = n - k;
+
+    long ans = 1;
+    for (int i = 1; i <= k; ++i) {
+        ans *= (n + 1 - i);
+        ans /= i;
+    }
+    return ans;
 }
 
 } // namespace regina

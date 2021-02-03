@@ -37,19 +37,6 @@
 
 namespace regina {
 
-const unsigned ClosedPrimeMinSearcher::EDGE_CHAIN_END = 1;
-const unsigned ClosedPrimeMinSearcher::EDGE_CHAIN_INTERNAL_FIRST = 2;
-const unsigned ClosedPrimeMinSearcher::EDGE_CHAIN_INTERNAL_SECOND = 3;
-const unsigned ClosedPrimeMinSearcher::EDGE_DOUBLE_FIRST = 4;
-const unsigned ClosedPrimeMinSearcher::EDGE_DOUBLE_SECOND = 5;
-const unsigned ClosedPrimeMinSearcher::EDGE_MISC = 6;
-
-const char ClosedPrimeMinSearcher::ECLASS_TWISTED = 1;
-const char ClosedPrimeMinSearcher::ECLASS_LOWDEG = 2;
-const char ClosedPrimeMinSearcher::ECLASS_HIGHDEG = 4;
-const char ClosedPrimeMinSearcher::ECLASS_CONE = 8;
-const char ClosedPrimeMinSearcher::ECLASS_L31 = 16;
-
 const unsigned ClosedPrimeMinSearcher::coneEdge[12][2] = {
     { 0, 1 }, { 0, 2 }, { 1, 2 }, { 0, 3 }, { 0, 4 }, { 3, 4 },
     { 1, 3 }, { 1, 5 }, { 3, 5 }, { 2, 4 }, { 2, 5 }, { 4, 5 },
@@ -58,8 +45,6 @@ const unsigned ClosedPrimeMinSearcher::coneEdge[12][2] = {
 const char ClosedPrimeMinSearcher::coneNoTwist[12] = {
     1, 1, 1, 0, 0, 1, 1, 0, 0, 1, 1, 1
 };
-
-const char ClosedPrimeMinSearcher::dataTag_ = 'c';
 
 ClosedPrimeMinSearcher::ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
         const FacetPairing<3>::IsoList* autos, bool orientableOnly,

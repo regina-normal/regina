@@ -48,8 +48,7 @@
 #include "triangulation/generic/triangulation.h"
 #include "triangulation/isosigtype.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 #ifndef __DOXYGEN
 struct IsoSigHelper {
@@ -58,9 +57,8 @@ struct IsoSigHelper {
      * Perm<dim+1>::Sn.
      */
     template <int dim>
-    static constexpr unsigned CHARS_PER_PERM() {
-        return ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
-    }
+    static constexpr unsigned CHARS_PER_PERM =
+        ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
 
     /**
      * Determine the integer value represented by the given character in
@@ -320,7 +318,7 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
         IsoSigHelper::SAPPEND(ans, joinDest[i], nChars);
     for (i = 0; i < joinPos; ++i)
         IsoSigHelper::SAPPEND(ans, joinGluing[i],
-            IsoSigHelper::CHARS_PER_PERM<dim>());
+            IsoSigHelper::CHARS_PER_PERM<dim>);
 
     // Record the canonical isomorphism if required.
     if (relabelling)
@@ -502,7 +500,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         typename Perm<dim+1>::Index* joinGluing =
             new typename Perm<dim+1>::Index[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
-            if (c + IsoSigHelper::CHARS_PER_PERM<dim>() > end) {
+            if (c + IsoSigHelper::CHARS_PER_PERM<dim> > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -511,8 +509,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
 
             joinGluing[pos] =
                 IsoSigHelper::SREAD<typename Perm<dim+1>::Index>(c,
-                IsoSigHelper::CHARS_PER_PERM<dim>());
-            c += IsoSigHelper::CHARS_PER_PERM<dim>();
+                IsoSigHelper::CHARS_PER_PERM<dim>);
+            c += IsoSigHelper::CHARS_PER_PERM<dim>;
 
             if (joinGluing[pos] >= Perm<dim+1>::nPerms ||
                     joinGluing[pos] < 0) {
@@ -604,6 +602,6 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     return IsoSigHelper::SREAD<unsigned>(c, nChars);
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

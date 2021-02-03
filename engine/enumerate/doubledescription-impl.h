@@ -391,23 +391,22 @@ bool DoubleDescription::intersectHyperplane(
     // new hyperplane they lie on.
     // Rays lying within the new hyperplane will be added directly to
     // the new solution set.
-    typename RayList::iterator it;
     int sign;
-    for (it = src.begin(); it != src.end(); it++) {
-        sign = (*it)->sign();
+    for (auto ray : src) {
+        sign = ray->sign();
         if (sign == 0)
-            dest.push_back(new RaySpec<BitmaskType>(**it));
+            dest.push_back(new RaySpec<BitmaskType>(*ray));
         else if (sign < 0)
-            neg.push_back(*it);
+            neg.push_back(ray);
         else
-            pos.push_back(*it);
+            pos.push_back(ray);
     }
 
     // Does one of the closed half-spaces defined by the hyperplane contain the
     // entire old solution set?  If so, there will be no new vertices.
     if (pos.empty() || neg.empty()) {
-        for (typename RayList::iterator it = src.begin(); it != src.end(); ++it)
-            delete *it;
+        for (auto ray : src)
+            delete ray;
         src.clear();
         return false;
     }

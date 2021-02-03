@@ -40,58 +40,6 @@
 
 namespace regina {
 
-const int quadSeparating[4][4] = {
-    { -1, 0, 1, 2 },
-    {  0,-1, 2, 1 },
-    {  1, 2,-1, 0 },
-    {  2, 1, 0,-1 }
-};
-
-const int quadMeeting[4][4][2] = {
-    { {-1,-1}, { 1, 2}, { 0, 2}, { 0, 1} },
-    { { 1, 2}, {-1,-1}, { 0, 1}, { 0, 2} },
-    { { 0, 2}, { 0, 1}, {-1,-1}, { 1, 2} },
-    { { 0, 1}, { 0, 2}, { 1, 2}, {-1,-1} }
-};
-
-const int quadDefn[3][4] = {
-    { 0, 1, 2, 3 },
-    { 0, 2, 1, 3 },
-    { 0, 3, 1, 2 }
-};
-
-const int quadPartner[3][4] = {
-    { 1, 0, 3, 2},
-    { 2, 3, 0, 1},
-    { 3, 2, 1, 0}
-};
-
-const char quadString[3][6] = { "01/23", "02/13", "03/12" };
-
-// The following three arrays cannot be made 2-D because of a g++-2.95 bug.
-
-const Perm<4> __triDiscArcs[12] = {
-    Perm<4>(0,1,2,3), Perm<4>(0,2,3,1), Perm<4>(0,3,1,2),
-    Perm<4>(1,0,3,2), Perm<4>(1,3,2,0), Perm<4>(1,2,0,3),
-    Perm<4>(2,3,0,1), Perm<4>(2,0,1,3), Perm<4>(2,1,3,0),
-    Perm<4>(3,2,1,0), Perm<4>(3,1,0,2), Perm<4>(3,0,2,1)
-};
-
-const Perm<4> __quadDiscArcs[12] = {
-    Perm<4>(0,2,3,1), Perm<4>(3,0,1,2), Perm<4>(1,3,2,0), Perm<4>(2,1,0,3),
-    Perm<4>(0,3,1,2), Perm<4>(1,0,2,3), Perm<4>(2,1,3,0), Perm<4>(3,2,0,1),
-    Perm<4>(0,1,2,3), Perm<4>(2,0,3,1), Perm<4>(3,2,1,0), Perm<4>(1,3,0,2)
-};
-
-const Perm<4> __octDiscArcs[24] = {
-    Perm<4>(0,3,1,2), Perm<4>(0,1,2,3), Perm<4>(2,0,3,1), Perm<4>(2,3,1,0),
-    Perm<4>(1,2,0,3), Perm<4>(1,0,3,2), Perm<4>(3,1,2,0), Perm<4>(3,2,0,1),
-    Perm<4>(0,1,2,3), Perm<4>(0,2,3,1), Perm<4>(3,0,1,2), Perm<4>(3,1,2,0),
-    Perm<4>(2,3,0,1), Perm<4>(2,0,1,3), Perm<4>(1,2,3,0), Perm<4>(1,3,0,2),
-    Perm<4>(0,2,3,1), Perm<4>(0,3,1,2), Perm<4>(1,0,2,3), Perm<4>(1,2,3,0),
-    Perm<4>(3,1,0,2), Perm<4>(3,0,2,1), Perm<4>(2,3,1,0), Perm<4>(2,1,0,3)
-};
-
 NormalSurface* NormalSurface::clone() const {
     NormalSurface* ans = new NormalSurface(triangulation_,
         dynamic_cast<NormalSurfaceVector*>(vector->clone()));
@@ -332,7 +280,7 @@ bool NormalSurface::locallyCompatible(const NormalSurface& other) const {
 
 void NormalSurface::calculateOctPosition() const {
     if (! vector->allowsAlmostNormal()) {
-        octPosition_ = DiscType::NONE;
+        octPosition_ = DiscType();
         return;
     }
 
@@ -346,7 +294,7 @@ void NormalSurface::calculateOctPosition() const {
                 return;
             }
 
-    octPosition_ = DiscType::NONE;
+    octPosition_ = DiscType();
     return;
 }
 
@@ -438,13 +386,12 @@ MatrixInt* NormalSurface::boundaryIntersections() const {
         return 0;
     if (vector->allowsAlmostNormal())
         return 0;
-    for (Triangulation<3>::VertexIterator it = snapPea->vertices().begin();
-            it != snapPea->vertices().end(); ++it) {
-        if (! (*it)->isIdeal())
+    for (Vertex<3>* v : snapPea->vertices()) {
+        if (! v->isIdeal())
             return 0;
-        if (! (*it)->isLinkOrientable())
+        if (! v->isLinkOrientable())
             return 0;
-        if ((*it)->linkEulerChar() != 0)
+        if (v->linkEulerChar() != 0)
             return 0;
     }
 

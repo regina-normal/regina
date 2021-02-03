@@ -46,13 +46,11 @@
 #include <string>
 #include <iconv.h>
 
-namespace regina {
-
 /**
  * Various classes and routines for working with internationalisation and
  * character encodings.
  */
-namespace i18n {
+namespace regina::i18n {
 
 /**
  * \weakgroup utilities
@@ -313,6 +311,6 @@ inline IConvStream::IConvStream(std::ostream& dest,
         setstate(std::ios::failbit);
 }
 
-} } // namespace regina::i18n
+} // namespace regina::i18n
 
 #endif

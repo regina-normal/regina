@@ -48,8 +48,7 @@
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 /**
  * \weakgroup detail
@@ -383,7 +382,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * @see http://www.graphviz.org/
          */
-        void writeDot(std::ostream& out, const char* prefix = 0,
+        void writeDot(std::ostream& out, const char* prefix = nullptr,
             bool subgraph = false, bool labels = false) const;
 
         /**
@@ -398,7 +397,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * @return the output of writeDot(), as outlined above.
          */
-        std::string dot(const char* prefix = 0, bool subgraph = false,
+        std::string dot(const char* prefix = nullptr, bool subgraph = false,
             bool labels = false) const;
 
         /*@}*/
@@ -456,7 +455,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * @see http://www.graphviz.org/
          */
         static void writeDotHeader(std::ostream& out,
-            const char* graphName = 0);
+            const char* graphName = nullptr);
 
         /**
          * Returns header information for a Graphviz DOT file that will
@@ -470,7 +469,7 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          *
          * @return the output of writeDotHeader(), as outlined above.
          */
-        static std::string dotHeader(const char* graphName = 0);
+        static std::string dotHeader(const char* graphName = nullptr);
 
         /**
          * Generates all possible facet pairings satisfying the given
@@ -536,8 +535,8 @@ class FacetPairingBase : public ShortOutput<FacetPairingBase<dim>> {
          * @param useArgs the pointer to pass as the final parameter for
          * the function \a use which will be called upon each pairing found.
          */
-        static void findAllPairings(size_t nSimplices,
-            BoolSet boundary, int nBdryFacets, Use use, void* useArgs = 0);
+        static void findAllPairings(size_t nSimplices, BoolSet boundary,
+            int nBdryFacets, Use use, void* useArgs = nullptr);
 
         // Make this class non-assignable.
         FacetPairingBase& operator = (const FacetPairingBase&) = delete;
@@ -766,7 +765,7 @@ inline void FacetPairingBase<dim>::findAllPairings(size_t nSimplices,
     pairing.enumerateInternal(boundary, nBdryFacets, use, useArgs);
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #include "triangulation/detail/facetpairing-impl.h"
 

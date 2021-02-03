@@ -45,8 +45,7 @@
 
 #include <queue>
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 #ifndef __DOXYGEN
 struct CanonicalHelper {
@@ -407,8 +406,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
             // If we are after a complete isomorphism, test whether the
             // simplices are a potential match.
             if (complete &&
-                    ! tri->SimplexFacesSuite<dim, dim - 2>::sameDegrees(
-                    *destSimp, myPerm)) {
+                    ! tri->template sameDegreesTo<dim - 2>(*destSimp, myPerm)) {
                 broken = true;
                 break;
             }
@@ -509,13 +507,13 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
             return false;
         if (isOrientable() ^ other.isOrientable())
             return false;
-        if (! FaceListSuite<dim, dim - 1>::sameFVector(other))
+        if (! this->sameFVector(other))
             return false;
 
         // TODO: Count boundary components and their sizes, once we have them.
 
         // Test degree sequences and the like.
-        if (! FaceListSuite<dim, dim - 2>::sameDegrees(other))
+        if (! this->template sameDegreesTo<dim - 2>(other))
             return false;
 
         // Test component sizes.
@@ -554,6 +552,6 @@ bool TriangulationBase<dim>::compatible(const Triangulation<dim>& other,
     return true;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif

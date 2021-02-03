@@ -51,10 +51,8 @@ MatrixInt* NSVectorQuad::makeMatchingEquations(
     unsigned long nCoords = 3 * triangulation->size();
     // One equation per non-boundary edge.
     long nEquations = long(triangulation->countEdges());
-    for (Triangulation<3>::BoundaryComponentIterator bit = triangulation->
-            boundaryComponents().begin();
-            bit != triangulation->boundaryComponents().end(); bit++)
-        nEquations -= (*bit)->countEdges();
+    for (BoundaryComponent<3>* bc : triangulation->boundaryComponents())
+        nEquations -= bc->countEdges();
 
     MatrixInt* ans = new MatrixInt(nEquations, nCoords);
     unsigned long row = 0;
@@ -63,10 +61,9 @@ MatrixInt* NSVectorQuad::makeMatchingEquations(
     // equation.
     Perm<4> perm;
     unsigned long tetIndex;
-    for (Triangulation<3>::EdgeIterator eit = triangulation->edges().begin();
-            eit != triangulation->edges().end(); eit++) {
-        if (! (*eit)->isBoundary()) {
-            for (auto& emb : **eit) {
+    for (Edge<3>* e : triangulation->edges()) {
+        if (! e->isBoundary()) {
+            for (auto& emb : *e) {
                 tetIndex = emb.tetrahedron()->index();
                 perm = emb.vertices();
                 ans->entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[2]])
@@ -154,14 +151,13 @@ NormalSurfaceVector* NSVectorQuad::makeMirror(
     Perm<4> tetPerm, adjPerm;
     unsigned long tetIndex, adjIndex;
     LargeInteger expect;
-    for (Triangulation<3>::VertexIterator vit = triang->vertices().begin();
-            vit != triang->vertices().end(); vit++) {
+    for (Vertex<3>* v : triang->vertices()) {
         usedEdges[0].clear(); usedEdges[1].clear();
         examine.clear();
         broken = false;
 
         // Pick some triangular disc and set it to zero.
-        const VertexEmbedding<3>& vemb = (*vit)->front();
+        const VertexEmbedding<3>& vemb = v->front();
         row = 7 * vemb.tetrahedron()->index() + vemb.vertex();
         ans->setElement(row, LargeInteger::zero);
 
@@ -284,7 +280,7 @@ NormalSurfaceVector* NSVectorQuad::makeMirror(
         // If the matching equations were broken, set every coordinate
         // to infinity.  Otherwise subtract min from every coordinate to
         // make the values as small as possible.
-        for (auto& emb : **vit) {
+        for (auto& emb : *v) {
             row = 7 * emb.tetrahedron()->index() + emb.vertex();
             if (broken)
                 ans->setElement(row, LargeInteger::infinity);

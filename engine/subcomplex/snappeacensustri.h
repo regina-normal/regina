@@ -82,23 +82,23 @@ namespace regina {
  */
 class REGINA_API SnapPeaCensusTri: public StandardTriangulation {
     public:
-        static const char SEC_5;
+        static constexpr char SEC_5 = 'm';
             /**< Represents the collection of triangulations formed from five
                  or fewer tetrahedra (both orientable and non-orientable).
                  There are 415 triangulations in this section. */
-        static const char SEC_6_OR;
+        static constexpr char SEC_6_OR = 's';
             /**< Represents the collection of orientable triangulations formed
                  from six tetrahedra.
                  There are 962 triangulations in this section. */
-        static const char SEC_6_NOR;
+        static constexpr char SEC_6_NOR = 'x';
             /**< Represents the collection of non-orientable triangulations
                  formed from six tetrahedra.
                  There are 259 triangulations in this section. */
-        static const char SEC_7_OR;
+        static constexpr char SEC_7_OR = 'v';
             /**< Represents the collection of orientable triangulations formed
                  from seven tetrahedra.
                  There are 3552 triangulations in this section. */
-        static const char SEC_7_NOR;
+        static constexpr char SEC_7_NOR = 'y';
             /**< Represents the collection of non-orientable triangulations
                  formed from seven tetrahedra.
                  There are 887 triangulations in this section. */
@@ -188,13 +188,20 @@ class REGINA_API SnapPeaCensusTri: public StandardTriangulation {
          * Creates a new SnapPea census triangulation with the given
          * parameters.
          */
-        REGINA_INLINE_REQUIRED
         SnapPeaCensusTri(char newSection, unsigned long newIndex);
 
     friend class SnapPeaCensusManifold;
 };
 
 /*@}*/
+
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline SnapPeaCensusTri::SnapPeaCensusTri(char newSection,
+        unsigned long newIndex) :
+        section_(newSection), index_(newIndex) {
+}
 
 // Inline functions for SnapPeaCensusTri
 
@@ -218,11 +225,6 @@ inline bool SnapPeaCensusTri::operator == (const SnapPeaCensusTri& compare)
 inline bool SnapPeaCensusTri::operator != (const SnapPeaCensusTri& compare)
         const {
     return (section_ != compare.section_ || index_ != compare.index_);
-}
-
-inline SnapPeaCensusTri::SnapPeaCensusTri(char newSection,
-        unsigned long newIndex) :
-        section_(newSection), index_(newIndex) {
 }
 
 } // namespace regina

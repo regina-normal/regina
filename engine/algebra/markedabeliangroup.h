@@ -315,7 +315,6 @@ class REGINA_API MarkedAbelianGroup :
          * @param other the group with which this should be compared.
          * @return \c true if and only if the two groups are isomorphic.
          */
-        REGINA_INLINE_REQUIRED
         bool isIsomorphicTo(const MarkedAbelianGroup &other) const;
 
         /**
@@ -832,7 +831,6 @@ class REGINA_API HomMarkedAbelianGroup :
          *
          * @return true if this homomorphism is an isomorphism.
          */
-        REGINA_INLINE_REQUIRED
         bool isIsomorphism() const;
         /**
          * Is this the zero map?
@@ -854,21 +852,18 @@ class REGINA_API HomMarkedAbelianGroup :
          *
          * @return the kernel of the homomorphism, as a marked abelian group.
          */
-        REGINA_INLINE_REQUIRED
         const MarkedAbelianGroup& kernel() const;
         /**
          * Returns the cokernel of this homomorphism.
          *
          * @return the cokernel of the homomorphism, as a marked abelian group.
          */
-        REGINA_INLINE_REQUIRED
         const MarkedAbelianGroup& cokernel() const;
         /**
          * Returns the image of this homomorphism.
          *
          * @return the image of the homomorphism, as a marked abelian group.
          */
-        REGINA_INLINE_REQUIRED
         const MarkedAbelianGroup& image() const;
 
         /**
@@ -1036,6 +1031,33 @@ class REGINA_API HomMarkedAbelianGroup :
 
 /*@}*/
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline const MarkedAbelianGroup& HomMarkedAbelianGroup::kernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeKernel();
+    return *kernel_;
+}
+
+inline const MarkedAbelianGroup& HomMarkedAbelianGroup::image() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeImage();
+    return *image_;
+}
+
+inline const MarkedAbelianGroup& HomMarkedAbelianGroup::cokernel() const {
+    // Cast away const to compute the kernel -- the only reason we're
+    // changing data members now is because we delayed calculations
+    // until they were really required.
+    const_cast<HomMarkedAbelianGroup*>(this)->computeCokernel();
+    return *coKernel_;
+}
+
 // Inline functions for MarkedAbelianGroup
 
 // copy constructor
@@ -1167,30 +1189,6 @@ inline bool HomMarkedAbelianGroup::isIsomorphism() const {
 
 inline bool HomMarkedAbelianGroup::isZero() const {
     return image().isTrivial();
-}
-
-inline const MarkedAbelianGroup& HomMarkedAbelianGroup::kernel() const {
-    // Cast away const to compute the kernel -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<HomMarkedAbelianGroup*>(this)->computeKernel();
-    return *kernel_;
-}
-
-inline const MarkedAbelianGroup& HomMarkedAbelianGroup::image() const {
-    // Cast away const to compute the kernel -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<HomMarkedAbelianGroup*>(this)->computeImage();
-    return *image_;
-}
-
-inline const MarkedAbelianGroup& HomMarkedAbelianGroup::cokernel() const {
-    // Cast away const to compute the kernel -- the only reason we're
-    // changing data members now is because we delayed calculations
-    // until they were really required.
-    const_cast<HomMarkedAbelianGroup*>(this)->computeCokernel();
-    return *coKernel_;
 }
 
 } // namespace regina

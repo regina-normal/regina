@@ -49,8 +49,7 @@
 #include <limits>
 #include <iostream>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 RepositoryPrivate::RepositoryPrivate() :
     m_formatId(0)
@@ -176,4 +175,4 @@ void Repository::reload()
     d->load(this);
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax

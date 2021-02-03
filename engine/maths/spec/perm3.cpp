@@ -35,22 +35,6 @@
 
 namespace regina {
 
-Perm<3>::Perm(const int* a, const int* b) {
-    int image[3];
-    image[a[0]] = b[0];
-    image[a[1]] = b[1];
-    image[a[2]] = b[2];
-
-    switch (image[0]) {
-        case 0:
-            code_ = static_cast<Code>(image[1] == 1 ? 0 : 1); break;
-        case 1:
-            code_ = static_cast<Code>(image[1] == 2 ? 2 : 3); break;
-        case 2:
-            code_ = static_cast<Code>(image[1] == 0 ? 4 : 5); break;
-    }
-}
-
 std::string Perm<3>::str() const {
     char ans[4];
     ans[0] = static_cast<char>('0' + imageTable[code_][0]);

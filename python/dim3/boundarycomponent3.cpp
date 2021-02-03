@@ -81,8 +81,12 @@ void addBoundaryComponent3(pybind11::module_& m) {
         .def("isIdeal", &BoundaryComponent<3>::isIdeal)
         .def("isInvalidVertex", &BoundaryComponent<3>::isInvalidVertex)
         .def("isOrientable", &BoundaryComponent<3>::isOrientable)
-        // We cannot take the addresses of the following header-only properties,
-        // so we define getter functions instead.
+        // On some systems we cannot take addresses of the following
+        // inline class constants (e.g., this fails with gcc10 on windows).
+        // We therefore define getter functions instead.
+        .def_property_readonly_static("dimension", [](pybind11::object) {
+            return BoundaryComponent<3>::dimension;
+        })
         .def_property_readonly_static("allFaces", [](pybind11::object) {
             return BoundaryComponent<3>::allFaces;
         })

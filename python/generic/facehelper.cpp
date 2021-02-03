@@ -34,8 +34,7 @@
 #include <sstream>
 #include "facehelper.h"
 
-namespace regina {
-namespace python {
+namespace regina::python {
 
 void invalidFaceDimension(const char* functionName, int dim) {
     std::ostringstream s;
@@ -44,5 +43,5 @@ void invalidFaceDimension(const char* functionName, int dim) {
     throw std::invalid_argument(s.str());
 }
 
-} } // namespace regina::python
+} // namespace regina::python
 

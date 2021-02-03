@@ -444,7 +444,7 @@ class TreeTraversal : public BanConstraint {
          * (indicating a problem or error).
          */
         bool verify(const NormalSurface* s,
-                const MatrixInt* matchingEqns = 0) const;
+                const MatrixInt* matchingEqns = nullptr) const;
 
         /**
          * Ensures that the given angle structure satisfies
@@ -484,7 +484,7 @@ class TreeTraversal : public BanConstraint {
          * (indicating a problem or error).
          */
         bool verify(const AngleStructure* s,
-                const MatrixInt* angleEqns = 0) const;
+                const MatrixInt* angleEqns = nullptr) const;
 
         // Mark this class as non-copyable.
         TreeTraversal(const TreeTraversal&) = delete;
@@ -822,7 +822,7 @@ class TreeEnumeration :
          * function; this may be any type of data that you like.
          */
         void run(bool (*useSoln)(const TreeEnumeration&, void*),
-                void* arg = 0);
+                void* arg = nullptr);
 
         /**
          * An incremental step in the tree traversal algorithm that
@@ -871,7 +871,7 @@ class TreeEnumeration :
          * \c false if the search has now finished and no more vertex
          * surfaces were found.
          */
-        bool next(ProgressTracker* tracker = 0);
+        bool next(ProgressTracker* tracker = nullptr);
 
         /**
          * A callback function that writes to standard output the type vector
@@ -1090,7 +1090,7 @@ class TautEnumeration :
          * function; this may be any type of data that you like.
          */
         void run(bool (*useSoln)(const TautEnumeration&, void*),
-                void* arg = 0);
+                void* arg = nullptr);
 
         /**
          * An incremental step in the enumeration algorithm that
@@ -1139,7 +1139,7 @@ class TautEnumeration :
          * \c false if the search has now finished and no more taut angle
          * strutures were found.
          */
-        bool next(ProgressTracker* tracker = 0);
+        bool next(ProgressTracker* tracker = nullptr);
 
         /**
          * A callback function that writes to standard output the type vector

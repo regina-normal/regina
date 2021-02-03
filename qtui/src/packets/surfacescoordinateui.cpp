@@ -211,7 +211,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
             regina::DiscType oct = s->octPosition();
-            if (oct == regina::DiscType::NONE)
+            if (! oct)
                 return QVariant();
             else {
                 regina::LargeInteger tot = s->octs(oct.tetIndex, oct.type);
@@ -281,7 +281,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
             regina::DiscType oct = s->octPosition();
-            if (oct != regina::DiscType::NONE) {
+            if (oct) {
                 if (s->octs(oct.tetIndex, oct.type) > 1)
                     return QColor(Qt::darkRed);
                 else

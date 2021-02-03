@@ -55,8 +55,6 @@ namespace {
     const regina::Laurent<regina::Integer> noResult;
 }
 
-const char* Link::jonesVar = "\u221At"; // \u221A = square root
-
 size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
         size_t* loopLengths) const {
     size_t n = crossings_.size();

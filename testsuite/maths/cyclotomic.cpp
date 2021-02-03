@@ -53,7 +53,7 @@ class CyclotomicTest : public CppUnit::TestFixture {
         Cyclotomic zero { 5 };
         Cyclotomic one { 5, 1 };
         Cyclotomic two { 5, 2 };
-        Cyclotomic x { 5, { 0, 1 } };
+        Cyclotomic x1 { 5, { 0, 1 } };
         Cyclotomic x2 { 5, { 0, 0, 1 } };
         Cyclotomic x3 { 5, { 0, 0, 0, 1 } };
         Cyclotomic xPlus1 { 5, { 1, 1 } };
@@ -236,7 +236,7 @@ class CyclotomicTest : public CppUnit::TestFixture {
             verifyEqual(zero, 5, {});
 
             verifyEqual(-one, 5, { -1 });
-            verifyEqual(-x, 5, { 0, -1 });
+            verifyEqual(-x1, 5, { 0, -1 });
             verifyEqual(-xMinus1, 5, { 1, -1 });
 
             verifyPlus(zero, zero, 5, {});

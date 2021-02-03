@@ -44,8 +44,7 @@
 #include "packet/packet.h"
 #include "triangulation/detail/strings.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 /**
  * \weakgroup detail
@@ -156,7 +155,7 @@ class ExampleFromLowDim<dim, false> {
  * This must be between 2 and 15 inclusive.
  */
 template <int dim>
-class ExampleBase : public ExampleFromLowDim<dim, (dim > 2)> {
+class ExampleBase : public ExampleFromLowDim<dim, dim != 2> {
     static_assert(dim >= 2, "Example requires dimension >= 2.");
 
     public:
@@ -527,7 +526,7 @@ Triangulation<dim>* ExampleBase<dim>::twistedBallBundle() {
     return ans;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

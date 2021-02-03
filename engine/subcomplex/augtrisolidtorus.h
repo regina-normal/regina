@@ -86,14 +86,14 @@ namespace regina {
  */
 class REGINA_API AugTriSolidTorus : public StandardTriangulation {
     public:
-        static const int CHAIN_NONE;
+        static constexpr int CHAIN_NONE = 0;
             /**< Indicates that this augmented triangular solid torus
                  contains no layered chain. */
-        static const int CHAIN_MAJOR;
+        static constexpr int CHAIN_MAJOR = 1;
             /**< Indicates that this augmented triangular solid torus
                  contains a layered chain attached as described by
                  TriSolidTorus::areAnnuliLinkedMajor(). */
-        static const int CHAIN_AXIS;
+        static constexpr int CHAIN_AXIS = 2;
             /**< Indicates that this augmented triangular solid torus
                  contains a layered chain attached as described by
                  TriSolidTorus::areAnnuliLinkedAxis(). */

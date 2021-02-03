@@ -44,8 +44,7 @@
 #include <string>
 #include "regina-core.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 /**
  * A traits class that deduces the type of the argument in a given position
@@ -250,7 +249,7 @@ struct RetriangulateActionTraits<Object, Action, const std::string&> {
 
 #endif // __DOXYGEN
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

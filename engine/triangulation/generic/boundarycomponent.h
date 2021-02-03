@@ -113,10 +113,6 @@ namespace regina {
  * class Triangulation<dim>.  See the Triangulation notes for further
  * information on working with <i>dim</i>-dimensional triangulations.
  *
- * For dimension \a dim = 3, this template is specialised and offers
- * more functionality.  In order to use this specialised class, you will
- * need to include the corresponding header triangulation/dim3.h.
- *
  * \ifacespython Python does not support templates.  Instead
  * this class can be used by appending the dimension as a suffix
  * (e.g., BoundaryComponent2 and BoundaryComponent3 for dimensions 2 and 3).
@@ -128,10 +124,6 @@ namespace regina {
  */
 template <int dim>
 class BoundaryComponent : public detail::BoundaryComponentBase<dim> {
-    static_assert(dim != 3,
-        "The generic implementation of BoundaryComponent<dim> "
-        "should not be used for dimension 3.");
-
     private:
         /**
          * Default constructor.

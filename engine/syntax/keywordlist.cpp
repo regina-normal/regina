@@ -44,8 +44,7 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 KeywordList::KeywordList() :
     m_caseSensitive(true)
@@ -117,4 +116,4 @@ void KeywordList::setCaseSensitivity(bool caseSensitive)
     m_caseSensitive = caseSensitive;
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax

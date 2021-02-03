@@ -56,9 +56,9 @@ namespace {
     GlobalArray2D<int> quadDefn_arr(regina::quadDefn, 3);
     GlobalArray2D<int> quadPartner_arr(regina::quadPartner, 3);
     GlobalArray<const char*> quadString_arr(quadString_1D, 3);
-    GlobalArray2D<regina::Perm<4>> triDiscArcs_arr(regina::__triDiscArcs, 4, 3);
-    GlobalArray2D<regina::Perm<4>> quadDiscArcs_arr(regina::__quadDiscArcs, 3, 4);
-    GlobalArray2D<regina::Perm<4>> octDiscArcs_arr(regina::__octDiscArcs, 3, 8);
+    GlobalArray2D<regina::Perm<4>> triDiscArcs_arr(regina::triDiscArcs, 4);
+    GlobalArray2D<regina::Perm<4>> quadDiscArcs_arr(regina::quadDiscArcs, 3);
+    GlobalArray2D<regina::Perm<4>> octDiscArcs_arr(regina::octDiscArcs, 3);
 }
 
 void addNormalSurface(pybind11::module_& m) {

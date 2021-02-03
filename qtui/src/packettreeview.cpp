@@ -184,19 +184,19 @@ PacketTreeItem* PacketTreeView::find(regina::Packet* packet) {
     // Note that the root packet itself will not be found by this routine.
     // Also, note that the invisible root item might not be a PacketTreeItem,
     // and we should not try to cast it as such.
-    QTreeWidgetItem* root = invisibleRootItem();
+    QTreeWidgetItem* rootItem = invisibleRootItem();
 
     int itemCount = 0;
     PacketTreeItem* item;
     regina::Packet* current;
-    while (itemCount < root->childCount()) {
-        item = dynamic_cast<PacketTreeItem*>(root->child(itemCount++));
+    while (itemCount < rootItem->childCount()) {
+        item = dynamic_cast<PacketTreeItem*>(rootItem->child(itemCount++));
         current = item->getPacket();
 
         if (current == packet)
             return item;
         if (current && current->isGrandparentOf(packet)) {
-            root = item;
+            rootItem = item;
             itemCount = 0;
         }
     }

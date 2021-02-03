@@ -146,17 +146,17 @@ namespace {
                 // Current disc is a triangle.
                 nGluingArcs = 3;
                 for (i = 0; i < 3; i++)
-                    arc[i] = regina::triDiscArcs(use.type, i);
+                    arc[i] = regina::triDiscArcs[use.type][i];
             } else if (use.type < 7) {
                 // Current disc is a quad.
                 nGluingArcs = 4;
                 for (i = 0; i < 4; i++)
-                    arc[i] = regina::quadDiscArcs(use.type - 4, i);
+                    arc[i] = regina::quadDiscArcs[use.type - 4][i];
             } else {
                 // Current disc is an octagon.
                 nGluingArcs = 8;
                 for (i = 0; i < 8; i++)
-                    arc[i] = regina::octDiscArcs(use.type - 7, i);
+                    arc[i] = regina::octDiscArcs[use.type - 7][i];
             }
 
             // Process any discs that might be adjacent to each of these

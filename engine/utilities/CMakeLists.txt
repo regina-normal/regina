@@ -31,6 +31,7 @@ if (${REGINA_INSTALL_DEV})
     i18nutils.h
     intutils.h
     listoncall.h
+    listview.h
     markedvector.h
     memstream.h
     memutils.h

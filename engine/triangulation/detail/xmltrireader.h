@@ -48,10 +48,10 @@
 #include <vector>
 
 namespace regina {
+    template <int> class XMLTriangulationReader;
+}
 
-template <int> class XMLTriangulationReader;
-
-namespace detail {
+namespace regina::detail {
 
 /**
  * \weakgroup detail
@@ -68,16 +68,39 @@ namespace detail {
  */
 template <int dim>
 struct XMLTriangulationTags {
-    constexpr static const char* simplices();
+    static constexpr const char* simplices = "simplices";
         /**< The XML tag that stores the set of all top-dimensional
              simplices for a <i>dim</i>-dimensional triangulation. */
-    constexpr static const char* simplex();
+    static constexpr const char* simplex = "simplex";
         /**< The XML tag that stores a single top-dimensional simplex
              in a <i>dim</i>-dimensional triangulation. */
-    constexpr static const char* size();
+    static constexpr const char* size = "size";
         /**< The XML attribute that stores the number of top-dimensional
              simplices in a <i>dim</i>-dimensional triangulation. */
 };
+
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+template <>
+struct XMLTriangulationTags<4> {
+    static constexpr const char* simplices = "pentachora";
+    static constexpr const char* simplex = "pent";
+    static constexpr const char* size = "npent";
+};
+
+template <>
+struct XMLTriangulationTags<3> {
+    static constexpr const char* simplices = "tetrahedra";
+    static constexpr const char* simplex = "tet";
+    static constexpr const char* size = "ntet";
+};
+
+template <>
+struct XMLTriangulationTags<2> {
+    static constexpr const char* simplices = "triangles";
+    static constexpr const char* simplex = "triangle";
+    static constexpr const char* size = "ntriangles";
+};
+#endif // __DOXYGEN
 
 /**
  * Helper class that reads the XML element for a single top-dimensional
@@ -287,63 +310,6 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
 
 /*@}*/
 
-// Inline functions for XMLTriangulationTags
-
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-
-template <int dim>
-inline constexpr const char* XMLTriangulationTags<dim>::simplices() {
-    return "simplices";
-}
-template <>
-inline constexpr const char* XMLTriangulationTags<4>::simplices() {
-    return "pentachora";
-}
-template <>
-inline constexpr const char* XMLTriangulationTags<3>::simplices() {
-    return "tetrahedra";
-}
-template <>
-inline constexpr const char* XMLTriangulationTags<2>::simplices() {
-    return "triangles";
-}
-
-template <int dim>
-inline constexpr const char* XMLTriangulationTags<dim>::simplex() {
-    return "simplex";
-}
-template <>
-inline constexpr const char* XMLTriangulationTags<4>::simplex() {
-    return "pent";
-}
-template <>
-inline constexpr const char* XMLTriangulationTags<3>::simplex() {
-    return "tet";
-}
-template <>
-inline constexpr const char* XMLTriangulationTags<2>::simplex() {
-    return "triangle";
-}
-
-template <int dim>
-inline constexpr const char* XMLTriangulationTags<dim>::size() {
-    return "size";
-}
-template <>
-inline constexpr const char* XMLTriangulationTags<4>::size() {
-    return "npent";
-}
-template <>
-inline constexpr const char* XMLTriangulationTags<3>::size() {
-    return "ntet";
-}
-template <>
-inline constexpr const char* XMLTriangulationTags<2>::size() {
-    return "ntriangles";
-}
-
-#endif // __DOXYGEN
-
 // Implementation details for XMLSimplexReader
 
 template <int dim>
@@ -405,7 +371,7 @@ template <int dim>
 void XMLSimplicesReader<dim>::startElement(const std::string& /* tagName */,
         const regina::xml::XMLPropertyDict& props, XMLElementReader*) {
     long nSimplices;
-    if (valueOf(props.lookup(XMLTriangulationTags<dim>::size()), nSimplices))
+    if (valueOf(props.lookup(XMLTriangulationTags<dim>::size), nSimplices))
         for ( ; nSimplices > 0; --nSimplices)
             tri_->newSimplex();
 }
@@ -414,7 +380,7 @@ template <int dim>
 XMLElementReader* XMLSimplicesReader<dim>::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
-    if (subTagName == XMLTriangulationTags<dim>::simplex()) {
+    if (subTagName == XMLTriangulationTags<dim>::simplex) {
         if (readSimplices_ < tri_->size())
             return new XMLSimplexReader<dim>(tri_, readSimplices_++);
         else
@@ -440,7 +406,7 @@ template <int dim>
 XMLElementReader* XMLTriangulationReaderBase<dim>::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
-    if (subTagName == XMLTriangulationTags<dim>::simplices())
+    if (subTagName == XMLTriangulationTags<dim>::simplices)
         return new XMLSimplicesReader<dim>(tri_);
     return static_cast<XMLTriangulationReader<dim>*>(this)->
         startPropertySubElement(subTagName, subTagProps);
@@ -523,7 +489,7 @@ inline XMLElementReader* XMLTriangulationReaderBase<dim>::propertyReader(
     return 0;
 }
 
-} } // namespace regina::detail
+} // namespace regina::detail
 
 #endif
 

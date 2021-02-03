@@ -206,20 +206,18 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
     // Write the tetrahedron gluings.
-    TetrahedronIterator it;
     Tetrahedron<3>* adjTet;
     int face;
 
     out << "  <tetrahedra ntet=\"" << simplices_.size() << "\">\n";
-    for (it = simplices_.begin(); it != simplices_.end(); it++) {
+    for (Tetrahedron<3>* t : simplices_) {
         out << "    <tet desc=\"" <<
-            xmlEncodeSpecialChars((*it)->description()) << "\"> ";
+            xmlEncodeSpecialChars(t->description()) << "\"> ";
         for (face = 0; face < 4; face++) {
-            adjTet = (*it)->adjacentTetrahedron(face);
+            adjTet = t->adjacentTetrahedron(face);
             if (adjTet) {
                 out << adjTet->index() << ' '
-                    << static_cast<int>((*it)->
-                        adjacentGluing(face).permCode())
+                    << static_cast<int>(t->adjacentGluing(face).permCode())
                     << ' ';
             } else
                 out << "-1 -1 ";
@@ -466,20 +464,19 @@ void Triangulation<3>::snapPea(std::ostream& out) const {
     out << size() << '\n';
 
     int i, j;
-    for (Triangulation<3>::TetrahedronIterator it = tetrahedra().begin();
-            it != tetrahedra().end(); it++) {
+    for (Tetrahedron<3>* tet : tetrahedra()) {
         // Although our precondition states that there are no boundary
         // triangles, we test for this anyway.  If somebody makes a mistake and
         // calls this routine with a bounded triangulation, we don't want
         // to wind up calling nullptr->index() and crashing.
         for (i = 0; i < 4; i++)
-            if ((*it)->adjacentTetrahedron(i))
-                out << "   " << (*it)->adjacentTetrahedron(i)->index() << ' ';
+            if (tet->adjacentTetrahedron(i))
+                out << "   " << tet->adjacentTetrahedron(i)->index() << ' ';
             else
                 out << "   -1 ";
         out << '\n';
         for (i = 0; i < 4; i++)
-            out << ' ' << (*it)->adjacentGluing(i).str();
+            out << ' ' << tet->adjacentGluing(i).str();
         out << '\n';
 
         // Incident cusps.

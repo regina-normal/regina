@@ -43,9 +43,6 @@ namespace regina {
 #define STARTS_TRUE 1
 #define STARTS_COULD_NOT_OPEN 2
 
-// const int FileInfo::TYPE_BINARY = 1; // OBSOLETE as of Regina 4.94.
-const int FileInfo::TYPE_XML = 2;
-
 namespace {
     /**
      * Does the given file begin with the given set of characters?

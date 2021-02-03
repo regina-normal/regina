@@ -81,23 +81,23 @@ namespace regina {
  */
 class REGINA_API SnapPeaCensusManifold : public Manifold {
     public:
-        static const char SEC_5;
+        static constexpr char SEC_5 = 'm';
             /**< Represents the collection of manifolds formed from five or
                  fewer tetrahedra (both orientable and non-orientable).
                  There are 415 manifolds in this section. */
-        static const char SEC_6_OR;
+        static constexpr char SEC_6_OR = 's';
             /**< Represents the collection of orientable manifolds formed
                  from six tetrahedra.
                  There are 962 manifolds in this section. */
-        static const char SEC_6_NOR;
+        static constexpr char SEC_6_NOR = 'x';
             /**< Represents the collection of non-orientable manifolds formed
                  from six tetrahedra.
                  There are 259 manifolds in this section. */
-        static const char SEC_7_OR;
+        static constexpr char SEC_7_OR = 'v';
             /**< Represents the collection of orientable manifolds formed
                  from seven tetrahedra.
                  There are 3552 manifolds in this section. */
-        static const char SEC_7_NOR;
+        static constexpr char SEC_7_NOR = 'y';
             /**< Represents the collection of non-orientable manifolds formed
                  from seven tetrahedra.
                  There are 887 manifolds in this section. */

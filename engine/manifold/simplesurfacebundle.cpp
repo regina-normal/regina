@@ -36,10 +36,6 @@
 
 namespace regina {
 
-const int SimpleSurfaceBundle::S2xS1 = 1;
-const int SimpleSurfaceBundle::S2xS1_TWISTED = 2;
-const int SimpleSurfaceBundle::RP2xS1 = 3;
-
 Triangulation<3>* SimpleSurfaceBundle::construct() const {
     Triangulation<3>* ans = new Triangulation<3>();
 

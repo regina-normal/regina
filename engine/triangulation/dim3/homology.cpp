@@ -59,9 +59,8 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
         nBdryVertices += bc->countVertices();
         nBdryEdges += bc->countEdges();
     }
-    for (ComponentIterator cit = components().begin();
-            cit != components().end(); cit++)
-        if ((*cit)->isClosed())
+    for (Component<3>* c : components())
+        if (c->isClosed())
             nClosedComponents++;
     long nGens = countEdges() - nBdryEdges
         - countVertices() + nBdryVertices

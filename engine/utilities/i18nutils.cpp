@@ -41,8 +41,7 @@
     #include <langinfo.h>
 #endif
 
-namespace regina {
-namespace i18n {
+namespace regina::i18n {
 
 std::string::const_iterator utf8ValidTo(const std::string& s) {
     const char* ans = utf8ValidTo(s.c_str());
@@ -248,4 +247,4 @@ int IConvStreamBuffer::sync() {
         return -1;
 }
 
-} } // namespace regina::i18n
+} // namespace regina::i18n

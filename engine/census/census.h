@@ -584,6 +584,13 @@ namespace std {
 
 namespace regina {
 
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
+
+inline CensusHitIterator::CensusHitIterator(const CensusHit* current) :
+        current_(current) {
+}
+
 // Inline functions for CensusDB:
 
 inline CensusDB::CensusDB(const std::string& filename,
@@ -666,10 +673,6 @@ inline void CensusHits::append(CensusHit* hit) {
 // Inline functions for CensusHitIterator:
 
 inline CensusHitIterator::CensusHitIterator() : current_(nullptr) {
-}
-
-inline CensusHitIterator::CensusHitIterator(const CensusHit* current) :
-        current_(current) {
 }
 
 inline bool CensusHitIterator::operator == (const CensusHitIterator& rhs)

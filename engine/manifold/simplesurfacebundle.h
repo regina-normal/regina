@@ -61,16 +61,17 @@ class REGINA_API SimpleSurfaceBundle : public Manifold {
         /**
          * Represents the orientable 2-sphere bundle over the circle.
          */
-        static const int S2xS1;
+        static constexpr int S2xS1 = 1;
         /**
          * Represents the non-orientable twisted 2-sphere bundle over the
          * circle.
          */
-        static const int S2xS1_TWISTED;
+        static constexpr int S2xS1_TWISTED = 2;
         /**
          * Represents the projective plane bundle over the circle.
          */
-        static const int RP2xS1;
+        static constexpr int RP2xS1 = 3;
+
     private:
         int type_;
             /**< The specific surface bundle being represented.

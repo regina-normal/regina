@@ -49,8 +49,7 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 static inline unsigned readColour(const std::string& str) {
     if (str.empty() || str.front() != '#')
@@ -268,4 +267,4 @@ void FormatPrivate::load(xmlTextReaderPtr reader)
     }
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax

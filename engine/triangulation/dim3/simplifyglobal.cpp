@@ -159,9 +159,6 @@ bool Triangulation<3>::intelligentSimplify() {
         std::pair<Edge<3>*, int> fourFourChoice;
 
         size_t fourFourAttempts, fourFourCap;
-
-        Edge<3>* edge;
-        EdgeIterator eit;
         int axis;
 
         while (true) {
@@ -179,14 +176,11 @@ bool Triangulation<3>::intelligentSimplify() {
                 // Calculate the list of available 4-4 moves.
                 fourFourAvailable.clear();
                 // Use edges() to ensure the skeleton has been calculated.
-                for (eit = use->edges().begin();
-                        eit != use->edges().end(); eit++) {
-                    edge = *eit;
+                for (Edge<3>* edge : use->edges())
                     for (axis = 0; axis < 2; axis++)
                         if (use->fourFourMove(edge, axis, true, false))
                             fourFourAvailable.push_back(
                                 std::make_pair(edge, axis));
-                }
 
                 // Increment fourFourCap if needed.
                 if (fourFourCap < COEFF_4_4 * fourFourAvailable.size())
@@ -233,16 +227,13 @@ bool Triangulation<3>::intelligentSimplify() {
                 use = new Triangulation<3>(*this, false);
 
                 // Perform every book opening move we can find.
-                TriangleIterator fit;
-
                 bool opened = false;
                 bool openedNow = true;
                 while (openedNow) {
                     openedNow = false;
 
-                    for (fit = use->triangles().begin();
-                            fit != use->triangles().end(); ++fit)
-                        if (use->openBook(*fit, true, true)) {
+                    for (Triangle<3>* t : use->triangles())
+                        if (use->openBook(t, true, true)) {
                             opened = openedNow = true;
                             break;
                         }
@@ -278,9 +269,8 @@ bool Triangulation<3>::intelligentSimplify() {
                 // the changes directly to this triangulation.
                 bool closed = false;
 
-                EdgeIterator eit;
-                for (eit = edges().begin(); eit != edges().end(); ++eit)
-                    if (closeBook(*eit, true, true)) {
+                for (Edge<3>* edge : edges())
+                    if (closeBook(edge, true, true)) {
                         closed = true;
                         changed = true;
 

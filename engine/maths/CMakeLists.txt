@@ -4,7 +4,6 @@ ADD_SUBDIRECTORY("spec")
 
 # Files to compile
 SET ( FILES
-  binom
   cyclotomic
   integer
   matrix2

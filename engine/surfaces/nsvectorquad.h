@@ -58,9 +58,7 @@ struct NormalInfo<NS_QUAD> {
     typedef NSVectorQuad Class;
     typedef NormalInfo<NS_STANDARD> Standard;
     typedef NormalInfo<NS_QUAD> Reduced;
-    inline static const char* name() {
-        return "Quad normal";
-    }
+    static constexpr const char* name = "Quad normal";
     enum {
         almostNormal = 0,
         spun = 1,

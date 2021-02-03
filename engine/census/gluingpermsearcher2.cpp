@@ -37,8 +37,6 @@
 
 namespace regina {
 
-const char GluingPermSearcher<2>::dataTag_ = 'g';
-
 GluingPermSearcher<2>::GluingPermSearcher(
         const FacetPairing<2>* pairing, const FacetPairing<2>::IsoList* autos,
         bool orientableOnly, GluingPermSearcher<2>::Use use, void* useArgs) :

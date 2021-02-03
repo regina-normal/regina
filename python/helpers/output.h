@@ -38,8 +38,7 @@
 #include <sstream>
 #include "core/output.h"
 
-namespace regina {
-namespace python {
+namespace regina::python {
 
 /**
  * Adds rich string output functions to the python bindings for a C++ class.
@@ -133,4 +132,4 @@ void add_output_ostream(pybind11::class_<C, options...>& c,
         c.def("__repr__", func);
 }
 
-} } // namespace regina::python
+} // namespace regina::python

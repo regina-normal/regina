@@ -863,13 +863,22 @@ namespace std {
 
 namespace regina {
 
-// Inline functions for DiscSpec
+// Inline functions that need to be defined before *other* inline funtions
+// that use them (this fixes DLL-related warnings in the windows port)
 
-inline DiscSpec::DiscSpec() {
-}
 inline DiscSpec::DiscSpec(size_t newTetIndex, int newType,
         unsigned long newNumber) : tetIndex(newTetIndex), type(newType),
         number(newNumber) {
+}
+
+inline DiscSpecIterator::DiscSpecIterator(const DiscSetSurface& discSet) :
+        internalDiscSet(&discSet), current(0, 0, 0) {
+    makeValid();
+}
+
+// Inline functions for DiscSpec
+
+inline DiscSpec::DiscSpec() {
 }
 
 inline bool DiscSpec::operator == (const DiscSpec& other) const {
@@ -919,10 +928,6 @@ inline DiscSpecIterator DiscSetSurface::end() const {
 // Inline functions for DiscSpecIterator
 
 inline DiscSpecIterator::DiscSpecIterator() {
-}
-inline DiscSpecIterator::DiscSpecIterator(const DiscSetSurface& discSet) :
-        internalDiscSet(&discSet), current(0, 0, 0) {
-    makeValid();
 }
 inline void DiscSpecIterator::init(const DiscSetSurface& discSet) {
     internalDiscSet = &discSet;

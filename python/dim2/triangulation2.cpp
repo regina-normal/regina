@@ -131,6 +131,7 @@ void addTriangulation2(pybind11::module_& m) {
         .def("isEmpty", &Triangulation<2>::isEmpty)
         .def("isValid", &Triangulation<2>::isValid)
         .def("eulerChar", &Triangulation<2>::eulerChar)
+        .def("eulerCharTri", &Triangulation<2>::eulerCharTri)
         .def("isClosed", &Triangulation<2>::isClosed)
         .def("hasBoundaryFacets", &Triangulation<2>::hasBoundaryFacets)
         .def("hasBoundaryEdges", &Triangulation<2>::hasBoundaryEdges)
@@ -185,7 +186,7 @@ void addTriangulation2(pybind11::module_& m) {
             return Triangulation<2>::typeID;
         })
         .def_property_readonly_static("dimension", [](pybind11::object) {
-            return 2;
+            return Triangulation<2>::dimension;
         })
     ;
 }

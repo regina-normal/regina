@@ -62,36 +62,36 @@ class REGINA_API TrivialTri : public StandardTriangulation {
          * Represents the two-tetrahedron four-vertex triangulation of
          * the 3-sphere.
          */
-        static const int SPHERE_4_VERTEX;
+        static constexpr int SPHERE_4_VERTEX = 5000;
         /**
          * Represents the one-tetrahedron three-vertex triangulation of
          * the ball.  This is a single tetrahedron with two faces as
          * boundary and the other two faces folded together.
          */
-        static const int BALL_3_VERTEX;
+        static constexpr int BALL_3_VERTEX = 5100;
         /**
          * Represents the one-tetrahedron four-vertex triangulation of
          * the ball.  This is a single tetrahedron with all four faces
          * as boundary.
          */
-        static const int BALL_4_VERTEX;
+        static constexpr int BALL_4_VERTEX = 5101;
         /**
          * Represents the two-tetrahedron triangulation N(2) of the
          * twisted 2-sphere bundle over the circle.
          */
-        static const int N2;
+        static constexpr int N2 = 200;
         /**
          * Represents the three-tetrahedron triangulation N(3,1) of the
          * projective plane bundle over the circle.  This particular
          * triangulation has no Mobius band triangles.
          */
-        static const int N3_1;
+        static constexpr int N3_1 = 301;
         /**
          * Represents the three-tetrahedron triangulation N(3,2) of the
          * projective plane bundle over the circle.  This particular
          * triangulation has two Mobius band triangles.
          */
-        static const int N3_2;
+        static constexpr int N3_2 = 302;
     private:
         int type_;
             /**< The specific triangulation being represented.

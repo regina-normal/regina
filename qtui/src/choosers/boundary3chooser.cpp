@@ -48,7 +48,7 @@ BoundaryComponent3Chooser::BoundaryComponent3Chooser(
         bool autoUpdate) :
         QComboBox(parent), tri_(tri), filter_(filter) {
     setMinimumContentsLength(30);
-    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLength);
+    setSizeAdjustPolicy(QComboBox::AdjustToMinimumContentsLengthWithIcon);
     if (autoUpdate)
         tri_->listen(this);
     fill();
@@ -111,12 +111,10 @@ QString BoundaryComponent3Chooser::description(
 }
 
 void BoundaryComponent3Chooser::fill() {
-    regina::Triangulation<3>::BoundaryComponentIterator it;
-    for (it = tri_->boundaryComponents().begin();
-            it != tri_->boundaryComponents().end(); ++it)
-        if ((! filter_) || (*filter_)(*it)) {
-            addItem(description(*it));
-            options_.push_back(*it);
+    for (regina::BoundaryComponent<3>* bc : tri_->boundaryComponents())
+        if ((! filter_) || (*filter_)(bc)) {
+            addItem(description(bc));
+            options_.push_back(bc);
         }
 }
 

@@ -42,6 +42,7 @@
 #include "pybind11/pybind11.h"
 #include "helpers/equality.h"
 #include "helpers/output.h"
+#include "helpers/listview.h"
 
 // Inform pybind11 that SafePtr can be used as a holder type, and that it
 // is safe to construct multiple holders from the same T*.

@@ -48,8 +48,7 @@
 #include "utilities/stringutils.h"
 #include "utilities/xmlutils.h"
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 Context::Context()
     : m_resolveState(Unknown)
@@ -248,4 +247,4 @@ void Context::resolveIncludes()
     m_resolveState = Resolved;
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax

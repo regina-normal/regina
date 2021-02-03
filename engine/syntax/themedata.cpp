@@ -44,8 +44,7 @@
 #include <cstring>
 #include <iostream>
 
-namespace regina {
-namespace syntax {
+namespace regina::syntax {
 
 ThemeData* ThemeData::get(const Theme &theme)
 {
@@ -262,4 +261,4 @@ unsigned ThemeData::editorColor(Theme::EditorColorRole role) const
     return m_editorColors[role];
 }
 
-} } // namespace regina::syntax
+} // namespace regina::syntax

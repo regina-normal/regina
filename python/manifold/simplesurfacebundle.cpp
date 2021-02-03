@@ -42,10 +42,18 @@ void addSimpleSurfaceBundle(pybind11::module_& m) {
         .def(pybind11::init<int>())
         .def(pybind11::init<const SimpleSurfaceBundle&>())
         .def("type", &SimpleSurfaceBundle::type)
-        .def_readonly_static("S2xS1", &SimpleSurfaceBundle::S2xS1)
-        .def_readonly_static("S2xS1_TWISTED",
-            &SimpleSurfaceBundle::S2xS1_TWISTED)
-        .def_readonly_static("RP2xS1", &SimpleSurfaceBundle::RP2xS1)
+        // On some systems we cannot take addresses of the following
+        // inline class constants (e.g., this fails with gcc10 on windows).
+        // We therefore define getter functions instead.
+        .def_property_readonly_static("S2xS1", [](pybind11::object) {
+            return SimpleSurfaceBundle::S2xS1;
+        })
+        .def_property_readonly_static("S2xS1_TWISTED", [](pybind11::object) {
+            return SimpleSurfaceBundle::S2xS1_TWISTED;
+        })
+        .def_property_readonly_static("RP2xS1", [](pybind11::object) {
+            return SimpleSurfaceBundle::RP2xS1;
+        })
     ;
     // The SimpleSurfaceBundle subclass defines its own equality tests, so we
     // should not just inherit the compare-by-pointer test from Manifold.

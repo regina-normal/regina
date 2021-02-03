@@ -32,8 +32,7 @@
 
 #include "triangulation/detail/pachner-impl.h"
 
-namespace regina {
-namespace detail {
+namespace regina::detail {
 
 // Precalculated values of movePerm() in standard dimensions:
 
@@ -67,4 +66,4 @@ const Perm<5> movePerm_4_3[2][4] = {
   { Perm<5>(1,2,3,0,4), Perm<5>(1,2,3,0,4),
     Perm<5>(1,2,3,0,4), Perm<5>(1,2,3,0,4) } };
 
-} } // namespace regina::detail
+} // namespace regina::detail

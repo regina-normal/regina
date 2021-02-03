@@ -168,7 +168,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
         tData.tetrahedron_data[tet].filled_shape.real = 0;
         tData.tetrahedron_data[tet].filled_shape.imag = 0;
 
-        it++;
+        ++it;
     }
 
     regina::snappea::data_to_triangulation(&tData, &data_);
