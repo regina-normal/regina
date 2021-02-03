@@ -149,9 +149,15 @@ bool PythonHandler::exportData(regina::Packet* data, const QString& fileName,
     // Write the name of the script.
     out << "### " << scriptMarker << ' ';
     out << QString(script->label().c_str());
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
     Qt::endl(out);
     out << "###";
     Qt::endl(out);
+#else
+    endl(out);
+    out << "###";
+    endl(out);
+#endif
 
     // Output the value of each variable.
     unsigned long i;
@@ -161,13 +167,23 @@ bool PythonHandler::exportData(regina::Packet* data, const QString& fileName,
         out << "### " << varMarker
             << QString(script->variableName(i).c_str())
             << ": " << (value ? QString(value->label().c_str()) : "");
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
         Qt::endl(out);
+#else
+        endl(out);
+#endif
     }
 
     out << "###";
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
     Qt::endl(out);
     out << "### " << endMetadataMarker;
     Qt::endl(out);
+#else
+    endl(out);
+    out << "### " << endMetadataMarker;
+    endl(out);
+#endif
     out << script->text().c_str();
 
     // All done!

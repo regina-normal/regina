@@ -455,7 +455,11 @@ void PythonConsole::saveLog() {
             QTextStream out(&f);
             out.setCodec(QTextCodec::codecForName("UTF-8"));
             out << session->toPlainText();
+#if QT_VERSION >= QT_VERSION_CHECK(5,14,0)
             Qt::endl(out);
+#else
+            endl(out);
+#endif
         }
     }
 }
