@@ -135,7 +135,7 @@ void TriangulationBase<dim>::calculateSkeleton() {
     // -----------------------------------------------------------------
 
     std::apply([=](auto&&... kFaces) {
-        (calculateFaces<subdimOf<decltype(kFaces)>()>(), ...);
+        (calculateFaces<subdimOf<decltype(kFaces)>()>(this), ...);
     }, this->faces_);
 
     // -----------------------------------------------------------------
@@ -147,12 +147,12 @@ void TriangulationBase<dim>::calculateSkeleton() {
 
 template <int dim>
 template <int subdim>
-void TriangulationBase<dim>::calculateFaces() {
+void TriangulationBase<dim>::calculateFaces(TriangulationBase<dim>* tri) {
     // Clear out all subdim-faces of all simplices.
     // These simplex-based arrays will be our markers for what faces
     // have or have not been seen yet.
     //
-    for (auto s : simplices_)
+    for (auto s : tri->simplices_)
         std::get<subdim>(s->faces_).fill(nullptr);
 
     if constexpr (subdim == dim - 1) {
@@ -167,7 +167,7 @@ void TriangulationBase<dim>::calculateFaces() {
         // according to the truncated permutation labels that are displayed to
         // the user.  This means working through the faces of each simplex
         // in *reverse*.
-        for (auto s : simplices_) {
+        for (auto s : tri->simplices_) {
             for (facet = dim; facet >= 0; --facet) {
                 // Have we already checked out this facet from the other side?
                 if (std::get<dim-1>(s->faces_)[facet])
@@ -175,7 +175,7 @@ void TriangulationBase<dim>::calculateFaces() {
 
                 // A new face!
                 f = new Face<dim, dim-1>(s->component_);
-                std::get<dim - 1>(this->faces_).push_back(f);
+                std::get<dim - 1>(tri->faces_).push_back(f);
 
                 std::get<dim-1>(s->faces_)[facet] = f;
                 std::get<dim-1>(s->mappings_)[facet] =
@@ -209,14 +209,14 @@ void TriangulationBase<dim>::calculateFaces() {
         int adjFace;
         Perm<dim+1> map, adjMap;
         int dir, exitFacet;
-        for (auto s : simplices_) {
+        for (auto s : tri->simplices_) {
             for (start = 0; start < FaceNumbering<dim, dim-2>::nFaces;
                     ++start) {
                 if (std::get<dim-2>(s->faces_)[start])
                     continue;
 
                 f = new Face<dim, dim-2>(s->component_);
-                std::get<dim - 2>(this->faces_).push_back(f);
+                std::get<dim - 2>(tri->faces_).push_back(f);
 
                 // Since the link of a codimension-2-face is a path or loop, the
                 // depth-first search is really just a straight line in either
@@ -258,7 +258,7 @@ void TriangulationBase<dim>::calculateFaces() {
                                             INVALID_IDENTIFICATION;
                                     else
                                         f->valid_.value = false;
-                                    valid_ = s->component_->valid_ = false;
+                                    tri->valid_ = s->component_->valid_ = false;
                                 }
                             }
                             break;
@@ -297,18 +297,18 @@ void TriangulationBase<dim>::calculateFaces() {
         // simplex is pushed on at most once, the array size does not need to
         // be very large.
         typedef std::pair<Simplex<dim>*, int> Spec; /* (simplex, face) */
-        Spec* queue = new Spec[size() * FaceNumbering<dim, subdim>::nFaces];
+        Spec* queue = new Spec[tri->size() * FaceNumbering<dim, subdim>::nFaces];
         unsigned queueStart, queueEnd;
         unsigned pos;
 
-        for (auto s : simplices_) {
+        for (auto s : tri->simplices_) {
             for (start = 0; start < FaceNumbering<dim, subdim>::nFaces;
                     ++start) {
                 if (std::get<subdim>(s->faces_)[start])
                     continue;
 
                 f = new Face<dim, subdim>(s->component_);
-                std::get<subdim>(this->faces_).push_back(f);
+                std::get<subdim>(tri->faces_).push_back(f);
 
                 std::get<subdim>(s->faces_)[start] = f;
                 std::get<subdim>(s->mappings_)[start] =
@@ -362,7 +362,7 @@ void TriangulationBase<dim>::calculateFaces() {
                                                     INVALID_IDENTIFICATION;
                                             else
                                                 f->valid_.value = false;
-                                            valid_ =
+                                            tri->valid_ =
                                                 s->component_->valid_ = false;
                                             break;
                                         }
