@@ -70,11 +70,15 @@ void testPerm() {
     static_assert(Perm<n>().reverse() * Perm<n>().reverse() == Perm<n>());
     static_assert(Perm<n>::rot(1) * Perm<n>::rot(1) == Perm<n>::rot(2 % n));
 
-    static_assert(Perm<n>::fromPermCode(swap.permCode()) == swap);
-    static_assert(Perm<n>::isPermCode(swap.permCode()));
     if constexpr (n == 4 || n == 5) {
+        static_assert(Perm<n>::fromPermCode1(swap.permCode1()) == swap);
+        static_assert(Perm<n>::isPermCode1(swap.permCode1()));
+
         static_assert(Perm<n>::fromPermCode2(swap.permCode2()) == swap);
         static_assert(Perm<n>::isPermCode2(swap.permCode2()));
+    } else {
+        static_assert(Perm<n>::fromPermCode(swap.permCode()) == swap);
+        static_assert(Perm<n>::isPermCode(swap.permCode()));
     }
 
     static_assert(! Perm<n>().reverse().isIdentity());

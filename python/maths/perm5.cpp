@@ -85,14 +85,18 @@ void addPerm5(pybind11::module_& m) {
         .def(pybind11::init<int, int, int, int, int>())
         .def(pybind11::init<int, int, int, int, int, int, int, int, int, int>())
         .def(pybind11::init<const Perm<5>&>())
-        .def("permCode", &Perm<5>::permCode)
+        .def("permCode1", &Perm<5>::permCode1)
         .def("permCode2", &Perm<5>::permCode2)
-        .def("setPermCode", &Perm<5>::setPermCode)
+        .def("permCode", &Perm<5>::permCode1) // deprecated
+        .def("setPermCode1", &Perm<5>::setPermCode1)
         .def("setPermCode2", &Perm<5>::setPermCode2)
-        .def_static("fromPermCode", &Perm<5>::fromPermCode)
+        .def("setPermCode", &Perm<5>::setPermCode1) // deprecated
+        .def_static("fromPermCode1", &Perm<5>::fromPermCode1)
         .def_static("fromPermCode2", &Perm<5>::fromPermCode2)
-        .def_static("isPermCode", &Perm<5>::isPermCode)
+        .def_static("fromPermCode", &Perm<5>::fromPermCode1) // deprecated
+        .def_static("isPermCode1", &Perm<5>::isPermCode1)
         .def_static("isPermCode2", &Perm<5>::isPermCode2)
+        .def_static("isPermCode", &Perm<5>::isPermCode1) // deprecated
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Perm<5>::inverse)
         .def("reverse", &Perm<5>::reverse)

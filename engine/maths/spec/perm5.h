@@ -78,8 +78,8 @@ namespace regina {
  * - \e First-generation codes were used internally in Regina 6.0 and earlier.
  *   These codes were characters whose lowest three bits represented the
  *   image of 0, whose next lowest three bits represented the image of 1,
- *   and so on.  The routines permCode(), setPermCode(), fromPermCode()
- *   and isPermCode() continue to work with first-generation codes for
+ *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
+ *   and isPermCode1() continue to work with first-generation codes for
  *   backward compatibility.  Likewise, the XML data file format
  *   continues to use first-generation codes to describe pentachoron gluings.
  *
@@ -584,7 +584,7 @@ class REGINA_API Perm<5> {
          * This code is sufficient to reproduce the entire permutation.
          *
          * The code returned will be a valid first-generation permutation
-         * code as determined by isPermCode().
+         * code as determined by isPermCode1().
          *
          * \warning This routine will incur additional overhead, since
          * Perm<5> now uses second-generation codes internally.
@@ -592,7 +592,7 @@ class REGINA_API Perm<5> {
          *
          * @return the first-generation permutation code.
          */
-        constexpr Code1 permCode() const;
+        constexpr Code1 permCode1() const;
 
         /**
          * Returns the second-generation code representing this permutation.
@@ -609,11 +609,31 @@ class REGINA_API Perm<5> {
         constexpr Code2 permCode2() const;
 
         /**
+         * Deprecated routine that returns the first-generation code
+         * representing this permutation.
+         *
+         * The code returned will be a valid first-generation permutation
+         * code as determined by isPermCode1().
+         *
+         * \deprecated Use permCode1() to reproduce this behaviour.
+         * However, unless you need backward compatibility, it is
+         * strongly recommended to switch to the much faster
+         * second-generation codes instead.
+         *
+         * \warning This routine will incur additional overhead, since
+         * Perm<5> now uses second-generation codes internally.
+         * See the class notes and the routine permCode2() for details.
+         *
+         * @return the first-generation permutation code.
+         */
+        [[deprecated]] constexpr Code1 permCode() const;
+
+        /**
          * Sets this permutation to that represented by the given
          * first-generation permutation code.
          *
          * \pre the given code is a valid first-generation permutation code;
-         * see isPermCode() for details.
+         * see isPermCode1() for details.
          *
          * \warning This routine will incur additional overhead, since
          * Perm<5> now uses second-generation codes internally.
@@ -622,7 +642,7 @@ class REGINA_API Perm<5> {
          * @param code the first-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(Code1 code);
+        void setPermCode1(Code1 code);
 
         /**
          * Sets this permutation to that represented by the given
@@ -640,11 +660,32 @@ class REGINA_API Perm<5> {
         void setPermCode2(Code2 code);
 
         /**
+         * Deprecated routine that sets this permutation to that represented
+         * by the given first-generation permutation code.
+         *
+         * \deprecated Use setPermCode1() to reproduce this behaviour.
+         * However, unless you need backward compatibility, it is
+         * strongly recommended to switch to the much faster
+         * second-generation codes instead.
+         *
+         * \pre the given code is a valid first-generation permutation code;
+         * see isPermCode1() for details.
+         *
+         * \warning This routine will incur additional overhead, since
+         * Perm<5> now uses second-generation codes internally.
+         * See the class notes and the routine setPermCode2() for details.
+         *
+         * @param code the first-generation code that will determine the
+         * new value of this permutation.
+         */
+        [[deprecated]] void setPermCode(Code1 code);
+
+        /**
          * Creates a permutation from the given first-generation
          * permutation code.
          *
          * \pre the given code is a valid first-generation permutation code;
-         * see isPermCode() for details.
+         * see isPermCode1() for details.
          *
          * \warning This routine will incur additional overhead, since
          * Perm<5> now uses second-generation codes internally.
@@ -653,7 +694,7 @@ class REGINA_API Perm<5> {
          * @param code the first-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static constexpr Perm<5> fromPermCode(Code1 code);
+        static constexpr Perm<5> fromPermCode1(Code1 code);
 
         /**
          * Creates a permutation from the given second-generation
@@ -671,9 +712,30 @@ class REGINA_API Perm<5> {
         static constexpr Perm<5> fromPermCode2(Code2 code);
 
         /**
+         * Deprecated routine that creates a permutation from the given
+         * first-generation permutation code.
+         *
+         * \pre the given code is a valid first-generation permutation code;
+         * see isPermCode1() for details.
+         *
+         * \deprecated Use fromPermCode1() to reproduce this behaviour.
+         * However, unless you need backward compatibility, it is
+         * strongly recommended to switch to the much faster
+         * second-generation codes instead.
+         *
+         * \warning This routine will incur additional overhead, since
+         * Perm<5> now uses second-generation codes internally.
+         * See the class notes and the routine fromPermCode2() for details.
+         *
+         * @param code the first-generation code for the new permutation.
+         * @return the permutation represented by the given code.
+         */
+        [[deprecated]] static constexpr Perm<5> fromPermCode(Code1 code);
+
+        /**
          * Determines whether the given character is a valid first-generation
          * permutation code.  Valid first-generation codes can be passed to
-         * setPermCode() or fromPermCode(), and are returned by permCode().
+         * setPermCode1() or fromPermCode1(), and are returned by permCode1().
          *
          * \warning This routine will incur additional overhead, since
          * Perm<5> now uses second-generation codes internally.
@@ -683,7 +745,7 @@ class REGINA_API Perm<5> {
          * @return \c true if and only if the given code is a valid
          * first-generation permutation code.
          */
-        static constexpr bool isPermCode(Code1 code);
+        static constexpr bool isPermCode1(Code1 code);
 
         /**
          * Determines whether the given character is a valid second-generation
@@ -698,6 +760,25 @@ class REGINA_API Perm<5> {
          * second-generation permutation code.
          */
         static constexpr bool isPermCode2(Code2 code);
+
+        /**
+         * Deprecated routine that determines whether the given character
+         * is a valid first-generation permutation code.
+         *
+         * \deprecated Use isPermCode1() to reproduce this behaviour.
+         * However, unless you need backward compatibility, it is
+         * strongly recommended to switch to the much faster
+         * second-generation codes instead.
+         *
+         * \warning This routine will incur additional overhead, since
+         * Perm<5> now uses second-generation codes internally.
+         * See the class notes and the routine isPermCode2() for details.
+         *
+         * @param code the permutation code to test.
+         * @return \c true if and only if the given code is a valid
+         * first-generation permutation code.
+         */
+        [[deprecated]] static constexpr bool isPermCode(Code1 code);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -1394,7 +1475,7 @@ inline constexpr Perm<5>::Perm(const int* a, const int* b) : code2_(0) {
         image[0], image[1], image[2], image[3], image[4]));
 }
 
-inline constexpr Perm<5>::Code1 Perm<5>::permCode() const {
+inline constexpr Perm<5>::Code1 Perm<5>::permCode1() const {
     return static_cast<Code1>(
         imageTable[code2_][0] |
         (imageTable[code2_][1] << 3) |
@@ -1407,7 +1488,11 @@ inline constexpr Perm<5>::Code2 Perm<5>::permCode2() const {
     return code2_;
 }
 
-inline void Perm<5>::setPermCode(Code1 code) {
+inline constexpr Perm<5>::Code1 Perm<5>::permCode() const {
+    return permCode1();
+}
+
+inline void Perm<5>::setPermCode1(Code1 code) {
     code2_ = static_cast<Code2>(S5Index(
         code & 0x07,
         (code >> 3) & 0x07,
@@ -1420,7 +1505,11 @@ inline void Perm<5>::setPermCode2(Code2 code) {
     code2_ = code;
 }
 
-inline constexpr Perm<5> Perm<5>::fromPermCode(Code1 code) {
+inline void Perm<5>::setPermCode(Code1 code) {
+    setPermCode1(code);
+}
+
+inline constexpr Perm<5> Perm<5>::fromPermCode1(Code1 code) {
     return Perm<5>(static_cast<Code2>(S5Index(
         code & 0x07,
         (code >> 3) & 0x07,
@@ -1433,7 +1522,11 @@ inline constexpr Perm<5> Perm<5>::fromPermCode2(Code2 code) {
     return Perm<5>(code);
 }
 
-inline constexpr bool Perm<5>::isPermCode(Code1 code) {
+inline constexpr Perm<5> Perm<5>::fromPermCode(Code1 code) {
+    return fromPermCode1(code);
+}
+
+inline constexpr bool Perm<5>::isPermCode1(Code1 code) {
     unsigned mask = 0;
     for (int i = 0; i < 5; i++)
         mask |= (1 << ((code >> (3 * i)) & 7));
@@ -1444,6 +1537,10 @@ inline constexpr bool Perm<5>::isPermCode(Code1 code) {
 inline constexpr bool Perm<5>::isPermCode2(Code2 code) {
     // code >= 0 is automatic because we are using an unsigned data type.
     return (code < 120);
+}
+
+inline constexpr bool Perm<5>::isPermCode(Code1 code) {
+    return isPermCode1(code);
 }
 
 inline constexpr Perm<5> Perm<5>::operator *(const Perm<5>& q) const {
