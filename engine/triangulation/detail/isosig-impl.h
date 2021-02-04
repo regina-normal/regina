@@ -369,7 +369,7 @@ std::string TriangulationBase<dim>::isoSig(
     std::string* comp = new std::string[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
-        IsoSigEdgeDegrees<dim> sigIt(**it);
+        IsoSigAllFaceDegrees<dim> sigIt(**it);
         bool first = true;
         do {
             curr = isoSigFrom((*it)->simplex(sigIt.simplex())->index(),

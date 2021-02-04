@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include "detail/simplexinfo-impl.h"
 
 namespace regina {
 
@@ -154,6 +155,30 @@ class IsoSigEdgeDegrees {
         bool next();
 };
 
+/**
+ * An isomorphism signature which looks at subdimensional faces of a 
+ * simplex starting from vertices going to higher dimensional faces
+ * and only examines simplices that are lexicographically smallest in
+ * all subdimensional face degrees. Also only looks at permutations
+ * of such simplices where the combined degree information of given
+ * vertices are weakly ascending. 
+ */
+template <int dim>
+class IsoSigAllFaceDegrees {
+    private:
+        size_t size_;
+        size_t simp_;
+        typename Perm<dim+1>::Index perm_;    
+        std::vector<detail::SimplexInfo<dim>> properties;
+    public:
+        IsoSigAllFaceDegrees(const Component<dim>& comp);
+
+        size_t simplex() const;
+        Perm<dim+1> perm() const;
+
+        bool next();        
+};
+
 /*@}*/
 
 template <int dim>
@@ -224,6 +249,93 @@ bool IsoSigEdgeDegrees<dim>::next() {
         return simp_ < size_;
     }
     return true;
+}
+
+
+template <int dim>
+size_t IsoSigAllFaceDegrees<dim>::simplex() const {
+    return simp_;
+}
+
+template <int dim>
+Perm<dim+1> IsoSigAllFaceDegrees<dim>::perm() const {
+    return Perm<dim+1>::atIndex(perm_);
+}
+
+template <int dim>
+bool IsoSigAllFaceDegrees<dim>::next() {
+    perm_++;
+    while (simp_ < size_) {
+        while (perm_ < Perm<dim + 1>::nPerms) {
+            if (properties[simp_].permIsOrdered(perm_)) {
+                return true;
+            }
+            perm_++;
+        }
+        simp_++;
+        perm_ = 0;
+    }
+    return false;
+}
+
+template <int dim>
+IsoSigAllFaceDegrees<dim>::IsoSigAllFaceDegrees(const Component<dim>& comp) {
+    /**
+     * Preprocesses each simplex so they can be compared easily using
+     * the 'SimplexInfo' class. (Look into the class to see how these
+     * comparisons are done) 
+     */
+    for (int i = 0; i < comp.size(); i++) {
+        Simplex<dim>* tetrahedra = comp.simplex(i);
+        properties.push_back(detail::SimplexInfo<dim>(tetrahedra, i, comp.size()));
+    }
+    /**
+     * Creates an ordering of simplices through sorting
+     */
+    std::sort(properties.begin(), properties.end());
+    /**
+     * Iterate through properties and stores the lengths of consecutive 
+     * equal SimplexInfo objects. 
+     */
+    int prev = 0;
+    int runLength = 1;
+    std::vector<int> partitionSizes;
+    for (int i = 1; i < properties.size(); i++) {
+        if (properties[prev] == properties[i]) {
+            runLength++;
+        } else {
+            partitionSizes.push_back(runLength);
+            prev = i;
+            runLength = 1;
+        }
+    }
+    partitionSizes.push_back(runLength);
+    /** 
+     * Selects the the first minimum size partition to use. 
+     */
+    int index = 0;
+    int bestIndex = 0; //Starting index for best tetrahedra
+    int partitionIndex = 0; //Partition index for best tetrahedra
+    int minPartitionSize = INT32_MAX;
+    for (int i = 0; i < partitionSizes.size(); i++) {
+        index += partitionSizes[i];
+        if (partitionSizes[i] < minPartitionSize) {
+            minPartitionSize = partitionSizes[i];
+            bestIndex = index - partitionSizes[i];
+            partitionIndex = i;
+        }
+    }
+
+    /** 
+     * Chooses the isomorphism signature that is lexicographically smallest
+     * which is contained within the first minimum size partition selected
+     * previously, and with a permutation where  each vertex label in the 
+     * comparison is ranked equal or higher then the previous vertex label.
+     */    
+    size_ = partitionSizes[partitionIndex] + bestIndex;
+    simp_ = bestIndex;
+    perm_ = -1;
+    next();
 }
 
 } // namespace regina
