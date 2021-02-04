@@ -91,19 +91,37 @@ class Perm3Test : public CppUnit::TestFixture {
 
         void index() {
             for (int i = 0; i < 6; ++i) {
-                if (Perm<3>::S3[i].S3Index() != i) {
+                Perm osn = Perm<3>::orderedS3[i];
+                Perm sn = Perm<3>::S3[i];
+
+                if (sn.S3Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation S3[" << i << "] gives an "
                         "incorrect S3 index of "
-                        << Perm<3>::S3[i].S3Index() << ".";
+                        << sn.S3Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (Perm<3>::orderedS3[i].orderedS3Index() != i) {
+                if (osn.orderedS3Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation orderedS3[" << i << "] gives an "
                         "incorrect orderedS3 index of "
-                        << Perm<3>::orderedS3[i].orderedS3Index() << ".";
+                        << osn.orderedS3Index() << ".";
                     CPPUNIT_FAIL(msg.str());
+                }
+
+                if (sn.sign() != (i % 2 == 0 ? 1 : -1)) {
+                    std::ostringstream msg;
+                    msg << "Permutation S3[" << i << "] has the wrong sign.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (sn != osn) {
+                    if (sn.orderedS3Index() != (i ^ 1) ||
+                            osn.S3Index() != (i ^ 1)) {
+                        std::ostringstream msg;
+                        msg << "Permutation S3/orderedS3[" << i << "] "
+                            "differ by more than the last index bit.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
             }
         }

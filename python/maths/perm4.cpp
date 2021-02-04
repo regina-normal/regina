@@ -80,14 +80,18 @@ void addPerm4(pybind11::module_& m) {
         .def(pybind11::init<int, int, int, int>())
         .def(pybind11::init<int, int, int, int, int, int, int, int>())
         .def(pybind11::init<const Perm<4>&>())
-        .def("permCode", &Perm<4>::permCode)
+        .def("permCode1", &Perm<4>::permCode1)
         .def("permCode2", &Perm<4>::permCode2)
-        .def("setPermCode", &Perm<4>::setPermCode)
+        .def("permCode", &Perm<4>::permCode1) // deprecated
+        .def("setPermCode1", &Perm<4>::setPermCode1)
         .def("setPermCode2", &Perm<4>::setPermCode2)
-        .def_static("fromPermCode", &Perm<4>::fromPermCode)
+        .def("setPermCode", &Perm<4>::setPermCode1) // deprecated
+        .def_static("fromPermCode1", &Perm<4>::fromPermCode1)
         .def_static("fromPermCode2", &Perm<4>::fromPermCode2)
-        .def_static("isPermCode", &Perm<4>::isPermCode)
+        .def_static("fromPermCode", &Perm<4>::fromPermCode1) // deprecated
+        .def_static("isPermCode1", &Perm<4>::isPermCode1)
         .def_static("isPermCode2", &Perm<4>::isPermCode2)
+        .def_static("isPermCode", &Perm<4>::isPermCode1) // deprecated
         .def(pybind11::self * pybind11::self)
         .def("inverse", &Perm<4>::inverse)
         .def("reverse", &Perm<4>::reverse)
@@ -97,8 +101,10 @@ void addPerm4(pybind11::module_& m) {
         .def("compareWith", &Perm<4>::compareWith)
         .def("isIdentity", &Perm<4>::isIdentity)
         .def_static("rot", &Perm<4>::rot)
-        .def_static("atIndex", &Perm<4>::atIndex)
-        .def("index", &Perm<4>::index)
+        // index and atIndex are deprecated, so do not call them directly.
+        .def_static("atIndex",
+            [](Perm<4>::Index i) { return Perm<4>::orderedSn[i]; })
+        .def("index", &Perm<4>::orderedSnIndex)
         .def_static("rand", (Perm<4> (*)(bool))(&Perm<4>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<4>::trunc)

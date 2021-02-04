@@ -94,44 +94,64 @@ class Perm5Test : public CppUnit::TestFixture {
 
         void index() {
             for (int i = 0; i < 120; ++i) {
-                if (Perm<5>::S5[i].S5Index() != i) {
+                Perm osn = Perm<5>::orderedS5[i];
+                Perm sn = Perm<5>::S5[i];
+
+                if (sn.S5Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation S5[" << i << "] gives an "
                         "incorrect S5 index of "
-                        << Perm<5>::S5[i].S5Index() << ".";
+                        << sn.S5Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (Perm<5>::orderedS5[i].orderedS5Index() != i) {
+                if (osn.orderedS5Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation orderedS5[" << i << "] gives an "
                         "incorrect orderedS5 index of "
-                        << Perm<5>::orderedS5[i].orderedS5Index() << ".";
+                        << osn.orderedS5Index() << ".";
                     CPPUNIT_FAIL(msg.str());
+                }
+
+                if (sn.sign() != (i % 2 == 0 ? 1 : -1)) {
+                    std::ostringstream msg;
+                    msg << "Permutation S5[" << i << "] has the wrong sign.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (sn != osn) {
+                    if (sn.orderedS5Index() != (i ^ 1) ||
+                            osn.S5Index() != (i ^ 1)) {
+                        std::ostringstream msg;
+                        msg << "Permutation S5/orderedS5[" << i << "] "
+                            "differ by more than the last index bit.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
             }
         }
 
         bool looksLikeIdentity(const Perm<5>& p) {
             return (p.isIdentity() && p == Perm<5>() &&
-                p.permCode() == 18056 && p.permCode2() == 0 &&
+                p.permCode1() == 18056 && p.permCode2() == 0 &&
                 p.str() == "01234");
         }
 
         bool looksEqual(const Perm<5>& p, const Perm<5>& q) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode() && p.permCode2() == q.permCode2());
+                p.permCode1() == q.permCode1() &&
+                p.permCode2() == q.permCode2());
         }
 
         bool looksEqual(const Perm<5>& p, const Perm<5>& q,
                 const std::string& qStr) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode() &&
+                p.permCode1() == q.permCode1() &&
                 p.permCode2() == q.permCode2() && p.str() == qStr);
         }
 
         bool looksDistinct(const Perm<5>& p, const Perm<5>& q) {
             return (p != q && (! (p == q)) && p.str() != q.str() &&
-                p.permCode() != q.permCode() && p.permCode2() != q.permCode2());
+                p.permCode1() != q.permCode1() &&
+                p.permCode2() != q.permCode2());
         }
 
         int expectedSign(const Perm<5>& p) {
@@ -153,7 +173,7 @@ class Perm5Test : public CppUnit::TestFixture {
             std::ostringstream name;
             name << a << b << c << d << e;
 
-            Perm<5> p1 = Perm<5>::fromPermCode(p.permCode());
+            Perm<5> p1 = Perm<5>::fromPermCode1(p.permCode1());
             if (! looksEqual(p1, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The first-generation code constructor fails for "
@@ -227,10 +247,10 @@ class Perm5Test : public CppUnit::TestFixture {
             }
 
             Perm<5> p5(4, 2, 3, 0, 1);
-            p5.setPermCode(p3.permCode());
+            p5.setPermCode1(p3.permCode1());
             if (! looksEqual(p5, p, name.str())) {
                 std::ostringstream msg;
-                msg << "The setPermCode() / permCode() routines fail for "
+                msg << "The setPermCode1() / permCode1() routines fail for "
                     "the permutation " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -244,9 +264,9 @@ class Perm5Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! Perm<5>::isPermCode(p.permCode())) {
+            if (! Perm<5>::isPermCode1(p.permCode1())) {
                 std::ostringstream msg;
-                msg << "Routine isPermCode() suggests that the permutation "
+                msg << "Routine isPermCode1() suggests that the permutation "
                     << name.str() << " has an invalid permutation code.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -258,8 +278,8 @@ class Perm5Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (Perm<5>::isPermCode(0))
-                CPPUNIT_FAIL("Routine isPermCode() suggests that 0 is a "
+            if (Perm<5>::isPermCode1(0))
+                CPPUNIT_FAIL("Routine isPermCode1() suggests that 0 is a "
                     "valid first-generation code (which it is not).");
 
             if (! Perm<5>::isPermCode2(0))

@@ -206,7 +206,7 @@ bool TriangulationBase<dim>::makeCanonical() {
             current.simpImage(simp) = 0;
             currentInv.simpImage(0) = simp;
 
-            currentInv.facetPerm(0) = Perm<dim+1>::atIndex(perm);
+            currentInv.facetPerm(0) = Perm<dim+1>::orderedSn[perm];
             current.facetPerm(simp) = currentInv.facetPerm(0).inverse();
 
             if (CanonicalHelper::extendIsomorphism<dim>(this, current,
@@ -391,7 +391,7 @@ size_t TriangulationBase<dim>::findIsomorphisms(
 
         whichComp[startSimp[comp]] = comp;
         iso.simpImage(myIndex) = startSimp[comp];
-        iso.facetPerm(myIndex) = Perm<dim+1>::atIndex(startPerm[comp]);
+        iso.facetPerm(myIndex) = Perm<dim+1>::orderedSn[startPerm[comp]];
         toProcess.push(myIndex);
 
         broken = false;

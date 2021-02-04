@@ -102,11 +102,15 @@ Version 6.1  [ TODO ]
             - Replaced lookup tables S1, S2, S3, ..., orderedS2, orderedS3, ...
               with lightweight objects whose square bracket operators compute
               and/or look up the relevant permutations on the fly.
+            - Now all n (not just small n) have static members Sn and orderedSn
+              and member functions SnIndex() and orderedSnIndex().
             - New static routine rot().
             - New class constant codeType.
             - For classes whose permutation codes are packed image sequences
               (n > 5), added a helper class constant imageMask.
             - Almost everything in the permutation classes is now constexpr.
+            - Routines index() and atIndex() are now deprecated.
+              Use orderedSnIndex() and orderedSn[...] instead.
         Class Perm<4>:
             - All of the changes listed for Perm<n> above.
             - Added a new typedef Code2; this is identical to Code, but
@@ -114,6 +118,9 @@ Version 6.1  [ TODO ]
               which generation of code is being used.
             - Renamed Code to Code1, to clearly indicate that this is an old
               code type; the old typedef Code is still present but deprecated.
+            - Renamed permCode(), setPermCode(), fromPermCode(), isPermCode()
+              to permCode1(), setPermCode1(), fromPermCode1(), isPermCode1().
+              The old names are now deprecated.
         Class Perm<5>:
             - All of the changes listed for Perm<n> above.
             - Changed the internal representation; as a result there are new
@@ -123,6 +130,9 @@ Version 6.1  [ TODO ]
               isPermCode()) are slower to work with, and should be avoided.
             - Renamed Code to Code1, to clearly indicate that this is an old
               code type; the old typedef Code is still present but deprecated.
+            - Renamed permCode(), setPermCode(), fromPermCode(), isPermCode()
+              to permCode1(), setPermCode1(), fromPermCode1(), isPermCode1().
+              The old names are now deprecated.
             - Several operations are now considerably faster than before
               (in particular, composition and inverses).
         Class PlugTriSolidTorus:

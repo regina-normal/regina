@@ -55,15 +55,45 @@
 #include <iostream>
 #include <sstream>
 
-#include "foreign/casson.h"
 #include "foreign/orb.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
+
+// This macro was originally provided in casson.h:
+#define LN(ch)   ((ch)=='u') ? 0 : (((ch)=='v') ? 1 : (((ch)=='w') ? 2 : 3))
 
 namespace regina {
 
 // Anonymous namespace for the private routines used only by this file.
 namespace {
+
+// Structures originally provided in casson.h:
+
+struct REGINA_LOCAL TetEdgeInfo {
+        int             tet_index,f1,f2;
+        TetEdgeInfo     *prev,
+                        *next;
+};
+struct REGINA_LOCAL EdgeInfo {
+        int             index,
+                        singular_index;
+        double          singular_order;
+
+        TetEdgeInfo     *head;
+        EdgeInfo        *prev,
+                        *next;
+};
+struct REGINA_LOCAL CassonFormat {
+        int             num_tet;
+        EdgeInfo        *head;
+};
+
+// Constants originally provided in casson.h:
+const int vertex_at_faces[4][4] =
+        {{9,2,3,1},
+         {3,9,0,2},
+         {1,3,9,0},
+         {2,0,1,9}};
 
 /**
  * Modified from Orb's cassonToTriangulation() routine.

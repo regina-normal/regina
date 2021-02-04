@@ -343,10 +343,16 @@ void XMLSimplexReader<dim>::initialChars(const std::string& chars) {
 
         if (simpIndex < 0 || simpIndex >= static_cast<long>(tri_->size()))
             continue;
-        if (! Perm<dim + 1>::isPermCode(permCode))
-            continue;
+        if constexpr (dim == 3 || dim == 4) {
+            if (! Perm<dim + 1>::isPermCode1(permCode))
+                continue;
+            perm.setPermCode1(permCode);
+        } else {
+            if (! Perm<dim + 1>::isPermCode(permCode))
+                continue;
+            perm.setPermCode(permCode);
+        }
 
-        perm.setPermCode(permCode);
         adjSimp = tri_->simplices()[simpIndex];
         adjFacet = perm[k];
         if (adjSimp == simplex_ && adjFacet == k)

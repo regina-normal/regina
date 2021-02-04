@@ -186,7 +186,7 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
             adjPent = p->adjacentPentachoron(facet);
             if (adjPent) {
                 out << adjPent->index() << ' '
-                    << p->adjacentGluing(facet).permCode() << ' ';
+                    << p->adjacentGluing(facet).permCode1() << ' ';
             } else
                 out << "-1 -1 ";
         }

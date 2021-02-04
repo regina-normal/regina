@@ -33,9 +33,11 @@
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
 #include "maths/perm.h"
+#include "../constarray.h"
 #include "../helpers.h"
 
 using regina::Perm;
+using regina::python::ConstArray;
 
 namespace {
     template <int n, int k>
@@ -79,10 +81,23 @@ namespace {
             // Only called for Perm16, which has no contract() methods at all.
         }
     };
+
+    template <int n>
+    ConstArray<decltype(Perm<n>::Sn)> Perm_Sn_arr(
+        Perm<n>::Sn, Perm<n>::nPerms);
+
+    template <int n>
+    ConstArray<decltype(Perm<n>::orderedSn)> Perm_orderedSn_arr(
+        Perm<n>::orderedSn, Perm<n>::nPerms);
 }
 
 template <int n>
 void addPerm(pybind11::module_& m, const char* name) {
+    decltype(Perm_Sn_arr<n>)::wrapClass(m,
+        (std::string("ConstArray_") + name + "_Sn").c_str());
+    decltype(Perm_orderedSn_arr<n>)::wrapClass(m,
+        (std::string("ConstArray_") + name + "_orderedSn").c_str());;
+
     auto c = pybind11::class_<Perm<n>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<int, int>())
@@ -114,12 +129,16 @@ void addPerm(pybind11::module_& m, const char* name) {
         .def("compareWith", &Perm<n>::compareWith)
         .def("isIdentity", &Perm<n>::isIdentity)
         .def_static("rot", &Perm<n>::rot)
-        .def_static("atIndex", &Perm<n>::atIndex)
-        .def("index", &Perm<n>::index)
+        // index and atIndex are deprecated, so do not call them directly.
+        .def_static("atIndex",
+            [](typename Perm<n>::Index i) { return Perm<n>::orderedSn[i]; })
+        .def("index", &Perm<n>::orderedSnIndex)
         .def_static("rand", (Perm<n> (*)(bool))(&Perm<n>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<n>::trunc)
         .def("clear", &Perm<n>::clear)
+        .def("SnIndex", &Perm<n>::SnIndex)
+        .def("orderedSnIndex", &Perm<n>::orderedSnIndex)
         .def_property_readonly_static("codeType",
             [](pybind11::object /* self */) { return Perm<n>::codeType; })
         .def_property_readonly_static("nPerms",
@@ -130,6 +149,8 @@ void addPerm(pybind11::module_& m, const char* name) {
             [](pybind11::object /* self */) { return Perm<n>::imageBits; })
         .def_property_readonly_static("imageMask",
             [](pybind11::object /* self */) { return Perm<n>::imageMask; })
+        .def_readonly_static("Sn", &Perm_Sn_arr<n>)
+        .def_readonly_static("orderedSn", &Perm_orderedSn_arr<n>)
     ;
     Perm_extend<n, n-1>::add_bindings(c);
     Perm_contract<n, n+1>::add_bindings(c);

@@ -79,8 +79,8 @@ namespace regina {
  * - \e First-generation codes were used internally in Regina 4.6 and earlier.
  *   These codes were characters whose lowest two bits represented the
  *   image of 0, whose next lowest two bits represented the image of 1,
- *   and so on.  The routines permCode(), setPermCode(), fromPermCode()
- *   and isPermCode() continue to work with first-generation codes for
+ *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
+ *   and isPermCode1() continue to work with first-generation codes for
  *   backward compatibility.  Likewise, the XML data file format
  *   continues to use first-generation codes to describe tetrahedron gluings.
  *
@@ -112,6 +112,8 @@ class REGINA_API Perm<4> {
              * Returns the permutation at the given index in the array S4.
              * See Perm<4>::S4 for details.
              *
+             * This operation is extremely fast (and constant time).
+             *
              * @param index an index between 0 and 23 inclusive.
              * @return the corresponding permutation in S4.
              */
@@ -125,6 +127,8 @@ class REGINA_API Perm<4> {
             /**
              * Returns the permutation at the given index in the array
              * orderedS4.  See Perm<4>::orderedS4 for details.
+             *
+             * This operation is extremely fast (and constant time).
              *
              * @param index an index between 0 and 23 inclusive.
              * @return the corresponding permutation in orderedS4.
@@ -140,6 +144,8 @@ class REGINA_API Perm<4> {
              * Returns the permutation at the given index in the array S3.
              * See Perm<4>::S3 for details.
              *
+             * This operation is extremely fast (and constant time).
+             *
              * @param index an index between 0 and 5 inclusive.
              * @return the corresponding permutation in S3.
              */
@@ -154,6 +160,8 @@ class REGINA_API Perm<4> {
              * Returns the permutation at the given index in the array
              * orderedS3.  See Perm<4>::orderedS3 for details.
              *
+             * This operation is extremely fast (and constant time).
+             *
              * @param index an index between 0 and 5 inclusive.
              * @return the corresponding permutation in orderedS3.
              */
@@ -167,6 +175,8 @@ class REGINA_API Perm<4> {
             /**
              * Returns the permutation at the given index in the array S2.
              * See Perm<4>::S2 for details.
+             *
+             * This operation is extremely fast (and constant time).
              *
              * @param index an index between 0 and 1 inclusive.
              * @return the corresponding permutation in S2.
@@ -233,7 +243,7 @@ class REGINA_API Perm<4> {
          * four elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>S4[i]</tt>.  The index \a i must be
+         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 23 inclusive.
          *
          * In Regina 6.0 and earlier, this was a hard-coded C-style array;
@@ -246,51 +256,68 @@ class REGINA_API Perm<4> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (Perm<4>, Perm<5> and so on), the
-         * S4 array stores the same permutations in the same order (but
-         * of course using different data types).
-         *
-         * Note that the permutations are not necessarily in
-         * lexicographical order.
-         */
-        static constexpr S4Lookup S4 {};
-
-        /**
-         * A dimension-agnostic alias for Perm<4>::S4.  In general, for
-         * each \a K the class PermK will define an alias \a Sn
-         * that references the list of all permutations PermK::SK.
+         * This is different from Perm<4>::orderedSn, since this array \a Sn
+         * alternates between even and odd permutations, whereas \a orderedSn
+         * stores permutations in lexicographical order.
          */
         static constexpr S4Lookup Sn {};
+
+        /**
+         * Gives array-like access to all possible permutations of
+         * four elements.
+         *
+         * This is a dimension-specific alias for Perm<4>::Sn; see that member
+         * for further information.  In general, for every \a n there will be
+         * a static member Perm<n>::Sn; however, these numerical aliases
+         * Perm<2>::S2, ..., Perm<5>::S5 are only available for small \a n.
+         *
+         * Note that both permutation classes Perm<4> and Perm<5> have
+         * an \a S4 array; these both store the same 24 permutations in the
+         * same order (but of course using different data types).
+         */
+        static constexpr S4Lookup S4 {};
 
         /**
          * Gives array-like access to all possible permutations of four
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedS4[i]</tt>.  The index \a i
+         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
          * must be between 0 and 23 inclusive.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * ordered pair (\a p[0], ..., \a p[3]).
          *
          * In Regina 6.0 and earlier, this was a hard-coded C-style array;
          * since Regina 6.1 it has changed type, but accessing elements as
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
-         */
-        static constexpr OrderedS4Lookup orderedS4 {};
-
-        /**
-         * A dimension-agnostic alias for Perm<4>::orderedS4.  In general, for
-         * each \a K the class PermK will define an alias \a orderedSn
-         * that references the list of all permutations PermK::orderedSK.
+         *
+         * This is different from Perm<4>::Sn, since this array \a orderedSn
+         * stores permutations in lexicographical order, whereas \a Sn
+         * alternates between even and odd permutations.
          */
         static constexpr OrderedS4Lookup orderedSn {};
+
+        /**
+         * Gives array-like access to all possible permutations of four
+         * elements in lexicographical order.
+         *
+         * This is a dimension-specific alias for Perm<4>::orderedSn; see that
+         * member for further information.  In general, for every \a n there
+         * will be a static member Perm<n>::orderedSn; however, these numerical
+         * aliases Perm<2>::orderedS2, ..., Perm<5>::orderedS5 are only
+         * available for small \a n.
+         */
+        static constexpr OrderedS4Lookup orderedS4 {};
 
         /**
          * Gives array-like access to all possible permutations of
          * three elements.  In each permutation, 3 maps to 3.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>S3[i]</tt>.  The index \a i must be
+         * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be
          * between 0 and 5 inclusive.
          *
          * In Regina 6.0 and earlier, this was a hard-coded C-style array;
@@ -303,21 +330,25 @@ class REGINA_API Perm<4> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (Perm<4>, Perm<5> and so on), the
-         * S3 array stores the same permutations in the same order (but
-         * of course using different data types).
-         *
-         * Note that the permutations are not necessarily in
+         * This is different from Perm<4>::orderedS3, since this array
+         * \a Sn_1 (or equivalently, \a S3) alternates between even and odd
+         * permutations, whereas \a orderedS3 stores permutations in
          * lexicographical order.
          */
-        static constexpr S3Lookup S3 {};
+        static constexpr S3Lookup Sn_1 {};
 
         /**
-         * A dimension-agnostic alias for Perm<4>::S3.  In general, for
-         * each \a K the class PermK will define an alias \a Sn_1
-         * that references the list of all permutations PermK::S(K-1).
+         * Gives array-like access to all possible permutations of
+         * three elements.
+         *
+         * This is a dimension-specific alias for Perm<4>::Sn_1; see that
+         * member for further information.
+         *
+         * Note that the small permutation classes Perm<3>, Perm<4> and Perm<5>
+         * all have an \a S3 array; these all store the same six permutations
+         * in the same order (but of course using different data types).
          */
-        static constexpr S3Lookup Sn_1 {};
+        static constexpr S3Lookup S3 {};
 
         /**
          * Gives array-like access to all possible permutations of three
@@ -332,6 +363,15 @@ class REGINA_API Perm<4> {
          * described above remains extremely fast.  The object that is returned
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
+         *
+         * This is different from Perm<4>::S3, since this array \a orderedS3
+         * stores permutations in lexicographical order, whereas \a S3 (or
+         * equivalently, \a Sn_1) alternates between even and odd permutations.
+         *
+         * Note that the small permutation classes Perm<3>, Perm<4> and Perm<5>
+         * all have an \a orderedS3 array; these all store the same six
+         * permutations in the same order (but of course using different data
+         * types).
          */
         static constexpr OrderedS3Lookup orderedS3 {};
 
@@ -353,11 +393,12 @@ class REGINA_API Perm<4> {
          * permutations, and those with odd indices in the array are the
          * odd permutations.
          *
-         * For all permutation classes (Perm<4>, Perm<5> and so on), the
-         * S2 array stores the same permutations in the same order (but
-         * of course using different data types).
+         * Note that all small permutation classes (Perm<2>, ..., Perm<5>)
+         * have an \a S2 array: these all store the same two permutations in
+         * the same order (but of course using different data types).
          *
-         * Note that these permutations are already in lexicographical order.
+         * There is no corresponding \a orderedS2 array, since the
+         * (trivial) arrays \a S2 and \a orderedS2 are identical.
          */
         static constexpr S2Lookup S2 {};
 
@@ -458,7 +499,7 @@ class REGINA_API Perm<4> {
          * This code is sufficient to reproduce the entire permutation.
          *
          * The code returned will be a valid first-generation permutation
-         * code as determined by isPermCode().
+         * code as determined by isPermCode1().
          *
          * \warning This routine will incur additional overhead, since
          * Perm<4> now uses second-generation codes internally.
@@ -466,7 +507,7 @@ class REGINA_API Perm<4> {
          *
          * @return the first-generation permutation code.
          */
-        constexpr Code1 permCode() const;
+        constexpr Code1 permCode1() const;
 
         /**
          * Returns the second-generation code representing this permutation.
@@ -483,11 +524,31 @@ class REGINA_API Perm<4> {
         constexpr Code2 permCode2() const;
 
         /**
+         * Deprecated routine that returns the first-generation code
+         * representing this permutation.
+         *
+         * The code returned will be a valid first-generation permutation
+         * code as determined by isPermCode1().
+         *
+         * \deprecated Use permCode1() to reproduce this behaviour.
+         * However, unless you need backward compatibility, it is
+         * strongly recommended to switch to the much faster
+         * second-generation codes instead.
+         *
+         * \warning This routine will incur additional overhead, since
+         * Perm<4> now uses second-generation codes internally.
+         * See the class notes and the routine permCode2() for details.
+         *
+         * @return the first-generation permutation code.
+         */
+        [[deprecated]] constexpr Code1 permCode() const;
+
+        /**
          * Sets this permutation to that represented by the given
          * first-generation permutation code.
          *
          * \pre the given code is a valid first-generation permutation code;
-         * see isPermCode() for details.
+         * see isPermCode1() for details.
          *
          * \warning This routine will incur additional overhead, since
          * Perm<4> now uses second-generation codes internally.
@@ -496,7 +557,7 @@ class REGINA_API Perm<4> {
          * @param code the first-generation code that will determine the
          * new value of this permutation.
          */
-        void setPermCode(Code1 code);
+        void setPermCode1(Code1 code);
 
         /**
          * Sets this permutation to that represented by the given
@@ -514,11 +575,32 @@ class REGINA_API Perm<4> {
         void setPermCode2(Code2 code);
 
         /**
+         * Deprecated routine that sets this permutation to that represented
+         * by the given first-generation permutation code.
+         *
+         * \deprecated Use setPermCode1() to reproduce this behaviour.
+         * However, unless you need backward compatibility, it is
+         * strongly recommended to switch to the much faster
+         * second-generation codes instead.
+         *
+         * \pre the given code is a valid first-generation permutation code;
+         * see isPermCode1() for details.
+         *
+         * \warning This routine will incur additional overhead, since
+         * Perm<4> now uses second-generation codes internally.
+         * See the class notes and the routine setPermCode2() for details.
+         *
+         * @param code the first-generation code that will determine the
+         * new value of this permutation.
+         */
+        [[deprecated]] void setPermCode(Code1 code);
+
+        /**
          * Creates a permutation from the given first-generation
          * permutation code.
          *
          * \pre the given code is a valid first-generation permutation code;
-         * see isPermCode() for details.
+         * see isPermCode1() for details.
          *
          * \warning This routine will incur additional overhead, since
          * Perm<4> now uses second-generation codes internally.
@@ -527,7 +609,7 @@ class REGINA_API Perm<4> {
          * @param code the first-generation code for the new permutation.
          * @return the permutation represented by the given code.
          */
-        static constexpr Perm<4> fromPermCode(Code1 code);
+        static constexpr Perm<4> fromPermCode1(Code1 code);
 
         /**
          * Creates a permutation from the given second-generation
@@ -545,9 +627,30 @@ class REGINA_API Perm<4> {
         static constexpr Perm<4> fromPermCode2(Code2 code);
 
         /**
+         * Deprecated routine that creates a permutation from the given
+         * first-generation permutation code.
+         *
+         * \pre the given code is a valid first-generation permutation code;
+         * see isPermCode1() for details.
+         *
+         * \deprecated Use fromPermCode1() to reproduce this behaviour.
+         * However, unless you need backward compatibility, it is
+         * strongly recommended to switch to the much faster
+         * second-generation codes instead.
+         *
+         * \warning This routine will incur additional overhead, since
+         * Perm<4> now uses second-generation codes internally.
+         * See the class notes and the routine fromPermCode2() for details.
+         *
+         * @param code the first-generation code for the new permutation.
+         * @return the permutation represented by the given code.
+         */
+        [[deprecated]] static constexpr Perm<4> fromPermCode(Code1 code);
+
+        /**
          * Determines whether the given character is a valid first-generation
          * permutation code.  Valid first-generation codes can be passed to
-         * setPermCode() or fromPermCode(), and are returned by permCode().
+         * setPermCode1() or fromPermCode1(), and are returned by permCode1().
          *
          * \warning This routine will incur additional overhead, since
          * Perm<4> now uses second-generation codes internally.
@@ -557,7 +660,7 @@ class REGINA_API Perm<4> {
          * @return \c true if and only if the given code is a valid
          * first-generation permutation code.
          */
-        static constexpr bool isPermCode(Code1 code);
+        static constexpr bool isPermCode1(Code1 code);
 
         /**
          * Determines whether the given character is a valid second-generation
@@ -572,6 +675,25 @@ class REGINA_API Perm<4> {
          * second-generation permutation code.
          */
         static constexpr bool isPermCode2(Code2 code);
+
+        /**
+         * Deprecated routine that determines whether the given character
+         * is a valid first-generation permutation code.
+         *
+         * \deprecated Use isPermCode1() to reproduce this behaviour.
+         * However, unless you need backward compatibility, it is
+         * strongly recommended to switch to the much faster
+         * second-generation codes instead.
+         *
+         * \warning This routine will incur additional overhead, since
+         * Perm<4> now uses second-generation codes internally.
+         * See the class notes and the routine isPermCode2() for details.
+         *
+         * @param code the permutation code to test.
+         * @return \c true if and only if the given code is a valid
+         * first-generation permutation code.
+         */
+        [[deprecated]] static constexpr bool isPermCode(Code1 code);
 
         /**
          * Sets this permutation to be equal to the given permutation.
@@ -691,39 +813,6 @@ class REGINA_API Perm<4> {
         static constexpr Perm rot(int i);
 
         /**
-         * Returns the <i>i</i>th permutation on four elements, where
-         * permutations are numbered lexicographically beginning at 0.
-         *
-         * Lexicographical ordering treats each permutation \a p as the
-         * 4-tuple (\a p[0], \a p[1], \a p[2], \a p[3]).
-         *
-         * The return value will be identical to orderedS4[\a i].
-         *
-         * @param i the lexicographical index of the permutation; this
-         * must be between 0 and 23 inclusive.
-         * @return the <i>i</i>th permutation.
-         */
-        static constexpr Perm atIndex(Index i);
-
-        /**
-         * Returns the lexicographical index of this permutation.  This
-         * indicates where this permutation sits within a full lexicographical
-         * ordering of all 4! permutations on four elements.
-         *
-         * Lexicographical ordering treats each permutation \a p as the
-         * 4-tuple (\a p[0], \a p[1], \a p[2], \a p[3]).
-         * In particular, the identity permutation has index 0, and the
-         * "reverse" permutation (which maps each \a i to 3-<i>i</i>)
-         * has index 23 = 4!-1.
-         *
-         * This routine is identical to orderedS4Index().
-         *
-         * @return the index of this permutation, which will be between
-         * 0 and 23 inclusive.
-         */
-        constexpr Index index() const;
-
-        /**
          * Returns a random permutation on four elements.
          * All permutations are returned with equal probability.
          *
@@ -823,38 +912,79 @@ class REGINA_API Perm<4> {
         void clear(unsigned from);
 
         /**
+         * Returns the index of this permutation in the Perm<4>::Sn array.
+         *
+         * See Sn for further information on how these permutations are indexed.
+         *
+         * @return the index \a i for which this permutation is equal to
+         * Perm<4>::Sn[i].  This will be between 0 and 23 inclusive.
+         */
+        constexpr Index SnIndex() const;
+
+        /**
          * Returns the index of this permutation in the Perm<4>::S4 array.
+         *
+         * This is a dimension-specific alias for SnIndex().  In general,
+         * for every \a n there will be a member function Perm<n>::SnIndex();
+         * however, these numerical aliases Perm<2>::S2Index(), ...,
+         * Perm<5>::S5Index() are only available for small \a n.
+         *
+         * See Sn for further information on how these permutations are indexed.
          *
          * @return the index \a i for which this permutation is equal to
          * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
          */
-        constexpr int S4Index() const;
+        constexpr Index S4Index() const;
 
         /**
-         * Returns the index of this permutation in the Perm<4>::S4 array.
-         * This is a dimension-agnostic alias for S4Index().
+         * Returns the lexicographical index of this permutation.  This will
+         * be the index of this permutation in the Perm<4>::orderedSn array.
          *
-         * @return the index \a i for which this permutation is equal to
-         * Perm<4>::S4[i].  This will be between 0 and 23 inclusive.
+         * See orderedSn for further information on lexicographical ordering.
+         *
+         * @return the lexicographical index of this permutation.
+         * This will be between 0 and 23 inclusive.
          */
-        constexpr int SnIndex() const;
+        constexpr Index orderedSnIndex() const;
 
         /**
-         * Returns the index of this permutation in the Perm<4>::orderedS4 array.
+         * Returns the lexicographical index of this permutation.  This will
+         * be the index of this permutation in the Perm<4>::orderedSn array.
          *
-         * @return the index \a i for which this permutation is equal to
-         * Perm<4>::orderedS4[i].  This will be between 0 and 23 inclusive.
+         * This is a dimension-specific alias for orderedSnIndex().
+         * In general, for every \a n there will be a member function
+         * Perm<n>::orderedSnIndex(); however, these numerical aliases
+         * Perm<2>::orderedS2Index(), ..., Perm<5>::orderedS5Index() are
+         * only available for small \a n.
+         *
+         * See orderedSn for further information on lexicographical ordering.
+         *
+         * @return the lexicographical index of this permutation.
+         * This will be between 0 and 23 inclusive.
          */
-        constexpr int orderedS4Index() const;
+        constexpr Index orderedS4Index() const;
 
         /**
-         * Returns the index of this permutation in the Perm<4>::orderedS4 array.
-         * This is a dimension-agnostic alias for orderedS4Index().
+         * Deprecated routine that returns the lexicographical index of this
+         * permutation.
          *
-         * @return the index \a i for which this permutation is equal to
-         * Perm<4>::orderedS4[i].  This will be between 0 and 23 inclusive.
+         * \deprecated Use the equivalent routine orderedSnIndex() instead.
+         *
+         * @return the lexicographical index of this permutation.
          */
-        constexpr int orderedSnIndex() const;
+        [[deprecated]] constexpr Index index() const;
+
+        /**
+         * Deprecated routine that returns the <i>i</i>th permutation on
+         * four elements, where permutations are numbered lexicographically.
+         *
+         * \deprecated Use orderedSn[\a i] instead.
+         *
+         * @param i the lexicographical index of the permutation; this
+         * must be between 0 and 23 inclusive.
+         * @return the <i>i</i>th permutation.
+         */
+        [[deprecated]] static constexpr Perm atIndex(Index i);
 
         /**
          * Extends a <i>k</i>-element permutation to a 4-element permutation,
@@ -1095,7 +1225,7 @@ inline constexpr Perm<4>::Perm(const int* a, const int* b) : code_(0) {
     code_ = static_cast<Code2>(S4Index(image[0], image[1], image[2], image[3]));
 }
 
-inline constexpr Perm<4>::Code1 Perm<4>::permCode() const {
+inline constexpr Perm<4>::Code1 Perm<4>::permCode1() const {
     return static_cast<Code1>(
         imageTable[code_][0] |
         (imageTable[code_][1] << 2) |
@@ -1107,7 +1237,11 @@ inline constexpr Perm<4>::Code2 Perm<4>::permCode2() const {
     return code_;
 }
 
-inline void Perm<4>::setPermCode(Code1 code) {
+inline constexpr Perm<4>::Code1 Perm<4>::permCode() const {
+    return permCode1();
+}
+
+inline void Perm<4>::setPermCode1(Code1 code) {
     code_ = static_cast<Code2>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
@@ -1119,7 +1253,11 @@ inline void Perm<4>::setPermCode2(Code2 code) {
     code_ = code;
 }
 
-inline constexpr Perm<4> Perm<4>::fromPermCode(Code1 code) {
+inline void Perm<4>::setPermCode(Code1 code) {
+    setPermCode1(code);
+}
+
+inline constexpr Perm<4> Perm<4>::fromPermCode1(Code1 code) {
     return Perm<4>(static_cast<Code2>(S4Index(
         code & 0x03,
         (code >> 2) & 0x03,
@@ -1131,7 +1269,11 @@ inline constexpr Perm<4> Perm<4>::fromPermCode2(Code2 code) {
     return Perm<4>(code);
 }
 
-inline constexpr bool Perm<4>::isPermCode(Code1 code) {
+inline constexpr Perm<4> Perm<4>::fromPermCode(Code1 code) {
+    return fromPermCode1(code);
+}
+
+inline constexpr bool Perm<4>::isPermCode1(Code1 code) {
     unsigned mask = 0;
     for (int i = 0; i < 4; i++)
         mask |= (1 << ((code >> (2 * i)) & 3));
@@ -1142,6 +1284,10 @@ inline constexpr bool Perm<4>::isPermCode(Code1 code) {
 inline constexpr bool Perm<4>::isPermCode2(Code2 code) {
     // code >= 0 is automatic because we are using an unsigned data type.
     return (code < 24);
+}
+
+inline constexpr bool Perm<4>::isPermCode(Code1 code) {
+    return isPermCode1(code);
 }
 
 inline constexpr Perm<4> Perm<4>::operator *(const Perm<4>& q) const {
@@ -1191,14 +1337,6 @@ inline constexpr Perm<4> Perm<4>::rot(int i) {
     }
 }
 
-inline constexpr Perm<4> Perm<4>::atIndex(Index i) {
-    return orderedS4[i];
-}
-
-inline constexpr Perm<4>::Index Perm<4>::index() const {
-    return orderedS4Index();
-}
-
 inline Perm<4> Perm<4>::rand(bool even) {
     RandomEngine engine;
     return rand(engine.engine(), even);
@@ -1223,18 +1361,6 @@ inline constexpr bool Perm<4>::operator != (const Perm<4>& other) const {
     return (code_ != other.code_);
 }
 
-inline constexpr int Perm<4>::S4Index() const {
-    return code_;
-}
-
-inline constexpr int Perm<4>::orderedS4Index() const {
-    return convOrderedUnordered(code_);
-}
-
-inline constexpr int Perm<4>::orderedSnIndex() const {
-    return orderedS4Index();
-}
-
 inline constexpr int Perm<4>::S4Index(int a, int b, int c, int d) {
     // First compute the ordered S4 index.
     int ans = 6 * a +
@@ -1245,8 +1371,28 @@ inline constexpr int Perm<4>::S4Index(int a, int b, int c, int d) {
     return convOrderedUnordered(ans);
 }
 
-inline constexpr int Perm<4>::SnIndex() const {
-    return S4Index();
+inline constexpr Perm<4>::Index Perm<4>::S4Index() const {
+    return code_;
+}
+
+inline constexpr Perm<4>::Index Perm<4>::SnIndex() const {
+    return code_;
+}
+
+inline constexpr Perm<4>::Index Perm<4>::orderedS4Index() const {
+    return convOrderedUnordered(code_);
+}
+
+inline constexpr Perm<4>::Index Perm<4>::orderedSnIndex() const {
+    return convOrderedUnordered(code_);
+}
+
+inline constexpr Perm<4>::Index Perm<4>::index() const {
+    return convOrderedUnordered(code_);
+}
+
+inline constexpr Perm<4> Perm<4>::atIndex(Index i) {
+    return orderedS4[i];
 }
 
 } // namespace regina

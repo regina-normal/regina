@@ -93,45 +93,63 @@ class Perm4Test : public CppUnit::TestFixture {
 
         void index() {
             for (int i = 0; i < 24; ++i) {
-                if (Perm<4>::S4[i].S4Index() != i) {
+                Perm osn = Perm<4>::orderedS4[i];
+                Perm sn = Perm<4>::S4[i];
+
+                if (sn.S4Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation S4[" << i << "] gives an "
                         "incorrect S4 index of "
-                        << Perm<4>::S4[i].S4Index() << ".";
+                        << sn.S4Index() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (Perm<4>::orderedS4[i].orderedS4Index() != i) {
+                if (osn.orderedS4Index() != i) {
                     std::ostringstream msg;
                     msg << "Permutation orderedS4[" << i << "] gives an "
                         "incorrect orderedS4 index of "
-                        << Perm<4>::orderedS4[i].orderedS4Index() << ".";
+                        << osn.orderedS4Index() << ".";
                     CPPUNIT_FAIL(msg.str());
+                }
+
+                if (sn.sign() != (i % 2 == 0 ? 1 : -1)) {
+                    std::ostringstream msg;
+                    msg << "Permutation S4[" << i << "] has the wrong sign.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (sn != osn) {
+                    if (sn.orderedS4Index() != (i ^ 1) ||
+                            osn.S4Index() != (i ^ 1)) {
+                        std::ostringstream msg;
+                        msg << "Permutation S4/orderedS4[" << i << "] "
+                            "differ by more than the last index bit.";
+                        CPPUNIT_FAIL(msg.str());
+                    }
                 }
             }
         }
 
         bool looksLikeIdentity(const Perm<4>& p) {
             return (p.isIdentity() && p == Perm<4>() &&
-                p.permCode() == 228 && p.permCode2() == 0 &&
+                p.permCode1() == 228 && p.permCode2() == 0 &&
                 p.str() == "0123");
         }
 
         bool looksEqual(const Perm<4>& p, const Perm<4>& q) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode() &&
+                p.permCode1() == q.permCode1() &&
                 p.permCode2() == q.permCode2());
         }
 
         bool looksEqual(const Perm<4>& p, const Perm<4>& q,
                 const std::string& qStr) {
             return (p == q && (! (p != q)) && p.str() == q.str() &&
-                p.permCode() == q.permCode() &&
+                p.permCode1() == q.permCode1() &&
                 p.permCode2() == q.permCode2() && p.str() == qStr);
         }
 
         bool looksDistinct(const Perm<4>& p, const Perm<4>& q) {
             return (p != q && (! (p == q)) && p.str() != q.str() &&
-                p.permCode() != q.permCode() &&
+                p.permCode1() != q.permCode1() &&
                 p.permCode2() != q.permCode2());
         }
 
@@ -154,7 +172,7 @@ class Perm4Test : public CppUnit::TestFixture {
             std::ostringstream name;
             name << a << b << c << d;
 
-            Perm<4> p0 = Perm<4>::fromPermCode(p.permCode());
+            Perm<4> p0 = Perm<4>::fromPermCode1(p.permCode1());
             if (! looksEqual(p0, p, name.str())) {
                 std::ostringstream msg;
                 msg << "The first-generation code constructor fails for "
@@ -228,10 +246,10 @@ class Perm4Test : public CppUnit::TestFixture {
             }
 
             Perm<4> p5(2, 3, 1, 0);
-            p5.setPermCode(p3.permCode());
+            p5.setPermCode1(p3.permCode1());
             if (! looksEqual(p5, p, name.str())) {
                 std::ostringstream msg;
-                msg << "The setPermCode() / permCode() routines fail for "
+                msg << "The setPermCode1() / permCode1() routines fail for "
                     "the permutation " << name.str() << ".";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -245,9 +263,9 @@ class Perm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! Perm<4>::isPermCode(p.permCode())) {
+            if (! Perm<4>::isPermCode1(p.permCode1())) {
                 std::ostringstream msg;
-                msg << "Routine isPermCode() suggests that the permutation "
+                msg << "Routine isPermCode1() suggests that the permutation "
                     << name.str() << " has an invalid first-generation code.";
                 CPPUNIT_FAIL(msg.str());
             }
@@ -259,7 +277,7 @@ class Perm4Test : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (Perm<4>::isPermCode(0))
+            if (Perm<4>::isPermCode1(0))
                 CPPUNIT_FAIL("Routine isPermCode() suggests that 0 is a "
                     "valid first-generation code (which it is not).");
 

@@ -103,6 +103,8 @@ class REGINA_API Perm<2> {
              * Returns the permutation at the given index in the array S2.
              * See Perm<2>::S2 for details.
              *
+             * This operation is extremely fast (and constant time).
+             *
              * @param index an index between 0 and 1 inclusive.
              * @return the corresponding permutation in S2.
              */
@@ -146,7 +148,7 @@ class REGINA_API Perm<2> {
          * two elements.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>S2[i]</tt>.  The index \a i must be
+         * square bracket operator: <tt>Sn[i]</tt>.  The index \a i must be
          * between 0 and 1 inclusive.
          *
          * In Regina 6.0 and earlier, this was a hard-coded C-style array;
@@ -156,29 +158,44 @@ class REGINA_API Perm<2> {
          * you cannot make a reference to it (but you can always make a copy).
          *
          * The identity permutation has index 0, and the non-identity
-         * permutation has index 1.  As a result, S2[\a i] is an even
+         * permutation has index 1.  As a result, Sn[\a i] is an even
          * permutation if and only if \a i is even.
          *
-         * For all permutation classes (Perm<2>, Perm<3> and so on),
-         * the S2 array stores the same permutations in the same order
-         * (but of course using different data types).
-         */
-        static constexpr S2Lookup S2 {};
-
-        /**
-         * A dimension-agnostic alias for Perm<2>::S2.  In general, for
-         * each \a K the class PermK will define an alias \a Sn
-         * that references the list of all permutations PermK::SK.
+         * This ordered array is identical to Perm<2>::orderedSn.
+         * Note however that for \a n &ge; 3, the arrays Perm<n>::Sn and
+         * Perm<n>::orderedSn are different: \a Sn alternates between even
+         * and odd permutations, whereas \a orderedSn stores permutations in
+         * lexicographical order.
          */
         static constexpr S2Lookup Sn {};
+
+        /**
+         * Gives array-like access to all possible permutations of
+         * two elements.
+         *
+         * This is a dimension-specific alias for Perm<2>::Sn; see that member
+         * for further information.  In general, for every \a n there will be
+         * a static member Perm<n>::Sn; however, these numerical aliases
+         * Perm<2>::S2, ..., Perm<5>::S5 are only available for small \a n.
+         *
+         * Note that all small permutation classes (Perm<2>, ..., Perm<5>)
+         * have an \a S2 array: these all store the same two permutations in
+         * the same order (but of course using different data types).
+         */
+        static constexpr S2Lookup S2 {};
 
         /**
          * Gives array-like access to all possible permutations of two
          * elements in lexicographical order.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>orderedS2[i]</tt>.  The index \a i
+         * square bracket operator: <tt>orderedSn[i]</tt>.  The index \a i
          * must be between 0 and 1 inclusive.
+         *
+         * Lexicographical ordering treats each permutation \a p as the
+         * ordered pair (\a p[0], \a p[1]).
+         * Therefore the identity permutation has index 0, and the
+         * (unique) non-identity permutation has index 1.
          *
          * In Regina 6.0 and earlier, this was a hard-coded C-style array;
          * since Regina 6.1 it has changed type, but accessing elements as
@@ -186,20 +203,25 @@ class REGINA_API Perm<2> {
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
          *
-         * This ordered array is identical to Perm<2>::S2.
+         * This ordered array is identical to Perm<2>::Sn.
          * Note however that for \a n &ge; 3, the arrays Perm<n>::Sn and
          * Perm<n>::orderedSn are different: \a Sn alternates between even
-         * and odd permutations, and \a orderedSn stores permutations in
-         * lexicograpical order.
-         */
-        static constexpr S2Lookup orderedS2 {};
-
-        /**
-         * A dimension-agnostic alias for Perm<2>::orderedS2.  In general, for
-         * each \a K the class PermK will define an alias \a orderedSn
-         * that references the list of all permutations PermK::orderedSK.
+         * and odd permutations, whereas \a orderedSn stores permutations in
+         * lexicographical order.
          */
         static constexpr S2Lookup orderedSn {};
+
+        /**
+         * Gives array-like access to all possible permutations of two
+         * elements in lexicographical order.
+         *
+         * This is a dimension-specific alias for Perm<2>::orderedSn; see that
+         * member for further information.  In general, for every \a n there
+         * will be a static member Perm<n>::orderedSn; however, these numerical
+         * aliases Perm<2>::orderedS2, ..., Perm<5>::orderedS5 are only
+         * available for small \a n.
+         */
+        static constexpr S2Lookup orderedS2 {};
 
         /**
          * Gives array-like access to all possible permutations of one element.
@@ -209,7 +231,7 @@ class REGINA_API Perm<2> {
          * larger permutation classes Perm<n>.
          *
          * To access the permutation at index \a i, you simply use the
-         * square bracket operator: <tt>S1[i]</tt>.  The index \a i must be 0.
+         * square bracket operator: <tt>Sn_1[i]</tt>.  The index \a i must be 0.
          *
          * In Regina 6.0 and earlier, this was a hard-coded C-style array;
          * since Regina 6.1 it has changed type, but accessing elements as
@@ -217,14 +239,15 @@ class REGINA_API Perm<2> {
          * is lightweight and is defined in the headers only; in particular,
          * you cannot make a reference to it (but you can always make a copy).
          */
-        static constexpr S2Lookup S1 {};
+        static constexpr S2Lookup Sn_1 {};
 
         /**
-         * A dimension-agnostic alias for Perm<2>::S1.  In general, for
-         * each \a K the class PermK will define an alias \a Sn_1
-         * that references the list of all permutations PermK::S(K-1).
+         * Gives array-like access to all possible permutations of one element.
+         *
+         * This is a dimension-specific alias for Perm<2>::Sn_1; see that
+         * member for further information.
          */
-        static constexpr S2Lookup Sn_1 {};
+        static constexpr S2Lookup S1 {};
 
     private:
         Code code_;
@@ -442,21 +465,6 @@ class REGINA_API Perm<2> {
         static constexpr Perm rot(int i);
 
         /**
-         * Returns the <i>i</i>th permutation on two elements, where
-         * permutations are numbered lexicographically beginning at 0.
-         *
-         * Lexicographical ordering treats each permutation \a p as the
-         * pair (\a p[0], \a p[1]).
-         *
-         * The return value will be identical to orderedS2[\a i].
-         *
-         * @param i the lexicographical index of the permutation; this
-         * must be 0 or 1.
-         * @return the <i>i</i>th permutation.
-         */
-        static constexpr Perm atIndex(Index i);
-
-        /**
          * Returns a random permutation on two elements.
          * All permutations are returned with equal probability.
          *
@@ -501,22 +509,6 @@ class REGINA_API Perm<2> {
         static Perm rand(URBG&& gen, bool even = false);
 
         /**
-         * Returns the lexicographical index of this permutation.  This
-         * indicates where this permutation sits within a full lexicographical
-         * ordering of all 2! permutations on two elements.
-         *
-         * Lexicographical ordering treats each permutation \a p as the
-         * pair (\a p[0], \a p[1]).
-         * That is, the identity permutation has index 0, and the
-         * (unique) non-identity permutation has index 1.
-         *
-         * This routine is identical to orderedS2Index().
-         *
-         * @return the index of this permutation, which will be 0 or 1.
-         */
-        constexpr Index index() const;
-
-        /**
          * Returns a string representation of this permutation.
          * The representation will consist of two adjacent digits
          * representing the images of 0 and 1 respectively.  An
@@ -554,38 +546,72 @@ class REGINA_API Perm<2> {
         void clear(unsigned from);
 
         /**
+         * Returns the index of this permutation in the Perm<2>::Sn array.
+         *
+         * See Sn for further information on how these permutations are indexed.
+         *
+         * @return the index \a i for which this permutation is equal to
+         * Perm<2>::Sn[i].  This will be 0 or 1.
+         */
+        constexpr Index SnIndex() const;
+
+        /**
          * Returns the index of this permutation in the Perm<2>::S2 array.
+         *
+         * This is a dimension-specific alias for SnIndex().
+         *
+         * See Sn for further information on how these permutations are indexed.
          *
          * @return the index \a i for which this permutation is equal to
          * Perm<2>::S2[i].  This will be 0 or 1.
          */
-        constexpr int S2Index() const;
+        constexpr Index S2Index() const;
 
         /**
-         * Returns the index of this permutation in the Perm<2>::S2 array.
-         * This is a dimension-agnostic alias for S2Index().
+         * Returns the lexicographical index of this permutation.  This will
+         * be the index of this permutation in the Perm<2>::orderedSn array.
          *
-         * @return the index \a i for which this permutation is equal to
-         * Perm<2>::S2[i].  This will be 0 or 1.
+         * See orderedSn for further information on lexicographical ordering.
+         *
+         * @return the lexicographical index of this permutation.
+         * This will be 0 or 1.
          */
-        constexpr int SnIndex() const;
+        constexpr Index orderedSnIndex() const;
 
         /**
-         * Returns the index of this permutation in the Perm<2>::orderedS2 array.
+         * Returns the lexicographical index of this permutation.  This will
+         * be the index of this permutation in the Perm<2>::orderedSn array.
          *
-         * @return the index \a i for which this permutation is equal to
-         * Perm<2>::orderedS2[i].  This will be 0 or 1.
+         * This is a dimension-specific alias for orderedSnIndex().
+         *
+         * See orderedSn for further information on lexicographical ordering.
+         *
+         * @return the lexicographical index of this permutation.
+         * This will be 0 or 1.
          */
-        constexpr int orderedS2Index() const;
+        constexpr Index orderedS2Index() const;
 
         /**
-         * Returns the index of this permutation in the Perm<2>::orderedS2 array.
-         * This is a dimension-agnostic alias for orderedS2Index().
+         * Deprecated routine that returns the lexicographical index of this
+         * permutation.
          *
-         * @return the index \a i for which this permutation is equal to
-         * Perm<2>::orderedS2[i].  This will be 0 or 1.
+         * \deprecated Use the equivalent routine orderedSnIndex() instead.
+         *
+         * @return the lexicographical index of this permutation.
          */
-        constexpr int orderedSnIndex() const;
+        [[deprecated]] constexpr Index index() const;
+
+        /**
+         * Deprecated routine that returns the <i>i</i>th permutation on
+         * two elements, where permutations are numbered lexicographically.
+         *
+         * \deprecated Use orderedSn[\a i] instead.
+         *
+         * @param i the lexicographical index of the permutation; this
+         * must be 0 or 1.
+         * @return the <i>i</i>th permutation.
+         */
+        [[deprecated]] static constexpr Perm atIndex(Index i);
 
         /**
          * Restricts a <i>k</i>-element permutation to an 2-element
@@ -706,14 +732,6 @@ inline constexpr Perm<2> Perm<2>::rot(int i) {
     return Perm<2>(static_cast<Code>(i));
 }
 
-inline constexpr Perm<2> Perm<2>::atIndex(Index i) {
-    return Perm<2>(static_cast<Code>(i));
-}
-
-inline constexpr Perm<2>::Index Perm<2>::index() const {
-    return code_;
-}
-
 inline Perm<2> Perm<2>::rand(bool even) {
     RandomEngine engine;
     return rand(engine.engine(), even);
@@ -741,20 +759,28 @@ inline std::string Perm<2>::trunc(unsigned len) const {
     }
 }
 
-inline constexpr int Perm<2>::S2Index() const {
+inline constexpr Perm<2>::Index Perm<2>::S2Index() const {
     return code_;
 }
 
-inline constexpr int Perm<2>::SnIndex() const {
+inline constexpr Perm<2>::Index Perm<2>::SnIndex() const {
     return code_;
 }
 
-inline constexpr int Perm<2>::orderedS2Index() const {
+inline constexpr Perm<2>::Index Perm<2>::orderedS2Index() const {
     return code_;
 }
 
-inline constexpr int Perm<2>::orderedSnIndex() const {
+inline constexpr Perm<2>::Index Perm<2>::orderedSnIndex() const {
     return code_;
+}
+
+inline constexpr Perm<2>::Index Perm<2>::index() const {
+    return code_;
+}
+
+inline constexpr Perm<2> Perm<2>::atIndex(Index i) {
+    return Perm<2>(static_cast<Code>(i));
 }
 
 } // namespace regina

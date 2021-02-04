@@ -88,8 +88,10 @@ void addPerm3(pybind11::module_& m) {
         .def("compareWith", &Perm<3>::compareWith)
         .def("isIdentity", &Perm<3>::isIdentity)
         .def_static("rot", &Perm<3>::rot)
-        .def_static("atIndex", &Perm<3>::atIndex)
-        .def("index", &Perm<3>::index)
+        // index and atIndex are deprecated, so do not call them directly.
+        .def_static("atIndex",
+            [](Perm<3>::Index i) { return Perm<3>::orderedSn[i]; })
+        .def("index", &Perm<3>::orderedSnIndex)
         .def_static("rand", (Perm<3> (*)(bool))(&Perm<3>::rand),
             pybind11::arg("even") = false)
         .def("trunc", &Perm<3>::trunc)
