@@ -168,7 +168,7 @@ inline size_t IsoSigClassic<dim>::simplex() const {
 
 template <int dim>
 inline Perm<dim+1> IsoSigClassic<dim>::perm() const {
-    return Perm<dim+1>::atIndex(perm_);
+    return Perm<dim+1>::orderedSn[perm_];
 }
 
 template <int dim>
@@ -210,7 +210,7 @@ inline size_t IsoSigEdgeDegrees<dim>::simplex() const {
 
 template <int dim>
 inline Perm<dim+1> IsoSigEdgeDegrees<dim>::perm() const {
-    return Perm<dim+1>::atIndex(perm_);
+    return Perm<dim+1>::orderedSn[perm_];
 }
 
 template <int dim>
