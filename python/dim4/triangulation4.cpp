@@ -257,5 +257,8 @@ void addTriangulation4(pybind11::module_& m) {
             return Triangulation<4>::dimension;
         })
     ;
+
+    m.def("swap",
+        (void(*)(Triangulation<4>&, Triangulation<4>&))(regina::swap));
 }
 

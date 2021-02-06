@@ -201,5 +201,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         })
     ;
     add_pachner<dim>::add(c);
+
+    m.def("swap",
+        (void(*)(Triangulation<dim>&, Triangulation<dim>&))(regina::swap));
 }
 

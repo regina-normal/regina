@@ -248,4 +248,5 @@ void addLink(pybind11::module_& m) {
         })
     ;
 
+    m.def("swap", (void(*)(Link&, Link&))(regina::swap));
 }
