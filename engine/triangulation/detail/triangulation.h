@@ -88,7 +88,8 @@
  *   (including the names and inheritance structure of classes within
  *   regina::detail) might change in subsequent releases without notice.
  */
-namespace regina::detail {
+namespace regina {
+namespace detail {
 
 template <int dim> class XMLTriangulationReaderBase;
 
@@ -2013,6 +2014,26 @@ class TriangulationBase :
     friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
 
+} // namespace regina::detail -> namespace regina
+
+/**
+ * Swaps the contents of the two given triangulations.
+ *
+ * This global routine simply calls Triangulation<dim>::swap(); it is
+ * provided so that Triangulation<dim> meets the C++ Swappable requirements.
+ *
+ * See Triangulation<dim>::swap() for more details.
+ *
+ * @param lhs the triangulation whose contents should be swapped with \a rhs.
+ * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ */
+template <int dim>
+void swap(Triangulation<dim>& lhs, Triangulation<dim>& rhs) {
+    lhs.swap(rhs);
+}
+
+namespace detail {
+
 /*@}*/
 
 // Inline functions for TriangulationFaceStorage
@@ -3157,7 +3178,7 @@ TriangulationBase<dim>::TopologyLock::~TopologyLock() {
         --tri_->topologyLock_;
 }
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #include "triangulation/detail/canonical-impl.h"
 

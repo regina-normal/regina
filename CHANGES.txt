@@ -175,7 +175,10 @@ Version 6.1  [ TODO ]
               temporary (as was recommended) should be unaffected, and the
               Python behaviour of these functions is completely unchanged.
             - Renamed swapContents() to swap(); the old name is now a
-              deprecated alias.
+              deprecated alias.  Also added a global
+              regina::swap(Triangulation<dim>&, Triangulation<dim>&).
+              As a result, Triangulation<dim> now meets the C++ Swappable
+              requirements.
             - Simplified the class hierarchy; BoundaryComponentCalculator,
               EulerCalculator, FaceCalculator, FaceList and PachnerHelper are
               now gone, and there are a lot fewer regina::alias classes.

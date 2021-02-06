@@ -36,6 +36,8 @@
 static_assert(regina::standardDim(4));
 static_assert(! regina::standardDim(5));
 
+static_assert(std::is_swappable_v<regina::Triangulation<3>>);
+
 // Number of base64 characters required to hold (dim+1)!
 static_assert(regina::detail::IsoSigHelper::CHARS_PER_PERM<3> == 1);
 static_assert(regina::detail::IsoSigHelper::CHARS_PER_PERM<4> == 2);
