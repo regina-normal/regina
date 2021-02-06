@@ -366,28 +366,28 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
     private:
         regina::snappea::Triangulation* data_;
             /**< The triangulation stored in SnapPea's native format,
-                 or 0 if this is a null triangulation. */
+                 or \c nullptr if this is a null triangulation. */
         std::complex<double>* shape_;
             /**< The array of tetrahedron shapes, in rectangular form, using a
                  fixed coordinate system (fixed alignment in SnapPea's
                  terminology).  All shapes are with respect to the Dehn filled
                  hyperbolic structure.  If this is a null triangulation, or if
                  the solution type is no_solution or not_attempted, then
-                 shape_ will be 0. */
+                 shape_ will be \c nullptr. */
         Cusp* cusp_;
             /**< An array that caches information about each cusp of the
                  internal SnapPea triangulation.  If this is a null
-                 triangulation then cusp_ will be 0. */
+                 triangulation then cusp_ will be \c nullptr. */
         unsigned filledCusps_;
             /**< The number of cusps that are currently filled. */
 
         mutable Property<GroupPresentation, StoreManagedPtr> fundGroupFilled_;
             /**< The fundamental group of the filled triangulation,
-                 or 0 if this cannot be computed (e.g., if SnapPea
+                 or \c nullptr if this cannot be computed (e.g., if SnapPea
                  does not return a matrix of relations). */
         mutable Property<AbelianGroup, StoreManagedPtr> h1Filled_;
             /**< The first homology group of the filled triangulation,
-                 or 0 if this cannot be computed. */
+                 or \c nullptr if this cannot be computed. */
 
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
@@ -399,9 +399,9 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
         static bool kernelMessages_;
             /**< Should the SnapPea kernel write diagnostic messages to
                  standard output? */
-        static std::complex<double> zero_;
-            /**< The complex number 0.  This is defined as a data member
-                 so that shape() can still return a reference even when
+        static constexpr std::complex<double> zero_ { 0, 0 };
+            /**< The complex number 0.  This is defined as a (static) data
+                 member so that shape() can still return a reference even when
                  no tetrahedron shapes have been computed. */
 
     public:
@@ -732,7 +732,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          *
          * @return a newly allocated matrix with (\a number_of_rows +
          * \a number_of_cusps) rows and (3 * \a number_of_tetrahedra) columns
-         * as described above, or 0 if this is a null triangulation.
+         * as described above, or \c nullptr if this is a null triangulation.
          */
         MatrixInt* gluingEquations() const;
 
@@ -765,7 +765,8 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          *
          * @return a newly allocated matrix with (\a number_of_rows +
          * \a number_of_cusps) rows and (2 * \a number_of_tetrahedra + 1)
-         * columns as described above, or 0 if this is a null triangulation.
+         * columns as described above, or \c nullptr if this is a null
+         * triangulation.
          */
         MatrixInt* gluingEquationsRect() const;
 
@@ -839,7 +840,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          *
          * @param whichCusp the index of a cusp according to SnapPea;
          * this must be between 0 and countCusps()-1 inclusive.
-         * @return information about the given cusp, or 0 if this is a
+         * @return information about the given cusp, or \c nullptr if this is a
          * null triangulation.
          */
         const Cusp* cusp(unsigned whichCusp = 0) const;
@@ -923,7 +924,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          * it is the responsibility of the caller of this routine to destroy it.
          * The original triangulation (this object) will be left unchanged.
          * If the given cusp is complete or if this is a null triangulation,
-         * then this routine will simply return 0.
+         * then this routine will simply return \c nullptr.
          *
          * \warning Be warned that cusp \a i might not correspond to vertex
          * \a i of the triangulation.  The Cusp::vertex() method (which
@@ -932,7 +933,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          *
          * @param whichCusp the index of the cusp to permanently fill according
          * to SnapPea; this must be between 0 and countCusps()-1 inclusive.
-         * @return the new filled triangulation or 0 if the filling was
+         * @return the new filled triangulation or \c nullptr if the filling was
          * not possible (as described above).
          */
         Triangulation<3>* filledTriangulation(unsigned whichCusp) const;
@@ -961,9 +962,9 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          * and it is the responsibility of the caller of this routine to
          * destroy it.  The original triangulation (this object) will be left
          * unchanged.  If this is a null triangulation, then this routine
-         * will simply return 0.
+         * will simply return \c nullptr.
          *
-         * @return the new filled triangulation, or 0 if this is a null
+         * @return the new filled triangulation, or \c nullptr if this is a null
          * triangulation.
          */
         Triangulation<3>* filledTriangulation() const;
@@ -1018,7 +1019,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          *
          * @return a newly allocated matrix with (2 * \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above,
-         * or 0 if this is a null triangulation.
+         * or \c nullptr if this is a null triangulation.
          */
         MatrixInt* slopeEquations() const;
 
@@ -1075,7 +1076,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          * instantaneous if the group has already been calculated.
          *
          * @return the first homology group of the filled manifold, or
-         * 0 if this could not be computed.
+         * \c nullptr if this could not be computed.
          */
         const AbelianGroup* homologyFilled() const;
 
@@ -1119,7 +1120,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          * by inserting one relation into another.  In general this is a
          * good thing, but it can be very costly for large presentations.
          * @return the fundamental group of the filled manifold, or
-         * 0 if this could not be computed.
+         * \c nullptr if this could not be computed.
          */
         const GroupPresentation* fundamentalGroupFilled(
             bool simplifyPresentation = true,
@@ -1158,7 +1159,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          *
          * If for any reason either Regina or SnapPea are unable to
          * construct a triangulation of the canonical cell decomposition,
-         * then this routine will return 0.
+         * then this routine will return \c nullptr.
          *
          * \snappy The function <tt>canonize()</tt> means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
@@ -1175,7 +1176,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          * the manifold that it does compute is homeomorphic to the original.
          *
          * @return the canonical triangulation of the canonical cell
-         * decomposition, or 0 if this could not be constructed.
+         * decomposition, or \c nullptr if this could not be constructed.
          */
         SnapPeaTriangulation* protoCanonize() const;
 
@@ -1225,7 +1226,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          *
          * If for any reason either Regina or SnapPea are unable to
          * construct the canonical retriangulation of the canonical cell
-         * decomposition, this routine will return 0.
+         * decomposition, this routine will return \c nullptr.
          *
          * \snappy The function <tt>canonize()</tt> means different
          * things for SnapPy versus the SnapPea kernel.  Here Regina follows
@@ -1242,7 +1243,7 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          * the manifold that it does compute is homeomorphic to the original.
          *
          * @return the canonical triangulation of the canonical cell
-         * decomposition, or 0 if this could not be constructed.
+         * decomposition, or \c nullptr if this could not be constructed.
          */
         Triangulation<3>* canonize() const;
 
@@ -1452,12 +1453,13 @@ inline int Cusp::l() const {
 // Inline functions for SnapPeaTriangulation
 
 inline SnapPeaTriangulation::SnapPeaTriangulation() :
-        data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
+        data_(nullptr), shape_(nullptr), cusp_(nullptr),
+        filledCusps_(0), syncing_(false) {
     listen(this);
 }
 
 inline bool SnapPeaTriangulation::isNull() const {
-    return (data_ == 0);
+    return (data_ == nullptr);
 }
 
 inline const std::complex<double>& SnapPeaTriangulation::shape(unsigned tet)
@@ -1478,7 +1480,7 @@ inline unsigned SnapPeaTriangulation::countFilledCusps() const {
 }
 
 inline const Cusp* SnapPeaTriangulation::cusp(unsigned whichCusp) const {
-    return (cusp_ ? cusp_ + whichCusp : 0);
+    return (cusp_ ? cusp_ + whichCusp : nullptr);
 }
 
 inline bool SnapPeaTriangulation::dependsOnParent() const {
