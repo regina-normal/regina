@@ -50,6 +50,16 @@ Triangulation<2>::Triangulation(const std::string& description) {
     delete attempt;
 }
 
+void Triangulation<2>::swap(Triangulation<2>& other) {
+    if (&other == this)
+        return;
+
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&other);
+
+    swapBaseData(other);
+}
+
 bool Triangulation<2>::isMinimal() const {
     // 2-sphere:
     if (eulerChar() == 2)

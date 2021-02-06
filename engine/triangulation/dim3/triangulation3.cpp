@@ -87,8 +87,14 @@ void Triangulation<3>::clearAllProperties() {
     }
 }
 
-void Triangulation<3>::swapAllProperties(Triangulation<3>& other) {
-    swapBaseProperties(other);
+void Triangulation<3>::swap(Triangulation<3>& other) {
+    if (&other == this)
+        return;
+
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&other);
+
+    swapBaseData(other);
 
     // Properties stored directly:
     std::swap(ideal_, other.ideal_);

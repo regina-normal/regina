@@ -579,7 +579,15 @@ void TriangulationBase<dim>::clearBaseProperties() {
 }
 
 template <int dim>
-void TriangulationBase<dim>::swapBaseProperties(TriangulationBase<dim>& other) {
+void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
+    // Simplices:
+    simplices_.swap(other.simplices_);
+
+    for (auto s : simplices_)
+        s->tri_ = static_cast<Triangulation<dim>*>(this);
+    for (auto s : other.simplices_)
+        s->tri_ = static_cast<Triangulation<dim>*>(&other);
+
     // Properties stored directly:
     std::swap(valid_, other.valid_);
     std::swap(calculatedSkeleton_, other.calculatedSkeleton_);

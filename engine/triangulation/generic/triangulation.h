@@ -219,6 +219,43 @@ class Triangulation :
         virtual bool dependsOnParent() const override;
 
         /*@}*/
+        /**
+         * \name Simplices
+         */
+        /*@{*/
+
+        /**
+         * Swaps the contents of this and the given triangulation.
+         *
+         * All top-dimensional simplices that belong to this triangulation
+         * will be moved to \a other, and all top-dimensional simplices
+         * that belong to \a other will be moved to this triangulation.
+         * Likewise, all skeletal objects (such as lower-dimensional faces,
+         * components, and boundary components) and all cached properties
+         * will be swapped.
+         *
+         * In particular, any pointers or references to Simplex<dim> and/or
+         * Face<dim, subdim> objects will remain valid.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this triangulation.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        void swap(Triangulation<dim>& other);
+        /**
+         * Deprecated routine that swaps the contents of this and the
+         * given triangulation.
+         *
+         * \deprecated Use swap() instead.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        [[deprecated]] void swapContents(Triangulation<dim>& other);
+
+        /*@}*/
 
         static XMLPacketReader* xmlReader(Packet* parent,
                 XMLTreeResolver& resolver);
@@ -237,12 +274,6 @@ class Triangulation :
          * a packet change event.
          */
         void clearAllProperties();
-        /**
-         * Swaps all calculated properties, including skeletal data,
-         * with the given triangulation.  This is called by
-         * TriangulationBase::swap(), and by nothing else.
-         */
-        void swapAllProperties(Triangulation<dim>& other);
 
     friend class detail::SimplexBase<dim>;
     friend class detail::TriangulationBase<dim>;
@@ -399,8 +430,19 @@ inline void Triangulation<dim>::clearAllProperties() {
 }
 
 template <int dim>
-inline void Triangulation<dim>::swapAllProperties(Triangulation<dim>& other) {
-    detail::TriangulationBase<dim>::swapBaseProperties(other);
+void Triangulation<dim>::swap(Triangulation<dim>& other) {
+    if (&other == this)
+        return;
+
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&other);
+
+    swapBaseData(other);
+}
+
+template <int dim>
+inline void Triangulation<dim>::swapContents(Triangulation<dim>& other) {
+    swap(other);
 }
 
 template <int dim>

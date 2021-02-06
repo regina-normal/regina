@@ -209,6 +209,37 @@ class REGINA_API Triangulation<2> :
          */
         void removeAllTriangles();
 
+        /**
+         * Swaps the contents of this and the given triangulation.
+         *
+         * All triangles that belong to this triangulation
+         * will be moved to \a other, and all triangles
+         * that belong to \a other will be moved to this triangulation.
+         * Likewise, all skeletal objects (such as lower-dimensional faces,
+         * components, and boundary components) and all cached properties
+         * will be swapped.
+         *
+         * In particular, any pointers or references to Triangle<2> and/or
+         * Face<2, subdim> objects will remain valid.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this triangulation.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        void swap(Triangulation<2>& other);
+        /**
+         * Deprecated routine that swaps the contents of this and the
+         * given triangulation.
+         *
+         * \deprecated Use swap() instead.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        [[deprecated]] void swapContents(Triangulation<2>& other);
+
         /*@}*/
         /**
          * \name Basic Properties
@@ -305,12 +336,6 @@ class REGINA_API Triangulation<2> :
          * a packet change event.
          */
         void clearAllProperties();
-        /**
-         * Swaps all calculated properties, including skeletal data,
-         * with the given triangulation.  This is called by
-         * TriangulationBase::swap(), and by nothing else.
-         */
-        void swapAllProperties(Triangulation<2>& other);
 
         void calculateSkeleton();
 
@@ -409,8 +434,8 @@ inline Packet* Triangulation<2>::internalClonePacket(Packet*) const {
     return new Triangulation(*this);
 }
 
-inline void Triangulation<2>::swapAllProperties(Triangulation<2>& other) {
-    swapBaseProperties(other);
+inline void Triangulation<2>::swapContents(Triangulation<2>& other) {
+    swap(other);
 }
 
 } // namespace regina

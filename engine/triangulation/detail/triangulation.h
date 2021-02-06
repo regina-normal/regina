@@ -473,36 +473,6 @@ class TriangulationBase :
          */
         void removeAllSimplices();
         /**
-         * Swaps the contents of this and the given triangulation.
-         *
-         * All top-dimensional simplices that belong to this triangulation
-         * will be moved to \a other, and all top-dimensional simplices
-         * that belong to \a other will be moved to this triangulation.
-         * Likewise, all skeletal objects (such as lower-dimensional faces,
-         * components, and boundary components) and all cached properties
-         * (such as homology and fundamental group) will be swapped.
-         *
-         * In particular, any pointers or references to Simplex<dim> and/or
-         * Face<dim, subdim> objects will remain valid.
-         *
-         * This routine will behave correctly if \a other is in fact
-         * this triangulation.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        void swap(Triangulation<dim>& other);
-        /**
-         * Deprecated routine that swaps the contents of this and the
-         * given triangulation.
-         *
-         * \deprecated Use swap() instead.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        [[deprecated]] void swapContents(Triangulation<dim>& other);
-        /**
          * Moves the contents of this triangulation into the given
          * destination triangulation, without destroying any pre-existing
          * contents.
@@ -1790,18 +1760,18 @@ class TriangulationBase :
         void clearBaseProperties();
 
         /**
-         * Swaps all properties that are managed by this base class,
-         * including skeletal data, with the given triangulation.
+         * Swaps all data that is managed by this base class, including
+         * simplices, skeletal data and other cached properties, with the
+         * given triangulation.
          *
          * Note that TriangulationBase never calls this routine itself.
-         * Typically swapBaseProperties() is only ever called by
-         * Triangulation<dim>::swapAllProperties(), which in turn is
-         * called by swap().
+         * Typically swapBaseData() is only ever called by
+         * Triangulation<dim>::swap().
          *
-         * @param other the triangulation whose properties should be
+         * @param other the triangulation whose data should be
          * swapped with this.
          */
-        void swapBaseProperties(TriangulationBase<dim>& other);
+        void swapBaseData(TriangulationBase<dim>& other);
 
         /**
          * Writes a chunk of XML containing properties of this triangulation.
@@ -2225,30 +2195,6 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
     simplices_.clear();
 
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
-}
-
-template <int dim>
-void TriangulationBase<dim>::swap(Triangulation<dim>& other) {
-    if (&other == this)
-        return;
-
-    typename Triangulation<dim>::ChangeEventSpan span1(
-        static_cast<Triangulation<dim>*>(this));
-    typename Triangulation<dim>::ChangeEventSpan span2(&other);
-
-    simplices_.swap(other.simplices_);
-
-    for (auto s : simplices_)
-        s->tri_ = static_cast<Triangulation<dim>*>(this);
-    for (auto s : other.simplices_)
-        s->tri_ = &other;
-
-    static_cast<Triangulation<dim>*>(this)->swapAllProperties(other);
-}
-
-template <int dim>
-inline void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
-    swap(other);
 }
 
 template <int dim>
@@ -2889,7 +2835,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
         }
 
     // Delete the existing simplices and put in the new ones.
-    swap(staging);
+    static_cast<Triangulation<dim>*>(this)->swap(staging);
     delete[] newSimp;
 }
 
