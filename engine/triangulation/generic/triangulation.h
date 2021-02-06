@@ -437,7 +437,7 @@ void Triangulation<dim>::swap(Triangulation<dim>& other) {
     ChangeEventSpan span1(this);
     ChangeEventSpan span2(&other);
 
-    swapBaseData(other);
+    this->swapBaseData(other);
 }
 
 template <int dim>
