@@ -7,6 +7,7 @@ SET ( FILES
   disctype
   facenumbering
   intutils
+  link
   perm
   triangulation
   )

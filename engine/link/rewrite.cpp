@@ -252,10 +252,10 @@ bool Link::simplifyExhaustive(int height, unsigned nThreads,
     return rewrite(height, nThreads, tracker,
         [](Link& alt, Link& original, size_t minCrossings) {
             if (alt.size() < minCrossings) {
-                // Since we are allowed to change alt, we use swapContents(),
+                // Since we are allowed to change alt, we use swap(),
                 // which avoids yet another round of rewiring the crossings.
                 Packet::ChangeEventSpan span(&original);
-                original.swapContents(alt);
+                original.swap(alt);
                 original.intelligentSimplify();
                 return true;
             } else

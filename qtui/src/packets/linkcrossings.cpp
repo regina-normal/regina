@@ -859,7 +859,7 @@ void ParallelDialog::slotOk() {
     }
 
     regina::Link* ans = link_->parallel(n, f);
-    link_->swapContents(*ans);
+    link_->swap(*ans);
     delete ans;
 
     accept();

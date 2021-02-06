@@ -935,7 +935,17 @@ class REGINA_API Link : public Packet {
          *
          * @param other the link whose contents should be swapped with this.
          */
-        void swapContents(Link& other);
+        void swap(Link& other);
+
+        /**
+         * Deprecated routine that swaps the contents of this and the
+         * given link.
+         *
+         * \deprecated Use swap() instead.
+         *
+         * @param other the link whose contents should be swapped with this.
+         */
+        [[deprecated]] void swapContents(Link& other);
 
         /**
          * Switches the upper and lower strands of the given crossing.
@@ -3629,6 +3639,19 @@ class REGINA_API Link : public Packet {
 };
 
 /**
+ * Swaps the contents of the two given links.
+ *
+ * This global routine simply calls Link::swap(); it is provided so
+ * that Link meets the C++ Swappable requirements.
+ *
+ * See Link::swap() for more details.
+ *
+ * @param lhs the link whose contents should be swapped with \a rhs.
+ * @param rhs the link whose contents should be swapped with \a lhs.
+ */
+void swap(Link& lhs, Link& rhs);
+
+/**
  * Iterates through all crossings of a link.
  *
  * The order of iteration follows the indexing of the crossings
@@ -4015,6 +4038,10 @@ inline Link::Link(size_t unknots) {
 inline Link::Link(const Link& cloneMe) : Link(cloneMe, true) {
 }
 
+inline void Link::swapContents(Link& other) {
+    swap(other);
+}
+
 inline size_t Link::size() const {
     return crossings_.size();
 }
@@ -4125,6 +4152,10 @@ inline bool Link::rewrite(int height, unsigned nThreads,
 inline void Link::join(const StrandRef& s, const StrandRef& t) {
     s.crossing_->next_[s.strand_] = t;
     t.crossing_->prev_[t.strand_] = s;
+}
+
+inline void swap(Link& lhs, Link& rhs) {
+    lhs.swap(rhs);
 }
 
 // Inline functions for CrossingIterator

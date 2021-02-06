@@ -83,12 +83,20 @@ Version 6.1  [ TODO ]
         Class Link:
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.
+            - Renamed swapContents() to swap(); the old name is now a
+              deprecated alias.  Also added a global regina::swap(Link&, Link&).
+              As a result, Link now meets the C++ Swappable requirements.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.
             - New global swap() routine, which will be used by std::swap().
+        Class ModelLinkGraph:
+            - Renamed swapContents() to swap(); the old name is now a
+              deprecated alias.  Also added a global
+              regina::swap(ModelLinkGraph&, ModelLinkGraph&).  As a result,
+              ModelLinkGraph now meets the C++ Swappable requirements.
         Class NormalInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -151,6 +159,10 @@ Version 6.1  [ TODO ]
         Class SurfaceFilterProperties:
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.
+        Class Tangle:
+            - Renamed swapContents() to swap(); the old name is now a deprecated
+              alias.  Also added a global regina::swap(Tangle&, Tangle&).
+              As a result, Tangle now meets the C++ Swappable requirements.
         Class Triangulation<dim>:
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a

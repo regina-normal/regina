@@ -53,7 +53,8 @@ void addTangle(pybind11::module_& m) {
         .def("begin", &Tangle::begin)
         .def("end", &Tangle::end)
         .def("translate", &Tangle::translate)
-        .def("swapContents", &Tangle::swapContents)
+        .def("swap", &Tangle::swap)
+        .def("swapContents", &Tangle::swap) // deprecated
         .def("twist", &Tangle::twist,
             pybind11::arg("sign") = 1)
         .def("turn", &Tangle::turn,

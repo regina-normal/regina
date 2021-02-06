@@ -76,6 +76,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(gauss);
     CPPUNIT_TEST(orientedGauss);
     CPPUNIT_TEST(rewrite);
+    CPPUNIT_TEST(swapping);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -2512,6 +2513,34 @@ class LinkTest : public CppUnit::TestFixture {
             verifyRewrite(figureEight_r1x2, 0, 137);
             verifyRewrite(figureEight_r1x2, 1, 2401);
             verifyRewrite(figureEight_r1x2, 2, 44985);
+        }
+
+        void swapping() {
+            Link* a = ExampleLink::trefoilLeft();
+            Link* b = ExampleLink::figureEight();
+
+            a->jones();
+            b->jones();
+
+            swap(*a, *b);
+
+            if (a->size() != 4) {
+                CPPUNIT_FAIL("swap() did not swap crossings correctly.");
+            }
+            if (a->jones() != figureEight->jones()) {
+                CPPUNIT_FAIL("swap() did not swap properties correctly.");
+            }
+
+            std::iter_swap(a, b);
+
+            if (a->size() != 3) {
+                CPPUNIT_FAIL(
+                    "std::iter_swap() did not swap crossings correctly.");
+            }
+            if (a->jones() != trefoilLeft->jones()) {
+                CPPUNIT_FAIL(
+                    "std::iter_swap() did not swap properties correctly.");
+            }
         }
 };
 

@@ -538,7 +538,17 @@ class REGINA_API ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * @param other the graph whose contents should be swapped with this.
          */
-        void swapContents(ModelLinkGraph& other);
+        void swap(ModelLinkGraph& other);
+
+        /**
+         * Deprecated routine that swaps the contents of this and the
+         * given graph.
+         *
+         * \deprecated Use swap() instead.
+         *
+         * @param other the graph whose contents should be swapped with this.
+         */
+        [[deprecated]] void swapContents(ModelLinkGraph& other);
 
         /**
          * Converts this graph into its reflection.
@@ -835,6 +845,19 @@ class REGINA_API ModelLinkGraph : public Output<ModelLinkGraph> {
         // Make this class non-assignable.
         ModelLinkGraph& operator = (const ModelLinkGraph&) = delete;
 };
+
+/**
+ * Swaps the contents of the two given graphs.
+ *
+ * This global routine simply calls ModelLinkGraph::swap(); it is provided
+ * so that ModelLinkGraph meets the C++ Swappable requirements.
+ *
+ * See ModelLinkGraph::swap() for more details.
+ *
+ * @param lhs the graph whose contents should be swapped with \a rhs.
+ * @param rhs the graph whose contents should be swapped with \a lhs.
+ */
+void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs);
 
 /**
  * Describes the cellular decomposition of the sphere that is induced by a
@@ -1280,11 +1303,15 @@ inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
     return nodes_[index];
 }
 
-inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) {
+inline void ModelLinkGraph::swap(ModelLinkGraph& other) {
     if (&other != this) {
         nodes_.swap(other.nodes_);
         std::swap(cells_, other.cells_);
     }
+}
+
+inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) {
+    swap(other);
 }
 
 inline const ModelLinkGraphCells& ModelLinkGraph::cells() const {
@@ -1298,6 +1325,10 @@ inline ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from)
         const {
     auto use = findFlype(from);
     return (use.first ? flype(from, use.first, use.second) : nullptr);
+}
+
+inline void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) {
+    lhs.swap(rhs);
 }
 
 // Inline functions for ModelLinkGraphCells
