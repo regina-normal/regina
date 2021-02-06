@@ -491,7 +491,17 @@ class TriangulationBase :
          * @param other the triangulation whose contents should be
          * swapped with this.
          */
-        void swapContents(Triangulation<dim>& other);
+        void swap(Triangulation<dim>& other);
+        /**
+         * Deprecated routine that swaps the contents of this and the
+         * given triangulation.
+         *
+         * \deprecated Use swap() instead.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        [[deprecated]] void swapContents(Triangulation<dim>& other);
         /**
          * Moves the contents of this triangulation into the given
          * destination triangulation, without destroying any pre-existing
@@ -1786,7 +1796,7 @@ class TriangulationBase :
          * Note that TriangulationBase never calls this routine itself.
          * Typically swapBaseProperties() is only ever called by
          * Triangulation<dim>::swapAllProperties(), which in turn is
-         * called by swapContents().
+         * called by swap().
          *
          * @param other the triangulation whose properties should be
          * swapped with this.
@@ -2218,7 +2228,7 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
 }
 
 template <int dim>
-void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
+void TriangulationBase<dim>::swap(Triangulation<dim>& other) {
     if (&other == this)
         return;
 
@@ -2234,6 +2244,11 @@ void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
         s->tri_ = &other;
 
     static_cast<Triangulation<dim>*>(this)->swapAllProperties(other);
+}
+
+template <int dim>
+inline void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
+    swap(other);
 }
 
 template <int dim>
@@ -2874,7 +2889,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
         }
 
     // Delete the existing simplices and put in the new ones.
-    swapContents(staging);
+    swap(staging);
     delete[] newSimp;
 }
 

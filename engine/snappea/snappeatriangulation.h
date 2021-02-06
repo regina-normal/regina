@@ -258,6 +258,11 @@ class REGINA_API Cusp : public ShortOutput<Cusp> {
  *   automatically cause this to become a <b>null triangulation</b>,
  *   with no tetrahedra and no SnapPea data at all.
  *
+ * - In particular, SnapPeaTriangulation does not have its own swap()
+ *   functionality; instead it inherits swap() from Triangulation<3>.
+ *   Therefore, as described above, using swap() on two SnapPeaTriangulation
+ *   objects will cause both to become null triangulations.
+ *
  * Null triangulations appear more generally when Regina is unable to
  * represent data in SnapPea's native format.  You can test for a
  * null triangulation by calling isNull().  Null triangulations can occur

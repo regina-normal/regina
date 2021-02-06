@@ -45,7 +45,7 @@ Triangulation<4>::Triangulation(const std::string& description) :
     Triangulation<4>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     }
 

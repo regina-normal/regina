@@ -47,13 +47,13 @@ Triangulation<3>::Triangulation(const std::string& description) {
     Triangulation<3>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     } else if ((attempt = rehydrate(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     } else if ((attempt = fromSnapPea(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(attempt->label());
     }
 

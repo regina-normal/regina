@@ -3057,7 +3057,7 @@ class REGINA_API Triangulation<3> :
         /**
          * Swaps all calculated properties, including skeletal data,
          * with the given triangulation.  This is called by
-         * TriangulationBase::swapContents(), and by nothing else.
+         * TriangulationBase::swap(), and by nothing else.
          */
         void swapAllProperties(Triangulation<3>& other);
 

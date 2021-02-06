@@ -85,7 +85,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("removeSimplex", &Triangulation<dim>::removeSimplex)
         .def("removeSimplexAt", &Triangulation<dim>::removeSimplexAt)
         .def("removeAllSimplices", &Triangulation<dim>::removeAllSimplices)
-        .def("swapContents", &Triangulation<dim>::swapContents)
+        .def("swap", &Triangulation<dim>::swap)
+        .def("swapContents", &Triangulation<dim>::swap) // deprecated
         .def("moveContentsTo", &Triangulation<dim>::moveContentsTo)
         .def("countComponents", &Triangulation<dim>::countComponents)
         .def("countBoundaryComponents",

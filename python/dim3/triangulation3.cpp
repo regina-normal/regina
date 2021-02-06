@@ -80,7 +80,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("removeSimplexAt", &Triangulation<3>::removeSimplexAt)
         .def("removeAllTetrahedra", &Triangulation<3>::removeAllTetrahedra)
         .def("removeAllSimplices", &Triangulation<3>::removeAllSimplices)
-        .def("swapContents", &Triangulation<3>::swapContents)
+        .def("swap", &Triangulation<3>::swap)
+        .def("swapContents", &Triangulation<3>::swap) // deprecated
         .def("moveContentsTo", &Triangulation<3>::moveContentsTo)
         .def("countComponents", &Triangulation<3>::countComponents)
         .def("countBoundaryComponents",
