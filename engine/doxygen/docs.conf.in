@@ -33,11 +33,11 @@ VERBATIM_HEADERS     = NO
 
 # Aliases:
 ALIASES = \
-    "ifaces=\par Interfaces@DOXYGEN_NEWLINE@" \
-    "ifacescpp=\par C++@DOXYGEN_NEWLINE@" \
-    "ifacespython=\par Python@DOXYGEN_NEWLINE@" \
-    "snappy=\par SnapPy@DOXYGEN_NEWLINE@" \
-    "i18n=\par Internationalisation@DOXYGEN_NEWLINE@" \
+    "ifaces=\par Interfaces^^" \
+    "ifacescpp=\par C++^^" \
+    "ifacespython=\par Python^^" \
+    "snappy=\par SnapPy^^" \
+    "i18n=\par Internationalisation^^" \
     "proburgent=<i><b>Bug (urgent):</b></i>" \
     "prob=<i>Bug:</i>" \
     "problong=<i>Bug (long-term):</i>" \
@@ -50,7 +50,7 @@ ALIASES = \
     "tidyurgent=<i><b>Tidy (urgent):</b></i>" \
     "tidy=<i>Tidy:</i>" \
     "tidylong=<i>Tidy (long-term):</i>" \
-    "headers=\par Headers@DOXYGEN_NEWLINE@" \
+    "headers=\par Headers^^" \
     "apinotfinal=\warning The API for this class has not yet been finalised.  This means that the class interface may change in new versions of Regina, without maintaining backward compatibility.  If you use this class directly in your own code, please watch the detailed changelogs upon new releases to see if you need to make changes to your code."
 
 # Warning and progress related options:
