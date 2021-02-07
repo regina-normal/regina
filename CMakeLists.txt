@@ -341,22 +341,45 @@ MACRO_LOG_FEATURE(POPT_FOUND
   TRUE)
 
 # Optionals
-FIND_PACKAGE(Doxygen)
-IF (DOXYGEN_FOUND)
-  # The newline separator in doxygen aliases changed
-  # at some point in a way that (by version 1.9.0) is
-  # neither backward nor forward compatible.
-  IF (DOXYGEN_VERSION VERSION_GREATER 1.8.13)
-    SET(DOXYGEN_NEWLINE "^^")
-  ELSE (DOXYGEN_VERSION VERSION_GREATER 1.8.13)
-    SET(DOXYGEN_NEWLINE "\\n")
-  ENDIF (DOXYGEN_VERSION VERSION_GREATER 1.8.13)
-ENDIF (DOXYGEN_FOUND)
-MACRO_LOG_FEATURE(DOXYGEN_FOUND
-  "Doxygen"
-  "Generate C++/Python API docs"
-  "http://www.doxygen.org/"
-  ${REGINA_MANDATORY})
+FIND_PROGRAM(UNZIP_EXECUTABLE NAMES unzip DOC "Command-line unzip tool")
+IF (UNZIP_EXECUTABLE)
+  SET (UNZIP_FOUND TRUE)
+ENDIF (UNZIP_EXECUTABLE)
+
+IF (REGINA_ENGINE_DOCS)
+  get_filename_component(REGINA_ENGINE_DOCS_FILE "${REGINA_ENGINE_DOCS}" ABSOLUTE)
+
+  IF (NOT EXISTS ${REGINA_ENGINE_DOCS_FILE})
+    MESSAGE (FATAL_ERROR "The argument to REGINA_ENGINE_DOCS should be a zip file containing pre-built API docs.  The file you gave (${REGINA_ENGINE_DOCS}) does not exist.")
+  ENDIF (NOT EXISTS ${REGINA_ENGINE_DOCS_FILE})
+
+  MESSAGE (STATUS "Using pre-built API docs from ${REGINA_ENGINE_DOCS_FILE}")
+
+  SET (REGINA_BUILD_ENGINE_DOCS ${UNZIP_FOUND})
+  MACRO_LOG_FEATURE(UNZIP_FOUND
+    "unzip"
+    "Extract the API docs"
+    "http://www.info-zip.org/pub/infozip/"
+    ${REGINA_MANDATORY})
+ELSE (REGINA_ENGINE_DOCS)
+  SET (REGINA_ENGINE_DOCS "" CACHE STRING
+    "Extract API docs from the given pre-built zip file instead of building them manually."
+    FORCE)
+
+  FIND_PACKAGE(Doxygen)
+  SET (DOXYGEN_MIN_VERSION 1.8.17)
+  IF (DOXYGEN_FOUND AND (DOXYGEN_VERSION VERSION_LESS DOXYGEN_MIN_VERSION))
+    MESSAGE (STATUS "Doxygen version ${DOXYGEN_VERSION} is too old; Regina requires Doxygen >= ${DOXYGEN_MIN_VERSION}.")
+    SET (DOXYGEN_FOUND FALSE)
+  ENDIF ()
+
+  SET (REGINA_BUILD_ENGINE_DOCS ${DOXYGEN_FOUND})
+  MACRO_LOG_FEATURE(DOXYGEN_FOUND
+    "Doxygen"
+    "Generate C++/Python API docs"
+    "http://www.doxygen.org/"
+    ${REGINA_MANDATORY})
+ENDIF (REGINA_ENGINE_DOCS)
 
 IF (REGINA_DOCS)
   get_filename_component(REGINA_DOCS_FILE "${REGINA_DOCS}" ABSOLUTE)
@@ -367,10 +390,6 @@ IF (REGINA_DOCS)
 
   MESSAGE (STATUS "Using pre-built handbooks from ${REGINA_DOCS_FILE}")
 
-  FIND_PROGRAM(UNZIP_EXECUTABLE NAMES unzip DOC "Command-line unzip tool")
-  IF (UNZIP_EXECUTABLE)
-    SET (UNZIP_FOUND TRUE)
-  ENDIF (UNZIP_EXECUTABLE)
   SET (REGINA_BUILD_HANDBOOK ${UNZIP_FOUND})
   MACRO_LOG_FEATURE(UNZIP_FOUND
     "unzip"
