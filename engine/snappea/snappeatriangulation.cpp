@@ -224,6 +224,32 @@ SnapPeaTriangulation::~SnapPeaTriangulation() {
     regina::snappea::free_triangulation(data_);
 }
 
+void SnapPeaTriangulation::swap(SnapPeaTriangulation& other) {
+    if (this == &other)
+        return;
+
+    // Use syncing_ to prevent change events from nullifying the snappea data.
+    syncing_ = true;
+    other.syncing_ = true;
+    {
+        ChangeEventSpan span1(this);
+        ChangeEventSpan span2(&other);
+
+        Triangulation<3>::swap(other);
+
+        std::swap(data_, other.data_);
+        std::swap(shape_, other.shape_);
+        std::swap(cusp_, other.cusp_);
+        std::swap(filledCusps_, other.filledCusps_);
+        fundGroupFilled_.swap(other.fundGroupFilled_);
+        h1Filled_.swap(other.h1Filled_);
+
+        // The change events will be fired at this point.
+    }
+    syncing_ = false;
+    other.syncing_ = false;
+}
+
 std::string SnapPeaTriangulation::name() const {
     return (data_ ? get_triangulation_name(data_) : "");
 }

@@ -258,10 +258,11 @@ class REGINA_API Cusp : public ShortOutput<Cusp> {
  *   automatically cause this to become a <b>null triangulation</b>,
  *   with no tetrahedra and no SnapPea data at all.
  *
- * - In particular, SnapPeaTriangulation does not have its own swap()
- *   functionality; instead it inherits swap() from Triangulation<3>.
- *   Therefore, as described above, using swap() on two SnapPeaTriangulation
- *   objects will cause both to become null triangulations.
+ * - In particular, if you wish to swap the contents of two SnapPea
+ *   triangulations, you \e must cast both to SnapPeaTriangulation before
+ *   calling swap().  If either argument is presented as the parent class
+ *   Triangulation<3> then the inherited Triangulation<3>::swap() will be
+ *   called instead, which will (as above) nullify both SnapPea triangulations.
  *
  * Null triangulations appear more generally when Regina is unable to
  * represent data in SnapPea's native format.  You can test for a
@@ -549,6 +550,40 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
          * also be destroyed.
          */
         ~SnapPeaTriangulation();
+
+        /*@}*/
+        /**
+         * \name Tetrahedra
+         */
+        /*@{*/
+
+        /**
+         * Swaps the contents of this and the given SnapPea triangulation.
+         *
+         * All information contained in this triangulation, including both
+         * Regina's and SnapPea's internal data as well as all cached
+         * properties, will be moved to \a other.  Likewise, all information
+         * contained in \a other will be moved to this triangulation.
+         *
+         * In particular, any pointers or references to Tetrahedron<3>,
+         * Face<3, subdim> and/or Cusp objects will remain valid.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this triangulation.
+         *
+         * \warning If you wish to swap the contents of two SnapPea
+         * triangulations, you \e must cast both to SnapPeaTriangulation
+         * before calling swap().  If either argument is presented as the
+         * parent class Triangulation<3>, then the Triangulation<3>
+         * swap() will be called instead; the result will be that (just
+         * like when you call any of the Triangulation<3> edit routines)
+         * both SnapPea triangulations will be reset to null triangulations.
+         * See the SnapPeaTriangulation class notes for further discussion.
+         *
+         * @param other the SnapPea triangulation whose contents should
+         * be swapped with this.
+         */
+        void swap(SnapPeaTriangulation& other);
 
         /*@}*/
         /**
@@ -1425,6 +1460,27 @@ class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
     friend class regina::XMLSnapPeaReader;
 };
 
+/**
+ * Swaps the contents of the two given SnapPea triangulations.
+ *
+ * This global routine simply calls SnapPeaTriangulation::swap(); it is
+ * provided so that SnapPeaTriangulation meets the C++ Swappable requirements.
+ *
+ * See SnapPeaTriangulation::swap() for more details.
+ *
+ * \warning If you wish to swap the contents of two SnapPea triangulations,
+ * you \e must cast both to SnapPeaTriangulation before calling swap().  If
+ * either argument is presented as the parent class Triangulation<3>, then
+ * the Triangulation<3> swap() will be called instead; the result will be
+ * that (just like when you call any of the Triangulation<3> edit routines)
+ * both SnapPea triangulations will be reset to null triangulations.
+ * See the SnapPeaTriangulation class notes for further discussion.
+ *
+ * @param lhs the triangulation whose contents should be swapped with \a rhs.
+ * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ */
+void swap(SnapPeaTriangulation& lhs, SnapPeaTriangulation& rhs);
+
 /*@}*/
 
 // Inline functions for SnapPeaFatalError
@@ -1506,6 +1562,10 @@ inline void SnapPeaTriangulation::randomise() {
 
 inline Packet* SnapPeaTriangulation::internalClonePacket(Packet*) const {
     return new SnapPeaTriangulation(*this);
+}
+
+inline void swap(SnapPeaTriangulation& lhs, SnapPeaTriangulation& rhs) {
+    lhs.swap(rhs);
 }
 
 } // namespace regina

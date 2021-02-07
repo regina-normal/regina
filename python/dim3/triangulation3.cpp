@@ -363,7 +363,13 @@ void addTriangulation3(pybind11::module_& m) {
         })
     ;
 
-    m.def("swap",
-        (void(*)(Triangulation<3>&, Triangulation<3>&))(regina::swap));
+    // We do not define the global swap() yet for Triangulation<3>, since this
+    // needs to come *after* the global swap() for the child class
+    // SnapPeaTriangulation.  This is because overloads in python/pybind11
+    // are handled by walking through the functions one after another
+    // until any matching function is found (as opposed to C++, which has a
+    // well-defined notion of "best match").  This means that, if we define
+    // the Triangulation<3> swap() first, the SnapPeaTriangulation swap()
+    // will never be called at all.
 }
 

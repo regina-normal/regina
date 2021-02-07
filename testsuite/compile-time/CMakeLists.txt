@@ -9,6 +9,7 @@ SET ( FILES
   intutils
   link
   perm
+  snappea
   triangulation
   )
 

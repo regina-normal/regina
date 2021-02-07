@@ -153,6 +153,9 @@ Version 6.1  [ TODO ]
             - New compile-time constants dimension and subdimension.
         Class SnapPeaCensusManifold, SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
+        Class SnapPeaTriangulation:
+            - New member swap() and global swap() routines, which mean that
+              SnapPeaTriangulation now meets the C++ Swappable requirements.
         Class SurfaceFilterInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
