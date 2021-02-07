@@ -60,6 +60,7 @@
 #include "utilities/listview.h"
 #include "utilities/property.h"
 
+namespace regina {
 /**
  * Contains implementation details and common functionality for Regina's
  * dimension-agnostic classes.
@@ -88,7 +89,6 @@
  *   (including the names and inheritance structure of classes within
  *   regina::detail) might change in subsequent releases without notice.
  */
-namespace regina {
 namespace detail {
 
 template <int dim> class XMLTriangulationReaderBase;
