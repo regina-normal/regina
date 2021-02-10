@@ -61,7 +61,7 @@ const QString ReginaAbout::regDescription(
     tr("Software for low-dimensional topology"));
 
 const QString ReginaAbout::regReleased(
-    tr("Released %1").arg(QDate(2021, 1, 11).toString(Qt::TextDate)));
+    tr("Released %1").arg(QDate(2021, 2, 12).toString(Qt::TextDate)));
 
 const QString ReginaAbout::regWebsite("http://regina-normal.github.io/");
 

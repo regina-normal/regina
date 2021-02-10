@@ -6,6 +6,11 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 6.0.1  [ 12 February, 2021 ]
+
+    - Fixes an issue for Python users, where the Triangulation3 constructor
+      could become unusable in the graphical user interface.
+
 Version 6.0  [ 11 January, 2021 ]
 
     - Lots more polish and cleaning up of unfinished business from 5.96, which
