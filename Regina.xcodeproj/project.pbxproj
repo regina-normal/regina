@@ -1913,7 +1913,6 @@
 		05D322D71FA1416700E5F9B8 /* linkpoly.h in Sources */ = {isa = PBXBuildFile; fileRef = 05D322D31FA1415200E5F9B8 /* linkpoly.h */; };
 		05D322DC1FA1EC1C00E5F9B8 /* linkcodes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D322D91FA1EC1400E5F9B8 /* linkcodes.cpp */; };
 		05D322DD1FA1EC3B00E5F9B8 /* linkcodes.h in Sources */ = {isa = PBXBuildFile; fileRef = 05D322D81FA1EC1200E5F9B8 /* linkcodes.h */; };
-		05D322DF1FA606E200E5F9B8 /* purePyMethods.py in Copy Python Scripts */ = {isa = PBXBuildFile; fileRef = 05D322DE1FA606D100E5F9B8 /* purePyMethods.py */; };
 		05D322E41FA923FB00E5F9B8 /* linkmovedialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05D322E11FA923F000E5F9B8 /* linkmovedialog.cpp */; };
 		05D322E51FA9241E00E5F9B8 /* linkmovedialog.h in Sources */ = {isa = PBXBuildFile; fileRef = 05D322E01FA923ED00E5F9B8 /* linkmovedialog.h */; };
 		05D6CFA41A01D0A60039150F /* Tri3Graph.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05D6CFA31A01D0A60039150F /* Tri3Graph.mm */; };
@@ -2230,7 +2229,6 @@
 			files = (
 				050BEA361D9C8B6700B96DB8 /* __init__.py in Copy Python Scripts */,
 				05D047062599F5AE00FA2B3E /* plainCompleter.py in Copy Python Scripts */,
-				05D322DF1FA606E200E5F9B8 /* purePyMethods.py in Copy Python Scripts */,
 				05199A3925C63BEA0006B8FA /* sageSetup.py in Copy Python Scripts */,
 			);
 			name = "Copy Python Scripts";
@@ -4003,6 +4001,8 @@
 		059D024B25BB08F1004150F7 /* constarray.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = constarray.h; sourceTree = "<group>"; };
 		059D6168258866370011E905 /* libbz2.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libbz2.tbd; path = usr/lib/libbz2.tbd; sourceTree = SDKROOT; };
 		059D61692588663B0011E905 /* libsqlite3.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libsqlite3.tbd; path = usr/lib/libsqlite3.tbd; sourceTree = SDKROOT; };
+		05A0251D25D48E500091372D /* constructors.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = constructors.test; sourceTree = "<group>"; };
+		05A0251E25D48E500091372D /* constructors.out */ = {isa = PBXFileReference; lastKnownFileType = text; path = constructors.out; sourceTree = "<group>"; };
 		05A0665E1DFA67CB0047872E /* augtrisolidtorus.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = augtrisolidtorus.cpp; sourceTree = "<group>"; };
 		05A0665F1DFA67CB0047872E /* blockedsfs.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blockedsfs.cpp; sourceTree = "<group>"; };
 		05A066601DFA67CB0047872E /* blockedsfsloop.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = blockedsfsloop.cpp; sourceTree = "<group>"; };
@@ -4314,7 +4314,6 @@
 		05D322D31FA1415200E5F9B8 /* linkpoly.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkpoly.h; sourceTree = "<group>"; };
 		05D322D81FA1EC1200E5F9B8 /* linkcodes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkcodes.h; sourceTree = "<group>"; };
 		05D322D91FA1EC1400E5F9B8 /* linkcodes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkcodes.cpp; sourceTree = "<group>"; };
-		05D322DE1FA606D100E5F9B8 /* purePyMethods.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; name = purePyMethods.py; path = regina/purePyMethods.py; sourceTree = "<group>"; };
 		05D322E01FA923ED00E5F9B8 /* linkmovedialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = linkmovedialog.h; sourceTree = "<group>"; };
 		05D322E11FA923F000E5F9B8 /* linkmovedialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = linkmovedialog.cpp; sourceTree = "<group>"; };
 		05D6CFA21A01D0A60039150F /* Tri3Graph.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Tri3Graph.h; sourceTree = "<group>"; };
@@ -4745,7 +4744,6 @@
 				05431FA31C40F56E009BC072 /* README.txt */,
 				050F5E6B1B9BD30700C1F681 /* __init__.py */,
 				05D046E62599F58A00FA2B3E /* plainCompleter.py */,
-				05D322DE1FA606D100E5F9B8 /* purePyMethods.py */,
 				05199A2D25C63B3C0006B8FA /* sageSetup.py */,
 				05617AD51D9D3C5400B1E33B /* regina-python.in */,
 				050F5D001B9BAB9C00C1F681 /* algebra */,
@@ -4989,6 +4987,8 @@
 				05431FD01C40F67C009BC072 /* alltypes.out */,
 				05431FD11C40F67C009BC072 /* alltypes.test */,
 				050F5D851B9BAB9C00C1F681 /* CMakeLists.txt */,
+				05A0251E25D48E500091372D /* constructors.out */,
+				05A0251D25D48E500091372D /* constructors.test */,
 				050F5D861B9BAB9C00C1F681 /* cube.orb */,
 				050F5D871B9BAB9C00C1F681 /* dodec.orb */,
 				0577E6DF1F97087A00CBDF15 /* embeddings.out */,
@@ -8325,7 +8325,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py purePyMethods.py sageSetup.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
+			shellScript = "macosdir=\"${CONFIGURATION_BUILD_DIR}/Regina.app/Contents/MacOS\"\n\nln -f -s ../Resources/regina-python \"${macosdir}\"/regina-python\n\nfor i in __init__.py plainCompleter.py sageSetup.py; do\n    ln -f -s ../../../Resources/python/$i \"${macosdir}\"/python/regina/$i\ndone\n\nchmod a+x \"${macosdir}\"/../Resources/regina-python\n";
 		};
 		0514CAE31D9C9A5800EDB2E6 /* Sign Qt */ = {
 			isa = PBXShellScriptBuildPhase;
