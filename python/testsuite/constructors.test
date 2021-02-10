@@ -78,7 +78,16 @@ class JunkSnapPyObject:
 	def _other_string(self):
 		return 'banana'
 
+class MisbehavedSnapPyObject:
+	def _to_string(self):
+		return 42
+
+class UncallableSnapPyObject:
+	_to_string = 'cPcbbbiht'
+
 tri3From(SnapPyObject())
 tri3From(NotSnapPyObject())
 tri3From(JunkSnapPyObject())
+tri3From(MisbehavedSnapPyObject())
+tri3From(UncallableSnapPyObject())
 
