@@ -47,6 +47,7 @@ void addTriangulation4(pybind11::module_& m) {
             regina::SafePtr<Triangulation<4>>>(m, "Triangulation4")
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<4>&>())
+        .def(pybind11::init<const Triangulation<4>&, bool>())
         .def(pybind11::init<const std::string&>())
         .def("size", &Triangulation<4>::size)
         .def("countPentachora", &Triangulation<4>::countPentachora)

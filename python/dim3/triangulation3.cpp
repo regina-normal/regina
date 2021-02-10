@@ -44,12 +44,61 @@ using pybind11::overload_cast;
 using regina::Triangulation;
 using regina::detail::TriangulationBase;
 
+/**
+ * An internal C++ representation of a snappy.Manifold or snappy.Triangulation.
+ *
+ * The only purpose of this class is to facilitate constructors of the form
+ * Triangulation3(snappy.Manifold) / Triangulation3(snappy.Triangulation).
+ *
+ * We declare these Triangulation3 constructors to take a SnapPyObject, and
+ * then we tell pybind11 to support implicit conversions to SnapPyObject
+ * from anything with a _to_string() method.
+ */
+namespace regina { namespace python {
+    struct SnapPyObject {
+        std::string string_;
+    };
+} } // namespace regina::python
+
+/**
+ * Tell pybind11 how to convert a Python object with a _to_string() method
+ * (which we assume is a snappy.Manifold or a snappy.Triangulation) to our
+ * internal SnapPyObject class.
+ */
+namespace pybind11 { namespace detail {
+    template <>
+    struct type_caster<regina::python::SnapPyObject> {
+        public:
+            PYBIND11_TYPE_CASTER(regina::python::SnapPyObject,
+                _("SnapPyObject"));
+
+            bool load(handle src, bool) {
+                if (! pybind11::hasattr(src, "_to_string"))
+                    return false;
+
+                value.string_ = pybind11::str(src.attr("_to_string")());
+                return true;
+            }
+
+            static handle cast(const regina::python::SnapPyObject& src,
+                    return_value_policy policy, handle parent) {
+                // We never convert from C++ back to Python, since the user
+                // should never directly hold a SnapPyObject type.
+                return NULL;
+            }
+    };
+} } // namespace pybind11::detail
+
 void addTriangulation3(pybind11::module_& m) {
     auto c = pybind11::class_<Triangulation<3>, regina::Packet,
             regina::SafePtr<Triangulation<3>>>(m, "Triangulation3")
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<3>&>())
+        .def(pybind11::init<const Triangulation<3>&, bool>())
         .def(pybind11::init<const std::string&>())
+        .def(pybind11::init([](const regina::python::SnapPyObject& obj) {
+            return new Triangulation<3>(obj.string_);
+        }))
         .def("size", &Triangulation<3>::size)
         .def("countTetrahedra", &Triangulation<3>::countTetrahedra)
         .def("tetrahedra", &Triangulation<3>::tetrahedra,
