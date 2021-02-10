@@ -71,6 +71,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             regina::SafePtr<Triangulation<dim>>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<dim>&>())
+        .def(pybind11::init<const Triangulation<dim>&, bool>())
         .def("size", &Triangulation<dim>::size)
         .def("simplices", &Triangulation<dim>::simplices,
             pybind11::return_value_policy::reference_internal)

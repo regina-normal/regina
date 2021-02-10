@@ -94,6 +94,7 @@ void addTriangulation3(pybind11::module_& m) {
             regina::SafePtr<Triangulation<3>>>(m, "Triangulation3")
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<3>&>())
+        .def(pybind11::init<const Triangulation<3>&, bool>())
         .def(pybind11::init<const std::string&>())
         .def(pybind11::init([](const regina::python::SnapPyObject& obj) {
             return new Triangulation<3>(obj.string_);
