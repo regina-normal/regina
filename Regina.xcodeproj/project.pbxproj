@@ -2209,7 +2209,7 @@
 				"$(DERIVED_FILE_DIR)/engine-docs",
 			);
 			runOncePerArchitecture = 0;
-			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/../..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\n# Note: our use of ^^ for newlines requires doxygen >= 1.8.14.\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" -e \"s#@DOXYGEN_NEWLINE@#^^#\" > \"${conf}\"\n\nmkdir -p \"${output}\"\n/usr/local/bin/doxygen \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
+			script = "conf=\"${DERIVED_FILE_DIR}/docs.conf\"\nsource=\"${INPUT_FILE_DIR}/../..\"\noutput=\"${DERIVED_FILE_DIR}/engine-docs\"\n\n# Note: our use of ^^ for newlines requires doxygen >= 1.8.14.\ncat \"${INPUT_FILE_PATH}\" | sed -e \"s#@PROJECT_SOURCE_DIR@#${source}#\" -e \"s#@PROJECT_BINARY_DIR@/docs/engine#${output}#\" -e \"s#@DOXYGEN_NEWLINE@#^^#\" > \"${conf}\"\n\nmkdir -p \"${output}\"\n/opt/local/bin/doxygen \"${conf}\" 2>/dev/null\ncp `find ${source}/engine -name \"*.png\"` \"${output}\"\n";
 		};
 		0543AE921811DE96002758F8 /* PBXBuildRule */ = {
 			isa = PBXBuildRule;
