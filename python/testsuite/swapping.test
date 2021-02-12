@@ -58,11 +58,11 @@ print(a.size(), b.size(), '|', a.homology(), '|', b.homology())
 print()
 
 a = ExampleSnapPea.figureEight(); b = ExampleSnapPea.whiteheadLink()
-print(a.countCusps(), b.countCusps(), '|', a.volume(), '|', b.volume())
+print(a.countCusps(), b.countCusps(), '|', '%.4f'%a.volume(), '|', '%.4f'%b.volume())
 swap(a, b)
-print(a.countCusps(), b.countCusps(), '|', a.volume(), '|', b.volume())
+print(a.countCusps(), b.countCusps(), '|', '%.4f'%a.volume(), '|', '%.4f'%b.volume())
 a.swap(b)
-print(a.countCusps(), b.countCusps(), '|', a.volume(), '|', b.volume())
+print(a.countCusps(), b.countCusps(), '|', '%.4f'%a.volume(), '|', '%.4f'%b.volume())
 print()
 
 # The following examples should all nullify the SnapPea triangulation,
