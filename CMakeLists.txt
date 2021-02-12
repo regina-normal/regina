@@ -47,6 +47,8 @@ ENDIF (WIN32)
 
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
+# HPC = filesystem installation suitable for HPC systems where there is
+#       no need for a GUI, and where you do not have root.
 # Windows = self-contained movable install directory for MS Windows.
 if (NOT REGINA_INSTALL_TYPE)
   if (WIN32)
@@ -55,7 +57,7 @@ if (NOT REGINA_INSTALL_TYPE)
     SET (REGINA_DEFAULT_INSTALL_TYPE XDG)
   endif ()
   SET (REGINA_INSTALL_TYPE ${REGINA_DEFAULT_INSTALL_TYPE} CACHE STRING
-    "Choose how Regina installs itself.  Options are: XDG Windows."
+    "Choose how Regina installs itself.  Options are: XDG HPC Windows."
     FORCE)
 ENDIF (NOT REGINA_INSTALL_TYPE)
 MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
@@ -65,11 +67,15 @@ MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
 # Note: even though Bundle is not supported in CMake, we must keep the flag
 # here because the Xcode build uses it (via the corresponding #define).
 SET(REGINA_INSTALL_XDG FALSE)
+SET(REGINA_INSTALL_HPC FALSE)
 SET(REGINA_INSTALL_BUNDLE FALSE)
 SET(REGINA_INSTALL_WINDOWS FALSE)
 IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # No sanity checking needed here (yet).
   SET(REGINA_INSTALL_XDG TRUE)
+ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL HPC)
+  # No sanity checking needed here either.
+  SET(REGINA_INSTALL_HPC TRUE)
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   MESSAGE(FATAL_ERROR
     "REGINA_INSTALL_TYPE=Bundle is no longer supported. These CMake build scripts will give a unix-style installation in a fixed location; for a standalone macOS app bundle please use Xcode instead.")
@@ -81,7 +87,7 @@ ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   SET(REGINA_INSTALL_WINDOWS TRUE)
 ELSE()
   MESSAGE(FATAL_ERROR
-    "REGINA_INSTALL_TYPE must be either XDG or Windows.")
+    "REGINA_INSTALL_TYPE must be XDG, HPC or Windows.")
 ENDIF()
 
 # Are we installing development files?
@@ -152,24 +158,16 @@ INCLUDE( ReginaMacros )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Installation directories
-if (${REGINA_INSTALL_TYPE} STREQUAL Windows)
-  # MS Windows install.
-  SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
-  SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
-  SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-  SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
-  SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
-  SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
-  SET (PYLIBDIR ${LIBDIR}/${PACKAGE_NAME}/python)
-else ()
-  # Full install.
-  SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
-  SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
-  SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-  SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
-  SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
-  SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
+SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
+SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
+SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
+SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
+SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   UNSET (PYLIBDIR)
+else ()
+  SET (PYLIBDIR ${LIBDIR}/${PACKAGE_NAME}/python)
 endif ()
 SET (HTMLDIR ${PKGDATADIR}/docs)
 SET (ICONDIR ${DATADIR}/icons)
@@ -460,7 +458,10 @@ IF(NOT DISABLE_GUI)
     "Disables the graphical user interface.  The calculation engine, Python bindings and other command-line utilities will still be built.  This option is suitable for use on high-performance clusters."
     FORCE)
 ENDIF(NOT DISABLE_GUI)
-IF(DISABLE_GUI)
+IF(${REGINA_INSTALL_TYPE} STREQUAL HPC)
+  set(GUI_REQUIRED FALSE)
+  MESSAGE(STATUS "Disabling Regina's GUI for HPC build.")
+ELSEIF(DISABLE_GUI)
   set(GUI_REQUIRED FALSE)
   if (NOT ${REGINA_INSTALL_TYPE} STREQUAL XDG)
     MESSAGE(FATAL_ERROR

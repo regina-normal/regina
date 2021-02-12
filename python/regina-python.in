@@ -239,6 +239,8 @@ if (! $python_lib_dir) {
     } elsif ($install_type eq 'Source') {
         # Use the build directory.
         &setPythonLibDir("$prog_dir");
+    } elsif ($install_type eq 'HPC') {
+        &setPythonLibDir("@PYLIBDIR@");
     } else {
         # We have installed the module in a standard Python location.
     }
