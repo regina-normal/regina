@@ -128,26 +128,6 @@ class REGINA_API GlobalDirs {
         static std::string census();
 
         /**
-         * Returns the directory in which optional "helper" Python libraries
-         * are installed.  These libraries are not a formal part of Regina,
-         * but can be made to load automatically as extra user libraries
-         * through Regina's python settings.
-         *
-         * On a typical GNU/Linux system, this directory might (for example) be
-         * \c /usr/local/share/regina/pylib .
-         *
-         * \warning If Regina is not installed in the exact location
-         * configured at compile time (e.g., if you are running a macOS
-         * app bundle), you \e must call setDirs() before calling this routine.
-         * \warning If you are running out of the source tree, this
-         * routine will almost certainly return an incorrect (and possibly
-         * non-existent) directory.
-         *
-         * @return Regina's optional Python library directory.
-         */
-        static std::string pythonLibs();
-
-        /**
          * Returns the directory in which example data files (including
          * the smaller but human-browsable census data files) are installed.
          *
@@ -263,10 +243,6 @@ inline std::string GlobalDirs::pythonModule() {
 
 inline std::string GlobalDirs::census() {
     return census_;
-}
-
-inline std::string GlobalDirs::pythonLibs() {
-    return home_ + "/pylib";
 }
 
 inline std::string GlobalDirs::examples() {

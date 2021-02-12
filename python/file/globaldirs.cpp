@@ -42,7 +42,6 @@ void addGlobalDirs(pybind11::module_& m) {
         .def_static("home", &GlobalDirs::home)
         .def_static("pythonModule", &GlobalDirs::pythonModule)
         .def_static("census", &GlobalDirs::census)
-        .def_static("pythonLibs", &GlobalDirs::pythonLibs)
         .def_static("examples", &GlobalDirs::examples)
         .def_static("engineDocs", &GlobalDirs::engineDocs)
         .def_static("data", &GlobalDirs::data)
