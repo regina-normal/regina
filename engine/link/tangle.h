@@ -280,20 +280,29 @@ class REGINA_API Tangle : public Output<Tangle> {
         /**
          * Swaps the contents of this and the given tangle.
          *
-         * All crossings that belong to this link will be moved to \a other,
-         * and all crossings that belong to \a other will be moved to this link.
-         * Likewise, all cached properties (e.g., tree decompositions) will be
-         * swapped.
+         * All crossings that belong to this tangle will be moved to \a other,
+         * and all crossings that belong to \a other will be moved to this
+         * tangle.  Likewise, all cached properties will be swapped.
          *
          * In particular, any Crossing pointers or references and any
          * StrandRef objects will remain valid.
          *
          * This routine will behave correctly if \a other is in fact
-         * this link.
+         * this tangle.
          *
-         * @param other the link whose contents should be swapped with this.
+         * @param other the tangle whose contents should be swapped with this.
          */
-        void swapContents(Tangle& other);
+        void swap(Tangle& other);
+
+        /**
+         * Deprecated routine that swaps the contents of this and the
+         * given tangle.
+         *
+         * \deprecated Use swap() instead.
+         *
+         * @param other the tangle whose contents should be swapped with this.
+         */
+        [[deprecated]] void swapContents(Tangle& other);
 
         /**
          * Adds a twist to the right-hand end of this tangle.
@@ -807,6 +816,19 @@ class REGINA_API Tangle : public Output<Tangle> {
         static char extractChar(const std::string& s);
 };
 
+/**
+ * Swaps the contents of the two given tangles.
+ *
+ * This global routine simply calls Tangle::swap(); it is provided so
+ * that Tangle meets the C++ Swappable requirements.
+ *
+ * See Tangle::swap() for more details.
+ *
+ * @param lhs the tangle whose contents should be swapped with \a rhs.
+ * @param rhs the tangle whose contents should be swapped with \a lhs.
+ */
+void swap(Tangle& lhs, Tangle& rhs);
+
 /*@}*/
 
 // Inline functions for Tangle
@@ -818,6 +840,10 @@ inline Tangle::Tangle() : type_('-') {
 inline Tangle::~Tangle() {
     for (Crossing* c : crossings_)
         delete c;
+}
+
+inline void Tangle::swapContents(Tangle& other) {
+    swap(other);
 }
 
 inline char Tangle::type() const {
@@ -848,6 +874,10 @@ inline StrandRef Tangle::translate(const StrandRef& other) const {
 
 inline bool Tangle::r2(Crossing* crossing, bool check, bool perform) {
     return r2(StrandRef(crossing, 1), check, perform);
+}
+
+inline void swap(Tangle& lhs, Tangle& rhs) {
+    lhs.swap(rhs);
 }
 
 } // namespace regina

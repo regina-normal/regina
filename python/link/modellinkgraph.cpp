@@ -76,7 +76,8 @@ void addModelLinkGraph(pybind11::module_& m) {
         .def("size", &ModelLinkGraph::size)
         .def("node", &ModelLinkGraph::node,
             pybind11::return_value_policy::reference_internal)
-        .def("swapContents", &ModelLinkGraph::swapContents)
+        .def("swap", &ModelLinkGraph::swap)
+        .def("swapContents", &ModelLinkGraph::swap) // deprecated
         .def("reflect", &ModelLinkGraph::reflect)
         .def("findFlype", &ModelLinkGraph::findFlype)
         .def("flype", overload_cast<const ModelLinkGraphArc&,
@@ -103,4 +104,6 @@ void addModelLinkGraph(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(ModelLinkGraph&, ModelLinkGraph&))(regina::swap));
 }

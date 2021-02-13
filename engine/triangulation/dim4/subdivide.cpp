@@ -667,7 +667,7 @@ bool Triangulation<4>::idealToFinite() {
                 }
         } // j loop -- edges
     }
-    swapContents( *newTri );
+    swap(*newTri);
     delete newTri;
     return true;
 }

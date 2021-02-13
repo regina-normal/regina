@@ -60,6 +60,7 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def(pybind11::init<const SnapPeaTriangulation&>())
         .def(pybind11::init<const Triangulation<3>&, bool>(),
             pybind11::arg(), pybind11::arg("ignored") = false)
+        .def("swap", &SnapPeaTriangulation::swap)
         .def("isNull", &SnapPeaTriangulation::isNull)
         .def("name", &SnapPeaTriangulation::name)
         .def("solutionType", &SnapPeaTriangulation::solutionType)
@@ -139,5 +140,14 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
 
     // For backward compatibility with the old boost.python bindings:
     m.attr("SolutionType") = st;
+
+    m.def("swap",
+        (void(*)(SnapPeaTriangulation&, SnapPeaTriangulation&))(regina::swap));
+
+    // Now we can define the global swap for the parent Triangulation<3> class.
+    // See the notes beneath the Triangulation<3> bindings as to why this had
+    // to wait until *after* the SnapPeaTriangulation swap.
+    m.def("swap",
+        (void(*)(Triangulation<3>&, Triangulation<3>&))(regina::swap));
 }
 

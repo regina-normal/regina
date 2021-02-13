@@ -47,6 +47,8 @@ ENDIF (WIN32)
 
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
+# HPC = filesystem installation suitable for HPC systems where there is
+#       no need for a GUI, and where you do not have root.
 # Windows = self-contained movable install directory for MS Windows.
 if (NOT REGINA_INSTALL_TYPE)
   if (WIN32)
@@ -55,7 +57,7 @@ if (NOT REGINA_INSTALL_TYPE)
     SET (REGINA_DEFAULT_INSTALL_TYPE XDG)
   endif ()
   SET (REGINA_INSTALL_TYPE ${REGINA_DEFAULT_INSTALL_TYPE} CACHE STRING
-    "Choose how Regina installs itself.  Options are: XDG Windows."
+    "Choose how Regina installs itself.  Options are: XDG HPC Windows."
     FORCE)
 ENDIF (NOT REGINA_INSTALL_TYPE)
 MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
@@ -65,11 +67,15 @@ MESSAGE (STATUS "Regina install type: ${REGINA_INSTALL_TYPE}")
 # Note: even though Bundle is not supported in CMake, we must keep the flag
 # here because the Xcode build uses it (via the corresponding #define).
 SET(REGINA_INSTALL_XDG FALSE)
+SET(REGINA_INSTALL_HPC FALSE)
 SET(REGINA_INSTALL_BUNDLE FALSE)
 SET(REGINA_INSTALL_WINDOWS FALSE)
 IF (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   # No sanity checking needed here (yet).
   SET(REGINA_INSTALL_XDG TRUE)
+ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL HPC)
+  # No sanity checking needed here either.
+  SET(REGINA_INSTALL_HPC TRUE)
 ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Bundle)
   MESSAGE(FATAL_ERROR
     "REGINA_INSTALL_TYPE=Bundle is no longer supported. These CMake build scripts will give a unix-style installation in a fixed location; for a standalone macOS app bundle please use Xcode instead.")
@@ -81,7 +87,7 @@ ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL Windows)
   SET(REGINA_INSTALL_WINDOWS TRUE)
 ELSE()
   MESSAGE(FATAL_ERROR
-    "REGINA_INSTALL_TYPE must be either XDG or Windows.")
+    "REGINA_INSTALL_TYPE must be XDG, HPC or Windows.")
 ENDIF()
 
 # Are we installing development files?
@@ -152,24 +158,16 @@ INCLUDE( ReginaMacros )
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 
 # Installation directories
-if (${REGINA_INSTALL_TYPE} STREQUAL Windows)
-  # MS Windows install.
-  SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
-  SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
-  SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-  SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
-  SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
-  SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
-  SET (PYLIBDIR ${LIBDIR}/${PACKAGE_NAME}/python)
-else ()
-  # Full install.
-  SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
-  SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
-  SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
-  SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
-  SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
-  SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
+SET (APPDIR ${CMAKE_INSTALL_PREFIX}/bin)
+SET (BINDIR ${CMAKE_INSTALL_PREFIX}/bin)
+SET (LIBDIR ${CMAKE_INSTALL_PREFIX}/lib${LIB_SUFFIX})
+SET (DATADIR ${CMAKE_INSTALL_PREFIX}/share)
+SET (INCLUDEDIR ${CMAKE_INSTALL_PREFIX}/include/${PACKAGE_NAME})
+SET (PKGDATADIR ${DATADIR}/${PACKAGE_NAME})
+if (${REGINA_INSTALL_TYPE} STREQUAL XDG)
   UNSET (PYLIBDIR)
+else ()
+  SET (PYLIBDIR ${LIBDIR}/${PACKAGE_NAME}/python)
 endif ()
 SET (HTMLDIR ${PKGDATADIR}/docs)
 SET (ICONDIR ${DATADIR}/icons)
@@ -341,22 +339,45 @@ MACRO_LOG_FEATURE(POPT_FOUND
   TRUE)
 
 # Optionals
-FIND_PACKAGE(Doxygen)
-IF (DOXYGEN_FOUND)
-  # The newline separator in doxygen aliases changed
-  # at some point in a way that (by version 1.9.0) is
-  # neither backward nor forward compatible.
-  IF (DOXYGEN_VERSION VERSION_GREATER 1.8.13)
-    SET(DOXYGEN_NEWLINE "^^")
-  ELSE (DOXYGEN_VERSION VERSION_GREATER 1.8.13)
-    SET(DOXYGEN_NEWLINE "\\n")
-  ENDIF (DOXYGEN_VERSION VERSION_GREATER 1.8.13)
-ENDIF (DOXYGEN_FOUND)
-MACRO_LOG_FEATURE(DOXYGEN_FOUND
-  "Doxygen"
-  "Generate C++/Python API docs"
-  "http://www.doxygen.org/"
-  ${REGINA_MANDATORY})
+FIND_PROGRAM(UNZIP_EXECUTABLE NAMES unzip DOC "Command-line unzip tool")
+IF (UNZIP_EXECUTABLE)
+  SET (UNZIP_FOUND TRUE)
+ENDIF (UNZIP_EXECUTABLE)
+
+IF (REGINA_ENGINE_DOCS)
+  get_filename_component(REGINA_ENGINE_DOCS_FILE "${REGINA_ENGINE_DOCS}" ABSOLUTE)
+
+  IF (NOT EXISTS ${REGINA_ENGINE_DOCS_FILE})
+    MESSAGE (FATAL_ERROR "The argument to REGINA_ENGINE_DOCS should be a zip file containing pre-built API docs.  The file you gave (${REGINA_ENGINE_DOCS}) does not exist.")
+  ENDIF (NOT EXISTS ${REGINA_ENGINE_DOCS_FILE})
+
+  MESSAGE (STATUS "Using pre-built API docs from ${REGINA_ENGINE_DOCS_FILE}")
+
+  SET (REGINA_BUILD_ENGINE_DOCS ${UNZIP_FOUND})
+  MACRO_LOG_FEATURE(UNZIP_FOUND
+    "unzip"
+    "Extract the API docs"
+    "http://www.info-zip.org/pub/infozip/"
+    ${REGINA_MANDATORY})
+ELSE (REGINA_ENGINE_DOCS)
+  SET (REGINA_ENGINE_DOCS "" CACHE STRING
+    "Extract API docs from the given pre-built zip file instead of building them manually."
+    FORCE)
+
+  FIND_PACKAGE(Doxygen)
+  SET (DOXYGEN_MIN_VERSION 1.8.17)
+  IF (DOXYGEN_FOUND AND (DOXYGEN_VERSION VERSION_LESS DOXYGEN_MIN_VERSION))
+    MESSAGE (STATUS "Doxygen version ${DOXYGEN_VERSION} is too old; Regina requires Doxygen >= ${DOXYGEN_MIN_VERSION}.")
+    SET (DOXYGEN_FOUND FALSE)
+  ENDIF ()
+
+  SET (REGINA_BUILD_ENGINE_DOCS ${DOXYGEN_FOUND})
+  MACRO_LOG_FEATURE(DOXYGEN_FOUND
+    "Doxygen"
+    "Generate C++/Python API docs"
+    "http://www.doxygen.org/"
+    ${REGINA_MANDATORY})
+ENDIF (REGINA_ENGINE_DOCS)
 
 IF (REGINA_DOCS)
   get_filename_component(REGINA_DOCS_FILE "${REGINA_DOCS}" ABSOLUTE)
@@ -367,10 +388,6 @@ IF (REGINA_DOCS)
 
   MESSAGE (STATUS "Using pre-built handbooks from ${REGINA_DOCS_FILE}")
 
-  FIND_PROGRAM(UNZIP_EXECUTABLE NAMES unzip DOC "Command-line unzip tool")
-  IF (UNZIP_EXECUTABLE)
-    SET (UNZIP_FOUND TRUE)
-  ENDIF (UNZIP_EXECUTABLE)
   SET (REGINA_BUILD_HANDBOOK ${UNZIP_FOUND})
   MACRO_LOG_FEATURE(UNZIP_FOUND
     "unzip"
@@ -441,7 +458,10 @@ IF(NOT DISABLE_GUI)
     "Disables the graphical user interface.  The calculation engine, Python bindings and other command-line utilities will still be built.  This option is suitable for use on high-performance clusters."
     FORCE)
 ENDIF(NOT DISABLE_GUI)
-IF(DISABLE_GUI)
+IF(${REGINA_INSTALL_TYPE} STREQUAL HPC)
+  set(GUI_REQUIRED FALSE)
+  MESSAGE(STATUS "Disabling Regina's GUI for HPC build.")
+ELSEIF(DISABLE_GUI)
   set(GUI_REQUIRED FALSE)
   if (NOT ${REGINA_INSTALL_TYPE} STREQUAL XDG)
     MESSAGE(FATAL_ERROR

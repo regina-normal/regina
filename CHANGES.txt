@@ -75,6 +75,9 @@ Version 6.1  [ TODO ]
             - Simplified the underlying web of template specialisations.
         Class FileInfo:
             - Class constant TYPE_XML is now constexpr.
+        Class GlobalDirs:
+            - Removed pythonLibs(), since nothing has been installed to
+              this path since Regina 5.0.
         Class GluingPermSearcher<dim> and subclasses:
             - Several class constants are now constexpr.
         Class HyperInfo<...>:
@@ -83,12 +86,20 @@ Version 6.1  [ TODO ]
         Class Link:
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.
+            - Renamed swapContents() to swap(); the old name is now a
+              deprecated alias.  Also added a global regina::swap(Link&, Link&).
+              As a result, Link now meets the C++ Swappable requirements.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.
             - New global swap() routine, which will be used by std::swap().
+        Class ModelLinkGraph:
+            - Renamed swapContents() to swap(); the old name is now a
+              deprecated alias.  Also added a global
+              regina::swap(ModelLinkGraph&, ModelLinkGraph&).  As a result,
+              ModelLinkGraph now meets the C++ Swappable requirements.
         Class NormalInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -145,12 +156,19 @@ Version 6.1  [ TODO ]
             - New compile-time constants dimension and subdimension.
         Class SnapPeaCensusManifold, SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
+        Class SnapPeaTriangulation:
+            - New member swap() and global swap() routines, which mean that
+              SnapPeaTriangulation now meets the C++ Swappable requirements.
         Class SurfaceFilterInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
         Class SurfaceFilterProperties:
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.
+        Class Tangle:
+            - Renamed swapContents() to swap(); the old name is now a deprecated
+              alias.  Also added a global regina::swap(Tangle&, Tangle&).
+              As a result, Tangle now meets the C++ Swappable requirements.
         Class Triangulation<dim>:
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a
@@ -162,6 +180,11 @@ Version 6.1  [ TODO ]
               C++ users who only ever used simplices(), faces(), etc. as a
               temporary (as was recommended) should be unaffected, and the
               Python behaviour of these functions is completely unchanged.
+            - Renamed swapContents() to swap(); the old name is now a
+              deprecated alias.  Also added a global
+              regina::swap(Triangulation<dim>&, Triangulation<dim>&).
+              As a result, Triangulation<dim> now meets the C++ Swappable
+              requirements.
             - Simplified the class hierarchy; BoundaryComponentCalculator,
               EulerCalculator, FaceCalculator, FaceList and PachnerHelper are
               now gone, and there are a lot fewer regina::alias classes.

@@ -1,0 +1,90 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides detailed tests for C++ Swappable types.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+a = ExampleLink.trefoil(); b = ExampleLink.figureEight()
+print(a.size(), b.size(), '|', a.jones(), '|', b.jones())
+swap(a, b)
+print(a.size(), b.size(), '|', a.jones(), '|', b.jones())
+a.swap(b)
+print(a.size(), b.size(), '|', a.jones(), '|', b.jones())
+print()
+
+a = Example5.sphere(); b = Example5.ballBundle()
+print(a.size(), b.size(), '|', a.homology(), '|', b.homology())
+swap(a, b)
+print(a.size(), b.size(), '|', a.homology(), '|', b.homology())
+a.swap(b)
+print(a.size(), b.size(), '|', a.homology(), '|', b.homology())
+print()
+
+a = Example3.weberSeifert(); b = Example3.figureEight()
+print(a.size(), b.size(), '|', a.homology(), '|', b.homology())
+swap(a, b)
+print(a.size(), b.size(), '|', a.homology(), '|', b.homology())
+a.swap(b)
+print(a.size(), b.size(), '|', a.homology(), '|', b.homology())
+print()
+
+a = ExampleSnapPea.figureEight(); b = ExampleSnapPea.whiteheadLink()
+print(a.countCusps(), b.countCusps(), '|', '%.4f'%a.volume(), '|', '%.4f'%b.volume())
+swap(a, b)
+print(a.countCusps(), b.countCusps(), '|', '%.4f'%a.volume(), '|', '%.4f'%b.volume())
+a.swap(b)
+print(a.countCusps(), b.countCusps(), '|', '%.4f'%a.volume(), '|', '%.4f'%b.volume())
+print()
+
+# The following examples should all nullify the SnapPea triangulation,
+# since they will fall back to the Triangulation<3> swap function.
+
+a = ExampleSnapPea.figureEight(); b = Example3.whiteheadLink()
+print(a.size(), b.size(), a.isNull())
+swap(a, b)
+print(a.size(), b.size(), a.isNull())
+print()
+
+a = ExampleSnapPea.figureEight(); b = Example3.whiteheadLink()
+print(a.size(), b.size(), a.isNull())
+swap(b, a)
+print(a.size(), b.size(), a.isNull())
+print()
+
+a = ExampleSnapPea.figureEight(); b = Example3.whiteheadLink()
+print(a.size(), b.size(), a.isNull())
+# Note: a.swap(b) is not recognised by python, since it seems that
+# SnapPeaTriangulation's swap() member hides Triangulation<3>'s swap() member.
+b.swap(a)
+print(a.size(), b.size(), a.isNull())
+print()
+

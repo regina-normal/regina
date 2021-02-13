@@ -126,7 +126,8 @@ void addLink(pybind11::module_& m) {
             return Link::fromDT(v.begin(), v.end());
         })
         .def_static("fromKnotSig", &Link::fromKnotSig)
-        .def("swapContents", &Link::swapContents)
+        .def("swap", &Link::swap)
+        .def("swapContents", &Link::swap) // deprecated
         .def("reflect", &Link::reflect)
         .def("rotate", &Link::rotate)
         .def("reverse", &Link::reverse)
@@ -247,4 +248,5 @@ void addLink(pybind11::module_& m) {
         })
     ;
 
+    m.def("swap", (void(*)(Link&, Link&))(regina::swap));
 }

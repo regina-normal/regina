@@ -46,6 +46,7 @@ void addTriangulation2(pybind11::module_& m) {
             regina::SafePtr<Triangulation<2>>>(m, "Triangulation2")
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<2>&>())
+        .def(pybind11::init<const Triangulation<2>&, bool>())
         .def(pybind11::init<const std::string&>())
         .def("size", &Triangulation<2>::size)
         .def("countTriangles", &Triangulation<2>::countTriangles)
@@ -77,7 +78,8 @@ void addTriangulation2(pybind11::module_& m) {
         .def("removeSimplexAt", &Triangulation<2>::removeSimplexAt)
         .def("removeAllTriangles", &Triangulation<2>::removeAllTriangles)
         .def("removeAllSimplices", &Triangulation<2>::removeAllSimplices)
-        .def("swapContents", &Triangulation<2>::swapContents)
+        .def("swap", &Triangulation<2>::swap)
+        .def("swapContents", &Triangulation<2>::swap) // deprecated
         .def("moveContentsTo", &Triangulation<2>::moveContentsTo)
         .def("countComponents", &Triangulation<2>::countComponents)
         .def("countBoundaryComponents",
@@ -189,5 +191,8 @@ void addTriangulation2(pybind11::module_& m) {
             return Triangulation<2>::dimension;
         })
     ;
+
+    m.def("swap",
+        (void(*)(Triangulation<2>&, Triangulation<2>&))(regina::swap));
 }
 

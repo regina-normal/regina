@@ -43,11 +43,21 @@ Triangulation<2>::Triangulation(const std::string& description) {
     Triangulation<2>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     }
 
     delete attempt;
+}
+
+void Triangulation<2>::swap(Triangulation<2>& other) {
+    if (&other == this)
+        return;
+
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&other);
+
+    swapBaseData(other);
 }
 
 bool Triangulation<2>::isMinimal() const {

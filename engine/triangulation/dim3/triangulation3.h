@@ -338,6 +338,37 @@ class REGINA_API Triangulation<3> :
          */
         void removeAllTetrahedra();
 
+        /**
+         * Swaps the contents of this and the given triangulation.
+         *
+         * All tetrahedra that belong to this triangulation
+         * will be moved to \a other, and all tetrahedra
+         * that belong to \a other will be moved to this triangulation.
+         * Likewise, all skeletal objects (such as lower-dimensional faces,
+         * components, and boundary components) and all cached properties
+         * (such as homology and fundamental group) will be swapped.
+         *
+         * In particular, any pointers or references to Tetrahedron<3> and/or
+         * Face<3, subdim> objects will remain valid.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this triangulation.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        void swap(Triangulation<3>& other);
+        /**
+         * Deprecated routine that swaps the contents of this and the
+         * given triangulation.
+         *
+         * \deprecated Use swap() instead.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        [[deprecated]] void swapContents(Triangulation<3>& other);
+
         /*@}*/
         /**
          * \name Skeletal Queries
@@ -3054,12 +3085,6 @@ class REGINA_API Triangulation<3> :
          * a packet change event.
          */
         void clearAllProperties();
-        /**
-         * Swaps all calculated properties, including skeletal data,
-         * with the given triangulation.  This is called by
-         * TriangulationBase::swapContents(), and by nothing else.
-         */
-        void swapAllProperties(Triangulation<3>& other);
 
         /**
          * Checks that the permutations on face gluings are valid and
@@ -3193,6 +3218,10 @@ inline void Triangulation<3>::removeTetrahedron(Tetrahedron<3>* tet) {
 
 inline void Triangulation<3>::removeAllTetrahedra() {
     removeAllSimplices();
+}
+
+inline void Triangulation<3>::swapContents(Triangulation<3>& other) {
+    swap(other);
 }
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {

@@ -60,6 +60,7 @@
 #include "utilities/listview.h"
 #include "utilities/property.h"
 
+namespace regina {
 /**
  * Contains implementation details and common functionality for Regina's
  * dimension-agnostic classes.
@@ -88,7 +89,7 @@
  *   (including the names and inheritance structure of classes within
  *   regina::detail) might change in subsequent releases without notice.
  */
-namespace regina::detail {
+namespace detail {
 
 template <int dim> class XMLTriangulationReaderBase;
 
@@ -472,26 +473,6 @@ class TriangulationBase :
          * be destroyed immediately.
          */
         void removeAllSimplices();
-        /**
-         * Swaps the contents of this and the given triangulation.
-         *
-         * All top-dimensional simplices that belong to this triangulation
-         * will be moved to \a other, and all top-dimensional simplices
-         * that belong to \a other will be moved to this triangulation.
-         * Likewise, all skeletal objects (such as lower-dimensional faces,
-         * components, and boundary components) and all cached properties
-         * (such as homology and fundamental group) will be swapped.
-         *
-         * In particular, any pointers or references to Simplex<dim> and/or
-         * Face<dim, subdim> objects will remain valid.
-         *
-         * This routine will behave correctly if \a other is in fact
-         * this triangulation.
-         *
-         * @param other the triangulation whose contents should be
-         * swapped with this.
-         */
-        void swapContents(Triangulation<dim>& other);
         /**
          * Moves the contents of this triangulation into the given
          * destination triangulation, without destroying any pre-existing
@@ -1780,18 +1761,18 @@ class TriangulationBase :
         void clearBaseProperties();
 
         /**
-         * Swaps all properties that are managed by this base class,
-         * including skeletal data, with the given triangulation.
+         * Swaps all data that is managed by this base class, including
+         * simplices, skeletal data and other cached properties, with the
+         * given triangulation.
          *
          * Note that TriangulationBase never calls this routine itself.
-         * Typically swapBaseProperties() is only ever called by
-         * Triangulation<dim>::swapAllProperties(), which in turn is
-         * called by swapContents().
+         * Typically swapBaseData() is only ever called by
+         * Triangulation<dim>::swap().
          *
-         * @param other the triangulation whose properties should be
+         * @param other the triangulation whose data should be
          * swapped with this.
          */
-        void swapBaseProperties(TriangulationBase<dim>& other);
+        void swapBaseData(TriangulationBase<dim>& other);
 
         /**
          * Writes a chunk of XML containing properties of this triangulation.
@@ -2033,6 +2014,26 @@ class TriangulationBase :
     friend class regina::detail::XMLTriangulationReaderBase<dim>;
 };
 
+} // namespace regina::detail -> namespace regina
+
+/**
+ * Swaps the contents of the two given triangulations.
+ *
+ * This global routine simply calls Triangulation<dim>::swap(); it is
+ * provided so that Triangulation<dim> meets the C++ Swappable requirements.
+ *
+ * See Triangulation<dim>::swap() for more details.
+ *
+ * @param lhs the triangulation whose contents should be swapped with \a rhs.
+ * @param rhs the triangulation whose contents should be swapped with \a lhs.
+ */
+template <int dim>
+void swap(Triangulation<dim>& lhs, Triangulation<dim>& rhs) {
+    lhs.swap(rhs);
+}
+
+namespace detail {
+
 /*@}*/
 
 // Inline functions for TriangulationFaceStorage
@@ -2215,25 +2216,6 @@ inline void TriangulationBase<dim>::removeAllSimplices() {
     simplices_.clear();
 
     static_cast<Triangulation<dim>*>(this)->clearAllProperties();
-}
-
-template <int dim>
-void TriangulationBase<dim>::swapContents(Triangulation<dim>& other) {
-    if (&other == this)
-        return;
-
-    typename Triangulation<dim>::ChangeEventSpan span1(
-        static_cast<Triangulation<dim>*>(this));
-    typename Triangulation<dim>::ChangeEventSpan span2(&other);
-
-    simplices_.swap(other.simplices_);
-
-    for (auto s : simplices_)
-        s->tri_ = static_cast<Triangulation<dim>*>(this);
-    for (auto s : other.simplices_)
-        s->tri_ = &other;
-
-    static_cast<Triangulation<dim>*>(this)->swapAllProperties(other);
 }
 
 template <int dim>
@@ -2874,7 +2856,7 @@ void TriangulationBase<dim>::barycentricSubdivision() {
         }
 
     // Delete the existing simplices and put in the new ones.
-    swapContents(staging);
+    static_cast<Triangulation<dim>*>(this)->swap(staging);
     delete[] newSimp;
 }
 
@@ -3196,7 +3178,7 @@ TriangulationBase<dim>::TopologyLock::~TopologyLock() {
         --tri_->topologyLock_;
 }
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #include "triangulation/detail/canonical-impl.h"
 

@@ -32,6 +32,9 @@ IF (Python_FOUND)
   ELSE ()
     MESSAGE(FATAL_ERROR "Unknown Python version: ${Python_VERSION_MAJOR}")
   ENDIF ()
+ELSE (Python_FOUND)
+  # Just choose one.
+  SET (PYX py3)
 ENDIF (Python_FOUND)
 
 FOREACH (FILE ${py23_files})

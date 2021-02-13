@@ -71,6 +71,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             regina::SafePtr<Triangulation<dim>>>(m, name)
         .def(pybind11::init<>())
         .def(pybind11::init<const Triangulation<dim>&>())
+        .def(pybind11::init<const Triangulation<dim>&, bool>())
         .def("size", &Triangulation<dim>::size)
         .def("simplices", &Triangulation<dim>::simplices,
             pybind11::return_value_policy::reference_internal)
@@ -85,7 +86,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("removeSimplex", &Triangulation<dim>::removeSimplex)
         .def("removeSimplexAt", &Triangulation<dim>::removeSimplexAt)
         .def("removeAllSimplices", &Triangulation<dim>::removeAllSimplices)
-        .def("swapContents", &Triangulation<dim>::swapContents)
+        .def("swap", &Triangulation<dim>::swap)
+        .def("swapContents", &Triangulation<dim>::swap) // deprecated
         .def("moveContentsTo", &Triangulation<dim>::moveContentsTo)
         .def("countComponents", &Triangulation<dim>::countComponents)
         .def("countBoundaryComponents",
@@ -200,5 +202,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         })
     ;
     add_pachner<dim>::add(c);
+
+    m.def("swap",
+        (void(*)(Triangulation<dim>&, Triangulation<dim>&))(regina::swap));
 }
 

@@ -121,6 +121,7 @@ class Triangulation3Test : public TriangulationTest<3> {
     CPPUNIT_TEST(fillTorus);
     CPPUNIT_TEST(meridianLongitude);
     CPPUNIT_TEST(retriangulate);
+    CPPUNIT_TEST(swapping);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -4764,6 +4765,34 @@ class Triangulation3Test : public TriangulationTest<3> {
             verifyRetriangulate(q20_large, 0, 1);
             verifyRetriangulate(q20_large, 1, 195);
             verifyRetriangulate(q20_large, 2, 2997);
+        }
+
+        void swapping() {
+            Triangulation<3>* a = Example<3>::figureEight();
+            Triangulation<3>* b = Example<3>::weberSeifert();
+
+            a->homology();
+            b->homology();
+
+            swap(*a, *b);
+
+            if (a->size() != 23) {
+                CPPUNIT_FAIL("swap() did not swap tetrahedra correctly.");
+            }
+            if (! b->homology().isZ()) {
+                CPPUNIT_FAIL("swap() did not swap properties correctly.");
+            }
+
+            std::iter_swap(a, b);
+
+            if (a->size() != 2) {
+                CPPUNIT_FAIL(
+                    "std::iter_swap() did not swap tetrahedra correctly.");
+            }
+            if (b->homology() != weberSeifert.homology()) {
+                CPPUNIT_FAIL(
+                    "std::iter_swap() did not swap properties correctly.");
+            }
         }
 };
 

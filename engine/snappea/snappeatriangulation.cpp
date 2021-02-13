@@ -54,8 +54,6 @@ namespace {
     static std::mutex snapMutex;
 }
 
-std::complex<double> SnapPeaTriangulation::zero_(0, 0);
-
 void Cusp::writeTextShort(std::ostream& out) const {
     if (complete())
         out << "Complete cusp: ";
@@ -70,7 +68,8 @@ void Cusp::writeTextShort(std::ostream& out) const {
 
 SnapPeaTriangulation::SnapPeaTriangulation(
         const std::string& fileNameOrContents) :
-        data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
+        data_(nullptr), shape_(nullptr), cusp_(nullptr),
+        filledCusps_(0), syncing_(false) {
     try {
         if (startsWith(fileNameOrContents, "% Triangulation"))
             data_ = regina::snappea::read_triangulation_from_string(
@@ -84,13 +83,14 @@ SnapPeaTriangulation::SnapPeaTriangulation(
             sync();
         }
     } catch (regina::SnapPeaFatalError& err) {
-        data_ = 0;
+        data_ = nullptr;
     }
     listen(this);
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
-        data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
+        data_(nullptr), shape_(nullptr), cusp_(nullptr),
+        filledCusps_(0), syncing_(false) {
     if (tri.data_) {
         regina::snappea::copy_triangulation(tri.data_, &data_);
         sync();
@@ -99,7 +99,8 @@ SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
 }
 
 SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
-        data_(0), shape_(0), cusp_(0), filledCusps_(0), syncing_(false) {
+        data_(nullptr), shape_(nullptr), cusp_(nullptr),
+        filledCusps_(0), syncing_(false) {
     const SnapPeaTriangulation* clone =
         dynamic_cast<const SnapPeaTriangulation*>(&tri);
     if (clone) {
@@ -221,6 +222,32 @@ SnapPeaTriangulation::~SnapPeaTriangulation() {
     delete[] shape_;
     delete[] cusp_;
     regina::snappea::free_triangulation(data_);
+}
+
+void SnapPeaTriangulation::swap(SnapPeaTriangulation& other) {
+    if (this == &other)
+        return;
+
+    // Use syncing_ to prevent change events from nullifying the snappea data.
+    syncing_ = true;
+    other.syncing_ = true;
+    {
+        ChangeEventSpan span1(this);
+        ChangeEventSpan span2(&other);
+
+        Triangulation<3>::swap(other);
+
+        std::swap(data_, other.data_);
+        std::swap(shape_, other.shape_);
+        std::swap(cusp_, other.cusp_);
+        std::swap(filledCusps_, other.filledCusps_);
+        fundGroupFilled_.swap(other.fundGroupFilled_);
+        h1Filled_.swap(other.h1Filled_);
+
+        // The change events will be fired at this point.
+    }
+    syncing_ = false;
+    other.syncing_ = false;
 }
 
 std::string SnapPeaTriangulation::name() const {
@@ -346,9 +373,9 @@ bool SnapPeaTriangulation::fill(int m, int l, unsigned whichCusp) {
 Triangulation<3>* SnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
         const {
     if (! data_)
-        return 0;
+        return nullptr;
     if (cusp_[whichCusp].complete())
-        return 0;
+        return nullptr;
 
     regina::snappea::Triangulation* t;
     unsigned nCusps = countCusps();
@@ -357,7 +384,7 @@ Triangulation<3>* SnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
             1 /* fill_all_cusps = TRUE, which is 1 in SnapPea */);
 
         if (! t)
-            return 0;
+            return nullptr;
         Triangulation<3>* ans = new Triangulation<3>();
         fillRegina(t, *ans);
         return ans;
@@ -378,7 +405,7 @@ Triangulation<3>* SnapPeaTriangulation::filledTriangulation(unsigned whichCusp)
 
 Triangulation<3>* SnapPeaTriangulation::filledTriangulation() const {
     if (! data_)
-        return 0;
+        return nullptr;
 
     unsigned nCusps = countBoundaryComponents();
     regina::snappea::Triangulation* t;
@@ -391,7 +418,7 @@ Triangulation<3>* SnapPeaTriangulation::filledTriangulation() const {
             1 /* fill_all_cusps = TRUE, which is 1 in SnapPea */);
 
         if (! t)
-            return 0;
+            return nullptr;
         Triangulation<3>* ans = new Triangulation<3>();
         fillRegina(t, *ans);
         return ans;
@@ -405,7 +432,7 @@ Triangulation<3>* SnapPeaTriangulation::filledTriangulation() const {
         delete[] fill_cusp;
 
         if (! t)
-            return 0;
+            return nullptr;
         SnapPeaTriangulation* ans = new SnapPeaTriangulation();
         ans->reset(t);
         return ans;
@@ -414,14 +441,14 @@ Triangulation<3>* SnapPeaTriangulation::filledTriangulation() const {
 
 SnapPeaTriangulation* SnapPeaTriangulation::protoCanonize() const {
     if (! data_)
-        return 0;
+        return nullptr;
 
     regina::snappea::Triangulation* tmp;
     regina::snappea::copy_triangulation(data_, &tmp);
 
     if (regina::snappea::proto_canonize(tmp) != regina::snappea::func_OK) {
         regina::snappea::free_triangulation(tmp);
-        return 0;
+        return nullptr;
     }
 
     SnapPeaTriangulation* ans = new SnapPeaTriangulation();
@@ -432,14 +459,14 @@ SnapPeaTriangulation* SnapPeaTriangulation::protoCanonize() const {
 
 Triangulation<3>* SnapPeaTriangulation::canonize() const {
     if (! data_)
-        return 0;
+        return nullptr;
 
     regina::snappea::Triangulation* tmp;
     regina::snappea::copy_triangulation(data_, &tmp);
 
     if (regina::snappea::canonize(tmp) != regina::snappea::func_OK) {
         regina::snappea::free_triangulation(tmp);
-        return 0;
+        return nullptr;
     }
 
     Triangulation<3>* ans = new Triangulation<3>();
@@ -459,7 +486,7 @@ void SnapPeaTriangulation::randomize() {
 
 MatrixInt* SnapPeaTriangulation::gluingEquations() const {
     if (! data_)
-        return 0;
+        return nullptr;
 
     MatrixInt* matrix = new MatrixInt(
         countEdges() + data_->num_cusps + countCompleteCusps(),
@@ -507,7 +534,7 @@ MatrixInt* SnapPeaTriangulation::gluingEquations() const {
 
 MatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
     if (! data_)
-        return 0;
+        return nullptr;
 
     unsigned n = size();
 
@@ -595,7 +622,7 @@ MatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
  */
 MatrixInt* SnapPeaTriangulation::slopeEquations() const {
     if (! data_)
-        return 0;
+        return nullptr;
 
     MatrixInt* matrix =
         new MatrixInt(2*data_->num_cusps, 3*data_->num_tetrahedra);
@@ -727,7 +754,7 @@ void SnapPeaTriangulation::packetWasChanged(Packet* packet) {
     // inherited Triangulation<3> interface, then convert this to a null
     // triangulation.
     if (packet == this && data_ && ! syncing_)
-        reset(0);
+        reset(nullptr);
 }
 
 void SnapPeaTriangulation::sync() {
@@ -758,7 +785,7 @@ void SnapPeaTriangulation::sync() {
             cusp_ = new Cusp[data_->num_cusps];
             regina::snappea::Cusp* c = data_->cusp_list_begin.next;
             for (i = 0; i < data_->num_cusps; ++i) {
-                cusp_[c->index].vertex_ = 0;
+                cusp_[c->index].vertex_ = nullptr;
                 if (c->is_complete) {
                     cusp_[c->index].m_ = cusp_[c->index].l_ = 0;
                 } else if (c->topology == regina::snappea::Klein_cusp &&
@@ -767,13 +794,13 @@ void SnapPeaTriangulation::sync() {
                     // Abort!  Make this a null triangulation.
                     // Note that reset() calls sync() again; this is
                     // harmless as long as we return immediately afterwards.
-                    reset(0);
+                    reset(nullptr);
                     syncing_ = false;
                     return;
                 } else if (c->topology == regina::snappea::torus_cusp &&
                         ! regina::snappea::Dehn_coefficients_are_relatively_prime_integers(c)) {
                     // Abort, as above.
-                    reset(0);
+                    reset(nullptr);
                     syncing_ = false;
                     return;
                 } else {
@@ -787,13 +814,13 @@ void SnapPeaTriangulation::sync() {
             for (i = 0; i < size(); ++i) {
                 for (j = 0; j < 4; ++j) {
                     c = stet->cusp[j];
-                    if (cusp_[c->index].vertex_ == 0)
+                    if (cusp_[c->index].vertex_ == nullptr)
                         cusp_[c->index].vertex_ = tetrahedron(i)->vertex(j);
                 }
                 stet = stet->next;
             }
         } else {
-            cusp_ = 0;
+            cusp_ = nullptr;
         }
 
         // Next, update all data that depend on the fillings (if any).
@@ -829,7 +856,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
         SolutionType soln = static_cast<SolutionType>(
             regina::snappea::get_filled_solution_type(data_));
         if (soln == not_attempted || soln == no_solution) {
-            shape_ = 0;
+            shape_ = nullptr;
         } else {
             // Fetch the shapes directly from SnapPea's internal
             // data structures, since SnapPea's get_tet_shape()
@@ -846,7 +873,7 @@ void SnapPeaTriangulation::fillingsHaveChanged() {
             }
         }
     } else {
-        shape_ = 0;
+        shape_ = nullptr;
     }
 }
 

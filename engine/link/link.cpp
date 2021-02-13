@@ -71,16 +71,16 @@ Link::Link(const std::string& description) {
     Link* attempt;
 
     if ((attempt = fromKnotSig(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     } else if ((attempt = fromOrientedGauss(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     } else if ((attempt = fromGauss(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     } else if ((attempt = fromDT(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     }
 
@@ -238,7 +238,7 @@ void Link::writeTextLong(std::ostream& out) const {
     out << std::endl;
 }
 
-void Link::swapContents(Link& other) {
+void Link::swap(Link& other) {
     if (&other == this)
         return;
 

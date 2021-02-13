@@ -45,7 +45,7 @@ Triangulation<4>::Triangulation(const std::string& description) :
     Triangulation<4>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     }
 
@@ -231,8 +231,14 @@ void Triangulation<4>::clearAllProperties() {
     }
 }
 
-void Triangulation<4>::swapAllProperties(Triangulation<4>& other) {
-    swapBaseProperties(other);
+void Triangulation<4>::swap(Triangulation<4>& other) {
+    if (&other == this)
+        return;
+
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&other);
+
+    swapBaseData(other);
 
     // Properties stored directly:
     std::swap(knownSimpleLinks_, other.knownSimpleLinks_);

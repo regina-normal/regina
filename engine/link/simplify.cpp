@@ -102,7 +102,7 @@ bool Link::intelligentSimplify() {
                 // At this point, changed == false.
                 if (use->size() < size()) {
                     // The type III moves were successful; accept them.
-                    swapContents(*use);
+                    swap(*use);
                     changed = true;
                 }
                 delete use;

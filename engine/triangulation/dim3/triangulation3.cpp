@@ -47,13 +47,13 @@ Triangulation<3>::Triangulation(const std::string& description) {
     Triangulation<3>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     } else if ((attempt = rehydrate(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(description);
     } else if ((attempt = fromSnapPea(description))) {
-        swapContents(*attempt);
+        swap(*attempt);
         setLabel(attempt->label());
     }
 
@@ -87,8 +87,14 @@ void Triangulation<3>::clearAllProperties() {
     }
 }
 
-void Triangulation<3>::swapAllProperties(Triangulation<3>& other) {
-    swapBaseProperties(other);
+void Triangulation<3>::swap(Triangulation<3>& other) {
+    if (&other == this)
+        return;
+
+    ChangeEventSpan span1(this);
+    ChangeEventSpan span2(&other);
+
+    swapBaseData(other);
 
     // Properties stored directly:
     std::swap(ideal_, other.ideal_);

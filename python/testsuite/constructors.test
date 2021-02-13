@@ -1,0 +1,95 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests bindings for the different Triangulation3 constructors.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+def tri3From(*args):
+	try:
+		t = Triangulation3(*args)
+		print(t.size(), t.isoSig())
+	except:
+		print('ERROR: Could not construct')
+
+# Empty
+tri3From()
+
+# Another triangulation
+tri3From(Example3.figureEight())
+
+# Another triangulation, without cloning properties
+tri3From(Example3.figureEight(), False)
+
+# Regina's SnapPeaTriangulation class
+tri3From(ExampleSnapPea.whiteheadLink())
+
+# Regina's SnapPeaTriangulation class, without cloning properties
+tri3From(ExampleSnapPea.whiteheadLink(), False)
+
+# Iso sig
+tri3From('cPcbbbiht')
+
+# Dehydration string
+tri3From('cabbbbaei')
+
+# SnapPea data file contents
+tri3From(Example3.figureEight().snapPea())
+
+# Junk (should result in an empty triangulation)
+tri3From('banana')
+
+# Simulate what happens if we try to pass a SnapPy manifold or triangulation:
+class SnapPyObject:
+	def _to_string(self):
+		return Example3.figureEight().snapPea()
+
+class NotSnapPyObject:
+	def _other_string(self):
+		return Example3.figureEight().snapPea()
+
+class JunkSnapPyObject:
+	def _other_string(self):
+		return 'banana'
+
+class MisbehavedSnapPyObject:
+	def _to_string(self):
+		return 42
+
+class UncallableSnapPyObject:
+	_to_string = 'cPcbbbiht'
+
+tri3From(SnapPyObject())
+tri3From(NotSnapPyObject())
+tri3From(JunkSnapPyObject())
+tri3From(MisbehavedSnapPyObject())
+tri3From(UncallableSnapPyObject())
+

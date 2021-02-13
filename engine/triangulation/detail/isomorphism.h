@@ -529,7 +529,7 @@ void IsomorphismBase<dim>::applyInPlace(Triangulation<dim>* tri) const {
         return;
 
     Triangulation<dim>* staging = apply(tri);
-    tri->swapContents(*staging);
+    tri->swap(*staging);
     delete staging;
 }
 

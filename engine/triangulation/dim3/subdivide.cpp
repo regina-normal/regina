@@ -136,7 +136,7 @@ bool Triangulation<3>::idealToFinite() {
 
     ChangeEventSpan span2(this);
 
-    swapContents(staging);
+    swap(staging);
     ensureSkeleton();
 
     // Remove the tetrahedra that meet any of the ideal or invalid vertices.

@@ -244,6 +244,37 @@ class REGINA_API Triangulation<4> :
          */
         void removeAllPentachora();
 
+        /**
+         * Swaps the contents of this and the given triangulation.
+         *
+         * All pentachora that belong to this triangulation
+         * will be moved to \a other, and all pentachora
+         * that belong to \a other will be moved to this triangulation.
+         * Likewise, all skeletal objects (such as lower-dimensional faces,
+         * components, and boundary components) and all cached properties
+         * (such as homology and fundamental group) will be swapped.
+         *
+         * In particular, any pointers or references to Pentachoron<4> and/or
+         * Face<4, subdim> objects will remain valid.
+         *
+         * This routine will behave correctly if \a other is in fact
+         * this triangulation.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        void swap(Triangulation<4>& other);
+        /**
+         * Deprecated routine that swaps the contents of this and the
+         * given triangulation.
+         *
+         * \deprecated Use swap() instead.
+         *
+         * @param other the triangulation whose contents should be
+         * swapped with this.
+         */
+        [[deprecated]] void swapContents(Triangulation<4>& other);
+
         /*@}*/
         /**
          * \name Basic Properties
@@ -882,12 +913,6 @@ class REGINA_API Triangulation<4> :
          * a packet change event.
          */
         void clearAllProperties();
-        /**
-         * Swaps all calculated properties, including skeletal data,
-         * with the given triangulation.  This is called by
-         * TriangulationBase::swapContents(), and by nothing else.
-         */
-        void swapAllProperties(Triangulation<4>& other);
 
         void calculateSkeleton();
 
@@ -1001,6 +1026,10 @@ inline bool Triangulation<4>::retriangulate(int height, unsigned nThreads,
 
 inline Packet* Triangulation<4>::internalClonePacket(Packet*) const {
     return new Triangulation<4>(*this);
+}
+
+inline void Triangulation<4>::swapContents(Triangulation<4>& other) {
+    swap(other);
 }
 
 } // namespace regina

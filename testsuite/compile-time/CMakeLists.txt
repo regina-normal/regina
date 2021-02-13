@@ -7,7 +7,9 @@ SET ( FILES
   disctype
   facenumbering
   intutils
+  link
   perm
+  snappea
   triangulation
   )
 

@@ -48,6 +48,7 @@ if (${REGINA_INSTALL_DEV})
     stringutils-impl.h
     trieset.h
     tritmask.h
+    typeutils.h
     xmlcallback.h
     xmlelementreader.h
     xmlutils.h

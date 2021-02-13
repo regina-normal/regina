@@ -34,6 +34,7 @@
 #include <iomanip>
 #include <cppunit/extensions/HelperMacros.h>
 #include "maths/matrix.h"
+#include "snappea/examplesnappea.h"
 #include "snappea/snappeatriangulation.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/example3.h"
@@ -43,6 +44,7 @@
 #include "testsuite/snappea/testsnappea.h"
 
 using regina::Example;
+using regina::ExampleSnapPea;
 using regina::Perm;
 using regina::SnapPeaTriangulation;
 using regina::Tetrahedron;
@@ -58,6 +60,7 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(spunBoundaries);
     CPPUNIT_TEST(stability);
     CPPUNIT_TEST(filling);
+    CPPUNIT_TEST(swapping);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -628,6 +631,83 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
             testFilledHomology(n4_9_2, 0, 0, "Z + Z_2");
             testFilledHomology(n4_9_2, 1, 0, "Z");
             testFilledHomology(n4_9_2, -1, 0, "Z");
+        }
+
+        void swapping() {
+            {
+                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+
+                a->volume();
+                b->volume();
+
+                swap(*a, *b);
+
+                if (a->isNull() || b->isNull()) {
+                    CPPUNIT_FAIL("swap() nullified the triangulation(s).");
+                }
+
+                if (a->countCusps() != 2) {
+                    CPPUNIT_FAIL("swap() did not swap cusps correctly.");
+                }
+                if (std::floor(a->volume()) != 3) {
+                    CPPUNIT_FAIL("swap() did not swap snappea data correctly.");
+                }
+
+                std::iter_swap(a, b);
+
+                if (a->countCusps() != 1) {
+                    CPPUNIT_FAIL(
+                        "std::iter_swap() did not swap cusps correctly.");
+                }
+                if (std::floor(a->volume()) != 2) {
+                    CPPUNIT_FAIL(
+                        "std::iter_swap() did not swap snappea data correctly.");
+                }
+            }
+            {
+                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+
+                a->volume();
+                b->volume();
+
+                swap(static_cast<Triangulation<3>&>(*a), *b);
+
+                if (! (a->isNull() && b->isNull())) {
+                    CPPUNIT_FAIL("swap() did not nullify triangulation(s) "
+                        "where required.");
+                }
+            }
+            {
+                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+
+                a->volume();
+                b->volume();
+
+                swap(*a, static_cast<Triangulation<3>&>(*b));
+
+                if (! (a->isNull() && b->isNull())) {
+                    CPPUNIT_FAIL("swap() did not nullify triangulation(s) "
+                        "where required.");
+                }
+            }
+            {
+                SnapPeaTriangulation* a = ExampleSnapPea::figureEight();
+                SnapPeaTriangulation* b = ExampleSnapPea::whiteheadLink();
+
+                a->volume();
+                b->volume();
+
+                swap(static_cast<Triangulation<3>&>(*a),
+                    static_cast<Triangulation<3>&>(*b));
+
+                if (! (a->isNull() && b->isNull())) {
+                    CPPUNIT_FAIL("swap() did not nullify triangulation(s) "
+                        "where required.");
+                }
+            }
         }
 };
 

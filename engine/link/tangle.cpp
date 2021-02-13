@@ -223,7 +223,7 @@ Tangle::Tangle(const Tangle& cloneMe) : type_(cloneMe.type_) {
             end_[i][j] = translate(cloneMe.end_[i][j]);
 }
 
-void Tangle::swapContents(Tangle& other) {
+void Tangle::swap(Tangle& other) {
     if (&other == this)
         return;
 

@@ -155,11 +155,11 @@ bool Triangulation<4>::simplifyExhaustive(int height, unsigned nThreads,
     return retriangulate(height, nThreads, tracker,
         [](Triangulation<4>& alt, Triangulation<4>& original, size_t minSimp) {
             if (alt.size() < minSimp) {
-                // Since we are allowed to change alt, we use swapContents(),
+                // Since we are allowed to change alt, we use swap(),
                 // which avoids yet another round of remaking the tetrahedron
                 // gluings.
                 Packet::ChangeEventSpan span(&original);
-                original.swapContents(alt);
+                original.swap(alt);
                 original.intelligentSimplify();
                 return true;
             } else
