@@ -54,18 +54,18 @@ using regina::detail::TriangulationBase;
  * then we tell pybind11 to support implicit conversions to SnapPyObject
  * from anything with a _to_string() method.
  */
-namespace regina { namespace python {
+namespace regina::python {
     struct SnapPyObject {
         std::string string_;
     };
-} } // namespace regina::python
+} // namespace regina::python
 
 /**
  * Tell pybind11 how to convert a Python object with a _to_string() method
  * (which we assume is a snappy.Manifold or a snappy.Triangulation) to our
  * internal SnapPyObject class.
  */
-namespace pybind11 { namespace detail {
+namespace pybind11::detail {
     template <>
     struct type_caster<regina::python::SnapPyObject> {
         public:
@@ -87,7 +87,7 @@ namespace pybind11 { namespace detail {
                 return NULL;
             }
     };
-} } // namespace pybind11::detail
+} // namespace pybind11::detail
 
 void addTriangulation3(pybind11::module_& m) {
     auto c = pybind11::class_<Triangulation<3>, regina::Packet,
