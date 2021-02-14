@@ -31,7 +31,6 @@
  **************************************************************************/
 
 #include "triangulation/dim3.h"
-#include "triangulation/detail/isosig-impl.h"
 
 static_assert(regina::standardDim(4));
 static_assert(! regina::standardDim(5));
@@ -39,6 +38,6 @@ static_assert(! regina::standardDim(5));
 static_assert(std::is_swappable_v<regina::Triangulation<3>>);
 
 // Number of base64 characters required to hold (dim+1)!
-static_assert(regina::detail::IsoSigHelper<3>::CHARS_PER_PERM == 1);
-static_assert(regina::detail::IsoSigHelper<4>::CHARS_PER_PERM == 2);
-static_assert(regina::detail::IsoSigHelper<15>::CHARS_PER_PERM == 8);
+static_assert(regina::IsoSigPrintable<3>::charsPerPerm == 1);
+static_assert(regina::IsoSigPrintable<4>::charsPerPerm == 2);
+static_assert(regina::IsoSigPrintable<15>::charsPerPerm == 8);

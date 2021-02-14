@@ -272,9 +272,10 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig(
     size_t i;
     size_t simp;
     typename Perm<dim+1>::Index perm;
-    std::string curr;
+    typename Encoding::SigType curr;
 
-    std::string* comp = new std::string[countComponents()];
+    typename Encoding::SigType* comp =
+        new typename Encoding::SigType[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
         for (simp = 0; simp < (*it)->size(); ++simp)
@@ -292,7 +293,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig(
     // Pack the components together.
     std::sort(comp, comp + countComponents());
 
-    std::string ans;
+    typename Encoding::SigType ans;
     for (i = 0; i < countComponents(); ++i)
         ans += comp[i];
 
