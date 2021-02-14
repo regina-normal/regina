@@ -59,8 +59,69 @@
 #include "triangulation/alias/simplex.h"
 #include "utilities/listview.h"
 #include "utilities/property.h"
+#include "utilities/sigutils.h"
 
 namespace regina {
+
+/**
+ * The default encoding to use for isomorphism signatures.
+ * This encoding represents an isomorphism signature as a std::string,
+ * using only printable characters from the 7-bit ASCII range.
+ */
+template <int dim>
+class IsoSigPrintable : public Base64SigEncoding {
+    public:
+        /**
+         * The data type used to store an isomorphism signature.
+         */
+        typedef std::string SigType;
+
+        /**
+         * The number of characters that we use in our encoding to
+         * represent a single gluing permutation.
+         * This must be large enough to encode an index into Perm<dim+1>::Sn.
+         */
+        static constexpr unsigned charsPerPerm =
+            ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
+
+        /**
+         * Returns the isomorphism signature of an empty
+         * <i>dim</i>-dimensional triangulation.
+         */
+        static SigType emptySig() {
+            char c[2] = { encodeSingle(0), 0 };
+            return c;
+        }
+
+        /**
+         * Encodes data for a single connected component of a
+         * <i>dim</i>-dimensional triangulation.
+         *
+         * The description consists of several arrays, describing facets of
+         * the top-dimensional simplices, as well as the ways that these
+         * facets are glued together.  Which array elements represent
+         * which facets/gluings is an implementation detail; the purpose
+         * of this routine is simply to encode the given information.
+         * See the isoSig() implementation for further details.
+         *
+         * @param size the number of top-dimensional simplices in the component.
+         * @param nFacetActions the size of the array \a facetAction.
+         * @param facetAction an array of size \a nFacetActions, where
+         * each element is either 0, 1 or 2, respectively representing
+         * a boundary facet, a facet joined to a new simplex, or a facet
+         * joined to a simplex that has already been seen.
+         * @param nJoins the size of the arrays \a joinDest and \a joinGluing.
+         * @param joinDest an array whose elements are indices of
+         * top-dimensional simplices to which gluings are being made.
+         * @param joinGluing an array of gluing permutations.
+         * @return the encoding of the component being described.
+         */
+        static SigType encode(size_t size,
+            size_t nFacetActions, const char* facetAction,
+            size_t nJoins, const size_t* joinDest,
+            const typename Perm<dim+1>::Index* joinGluing);
+};
+
 /**
  * Contains implementation details and common functionality for Regina's
  * dimension-agnostic classes.
@@ -1528,15 +1589,31 @@ class TriangulationBase :
         /**
          * Constructs the isomorphism signature for this triangulation.
          *
-         * An <i>isomorphism signature</i> is a compact text representation of
-         * a triangulation that uniquely determines the triangulation up to
+         * An <i>isomorphism signature</i> is a compact representation
+         * of a triangulation that uniquely determines the triangulation up to
          * combinatorial isomorphism.  That is, two triangulations of
          * dimension \a dim are combinatorially isomorphic if and only if
          * their isomorphism signatures are the same.
          *
-         * The isomorphism signature is constructed entirely of printable
-         * characters, and has length proportional to <tt>n log n</tt>,
-         * where \a n is the number of top-dimenisonal simplices.
+         * Regina supports several different variants of isomorphism signatures,
+         * which are tailored to different computational needs; these are
+         * currently determined by the template parameter \a Encoding.
+         *
+         * - The default \a Encoding returns a std::string, consisting
+         *   entirely of printable characters in the 7-bit ASCII range.
+         *   Currently this is the only encoding from which Regina can
+         *   \e reconstruct a triangulation from its isomorphism signature.
+         *
+         * - You can, alternatively, pass your own encoding class.
+         *   Currently this is for internal use only, and the
+         *   class requirements may change in different versions of Regina;
+         *   at present such a class must offer a \a SigType typedef,
+         *   and static functions emptySig() and encode().  See the
+         *   implementation of IsoSigHelper for details.
+         *
+         * The length of an isomorphism signature is proportional to
+         * <tt>n log n</tt>, where \a n is the number of top-dimenisonal
+         * simplices.
          *
          * Whilst the format of an isomorphism signature bears some
          * similarity to dehydration strings for 3-manifolds, they are more
@@ -1546,15 +1623,14 @@ class TriangulationBase :
          * 3-manifold dehydration strings are not unique up to isomorphism
          * (they depend on the particular labelling of tetrahedra).
          *
+         * The routine fromIsoSig() can be used to recover a triangulation
+         * from an isomorphism signature (but only if the default encoding
+         * has been used).  The triangulation recovered might not be identical
+         * to the original, but it \e will be combinatorially isomorphic.
          * The time required to construct the isomorphism signature of a
          * triangulation is <tt>O((dim!) n^2 log^2 n)</tt>.  Whilst this
          * is fine for large triangulation, it will be extremly slow for
          * large \e dimensions.
-         *
-         * The routine fromIsoSig() can be used to recover a
-         * triangulation from an isomorphism signature.  The triangulation
-         * recovered might not be identical to the original, but it will be
-         * combinatorially isomorphic.
          *
          * If \a relabelling is non-null (i.e., it points to some
          * Isomorphism pointer \a p), then it will be modified to point
@@ -1571,8 +1647,9 @@ class TriangulationBase :
          * The format for other dimensions is essentially the same, but with
          * minor dimension-specific adjustments.
          *
-         * \ifacespython The isomorphism argument is not present.
-         * Instead there are two routines: isoSig(), which returns a
+         * \ifacespython There are no template arguments: only the default
+         * encoding is supported.  Moreover, the isomorphism argument is not
+         * present; instead there are two routines: isoSig(), which returns a
          * string only, and isoSigDetail(), which returns a pair
          * (\a signature, \a relabelling).
          *
@@ -1592,7 +1669,9 @@ class TriangulationBase :
          * from fromIsoSig(), as described above.
          * @return the isomorphism signature of this triangulation.
          */
-        std::string isoSig(Isomorphism<dim>** relabelling = 0) const;
+        template <class Encoding = IsoSigPrintable<dim>>
+        typename Encoding::SigType isoSig(
+            Isomorphism<dim>** relabelling = nullptr) const;
 
         /**
          * Returns C++ code that can be used with insertConstruction()
@@ -1629,6 +1708,10 @@ class TriangulationBase :
          * It will be assumed that the signature describes a triangulation of
          * dimension \a dim.
          *
+         * Currently this routine only supports isomorphism signatures
+         * that were created with the default encoding (i.e., there was
+         * no \a Encoding template parameter passed to isoSig()).
+         *
          * The triangulation that is returned will be newly created, and
          * it is the responsibility of the caller of this routine to
          * destroy it.
@@ -1658,7 +1741,8 @@ class TriangulationBase :
          * (unlike, for example, dehydration strings for 3-manifolds).
          * @return a newly allocated triangulation if the reconstruction was
          * successful, or \c null if the given string was not a valid
-         * <i>dim</i>-dimensional isomorphism signature.
+         * <i>dim</i>-dimensional isomorphism signature created using
+         * the default encoding.
          */
         static Triangulation<dim>* fromIsoSig(const std::string& sig);
 
@@ -1669,6 +1753,10 @@ class TriangulationBase :
          * See isoSig() for more information on isomorphism signatures.
          * It will be assumed that the signature describes a triangulation of
          * dimension \a dim.
+         *
+         * Currently this routine only supports isomorphism signatures
+         * that were created with the default encoding (i.e., there was
+         * no \a Encoding template parameter passed to isoSig()).
          *
          * If the signature describes a connected triangulation, this
          * routine will simply return the size of that triangulation
@@ -1698,7 +1786,8 @@ class TriangulationBase :
          * (unlike, for example, dehydration strings for 3-manifolds).
          * @return the number of top-dimensional simplices in the first
          * connected component, or 0 if this could not be determined
-         * because the given string was not a valid isomorphism signature.
+         * because the given string was not a valid isomorphism signature
+         * created using the default encoding.
          */
         static size_t isoSigComponentSize(const std::string& sig);
 
@@ -1838,7 +1927,7 @@ class TriangulationBase :
             Face<dim, dim-1>* facet);
 
         /**
-         * Internal to isoSig().
+         * Internal to isoSig<Encoding>().
          *
          * Constructs a candidate isomorphism signature for a single
          * component of this triangulation.  This candidate signature
@@ -1854,8 +1943,9 @@ class TriangulationBase :
          * constructed for the correct number of simplices.
          * @return the candidate isomorphism signature.
          */
-        std::string isoSigFrom(size_t simp, const Perm<dim+1>& vertices,
-            Isomorphism<dim>* relabelling) const;
+        template <class Encoding>
+        typename Encoding::SigType isoSigFrom(size_t simp,
+            const Perm<dim+1>& vertices, Isomorphism<dim>* relabelling) const;
 
         /**
          * Determines if an isomorphic copy of this triangulation is

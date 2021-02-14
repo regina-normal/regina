@@ -48,71 +48,59 @@
 #include "triangulation/generic/triangulation.h"
 #include "utilities/sigutils.h"
 
-namespace regina::detail {
+namespace regina {
 
-#ifndef __DOXYGEN
 template <int dim>
-struct IsoSigHelper : public Base64SigEncoding {
-    /**
-     * The numbers of base64 characters required to store an index into
-     * Perm<dim+1>::Sn.
-     */
-    static constexpr unsigned CHARS_PER_PERM =
-        ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
+typename IsoSigPrintable<dim>::SigType IsoSigPrintable<dim>::encode(
+        size_t nCompSimp, size_t nFacetActions, const char* facetAction,
+        size_t nJoins, const size_t* joinDest,
+        const typename Perm<dim + 1>::Index *joinGluing) {
+    // We need to encode:
+    // - the number of simplices in this component;
+    // - facetAction[...];
+    // - joinDest[...];
+    // - joinGluing[...].
+    std::string ans;
 
-    static std::string emptySig() {
-        char c[2] = { encodeSingle(0), 0 };
-        return c;
-    }
-
-    static std::string encode(size_t nCompSimp,
-            size_t nFacetActions, const char* facetAction,
-            size_t nJoins, const size_t* joinDest,
-            const typename Perm<dim + 1>::Index *joinGluing) {
-        // We need to encode:
-        // - the number of simplices in this component;
-        // - facetAction[...];
-        // - joinDest[...];
-        // - joinGluing[...].
-        std::string ans;
-
-        // Keep it simple for small triangulations (1 character per integer).
-        // For large triangulations, start with a special marker followed by
-        // the number of chars per integer.
-        unsigned nChars;
-        if (nCompSimp < 63)
-            nChars = 1;
-        else {
-            nChars = 0;
-            size_t tmp = nCompSimp;
-            while (tmp > 0) {
-                tmp >>= 6;
-                ++nChars;
-            }
-
-            ans = encodeSingle(63);
-            ans += encodeSingle(nChars);
+    // Keep it simple for small triangulations (1 character per integer).
+    // For large triangulations, start with a special marker followed by
+    // the number of chars per integer.
+    unsigned nChars;
+    if (nCompSimp < 63)
+        nChars = 1;
+    else {
+        nChars = 0;
+        size_t tmp = nCompSimp;
+        while (tmp > 0) {
+            tmp >>= 6;
+            ++nChars;
         }
 
-        // Off we go.
-        size_t i;
-        encodeInt(ans, nCompSimp, nChars);
-        for (i = 0; i < nFacetActions; i += 3)
-            ans += encodeTrits(facetAction + i,
-                (nFacetActions >= i + 3 ? 3 : nFacetActions - i));
-        for (i = 0; i < nJoins; ++i)
-            encodeInt(ans, joinDest[i], nChars);
-        for (i = 0; i < nJoins; ++i)
-            encodeInt(ans, joinGluing[i], CHARS_PER_PERM);
-
-        return ans;
+        ans = encodeSingle(63);
+        ans += encodeSingle(nChars);
     }
-};
-#endif
+
+    // Off we go.
+    size_t i;
+    encodeInt(ans, nCompSimp, nChars);
+    for (i = 0; i < nFacetActions; i += 3)
+        ans += encodeTrits(facetAction + i,
+            (nFacetActions >= i + 3 ? 3 : nFacetActions - i));
+    for (i = 0; i < nJoins; ++i)
+        encodeInt(ans, joinDest[i], nChars);
+    for (i = 0; i < nJoins; ++i)
+        encodeInt(ans, joinGluing[i], charsPerPerm);
+
+    return ans;
+}
+
+namespace detail {
 
 template <int dim>
-std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
-        const Perm<dim+1>& vertices, Isomorphism<dim>* relabelling) const {
+template <class Encoding>
+typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
+        size_t simp, const Perm<dim+1>& vertices,
+        Isomorphism<dim>* relabelling) const {
     // Only process the component that simp belongs to.
 
     // ---------------------------------------------------------------------
@@ -238,7 +226,7 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
     }
 
     // We have all we need.  Pack it all together into a string.
-    std::string ans = IsoSigHelper<dim>::encode(simpImg,
+    typename Encoding::SigType ans = Encoding::encode(simpImg,
         facetPos, facetAction, joinPos, joinDest, joinGluing);
 
     // Record the canonical isomorphism if required.
@@ -260,22 +248,23 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
 }
 
 template <int dim>
-std::string TriangulationBase<dim>::isoSig(
+template <class Encoding>
+typename Encoding::SigType TriangulationBase<dim>::isoSig(
         Isomorphism<dim>** relabelling) const {
     // Make sure the user is not trying to do something illegal.
     if (relabelling && countComponents() != 1) {
-        *relabelling = 0; // Return 0 to the user...
-        relabelling = 0;  // ... and forget they ever asked for an isomorphism.
+        *relabelling = nullptr; // Return 0 to the user...
+        relabelling = nullptr;  // ... and forget they asked for an isomorphism.
     }
 
-    Isomorphism<dim>* currRelabelling = 0;
+    Isomorphism<dim>* currRelabelling = nullptr;
     if (relabelling) {
         *relabelling = new Isomorphism<dim>(size());
         currRelabelling = new Isomorphism<dim>(size());
     }
 
     if (isEmpty())
-        return IsoSigHelper<dim>::emptySig();
+        return Encoding::emptySig();
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
@@ -290,7 +279,7 @@ std::string TriangulationBase<dim>::isoSig(
             it != components().end(); ++it, ++i) {
         for (simp = 0; simp < (*it)->size(); ++simp)
             for (perm = 0; perm < Perm<dim+1>::nPerms; ++perm) {
-                curr = isoSigFrom((*it)->simplex(simp)->index(),
+                curr = isoSigFrom<Encoding>((*it)->simplex(simp)->index(),
                     Perm<dim+1>::orderedSn[perm], currRelabelling);
                 if ((simp == 0 && perm == 0) || (curr < comp[i])) {
                     comp[i].swap(curr);
@@ -417,7 +406,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
         typename Perm<dim+1>::Index* joinGluing =
             new typename Perm<dim+1>::Index[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
-            if (c + IsoSigHelper<dim>::CHARS_PER_PERM > end) {
+            if (c + IsoSigPrintable<dim>::charsPerPerm > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -426,8 +415,8 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
 
             joinGluing[pos] =
                 Base64SigEncoding::decodeInt<typename Perm<dim+1>::Index>(c,
-                    IsoSigHelper<dim>::CHARS_PER_PERM);
-            c += IsoSigHelper<dim>::CHARS_PER_PERM;
+                    IsoSigPrintable<dim>::charsPerPerm);
+            c += IsoSigPrintable<dim>::charsPerPerm;
 
             if (joinGluing[pos] >= Perm<dim+1>::nPerms ||
                     joinGluing[pos] < 0) {
@@ -519,6 +508,6 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     return Base64SigEncoding::decodeInt<unsigned>(c, nChars);
 }
 
-} // namespace regina::detail
+} } // namespace regina::detail
 
 #endif
