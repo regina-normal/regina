@@ -44,6 +44,7 @@ if (${REGINA_INSTALL_DEV})
     safepointeebase.h
     safeptr.h
     sequence.h
+    sigutils.h
     stringutils.h
     stringutils-impl.h
     trieset.h

@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include "triangulation/detail/isosig-impl.h"
+#include "utilities/sigutils.h"
 
 namespace regina {
 
@@ -178,14 +178,14 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
             tmp >>= 6;
             ++charsPerInt;
         }
-        ans = regina::detail::IsoSigHelper::SCHAR(63);
-        ans += regina::detail::IsoSigHelper::SCHAR(charsPerInt);
+        ans = Base64SigEncoding::encodeSingle(63);
+        ans += Base64SigEncoding::encodeSingle(charsPerInt);
     }
 
     // Output crossings in order.
-    regina::detail::IsoSigHelper::SAPPEND(ans, n, charsPerInt);
+    Base64SigEncoding::encodeInt(ans, n, charsPerInt);
     for (auto dat = best; dat != best + 2*n; ++dat)
-        regina::detail::IsoSigHelper::SAPPEND(ans, dat->crossing, charsPerInt);
+        Base64SigEncoding::encodeInt(ans, dat->crossing, charsPerInt);
 
     // Output strands and signs, each as a packed sequence of bits.
     unsigned i, j;
@@ -195,14 +195,14 @@ std::string Link::knotSig(bool useReflection, bool useReverse) const {
         for (j = 0; j < 6 && i + j < 2 * n; ++j)
             if (best[i + j].strand)
                 write |= (1 << j);
-        ans += regina::detail::IsoSigHelper::SCHAR(write);
+        ans += Base64SigEncoding::encodeSingle(write);
     }
     for (i = 0; i < 2 * n; i += 6) {
         write = 0;
         for (j = 0; j < 6 && i + j < 2 * n; ++j)
             if (best[i + j].sign > 0)
                 write |= (1 << j);
-        ans += regina::detail::IsoSigHelper::SCHAR(write);
+        ans += Base64SigEncoding::encodeSingle(write);
     }
 
     delete[] best;
@@ -227,23 +227,23 @@ Link* Link::fromKnotSig(const std::string& sig) {
     // Initial check for invalid characters.
     const char* d;
     for (d = c; d != end; ++d)
-        if (! regina::detail::IsoSigHelper::SVALID(*d))
+        if (! Base64SigEncoding::isValid(*d))
             return nullptr;
     for (d = end; *d; ++d)
         if (! ::isspace(*d))
             return nullptr;
 
     size_t charsPerInt;
-    size_t n = regina::detail::IsoSigHelper::SVAL(*c++);
+    size_t n = Base64SigEncoding::decodeSingle(*c++);
     if (n < 63)
         charsPerInt = 1;
     else {
         if (c == end)
             return nullptr;
-        charsPerInt = regina::detail::IsoSigHelper::SVAL(*c++);
+        charsPerInt = Base64SigEncoding::decodeSingle(*c++);
         if (c + charsPerInt > end)
             return nullptr;
-        n = regina::detail::IsoSigHelper::SREAD<size_t>(c, charsPerInt);
+        n = Base64SigEncoding::decodeInt<size_t>(c, charsPerInt);
         c += charsPerInt;
     }
 
@@ -265,8 +265,7 @@ Link* Link::fromKnotSig(const std::string& sig) {
     size_t i, j;
 
     for (i = 0; i < 2 * n; ++i) {
-        crossing[i] = regina::detail::IsoSigHelper::SREAD<size_t>(c,
-            charsPerInt);
+        crossing[i] = Base64SigEncoding::decodeInt<size_t>(c, charsPerInt);
         if (/* crossing[i] < 0 || */ crossing[i] >= n) {
             delete[] crossing;
             delete[] sign;
@@ -278,7 +277,7 @@ Link* Link::fromKnotSig(const std::string& sig) {
 
     unsigned bits;
     for (i = 0; i < 2 * n; i += 6) {
-        bits = regina::detail::IsoSigHelper::SVAL(*c++);
+        bits = Base64SigEncoding::decodeSingle(*c++);
         for (j = 0; j < 6 && i + j < 2 * n; ++j) {
             strand[i + j] = (bits & 1);
             bits >>= 1;
@@ -291,7 +290,7 @@ Link* Link::fromKnotSig(const std::string& sig) {
         }
     }
     for (i = 0; i < 2 * n; i += 6) {
-        bits = regina::detail::IsoSigHelper::SVAL(*c++);
+        bits = Base64SigEncoding::decodeSingle(*c++);
         for (j = 0; j < 6 && i + j < 2 * n; ++j) {
             sign[i + j] = ((bits & 1) ? 1 : -1);
             bits >>= 1;

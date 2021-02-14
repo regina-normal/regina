@@ -46,109 +46,66 @@
 
 #include <algorithm>
 #include "triangulation/generic/triangulation.h"
+#include "utilities/sigutils.h"
 
 namespace regina::detail {
 
 #ifndef __DOXYGEN
-struct IsoSigHelper {
+template <int dim>
+struct IsoSigHelper : public Base64SigEncoding {
     /**
      * The numbers of base64 characters required to store an index into
      * Perm<dim+1>::Sn.
      */
-    template <int dim>
     static constexpr unsigned CHARS_PER_PERM =
         ((regina::bitsRequired(Perm<(dim)+1>::nPerms) + 5) / 6);
 
-    /**
-     * Determine the integer value represented by the given character in
-     * a signature string.
-     */
-    static unsigned SVAL(char c) {
-        if (c >= 'a' && c <= 'z')
-            return (c - 'a');
-        if (c >= 'A' && c <= 'Z')
-            return (c - 'A' + 26);
-        if (c >= '0' && c <= '9')
-            return (c - '0' + 52);
-        if (c == '+')
-            return 62;
-        return 63;
+    static std::string emptySig() {
+        char c[2] = { encodeSingle(0), 0 };
+        return c;
     }
 
-    /**
-     * Determine the character that represents the given integer value
-     * in a signature string.
-     */
-    static char SCHAR(unsigned c) {
-        if (c < 26)
-            return (char(c) + 'a');
-        if (c < 52)
-            return (char(c - 26) + 'A');
-        if (c < 62)
-            return (char(c - 52) + '0');
-        if (c == 62)
-            return '+';
-        return '-';
-    }
+    static std::string encode(size_t nCompSimp,
+            size_t nFacetActions, const char* facetAction,
+            size_t nJoins, const size_t* joinDest,
+            const typename Perm<dim + 1>::Index *joinGluing) {
+        // We need to encode:
+        // - the number of simplices in this component;
+        // - facetAction[...];
+        // - joinDest[...];
+        // - joinGluing[...].
+        std::string ans;
 
-    /**
-     * Is the given character a valid character in a signature string?
-     */
-    static bool SVALID(char c) {
-        return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
-            (c >= '0' && c <= '9') || c == '+' || c == '-');
-    }
+        // Keep it simple for small triangulations (1 character per integer).
+        // For large triangulations, start with a special marker followed by
+        // the number of chars per integer.
+        unsigned nChars;
+        if (nCompSimp < 63)
+            nChars = 1;
+        else {
+            nChars = 0;
+            size_t tmp = nCompSimp;
+            while (tmp > 0) {
+                tmp >>= 6;
+                ++nChars;
+            }
 
-    /**
-     * Append an encoding of the given integer to the given string.
-     * The integer is broken into nChars distinct 6-bit blocks, and the
-     * lowest-significance blocks are written first.
-     */
-    template <typename IntType>
-    static void SAPPEND(std::string& s, IntType val, unsigned nChars) {
-        for ( ; nChars > 0; --nChars) {
-            s += SCHAR(val & 0x3F);
-            val >>= 6;
+            ans = encodeSingle(63);
+            ans += encodeSingle(nChars);
         }
-    }
 
-    /**
-     * Read the integer at the beginning of the given string.
-     * Assumes the string has length >= nChars.
-     */
-    template <typename IntType>
-    static IntType SREAD(const char* s, unsigned nChars) {
-        IntType ans = 0;
-        for (unsigned i = 0; i < nChars; ++i)
-            ans |= (static_cast<IntType>(SVAL(s[i])) << (6 * i));
+        // Off we go.
+        size_t i;
+        encodeInt(ans, nCompSimp, nChars);
+        for (i = 0; i < nFacetActions; i += 3)
+            ans += encodeTrits(facetAction + i,
+                (nFacetActions >= i + 3 ? 3 : nFacetActions - i));
+        for (i = 0; i < nJoins; ++i)
+            encodeInt(ans, joinDest[i], nChars);
+        for (i = 0; i < nJoins; ++i)
+            encodeInt(ans, joinGluing[i], CHARS_PER_PERM);
+
         return ans;
-    }
-
-    /**
-     * Append up to three trits (0, 1 or 2) to the given string.
-     * These are packed into a single character, with the first trit
-     * representing the lowest-significance bits and so on.
-     */
-    static void SAPPENDTRITS(std::string& s, const char* trits,
-            unsigned nTrits) {
-        char ans = 0;
-        if (nTrits >= 1)
-            ans |= trits[0];
-        if (nTrits >= 2)
-            ans |= (trits[1] << 2);
-        if (nTrits >= 3)
-            ans |= (trits[2] << 4);
-        s += SCHAR(ans);
-    }
-
-    /**
-     * Reads three trits (0, 1 or 2) from the given character.
-     */
-    static void SREADTRITS(char c, char* result) {
-        unsigned val = SVAL(c);
-        result[0] = val & 3;
-        result[1] = (val >> 2) & 3;
-        result[2] = (val >> 4) & 3;
     }
 };
 #endif
@@ -281,47 +238,12 @@ std::string TriangulationBase<dim>::isoSigFrom(size_t simp,
     }
 
     // We have all we need.  Pack it all together into a string.
-    // We need to encode:
-    // - the number of simplices in this component;
-    // - facetAction[i], 0 <= i < facetPos;
-    // - joinDest[i], 0 <= i < joinPos;
-    // - joinGluing[i], 0 <= i < joinPos.
-    std::string ans;
-
-    // Keep it simple for small triangulations (1 character per integer).
-    // For large triangulations, start with a special marker followed by
-    // the number of chars per integer.
-    size_t nCompSimp = simpImg;
-    unsigned nChars;
-    if (nCompSimp < 63)
-        nChars = 1;
-    else {
-        nChars = 0;
-        size_t tmp = nCompSimp;
-        while (tmp > 0) {
-            tmp >>= 6;
-            ++nChars;
-        }
-
-        ans = IsoSigHelper::SCHAR(63);
-        ans += IsoSigHelper::SCHAR(nChars);
-    }
-
-    // Off we go.
-    size_t i;
-    IsoSigHelper::SAPPEND(ans, nCompSimp, nChars);
-    for (i = 0; i < facetPos; i += 3)
-        IsoSigHelper::SAPPENDTRITS(ans, facetAction + i,
-            (facetPos >= i + 3 ? 3 : facetPos - i));
-    for (i = 0; i < joinPos; ++i)
-        IsoSigHelper::SAPPEND(ans, joinDest[i], nChars);
-    for (i = 0; i < joinPos; ++i)
-        IsoSigHelper::SAPPEND(ans, joinGluing[i],
-            IsoSigHelper::CHARS_PER_PERM<dim>);
+    std::string ans = IsoSigHelper<dim>::encode(simpImg,
+        facetPos, facetAction, joinPos, joinDest, joinGluing);
 
     // Record the canonical isomorphism if required.
     if (relabelling)
-        for (i = 0; i < nCompSimp; ++i) {
+        for (size_t i = 0; i < simpImg; ++i) {
             relabelling->simpImage(i) = image[i];
             relabelling->facetPerm(i) = vertexMap[i];
         }
@@ -352,12 +274,8 @@ std::string TriangulationBase<dim>::isoSig(
         currRelabelling = new Isomorphism<dim>(size());
     }
 
-    if (isEmpty()) {
-        char c[2];
-        c[0] = IsoSigHelper::SCHAR(0);
-        c[1] = 0;
-        return c;
-    }
+    if (isEmpty())
+        return IsoSigHelper<dim>::emptySig();
 
     // The triangulation is non-empty.  Get a signature string for each
     // connected component.
@@ -415,7 +333,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
     // Initial check for invalid characters.
     const char* d;
     for (d = c; d != end; ++d)
-        if (! IsoSigHelper::SVALID(*d))
+        if (! Base64SigEncoding::isValid(*d))
             return 0;
     for (d = end; *d; ++d)
         if (! ::isspace(*d))
@@ -425,16 +343,16 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
     size_t pos, nSimp, nChars;
     while (c != end) {
         // Read one component at a time.
-        nSimp = IsoSigHelper::SVAL(*c++);
+        nSimp = Base64SigEncoding::decodeSingle(*c++);
         if (nSimp < 63)
             nChars = 1;
         else {
             if (c == end)
                 return 0;
-            nChars = IsoSigHelper::SVAL(*c++);
+            nChars = Base64SigEncoding::decodeSingle(*c++);
             if (c + nChars > end)
                 return 0;
-            nSimp = IsoSigHelper::SREAD<unsigned>(c, nChars);
+            nSimp = Base64SigEncoding::decodeInt<unsigned>(c, nChars);
             c += nChars;
         }
 
@@ -454,7 +372,7 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                 delete[] facetAction;
                 return 0;
             }
-            IsoSigHelper::SREADTRITS(*c++, facetAction + facetPos);
+            Base64SigEncoding::decodeTrits(*c++, facetAction + facetPos);
             for (j = 0; j < 3; ++j) {
                 // If we're already finished, make sure the leftover trits
                 // are zero.
@@ -492,14 +410,14 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
                 return 0;
             }
 
-            joinDest[pos] = IsoSigHelper::SREAD<unsigned>(c, nChars);
+            joinDest[pos] = Base64SigEncoding::decodeInt<unsigned>(c, nChars);
             c += nChars;
         }
 
         typename Perm<dim+1>::Index* joinGluing =
             new typename Perm<dim+1>::Index[nJoins + 1];
         for (pos = 0; pos < nJoins; ++pos) {
-            if (c + IsoSigHelper::CHARS_PER_PERM<dim> > end) {
+            if (c + IsoSigHelper<dim>::CHARS_PER_PERM > end) {
                 delete[] facetAction;
                 delete[] joinDest;
                 delete[] joinGluing;
@@ -507,9 +425,9 @@ Triangulation<dim>* TriangulationBase<dim>::fromIsoSig(
             }
 
             joinGluing[pos] =
-                IsoSigHelper::SREAD<typename Perm<dim+1>::Index>(c,
-                IsoSigHelper::CHARS_PER_PERM<dim>);
-            c += IsoSigHelper::CHARS_PER_PERM<dim>;
+                Base64SigEncoding::decodeInt<typename Perm<dim+1>::Index>(c,
+                    IsoSigHelper<dim>::CHARS_PER_PERM);
+            c += IsoSigHelper<dim>::CHARS_PER_PERM;
 
             if (joinGluing[pos] >= Perm<dim+1>::nPerms ||
                     joinGluing[pos] < 0) {
@@ -580,11 +498,11 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     const char* c = sig.c_str();
 
     // Examine the first character.
-    // Note that SVALID also ensures that *c is non-null (i.e., it
+    // Note that isValid also ensures that *c is non-null (i.e., it
     // detects premature end of string).
-    if (! IsoSigHelper::SVALID(*c))
+    if (! Base64SigEncoding::isValid(*c))
         return 0;
-    size_t nSimp = IsoSigHelper::SVAL(*c);
+    size_t nSimp = Base64SigEncoding::decodeSingle(*c);
     if (nSimp < 63)
         return nSimp;
 
@@ -593,12 +511,12 @@ size_t TriangulationBase<dim>::isoSigComponentSize(const std::string& sig) {
     ++c;
     if (! *c)
         return 0;
-    size_t nChars = IsoSigHelper::SVAL(*c++);
+    size_t nChars = Base64SigEncoding::decodeSingle(*c++);
 
     for (const char* d = c; d < c + nChars; ++d)
-        if (! IsoSigHelper::SVALID(*d))
+        if (! Base64SigEncoding::isValid(*d))
             return 0;
-    return IsoSigHelper::SREAD<unsigned>(c, nChars);
+    return Base64SigEncoding::decodeInt<unsigned>(c, nChars);
 }
 
 } // namespace regina::detail

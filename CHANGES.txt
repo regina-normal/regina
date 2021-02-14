@@ -22,6 +22,9 @@ Version 6.1  [ TODO ]
     ENGINE:
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
+        Class Base64SigEncoding:
+            - New helper class that provides code common to isomorphism
+              signatures and knot signatures.
         Class BoolSet:
             - Almost everything in this class is now constexpr.
             - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
