@@ -188,6 +188,8 @@ Version 6.1  [ TODO ]
               regina::swap(Triangulation<dim>&, Triangulation<dim>&).
               As a result, Triangulation<dim> now meets the C++ Swappable
               requirements.
+            - Routine isoSig() now supports different encodings (but not
+              different decodings), via a new template parameter.
             - Simplified the class hierarchy; BoundaryComponentCalculator,
               EulerCalculator, FaceCalculator, FaceList and PachnerHelper are
               now gone, and there are a lot fewer regina::alias classes.
