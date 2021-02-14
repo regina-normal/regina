@@ -74,7 +74,7 @@ struct Base64SigEncoding {
      * @return the corresponding integer, which will be between 0 and 63
      * inclusive.
      */
-    static unsigned decodeSingle(char c) {
+    static constexpr unsigned decodeSingle(char c) {
         if (c >= 'a' && c <= 'z')
             return (c - 'a');
         if (c >= 'A' && c <= 'Z')
@@ -94,7 +94,7 @@ struct Base64SigEncoding {
      * @param c an integer between 0 and 63 inclusive.
      * @return the corresponding printable base64 character.
      */
-    static char encodeSingle(unsigned c) {
+    static constexpr char encodeSingle(unsigned c) {
         if (c < 26)
             return (char(c) + 'a');
         if (c < 52)
@@ -112,7 +112,7 @@ struct Base64SigEncoding {
      * @return \c true if and only if the given character is one of the
      * 64 printable characters described in the class notes.
      */
-    static bool isValid(char c) {
+    static constexpr bool isValid(char c) {
         return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') ||
             (c >= '0' && c <= '9') || c == '+' || c == '-');
     }
