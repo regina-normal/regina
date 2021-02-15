@@ -37,10 +37,10 @@
 
 namespace regina::detail {
 
-template REGINA_API std::string TriangulationBase<15>::isoSigFrom(
-    size_t, const Perm<16>&, Isomorphism<15>*) const;
-template REGINA_API std::string TriangulationBase<15>::isoSig(
-    Isomorphism<15>**) const;
+template REGINA_API std::string TriangulationBase<15>::isoSigFrom
+    <IsoSigPrintable<15>>(size_t, const Perm<16>&, Isomorphism<15>*) const;
+template REGINA_API std::string TriangulationBase<15>::isoSig
+    <IsoSigPrintable<15>>(Isomorphism<15>**) const;
 template REGINA_API Triangulation<15>* TriangulationBase<15>::fromIsoSig(
     const std::string&);
 template REGINA_API size_t TriangulationBase<15>::isoSigComponentSize(

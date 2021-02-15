@@ -22,6 +22,9 @@ Version 6.1  [ TODO ]
     ENGINE:
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
+        Class Base64SigEncoding:
+            - New helper class that provides code common to isomorphism
+              signatures and knot signatures.
         Class BoolSet:
             - Almost everything in this class is now constexpr.
             - The class constants sNone, sTrue, sFalse, sBoth are deprecated.
@@ -185,6 +188,8 @@ Version 6.1  [ TODO ]
               regina::swap(Triangulation<dim>&, Triangulation<dim>&).
               As a result, Triangulation<dim> now meets the C++ Swappable
               requirements.
+            - Routine isoSig() now supports different encodings (but not
+              different decodings), via a new template parameter.
             - Simplified the class hierarchy; BoundaryComponentCalculator,
               EulerCalculator, FaceCalculator, FaceList and PachnerHelper are
               now gone, and there are a lot fewer regina::alias classes.
