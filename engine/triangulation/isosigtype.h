@@ -79,27 +79,6 @@ namespace regina {
 // enough to store all (dim+1)! possibilities.
 
 /**
- * Represents the original isomorphism signatures that were implemented
- * in Regina 4.90.  These consider all possible starting simplicies and
- * vertex permutations.
- */
-template <int dim>
-class IsoSigClassic {
-    private:
-        size_t size_;
-        size_t simp_;
-        typename Perm<dim+1>::Index perm_;
-
-    public:
-        IsoSigClassic(const Component<dim>& comp);
-
-        size_t simplex() const;
-        Perm<dim+1> perm() const;
-
-        bool next();
-};
-
-/**
  * An isomorphism signature where the first simplex must be one whose
  * set of edge degrees is lexicographically smallest.  Hopefully this
  * eliminates a large number of starting simplices without an enormous
@@ -155,31 +134,6 @@ class IsoSigEdgeDegrees {
 };
 
 /*@}*/
-
-template <int dim>
-inline IsoSigClassic<dim>::IsoSigClassic(const Component<dim>& comp) :
-        size_(comp.size()), simp_(0), perm_(0) {
-}
-
-template <int dim>
-inline size_t IsoSigClassic<dim>::simplex() const {
-    return simp_;
-}
-
-template <int dim>
-inline Perm<dim+1> IsoSigClassic<dim>::perm() const {
-    return Perm<dim+1>::orderedSn[perm_];
-}
-
-template <int dim>
-inline bool IsoSigClassic<dim>::next() {
-    if (++perm_ == Perm<dim+1>::nPerms) {
-        perm_ = 0;
-        if (++simp_ == size_)
-            return false;
-    }
-    return true;
-}
 
 template <int dim>
 IsoSigEdgeDegrees<dim>::IsoSigEdgeDegrees(const Component<dim>& comp) :

@@ -46,7 +46,6 @@
 
 #include <algorithm>
 #include "triangulation/generic/triangulation.h"
-#include "triangulation/isosigtype.h"
 #include "utilities/sigutils.h"
 
 namespace regina {
@@ -249,7 +248,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSigFrom(
 }
 
 template <int dim>
-template <class Encoding>
+template <class Algorithm, class Encoding>
 typename Encoding::SigType TriangulationBase<dim>::isoSig(
         Isomorphism<dim>** relabelling) const {
     // Make sure the user is not trying to do something illegal.
@@ -277,7 +276,7 @@ typename Encoding::SigType TriangulationBase<dim>::isoSig(
         new typename Encoding::SigType[countComponents()];
     for (it = components().begin(), i = 0;
             it != components().end(); ++it, ++i) {
-        IsoSigEdgeDegrees<dim> sigIt(**it);
+        Algorithm sigIt(**it);
         bool first = true;
         do {
             curr = isoSigFrom<Encoding>((*it)->simplex(sigIt.simplex())->index(),
