@@ -49,7 +49,7 @@ namespace regina::detail {
 /**
  * A traits class that deduces the type of the argument in a given position
  * for a callable object.  It can (amongst other things) work with
- * function pointers, member functions, and lambdas.
+ * function pointers, function references, member functions, and lambdas.
  *
  * This struct provides a single member typedef, named \a type, which is
  * the type of the argument to \a Action that appears in position \a pos.
@@ -74,21 +74,30 @@ struct CallableArg;
 #ifndef __DOXYGEN
 
 // Generic implementation which works for lambdas and classes with a
-// bracket operator:
+// bracket operator.  For lambdas, this then falls through (via inheritance)
+// to the case for member function pointers, implemented separately below.
 template <typename Action, int pos>
 struct CallableArg : public CallableArg<decltype(&Action::operator()), pos> {
 };
 
-// Implementation for global functions:
+// Implementation for global function pointers/references:
 template <typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(*)(Args...), pos> {
     typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
 };
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<ReturnType(&)(Args...), pos> {
+    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+};
 
-// Implementation for member functions (and this is also where the
-// lambda implementation ultimately falls through to):
+
+// Implementation for member function pointers/references:
 template <typename Class, typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(Class::*)(Args...) const, pos> {
+    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+};
+template <typename Class, typename ReturnType, typename... Args, int pos>
+struct CallableArg<ReturnType(Class::&)(Args...) const, pos> {
     typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
 };
 
