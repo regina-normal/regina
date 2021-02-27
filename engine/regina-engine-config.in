@@ -14,8 +14,8 @@
 # Changes to this script were made by Ben Burton <bab@maths.uq.edu.au> and are
 # released under the same license as above.
 
-prefix=@CMAKE_INSTALL_PREFIX@
-exec_prefix=@CMAKE_INSTALL_PREFIX@
+prefix='@CMAKE_INSTALL_PREFIX@'
+exec_prefix='@CMAKE_INSTALL_PREFIX@'
 exec_prefix_set=no
 
 usage()
@@ -60,7 +60,7 @@ while test $# -gt 0; do
       echo_exec_prefix=yes
       ;;
     --version)
-      echo @PACKAGE_VERSION@
+      echo '@PACKAGE_VERSION@'
       ;;
     --cflags)
       echo_cflags=yes
@@ -83,23 +83,23 @@ if test "$echo_exec_prefix" = "yes"; then
 	echo $exec_prefix
 fi
 
-regina_engine_libs="-lregina-engine @RECONFIG_LINK_FLAGS@"
+regina_engine_libs='-lregina-engine @RECONFIG_LINK_FLAGS@'
 
 if test "$echo_cflags" = "yes" -o "$echo_libs" = "yes"; then
-	echo "@CMAKE_CXX17_STANDARD_COMPILE_OPTION@"
+	echo '@CMAKE_CXX17_STANDARD_COMPILE_OPTION@'
 fi
 
 if test "$echo_cflags" = "yes"; then
-	includes="@RECONFIG_INCLUDE_FLAGS@"
-	includes="-I@INCLUDEDIR@ $includes"
+	includes='@RECONFIG_INCLUDE_FLAGS@'
+	includes='-I@INCLUDEDIR@'" $includes"
 	echo $includes
 fi
 
 if test "$echo_libs" = "yes"; then
-	libdirs=-L@LIBDIR@
+	libdirs='-L@LIBDIR@'
 	my_regina_engine_libs=
 	for i in $regina_engine_libs ; do
-		if test "x$i" != "x-L@LIBDIR@" ; then
+		if test "x$i" != 'x-L@LIBDIR@' ; then
 			if test -z "$my_regina_engine_libs" ; then
 				my_regina_engine_libs="$i"
 			else

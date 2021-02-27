@@ -121,7 +121,7 @@ if ($interactive and not $script) {
 # In the absence of any user-specified options, use the python
 # command that corresponds to the original build environment.
 
-my $python_cmd = "@Python_EXECUTABLE@";
+my $python_cmd = '@Python_EXECUTABLE@';
 my $sandboxed = @PYTHON_SANDBOXED@;
 if (not -e $python_cmd) {
     &warn("W: The python command used during the build was: $python_cmd.\n");
@@ -131,7 +131,7 @@ if (not -e $python_cmd) {
 
 # --- Determine the installation type.
 
-my $install_type = "@REGINA_INSTALL_TYPE@";
+my $install_type = '@REGINA_INSTALL_TYPE@';
 if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
     $install_type = 'Source';
 }
@@ -139,7 +139,7 @@ if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
 &info("I: Running from installation type: $install_type\n");
 
 # --- Determine the underlying operating system.
-my $os = "@CMAKE_SYSTEM_NAME@";
+my $os = '@CMAKE_SYSTEM_NAME@';
 &info("I: Running on operating system: $os\n");
 
 # --- Set up the environment.
@@ -200,15 +200,15 @@ if ($ENV{REGINA_PYLIBDIR}) {
 
 # --- Check that the current options are reasonable. ---
 
-my $prefix = "@CMAKE_INSTALL_PREFIX@";
-my $exec_prefix = "@CMAKE_INSTALL_PREFIX@";
-my $pkgdatadir = "@PKGDATADIR@";
-my $libdir = "@LIBDIR@";
-my $package = "@PACKAGE_NAME@";
+my $prefix = '@CMAKE_INSTALL_PREFIX@';
+my $exec_prefix = '@CMAKE_INSTALL_PREFIX@';
+my $pkgdatadir = '@PKGDATADIR@';
+my $libdir = '@LIBDIR@';
+my $package = '@PACKAGE_NAME@';
 
 if (! $regina_home) {
     if ($install_type eq 'Source') {
-        my $srcdir = "@CMAKE_SOURCE_DIR@";
+        my $srcdir = '@CMAKE_SOURCE_DIR@';
         $srcdir =~ /^\// or                  # Unix-style absolute path
             $srcdir =~ /^[A-Za-z]:[\\\/]/ or # Windows-style absolute path
             $srcdir = "$prog_dir/$srcdir";   # Relative path: make absolute
@@ -240,7 +240,7 @@ if (! $python_lib_dir) {
         # Use the build directory.
         &setPythonLibDir("$prog_dir");
     } elsif ($install_type eq 'HPC') {
-        &setPythonLibDir("@PYLIBDIR@");
+        &setPythonLibDir('@PYLIBDIR@');
     } else {
         # We have installed the module in a standard Python location.
     }
