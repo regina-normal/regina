@@ -83,7 +83,6 @@ found=
 # Because $testdir may contain spaces, we use a slightly tortured loop
 # with the source 'find' statement at the end (not the beginning).
 # See http://mywiki.wooledge.org/BashFAQ/020 for details.
-unset a i
 while IFS= read -r -d $'\0' i; do
 	found=1
 	testname=`basename "$i"`
@@ -137,7 +136,7 @@ while IFS= read -r -d $'\0' i; do
 			rm -f "$testout"
 		fi
 	fi
-done < <(find "$testdir" -name "*.test" -print0)
+done < <(find "$testdir" -name "*.test" -print0 | sort -z)
 
 if ! test -n "$found"; then
 	echo "ERROR: No tests were found!"
