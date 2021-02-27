@@ -63,11 +63,9 @@ macro (REGINA_CREATE_HANDBOOK _lang)
       # construct then *please* let me know.  I couldn't do it.
       string(REGEX MATCH "^[A-Za-z0-9_.~!#$&'()*+,/:;=?@-]$" m "${c}")
       if (NOT m STREQUAL "")
-        message("okay ${c}")
         # These characters are allowed in URIs.
         string(APPEND _output "${c}")
       else (NOT m STREQUAL "")
-        message("bad ${c}")
         # All other characters must be percent-encoded.
         # Note that these may be multi-byte unicode characters.
         #
