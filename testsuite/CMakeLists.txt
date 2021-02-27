@@ -38,3 +38,10 @@ ADD_EXECUTABLE(regtestsuite ${SOURCES})
 TARGET_LINK_LIBRARIES(regtestsuite ${ENGINE_LIBRARY} ${CPPUNIT_LIBRARY}) # TODO
 
 ADD_TEST(cpp-test regtestsuite)
+
+# Give a way to print out information on the compilers and environment:
+ADD_EXECUTABLE(arch arch)
+CONFIGURE_FILE(env.in "${CMAKE_CURRENT_BINARY_DIR}/env")
+add_custom_target(env "${CMAKE_CURRENT_BINARY_DIR}/env"
+  DEPENDS arch env
+)
