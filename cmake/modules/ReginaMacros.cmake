@@ -46,8 +46,48 @@ macro (REGINA_CREATE_HANDBOOK _lang)
       COMMAND ${UNZIP_EXECUTABLE} -o -j -d ${CMAKE_CURRENT_BINARY_DIR}
         ${REGINA_DOCS_FILE} "docs/${_lang}/${_handbook}/\\*")
   else (REGINA_DOCS)
+    # xsltproc requires an URI-encoded output directory.
+    #
+    # The following block of code tries to use cmake to URI-encode the
+    # output directory ${CMAKE_CURRENT_BINARY_DIR}.
+    #
+    # This code still breaks if the directory name includes a backslash,
+    # but probably a pile of other code breaks in similar situations, due
+    # to cmake's argument parsing.
+
+    set(_output "")
+    string(REGEX MATCHALL . chars ${CMAKE_CURRENT_BINARY_DIR})
+    foreach(c ${chars})
+      # This code percent-encodes [ and ], which is unnecessary but harmless.
+      # If someone knows how to include [ and ] inside cmake's regex [...]
+      # construct then *please* let me know.  I couldn't do it.
+      string(REGEX MATCH "^[A-Za-z0-9_.~!#$&'()*+,/:;=?@-]$" m "${c}")
+      if (NOT m STREQUAL "")
+        message("okay ${c}")
+        # These characters are allowed in URIs.
+        string(APPEND _output "${c}")
+      else (m)
+        message("bad ${c}")
+        # All other characters must be percent-encoded.
+        # Note that these may be multi-byte unicode characters.
+        #
+        # Whilst CMake 3.18 introduces hex encoding for strings,
+        # we must preserve compatibility with older cmake, and so we
+        # use file read/writes to get the hex encoding.  Again I'd be
+        # super happy for a better way of doing this.
+        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/_hex.dat "${c}")
+        file(READ ${CMAKE_CURRENT_BINARY_DIR}/_hex.dat _hexraw HEX)
+
+        string(REGEX MATCHALL "(..)" _hexlist "${_hexraw}")
+        list(JOIN _hexlist "%" _hex)
+        string(PREPEND _hex "%")
+        string(TOUPPER "${_hex}" _hexupper)
+        string(APPEND _output "${_hexupper}")
+      endif (m)
+    endforeach()
+
     add_custom_command(OUTPUT ${_doc}
-      COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o ${CMAKE_CURRENT_BINARY_DIR}/ ${_ssheet} ${_input}
+      COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o ${_output}/ ${_ssheet} ${_input}
       DEPENDS ${_docs} ${_ssheet}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
   endif (REGINA_DOCS)
