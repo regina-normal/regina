@@ -16,7 +16,7 @@ SET(censusdata_DATA
 
 FOREACH(db ${censusdata_DATA})
   STRING(REGEX REPLACE [.]${DB_EXT}$ .zsig siglist ${db})
-  ADD_CUSTOM_COMMAND(OUTPUT ${db} DEPENDS mkcensusdb ${siglist}
+  ADD_CUSTOM_COMMAND(OUTPUT ${db} VERBATIM DEPENDS mkcensusdb ${siglist}
     COMMAND mkcensusdb
       "${PROJECT_SOURCE_DIR}/engine/data/census/${siglist}"
       "${PROJECT_BINARY_DIR}/engine/data/census/${db}"
