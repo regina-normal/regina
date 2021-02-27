@@ -66,7 +66,7 @@ macro (REGINA_CREATE_HANDBOOK _lang)
         message("okay ${c}")
         # These characters are allowed in URIs.
         string(APPEND _output "${c}")
-      else (m)
+      else (NOT m STREQUAL "")
         message("bad ${c}")
         # All other characters must be percent-encoded.
         # Note that these may be multi-byte unicode characters.
@@ -83,7 +83,7 @@ macro (REGINA_CREATE_HANDBOOK _lang)
         string(PREPEND _hex "%")
         string(TOUPPER "${_hex}" _hexupper)
         string(APPEND _output "${_hexupper}")
-      endif (m)
+      endif (NOT m STREQUAL "")
     endforeach()
 
     add_custom_command(OUTPUT ${_doc}
