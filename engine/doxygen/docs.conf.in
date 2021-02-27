@@ -20,8 +20,8 @@ REPEAT_BRIEF         = YES
 ALWAYS_DETAILED_SEC  = YES
 
 FULL_PATH_NAMES      = YES
-STRIP_FROM_PATH      = @PROJECT_SOURCE_DIR@/engine @PROJECT_SOURCE_DIR@
-STRIP_FROM_INC_PATH  = @PROJECT_SOURCE_DIR@/engine @PROJECT_SOURCE_DIR@
+STRIP_FROM_PATH      = "@PROJECT_SOURCE_DIR@/engine" "@PROJECT_SOURCE_DIR@"
+STRIP_FROM_INC_PATH  = "@PROJECT_SOURCE_DIR@/engine" "@PROJECT_SOURCE_DIR@"
 
 CLASS_DIAGRAMS       = YES
 SOURCE_BROWSER       = NO
@@ -62,17 +62,17 @@ WARN_IF_UNDOCUMENTED = YES
 # Input related options:
 
 INPUT = \
-    @PROJECT_SOURCE_DIR@/engine \
-    @PROJECT_SOURCE_DIR@/python/constarray.h \
-    @PROJECT_SOURCE_DIR@/python/globalarray.h
+    "@PROJECT_SOURCE_DIR@/engine" \
+    "@PROJECT_SOURCE_DIR@/python/constarray.h" \
+    "@PROJECT_SOURCE_DIR@/python/globalarray.h"
 FILE_PATTERNS        = *.h
 RECURSIVE            = YES
 EXCLUDE = \
-    @PROJECT_SOURCE_DIR@/engine/libnormaliz \
-    @PROJECT_SOURCE_DIR@/engine/foreign/casson.h \
-    @PROJECT_SOURCE_DIR@/engine/snappea/kernel \
-    @PROJECT_SOURCE_DIR@/engine/syntax \
-    @PROJECT_SOURCE_DIR@/engine/utilities/zstr.h
+    "@PROJECT_SOURCE_DIR@/engine/libnormaliz" \
+    "@PROJECT_SOURCE_DIR@/engine/foreign/casson.h" \
+    "@PROJECT_SOURCE_DIR@/engine/snappea/kernel" \
+    "@PROJECT_SOURCE_DIR@/engine/syntax" \
+    "@PROJECT_SOURCE_DIR@/engine/utilities/zstr.h"
 EXCLUDE_PATTERNS = *-impl.h
 
 IMAGE_PATH           =
@@ -86,7 +86,7 @@ IGNORE_PREFIX        = N
 
 GENERATE_HTML        = YES
 HTML_OUTPUT          = .
-HTML_FOOTER          = @PROJECT_SOURCE_DIR@/engine/doxygen/doc-footer.html
+HTML_FOOTER          = "@PROJECT_SOURCE_DIR@/engine/doxygen/doc-footer.html"
 HTML_ALIGN_MEMBERS   = YES
 GENERATE_HTMLHELP    = NO
 
@@ -116,7 +116,7 @@ PREDEFINED           = \
     "REGINA_ENABLE_FOR_RING_DEPRECATED(returnType)=[[deprecated]] returnType"
 
 SEARCH_INCLUDES      = YES
-INCLUDE_PATH         = @PROJECT_SOURCE_DIR@/engine
+INCLUDE_PATH         = "@PROJECT_SOURCE_DIR@/engine"
 
 # External reference options:
 
