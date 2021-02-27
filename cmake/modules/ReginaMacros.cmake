@@ -84,8 +84,8 @@ macro (REGINA_CREATE_HANDBOOK _lang)
       endif (NOT m STREQUAL "")
     endforeach()
 
-    add_custom_command(OUTPUT ${_doc}
-      COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o ${_output}/ ${_ssheet} ${_input}
+    add_custom_command(OUTPUT ${_doc} VERBATIM
+      COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o "${_output}/" ${_ssheet} "${_input}"
       DEPENDS ${_docs} ${_ssheet}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
   endif (REGINA_DOCS)
