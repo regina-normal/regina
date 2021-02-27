@@ -564,7 +564,7 @@ ELSE(DISABLE_GUI)
     SET(QT5_FOUND FALSE)
   endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
   MESSAGE(STATUS "Graphical user interface enabled")
-ENDIF(DISABLE_GUI)
+ENDIF()
 MACRO_LOG_FEATURE(QT5_FOUND
   "Qt5"
   "Required for Regina's graphical user interface"
