@@ -79,7 +79,12 @@ export REGINA_HOME=
 broken=
 found=
 
-for i in `find "$testdir" -name "*.test" | sort`; do
+# We need to loop through all files $testdir/*.test .
+# Because $testdir may contain spaces, we use a slightly tortured loop
+# with the source 'find' statement at the end (not the beginning).
+# See http://mywiki.wooledge.org/BashFAQ/020 for details.
+unset a i
+while IFS= read -r -d $'\0' i; do
 	found=1
 	testname=`basename "$i"`
 	baseline="${i/.test/.out}"
@@ -132,7 +137,7 @@ for i in `find "$testdir" -name "*.test" | sort`; do
 			rm -f "$testout"
 		fi
 	fi
-done
+done < <(find "$testdir" -name "*.test" -print0)
 
 if ! test -n "$found"; then
 	echo "ERROR: No tests were found!"
