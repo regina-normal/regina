@@ -83,6 +83,10 @@ found=
 # Because $testdir may contain spaces, we use a slightly tortured loop
 # with the source 'find' statement at the end (not the beginning).
 # See http://mywiki.wooledge.org/BashFAQ/020 for details.
+#
+# Note that both "find -print0" and "sort -z" (which are part of our machinery
+# to handle spaces correctly) are implemented in both GNU and BSD utilities.
+#
 while IFS= read -r -d $'\0' i; do
 	found=1
 	testname=`basename "$i"`
