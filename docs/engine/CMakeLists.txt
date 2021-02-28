@@ -3,13 +3,14 @@
 # by "make clean".
 
 if (REGINA_ENGINE_DOCS)
-  ADD_CUSTOM_COMMAND(OUTPUT index.html
-    COMMAND ${UNZIP_EXECUTABLE} -o -j -d ${CMAKE_CURRENT_BINARY_DIR}
-      ${REGINA_ENGINE_DOCS_FILE})
+  ADD_CUSTOM_COMMAND(OUTPUT index.html VERBATIM
+    COMMAND ${UNZIP_EXECUTABLE} -o -j -d "${CMAKE_CURRENT_BINARY_DIR}"
+      "${REGINA_ENGINE_DOCS_FILE}")
 else (REGINA_ENGINE_DOCS)
-  ADD_CUSTOM_COMMAND(OUTPUT index.html
-    COMMAND ${DOXYGEN_EXECUTABLE} ${PROJECT_BINARY_DIR}/engine/doxygen/docs.conf
-    COMMAND cp `find "${PROJECT_SOURCE_DIR}/engine" -name '*.png'` .
+  FILE(GLOB _png ../../engine/*/*.png)
+  FILE(COPY ${_png} DESTINATION .)
+  ADD_CUSTOM_COMMAND(OUTPUT index.html VERBATIM
+    COMMAND ${DOXYGEN_EXECUTABLE} "${PROJECT_BINARY_DIR}/engine/doxygen/docs.conf"
     )
 endif (REGINA_ENGINE_DOCS)
 
