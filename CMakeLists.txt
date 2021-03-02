@@ -597,6 +597,7 @@ ADD_SUBDIRECTORY(examples)
 CONFIGURE_FILE (
   "${PROJECT_SOURCE_DIR}/engine/regina-config.h.in"
   "${PROJECT_BINARY_DIR}/engine/regina-config.h"
+  ESCAPE_QUOTES
 )
 
 MACRO_DISPLAY_FEATURE_LOG()
