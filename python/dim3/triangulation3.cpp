@@ -329,6 +329,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def("knowsThreeSphere", &Triangulation<3>::knowsThreeSphere)
         .def("isBall", &Triangulation<3>::isBall)
         .def("knowsBall", &Triangulation<3>::knowsBall)
+        .def("makeZeroEfficient", &Triangulation<3>::makeZeroEfficient)
         .def("isSolidTorus", &Triangulation<3>::isSolidTorus)
         .def("knowsSolidTorus", &Triangulation<3>::knowsSolidTorus)
         .def("isTxI", &Triangulation<3>::isTxI)
