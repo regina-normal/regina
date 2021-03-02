@@ -38,17 +38,22 @@
 
 /* Define if we are building a standard freedesktop.org installation in
    a fixed location on the filesystem.
-   Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
+   Exactly one of REGINA_INSTALL_{XDG,HPC,BUNDLE,WINDOWS} should be defined. */
 #define REGINA_INSTALL_XDG
+
+/* Define if we are building a local installation in a fixed location suitable
+   for an HPC system (typically in a user's home area, and with no GUI).
+   Exactly one of REGINA_INSTALL_{XDG,HPC,BUNDLE,WINDOWS} should be defined. */
+/* #undef REGINA_INSTALL_HPC */
 
 /* Define if we are building a self-contained macOS app bundle that users can
    drag and drop.
-   Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
+   Exactly one of REGINA_INSTALL_{XDG,HPC,BUNDLE,WINDOWS} should be defined. */
 /* #undef REGINA_INSTALL_BUNDLE */
 
 /* Define if we are building a self-contained movable install directory
    for MS Windows.
-   Exactly one of REGINA_INSTALL_{XDG,BUNDLE,WINDOWS} should be defined. */
+   Exactly one of REGINA_INSTALL_{XDG,HPC,BUNDLE,WINDOWS} should be defined. */
 /* #undef REGINA_INSTALL_WINDOWS */
 
 /* Define if Regina ships its own python, with the core python libraries
