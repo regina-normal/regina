@@ -41,14 +41,17 @@ macro (REGINA_ESCAPE_PERL _output _input)
 endmacro (REGINA_ESCAPE_PERL)
 
 
-# Macro: REGINA_ESCAPE_URI(output input)
+# Macro: REGINA_ESCAPE_URI_PATH(output input)
 #
-# Sets the variable ${output} to be a variant of ${input} that is
+# Sets the path variable ${output} to be a variant of ${input} that is
 # properly percent-escaped for use as a URI.
+#
+# Since the ${input} is assumed to be a path, all reserved URI characters
+# except for the forward slash will also be percent-escaped.
 #
 # Both output and input should be variable names.
 #
-macro (REGINA_ESCAPE_URI _output _input)
+macro (REGINA_ESCAPE_URI_PATH _output _input)
   set(${_output} "")
 
   # The following character-by-character extraction breaks in two ways:
@@ -66,12 +69,10 @@ macro (REGINA_ESCAPE_URI _output _input)
 
   string(REGEX MATCHALL . chars "${_intermediate}")
   foreach(c ${chars})
-    # This code percent-encodes [ and ], which is unnecessary but harmless.
-    # If someone knows how to include [ and ] inside cmake's regex [...]
-    # construct then *please* let me know.  I couldn't do it.
-    string(REGEX MATCH "^[A-Za-z0-9_.~!#$&'()*+,/:;=?@-]$" m "${c}")
+    string(REGEX MATCH "^[A-Za-z0-9_.~/-]$" m "${c}")
     if (NOT m STREQUAL "")
-      # These characters are allowed in URIs.
+      # These characters are allowed and unreserved in URIs
+      # (except for / which is reserved but which we also preserve here).
       string(APPEND ${_output} "${c}")
     else (NOT m STREQUAL "")
       # All other characters must be percent-encoded.
@@ -95,7 +96,7 @@ macro (REGINA_ESCAPE_URI _output _input)
   string(REPLACE "_s" ";" ${_output} "${${_output}}")
   string(REPLACE "_b" "%5C" ${_output} "${${_output}}")
   string(REPLACE "_u" "_" ${_output} "${${_output}}")
-endmacro (REGINA_ESCAPE_URI)
+endmacro (REGINA_ESCAPE_URI_PATH)
 
 
 # Macro: REGINA_CREATE_HANDBOOK(lang)
@@ -135,7 +136,7 @@ macro (REGINA_CREATE_HANDBOOK _lang)
         ${REGINA_DOCS_FILE} "docs/${_lang}/${_handbook}/\\*")
   else (REGINA_DOCS)
     # xsltproc requires an URI-encoded output directory.
-    REGINA_ESCAPE_URI(_output CMAKE_CURRENT_BINARY_DIR)
+    REGINA_ESCAPE_URI_PATH(_output CMAKE_CURRENT_BINARY_DIR)
     add_custom_command(OUTPUT ${_doc} VERBATIM
       COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o "${_output}/" ${_ssheet} "${_input}"
       DEPENDS ${_docs} ${_ssheet}
