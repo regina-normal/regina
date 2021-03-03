@@ -434,7 +434,7 @@ Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
                 new AngleStructureVector(
                 *X.strictAngleStructure_.value()->rawVector()));
         else
-            strictAngleStructure_ = 0;
+            strictAngleStructure_ = nullptr;
     }
 
     turaevViroCache_ = X.turaevViroCache_;

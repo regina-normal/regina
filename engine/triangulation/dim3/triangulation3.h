@@ -637,7 +637,7 @@ class REGINA_API Triangulation<3> :
          * @param alg the algorithm with which to compute the invariant.  If
          * you are not sure, the default value (ALG_DEFAULT) is a safe choice.
          * @param tracker a progress tracker through will progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c nullptr if no progress reporting is required.
          * @return the requested Turaev-Viro invariant.  As an exception,
          * if \a tracker is non-null and the value of this invariant has
          * not been computed before, then (since the calculation will
@@ -900,7 +900,7 @@ class REGINA_API Triangulation<3> :
          * packet tree by creating and then destroying a normal surface list.
          *
          * @return a newly allocated non-vertex-linking normal sphere or
-         * disc, or 0 if none exists.
+         * disc, or \c nullptr if none exists.
          */
         NormalSurface* hasNonTrivialSphereOrDisc();
         /**
@@ -920,7 +920,7 @@ class REGINA_API Triangulation<3> :
          * packet tree by creating and then destroying a normal surface list.
          *
          * @return a newly allocated non-vertex-linking normal sphere or
-         * disc, or 0 if none exists.
+         * disc, or \c nullptr if none exists.
          */
         NormalSurface* hasOctagonalAlmostNormalSphere();
         /**
@@ -948,8 +948,8 @@ class REGINA_API Triangulation<3> :
          * store the returned pointer for later use; instead you should
          * just call findStrictAngleStructure() again.
          *
-         * @return a strict angle structure on this triangulation, or 0 if
-         * none exists.
+         * @return a strict angle structure on this triangulation, or
+         * \c nullptr if none exists.
          */
         const AngleStructure* findStrictAngleStructure() const;
         /**
@@ -965,7 +965,7 @@ class REGINA_API Triangulation<3> :
          * that it is likely to be fast even for large triangulations.
          *
          * @return \c true if a strict angle structure exists on this
-         * triangulation, or 0 if not.
+         * triangulation, or \c false if not.
          */
         bool hasStrictAngleStructure() const;
         /**
@@ -1171,7 +1171,7 @@ class REGINA_API Triangulation<3> :
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c nullptr if no progress reporting is required.
          * @return If a progress tracker is passed, then this routine
          * will return \c true or \c false immediately according to
          * whether a new thread could or could not be started.  If no
@@ -1277,7 +1277,7 @@ class REGINA_API Triangulation<3> :
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c nullptr if no progress reporting is required.
          * @param action a function (or other callable object) to call
          * for each triangulation that is found.
          * @param args any additional arguments that should be passed to
@@ -1800,7 +1800,7 @@ class REGINA_API Triangulation<3> :
          * Note that this routine is currently only available for closed
          * triangulations; see the list of preconditions for full details.
          *
-         * If the given parent packet is 0, the new prime summand
+         * If the given parent packet is \c nullptr, the new prime summand
          * triangulations will be inserted as children of this triangulation.
          *
          * This routine can optionally assign unique (and sensible)
@@ -1834,7 +1834,7 @@ class REGINA_API Triangulation<3> :
          * \pre This triangulation is valid, closed and connected.
          *
          * @param primeParent the packet beneath which the new prime
-         * summand triangulations will be inserted, or 0 if they
+         * summand triangulations will be inserted, or \c nullptr if they
          * should be inserted directly beneath this triangulation.
          * @param setLabels \c true if the new prime summand triangulations
          * should be assigned unique packet labels, or \c false if
@@ -1946,12 +1946,12 @@ class REGINA_API Triangulation<3> :
          * If the underlying 3-manifold is prime, it can always be made
          * 0-efficient (with the exception of the special cases RP3 and
          * S2xS1 as noted below).  In this case the original triangulation
-         * will be modified directly and 0 will be returned.
+         * will be modified directly and \c nullptr will be returned.
          *
          * If the underyling 3-manifold is RP3 or S2xS1, it cannot
          * be made 0-efficient; in this case the original triangulation
          * will be reduced to a two-tetrahedron minimal triangulation
-         * and 0 will again be returned.
+         * and \c nullptr will again be returned.
          *
          * If the underlying 3-manifold is not prime, it cannot be made
          * 0-efficient.  In this case the original triangulation will
@@ -1968,7 +1968,7 @@ class REGINA_API Triangulation<3> :
          *
          * \todo Preserve computed properties of the underlying manifold.
          *
-         * @return 0 if the underlying 3-manifold is prime (in which
+         * @return \c nullptr if the underlying 3-manifold is prime (in which
          * case the original triangulation was modified directly), or
          * a newly allocated connected sum decomposition if the
          * underlying 3-manifold is composite (in which case the
@@ -3049,7 +3049,7 @@ class REGINA_API Triangulation<3> :
          *
          * The triangulation that is returned will be newly created.
          * If the SnapPea data is not in the correct format, this
-         * routine will return 0 instead.
+         * routine will return \c nullptr instead.
          *
          * \warning This routine is "lossy", in that drops SnapPea-specific
          * information (as described above).  Unless you specifically need an
@@ -3062,7 +3062,7 @@ class REGINA_API Triangulation<3> :
          * @param snapPeaData a string containing the full contents of a
          * SnapPea data file.
          * @return a new triangulation extracted from the given data,
-         * or 0 on error.
+         * or \c nullptr on error.
          */
         static Triangulation<3>* fromSnapPea(const std::string& snapPeaData);
 
@@ -3148,9 +3148,9 @@ class REGINA_API Triangulation<3> :
          * information in the process (such as peripheral curves).
          *
          * If the input stream could not be read or if the data was not in the
-         * correct format, 0 will be returned.  Otherwise a newly allocated
-         * triangulation will be returned, and it is the user's responsibility
-         * to deallocate this when it is finished with.
+         * correct format, \c nullptr will be returned.  Otherwise a newly
+         * allocated triangulation will be returned, and it is the user's
+         * responsibility to deallocate this when it is finished with.
          *
          * Unlike the SnapPeaTriangulation constructor, this routine uses
          * Regina's own SnapPea input code - it does not call any functions
@@ -3258,7 +3258,7 @@ inline bool Triangulation<3>::knowsZeroEfficient() const {
 inline bool Triangulation<3>::hasStrictAngleStructure() const {
     if (! strictAngleStructure_.known())
         findStrictAngleStructure();
-    return (strictAngleStructure_.value() != 0);
+    return (strictAngleStructure_.value() != nullptr);
 }
 
 inline unsigned long Triangulation<3>::homologyH2Z2() const {
