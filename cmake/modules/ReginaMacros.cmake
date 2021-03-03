@@ -10,49 +10,49 @@
 # restrictions that are required by its terms of service.
 
 
-# Macro: REGINA_ESCAPE_BASH(output input)
+# Macro: REGINA_ESCAPE_BASH(input)
 #
-# Sets the variable ${output} to be a variant of ${input} that is
-# properly escaped for use in a bash script between single quotes.
+# Sets the variable BASH_${input} to be a variant of the variable ${input}
+# that is properly escaped for use in a bash script between single quotes.
 #
-# Both output and input should be variable names.
+# The input argument must be a variable name (not its value).
 #
 # This macro correctly handles characters that are special to cmake
 # as well as characters that are special to bash.
 #
-macro (REGINA_ESCAPE_BASH _output _input)
-  string(REPLACE "'" "'\"'\"'" ${_output} "${${_input}}")
+macro (REGINA_ESCAPE_BASH _input)
+  string(REPLACE "'" "'\"'\"'" BASH_${_input} "${${_input}}")
 endmacro (REGINA_ESCAPE_BASH)
 
 
-# Macro: REGINA_ESCAPE_PERL(output input)
+# Macro: REGINA_ESCAPE_PERL(input)
 #
-# Sets the variable ${output} to be a variant of ${input} that is
-# properly escaped for use in a perl script between single quotes.
+# Sets the variable PERL_${input} to be a variant of the variable ${input}
+# that is properly escaped for use in a perl script between single quotes.
 #
-# Both output and input should be variable names.
+# The input argument must be a variable name (not its value).
 #
 # This macro correctly handles characters that are special to perl
 # as well as characters that are special to bash.
 #
-macro (REGINA_ESCAPE_PERL _output _input)
-  string(REPLACE "\\" "\\\\" ${_output} "${${_input}}")
-  string(REPLACE "'" "\\'" ${_output} "${${_output}}")
+macro (REGINA_ESCAPE_PERL _input)
+  string(REPLACE "\\" "\\\\" PERL_${_input} "${${_input}}")
+  string(REPLACE "'" "\\'" PERL_${_input} "${PERL_${_input}}")
 endmacro (REGINA_ESCAPE_PERL)
 
 
-# Macro: REGINA_ESCAPE_URI_PATH(output input)
+# Macro: REGINA_ESCAPE_URI_PATH(input)
 #
-# Sets the path variable ${output} to be a variant of ${input} that is
-# properly percent-escaped for use as a URI.
+# Sets the path variable URI_${input} to be a variant of the variable ${input}
+# that is properly percent-escaped for use as a URI.
 #
-# Since the ${input} is assumed to be a path, all reserved URI characters
+# Since ${input} is assumed to represent a path, all reserved URI characters
 # except for the forward slash will also be percent-escaped.
 #
-# Both output and input should be variable names.
+# The input argument must be a variable name (not its value).
 #
-macro (REGINA_ESCAPE_URI_PATH _output _input)
-  set(${_output} "")
+macro (REGINA_ESCAPE_URI_PATH _input)
+  set(URI_${_input} "")
 
   # The following character-by-character extraction breaks in two ways:
   # - if the string contains a semicolon then this is lost, because cmake
@@ -73,7 +73,7 @@ macro (REGINA_ESCAPE_URI_PATH _output _input)
     if (NOT m STREQUAL "")
       # These characters are allowed and unreserved in URIs
       # (except for / which is reserved but which we also preserve here).
-      string(APPEND ${_output} "${c}")
+      string(APPEND URI_${_input} "${c}")
     else (NOT m STREQUAL "")
       # All other characters must be percent-encoded.
       # Note that these may be multi-byte unicode characters.
@@ -89,13 +89,13 @@ macro (REGINA_ESCAPE_URI_PATH _output _input)
       list(JOIN _hexlist "%" _hex)
       string(PREPEND _hex "%")
       string(TOUPPER "${_hex}" _hexupper)
-      string(APPEND ${_output} "${_hexupper}")
+      string(APPEND URI_${_input} "${_hexupper}")
     endif (NOT m STREQUAL "")
   endforeach()
 
-  string(REPLACE "_s" ";" ${_output} "${${_output}}")
-  string(REPLACE "_b" "%5C" ${_output} "${${_output}}")
-  string(REPLACE "_u" "_" ${_output} "${${_output}}")
+  string(REPLACE "_s" ";" URI_${_input} "${URI_${_input}}")
+  string(REPLACE "_b" "%5C" URI_${_input} "${URI_${_input}}")
+  string(REPLACE "_u" "_" URI_${_input} "${URI_${_input}}")
 endmacro (REGINA_ESCAPE_URI_PATH)
 
 
@@ -136,9 +136,9 @@ macro (REGINA_CREATE_HANDBOOK _lang)
         ${REGINA_DOCS_FILE} "docs/${_lang}/${_handbook}/\\*")
   else (REGINA_DOCS)
     # xsltproc requires an URI-encoded output directory.
-    REGINA_ESCAPE_URI_PATH(_output CMAKE_CURRENT_BINARY_DIR)
+    REGINA_ESCAPE_URI_PATH(CMAKE_CURRENT_BINARY_DIR)
     add_custom_command(OUTPUT ${_doc} VERBATIM
-      COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o "${_output}/" ${_ssheet} "${_input}"
+      COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o "${URI_CMAKE_CURRENT_BINARY_DIR}/" ${_ssheet} "${_input}"
       DEPENDS ${_docs} ${_ssheet}
       WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
   endif (REGINA_DOCS)
