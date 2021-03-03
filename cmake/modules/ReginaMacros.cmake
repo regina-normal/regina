@@ -12,10 +12,13 @@
 
 # Macro: REGINA_ESCAPE_BASH(output input)
 #
-# Sets the variable ${output} to be a variant of ${input} suitable for
-# use in a bash script between single quotes.
+# Sets the variable ${output} to be a variant of ${input} that is
+# properly escaped for use in a bash script between single quotes.
 #
 # Both output and input should be variable names.
+#
+# This macro correctly handles characters that are special to cmake
+# as well as characters that are special to bash.
 #
 macro (REGINA_ESCAPE_BASH _output _input)
   string(REPLACE "'" "'\"'\"'" ${_output} "${${_input}}")
@@ -24,15 +27,75 @@ endmacro (REGINA_ESCAPE_BASH)
 
 # Macro: REGINA_ESCAPE_PERL(output input)
 #
-# Sets the variable ${output} to be a variant of ${input} suitable for
-# use in a perl script between single quotes.
+# Sets the variable ${output} to be a variant of ${input} that is
+# properly escaped for use in a perl script between single quotes.
 #
 # Both output and input should be variable names.
 #
+# This macro correctly handles characters that are special to perl
+# as well as characters that are special to bash.
+#
 macro (REGINA_ESCAPE_PERL _output _input)
-  string(REPLACE "\\" "\\\\" ${_output} "${${_output}}")
-  string(REPLACE "'" "\\'" ${_output} "${${_input}}")
+  string(REPLACE "\\" "\\\\" ${_output} "${${_input}}")
+  string(REPLACE "'" "\\'" ${_output} "${${_output}}")
 endmacro (REGINA_ESCAPE_PERL)
+
+
+# Macro: REGINA_ESCAPE_URI(output input)
+#
+# Sets the variable ${output} to be a variant of ${input} that is
+# properly percent-escaped for use as a URI.
+#
+# Both output and input should be variable names.
+#
+macro (REGINA_ESCAPE_URI _output _input)
+  set(${_output} "")
+
+  # The following character-by-character extraction breaks in two ways:
+  # - if the string contains a semicolon then this is lost, because cmake
+  #   uses semicolons internally to separate the full *list* of matches;
+  # - if the string contains a backslash then this is incorrectly combined
+  #   with the following character.
+  #
+  # We work around this by doing our own custom encoding first, and
+  # removing this at the end.
+  #
+  string(REPLACE "_" "_u" _intermediate "${${_input}}")
+  string(REPLACE ";" "_s" _intermediate "${_intermediate}")
+  string(REPLACE "\\" "_b" _intermediate "${_intermediate}")
+
+  string(REGEX MATCHALL . chars "${_intermediate}")
+  foreach(c ${chars})
+    # This code percent-encodes [ and ], which is unnecessary but harmless.
+    # If someone knows how to include [ and ] inside cmake's regex [...]
+    # construct then *please* let me know.  I couldn't do it.
+    string(REGEX MATCH "^[A-Za-z0-9_.~!#$&'()*+,/:;=?@-]$" m "${c}")
+    if (NOT m STREQUAL "")
+      # These characters are allowed in URIs.
+      string(APPEND ${_output} "${c}")
+    else (NOT m STREQUAL "")
+      # All other characters must be percent-encoded.
+      # Note that these may be multi-byte unicode characters.
+      #
+      # Whilst CMake 3.18 introduces hex encoding for strings,
+      # we must preserve compatibility with older cmake, and so we
+      # use file read/writes to get the hex encoding.  Again I'd be
+      # super happy for a better way of doing this.
+      file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/_hex.dat "${c}")
+      file(READ ${CMAKE_CURRENT_BINARY_DIR}/_hex.dat _hexraw HEX)
+
+      string(REGEX MATCHALL "(..)" _hexlist "${_hexraw}")
+      list(JOIN _hexlist "%" _hex)
+      string(PREPEND _hex "%")
+      string(TOUPPER "${_hex}" _hexupper)
+      string(APPEND ${_output} "${_hexupper}")
+    endif (NOT m STREQUAL "")
+  endforeach()
+
+  string(REPLACE "_s" ";" ${_output} "${${_output}}")
+  string(REPLACE "_b" "%5C" ${_output} "${${_output}}")
+  string(REPLACE "_u" "_" ${_output} "${${_output}}")
+endmacro (REGINA_ESCAPE_URI)
 
 
 # Macro: REGINA_CREATE_HANDBOOK(lang)
@@ -72,43 +135,7 @@ macro (REGINA_CREATE_HANDBOOK _lang)
         ${REGINA_DOCS_FILE} "docs/${_lang}/${_handbook}/\\*")
   else (REGINA_DOCS)
     # xsltproc requires an URI-encoded output directory.
-    #
-    # The following block of code tries to use cmake to URI-encode the
-    # output directory ${CMAKE_CURRENT_BINARY_DIR}.
-    #
-    # This code still breaks if the directory name includes a backslash,
-    # but probably a pile of other code breaks in similar situations, due
-    # to cmake's argument parsing.
-
-    set(_output "")
-    string(REGEX MATCHALL . chars ${CMAKE_CURRENT_BINARY_DIR})
-    foreach(c ${chars})
-      # This code percent-encodes [ and ], which is unnecessary but harmless.
-      # If someone knows how to include [ and ] inside cmake's regex [...]
-      # construct then *please* let me know.  I couldn't do it.
-      string(REGEX MATCH "^[A-Za-z0-9_.~!#$&'()*+,/:;=?@-]$" m "${c}")
-      if (NOT m STREQUAL "")
-        # These characters are allowed in URIs.
-        string(APPEND _output "${c}")
-      else (NOT m STREQUAL "")
-        # All other characters must be percent-encoded.
-        # Note that these may be multi-byte unicode characters.
-        #
-        # Whilst CMake 3.18 introduces hex encoding for strings,
-        # we must preserve compatibility with older cmake, and so we
-        # use file read/writes to get the hex encoding.  Again I'd be
-        # super happy for a better way of doing this.
-        file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/_hex.dat "${c}")
-        file(READ ${CMAKE_CURRENT_BINARY_DIR}/_hex.dat _hexraw HEX)
-
-        string(REGEX MATCHALL "(..)" _hexlist "${_hexraw}")
-        list(JOIN _hexlist "%" _hex)
-        string(PREPEND _hex "%")
-        string(TOUPPER "${_hex}" _hexupper)
-        string(APPEND _output "${_hexupper}")
-      endif (NOT m STREQUAL "")
-    endforeach()
-
+    REGINA_ESCAPE_URI(_output CMAKE_CURRENT_BINARY_DIR)
     add_custom_command(OUTPUT ${_doc} VERBATIM
       COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o "${_output}/" ${_ssheet} "${_input}"
       DEPENDS ${_docs} ${_ssheet}
