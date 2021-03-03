@@ -10,6 +10,31 @@
 # restrictions that are required by its terms of service.
 
 
+# Macro: REGINA_ESCAPE_BASH(output input)
+#
+# Sets the variable ${output} to be a variant of ${input} suitable for
+# use in a bash script between single quotes.
+#
+# Both output and input should be variable names.
+#
+macro (REGINA_ESCAPE_BASH _output _input)
+  string(REPLACE "'" "'\"'\"'" ${_output} "${${_input}}")
+endmacro (REGINA_ESCAPE_BASH)
+
+
+# Macro: REGINA_ESCAPE_PERL(output input)
+#
+# Sets the variable ${output} to be a variant of ${input} suitable for
+# use in a perl script between single quotes.
+#
+# Both output and input should be variable names.
+#
+macro (REGINA_ESCAPE_PERL _output _input)
+  string(REPLACE "\\" "\\\\" ${_output} "${${_output}}")
+  string(REPLACE "'" "\\'" ${_output} "${${_input}}")
+endmacro (REGINA_ESCAPE_PERL)
+
+
 # Macro: REGINA_CREATE_HANDBOOK(lang)
 #
 # Builds an HTML manual from XML Docbook sources.
