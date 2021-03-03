@@ -54,7 +54,7 @@ set -e
 verbose=0
 
 executable=../regina-python
-testdir='@PROJECT_SOURCE_DIR@/python/testsuite'
+testdir='@BASH_CMAKE_SOURCE_DIR@/python/testsuite'
 testoutdir=`mktemp -d -t regina.XXX`
 
 echo "---------------------------------------"
