@@ -116,7 +116,7 @@ endmacro (REGINA_ESCAPE_URI_PATH)
 macro (REGINA_CREATE_HANDBOOK _lang)
   # Build the docbook documentation.
 
-  set(_doc ${CMAKE_CURRENT_BINARY_DIR}/index.html)
+  set(_doc "${CMAKE_CURRENT_BINARY_DIR}/index.html")
 
   # The source variables below are relative to ${CMAKE_CURRENT_SOURCE_DIR}.
   # We use relative paths here because xsltproc on Windows seems to have
@@ -131,24 +131,24 @@ macro (REGINA_CREATE_HANDBOOK _lang)
 
   file(GLOB _docs *.docbook)
   if (REGINA_DOCS)
-    add_custom_command(OUTPUT ${_doc}
-      COMMAND ${UNZIP_EXECUTABLE} -o -j -d ${CMAKE_CURRENT_BINARY_DIR}
-        ${REGINA_DOCS_FILE} "docs/${_lang}/${_handbook}/\\*")
+    add_custom_command(OUTPUT "${_doc}" VERBATIM
+      COMMAND "${UNZIP_EXECUTABLE}" -o -j -d "${CMAKE_CURRENT_BINARY_DIR}"
+        "${REGINA_DOCS_FILE}" "docs/${_lang}/${_handbook}/\\*")
   else (REGINA_DOCS)
     # xsltproc requires an URI-encoded output directory.
     REGINA_ESCAPE_URI_PATH(CMAKE_CURRENT_BINARY_DIR)
-    add_custom_command(OUTPUT ${_doc} VERBATIM
-      COMMAND ${XSLTPROC_EXECUTABLE} --path ${_dtd} -o "${URI_CMAKE_CURRENT_BINARY_DIR}/" ${_ssheet} "${_input}"
+    add_custom_command(OUTPUT "${_doc}" VERBATIM
+      COMMAND "${XSLTPROC_EXECUTABLE}" --path ${_dtd} -o "${URI_CMAKE_CURRENT_BINARY_DIR}/" ${_ssheet} "${_input}"
       DEPENDS ${_docs} ${_ssheet}
-      WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
+      WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}")
   endif (REGINA_DOCS)
-  add_custom_target(${_handbook}-html ALL DEPENDS ${_doc})
+  add_custom_target(${_handbook}-html ALL DEPENDS "${_doc}")
 
   file(GLOB _support *.png *.css *.html)
-  install(FILES ${_support} DESTINATION ${HTMLDIR}/${_lang}/${_handbook})
+  install(FILES ${_support} DESTINATION "${HTMLDIR}/${_lang}/${_handbook}")
   install(
-    DIRECTORY ${CMAKE_CURRENT_BINARY_DIR}
-    DESTINATION ${HTMLDIR}/${_lang}
+    DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}"
+    DESTINATION "${HTMLDIR}/${_lang}"
     FILES_MATCHING
     PATTERN CMakeFiles EXCLUDE
     PATTERN "*.html"

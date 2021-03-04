@@ -22,5 +22,5 @@ if (${REGINA_INSTALL_DEV})
     homgrouppresentation.h
     markedabeliangroup.h
     xmlalgebrareader.h
-    DESTINATION ${INCLUDEDIR}/algebra COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/algebra" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

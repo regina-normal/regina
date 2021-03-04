@@ -53,5 +53,5 @@ if (${REGINA_INSTALL_DEV})
     xmlcallback.h
     xmlelementreader.h
     xmlutils.h
-    DESTINATION ${INCLUDEDIR}/utilities COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/utilities" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

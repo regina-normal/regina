@@ -14,5 +14,5 @@ SET(man1_files
   regina-gui.1
   regina-python.1
   )
-INSTALL(FILES ${man1_files} DESTINATION ${man1dir} COMPONENT Runtime)
+INSTALL(FILES ${man1_files} DESTINATION "${man1dir}" COMPONENT Runtime)
 

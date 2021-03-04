@@ -43,5 +43,5 @@ if (${REGINA_INSTALL_DEV})
     modellinkgraph.h
     tangle.h
     xmllinkreader.h
-    DESTINATION ${INCLUDEDIR}/link COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/link" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

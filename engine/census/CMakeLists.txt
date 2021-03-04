@@ -28,5 +28,5 @@ if (${REGINA_INSTALL_DEV})
     gluingpermsearcher2.h
     gluingpermsearcher3.h
     gluingpermsearcher4.h
-    DESTINATION ${INCLUDEDIR}/census COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/census" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

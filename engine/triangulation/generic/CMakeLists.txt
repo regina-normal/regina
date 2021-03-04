@@ -7,5 +7,5 @@ if (${REGINA_INSTALL_DEV})
     isomorphism.h
     simplex.h
     triangulation.h
-    DESTINATION ${INCLUDEDIR}/triangulation/generic COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/triangulation/generic" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

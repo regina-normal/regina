@@ -27,7 +27,7 @@ INSTALL(FILES
   default.theme
   modelines.xml
   python.xml
-  DESTINATION ${PKGDATADIR}/syntax)
+  DESTINATION "${PKGDATADIR}/syntax")
 
 # Install development headers
 if (FALSE AND ${REGINA_INSTALL_DEV})
@@ -49,5 +49,5 @@ if (FALSE AND ${REGINA_INSTALL_DEV})
     textstyledata_p.h
     theme.h
     themedata_p.h
-    DESTINATION ${INCLUDEDIR}/syntax COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/syntax" COMPONENT Development)
 endif (FALSE AND ${REGINA_INSTALL_DEV})

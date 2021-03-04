@@ -1,6 +1,6 @@
-INCLUDE_DIRECTORIES(${Python_INCLUDE_DIRS} ${ENGINE_INCLUDES} ${PROJECT_BINARY_DIR}/engine)
+INCLUDE_DIRECTORIES(${Python_INCLUDE_DIRS} ${ENGINE_INCLUDES} "${PROJECT_BINARY_DIR}/engine")
 
-SET(LINK_LIBS ${ENGINE_LIBRARY} Qt5::Widgets Qt5::Svg)
+SET(LINK_LIBS "${ENGINE_LIBRARY}" Qt5::Widgets Qt5::Svg)
 
 ADD_SUBDIRECTORY(icons)
 ADD_SUBDIRECTORY(choosers)
@@ -21,15 +21,15 @@ IF(LIBGVC_FOUND)
       # An xcframework.
       GET_FILENAME_COMPONENT(GRAPHVIZ_FRAMEWORK_DIR "${GRAPHVIZ_FRAMEWORK}" DIRECTORY)
       INCLUDE_DIRECTORIES("${GRAPHVIZ_FRAMEWORK_DIR}/Headers")
-      SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} ${GRAPHVIZ_FRAMEWORK})
+      SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} "${GRAPHVIZ_FRAMEWORK}")
     ELSE(GRAPHVIZ_FRAMEWORK MATCHES "xcframework/macos-")
       # An ordinary framework.
       INCLUDE_DIRECTORIES("${GRAPHVIZ_FRAMEWORK}/Headers")
-      SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} ${GRAPHVIZ_FRAMEWORK})
+      SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} "${GRAPHVIZ_FRAMEWORK}")
     ENDIF(GRAPHVIZ_FRAMEWORK MATCHES "xcframework/macos-")
   ELSEIF(${GRAPHVIZ_TYPE} STREQUAL XCFramework)
     INCLUDE_DIRECTORIES("${GRAPHVIZ_PATH}/Headers")
-    SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} ${GRAPHVIZ_PATH}/libgraphviz.a)
+    SET(LINK_LIBS ${LINK_LIBS} ${ZLIB_LIBRARIES} "${GRAPHVIZ_PATH}/libgraphviz.a")
   ELSE (${GRAPHVIZ_TYPE} STREQUAL Framework)
     INCLUDE_DIRECTORIES("${LIBGVC_INCLUDEDIR}")
     SET(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${LIBGVC_CFLAGS_OTHER}")
@@ -100,9 +100,9 @@ if (APPLE)
 
   # Add application and mimetype icons to the app bundle.
   set(REGINA_MACOS_ICONS
-    ${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/Assets.car
-    ${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/AppIcon.icns
-    ${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/x-regina.icns)
+    "${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/Assets.car"
+    "${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/AppIcon.icns"
+    "${CMAKE_CURRENT_SOURCE_DIR}/macos-icons/x-regina.icns")
   set_source_files_properties(${REGINA_MACOS_ICONS} PROPERTIES MACOSX_PACKAGE_LOCATION Resources)
   set(SOURCES ${SOURCES} ${REGINA_MACOS_ICONS})
 else (APPLE)
@@ -118,8 +118,8 @@ if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   # Install XDG application icons.
   set (XDGSIZES 16 22 24 32 48 64 128 256)
   foreach (IMG_SIZE ${XDGSIZES})
-    INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps RENAME regina.png)
-    INSTALL (FILES ${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/x-regina-${IMG_SIZE}.png DESTINATION ${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes RENAME application-x-regina.png)
+    INSTALL (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/regina-${IMG_SIZE}.png" DESTINATION "${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/apps" RENAME regina.png)
+    INSTALL (FILES "${CMAKE_CURRENT_SOURCE_DIR}/xdg-icons/x-regina-${IMG_SIZE}.png" DESTINATION "${ICONDIR}/hicolor/${IMG_SIZE}x${IMG_SIZE}/mimetypes" RENAME application-x-regina.png)
   endforeach (IMG_SIZE ${XDGSIZES})
 endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
@@ -139,7 +139,7 @@ if (APPLE)
   # This information will be inserted into the following template (which
   # contains file associations for Regina data files, amongst other things):
   set_target_properties(${REGINA_APP_NAME}
-    PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_SOURCE_DIR}/regina.plist )
+    PROPERTIES MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_SOURCE_DIR}/regina.plist")
 elseif (LIBGVC_FOUND AND ${GRAPHVIZ_TYPE} STREQUAL Library AND NOT WIN32)
   # Even if this is a no-rpath install into standard system directories,
   # we still need to be able to link with the graphviz plugins.
@@ -149,17 +149,17 @@ elseif (LIBGVC_FOUND AND ${GRAPHVIZ_TYPE} STREQUAL Library AND NOT WIN32)
     PROPERTIES INSTALL_RPATH_USE_LINK_PATH TRUE)
 endif ()
 
-INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION ${APPDIR} COMPONENT Runtime)
+INSTALL(TARGETS ${REGINA_APP_NAME} DESTINATION "${APPDIR}" COMPONENT Runtime)
 
 # TODO: Use COMPONENT Runtime/Development throughout all install targets.
 
 if (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
   # Install desktop files and mimetype handling.
-  install(FILES regina.desktop DESTINATION ${XDG_APPS_INSTALL_DIR}
+  install(FILES regina.desktop DESTINATION "${XDG_APPS_INSTALL_DIR}"
     COMPONENT Runtime)
-  install(FILES regina.xml DESTINATION ${XDG_MIME_INSTALL_DIR}
+  install(FILES regina.xml DESTINATION "${XDG_MIME_INSTALL_DIR}"
     COMPONENT Runtime)
-  update_xdg_mimetypes(${XDG_MIME_INSTALL_DIR})
+  update_xdg_mimetypes("${XDG_MIME_INSTALL_DIR}")
 endif (${REGINA_INSTALL_TYPE} STREQUAL XDG AND NOT APPLE)
 
 if (WIN32)
@@ -167,5 +167,5 @@ if (WIN32)
   # It seems that, to keep WiX happy, x-regina.ico needs to be in $BINDIR
   # to avoid an ICE69 error (mismatched components for the ProgId entry).
   # I'd love to hear any advice to the contrary.
-  install(FILES x-regina.ico DESTINATION ${BINDIR} COMPONENT Runtime)
+  install(FILES x-regina.ico DESTINATION "${BINDIR}" COMPONENT Runtime)
 endif (WIN32)

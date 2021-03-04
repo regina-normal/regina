@@ -18,5 +18,5 @@ if (${REGINA_INSTALL_DEV})
     anglestructure.h
     anglestructures.h
     xmlanglestructreader.h
-    DESTINATION ${INCLUDEDIR}/angle COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/angle" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

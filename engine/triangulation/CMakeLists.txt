@@ -52,5 +52,5 @@ if (${REGINA_INSTALL_DEV})
     xmltrireader2.h
     xmltrireader3.h
     xmltrireader4.h
-    DESTINATION ${INCLUDEDIR}/triangulation COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/triangulation" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

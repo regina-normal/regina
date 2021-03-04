@@ -65,5 +65,5 @@ if (${REGINA_INSTALL_DEV})
     surfacefiltertype.h
     xmlfilterreader.h
     xmlsurfacereader.h
-    DESTINATION ${INCLUDEDIR}/surfaces COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/surfaces" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

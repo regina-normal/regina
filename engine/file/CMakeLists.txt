@@ -15,5 +15,5 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     fileinfo.h
     globaldirs.h
-    DESTINATION ${INCLUDEDIR}/file COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/file" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

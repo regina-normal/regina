@@ -1,6 +1,6 @@
 include_directories(${ENGINE_INCLUDES})
-include_directories(${CMAKE_BINARY_DIR}/engine)
-include_directories(${POPT_INCLUDE_DIR})
+include_directories("${CMAKE_BINARY_DIR}/engine")
+include_directories("${POPT_INCLUDE_DIR}")
 
 set(UTILS
   censuslookup
@@ -20,4 +20,4 @@ foreach(UTIL ${UTILS})
   target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${POPT_LIBRARY})
 endforeach(UTIL)
 
-install(TARGETS ${UTILS} DESTINATION ${BINDIR} COMPONENT Runtime)
+install(TARGETS ${UTILS} DESTINATION "${BINDIR}" COMPONENT Runtime)

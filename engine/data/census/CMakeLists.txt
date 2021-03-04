@@ -1,5 +1,5 @@
 
-SET(CENSUSDATADIR ${PKGDATADIR}/data/census)
+SET(CENSUSDATADIR "${PKGDATADIR}/data/census")
 
 INCLUDE_DIRECTORIES(${ENGINE_INCLUDES})
 ADD_EXECUTABLE(mkcensusdb mkcensusdb.cpp)
@@ -22,8 +22,8 @@ FOREACH(db ${censusdata_DATA})
       "${PROJECT_BINARY_DIR}/engine/data/census/${db}"
   )
   INSTALL(
-    FILES ${PROJECT_BINARY_DIR}/engine/data/census/${db}
-    DESTINATION ${CENSUSDATADIR}
+    FILES "${PROJECT_BINARY_DIR}/engine/data/census/${db}"
+    DESTINATION "${CENSUSDATADIR}"
     COMPONENT Runtime)
 ENDFOREACH(db)
 

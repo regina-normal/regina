@@ -29,5 +29,5 @@ if (${REGINA_INSTALL_DEV})
     normalhypersurface.h
     normalhypersurfaces.h
     xmlhypersurfacereader.h
-    DESTINATION ${INCLUDEDIR}/hypersurface COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/hypersurface" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

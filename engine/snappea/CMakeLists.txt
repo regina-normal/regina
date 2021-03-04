@@ -28,6 +28,6 @@ if (${REGINA_INSTALL_DEV})
     examplesnappea.h
     snappeatriangulation.h
     xmlsnappeareader.h
-    DESTINATION ${INCLUDEDIR}/snappea COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/snappea" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
 

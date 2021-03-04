@@ -1,5 +1,5 @@
 
-SET(examplesdir ${PKGDATADIR}/examples)
+SET(examplesdir "${PKGDATADIR}/examples")
 
 SET(examples_files
   README.txt
@@ -10,7 +10,7 @@ SET(examples_files
   cusped-hyp-nor-census.rga
   knot-census.rga
   )
-INSTALL(FILES ${examples_files} DESTINATION ${examplesdir})
+INSTALL(FILES ${examples_files} DESTINATION "${examplesdir}")
 
 # Files that come with different versions for python 2 vs python 3:
 
@@ -40,5 +40,5 @@ ENDIF (Python_FOUND)
 FOREACH (FILE ${py23_files})
   STRING (REPLACE "-pyX" "-${PYX}" _SRC "${FILE}")
   STRING (REPLACE "-pyX" "" _DEST "${FILE}")
-  INSTALL(FILES ${_SRC} DESTINATION ${examplesdir} RENAME ${_DEST})
+  INSTALL(FILES ${_SRC} DESTINATION "${examplesdir}" RENAME ${_DEST})
 ENDFOREACH (FILE ${py23_files})

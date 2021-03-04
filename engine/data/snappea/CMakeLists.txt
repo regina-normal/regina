@@ -1,5 +1,5 @@
 
-SET(SNAPPEADATADIR ${PKGDATADIR}/data/snappea)
+SET(SNAPPEADATADIR "${PKGDATADIR}/data/snappea")
 
 SET(snappeadata_DATA
   snappea-census-sec5.dat
@@ -8,5 +8,5 @@ SET(snappeadata_DATA
   snappea-census-sec7o.dat
   snappea-census-sec7n.dat
   )
-INSTALL(FILES ${snappeadata_DATA} DESTINATION ${SNAPPEADATADIR} COMPONENT Runtime)
+INSTALL(FILES ${snappeadata_DATA} DESTINATION "${SNAPPEADATADIR}" COMPONENT Runtime)
 

@@ -72,5 +72,5 @@ if (${REGINA_INSTALL_DEV})
     trisolidtorus.h
     trivialtri.h
     txicore.h
-    DESTINATION ${INCLUDEDIR}/subcomplex COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/subcomplex" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

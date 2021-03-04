@@ -18,5 +18,5 @@ if (${REGINA_INSTALL_DEV})
     dehydration.h
     isosig.h
     orb.h
-    DESTINATION ${INCLUDEDIR}/foreign COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/foreign" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

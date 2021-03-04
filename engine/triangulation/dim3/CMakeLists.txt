@@ -36,5 +36,5 @@ if (${REGINA_INSTALL_DEV})
     triangle3.h
     triangulation3.h
     vertex3.h
-    DESTINATION ${INCLUDEDIR}/triangulation/dim3 COMPONENT Development)
+    DESTINATION "${INCLUDEDIR}/triangulation/dim3" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
