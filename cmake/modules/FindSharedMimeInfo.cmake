@@ -1,4 +1,4 @@
-# Taken from the KDE4 cmake modules directory. - Ben Burton, 11 February 2012.
+# Modified from the KDE4 cmake modules directory. - Ben Burton, 11 February 2012.
 
 # - Try to find the shared-mime-info package
 #
@@ -71,7 +71,7 @@ macro(UPDATE_XDG_MIMETYPES _path)
 set(DESTDIR_VALUE \"\$ENV{DESTDIR}\")
 if (NOT DESTDIR_VALUE)
   # under Windows relative paths are used, that's why it runs from CMAKE_INSTALL_PREFIX
-  execute_process(COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} ${_xdgmimeDir}
+  execute_process(COMMAND ${UPDATE_MIME_DATABASE_EXECUTABLE} \"${_xdgmimeDir}\"
                   WORKING_DIRECTORY \"${CMAKE_INSTALL_PREFIX}\")
 endif (NOT DESTDIR_VALUE)
 ")
