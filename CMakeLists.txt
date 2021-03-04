@@ -138,14 +138,6 @@ IF(CMAKE_COMPILER_IS_GNUCXX)
   SET(CMAKE_CXX_FLAGS "-pthread ${CMAKE_CXX_FLAGS}")
 ENDIF(CMAKE_COMPILER_IS_GNUCXX)
 
-# Make sure we have std::thread (which has in the past been missing on windows).
-INCLUDE(CheckCXX11Features)
-SET(HAVE_CXX11_FEATURES TRUE)
-NEED_CXX11_FEATURE("stdthread")
-IF(NOT HAVE_CXX11_FEATURES)
-  MESSAGE(FATAL_ERROR "Regina requires full C++11 support, including std::thread, to compile.")
-ENDIF()
-
 # Make everything use C++17 (or later).
 SET(CMAKE_CXX_STANDARD 17)
 SET(CMAKE_CXX_STANDARD_REQUIRED YES)
