@@ -468,14 +468,12 @@ MACRO_LOG_FEATURE(Python_FOUND
 # The Qt GUI
 IF(NOT DISABLE_GUI)
   SET (DISABLE_GUI OFF CACHE STRING
-    "Disables the graphical user interface.  The calculation engine, Python bindings and other command-line utilities will still be built.  This option is suitable for use on high-performance clusters."
+    "Disables the graphical user interface.  The calculation engine, Python bindings and other command-line utilities will still be built."
     FORCE)
 ENDIF(NOT DISABLE_GUI)
 IF(${REGINA_INSTALL_TYPE} STREQUAL HPC)
-  set(GUI_REQUIRED FALSE)
   MESSAGE(STATUS "Disabling Regina's GUI for HPC build.")
 ELSEIF(DISABLE_GUI)
-  set(GUI_REQUIRED FALSE)
   if (NOT ${REGINA_INSTALL_TYPE} STREQUAL XDG)
     MESSAGE(FATAL_ERROR
       "You can only set DISABLE_GUI=1 with REGINA_INSTALL_TYPE=XDG.")
@@ -483,7 +481,6 @@ ELSEIF(DISABLE_GUI)
 
   MESSAGE(WARNING "User set DISABLE_GUI=1: graphical user interface disabled.")
 ELSE(DISABLE_GUI)
-  set(GUI_REQUIRED TRUE)
   set(CMAKE_AUTOMOC ON)
   FIND_PACKAGE(Qt5Widgets)
   FIND_PACKAGE(Qt5Svg)
@@ -576,14 +573,14 @@ ELSE(DISABLE_GUI)
   else (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
     SET(QT5_FOUND FALSE)
   endif (Qt5Widgets_FOUND AND Qt5Svg_FOUND)
-  MESSAGE(STATUS "Graphical user interface enabled")
+
+  MACRO_LOG_FEATURE(QT5_FOUND
+    "Qt5"
+    "Required for Regina's graphical user interface"
+    "http://qt-project.org/"
+    TRUE ""
+    "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 ENDIF()
-MACRO_LOG_FEATURE(QT5_FOUND
-  "Qt5"
-  "Required for Regina's graphical user interface"
-  "http://qt-project.org/"
-  ${GUI_REQUIRED} ""
-  "To disable the graphical user interface, run: cmake -DDISABLE_GUI=1")
 
 # Test suite, continued
 FIND_PATH(CPPUNIT_INCLUDE_DIR cppunit/Test.h)
