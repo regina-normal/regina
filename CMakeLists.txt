@@ -48,7 +48,7 @@ ENDIF (WIN32)
 # Distinguish between the different Regina installation types:
 # XDG = standard freedesktop.org filesystem installation in a fixed location.
 # HPC = filesystem installation suitable for HPC systems where there is
-#       no need for a GUI, and where you do not have root.
+#       no need for a GUI or HTML documentation, and where you do not have root.
 # Windows = self-contained movable install directory for MS Windows.
 if (NOT REGINA_INSTALL_TYPE)
   if (WIN32)
@@ -366,7 +366,10 @@ IF (REGINA_ENGINE_DOCS)
     "Extract the API docs"
     "http://www.info-zip.org/pub/infozip/"
     ${REGINA_MANDATORY})
-ELSE (REGINA_ENGINE_DOCS)
+ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL HPC)
+  SET (REGINA_BUILD_ENGINE_DOCS FALSE)
+  MESSAGE (STATUS "Disabling API docs for HPC build.")
+ELSE (${REGINA_INSTALL_TYPE} STREQUAL HPC)
   SET (REGINA_ENGINE_DOCS "" CACHE STRING
     "Extract API docs from the given pre-built zip file instead of building them manually."
     FORCE)
@@ -401,7 +404,10 @@ IF (REGINA_DOCS)
     "Extract the user handbook"
     "http://www.info-zip.org/pub/infozip/"
     ${REGINA_MANDATORY})
-ELSE (REGINA_DOCS)
+ELSEIF (${REGINA_INSTALL_TYPE} STREQUAL HPC)
+  SET (REGINA_BUILD_HANDBOOK FALSE)
+  MESSAGE (STATUS "Disabling handbooks for HPC build.")
+ELSE (${REGINA_INSTALL_TYPE} STREQUAL HPC)
   SET (REGINA_DOCS "" CACHE STRING
     "Extract handbooks from the given pre-built zip file instead of building them manually."
     FORCE)
