@@ -675,8 +675,10 @@
 
  <indexentry>
   <primaryie>exhaustive simplification</primaryie>
+  <secondaryie><link linkend="man-retriangulate">of links,
+   from the command-line</link></secondaryie>
   <secondaryie><link linkend="link-simplify-exhaustive">of
-   links</link></secondaryie>
+   links, in the &gui;</link></secondaryie>
   <secondaryie><link linkend="man-retriangulate">of triangulations,
    from the command-line</link></secondaryie>
   <secondaryie><link linkend="tri-simplify-exhaustive">of triangulations,
@@ -1468,8 +1470,9 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="link-simplify-exhaustive">Reidemeister graph,
-   searching</link></primaryie>
+  <primaryie>Reidemeister graph, searching</primaryie>
+  <secondaryie><link linkend="man-retriangulate">from the command-line</link></secondaryie>
+  <secondaryie><link linkend="link-simplify-exhaustive">in the &gui;</link></secondaryie>
  </indexentry>
 
  <indexentry>
@@ -1497,12 +1500,17 @@
  </indexentry>
 
  <indexentry>
-  <primaryie><link linkend="man-retriangulate">retriangulating
-   manifolds</link></primaryie>
+  <primaryie>retriangulating manifolds</primaryie>
+  <seeie>See: Pachner graph, searching</seeie>
  </indexentry>
 
  <indexentry>
   <primaryie><link linkend="link-flip">reversing links</link></primaryie>
+ </indexentry>
+
+ <indexentry>
+  <primaryie>rewriting link diagrams</primaryie>
+  <seeie>See: Reidemeister graph, searching</seeie>
  </indexentry>
 
  <indexentry>

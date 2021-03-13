@@ -33,15 +33,24 @@
 #include <mutex>
 #include <thread>
 #include <popt.h>
+#include "link/link.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 
 std::mutex mutex;
 
+enum Flavours {
+    FLAVOUR_DIM3 = 0,
+    FLAVOUR_DIM4 = 1,
+    FLAVOUR_KNOT = 100
+};
+
+constexpr int NO_HEIGHT = -1000;
+
 // Command-line arguments:
-int argHeight = 0;
+int argHeight = NO_HEIGHT;
 int argThreads = 1;
-bool dim4 = 0;
+int flavour = FLAVOUR_DIM3;
 
 template <int dim>
 void process(regina::Triangulation<dim>* tri) {
@@ -77,17 +86,54 @@ void process(regina::Triangulation<dim>* tri) {
         std::cerr << "Found " << nSolns << " triangulation(s)." << std::endl;
 }
 
+void process(regina::Link* knot) {
+    unsigned long nSolns = 0;
+    bool nonMinimal = false;
+    std::string simpler;
+
+    knot->rewrite(argHeight, argThreads, nullptr /* tracker */,
+        [&nSolns, &nonMinimal, &simpler, knot](
+                const std::string& sig, const regina::Link& k) {
+            if (k.size() > knot->size())
+                return false;
+
+            std::lock_guard<std::mutex> lock(mutex);
+            std::cout << sig << std::endl;
+
+            if (k.size() < knot->size()) {
+                nonMinimal = true;
+                simpler = sig;
+                return true;
+            }
+
+            ++nSolns;
+            return false;
+        });
+
+    delete knot;
+
+    if (nonMinimal) {
+        std::cerr << "Knot is non-minimal!" << std::endl;
+        std::cerr << "Smaller knot: " << simpler << std::endl;
+    } else
+        std::cerr << "Found " << nSolns << " knot(s)." << std::endl;
+}
+
 int main(int argc, const char* argv[]) {
     // Set up the command-line arguments.
     std::string sig;
 
     poptOption opts[] = {
         { "height", 'h', POPT_ARG_INT, &argHeight, 0,
-            "Number of extra tetrahedra (default = 1)", "<height>" },
+            "Number of extra simplices/crossings (default = 1)", "<height>" },
         { "threads", 't', POPT_ARG_INT, &argThreads, 0,
             "Number of parallel threads (default = 1)", "<threads>" },
-        { "dim4", '4', POPT_ARG_NONE, &dim4, 0,
-            "Input is a 4-manifold signature (default is 3-manifold)", 0 },
+        { "dim3", '3', POPT_ARG_VAL, &flavour, FLAVOUR_DIM3,
+            "Input is a 3-manifold signature (default)", 0 },
+        { "dim4", '4', POPT_ARG_VAL, &flavour, FLAVOUR_DIM4,
+            "Input is a 4-manifold signature", 0 },
+        { "knot", 'k', POPT_ARG_VAL, &flavour, FLAVOUR_KNOT,
+            "Input is a knot signature", 0 },
         POPT_AUTOHELP
         { 0, 0, 0, 0, 0, 0, 0 }
     };
@@ -115,22 +161,30 @@ int main(int argc, const char* argv[]) {
             return 1;
         }
     } else {
-        std::cerr << "Please give an isomorphism signature.\n\n";
+        std::cerr << "Please give an isomorphism/knot signature.\n\n";
         poptPrintHelp(optCon, stderr, 0);
         poptFreeContext(optCon);
         return 1;
     }
 
     // Set default arguments.
-    if (argHeight == 0)
-        argHeight = (dim4 ? 2 : 1);
+    if (argHeight == NO_HEIGHT) {
+        switch (flavour) {
+            case FLAVOUR_DIM3: argHeight = 1; break;
+            case FLAVOUR_DIM4: argHeight = 2; break;
+            case FLAVOUR_KNOT: argHeight = 1; break;
+        }
+    }
 
     // Run a sanity check on the command-line arguments.
     bool broken = false;
     if (argHeight < 0) {
-        std::cerr << "The height must be positive.\n";
+        std::cerr << "The height cannot be negative.\n";
         broken = true;
-    } else if (dim4 && (argHeight % 2)) {
+    } else if (flavour == FLAVOUR_DIM3 && argHeight == 0) {
+        std::cerr << "In three dimensions the height must be positive.\n";
+        broken = true;
+    } else if (flavour == FLAVOUR_DIM4 && (argHeight % 2)) {
         std::cerr << "In four dimensions the height must be even.\n";
         broken = true;
     }
@@ -139,17 +193,42 @@ int main(int argc, const char* argv[]) {
         broken = true;
     }
 
-    regina::Triangulation<3>* tri3 = nullptr;
-    regina::Triangulation<4>* tri4 = nullptr;
-
-    if (dim4)
-        tri4 = regina::Triangulation<4>::fromIsoSig(sig);
-    else
-        tri3 = regina::Triangulation<3>::fromIsoSig(sig);
-
-    if (! (tri3 || tri4)) {
-        std::cerr << "I could not interpret the given isomorphism signature.\n";
-        broken = true;
+    if (! broken) {
+        switch (flavour) {
+            case FLAVOUR_DIM3: {
+                auto tri3 = regina::Triangulation<3>::fromIsoSig(sig);
+                if (tri3) {
+                    process(tri3);
+                } else {
+                    std::cerr << "I could not interpret the given "
+                        "3-manifold isomorphism signature.\n";
+                    broken = true;
+                }
+                break;
+            }
+            case FLAVOUR_DIM4: {
+                auto tri4 = regina::Triangulation<4>::fromIsoSig(sig);
+                if (tri4) {
+                    process(tri4);
+                } else {
+                    std::cerr << "I could not interpret the given "
+                        "4-manifold isomorphism signature.\n";
+                    broken = true;
+                }
+                break;
+            }
+            case FLAVOUR_KNOT: {
+                auto knot = regina::Link::fromKnotSig(sig);
+                if (knot) {
+                    process(knot);
+                } else {
+                    std::cerr << "I could not interpret the given "
+                        "knot signature.\n";
+                    broken = true;
+                }
+                break;
+            }
+        }
     }
 
     if (broken) {
@@ -157,17 +236,9 @@ int main(int argc, const char* argv[]) {
         poptPrintHelp(optCon, stderr, 0);
         poptFreeContext(optCon);
         return 1;
+    } else {
+        poptFreeContext(optCon);
+        return 0;
     }
-
-    // Done parsing the command line.
-    poptFreeContext(optCon);
-
-    // Off we go!
-    if (tri3)
-        process(tri3);
-    else
-        process(tri4);
-
-    return 0;
 }
 

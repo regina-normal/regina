@@ -236,6 +236,9 @@ Version 6.1  [ TODO ]
           well just double-click on the packet instead.
         - Gave some of the standard system icons (open, save, close, etc.)
           a long-awaited refresh.
+    UTILITIES:
+        retriangulate:
+            - Now works with knots as well as 3/4-manifold triangulations.
 
 Version 6.0  [ 11 January, 2021 ]
 
