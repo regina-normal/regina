@@ -524,7 +524,7 @@
 
   <refnamediv>
    <refname>retriangulate</refname>
-   <refpurpose>Exhaustively search triangulations or knot diagrams using local moves</refpurpose>
+   <refpurpose>Exhaustively search through triangulations or knot diagrams using local moves</refpurpose>
   </refnamediv>
 
   <refsynopsisdiv>

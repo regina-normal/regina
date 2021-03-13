@@ -31,6 +31,7 @@
   <!ENTITY bzip2 "bzip2">
   <!ENTITY cpp "C++">
   <!ENTITY gzip "gzip">
+  <!ENTITY ldquo "&#34;">
   <!ENTITY html "<acronym>HTML</acronym>">
   <!ENTITY kde "<acronym>KDE</acronym>">
   <!ENTITY linux "<application><acronym>GNU</acronym>/Linux</application>">
@@ -40,6 +41,7 @@
   <!ENTITY menuhandbook "Help-&gt;Regina Handbook">
   <!ENTITY menuimportsigs "File-&gt;Import-&gt;Isomorphism Signature List">
   <!ENTITY python "Python">
+  <!ENTITY rdquo "&#34;">
   <!ENTITY url "<acronym>URL</acronym>">
   <!ENTITY windows "<application>Windows</application>">
   <!ENTITY xml "<acronym>XML</acronym>">
