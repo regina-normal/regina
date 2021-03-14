@@ -19,7 +19,7 @@
 #
 # Any instances of @TESTDIR@, @TESTOUT@, @INVALIDFILE@ or @BADFILE@ in the
 # arguments will be replaced with the corresponding environment variables
-# (see below).
+# (see below), or their defaults if the environment variables are not set.
 #
 # There is very limited capacity for handling arguments with whitespace:
 # such arguments may be surrounded by single quotes, though each block of
