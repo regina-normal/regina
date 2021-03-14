@@ -21,3 +21,5 @@ foreach(UTIL ${UTILS})
 endforeach(UTIL)
 
 install(TARGETS ${UTILS} DESTINATION "${BINDIR}" COMPONENT Runtime)
+
+ADD_SUBDIRECTORY("testsuite")
