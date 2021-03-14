@@ -1,0 +1,405 @@
+============================================================
+TEST: trisetcmp
+--------------------
+Two data files must be specified.
+
+Usage:
+    trisetcmp [ -m | -n ] [ -s ] <file1.rga> <file2.rga>
+
+    -m : List matches, i.e., triangulations contained in both files (default)
+    -n : List non-matches, i.e., triangulations in one file but not the other
+    -s : Allow triangulations from file1.rga to be subcomplexes of
+         triangulations from file2.rga
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp -m -n
+--------------------
+Options -n and -m may not be used together.
+
+Usage:
+    trisetcmp [ -m | -n ] [ -s ] <file1.rga> <file2.rga>
+
+    -m : List matches, i.e., triangulations contained in both files (default)
+    -n : List non-matches, i.e., triangulations in one file but not the other
+    -s : Allow triangulations from file1.rga to be subcomplexes of
+         triangulations from file2.rga
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp -z
+--------------------
+Invalid option: -z
+
+Usage:
+    trisetcmp [ -m | -n ] [ -s ] <file1.rga> <file2.rga>
+
+    -m : List matches, i.e., triangulations contained in both files (default)
+    -n : List non-matches, i.e., triangulations in one file but not the other
+    -s : Allow triangulations from file1.rga to be subcomplexes of
+         triangulations from file2.rga
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp @TESTDIR@/tiny.rga
+--------------------
+Two data files must be specified.
+
+Usage:
+    trisetcmp [ -m | -n ] [ -s ] <file1.rga> <file2.rga>
+
+    -m : List matches, i.e., triangulations contained in both files (default)
+    -n : List non-matches, i.e., triangulations in one file but not the other
+    -s : Allow triangulations from file1.rga to be subcomplexes of
+         triangulations from file2.rga
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp @TESTDIR@/tiny.rga ''
+--------------------
+Empty arguments are not allowed.
+
+Usage:
+    trisetcmp [ -m | -n ] [ -s ] <file1.rga> <file2.rga>
+
+    -m : List matches, i.e., triangulations contained in both files (default)
+    -n : List non-matches, i.e., triangulations in one file but not the other
+    -s : Allow triangulations from file1.rga to be subcomplexes of
+         triangulations from file2.rga
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp '' @TESTDIR@/tiny.rga
+--------------------
+Empty arguments are not allowed.
+
+Usage:
+    trisetcmp [ -m | -n ] [ -s ] <file1.rga> <file2.rga>
+
+    -m : List matches, i.e., triangulations contained in both files (default)
+    -n : List non-matches, i.e., triangulations in one file but not the other
+    -s : Allow triangulations from file1.rga to be subcomplexes of
+         triangulations from file2.rga
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp @TESTDIR@/tiny.rga @TESTDIR@/test.rga foo
+--------------------
+You may not pass more than two data files.
+
+Usage:
+    trisetcmp [ -m | -n ] [ -s ] <file1.rga> <file2.rga>
+
+    -m : List matches, i.e., triangulations contained in both files (default)
+    -n : List non-matches, i.e., triangulations in one file but not the other
+    -s : Allow triangulations from file1.rga to be subcomplexes of
+         triangulations from file2.rga
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp @TESTDIR@/tiny.rga @INVALIDFILE@
+--------------------
+File @INVALIDFILE@ could not be read.
+Please check that it exists and that it is a Regina data file.
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp @TESTDIR@/tiny.rga @BADFILE@
+--------------------
+XML Error: Document is empty
+
+File @BADFILE@ could not be read.
+Please check that it exists and that it is a Regina data file.
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp @INVALIDFILE@ @TESTDIR@/tiny.rga
+--------------------
+File @INVALIDFILE@ could not be read.
+Please check that it exists and that it is a Regina data file.
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp @BADFILE@ @TESTDIR@/tiny.rga
+--------------------
+XML Error: Document is empty
+
+File @BADFILE@ could not be read.
+Please check that it exists and that it is a Regina data file.
+--------------------
+Exit code: 1
+============================================================
+TEST: trisetcmp @TESTDIR@/tiny.rga @TESTDIR@/test.rga
+--------------------
+Matching (isomorphic) triangulations:
+
+    Layered Solid Torus  ==  Layered Solid Torus
+    RP² x S¹  ==  RP² x S¹
+    Twisted S³ x~ S¹  ==  Twisted S³ x~ S¹
+
+3 matches.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp @TESTDIR@/test.rga @TESTDIR@/tiny.rga
+--------------------
+Matching (isomorphic) triangulations:
+
+    Layered Solid Torus  ==  Layered Solid Torus
+    RP² x S¹  ==  RP² x S¹
+    Twisted S³ x~ S¹  ==  Twisted S³ x~ S¹
+
+3 matches.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp @TESTDIR@/test.rga @TESTDIR@/census-or-small.rga
+--------------------
+Matching (isomorphic) triangulations:
+
+    Poincaré Homology Sphere  ==  SFS [S2: (2,1) (3,1) (5,-4)] : #1
+
+1 match.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -s @TESTDIR@/b5.rga @TESTDIR@/b5-found.rga
+--------------------
+Matching (isomorphic subcomplex) triangulations:
+
+    B5  <=  SFS [S2: (2,1) (3,1) (11,-9)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (13,-11)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (16,-13)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (17,-14)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (15,-13)] : #4
+    B5  <=  SFS [S2: (2,1) (3,1) (19,-16)] : #4
+    B5  <=  SFS [S2: (2,1) (3,1) (20,-17)] : #4
+    B5  <=  SFS [S2: (2,1) (3,1) (21,-17)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (23,-19)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (27,-22)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (28,-23)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (17,-15)] : #19
+    B5  <=  SFS [S2: (2,1) (3,1) (22,-19)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (23,-20)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (25,-21)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (26,-21)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (27,-23)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (29,-24)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (32,-27)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (33,-28)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (37,-30)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (38,-31)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (39,-32)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (40,-33)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (43,-35)] : #1
+    B5  <=  SFS [S2: (2,1) (3,1) (45,-37)] : #1
+    B5  <=  SFS [D: (2,1) (2,1)] U/m SFS [D: (2,1) (3,1)], m = [ 4,1 | 3,1 ] : #29
+    B5  <=  SFS [D: (2,1) (2,1)] U/m SFS [D: (2,1) (3,1)], m = [ 1,5 | 1,4 ] : #1
+    B5  <=  SFS [D: (2,1) (2,1)] U/m SFS [D: (2,1) (3,1)], m = [ 5,1 | 4,1 ] : #2
+    B5  <=  SFS [D: (2,1) (2,1)] U/m SFS [D: (2,1) (3,1)], m = [ -4,5 | -3,4 ] : #18
+    B5  <=  SFS [D: (2,1) (2,1)] U/m SFS [D: (2,1) (3,1)], m = [ -5,6 | -4,5 ] : #1
+    B5  <=  SFS [D: (2,1) (2,1)] U/m SFS [D: (2,1) (3,1)], m = [ -1,6 | -1,5 ] : #1
+
+32 matches.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -s @TESTDIR@/b5.rga @TESTDIR@/8-or.rga
+--------------------
+Matching (isomorphic subcomplex) triangulations:
+
+    B5  <=  SFS [S2: (2,1) (3,1) (11,-9)] : #1
+
+1 match.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -s @TESTDIR@/b5-found.rga @TESTDIR@/b5.rga
+--------------------
+Matching (isomorphic subcomplex) triangulations:
+
+No matches found.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -s @TESTDIR@/test.rga @TESTDIR@/census-or-small.rga
+--------------------
+Matching (isomorphic subcomplex) triangulations:
+
+    Layered Solid Torus  <=  L(15,4) : #1
+    Layered Solid Torus  <=  L(18,5) : #1
+    Layered Solid Torus  <=  L(19,4) : #1
+    Layered Solid Torus  <=  L(25,7) : #1
+    Layered Solid Torus  <=  L(26,7) : #1
+    Layered Solid Torus  <=  L(29,8) : #1
+    Poincaré Homology Sphere  <=  SFS [S2: (2,1) (3,1) (5,-4)] : #1
+
+7 matches.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -s @TESTDIR@/census-or-small.rga @TESTDIR@/test.rga
+--------------------
+Matching (isomorphic subcomplex) triangulations:
+
+    SFS [S2: (2,1) (3,1) (5,-4)] : #1  <=  Poincaré Homology Sphere
+
+1 match.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -n @TESTDIR@/tiny.rga @TESTDIR@/test.rga
+--------------------
+Triangulations in @TESTDIR@/tiny.rga but not @TESTDIR@/test.rga:
+
+All triangulations matched.
+
+--------------------
+
+Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/tiny.rga:
+
+    Poincaré Homology Sphere
+    Cappell-Shaneson Knot Complement
+
+2 non-matches.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -n @TESTDIR@/test.rga @TESTDIR@/tiny.rga
+--------------------
+Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/tiny.rga:
+
+    Poincaré Homology Sphere
+    Cappell-Shaneson Knot Complement
+
+2 non-matches.
+
+--------------------
+
+Triangulations in @TESTDIR@/tiny.rga but not @TESTDIR@/test.rga:
+
+All triangulations matched.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -n @TESTDIR@/test.rga @TESTDIR@/census-or-small.rga
+--------------------
+Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/census-or-small.rga:
+
+    Layered Solid Torus
+    RP² x S¹
+    Cappell-Shaneson Knot Complement
+    Twisted S³ x~ S¹
+
+4 non-matches.
+
+--------------------
+
+Triangulations in @TESTDIR@/census-or-small.rga but not @TESTDIR@/test.rga:
+
+    S3 : #1
+    S3 : #2
+    L(4,1) : #1
+    L(5,2) : #1
+    S2 x S1 : #1
+    RP3 : #1
+    RP3 : #2
+    L(3,1) : #1
+    L(3,1) : #2
+    L(3,1) : #3
+    L(5,1) : #1
+    L(7,2) : #1
+    L(8,3) : #1
+    SFS [S2: (2,1) (2,1) (2,-1)] : #1
+    L(6,1) : #1
+    L(9,2) : #1
+    L(10,3) : #1
+    L(11,3) : #1
+    L(12,5) : #1
+    L(13,5) : #1
+    SFS [S2: (2,1) (2,1) (3,-2)] : #1
+    L(7,1) : #1
+    L(11,2) : #1
+    L(13,3) : #1
+    L(14,3) : #1
+    L(15,4) : #1
+    L(16,7) : #1
+    L(17,5) : #1
+    L(18,5) : #1
+    L(19,7) : #1
+    L(21,8) : #1
+    SFS [S2: (2,1) (2,1) (2,1)] : #1
+    SFS [S2: (2,1) (2,1) (3,-1)] : #1
+    SFS [S2: (2,1) (2,1) (3,-1)] : #2
+    SFS [S2: (2,1) (2,1) (4,-3)] : #1
+    SFS [S2: (2,1) (3,1) (3,-2)] : #1
+    L(8,1) : #1
+    L(13,2) : #1
+    L(16,3) : #1
+    L(17,3) : #1
+    L(17,4) : #1
+    L(19,4) : #1
+    L(20,9) : #1
+    L(22,5) : #1
+    L(23,5) : #1
+    L(23,7) : #1
+    L(24,7) : #1
+    L(25,7) : #1
+    L(25,9) : #1
+    L(26,7) : #1
+    L(27,8) : #1
+    L(29,8) : #1
+    L(29,12) : #1
+    L(30,11) : #1
+    L(31,12) : #1
+    L(34,13) : #1
+    SFS [S2: (2,1) (2,1) (2,3)] : #1
+    SFS [S2: (2,1) (2,1) (2,3)] : #2
+    SFS [S2: (2,1) (2,1) (3,1)] : #1
+    SFS [S2: (2,1) (2,1) (3,1)] : #2
+    SFS [S2: (2,1) (2,1) (3,2)] : #1
+    SFS [S2: (2,1) (2,1) (3,2)] : #2
+    SFS [S2: (2,1) (2,1) (4,-1)] : #1
+    SFS [S2: (2,1) (2,1) (4,-1)] : #2
+    SFS [S2: (2,1) (2,1) (5,-4)] : #1
+    SFS [S2: (2,1) (2,1) (5,-3)] : #1
+    SFS [S2: (2,1) (2,1) (5,-3)] : #2
+    SFS [S2: (2,1) (2,1) (5,-3)] : #3
+    SFS [S2: (2,1) (2,1) (5,-2)] : #1
+    SFS [S2: (2,1) (2,1) (5,-2)] : #2
+    SFS [S2: (2,1) (3,1) (3,-1)] : #1
+    SFS [S2: (2,1) (3,1) (3,-1)] : #2
+    SFS [S2: (2,1) (3,1) (4,-3)] : #1
+    SFS [S2: (2,1) (3,1) (4,-3)] : #2
+    SFS [S2: (2,1) (3,2) (3,-1)] : #1
+
+75 non-matches.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -n -s @TESTDIR@/test.rga @TESTDIR@/census-or-small.rga
+--------------------
+Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/census-or-small.rga:
+
+    RP² x S¹
+    Cappell-Shaneson Knot Complement
+    Twisted S³ x~ S¹
+
+3 non-matches.
+--------------------
+Exit code: 0
+============================================================
+TEST: trisetcmp -n -s @TESTDIR@/test.rga @TESTDIR@/b5-found.rga
+--------------------
+Triangulations in @TESTDIR@/test.rga but not @TESTDIR@/b5-found.rga:
+
+    Layered Solid Torus
+    Poincaré Homology Sphere
+    RP² x S¹
+    Cappell-Shaneson Knot Complement
+    Twisted S³ x~ S¹
+
+5 non-matches.
+--------------------
+Exit code: 0
+============================================================

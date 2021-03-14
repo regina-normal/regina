@@ -1,0 +1,1213 @@
+============================================================
+TEST: regfiledump
+--------------------
+No file has been specified.
+
+Usage:
+    regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+
+    -f : Display full packet details (default)
+    -l : Only display packet labels and types
+    -n : Don't display packets at all (implies -c)
+
+    -c : Finish with a count of all packets in the file
+
+    <packet-label> ... : Only display the listed packets (otherwise all
+                         packets are displayed)
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiledump -f -l
+--------------------
+More than one detail level has been specified.
+
+Usage:
+    regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+
+    -f : Display full packet details (default)
+    -l : Only display packet labels and types
+    -n : Don't display packets at all (implies -c)
+
+    -c : Finish with a count of all packets in the file
+
+    <packet-label> ... : Only display the listed packets (otherwise all
+                         packets are displayed)
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiledump -f -n
+--------------------
+More than one detail level has been specified.
+
+Usage:
+    regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+
+    -f : Display full packet details (default)
+    -l : Only display packet labels and types
+    -n : Don't display packets at all (implies -c)
+
+    -c : Finish with a count of all packets in the file
+
+    <packet-label> ... : Only display the listed packets (otherwise all
+                         packets are displayed)
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiledump -l -n
+--------------------
+More than one detail level has been specified.
+
+Usage:
+    regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+
+    -f : Display full packet details (default)
+    -l : Only display packet labels and types
+    -n : Don't display packets at all (implies -c)
+
+    -c : Finish with a count of all packets in the file
+
+    <packet-label> ... : Only display the listed packets (otherwise all
+                         packets are displayed)
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiledump -z
+--------------------
+Invalid option: -z
+
+Usage:
+    regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+
+    -f : Display full packet details (default)
+    -l : Only display packet labels and types
+    -n : Don't display packets at all (implies -c)
+
+    -c : Finish with a count of all packets in the file
+
+    <packet-label> ... : Only display the listed packets (otherwise all
+                         packets are displayed)
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiledump ''
+--------------------
+Empty arguments are not allowed.
+
+Usage:
+    regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+
+    -f : Display full packet details (default)
+    -l : Only display packet labels and types
+    -n : Don't display packets at all (implies -c)
+
+    -c : Finish with a count of all packets in the file
+
+    <packet-label> ... : Only display the listed packets (otherwise all
+                         packets are displayed)
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiledump @INVALIDFILE@
+--------------------
+File @INVALIDFILE@ could not be read.
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiledump @BADFILE@
+--------------------
+XML Error: Document is empty
+
+File @BADFILE@ could not be read.
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiledump -n @TESTDIR@/tiny.rga foo
+--------------------
+You cannot specify individual packets if packets are not to be displayed.
+
+Usage:
+    regfiledump [ -f | -l | -n ] [ -c ] <file> [ <packet-label> ... ]
+
+    -f : Display full packet details (default)
+    -l : Only display packet labels and types
+    -n : Don't display packets at all (implies -c)
+
+    -c : Finish with a count of all packets in the file
+
+    <packet-label> ... : Only display the listed packets (otherwise all
+                         packets are displayed)
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiledump @TESTDIR@/tiny.rga
+--------------------
+************************************************************
+*
+* Label: Sample Data File
+* Type: Container
+* Parent: (none)
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Read Me
+* Type: Text
+* Parent: Sample Data File
+*
+************************************************************
+
+Welcome to Regina!
+
+
+************************************************************
+*
+* Label: 3-Manifolds
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Layered Solid Torus
+* Type: 3-Manifold Triangulation
+* Parent: 3-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 4
+  Triangles: 9
+  Edges: 6
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  glued to:      (012)      (013)      (023)      (123)
+  -----+-------------------------------------------------------
+    0  |              boundary   boundary    1 (012)    1 (130)
+    1  |               0 (023)    0 (312)    2 (012)    2 (130)
+    2  |               1 (023)    1 (312)    3 (013)    3 (120)
+    3  |               2 (312)    2 (023)    3 (312)    3 (230)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+    2  |             0   0   0   0
+    3  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   2   2   1   3
+    1  |           1   2   3   3   2   4
+    2  |           2   3   4   4   3   5
+    3  |           3   5   4   4   5   4
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           2   3   4   5
+    2  |           4   5   6   7
+    3  |           7   6   8   8
+
+
+
+************************************************************
+*
+* Label: RP² x S¹
+* Type: 3-Manifold Triangulation
+* Parent: 3-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 3
+  Triangles: 6
+  Edges: 4
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  glued to:      (012)      (013)      (023)      (123)
+  -----+-------------------------------------------------------
+    0  |               2 (023)    2 (132)    1 (023)    1 (123)
+    1  |               2 (201)    2 (310)    0 (023)    0 (123)
+    2  |               1 (120)    1 (310)    0 (012)    0 (031)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+    2  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   1   2   2   3
+    1  |           0   1   1   2   2   3
+    2  |           2   0   1   1   0   2
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           4   5   2   3
+    2  |           4   5   0   1
+
+
+
+************************************************************
+*
+* Label: Note
+* Type: Text
+* Parent: RP² x S¹
+*
+************************************************************
+
+There are in fact two triangulations of this 3-manifold with three tetrahedra.
+
+
+************************************************************
+*
+* Label: Figure 8 Knot Complement
+* Type: SnapPea Triangulation
+* Parent: 3-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 2
+  Triangles: 4
+  Edges: 2
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  glued to:      (012)      (013)      (023)      (123)
+  -----+-------------------------------------------------------
+    0  |               1 (210)    1 (230)    1 (130)    1 (132)
+    1  |               0 (210)    0 (302)    0 (301)    0 (132)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   1   1   0   0
+    1  |           1   1   0   0   1   0
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           0   2   1   3
+
+Tetrahedron shapes:
+  0: ( 0.5, 0.866025 )
+  1: ( 0.5, 0.866025 )
+
+Cusps:
+  0: Vertex 0, complete
+
+
+************************************************************
+*
+* Label: Angle Structures
+* Type: Angle Structure List
+* Parent: Figure 8 Knot Complement
+*
+************************************************************
+
+5 vertex angle structures (no restrictions):
+0 1 0 ; 1 0 0
+0 0 1 ; 0 0 1
+1 0 0 ; 0 1 0
+1/2 0 1/2 ; 1 0 0
+0 1 0 ; 0 1/2 1/2
+
+
+************************************************************
+*
+* Label: 4-Manifolds
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Twisted S³ x~ S¹
+* Type: 4-Manifold Triangulation
+* Parent: 4-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Pentachora: 2
+  Tetrahedra: 5
+  Triangles: 6
+  Edges: 4
+  Vertices: 1
+
+Pentachoron gluing:
+  Pent  |  glued to:     (0123)     (0124)     (0134)     (0234)     (1234)
+  ------+------------------------------------------------------------------
+     0  |              0 (1234)   1 (0124)   1 (0134)   1 (0234)   0 (0123)
+     1  |              1 (1234)   0 (0124)   0 (0134)   0 (0234)   1 (0123)
+
+Vertices:
+  Pent  |  vertex:    0   1   2   3   4
+  ------+------------------------------
+     0  |             0   0   0   0   0
+     1  |             0   0   0   0   0
+
+Edges:
+  Pent  |  edge:   01  02  03  04  12  13  14  23  24  34
+  ------+------------------------------------------------
+     0  |           0   1   2   3   0   1   2   0   1   0
+     1  |           0   1   2   3   0   1   2   0   1   0
+
+Triangles:
+  Pent  |  triangle:  012 013 014 023 024 034 123 124 134 234
+  ------+----------------------------------------------------
+     0  |               0   2   5   1   4   3   0   2   1   0
+     1  |               0   2   5   1   4   3   0   2   1   0
+
+Tetrahedra:
+  Pent  |  facet:  0123 0124 0134 0234 1234
+  ------+----------------------------------
+     0  |             0    1    2    3    0
+     1  |             4    1    2    3    4
+
+
+
+************************************************************
+*
+* Label: Normal Hypersurfaces
+* Type: Normal Hypersurface List
+* Parent: Twisted S³ x~ S¹
+*
+************************************************************
+
+Embedded, vertex hypersurfaces
+Coordinates: Standard normal (tet-prism)
+Number of hypersurfaces is 5
+0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0
+0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0 || 0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0
+0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0 || 0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0
+1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1 || 1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1
+1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0 || 1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0
+
+
+************************************************************
+*
+* Label: 2-Manifolds
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Klein Bottle, version 1
+* Type: 2-Manifold Triangulation
+* Parent: 2-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Triangles: 2
+  Edges: 3
+  Vertices: 1
+
+Triangle gluing:
+  Triangle  |  glued to:     (01)     (02)     (12)
+  ----------+--------------------------------------
+         0  |              1 (01)   1 (20)   1 (21)
+         1  |              0 (01)   0 (20)   0 (21)
+
+Vertices:
+  Triangle  |  vertex:    0   1   2
+  ----------+----------------------
+         0  |             0   0   0
+         1  |             0   0   0
+
+Edges:
+  Triangle  |  edge:   01  02  12
+  ----------+--------------------
+         0  |           0   1   2
+         1  |           0   1   2
+
+
+
+************************************************************
+*
+* Label: Klein Bottle, version 2
+* Type: 2-Manifold Triangulation
+* Parent: 2-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Triangles: 2
+  Edges: 3
+  Vertices: 1
+
+Triangle gluing:
+  Triangle  |  glued to:     (01)     (02)     (12)
+  ----------+--------------------------------------
+         0  |              0 (12)   1 (02)   0 (01)
+         1  |              1 (12)   0 (02)   1 (01)
+
+Vertices:
+  Triangle  |  vertex:    0   1   2
+  ----------+----------------------
+         0  |             0   0   0
+         1  |             0   0   0
+
+Edges:
+  Triangle  |  edge:   01  02  12
+  ----------+--------------------
+         0  |           0   1   0
+         1  |           2   1   2
+
+
+
+************************************************************
+*
+* Label: Normal Surface Filters
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Tori and Annuli
+* Type: Surface Filter
+* Parent: Normal Surface Filters
+*
+************************************************************
+
+Filter normal surfaces with restrictions:
+    Euler characteristic: 0
+    Orientability: { true }
+    Compactness: { true }
+
+
+************************************************************
+*
+* Label: Python Script
+* Type: Script
+* Parent: Sample Data File
+*
+************************************************************
+
+Variable: tri = 3-Manifolds
+
+# This Python script runs through all 3-manifold triangulations in this file
+# and prints the first homology of each.
+#
+# See the Regina handbook for more elaborate sample Python sessions.
+
+# Output the homology of each triangulation.
+t = tri.firstChild()
+while t != None:
+	print t.label() + ":", t.homology()
+	t = t.nextSibling()
+
+
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump -c @TESTDIR@/tiny.rga
+--------------------
+************************************************************
+*
+* Label: Sample Data File
+* Type: Container
+* Parent: (none)
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Read Me
+* Type: Text
+* Parent: Sample Data File
+*
+************************************************************
+
+Welcome to Regina!
+
+
+************************************************************
+*
+* Label: 3-Manifolds
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Layered Solid Torus
+* Type: 3-Manifold Triangulation
+* Parent: 3-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 4
+  Triangles: 9
+  Edges: 6
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  glued to:      (012)      (013)      (023)      (123)
+  -----+-------------------------------------------------------
+    0  |              boundary   boundary    1 (012)    1 (130)
+    1  |               0 (023)    0 (312)    2 (012)    2 (130)
+    2  |               1 (023)    1 (312)    3 (013)    3 (120)
+    3  |               2 (312)    2 (023)    3 (312)    3 (230)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+    2  |             0   0   0   0
+    3  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   2   2   1   3
+    1  |           1   2   3   3   2   4
+    2  |           2   3   4   4   3   5
+    3  |           3   5   4   4   5   4
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           2   3   4   5
+    2  |           4   5   6   7
+    3  |           7   6   8   8
+
+
+
+************************************************************
+*
+* Label: RP² x S¹
+* Type: 3-Manifold Triangulation
+* Parent: 3-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 3
+  Triangles: 6
+  Edges: 4
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  glued to:      (012)      (013)      (023)      (123)
+  -----+-------------------------------------------------------
+    0  |               2 (023)    2 (132)    1 (023)    1 (123)
+    1  |               2 (201)    2 (310)    0 (023)    0 (123)
+    2  |               1 (120)    1 (310)    0 (012)    0 (031)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+    2  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   1   2   2   3
+    1  |           0   1   1   2   2   3
+    2  |           2   0   1   1   0   2
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           4   5   2   3
+    2  |           4   5   0   1
+
+
+
+************************************************************
+*
+* Label: Note
+* Type: Text
+* Parent: RP² x S¹
+*
+************************************************************
+
+There are in fact two triangulations of this 3-manifold with three tetrahedra.
+
+
+************************************************************
+*
+* Label: Figure 8 Knot Complement
+* Type: SnapPea Triangulation
+* Parent: 3-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 2
+  Triangles: 4
+  Edges: 2
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  glued to:      (012)      (013)      (023)      (123)
+  -----+-------------------------------------------------------
+    0  |               1 (210)    1 (230)    1 (130)    1 (132)
+    1  |               0 (210)    0 (302)    0 (301)    0 (132)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   1   1   0   0
+    1  |           1   1   0   0   1   0
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           0   2   1   3
+
+Tetrahedron shapes:
+  0: ( 0.5, 0.866025 )
+  1: ( 0.5, 0.866025 )
+
+Cusps:
+  0: Vertex 0, complete
+
+
+************************************************************
+*
+* Label: Angle Structures
+* Type: Angle Structure List
+* Parent: Figure 8 Knot Complement
+*
+************************************************************
+
+5 vertex angle structures (no restrictions):
+0 1 0 ; 1 0 0
+0 0 1 ; 0 0 1
+1 0 0 ; 0 1 0
+1/2 0 1/2 ; 1 0 0
+0 1 0 ; 0 1/2 1/2
+
+
+************************************************************
+*
+* Label: 4-Manifolds
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Twisted S³ x~ S¹
+* Type: 4-Manifold Triangulation
+* Parent: 4-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Pentachora: 2
+  Tetrahedra: 5
+  Triangles: 6
+  Edges: 4
+  Vertices: 1
+
+Pentachoron gluing:
+  Pent  |  glued to:     (0123)     (0124)     (0134)     (0234)     (1234)
+  ------+------------------------------------------------------------------
+     0  |              0 (1234)   1 (0124)   1 (0134)   1 (0234)   0 (0123)
+     1  |              1 (1234)   0 (0124)   0 (0134)   0 (0234)   1 (0123)
+
+Vertices:
+  Pent  |  vertex:    0   1   2   3   4
+  ------+------------------------------
+     0  |             0   0   0   0   0
+     1  |             0   0   0   0   0
+
+Edges:
+  Pent  |  edge:   01  02  03  04  12  13  14  23  24  34
+  ------+------------------------------------------------
+     0  |           0   1   2   3   0   1   2   0   1   0
+     1  |           0   1   2   3   0   1   2   0   1   0
+
+Triangles:
+  Pent  |  triangle:  012 013 014 023 024 034 123 124 134 234
+  ------+----------------------------------------------------
+     0  |               0   2   5   1   4   3   0   2   1   0
+     1  |               0   2   5   1   4   3   0   2   1   0
+
+Tetrahedra:
+  Pent  |  facet:  0123 0124 0134 0234 1234
+  ------+----------------------------------
+     0  |             0    1    2    3    0
+     1  |             4    1    2    3    4
+
+
+
+************************************************************
+*
+* Label: Normal Hypersurfaces
+* Type: Normal Hypersurface List
+* Parent: Twisted S³ x~ S¹
+*
+************************************************************
+
+Embedded, vertex hypersurfaces
+Coordinates: Standard normal (tet-prism)
+Number of hypersurfaces is 5
+0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0
+0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0 || 0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0
+0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0 || 0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0
+1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1 || 1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1
+1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0 || 1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0
+
+
+************************************************************
+*
+* Label: 2-Manifolds
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Klein Bottle, version 1
+* Type: 2-Manifold Triangulation
+* Parent: 2-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Triangles: 2
+  Edges: 3
+  Vertices: 1
+
+Triangle gluing:
+  Triangle  |  glued to:     (01)     (02)     (12)
+  ----------+--------------------------------------
+         0  |              1 (01)   1 (20)   1 (21)
+         1  |              0 (01)   0 (20)   0 (21)
+
+Vertices:
+  Triangle  |  vertex:    0   1   2
+  ----------+----------------------
+         0  |             0   0   0
+         1  |             0   0   0
+
+Edges:
+  Triangle  |  edge:   01  02  12
+  ----------+--------------------
+         0  |           0   1   2
+         1  |           0   1   2
+
+
+
+************************************************************
+*
+* Label: Klein Bottle, version 2
+* Type: 2-Manifold Triangulation
+* Parent: 2-Manifolds
+*
+************************************************************
+
+Size of the skeleton:
+  Triangles: 2
+  Edges: 3
+  Vertices: 1
+
+Triangle gluing:
+  Triangle  |  glued to:     (01)     (02)     (12)
+  ----------+--------------------------------------
+         0  |              0 (12)   1 (02)   0 (01)
+         1  |              1 (12)   0 (02)   1 (01)
+
+Vertices:
+  Triangle  |  vertex:    0   1   2
+  ----------+----------------------
+         0  |             0   0   0
+         1  |             0   0   0
+
+Edges:
+  Triangle  |  edge:   01  02  12
+  ----------+--------------------
+         0  |           0   1   0
+         1  |           2   1   2
+
+
+
+************************************************************
+*
+* Label: Normal Surface Filters
+* Type: Container
+* Parent: Sample Data File
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Tori and Annuli
+* Type: Surface Filter
+* Parent: Normal Surface Filters
+*
+************************************************************
+
+Filter normal surfaces with restrictions:
+    Euler characteristic: 0
+    Orientability: { true }
+    Compactness: { true }
+
+
+************************************************************
+*
+* Label: Python Script
+* Type: Script
+* Parent: Sample Data File
+*
+************************************************************
+
+Variable: tri = 3-Manifolds
+
+# This Python script runs through all 3-manifold triangulations in this file
+# and prints the first homology of each.
+#
+# See the Regina handbook for more elaborate sample Python sessions.
+
+# Output the homology of each triangulation.
+t = tri.firstChild()
+while t != None:
+	print t.label() + ":", t.homology()
+	t = t.nextSibling()
+
+
+
+17 total packets in file.
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump -l @TESTDIR@/tiny.rga
+--------------------
+Sample Data File (Container)
+Read Me (Text)
+3-Manifolds (Container)
+Layered Solid Torus (3-Manifold Triangulation)
+RP² x S¹ (3-Manifold Triangulation)
+Note (Text)
+Figure 8 Knot Complement (SnapPea Triangulation)
+Angle Structures (Angle Structure List)
+4-Manifolds (Container)
+Twisted S³ x~ S¹ (4-Manifold Triangulation)
+Normal Hypersurfaces (Normal Hypersurface List)
+2-Manifolds (Container)
+Klein Bottle, version 1 (2-Manifold Triangulation)
+Klein Bottle, version 2 (2-Manifold Triangulation)
+Normal Surface Filters (Container)
+Tori and Annuli (Surface Filter)
+Python Script (Script)
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump -l -c @TESTDIR@/tiny.rga
+--------------------
+Sample Data File (Container)
+Read Me (Text)
+3-Manifolds (Container)
+Layered Solid Torus (3-Manifold Triangulation)
+RP² x S¹ (3-Manifold Triangulation)
+Note (Text)
+Figure 8 Knot Complement (SnapPea Triangulation)
+Angle Structures (Angle Structure List)
+4-Manifolds (Container)
+Twisted S³ x~ S¹ (4-Manifold Triangulation)
+Normal Hypersurfaces (Normal Hypersurface List)
+2-Manifolds (Container)
+Klein Bottle, version 1 (2-Manifold Triangulation)
+Klein Bottle, version 2 (2-Manifold Triangulation)
+Normal Surface Filters (Container)
+Tori and Annuli (Surface Filter)
+Python Script (Script)
+
+17 total packets in file.
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump -n @TESTDIR@/tiny.rga
+--------------------
+17 total packets in file.
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump @TESTDIR@/tiny.rga 'Normal Hypersurfaces'
+--------------------
+************************************************************
+*
+* Label: Normal Hypersurfaces
+* Type: Normal Hypersurface List
+* Parent: Twisted S³ x~ S¹
+*
+************************************************************
+
+Embedded, vertex hypersurfaces
+Coordinates: Standard normal (tet-prism)
+Number of hypersurfaces is 5
+0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0
+0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0 || 0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0
+0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0 || 0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0
+1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1 || 1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1
+1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0 || 1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0
+
+
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump @TESTDIR@/tiny.rga Foo
+--------------------
+************************************************************
+*
+* ERROR: Foo
+*        No such packet.
+*
+************************************************************
+
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump @TESTDIR@/tiny.rga 'Normal Hypersurfaces' Foo 'Read Me'
+--------------------
+************************************************************
+*
+* Label: Normal Hypersurfaces
+* Type: Normal Hypersurface List
+* Parent: Twisted S³ x~ S¹
+*
+************************************************************
+
+Embedded, vertex hypersurfaces
+Coordinates: Standard normal (tet-prism)
+Number of hypersurfaces is 5
+0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0 || 0 0 0 0 0 ; 0 0 0 0 0 1 0 0 0 0
+0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0 || 0 0 1 0 0 ; 0 0 1 0 0 0 1 0 0 0
+0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0 || 0 1 1 1 0 ; 0 0 0 1 0 0 0 0 0 0
+1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1 || 1 0 0 0 1 ; 1 0 0 0 0 0 0 0 0 1
+1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0 || 1 1 1 1 1 ; 0 0 0 0 0 0 0 0 0 0
+
+
+************************************************************
+*
+* ERROR: Foo
+*        No such packet.
+*
+************************************************************
+
+************************************************************
+*
+* Label: Read Me
+* Type: Text
+* Parent: Sample Data File
+*
+************************************************************
+
+Welcome to Regina!
+
+
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump -l @TESTDIR@/tiny.rga 'Normal Hypersurfaces'
+--------------------
+Normal Hypersurfaces (Normal Hypersurface List)
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump -l @TESTDIR@/tiny.rga Foo
+--------------------
+ERROR: Foo -- No such packet.
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump -l @TESTDIR@/tiny.rga 'Normal Hypersurfaces' Foo 'Read Me'
+--------------------
+Normal Hypersurfaces (Normal Hypersurface List)
+ERROR: Foo -- No such packet.
+Read Me (Text)
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiledump @TESTDIR@/tags.rga
+--------------------
+************************************************************
+*
+* Label: Container
+* Type: Container
+* Parent: (none)
+*
+************************************************************
+
+Container
+
+
+************************************************************
+*
+* Label: Poincaré homology sphere
+* Type: 3-Manifold Triangulation
+* Parent: Container
+*
+************************************************************
+
+Size of the skeleton:
+  Tetrahedra: 5
+  Triangles: 10
+  Edges: 6
+  Vertices: 1
+
+Tetrahedron gluing:
+  Tet  |  glued to:      (012)      (013)      (023)      (123)
+  -----+-------------------------------------------------------
+    0  |               4 (312)    3 (321)    2 (312)    1 (321)
+    1  |               3 (203)    4 (230)    2 (203)    0 (321)
+    2  |               4 (301)    3 (120)    1 (203)    0 (230)
+    3  |               2 (301)    4 (120)    1 (102)    0 (310)
+    4  |               3 (301)    2 (120)    1 (301)    0 (120)
+
+Vertices:
+  Tet  |  vertex:    0   1   2   3
+  -----+--------------------------
+    0  |             0   0   0   0
+    1  |             0   0   0   0
+    2  |             0   0   0   0
+    3  |             0   0   0   0
+    4  |             0   0   0   0
+
+Edges:
+  Tet  |  edge:   01  02  03  12  13  23
+  -----+--------------------------------
+    0  |           0   1   2   3   4   5
+    1  |           1   0   2   5   4   3
+    2  |           4   0   3   5   1   2
+    3  |           3   1   5   4   2   0
+    4  |           5   2   4   3   0   1
+
+Triangles:
+  Tet  |  face:  012 013 023 123
+  -----+------------------------
+    0  |           0   1   2   3
+    1  |           4   5   6   3
+    2  |           7   8   6   2
+    3  |           8   9   4   1
+    4  |           9   7   5   0
+
+
+
+************************************************************
+*
+* Label: Cappell-Shaneson knot complement
+* Type: 4-Manifold Triangulation
+* Parent: Container
+* Tags: 2-knot, 4-D
+*
+************************************************************
+
+Size of the skeleton:
+  Pentachora: 2
+  Tetrahedra: 5
+  Triangles: 4
+  Edges: 1
+  Vertices: 1
+
+Pentachoron gluing:
+  Pent  |  glued to:     (0123)     (0124)     (0134)     (0234)     (1234)
+  ------+------------------------------------------------------------------
+     0  |              1 (0134)   0 (1234)   1 (1234)   1 (0124)   0 (0124)
+     1  |              1 (0234)   0 (0234)   0 (0123)   1 (0123)   0 (0134)
+
+Vertices:
+  Pent  |  vertex:    0   1   2   3   4
+  ------+------------------------------
+     0  |             0   0   0   0   0
+     1  |             0   0   0   0   0
+
+Edges:
+  Pent  |  edge:   01  02  03  04  12  13  14  23  24  34
+  ------+------------------------------------------------
+     0  |           0   0   0   0   0   0   0   0   0   0
+     1  |           0   0   0   0   0   0   0   0   0   0
+
+Triangles:
+  Pent  |  triangle:  012 013 014 023 024 034 123 124 134 234
+  ------+----------------------------------------------------
+     0  |               2   1   0   3   1   2   2   0   1   0
+     1  |               3   2   1   3   2   3   1   0   2   1
+
+Tetrahedra:
+  Pent  |  facet:  0123 0124 0134 0234 1234
+  ------+----------------------------------
+     0  |             0    1    2    3    1
+     1  |             4    3    0    4    2
+
+
+
+--------------------
+Exit code: 0
+============================================================

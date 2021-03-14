@@ -1,0 +1,87 @@
+============================================================
+TEST: regfiletype
+--------------------
+Please specify one or more files.
+
+Usage:
+    regfiletype <file> ...
+--------------------
+Exit code: 1
+============================================================
+TEST: regfiletype @TESTDIR@/test.rga
+--------------------
+Regina data
+XML Regina data file
+Engine 5.0
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @TESTDIR@/8-or.rga
+--------------------
+Regina data
+XML Regina data file (compressed)
+Engine 4.5
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @TESTDIR@/b5.rga
+--------------------
+Regina data
+XML Regina data file (compressed)
+Engine 4.91
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @INVALIDFILE@
+--------------------
+Unknown file format or file could not be opened.
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @BADFILE@
+--------------------
+Unknown file format or file could not be opened.
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @TESTDIR@/test.rga @TESTDIR@/b5.rga
+--------------------
+[ @TESTDIR@/test.rga ]
+Regina data
+XML Regina data file
+Engine 5.0
+
+[ @TESTDIR@/b5.rga ]
+Regina data
+XML Regina data file (compressed)
+Engine 4.91
+
+--------------------
+Exit code: 0
+============================================================
+TEST: regfiletype @TESTDIR@/test.rga @INVALIDFILE@ @BADFILE@ @TESTDIR@/b5.rga @TESTDIR@/8-or.rga
+--------------------
+[ @TESTDIR@/test.rga ]
+Regina data
+XML Regina data file
+Engine 5.0
+
+[ @INVALIDFILE@ ]
+Unknown file format or file could not be opened.
+
+[ @BADFILE@ ]
+Unknown file format or file could not be opened.
+
+[ @TESTDIR@/b5.rga ]
+Regina data
+XML Regina data file (compressed)
+Engine 4.91
+
+[ @TESTDIR@/8-or.rga ]
+Regina data
+XML Regina data file (compressed)
+Engine 4.5
+
+--------------------
+Exit code: 0
+============================================================

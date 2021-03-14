@@ -17,9 +17,15 @@
 # Utilities must be the utility name only (e.g., censuslookup, not
 # path/to/censuslookup or censuslookup.exe).
 #
-# Arguments must not contain whitespace or bash special characters.
-# Any arguments of the form TESTOUT, INVALIDFILE or BADFILE will be
-# replaced with the corresponding environment variables (see below).
+# Any instances of @TESTDIR@, @TESTOUT@, @INVALIDFILE@ or @BADFILE@ in the
+# arguments will be replaced with the corresponding environment variables
+# (see below).
+#
+# There is very limited capacity for handling arguments with whitespace:
+# such arguments may be surrounded by single quotes, though each block of
+# whitespace will be compressed to a single space.  An empty argument
+# may be specified with a pair of single quotes ('').  Currently there is
+# no way to escape single quotes within an argument.
 #
 # Lines beginning with # will be ignored.
 #
@@ -113,6 +119,9 @@ if [ ! -e "$badfile" ]; then
     exit 1
 fi
 
+# Ensure that our perl substitution scripts can see all of these variables.
+export testdir bindir testout invalidfile badfile
+
 input="$1"
 if [ ! -e "$input" ]; then
     echo "ERROR: Test file $input does not exist."
@@ -122,56 +131,98 @@ fi
 filter="$2"
 
 function pathfilter {
-    _from="$bindir/$util" _to="$util" perl -pe 's/\Q$ENV{_from}\E/$ENV{_to}/g'
-    # TODO: Fix TESTOUT, INVALIDFILE, BADFILE
+    _from="$bindir/$util" _to="$util" \
+        perl -pe 's/\Q$ENV{_from}\E/$ENV{_to}/g;
+                  s/\Q$ENV{invalidfile}\E/\@INVALIDFILE\@/g;
+                  s/\Q$ENV{badfile}\E/\@BADFILE\@/g;
+                  s/\Q$ENV{testout}\E/\@TESTOUT\@/g;
+                  s/\Q$ENV{testdir}\E/\@TESTDIR\@/g';
 }
 
 while read -r -a line; do
     util="${line[0]}"
-    args=( "${line[@]:1}" )
-    # TODO: Replace TESTOUT, INVALIDFILE, BADFILE
     case "$util" in
-        '' )
-            ;;
-        '#'* )
-            ;;
-        * )
-            echo "============================================================"
-            echo "TEST: $util ${line[@]:1}"
-            echo "--------------------"
-            rm -f "$testout"
-            if [ -z "$filter" ]; then
-                "$bindir/$util" "${line[@]:1}" 2>&1 | pathfilter && dummy=
-                exitcode=$?
-            else
-                "$bindir/$util" "${line[@]:1}" 2>&1 | pathfilter | "$filter" && dummy=
-                exitcode=$?
-            fi
-            echo "--------------------"
-            echo "Exit code: $exitcode"
-            if [ -e "$testout" ]; then
-                echo "--------------------"
-                raw=`cat "$testout" | shasum`
-                uncompressed=`zcat -f "$testout" | shasum`
-                if [ "$raw" = "$uncompressed" ]; then
-                    echo "Output:"
-                    if [ -z "$filter" ]; then
-                        cat "$testout"
-                    else
-                        cat "$testout" | "$filter"
-                    fi
-                else
-                    echo "Output (compressed):"
-                    if [ -z "$filter" ]; then
-                        zcat "$testout"
-                    else
-                        zcat "$testout" | "$filter"
-                    fi
-                fi
-                rm "$testout"
-            fi
-            ;;
+        '' ) continue ;;
+        '#'* ) continue ;;
     esac
+
+    args=()
+    next=
+    waiting=0
+    for arg in "${line[@]:1}"; do
+        if [ "$waiting" = 0 ]; then
+            # We are beginning a new argument.
+            case "$arg" in
+                "'"*"'" )
+                    next="`printf '%s\n' "$arg" | sed -e 's#^.##' -e 's#.$##'`"
+                    ;;
+                "'"* )
+                    next="`printf '%s\n' "$arg" | sed -e 's#^.##'`"
+                    waiting=1
+                    ;;
+                * )
+                    next="$arg"
+                    ;;
+            esac
+        else
+            # We are continuing a quoted argument.
+            case "$arg" in
+                *"'" )
+                    next="$next `printf '%s\n' "$arg" | sed -e 's#.$##'`"
+                    waiting=0
+                    ;;
+                * )
+                    next="$next $arg"
+                    ;;
+            esac
+        fi
+        if [ "$waiting" = 0 ]; then
+            args+=("`printf '%s\n' "$next" | \
+                perl -pe 's/\@TESTDIR\@/$ENV{testdir}/g;
+                          s/\@TESTOUT\@/$ENV{testout}/g;
+                          s/\@INVALIDFILE\@/$ENV{invalidfile}/g;
+                          s/\@BADFILE\@/$ENV{badfile}/g;'`")
+            next=
+        fi
+    done
+    if [ "$waiting" = 1 ]; then
+        echo "ERROR: Unfinished quoted argument: $next"
+        exit 1
+    fi
+
+    echo "============================================================"
+    echo "TEST: ${line[@]}"
+    echo "--------------------"
+    rm -f "$testout"
+    if [ -z "$filter" ]; then
+        "$bindir/$util" "${args[@]}" 2>&1 | pathfilter && dummy=
+        exitcode=$?
+    else
+        "$bindir/$util" "${args[@]}" 2>&1 | pathfilter | "$filter" && dummy=
+        exitcode=$?
+    fi
+    echo "--------------------"
+    echo "Exit code: $exitcode"
+    if [ -e "$testout" ]; then
+        echo "--------------------"
+        magic="`hexdump -n2 -e '/2 "%x\n"' "$testout"`"
+        if [ "$magic" = 8b1f ]; then
+            echo "Output (compressed):"
+            if [ -z "$filter" ]; then
+                cat "$testout" | gunzip
+            else
+                cat "$testout" | gunzip | "$filter"
+            fi
+        else
+            echo "Output:"
+            if [ -z "$filter" ]; then
+                cat "$testout"
+            else
+                cat "$testout" | "$filter"
+            fi
+        fi
+        rm "$testout"
+    fi
 done < "$input"
 echo "============================================================"
 

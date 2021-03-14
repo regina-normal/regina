@@ -1,0 +1,52 @@
+#!/bin/bash
+#
+# Regina - Software for low-dimensional topology
+# Command-Line Utilities Test Suite
+#
+# Copyright (c) 2016-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+# --- regconvert with errors:
+regconvert
+regconvert -x -u
+regconvert -f
+regconvert ''
+regconvert -x
+regconvert -x @TESTDIR@/b5.rga
+regconvert @TESTDIR@/b5.rga @TESTOUT@ foo
+regconvert @INVALIDFILE@
+regconvert @BADFILE@
+regconvert @TESTDIR@/b5.rga @INVALIDFILE@
+# --- regconvert when successful:
+regconvert @TESTDIR@/b5.rga
+regconvert @TESTDIR@/tiny.rga
+regconvert @TESTDIR@/b5.rga @TESTOUT@
+regconvert @TESTDIR@/tiny.rga @TESTOUT@
+regconvert -x @TESTDIR@/b5.rga @TESTOUT@
+regconvert -x @TESTDIR@/tiny.rga @TESTOUT@
+regconvert -u @TESTDIR@/b5.rga
+regconvert -u @TESTDIR@/tiny.rga
+regconvert -u @TESTDIR@/b5.rga @TESTOUT@
+regconvert -u @TESTDIR@/tiny.rga @TESTOUT@
+# Note: this test framework does not let us test the case old-file == new-file.

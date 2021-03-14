@@ -86,7 +86,7 @@ while IFS= read -r -d $'\0' i; do
 	testname=`basename "$i"`
 	expected="${i/.test/.out}"
 	observed="$testoutdir/${testname/.test/.out}"
-	filter="$testoutdir/${testname/.test/.filter}"
+	filter="$testdir/${testname/.test/.filter}"
 
 	# Run the test.
 	#

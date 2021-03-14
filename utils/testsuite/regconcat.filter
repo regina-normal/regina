@@ -1,0 +1,14 @@
+#!/bin/sh
+set -e
+
+# This filter is used when dumping the contents of a Regina data file.  It:
+# - blanks out internal packet IDs (used in script variables), since
+#   these are non-deterministic;
+# - blanks out the regina version that created the file, so that the
+#   test output is stable across different upstream releases.
+#
+# Note that BSD sed does not support \+, which is why we use \{1,\} instead.
+
+sed -e 's#^\tid="[^"]\{1,\}"$#\tid="_"#g' \
+    -e 's# valueid="[^"]\{1,\}"# valueid="_"#g' \
+    -e 's#<reginadata engine="[^"]\{1,\}">#<reginadata engine="_">#g'
