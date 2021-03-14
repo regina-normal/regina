@@ -98,12 +98,17 @@ while IFS= read -r -d $'\0' i; do
 	# The code that unsets TERM fixes an issue seen in the python test suite
 	# some years ago on Fedora; see the python test suite script for details.
 	#
+	# The LANG setting is necessary since the command-line utiliites
+	# output unicode characters using the encoding for the current locale.
+	#
 	if [ -e "$filter" ]; then
 		echo -n "Running $testname (with filter) ... "
-		TERM= "$executable" "$i" "$filter" > "$observed" 2>&1 && dummy=
+		TERM= LANG=en_AU.UTF-8 \
+			"$executable" "$i" "$filter" > "$observed" 2>&1 && dummy=
 	else
 		echo -n "Running $testname ... "
-		TERM= "$executable" "$i" > "$observed" 2>&1 && dummy=
+		TERM= LANG=en_AU.UTF-8 \
+			"$executable" "$i" > "$observed" 2>&1 && dummy=
 	fi
 
 	# Catch exitcode.
