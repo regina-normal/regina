@@ -1,0 +1,166 @@
+============================================================
+TEST: retriangulate 
+--------------------
+Please give an isomorphism/knot signature.
+
+Usage: retriangulate <isosig>
+  -h, --height=<height>       Number of extra simplices/crossings (default = 1)
+  -t, --threads=<threads>     Number of parallel threads (default = 1)
+  -3, --dim3                  Input is a 3-manifold signature (default)
+  -4, --dim4                  Input is a 4-manifold signature
+  -k, --knot                  Input is a knot signature
+
+Help options:
+  -?, --help                  Show this help message
+      --usage                 Display brief usage message
+--------------------
+Exit code: 1
+============================================================
+TEST: retriangulate foo
+--------------------
+I could not interpret the given 3-manifold isomorphism signature.
+
+Usage: retriangulate <isosig>
+  -h, --height=<height>       Number of extra simplices/crossings (default = 1)
+  -t, --threads=<threads>     Number of parallel threads (default = 1)
+  -3, --dim3                  Input is a 3-manifold signature (default)
+  -4, --dim4                  Input is a 4-manifold signature
+  -k, --knot                  Input is a knot signature
+
+Help options:
+  -?, --help                  Show this help message
+      --usage                 Display brief usage message
+--------------------
+Exit code: 1
+============================================================
+TEST: retriangulate cPcbbbadu hLLMAkacdefeggjkaknkxn
+--------------------
+Too many arguments.
+
+Usage: retriangulate <isosig>
+  -h, --height=<height>       Number of extra simplices/crossings (default = 1)
+  -t, --threads=<threads>     Number of parallel threads (default = 1)
+  -3, --dim3                  Input is a 3-manifold signature (default)
+  -4, --dim4                  Input is a 4-manifold signature
+  -k, --knot                  Input is a knot signature
+
+Help options:
+  -?, --help                  Show this help message
+      --usage                 Display brief usage message
+--------------------
+Exit code: 1
+============================================================
+TEST: retriangulate -h -1 cPcbbbadu
+--------------------
+The height cannot be negative.
+
+Usage: retriangulate <isosig>
+  -h, --height=<height>       Number of extra simplices/crossings (default = 1)
+  -t, --threads=<threads>     Number of parallel threads (default = 1)
+  -3, --dim3                  Input is a 3-manifold signature (default)
+  -4, --dim4                  Input is a 4-manifold signature
+  -k, --knot                  Input is a knot signature
+
+Help options:
+  -?, --help                  Show this help message
+      --usage                 Display brief usage message
+--------------------
+Exit code: 1
+============================================================
+TEST: retriangulate -t 0 cPcbbbadu
+--------------------
+The number of threads must be positive.
+
+Usage: retriangulate <isosig>
+  -h, --height=<height>       Number of extra simplices/crossings (default = 1)
+  -t, --threads=<threads>     Number of parallel threads (default = 1)
+  -3, --dim3                  Input is a 3-manifold signature (default)
+  -4, --dim4                  Input is a 4-manifold signature
+  -k, --knot                  Input is a knot signature
+
+Help options:
+  -?, --help                  Show this help message
+      --usage                 Display brief usage message
+--------------------
+Exit code: 1
+============================================================
+TEST: retriangulate -4 -h 3 eLMQcbcddcddaaaa8a8a8a8a8a
+--------------------
+In four dimensions the height must be even.
+
+Usage: retriangulate <isosig>
+  -h, --height=<height>       Number of extra simplices/crossings (default = 1)
+  -t, --threads=<threads>     Number of parallel threads (default = 1)
+  -3, --dim3                  Input is a 3-manifold signature (default)
+  -4, --dim4                  Input is a 4-manifold signature
+  -k, --knot                  Input is a knot signature
+
+Help options:
+  -?, --help                  Show this help message
+      --usage                 Display brief usage message
+--------------------
+Exit code: 1
+============================================================
+TEST: retriangulate fLAMcbcbdeehhjqqs
+--------------------
+fLAMcbcbdeehhjqqs
+Found 1 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate cPcbbbadu
+--------------------
+cPcbbbadu
+Found 1 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate -h 2 cPcbbbadu
+--------------------
+cPcbbbadu
+Found 1 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate -h 3 cPcbbbadu
+--------------------
+cPcbbbadu
+cPcbbbadh
+Found 2 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate -h 3 -t 2 cPcbbbadu
+--------------------
+cPcbbbadu
+cPcbbbadh
+Found 2 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate hLLMAkacdefeggjkaknkxn
+--------------------
+hLLMAkacdefeggjkaknkxn
+hLLAAkcdecefggqsmjqsqw
+hLALMkbcbeffgghxwnddjn
+Found 3 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate -h 2 -t 2 hLLAAkbdceefggdonxdjxn
+--------------------
+hLLAAkbdceefggdonxdjxn
+hLALPkbcbefgfghxwnxark
+Found 2 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
+TEST: retriangulate -4 eLMQcbcddcddaaaa8a8a8a8a8a
+--------------------
+eLMQcbcddcddaaaa8a8a8a8a8a
+eLAQcbbbcdddOakbOaqbOaOaya
+eALQcaabddddyacacayahbDbya
+Found 3 triangulation(s).
+--------------------
+Exit code: 0
+============================================================
