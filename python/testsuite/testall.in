@@ -50,9 +50,6 @@ set -e
 # To see the output, you need to run:
 #     make test ARGS="-V"
 
-# Change verbose to 1 if you wish to see the full command lines.
-verbose=0
-
 executable=../regina-python
 testdir='@BASH_CMAKE_SOURCE_DIR@/python/testsuite'
 testoutdir=`mktemp -d -t regina.XXX`
@@ -65,7 +62,7 @@ echo
 if ! test -f ../../CMakeCache.txt -a -f "$executable"; then
 	echo "ERROR: You do not appear to be within the python/testsuite directory"
 	echo "       in the build tree.  This script must be run from directly"
-	echo "       within the build tree (where you ran the configure script)."
+	echo "       within the build tree (where you ran cmake)."
 	echo "       Please change into the python/testsuite directory in the"
 	echo "       build tree and try again."
 	exit 1
@@ -90,9 +87,8 @@ found=
 while IFS= read -r -d $'\0' i; do
 	found=1
 	testname=`basename "$i"`
-	baseline="${i/.test/.out}"
-	testout="$testoutdir/${testname/.test/.out}"
-	echo -n "Running $testname ... "
+	expected="${i/.test/.out}"
+	observed="$testoutdir/${testname/.test/.out}"
 
 	# Run the test.
 	#
@@ -105,8 +101,9 @@ while IFS= read -r -d $'\0' i; do
 	# Fedora, where (as a result of a more exotic TERM setting) unprintable
 	# characters were being dumped at the beginning of the python output.
 	#
+	echo -n "Running $testname ... "
 	TERM= PYTHONIOENCODING=utf8 \
-		"$executable" "$i" "$testdir" > "$testout" 2>&1 && dummy=
+		"$executable" "$i" "$testdir" > "$observed" 2>&1 && dummy=
 
 	# Catch exitcode.
 	exitcode=$?
@@ -114,30 +111,22 @@ while IFS= read -r -d $'\0' i; do
 	# Branch based on exit code.
 	if [ "$exitcode" -ne 0 ];  then
 		echo "FAILED (exit code $exitcode)"
-		if [ "$verbose" -eq 1 ]; then
-			echo "    Command was:"
-			echo "        " \""$executable"\" \""$i"\" \""$testdir"\" ">" \""$testout"\" "2>&1"
-		fi
 		echo "    Output was:"
 		echo "        ..."
-		tail -n 5 $testout | sed -e 's/^/        /'
+		tail -n 5 $observed | sed -e 's/^/        /'
 		broken=1
 	else
-		if ! ( diff --strip-trailing-cr "$baseline" "$testout" > /dev/null ); then
+		if ! ( diff --strip-trailing-cr "$expected" "$observed" > /dev/null ); then
 			echo "FAILED (output differs from expected)"
-			if [ "$verbose" -eq 1 ]; then
-				echo "    Command to diff:"
-				echo "        " diff "--strip-trailing-cr" \""$baseline"\" \""$testout"\"
-			fi
 			echo "    Diff was:"
 			diff --strip-trailing-cr -u \
 				--label 'Expected output' --label 'Actual output' \
-				"$baseline" "$testout" | head -n10 | sed -e 's/^/        /'
+				"$expected" "$observed" | head -n10 | sed -e 's/^/        /'
 			echo "        ..."
 			broken=1
 		else
 			echo "ok"
-			rm -f "$testout"
+			rm -f "$observed"
 		fi
 	fi
 done < <(find "$testdir" -name "*.test" -print0 | sort -z)
