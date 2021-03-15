@@ -43,7 +43,7 @@
 # - testout : a suitable output file if one is required
 #               (default: "$TMPDIR/test.rga")
 # - invalidfile : a file that you can neither read from nor write to
-#               (default: /foo.rga)
+#               (default: /foo/foo.rga)
 # - badfile : a file that exists but is not a Regina data file
 #               (default: "$testdir/bad.rga")
 #
@@ -100,7 +100,7 @@ if ! rm -f "$testout"; then
 fi
 
 if [ -z "$invalidfile" ]; then
-    invalidfile=/foo.rga
+    invalidfile=/foo/foo.rga
 fi
 if [ -e "$invalidfile" ]; then
     echo "ERROR: Invalid file $invalidfile exists."
