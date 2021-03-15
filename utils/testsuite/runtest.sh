@@ -194,11 +194,16 @@ while read -r -a line; do
     echo "TEST: ${line[@]}"
     echo "--------------------"
     rm -f "$testout"
+    # The LC_ALL setting is to ensure that regina's command-line utilities
+    # write unicode strings (e.g., packet labels) in UTF-8, to match how our
+    # expected output is encoded.
     if [ -z "$filter" ]; then
-        "$bindir/$util" "${args[@]}" 2>&1 | pathfilter && dummy=
+        LC_ALL=en_US.UTF-8 \
+            "$bindir/$util" "${args[@]}" 2>&1 | pathfilter && dummy=
         exitcode=$?
     else
-        "$bindir/$util" "${args[@]}" 2>&1 | pathfilter | "$filter" && dummy=
+        LC_ALL=en_US.UTF-8 \
+            "$bindir/$util" "${args[@]}" 2>&1 | pathfilter | "$filter" && dummy=
         exitcode=$?
     fi
     echo "--------------------"
