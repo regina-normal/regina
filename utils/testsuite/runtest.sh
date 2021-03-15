@@ -139,6 +139,34 @@ function pathfilter {
                   s/\Q$ENV{testdir}\E/\@TESTDIR\@/g';
 }
 
+# We need the command-line utilities to write unicode output (such as
+# packet labels) in UTF-8, so that we can match against our expected output.
+if [ "`locale charmap 2>/dev/null`" = UTF-8 ]; then
+    # We should be getting UTF-8 by default.
+    fix_charmap=
+else
+    # Find ourselves a locale that is UTF-8 and that is supported.
+    use_locale=
+    backup_locale=
+    for i in `locale -a | tr '[:lower:]' '[:upper:]'`; do
+        case "$i" in
+            UTF-8 ) use_locale="$i"; break ;;
+            C.UTF-8 ) use_locale="$i"; break ;;
+            C.UTF8 ) use_locale="$i"; break ;;
+            *.UTF-8 ) backup_locale="$i" ;;
+            *.UTF8 ) backup_locale="$i" ;;
+        esac
+    done
+    if [ -z "$use_locale" ]; then
+        use_locale="$backup_locale"
+    fi
+    if [ -z "$use_locale" ]; then
+        echo "ERROR: Could not work out how to enforce UTF-8 output."
+        exit 1
+    fi
+    fix_charmap="LANG= LC_ALL= LC_CTYPE='$use_locale'"
+fi
+
 while read -r -a line; do
     util="${line[0]}"
     case "$util" in
@@ -198,11 +226,11 @@ while read -r -a line; do
     # write unicode strings (e.g., packet labels) in UTF-8, to match how our
     # expected output is encoded.
     if [ -z "$filter" ]; then
-        LC_ALL=en_US.UTF-8 \
+        $fix_locale \
             "$bindir/$util" "${args[@]}" 2>&1 | pathfilter && dummy=
         exitcode=$?
     else
-        LC_ALL=en_US.UTF-8 \
+        $fix_locale \
             "$bindir/$util" "${args[@]}" 2>&1 | pathfilter | "$filter" && dummy=
         exitcode=$?
     fi
