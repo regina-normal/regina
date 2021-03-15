@@ -55,25 +55,34 @@ int main(int argc, char* argv[]) {
     if (argc < 2)
         usage(argv[0], "Please specify one or more isomorphism signatures.");
 
-#if defined(REGINA_INSTALL_BUNDLE) || defined(REGINA_INSTALL_WINDOWS)
-    // The census databases are installed with the app, and we cannot
-    // know the path to that in advance.  Set it dynamically now.
-    std::string appDir = dirname(argv[0]);
-#if defined(REGINA_INSTALL_BUNDLE)
-    #if ! defined(REGINA_XCODE_BUNDLE)
-    #error "Regina only supports macOS bundles through the Xcode build."
-    #endif
-    // The xcode-built MacOS bundle puts the databases in the
-    // root resources directory: Regina.app/Contents/Resources.
-    // This is because the databases are "derived sources" and so need to be
-    // installed through a "copy bundle resources" phase (not "copy files").
-    regina::GlobalDirs::setDirs("", "", appDir + "/../Resources");
-#else
-    // The MS Windows build tries to follow the XDG build as far as possible.
-    regina::GlobalDirs::setDirs("", "",
-        appDir + "\\..\\share\\regina\\data\\census");
-#endif
-#endif
+    // Locate the census data files.
+    if (const char* home = std::getenv("REGINA_HOME")) {
+        // The user has specified their own custom location.
+        regina::GlobalDirs::setDirs("", "", std::string(home) + "/data/census");
+    } else {
+        // Regina's default census path is derived from the installation prefix.
+        #if defined(REGINA_INSTALL_BUNDLE) || defined(REGINA_INSTALL_WINDOWS)
+            // The census databases are installed with the app, and we cannot
+            // know the path to that in advance.  Set it dynamically now.
+            std::string appDir = dirname(argv[0]);
+            #if defined(REGINA_INSTALL_BUNDLE)
+                #if ! defined(REGINA_XCODE_BUNDLE)
+                    #error "Regina only supports macOS bundles through the Xcode build."
+                #endif
+                // The xcode-built MacOS bundle puts the databases in the
+                // root resources directory: Regina.app/Contents/Resources.
+                // This is because the databases are "derived sources" and so
+                // need to be installed through a "copy bundle resources" phase
+                // (not "copy files").
+                regina::GlobalDirs::setDirs("", "", appDir + "/../Resources");
+            #else
+                // The MS Windows build tries to follow the XDG build
+                // as far as possible.
+                regina::GlobalDirs::setDirs("", "",
+                    appDir + "\\..\\share\\regina\\data\\census");
+            #endif
+        #endif
+    }
 
     for (int i = 1; i < argc; ++i) {
         regina::CensusHits* hits = regina::Census::lookup(argv[i]);
