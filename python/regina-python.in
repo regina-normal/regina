@@ -142,13 +142,6 @@ if ( -f "$prog_dir/cmake_install.cmake" and -f "$prog_dir/../CMakeCache.txt") {
 my $os = '@CMAKE_SYSTEM_NAME@';
 &info("I: Running on operating system: $os\n");
 
-# --- Set up the environment.
-
-# On Windows, we need to make sure all our DLLs are on the path.
-if ($install_type eq 'Windows') {
-    &extendEnvVar('PATH', $prog_dir);
-}
-
 # --- Extract variables from the configuration file.
 
 if (open(CONF, $python_conf)) {
@@ -252,11 +245,11 @@ if ($install_type eq 'Source') {
     # Since we're running from the source tree, we need to ensure that
     # the calculation engine library can be found.
     if ($os eq 'Darwin') {
-        &extendEnvVar('DYLD_LIBRARY_PATH', "$regina_home/engine/");
+        &extendEnvVar('DYLD_LIBRARY_PATH', "$prog_dir/../engine/");
     } elsif ($os eq 'Windows') {
-        &extendEnvVar('PATH', "$regina_home/engine/");
+        &extendEnvVar('PATH', "$prog_dir/../engine/");
     } else {
-        &extendEnvVar('LD_LIBRARY_PATH', "$regina_home/engine/");
+        &extendEnvVar('LD_LIBRARY_PATH', "$prog_dir/../engine/");
     }
 } elsif ($install_type eq 'Bundle') {
     # All libraries shipped in the bundle should be found automatically
@@ -338,7 +331,13 @@ sub setPythonLibDir() {
         &err("   \$REGINA_PYLIBDIR/regina/__init__.py and so on.\n");
         exit 1;
     }
-    $python_lib_dir = $_[0];
+    if ($os eq 'Windows' and -e '/usr/bin/cygpath.exe') {
+        # The python that ships with msys2 expects paths in the form c:/... .
+        $python_lib_dir = `/usr/bin/cygpath -m "$_[0]"`;
+        chomp $python_lib_dir;
+    } else {
+        $python_lib_dir = $_[0];
+    }
 }
 sub setReginaHome() {
     &info("I: Setting Regina home directory to $_[0].\n");
