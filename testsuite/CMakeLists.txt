@@ -38,6 +38,13 @@ ADD_EXECUTABLE(regtestsuite ${SOURCES})
 TARGET_LINK_LIBRARIES(regtestsuite ${ENGINE_LIBRARY} ${CPPUNIT_LIBRARY}) # TODO
 
 ADD_TEST(cpp-test regtestsuite)
+IF (WIN32)
+  # On Windows we need to add the engine DLL location to the runtime path.
+  # The string replacement is to prevent cmake treating $ENV{PATH} as a list.
+  string(REPLACE ";" "\\;" ESCAPED_PATH "$ENV{PATH}")
+  SET_PROPERTY(TEST cpp-test PROPERTY ENVIRONMENT
+    "PATH=${ESCAPED_PATH}\;${PROJECT_BINARY_DIR}/engine")
+ENDIF (WIN32)
 
 # Give a way to print out information on the compilers and environment.
 # A warning: the cmake variable substitutions in env will break if they

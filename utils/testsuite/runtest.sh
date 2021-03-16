@@ -82,7 +82,7 @@ fi
 if [ -z "$bindir" ]; then
     bindir="$testdir/.."
 fi
-if [ ! -e "$bindir"/regfiledump -o -e "$bindir"/regfiledump.exe ]; then
+if [ ! -e "$bindir"/regfiledump -a ! -e "$bindir"/regfiledump.exe ]; then
     echo "ERROR: Binary directory "$bindir" does not contain regfiledump."
     exit 1
 fi
@@ -131,12 +131,30 @@ fi
 filter="$2"
 
 function pathfilter {
-    _from="$bindir/$util" _to="$util" \
-        perl -pe 's/\Q$ENV{_from}\E/$ENV{_to}/g;
-                  s/\Q$ENV{invalidfile}\E/\@INVALIDFILE\@/g;
-                  s/\Q$ENV{badfile}\E/\@BADFILE\@/g;
-                  s/\Q$ENV{testout}\E/\@TESTOUT\@/g;
-                  s/\Q$ENV{testdir}\E/\@TESTDIR\@/g';
+    if [ -x /usr/bin/cygpath.exe ]; then
+        # We are running under Windows, which means we need to do some
+        # path mangling.  The path to the utility itself will be seen by
+        # the utility (via argv[0]) in windows format (C:\...).  All other
+        # paths should look like windows paths but with forward slashes
+        # (e.g., /foo/foo.rga might become C:/msys64/foo/foo.rga).
+        utilpath="`/usr/bin/cygpath -w "$bindir/$util"`" utilname="$util" \
+                invalidfile="`/usr/bin/cygpath -m "$invalidfile"`" \
+                badfile="`/usr/bin/cygpath -m "$badfile"`" \
+                testout="`/usr/bin/cygpath -m "$testout"`" \
+                testdir="`/usr/bin/cygpath -m "$testdir"`" \
+            perl -pe 's/\Q$ENV{utilpath}\E/$ENV{utilname}/g;
+                    s/\Q$ENV{invalidfile}\E/\@INVALIDFILE\@/g;
+                    s/\Q$ENV{badfile}\E/\@BADFILE\@/g;
+                    s/\Q$ENV{testout}\E/\@TESTOUT\@/g;
+                    s/\Q$ENV{testdir}\E/\@TESTDIR\@/g';
+    else
+        utilpath="$bindir/$util" utilname="$util" \
+            perl -pe 's/\Q$ENV{utilpath}\E/$ENV{utilname}/g;
+                    s/\Q$ENV{invalidfile}\E/\@INVALIDFILE\@/g;
+                    s/\Q$ENV{badfile}\E/\@BADFILE\@/g;
+                    s/\Q$ENV{testout}\E/\@TESTOUT\@/g;
+                    s/\Q$ENV{testdir}\E/\@TESTDIR\@/g';
+    fi
 }
 
 # We need the command-line utilities to write unicode output (such as
