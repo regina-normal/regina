@@ -35,5 +35,6 @@
 int main() {
     std::cout << "sizeof(int) = " << sizeof(int) << std::endl;
     std::cout << "sizeof(long) = " << sizeof(long) << std::endl;
+    std::cout << "sizeof(size_t) = " << sizeof(size_t) << std::endl;
     return 0;
 }
