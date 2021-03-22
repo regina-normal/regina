@@ -240,8 +240,8 @@ Version 6.1  [ TODO ]
         retriangulate:
             - Now works with knots as well as 3/4-manifold triangulations.
     TEST SUITE:
-        - The command-line utilities now have their own dedicated tests
-          (in addition to the engine tests and the python tests).
+        - The command-line utilities now have their own dedicated tests (in
+          addition to the engine and python tests which were already present).
 
 Version 6.0  [ 11 January, 2021 ]
 
