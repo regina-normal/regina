@@ -1,0 +1,42 @@
+#!/bin/bash
+#
+# Regina - Software for low-dimensional topology
+# Administrative utilities
+#
+# This script is built and run by "make verify_build".
+# It aims to gives us some confidence that all of the files that *should*
+# have been built have actually been built.
+#
+# This script is only suitable for use with packaging mode, in that it
+# assumes that all optional build dependencies were found.
+#
+set -e
+retval=0
+
+function test {
+  file="$1"
+  desc="$2"
+
+  if [ ! -e "../$1" ]; then
+    echo "ERROR: $2 not built ($1)."
+    retval=1
+  fi
+}
+
+os=`uname -s`
+
+test "docs/engine/index.html" "API docs"
+test "engine/data/census/closed-or-census-11.@DB_EXT@" "Census data"
+test "python/regina/engine.@REGINA_PYTHON_EXTENSION@" "Python module"
+test "qtui/doc/regina/index.html" "User handbook"
+test "qtui/doc/regina-xml/index.html" "File format docs "
+if [ "$os" = Darwin ]; then
+  test "qtui/src/Regina.app" "GUI"
+else
+  test "qtui/src/regina-gui@CMAKE_EXECUTABLE_SUFFIX@" "GUI"
+fi
+test "testsuite/regtestsuite@CMAKE_EXECUTABLE_SUFFIX@" "C++ test suite"
+test "utils/regfiledump@CMAKE_EXECUTABLE_SUFFIX@" "Utilities"
+
+exit $retval
+

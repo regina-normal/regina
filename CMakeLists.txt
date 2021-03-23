@@ -424,15 +424,9 @@ ELSE (${REGINA_INSTALL_TYPE} STREQUAL HPC)
     ${REGINA_MANDATORY})
 ENDIF (REGINA_DOCS)
 
-# Test suite
-ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
+# Setup that must appear before any calls to ADD_SUBDIRECTORY():
+ENABLE_TESTING()
 
-# Core directories
-ADD_SUBDIRECTORY(admin)
-ADD_SUBDIRECTORY(engine)
-ADD_SUBDIRECTORY(utils)
-
-# Python support
 if (WIN32 AND NOT CYGWIN)
   SET (REGINA_PYTHON_EXTENSION "pyd")
   SET (REGINA_PYTHON_EXTENSION_NONSTANDARD TRUE)
@@ -440,6 +434,13 @@ else ()
   SET (REGINA_PYTHON_EXTENSION "so")
   SET (REGINA_PYTHON_EXTENSION_NONSTANDARD FALSE)
 endif ()
+
+# Core directories
+ADD_SUBDIRECTORY(admin)
+ADD_SUBDIRECTORY(engine)
+ADD_SUBDIRECTORY(utils)
+
+# Python support
 
 # This option must be 0 or 1 (it needs to be readable as a bool in perl).
 # It is always 0 for CMake builds.
