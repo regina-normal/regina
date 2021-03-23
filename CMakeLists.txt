@@ -428,6 +428,7 @@ ENDIF (REGINA_DOCS)
 ENABLE_TESTING() # This must appear before any calls to ADD_SUBDIRECTORY().
 
 # Core directories
+ADD_SUBDIRECTORY(admin)
 ADD_SUBDIRECTORY(engine)
 ADD_SUBDIRECTORY(utils)
 
