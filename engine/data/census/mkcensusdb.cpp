@@ -51,6 +51,7 @@
   #include <tcutil.h>
   #define DB_CLOSE(x) { tcbdbclose(x); tcbdbdel(x); }
 #elif defined(REGINA_KVSTORE_LMDB)
+  #include <cstring>
   #include <lmdb.h>
   #define DB_CLOSE(x) ::mdb_env_close(x);
 #else
