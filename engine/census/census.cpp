@@ -66,7 +66,7 @@ bool Census::dbInit_ = false;
 bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
 #if defined(REGINA_KVSTORE_QDBM)
     VILLA* db;
-    if (! (db = vlopen(filename_.c_str(), VL_OREADER, VL_CMPLEX))) {
+    if (! (db = vlopen(filename_.c_str(), VL_OREADER | VL_ONOLCK, VL_CMPLEX))) {
         std::cerr << "ERROR: Could not open QDBM database: "
             << filename_ << std::endl;
         return false;

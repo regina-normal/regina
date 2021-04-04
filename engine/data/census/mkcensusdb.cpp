@@ -90,7 +90,8 @@ int main(int argc, char* argv[]) {
 #if defined(REGINA_KVSTORE_QDBM)
     VILLA* db;
     if (! (db = vlopen(outputFile.c_str(),
-            VL_OWRITER | VL_OCREAT | VL_OTRUNC | VL_OZCOMP, VL_CMPLEX))) {
+            VL_OWRITER | VL_OCREAT | VL_OTRUNC | VL_OZCOMP | VL_ONOLCK,
+            VL_CMPLEX))) {
         std::cerr << "ERROR: Could not open QDBM database: "
             << outputFile << std::endl;
         std::exit(1);
