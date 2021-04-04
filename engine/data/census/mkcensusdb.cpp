@@ -98,7 +98,7 @@ int main(int argc, char* argv[]) {
 #elif defined(REGINA_KVSTORE_TOKYOCABINET)
     TCBDB* db = tcbdbnew();
     if (! tcbdbopen(db, outputFile.c_str(),
-            BDBOWRITER | BDBOCREAT | BDBOTRUNC)) {
+            BDBOWRITER | BDBOCREAT | BDBOTRUNC | BDBONOLCK)) {
         std::cerr << "ERROR: Could not open Tokyo Cabinet database: "
             << outputFile << std::endl;
         std::exit(1);
