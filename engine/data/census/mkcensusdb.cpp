@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h" // For QDBM-related macros
+#include "regina-config.h" // For key-value store macros
 
 #include <cctype>
 #include <cstdlib>
@@ -39,21 +39,22 @@
 #include <string>
 #include "utilities/zstr.h"
 
-#ifdef QDBM_AS_TOKYOCABINET
-#include <depot.h>
-#include <cabin.h>
-#include <villa.h>
-#else
-#include <cstdbool>
-#include <cstdint>
-#include <tcbdb.h>
-#include <tcutil.h>
-#endif
-
-#ifdef QDBM_AS_TOKYOCABINET
+#if defined(REGINA_KVSTORE_QDBM)
+  #include <depot.h>
+  #include <cabin.h>
+  #include <villa.h>
   #define DB_CLOSE(x) vlclose(x);
-#else
+#elif defined(REGINA_KVSTORE_TOKYOCABINET)
+  #include <cstdbool>
+  #include <cstdint>
+  #include <tcbdb.h>
+  #include <tcutil.h>
   #define DB_CLOSE(x) { tcbdbclose(x); tcbdbdel(x); }
+#elif defined(REGINA_KVSTORE_LMDB)
+  #include <lmdb.h>
+  #define DB_CLOSE(x) ::mdb_env_close(x);
+#else
+  #error "No key-value store library was detected!"
 #endif
 
 void usage(const char* progName, const std::string& error = std::string()) {
@@ -86,7 +87,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Initialise the database.
-#ifdef QDBM_AS_TOKYOCABINET
+#if defined(REGINA_KVSTORE_QDBM)
     VILLA* db;
     if (! (db = vlopen(outputFile.c_str(),
             VL_OWRITER | VL_OCREAT | VL_OTRUNC | VL_OZCOMP, VL_CMPLEX))) {
@@ -94,12 +95,60 @@ int main(int argc, char* argv[]) {
             << outputFile << std::endl;
         std::exit(1);
     }
-#else
+#elif defined(REGINA_KVSTORE_TOKYOCABINET)
     TCBDB* db = tcbdbnew();
     if (! tcbdbopen(db, outputFile.c_str(),
             BDBOWRITER | BDBOCREAT | BDBOTRUNC)) {
         std::cerr << "ERROR: Could not open Tokyo Cabinet database: "
             << outputFile << std::endl;
+        std::exit(1);
+    }
+#elif defined(REGINA_KVSTORE_LMDB)
+    MDB_env* db = nullptr;
+    if (::mdb_env_create(&db) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not create LMDB environment." << std::endl;
+        std::exit(1);
+    }
+    // LMDB requires us to hard-code a maximum map size.
+    // Here we set this to 50MB.
+    // At the time of writing (3 April 2021) this is enough: the largest
+    // database is closed-hyp-or-census, which is around 12MB in size.
+    if (::mdb_env_set_mapsize(db, 1024UL * 1024UL * 50) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not set LMDB map size." << std::endl;
+        ::mdb_env_close(db);
+        std::exit(1);
+    }
+    if (::mdb_env_open(db, outputFile.c_str(),
+            MDB_NOSUBDIR | MDB_NOLOCK, 0664) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not open LMDB environment: "
+            << outputFile << std::endl;
+        ::mdb_env_close(db);
+        std::exit(1);
+    }
+    MDB_txn* txn = nullptr;
+    if (::mdb_txn_begin(db, nullptr, 0, &txn) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not create LMDB transaction: "
+            << outputFile << std::endl;
+        ::mdb_env_close(db);
+        std::exit(1);
+    }
+    MDB_dbi dbi = 0;
+    if (::mdb_dbi_open(txn, nullptr, MDB_DUPSORT, &dbi) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not open LMDB database: "
+            << outputFile << std::endl;
+        ::mdb_env_close(db);
+        std::exit(1);
+    }
+    if (::mdb_drop(txn, dbi, 0 /* empty DB */) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not empty LMDB database: "
+            << outputFile << std::endl;
+        ::mdb_env_close(db);
+        std::exit(1);
+    }
+    if (::mdb_txn_commit(txn) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not commit LMDB transaction: "
+            << outputFile << std::endl;
+        ::mdb_env_close(db);
         std::exit(1);
     }
 #endif
@@ -141,14 +190,34 @@ int main(int argc, char* argv[]) {
                 usage(argv[0]);
             }
 
-    #ifdef QDBM_AS_TOKYOCABINET
+    #if defined(REGINA_KVSTORE_QDBM)
             if (! vlput(db, sig.c_str(), sig.length(),
                     pos, -1 /* strlen */, VL_DDUP)) {
-    #else
+    #elif defined(REGINA_KVSTORE_TOKYOCABINET)
             if (! tcbdbputdup2(db, sig.c_str(), pos)) {
+    #elif defined(REGINA_KVSTORE_LMDB)
+            bool success = false;
+            MDB_txn* txn = nullptr;
+            int rv;
+            if ((rv = ::mdb_txn_begin(db, nullptr, 0, &txn)) == MDB_SUCCESS) {
+                MDB_dbi dbi = 0;
+                MDB_val key { sig.size(), sig.data() };
+                MDB_val value { strlen(pos), const_cast<char*>(pos) };
+                if ((rv = ::mdb_dbi_open(txn, nullptr, MDB_DUPSORT, &dbi)) == MDB_SUCCESS) {
+                    if ((rv = ::mdb_put(txn, dbi, &key, &value, 0)) == MDB_SUCCESS) {
+                        if ((rv = ::mdb_txn_commit(txn)) == MDB_SUCCESS) {
+                            success = true;
+                        }
+                    }
+                }
+            }
+            if (! success) {
     #endif
                 std::cerr << "ERROR: Could not store the record for "
                     << sig << " in the database." << std::endl;
+    #if defined(REGINA_KVSTORE_LMDB)
+                std::cerr << "       Error value: " << rv << std::endl;
+    #endif
                 DB_CLOSE(db);
                 std::exit(1);
             }
@@ -161,7 +230,7 @@ int main(int argc, char* argv[]) {
     }
 
     // Close and tidy up.
-#ifdef QDBM_AS_TOKYOCABINET
+#if defined(REGINA_KVSTORE_QDBM)
     if (! vloptimize(db)) {
         std::cerr << "ERROR: Could not optimise QDBM database: "
             << outputFile << std::endl;
@@ -174,7 +243,7 @@ int main(int argc, char* argv[]) {
             << outputFile << std::endl;
         std::exit(1);
     }
-#else
+#elif defined(REGINA_KVSTORE_TOKYOCABINET)
     // The following call to tcbdboptimise() does not change any options
     // other than the bitwise compression option given in the final argument.
     if (! tcbdboptimize(db, 0, 0, 0, -1, -1, BDBTBZIP)) {
@@ -193,6 +262,8 @@ int main(int argc, char* argv[]) {
         std::exit(1);
     }
     tcbdbdel(db);
+#elif defined(REGINA_KVSTORE_LMDB)
+    ::mdb_env_close(db);
 #endif
 
     std::cout << "Success: " << tot << " records." << std::endl;

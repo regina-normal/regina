@@ -31,8 +31,17 @@
 /* Define if langinfo.h and nl_langinfo() are available. */
 #define LANGINFO_FOUND
 
-/* Define if we are replacing Tokyo Cabinet with the older QDBM. */
-/* #undef QDBM_AS_TOKYOCABINET */
+/* Define if we implement key-value stores using Tokyo Cabinet.
+   Exactly one of these REGINA_KVSTORE_* macros should be defined. */
+#define REGINA_KVSTORE_TOKYOCABINET
+
+/* Define if we implement key-value stores using QDBM.
+   Exactly one of these REGINA_KVSTORE_* macros should be defined. */
+/* #undef REGINA_KVSTORE_QDBM */
+
+/* Define if we implement key-value stores using LMDB.
+   Exactly one of these REGINA_KVSTORE_* macros should be defined. */
+/* #undef REGINA_KVSTORE_LMDB */
 
 /* Define if we are building a standard freedesktop.org installation in
    a fixed location on the filesystem.
@@ -91,5 +100,5 @@
 #define PACKAGE_VERSION_MINOR 1
 
 /* Define to the version of SnapPy that is bundled with Regina. */
-#define SNAPPY_VERSION "2.4"
+#define SNAPPY_VERSION "2.8"
 

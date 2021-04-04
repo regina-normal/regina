@@ -30,20 +30,24 @@
  *                                                                        *
  **************************************************************************/
 
-#include "regina-config.h" // For QDBM-related macros
+#include "regina-config.h" // For key-value store macros
 
 #include <algorithm>
 #include <cstdlib>
 #include <sstream>
-#ifdef QDBM_AS_TOKYOCABINET
-#include <depot.h>
-#include <cabin.h>
-#include <villa.h>
+#if defined(REGINA_KVSTORE_QDBM)
+  #include <depot.h>
+  #include <cabin.h>
+  #include <villa.h>
+#elif defined(REGINA_KVSTORE_TOKYOCABINET)
+  #include <cstdbool>
+  #include <cstdint>
+  #include <tcbdb.h>
+  #include <tcutil.h>
+#elif defined(REGINA_KVSTORE_LMDB)
+  #include <lmdb.h>
 #else
-#include <cstdbool>
-#include <cstdint>
-#include <tcbdb.h>
-#include <tcutil.h>
+  #error "No key-value store library was detected!"
 #endif
 #include "census/census.h"
 #include "file/globaldirs.h"
@@ -60,7 +64,7 @@ CensusDB* Census::christy_ = 0;
 bool Census::dbInit_ = false;
 
 bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
-#ifdef QDBM_AS_TOKYOCABINET
+#if defined(REGINA_KVSTORE_QDBM)
     VILLA* db;
     if (! (db = vlopen(filename_.c_str(), VL_OREADER, VL_CMPLEX))) {
         std::cerr << "ERROR: Could not open QDBM database: "
@@ -77,7 +81,7 @@ bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
     }
 
     vlclose(db);
-#else
+#elif defined(REGINA_KVSTORE_TOKYOCABINET)
     TCBDB* db = tcbdbnew();
     if (! tcbdbopen(db, filename_.c_str(), BDBOREADER)) {
         std::cerr << "ERROR: Could not open Tokyo Cabinet database: "
@@ -97,6 +101,84 @@ bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
 
     tcbdbclose(db);
     tcbdbdel(db);
+#elif defined(REGINA_KVSTORE_LMDB)
+    MDB_env* db = nullptr;
+    int rv;
+    if ((rv = ::mdb_env_create(&db)) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not create LMDB environment: "
+            << filename_ << std::endl;
+        std::cerr << "       -> error code " << rv << std::endl;
+        return false;
+    }
+    /*
+    // AFAICT we do not need to set the map size for read-only access.
+    // This avoids the need to check in advance how large our databases are.
+    if ((rv = ::mdb_env_set_mapsize(db, 1024UL * 1024UL * 50)) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not set LMDB map size: "
+            << filename_ << std::endl;
+        std::cerr << "       -> error code " << rv << std::endl;
+        ::mdb_env_close(db);
+        return false;
+    }
+    */
+    if ((rv = ::mdb_env_open(db, filename_.c_str(),
+            MDB_RDONLY | MDB_NOSUBDIR | MDB_NOLOCK, 0664)) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not open LMDB environment: "
+            << filename_ << std::endl;
+        std::cerr << "       -> error code " << rv << std::endl;
+        ::mdb_env_close(db);
+        return false;
+    }
+    MDB_txn* txn = nullptr;
+    if ((rv = ::mdb_txn_begin(db, nullptr, MDB_RDONLY, &txn)) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not create LMDB transaction: "
+            << filename_ << std::endl;
+        std::cerr << "       -> error code " << rv << std::endl;
+        ::mdb_env_close(db);
+        return false;
+    }
+    MDB_dbi dbi = 0;
+    if ((rv = ::mdb_dbi_open(txn, nullptr, MDB_DUPSORT, &dbi)) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not open LMDB database: "
+            << filename_ << std::endl;
+        std::cerr << "       -> error code " << rv << std::endl;
+        ::mdb_txn_abort(txn);
+        ::mdb_env_close(db);
+        return false;
+    }
+    MDB_cursor* cursor = nullptr;
+    if ((rv = ::mdb_cursor_open(txn, dbi, &cursor)) != MDB_SUCCESS) {
+        std::cerr << "ERROR: Could not create LMDB cursor: "
+            << filename_ << std::endl;
+        std::cerr << "       -> error code " << rv << std::endl;
+        ::mdb_txn_abort(txn);
+        ::mdb_env_close(db);
+        return false;
+    }
+    MDB_val key { isoSig.size(), const_cast<char*>(isoSig.data()) };
+    MDB_val value;
+    rv = mdb_cursor_get(cursor, &key, &value, MDB_SET_KEY);
+    while (true) {
+        if (rv == MDB_SUCCESS) {
+            hits->append(new CensusHit(
+                std::string(static_cast<char*>(value.mv_data), value.mv_size),
+                this));
+            rv = mdb_cursor_get(cursor, &key, &value, MDB_NEXT_DUP);
+        } else if (rv == MDB_NOTFOUND) {
+            break;
+        } else {
+            std::cerr << "ERROR: Could not search LMDB database: "
+                << filename_ << std::endl;
+            std::cerr << "       -> error code " << rv << std::endl;
+            ::mdb_cursor_close(cursor);
+            ::mdb_txn_abort(txn);
+            ::mdb_env_close(db);
+            return false;
+        }
+    }
+    ::mdb_cursor_close(cursor);
+    ::mdb_txn_abort(txn);
+    ::mdb_env_close(db);
 #endif
 
     return true;
