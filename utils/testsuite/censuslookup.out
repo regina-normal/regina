@@ -51,3 +51,38 @@ eLPkbdcddhgggb: 3 hits
 --------------------
 Exit code: 0
 ============================================================
+TEST: censuslookup jLLPLMQacefghghiinbxgaumcsr
+--------------------
+jLLPLMQacefghghiinbxgaumcsr: 1 hit
+    o9_36292 : #4 -- Cusped hyperbolic census (orientable)
+
+--------------------
+Exit code: 0
+============================================================
+TEST: censuslookup nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng
+--------------------
+nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng: 2 hits
+    L111376 -- Christy's collection of knot/link complements
+    L111449 -- Christy's collection of knot/link complements
+
+--------------------
+Exit code: 0
+============================================================
+TEST: censuslookup foo cPcbbbiht jLLPLMQacefghghiinbxgaumcsr nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng
+--------------------
+foo: 0 hits
+
+cPcbbbiht: 2 hits
+    m004 : #1 -- Cusped hyperbolic census (orientable)
+    L104001 -- Christy's collection of knot/link complements
+
+jLLPLMQacefghghiinbxgaumcsr: 1 hit
+    o9_36292 : #4 -- Cusped hyperbolic census (orientable)
+
+nLLvLMPMQkcdijihjjmlklmmicgcvcbkihlfng: 2 hits
+    L111376 -- Christy's collection of knot/link complements
+    L111449 -- Christy's collection of knot/link complements
+
+--------------------
+Exit code: 0
+============================================================
