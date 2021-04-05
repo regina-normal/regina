@@ -35,10 +35,20 @@
  **************************************************************************/
 
 #include <cstring>
-#include <filesystem>
 #include <iostream>
 #include <string>
 #include <lmdb.h>
+
+#if __has_include(<filesystem>)
+  #include <filesystem>
+  #define fs std::filesystem
+#elif __has_include(<experimental/filesystem>)
+  // Required for GCC 7:
+  #include <experimental/filesystem>
+  #define fs std::experimental::filesystem
+#else
+  #error "LMDB support requires the C++17 std::filesystem library."
+#endif
 
 void usage(const char* progName, const std::string& error = std::string()) {
     if (! error.empty())
@@ -60,8 +70,8 @@ int main(int argc, char* argv[]) {
     try {
         // Returns true on success, false if the file did not exist, and
         // throws an exception on error.
-        std::filesystem::remove(outputFile);
-    } catch (const std::filesystem::filesystem_error& e) {
+        fs::remove(outputFile);
+    } catch (const fs::filesystem_error& e) {
         std::cerr << "ERROR: Could not remove old LMDB database: "
             << outputFile << std::endl;
         std::cerr << "Detail: " << e.what() << std::endl;
