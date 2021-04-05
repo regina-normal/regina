@@ -96,6 +96,7 @@ int main(int argc, char* argv[]) {
             VL_CMPLEX))) {
         std::cerr << "ERROR: Could not open QDBM database: "
             << outputFile << std::endl;
+        std::cerr << "Detail: " << dperrmsg(dpecode) << std::endl;
         std::exit(1);
     }
 #elif defined(REGINA_KVSTORE_TOKYOCABINET)
@@ -104,6 +105,7 @@ int main(int argc, char* argv[]) {
             BDBOWRITER | BDBOCREAT | BDBOTRUNC | BDBONOLCK)) {
         std::cerr << "ERROR: Could not open Tokyo Cabinet database: "
             << outputFile << std::endl;
+        std::cerr << "Detail: " << tcbdberrmsg(tcbdbecode(db)) << std::endl;
         std::exit(1);
     }
 #elif defined(REGINA_KVSTORE_LMDB)
@@ -205,21 +207,34 @@ int main(int argc, char* argv[]) {
     #if defined(REGINA_KVSTORE_QDBM)
             if (! vlput(db, sig.c_str(), sig.length(),
                     pos, -1 /* strlen */, VL_DDUP)) {
+                std::cerr << "ERROR: Could not store the record for "
+                    << sig << " in the database." << std::endl;
+                std::cerr << "Detail: " << dperrmsg(dpecode) << std::endl;
+                vlclose(db);
+                std::exit(1);
+            }
     #elif defined(REGINA_KVSTORE_TOKYOCABINET)
             if (! tcbdbputdup2(db, sig.c_str(), pos)) {
+                std::cerr << "ERROR: Could not store the record for "
+                    << sig << " in the database." << std::endl;
+                std::cerr << "Detail: " << tcbdberrmsg(tcbdbecode(db))
+                    << std::endl;
+                tcbdbclose(db);
+                tcbdbdel(db);
+                std::exit(1);
+            }
     #elif defined(REGINA_KVSTORE_LMDB)
             MDB_val key { sig.size(), sig.data() };
             MDB_val value { strlen(pos), const_cast<char*>(pos) };
             if (int rv = ::mdb_put(txn, dbi, &key, &value, 0)) {
-    #endif
                 std::cerr << "ERROR: Could not store the record for "
                     << sig << " in the database." << std::endl;
-    #if defined(REGINA_KVSTORE_LMDB)
-                std::cerr << "       Error value: " << rv << std::endl;
-    #endif
-                DB_CLOSE(db);
+                std::cerr << "LMDB error code: " << rv << std::endl;
+                ::mdb_txn_abort(txn);
+                ::mdb_env_close(db);
                 std::exit(1);
             }
+    #endif
             ++tot;
         }
     } catch (const zstr::Exception& e) {
@@ -233,6 +248,7 @@ int main(int argc, char* argv[]) {
     if (! vloptimize(db)) {
         std::cerr << "ERROR: Could not optimise QDBM database: "
             << outputFile << std::endl;
+        std::cerr << "Detail: " << dperrmsg(dpecode) << std::endl;
         vlclose(db);
         std::exit(1);
     }
@@ -240,6 +256,7 @@ int main(int argc, char* argv[]) {
     if (! vlclose(db)) {
         std::cerr << "ERROR: Could not close QDBM database: "
             << outputFile << std::endl;
+        std::cerr << "Detail: " << dperrmsg(dpecode) << std::endl;
         std::exit(1);
     }
 #elif defined(REGINA_KVSTORE_TOKYOCABINET)
@@ -248,8 +265,7 @@ int main(int argc, char* argv[]) {
     if (! tcbdboptimize(db, 0, 0, 0, -1, -1, BDBTBZIP)) {
         std::cerr << "ERROR: Could not optimise Tokyo Cabinet database: "
             << outputFile << std::endl;
-        std::cerr << "Tokyo cabinet error: " << tcerrmsg(tcbdbecode(db))
-            << std::endl;
+        std::cerr << "Detail: " << tcbdberrmsg(tcbdbecode(db)) << std::endl;
         tcbdbclose(db);
         tcbdbdel(db);
         std::exit(1);
@@ -258,6 +274,7 @@ int main(int argc, char* argv[]) {
     if (! tcbdbclose(db)) {
         std::cerr << "ERROR: Could not close Tokyo Cabinet database: "
             << outputFile << std::endl;
+        std::cerr << "Detail: " << tcbdberrmsg(tcbdbecode(db)) << std::endl;
         tcbdbdel(db);
         std::exit(1);
     }

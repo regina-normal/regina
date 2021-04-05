@@ -69,6 +69,7 @@ bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
     if (! (db = vlopen(filename_.c_str(), VL_OREADER | VL_ONOLCK, VL_CMPLEX))) {
         std::cerr << "ERROR: Could not open QDBM database: "
             << filename_ << std::endl;
+        std::cerr << "       -> " << dperrmsg(dpecode) << std::endl;
         return false;
     }
 
