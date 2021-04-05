@@ -79,10 +79,10 @@ int main(int argc, char* argv[]) {
         std::exit(1);
     }
     // LMDB requires us to hard-code a maximum map size for the output file.
-    // Here we set this to 50MB.
+    // Here we set this to 20MB.
     // At the time of writing (3 April 2021) this is enough: the largest
     // database is closed-hyp-or-census, which is around 12MB in size.
-    if ((rv = ::mdb_env_set_mapsize(envOut, 1024UL * 1024UL * 50))) {
+    if ((rv = ::mdb_env_set_mapsize(envOut, 1024UL * 1024UL * 20))) {
         std::cerr << "ERROR: Could not set LMDB map size." << std::endl;
         std::cerr << "LMDB error code: " << rv << std::endl;
         ::mdb_env_close(envIn);
