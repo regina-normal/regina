@@ -233,7 +233,7 @@ int main(int argc, char* argv[]) {
     if (! vloptimize(db)) {
         std::cerr << "ERROR: Could not optimise QDBM database: "
             << outputFile << std::endl;
-        DB_CLOSE(db);
+        vlclose(db);
         std::exit(1);
     }
 
@@ -250,7 +250,8 @@ int main(int argc, char* argv[]) {
             << outputFile << std::endl;
         std::cerr << "Tokyo cabinet error: " << tcerrmsg(tcbdbecode(db))
             << std::endl;
-        DB_CLOSE(db);
+        tcbdbclose(db);
+        tcbdbdel(db);
         std::exit(1);
     }
 
