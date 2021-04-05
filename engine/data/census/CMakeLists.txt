@@ -6,7 +6,9 @@ ADD_EXECUTABLE(mkcensusdb mkcensusdb.cpp)
 TARGET_LINK_LIBRARIES(mkcensusdb ${ZLIB_LIBRARIES} ${KVSTORE_LIBRARIES})
 IF (REGINA_KVSTORE_LMDB)
   ADD_EXECUTABLE(optimise-lmdb optimise-lmdb.cpp)
+  ADD_EXECUTABLE(compact-lmdb compact-lmdb.cpp)
   TARGET_LINK_LIBRARIES(optimise-lmdb ${KVSTORE_LIBRARIES})
+  TARGET_LINK_LIBRARIES(compact-lmdb ${KVSTORE_LIBRARIES})
 ENDIF (REGINA_KVSTORE_LMDB)
 
 SET(censusdata_DATA
