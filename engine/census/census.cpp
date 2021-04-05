@@ -104,16 +104,18 @@ bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
 #elif defined(REGINA_KVSTORE_LMDB)
     MDB_env* db = nullptr;
     int rv;
-    if ((rv = ::mdb_env_create(&db)) != MDB_SUCCESS) {
+    if ((rv = ::mdb_env_create(&db))) {
         std::cerr << "ERROR: Could not create LMDB environment: "
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
         return false;
     }
     /*
-    // AFAICT we do not need to set the map size for read-only access.
-    // This avoids the need to check in advance how large our databases are.
-    if ((rv = ::mdb_env_set_mapsize(db, 1024UL * 1024UL * 50)) != MDB_SUCCESS) {
+    // LMDB normally requires that you set the maximum map size before calling
+    // mdb_env_open.  However, AFAICT this is not required for read-only access.
+    // We therefore skip the call to mdb_env_set_mapsize, since it is better
+    // not to hard-code our databases sizes here in the source code.
+    if ((rv = ::mdb_env_set_mapsize(db, 1024UL * 1024UL * 50))) {
         std::cerr << "ERROR: Could not set LMDB map size: "
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
@@ -121,8 +123,11 @@ bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
         return false;
     }
     */
+    // We still need to pass a file mode to mdb_env_open, and we use 0664 here;
+    // however, AFAICT this should be ignored in read-only mode because it is
+    // only used for newly created files.
     if ((rv = ::mdb_env_open(db, filename_.c_str(),
-            MDB_RDONLY | MDB_NOSUBDIR | MDB_NOLOCK, 0664)) != MDB_SUCCESS) {
+            MDB_RDONLY | MDB_NOSUBDIR | MDB_NOLOCK, 0664))) {
         std::cerr << "ERROR: Could not open LMDB environment: "
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
@@ -130,7 +135,7 @@ bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
         return false;
     }
     MDB_txn* txn = nullptr;
-    if ((rv = ::mdb_txn_begin(db, nullptr, MDB_RDONLY, &txn)) != MDB_SUCCESS) {
+    if ((rv = ::mdb_txn_begin(db, nullptr, MDB_RDONLY, &txn))) {
         std::cerr << "ERROR: Could not create LMDB transaction: "
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
@@ -138,7 +143,7 @@ bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
         return false;
     }
     MDB_dbi dbi = 0;
-    if ((rv = ::mdb_dbi_open(txn, nullptr, MDB_DUPSORT, &dbi)) != MDB_SUCCESS) {
+    if ((rv = ::mdb_dbi_open(txn, nullptr, MDB_DUPSORT, &dbi))) {
         std::cerr << "ERROR: Could not open LMDB database: "
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
@@ -147,7 +152,7 @@ bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
         return false;
     }
     MDB_cursor* cursor = nullptr;
-    if ((rv = ::mdb_cursor_open(txn, dbi, &cursor)) != MDB_SUCCESS) {
+    if ((rv = ::mdb_cursor_open(txn, dbi, &cursor))) {
         std::cerr << "ERROR: Could not create LMDB cursor: "
             << filename_ << std::endl;
         std::cerr << "       -> error code " << rv << std::endl;
