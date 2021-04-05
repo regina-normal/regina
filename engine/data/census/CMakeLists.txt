@@ -38,7 +38,7 @@ FOREACH(db ${censusdata_DATA})
         "${PROJECT_SOURCE_DIR}/engine/data/census/${siglist}"
         "${PROJECT_BINARY_DIR}/engine/data/census/${db_1}"
     )
-    ADD_CUSTOM_COMMAND(OUTPUT "${db}" VERBATIM DEPENDS optimise-lmdb ${db_1}
+    ADD_CUSTOM_COMMAND(OUTPUT "${db_2}" VERBATIM DEPENDS optimise-lmdb ${db_1}
       COMMAND optimise-lmdb
         "${PROJECT_BINARY_DIR}/engine/data/census/${db_1}"
         "${PROJECT_BINARY_DIR}/engine/data/census/${db_2}"
