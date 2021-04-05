@@ -52,8 +52,9 @@
   #define DB_CLOSE(x) { tcbdbclose(x); tcbdbdel(x); }
 #elif defined(REGINA_KVSTORE_LMDB)
   #include <cstring>
+  #include <filesystem>
   #include <lmdb.h>
-  #define DB_CLOSE(x) ::mdb_env_close(x);
+  #define DB_CLOSE(x) { ::mdb_txn_abort(txn); ::mdb_env_close(x); }
 #else
   #error "No key-value store library was detected!"
 #endif
@@ -106,50 +107,59 @@ int main(int argc, char* argv[]) {
         std::exit(1);
     }
 #elif defined(REGINA_KVSTORE_LMDB)
+    // LMDB does not offer an "open-and-truncate" option, and if we use
+    // mdb_dbi_drop() and re-add the records to a database that was already
+    // filled then its size can almost double.  So instead we just remove the
+    // old database via the filesystem, before using LMDB at all.
+    try {
+        // Returns true on success, false if the file did not exist, and
+        // throws an exception on error.
+        std::filesystem::remove(outputFile);
+    } catch (const std::filesystem::filesystem_error& e) {
+        std::cerr << "ERROR: Could not remove old LMDB database: "
+            << outputFile << std::endl;
+        std::cerr << "Detail: " << e.what() << std::endl;
+        std::exit(1);
+    }
+
     MDB_env* db = nullptr;
-    if (::mdb_env_create(&db) != MDB_SUCCESS) {
+    if (int rv = ::mdb_env_create(&db)) {
         std::cerr << "ERROR: Could not create LMDB environment." << std::endl;
+        std::cerr << "LMDB error code: " << rv << std::endl;
         std::exit(1);
     }
     // LMDB requires us to hard-code a maximum map size.
     // Here we set this to 50MB.
     // At the time of writing (3 April 2021) this is enough: the largest
     // database is closed-hyp-or-census, which is around 12MB in size.
-    if (::mdb_env_set_mapsize(db, 1024UL * 1024UL * 50) != MDB_SUCCESS) {
+    if (int rv = ::mdb_env_set_mapsize(db, 1024UL * 1024UL * 50)) {
         std::cerr << "ERROR: Could not set LMDB map size." << std::endl;
+        std::cerr << "LMDB error code: " << rv << std::endl;
         ::mdb_env_close(db);
         std::exit(1);
     }
-    if (::mdb_env_open(db, outputFile.c_str(),
-            MDB_NOSUBDIR | MDB_NOLOCK, 0664) != MDB_SUCCESS) {
+    if (int rv = ::mdb_env_open(db, outputFile.c_str(),
+            MDB_NOSUBDIR | MDB_NOLOCK, 0664)) {
         std::cerr << "ERROR: Could not open LMDB environment: "
             << outputFile << std::endl;
+        std::cerr << "LMDB error code: " << rv << std::endl;
         ::mdb_env_close(db);
         std::exit(1);
     }
     MDB_txn* txn = nullptr;
-    if (::mdb_txn_begin(db, nullptr, 0, &txn) != MDB_SUCCESS) {
+    if (int rv = ::mdb_txn_begin(db, nullptr, 0, &txn)) {
         std::cerr << "ERROR: Could not create LMDB transaction: "
             << outputFile << std::endl;
+        std::cerr << "LMDB error code: " << rv << std::endl;
         ::mdb_env_close(db);
         std::exit(1);
     }
     MDB_dbi dbi = 0;
-    if (::mdb_dbi_open(txn, nullptr, MDB_DUPSORT, &dbi) != MDB_SUCCESS) {
+    if (int rv = ::mdb_dbi_open(txn, nullptr, MDB_DUPSORT, &dbi)) {
         std::cerr << "ERROR: Could not open LMDB database: "
             << outputFile << std::endl;
-        ::mdb_env_close(db);
-        std::exit(1);
-    }
-    if (::mdb_drop(txn, dbi, 0 /* empty DB */) != MDB_SUCCESS) {
-        std::cerr << "ERROR: Could not empty LMDB database: "
-            << outputFile << std::endl;
-        ::mdb_env_close(db);
-        std::exit(1);
-    }
-    if (::mdb_txn_commit(txn) != MDB_SUCCESS) {
-        std::cerr << "ERROR: Could not commit LMDB transaction: "
-            << outputFile << std::endl;
+        std::cerr << "LMDB error code: " << rv << std::endl;
+        ::mdb_txn_abort(txn);
         ::mdb_env_close(db);
         std::exit(1);
     }
@@ -198,22 +208,9 @@ int main(int argc, char* argv[]) {
     #elif defined(REGINA_KVSTORE_TOKYOCABINET)
             if (! tcbdbputdup2(db, sig.c_str(), pos)) {
     #elif defined(REGINA_KVSTORE_LMDB)
-            bool success = false;
-            MDB_txn* txn = nullptr;
-            int rv;
-            if ((rv = ::mdb_txn_begin(db, nullptr, 0, &txn)) == MDB_SUCCESS) {
-                MDB_dbi dbi = 0;
-                MDB_val key { sig.size(), sig.data() };
-                MDB_val value { strlen(pos), const_cast<char*>(pos) };
-                if ((rv = ::mdb_dbi_open(txn, nullptr, MDB_DUPSORT, &dbi)) == MDB_SUCCESS) {
-                    if ((rv = ::mdb_put(txn, dbi, &key, &value, 0)) == MDB_SUCCESS) {
-                        if ((rv = ::mdb_txn_commit(txn)) == MDB_SUCCESS) {
-                            success = true;
-                        }
-                    }
-                }
-            }
-            if (! success) {
+            MDB_val key { sig.size(), sig.data() };
+            MDB_val value { strlen(pos), const_cast<char*>(pos) };
+            if (int rv = ::mdb_put(txn, dbi, &key, &value, 0)) {
     #endif
                 std::cerr << "ERROR: Could not store the record for "
                     << sig << " in the database." << std::endl;
@@ -265,6 +262,13 @@ int main(int argc, char* argv[]) {
     }
     tcbdbdel(db);
 #elif defined(REGINA_KVSTORE_LMDB)
+    if (int rv = ::mdb_txn_commit(txn)) {
+        std::cerr << "ERROR: Could not commit LMDB transaction: "
+            << outputFile << std::endl;
+        std::cerr << "LMDB error code: " << rv << std::endl;
+        ::mdb_env_close(db);
+        std::exit(1);
+    }
     ::mdb_env_close(db);
 #endif
 
