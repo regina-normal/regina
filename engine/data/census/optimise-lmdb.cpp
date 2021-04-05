@@ -4,6 +4,10 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Clone an LMDB database in a way that may reduce its file size         *
  *                                                                        *
+ *  This program fills a new database with its records added in sorted    *
+ *  order (as opposed to random access).  This solves the problem where   *
+ *  adding records in random order inflates the occupied file size.       *
+ *                                                                        *
  *  Copyright (c) 2021, Ben Burton                                        *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *

@@ -22,22 +22,30 @@ SET(censusdata_DATA
 
 FOREACH(db ${censusdata_DATA})
   STRING(REGEX REPLACE [.]${DB_EXT}$ .zsig siglist ${db})
-  SET(db_pre "${db}.pre")
+  SET(db_1 "${db}.pre1")
+  SET(db_2 "${db}.pre2")
   IF (REGINA_KVSTORE_LMDB)
-    # For LMDB, we create each database in two stages:
-    # 1) copy the records from the .zsig file into a preliminary LMDB database,
-    #    which has the side-effect of sorting the records by key;
-    # 2) copy these records into a second LMDB database, now processing
-    #    them in sorted order by key, which in practice seems to result in a
-    #    significantly smaller file size.
-    ADD_CUSTOM_COMMAND(OUTPUT "${db_pre}" VERBATIM DEPENDS mkcensusdb ${siglist}
+    # For LMDB, we create each database in three stages:
+    # 1) copy the records from the .zsig file into a stage 1 LMDB database,
+    #    which has the side-effect of sorting the records;
+    # 2) re-add these records in sorted order into a stage 2 LMDB database,
+    #    which can result in significantly smaller file sizes;
+    # 3) ask LMDB to clone this into a final LMDB database using the
+    #    MDB_CP_COMPRESS flag, which solves the problem under Windows where
+    #    databases would always occupy their entire maximum map size.
+    ADD_CUSTOM_COMMAND(OUTPUT "${db_1}" VERBATIM DEPENDS mkcensusdb ${siglist}
       COMMAND mkcensusdb
         "${PROJECT_SOURCE_DIR}/engine/data/census/${siglist}"
-        "${PROJECT_BINARY_DIR}/engine/data/census/${db_pre}"
+        "${PROJECT_BINARY_DIR}/engine/data/census/${db_1}"
     )
-    ADD_CUSTOM_COMMAND(OUTPUT "${db}" VERBATIM DEPENDS optimise-lmdb ${db_pre}
+    ADD_CUSTOM_COMMAND(OUTPUT "${db}" VERBATIM DEPENDS optimise-lmdb ${db_1}
       COMMAND optimise-lmdb
-        "${PROJECT_BINARY_DIR}/engine/data/census/${db_pre}"
+        "${PROJECT_BINARY_DIR}/engine/data/census/${db_1}"
+        "${PROJECT_BINARY_DIR}/engine/data/census/${db_2}"
+    )
+    ADD_CUSTOM_COMMAND(OUTPUT "${db}" VERBATIM DEPENDS compact-lmdb ${db_2}
+      COMMAND compact-lmdb
+        "${PROJECT_BINARY_DIR}/engine/data/census/${db_2}"
         "${PROJECT_BINARY_DIR}/engine/data/census/${db}"
     )
   ELSE (REGINA_KVSTORE_LMDB)

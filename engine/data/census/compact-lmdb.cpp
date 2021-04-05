@@ -4,6 +4,10 @@
  *  Regina - A Normal Surface Theory Calculator                           *
  *  Clone and compact an LMDB database                                    *
  *                                                                        *
+ *  This program clones a database in a way that omits free pages.        *
+ *  This is found to solve the problem under Windows where a database     *
+ *  occupies the entire maximum map size that was set upon creation.      *
+ *                                                                        *
  *  Copyright (c) 2021, Ben Burton                                        *
  *  For further details contact Ben Burton (bab@debian.org).              *
  *                                                                        *
