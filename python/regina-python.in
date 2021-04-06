@@ -60,7 +60,6 @@ my $quiet = 0;
 my $verbose = 0;
 my $interactive = 0;
 my $autoImport = 1;
-my $regina_home = '';
 my $python_lib_dir = '';
 my $script = '';
 my @script_args;
@@ -165,8 +164,6 @@ if (open(CONF, $python_conf)) {
                 &setPythonCmd($2);
             } elsif ($1 eq 'REGINA_PYLIBDIR') {
                 &setPythonLibDir($2);
-            } elsif ($1 eq 'REGINA_HOME') {
-                &setReginaHome($2);
             } else {
                 &warn("W: Unknown variable $1 in $python_conf.\n");
             }
@@ -180,9 +177,6 @@ if (open(CONF, $python_conf)) {
 
 if ($ENV{REGINA_VERBOSITY}) {
     &setVerbosity($ENV{REGINA_VERBOSITY});
-}
-if ($ENV{REGINA_HOME}) {
-    &setReginaHome($ENV{REGINA_HOME});
 }
 if ($ENV{REGINA_PYTHON}) {
     &setPythonCmd($ENV{REGINA_PYTHON});
@@ -198,21 +192,6 @@ my $exec_prefix = '@PERL_CMAKE_INSTALL_PREFIX@';
 my $pkgdatadir = '@PERL_PKGDATADIR@';
 my $libdir = '@PERL_LIBDIR@';
 my $package = '@PACKAGE_NAME@';
-
-if (! $regina_home) {
-    if ($install_type eq 'Source') {
-        my $srcdir = '@PERL_CMAKE_SOURCE_DIR@';
-        $srcdir =~ /^\// or                  # Unix-style absolute path
-            $srcdir =~ /^[A-Za-z]:[\\\/]/ or # Windows-style absolute path
-            $srcdir = "$prog_dir/$srcdir";   # Relative path: make absolute
-
-        &setReginaHome($srcdir);
-    } elsif ($install_type eq 'Bundle') {
-        &setReginaHome("$prog_dir/../Resources");
-    } else {
-        &setReginaHome($pkgdatadir);
-    }
-}
 
 if (! $python_cmd) {
     my $which_python;
@@ -337,19 +316,6 @@ sub setPythonLibDir() {
         chomp $python_lib_dir;
     } else {
         $python_lib_dir = $_[0];
-    }
-}
-sub setReginaHome() {
-    &info("I: Setting Regina home directory to $_[0].\n");
-    $regina_home = $_[0];
-
-    # Sanity test.
-    if (! (-e "$regina_home/examples/sample.rga" or -e "$regina_home/examples/sample-py3.rga")) {
-        &err("E: \$REGINA_HOME should be set to the Regina base directory.\n");
-        &err("   This is the directory containing the 'icons' subdirectory,\n");
-        &err("   the 'examples' subdirectory, and so on.\n");
-        &err("E: It is currently set to $regina_home .\n");
-        exit 1;
     }
 }
 sub extendEnvVar() {
