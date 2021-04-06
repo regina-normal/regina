@@ -52,7 +52,7 @@
   #define DB_CLOSE(x) { tcbdbclose(x); tcbdbdel(x); }
 #elif defined(REGINA_KVSTORE_LMDB)
   #include <cstring>
-  #include <filesystem>
+  #include <unistd.h>
   #include <lmdb.h>
   #define DB_CLOSE(x) { ::mdb_txn_abort(txn); ::mdb_env_close(x); }
 #else
@@ -113,14 +113,10 @@ int main(int argc, char* argv[]) {
     // mdb_dbi_drop() and re-add the records to a database that was already
     // filled then its size can almost double.  So instead we just remove the
     // old database via the filesystem, before using LMDB at all.
-    try {
-        // Returns true on success, false if the file did not exist, and
-        // throws an exception on error.
-        std::filesystem::remove(outputFile);
-    } catch (const std::filesystem::filesystem_error& e) {
+    if (unlink(outputFile.c_str()) && errno != ENOENT) {
         std::cerr << "ERROR: Could not remove old LMDB database: "
             << outputFile << std::endl;
-        std::cerr << "Detail: " << e.what() << std::endl;
+        std::cerr << "Detail: " << strerror(errno) << std::endl;
         std::exit(1);
     }
 
