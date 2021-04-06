@@ -2,19 +2,19 @@
 
 # Files to compile
 SET ( FILES
-  boundarycomponent3
-  component3
-  edge3
-  example3
-  facetpairing3
-  facepair
-  homologicaldata
-  isomorphism3
-  tetrahedron3
-  triangle3
-  triangulation3
-  vertex3
-  pytriangulation
+  boundarycomponent3.cpp
+  component3.cpp
+  edge3.cpp
+  example3.cpp
+  facetpairing3.cpp
+  facepair.cpp
+  homologicaldata.cpp
+  isomorphism3.cpp
+  tetrahedron3.cpp
+  triangle3.cpp
+  triangulation3.cpp
+  vertex3.cpp
+  pytriangulation.cpp
   )
 
 # Prepend folder name

@@ -4,25 +4,25 @@
 #
 # Currently we exclude: nmz_integral, nmz_nauty
 SET ( FILES
-  HilbertSeries
-  automorph
-  collection
-  cone
-  cone_dual_mode
-  cone_property
-  descent
-  face_lattice
-  full_cone
-  general
-  input
-  matrix
-  offload_handler
-  options
-  output
-  project_and_lift
-  reduction
-  simplex
-  sublattice_representation
+  HilbertSeries.cpp
+  automorph.cpp
+  collection.cpp
+  cone.cpp
+  cone_dual_mode.cpp
+  cone_property.cpp
+  descent.cpp
+  face_lattice.cpp
+  full_cone.cpp
+  general.cpp
+  input.cpp
+  matrix.cpp
+  offload_handler.cpp
+  options.cpp
+  output.cpp
+  project_and_lift.cpp
+  reduction.cpp
+  simplex.cpp
+  sublattice_representation.cpp
   )
 
 # Prepend folder name

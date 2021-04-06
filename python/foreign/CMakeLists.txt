@@ -2,10 +2,10 @@
 
 # Files to compile
 SET ( FILES
-  dehydration
-  isosig
-  orb
-  pyforeign
+  dehydration.cpp
+  isosig.cpp
+  orb.cpp
+  pyforeign.cpp
   )
 
 # Prepend folder name

@@ -2,13 +2,13 @@
 
 # Files to compile
 SET ( FILES
-  open
-  packet
-  pdf
-  script
-  text
-  xmlpacketreader
-  xmlpacketreaders
+  open.cpp
+  packet.cpp
+  pdf.cpp
+  script.cpp
+  text.cpp
+  xmlpacketreader.cpp
+  xmlpacketreaders.cpp
   )
 
 # Prepend folder name

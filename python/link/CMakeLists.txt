@@ -2,11 +2,11 @@
 
 # Files to compile
 SET ( FILES
-  examplelink
-  link
-  modellinkgraph
-  pylink
-  tangle
+  examplelink.cpp
+  link.cpp
+  modellinkgraph.cpp
+  pylink.cpp
+  tangle.cpp
   )
 
 # Prepend folder name

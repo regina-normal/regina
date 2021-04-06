@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  census
-  gluingpermsearcher3
-  pycensus
+  census.cpp
+  gluingpermsearcher3.cpp
+  pycensus.cpp
   )
 
 # Prepend folder name

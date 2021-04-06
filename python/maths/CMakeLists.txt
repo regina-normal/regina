@@ -2,25 +2,25 @@
 
 # Files to compile
 SET ( FILES
-  binom
-  laurent
-  laurent2
-  matrixops
-  cyclotomic
-  integer
-  largeinteger
-  matrix2
-  matrixint
-  numbertheory
-  perm
-  perm2
-  perm3
-  perm4
-  perm5
-  polynomial
-  primes
-  pymaths
-  rational
+  binom.cpp
+  laurent.cpp
+  laurent2.cpp
+  matrixops.cpp
+  cyclotomic.cpp
+  integer.cpp
+  largeinteger.cpp
+  matrix2.cpp
+  matrixint.cpp
+  numbertheory.cpp
+  perm.cpp
+  perm2.cpp
+  perm3.cpp
+  perm4.cpp
+  perm5.cpp
+  polynomial.cpp
+  primes.cpp
+  pymaths.cpp
+  rational.cpp
   )
 
 # Prepend folder name

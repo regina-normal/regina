@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  signature
-  pysplit
+  signature.cpp
+  pysplit.cpp
   )
 
 # Prepend folder name

@@ -2,18 +2,18 @@
 
 # Files to compile
 SET ( FILES
-  graphloop
-  graphpair
-  graphtriple
-  handlebody
-  lensspace
-  manifold
-  sfs
-  sfsaltset
-  simplesurfacebundle
-  snappeacensusmfd
-  torusbundle
-  order
+  graphloop.cpp
+  graphpair.cpp
+  graphtriple.cpp
+  handlebody.cpp
+  lensspace.cpp
+  manifold.cpp
+  sfs.cpp
+  sfsaltset.cpp
+  simplesurfacebundle.cpp
+  snappeacensusmfd.cpp
+  torusbundle.cpp
+  order.cpp
   )
 
 # Prepend folder name

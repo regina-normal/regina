@@ -2,12 +2,12 @@
 
 # Files to compile
 SET ( FILES
-  census2
-  census3
-  census4
-  facetpairing2
-  facetpairing3
-  facetpairing4
+  census2.cpp
+  census3.cpp
+  census4.cpp
+  facetpairing2.cpp
+  facetpairing3.cpp
+  facetpairing4.cpp
   )
 
 # Prepend folder name

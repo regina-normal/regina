@@ -1,6 +1,6 @@
 # Files to compile
 SET ( FILES
-  treedecomposition
+  treedecomposition.cpp
   )
 
 # Prepend folder name

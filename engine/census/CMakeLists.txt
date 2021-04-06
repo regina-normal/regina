@@ -2,15 +2,15 @@
 
 # Files to compile
 SET ( FILES
-  census
-  closedprimemin
-  compact
-  euler
-  gluingperms
-  gluingpermsearcher2
-  gluingpermsearcher3
-  gluingpermsearcher4
-  hyperbolic
+  census.cpp
+  closedprimemin.cpp
+  compact.cpp
+  euler.cpp
+  gluingperms.cpp
+  gluingpermsearcher2.cpp
+  gluingpermsearcher3.cpp
+  gluingpermsearcher4.cpp
+  hyperbolic.cpp
   )
 
 # Prepend folder name

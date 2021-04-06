@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  grouppresentation
+  grouppresentation.cpp
   )
 
 # Prepend folder name

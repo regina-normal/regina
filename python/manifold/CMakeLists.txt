@@ -2,17 +2,17 @@
 
 # Files to compile
 SET ( FILES
-  graphloop
-  graphpair
-  graphtriple
-  handlebody
-  lensspace
-  manifold
-  sfs
-  simplesurfacebundle
-  snappeacensusmfd
-  torusbundle
-  pymanifold
+  graphloop.cpp
+  graphpair.cpp
+  graphtriple.cpp
+  handlebody.cpp
+  lensspace.cpp
+  manifold.cpp
+  sfs.cpp
+  simplesurfacebundle.cpp
+  snappeacensusmfd.cpp
+  torusbundle.cpp
+  pymanifold.cpp
   )
 
 # Prepend folder name

@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  sigcensus
-  sigisomorphism
-  signature
+  sigcensus.cpp
+  sigisomorphism.cpp
+  signature.cpp
   )
 
 # Prepend folder name

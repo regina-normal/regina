@@ -2,11 +2,11 @@
 
 # Files to compile
 SET ( FILES
-  abeliangroup
-  grouppresentation
-  homgrouppresentation
-  markedabeliangroup
-  xmlalgebrareader
+  abeliangroup.cpp
+  grouppresentation.cpp
+  homgrouppresentation.cpp
+  markedabeliangroup.cpp
+  xmlalgebrareader.cpp
   )
 
 # Prepend folder name

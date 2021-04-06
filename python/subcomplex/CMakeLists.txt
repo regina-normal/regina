@@ -2,35 +2,35 @@
 
 # Files to compile
 SET ( FILES
-  augtrisolidtorus
-  blockedsfs
-  blockedsfsloop
-  blockedsfspair
-  blockedsfstriple
-  l31pillow
-  layeredchain
-  layeredchainpair
-  layeredlensspace
-  layeredloop
-  layeredsolidtorus
-  layeredtorusbundle
-  layering
-  pillowtwosphere
-  pluggedtorusbundle
-  plugtrisolidtorus
-  satannulus
-  satblock
-  satblocktypes
-  satregion
-  snappeacensustri
-  snappedball
-  snappedtwosphere
-  spiralsolidtorus
-  standardtri
-  trisolidtorus
-  trivialtri
-  txicore
-  pysubcomplex
+  augtrisolidtorus.cpp
+  blockedsfs.cpp
+  blockedsfsloop.cpp
+  blockedsfspair.cpp
+  blockedsfstriple.cpp
+  l31pillow.cpp
+  layeredchain.cpp
+  layeredchainpair.cpp
+  layeredlensspace.cpp
+  layeredloop.cpp
+  layeredsolidtorus.cpp
+  layeredtorusbundle.cpp
+  layering.cpp
+  pillowtwosphere.cpp
+  pluggedtorusbundle.cpp
+  plugtrisolidtorus.cpp
+  satannulus.cpp
+  satblock.cpp
+  satblocktypes.cpp
+  satregion.cpp
+  snappeacensustri.cpp
+  snappedball.cpp
+  snappedtwosphere.cpp
+  spiralsolidtorus.cpp
+  standardtri.cpp
+  trisolidtorus.cpp
+  trivialtri.cpp
+  txicore.cpp
+  pysubcomplex.cpp
   )
 
 # Prepend folder name

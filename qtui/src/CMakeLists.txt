@@ -67,32 +67,32 @@ SET(SOURCES ${SOURCES}
   reginamain.cpp
   reginapref.cpp
   reginamanager.cpp
-  actionspart
-  exports
-  imports
-  messagelayer
-  newpacketdialog
-  newpackets
-  packetchooser
-  packetcreator
-  packeteditiface
-  packetmanager
-  packettabui
-  packettreeview
-  packetui
-  packetwindow
-  patiencedialog
-  progressdialogs
-  treenav
-  coordinatechooser
-  coordinates
-  pythonmanager
-  recentfilesaction
-  reginaabout
-  reginaprefset
-  reginasupport
-  sharedtempfile
-  shortrunner
+  actionspart.cpp
+  exports.cpp
+  imports.cpp
+  messagelayer.cpp
+  newpacketdialog.cpp
+  newpackets.cpp
+  packetchooser.cpp
+  packetcreator.cpp
+  packeteditiface.cpp
+  packetmanager.cpp
+  packettabui.cpp
+  packettreeview.cpp
+  packetui.cpp
+  packetwindow.cpp
+  patiencedialog.cpp
+  progressdialogs.cpp
+  treenav.cpp
+  coordinatechooser.cpp
+  coordinates.cpp
+  pythonmanager.cpp
+  recentfilesaction.cpp
+  reginaabout.cpp
+  reginaprefset.cpp
+  reginasupport.cpp
+  sharedtempfile.cpp
+  shortrunner.cpp
   )
 
 if (APPLE)

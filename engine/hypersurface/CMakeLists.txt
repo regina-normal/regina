@@ -2,13 +2,13 @@
 
 # Files to compile
 SET ( FILES
-  enumerate
-  links
-  hsvectorstandard
-  normalhypersurface
-  normalhypersurfaces
-  xmlhypersurfacereader
-  triangulate
+  enumerate.cpp
+  links.cpp
+  hsvectorstandard.cpp
+  normalhypersurface.cpp
+  normalhypersurfaces.cpp
+  xmlhypersurfacereader.cpp
+  triangulate.cpp
   )
 
 # Prepend folder name

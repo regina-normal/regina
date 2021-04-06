@@ -2,14 +2,14 @@
 
 # Files to compile
 SET ( FILES
-  container
-  packet
-  packetlistener
-  packettype
-  pdf
-  pypacket
-  script
-  text
+  container.cpp
+  packet.cpp
+  packetlistener.cpp
+  packettype.cpp
+  pdf.cpp
+  pypacket.cpp
+  script.cpp
+  text.cpp
   )
 
 # Prepend folder name

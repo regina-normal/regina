@@ -2,11 +2,11 @@
 
 # Files to compile
 SET ( FILES
-  abeliangroup
-  grouppresentation
-  homgrouppresentation
-  markedabeliangroup
-  pyalgebra
+  abeliangroup.cpp
+  grouppresentation.cpp
+  homgrouppresentation.cpp
+  markedabeliangroup.cpp
+  pyalgebra.cpp
   )
 
 # Prepend folder name

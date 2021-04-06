@@ -4,15 +4,15 @@ ADD_SUBDIRECTORY("spec")
 
 # Files to compile
 SET ( FILES
-  cyclotomic
-  integer
-  matrix2
-  matrixops
-  numbertheory
-  primes
-  rational
-  ray
-  seedprimes
+  cyclotomic.cpp
+  integer.cpp
+  matrix2.cpp
+  matrixops.cpp
+  numbertheory.cpp
+  primes.cpp
+  rational.cpp
+  ray.cpp
+  seedprimes.cpp
   )
 
 # Prepend folder name

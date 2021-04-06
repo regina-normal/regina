@@ -3,8 +3,8 @@ include_directories(${ENGINE_INCLUDES})
 include_directories(${CMAKE_BINARY_DIR}/engine)
 
 set(TIMING_APPS
-  loadlarge
-  tree
+  loadlarge.cpp
+  tree.cc
   )
 
 foreach(APP ${TIMING_APPS})

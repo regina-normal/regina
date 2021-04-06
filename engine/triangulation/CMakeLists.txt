@@ -2,15 +2,15 @@
 
 # Files to compile
 SET ( FILES
-  example2
-  example3
-  example4
-  facetpairing3
-  facepair
-  homologicaldata
-  xmltrireader2
-  xmltrireader3
-  xmltrireader4
+  example2.cpp
+  example3.cpp
+  example4.cpp
+  facetpairing3.cpp
+  facepair.cpp
+  homologicaldata.cpp
+  xmltrireader2.cpp
+  xmltrireader3.cpp
+  xmltrireader4.cpp
   )
 
 # Prepend folder name

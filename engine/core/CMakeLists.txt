@@ -1,5 +1,5 @@
 # Files to compile
-SET ( FILES engine )
+SET ( FILES engine.cpp )
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

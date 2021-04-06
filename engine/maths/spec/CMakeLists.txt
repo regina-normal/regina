@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  perm3
-  perm4
-  perm5
+  perm3.cpp
+  perm4.cpp
+  perm5.cpp
   )
 
 # Prepend folder name

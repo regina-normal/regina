@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  fileinfo
-  globaldirs)
+  fileinfo.cpp
+  globaldirs.cpp)
 
 # Prepend folder name
 FOREACH ( SOURCE_FILE ${FILES} )

@@ -2,32 +2,32 @@
 
 # Files to compile
 SET ( FILES
-  boundaries
-  components
-  crushandcut
-  csv
-  disc
-  disctype
-  enumerator
-  enumfilter
-  links
-  normalsurface
-  normalsurfaces
-  nsvectoranstandard
-  nsvectororiented
-  nsvectororientedquad
-  nsvectorquad
-  nsvectorquadclosed
-  nsvectorquadoct
-  nsvectorquadoctclosed
-  nsvectorstandard
-  prism
-  surfacefilter
-  xmlfilterreader
-  xmlsurfacereader
-  orientable
-  quadtostd
-  stdtoquad
+  boundaries.cpp
+  components.cpp
+  crushandcut.cpp
+  csv.cpp
+  disc.cpp
+  disctype.cpp
+  enumerator.cpp
+  enumfilter.cpp
+  links.cpp
+  normalsurface.cpp
+  normalsurfaces.cpp
+  nsvectoranstandard.cpp
+  nsvectororiented.cpp
+  nsvectororientedquad.cpp
+  nsvectorquad.cpp
+  nsvectorquadclosed.cpp
+  nsvectorquadoct.cpp
+  nsvectorquadoctclosed.cpp
+  nsvectorstandard.cpp
+  prism.cpp
+  surfacefilter.cpp
+  xmlfilterreader.cpp
+  xmlsurfacereader.cpp
+  orientable.cpp
+  quadtostd.cpp
+  stdtoquad.cpp
   )
 
 # Prepend folder name

@@ -6,9 +6,9 @@ SET_PROPERTY ( DIRECTORY
 )
 
 SET ( SOURCES
-  exhaustive
-  runalltests
-  testsuite
+  exhaustive.cpp
+  runalltests.cpp
+  testsuite.cpp
   )
 # Each of these subdirectories modifies the SOURCES variable,
 # adding more source files

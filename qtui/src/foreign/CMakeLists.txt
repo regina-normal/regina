@@ -1,16 +1,16 @@
 SET ( FILES
-  csvsurfacehandler
-  dehydrationhandler
-  exportdialog
-  importdialog
-  isosighandler
-  orbhandler
-  pdfhandler
-  pythonhandler
-  recogniserhandler
-  reginahandler
-  snappeahandler
-  sourcehandler
+  csvsurfacehandler.cpp
+  dehydrationhandler.cpp
+  exportdialog.cpp
+  importdialog.cpp
+  isosighandler.cpp
+  orbhandler.cpp
+  pdfhandler.cpp
+  pythonhandler.cpp
+  recogniserhandler.cpp
+  reginahandler.cpp
+  snappeahandler.cpp
+  sourcehandler.cpp
   )
 
 FOREACH( FILE ${FILES} )

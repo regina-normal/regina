@@ -2,15 +2,15 @@
 
 # Files to compile
 SET ( FILES
-  boundarycomponent2
-  component2
-  edge2
-  example2
-  triangle2
-  isomorphism2
-  triangulation2
-  vertex2
-  pydim2
+  boundarycomponent2.cpp
+  component2.cpp
+  edge2.cpp
+  example2.cpp
+  triangle2.cpp
+  isomorphism2.cpp
+  triangulation2.cpp
+  vertex2.cpp
+  pydim2.cpp
   )
 
 # Prepend folder name
