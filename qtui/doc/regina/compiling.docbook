@@ -86,10 +86,14 @@
   <para>
    On some platforms you might also need development files for the
    zlib compression library (<firstterm>libz</firstterm>), the
-   Jansson &json; library (<firstterm>libjansson</firstterm>), and the
-   Tokyo Cabinet library (<firstterm>libtokyocabinet</firstterm>),
-   but this depends on how your linker works.
-   If you do need these, look for a package named
+   Jansson &json; library (<firstterm>libjansson</firstterm>), and
+   a lightweight database library (which will be one of
+   Tokyo Cabinet (<firstterm>libtokyocabinet</firstterm>),
+   QDBM (<firstterm>libqdbm</firstterm>) or the
+   Lightning Memory-Mapped Database (<firstterm>liblmdb</firstterm>)).
+   Which of these you need will depend on how your linker works and how
+   &regina; was built.
+   If you do need any of these, look for a package named
    <literal>zlib1g-dev</literal>,
    <literal>zlib1-devel</literal> or
    <literal>zlib-devel</literal>,
@@ -97,10 +101,15 @@
    <literal>libjansson-dev</literal>,
    <literal>libjansson-devel</literal> or
    <literal>jansson-devel</literal>,
-   and a package named
+   and an appropriate option from
    <literal>libtokyocabinet-dev</literal>,
-   <literal>libtokyocabinet-devel</literal> or
-   <literal>tokyocabinet-devel</literal>.
+   <literal>libtokyocabinet-devel</literal>,
+   <literal>tokyocabinet-devel</literal>,
+   <literal>libqdbm-dev</literal>,
+   <literal>qdbm-devel</literal>,
+   <literal>liblmdb-dev</literal>,
+   <literal>liblmdb-devel</literal> or
+   <literal>lmdb-devel</literal>.
   </para>
  </sect1>
 
