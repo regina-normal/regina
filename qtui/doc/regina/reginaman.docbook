@@ -265,35 +265,6 @@
      </listitem>
     </varlistentry>
     <varlistentry>
-     <term><parameter>REGINA_HOME</parameter></term>
-     <listitem>
-      <para>
-       The directory in which &regina;'s data files are installed.  This
-       should be the directory containing the <filename>icons/</filename>
-       subdirectory, the <filename>examples/</filename> subdirectory and so on.
-      </para>
-      <para>
-       If you are running &regina; directly out of the source tree, this
-       defaults to the top-level source directory.  If you are running
-       &regina; from a proper installation, this defaults to the corresponding
-       installation directory.
-      </para>
-      <para>
-       In normal situations you should never need to set this option yourself.
-      </para>
-      <warning>
-       <para>
-        When running from a proper installation,
-        the default <parameter>REGINA_HOME</parameter> is
-        hard-wired into the startup script (it is set at compile time).
-        If you install &regina; into one directory but then move it by
-        hand into another, the default <parameter>REGINA_HOME</parameter>
-        will be incorrect.
-       </para>
-      </warning>
-     </listitem>
-    </varlistentry>
-    <varlistentry>
      <term><parameter>REGINA_PYLIBDIR</parameter></term>
      <listitem>
       <para>
