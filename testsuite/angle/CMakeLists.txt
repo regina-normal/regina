@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  anglestructures
+  anglestructures.cpp
   )
 
 # Prepend folder name

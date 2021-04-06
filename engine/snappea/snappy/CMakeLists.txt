@@ -1,6 +1,6 @@
 # Files to compile
 SET ( FILES
-  snappy_get_gluing_equations
+  snappy_get_gluing_equations.c
   )
 
 # Prepend folder name

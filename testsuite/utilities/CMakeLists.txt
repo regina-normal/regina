@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  base64
-  bitmask
+  base64.cpp
+  bitmask.cpp
   )
 
 # Prepend folder name

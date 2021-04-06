@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  standardtriangulation
+  standardtriangulation.cpp
   )
 
 # Prepend folder name

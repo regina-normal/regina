@@ -16,7 +16,7 @@ set(UTILS
 
 foreach(UTIL ${UTILS})
   string(REGEX REPLACE _ - SOURCE_FILE ${UTIL})
-  add_executable(${UTIL} ${SOURCE_FILE})
+  add_executable(${UTIL} ${SOURCE_FILE}.cpp)
   target_link_libraries(${UTIL} ${ENGINE_LIBRARY} ${POPT_LIBRARY})
 endforeach(UTIL)
 

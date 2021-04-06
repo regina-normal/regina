@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  anglestructure
-  anglestructures
-  pyangle
+  anglestructure.cpp
+  anglestructures.cpp
+  pyangle.cpp
   )
 
 # Prepend folder name

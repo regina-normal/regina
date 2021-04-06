@@ -1,7 +1,7 @@
 # Files to compile
 SET ( FILES
-  treedecomposition
-  pytreewidth
+  treedecomposition.cpp
+  pytreewidth.cpp
   )
 
 # Prepend folder name

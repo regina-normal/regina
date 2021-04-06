@@ -4,11 +4,11 @@
 #
 # Currently we exclude graph.cpp, since we no longer build-depend on boost.
 SET ( FILES
-  connectedsumdecomp
-  eltmoves
-  homologicaldata
-  isomorphism
-  triangulation3
+  connectedsumdecomp.cpp
+  eltmoves.cpp
+  homologicaldata.cpp
+  isomorphism.cpp
+  triangulation3.cpp
   )
 
 # Prepend folder name

@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  dehydration
-  isosig
-  orb
+  dehydration.cpp
+  isosig.cpp
+  orb.cpp
   )
 
 # Prepend folder name

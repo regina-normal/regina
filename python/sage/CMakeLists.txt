@@ -1,8 +1,8 @@
 
 # Files to compile
 SET ( FILES
-  pysage
-  registerIntFromPyIndex
+  pysage.cpp
+  registerIntFromPyIndex.cpp
   )
 
 # Prepend folder name

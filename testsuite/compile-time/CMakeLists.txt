@@ -2,15 +2,15 @@
 
 # Files to compile
 SET ( FILES
-  binom
-  boolset
-  disctype
-  facenumbering
-  intutils
-  link
-  perm
-  snappea
-  triangulation
+  binom.cpp
+  boolset.cpp
+  disctype.cpp
+  facenumbering.cpp
+  intutils.cpp
+  link.cpp
+  perm.cpp
+  snappea.cpp
+  triangulation.cpp
   )
 
 # Prepend folder name

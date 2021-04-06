@@ -1,24 +1,24 @@
 # Files to compile
 SET ( FILES
-  angle
-  crushtri
-  decompose
-  homology
-  hydrate
-  insertlayered
-  knot
-  reorder
-  retriangulate
-  simplify
-  simplifyglobal
-  skeleton
-  snappea
-  subdivide
-  surfaces
-  triangle3
-  triangulation3
-  turaevviro
-  vertex3
+  angle.cpp
+  crushtri.cpp
+  decompose.cpp
+  homology.cpp
+  hydrate.cpp
+  insertlayered.cpp
+  knot.cpp
+  reorder.cpp
+  retriangulate.cpp
+  simplify.cpp
+  simplifyglobal.cpp
+  skeleton.cpp
+  snappea.cpp
+  subdivide.cpp
+  surfaces.cpp
+  triangle3.cpp
+  triangulation3.cpp
+  turaevviro.cpp
+  vertex3.cpp
   )
 
 # Prepend folder name

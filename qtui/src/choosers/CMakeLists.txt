@@ -1,8 +1,8 @@
 SET ( FILES
-  boundary3chooser
-  boundary4chooser
-  cuspchooser
-  edgeintchooser
+  boundary3chooser.cpp
+  boundary4chooser.cpp
+  cuspchooser.cpp
+  edgeintchooser.cpp
   )
 
 FOREACH( FILE ${FILES} )

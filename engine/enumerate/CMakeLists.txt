@@ -2,10 +2,10 @@
 
 # Files to compile
 SET ( FILES
-  treeconstraint
-  treelp
-  treetraversal
-  typetrie
+  treeconstraint.cpp
+  treelp.cpp
+  treetraversal.cpp
+  typetrie.cpp
   )
 
 # Prepend folder name

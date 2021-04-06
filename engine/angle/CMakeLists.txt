@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  anglestructure
-  anglestructures
-  xmlanglestructreader
+  anglestructure.cpp
+  anglestructures.cpp
+  xmlanglestructreader.cpp
   )
 
 # Prepend folder name

@@ -2,25 +2,25 @@
 
 # Files to compile
 SET ( FILES
-  algebra
-  complement
-  dt
-  examplelink
-  flype
-  gauss
-  homfly
-  jenkins
-  jones
-  link
-  modellinkgraph
-  pass
-  reidemeister
-  reidemeister-tangle
-  rewrite
-  sig
-  simplify
-  tangle
-  xmllinkreader
+  algebra.cpp
+  complement.cpp
+  dt.cpp
+  examplelink.cpp
+  flype.cpp
+  gauss.cpp
+  homfly.cpp
+  jenkins.cpp
+  jones.cpp
+  link.cpp
+  modellinkgraph.cpp
+  pass.cpp
+  reidemeister.cpp
+  reidemeister-tangle.cpp
+  rewrite.cpp
+  sig.cpp
+  simplify.cpp
+  tangle.cpp
+  xmllinkreader.cpp
   )
 
 # Prepend folder name

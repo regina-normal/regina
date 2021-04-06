@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  fileinfo
-  globaldirs
-  pyfile
+  fileinfo.cpp
+  globaldirs.cpp
+  pyfile.cpp
   )
 
 # Prepend folder name

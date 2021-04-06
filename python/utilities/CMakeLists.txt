@@ -2,13 +2,13 @@
 
 # Files to compile
 SET ( FILES
-  boolset
-  i18nutils
-  intutils
-  osutils
-  pyutilities
-  randutils
-  stringutils
+  boolset.cpp
+  i18nutils.cpp
+  intutils.cpp
+  osutils.cpp
+  pyutilities.cpp
+  randutils.cpp
+  stringutils.cpp
   )
 
 # Prepend folder name

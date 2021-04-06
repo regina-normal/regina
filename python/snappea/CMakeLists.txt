@@ -2,9 +2,9 @@
 
 # Files to compile
 SET ( FILES
-  examplesnappea
-  snappeatriangulation
-  pysnappea
+  examplesnappea.cpp
+  snappeatriangulation.cpp
+  pysnappea.cpp
   )
 
 # Prepend folder name

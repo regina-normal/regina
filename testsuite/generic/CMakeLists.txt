@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  facenumbering
-  generictriangulation
+  facenumbering.cpp
+  generictriangulation.cpp
   )
 
 # Prepend folder name

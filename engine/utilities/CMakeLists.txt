@@ -2,15 +2,15 @@
 
 # Files to compile
 SET ( FILES
-  boolset
-  base64
-  i18nutils
-  memstream
-  osutils
-  randutils
-  stringutils
-  xmlcallback
-  xmlutils
+  boolset.cpp
+  base64.cpp
+  i18nutils.cpp
+  memstream.cpp
+  osutils.cpp
+  randutils.cpp
+  stringutils.cpp
+  xmlcallback.cpp
+  xmlutils.cpp
   )
 
 # Prepend folder name

@@ -1,14 +1,14 @@
 # Files to compile
 SET ( FILES
-  edge4
-  homology
-  retriangulate
-  simplify
-  simplifyglobal
-  skeleton
-  subdivide
-  triangulation4
-  vertex4
+  edge4.cpp
+  homology.cpp
+  retriangulate.cpp
+  simplify.cpp
+  simplifyglobal.cpp
+  skeleton.cpp
+  subdivide.cpp
+  triangulation4.cpp
+  vertex4.cpp
   )
 
 # Prepend folder name

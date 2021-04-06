@@ -1,7 +1,7 @@
 # Files to compile
 SET ( FILES
-  skeleton
-  triangulation2
+  skeleton.cpp
+  triangulation2.cpp
   )
 
 # Prepend folder name

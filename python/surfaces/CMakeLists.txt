@@ -2,16 +2,16 @@
 
 # Files to compile
 SET ( FILES
-  disc
-  disctype
-  normalcoords
-  normalflags
-  normalsurface
-  normalsurfaces
-  prism
-  surfacefilter
-  surfacefiltertype
-  pysurfaces
+  disc.cpp
+  disctype.cpp
+  normalcoords.cpp
+  normalflags.cpp
+  normalsurface.cpp
+  normalsurfaces.cpp
+  prism.cpp
+  surfacefilter.cpp
+  surfacefiltertype.cpp
+  pysurfaces.cpp
   )
 
 # Prepend folder name

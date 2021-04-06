@@ -2,8 +2,8 @@
 
 # Files to compile
 SET ( FILES
-  progresstracker
-  pyprogress
+  progresstracker.cpp
+  pyprogress.cpp
   )
 
 # Prepend folder name

@@ -2,12 +2,12 @@
 
 # Files to compile
 SET ( FILES
-  fundgroup
-  homology
-  examplesnappea
-  snappeatriangulation
-  xmlsnappeareader
-  uimessages)
+  fundgroup.cpp
+  homology.cpp
+  examplesnappea.cpp
+  snappeatriangulation.cpp
+  xmlsnappeareader.cpp
+  uimessages.cpp)
 
 
 # Prepend folder name

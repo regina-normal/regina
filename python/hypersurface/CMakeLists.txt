@@ -2,11 +2,11 @@
 
 # Files to compile
 SET ( FILES
-  hypercoords
-  hyperflags
-  normalhypersurface
-  normalhypersurfaces
-  pyhypersurface
+  hypercoords.cpp
+  hyperflags.cpp
+  normalhypersurface.cpp
+  normalhypersurfaces.cpp
+  pyhypersurface.cpp
   )
 
 # Prepend folder name

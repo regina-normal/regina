@@ -2,7 +2,7 @@
 
 # Files to compile
 SET ( FILES
-  snappeatriangulation
+  snappeatriangulation.cpp
   )
 
 # Prepend folder name

@@ -2,17 +2,17 @@
 
 # Files to compile
 SET ( FILES
-  boundarycomponent4
-  component4
-  edge4
-  example4
-  triangle4
-  isomorphism4
-  pentachoron4
-  tetrahedron4
-  triangulation4
-  vertex4
-  pydim4
+  boundarycomponent4.cpp
+  component4.cpp
+  edge4.cpp
+  example4.cpp
+  triangle4.cpp
+  isomorphism4.cpp
+  pentachoron4.cpp
+  tetrahedron4.cpp
+  triangulation4.cpp
+  vertex4.cpp
+  pydim4.cpp
   )
 
 # Prepend folder name

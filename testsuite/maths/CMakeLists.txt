@@ -2,22 +2,22 @@
 
 # Files to compile
 SET ( FILES
-  binom
-  cyclotomic
-  integer
-  laurent
-  laurent2
-  matrixops
-  numbertheory
-  perm
-  perm2
-  perm3
-  perm4
-  perm5
-  permconv
-  polynomial
-  primes
-  rational
+  binom.cpp
+  cyclotomic.cpp
+  integer.cpp
+  laurent.cpp
+  laurent2.cpp
+  matrixops.cpp
+  numbertheory.cpp
+  perm.cpp
+  perm2.cpp
+  perm3.cpp
+  perm4.cpp
+  perm5.cpp
+  permconv.cpp
+  polynomial.cpp
+  primes.cpp
+  rational.cpp
   )
 
 # Prepend folder name
