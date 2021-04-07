@@ -79,6 +79,8 @@ Version 6.1  [ TODO ]
         Class FileInfo:
             - Class constant TYPE_XML is now constexpr.
         Class GlobalDirs:
+            - Added deduceDirs() as an alternative to setDirs(); this new
+              routine also supports running directly from the source tree.
             - Removed pythonLibs(), since nothing has been installed to
               this path since Regina 5.0.
         Class GluingPermSearcher<dim> and subclasses:

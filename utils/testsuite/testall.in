@@ -63,9 +63,9 @@ if ! test -f ../../CMakeCache.txt -a -f "$executable"; then
 	exit 1
 fi
 
-# Tell Regina to fetch census data files from the (built) source tree,
-# not the final installation directory.
-export REGINA_HOME="`dirname "$0"`"/../../engine
+# Clobber environment variables that the user might already have set.
+export REGINA_PYLIBDIR=
+export REGINA_HOME=
 
 # Set up variables that runtest.sh needs.
 export testdir

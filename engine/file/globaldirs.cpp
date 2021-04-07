@@ -30,6 +30,10 @@
  *                                                                        *
  **************************************************************************/
 
+#include <cstdlib> // for getenv()
+#include <cstring> // for strdup()
+#include <libgen.h> // for dirname()
+#include <unistd.h> // for access()
 #include "regina-config.h"
 #include "file/globaldirs.h"
 
@@ -50,6 +54,97 @@ void GlobalDirs::setDirs(const std::string& homeDir,
 
     if (! censusDir.empty())
         census_ = censusDir;
+}
+
+void GlobalDirs::deduceDirs(const char* executable) {
+    // Make a copy of executable, since dirname() might modify it.
+    char* copy = strdup(executable);
+    std::string exeDir = dirname(copy);
+    free(copy);
+
+    // Are we in the build tree?
+    bool inBuildTree = true;
+    std::string buildRoot = exeDir;
+    std::string sourceRoot;
+    while (true) {
+        // A file that should exist in every build subdirectory:
+        if (access((buildRoot + "/cmake_install.cmake").c_str(), F_OK) != 0) {
+            inBuildTree = false;
+            break;
+        }
+
+        // A file that should exist in only in the build root:
+        if (access((buildRoot + "/CMakeCache.txt").c_str(), F_OK) == 0) {
+            // Success!
+            // Now locate the source root, which we assume is either
+            // buildRoot or its immediate parent.
+            if (access((buildRoot + "/CMakeLists.txt").c_str(), F_OK) == 0)
+                sourceRoot = buildRoot;
+            else if (access((buildRoot + "/../CMakeLists.txt").c_str(),
+                    F_OK) == 0)
+                sourceRoot = buildRoot + "/..";
+            else {
+                inBuildTree = false;
+                break;
+            }
+
+            if (access((sourceRoot + "/engine/regina-config.h.in").c_str(),
+                    F_OK) != 0) {
+                inBuildTree = false;
+                break;
+            }
+            break;
+        }
+
+        // At this stage it looks like we are in a subdirectory within
+        // the build tree, but we have not yet found the build root.
+        buildRoot += "/..";
+    }
+
+    const char* env;
+
+    env = std::getenv("REGINA_HOME");
+    if (env && *env) {
+        home_ = env;
+        census_ = home_ + "/data/census";
+    } else if (inBuildTree) {
+        home_ = sourceRoot;
+        census_ = buildRoot + "/engine/data/census";
+    } else {
+#if defined(REGINA_INSTALL_BUNDLE)
+        #if ! defined(REGINA_XCODE_BUNDLE)
+            #error "Regina only supports macOS bundles through the Xcode build."
+        #endif
+        // The xcode-built MacOS bundle puts the databases in the root resources
+        // directory: Regina.app/Contents/Resources.
+        // This is because the databases are "derived sources" and so need to be
+        // installed through a "copy bundle resources" phase (not "copy files").
+        home_ = exeDir + "/../Resources";
+        census_ = home_;
+#elif defined(REGINA_INSTALL_WINDOWS)
+        // The Windows build tries to follow the XDG build as far as possible.
+        home_ = exeDir + "\\..\\share\\regina";
+        census_ = home_ + "\\data\\census";
+#else
+        // This appears to be a standard XDG installation, and we should be
+        // able to rely on the hard-coded paths that were set at build time.
+#endif
+    }
+
+    env = std::getenv("REGINA_PYLIBDIR");
+    if (env && *env) {
+        pythonModule_ = env;
+    } else if (inBuildTree) {
+        pythonModule_ = buildRoot + "/python";
+    } else {
+#if defined(REGINA_INSTALL_BUNDLE)
+        pythonModule_ = exeDir + "/python";
+#elif defined(REGINA_INSTALL_WINDOWS)
+        pythonModule_ = exeDir + "\\..\\lib\\regina\\python";
+#else
+        // As before, use the hard-coded paths.
+#endif
+    }
 }
 
 } // namespace regina

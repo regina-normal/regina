@@ -75,13 +75,13 @@
 #define ICONV_CONST 
 
 /* Define to Regina's primary home directory on the system.
-   This can always be changed at runtime vi GlobalDirs::setDirs(). */
+   This can always be changed at runtime via the GlobalDirs class. */
 #define REGINA_DATADIR "/usr/local/share/regina"
 
 /* Define to the directory on the system in which Regina's python module is
    installed, or the empty string if the module is installed in a standard
    python location (i.e., it can be found automatically on python's sys.path).
-   This can always be changed at runtime vi GlobalDirs::setDirs(). */
+   This can always be changed at runtime via the GlobalDirs class. */
 #define REGINA_PYLIBDIR ""
 
 /* Define to the filename extension that we use for census databases. */

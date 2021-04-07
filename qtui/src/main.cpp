@@ -86,29 +86,8 @@ int main(int argc, char **argv) {
     QCoreApplication::setOrganizationDomain("regina-normal.github.io");
     QCoreApplication::setApplicationName("Regina");
 
-#ifdef REGINA_INSTALL_BUNDLE
-    regina::GlobalDirs::setDirs(
-        static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath() + "/../Resources")),
-        static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath() + "/python")),
-        /* The Xcode bundle currently puts census databases in the
-           root resources directory.  This is difficult to avoid, since
-           these are "derived sources" and hence need to go in a
-           "copy bundle resources" phase, not a "copy files" phase. */
-        static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath() + "/../Resources")));
-#endif
-
-#ifdef REGINA_INSTALL_WINDOWS
-    regina::GlobalDirs::setDirs(
-        static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath() + "/../share/regina")),
-        static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath() + "/../lib/regina/python")),
-        static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath() + "/../share/regina/data/census")));
-#endif
+    regina::GlobalDirs::deduceDirs(static_cast<const char*>(QFile::encodeName(
+            QCoreApplication::applicationDirPath())));
 
     // Load preferences from file.
     ReginaPrefSet::read();

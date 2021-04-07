@@ -50,6 +50,7 @@ void addGlobalDirs(pybind11::module_& m) {
             &GlobalDirs::setDirs),
             pybind11::arg(), pybind11::arg(),
             pybind11::arg("censusDir") = std::string())
+        .def_static("deduceDirs", &GlobalDirs::deduceDirs)
     ;
     regina::python::no_eq_operators(c);
 }
