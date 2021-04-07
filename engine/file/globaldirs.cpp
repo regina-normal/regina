@@ -37,6 +37,13 @@
 #include "regina-config.h"
 #include "file/globaldirs.h"
 
+// We will be special-casing the Xcode build here.
+#if defined(REGINA_INSTALL_BUNDLE) && ! defined(REGINA_XCODE_BUNDLE)
+    #error "Regina only supports macOS bundles through the Xcode build."
+#elif defined(REGINA_XCODE_BUNDLE) && ! defined(REGINA_INSTALL_BUNDLE)
+    #error "The Xcode build must be configured as REGINA_INSTALL_BUNDLE."
+#endif
+
 namespace regina {
 
 std::string GlobalDirs::home_(REGINA_DATADIR);
@@ -65,14 +72,26 @@ void GlobalDirs::deduceDirs(const char* executable) {
     std::string exeDir = dirname(copy);
     free(copy);
 
-    // Are we in the build tree?
-    bool inBuildTree = true;
+    const char* env;
+
+#if defined(REGINA_XCODE_BUNDLE)
+    // Are we running from within Xcode?
+    bool inXcode = false;
+    std::string builtProducts;
+    env = std::getenv("__XCODE_BUILT_PRODUCTS_DIR_PATHS");
+    if (env && *env) {
+        builtProducts = env;
+        inXcode = true;
+    }
+#else
+    // Are we in the cmake build tree?
+    bool inCMakeBuildTree = true;
     std::string buildRoot = exeDir;
     std::string sourceRoot;
     while (true) {
         // A file that should exist in every build subdirectory:
         if (access((buildRoot + "/cmake_install.cmake").c_str(), F_OK) != 0) {
-            inBuildTree = false;
+            inCMakeBuildTree = false;
             break;
         }
 
@@ -87,13 +106,13 @@ void GlobalDirs::deduceDirs(const char* executable) {
                     F_OK) == 0)
                 sourceRoot = buildRoot + "/..";
             else {
-                inBuildTree = false;
+                inCMakeBuildTree = false;
                 break;
             }
 
             if (access((sourceRoot + "/engine/regina-config.h.in").c_str(),
                     F_OK) != 0) {
-                inBuildTree = false;
+                inCMakeBuildTree = false;
                 break;
             }
             break;
@@ -103,55 +122,75 @@ void GlobalDirs::deduceDirs(const char* executable) {
         // the build tree, but we have not yet found the build root.
         buildRoot += "/..";
     }
-
-    const char* env;
+#endif
 
     env = std::getenv("REGINA_HOME");
     if (env && *env) {
         home_ = env;
         census_ = home_ + "/data/census";
         engineDocs_ = home_ + "/engine-docs";
-    } else if (inBuildTree) {
+    }
+#if defined(REGINA_XCODE_BUNDLE)
+    else {
+        home_ = exeDir + "/../Resources";
+        engineDocs_ = home_ + "/engine-docs";
+        if (inXcode) {
+            // Make sure we can find the census databases where they were first
+            // built, even if we have not yet constructed a full app bundle.
+            // (This matters, for instance, when running the test suite.)
+            census_ = builtProducts + "/..";
+        } else {
+            // The xcode-built MacOS bundle puts the databases in the root
+            // resources directory: Regina.app/Contents/Resources.
+            // This is because the databases are "derived sources" and so must
+            // be installed via "copy bundle resources" (not "copy files").
+            census_ = home_;
+        }
+    }
+#elif defined(REGINA_INSTALL_WINDOWS)
+    else if (inCMakeBuildTree) {
         home_ = sourceRoot;
         census_ = buildRoot + "/engine/data/census";
         engineDocs_ = buildRoot + "/docs/engine";
     } else {
-#if defined(REGINA_INSTALL_BUNDLE)
-        #if ! defined(REGINA_XCODE_BUNDLE)
-            #error "Regina only supports macOS bundles through the Xcode build."
-        #endif
-        // The xcode-built MacOS bundle puts the databases in the root resources
-        // directory: Regina.app/Contents/Resources.
-        // This is because the databases are "derived sources" and so need to be
-        // installed through a "copy bundle resources" phase (not "copy files").
-        home_ = exeDir + "/../Resources";
-        census_ = home_;
-        engineDocs_ = home_ + "/engine-docs";
-#elif defined(REGINA_INSTALL_WINDOWS)
-        // The Windows build tries to follow the XDG build as far as possible.
+        // The Windows installation tries to mirror the XDG installation.
         home_ = exeDir + "\\..\\share\\regina";
         census_ = home_ + "\\data\\census";
         engineDocs_ = home_ + "\\engine-docs";
-#else
-        // This appears to be a standard XDG installation, and we should be
-        // able to rely on the hard-coded paths that were set at build time.
-#endif
     }
+#else
+    else if (inCMakeBuildTree) {
+        home_ = sourceRoot;
+        census_ = buildRoot + "/engine/data/census";
+        engineDocs_ = buildRoot + "/docs/engine";
+    }
+    // If we are not in the build tree then this should be a standard
+    // XDG installation, and we should be able to rely on the hard-coded paths
+    // that were set at build time.
+#endif
 
     env = std::getenv("REGINA_PYLIBDIR");
     if (env && *env) {
         pythonModule_ = env;
-    } else if (inBuildTree) {
+    }
+#if defined(REGINA_INSTALL_BUNDLE)
+    else {
+        // Location inside the macOS app bundle:
+        pythonModule_ = exeDir + "/python";
+    }
+#elif defined(REGINA_INSTALL_WINDOWS)
+    else if (inCMakeBuildTree) {
         pythonModule_ = buildRoot + "/python";
     } else {
-#if defined(REGINA_INSTALL_BUNDLE)
-        pythonModule_ = exeDir + "/python";
-#elif defined(REGINA_INSTALL_WINDOWS)
+        // Again, the Windows installation follows the XDG installation.
         pythonModule_ = exeDir + "\\..\\lib\\regina\\python";
-#else
-        // As before, use the hard-coded paths.
-#endif
     }
+#else
+    else if (inCMakeBuildTree) {
+        pythonModule_ = buildRoot + "/python";
+    }
+    // As before, if we are not in the built tree then use the hard-coded paths.
+#endif
 }
 
 } // namespace regina
