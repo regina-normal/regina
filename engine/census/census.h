@@ -132,6 +132,10 @@ class REGINA_API CensusDB {
          * Note that the database will be opened and closed every time
          * this routine is called.
          *
+         * If the given isomorphism signature is empty then this routine will
+         * return \c true immediately (i.e., it will be treated as successful
+         * with no hits but it will not actually search the database).
+         *
          * @param isoSig the isomorphism signature to search for.
          * @param hits the list of hits to which all matches will be appended.
          * @return \c true if the lookup was correctly performed, or \c false

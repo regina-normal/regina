@@ -64,6 +64,11 @@ CensusDB* Census::christy_ = 0;
 bool Census::dbInit_ = false;
 
 bool CensusDB::lookup(const std::string& isoSig, CensusHits* hits) const {
+    // On some platforms, looking up an empty key triggers the
+    // error MDB_BAD_VALSIZE when using LMDB.
+    if (isoSig.empty())
+        return true;
+
 #if defined(REGINA_KVSTORE_QDBM)
     VILLA* db;
     if (! (db = vlopen(filename_.c_str(), VL_OREADER | VL_ONOLCK, VL_CMPLEX))) {
