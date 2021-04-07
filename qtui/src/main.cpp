@@ -87,7 +87,7 @@ int main(int argc, char **argv) {
     QCoreApplication::setApplicationName("Regina");
 
     regina::GlobalDirs::deduceDirs(static_cast<const char*>(QFile::encodeName(
-            QCoreApplication::applicationDirPath())));
+        QCoreApplication::applicationFilePath())));
 
     // Load preferences from file.
     ReginaPrefSet::read();
