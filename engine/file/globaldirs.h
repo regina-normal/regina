@@ -170,10 +170,15 @@ class REGINA_API GlobalDirs {
 
         /**
          * Tells Regina explicitly where its supporting files are installed.
-         * You must call either setDirs() or deduceDirs() at runtime if
+         *
+         * You should call either setDirs() or deduceDirs() at runtime if
          * Regina is not installed in the location that was configured by
          * \e cmake at build time (e.g., if you are running a macOS app bundle,
          * or if you are running directly out of the source tree).
+         *
+         * In most settings, it is better to call deduceDirs(), since
+         * this avoids you (the programmer) having to manage through the
+         * many different possible platforms and runtime environments.
          *
          * Empty strings are treated as follows:
          *
@@ -203,14 +208,15 @@ class REGINA_API GlobalDirs {
 
         /**
          * Ask Regina to deduce where its supporting files are installed.
-         * You must call either setDirs() or deduceDirs() at runtime if
+         *
+         * You should call either setDirs() or deduceDirs() at runtime if
          * Regina is not installed in the location that was configured by
          * \e cmake at build time (e.g., if you are running a macOS app bundle,
          * or if you are running directly out of the source tree).
          *
-         * This routine sets all of the relevant paths based on the type of
-         * build and the location of the given executable (which is typically
-         * the program currently being run).
+         * This routine sets all of the relevant paths automatically, based on
+         * the type of build and the location of the given executable (which
+         * is typically the program currently being run).
          * It can identify the correct paths for fixed XDG installations,
          * relocatable macOS bundles, Windows installations, and also
          * running directly from within the source tree.
