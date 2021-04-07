@@ -3071,7 +3071,6 @@
 		053CAB291DA710FE00A92F98 /* perm3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm3.h; sourceTree = "<group>"; };
 		053CAB2A1DA710FE00A92F98 /* perm4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm4.h; sourceTree = "<group>"; };
 		053CAB2B1DA710FE00A92F98 /* perm5.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = perm5.h; sourceTree = "<group>"; };
-		053CAB4E1DACA74A00A92F98 /* regutils.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = regutils.py; sourceTree = "<group>"; };
 		053ED8111D8B836C00628652 /* snappy_get_gluing_equations.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = snappy_get_gluing_equations.c; sourceTree = "<group>"; };
 		0541AF481B8BE2F5002E166B /* cyclotomic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = cyclotomic.cpp; sourceTree = "<group>"; };
 		0541AF491B8BE2F5002E166B /* cyclotomic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = cyclotomic.h; sourceTree = "<group>"; };
@@ -3501,7 +3500,6 @@
 		0564A6161811D921002CC2AE /* treenav.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = treenav.cpp; sourceTree = "<group>"; };
 		0564A6171811D921002CC2AE /* x-regina.ico */ = {isa = PBXFileReference; lastKnownFileType = image.ico; path = "x-regina.ico"; sourceTree = "<group>"; };
 		0564A6181811D921002CC2AE /* TODO.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TODO.txt; sourceTree = "<group>"; };
-		0565A6E5259CCC7500BFA49F /* regutils-launch */ = {isa = PBXFileReference; lastKnownFileType = text.script.sh; path = "regutils-launch"; sourceTree = "<group>"; };
 		05669D911DCB0E9A00C870C6 /* facetpairing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing.h; sourceTree = "<group>"; };
 		05669D921DCB0E9A00C870C6 /* facetpairing3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = facetpairing3.cpp; sourceTree = "<group>"; };
 		05669D931DCB0E9A00C870C6 /* facetpairing3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetpairing3.h; sourceTree = "<group>"; };
@@ -5337,15 +5335,6 @@
 			path = "compile-time";
 			sourceTree = "<group>";
 		};
-		052DB5C01D9F1FF100EDEA68 /* alt */ = {
-			isa = PBXGroup;
-			children = (
-				053CAB4E1DACA74A00A92F98 /* regutils.py */,
-				0565A6E5259CCC7500BFA49F /* regutils-launch */,
-			);
-			path = alt;
-			sourceTree = "<group>";
-		};
 		052F9BFD180600FA00FAE4DF /* engine */ = {
 			isa = PBXGroup;
 			children = (
@@ -6554,7 +6543,6 @@
 				05617AE91D9DC02900B1E33B /* sigcensus.cpp */,
 				05617AEA1D9DC02900B1E33B /* tricensus.cpp */,
 				05617AEB1D9DC02900B1E33B /* trisetcmp.cpp */,
-				052DB5C01D9F1FF100EDEA68 /* alt */,
 				05685FEE1F9713B000085B44 /* testsuite */,
 				0577E70A1F970BF900CBDF15 /* local */,
 			);
