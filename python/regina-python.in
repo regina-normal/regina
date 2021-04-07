@@ -243,7 +243,12 @@ if ($install_type eq 'Source') {
 $python_lib_dir =~ s/\\/\\\\/g;
 $python_lib_dir =~ s/'/\\'/g;
 my $cmd = ($python_lib_dir ? "import sys; sys.path = ['$python_lib_dir'] + sys.path; " : '');
-$cmd .= 'import regina; ';
+
+my $esc_prog_name = $prog_name;
+$esc_prog_name =~ s/\\/\\\\/g;
+$esc_prog_name =~ s/'/\\'/g;
+$cmd .= "import regina; regina.GlobalDirs.deduceDirs('$esc_prog_name'); ";
+
 $autoImport and $cmd .= 'from regina import *; ';
 
 if ($script) {
