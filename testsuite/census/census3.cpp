@@ -34,7 +34,6 @@
 #include <cppunit/extensions/HelperMacros.h>
 #include "census/census.h"
 #include "census/gluingpermsearcher3.h"
-#include "file/globaldirs.h"
 #include "packet/container.h"
 #include "triangulation/dim3.h"
 #include "testsuite/census/testcensus.h"
@@ -129,14 +128,6 @@ class Census3Test : public CppUnit::TestFixture {
             // Make sure that the database library is working, and that
             // we can access all censuses.
 
-#ifdef TESTSUITE_CENSUS_DIR
-            // Temporarily redirect the home directory so that Regina
-            // finds the census data files in the source tree.
-            std::string census = regina::GlobalDirs::census();
-            std::string python = regina::GlobalDirs::pythonModule();
-            regina::GlobalDirs::setDirs("", python, TESTSUITE_CENSUS_DIR);
-#endif
-            
             verifyLookupNone("");
             verifyLookupNone("abcdefg");
             verifyLookup("fvPQcdecedekrsnrs",
@@ -151,10 +142,6 @@ class Census3Test : public CppUnit::TestFixture {
             verifyLookup("bkaaid", "m000 : #1"); // cusped nor
             verifyLookup("kLLPLLQkceefejjiijiiiatdmpamxt",
                 "L408001", "L410005"); // hyp knots & links, multiple times
-
-#ifdef TESTSUITE_CENSUS_DIR
-            regina::GlobalDirs::setDirs("", python, census);
-#endif
         }
 
         void rawCounts() {

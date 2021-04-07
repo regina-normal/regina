@@ -1,10 +1,3 @@
-# Give the test suite a way to locate the data files shipped with
-# Regina's calculation engine.
-SET_PROPERTY ( DIRECTORY
-  PROPERTY COMPILE_DEFINITIONS
-    TESTSUITE_CENSUS_DIR=\"${PROJECT_BINARY_DIR}/engine/data/census\"
-)
-
 SET ( SOURCES
   exhaustive.cpp
   runalltests.cpp

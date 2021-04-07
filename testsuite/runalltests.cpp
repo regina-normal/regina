@@ -30,6 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
+#include "file/globaldirs.h"
 #include "testsuite.h"
 
 #include <cctype>
@@ -91,6 +92,10 @@ bool runAllTests(int argc, char* argv[]) {
  */
 #ifndef __NO_TESTSUITE_MAIN
 int main(int argc, char* argv[]) {
+    // Make sure we know where to find the census data files.
+    regina::GlobalDirs::deduceDirs(argv[0]);
+
+    // Run the tests!
     return (runAllTests(argc, argv) ? 0 : 1);
 }
 #endif
