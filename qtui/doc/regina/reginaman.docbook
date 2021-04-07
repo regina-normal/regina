@@ -42,6 +42,61 @@
   </refsect1>
 
   <refsect1>
+   <title>Environment Variables</title>
+   <para>
+    The following environment variables influence the behaviour of
+    this program.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term><parameter>REGINA_PYLIBDIR</parameter></term>
+     <listitem>
+      <para>
+       The directory containing the &python; module
+       <filename>regina</filename>.
+      </para>
+      <para>
+       If you have installed &regina;'s &python; module in a standard
+       &python; location (i.e., &python; can import it directly without
+       extending <literal>sys.path</literal>), then
+       <parameter>REGINA_PYLIBDIR</parameter> should be left empty or undefined.
+      </para>
+      <para>
+       Normally you should not need to set this option yourself.
+       This program should know how to find &regina;'s &python; module
+       in standard situations, which include
+       fixed filesystem installations (e.g., &linux; and &windows;),
+       relocatable app bundles (e.g., &macosx;),
+       and running directly from the source tree.
+      </para>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_HOME</parameter></term>
+     <listitem>
+      <para>
+       The directory beneath which &regina;'s data files are installed.
+       These include (amongst other things) example files in
+       <filename><parameter>$REGINA_HOME</parameter>/examples/</filename>,
+       &api; documentation in
+       <filename><parameter>$REGINA_HOME</parameter>/engine-docs/</filename>,
+       and census databases in
+       <filename><parameter>$REGINA_HOME</parameter>/data/census/</filename>.
+      </para>
+      <para>
+       Normally you should not need to set this option yourself.
+       This program should know how to find its data files in standard
+       situations, which include
+       fixed filesystem installations (e.g., &linux; and &windows;),
+       relocatable app bundles (e.g., &macosx;),
+       and running directly from the source tree.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
    <title>&macosx; Users</title>
    <para>
     If you downloaded a drag-and-drop app bundle, this is the
@@ -207,11 +262,12 @@
    <title>Environment Variables</title>
    <para>
     The following environment variables influence the behaviour of
-    this program.  Each variable can also be set in the local
+    this program.  Most variables can also be set in the local
     configuration file <filename>~/.regina-python</filename> using a line
     of the form
-    <replaceable>option</replaceable>=<replaceable>value</replaceable>.
-    Environment variables will take precedence over values in
+    <replaceable>option</replaceable>=<replaceable>value</replaceable>;
+    exceptions are noted below.
+    Environment variables take precedence over values in
     the configuration file.
    </para>
    <variablelist>
@@ -251,8 +307,6 @@
      <listitem>
       <para>
        The command used to start the &python; interpreter.
-       By default, &regina; tries to run the same version of &python;
-       that it was built against.
       </para>
       <para>
        In general you should use the same version of &python; that &regina;
@@ -260,7 +314,9 @@
        <parameter>regina</parameter> module.
       </para>
       <para>
-       In normal situations you should never need to set this option yourself.
+       Normally you should not need to set this option yourself.
+       By default, &regina; will use the same &python; installation
+       that it was built against.
       </para>
      </listitem>
     </varlistentry>
@@ -269,13 +325,7 @@
      <listitem>
       <para>
        The directory containing the &python; module
-       <filename>regina.so</filename>.
-      </para>
-      <para>
-       If you are running &regina; directly out of the source tree, this
-       defaults to a directory within this source tree.  If you are
-       running &regina; from a proper installation, this defaults to the
-       corresponding installation directory.
+       <parameter>regina</parameter>.
       </para>
       <para>
        If you have installed &regina;'s &python; module in a standard
@@ -284,19 +334,36 @@
        <parameter>REGINA_PYLIBDIR</parameter> should be left empty or undefined.
       </para>
       <para>
-       In normal situations you should never need to set this option yourself.
+       Normally you should not need to set this option yourself.
+       This program should know how to find &regina;'s &python; module
+       in standard situations, which include
+       fixed filesystem installations (e.g., &linux; and &windows;),
+       relocatable app bundles (e.g., &macosx;),
+       and running directly from the source tree.
       </para>
-      <warning>
-       <para>
-        Like <parameter>REGINA_HOME</parameter>,
-        when running from a proper installation
-        the default <parameter>REGINA_PYLIBDIR</parameter> is
-        hard-wired into the startup script.
-        If you install &regina; into one directory but then move it by
-        hand into another, the default <parameter>REGINA_PYLIBDIR</parameter>
-        will be incorrect.
-       </para>
-      </warning>
+     </listitem>
+    </varlistentry>
+    <varlistentry>
+     <term><parameter>REGINA_HOME</parameter></term>
+     <listitem>
+      <para>
+       The directory beneath which &regina;'s data files are installed.
+       In particular, &regina;'s census lookup routines will look for the
+       census databases in the subdirectory
+       <filename><parameter>$REGINA_HOME</parameter>/data/census/</filename>.
+      </para>
+      <para>
+       This option can only be set from the environment: it cannot be set in
+       the configuration file <filename>~/.regina-python</filename>.
+      </para>
+      <para>
+       Normally you should not need to set this option yourself.
+       This program should know how to find its data files in standard
+       situations, which include
+       fixed filesystem installations (e.g., &linux; and &windows;),
+       relocatable app bundles (e.g., &macosx;),
+       and running directly from the source tree.
+      </para>
      </listitem>
     </varlistentry>
    </variablelist>

@@ -58,6 +58,34 @@
   </refsect1>
 
   <refsect1>
+   <title>Environment Variables</title>
+   <para>
+    The following environment variables influence the behaviour of
+    this program.
+   </para>
+   <variablelist>
+    <varlistentry>
+     <term><parameter>REGINA_HOME</parameter></term>
+     <listitem>
+      <para>
+       The directory beneath which &regina;'s data files are installed.
+       This utility will look for the census databases in the subdirectory
+       <filename><parameter>$REGINA_HOME</parameter>/data/census/</filename>.
+      </para>
+      <para>
+       Normally you should not need to set this option yourself.
+       This utility should know how to find its census databases in standard
+       situations, which include
+       fixed filesystem installations (e.g., &linux; and &windows;),
+       relocatable app bundles (e.g., &macosx;),
+       and running directly from the source tree.
+      </para>
+     </listitem>
+    </varlistentry>
+   </variablelist>
+  </refsect1>
+
+  <refsect1>
    <title>Example</title>
 
 <screen>
