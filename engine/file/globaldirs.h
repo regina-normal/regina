@@ -118,7 +118,8 @@ class REGINA_API GlobalDirs {
          * Returns the directory in which example data files (including
          * the smaller but human-browsable census data files) are installed.
          *
-         * This is computed automatically as a subdirectory of home().
+         * This is computed automatically as the <tt>examples/</tt> subdirectory
+         * of home().
          *
          * On a typical GNU/Linux system, this directory might (for example) be
          * \c /usr/local/share/regina/examples .
@@ -136,7 +137,14 @@ class REGINA_API GlobalDirs {
          * Returns the directory in which API documentation for Regina's
          * calculation engine is installed.
          *
-         * This is computed automatically as a subdirectory of home().
+         * This is computed automatically:
+         *
+         * - in most cases it will be the <tt>engine-docs/</tt> subdirectory
+         *   of home();
+         *
+         * - in the special case where deduceDirs() was called and we are
+         *   running from the build tree, it will be the location in the
+         *   build tree where the API docs are built.
          *
          * On a typical GNU/Linux system, this directory might (for example) be
          * \c /usr/local/share/regina/engine-docs .
@@ -154,7 +162,8 @@ class REGINA_API GlobalDirs {
          * Returns the directory containing miscellaneous data files
          * for internal use Regina's calculation engine.
          *
-         * This is computed automatically as a subdirectory of home().
+         * This is computed automatically as the <tt>data/</tt> subdirectory
+         * of home().
          *
          * On a typical GNU/Linux system, this directory might (for example) be
          * \c /usr/local/share/regina/data .
@@ -262,6 +271,8 @@ class REGINA_API GlobalDirs {
         static std::string census_;
             /**< The directory containing the large machine-encoded
                  census data files. */
+        static std::string engineDocs_;
+            /**< The directory containing Regina's API documentation. */
 };
 
 /*@}*/
@@ -280,12 +291,12 @@ inline std::string GlobalDirs::census() {
     return census_;
 }
 
-inline std::string GlobalDirs::examples() {
-    return home_ + "/examples";
+inline std::string GlobalDirs::engineDocs() {
+    return engineDocs_;
 }
 
-inline std::string GlobalDirs::engineDocs() {
-    return home_ + "/engine-docs";
+inline std::string GlobalDirs::examples() {
+    return home_ + "/examples";
 }
 
 inline std::string GlobalDirs::data() {

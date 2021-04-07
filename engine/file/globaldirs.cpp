@@ -42,12 +42,15 @@ namespace regina {
 std::string GlobalDirs::home_(REGINA_DATADIR);
 std::string GlobalDirs::pythonModule_(REGINA_PYLIBDIR);
 std::string GlobalDirs::census_(REGINA_DATADIR "/data/census");
+std::string GlobalDirs::engineDocs_(REGINA_DATADIR "/engine-docs");
 
 void GlobalDirs::setDirs(const std::string& homeDir,
         const std::string& pythonModuleDir,
         const std::string& censusDir) {
-    if (! homeDir.empty())
+    if (! homeDir.empty()) {
         home_ = homeDir;
+        engineDocs_ = home_ + "/engine-docs";
+    }
 
     // The empty string has an explicit meaning for pythonModule_.
     pythonModule_ = pythonModuleDir;
@@ -107,9 +110,11 @@ void GlobalDirs::deduceDirs(const char* executable) {
     if (env && *env) {
         home_ = env;
         census_ = home_ + "/data/census";
+        engineDocs_ = home_ + "/engine-docs";
     } else if (inBuildTree) {
         home_ = sourceRoot;
         census_ = buildRoot + "/engine/data/census";
+        engineDocs_ = buildRoot + "/docs/engine";
     } else {
 #if defined(REGINA_INSTALL_BUNDLE)
         #if ! defined(REGINA_XCODE_BUNDLE)
@@ -121,10 +126,12 @@ void GlobalDirs::deduceDirs(const char* executable) {
         // installed through a "copy bundle resources" phase (not "copy files").
         home_ = exeDir + "/../Resources";
         census_ = home_;
+        engineDocs_ = home_ + "/engine-docs";
 #elif defined(REGINA_INSTALL_WINDOWS)
         // The Windows build tries to follow the XDG build as far as possible.
         home_ = exeDir + "\\..\\share\\regina";
         census_ = home_ + "\\data\\census";
+        engineDocs_ = home_ + "\\engine-docs";
 #else
         // This appears to be a standard XDG installation, and we should be
         // able to rely on the hard-coded paths that were set at build time.
