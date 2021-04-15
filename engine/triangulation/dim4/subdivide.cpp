@@ -32,8 +32,9 @@
 
 #include <vector>
 #include <map>
-
 #include "triangulation/dim4.h"
+
+// #define SIMPLIFY_DUMP_MOVES
 
 namespace regina {
 
@@ -137,7 +138,7 @@ bool Triangulation<4>::idealToFinite() {
     if (!idVrts) return false;
 // * * * Create new triangulation * * *
     Triangulation<4>* newTri( new Triangulation<4> );
-#ifdef DEBUG
+#ifdef SIMPLIFY_DUMP_MOVES
     std::cerr << "Performing idealToFinite()\n";
 #endif
 
