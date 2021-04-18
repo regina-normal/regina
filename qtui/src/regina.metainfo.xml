@@ -31,8 +31,6 @@
   </description>
 
   <launchable type="desktop-id">regina.desktop</launchable>
-  <icon type="stock">regina</icon>
-  <icon type="remote" width="128" height="128">https://regina-normal.github.io/regina128.png</icon>
   <categories>
     <category>Math</category>
     <category>Education</category>
