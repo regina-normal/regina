@@ -38,20 +38,20 @@
   </categories>
   <screenshots>
     <screenshot type="default">
-      <image>https://regina-normal.github.io/shots/linux/tri.png</image>
-      <caption></caption>
+      <image>https://people.debian.org/~bab/regina/shots/tri.png</image>
+      <caption>3-manifold and 4-manifold triangulations</caption>
     </screenshot>
     <screenshot>
-      <image>https://regina-normal.github.io/shots/linux/surfaces.png</image>
-      <caption></caption>
+      <image>https://people.debian.org/~bab/regina/shots/surfaces.png</image>
+      <caption>Normal surfaces and angle structures</caption>
     </screenshot>
     <screenshot>
-      <image>https://regina-normal.github.io/shots/linux/links.png</image>
-      <caption></caption>
+      <image>https://people.debian.org/~bab/regina/shots/links.png</image>
+      <caption>Knots and links</caption>
     </screenshot>
     <screenshot>
-      <image>https://regina-normal.github.io/shots/linux/python.png</image>
-      <caption></caption>
+      <image>https://people.debian.org/~bab/regina/shots/python.png</image>
+      <caption>In-built Python scripting</caption>
     </screenshot>
   </screenshots>
 
