@@ -62,6 +62,8 @@ class LinkTest : public CppUnit::TestFixture {
 
     CPPUNIT_TEST(components);
     CPPUNIT_TEST(linking);
+    CPPUNIT_TEST(writhe);
+    CPPUNIT_TEST(selfFrame);
     CPPUNIT_TEST(parallel);
     CPPUNIT_TEST(jones);
     CPPUNIT_TEST(homfly);
@@ -337,6 +339,80 @@ class LinkTest : public CppUnit::TestFixture {
             testLinking(trefoil_unknot_overlap, 0);
             testLinking(rht_rht, 0);
             testLinking(rht_lht, 0);
+        }
+
+        void verifyWrithe(const Link* l) {
+            long sum = 0;
+            for (long c = 0; c < l->countComponents(); ++c)
+                sum += l->writheOfComponent(c);
+            if (sum + 2 * l->linking() != l->writhe()) {
+                std::ostringstream msg;
+                msg << l->label() << ": sum of component writhes + "
+                    "2 * linking number != writhe.";
+                CPPUNIT_FAIL(msg.str());
+            }
+        }
+
+        void writhe() {
+            verifyWrithe(unknot0);
+            verifyWrithe(unknot1);
+            verifyWrithe(unknot3);
+            verifyWrithe(unknotMonster);
+            verifyWrithe(unknotGordian);
+            verifyWrithe(trefoilLeft);
+            verifyWrithe(trefoilRight);
+            verifyWrithe(trefoil_r1x2);
+            verifyWrithe(trefoil_r1x6);
+            verifyWrithe(figureEight);
+            verifyWrithe(figureEight_r1x2);
+            verifyWrithe(conway);
+            verifyWrithe(kinoshitaTerasaka);
+            verifyWrithe(gst);
+            verifyWrithe(rht_rht);
+            verifyWrithe(rht_lht);
+        }
+
+        void verifySelfFrame(const Link* l) {
+            Link framed(*l);
+            framed.selfFrame();
+            long framedWrithe = framed.writhe();
+            if (framedWrithe != 0) {
+                std::ostringstream msg;
+                msg << l->label() << ": self-framed version has writhe "
+                    << framedWrithe << ", not 0.";
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            if (l->size() < 20) {
+                auto jones = l->jones();
+                auto framedJones = framed.jones();
+                if (jones != framedJones) {
+                    std::ostringstream msg;
+                    msg << l->label() << ": self-framed version has different "
+                        "Jones polynomial (" << jones << " != "
+                        << framedJones << ").";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void selfFrame() {
+            verifySelfFrame(unknot0);
+            verifySelfFrame(unknot1);
+            verifySelfFrame(unknot3);
+            verifySelfFrame(unknotMonster);
+            verifySelfFrame(unknotGordian);
+            verifySelfFrame(trefoilLeft);
+            verifySelfFrame(trefoilRight);
+            verifySelfFrame(trefoil_r1x2);
+            verifySelfFrame(trefoil_r1x6);
+            verifySelfFrame(figureEight);
+            verifySelfFrame(figureEight_r1x2);
+            verifySelfFrame(conway);
+            verifySelfFrame(kinoshitaTerasaka);
+            verifySelfFrame(gst);
+            verifySelfFrame(rht_rht);
+            verifySelfFrame(rht_lht);
         }
 
         void testParallel(const Link* l) {
