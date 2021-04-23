@@ -218,6 +218,33 @@ long Link::writheOfComponent(StrandRef strand) const {
     return ans;
 }
 
+void Link::selfFrame() {
+    // Some notes:
+    //
+    // We arbitrarily decide to put all twists on the left.
+    //
+    // We do not check r1 moves for validity, since these are always legal.
+    //
+    // We are safe to iterate through components_ while we add our twists,
+    // since r1 does not change the components_ array and does not invalidate
+    // existing strand references.
+
+    for (StrandRef c : components_) {
+        long w = writheOfComponent(c);
+        if (w > 0) {
+            do {
+                r1(c, 0 /* left */, -1, false, true);
+                --w;
+            } while (w != 0);
+        } else if (w < 0) {
+            do {
+                r1(c, 0 /* left */, 1, false, true);
+                ++w;
+            } while (w != 0);
+        }
+    }
+}
+
 void Link::writeTextShort(std::ostream& out) const {
     if (components_.empty())
         out << "empty link";

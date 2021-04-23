@@ -228,6 +228,7 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
         .def("hasReducingPass", &Link::hasReducingPass)
+        .def("selfFrame", &Link::selfFrame)
         .def("intelligentSimplify", &Link::intelligentSimplify)
         .def("simplifyToLocalMinimum", &Link::simplifyToLocalMinimum,
              pybind11::arg("perform") = true)

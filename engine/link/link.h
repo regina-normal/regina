@@ -1517,6 +1517,18 @@ class REGINA_API Link : public Packet {
         bool hasReducingPass() const;
 
         /**
+         * Adds trivial twists to this link to ensure that each component has
+         * zero writhe.  Here the \e writhe of a component \a c is the sum of
+         * the signs of all crossings at which \a c crosses itself.
+         *
+         * Any component(s) that already have zero writhe will be left
+         * unchanged.
+         *
+         * This link will be modified directly.
+         */
+        void selfFrame();
+
+        /**
          * Attempts to simplify the link diagram using fast and greedy
          * heuristics.  Specifically, this routine tries combinations of
          * Reidemeister moves with the aim of reducing the number of
