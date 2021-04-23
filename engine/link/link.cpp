@@ -158,7 +158,7 @@ long Link::linking() const {
 
     // This algorithm is linear time.
 
-    // Firat sum the signs of all crossings.
+    // First sum the signs of all crossings.
     long ans = 0;
     for (const Crossing* c : crossings_)
         ans += c->sign();
@@ -192,6 +192,30 @@ long Link::linking() const {
     delete[] seen;
 
     return ans / 2;
+}
+
+long Link::writheOfComponent(StrandRef strand) const {
+    if (! strand)
+        return 0;
+
+    // This algorithm is linear time.
+
+    long ans = 0;
+
+    bool* seen = new bool[crossings_.size()];
+    std::fill(seen, seen + crossings_.size(), false);
+
+    StrandRef s = strand;
+    do {
+        if (seen[s.crossing()->index()])
+            ans += s.crossing()->sign();
+        else
+            seen[s.crossing()->index()] = true;
+        ++s;
+    } while (s != strand);
+
+    delete[] seen;
+    return ans;
 }
 
 void Link::writeTextShort(std::ostream& out) const {

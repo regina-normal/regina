@@ -138,6 +138,10 @@ void addLink(pybind11::module_& m) {
         .def("isAlternating", &Link::isAlternating)
         .def("linking", &Link::linking)
         .def("writhe", &Link::writhe)
+        .def("writheOfComponent", overload_cast<StrandRef>(
+            &Link::writheOfComponent, pybind11::const_))
+        .def("writheOfComponent", overload_cast<size_t>(
+            &Link::writheOfComponent, pybind11::const_))
         .def("complement", &Link::complement,
             pybind11::arg("simplify") = true)
         .def("parallel", &Link::parallel,

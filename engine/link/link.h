@@ -1845,6 +1845,47 @@ class REGINA_API Link : public Packet {
         long writhe() const;
 
         /**
+         * Returns the writhe of a single component of this link diagram.
+         *
+         * This is the writhe of the diagram when all \e other components
+         * are removed.  It is computed as the sum of the signs of all
+         * crossings at which the given component crosses itself.
+         *
+         * In this version of writheOfComponent(), the component is
+         * indicated by the argument \a strand, which may be any strand
+         * along the component.  In particular, \a strand does not need to be
+         * the "starting strand" returned by component().
+         *
+         * The given strand may be a null strand, in which case the
+         * return value will be 0 (since Regina uses null strands to refer to
+         * zero-crossing unknot components).  This is always allowed,
+         * regardless of whether the link actually contains any zero-crossing
+         * unknot components.
+         *
+         * @param component any strand along the component of interest.
+         * @return the writhe of the component containing the given strand,
+         * or 0 if the given strand is a null strand.
+         */
+        long writheOfComponent(StrandRef strand) const;
+
+        /**
+         * Returns the writhe of a single component of this link diagram.
+         *
+         * This is the writhe of the diagram when all \e other components
+         * are removed.  It is computed as the sum of the signs of all
+         * crossings at which the given component crosses itself.
+         *
+         * In this version of writheOfComponent(), the component is
+         * indicated by its index.  This function is equivalent to calling
+         * <tt>writheOfComponent(component(index))</tt>.
+         *
+         * @param index the index of the requested component.  This must
+         * be between 0 and countComponents()-1 inclusive.
+         * @return the writhe of the given component.
+         */
+        long writheOfComponent(size_t index) const;
+
+        /**
          * Returns an ideal triangulation of the complement of this link
          * in the 3-sphere.
          *
@@ -4072,6 +4113,10 @@ inline long Link::writhe() const {
     for (const Crossing* c : crossings_)
         ans += c->sign();
     return ans;
+}
+
+inline long Link::writheOfComponent(size_t index) const {
+    return writheOfComponent(components_[index]);
 }
 
 inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
