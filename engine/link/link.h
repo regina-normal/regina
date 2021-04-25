@@ -39,6 +39,7 @@
 #define __LINK_H
 #endif
 
+#include <array>
 #include <functional>
 #include <vector>
 #include "regina-core.h"
@@ -2683,6 +2684,51 @@ class REGINA_API Link : public Packet {
          * (the default) to use numerical notation.
          */
         void dt(std::ostream& out, bool alpha = false) const;
+
+        /**
+         * Returns a planar diagram code for this link.
+         *
+         * Planar diagram codes encode the local information at each
+         * crossing.  They are available for links as well as knots;
+         * their only restriction is that they cannot encode zero-crossing
+         * unknot components (i.e., components for which the component()
+         * function returns a null strand).
+         *
+         * Regina adheres to a tight specification for the planar diagram codes
+         * that it outputs, in order to ensure compatibility with other
+         * software.  In particular, these codes are compatible with the
+         * Knot Atlas; see http://katlas.org/wiki/Planar_Diagrams for details.
+         *
+         * In detail, Regina constructs planar diagram codes as follows:
+         *
+         * - Throw away any zero-crossing unknot components.
+         *
+         * - Let \a n denote the number of crossings.
+         *
+         * - Number the strands from 1 to 2<i>n</i> in order as we walk along
+         *   each component, in order from the first component to the last.
+         *
+         * - For each crossing \a c, construct a 4-tuple that lists the four
+         *   strands that meet at that \a c, in counter-clockwise order,
+         *   beginning from the incoming lower strand.
+         *
+         * - Return the resulting list of \a n 4-tuples.
+         *
+         * Some points to be aware of:
+         *
+         * - When building the list of 4-tuples, Regina orders the
+         *   crossings as follows: again we walk along each component,
+         *   in order from the first component to the last, and process
+         *   each crossing when we enter it at the lower strand.
+         *
+         * - When building each individual 4-tuple, some sources (e.g., Sage)
+         *   order the strands clockwise instead of counter-clockwise.
+         *   Regina follows the same counter-clockwise convention that is used
+         *   by the Knot Atlas and SnapPy.
+         *
+         * @return the planar diagram code, as described above.
+         */
+        std::vector<std::array<int, 4>> pd() const;
 
         /**
          * Outputs the underlying planar 4-valent multigraph using the
