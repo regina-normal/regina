@@ -1444,6 +1444,57 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
         bool isIncompressible() const;
 
         /**
+         * Determines whether or not cutting along the surface
+         * yields a new component.
+         */
+        bool separates() const;
+
+        /**
+         * Determines whether or not this surface is an essential sphere.
+         *
+         * \pre The underlying triangulation is connected
+         * and has no sphere boundary components.
+         * \pre This normal surface can be cut along.
+         *
+         * @return \c true if this is an essential sphere, otherwise \c false.
+         */
+        bool isEssentialSphere() const;
+
+        /**
+         * Determines whether or not this surface is an essential Klein bottle.
+         *
+         * \pre The underlying triangulation is connected and irreducible,
+         * and has no compressing disc (i.e. is boundary-incompressible).
+         * \pre This normal surface can be cut along.
+         *
+         * @return \c true if this is an essential Klein bottle, else \c false.
+         */
+        bool isEssentialKleinBottle() const;
+        
+         /**
+         * Determines whether or not this surface is an essential torus.
+         *
+         * \pre The underlying triangulation is connected and irreducible,
+         * and has no compressing disc (i.e. is boundary-incompressible).
+         * \pre This normal surface can be cut along.
+         *
+         * @return \c true if this is an essential torus, else \c false.
+         */
+        bool isEssentialTorus() const;
+
+        /**
+         * Determines whether or not this surface is an annulus
+         * cutting along which yields a disjoint union of at most two solid tori,
+         * which we call a \e solid \e torus \e annulus.
+         * This is easier to check than whether or not the annulus is essential.
+         *
+         * \pre This normal surface can be cut along.
+         *
+         * @return \c true if this surface is a solid torus annulus, else \c false.
+         */
+        bool isSolidTorusAnnulus() const;
+        
+        /**
          * Cuts the associated triangulation along this surface and
          * returns a newly created resulting triangulation.
          * The original triangulation is not changed.

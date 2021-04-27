@@ -44,4 +44,5 @@
 
 void addNormalSurfaces(CppUnit::TextUi::TestRunner& runner);
 void addIncompressible(CppUnit::TextUi::TestRunner& runner);
+void addFaultFinding(CppUnit::TextUi::TestRunner& runner);
 

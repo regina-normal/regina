@@ -296,6 +296,8 @@ void addTriangulation3(pybind11::module& m) {
         .def("knowsBall", &Triangulation<3>::knowsBall)
         .def("isSolidTorus", &Triangulation<3>::isSolidTorus)
         .def("knowsSolidTorus", &Triangulation<3>::knowsSolidTorus)
+        .def("isTorusXInterval", &Triangulation<3>::isTorusXInterval)
+        .def("knowsTorusXInterval", &Triangulation<3>::knowsTorusXInterval)
         .def("isIrreducible", &Triangulation<3>::isIrreducible)
         .def("knowsIrreducible", &Triangulation<3>::knowsIrreducible)
         .def("hasCompressingDisc", &Triangulation<3>::hasCompressingDisc)
