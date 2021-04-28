@@ -166,6 +166,7 @@ SET (ICONDIR "${DATADIR}/icons")
 SET (MANDIR "${DATADIR}/man")
 SET (XDG_APPS_INSTALL_DIR "${DATADIR}/applications")
 SET (XDG_MIME_INSTALL_DIR "${DATADIR}/mime/packages")
+SET (XDG_METAINFO_DIR "${DATADIR}/metainfo")
 
 # Useful build directories
 SET (ENGINE_INCLUDES "${PROJECT_SOURCE_DIR}/engine" )

@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<component type="desktop-application">
+  <id>regina.desktop</id>
+
+  <name>Regina</name>
+  <summary>Mathematical software for low-dimensional topology</summary>
+
+  <metadata_license>FSFAP</metadata_license>
+  <project_license>GPL-2.0-or-later</project_license>
+
+  <description>
+    <p>
+      Regina is a software package for 3-manifold and 4-manifold topologists,
+      with a focus on triangulations, knots and links, normal surfaces, and
+      angle structures.
+    </p>
+    <p>
+      For 3-manifolds, it includes high-level tasks such as 3-sphere
+      recognition, connected sum decomposition and Hakenness testing,
+      comes with a rich database of census manifolds, and incorporates the
+      SnapPea kernel for working with hyperbolic manifolds.
+      For 4-manifolds, it offers a range of combinatorial and algebraic tools,
+      plus support for normal hypersurfaces.
+      For knots and links, Regina can perform combinatorial manipulation,
+      compute knot polynomials, and work with several import/export formats.
+    </p>
+    <p>
+      Regina comes with a full graphical user interface, as well as
+      Python bindings and a low-level C++ programming interface.
+    </p>
+  </description>
+
+  <launchable type="desktop-id">regina.desktop</launchable>
+  <categories>
+    <category>Math</category>
+    <category>Education</category>
+    <category>Science</category>
+  </categories>
+  <screenshots>
+    <screenshot type="default">
+      <image>https://people.debian.org/~bab/regina/shots/tri.png</image>
+      <caption>3-manifold and 4-manifold triangulations</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://people.debian.org/~bab/regina/shots/surfaces.png</image>
+      <caption>Normal surfaces and angle structures</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://people.debian.org/~bab/regina/shots/links.png</image>
+      <caption>Knots and links</caption>
+    </screenshot>
+    <screenshot>
+      <image>https://people.debian.org/~bab/regina/shots/python.png</image>
+      <caption>In-built Python scripting</caption>
+    </screenshot>
+  </screenshots>
+
+  <url type="homepage">https://regina-normal.github.io/</url>
+  <provides>
+    <mediatype>application/x-regina</mediatype>
+  </provides>
+
+  <releases>
+    <release version="6.0.1" date="2021-02-12">
+      <description>
+        <p>
+          Fixes an issue for Python users, where the Triangulation3
+          constructor could become unusable in the graphical user interface.
+        </p>
+      </description>
+    </release>
+    <release version="6.0" date="2021-01-10">
+      <description>
+        <p>
+          Final polish on the recent 5.96 release, with a couple of new
+          features also.
+        </p>
+      </description>
+    </release>
+    <release version="5.96" date="2020-12-24">
+      <description>
+        <p>
+          A major overhaul from version 5.1 that includes
+          native knots and links, Python 3 support, and many other
+          new features and improvements.
+        </p>
+      </description>
+    </release>
+  </releases>
+</component>

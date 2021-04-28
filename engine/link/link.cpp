@@ -158,7 +158,7 @@ long Link::linking() const {
 
     // This algorithm is linear time.
 
-    // Firat sum the signs of all crossings.
+    // First sum the signs of all crossings.
     long ans = 0;
     for (const Crossing* c : crossings_)
         ans += c->sign();
@@ -192,6 +192,57 @@ long Link::linking() const {
     delete[] seen;
 
     return ans / 2;
+}
+
+long Link::writheOfComponent(StrandRef strand) const {
+    if (! strand)
+        return 0;
+
+    // This algorithm is linear time.
+
+    long ans = 0;
+
+    bool* seen = new bool[crossings_.size()];
+    std::fill(seen, seen + crossings_.size(), false);
+
+    StrandRef s = strand;
+    do {
+        if (seen[s.crossing()->index()])
+            ans += s.crossing()->sign();
+        else
+            seen[s.crossing()->index()] = true;
+        ++s;
+    } while (s != strand);
+
+    delete[] seen;
+    return ans;
+}
+
+void Link::selfFrame() {
+    // Some notes:
+    //
+    // We arbitrarily decide to put all twists on the left.
+    //
+    // We do not check r1 moves for validity, since these are always legal.
+    //
+    // We are safe to iterate through components_ while we add our twists,
+    // since r1 does not change the components_ array and does not invalidate
+    // existing strand references.
+
+    for (StrandRef c : components_) {
+        long w = writheOfComponent(c);
+        if (w > 0) {
+            do {
+                r1(c, 0 /* left */, -1, false, true);
+                --w;
+            } while (w != 0);
+        } else if (w < 0) {
+            do {
+                r1(c, 0 /* left */, 1, false, true);
+                ++w;
+            } while (w != 0);
+        }
+    }
 }
 
 void Link::writeTextShort(std::ostream& out) const {

@@ -14,6 +14,7 @@ SET ( FILES
   link.cpp
   modellinkgraph.cpp
   pass.cpp
+  pd.cpp
   reidemeister.cpp
   reidemeister-tangle.cpp
   rewrite.cpp

@@ -57,10 +57,11 @@ NormalHypersurfaces* NormalHypersurfaces::enumerate(
     NormalHypersurfaces* list = new NormalHypersurfaces(
         coords, which, algHints);
 
-    if (tracker)
-        std::thread(forCoords<Enumerator>,
-            coords, Enumerator(list, owner, eqns, tracker)).detach();
-    else
+    if (tracker) {
+        std::thread([=]{
+            forCoords(coords, Enumerator(list, owner, eqns, tracker));
+        }).detach();
+    } else
         forCoords(coords, Enumerator(list, owner, eqns, tracker));
     return list;
 }

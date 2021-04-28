@@ -92,6 +92,8 @@ Version 6.1  [ TODO ]
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
         Class Link:
+            - New routines writheOfComponent() and selfFrame().
+            - New routine pd() to create planar diagram codes.
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.
             - Renamed swapContents() to swap(); the old name is now a

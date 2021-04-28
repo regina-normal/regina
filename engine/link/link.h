@@ -39,6 +39,7 @@
 #define __LINK_H
 #endif
 
+#include <array>
 #include <functional>
 #include <vector>
 #include "regina-core.h"
@@ -1517,6 +1518,18 @@ class REGINA_API Link : public Packet {
         bool hasReducingPass() const;
 
         /**
+         * Adds trivial twists to this link to ensure that each component has
+         * zero writhe.  Here the \e writhe of a component \a c is the sum of
+         * the signs of all crossings at which \a c crosses itself.
+         *
+         * Any component(s) that already have zero writhe will be left
+         * unchanged.
+         *
+         * This link will be modified directly.
+         */
+        void selfFrame();
+
+        /**
          * Attempts to simplify the link diagram using fast and greedy
          * heuristics.  Specifically, this routine tries combinations of
          * Reidemeister moves with the aim of reducing the number of
@@ -1843,6 +1856,47 @@ class REGINA_API Link : public Packet {
          * @return the writhe.
          */
         long writhe() const;
+
+        /**
+         * Returns the writhe of a single component of this link diagram.
+         *
+         * This is the writhe of the diagram when all \e other components
+         * are removed.  It is computed as the sum of the signs of all
+         * crossings at which the given component crosses itself.
+         *
+         * In this version of writheOfComponent(), the component is
+         * indicated by the argument \a strand, which may be any strand
+         * along the component.  In particular, \a strand does not need to be
+         * the "starting strand" returned by component().
+         *
+         * The given strand may be a null strand, in which case the
+         * return value will be 0 (since Regina uses null strands to refer to
+         * zero-crossing unknot components).  This is always allowed,
+         * regardless of whether the link actually contains any zero-crossing
+         * unknot components.
+         *
+         * @param component any strand along the component of interest.
+         * @return the writhe of the component containing the given strand,
+         * or 0 if the given strand is a null strand.
+         */
+        long writheOfComponent(StrandRef strand) const;
+
+        /**
+         * Returns the writhe of a single component of this link diagram.
+         *
+         * This is the writhe of the diagram when all \e other components
+         * are removed.  It is computed as the sum of the signs of all
+         * crossings at which the given component crosses itself.
+         *
+         * In this version of writheOfComponent(), the component is
+         * indicated by its index.  This function is equivalent to calling
+         * <tt>writheOfComponent(component(index))</tt>.
+         *
+         * @param index the index of the requested component.  This must
+         * be between 0 and countComponents()-1 inclusive.
+         * @return the writhe of the given component.
+         */
+        long writheOfComponent(size_t index) const;
 
         /**
          * Returns an ideal triangulation of the complement of this link
@@ -2630,6 +2684,51 @@ class REGINA_API Link : public Packet {
          * (the default) to use numerical notation.
          */
         void dt(std::ostream& out, bool alpha = false) const;
+
+        /**
+         * Returns a planar diagram code for this link.
+         *
+         * Planar diagram codes encode the local information at each
+         * crossing.  They are available for links as well as knots;
+         * their only restriction is that they cannot encode zero-crossing
+         * unknot components (i.e., components for which the component()
+         * function returns a null strand).
+         *
+         * Regina adheres to a tight specification for the planar diagram codes
+         * that it outputs, in order to ensure compatibility with other
+         * software.  In particular, these codes are compatible with the
+         * Knot Atlas; see http://katlas.org/wiki/Planar_Diagrams for details.
+         *
+         * In detail, Regina constructs planar diagram codes as follows:
+         *
+         * - Throw away any zero-crossing unknot components.
+         *
+         * - Let \a n denote the number of crossings.
+         *
+         * - Number the strands from 1 to 2<i>n</i> in order as we walk along
+         *   each component, in order from the first component to the last.
+         *
+         * - For each crossing \a c, construct a 4-tuple that lists the four
+         *   strands that meet at that \a c, in counter-clockwise order,
+         *   beginning from the incoming lower strand.
+         *
+         * - Return the resulting list of \a n 4-tuples.
+         *
+         * Some points to be aware of:
+         *
+         * - When building the list of 4-tuples, Regina orders the
+         *   crossings as follows: again we walk along each component,
+         *   in order from the first component to the last, and process
+         *   each crossing when we enter it at the lower strand.
+         *
+         * - When building each individual 4-tuple, some sources (e.g., Sage)
+         *   order the strands clockwise instead of counter-clockwise.
+         *   Regina follows the same counter-clockwise convention that is used
+         *   by the Knot Atlas and SnapPy.
+         *
+         * @return the planar diagram code, as described above.
+         */
+        std::vector<std::array<int, 4>> pd() const;
 
         /**
          * Outputs the underlying planar 4-valent multigraph using the
@@ -4072,6 +4171,10 @@ inline long Link::writhe() const {
     for (const Crossing* c : crossings_)
         ans += c->sign();
     return ans;
+}
+
+inline long Link::writheOfComponent(size_t index) const {
+    return writheOfComponent(components_[index]);
 }
 
 inline const Laurent2<Integer>& Link::homfly(Algorithm alg,

@@ -138,6 +138,10 @@ void addLink(pybind11::module_& m) {
         .def("isAlternating", &Link::isAlternating)
         .def("linking", &Link::linking)
         .def("writhe", &Link::writhe)
+        .def("writheOfComponent", overload_cast<StrandRef>(
+            &Link::writheOfComponent, pybind11::const_))
+        .def("writheOfComponent", overload_cast<size_t>(
+            &Link::writheOfComponent, pybind11::const_))
         .def("complement", &Link::complement,
             pybind11::arg("simplify") = true)
         .def("parallel", &Link::parallel,
@@ -179,6 +183,7 @@ void addLink(pybind11::module_& m) {
         .def("dt",
             overload_cast<bool>(&Link::dt, pybind11::const_),
             pybind11::arg("alpha") = false)
+        .def("pd", &Link::pd)
         .def("writePACE", [](const Link& l) {
             l.writePACE(std::cout);
         })
@@ -224,6 +229,7 @@ void addLink(pybind11::module_& m) {
             pybind11::arg("check") = true,
             pybind11::arg("perform") = true)
         .def("hasReducingPass", &Link::hasReducingPass)
+        .def("selfFrame", &Link::selfFrame)
         .def("intelligentSimplify", &Link::intelligentSimplify)
         .def("simplifyToLocalMinimum", &Link::simplifyToLocalMinimum,
              pybind11::arg("perform") = true)
