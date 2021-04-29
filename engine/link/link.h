@@ -2686,7 +2686,8 @@ class REGINA_API Link : public Packet {
         void dt(std::ostream& out, bool alpha = false) const;
 
         /**
-         * Returns a planar diagram code for this link.
+         * Returns a planar diagram code for this link, presented as
+         * vector of 4-tuples.
          *
          * Planar diagram codes encode the local information at each
          * crossing.  They are available for links as well as knots;
@@ -2726,9 +2727,41 @@ class REGINA_API Link : public Packet {
          *   Regina follows the same counter-clockwise convention that is used
          *   by the Knot Atlas and SnapPy.
          *
+         * See pd() for a variant of this routine that returns a string.
+         *
          * @return the planar diagram code, as described above.
          */
-        std::vector<std::array<int, 4>> pd() const;
+        std::vector<std::array<int, 4>> pdData() const;
+
+        /**
+         * Returns a planar diagram code for this link, presented as
+         * a string.
+         *
+         * A planar diagram code consists of a list of 4-tuples; see
+         * pdData() for details on how this list is constructed and what
+         * it represents.
+         *
+         * This routine formats the list as a string, in a way that is
+         * consistent with the description in the Knot Atlas at
+         * http://katlas.org/wiki/Planar_Diagrams .
+         *
+         * In particular, each 4-tuple will be formatted with square
+         * brackets, commas, and the prefix \c X, and the main list will
+         * be formatted with square brackets, commas, and the prefix \c PD.
+         * An example (for the right-handed trefoil) is:
+         *
+           \verbatim
+           PD[X[1, 5, 2, 4], X[3, 1, 4, 6], X[5, 3, 6, 2]]
+           \endverbatim
+         *
+         *
+         * See pdData() for a variant of this routine that returns
+         * machine-readable data as opposed to human-readable data
+         * (i.e., a vector of 4-tuples of integers).
+         *
+         * @return the planar diagram code in string form.
+         */
+        std::string pd() const;
 
         /**
          * Outputs the underlying planar 4-valent multigraph using the

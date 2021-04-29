@@ -93,7 +93,7 @@ Version 6.1  [ TODO ]
               This change is backward incompatible (but probably affects noone).
         Class Link:
             - New routines writheOfComponent() and selfFrame().
-            - New routine pd() to create planar diagram codes.
+            - New routines pd() and pdData() to create planar diagram codes.
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.
             - Renamed swapContents() to swap(); the old name is now a

@@ -31,10 +31,11 @@
  **************************************************************************/
 
 #include "link/link.h"
+#include <sstream>
 
 namespace regina {
 
-std::vector<std::array<int, 4>> Link::pd() const {
+std::vector<std::array<int, 4>> Link::pdData() const {
     const int n = crossings_.size();
 
     std::vector<std::array<int, 4>> ans;
@@ -79,6 +80,32 @@ std::vector<std::array<int, 4>> Link::pd() const {
 
     delete[] strand;
     return ans;
+}
+
+std::string Link::pd() const {
+    auto code = pdData();
+
+    std::ostringstream out;
+    out << "PD[";
+    bool outer = false;
+    for (const auto& tuple : code) {
+        if (outer)
+            out << ", ";
+        else
+            outer = true;
+        out << "X[";
+        bool inner = false;
+        for (auto i : tuple) {
+            if (inner)
+                out << ", ";
+            else
+                inner = true;
+            out << i;
+        }
+        out << ']';
+    }
+    out << ']';
+    return out.str();
 }
 
 } // namespace regina

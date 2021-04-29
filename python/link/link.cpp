@@ -183,6 +183,7 @@ void addLink(pybind11::module_& m) {
         .def("dt",
             overload_cast<bool>(&Link::dt, pybind11::const_),
             pybind11::arg("alpha") = false)
+        .def("pdData", &Link::pdData)
         .def("pd", &Link::pd)
         .def("writePACE", [](const Link& l) {
             l.writePACE(std::cout);
