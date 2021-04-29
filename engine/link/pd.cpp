@@ -83,27 +83,60 @@ std::vector<std::array<int, 4>> Link::pdData() const {
 }
 
 std::string Link::pd() const {
-    auto code = pdData();
+    const int n = crossings_.size();
 
     std::ostringstream out;
     out << "PD[";
-    bool outer = false;
-    for (const auto& tuple : code) {
-        if (outer)
-            out << ", ";
-        else
-            outer = true;
-        out << "X[";
-        bool inner = false;
-        for (auto i : tuple) {
-            if (inner)
-                out << ", ";
-            else
-                inner = true;
-            out << i;
-        }
-        out << ']';
+    bool nonEmpty = false;
+
+    // Build a lookup table from StrandRef::id() -> PD strand number:
+    int* strand = new int[2 * n];
+    int next = 1;
+    for (auto start : components_) {
+        StrandRef s = start;
+        do {
+            strand[s.id()] = next++;
+            ++s;
+        } while (s != start);
     }
+
+    // Now process each crossing in turn:
+    for (auto start : components_) {
+        StrandRef s = start;
+        do {
+            const StrandRef next = s.next();
+            if (next.strand() == 0) {
+                // Strand s enters the next crossing from beneath.
+                // Identify the other two strands involved.
+                const StrandRef upperOut(next.crossing(), 1);
+                const StrandRef upperIn = upperOut.prev();
+
+                if (nonEmpty)
+                    out << ", ";
+                else
+                    nonEmpty = true;
+
+                out << "X[" << strand[s.id()] << ", ";
+                if (next.crossing()->sign() > 0) {
+                    // lower in, upper out, lower out, upper in
+                    out << strand[upperOut.id()] << ", "
+                        << strand[next.id()] << ", "
+                        << strand[upperIn.id()];
+                } else {
+                    // lower in, upper in, lower out, upper out
+                    out << strand[upperIn.id()] << ", "
+                        << strand[next.id()] << ", "
+                        << strand[upperOut.id()];
+                }
+                out << ']';
+            }
+
+            s = next;
+        } while (s != start);
+    }
+
+    delete[] strand;
+
     out << ']';
     return out.str();
 }
