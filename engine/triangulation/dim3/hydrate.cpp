@@ -54,7 +54,7 @@ Triangulation<3>* Triangulation<3>::rehydrate(const std::string& dehydration) {
         return ans;
 
     delete ans;
-    return 0;
+    return nullptr;
 }
 
 bool Triangulation<3>::insertRehydration(const std::string& dehydration) {

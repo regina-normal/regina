@@ -498,10 +498,10 @@ bool Triangulation<3>::isSolidTorus() const {
         crushed = s->crush();
         delete s;
         delete working;
-        working = 0;
+        working = nullptr;
 
         crushed->intelligentSimplify();
-        crushed->splitIntoComponents(0, false);
+        crushed->splitIntoComponents(nullptr, false);
         for (p = crushed->firstChild(); p; p = p->nextSibling()) {
             // Examine each connected component after crushing.
             comp = static_cast<Triangulation<3>*>(p);
@@ -687,7 +687,7 @@ Packet* Triangulation<3>::makeZeroEfficient() {
             insertTriangulation(*newTri);
         }
         delete connSum;
-        return 0;
+        return nullptr;
     } else {
         // 3-sphere.
         if (size() > 1) {
@@ -695,7 +695,7 @@ Packet* Triangulation<3>::makeZeroEfficient() {
             insertLayeredLensSpace(1,0);
         }
         delete connSum;
-        return 0;
+        return nullptr;
     }
 }
 
@@ -705,7 +705,7 @@ bool Triangulation<3>::isIrreducible() const {
 
     // Precondition checks.
     if (! (isValid() && isClosed() && isOrientable() && isConnected()))
-        return 0;
+        return false;
 
     // We will essentially carry out a connected sum decomposition, but
     // instead of keeping prime summands we will just count them and

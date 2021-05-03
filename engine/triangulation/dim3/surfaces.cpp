@@ -72,11 +72,11 @@ namespace regina {
 NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
-        return 0;
+        return nullptr;
 
     // Do we already know the answer?
     if (zeroEfficient_.known() && zeroEfficient_.value())
-        return 0;
+        return nullptr;
 
     // Use combinatorial optimisation if we can.
     if (isValid() && countVertices() == 1) {
@@ -91,7 +91,7 @@ NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
             // Fall through to a full enumeration of vertex surfaces.
             delete s;
         } else
-            return 0;
+            return nullptr;
     }
 
     // Fall back to a slow-but-general method: enumerate all vertex surfaces.
@@ -101,7 +101,7 @@ NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
     NormalSurfaces* surfaces = NormalSurfaces::enumerate(this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
     const NormalSurface* s;
-    NormalSurface* ans = 0;
+    NormalSurface* ans = nullptr;
     for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
         s = surfaces->surface(i);
 
@@ -136,7 +136,7 @@ NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
 NormalSurface* Triangulation<3>::hasOctagonalAlmostNormalSphere() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
-        return 0;
+        return nullptr;
 
     // Use combinatorial optimisation if we can.
     // This is good for large problems, but for small problems a full
@@ -156,7 +156,7 @@ NormalSurface* Triangulation<3>::hasOctagonalAlmostNormalSphere() {
             NormalSurface* s = tree.buildSurface();
             return s;
         } else
-            return 0;
+            return nullptr;
     }
 
     // Fall back to a slow-but-general method: enumerate all vertex surfaces.
@@ -169,7 +169,7 @@ NormalSurface* Triangulation<3>::hasOctagonalAlmostNormalSphere() {
     // Our vertex surfaces are guaranteed to be in smallest possible
     // integer coordinates, with at most one non-zero octagonal coordinate.
     const NormalSurface* s;
-    NormalSurface* ans = 0;
+    NormalSurface* ans = nullptr;
     unsigned long tet;
     unsigned oct;
     bool found, broken;
