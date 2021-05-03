@@ -30,11 +30,15 @@
  *                                                                        *
  **************************************************************************/
 
-#include "foreign/isosig.h"
-#include "packet/container.h"
-#include "packet/text.h"
+/*! \file sighandler.h
+ *  \brief Allows interaction with knot and isomorphism signature lists.
+ */
 
-#include "isosighandler.h"
+#ifndef __SIGHANDLER_H
+#define __SIGHANDLER_H
+
+#include "foreign/isosig.h"
+#include "packetimporter.h"
 #include "reginamain.h"
 #include "reginasupport.h"
 #include "../packetfilter.h"
@@ -42,61 +46,122 @@
 #include <QFile>
 #include <QTextDocument>
 
-const IsoSigHandler IsoSigHandler::instance2(2);
-const IsoSigHandler IsoSigHandler::instance3(3);
-const IsoSigHandler IsoSigHandler::instance4(4);
+namespace regina {
+    class Link;
+    template <int> class Triangulation;
+}
 
-regina::Packet* IsoSigHandler::importData(const QString& fileName,
+/**
+ * An object responsible for importing data from
+ * knot signature or isomorphism signature lists.
+ *
+ * Rather than creating new objects of this class, the globally
+ * available object SigHandler<PacketType>::instance should always be used.
+ *
+ * \tparam PacketType Indicates which types of signatures to import.
+ * This must be either Link (indicating knot signatures), or one of the
+ * Triangulation<dim> classes (indicating isomorphism signatures for
+ * <i>dim</i>-dimensional triangulations).
+ */
+template <class PacketType>
+class SigHandler : public PacketImporter {
+    using PacketImporter::importData;
+
+    public:
+        /**
+         * A globally available instance of this class.
+         */
+        static const SigHandler instance;
+
+    public:
+        /**
+         * PacketImporter overrides:
+         */
+        virtual regina::Packet* importData(const QString& fileName,
+            ReginaMain* parentWidget) const;
+
+    private:
+        /**
+         * Don't allow people to construct their own handlers.
+         */
+        SigHandler();
+};
+
+template <class PacketType>
+const SigHandler<PacketType> SigHandler<PacketType>::instance;
+
+template <class PacketType>
+inline SigHandler<PacketType>::SigHandler() {
+}
+
+template <class PacketType>
+regina::Packet* SigHandler<PacketType>::importData(const QString& fileName,
         ReginaMain* parentWidget) const {
-    QString explnSuffix = QObject::tr("<p>The file should be a plain text file "
-        "containing one %1-manifold isomorphism signature per line.  "
-        "Isomorphism signatures are described in detail in "
-        "<i>Simplification paths in the Pachner graphs "
-        "of closed orientable 3-manifold triangulations</i>, "
-        "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>").arg(dimension_);
+    QString explnSuffix;
+    QString signatures;
+    if constexpr (std::is_same_v<PacketType, regina::Link>) {
+        explnSuffix = QObject::tr("<p>The file should be a plain text file "
+            "containing one knot signature per line.</qt>");
+        signatures = QObject::tr("knot signatures");
+    } else {
+        explnSuffix = QObject::tr("<p>The file should be a plain text file "
+            "containing one %1-manifold isomorphism signature per line.  "
+            "Isomorphism signatures are described in detail in "
+            "<i>Simplification paths in the Pachner graphs "
+            "of closed orientable 3-manifold triangulations</i>, "
+            "Burton, 2011, <tt>arXiv:1110.6080</tt>.</qt>")
+            .arg(PacketType::dimension);
+        signatures = QObject::tr("isomorphism signatures");
+    }
 
-    regina::Packet* ans = regina::readIsoSigList(
-        static_cast<const char*>(QFile::encodeName(fileName)), dimension_);
+    regina::Packet* ans = regina::readSigList<PacketType>(
+        static_cast<const char*>(QFile::encodeName(fileName)));
     if (! ans) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>I could not open the file <tt>%1</tt>.  "
                 "Please check that this file is readable.</qt>")
                 .arg(fileName.toHtmlEscaped()));
-        return 0;
+        return nullptr;
     }
 
     regina::Packet* last = ans->lastChild();
-    if (last == 0) {
+    if (! last) {
         ReginaSupport::sorry(parentWidget,
             QObject::tr("The import failed."),
             QObject::tr("<qt>The selected file does "
-            "not contain any isomorphism signatures.") + explnSuffix);
+            "not contain any %1.").arg(signatures) + explnSuffix);
         delete ans;
-        return 0;
+        return nullptr;
     } else if (last->type() == regina::PACKET_TEXT) {
         if (last == ans->firstChild()) {
             ReginaSupport::sorry(parentWidget, 
                 QObject::tr("The import failed."),
                 QObject::tr("<qt>None of the lines in the selected file "
-                "could be interpreted as isomorphism signatures.")
+                "could be interpreted as %1.").arg(signatures)
                 + explnSuffix);
             delete ans;
-            return 0;
+            return nullptr;
         } else {
             ReginaSupport::warn(parentWidget, 
                 QObject::tr("There were problems with the import."),
                 QObject::tr("<qt>One or more lines in the selected file "
-                "could not be interpreted as isomorphism signatures. "
+                "could not be interpreted as %1. "
                 "For details, see the text packet "
-                "at the end of the imported packet list.")
+                "at the end of the imported packet list.").arg(signatures)
                 + explnSuffix);
         }
     }
 
     // All worked out okay.
-    ans->setLabel(
-        QObject::tr("Imported Triangulations").toUtf8().constData());
+    if constexpr (std::is_same_v<PacketType, regina::Link>) {
+        ans->setLabel(
+            QObject::tr("Imported Knots").toUtf8().constData());
+    } else {
+        ans->setLabel(
+            QObject::tr("Imported Triangulations").toUtf8().constData());
+    }
     return ans;
 }
 
+#endif

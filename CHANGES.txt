@@ -94,6 +94,7 @@ Version 6.1  [ TODO ]
         Class Link:
             - New routines writheOfComponent() and selfFrame().
             - New routines pd() and pdData() to create planar diagram codes.
+            - New alias fromSig(), which is is identical to fromKnotSig().
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.
             - Renamed swapContents() to swap(); the old name is now a
@@ -180,6 +181,7 @@ Version 6.1  [ TODO ]
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
               As a result, Tangle now meets the C++ Swappable requirements.
         Class Triangulation<dim>:
+            - New alias fromSig(), which is is identical to fromIsoSig().
             - Routine simplices(), faces(), components(), boundaryComponents(),
               and the aliases vertices(), edges(), etc. no longer return a
               const reference to a std::vector or FaceList.  Instead they
@@ -223,6 +225,11 @@ Version 6.1  [ TODO ]
             - Both these functions are now inline and constexpr.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
+        Function readSigList(), readIsoSigList():
+            - The old readIsoSigList() is now deprecated, in favour of a new
+              template function readSigList() that can work with knots and
+              also triangulations of any dimension.  The old readIsoSigList()
+              has been kept as a deprecated alias.
         Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
                 quadString:
             - These are all now inline constexpr.

@@ -319,6 +319,7 @@ class ReginaMain : public QMainWindow {
         void importIsoSig2();
         void importIsoSig3();
         void importIsoSig4();
+        void importKnotSig();
         void importPDF();
         void importPython();
         void importRegina();

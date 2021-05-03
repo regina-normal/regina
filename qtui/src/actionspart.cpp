@@ -174,6 +174,17 @@ void ReginaMain::setupActions() {
     importMenu->addAction(act);
 
     act = new QAction(this);
+    act->setText(tr("&Knot Signature List"));
+    // act->setIcon(ReginaSupport::regIcon("signature-2d"));
+    act->setToolTip(tr("Import a knot signature list"));
+    act->setWhatsThis(tr("Import an external text file containing "
+        "knot signatures.  For each signature, "
+        "a new knot will be created in this packet tree."));
+    connect(act, SIGNAL(triggered()), this, SLOT(importKnotSig()) );
+    treeGeneralEditActions.push_back(act);
+    importMenu->addAction(act);
+
+    act = new QAction(this);
     act->setText(tr("&Dehydrated Triangulation List"));
     act->setIcon(ReginaSupport::regIcon("dehydrated"));
     act->setToolTip(tr("Import a dehydrated triangulation list"));

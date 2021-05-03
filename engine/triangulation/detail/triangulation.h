@@ -1747,6 +1747,25 @@ class TriangulationBase :
         static Triangulation<dim>* fromIsoSig(const std::string& sig);
 
         /**
+         * Alias for fromIsoSig(), to recover a full triangulation from an
+         * isomorphism signature.
+         *
+         * This alias fromSig() is provided to assist with generic code
+         * that can work with both triangulations and links.
+         *
+         * See fromIsoSig() for further details.
+         *
+         * @param sig the isomorphism signature of the triangulation to
+         * construct.  Note that isomorphism signatures are case-sensitive
+         * (unlike, for example, dehydration strings for 3-manifolds).
+         * @return a newly allocated triangulation if the reconstruction was
+         * successful, or \c null if the given string was not a valid
+         * <i>dim</i>-dimensional isomorphism signature created using
+         * the default encoding.
+         */
+        static Triangulation<dim>* fromSig(const std::string& sig);
+
+        /**
          * Deduces the number of top-dimensional simplices in a
          * connected triangulation from its isomorphism signature.
          *
@@ -3251,6 +3270,11 @@ void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
         H1_.value()->writeXMLData(out);
         out << "</H1>\n";
     }
+}
+
+template <int dim>
+Triangulation<dim>* TriangulationBase<dim>::fromSig(const std::string& sig) {
+    return TriangulationBase<dim>::fromIsoSig(sig);
 }
 
 // Inline functions for TriangulationBase::TopologyLock

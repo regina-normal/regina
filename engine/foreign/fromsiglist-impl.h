@@ -30,24 +30,37 @@
  *                                                                        *
  **************************************************************************/
 
+/*! \file foreign/fromsiglist-impl.h
+ *  \brief Contains implementation details for the template function
+ *  fromSigList().
+ *
+ *  This file is automatically included from foreign/isosig.h, there is
+ *  no need for end users to include it explicitly.
+ */
+
+#ifndef __FROMSIGLIST_IMPL_H_DETAIL
+#ifndef __DOXYGEN
+#define __FROMSIGLIST_IMPL_H_DETAIL
+#endif
+
 #include <fstream>
 #include <sstream>
-
-#include "foreign/isosig.h"
+#include <type_traits>
 #include "packet/container.h"
 #include "packet/text.h"
-#include "triangulation/dim2.h"
-#include "triangulation/dim3.h"
-#include "triangulation/dim4.h"
 
 namespace regina {
 
-Container* readIsoSigList(const char *filename, unsigned dimension,
-        unsigned colSigs, int colLabels, unsigned long ignoreLines) {
+class Link;
+template <int dim> class Triangulation;
+
+template <class PacketType>
+Container* readSigList(const char *filename, unsigned colSigs, int colLabels,
+        unsigned long ignoreLines) {
     // Open the file.
     std::ifstream in(filename);
     if (! in)
-        return 0;
+        return nullptr;
 
     // Ignore the specified number of lines.
     std::string line;
@@ -66,11 +79,9 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
     int col;
     std::string token;
 
-    std::string isoSig;
+    std::string sig;
     std::string label;
-    Triangulation<2>* tri2;
-    Triangulation<3>* tri3;
-    Triangulation<4>* tri4;
+    PacketType* object;
 
     while(! in.eof()) {
         // Read in the next line.
@@ -83,7 +94,7 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
         // Find the appropriate tokens.
         std::istringstream tokens(line);
 
-        isoSig.clear();
+        sig.clear();
         label.clear();
         for (col = 0; col <= static_cast<int>(colSigs) ||
                 col <= colLabels; col++) {
@@ -91,41 +102,31 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
             if (token.empty())
                 break;
             if (col == static_cast<int>(colSigs))
-                isoSig = token;
+                sig = token;
             if (col == colLabels)
                 label = token;
         }
 
-        if (! isoSig.empty()) {
+        if (! sig.empty()) {
             // Process this isomorphism signature.
-            if (dimension == 2) {
-                if ((tri2 = Triangulation<2>::fromIsoSig(isoSig))) {
-                    tri2->setLabel(label.empty() ? isoSig : label);
-                    ans->insertChildLast(tri2);
-                } else
-                    errStrings = errStrings + '\n' + isoSig;
-            } else if (dimension == 3) {
-                if ((tri3 = Triangulation<3>::fromIsoSig(isoSig))) {
-                    tri3->setLabel(label.empty() ? isoSig : label);
-                    ans->insertChildLast(tri3);
-                } else
-                    errStrings = errStrings + '\n' + isoSig;
-            } else if (dimension == 4) {
-                if ((tri4 = Triangulation<4>::fromIsoSig(isoSig))) {
-                    tri4->setLabel(label.empty() ? isoSig : label);
-                    ans->insertChildLast(tri4);
-                } else
-                    errStrings = errStrings + '\n' + isoSig;
+            if ((object = PacketType::fromSig(sig))) {
+                object->setLabel(label.empty() ? sig : label);
+                ans->insertChildLast(object);
             } else
-                errStrings = errStrings + '\n' + isoSig;
+                errStrings = errStrings + '\n' + sig;
         }
     }
 
     // Finish off.
     if (! errStrings.empty()) {
         std::ostringstream msg;
-        msg << "The following isomorphism string(s) could not be interpreted "
-            "as " << dimension << "-manifold triangulations:\n" << errStrings;
+        msg << "The following signature(s) could not be interpreted as ";
+        if constexpr (std::is_same_v<PacketType, Link>)
+            msg << "knots:\n";
+        else
+            msg << PacketType::dimension << "-manifold triangulations:\n";
+        msg << errStrings;
+
         Text* errPkt = new Text(msg.str());
         errPkt->setLabel("Errors");
         ans->insertChildLast(errPkt);
@@ -135,3 +136,5 @@ Container* readIsoSigList(const char *filename, unsigned dimension,
 }
 
 } // namespace regina
+
+#endif

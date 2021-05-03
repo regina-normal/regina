@@ -3001,6 +3001,23 @@ class REGINA_API Link : public Packet {
         static Link* fromKnotSig(const std::string& sig);
 
         /**
+         * Alias for fromKnotSig(), to recover a knot diagram from its
+         * signature.
+         *
+         * This alias fromSig() is provided to assist with generic code
+         * that can work with both knots and triangulations.
+         *
+         * See fromKnotSig() for further details.
+         *
+         * @param sig the signature of the knot diagram to construct.
+         * Note that signatures are case-sensitive.
+         * @return a newly allocated knot if the reconstruction was
+         * successful, or \c null if the given string was not a valid
+         * knot signature.
+         */
+        static Link* fromSig(const std::string& sig);
+
+        /**
          * Creates a new knot from a classical Gauss code.
          *
          * Classical Gauss codes essentially describe the 4-valent graph
@@ -4288,6 +4305,10 @@ inline bool Link::rewrite(int height, unsigned nThreads,
 inline void Link::join(const StrandRef& s, const StrandRef& t) {
     s.crossing_->next_[s.strand_] = t;
     t.crossing_->prev_[t.strand_] = s;
+}
+
+inline Link* Link::fromSig(const std::string& sig) {
+    return Link::fromKnotSig(sig);
 }
 
 inline void swap(Link& lhs, Link& rhs) {

@@ -36,12 +36,16 @@
 #include "reginamain.h"
 #include "foreign/dehydrationhandler.h"
 #include "foreign/importdialog.h"
-#include "foreign/isosighandler.h"
+#include "foreign/sighandler.h"
 #include "foreign/orbhandler.h"
 #include "foreign/pdfhandler.h"
 #include "foreign/pythonhandler.h"
 #include "foreign/reginahandler.h"
 #include "foreign/snappeahandler.h"
+#include "link/link.h"
+#include "triangulation/dim2.h"
+#include "triangulation/dim3.h"
+#include "triangulation/dim4.h"
 #include "reginafilter.h"
 
 #include <QFileDialog>
@@ -52,18 +56,23 @@ void ReginaMain::importDehydration() {
 }
 
 void ReginaMain::importIsoSig2() {
-    importFile(IsoSigHandler::instance2, 0, tr(FILTER_ALL),
-        tr("Import Isomorphism Signature List (2-D)"));
+    importFile(SigHandler<regina::Triangulation<2>>::instance, 0,
+        tr(FILTER_ALL), tr("Import Isomorphism Signature List (2-D)"));
 }
 
 void ReginaMain::importIsoSig3() {
-    importFile(IsoSigHandler::instance3, 0, tr(FILTER_ALL),
-        tr("Import Isomorphism Signature List (3-D)"));
+    importFile(SigHandler<regina::Triangulation<3>>::instance, 0,
+        tr(FILTER_ALL), tr("Import Isomorphism Signature List (3-D)"));
 }
 
 void ReginaMain::importIsoSig4() {
-    importFile(IsoSigHandler::instance4, 0, tr(FILTER_ALL),
-        tr("Import Isomorphism Signature List (4-D)"));
+    importFile(SigHandler<regina::Triangulation<4>>::instance, 0,
+        tr(FILTER_ALL), tr("Import Isomorphism Signature List (4-D)"));
+}
+
+void ReginaMain::importKnotSig() {
+    importFile(SigHandler<regina::Link>::instance, 0,
+        tr(FILTER_ALL), tr("Import Knot Signature List"));
 }
 
 void ReginaMain::importPDF() {

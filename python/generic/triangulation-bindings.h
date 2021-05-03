@@ -189,6 +189,7 @@ void addTriangulation(pybind11::module_& m, const char* name) {
             return pybind11::make_tuple(sig, iso);
         })
         .def_static("fromIsoSig", &Triangulation<dim>::fromIsoSig)
+        .def_static("fromSig", &Triangulation<dim>::fromSig)
         .def_static("isoSigComponentSize",
             &Triangulation<dim>::isoSigComponentSize)
         .def("dumpConstruction", &Triangulation<dim>::dumpConstruction)

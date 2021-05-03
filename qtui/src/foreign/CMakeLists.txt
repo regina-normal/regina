@@ -3,7 +3,6 @@ SET ( FILES
   dehydrationhandler.cpp
   exportdialog.cpp
   importdialog.cpp
-  isosighandler.cpp
   orbhandler.cpp
   pdfhandler.cpp
   pythonhandler.cpp
