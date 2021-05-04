@@ -175,7 +175,7 @@ void ReginaMain::setupActions() {
 
     act = new QAction(this);
     act->setText(tr("&Knot Signature List"));
-    // act->setIcon(ReginaSupport::regIcon("signature-2d"));
+    act->setIcon(ReginaSupport::regIcon("signature-knot"));
     act->setToolTip(tr("Import a knot signature list"));
     act->setWhatsThis(tr("Import an external text file containing "
         "knot signatures.  For each signature, "

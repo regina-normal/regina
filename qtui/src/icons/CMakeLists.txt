@@ -62,6 +62,7 @@ set (IMGS
   signature-2d
   signature-3d
   signature-4d
+  signature-knot
   simplify
   simplify-link
   snappea
