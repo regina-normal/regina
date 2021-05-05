@@ -39,7 +39,9 @@ namespace regina {
 
 NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter* filter) const {
     NormalSurfaces* ans = new NormalSurfaces(
-        coords_, which_ | NS_CUSTOM, algorithm_ | NS_ALG_CUSTOM);
+        coords_,
+            (which_ & (NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR)) | NS_CUSTOM,
+            algorithm_ | NS_ALG_CUSTOM);
 
     for (NormalSurface* s : surfaces)
         if (filter->accept(*s))
