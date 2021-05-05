@@ -32,9 +32,22 @@
 
 #include <vector>
 #include "surfaces/normalsurfaces.h"
+#include "surfaces/surfacefilter.h"
 #include "triangulation/dim3.h"
 
 namespace regina {
+
+NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter* filter) const {
+    NormalSurfaces* ans = new NormalSurfaces(
+        coords_, which_ | NS_CUSTOM, algorithm_ | NS_ALG_CUSTOM);
+
+    for (NormalSurface* s : surfaces)
+        if (filter->accept(*s))
+            ans->surfaces.push_back(s->clone());
+
+    triangulation()->insertChildLast(ans);
+    return ans;
+}
 
 NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
         const {

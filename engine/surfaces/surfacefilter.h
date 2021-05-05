@@ -49,7 +49,6 @@
 namespace regina {
 
 class NormalSurface;
-class NormalSurfaces;
 class SurfaceFilter;
 class SurfaceFilterCombination;
 class SurfaceFilterProperties;

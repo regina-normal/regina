@@ -34,6 +34,7 @@
 #include "maths/matrix.h"
 #include "progress/progresstracker.h"
 #include "surfaces/normalsurfaces.h"
+#include "surfaces/surfacefilter.h"
 #include "triangulation/dim3.h"
 #include "utilities/safeptr.h"
 #include "../helpers.h"
@@ -82,6 +83,7 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("quadOctToStandardAN", &NormalSurfaces::quadOctToStandardAN)
         .def("standardToQuad", &NormalSurfaces::standardToQuad)
         .def("standardANToQuadOct", &NormalSurfaces::standardANToQuadOct)
+        .def("filter", &NormalSurfaces::filter)
         .def("filterForLocallyCompatiblePairs",
             &NormalSurfaces::filterForLocallyCompatiblePairs)
         .def("filterForDisjointPairs",

@@ -120,6 +120,8 @@ Version 6.1  [ TODO ]
         Class NormalInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
+        Class NormalSurfaces:
+            - New filter() method that takes a SurfaceFilter.
         Class PacketInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).

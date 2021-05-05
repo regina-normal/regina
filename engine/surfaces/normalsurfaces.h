@@ -54,6 +54,7 @@ namespace regina {
 
 class NormalSurfaces;
 class ProgressTracker;
+class SurfaceFilter;
 class XMLPacketReader;
 
 /**
@@ -555,6 +556,23 @@ class REGINA_API NormalSurfaces : public Packet {
          */
         template <typename Comparison>
         void sort(Comparison&& comp);
+
+        /**
+         * Creates a new list filled with the surfaces from this list
+         * that pass the given filter.
+         *
+         * The new list will be inserted as a new child packet of the
+         * underlying triangulation (specifically, as the final child).  As a
+         * convenience, the new list will also be returned from this routine.
+         *
+         * This original list is not altered in any way.  Likewise,
+         * the surfaces in the new list are deep copies of the originals
+         * (so they can be altered without affecting the original surfaces).
+         *
+         * @return the new list, which will also have been inserted as
+         * a new child packet of the underlying triangulation.
+         */
+        NormalSurfaces* filter(const SurfaceFilter* filter) const;
 
         /**
          * Creates a new list filled with the surfaces from this list
