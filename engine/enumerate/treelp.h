@@ -1264,7 +1264,7 @@ class LPData {
          * positive via calls to constrainPositive().  This is necessary
          * because LPData does not keep such historical data on its own.
          * As a special case, when extracting a strict angle structure
-         * one may pass \a type = 0, in which case this routine will
+         * one may pass \a type = \c null, in which case this routine will
          * assume that \e every coordinate was constrained as positive.
          */
         template <class RayClass>
@@ -1532,7 +1532,7 @@ extern template REGINA_API void LPData<LPConstraintNonSpun, NativeInteger<16>>::
 // Inline functions for LPMatrix
 
 template <typename IntType>
-inline LPMatrix<IntType>::LPMatrix() : dat_(0) {
+inline LPMatrix<IntType>::LPMatrix() : dat_(nullptr) {
 }
 
 template <typename IntType>
@@ -1737,7 +1737,7 @@ inline void LPInitialTableaux<LPConstraint>::fillInitialTableaux(
 
 template <class LPConstraint, typename IntType>
 inline LPData<LPConstraint, IntType>::LPData() :
-        rhs_(0), basis_(0), basisRow_(0) {
+        rhs_(nullptr), basis_(nullptr), basisRow_(nullptr) {
 }
 
 template <class LPConstraint, typename IntType>

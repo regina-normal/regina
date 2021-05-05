@@ -41,7 +41,7 @@ bool Triangulation<3>::knowsStrictAngleStructure() const {
     // There are some simple cases for which we can deduce the answer
     // automatically.
     if (simplices_.empty()) {
-        strictAngleStructure_ = 0;
+        strictAngleStructure_ = nullptr;
         return true;
     }
 
@@ -49,7 +49,7 @@ bool Triangulation<3>::knowsStrictAngleStructure() const {
         // It is easy to prove that, if an angle structure exists,
         // then we must have #edges = #tetrahedra.
         if (countEdges() != simplices_.size()) {
-            strictAngleStructure_ = 0;
+            strictAngleStructure_ = nullptr;
             return true;
         }
     }
@@ -80,12 +80,12 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
 
     // Test for a solution!
     if (! lp.isFeasible())
-        return (strictAngleStructure_ = 0);
+        return (strictAngleStructure_ = nullptr);
 
     // We have a strict angle structure: reconstruct it.
     unsigned long len = 3 * simplices_.size() + 1;
     AngleStructureVector* v = new AngleStructureVector(len);
-    lp.extractSolution(*v, 0 /* type vector */);
+    lp.extractSolution(*v, nullptr /* type vector */);
     return (strictAngleStructure_ = new AngleStructure(this, v));
 }
 
