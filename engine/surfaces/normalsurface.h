@@ -547,7 +547,7 @@ class REGINA_API NormalSurfaceVector {
          * they can provide a faster implementation.
          *
          * @param triang the triangulation in which this normal surface lives.
-         * @return the vertex linked by this surface, or 0 if this
+         * @return the vertex linked by this surface, or \c null if this
          * surface is not the link of a single vertex.
          */
         virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang) const;
@@ -558,11 +558,11 @@ class REGINA_API NormalSurfaceVector {
          * If there are two different edges <i>e1</i> and <i>e2</i> for
          * which the surface could be expressed as the thin link of
          * either <i>e1</i> or <i>e2</i>, the pair
-         * (<i>e1</i>,<i>e2</i>) will be returned.
+         * (<i>e1</i>, <i>e2</i>) will be returned.
          * If the surface is the thin link of only one edge <i>e</i>,
-         * the pair (<i>e</i>,0) will be returned.
+         * the pair (<i>e</i>, \c null) will be returned.
          * If the surface is not the thin link of any edges, the pair
-         * (0,0) will be returned.
+         * (\c null, \c null) will be returned.
          *
          * The default implementation for this routine involves counting the
          * number of discs of every type.
@@ -607,7 +607,7 @@ class REGINA_API NormalSurfaceVector {
          *
          * @param triang the triangulation in which this normal surface lives.
          * @return the number of tetrahedra that the surface meets if it
-         * is a central surface, or 0 if it is not a central surface.
+         * is a central surface, or \c null if it is not a central surface.
          */
         virtual LargeInteger isCentral(const Triangulation<3>* triang) const;
 
@@ -1288,7 +1288,7 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          *
          * \todo \opt Cache results.
          *
-         * @return the vertex linked by this surface, or 0 if this
+         * @return the vertex linked by this surface, or \c null if this
          * surface is not the link of a single vertex.
          */
         const Vertex<3>* isVertexLink() const;
@@ -1299,11 +1299,11 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          * If there are two different edges <i>e1</i> and <i>e2</i> for
          * which this surface could be expressed as the thin link of
          * either <i>e1</i> or <i>e2</i>, the pair
-         * (<i>e1</i>,<i>e2</i>) will be returned.
+         * (<i>e1</i>, <i>e2</i>) will be returned.
          * If this surface is the thin link of only one edge <i>e</i>,
-         * the pair (<i>e</i>,0) will be returned.
+         * the pair (<i>e</i>, \c null) will be returned.
          * If this surface is not the thin link of any edges, the pair
-         * (0,0) will be returned.
+         * (\c null, \c null) will be returned.
          *
          * Note that the results of this routine are not cached.
          * Thus the results will be reevaluated every time this routine is
@@ -1346,7 +1346,7 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          * \todo \opt Cache results.
          *
          * @return the number of tetrahedra that this surface meets if it
-         * is a central surface, or 0 if it is not a central surface.
+         * is a central surface, or \c null if it is not a central surface.
          */
         LargeInteger isCentral() const;
 
@@ -1632,7 +1632,8 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          * kernel, since Regina does not use or store peripheral curves for
          * its own Triangulation<3> class.  Therefore, if the underlying
          * triangulation (as returned by triangulation()) is not of the
-         * subclass SnapPeaTriangulation, this routine will simply return 0.
+         * subclass SnapPeaTriangulation, this routine will simply return
+         * \c null.
          *
          * All cusps are treated as complete.  That is, any Dehn fillings
          * stored in the SnapPea triangulation will be ignored.
@@ -1664,12 +1665,12 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          * triangulation is oriented, if every vertex link in the
          * triangulation is a torus, and if the underlying coordinate system
          * is for normal surfaces (not almost normal surfaces).  If these
-         * conditions are not met, this routine will return 0.
+         * conditions are not met, this routine will return \c null.
          *
          * @author William Pettersson and Stephan Tillmann
          *
          * @return a newly allocated matrix with \a number_of_vertices
-         * rows and two columns as described above, or 0 if the boundary
+         * rows and two columns as described above, or \c null if the boundary
          * slopes cannot be computed (e.g., if the underlying triangulation
          * is not of type SnapPeaTriangulation, or if it fails to meet the
          * preconditions outlined above).
