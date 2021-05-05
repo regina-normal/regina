@@ -40,7 +40,7 @@ NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
         const {
     // Sanity check:
     if (! isEmbeddedOnly())
-        return 0;
+        return nullptr;
 
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
@@ -67,7 +67,7 @@ NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
 NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
     // Sanity check:
     if (! isEmbeddedOnly())
-        return 0;
+        return nullptr;
 
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
@@ -110,7 +110,7 @@ NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
         const {
     // Sanity check:
     if (! isEmbeddedOnly())
-        return 0;
+        return nullptr;
 
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
