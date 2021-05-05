@@ -4325,8 +4325,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NormalSurface* origSurface = tri->hasNonTrivialSphereOrDisc();
-            NormalSurface* postSurface = copy.hasNonTrivialSphereOrDisc();
+            NormalSurface* origSurface = tri->nonTrivialSphereOrDisc();
+            NormalSurface* postSurface = copy.nonTrivialSphereOrDisc();
             bool isOrig0eff = ! origSurface;
             bool isPost0eff = ! postSurface;
             delete origSurface;

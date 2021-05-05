@@ -902,7 +902,18 @@ class REGINA_API Triangulation<3> :
          * @return a newly allocated non-vertex-linking normal sphere or
          * disc, or \c nullptr if none exists.
          */
-        NormalSurface* hasNonTrivialSphereOrDisc();
+        NormalSurface* nonTrivialSphereOrDisc();
+        /**
+         * A deprecated alias for nonTrivialSphereOrDisc(), which searches for
+         * a non-vertex-linking normal sphere or disc within this triangulation.
+         *
+         * \deprecated This routine has been renamed to
+         * nonTrivialSphereOrDisc().  See that routine for further details.
+         *
+         * @return a newly allocated non-vertex-linking normal sphere or
+         * disc, or \c nullptr if none exists.
+         */
+        [[deprecated]] NormalSurface* hasNonTrivialSphereOrDisc();
         /**
          * Searches for an octagonal almost normal 2-sphere within this
          * triangulation.  If such a surface exists, this routine is
@@ -922,7 +933,21 @@ class REGINA_API Triangulation<3> :
          * @return a newly allocated non-vertex-linking normal sphere or
          * disc, or \c nullptr if none exists.
          */
-        NormalSurface* hasOctagonalAlmostNormalSphere();
+        NormalSurface* octagonalAlmostNormalSphere();
+        /**
+         * A deprecated alias for octagonalAlmostNormalSphere(), which searches
+         * for an octagonal almost normal 2-sphere within this triangulation.
+         *
+         * \deprecated This routine has been renamed to
+         * octagonalAlmostNormalSphere().  See that routine for further details.
+         *
+         * \pre This triangulation is valid, closed, orientable, connected,
+         * and 0-efficient.
+         *
+         * @return a newly allocated non-vertex-linking normal sphere or
+         * disc, or \c nullptr if none exists.
+         */
+        [[deprecated]] NormalSurface* hasOctagonalAlmostNormalSphere();
         /**
          * Searches for a strict angle structure on this triangulation.
          * Recall that a \e strict angle structure is one in which every
@@ -940,24 +965,35 @@ class REGINA_API Triangulation<3> :
          * The angle structure returned (if any) is cached internally
          * alongside this triangulation.  This means that, as long as
          * the triangulation does not change, subsequent calls to
-         * findStrictAngleStructure() will return identical pointers
+         * strictAngleStructure() will return identical pointers
          * and will be essentially instantaneous.
          *
          * If the triangulation changes however, then the cached angle
          * structure will be deleted.  This means that you should not
          * store the returned pointer for later use; instead you should
-         * just call findStrictAngleStructure() again.
+         * just call strictAngleStructure() again.
          *
          * @return a strict angle structure on this triangulation, or
          * \c nullptr if none exists.
          */
-        const AngleStructure* findStrictAngleStructure() const;
+        const AngleStructure* strictAngleStructure() const;
+        /**
+         * A deprecated alias for strictAngleStructure(), which searches
+         * for a strict angle structure on this triangulation.
+         *
+         * \deprecated This routine has been renamed to strictAngleStructure().
+         * See that routine for further details.
+         *
+         * @return a strict angle structure on this triangulation, or
+         * \c nullptr if none exists.
+         */
+        [[deprecated]] const AngleStructure* findStrictAngleStructure() const;
         /**
          * Determines whether this triangulation supports a strict angle
          * structure.  Recall that a \e strict angle structure is one
          * in which every angle is strictly between 0 and &pi;.
          *
-         * This routine is equivalent to calling findStrictAngleStructure()
+         * This routine is equivalent to calling strictAngleStructure()
          * and testing whether the return value is non-null.
          *
          * The underlying algorithm runs a single linear program (it does
@@ -974,7 +1010,7 @@ class REGINA_API Triangulation<3> :
          * See hasStrictAngleStructure() for further details.
          *
          * If this property is indeed already known, future calls to
-         * findStrictAngleStructure() and hasStrictAngleStructure() will be
+         * strictAngleStructure() and hasStrictAngleStructure() will be
          * very fast (simply returning the precalculated solution).
          *
          * \warning This routine does not actually tell you \e whether
@@ -3255,9 +3291,22 @@ inline bool Triangulation<3>::knowsZeroEfficient() const {
     return zeroEfficient_.known();
 }
 
+inline NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
+    return nonTrivialSphereOrDisc();
+}
+
+inline NormalSurface* Triangulation<3>::hasOctagonalAlmostNormalSphere() {
+    return octagonalAlmostNormalSphere();
+}
+
+inline const AngleStructure* Triangulation<3>::findStrictAngleStructure()
+        const {
+    return strictAngleStructure();
+}
+
 inline bool Triangulation<3>::hasStrictAngleStructure() const {
     if (! strictAngleStructure_.known())
-        findStrictAngleStructure();
+        strictAngleStructure();
     return (strictAngleStructure_.value() != nullptr);
 }
 

@@ -69,7 +69,7 @@ namespace regina {
  * vertex link.
  */
 
-NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
+NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return nullptr;
@@ -133,7 +133,7 @@ NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
     return ans;
 }
 
-NormalSurface* Triangulation<3>::hasOctagonalAlmostNormalSphere() {
+NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
         return nullptr;
@@ -221,7 +221,7 @@ bool Triangulation<3>::isZeroEfficient() {
             // Operate on a clone of this triangulation, to avoid
             // changing the real packet tree.
             Triangulation<3> clone(*this, false);
-            NormalSurface* s = clone.hasNonTrivialSphereOrDisc();
+            NormalSurface* s = clone.nonTrivialSphereOrDisc();
             if (s) {
                 zeroEfficient_ = false;
                 delete s;

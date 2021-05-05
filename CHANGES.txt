@@ -200,6 +200,10 @@ Version 6.1  [ TODO ]
               C++ users who only ever used simplices(), faces(), etc. as a
               temporary (as was recommended) should be unaffected, and the
               Python behaviour of these functions is completely unchanged.
+            - Renamed findStrictAngleStructure(), hasNonTrivialSphereOrDisc()
+              and hasOctagonalAlmostNormalSphere() to strictAngleStructure(),
+              nonTrivialSphereOrDisc() and octagonalAlmostNormalSphere().
+              The old names are kept as deprecated aliases.
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
               regina::swap(Triangulation<dim>&, Triangulation<dim>&).

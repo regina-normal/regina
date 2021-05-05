@@ -89,7 +89,7 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
         processing->makeOrphan();
 
         // Find a normal 2-sphere to crush.
-        sphere = processing->hasNonTrivialSphereOrDisc();
+        sphere = processing->nonTrivialSphereOrDisc();
         if (sphere) {
             crushed = sphere->crush();
             delete sphere;
@@ -155,7 +155,7 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
                     // coordinates paper, we can restrict this search further
                     // to vertex octagonal almost normal surfaces in
                     // quadrilateral-octagonal space.
-                    sphere = processing->hasOctagonalAlmostNormalSphere();
+                    sphere = processing->octagonalAlmostNormalSphere();
                     if (sphere) {
                         // It's a 3-sphere.  Toss this component away.
                         delete sphere;
@@ -299,7 +299,7 @@ bool Triangulation<3>::isThreeSphere() const {
         processing->makeOrphan();
 
         // Find a normal 2-sphere to crush.
-        sphere = processing->hasNonTrivialSphereOrDisc();
+        sphere = processing->nonTrivialSphereOrDisc();
         if (sphere) {
             crushed = sphere->crush();
             delete sphere;
@@ -343,7 +343,7 @@ bool Triangulation<3>::isThreeSphere() const {
                 // coordinates paper, we can restrict this search further
                 // to vertex octagonal almost normal surfaces in
                 // quadrilateral-octagonal space.
-                sphere = processing->hasOctagonalAlmostNormalSphere();
+                sphere = processing->octagonalAlmostNormalSphere();
                 if (sphere) {
                     // It's a 3-sphere.  Toss this component away.
                     delete sphere;
@@ -471,7 +471,7 @@ bool Triangulation<3>::isSolidTorus() const {
         // INVARIANT: working is homeomorphic to our original manifold.
         if (working->countVertices() > 1) {
             // Try *really* hard to get to a 1-vertex triangulation,
-            // since this will make hasNonTrivialSphereOrDisc() much
+            // since this will make nonTrivialSphereOrDisc() much
             // faster (it will be able to use linear programming).
             working->intelligentSimplify();
             if (working->countVertices() > 1) {
@@ -482,7 +482,7 @@ bool Triangulation<3>::isSolidTorus() const {
         }
 
         // Find a non-trivial normal disc or sphere.
-        s = working->hasNonTrivialSphereOrDisc();
+        s = working->nonTrivialSphereOrDisc();
         if (! s) {
             // No non-trivial normal disc.  This cannot be a solid torus.
             delete working;
@@ -741,7 +741,7 @@ bool Triangulation<3>::isIrreducible() const {
         processing->makeOrphan();
 
         // Find a normal 2-sphere to crush.
-        sphere = processing->hasNonTrivialSphereOrDisc();
+        sphere = processing->nonTrivialSphereOrDisc();
         if (sphere) {
             crushed = sphere->crush();
             delete sphere;
@@ -785,7 +785,7 @@ bool Triangulation<3>::isIrreducible() const {
                 // coordinates paper, we can restrict this search further
                 // to vertex octagonal almost normal surfaces in
                 // quadrilateral-octagonal space.
-                sphere = processing->hasOctagonalAlmostNormalSphere();
+                sphere = processing->octagonalAlmostNormalSphere();
                 if (sphere) {
                     // It's a 3-sphere.  Toss this component away.
                     delete sphere;

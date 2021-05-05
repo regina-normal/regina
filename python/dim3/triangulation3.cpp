@@ -237,12 +237,19 @@ void addTriangulation3(pybind11::module_& m) {
         .def("isZeroEfficient", &Triangulation<3>::isZeroEfficient)
         .def("knowsZeroEfficient", &Triangulation<3>::knowsZeroEfficient)
         .def("hasSplittingSurface", &Triangulation<3>::hasSplittingSurface)
-        .def("hasNonTrivialSphereOrDisc",
-            &Triangulation<3>::hasNonTrivialSphereOrDisc)
-        .def("hasOctagonalAlmostNormalSphere",
-            &Triangulation<3>::hasOctagonalAlmostNormalSphere)
-        .def("findStrictAngleStructure",
-            &Triangulation<3>::findStrictAngleStructure,
+        .def("nonTrivialSphereOrDisc",
+            &Triangulation<3>::nonTrivialSphereOrDisc)
+        .def("hasNonTrivialSphereOrDisc", // deprecated
+            &Triangulation<3>::nonTrivialSphereOrDisc)
+        .def("octagonalAlmostNormalSphere",
+            &Triangulation<3>::octagonalAlmostNormalSphere)
+        .def("hasOctagonalAlmostNormalSphere", // deprecated
+            &Triangulation<3>::octagonalAlmostNormalSphere)
+        .def("strictAngleStructure",
+            &Triangulation<3>::strictAngleStructure,
+            pybind11::return_value_policy::reference_internal)
+        .def("findStrictAngleStructure", // deprecated
+            &Triangulation<3>::strictAngleStructure,
             pybind11::return_value_policy::reference_internal)
         .def("hasStrictAngleStructure",
             &Triangulation<3>::hasStrictAngleStructure)

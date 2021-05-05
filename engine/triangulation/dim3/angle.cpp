@@ -57,7 +57,7 @@ bool Triangulation<3>::knowsStrictAngleStructure() const {
     return strictAngleStructure_.known();
 }
 
-const AngleStructure* Triangulation<3>::findStrictAngleStructure() const {
+const AngleStructure* Triangulation<3>::strictAngleStructure() const {
     // The following test also catches any easy cases.
     if (knowsStrictAngleStructure())
         return strictAngleStructure_.value();
