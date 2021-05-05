@@ -102,6 +102,12 @@ Version 6.1  [ TODO ]
               As a result, Link now meets the C++ Swappable requirements.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
+        Class LPConstraintEuler, LPConstraintEulerPositive:
+            - LPConstraintEuler has been renamed to LPConstraintEulerPositive.
+              The old name is kept as a deprecated typedef.
+        Class LPConstraintEulerZero:
+            - New constraint to use with normal surface enumeration that
+              fixes Euler characteristic to be zero.
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.
@@ -215,6 +221,8 @@ Version 6.1  [ TODO ]
               a full triangluation.
         Class TrivialTri:
             - Class constants are now constexpr.
+        Class Vector:
+            - New operator !=.
         Class XMLCallback:
             - The state constants have now been rolled into a State enum type.
         Function allowsNonOrientableLinks(), allowsInvalidFaces():

@@ -43,11 +43,13 @@ template class LPMatrix<Integer>;
 template class LPMatrix<NNativeLong>;
 
 template class LPCol<LPConstraintNone>;
-template class LPCol<LPConstraintEuler>;
+template class LPCol<LPConstraintEulerPositive>;
+template class LPCol<LPConstraintEulerZero>;
 template class LPCol<LPConstraintNonSpun>;
 
 template class LPInitialTableaux<LPConstraintNone>;
-template class LPInitialTableaux<LPConstraintEuler>;
+template class LPInitialTableaux<LPConstraintEulerPositive>;
+template class LPInitialTableaux<LPConstraintEulerZero>;
 template class LPInitialTableaux<LPConstraintNonSpun>;
 
 template class LPData<LPConstraintNone, Integer>;
@@ -66,19 +68,35 @@ template void LPData<LPConstraintNone, NNativeLong>::
     extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 
-template class LPData<LPConstraintEuler, Integer>;
-template void LPData<LPConstraintEuler, Integer>::
+template class LPData<LPConstraintEulerPositive, Integer>;
+template void LPData<LPConstraintEulerPositive, Integer>::
     extractSolution<AngleStructureVector>(
     AngleStructureVector&, const char*) const;
-template void LPData<LPConstraintEuler, Integer>::
+template void LPData<LPConstraintEulerPositive, Integer>::
     extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 
-template class LPData<LPConstraintEuler, NNativeLong>;
-template void LPData<LPConstraintEuler, NNativeLong>::
+template class LPData<LPConstraintEulerPositive, NNativeLong>;
+template void LPData<LPConstraintEulerPositive, NNativeLong>::
     extractSolution<AngleStructureVector>(
     AngleStructureVector&, const char*) const;
-template void LPData<LPConstraintEuler, NNativeLong>::
+template void LPData<LPConstraintEulerPositive, NNativeLong>::
+    extractSolution<NormalSurfaceVector>(
+    NormalSurfaceVector&, const char*) const;
+
+template class LPData<LPConstraintEulerZero, Integer>;
+template void LPData<LPConstraintEulerZero, Integer>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+template void LPData<LPConstraintEulerZero, Integer>::
+    extractSolution<NormalSurfaceVector>(
+    NormalSurfaceVector&, const char*) const;
+
+template class LPData<LPConstraintEulerZero, NNativeLong>;
+template void LPData<LPConstraintEulerZero, NNativeLong>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+template void LPData<LPConstraintEulerZero, NNativeLong>::
     extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 
@@ -107,11 +125,19 @@ template void LPData<LPConstraintNone, NativeInteger<16>>::
     extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 
-template class LPData<LPConstraintEuler, NativeInteger<16>>;
-template void LPData<LPConstraintEuler, NativeInteger<16>>::
+template class LPData<LPConstraintEulerPositive, NativeInteger<16>>;
+template void LPData<LPConstraintEulerPositive, NativeInteger<16>>::
     extractSolution<AngleStructureVector>(
     AngleStructureVector&, const char*) const;
-template void LPData<LPConstraintEuler, NativeInteger<16>>::
+template void LPData<LPConstraintEulerPositive, NativeInteger<16>>::
+    extractSolution<NormalSurfaceVector>(
+    NormalSurfaceVector&, const char*) const;
+
+template class LPData<LPConstraintEulerZero, NativeInteger<16>>;
+template void LPData<LPConstraintEulerZero, NativeInteger<16>>::
+    extractSolution<AngleStructureVector>(
+    AngleStructureVector&, const char*) const;
+template void LPData<LPConstraintEulerZero, NativeInteger<16>>::
     extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 

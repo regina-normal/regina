@@ -1351,7 +1351,7 @@ namespace {
 
             // Information specific to each thread:
             Triangulation<3>* t_[2];
-            TreeSingleSoln<LPConstraintEuler, BanNone>* currSearch_[2];
+            TreeSingleSoln<LPConstraintEulerPositive, BanNone>* currSearch_[2];
             std::mutex searchMutex_[2];
 
         public:
@@ -1452,8 +1452,8 @@ namespace {
                         return;
                     }
 
-                    TreeSingleSoln<LPConstraintEuler, BanNone> search(t_[side],
-                        NS_STANDARD);
+                    TreeSingleSoln<LPConstraintEulerPositive, BanNone> search(
+                        t_[side], NS_STANDARD);
                     {
                         std::lock_guard<std::mutex> lock(searchMutex_[side]);
                         currSearch_[side] = &search;

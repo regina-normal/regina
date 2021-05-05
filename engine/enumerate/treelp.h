@@ -1447,11 +1447,11 @@ extern template class REGINA_API LPMatrix<Integer>;
 extern template class REGINA_API LPMatrix<NNativeLong>;
 
 extern template struct REGINA_API LPCol<LPConstraintNone>;
-extern template struct REGINA_API LPCol<LPConstraintEuler>;
+extern template struct REGINA_API LPCol<LPConstraintEulerPositive>;
 extern template struct REGINA_API LPCol<LPConstraintNonSpun>;
 
 extern template class REGINA_API LPInitialTableaux<LPConstraintNone>;
-extern template class REGINA_API LPInitialTableaux<LPConstraintEuler>;
+extern template class REGINA_API LPInitialTableaux<LPConstraintEulerPositive>;
 extern template class REGINA_API LPInitialTableaux<LPConstraintNonSpun>;
 
 extern template class REGINA_API LPData<LPConstraintNone, Integer>;
@@ -1470,19 +1470,19 @@ extern template REGINA_API void LPData<LPConstraintNone, NNativeLong>::
     extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 
-extern template class REGINA_API LPData<LPConstraintEuler, Integer>;
-extern template REGINA_API void LPData<LPConstraintEuler, Integer>::
+extern template class REGINA_API LPData<LPConstraintEulerPositive, Integer>;
+extern template REGINA_API void LPData<LPConstraintEulerPositive, Integer>::
     extractSolution<AngleStructureVector>(
     AngleStructureVector&, const char*) const;
-extern template REGINA_API void LPData<LPConstraintEuler, Integer>::
+extern template REGINA_API void LPData<LPConstraintEulerPositive, Integer>::
     extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 
-extern template class REGINA_API LPData<LPConstraintEuler, NNativeLong>;
-extern template REGINA_API void LPData<LPConstraintEuler, NNativeLong>::
+extern template class REGINA_API LPData<LPConstraintEulerPositive, NNativeLong>;
+extern template REGINA_API void LPData<LPConstraintEulerPositive, NNativeLong>::
     extractSolution<AngleStructureVector>(
     AngleStructureVector&, const char*) const;
-extern template REGINA_API void LPData<LPConstraintEuler, NNativeLong>::
+extern template REGINA_API void LPData<LPConstraintEulerPositive, NNativeLong>::
     extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 
@@ -1511,12 +1511,13 @@ extern template REGINA_API void REGINA_API LPData<LPConstraintNone, NativeIntege
     extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 
-extern template class REGINA_API LPData<LPConstraintEuler, NativeInteger<16>>;
-extern template REGINA_API void LPData<LPConstraintEuler, NativeInteger<16>>::
-    extractSolution<AngleStructureVector>(
+extern template class REGINA_API LPData<LPConstraintEulerPositive,
+    NativeInteger<16>>;
+extern template REGINA_API void LPData<LPConstraintEulerPositive,
+    NativeInteger<16>>::extractSolution<AngleStructureVector>(
     AngleStructureVector&, const char*) const;
-extern template REGINA_API void LPData<LPConstraintEuler, NativeInteger<16>>::
-    extractSolution<NormalSurfaceVector>(
+extern template REGINA_API void LPData<LPConstraintEulerPositive,
+    NativeInteger<16>>::extractSolution<NormalSurfaceVector>(
     NormalSurfaceVector&, const char*) const;
 
 extern template class REGINA_API LPData<LPConstraintNonSpun, NativeInteger<16>>;

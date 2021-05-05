@@ -36,8 +36,44 @@
 
 namespace regina {
 
-bool LPConstraintEuler::addRows(
-        LPCol<regina::LPConstraintEuler>* col,
+bool LPConstraintEulerPositive::addRows(
+        LPCol<regina::LPConstraintEulerPositive>* col,
+        const int* columnPerm, const Triangulation<3>* tri) {
+    int* obj = new int[7 * tri->size()];
+    unsigned tet, i;
+    Perm<4> p;
+    for (i = 0; i < 7 * tri->size(); ++i)
+        obj[i] = 1;
+    for (i = 0; i < tri->countTriangles(); ++i) {
+        tet = tri->triangle(i)->front().tetrahedron()->index();
+        p = tri->triangle(i)->front().vertices();
+        --obj[7 * tet + p[0]];
+        --obj[7 * tet + p[1]];
+        --obj[7 * tet + p[2]];
+        --obj[7 * tet + 4];
+        --obj[7 * tet + 5];
+        --obj[7 * tet + 6];
+    }
+    for (i = 0; i < tri->countEdges(); ++i) {
+        tet = tri->edge(i)->front().tetrahedron()->index();
+        p = tri->edge(i)->front().vertices();
+        ++obj[7 * tet + p[0]];
+        ++obj[7 * tet + p[1]];
+        ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][0]];
+        ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][1]];
+    }
+
+    for (i = 0; i < 7 * tri->size(); ++i)
+        col[i].euler = obj[columnPerm[i]];
+
+    col[7 * tri->size()].euler = -1;
+
+    delete[] obj;
+    return true;
+}
+
+bool LPConstraintEulerZero::addRows(
+        LPCol<regina::LPConstraintEulerZero>* col,
         const int* columnPerm, const Triangulation<3>* tri) {
     int* obj = new int[7 * tri->size()];
     unsigned tet, i;

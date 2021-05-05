@@ -907,7 +907,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
                 }
             }
 
-            TreeSingleSoln<LPConstraintEuler> search(use, NS_STANDARD);
+            TreeSingleSoln<LPConstraintEulerPositive> search(use, NS_STANDARD);
             if (! search.find()) {
                 // No compressing discs!
                 delete use;

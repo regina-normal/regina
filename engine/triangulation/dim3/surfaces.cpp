@@ -81,7 +81,7 @@ NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
     // Use combinatorial optimisation if we can.
     if (isValid() && countVertices() == 1) {
         // For now, just use the safe arbitrary-precision Integer type.
-        TreeSingleSoln<LPConstraintEuler> tree(this, NS_STANDARD);
+        TreeSingleSoln<LPConstraintEulerPositive> tree(this, NS_STANDARD);
         if (tree.find()) {
             NormalSurface* s = tree.buildSurface();
             if (! ((! s->hasRealBoundary()) &&
@@ -144,7 +144,7 @@ NormalSurface* Triangulation<3>::hasOctagonalAlmostNormalSphere() {
     // ones we need to be more fussy about.
     if (countVertices() == 1) {
         // For now, just use the safe arbitrary-precision Integer type.
-        TreeSingleSoln<LPConstraintEuler> tree(this, NS_AN_STANDARD);
+        TreeSingleSoln<LPConstraintEulerPositive> tree(this, NS_AN_STANDARD);
         if (tree.find()) {
             // Since our preconditions ensure the triangulation is
             // closed, orientable and 0-efficient, there are no

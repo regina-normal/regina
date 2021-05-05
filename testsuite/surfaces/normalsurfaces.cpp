@@ -33,6 +33,7 @@
 #include <algorithm>
 #include <cppunit/extensions/HelperMacros.h>
 #include <memory>
+#include "enumerate/treetraversal.h"
 #include "packet/container.h"
 #include "split/signature.h"
 #include "surfaces/normalsurfaces.h"
@@ -125,6 +126,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(treeVsDDCensus<NS_AN_STANDARD>);
     CPPUNIT_TEST(treeVsDDCensus<NS_QUAD_CLOSED>);
     CPPUNIT_TEST(treeVsDDCensus<NS_AN_QUAD_OCT_CLOSED>);
+    CPPUNIT_TEST(eulerZero);
     CPPUNIT_TEST(fundPrimalVsDual<NS_QUAD>);
     CPPUNIT_TEST(fundPrimalVsDual<NS_STANDARD>);
     CPPUNIT_TEST(fundPrimalVsDual<NS_AN_QUAD_OCT>);
@@ -494,7 +496,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             bool ok = true;
             for (i = 0; i < n; ++i)
-                if (! (*(lhsRaw[i]) == *(rhsRaw[i]))) {
+                if (*(lhsRaw[i]) != *(rhsRaw[i])) {
                     ok = false;
                     break;
                 }
@@ -1784,6 +1786,85 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             runCensusAllClosed(verifyTreeVsDD<coords>);
             runCensusAllBounded(verifyTreeVsDD<coords>);
             runCensusAllIdeal(verifyTreeVsDD<coords>);
+        }
+
+        void verifyEulerZeroNoPositive(Triangulation<3>& tri) {
+            // Preconditions for tree traversal:
+            if (tri.isEmpty()) {
+                std::ostringstream msg;
+                msg << "Chi=0: triangulation is empty: " << tri.label();
+                CPPUNIT_FAIL(msg.str());
+            }
+
+            // Collect all vertex surfaces with the chi=0 constraint.
+            std::vector<Ray*> eulerZero;
+            regina::TreeEnumeration<regina::LPConstraintEulerZero> tree(
+                &tri, NS_STANDARD);
+            while (tree.next()) {
+                NormalSurface* s = tree.buildSurface();
+                if (s->eulerChar() != 0) {
+                    std::ostringstream msg;
+                    msg << "Chi=0: custom list contains a surface with "
+                        "chi = " << s->eulerChar() << ": " << tri.label();
+                    CPPUNIT_FAIL(msg.str());
+                }
+                eulerZero.push_back(new Ray(s->rawVector()));
+                delete s;
+            }
+
+            // Collect *all* vertex surfaces in the normal way, and extract
+            // only those with chi=0.
+            std::vector<const Ray*> filtered;
+            NormalSurfaces* all = NormalSurfaces::enumerate(&tri, NS_STANDARD);
+            for (size_t i = 0; i < all->size(); ++i) {
+                const NormalSurface* s = all->surface(i);
+                if (s->eulerChar() == 0)
+                    filtered.push_back(&s->rawVector());
+            }
+
+            // Ensure that every vertex surface with chi=0 was picked up
+            // in our custom list.
+
+            std::sort(eulerZero.begin(), eulerZero.end(), lexLess);
+            std::sort(filtered.begin(), filtered.end(), lexLess);
+
+            auto customIt = eulerZero.begin();
+            auto allIt = filtered.begin();
+
+            while (allIt != filtered.end()) {
+                // We are looking for *allIt in our custom list.
+                if (customIt == eulerZero.end()) {
+                    std::ostringstream msg;
+                    msg << "Chi=0: custom list is missing a vertex surface: "
+                        << tri.label();
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (**customIt == **allIt) {
+                    ++customIt;
+                    ++allIt;
+                    continue;
+                }
+                // Assume *customIt is one of the extra (non-vertex) surfaces
+                // that we picked up by adding chi=0 as a new constraint.
+                ++customIt;
+            }
+
+            for (auto ray : eulerZero)
+                delete ray;
+            delete all;
+        }
+
+        void eulerZero() {
+            verifyEulerZeroNoPositive(oneTet);
+            verifyEulerZeroNoPositive(figure8);
+            verifyEulerZeroNoPositive(gieseking);
+            verifyEulerZeroNoPositive(S3);
+            verifyEulerZeroNoPositive(loopC2);
+            verifyEulerZeroNoPositive(loopCtw3);
+            verifyEulerZeroNoPositive(largeS3);
+            verifyEulerZeroNoPositive(largeRP3);
+            verifyEulerZeroNoPositive(twistedKxI);
+            verifyEulerZeroNoPositive(norSFS);
         }
 
         template <regina::NormalCoords coords>

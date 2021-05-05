@@ -247,7 +247,11 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         // Use exactly the same ordering of quadrilaterals that we
         // use in quadrilateral coordinates, and then just fill
         // in the triangles at the end.
-        LPInitialTableaux quad(tri_, NS_QUAD, true /* enumeration */);
+        //
+        // We remove our extra constraints here, since some constraints might
+        // not be offered in quad coordinates.
+        LPInitialTableaux<LPConstraintNone> quad(tri_, NS_QUAD,
+            true /* enumeration */);
         for (i = 0; i < n; ++i) {
             k = quad.columnPerm()[3 * i] / 3;
             columnPerm_[3 * i] = 7 * k + 4;

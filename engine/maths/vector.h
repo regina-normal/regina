@@ -193,13 +193,25 @@ class Vector {
          * Determines if this vector is equal to the given vector.
          *
          * \pre This and the given vector have the same size.
-         * 
+         *
          * @param compare the vector with which this will be compared.
          * @return \c true if and only if the this and the given vector
          * are equal.
          */
         inline bool operator == (const Vector<T>& compare) const {
             return std::equal(elements, end, compare.elements);
+        }
+        /**
+         * Determines if this vector is different from the given vector.
+         *
+         * \pre This and the given vector have the same size.
+         *
+         * @param compare the vector with which this will be compared.
+         * @return \c true if and only if the this and the given vector
+         * are not equal.
+         */
+        inline bool operator != (const Vector<T>& compare) const {
+            return ! std::equal(elements, end, compare.elements);
         }
         /**
          * Sets this vector equal to the given vector.

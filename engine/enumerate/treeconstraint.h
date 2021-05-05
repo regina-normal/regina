@@ -442,7 +442,7 @@ class LPConstraintNone : public LPConstraintSubspace {
  *
  * \ifacespython Not present.
  */
-class LPConstraintEuler : public LPConstraintBase {
+class LPConstraintEulerPositive : public LPConstraintBase {
     public:
         enum { nConstraints = 1 };
 
@@ -470,11 +470,80 @@ class LPConstraintEuler : public LPConstraintBase {
         };
 
         static bool addRows(
-            LPCol<regina::LPConstraintEuler>* col,
+            LPCol<regina::LPConstraintEulerPositive>* col,
             const int* columnPerm, const Triangulation<3>* tri);
         template<typename IntType>
         static void constrain(
-            LPData<regina::LPConstraintEuler, IntType>& lp,
+            LPData<regina::LPConstraintEulerPositive, IntType>& lp,
+            unsigned numCols);
+        static bool verify(const NormalSurface* s);
+        static bool verify(const AngleStructure*);
+        static bool supported(NormalCoords coords);
+};
+
+/**
+ * A deprecated typedef for LPConstraintEulerPositive.
+ *
+ * The old name LPConstraintEuler should no longer be used, since Regina
+ * now provides multiple constraint types relating to Euler characteristic.
+ */
+typedef LPConstraintEulerPositive LPConstraintEuler [[deprecated]];
+
+/**
+ * A class that constraints the tableaux of normal surface matching equations
+ * to ensure that Euler characteristic is zero.
+ *
+ * There are many ways of writing Euler characteritic as a linear
+ * function.  The function constructed here has integer coefficients,
+ * but otherwise has no special properties of note.
+ *
+ * This constraint currently only works with normal (and \e not almost normal)
+ * coordinates.
+ *
+ * See the LPConstraintBase class notes for details on all member
+ * functions and structs.
+ *
+ * \pre We are working in standard normal coordinates (not quadrilateral
+ * coordinates).  In particular, the coordinate system passed to the
+ * corresponding LPInitialTableaux class constructor must be NS_STANDARD.
+ *
+ * \apinotfinal
+ *
+ * \ifacespython Not present.
+ */
+class LPConstraintEulerZero : public LPConstraintSubspace {
+    public:
+        enum { nConstraints = 1 };
+
+        /**
+         * Stores the extra coefficients in the tableaux associated with this
+         * constraint class (in this case, one extra integer per column).
+         *
+         * See the LPConstraintBase::Coefficients notes for further details.
+         */
+        struct Coefficients {
+            int euler;
+                /**< The coefficient of the Euler characteristic
+                     function for the corresponding column of the matching
+                     equation matrix. */
+
+            Coefficients();
+            template<typename IntType>
+            void fillFinalRows(LPMatrix<IntType>& m, unsigned col) const;
+            template<typename IntType>
+            IntType innerProduct(const LPMatrix<IntType>& m,
+                    unsigned mRow) const;
+            template<typename IntType>
+            IntType innerProductOct(const LPMatrix<IntType>& m,
+                    unsigned mRow) const;
+        };
+
+        static bool addRows(
+            LPCol<regina::LPConstraintEulerZero>* col,
+            const int* columnPerm, const Triangulation<3>* tri);
+        template<typename IntType>
+        static void constrain(
+            LPData<regina::LPConstraintEulerZero, IntType>& lp,
             unsigned numCols);
         static bool verify(const NormalSurface* s);
         static bool verify(const AngleStructure*);
@@ -887,16 +956,16 @@ inline bool LPConstraintNone::supported(NormalCoords) {
     return true;
 }
 
-inline LPConstraintEuler::Coefficients::Coefficients() : euler(0) {}
+inline LPConstraintEulerPositive::Coefficients::Coefficients() : euler(0) {}
 
 template <typename IntType>
-inline void LPConstraintEuler::Coefficients::fillFinalRows(
+inline void LPConstraintEulerPositive::Coefficients::fillFinalRows(
         LPMatrix<IntType>& m, unsigned col) const {
     m.entry(m.rows() - 1, col) = euler;
 }
 
 template <typename IntType>
-inline IntType LPConstraintEuler::Coefficients::innerProduct(
+inline IntType LPConstraintEulerPositive::Coefficients::innerProduct(
         const LPMatrix<IntType>& m, unsigned mRow) const {
     IntType ans(m.entry(mRow, m.rows() - 1));
     ans *= euler;
@@ -904,7 +973,7 @@ inline IntType LPConstraintEuler::Coefficients::innerProduct(
 }
 
 template <typename IntType>
-inline IntType LPConstraintEuler::Coefficients::innerProductOct(
+inline IntType LPConstraintEulerPositive::Coefficients::innerProductOct(
         const LPMatrix<IntType>& m, unsigned mRow) const {
     // This is called for *two* quad columns (the two quads
     // that combine to give a single octagon).
@@ -924,21 +993,65 @@ inline IntType LPConstraintEuler::Coefficients::innerProductOct(
 }
 
 template <typename IntType>
-inline void LPConstraintEuler::constrain(
-        LPData<regina::LPConstraintEuler, IntType>& lp, unsigned numCols) {
+inline void LPConstraintEulerPositive::constrain(
+        LPData<regina::LPConstraintEulerPositive, IntType>& lp,
+        unsigned numCols) {
     lp.constrainPositive(numCols - 1);
 }
 
-inline bool LPConstraintEuler::verify(const NormalSurface* s) {
+inline bool LPConstraintEulerPositive::verify(const NormalSurface* s) {
     return (s->eulerChar() > 0);
 }
 
-inline bool LPConstraintEuler::verify(const AngleStructure*) {
+inline bool LPConstraintEulerPositive::verify(const AngleStructure*) {
     return false;
 }
 
-inline bool LPConstraintEuler::supported(NormalCoords coords) {
+inline bool LPConstraintEulerPositive::supported(NormalCoords coords) {
     return (coords == NS_STANDARD || coords == NS_AN_STANDARD);
+}
+
+inline LPConstraintEulerZero::Coefficients::Coefficients() : euler(0) {}
+
+template <typename IntType>
+inline void LPConstraintEulerZero::Coefficients::fillFinalRows(
+        LPMatrix<IntType>& m, unsigned col) const {
+    m.entry(m.rows() - 1, col) = euler;
+}
+
+template <typename IntType>
+inline IntType LPConstraintEulerZero::Coefficients::innerProduct(
+        const LPMatrix<IntType>& m, unsigned mRow) const {
+    IntType ans(m.entry(mRow, m.rows() - 1));
+    ans *= euler;
+    return ans;
+}
+
+template <typename IntType>
+inline IntType LPConstraintEulerZero::Coefficients::innerProductOct(
+        const LPMatrix<IntType>& m, unsigned mRow) const {
+    // This should never be called, since we never use this
+    // constraint with almost normal surfaces.
+    // For compilation's sake though, just return the usual inner product.
+    return innerProduct(m, mRow);
+}
+
+template <typename IntType>
+inline void LPConstraintEulerZero::constrain(
+        LPData<regina::LPConstraintEulerZero, IntType>& lp, unsigned numCols) {
+    lp.constrainZero(numCols - 1);
+}
+
+inline bool LPConstraintEulerZero::verify(const NormalSurface* s) {
+    return (s->eulerChar() == 0);
+}
+
+inline bool LPConstraintEulerZero::verify(const AngleStructure*) {
+    return false;
+}
+
+inline bool LPConstraintEulerZero::supported(NormalCoords coords) {
+    return (coords == NS_STANDARD);
 }
 
 inline LPConstraintNonSpun::Coefficients::Coefficients() :

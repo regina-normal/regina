@@ -1205,7 +1205,7 @@ class TautEnumeration :
  * combination of the template arguments LPConstraint and BanConstraint.
  *
  * A common application of this algorithm is to find a surface of positive
- * Euler characteristic, using the template argument LPConstraintEuler.
+ * Euler characteristic, using the template argument LPConstraintEulerPositive.
  * This is useful for tasks such as 0-efficiency testing
  * and prime decomposition (when this is done in standard normal coordinates),
  * and also 3-sphere recognition (when this is done in standard almost normal
@@ -1227,8 +1227,8 @@ class TautEnumeration :
  * that coordinate to zero before it tries setting it to non-zero.  In
  * other words, if it does find a surface satisfying the given constraints,
  * then it is guaranteed that the set of non-zero coordinate positions
- * will be minimal (though not necessary a global \e minimum).
- * In many settings (such as when using LPConstraintEuler), this guarantees
+ * will be minimal (though not necessary a global \e minimum).  In many
+ * settings (such as when using LPConstraintEulerPositive), this guarantees
  * that the final surface (if it exists) will be a vertex normal or
  * almost normal surface.
  *
@@ -1428,14 +1428,14 @@ extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
 extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
     NNativeLong>;
 
-extern template class REGINA_API TreeTraversal<LPConstraintEuler, BanNone,
-    Integer>;
-extern template class REGINA_API TreeTraversal<LPConstraintEuler, BanNone,
-    NNativeLong>;
-extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
-    Integer>;
-extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
-    NNativeLong>;
+extern template class REGINA_API TreeTraversal<LPConstraintEulerPositive,
+    BanNone, Integer>;
+extern template class REGINA_API TreeTraversal<LPConstraintEulerPositive,
+    BanNone, NNativeLong>;
+extern template class REGINA_API TreeSingleSoln<LPConstraintEulerPositive,
+    BanNone, Integer>;
+extern template class REGINA_API TreeSingleSoln<LPConstraintEulerPositive,
+    BanNone, NNativeLong>;
 
 #ifdef INT128_AVAILABLE
 extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
@@ -1445,10 +1445,10 @@ extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
 extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
     NativeInteger<16> >;
 
-extern template class REGINA_API TreeTraversal<LPConstraintEuler, BanNone,
-    NativeInteger<16> >;
-extern template class REGINA_API TreeSingleSoln<LPConstraintEuler, BanNone,
-    NativeInteger<16> >;
+extern template class REGINA_API TreeTraversal<LPConstraintEulerPositive,
+    BanNone, NativeInteger<16> >;
+extern template class REGINA_API TreeSingleSoln<LPConstraintEulerPositive,
+    BanNone, NativeInteger<16> >;
 #endif
 
 

@@ -148,7 +148,7 @@ int main(int argc, char* argv[]) {
                     delete eqns;
                 }
             } else {
-                TreeSingleSoln<LPConstraintEuler>
+                TreeSingleSoln<LPConstraintEulerPositive>
                     search(t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
                 if (search.constraintsBroken())
                     std::cerr << "ERROR: Constraints broken." << std::endl;
