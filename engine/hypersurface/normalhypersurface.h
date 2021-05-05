@@ -321,7 +321,7 @@ class REGINA_API NormalHypersurfaceVector {
          *
          * @param triang the triangulation in which this normal hypersurface
          * lives.
-         * @return the vertex linked by this hypersurface, or 0 if this
+         * @return the vertex linked by this hypersurface, or \c null if this
          * hypersurface is not the link of a single vertex.
          */
         virtual const Vertex<4>* isVertexLink(const Triangulation<4>* triang)
@@ -337,7 +337,7 @@ class REGINA_API NormalHypersurfaceVector {
          *
          * @param triang the triangulation in which this normal hypersurface
          * lives.
-         * @return the edge linked by this hypersurface, or 0 if this
+         * @return the edge linked by this hypersurface, or \c null if this
          * hypersurface is not a thin edge link.
          */
         virtual const Edge<4>* isThinEdgeLink(const Triangulation<4>* triang)
@@ -780,7 +780,7 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \todo \opt Cache results.
          *
-         * @return the vertex linked by this hypersurface, or 0 if this
+         * @return the vertex linked by this hypersurface, or \c null if this
          * hypersurface is not the link of a single vertex.
          */
         const Vertex<4>* isVertexLink() const;
@@ -794,7 +794,7 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * \todo \opt Cache results.
          *
-         * @return the edge linked by this hypersurface, or 0 if this
+         * @return the edge linked by this hypersurface, or \c null if this
          * hypersurface is not a thin edge link.
          */
         const Edge<4>* isThinEdgeLink() const;
@@ -839,7 +839,7 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * destroying it is the responsibility of the caller of this routine.
          *
          * \todo \prob Check for absurdly large numbers of pieces and
-         * return 0 accordingly.
+         * return \c null accordingly.
          *
          * \pre This normal hypersurface is compact and embedded.
          *
