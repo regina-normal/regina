@@ -39,6 +39,7 @@
 #define __MATRIX_H
 #endif
 
+#include <initializer_list>
 #include <iostream>
 #include <memory>
 #include <type_traits> // for std::enable_if_t
@@ -218,9 +219,40 @@ class Matrix : public Output<Matrix<T>> {
          * @param cols the number of columns in the new matrix.
          */
         Matrix(unsigned long rows, unsigned long cols) :
-                rows_(rows), cols_(cols), data_(new T*[rows]){
+                rows_(rows), cols_(cols), data_(new T*[rows]) {
             for (unsigned long i = 0; i < rows; i++)
                 data_[i] = new T[cols];
+        }
+        /**
+         * Creates a new matrix containing the given hard-coded entries.
+         * This constructor can be used (for example) to create
+         * hard-coded examples directly in C++ code.
+         *
+         * Each element of the initialiser list \a data describes a single row
+         * of the matrix.
+         *
+         * \pre The list \a data is non-empty (i.e., the number of rows
+         * is positive), and each of its elements is non-empty (i.e., the
+         * number of columns is positive).
+         *
+         * \pre All elements of \a data (representing the rows of the matrix)
+         * are lists of the same size.
+         *
+         * \ifacespython Not available.
+         *
+         * @param data the rows of the matrix, each given as a list of elements.
+         */
+        Matrix(std::initializer_list<std::initializer_list<T>> data) :
+                rows_(data.size()), cols_(data.begin()->size()),
+                data_(new T*[data.size()]) {
+            unsigned long r = 0;
+            for (auto row : data) {
+                data_[r] = new T[cols_];
+                unsigned long c = 0;
+                for (auto elt : row)
+                    data_[r][c++] = elt;
+                ++r;
+            }
         }
         /**
          * Creates a new matrix that is a clone of the given matrix.

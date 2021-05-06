@@ -93,39 +93,26 @@ class MatrixOpsTest : public CppUnit::TestFixture {
             zero43.initialise(0L);
             identity3.makeIdentity();
 
-            square3.entry(0, 0) = 2;   square3.entry(0, 1) = 4;
-            square3.entry(0, 2) = 4;
-            square3.entry(1, 0) = -6;  square3.entry(1, 1) = 6;
-            square3.entry(1, 2) = 12;
-            square3.entry(2, 0) = 10;  square3.entry(2, 1) = -4;
-            square3.entry(2, 2) = -16;
+            square3 = MatrixInt {{ 2, 4, 4 },
+                                 { -6, 6, 12 },
+                                 { 10, -4, -16 }};
 
-            rect34.entry(0, 0) = 4;  rect34.entry(0, 1) = -17;
-            rect34.entry(0, 2) = 0L; rect34.entry(0, 3) = 6;
-            rect34.entry(1, 0) = -2; rect34.entry(1, 1) = 4;
-            rect34.entry(1, 2) = 9;  rect34.entry(1, 3) = 0L;
-            rect34.entry(2, 0) = 6;  rect34.entry(2, 1) = -3;
-            rect34.entry(2, 2) = -2; rect34.entry(2, 3) = 10;
+            rect34 = MatrixInt {{ 4, -17, 0, 6 },
+                                { -2, 4, 9, 0 },
+                                { 6, -3, -2, 10 }};
 
             int i;
             for (i = 0; i < 12; ++i)
                 rect43.entry(i / 3, i % 3) = rect34.entry(i / 4, i % 4);
 
-            red43.entry(0, 0) = 3;  red43.entry(0, 1) = 1;
-            red43.entry(0, 2) = 2;
-            red43.entry(1, 0) = 8;  red43.entry(1, 1) = 4;
-            red43.entry(1, 2) = 8;
-            red43.entry(2, 0) = 11; red43.entry(2, 1) = 5;
-            red43.entry(2, 2) = 10;
-            red43.entry(3, 0) = -5; red43.entry(3, 1) = -3;
-            red43.entry(3, 2) = -6;
+            red43 = MatrixInt {{ 3, 1, 2 },
+                               { 8, 4, 8 },
+                               { 11, 5, 10 },
+                               { -5, -3, -6 }};
 
-            dup34.entry(0, 0) = 1;  dup34.entry(0, 1) = 1;
-            dup34.entry(0, 2) = 1;  dup34.entry(0, 3) = 1;
-            dup34.entry(1, 0) = 0L; dup34.entry(1, 1) = 0L;
-            dup34.entry(1, 2) = 2;  dup34.entry(1, 3) = 3;
-            dup34.entry(2, 0) = 0L; dup34.entry(2, 1) = 0L;
-            dup34.entry(2, 2) = 3;  dup34.entry(2, 3) = 5;
+            dup34 = MatrixInt {{ 1, 1, 1, 1 },
+                               { 0, 0, 2, 3 },
+                               { 0, 0, 3, 5 }};
 
             for (i = 0; i < 12; ++i)
                 dup43.entry(i / 3, i % 3) = dup34.entry(i % 3, i / 3);

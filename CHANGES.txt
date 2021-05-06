@@ -116,6 +116,8 @@ Version 6.1  [ TODO ]
             - New routine transpose().
             - New routines rowEchelonForm() and columnEchelonForm() for
               matrices over Regina's integer types (including MatrixInt).
+            - New constructor that takes a hard-coded list of entries
+              via a C++11 initialiser list.
         Class ModelLinkGraph:
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
