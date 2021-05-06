@@ -159,8 +159,8 @@ REGINA_API void smithNormalForm(MatrixInt& matrix,
  * \author Ryan Budney
  */
 REGINA_API void metricalSmithNormalForm(MatrixInt& matrix,
-        MatrixInt *rowSpaceBasis=0, MatrixInt *rowSpaceBasisInv=0,
-        MatrixInt *colSpaceBasis=0, MatrixInt *colSpaceBasisInv=0);
+        MatrixInt *rowSpaceBasis=nullptr, MatrixInt *rowSpaceBasisInv=nullptr,
+        MatrixInt *colSpaceBasis=nullptr, MatrixInt *colSpaceBasisInv=nullptr);
 
 /**
  * Find a basis for the row space of the given matrix.
