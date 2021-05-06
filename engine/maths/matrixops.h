@@ -220,7 +220,7 @@ REGINA_API unsigned rowBasisAndOrthComp(MatrixInt& input,
 
 /**
  * Transforms a given matrix into column echelon form with respect to a
- * collection of rows.
+ * collection of rows.  The transformation will perform only column operations.
  *
  * Given the matrix \a M and the list \a rowList of rows from \a M, this
  * algorithm puts \a M in column echelon form with respect to the rows
@@ -257,6 +257,11 @@ REGINA_API unsigned rowBasisAndOrthComp(MatrixInt& input,
  * In a pinch, you can also use this routine to compute the inverse of an
  * invertible square matrix.
  *
+ * If you just wish to reduce the matrix, you do not care about the order of
+ * rows, and you do not want the change-of-basis matrices, then you should
+ * call MatrixInt::columnEchelonForm() instead, which is simpler but also more
+ * streamlined.
+ *
  * \pre Both \a R and \a Ri are square matrices with side length M.columns(),
  * and these matrices are inverses of each other.
  *
@@ -268,7 +273,8 @@ REGINA_API unsigned rowBasisAndOrthComp(MatrixInt& input,
  * @param rowList the rows to pay attention to.  This list must contain
  * distinct integers, all between 0 and M.rows()-1 inclusive.  The
  * integers may appear in any order (though changing the order will
- * change the resulting column echelon form).
+ * change the resulting column echelon form).  For a "classical" column
+ * echelon form, this would be the list of all rows: 0,...,(M.rows()-1).
  *
  * \author Ryan Budney
  */

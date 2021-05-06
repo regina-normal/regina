@@ -112,6 +112,10 @@ Version 6.1  [ TODO ]
             - New convenience routine clear_destructive().
             - New typedef value_type.
             - New global swap() routine, which will be used by std::swap().
+        Class Matrix:
+            - New routine transpose().
+            - New routines rowEchelonForm() and columnEchelonForm() for
+              matrices over Regina's integer types (including MatrixInt).
         Class ModelLinkGraph:
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global

@@ -72,6 +72,7 @@ void addMatrixInt(pybind11::module_& m) {
                 const regina::Integer& value){
             m.entry(row, col) = value;
         })
+        .def("transpose", &MatrixInt::transpose)
         // The C-style casts below are to avoid a compile error under gcc7
         // (but not gcc8), where the compiler cannot determine the type of a
         // template member function.
@@ -128,6 +129,12 @@ void addMatrixInt(pybind11::module_& m) {
         .def("reduceCol",
             (void (MatrixInt::*)(unsigned long))
             &MatrixInt::reduceCol<>)
+        .def("rowEchelonForm",
+            (unsigned long (MatrixInt::*)())
+            &MatrixInt::rowEchelonForm)
+        .def("columnEchelonForm",
+            (unsigned long (MatrixInt::*)())
+            &MatrixInt::columnEchelonForm)
         .def("__mul__", [](const MatrixInt& m1, const MatrixInt& m2){
             return m1 * m2;
         })

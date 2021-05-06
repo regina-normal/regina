@@ -399,6 +399,22 @@ class Matrix : public Output<Matrix<T>> {
         }
 
         /**
+         * Returns the transpose of this matrix.  This matrix is not changed.
+         *
+         * @return the transpose.
+         */
+        Matrix<T> transpose() const {
+            Matrix<T> ans(cols_, rows_);
+
+            unsigned long r, c;
+            for (r = 0; r < rows_; r++)
+                for (c = 0; c < cols_; c++)
+                    ans.data_[c][r] = data_[r][c];
+
+            return ans;
+        }
+
+        /**
          * Determines whether this and the given matrix are identical.
          *
          * Two matrices are identical if and only if (i) their dimensions
@@ -961,6 +977,186 @@ class Matrix : public Output<Matrix<T>> {
             T gcd = gcdCol(col);
             if (gcd != 0 && gcd != 1)
                 divColExact(col, gcd);
+        }
+
+        /**
+         * Transforms this matrix into row echelon form.  The transformation
+         * will perform only row operations.
+         *
+         * This is simpler than the global routine regina::columnEchelonForm():
+         * it does not return the change of basis matrices, and it processes
+         * all columns in order from left to right (instead of passing a
+         * custom column list).
+         *
+         * Our convention is that a matrix is in row echelon form if:
+         *
+         * -# each row is either zero or there is a first non-zero entry which
+         *    is positive;
+         * -# moving from the top row to the bottom, these first non-zero
+         *    entries have strictly increasing column indices;
+         * -# for each first non-zero row entry, in that column all the elements
+         *    above are smaller and non-negative (and all elements below are
+         *    already zero by the previous condition);
+         * -# all the zero rows are at the bottom of the matrix.
+         *
+         * @return the rank of this matrix, i.e., the number of non-zero rows
+         * remaining.
+         */
+        REGINA_ENABLE_FOR_REGINA_INTEGER(unsigned long) rowEchelonForm() {
+            unsigned long i, j;
+
+            // The current working row and column:
+            // The entries to the left of currCol will not change, and
+            // above currRow all that can happen is some reduction.
+            unsigned long currRow = 0;
+            unsigned long currCol = 0;
+
+            // The algorithm works from left to right.
+            T d, r, u, v, gcd, a, b, tmp;
+            while (currRow < rows_ && currCol < cols_) {
+                // Identify the first non-zero entry in currCol.
+                for (i = currRow; i < rows_; ++i)
+                    if (data_[i][currCol] != 0)
+                        break;
+
+                if (i == rows_) {
+                    // The column is entirely zero.  Nothing to do.
+                    ++currCol;
+                    continue;
+                }
+
+                if (i > currRow) {
+                    // Swap rows so this first non-zero entry is currRow.
+                    swapRows(currRow, i);
+                }
+
+                // Now our first non-zero entry is in currRow.
+
+                // Zero out all entries in currCol that appear *below* currRow.
+                for (i = currRow + 1; i < rows_; ++i)
+                    if (data_[i][currCol] != 0) {
+                        gcd = data_[currRow][currCol].gcdWithCoeffs(
+                            data_[i][currCol], u, v);
+                        a = data_[currRow][currCol].divExact(gcd);
+                        b = data_[i][currCol].divExact(gcd);
+                        for (j = 0; j < cols_; ++j) {
+                            tmp = u * data_[currRow][j] + v * data_[i][j];
+                            data_[i][j] = a * data_[i][j] -
+                                b * data_[currRow][j];
+                            data_[currRow][j] = tmp;
+                        }
+                    }
+
+                // Ensure that our leading coefficient (currRow, currCol)
+                // is positive.
+                if (data_[currRow][currCol] < 0) {
+                    multRow(currRow, -1);
+                }
+
+                // Finally, reduce the entries in currCol *above* currRow.
+                for (i = 0; i < currRow; ++i) {
+                    d = data_[i][currCol].divisionAlg(data_[currRow][currCol],
+                        r);
+                    if (d != 0) {
+                        addRow(currRow /* source */, i /* dest */, -d);
+                    }
+                }
+
+                ++currRow;
+                ++currCol;
+            }
+
+            return currRow;
+        }
+
+        /**
+         * Transforms this matrix into column echelon form.  The transformation
+         * will perform only column operations.
+         *
+         * This is simpler than the global routine regina::columnEchelonForm():
+         * it does not return the change of basis matrices, and it processes
+         * all rows in order from left to right (instead of passing a
+         * custom row list).
+         *
+         * Our convention is that a matrix is in column echelon form if:
+         *
+         * -# each column is either zero or there is a first non-zero entry
+         *    which is positive;
+         * -# moving from the left column to the right, these first non-zero
+         *    entries have strictly increasing row indices;
+         * -# for each first non-zero column entry, in that row all the elements
+         *    to the left are smaller and non-negative (and all elements to the
+         *    right are already zero by the previous condition);
+         * -# all the zero columns are at the right hand end of the matrix.
+         *
+         * @return the rank of this matrix, i.e., the number of non-zero
+         * columns remaining.
+         */
+        REGINA_ENABLE_FOR_REGINA_INTEGER(unsigned long) columnEchelonForm() {
+            unsigned long i, j;
+
+            // The current working row and column:
+            // The entries above currRow will not change, and to the left of
+            // currCol all that can happen is some reduction.
+            unsigned long currRow = 0;
+            unsigned long currCol = 0;
+
+            // The algorithm works from top to bottom.
+            T d, r, u, v, gcd, a, b, tmp;
+            while (currRow < rows_ && currCol < cols_) {
+                // Identify the first non-zero entry in currRow.
+                for (i = currCol; i < cols_; ++i)
+                    if (data_[currRow][i] != 0)
+                        break;
+
+                if (i == cols_) {
+                    // The row is entirely zero.  Nothing to do.
+                    ++currRow;
+                    continue;
+                }
+
+                if (i > currCol) {
+                    // Swap columns so this first non-zero entry is currCol.
+                    swapColumns(currCol, i);
+                }
+
+                // Now our first non-zero entry is in currCol.
+
+                // Zero out all entries in currRow that appear right of currCol.
+                for (i = currCol + 1; i < cols_; ++i)
+                    if (data_[currRow][i] != 0) {
+                        gcd = data_[currRow][currCol].gcdWithCoeffs(
+                            data_[currRow][i], u, v);
+                        a = data_[currRow][currCol].divExact(gcd);
+                        b = data_[currRow][i].divExact(gcd);
+                        for (j = 0; j < rows_; ++j) {
+                            tmp = u * data_[j][currCol] + v * data_[j][i];
+                            data_[j][i] = a * data_[j][i] -
+                                b * data_[j][currCol];
+                            data_[j][currCol] = tmp;
+                        }
+                    }
+
+                // Ensure that our leading coefficient (currRow, currCol)
+                // is positive.
+                if (data_[currRow][currCol] < 0) {
+                    multCol(currCol, -1);
+                }
+
+                // Finally, reduce the entries in currRow left of currCol.
+                for (i = 0; i < currCol; ++i) {
+                    d = data_[currRow][i].divisionAlg(data_[currRow][currCol],
+                        r);
+                    if (d != 0) {
+                        addCol(currCol /* source */, i /* dest */, -d);
+                    }
+                }
+
+                ++currRow;
+                ++currCol;
+            }
+
+            return currCol;
         }
 };
 

@@ -627,7 +627,6 @@ void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
     }
 }
 
-
 std::unique_ptr<MatrixInt> preImageOfLattice(const MatrixInt& hom,
         const std::vector<Integer>& L) {
     // there are two main steps to this algorithm.
