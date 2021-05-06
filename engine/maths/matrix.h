@@ -121,7 +121,7 @@ class Rational;
 /**
  * Represents a matrix of elements of the given type \a T.
  *
- * As of Regina 5.3, the old subclasses of Matrix have now been merged into a
+ * As of Regina 5.96, the old subclasses of Matrix have now been merged into a
  * single Matrix class.  The additional member functions that the old
  * subclasses MatrixRing and MatrixIntDomain used to provide are now part of
  * Matrix, and are enabled or disabled according to the Matrix template

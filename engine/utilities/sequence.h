@@ -319,7 +319,7 @@ class REGINA_API LightweightSequence {
          * and fast to pass around by value.  The cost of this is that
          * the caller \e must ensure that the list of elements to compare
          * (which is a C-style array) has a lifespan at least as long as
-         * this object.  This behaviour is new as of Regina 5.3; in past
+         * this object.  This behaviour is new as of Regina 5.96; in past
          * versions of Regina the list of elements was copied on construction.
          */
         template <typename Iterator>
