@@ -1437,6 +1437,15 @@ extern template class REGINA_API TreeSingleSoln<LPConstraintEulerPositive,
 extern template class REGINA_API TreeSingleSoln<LPConstraintEulerPositive,
     BanNone, NNativeLong>;
 
+extern template class REGINA_API TreeTraversal<LPConstraintEulerZero,
+    BanNone, Integer>;
+extern template class REGINA_API TreeTraversal<LPConstraintEulerZero,
+    BanNone, NNativeLong>;
+extern template class REGINA_API TreeEnumeration<LPConstraintEulerZero,
+    BanNone, Integer>;
+extern template class REGINA_API TreeEnumeration<LPConstraintEulerZero,
+    BanNone, NNativeLong>;
+
 #ifdef INT128_AVAILABLE
 extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
     NativeInteger<16> >;
@@ -1448,6 +1457,11 @@ extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
 extern template class REGINA_API TreeTraversal<LPConstraintEulerPositive,
     BanNone, NativeInteger<16> >;
 extern template class REGINA_API TreeSingleSoln<LPConstraintEulerPositive,
+    BanNone, NativeInteger<16> >;
+
+extern template class REGINA_API TreeTraversal<LPConstraintEulerZero,
+    BanNone, NativeInteger<16> >;
+extern template class REGINA_API TreeEnumeration<LPConstraintEulerZero,
     BanNone, NativeInteger<16> >;
 #endif
 
