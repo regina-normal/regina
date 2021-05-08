@@ -1031,6 +1031,9 @@ class Matrix : public Output<Matrix<T>> {
          *    already zero by the previous condition);
          * -# all the zero rows are at the bottom of the matrix.
          *
+         * This routine is only available when \a T is one of Regina's
+         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
+         *
          * @return the rank of this matrix, i.e., the number of non-zero rows
          * remaining.
          */
@@ -1120,6 +1123,9 @@ class Matrix : public Output<Matrix<T>> {
          *    to the left are smaller and non-negative (and all elements to the
          *    right are already zero by the previous condition);
          * -# all the zero columns are at the right hand end of the matrix.
+         *
+         * This routine is only available when \a T is one of Regina's
+         * own integer classes (Integer, LargeInteger, or NativeIntgeger).
          *
          * @return the rank of this matrix, i.e., the number of non-zero
          * columns remaining.
