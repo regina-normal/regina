@@ -113,7 +113,7 @@ namespace {
 }
 
 NormalSurfaceVector* NSVectorQuad::makeMirror(
-        const Ray& original, const Triangulation<3>* triang) {
+        const Vector<LargeInteger>& original, const Triangulation<3>* triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
     unsigned long nRows = 7 * triang->size();
@@ -126,10 +126,10 @@ NormalSurfaceVector* NSVectorQuad::makeMirror(
     int i;
     for (row = 0; row < nRows; row+=7)
         for (i = 0; i < 4; i++)
-            ans->setElement(row + i, LargeInteger::infinity);
+            ans->set(row + i, LargeInteger::infinity);
     for (row = 0; 7 * row < nRows; row++)
         for (i = 0; i < 3; i++)
-            ans->setElement(7 * row + 4 + i, original[3 * row + i]);
+            ans->set(7 * row + 4 + i, original[3 * row + i]);
 
     // Run through the vertices and work out the triangular coordinates
     // about each vertex in turn.
@@ -159,7 +159,7 @@ NormalSurfaceVector* NSVectorQuad::makeMirror(
         // Pick some triangular disc and set it to zero.
         const VertexEmbedding<3>& vemb = v->front();
         row = 7 * vemb.tetrahedron()->index() + vemb.vertex();
-        ans->setElement(row, LargeInteger::zero);
+        ans->set(row, LargeInteger::zero);
 
         min = LargeInteger::zero;
 
@@ -213,7 +213,7 @@ NormalSurfaceVector* NSVectorQuad::makeMirror(
                         quadSeparating[adjPerm[3]][adjPerm[current.end]]] -
                     (*ans)[7 * tetIndex + 4 +
                         quadSeparating[tetPerm[2]][tetPerm[current.end]]];
-                ans->setElement(7 * tetIndex + tetPerm[current.end], expect);
+                ans->set(7 * tetIndex + tetPerm[current.end], expect);
                 if (expect < min)
                     min = expect;
 
@@ -251,7 +251,7 @@ NormalSurfaceVector* NSVectorQuad::makeMirror(
                         quadSeparating[tetPerm[3]][tetPerm[current.end]]];
                 row = 7 * tetIndex + tetPerm[current.end];
                 if ((*ans)[row].isInfinite()) {
-                    ans->setElement(row, expect);
+                    ans->set(row, expect);
                     if (expect < min)
                         min = expect;
 
@@ -283,9 +283,9 @@ NormalSurfaceVector* NSVectorQuad::makeMirror(
         for (auto& emb : *v) {
             row = 7 * emb.tetrahedron()->index() + emb.vertex();
             if (broken)
-                ans->setElement(row, LargeInteger::infinity);
+                ans->set(row, LargeInteger::infinity);
             else
-                ans->setElement(row, (*ans)[row] - min);
+                ans->set(row, (*ans)[row] - min);
         }
     }
 

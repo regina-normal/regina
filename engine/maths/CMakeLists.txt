@@ -11,7 +11,6 @@ SET ( FILES
   numbertheory.cpp
   primes.cpp
   rational.cpp
-  ray.cpp
   seedprimes.cpp
   )
 

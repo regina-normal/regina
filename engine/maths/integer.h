@@ -2268,6 +2268,27 @@ class NativeInteger {
          */
         NativeInteger gcd(const NativeInteger& other) const;
 
+        /**
+         * Returns whether this integer is infinity.
+         *
+         * Since NativeInteger cannot represent infinity, this routine will
+         * always return \c false.  This routine is simply provided for
+         * compatibility with LargeInteger (where infinity is allowed).
+         *
+         * @return \c false, since a NativeInteger can never be infinity.
+         */
+        bool isInfinite() const;
+        /**
+         * A do-nothing routine that ensures that this integer is using a
+         * native C/C++ integer representation.
+         *
+         * Since the NativeInteger class always uses a native representation,
+         * this routine does nothing at all.  This routine is simply provided
+         * for compatibility with Regina's arbitrary-precision Integer and
+         * LargeInteger classes.
+         */
+        void tryReduce();
+
     template <int bytes_>
     friend std::ostream& operator << (std::ostream& out,
         const NativeInteger<bytes_>& large);
@@ -3673,6 +3694,15 @@ inline NativeInteger<bytes> NativeInteger<bytes>::gcd(
     NativeInteger<bytes> ans(data_);
     ans.gcdWith(other);
     return ans;
+}
+
+template <int bytes>
+inline bool NativeInteger<bytes>::isInfinite() const {
+    return false;
+}
+
+template <int bytes>
+inline void NativeInteger<bytes>::tryReduce() {
 }
 
 template <int bytes>

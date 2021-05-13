@@ -48,7 +48,7 @@
 #include "enumerate/hilbertprimal.h"
 #include "enumerate/maxadmissible.h"
 #include "libnormaliz/cone.h"
-#include "maths/ray.h"
+#include "maths/vector.h"
 #include "progress/progresstracker.h"
 #include <list>
 #include <set>
@@ -120,7 +120,7 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         tracker->setPercent(30);
 
     std::set<std::vector<mpz_class> > finalBasis;
-    std::vector<const Ray*> face;
+    std::vector<const Vector<LargeInteger>*> face;
     typename std::vector<BitmaskType>::const_iterator mit;
     RayIterator rit;
     unsigned i;
@@ -169,11 +169,11 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         ans = new RayClass(dim);
         for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i) {
             // We make two copies of the GMP integer instead of one.
-            // This is because Vector/Ray does not give us direct
+            // This is because Vector does not give us direct
             // non-const access to its elements, and so we need a
-            // temporary LargeInteger to pass through setElement() instead.
+            // temporary LargeInteger to pass through set() instead.
             tmpInt.setRaw(hvit->get_mpz_t());
-            ans->setElement(i, tmpInt);
+            ans->set(i, tmpInt);
         }
         *results++ = ans;
     }

@@ -43,14 +43,13 @@
 #include "regina-core.h"
 #include "enumerate/enumconstraints.h"
 #include "enumerate/ordering.h"
-#include "maths/ray.h"
 #include "maths/matrix.h"
+#include "maths/vector.h"
 #include <iterator>
 #include <vector>
 
 namespace regina {
 
-class Ray;
 class ProgressTracker;
 
 /**
@@ -112,8 +111,8 @@ class REGINA_API DoubleDescription {
          * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
          *
-         * \pre The template argument RayClass is derived from Ray (or
-         * may possibly be Ray itself).
+         * \pre The template argument RayClass is derived from
+         * Vector<LargeInteger> (or may be Vector<LargeInteger> itself).
          *
          * @param results the output iterator to which the resulting extremal
          * rays will be written; this must accept objects of type
@@ -152,7 +151,7 @@ class REGINA_API DoubleDescription {
          *   ray belongs to.
          *
          * The dot products are stored as coordinates of the
-         * superclass Ray.  Dot products are only stored
+         * Vector superclass.  Dot products are only stored
          * for hyperplanes that have not yet been intersected (thus
          * the vector length becomes smaller as the main algorithm progresses).
          * Dot products are stored in the order in which hyperplanes are
@@ -174,7 +173,7 @@ class REGINA_API DoubleDescription {
          * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
          */
         template <class BitmaskType>
-        class RaySpec : private Ray {
+        class RaySpec : private Vector<LargeInteger> {
             private:
                 BitmaskType facets_;
                     /**< A bitmask listing which original facets this ray
@@ -392,7 +391,7 @@ class REGINA_API DoubleDescription {
 template <class BitmaskType>
 inline DoubleDescription::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& trunc) :
-        Ray(trunc.size() - 1),
+        Vector<LargeInteger>(trunc.size() - 1),
         facets_(trunc.facets_) {
     std::copy(trunc.elements + 1, trunc.end, elements);
 }

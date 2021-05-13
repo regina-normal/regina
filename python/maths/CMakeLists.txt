@@ -21,6 +21,7 @@ SET ( FILES
   primes.cpp
   pymaths.cpp
   rational.cpp
+  vectorint.cpp
   )
 
 # Prepend folder name

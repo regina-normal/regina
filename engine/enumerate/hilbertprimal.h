@@ -47,7 +47,6 @@
 namespace regina {
 
 class ProgressTracker;
-class Ray;
 
 /**
  * \weakgroup enumerate
@@ -115,10 +114,10 @@ class HilbertPrimal {
          * \pre If \a constraints is passed, then the given list of
          * extremal rays contains \e only those extremal rays that satisfy
          * all of the given constraints.
-         * \pre The template argument RayClass is derived from Ray (or
-         * may possibly be Ray itself).
+         * \pre The template argument RayClass is derived from
+         * Vector<LargeInteger> (or may be Vector<LargeInteger> itself).
          * \pre The template argument RayIterator is a forward iterator type,
-         * and when dereferenced can be cast to (const Ray&).
+         * and when dereferenced can be cast to (const Vector<LargeInteger>&).
          *
          * \warning If a progress tracker is passed, be aware that the
          * present implementation updates percentage progress very infrequently,

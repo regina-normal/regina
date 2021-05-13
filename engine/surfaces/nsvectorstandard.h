@@ -142,7 +142,7 @@ inline LargeInteger NSVectorStandard::quads(
 }
 inline LargeInteger NSVectorStandard::octs(
         size_t, int, const Triangulation<3>*) const {
-    return Ray::zero;
+    return LargeInteger::zero;
 }
 
 } // namespace regina

@@ -55,7 +55,7 @@ void addNormalHypersurface(pybind11::module_& m) {
                 // Accept any type that we know how to convert to a large
                 // integer.
                 for (size_t i = 0; i < v->size(); ++i)
-                    v->setElement(i, values[i].cast<regina::LargeInteger>());
+                    v->set(i, values[i].cast<regina::LargeInteger>());
             } catch (pybind11::cast_error const &) {
                 delete v;
                 throw std::invalid_argument(

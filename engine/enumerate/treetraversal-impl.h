@@ -112,29 +112,29 @@ NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         an = new NSVectorQuadOct(6 * nTets_);
         for (i = 0; i < nTets_; ++i)
             for (j = 0; j < 3; ++j)
-                an->setElement(6 * i + j, (*v)[3 * i + j]);
+                an->set(6 * i + j, (*v)[3 * i + j]);
         if (octLevel_ >= 0) {
             unsigned octTet = (origTableaux_.columnPerm()[
                 3 * typeOrder_[octLevel_]] / 3);
             unsigned octType = type_[typeOrder_[octLevel_]] - 4;
-            an->setElement(6 * octTet + 3 + octType,
+            an->set(6 * octTet + 3 + octType,
                 (*v)[3 * octTet + (octType + 1) % 3]);
             for (j = 0; j < 3; ++j)
-                an->setElement(6 * octTet + j, 0);
+                an->set(6 * octTet + j, 0);
         }
     } else {
         an = new NSVectorANStandard(10 * nTets_);
         for (i = 0; i < nTets_; ++i)
             for (j = 0; j < 7; ++j)
-                an->setElement(10 * i + j, (*v)[7 * i + j]);
+                an->set(10 * i + j, (*v)[7 * i + j]);
         if (octLevel_ >= 0) {
             unsigned octTet = (origTableaux_.columnPerm()[
                 3 * typeOrder_[octLevel_]] / 7);
             unsigned octType = type_[typeOrder_[octLevel_]] - 4;
-            an->setElement(10 * octTet + 7 + octType,
+            an->set(10 * octTet + 7 + octType,
                 (*v)[7 * octTet + 4 + (octType + 1) % 3]);
             for (j = 0; j < 3; ++j)
-                an->setElement(10 * octTet + 4 + j, 0);
+                an->set(10 * octTet + 4 + j, 0);
         }
     }
     delete v;

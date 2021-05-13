@@ -123,11 +123,20 @@ Version 6.1  [ TODO ]
               deprecated alias.  Also added a global
               regina::swap(ModelLinkGraph&, ModelLinkGraph&).  As a result,
               ModelLinkGraph now meets the C++ Swappable requirements.
+        Class NativeInteger<...>:
+            - New do-nothing routines isInfinite() and tryReduce(), for
+              compatibility with Integer and LargeInteger.
         Class NormalInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
         Class NormalSurfaces:
             - New filter() method that takes a SurfaceFilter.
+        Class NormalSurfaceVector, NormalHypersurfaceVector:
+            - Renamed setElement() to set().  Since this is a virtual function,
+              the old name has been removed completely.  If you have a
+              subclass which overrides this function (which is highly unlikely
+              for end users), you MUST rename your override accordingly.
+            - Operator += now returns a reference, as it should.
         Class PacketInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -173,6 +182,10 @@ Version 6.1  [ TODO ]
               (in particular, composition and inverses).
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
+        Class Ray:
+            - All of the old Ray functionality is now merged into
+              Vector<LargeInteger>, and you should use that class directly.
+              The name Ray is kept as a deprecated typedef.
         Class SimpleSurfaceBundle:
             - Class constants are now constexpr.
         Class Simplex<dim>:
@@ -235,6 +248,19 @@ Version 6.1  [ TODO ]
             - Class constants are now constexpr.
         Class Vector:
             - New operator !=.
+            - New constructors that take iterator ranges and initialiser lists.
+            - New move constructor and move assignment operator.
+            - New binary +, - and scalar * operators.
+            - New routine isZero().
+            - New routine scaleDown() for vectors over Regina's integer classes.
+            - Provides the standard str() and detail() output functions.
+            - Renamed setElement() to set(); the old name is now a deprecated
+              alias.
+            - Operators +=, -=, *= now return a reference, as they should.
+            - The class Vector<Integer> is now available in python, via
+              the typedef VectorInt (in a similar way to MatrixInt).
+        Class VectorInt:
+            - New typedef for Vector<Integer>, for compatibility with MatrixInt.
         Class XMLCallback:
             - The state constants have now been rolled into a State enum type.
         Function allowsNonOrientableLinks(), allowsInvalidFaces():
@@ -259,6 +285,9 @@ Version 6.1  [ TODO ]
               once again genuine 2-D arrays.  Unfortunately this change is not
               backward compatible: you must now use foo[i][j], not foo(i,j).
               Python users are unaffected.
+        Macro:
+            - New macro ENABLE_MEMBER_FOR_REGINA_INTEGER for conditionally
+              enabling or disabling member functions in template classes.
     PYTHON:
         - Updated the included pybind11 library from 2.6.1 to 2.6.2.
         - All face embedding classes now have a __repr__() for easier printing.

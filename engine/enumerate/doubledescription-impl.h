@@ -49,7 +49,6 @@
 #include "regina-config.h"
 #include "enumerate/doubledescription.h"
 #include "maths/matrixops.h"
-#include "maths/ray.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
 #include "utilities/trieset.h"
@@ -59,7 +58,7 @@ namespace regina {
 template <class BitmaskType>
 DoubleDescription::RaySpec<BitmaskType>::RaySpec(unsigned long axis,
         const MatrixInt& subspace, const long* hypOrder) :
-        Ray(subspace.rows()),
+        Vector<LargeInteger>(subspace.rows()),
         facets_(subspace.columns()) {
     size_t i;
 
@@ -75,7 +74,7 @@ template <class BitmaskType>
 DoubleDescription::RaySpec<BitmaskType>::RaySpec(
         const RaySpec<BitmaskType>& first,
         const RaySpec<BitmaskType>& second) :
-        Ray(second.size() - 1),
+        Vector<LargeInteger>(second.size() - 1),
         facets_(second.facets_) {
     for (size_t i = 0; i < size(); ++i)
         elements[i] = second.elements[i + 1] * (*first.elements) -
@@ -103,7 +102,7 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     for (i = 0, j = 0; i < subspace.columns(); ++i)
         if (facets_.get(i)) {
             // We know in advance that this coordinate will be zero.
-            dest.setElement(i, LargeInteger::zero);
+            dest.set(i, LargeInteger::zero);
         } else {
             use[j++] = i;
         }
@@ -112,7 +111,7 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     // If there are no equations then there must be only one non-zero
     // coordinate, and vice versa.
     if (cols == 1) {
-        dest.setElement(*use, 1);
+        dest.set(*use, 1);
         delete[] use;
         return;
     }
@@ -193,9 +192,9 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
         common.negate();
 
     for (i = 0; i < rows; ++i)
-        dest.setElement(use[lead[i]], - (common * m[i * cols + lead[rows]]).
+        dest.set(use[lead[i]], - (common * m[i * cols + lead[rows]]).
             divExact(m[i * cols + lead[i]]));
-    dest.setElement(use[lead[rows]], common);
+    dest.set(use[lead[rows]], common);
 
     dest.scaleDown();
 
@@ -260,7 +259,7 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
         RayClass* ans;
         for (unsigned long i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
-            ans->setElement(i, LargeInteger::one);
+            ans->set(i, LargeInteger::one);
             *results++ = ans;
         }
 

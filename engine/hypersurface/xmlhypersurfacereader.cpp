@@ -68,7 +68,7 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
             if (valueOf(tokens[i + 1], value))
                 if (pos >= 0 && pos < vecLen_) {
                     // All looks valid.
-                    vec->setElement(pos, value);
+                    vec->set(pos, value);
                     continue;
                 }
 

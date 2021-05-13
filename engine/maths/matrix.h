@@ -95,19 +95,6 @@
 #define REGINA_ENABLE_FOR_RING_DEPRECATED(returnType) \
     template <typename... Args, typename Return = returnType> \
     [[deprecated]] std::enable_if_t<ring, Return>
-/**
- * Use this as the return type for a Matrix member function that is only
- * available when working with matrices over Regina's own integer classes.
- *
- * Equivalent to \a returnType if the Matrix template argument \a T is one of
- * Regina's own integer classes (Integer, LargeInteger or NativeInteger),
- * and removes the member function completey otherwise.
- *
- * This macro cannot be used with templated member functions.
- */
-#define REGINA_ENABLE_FOR_REGINA_INTEGER(returnType) \
-    template <typename... Args, typename Return = returnType> \
-    std::enable_if_t<IsReginaInteger<T>::value, Return>
 #endif
 
 namespace regina {
@@ -896,7 +883,7 @@ class Matrix : public Output<Matrix<T>> {
          * divided by \a divBy.
          * @param divBy the integer to divide each row element by.
          */
-        REGINA_ENABLE_FOR_REGINA_INTEGER(void) divRowExact(
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divRowExact(
                 unsigned long row, const T& divBy) {
             for (T* x = this->data_[row]; x != this->data_[row] + cols_; ++x)
                 x->divByExact(divBy);
@@ -921,7 +908,7 @@ class Matrix : public Output<Matrix<T>> {
          * divided by \a divBy.
          * @param divBy the integer to divide each column element by.
          */
-        REGINA_ENABLE_FOR_REGINA_INTEGER(void) divColExact(
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) divColExact(
                 unsigned long col, const T& divBy) {
             for (T** row = this->data_; row != this->data_ + rows_; ++row)
                 (*row)[col].divByExact(divBy);
@@ -939,7 +926,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param row the index of the row whose gcd should be computed.
          * @return the greatest common divisor of all elements of this row.
          */
-        REGINA_ENABLE_FOR_REGINA_INTEGER(T) gcdRow(unsigned long row) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdRow(unsigned long row) {
             T* x = this->data_[row];
 
             T gcd = *x++;
@@ -963,7 +950,7 @@ class Matrix : public Output<Matrix<T>> {
          * @param col the index of the column whose gcd should be computed.
          * @return the greatest common divisor of all elements of this column.
          */
-        REGINA_ENABLE_FOR_REGINA_INTEGER(T) gcdCol(unsigned long col) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, T) gcdCol(unsigned long col) {
             T** row = this->data_;
 
             T gcd = (*row++)[col];
@@ -987,7 +974,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * @param row the index of the row to reduce.
          */
-        REGINA_ENABLE_FOR_REGINA_INTEGER(void) reduceRow(unsigned long row) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceRow(unsigned long row) {
             T gcd = gcdRow(row);
             if (gcd != 0 && gcd != 1)
                 divRowExact(row, gcd);
@@ -1005,7 +992,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * @param col the index of the column to reduce.
          */
-        REGINA_ENABLE_FOR_REGINA_INTEGER(void) reduceCol(unsigned long col) {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) reduceCol(unsigned long col) {
             T gcd = gcdCol(col);
             if (gcd != 0 && gcd != 1)
                 divColExact(col, gcd);
@@ -1037,7 +1024,7 @@ class Matrix : public Output<Matrix<T>> {
          * @return the rank of this matrix, i.e., the number of non-zero rows
          * remaining.
          */
-        REGINA_ENABLE_FOR_REGINA_INTEGER(unsigned long) rowEchelonForm() {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, unsigned long) rowEchelonForm() {
             unsigned long i, j;
 
             // The current working row and column:
@@ -1130,7 +1117,7 @@ class Matrix : public Output<Matrix<T>> {
          * @return the rank of this matrix, i.e., the number of non-zero
          * columns remaining.
          */
-        REGINA_ENABLE_FOR_REGINA_INTEGER(unsigned long) columnEchelonForm() {
+        ENABLE_MEMBER_FOR_REGINA_INTEGER(T, unsigned long) columnEchelonForm() {
             unsigned long i, j;
 
             // The current working row and column:

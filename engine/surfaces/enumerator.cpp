@@ -633,11 +633,11 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
                 }
                 for (i = 0; i < dim; ++i) {
                     // Inefficiency: We make two copies of the GMP integer
-                    // here instead of one, since Vector/Ray does not give
+                    // here instead of one, since Vector does not give
                     // us direct non-const access to its elements.
                     tmpInt.setRaw((*hlit)[i].get_mpz_t());
                     tmpInt.tryReduce();
-                    v->setElement(i, tmpInt);
+                    v->set(i, tmpInt);
                 }
                 list_->surfaces.push_back(new NormalSurface(triang_, v));
             }

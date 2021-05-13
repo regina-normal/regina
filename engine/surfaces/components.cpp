@@ -199,7 +199,7 @@ namespace {
             for (const auto& disc : components) {
                 vec = ans[components.data(disc).id];
                 coord = 10 * disc.tetIndex + disc.type;
-                vec->setElement(coord, (*vec)[coord] + 1);
+                vec->set(coord, (*vec)[coord] + 1);
             }
         } else {
             for (i = 0; i < compID; ++i)
@@ -209,7 +209,7 @@ namespace {
             for (const auto& disc : components) {
                 vec = ans[components.data(disc).id];
                 coord = 7 * disc.tetIndex + disc.type;
-                vec->setElement(coord, (*vec)[coord] + 1);
+                vec->set(coord, (*vec)[coord] + 1);
             }
         }
 

@@ -79,6 +79,33 @@ struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
 #endif // __DOXYGEN
 
 /**
+ * Conditionally enables a member function for a template class only
+ * when the type \a T is one of Regina's own integer classes.
+ *
+ * This macro should be used as the return type for such a member function.
+ * If \a T is one of Regina's own integer classes (Integer, LargeInteger
+ * or NativeInteger), then the actual return type for the member function
+ * will be the argument \a returnType.  Otherwise the member function will
+ * be disabled, will not appear in the class at all, and will not generate
+ * compile errors if it uses operations that \a T does not support.
+ *
+ * The implementation uses SFINAE to remove the member function without
+ * compile errors.  A side-effect of this is that the member function will
+ * now be a \e template member function.  The user should never specify their
+ * own template arguments, and indeed the template parameter pack \a Args in
+ * the implementation is there precisely to stop users from doing this.
+ *
+ * \pre The member function this macro is applied to is \e not a
+ * template member function (though, as noted above, this macro will
+ * silently make it one).
+ *
+ * \apinotfinal
+ */
+#define ENABLE_MEMBER_FOR_REGINA_INTEGER(T, returnType) \
+    template <typename... Args, typename Return = returnType> \
+    std::enable_if_t<IsReginaInteger<T>::value, Return>
+
+/**
  * Returns the number of bits required to store integers in the range
  * 0,...,<i>n</i>-1.
  * This is simply the number of bits in the binary expansion of <i>n</i>-1.

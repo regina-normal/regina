@@ -82,7 +82,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     }
 
     // We need to get rid of vertex links entirely before we start.
-    typedef const Ray* VectorPtr;
+    typedef const Vector<LargeInteger>* VectorPtr;
     VectorPtr* use = new VectorPtr[surfaces.size()];
     unsigned long nUse = 0;
 
@@ -140,7 +140,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
             pos = 0;
             for (tet = 0; tet < n; ++tet)
                 for (quad = 0; quad < Variant::reducedPerTet; ++quad)
-                    v->setElement(pos++,
+                    v->set(pos++,
                         (*use[i])[Variant::stdPos(tet, 4 + quad)]);
             ans->surfaces.push_back(new NormalSurface(owner, v));
         } else if (strict) {

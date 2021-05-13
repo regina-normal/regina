@@ -41,14 +41,12 @@
 #endif
 
 #include "regina-core.h"
-#include "maths/ray.h"
+#include "maths/vector.h"
 #include <iterator>
 #include <list>
 #include <vector>
 
 namespace regina {
-
-class Ray;
 
 /**
  * \weakgroup enumerate
@@ -109,8 +107,8 @@ class HilbertCD {
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
-         * \pre The template argument RayClass is derived from Ray (or
-         * may possibly be Ray itself).
+         * \pre The template argument RayClass is derived from
+         * Vector<LargeInteger> (or may be Vector<LargeInteger> itself).
          *
          * \warning For normal surface theory, the Contejean-Devie algorithm is
          * extremely slow, even when modified to incorporate admissibility
@@ -141,7 +139,7 @@ class HilbertCD {
          * single candidate basis vector.
          *
          * The coordinates of the vector are inherited through the
-         * superclass Ray.
+         * Vector superclass.
          *
          * The \a BitmaskType template argument is used to store one bit
          * per coordinate, which is \c false if the coordinate is zero
@@ -151,7 +149,7 @@ class HilbertCD {
          * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
          */
         template <class BitmaskType>
-        struct VecSpec : public Ray {
+        struct VecSpec : public Vector<LargeInteger> {
             BitmaskType mask_;
                 /**< A bitmask indicating which coordinates are zero
                      (\c false) and which are non-zero (\c true). */
@@ -200,7 +198,7 @@ class HilbertCD {
 
 template <class BitmaskType>
 inline HilbertCD::VecSpec<BitmaskType>::VecSpec(size_t dim) :
-        Ray(dim), mask_(dim) {
+        Vector<LargeInteger>(dim), mask_(dim) {
     // All vector elements are initialised to zero thanks to the
     // LargeInteger default constructor.
 }

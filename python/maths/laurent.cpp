@@ -39,37 +39,14 @@
 using pybind11::overload_cast;
 using regina::Laurent;
 
-namespace {
-    // If this function returns, it guarantees to return non-null.
-    regina::Integer* seqFromList(pybind11::list l) {
-        size_t len = l.size();
-        regina::Integer* coeffs = new regina::Integer[len];
-        if (! coeffs)
-            throw std::bad_alloc();
-        for (size_t i = 0; i < len; ++i) {
-            // Accept any type that we know how to convert to regina::Integer.
-            // This includes (at least) Regina's large integer classes,
-            // python integers (both int and long), and strings.
-            try {
-                coeffs[i] = l[i].cast<regina::Integer>();
-                continue;
-            } catch (pybind11::cast_error const &) {
-                delete[] coeffs;
-                throw std::invalid_argument(
-                    "List element not convertible to Integer");
-            }
-        }
-        return coeffs;
-    }
-}
-
 void addLaurent(pybind11::module_& m) {
     auto c = pybind11::class_<Laurent<regina::Integer>>(m, "Laurent")
         .def(pybind11::init<>())
         .def(pybind11::init<long>())
         .def(pybind11::init<const Laurent<regina::Integer>&>())
         .def(pybind11::init([](long minExp, pybind11::list l) {
-            regina::Integer* coeffs = seqFromList(l);
+            regina::Integer* coeffs =
+                regina::python::seqFromList<regina::Integer>(l);
             Laurent<regina::Integer>* ans = new Laurent<regina::Integer>(
                 minExp, coeffs, coeffs + l.size());
             delete[] coeffs;
@@ -83,7 +60,8 @@ void addLaurent(pybind11::module_& m) {
             &Laurent<regina::Integer>::init)
         .def("init", [](Laurent<regina::Integer>& p, long minExp,
                 pybind11::list l) {
-            regina::Integer* coeffs = seqFromList(l);
+            regina::Integer* coeffs =
+                regina::python::seqFromList<regina::Integer>(l);
             p.init(minExp, coeffs, coeffs + l.size());
             delete[] coeffs;
         })

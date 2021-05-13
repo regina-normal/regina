@@ -42,7 +42,7 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/rational.h"
-#include "maths/ray.h"
+#include "maths/vector.h"
 #include "triangulation/forward.h"
 
 namespace regina {
@@ -82,7 +82,7 @@ typedef Matrix<Integer, true> MatrixInt;
  *
  * \ifacespython Not present.
  */
-class REGINA_API AngleStructureVector : public Ray {
+class REGINA_API AngleStructureVector : public Vector<LargeInteger> {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -314,7 +314,7 @@ class REGINA_API AngleStructure :
 // Inline functions for AngleStructureVector
 
 inline AngleStructureVector::AngleStructureVector(size_t length) :
-        Ray(length) {
+        Vector<LargeInteger>(length) {
 }
 
 inline AngleStructureVector::AngleStructureVector(

@@ -44,7 +44,7 @@
 #include "regina-core.h"
 #include "core/output.h"
 #include "maths/perm.h"
-#include "maths/ray.h"
+#include "maths/vector.h"
 #include "surfaces/disctype.h"
 #include "surfaces/normalcoords.h"
 #include "triangulation/forward.h"
@@ -349,7 +349,7 @@ struct NormalInfo;
  */
 class REGINA_API NormalSurfaceVector {
     protected:
-        Ray coords_;
+        Vector<LargeInteger> coords_;
             /**< The raw vector of normal coordinates. */
 
     public:
@@ -369,7 +369,7 @@ class REGINA_API NormalSurfaceVector {
 
         /**
          * A virtual destructor.  This is required because here we introduce
-         * virtual functions into the Ray hierarchy.
+         * virtual functions into the Vector hierarchy.
          */
         virtual ~NormalSurfaceVector();
 
@@ -378,7 +378,7 @@ class REGINA_API NormalSurfaceVector {
          *
          * @return the vector of coordinates.
          */
-        const Ray& coords() const;
+        const Vector<LargeInteger>& coords() const;
 
         /**
          * Creates a newly allocated clone of this vector.
@@ -410,11 +410,15 @@ class REGINA_API NormalSurfaceVector {
          * underlying vector.  Subclasses should reimplement this if they
          * carry any additional information that also need adjusting.
          *
+         * \warning Before Regina 6.1, this routine was named setElement().
+         * It is now named set(), and if you have subclasses that reimplement
+         * it then it should be renamed accordingly in these subclasses also.
+         *
          * @param index the index of the coordinate to set; this must be
          * between 0 and size()-1 inclusive.
          * @param value the new value to assign to the given coordinate.
          */
-        virtual void setElement(size_t index, const LargeInteger& value);
+        virtual void set(size_t index, const LargeInteger& value);
 
         /**
          * Adds the given vector to this vector.
@@ -428,8 +432,10 @@ class REGINA_API NormalSurfaceVector {
          * the same triangulation, and use the same normal coordinate system.
          *
          * @param other the vector to add to this vector.
+         * @return a reference to this vector.
          */
-        virtual void operator += (const NormalSurfaceVector& other);
+        virtual NormalSurfaceVector& operator += (
+            const NormalSurfaceVector& other);
 
         /**
          * Scales this vector down by the greatest common divisor of all
@@ -1696,7 +1702,7 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          *
          * @return the underlying raw vector.
          */
-        const Ray& rawVector() const;
+        const Vector<LargeInteger>& rawVector() const;
 
         /**
          * Determines if the underlying coordinate system being used
@@ -1788,7 +1794,7 @@ inline NormalSurfaceVector::NormalSurfaceVector(
 inline NormalSurfaceVector::~NormalSurfaceVector() {
 }
 
-inline const Ray& NormalSurfaceVector::coords() const {
+inline const Vector<LargeInteger>& NormalSurfaceVector::coords() const {
     return coords_;
 }
 
@@ -1801,14 +1807,14 @@ inline const LargeInteger& NormalSurfaceVector::operator [](size_t index)
     return coords_[index];
 }
 
-inline void NormalSurfaceVector::setElement(size_t index,
-        const LargeInteger& value) {
-    coords_.setElement(index, value);
+inline void NormalSurfaceVector::set(size_t index, const LargeInteger& value) {
+    coords_.set(index, value);
 }
 
-inline void NormalSurfaceVector::operator += (
+inline NormalSurfaceVector& NormalSurfaceVector::operator += (
         const NormalSurfaceVector& other) {
     coords_ += other.coords_;
+    return *this;
 }
 
 inline void NormalSurfaceVector::scaleDown() {
@@ -1942,7 +1948,7 @@ inline bool NormalSurface::normal() const {
     return ! octPosition();
 }
 
-inline const Ray& NormalSurface::rawVector() const {
+inline const Vector<LargeInteger>& NormalSurface::rawVector() const {
     return vector->coords();
 }
 

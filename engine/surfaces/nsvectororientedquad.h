@@ -103,7 +103,8 @@ class REGINA_API NSVectorOrientedQuad : public NSVectorMirrored {
          */
         NSVectorOrientedQuad(const Vector<LargeInteger>& cloneMe);
 
-        static NormalSurfaceVector* makeMirror(const Ray& original,
+        static NormalSurfaceVector* makeMirror(
+            const Vector<LargeInteger>& original,
             const Triangulation<3>* triang);
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>* triang)
             const override;
@@ -165,7 +166,7 @@ inline const Vertex<3>* NSVectorOrientedQuad::isVertexLink(
 
 inline LargeInteger NSVectorOrientedQuad::octs(
         size_t, int, const Triangulation<3>*) const {
-    return Ray::zero;
+    return LargeInteger::zero;
 }
 
 } // namespace regina

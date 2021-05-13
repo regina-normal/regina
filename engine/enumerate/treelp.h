@@ -55,7 +55,6 @@ namespace regina {
 
 class AngleStructureVector;
 class NormalSurfaceVector;
-class Ray;
 
 template <typename, bool> class Matrix;
 typedef Matrix<Integer, true> MatrixInt;
@@ -1237,15 +1236,15 @@ class LPData {
          * - To ensure that the variables are all integers, we scale the
          *   final vector by the smallest positive rational multiple
          *   for which all elements of the vector are integers.
-         *   (This is why the output class is Ray and not Vector.)
          *
          * This routine is not used as an internal part of the tree traversal
          * algorithm; instead it is offered as a helper routine for
          * reconstructing the normal surfaces or angle structures that result.
          *
          * \pre The given vector \a v has been initialised to the zero vector
-         * of length origTableaux_->columns().  Note that the Ray constructor
-         * will automatically initialise all elements to zero as required.
+         * of length origTableaux_->columns().  Note that the constructor for
+         * Vector <T> (where \a T is of Regina's native integer types) will
+         * automatically initialise all elements to zero as required.
          *
          * \pre No individual coordinate column has had more than one call
          * to either of constrainPositive() or constrainOct() (otherwise
@@ -1254,8 +1253,9 @@ class LPData {
          * this requirement.
          *
          * \tparam RayClass the class used to hold the output vector \a v.
-         * This should either be Ray, or some other class that provides
-         * analogous functions size(), setElement() and scaleDown().
+         * This should be Vector<T> where \a T is one of Regina's native
+         * integer types, or else some other class that provides
+         * analogous functions size(), set() and scaleDown().
          *
          * @param v the vector into which the values of the variables
          * will be placed.

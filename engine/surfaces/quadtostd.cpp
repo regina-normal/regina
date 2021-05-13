@@ -33,7 +33,7 @@
 #include "regina-config.h"
 #include "enumerate/doubledescription.h"
 #include "maths/matrix.h"
-#include "maths/ray.h"
+#include "maths/vector.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalsurfaces.h"
 #include "surfaces/nsvectorstandard.h"
@@ -97,7 +97,7 @@ namespace {
      * solution sets, describing a single ray (which is typically a
      * vertex in some partial solution space).
      *
-     * This class derives from Ray, which stores the coordinates of
+     * This class derives from Vector, which stores the coordinates of
      * the ray itself in standard coordinates.  This RaySpec class also
      * stores a bitmask indicating which of these coordinates are set to zero.
      *
@@ -115,7 +115,7 @@ namespace {
      * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
      */
     template <class BitmaskType>
-    class RaySpec : private Ray {
+    class RaySpec : private Vector<LargeInteger> {
         private:
             BitmaskType facets_;
                 /**< A bitmask listing which coordinates of this ray are
@@ -128,7 +128,8 @@ namespace {
              *
              * @param v the vector to clone.
              */
-            RaySpec(const Ray& v) : Ray(v.size()), facets_(v.size()) {
+            RaySpec(const Vector<LargeInteger>& v) :
+                    Vector<LargeInteger>(v.size()), facets_(v.size()) {
                 // Note that the vector is initialised to zero since
                 // this is what LargeInteger's default constructor does.
                 for (size_t i = 0; i < v.size(); ++i)
@@ -151,7 +152,7 @@ namespace {
              */
             RaySpec(const Triangulation<3>* tri, unsigned long whichLink,
                     unsigned coordsPerTet) :
-                    Ray(coordsPerTet * tri->size()),
+                    Vector<LargeInteger>(coordsPerTet * tri->size()),
                     facets_(coordsPerTet * tri->size()) {
                 // Note that the vector is initialised to zero since
                 // this is what LargeInteger's default constructor does.
@@ -187,7 +188,7 @@ namespace {
              * to zero to form the intersecting hyperplane.
              */
             RaySpec(const RaySpec& pos, const RaySpec& neg, size_t coord) :
-                    Ray(pos.size()), facets_(pos.facets_) {
+                    Vector<LargeInteger>(pos.size()), facets_(pos.facets_) {
                 facets_ &= neg.facets_;
 
                 // Note that we may need to re-enable some bits in \a facets_,
@@ -290,7 +291,7 @@ namespace {
                 VectorClass* v = new VectorClass(size());
 
                 for (size_t i = 0; i < size(); ++i)
-                    v->setElement(i, elements[i]);
+                    v->set(i, elements[i]);
 
                 return new NormalSurface(tri, v);
             }
@@ -308,7 +309,7 @@ namespace {
                 return (elements[index] > zero ? 1 : -1);
             }
 
-            using Ray::scaleDown;
+            using Vector<LargeInteger>::scaleDown;
     };
 } // anonymous namespace
 
@@ -413,7 +414,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
         link[i] = new typename Variant::StandardVector(slen);
 
         for (auto& emb : *owner->vertex(i))
-            link[i]->setElement(Variant::stdPos(
+            link[i]->set(Variant::stdPos(
                 emb.tetrahedron()->markedIndex(), emb.vertex()), 1);
     }
 

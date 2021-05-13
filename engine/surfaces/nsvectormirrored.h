@@ -65,9 +65,9 @@ namespace regina {
  *
  * Subclasses must however implement two variants of makeMirror():
  *
- * - a static function
- *   NormalSurfaceVector* makeMirror(const Ray&, const Triangulation<3>*),
- *   which builds the mirror vector from the native vector;
+ * - a static function NormalSurfaceVector* makeMirror(
+ *   const Vector<LargeInteger>&, const Triangulation<3>*), which builds the
+ *   mirror vector from the native vector;
  * - a virtual function
  *   NormalSurfaceVector* makeMirror(const Triangulation<3>*) const,
  *   which simply calls the static function described above.
@@ -140,13 +140,14 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
          * @return a newly created vector that describes the same normal
          * surface in a "standard" coordinate system, as described above.
          */
-        static NormalSurfaceVector* makeMirror(const Ray& original,
+        static NormalSurfaceVector* makeMirror(
+            const Vector<LargeInteger>& original,
             const Triangulation<3>* triang);
 #endif
 
-        virtual void setElement(size_t index, const LargeInteger& value)
-            override;
-        virtual void operator += (const NormalSurfaceVector& other) override;
+        virtual void set(size_t index, const LargeInteger& value) override;
+        virtual NormalSurfaceVector& operator += (
+            const NormalSurfaceVector& other) override;
         virtual void scaleDown() override;
 
         virtual LargeInteger triangles(size_t tetIndex,
@@ -172,26 +173,26 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
 // Inline functions for NSVectorMirrored
 
 inline NSVectorMirrored::NSVectorMirrored(
-        size_t length) : NormalSurfaceVector(length), mirror(0) {
+        size_t length) : NormalSurfaceVector(length), mirror(nullptr) {
 }
 inline NSVectorMirrored::NSVectorMirrored(
         const Vector<LargeInteger>& cloneMe) :
-        NormalSurfaceVector(cloneMe), mirror(0) {
+        NormalSurfaceVector(cloneMe), mirror(nullptr) {
 }
 inline NSVectorMirrored::~NSVectorMirrored() {
     delete mirror;
 }
 
-inline void NSVectorMirrored::setElement(size_t index,
-        const LargeInteger& value) {
-    coords_.setElement(index, value);
+inline void NSVectorMirrored::set(size_t index, const LargeInteger& value) {
+    coords_.set(index, value);
     delete mirror;
 }
 
-inline void NSVectorMirrored::operator += (
+inline NormalSurfaceVector& NSVectorMirrored::operator += (
         const NormalSurfaceVector& other) {
     coords_ += other.coords();
     delete mirror;
+    return *this;
 }
 
 inline void NSVectorMirrored::scaleDown() {

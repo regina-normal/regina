@@ -45,7 +45,7 @@
 #include "core/output.h"
 #include "algebra/abeliangroup.h"
 #include "hypersurface/hypercoords.h"
-#include "maths/ray.h"
+#include "maths/vector.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
 #include "utilities/property.h"
@@ -179,7 +179,7 @@ struct HyperInfo;
  */
 class REGINA_API NormalHypersurfaceVector {
     protected:
-        Ray coords_;
+        Vector<LargeInteger> coords_;
             /**< The raw vector of normal coordinates. */
 
     public:
@@ -199,7 +199,7 @@ class REGINA_API NormalHypersurfaceVector {
 
         /**
          * A virtual destructor.  This is required because here we
-         * introduce virtual functions into the Ray hierarchy.
+         * introduce virtual functions into the Vector hierarchy.
          */
         virtual ~NormalHypersurfaceVector();
 
@@ -208,7 +208,7 @@ class REGINA_API NormalHypersurfaceVector {
          *
          * @return the vector of coordinates.
          */
-        const Ray& coords() const;
+        const Vector<LargeInteger>& coords() const;
 
         /**
          * Creates a newly allocated clone of this vector.
@@ -240,11 +240,15 @@ class REGINA_API NormalHypersurfaceVector {
          * underlying vector.  Subclasses should reimplement this if they
          * carry any additional information that also need adjusting.
          *
+         * \warning Before Regina 6.1, this routine was named setElement().
+         * It is now named set(), and if you have subclasses that reimplement
+         * it then it should be renamed accordingly in these subclasses also.
+         *
          * @param index the index of the coordinate to set; this must e
          * between 0 and size()-1 inclusive.
          * @param value the new value to assign to the given coordinate.
          */
-        virtual void setElement(size_t index, const LargeInteger& value);
+        virtual void set(size_t index, const LargeInteger& value);
 
         /**
          * Adds the given vector to this vector.
@@ -258,8 +262,10 @@ class REGINA_API NormalHypersurfaceVector {
          * the same triangulation, and use the same normal coordinate system.
          *
          * @param other the vector to add to this vector.
+         * @return a reference to this vector.
          */
-        virtual void operator += (const NormalHypersurfaceVector& other);
+        virtual NormalHypersurfaceVector& operator += (
+            const NormalHypersurfaceVector& other);
 
         /**
          * Scales this vector down by the greatest common divisor of all
@@ -927,7 +933,7 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * @return the underlying raw vector.
          */
-        const Ray& rawVector() const;
+        const Vector<LargeInteger>& rawVector() const;
 
         // Make this class non-copyable.
         NormalHypersurface(const NormalHypersurface&) = delete;
@@ -961,7 +967,7 @@ inline NormalHypersurfaceVector::NormalHypersurfaceVector(
 inline NormalHypersurfaceVector::~NormalHypersurfaceVector() {
 }
 
-inline const Ray& NormalHypersurfaceVector::coords() const {
+inline const Vector<LargeInteger>& NormalHypersurfaceVector::coords() const {
     return coords_;
 }
 
@@ -974,14 +980,15 @@ inline const LargeInteger& NormalHypersurfaceVector::operator []
     return coords_[index];
 }
 
-inline void NormalHypersurfaceVector::setElement(size_t index,
+inline void NormalHypersurfaceVector::set(size_t index,
         const LargeInteger& value) {
-    coords_.setElement(index, value);
+    coords_.set(index, value);
 }
 
-inline void NormalHypersurfaceVector::operator += (
+inline NormalHypersurfaceVector& NormalHypersurfaceVector::operator += (
         const NormalHypersurfaceVector& other) {
     coords_ += other.coords_;
+    return *this;
 }
 
 inline void NormalHypersurfaceVector::scaleDown() {
@@ -1072,7 +1079,7 @@ inline const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
     return vector_->isThinEdgeLink(triangulation_);
 }
 
-inline const Ray& NormalHypersurface::rawVector() const {
+inline const Vector<LargeInteger>& NormalHypersurface::rawVector() const {
     return vector_->coords();
 }
 

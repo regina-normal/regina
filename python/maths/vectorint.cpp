@@ -32,79 +32,56 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/operators.h"
-#include "maths/polynomial.h"
-#include "maths/rational.h"
+#include "maths/vector.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
-using regina::Polynomial;
-using regina::Rational;
+using regina::VectorInt;
 
-void addPolynomial(pybind11::module_& m) {
-    auto c = pybind11::class_<Polynomial<Rational>>(m, "Polynomial")
-        .def(pybind11::init<>())
+void addVectorInt(pybind11::module_& m) {
+    auto c = pybind11::class_<VectorInt>(m, "VectorInt")
         .def(pybind11::init<size_t>())
-        .def(pybind11::init<const Polynomial<Rational>&>())
+        .def(pybind11::init<size_t, const regina::Integer&>())
+        .def(pybind11::init<const VectorInt&>())
         .def(pybind11::init([](pybind11::list l) {
-            Rational* coeffs = regina::python::seqFromList<Rational>(l);
-            Polynomial<Rational>* ans = new Polynomial<Rational>(
-                coeffs, coeffs + l.size());
+            regina::Integer* coeffs =
+                regina::python::seqFromList<regina::Integer>(l);
+            VectorInt* ans = new VectorInt(coeffs, coeffs + l.size());
             delete[] coeffs;
             return ans;
         }))
-        // overload_cast has trouble with templated vs non-templated overloads.
-        // Just cast directly.
-        .def("init", (void (Polynomial<Rational>::*)())
-            &Polynomial<Rational>::init)
-        .def("init", (void (Polynomial<Rational>::*)(size_t))
-            &Polynomial<Rational>::init)
-        .def("init", [](Polynomial<Rational>& p, pybind11::list l) {
-            Rational* coeffs = regina::python::seqFromList<Rational>(l);
-            p.init(coeffs, coeffs + l.size());
-            delete[] coeffs;
-        })
-        .def("degree", &Polynomial<Rational>::degree)
-        .def("isZero", &Polynomial<Rational>::isZero)
-        .def("isMonic", &Polynomial<Rational>::isMonic)
-        .def("leading", &Polynomial<Rational>::leading,
-            pybind11::return_value_policy::reference_internal)
-        .def("__getitem__", [](const Polynomial<Rational>& p, size_t exp) {
-            return p[exp];
+        .def("size", &VectorInt::size)
+        .def("__getitem__", [](const VectorInt& v, size_t index) {
+            return v[index];
         }, pybind11::return_value_policy::reference_internal)
-        .def("__setitem__", [](Polynomial<Rational>& p, size_t exp,
-                const regina::Rational& value) {
-            p.set(exp, value);
+        .def("set", &VectorInt::set)
+        .def("setElement", &VectorInt::set) // deprecated
+        .def("__setitem__", [](VectorInt& v, size_t index,
+                const regina::Integer& value) {
+            v.set(index, value);
         })
-        .def("set", &Polynomial<Rational>::set)
-        .def("swap", &Polynomial<Rational>::swap)
-        .def("negate", &Polynomial<Rational>::negate)
-        .def("str", overload_cast<const char*>(
-            &Polynomial<Rational>::str, pybind11::const_))
-        .def("utf8", overload_cast<const char*>(
-            &Polynomial<Rational>::utf8, pybind11::const_))
-        .def(pybind11::self *= Rational())
-        .def(pybind11::self /= Rational())
         .def(pybind11::self += pybind11::self)
         .def(pybind11::self -= pybind11::self)
-        .def(pybind11::self *= pybind11::self)
-        .def(pybind11::self /= pybind11::self)
-        .def(pybind11::self * regina::Rational())
-        .def(regina::Rational() * pybind11::self)
-        .def(pybind11::self / regina::Rational())
+        .def(pybind11::self *= regina::Integer())
         .def(pybind11::self + pybind11::self)
         .def(pybind11::self - pybind11::self)
+        .def(pybind11::self * regina::Integer())
         .def(pybind11::self * pybind11::self)
-        .def(pybind11::self / pybind11::self)
-        .def(- pybind11::self)
-        .def("divisionAlg", [](const Polynomial<Rational>& p,
-                const Polynomial<Rational>& divisor) {
-            std::unique_ptr<Polynomial<Rational>> q(new Polynomial<Rational>);
-            std::unique_ptr<Polynomial<Rational>> r(new Polynomial<Rational>);
-
-            p.divisionAlg(divisor, *q, *r);
-            return std::make_pair(std::move(q), std::move(r));
-        })
-        .def("gcdWithCoeffs", &Polynomial<Rational>::gcdWithCoeffs<Rational>)
+        .def("negate", &VectorInt::negate)
+        .def("norm", &VectorInt::norm)
+        .def("elementSum", &VectorInt::elementSum)
+        .def("addCopies", &VectorInt::addCopies)
+        .def("subtractCopies", &VectorInt::subtractCopies)
+        .def("isZero", &VectorInt::isZero)
+        // The C-style casts below are to avoid a compile error under gcc7
+        // (but not gcc8), where the compiler cannot determine the type of a
+        // template member function.
+        .def("scaleDown",
+            (void (VectorInt::*)())
+            &VectorInt::scaleDown)
+        .def_readonly_static("zero", &VectorInt::zero)
+        .def_readonly_static("one", &VectorInt::one)
+        .def_readonly_static("minusOne", &VectorInt::minusOne)
     ;
     regina::python::add_output(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);

@@ -54,10 +54,10 @@ using regina::NormalSurfaces;
 using regina::NormalSurfaceVector;
 using regina::Packet;
 using regina::Perm;
-using regina::Ray;
 using regina::Signature;
 using regina::Tetrahedron;
 using regina::Triangulation;
+using regina::Vector;
 
 using regina::NS_STANDARD;
 using regina::NS_QUAD;
@@ -462,7 +462,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             CPPUNIT_ASSERT_MESSAGE(msg.str(), expectedCount == tot);
         }
 
-        static bool lexLess(const Ray* a, const Ray* b) {
+        template <typename T>
+        static bool lexLess(const Vector<T>* a, const Vector<T>* b) {
             for (unsigned i = 0; i < a->size(); ++i) {
                 if ((*a)[i] < (*b)[i])
                     return true;
@@ -481,7 +482,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             if (n == 0)
                 return true;
 
-            typedef const Ray* VecPtr;
+            typedef const Vector<LargeInteger>* VecPtr;
             VecPtr* lhsRaw = new VecPtr[n];
             VecPtr* rhsRaw = new VecPtr[n];
 
@@ -491,8 +492,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 rhsRaw[i] = &rhs->surface(i)->rawVector();
             }
 
-            std::sort(lhsRaw, lhsRaw + n, lexLess);
-            std::sort(rhsRaw, rhsRaw + n, lexLess);
+            std::sort(lhsRaw, lhsRaw + n, lexLess<LargeInteger>);
+            std::sort(rhsRaw, rhsRaw + n, lexLess<LargeInteger>);
 
             bool ok = true;
             for (i = 0; i < n; ++i)
@@ -1797,7 +1798,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             }
 
             // Collect all vertex surfaces with the chi=0 constraint.
-            std::vector<Ray*> eulerZero;
+            std::vector<Vector<LargeInteger>*> eulerZero;
             regina::TreeEnumeration<regina::LPConstraintEulerZero> tree(
                 &tri, NS_STANDARD);
             while (tree.next()) {
@@ -1808,13 +1809,13 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         "chi = " << s->eulerChar() << ": " << tri.label();
                     CPPUNIT_FAIL(msg.str());
                 }
-                eulerZero.push_back(new Ray(s->rawVector()));
+                eulerZero.push_back(new Vector<LargeInteger>(s->rawVector()));
                 delete s;
             }
 
             // Collect *all* vertex surfaces in the normal way, and extract
             // only those with chi=0.
-            std::vector<const Ray*> filtered;
+            std::vector<const Vector<LargeInteger>*> filtered;
             NormalSurfaces* all = NormalSurfaces::enumerate(&tri, NS_STANDARD);
             for (size_t i = 0; i < all->size(); ++i) {
                 const NormalSurface* s = all->surface(i);
@@ -1825,8 +1826,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             // Ensure that every vertex surface with chi=0 was picked up
             // in our custom list.
 
-            std::sort(eulerZero.begin(), eulerZero.end(), lexLess);
-            std::sort(filtered.begin(), filtered.end(), lexLess);
+            std::sort(eulerZero.begin(), eulerZero.end(), lexLess<LargeInteger>);
+            std::sort(filtered.begin(), filtered.end(), lexLess<LargeInteger>);
 
             auto customIt = eulerZero.begin();
             auto allIt = filtered.begin();

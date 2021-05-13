@@ -47,7 +47,6 @@
 #include "enumerate/enumconstraints.h"
 #include "enumerate/hilbertcd.h"
 #include "maths/matrix.h"
-#include "maths/ray.h"
 #include "utilities/bitmask.h"
 #include <list>
 
@@ -117,19 +116,19 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
     std::list<VecSpec<BitmaskType>*> basis;
     typename std::list<VecSpec<BitmaskType>*>::iterator bit;
 
-    Ray** unitMatch = new Ray*[dim];
+    Vector<LargeInteger>** unitMatch = new Vector<LargeInteger>*[dim];
     int i, j;
     for (i = 0; i < dim; ++i) {
-        unitMatch[i] = new Ray(nEqns);
+        unitMatch[i] = new Vector<LargeInteger>(nEqns);
         for (j = 0; j < nEqns; ++j)
-            unitMatch[i]->setElement(j, LargeInteger(subspace.entry(j, i)));
+            unitMatch[i]->set(j, LargeInteger(subspace.entry(j, i)));
     }
 
     unsigned stackSize;
     // All vectors/rays are created and destroyed.
     // Bitmasks on the other hand are reused.
     VecSpec<BitmaskType>** coord = new VecSpec<BitmaskType>*[dim];
-    Ray** match = new Ray*[dim];
+    Vector<LargeInteger>** match = new Vector<LargeInteger>*[dim];
     BitmaskType* frozen = new BitmaskType[dim];
 
     for (i = 0; i < dim; ++i)
@@ -137,12 +136,12 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
     
     // Push the zero vector.
     coord[0] = new VecSpec<BitmaskType>(dim);
-    match[0] = new Ray(nEqns);
+    match[0] = new Vector<LargeInteger>(nEqns);
     stackSize = 1; // The zero vector is already on top.
     bool first = true;
 
     VecSpec<BitmaskType> *c;
-    Ray *m;
+    Vector<LargeInteger> *m;
     BitmaskType f(dim);
     BitmaskType mask(dim), tmpMask(dim);
     BitmaskType* constraint;
@@ -235,10 +234,10 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
             }
 
             coord[stackSize] = new VecSpec<BitmaskType>(*c);
-            coord[stackSize]->setElement(i, (*coord[stackSize])[i] + 1);
+            coord[stackSize]->set(i, (*coord[stackSize])[i] + 1);
             coord[stackSize]->mask_.set(i, true);
 
-            match[stackSize] = new Ray(*m);
+            match[stackSize] = new Vector<LargeInteger>(*m);
             (*match[stackSize]) += (*unitMatch[i]);
 
             frozen[stackSize] = f;
