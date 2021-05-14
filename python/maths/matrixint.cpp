@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "maths/matrix.h"
+#include "maths/vector.h"
 #include "../helpers.h"
 
 using pybind11::overload_cast;
@@ -137,6 +138,9 @@ void addMatrixInt(pybind11::module_& m) {
             &MatrixInt::columnEchelonForm)
         .def("__mul__", [](const MatrixInt& m1, const MatrixInt& m2){
             return m1 * m2;
+        })
+        .def("__mul__", [](const MatrixInt& m, const regina::VectorInt& v){
+            return m * v;
         })
     ;
     regina::python::add_output(c);

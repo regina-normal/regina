@@ -119,6 +119,7 @@ Version 6.1  [ TODO ]
             - New routine transpose().
             - New routines rowEchelonForm() and columnEchelonForm() for
               matrices over Regina's integer types (including MatrixInt).
+            - New operator * for multiplying a matrix by a vector.
             - New constructor that takes a hard-coded list of entries
               via a C++11 initialiser list.
         Class ModelLinkGraph:

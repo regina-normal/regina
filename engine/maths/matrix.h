@@ -100,6 +100,7 @@
 namespace regina {
 
 class Rational;
+template <class> class Vector;
 
 /**
  * \weakgroup maths
@@ -788,6 +789,35 @@ class Matrix : public Output<Matrix<T>> {
                         ans.data_[row][col] +=
                             (data_[row][k] * other.data_[k][col]);
                 }
+
+            return ans;
+        }
+
+        /**
+         * Multiplies this matrix by the given vector, and returns the result.
+         * The given vector is treated as a column vector.
+         *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
+         * \pre The length of the given vector is precisely the number of
+         * columns in this matrix.
+         *
+         * @param other the vector to multiply this matrix by.
+         * @return the product <tt>this * other</tt>, which will be a
+         * vector whose length is the number of rows in this matrix.
+         */
+        REGINA_ENABLE_FOR_RING(Vector<T>) operator * (const Vector<T>& other)
+                const {
+            Vector<T> ans(this->rows_);
+
+            unsigned long row, col;
+            for (row = 0; row < rows_; ++row) {
+                T elt = 0;
+                for (col = 0; col < cols_; ++col)
+                    elt += (data_[row][col] * other[col]);
+                ans.set(row, elt);
+            }
 
             return ans;
         }
