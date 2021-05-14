@@ -181,8 +181,8 @@ class HilbertPrimal {
          * @return \c true if the given ray lies within the given face,
          * or \c false otherwise.
          */
-        template <class BitmaskType>
-        static bool inFace(const Ray& ray, const BitmaskType& face);
+        template <class VectorClass, class BitmaskType>
+        static bool inFace(const VectorClass& ray, const BitmaskType& face);
 };
 
 /*@}*/

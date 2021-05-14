@@ -184,8 +184,8 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         tracker->setPercent(100);
 }
 
-template <class BitmaskType>
-bool HilbertPrimal::inFace(const Ray& ray, const BitmaskType& face) {
+template <class VectorClass, class BitmaskType>
+bool HilbertPrimal::inFace(const VectorClass& ray, const BitmaskType& face) {
     for (unsigned i = 0; i < ray.size(); ++i)
         if ((! face.get(i)) && ray[i] > 0)
             return false;
