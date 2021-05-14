@@ -92,7 +92,8 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        NSVectorMirrored(const Vector<LargeInteger>& cloneMe);
+        template <typename T>
+        NSVectorMirrored(const Vector<T>& cloneMe);
         /**
          * Destroys this vector and its mirror if appropriate.
          */
@@ -175,8 +176,8 @@ class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
 inline NSVectorMirrored::NSVectorMirrored(
         size_t length) : NormalSurfaceVector(length), mirror(nullptr) {
 }
-inline NSVectorMirrored::NSVectorMirrored(
-        const Vector<LargeInteger>& cloneMe) :
+template <typename T>
+inline NSVectorMirrored::NSVectorMirrored(const Vector<T>& cloneMe) :
         NormalSurfaceVector(cloneMe), mirror(nullptr) {
 }
 inline NSVectorMirrored::~NSVectorMirrored() {

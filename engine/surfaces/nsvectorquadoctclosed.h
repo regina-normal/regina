@@ -111,7 +111,8 @@ class REGINA_API NSVectorQuadOctClosed : public NSVectorQuadOct {
          *
          * @param cloneMe the vector to clone.
          */
-        NSVectorQuadOctClosed(const Vector<LargeInteger>& cloneMe);
+        template <typename T>
+        NSVectorQuadOctClosed(const Vector<T>& cloneMe);
 
         static NormalSurfaceVector* makeZeroVector(
             const Triangulation<3>* triangulation);
@@ -127,8 +128,8 @@ inline NSVectorQuadOctClosed::NSVectorQuadOctClosed(size_t length) :
         NSVectorQuadOct(length) {
 }
 
-inline NSVectorQuadOctClosed::NSVectorQuadOctClosed(
-        const Vector<LargeInteger>& cloneMe) :
+template <typename T>
+inline NSVectorQuadOctClosed::NSVectorQuadOctClosed(const Vector<T>& cloneMe) :
         NSVectorQuadOct(cloneMe) {
 }
 

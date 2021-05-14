@@ -22,6 +22,9 @@ Version 6.1  [ TODO ]
         - Environment variables such as REGINA_HOME and REGINA_PYLIBDIR
           are more consistently used, and should need to be set less often.
     ENGINE:
+        Class AngleStructureVector:
+            - The constructor that used to take a const Vector<LargeInteger>&
+              is now a template constructor that takes any const Vector<T>&.
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
         Class Base64SigEncoding:
@@ -136,6 +139,8 @@ Version 6.1  [ TODO ]
               the old name has been removed completely.  If you have a
               subclass which overrides this function (which is highly unlikely
               for end users), you MUST rename your override accordingly.
+            - The constructor that used to take a const Vector<LargeInteger>&
+              is now a template constructor that takes any const Vector<T>&.
             - Operator += now returns a reference, as it should.
         Class PacketInfo<...>:
             - Routine name() has been changed to a class constant.

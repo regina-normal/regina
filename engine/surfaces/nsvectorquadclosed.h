@@ -120,7 +120,8 @@ class REGINA_API NSVectorQuadClosed : public NSVectorQuad {
          *
          * @param cloneMe the vector to clone.
          */
-        NSVectorQuadClosed(const Vector<LargeInteger>& cloneMe);
+        template <typename T>
+        NSVectorQuadClosed(const Vector<T>& cloneMe);
 
         static NormalSurfaceVector* makeZeroVector(
             const Triangulation<3>* triangulation);
@@ -136,8 +137,8 @@ inline NSVectorQuadClosed::NSVectorQuadClosed(size_t length) :
         NSVectorQuad(length) {
 }
 
-inline NSVectorQuadClosed::NSVectorQuadClosed(
-        const Vector<LargeInteger>& cloneMe) :
+template <typename T>
+inline NSVectorQuadClosed::NSVectorQuadClosed(const Vector<T>& cloneMe) :
         NSVectorQuad(cloneMe) {
 }
 

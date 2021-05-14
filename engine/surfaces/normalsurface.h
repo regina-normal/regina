@@ -322,8 +322,8 @@ struct NormalInfo;
  *   beginning of the new vector subclass.  This will declare and define
  *   various constants, typedefs and virtual functions (see the
  *   REGINA_NORMAL_SURFACE_FLAVOUR macro documentation for details).</li>
- *   <li>Constructors <tt>class(size_t length)</tt> and
- *   <tt>class(const Vector<LargeInteger>& cloneMe)</tt> must be
+ *   <li>A constructor <tt>class(size_t length)</tt> and a template constructor
+ *   <tt>class(const Vector<T>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
  *   <li>All abstract functions must be implemented, except for those
@@ -365,7 +365,8 @@ class REGINA_API NormalSurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        NormalSurfaceVector(const Vector<LargeInteger>& cloneMe);
+        template <typename T>
+        NormalSurfaceVector(const Vector<T>& cloneMe);
 
         /**
          * A virtual destructor.  This is required because here we introduce
@@ -1788,8 +1789,9 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
 inline NormalSurfaceVector::NormalSurfaceVector(size_t length) :
         coords_(length) {
 }
-inline NormalSurfaceVector::NormalSurfaceVector(
-        const Vector<LargeInteger>& cloneMe) : coords_(cloneMe) {
+template <typename T>
+inline NormalSurfaceVector::NormalSurfaceVector(const Vector<T>& cloneMe) :
+        coords_(cloneMe) {
 }
 inline NormalSurfaceVector::~NormalSurfaceVector() {
 }

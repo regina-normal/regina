@@ -102,7 +102,8 @@ class REGINA_API NSVectorANStandard : public NormalSurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        NSVectorANStandard(const Vector<LargeInteger>& cloneMe);
+        template <typename T>
+        NSVectorANStandard(const Vector<T>& cloneMe);
 
         virtual LargeInteger triangles(size_t tetIndex,
             int vertex, const Triangulation<3>* triang) const override;
@@ -130,8 +131,8 @@ class REGINA_API NSVectorANStandard : public NormalSurfaceVector {
 inline NSVectorANStandard::NSVectorANStandard(
         size_t length) : NormalSurfaceVector(length) {
 }
-inline NSVectorANStandard::NSVectorANStandard(
-        const Vector<LargeInteger>& cloneMe) :
+template <typename T>
+inline NSVectorANStandard::NSVectorANStandard(const Vector<T>& cloneMe) :
         NormalSurfaceVector(cloneMe) {
 }
 

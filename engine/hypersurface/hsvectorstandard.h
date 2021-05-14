@@ -92,7 +92,8 @@ class REGINA_API HSVectorStandard : public NormalHypersurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        HSVectorStandard(const Vector<LargeInteger>& cloneMe);
+        template <typename T>
+        HSVectorStandard(const Vector<T>& cloneMe);
 
         virtual LargeInteger tetrahedra(size_t pentIndex,
             int vertex, const Triangulation<4>* triang) const override;
@@ -116,8 +117,8 @@ class REGINA_API HSVectorStandard : public NormalHypersurfaceVector {
 inline HSVectorStandard::HSVectorStandard(
         size_t length) : NormalHypersurfaceVector(length) {
 }
-inline HSVectorStandard::HSVectorStandard(
-        const Vector<LargeInteger>& cloneMe) :
+template <typename T>
+inline HSVectorStandard::HSVectorStandard(const Vector<T>& cloneMe) :
         NormalHypersurfaceVector(cloneMe) {
 }
 

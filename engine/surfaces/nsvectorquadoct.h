@@ -98,7 +98,8 @@ class REGINA_API NSVectorQuadOct : public NSVectorMirrored {
          *
          * @param cloneMe the vector to clone.
          */
-        NSVectorQuadOct(const Vector<LargeInteger>& cloneMe);
+        template <typename T>
+        NSVectorQuadOct(const Vector<T>& cloneMe);
 
         static NormalSurfaceVector* makeMirror(
             const Vector<LargeInteger>& original,
@@ -124,8 +125,8 @@ class REGINA_API NSVectorQuadOct : public NSVectorMirrored {
 inline NSVectorQuadOct::NSVectorQuadOct(
         size_t length) : NSVectorMirrored(length) {
 }
-inline NSVectorQuadOct::NSVectorQuadOct(
-        const Vector<LargeInteger>& cloneMe) :
+template <typename T>
+inline NSVectorQuadOct::NSVectorQuadOct(const Vector<T>& cloneMe) :
         NSVectorMirrored(cloneMe) {
 }
 

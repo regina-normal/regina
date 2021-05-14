@@ -158,8 +158,8 @@ struct HyperInfo;
  *   the beginning of the new vector subclass.  This will declare and
  *   define various constants, typedefs and virtual functions (see the
  *   REGINA_NORMAL_HYPERSURFACE_FLAVOUR macro documentation for details).</li>
- *   <li>Constructors <tt>class(size_t length)</tt> and
- *   <tt>class(const Vector<LargeInteger>& cloneMe)</tt> must be
+ *   <li>A constructor <tt>class(size_t length)</tt> and a template constructor
+ *   <tt>class(const Vector<T>& cloneMe)</tt> must be
  *   declared and implemented; these will usually just call the
  *   corresponding superclass constructors.</li>
  *   <li>All abstract functions must be implemented, except for those
@@ -195,7 +195,8 @@ class REGINA_API NormalHypersurfaceVector {
          *
          * @param cloneMe the vector to clone.
          */
-        NormalHypersurfaceVector(const Vector<LargeInteger>& cloneMe);
+        template <typename T>
+        NormalHypersurfaceVector(const Vector<T>& cloneMe);
 
         /**
          * A virtual destructor.  This is required because here we
@@ -961,8 +962,9 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
 inline NormalHypersurfaceVector::NormalHypersurfaceVector(size_t length) :
         coords_(length) {
 }
+template <typename T>
 inline NormalHypersurfaceVector::NormalHypersurfaceVector(
-        const Vector<LargeInteger>& cloneMe) : coords_(cloneMe) {
+        const Vector<T>& cloneMe) : coords_(cloneMe) {
 }
 inline NormalHypersurfaceVector::~NormalHypersurfaceVector() {
 }
