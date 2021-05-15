@@ -221,26 +221,15 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Initialises this integer to the given value.
          *
-         * @param value the new value of this integer.
-         */
-        IntegerBase(const IntegerBase<supportInfinity>& value);
-        /**
-         * Initialises this integer to the given value.
-         *
-         * This constructor is marked as explicit in the hope of
-         * avoiding accidental (and unintentional) mixing of template
-         * parameters.
-         *
-         * \pre The given integer is not infinite.
+         * \pre If \a supportInfinity is \c false (i.e., this class cannot
+         * represent infinity), then \a value is not infinite.
          *
          * @param value the new value of this integer.
          */
-        explicit IntegerBase(const IntegerBase<! supportInfinity>& value);
+        template <bool srcSupportInfinity>
+        IntegerBase(const IntegerBase<srcSupportInfinity>& value);
         /**
          * Initialises this integer to the given value.
-         *
-         * This constructor is marked as explicit in the hope of
-         * avoiding accidental (and unintentional) mixing of integer classes.
          *
          * \pre If \a bytes is larger than sizeof(long), then
          * \a bytes is a strict \e multiple of sizeof(long).  For
@@ -254,7 +243,7 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
          * @param value the new value of this integer.
          */
         template <int bytes>
-        explicit IntegerBase(const NativeInteger<bytes>& value);
+        IntegerBase(const NativeInteger<bytes>& value);
         /**
          * Initialises this to the given Python arbitrary-precision integer.
          *
@@ -460,19 +449,14 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Sets this integer to the given value.
          *
-         * @param value the new value of this integer.
-         * @return a reference to this integer with its new value.
-         */
-        IntegerBase& operator =(const IntegerBase& value);
-        /**
-         * Sets this integer to the given value.
-         *
-         * \pre The given integer is not infinite.
+         * \pre If \a supportInfinity is \c false (i.e., this class cannot
+         * represent infinity), then \a value is not infinite.
          *
          * @param value the new value of this integer.
          * @return a reference to this integer with its new value.
          */
-        IntegerBase& operator = (const IntegerBase<! supportInfinity>& value);
+        template <bool srcSupportInfinity>
+        IntegerBase& operator =(const IntegerBase<srcSupportInfinity>& value);
         /**
          * Sets this integer to the given value.
          *
@@ -2354,25 +2338,16 @@ inline IntegerBase<supportInfinity>::IntegerBase(unsigned long value) :
 }
 
 template <bool supportInfinity>
+template <bool srcSupportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase(
-        const IntegerBase<supportInfinity>& value) {
-    if (value.isInfinite()) {
-        large_ = nullptr;
-        makeInfinite();
-    } else if (value.large_) {
-        large_ = new __mpz_struct[1];
-        mpz_init_set(large_, value.large_);
-    } else {
-        small_ = value.small_;
-        large_ = nullptr;
+        const IntegerBase<srcSupportInfinity>& value) {
+    if constexpr (supportInfinity && srcSupportInfinity) {
+        if (value.isInfinite()) {
+            large_ = nullptr;
+            makeInfinite();
+            return;
+        }
     }
-}
-
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>::IntegerBase(
-        const IntegerBase<! supportInfinity>& value) {
-    // If value is infinite, we cannot make this infinite.
-    // This is why we insist via preconditions that value is finite.
     if (value.large_) {
         large_ = new __mpz_struct[1];
         mpz_init_set(large_, value.large_);
@@ -2528,35 +2503,15 @@ inline long IntegerBase<supportInfinity>::longValue() const {
 }
 
 template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(
-        const IntegerBase<supportInfinity>& value) {
-    if (value.isInfinite()) {
-        makeInfinite();
-        return *this;
-    }
-    makeFinite();
-    if (value.large_) {
-        if (large_)
-            mpz_set(large_, value.large_);
-        else {
-            large_ = new __mpz_struct[1];
-            mpz_init_set(large_, value.large_);
+template <bool srcSupportInfinity>
+inline IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator =(
+        const IntegerBase<srcSupportInfinity>& value) {
+    if constexpr (supportInfinity && srcSupportInfinity) {
+        if (value.isInfinite()) {
+            makeInfinite();
+            return *this;
         }
-    } else {
-        small_ = value.small_;
-        if (large_)
-            clearLarge();
     }
-    return *this;
-}
-
-template <bool supportInfinity>
-inline IntegerBase<supportInfinity>&
-        IntegerBase<supportInfinity>::operator =(
-        const IntegerBase<! supportInfinity>& value) {
-    // If value is infinite, we cannot make this infinite.
-    // This is why we insist via preconditions that value is finite.
     makeFinite();
     if (value.large_) {
         if (large_)
