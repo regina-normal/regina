@@ -259,6 +259,7 @@ Version 6.1  [ TODO ]
             - New binary +, - and scalar * operators.
             - New routine isZero().
             - New routine scaleDown() for vectors over Regina's integer classes.
+            - New typedef Element.
             - Provides the standard str() and detail() output functions.
             - Renamed setElement() to set(); the old name is now a deprecated
               alias.

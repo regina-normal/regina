@@ -105,6 +105,9 @@ class Rational;
 template <class T>
 class Vector : public ShortOutput<Vector<T>> {
     public:
+        typedef T Element;
+            /**< The type of each element in the vector. */
+
         static T zero;
             /**< Zero in the underlying number system.
              *   This would be \c const if it weren't for the fact that
