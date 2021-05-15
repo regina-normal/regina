@@ -111,8 +111,9 @@ class REGINA_API DoubleDescription {
          * is called, and that ProgressTracker::setFinished() will be
          * called after this routine returns.
          *
-         * \pre The template argument RayClass is derived from
-         * Vector<LargeInteger> (or may be Vector<LargeInteger> itself).
+         * \pre The template argument RayClass is derived from (or equal to)
+         * Vector<T>, where \a T is one of Regina's own integer classes
+         * (Integer, LargeInteger or NativeInteger).
          *
          * @param results the output iterator to which the resulting extremal
          * rays will be written; this must accept objects of type
@@ -123,9 +124,9 @@ class REGINA_API DoubleDescription {
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
          * @param constraints a set of validity constraints as described
-         * above, or 0 if no additional constraints should be imposed.
+         * above, or \c null if no additional constraints should be imposed.
          * @param tracker a progress tracker through which progress
-         * will be reported, or 0 if no progress reporting is required.
+         * will be reported, or \c null if no progress reporting is required.
          * @param initialRows specifies how many initial rows of \a subspace
          * are to be processed in the precise order in which they appear.
          * The remaining rows will be sorted using the PosOrder class
@@ -134,7 +135,7 @@ class REGINA_API DoubleDescription {
         template <class RayClass, class OutputIterator>
         static void enumerateExtremalRays(OutputIterator results,
             const MatrixInt& subspace, const EnumConstraints* constraints,
-            ProgressTracker* tracker = 0, unsigned long initialRows = 0);
+            ProgressTracker* tracker = nullptr, unsigned long initialRows = 0);
 
     private:
         /**
@@ -150,10 +151,10 @@ class REGINA_API DoubleDescription {
          * - a bitmask indicating which facets of the original cone this
          *   ray belongs to.
          *
-         * The dot products are stored as coordinates of the
-         * Vector superclass.  Dot products are only stored
-         * for hyperplanes that have not yet been intersected (thus
-         * the vector length becomes smaller as the main algorithm progresses).
+         * The dot products are stored as coordinates of the Vector superclass.
+         * Dot products are only stored for hyperplanes that have not yet been
+         * intersected (thus the vector length becomes smaller as the
+         * main algorithm progresses).
          * Dot products are stored in the order in which hyperplanes are
          * to be processed (thus the dot product with the next hyperplane
          * is the first element of this vector, and the dot product with
@@ -169,12 +170,18 @@ class REGINA_API DoubleDescription {
          * number of facets is too large then the slower general-use Bitmask
          * class will need to be used instead.
          *
-         * \pre The template argument \a BitmaskType is one of Regina's
-         * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
+         * \tparam IntegerType the integer type used to store and manipulate
+         * rays; this must be one of Regina's own integer types.
+         *
+         * \tparam BitmaskType the bitmask type used to store a set of facets;
+         * this must be one of Regina's own bitmask types, such as
+         * Bitmask, Bitmask1 or Bitmask2.
          */
-        template <class BitmaskType>
-        class RaySpec : private Vector<LargeInteger> {
+        template <class IntegerType, class BitmaskType>
+        class RaySpec : private Vector<IntegerType> {
             private:
+                using Vector<IntegerType>::elements;
+
                 BitmaskType facets_;
                     /**< A bitmask listing which original facets this ray
                          belongs to. */
@@ -215,7 +222,7 @@ class REGINA_API DoubleDescription {
                  *
                  * @param trunc the ray to copy and truncate.
                  */
-                inline RaySpec(const RaySpec<BitmaskType>& trunc);
+                inline RaySpec(const RaySpec& trunc);
 
                 /**
                  * Creates a new ray, describing where the plane between
@@ -296,11 +303,7 @@ class REGINA_API DoubleDescription {
                 void recover(RayClass& dest, const MatrixInt& subspace) const;
         };
 
-        /**
-         * Private constructor to ensure that objects of this class are
-         * never created.
-         */
-        DoubleDescription();
+        DoubleDescription() = delete;
 
         /**
          * Identical to the public routine enumerateExtremalRays(), except
@@ -360,10 +363,10 @@ class REGINA_API DoubleDescription {
          * current solution set.  This does not include the hyperplane
          * currently under consideration.
          * @param constraintsBegin the beginning of the C-style array of
-         * validity constraints.  This should be 0 if no additional
+         * validity constraints.  This should be \c null if no additional
          * constraints are to be imposed.
          * @param constraintsEnd a pointer just past the end of the
-         * C-style array of validity constraints.  This should be 0
+         * C-style array of validity constraints.  This should be \c null
          * if no additional constraints are to be imposed.
          * @param tracker an optional progress tracker that will be polled
          * for cancellation (though no incremental progress will be reported
@@ -374,10 +377,10 @@ class REGINA_API DoubleDescription {
          * the entire old solution set, or undefined if the operation
          * was cancelled via the progress tracker.
          */
-        template <class BitmaskType>
+        template <class IntegerType, class BitmaskType>
         static bool intersectHyperplane(
-            std::vector<RaySpec<BitmaskType>*>& src,
-            std::vector<RaySpec<BitmaskType>*>& dest,
+            std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
+            std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,
             unsigned long dim, unsigned long prevHyperplanes,
             const BitmaskType* constraintsBegin,
             const BitmaskType* constraintsEnd,
@@ -388,38 +391,34 @@ class REGINA_API DoubleDescription {
 
 // Inline functions for DoubleDescription::RaySpec
 
-template <class BitmaskType>
-inline DoubleDescription::RaySpec<BitmaskType>::RaySpec(
-        const RaySpec<BitmaskType>& trunc) :
-        Vector<LargeInteger>(trunc.size() - 1),
-        facets_(trunc.facets_) {
+template <class IntegerType, class BitmaskType>
+inline DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
+        const RaySpec<IntegerType, BitmaskType>& trunc) :
+        Vector<IntegerType>(trunc.size() - 1), facets_(trunc.facets_) {
     std::copy(trunc.elements + 1, trunc.end, elements);
 }
 
-template <class BitmaskType>
-inline int DoubleDescription::RaySpec<BitmaskType>::sign() const {
-    if (*elements < LargeInteger::zero)
+template <class IntegerType, class BitmaskType>
+inline int DoubleDescription::RaySpec<IntegerType, BitmaskType>::sign() const {
+    if (*elements < 0)
         return -1;
-    if (*elements > LargeInteger::zero)
+    if (*elements > 0)
         return 1;
     return 0;
 }
 
-template <class BitmaskType>
-inline const BitmaskType& DoubleDescription::RaySpec<BitmaskType>::facets()
-        const {
+template <class IntegerType, class BitmaskType>
+inline const BitmaskType&
+        DoubleDescription::RaySpec<IntegerType, BitmaskType>::facets() const {
     return facets_;
 }
 
-template <class BitmaskType>
-inline bool DoubleDescription::RaySpec<BitmaskType>::onAllCommonFacets(
-        const RaySpec<BitmaskType>& x, const RaySpec<BitmaskType>& y) const {
+template <class IntegerType, class BitmaskType>
+inline bool
+        DoubleDescription::RaySpec<IntegerType, BitmaskType>::onAllCommonFacets(
+        const RaySpec<IntegerType, BitmaskType>& x,
+        const RaySpec<IntegerType, BitmaskType>& y) const {
     return facets_.containsIntn(x.facets_, y.facets_);
-}
-
-// Inline functions for DoubleDescription
-
-inline DoubleDescription::DoubleDescription() {
 }
 
 } // namespace regina

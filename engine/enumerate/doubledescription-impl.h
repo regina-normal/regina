@@ -51,46 +51,45 @@
 #include "maths/matrixops.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
+#include "utilities/intutils.h"
 #include "utilities/trieset.h"
 
 namespace regina {
 
-template <class BitmaskType>
-DoubleDescription::RaySpec<BitmaskType>::RaySpec(unsigned long axis,
-        const MatrixInt& subspace, const long* hypOrder) :
-        Vector<LargeInteger>(subspace.rows()),
-        facets_(subspace.columns()) {
+template <class IntegerType, class BitmaskType>
+DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
+        unsigned long axis, const MatrixInt& subspace, const long* hypOrder) :
+        Vector<IntegerType>(subspace.rows()), facets_(subspace.columns()) {
     size_t i;
 
     for (i = 0; i < subspace.columns(); ++i)
         if (i != axis)
             facets_.set(i, true);
 
-    for (i = 0; i < size(); ++i)
+    for (i = 0; i < Vector<IntegerType>::size(); ++i)
         elements[i] = subspace.entry(hypOrder[i], axis);
 }
 
-template <class BitmaskType>
-DoubleDescription::RaySpec<BitmaskType>::RaySpec(
-        const RaySpec<BitmaskType>& first,
-        const RaySpec<BitmaskType>& second) :
-        Vector<LargeInteger>(second.size() - 1),
-        facets_(second.facets_) {
-    for (size_t i = 0; i < size(); ++i)
+template <class IntegerType, class BitmaskType>
+DoubleDescription::RaySpec<IntegerType, BitmaskType>::RaySpec(
+        const RaySpec<IntegerType, BitmaskType>& first,
+        const RaySpec<IntegerType, BitmaskType>& second) :
+        Vector<IntegerType>(second.size() - 1), facets_(second.facets_) {
+    for (size_t i = 0; i < Vector<IntegerType>::size(); ++i)
         elements[i] = second.elements[i + 1] * (*first.elements) -
             first.elements[i + 1] * (*second.elements);
-    scaleDown();
+    Vector<IntegerType>::scaleDown();
 
-    if (*first.elements < zero)
-        negate();
+    if (*first.elements < 0)
+        Vector<IntegerType>::negate();
 
     // Compute the new set of facets.
     facets_ &= first.facets_;
 }
 
-template <class BitmaskType>
+template <class IntegerType, class BitmaskType>
 template <typename RayClass>
-void DoubleDescription::RaySpec<BitmaskType>::recover(
+void DoubleDescription::RaySpec<IntegerType, BitmaskType>::recover(
         RayClass& dest, const MatrixInt& subspace) const {
     unsigned long i, j;
 
@@ -102,7 +101,7 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     for (i = 0, j = 0; i < subspace.columns(); ++i)
         if (facets_.get(i)) {
             // We know in advance that this coordinate will be zero.
-            dest.set(i, LargeInteger::zero);
+            dest.set(i, IntegerType::zero);
         } else {
             use[j++] = i;
         }
@@ -120,7 +119,7 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     // non-trivial equation relating them.
 
     // Form a submatrix for the equations, looking only at non-zero coordinates.
-    LargeInteger* m = new LargeInteger[rows * cols];
+    IntegerType* m = new IntegerType[rows * cols];
     for (i = 0; i < rows; ++i)
         for (j = 0; j < cols; ++j)
             m[i * cols + j] = subspace.entry(i, use[j]);
@@ -136,11 +135,11 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     // See rowBasisAndOrthComp() for further details on how this works.
     unsigned long done = 0;
     unsigned long tmp;
-    LargeInteger coeff1, coeff2, common;
+    IntegerType coeff1, coeff2, common;
     while (done < rows) {
         // Find the first non-zero entry in row done.
         for (i = done; i < cols; ++i)
-            if (m[done * cols + lead[i]] != LargeInteger::zero)
+            if (m[done * cols + lead[i]] != 0)
                 break;
 
         if (i == cols) {
@@ -162,17 +161,17 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
                     continue;
 
                 coeff2 = m[i * cols + lead[done]];
-                common = LargeInteger::zero;
-                if (coeff2 != LargeInteger::zero) {
+                common = 0;
+                if (coeff2 != 0) {
                     for (j = 0; j < cols; ++j) {
                         m[i * cols + j] = m[i * cols + j] * coeff1
                             - m[done * cols + j] * coeff2;
                         common = common.gcd(m[i * cols + j]);
                     }
                 }
-                if (common < LargeInteger::zero)
+                if (common < 0)
                     common.negate();
-                if (common > LargeInteger::one)
+                if (common > 1)
                     for (j = 0; j < cols; ++j)
                         m[i * cols + j].divByExact(common);
             }
@@ -185,10 +184,10 @@ void DoubleDescription::RaySpec<BitmaskType>::recover(
     // know this because we know that our solution must be one-dimensional).
     //
     // Form a solution!
-    common = LargeInteger::one;
+    common = 1;
     for (i = 0; i < rows; ++i)
         common = common.lcm(m[i * cols + lead[i]]);
-    if (common < LargeInteger::zero)
+    if (common < 0)
         common.negate();
 
     for (i = 0; i < rows; ++i)
@@ -208,6 +207,11 @@ template <class RayClass, class OutputIterator>
 void DoubleDescription::enumerateExtremalRays(OutputIterator results,
         const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
+    static_assert(IsReginaInteger<typename RayClass::Element>::value,
+        "DoubleDescription::enumerateExtremalRays() requires the RayClass "
+        "template parameter to be equal to or derived from Vector<T>, "
+        "where T is one of Regina's own integer types.");
+
     unsigned long nFacets = subspace.columns();
 
     // If the space has dimension zero, return no results.
@@ -249,6 +253,8 @@ template <class RayClass, class BitmaskType, class OutputIterator>
 void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
         const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
+    typedef typename RayClass::Element IntegerType;
+
     // Get the dimension of the entire space in which we are working.
     unsigned long dim = subspace.columns();
 
@@ -259,7 +265,7 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
         RayClass* ans;
         for (unsigned long i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
-            ans->set(i, LargeInteger::one);
+            ans->set(i, IntegerType::one);
             *results++ = ans;
         }
 
@@ -290,11 +296,12 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
 
     // Create the two vector lists with which we will work.
     // Fill the first with the initial set of rays.
-    typedef std::vector<RaySpec<BitmaskType>*> RaySpecList;
+    typedef std::vector<RaySpec<IntegerType, BitmaskType>*> RaySpecList;
     RaySpecList list[2];
 
     for (i = 0; i < dim; ++i)
-        list[0].push_back(new RaySpec<BitmaskType>(i, subspace, hyperplanes));
+        list[0].push_back(new RaySpec<IntegerType, BitmaskType>(
+            i, subspace, hyperplanes));
 
     // Convert the set of constraints into a bitmask, where for every original
     // facet listed in the constraint the corresponding bit is set to 1.
@@ -372,10 +379,10 @@ void DoubleDescription::enumerateUsingBitmask(OutputIterator results,
         tracker->setPercent(100);
 }
 
-template <class BitmaskType>
+template <class IntegerType, class BitmaskType>
 bool DoubleDescription::intersectHyperplane(
-        std::vector<RaySpec<BitmaskType>*>& src,
-        std::vector<RaySpec<BitmaskType>*>& dest,
+        std::vector<RaySpec<IntegerType, BitmaskType>*>& src,
+        std::vector<RaySpec<IntegerType, BitmaskType>*>& dest,
         unsigned long dim, unsigned long prevHyperplanes,
         const BitmaskType* constraintsBegin,
         const BitmaskType* constraintsEnd,
@@ -383,7 +390,7 @@ bool DoubleDescription::intersectHyperplane(
     if (src.empty())
         return false;
 
-    typedef std::vector<RaySpec<BitmaskType>*> RayList;
+    typedef std::vector<RaySpec<IntegerType, BitmaskType>*> RayList;
     RayList pos, neg;
 
     // Run through the old rays and determine which side of the
@@ -394,7 +401,7 @@ bool DoubleDescription::intersectHyperplane(
     for (auto ray : src) {
         sign = ray->sign();
         if (sign == 0)
-            dest.push_back(new RaySpec<BitmaskType>(*ray));
+            dest.push_back(new RaySpec<IntegerType, BitmaskType>(*ray));
         else if (sign < 0)
             neg.push_back(ray);
         else
@@ -483,7 +490,8 @@ bool DoubleDescription::intersectHyperplane(
             // corresponding intersection in the new results set.
             if (! trie.hasExtraSuperset(join,
                     (*posit)->facets(), (*negit)->facets(), dim))
-                dest.push_back(new RaySpec<BitmaskType>(**posit, **negit));
+                dest.push_back(new RaySpec<IntegerType, BitmaskType>(
+                    **posit, **negit));
         }
 
     // Clean up.

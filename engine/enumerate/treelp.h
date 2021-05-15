@@ -1243,7 +1243,7 @@ class LPData {
          *
          * \pre The given vector \a v has been initialised to the zero vector
          * of length origTableaux_->columns().  Note that the constructor for
-         * Vector <T> (where \a T is of Regina's native integer types) will
+         * Vector <T> (where \a T is of Regina's own integer types) will
          * automatically initialise all elements to zero as required.
          *
          * \pre No individual coordinate column has had more than one call
@@ -1253,9 +1253,10 @@ class LPData {
          * this requirement.
          *
          * \tparam RayClass the class used to hold the output vector \a v.
-         * This should be Vector<T> where \a T is one of Regina's native
-         * integer types, or else some other class that provides
-         * analogous functions size(), set() and scaleDown().
+         * This should be Vector<T> where \a T is one of Regina's integer
+         * types (Integer, LargeInteger or NativeInteger), or else some other
+         * class that provides analogous functions size(), set() and
+         * scaleDown().
          *
          * @param v the vector into which the values of the variables
          * will be placed.

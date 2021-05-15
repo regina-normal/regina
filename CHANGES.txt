@@ -65,6 +65,9 @@ Version 6.1  [ TODO ]
             - Almost everything in this class is now constexpr.
             - The class constant NONE is deprecated.  Just use DiscType().
             - Added a bool() operator that tests for a null disc type.
+        Class DoubleDescription:
+            - Can now work with rays over any of Regina's own integer types,
+              not only LargeInteger.
         Class EnableIf<condition, T, defaultValue>:
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
