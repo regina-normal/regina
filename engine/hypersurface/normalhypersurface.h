@@ -178,6 +178,10 @@ struct HyperInfo;
  * \ifacespython Not present.
  */
 class REGINA_API NormalHypersurfaceVector {
+    public:
+        typedef LargeInteger Element;
+            /**< The type of each element in the vector. */
+
     protected:
         Vector<LargeInteger> coords_;
             /**< The raw vector of normal coordinates. */

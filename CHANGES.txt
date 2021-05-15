@@ -146,6 +146,7 @@ Version 6.1  [ TODO ]
             - The constructor that used to take a const Vector<LargeInteger>&
               is now a template constructor that takes any const Vector<T>&.
             - Operator += now returns a reference, as it should.
+            - New typedef Element, for better compatibility with Vector.
         Class PacketInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
