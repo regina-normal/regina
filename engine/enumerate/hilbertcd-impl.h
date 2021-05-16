@@ -48,6 +48,7 @@
 #include "enumerate/hilbertcd.h"
 #include "maths/matrix.h"
 #include "utilities/bitmask.h"
+#include "utilities/intutils.h"
 #include <list>
 
 namespace regina {
@@ -55,6 +56,12 @@ namespace regina {
 template <class RayClass, class OutputIterator>
 void HilbertCD::enumerateHilbertBasis(OutputIterator results,
         const MatrixInt& subspace, const EnumConstraints* constraints) {
+    static_assert(
+        IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
+        "HilbertCD::enumerateHilbertBasis() requires the RayClass "
+        "template parameter to be equal to or derived from Vector<T>, "
+        "where T is one of Regina's arbitrary precision integer types.");
+
     // Get the dimension of the space.
     size_t dim = subspace.columns();
     if (dim == 0)
@@ -93,6 +100,8 @@ void HilbertCD::enumerateHilbertBasis(OutputIterator results,
 template <class RayClass, class BitmaskType, class OutputIterator>
 void HilbertCD::enumerateUsingBitmask(OutputIterator results,
         const MatrixInt& subspace, const EnumConstraints* constraints) {
+    typedef typename RayClass::Element IntegerType;
+
     // Stack-based Contejean-Devie algorithm (Information & Computation, 1994).
     size_t dim = subspace.columns();
     size_t nEqns = subspace.rows();
@@ -113,35 +122,36 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
         }
     }
 
-    std::list<VecSpec<BitmaskType>*> basis;
-    typename std::list<VecSpec<BitmaskType>*>::iterator bit;
+    std::list<VecSpec<IntegerType, BitmaskType>*> basis;
+    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator bit;
 
-    Vector<LargeInteger>** unitMatch = new Vector<LargeInteger>*[dim];
+    Vector<IntegerType>** unitMatch = new Vector<IntegerType>*[dim];
     int i, j;
     for (i = 0; i < dim; ++i) {
-        unitMatch[i] = new Vector<LargeInteger>(nEqns);
+        unitMatch[i] = new Vector<IntegerType>(nEqns);
         for (j = 0; j < nEqns; ++j)
-            unitMatch[i]->set(j, LargeInteger(subspace.entry(j, i)));
+            unitMatch[i]->set(j, subspace.entry(j, i));
     }
 
     unsigned stackSize;
     // All vectors/rays are created and destroyed.
     // Bitmasks on the other hand are reused.
-    VecSpec<BitmaskType>** coord = new VecSpec<BitmaskType>*[dim];
-    Vector<LargeInteger>** match = new Vector<LargeInteger>*[dim];
+    VecSpec<IntegerType, BitmaskType>** coord =
+        new VecSpec<IntegerType, BitmaskType>*[dim];
+    Vector<IntegerType>** match = new Vector<IntegerType>*[dim];
     BitmaskType* frozen = new BitmaskType[dim];
 
     for (i = 0; i < dim; ++i)
         frozen[i].reset(dim); // All false.
-    
+
     // Push the zero vector.
-    coord[0] = new VecSpec<BitmaskType>(dim);
-    match[0] = new Vector<LargeInteger>(nEqns);
+    coord[0] = new VecSpec<IntegerType, BitmaskType>(dim);
+    match[0] = new Vector<IntegerType>(nEqns);
     stackSize = 1; // The zero vector is already on top.
     bool first = true;
 
-    VecSpec<BitmaskType> *c;
-    Vector<LargeInteger> *m;
+    VecSpec<IntegerType, BitmaskType> *c;
+    Vector<IntegerType> *m;
     BitmaskType f(dim);
     BitmaskType mask(dim), tmpMask(dim);
     BitmaskType* constraint;
@@ -233,11 +243,11 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
                 std::exit(1);
             }
 
-            coord[stackSize] = new VecSpec<BitmaskType>(*c);
+            coord[stackSize] = new VecSpec<IntegerType, BitmaskType>(*c);
             coord[stackSize]->set(i, (*coord[stackSize])[i] + 1);
             coord[stackSize]->mask_.set(i, true);
 
-            match[stackSize] = new Vector<LargeInteger>(*m);
+            match[stackSize] = new Vector<IntegerType>(*m);
             (*match[stackSize]) += (*unitMatch[i]);
 
             frozen[stackSize] = f;

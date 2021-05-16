@@ -114,10 +114,18 @@ class HilbertPrimal {
          * \pre If \a constraints is passed, then the given list of
          * extremal rays contains \e only those extremal rays that satisfy
          * all of the given constraints.
-         * \pre The template argument RayClass is derived from
-         * Vector<LargeInteger> (or may be Vector<LargeInteger> itself).
+         * \pre The template argument RayClass is derived from (or equal to)
+         * Vector<T>, where \a T is one of Regina's arbitrary-precision
+         * integer classes (Integer or LargeInteger).
          * \pre The template argument RayIterator is a forward iterator type,
-         * and when dereferenced can be cast to (const Vector<LargeInteger>&).
+         * and when dereferenced has the interface of a constant vector of
+         * Regina's arbitrary-precision integers (i.e., the elements of the
+         * vector must be of type Integer or LargeInteger).  For example, it
+         * might dereference to a (const Vector<Integer>&), or a
+         * (const std::vector<LargeInteger>&).
+         * The vector interface required is minimal (just a bracket operator
+         * and a size() function), and in particular both std::vector and
+         * regina::Vector will suffice for this.
          *
          * \warning If a progress tracker is passed, be aware that the
          * present implementation updates percentage progress very infrequently,
@@ -131,15 +139,15 @@ class HilbertPrimal {
          * @param raysEnd an iterator pointing past the end of the
          * list of extremal rays.
          * @param constraints a set of validity constraints as described
-         * above, or 0 if no additional constraints should be imposed.
+         * above, or \c null if no additional constraints should be imposed.
          * @param tracker a progress tracker through which progress
-         * will be reported, or 0 if no progress reporting is required.
+         * will be reported, or \c null if no progress reporting is required.
          */
         template <class RayClass, class RayIterator, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
             const RayIterator& raysBegin, const RayIterator& raysEnd,
             const EnumConstraints* constraints,
-            ProgressTracker* tracker = 0);
+            ProgressTracker* tracker = nullptr);
 
         // Mark this class as non-constructible.
         HilbertPrimal() = delete;

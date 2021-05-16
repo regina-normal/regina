@@ -107,8 +107,9 @@ class HilbertCD {
          * important property that, although validity is not preserved under
          * addition, \e invalidity is.
          *
-         * \pre The template argument RayClass is derived from
-         * Vector<LargeInteger> (or may be Vector<LargeInteger> itself).
+         * \pre The template argument RayClass is derived from (or equal to)
+         * Vector<T>, where \a T is one of Regina's arbitrary-precision
+         * integer classes (Integer or LargeInteger).
          *
          * \warning For normal surface theory, the Contejean-Devie algorithm is
          * extremely slow, even when modified to incorporate admissibility
@@ -124,7 +125,7 @@ class HilbertCD {
          * subspace.  The number of columns in this matrix must be the
          * dimension of the overall space in which we are working.
          * @param constraints a set of validity constraints as described
-         * above, or 0 if no additional constraints should be imposed.
+         * above, or \c null if no additional constraints should be imposed.
          */
         template <class RayClass, class OutputIterator>
         static void enumerateHilbertBasis(OutputIterator results,
@@ -145,11 +146,15 @@ class HilbertCD {
          * per coordinate, which is \c false if the coordinate is zero
          * or \c true if the coordinate is non-zero.
          *
-         * \pre The template argument \a BitmaskType is one of Regina's
-         * bitmask types, such as Bitmask, Bitmask1 or Bitmask2.
+         * \tparam IntegerType the integer type used to store and manipulate
+         * vectors; this must be one of Regina's own integer types.
+         *
+         * \tparam BitmaskType the bitmask type used to indicate zero/non-zero
+         * coordinates; this must be one of Regina's own bitmask types, such as
+         * Bitmask, Bitmask1 or Bitmask2.
          */
-        template <class BitmaskType>
-        struct VecSpec : public Vector<LargeInteger> {
+        template <class IntegerType, class BitmaskType>
+        struct VecSpec : public Vector<IntegerType> {
             BitmaskType mask_;
                 /**< A bitmask indicating which coordinates are zero
                      (\c false) and which are non-zero (\c true). */
@@ -196,11 +201,11 @@ class HilbertCD {
 
 // Inline functions for HilbertCD::VecSpec
 
-template <class BitmaskType>
-inline HilbertCD::VecSpec<BitmaskType>::VecSpec(size_t dim) :
-        Vector<LargeInteger>(dim), mask_(dim) {
-    // All vector elements are initialised to zero thanks to the
-    // LargeInteger default constructor.
+template <class IntegerType, class BitmaskType>
+inline HilbertCD::VecSpec<IntegerType, BitmaskType>::VecSpec(size_t dim) :
+        Vector<IntegerType>(dim), mask_(dim) {
+    // All vector elements are initialised to zero thanks to the default
+    // constructors in Regina's integer classes.
 }
 
 } // namespace regina

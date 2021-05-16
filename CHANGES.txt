@@ -67,8 +67,8 @@ Version 6.1  [ TODO ]
             - The class constant NONE is deprecated.  Just use DiscType().
             - Added a bool() operator that tests for a null disc type.
         Class DoubleDescription:
-            - Can now work with rays over any of Regina's own integer types,
-              not only LargeInteger.
+            - Can now output to either of Regina's arbitrary precision
+              integer types, not only LargeInteger.
         Class EnableIf<condition, T, defaultValue>:
             - Added to support data members that only appear for some
               template parameters (such as validity and link orientability
@@ -95,6 +95,9 @@ Version 6.1  [ TODO ]
               this path since Regina 5.0.
         Class GluingPermSearcher<dim> and subclasses:
             - Several class constants are now constexpr.
+        Class HilbertCD, HilbertDual, HilbertPrimal:
+            - Can now output to either of Regina's arbitrary precision
+              integer types, not only LargeInteger.
         Class HyperInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -105,6 +108,9 @@ Version 6.1  [ TODO ]
               are no longer explicit, and have been merged with the old copy
               constructors to become template constructors instead;
               likewise for the corresponding assignment operators.
+        Class IsReginaArbitraryPrecisionInteger:
+            - New type trait to identify Regina's arbitrary precision integer
+              types.
         Class Link:
             - New routines writheOfComponent() and selfFrame().
             - New routines pd() and pdData() to create planar diagram codes.

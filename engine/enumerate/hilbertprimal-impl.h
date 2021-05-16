@@ -50,6 +50,7 @@
 #include "libnormaliz/cone.h"
 #include "maths/vector.h"
 #include "progress/progresstracker.h"
+#include "utilities/intutils.h"
 #include <list>
 #include <set>
 #include <vector>
@@ -61,6 +62,12 @@ template <class RayClass, class RayIterator, class OutputIterator>
 void HilbertPrimal::enumerateHilbertBasis(OutputIterator results,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const EnumConstraints* constraints, ProgressTracker* tracker) {
+    static_assert(
+        IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
+        "HilbertPrimal::enumerateHilbertBasis() requires the RayClass "
+        "template parameter to be equal to or derived from Vector<T>, "
+        "where T is one of Regina's arbitrary precision integer types.");
+
     if (raysBegin == raysEnd) {
         // No extremal rays; no Hilbert basis.
         return;
@@ -106,6 +113,8 @@ template <class RayClass, class BitmaskType,
 void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         const RayIterator& raysBegin, const RayIterator& raysEnd,
         const EnumConstraints* constraints, ProgressTracker* tracker) {
+    typedef typename RayClass::Element IntegerType;
+
     // We know at this point that the dimension is non-zero.
     size_t dim = (*raysBegin).size();
 
@@ -120,7 +129,7 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         tracker->setPercent(30);
 
     std::set<std::vector<mpz_class> > finalBasis;
-    std::vector<const Vector<LargeInteger>*> face;
+    std::vector<const Vector<IntegerType>*> face;
     typename std::vector<BitmaskType>::const_iterator mit;
     RayIterator rit;
     unsigned i;
@@ -164,14 +173,14 @@ void HilbertPrimal::enumerateUsingBitmask(OutputIterator results,
         tracker->setPercent(90);
 
     RayClass* ans;
-    LargeInteger tmpInt;
+    IntegerType tmpInt;
     for (hsit = finalBasis.begin(); hsit != finalBasis.end(); ++hsit) {
         ans = new RayClass(dim);
         for (i = 0, hvit = hsit->begin(); hvit != hsit->end(); ++hvit, ++i) {
             // We make two copies of the GMP integer instead of one.
             // This is because Vector does not give us direct
             // non-const access to its elements, and so we need a
-            // temporary LargeInteger to pass through set() instead.
+            // temporary IntegerType to pass through set() instead.
             tmpInt.setRaw(hvit->get_mpz_t());
             ans->set(i, tmpInt);
         }

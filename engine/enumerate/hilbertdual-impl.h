@@ -49,6 +49,7 @@
 #include "enumerate/ordering.h"
 #include "progress/progresstracker.h"
 #include "utilities/bitmask.h"
+#include "utilities/intutils.h"
 
 namespace regina {
 
@@ -56,6 +57,12 @@ template <class RayClass, class OutputIterator>
 void HilbertDual::enumerateHilbertBasis(OutputIterator results,
         const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned initialRows) {
+    static_assert(
+        IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
+        "HilbertDual::enumerateHilbertBasis() requires the RayClass "
+        "template parameter to be equal to or derived from Vector<T>, "
+        "where T is one of Regina's arbitrary precision integer types.");
+
     // Get the dimension of the entire space in which we are working.
     size_t dim = subspace.columns();
 
@@ -97,6 +104,8 @@ template <class RayClass, class BitmaskType, class OutputIterator>
 void HilbertDual::enumerateUsingBitmask(OutputIterator results,
         const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned initialRows) {
+    typedef typename RayClass::Element IntegerType;
+
     // Get the dimension of the entire space in which we are working.
     // At this point we are guaranteed that the dimension is non-zero.
     size_t dim = subspace.columns();
@@ -108,7 +117,7 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
         RayClass* ans;
         for (unsigned i = 0; i < dim; ++i) {
             ans = new RayClass(dim);
-            ans->set(i, LargeInteger::one);
+            ans->set(i, IntegerType::one);
             *results++ = ans;
         }
 
@@ -149,9 +158,9 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
 
     // Create the vector list with which we will work.
     // Fill it with the initial basis elements.
-    std::vector<VecSpec<BitmaskType>*> list;
+    std::vector<VecSpec<IntegerType, BitmaskType>*> list;
     for (i = 0; i < dim; ++i)
-        list.push_back(new VecSpec<BitmaskType>(i, dim));
+        list.push_back(new VecSpec<IntegerType, BitmaskType>(i, dim));
 
 #if 0
     std::cout << "LIST SIZE: " << list.size() << std::endl;
@@ -174,7 +183,7 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
     delete[] hyperplanes;
     delete[] constraintsBegin;
 
-    typename std::vector<VecSpec<BitmaskType>*>::iterator it;
+    typename std::vector<VecSpec<IntegerType, BitmaskType>*>::iterator it;
 
     if (tracker && tracker->isCancelled()) {
         // The operation was cancelled.  Clean up before returning.
@@ -198,11 +207,11 @@ void HilbertDual::enumerateUsingBitmask(OutputIterator results,
         tracker->setPercent(100);
 }
 
-template <class BitmaskType>
-bool HilbertDual::reduces(const VecSpec<BitmaskType>& vec,
-        const std::list<VecSpec<BitmaskType>*>& against,
+template <class IntegerType, class BitmaskType>
+bool HilbertDual::reduces(const VecSpec<IntegerType, BitmaskType>& vec,
+        const std::list<VecSpec<IntegerType, BitmaskType>*>& against,
         int listSign) {
-    typename std::list<VecSpec<BitmaskType>*>::const_iterator it;
+    typename std::list<VecSpec<IntegerType, BitmaskType>*>::const_iterator it;
     for (it = against.begin(); it != against.end(); ++it) {
         if (! (**it <= vec))
             continue;
@@ -222,14 +231,16 @@ bool HilbertDual::reduces(const VecSpec<BitmaskType>& vec,
     return false;
 }
 
-template <class BitmaskType>
-void HilbertDual::reduceBasis(std::list<VecSpec<BitmaskType>*>& reduce,
-        std::list<VecSpec<BitmaskType>*>& against,
+template <class IntegerType, class BitmaskType>
+void HilbertDual::reduceBasis(
+        std::list<VecSpec<IntegerType, BitmaskType>*>& reduce,
+        std::list<VecSpec<IntegerType, BitmaskType>*>& against,
         int listSign) {
     if (reduce.empty())
         return;
 
-    typename std::list<VecSpec<BitmaskType>*>::iterator i, next, red;
+    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator
+        i, next, red;
     bool processed;
 
     i = reduce.begin();
@@ -295,22 +306,26 @@ void HilbertDual::reduceBasis(std::list<VecSpec<BitmaskType>*>& reduce,
     }
 }
 
-template <class BitmaskType>
-void HilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
+template <class IntegerType, class BitmaskType>
+void HilbertDual::intersectHyperplane(
+        std::vector<VecSpec<IntegerType, BitmaskType>*>& list,
         const MatrixInt& subspace,
         unsigned row,
         const BitmaskType* constraintsBegin,
         const BitmaskType* constraintsEnd) {
     // These must be linked lists because we need fast insertion and
     // deletion at arbitrary locations.
-    std::list<VecSpec<BitmaskType>*> zero, pos, neg, newZero, newPos, newNeg;
-    typename std::list<VecSpec<BitmaskType>*>::iterator it, posit, negit;
-    typename std::list<VecSpec<BitmaskType>*>::iterator posPrevGen, negPrevGen;
+    std::list<VecSpec<IntegerType, BitmaskType>*>
+        zero, pos, neg, newZero, newPos, newNeg;
+    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator
+        it, posit, negit;
+    typename std::list<VecSpec<IntegerType, BitmaskType>*>::iterator
+        posPrevGen, negPrevGen;
 
     // Decant the existing basis elements into 0/+/- sets according to the
     // new hyperplane.
     int s;
-    typename std::vector<VecSpec<BitmaskType>*>::iterator srcit;
+    typename std::vector<VecSpec<IntegerType, BitmaskType>*>::iterator srcit;
     for (srcit = list.begin(); srcit != list.end(); srcit++) {
         (*srcit)->initNextHyp(subspace, row);
 
@@ -335,7 +350,7 @@ void HilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
     std::set<unsigned long>::const_iterator coordit;
     bool broken;
     bool reachedPosPrevGen;
-    VecSpec<BitmaskType> sum(subspace.columns());
+    VecSpec<IntegerType, BitmaskType> sum(subspace.columns());
 #if 0
     std::cerr << "Start iteration:" << std::endl;
 #endif
@@ -391,7 +406,8 @@ void HilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
                 s = sum.sign();
                 if (s == 0) {
                     if (! reduces(sum, zero, 0))
-                        newZero.push_back(new VecSpec<BitmaskType>(sum));
+                        newZero.push_back(
+                            new VecSpec<IntegerType, BitmaskType>(sum));
                 } else if (s > 0) {
                     // If this decomposes as a sum of (possibly many)
                     // terms in pos and/or zero, at least one such term must
@@ -401,14 +417,16 @@ void HilbertDual::intersectHyperplane(std::vector<VecSpec<BitmaskType>*>& list,
 #ifndef __REGINA_HILBERT_DUAL_OPT_NEWGEN_STRICT_ONLY
                         if (! reduces(sum, zero, 1))
 #endif
-                            newPos.push_back(new VecSpec<BitmaskType>(sum));
+                            newPos.push_back(
+                                new VecSpec<IntegerType, BitmaskType>(sum));
                 } else if (s < 0) {
                     // Likewise: test only against neg, and not zero also.
                     if (! reduces(sum, neg, -1))
 #ifndef __REGINA_HILBERT_DUAL_OPT_NEWGEN_STRICT_ONLY
                         if (! reduces(sum, zero, -1))
 #endif
-                            newNeg.push_back(new VecSpec<BitmaskType>(sum));
+                            newNeg.push_back(
+                                new VecSpec<IntegerType, BitmaskType>(sum));
                 }
             }
         }

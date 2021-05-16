@@ -207,10 +207,11 @@ template <class RayClass, class OutputIterator>
 void DoubleDescription::enumerateExtremalRays(OutputIterator results,
         const MatrixInt& subspace, const EnumConstraints* constraints,
         ProgressTracker* tracker, unsigned long initialRows) {
-    static_assert(IsReginaInteger<typename RayClass::Element>::value,
+    static_assert(
+        IsReginaArbitraryPrecisionInteger<typename RayClass::Element>::value,
         "DoubleDescription::enumerateExtremalRays() requires the RayClass "
         "template parameter to be equal to or derived from Vector<T>, "
-        "where T is one of Regina's own integer types.");
+        "where T is one of Regina's arbitrary precision integer types.");
 
     unsigned long nFacets = subspace.columns();
 

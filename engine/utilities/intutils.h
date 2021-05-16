@@ -59,7 +59,8 @@ class NativeInteger;
  */
 
 /**
- * Determines if the type \a T is one of Regina's own integer types.
+ * Determines if the type \a T is one of Regina's own integer types
+ * (either arbitrary precision or fixed size).
  *
  * This is true precisely when \a T is one of the classes Integer,
  * LargeInteger, or NativeInteger<...>.
@@ -76,6 +77,23 @@ struct IsReginaInteger<IntegerBase<supportInfinity>> : public std::true_type {};
 
 template <int bytes>
 struct IsReginaInteger<NativeInteger<bytes>> : public std::true_type {};
+#endif // __DOXYGEN
+
+/**
+ * Determines if the type \a T is one of Regina's arbitrary precision
+ * integer types.
+ *
+ * This is true only when \a T is one of the classes Integer or LargeInteger.
+ *
+ * The result will be available through the compile-time boolean constant
+ * IsReginaArbitraryPrecisionInteger<T>::value.
+ */
+template <typename T>
+struct IsReginaArbitraryPrecisionInteger : public std::false_type {};
+
+#ifndef __DOXYGEN
+template <bool supportInfinity>
+struct IsReginaArbitraryPrecisionInteger<IntegerBase<supportInfinity>> : public std::true_type {};
 #endif // __DOXYGEN
 
 /**

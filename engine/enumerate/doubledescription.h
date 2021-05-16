@@ -112,8 +112,8 @@ class REGINA_API DoubleDescription {
          * called after this routine returns.
          *
          * \pre The template argument RayClass is derived from (or equal to)
-         * Vector<T>, where \a T is one of Regina's own integer classes
-         * (Integer, LargeInteger or NativeInteger).
+         * Vector<T>, where \a T is one of Regina's arbitrary-precision
+         * integer classes (Integer or LargeInteger).
          *
          * @param results the output iterator to which the resulting extremal
          * rays will be written; this must accept objects of type
