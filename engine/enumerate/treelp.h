@@ -1242,9 +1242,10 @@ class LPData {
          * reconstructing the normal surfaces or angle structures that result.
          *
          * \pre The given vector \a v has been initialised to the zero vector
-         * of length origTableaux_->columns().  Note that the constructor for
-         * Vector <T> (where \a T is of Regina's own integer types) will
-         * automatically initialise all elements to zero as required.
+         * of length origTableaux_->columns().  Note that the constructors
+         * for all of Vector<T> (where \a T is of Regina's own integer types),
+         * NormalSurfaceVector and AngleStructureVector will automatically
+         * initialise all elements to zero as required.
          *
          * \pre No individual coordinate column has had more than one call
          * to either of constrainPositive() or constrainOct() (otherwise
@@ -1252,11 +1253,14 @@ class LPData {
          * additional columns arising from LPConstraint are exempt from
          * this requirement.
          *
+         * \pre The precision of integers in \a RayClass is at least as
+         * large as the precision of \a IntType (as used by LPData).
+         *
          * \tparam RayClass the class used to hold the output vector \a v.
-         * This should be Vector<T> where \a T is one of Regina's integer
-         * types (Integer, LargeInteger or NativeInteger), or else some other
-         * class that provides analogous functions size(), set() and
-         * scaleDown().
+         * This should be Vector<T> where \a T is one of Regina's own integer
+         * types (Integer, LargeInteger or NativeInteger), or else one
+         * of Regina's surface/structure classes (NormalSurfaceVector,
+         * NormalHypersurfaceVector or AngleStructureVector).
          *
          * @param v the vector into which the values of the variables
          * will be placed.

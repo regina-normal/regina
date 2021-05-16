@@ -874,9 +874,9 @@ void LPData<LPConstraint, IntType>::extractSolution(
     //
     // First compute this lcm.
     unsigned i;
-    LargeInteger lcm(1);
+    typename RayClass::Element lcm(1);
     for (i = 0; i < rank_; ++i)
-        lcm = lcm.lcm(LargeInteger(entry(i, basis_[i])));
+        lcm = lcm.lcm(entry(i, basis_[i]));
 
     // Now compute (lcm * the solution vector).  We do not yet
     // take into account the change of variables x_i -> x_i - 1
@@ -892,13 +892,13 @@ void LPData<LPConstraint, IntType>::extractSolution(
     // Because we are multiplying everything by lcm, the
     // divisions in the following code are all perfectly safe
     // (and give precise integer results).
-    LargeInteger coord;
+    typename RayClass::Element coord;
     for (i = 0; i < rank_; ++i) {
         if (basis_[i] >= v.size())
             continue;
         coord = lcm;
-        coord *= LargeInteger(rhs_[i]);
-        coord /= LargeInteger(entry(i, basis_[i]));
+        coord *= rhs_[i];
+        coord /= entry(i, basis_[i]);
         v.set(columnPerm[basis_[i]], coord);
     }
 
