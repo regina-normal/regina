@@ -2348,6 +2348,8 @@ inline IntegerBase<supportInfinity>::IntegerBase(
             return;
         }
     }
+    // Either by the test above or by our preconditions, we know from
+    // here that value is finite.
     if (value.large_) {
         large_ = new __mpz_struct[1];
         mpz_init_set(large_, value.large_);
@@ -2512,6 +2514,8 @@ inline IntegerBase<supportInfinity>& IntegerBase<supportInfinity>::operator =(
             return *this;
         }
     }
+    // Either by the test above or by our preconditions, we know from
+    // here that value is finite.
     makeFinite();
     if (value.large_) {
         if (large_)
