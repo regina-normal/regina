@@ -1852,6 +1852,9 @@ Equality type : EqualityType.BY_REFERENCE
 TxIParallelCore : class
 Equality type : EqualityType.BY_REFERENCE
 
+VectorInt : class
+Equality type : EqualityType.BY_VALUE
+
 Vertex10 : typedef ->  Face10_0
 
 Vertex11 : typedef ->  Face11_0
