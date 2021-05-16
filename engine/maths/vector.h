@@ -95,7 +95,7 @@ class Rational;
  * \pre Type T allows for operators <tt>=</tt>, <tt>==</tt>, <tt>+=</tt>,
  * <tt>-=</tt>, <tt>*=</tt>, <tt>+</tt>, <tt>-</tt> and <tt>*</tt>.
  * \pre Type T has an integer constructor.  That is, if \c a is of type T,
- * then \c a can be initialised to a long integer \c l using <tt>a(l)</tt>.
+ * then \c a can be initialised to an integer \c l using <tt>a(l)</tt>.
  * \pre An element \c t of type T can be written to an output stream
  * \c out using the standard expression <tt>out << t</tt>.
  *
