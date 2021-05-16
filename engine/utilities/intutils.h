@@ -317,16 +317,13 @@ template <typename From, typename To>
 struct FaithfulAssignment;
 
 #ifndef __DOXYGEN
-template <typename T>
-struct FaithfulAssignment<T, T> : public std::true_type {};
+template <int a, int b>
+struct FaithfulAssignment<NativeInteger<a>, NativeInteger<b>> :
+    public std::integral_constant<bool, (a <= b)> {};
 
-template <>
-struct FaithfulAssignment<IntegerBase<false>, IntegerBase<true>> :
-    public std::true_type {};
-
-template <>
-struct FaithfulAssignment<IntegerBase<true>, IntegerBase<false>> :
-    public std::false_type {};
+template <int a, int b>
+struct FaithfulAssignment<IntegerBase<a>, IntegerBase<b>> :
+    public std::integral_constant<bool, (b || ! a)> {};
 
 template <int bytes, bool supportInfinity>
 struct FaithfulAssignment<NativeInteger<bytes>, IntegerBase<supportInfinity>> :
@@ -335,10 +332,6 @@ struct FaithfulAssignment<NativeInteger<bytes>, IntegerBase<supportInfinity>> :
 template <int bytes, bool supportInfinity>
 struct FaithfulAssignment<IntegerBase<supportInfinity>, NativeInteger<bytes>> :
     public std::false_type {};
-
-template <int a, int b>
-struct FaithfulAssignment<NativeInteger<a>, NativeInteger<b>> :
-    public std::integral_constant<bool, (a <= b)> {};
 
 #endif // __DOXYGEN
 

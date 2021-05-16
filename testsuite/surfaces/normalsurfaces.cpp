@@ -49,6 +49,7 @@ using regina::BoundaryComponent;
 using regina::Container;
 using regina::Edge;
 using regina::Example;
+using regina::LargeInteger;
 using regina::NormalSurface;
 using regina::NormalSurfaces;
 using regina::NormalSurfaceVector;
