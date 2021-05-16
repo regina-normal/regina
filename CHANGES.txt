@@ -85,6 +85,9 @@ Version 6.1  [ TODO ]
             - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.
             - Simplified the underlying web of template specialisations.
+        Class FaithfulAssignment:
+            - New type trait to identify which of Regina's integer types
+              can be losslessly assigned to which others.
         Class FileInfo:
             - Class constant TYPE_XML is now constexpr.
         Class GlobalDirs:

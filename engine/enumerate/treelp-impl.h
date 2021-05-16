@@ -863,6 +863,12 @@ template <class LPConstraint, typename IntType>
 template <class RayClass>
 void LPData<LPConstraint, IntType>::extractSolution(
         RayClass& v, const char* type) const {
+    static_assert(
+        FaithfulAssignment<IntType, typename RayClass::Element>::value,
+        "LPData::extractSolution() requires a RayClass template parameter "
+        "whose elements can faithfully store integers of the template "
+        "parameter IntType.");
+
     // Fetch details on how to undo the column permutation.
     const int* columnPerm = origTableaux_->columnPerm();
 

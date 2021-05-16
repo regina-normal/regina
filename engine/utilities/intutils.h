@@ -302,6 +302,46 @@ struct IntOfSize<8> {
 
 #endif // __DOXYGEN
 
+/**
+ * Determines if an integer of type \a From can always be assigned to an
+ * integer of type \a To with no loss of information.
+ *
+ * The result will be available through the compile-time boolean constant
+ * FaithfulAssignment<From, To>::value.
+ *
+ * Currently this is only implemented for Regina's own integer types
+ * (Integer, LargeInteger and NativeInteger).  If you attempt to use this
+ * with other types (e.g., int or long), this struct will be undefined.
+ */
+template <typename From, typename To>
+struct FaithfulAssignment;
+
+#ifndef __DOXYGEN
+template <typename T>
+struct FaithfulAssignment<T, T> : public std::true_type {};
+
+template <>
+struct FaithfulAssignment<IntegerBase<false>, IntegerBase<true>> :
+    public std::true_type {};
+
+template <>
+struct FaithfulAssignment<IntegerBase<true>, IntegerBase<false>> :
+    public std::false_type {};
+
+template <int bytes, bool supportInfinity>
+struct FaithfulAssignment<NativeInteger<bytes>, IntegerBase<supportInfinity>> :
+    public std::true_type {};
+
+template <int bytes, bool supportInfinity>
+struct FaithfulAssignment<IntegerBase<supportInfinity>, NativeInteger<bytes>> :
+    public std::false_type {};
+
+template <int a, int b>
+struct FaithfulAssignment<NativeInteger<a>, NativeInteger<b>> :
+    public std::integral_constant<bool, (a <= b)> {};
+
+#endif // __DOXYGEN
+
 /*@}*/
 
 } // namespace regina
