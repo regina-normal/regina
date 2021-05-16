@@ -93,9 +93,11 @@ class MaxAdmissible {
          * and <tt>b[i]</tt> is \c true if every point \a x in the relative
          * interior of \a F has <tt>x[i] &gt; 0</tt>.
          *
-         * \pre The template argument RayIterator should be an iterator
-         * type that, when dereferenced, can be cast to
-         * (const Vector<LargeInteger>&).
+         * \pre The template argument RayIterator should be an iterator type
+         * that, when dereferenced, can be treated as a vector of integers.
+         * The exact vector and integer types are unimportant; all that matters
+         * is that, for any such iterator \a it and any integer index \a i,
+         * we can test <tt>(*it)[i] == 0</tt> and <tt>(*it)[i] != 0</tt>.
          *
          * \pre The template argument BitmaskType is one of the bitmask
          * types Bitmask, Bitmask1 or Bitmask2.
