@@ -105,12 +105,9 @@ Version 6.1  [ TODO ]
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
         Class Integer, LargeInteger:
-            - The constructor that takes a NativeInteger is no longer explicit,
-              since there will never be a loss of precision.
+            - The constructor that takes a NativeInteger is no longer explicit.
             - The constructors Integer(LargeInteger) and LargeInteger(Integer)
-              are no longer explicit, and have been merged with the old copy
-              constructors to become template constructors instead;
-              likewise for the corresponding assignment operators.
+              are likewise no longer explicit.
         Class IsReginaArbitraryPrecisionInteger:
             - New type trait to identify Regina's arbitrary precision integer
               types.
