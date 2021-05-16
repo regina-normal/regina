@@ -277,6 +277,8 @@ Version 6.1  [ TODO ]
             - Operators +=, -=, *= now return a reference, as they should.
             - The class Vector<Integer> is now available in python, via
               the typedef VectorInt (in a similar way to MatrixInt).
+            - Deprecated class constants zero, one and minusOne; just use
+              0, 1 and -1 instead.
         Class VectorInt:
             - New typedef for Vector<Integer>, for compatibility with MatrixInt.
         Class XMLCallback:

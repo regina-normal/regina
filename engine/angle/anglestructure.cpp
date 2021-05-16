@@ -150,7 +150,7 @@ void AngleStructure::calculateType() const {
                 // tetrahedron are pi or zero.
                 strict = false;
                 break;
-            } else if ((*vector)[base + pair] == LargeInteger::zero)
+            } else if ((*vector)[base + pair] == 0)
                 strict = false;
             else
                 taut = false;

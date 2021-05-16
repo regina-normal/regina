@@ -249,14 +249,12 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                         // check in temp if dj | entry(j) for all j != k
                         // and             GCD(dj,entry(j)) == 1  j == k
                         if (k==j) {
-                            if (temp[k].gcd( mab->invariantFactor(k) )!=
-                                    Integer::one)
+                            if (temp[k].gcd( mab->invariantFactor(k) )!= 1)
                                 CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 1.");
                         } else if ( k < N ) {
-                            if ( temp[k] % mab->invariantFactor(k) !=
-                                    Integer::zero )
+                            if ( temp[k] % mab->invariantFactor(k) != 0 )
                                 CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 2.");
-                        } else if ( temp[k] != Integer::zero )
+                        } else if ( temp[k] != 0 )
                             CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 3.");
                         // dj divides entry(j) for all j!=k,
                         // and GCD(dk,entry(k)==1.
@@ -266,23 +264,21 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                     // case 2: column should be delta_ij
                     if (j<M) {  // entry
                         if (k==j) {
-                            if (temp[k].abs() != Integer::one)
+                            if (temp[k].abs() != 1)
                                 CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 4.");
                         } else if (k<N) {
-                            if (temp[k] % mab->invariantFactor(k) !=
-                                    Integer::zero )
+                            if (temp[k] % mab->invariantFactor(k) != 0)
                                 CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 5.");
-                        } else if (temp[k] != Integer::zero)
+                        } else if (temp[k] != 0)
                             CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 6.");
                         continue;
                     }
 
                     // case 3: column should be zero (modulo d's)
                     if (k<N) {
-                        if (temp[k] % mab->invariantFactor(k) !=
-                                Integer::zero )
+                        if (temp[k] % mab->invariantFactor(k) != 0)
                             CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 7.");
-                    } else if (temp[k] != Integer::zero)
+                    } else if (temp[k] != 0)
                         CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 8.");
                 } // end k loop
             } // end j loop

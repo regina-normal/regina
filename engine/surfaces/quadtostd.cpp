@@ -133,7 +133,7 @@ namespace {
                 // Note that the vector is initialised to zero since
                 // this is what LargeInteger's default constructor does.
                 for (size_t i = 0; i < v.size(); ++i)
-                    if ((elements[i] = v[i]) == zero)
+                    if ((elements[i] = v[i]) == 0)
                         facets_.set(i, true);
             }
 
@@ -200,7 +200,7 @@ namespace {
 
                 for (size_t i = 0; i < size(); ++i)
                     if ((elements[i] = neg[i] * posDiff - pos[i] * negDiff)
-                            == zero)
+                            == 0)
                         facets_.set(i, true);
 
                 scaleDown();
@@ -273,7 +273,7 @@ namespace {
                 // link.facets_.get(i) must always be true.
                 for (i = 0; i < size(); ++i)
                     if (! link.facets_.get(i))
-                        if ((elements[i] -= max) == zero)
+                        if ((elements[i] -= max) == 0)
                             facets_.set(i, true);
             }
 
@@ -306,7 +306,7 @@ namespace {
             inline int sign(size_t index) const {
                 if (facets_.get(index))
                     return 0;
-                return (elements[index] > zero ? 1 : -1);
+                return (elements[index] > 0 ? 1 : -1);
             }
 
             using Vector<LargeInteger>::scaleDown;

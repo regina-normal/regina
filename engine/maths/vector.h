@@ -94,7 +94,7 @@ class Rational;
  * default value is required.
  * \pre Type T allows for operators <tt>=</tt>, <tt>==</tt>, <tt>+=</tt>,
  * <tt>-=</tt>, <tt>*=</tt>, <tt>+</tt>, <tt>-</tt> and <tt>*</tt>.
- * \pre Type T has a long integer constructor.  That is, if \c a is of type T,
+ * \pre Type T has an integer constructor.  That is, if \c a is of type T,
  * then \c a can be initialised to a long integer \c l using <tt>a(l)</tt>.
  * \pre An element \c t of type T can be written to an output stream
  * \c out using the standard expression <tt>out << t</tt>.
@@ -108,21 +108,24 @@ class Vector : public ShortOutput<Vector<T>> {
         typedef T Element;
             /**< The type of each element in the vector. */
 
-        static T zero;
-            /**< Zero in the underlying number system.
-             *   This would be \c const if it weren't for the fact that
-             *   some compilers don't like this.  It should never be
-             *   modified! */
-        static T one;
-            /**< One in the underlying number system.
-             *   This would be \c const if it weren't for the fact that
-             *   some compilers don't like this.  It should never be
-             *   modified! */
-        static T minusOne;
-            /**< Negative one in the underlying number system.
-             *   This would be \c const if it weren't for the fact that
-             *   some compilers don't like this.  It should never be
-             *   modified! */
+        /**
+         * Zero in the underlying number system.
+         *
+         * \deprecated This constant is deprecated; just use 0 instead.
+         */
+        [[deprecated]] static const T zero;
+        /**
+         * One in the underlying number system.
+         *
+         * \deprecated This constant is deprecated; just use 1 instead.
+         */
+        [[deprecated]] static const T one;
+        /**
+         * Negative one in the underlying number system.
+         *
+         * \deprecated This constant is deprecated; just use -1 instead.
+         */
+        [[deprecated]] static const T minusOne;
 
     protected:
         T* elements;
@@ -381,7 +384,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return a reference to this vector.
          */
         inline Vector& operator *= (const T& factor) {
-            if (factor == Vector<T>::one)
+            if (factor == 1)
                 return *this;
             for (T* e = elements; e < end; ++e)
                 *e *= factor;
@@ -437,7 +440,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return the product <tt>this * factor</tt>.
          */
         inline Vector operator * (const T& factor) const {
-            if (factor == Vector<T>::one)
+            if (factor == 1)
                 return Vector(*this);
 
             Vector ans(size());
@@ -459,7 +462,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return the dot product of this and the given vector.
          */
         inline T operator * (const Vector<T>& other) const {
-            T ans(zero);
+            T ans(0);
 
             const T* e = elements;
             const T* o = other.elements;
@@ -488,7 +491,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return the norm of this vector.
          */
         inline T norm() const {
-            T ans(zero);
+            T ans(0);
             for (const T* e = elements; e < end; ++e)
                 ans += (*e) * (*e);
             return ans;
@@ -499,7 +502,7 @@ class Vector : public ShortOutput<Vector<T>> {
          * @return the sum of the elements of this vector.
          */
         inline T elementSum() const {
-            T ans(zero);
+            T ans(0);
             for (const T* e = elements; e < end; ++e)
                 ans += *e;
             return ans;
@@ -516,13 +519,13 @@ class Vector : public ShortOutput<Vector<T>> {
          * vector.
          */
         void addCopies(const Vector<T>& other, const T& multiple) {
-            if (multiple == Vector<T>::zero)
+            if (multiple == 0)
                 return;
-            if (multiple == Vector<T>::one) {
+            if (multiple == 1) {
                 (*this) += other;
                 return;
             }
-            if (multiple == Vector<T>::minusOne) {
+            if (multiple == -1) {
                 (*this) -= other;
                 return;
             }
@@ -543,13 +546,13 @@ class Vector : public ShortOutput<Vector<T>> {
          * from this vector.
          */
         void subtractCopies(const Vector<T>& other, const T& multiple) {
-            if (multiple == Vector<T>::zero)
+            if (multiple == 0)
                 return;
-            if (multiple == Vector<T>::one) {
+            if (multiple == 1) {
                 (*this) -= other;
                 return;
             }
-            if (multiple == Vector<T>::minusOne) {
+            if (multiple == -1) {
                 (*this) += other;
                 return;
             }
@@ -604,16 +607,16 @@ class Vector : public ShortOutput<Vector<T>> {
         ENABLE_MEMBER_FOR_REGINA_INTEGER(T, void) scaleDown() {
             T gcd; // Initialised to 0.
             for (const T* e = elements; e != end; ++e) {
-                if (e->isInfinite() || (*e) == zero)
+                if (e->isInfinite() || (*e) == 0)
                     continue;
                 gcd.gcdWith(*e); // Guaranteed non-negative result.
-                if (gcd == one)
+                if (gcd == 1)
                     return;
             }
-            if (gcd == zero)
+            if (gcd == 0)
                 return;
             for (T* e = elements; e != end; ++e)
-                if ((! e->isInfinite()) && (*e) != zero) {
+                if ((! e->isInfinite()) && (*e) != 0) {
                     e->divByExact(gcd);
                     e->tryReduce();
                 }
@@ -643,23 +646,13 @@ std::ostream& operator << (std::ostream& out, const Vector<T>& vector) {
 }
 
 template <class T>
-T Vector<T>::zero(0L);
-    /**< Zero in the underlying number system.
-     *   This would be \c const if it weren't for the fact that
-     *   some compilers don't like this.  It should never be
-     *   modified! */
+const T Vector<T>::zero(0);
+
 template <class T>
-T Vector<T>::one(1L);
-    /**< One in the underlying number system.
-     *   This would be \c const if it weren't for the fact that
-     *   some compilers don't like this.  It should never be
-     *   modified! */
+const T Vector<T>::one(1);
+
 template <class T>
-T Vector<T>::minusOne(-1L);
-    /**< Negative one in the underlying number system.
-     *   This would be \c const if it weren't for the fact that
-     *   some compilers don't like this.  It should never be
-     *   modified! */
+const T Vector<T>::minusOne(-1);
 
 /**
  * A vector of arbitrary-precision integers.
