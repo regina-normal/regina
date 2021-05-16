@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "utilities/intutils.h"
+#include "maths/integer.h"
 
 static_assert(regina::bitsRequired(32) == 5);
 static_assert(regina::bitsRequired(33) == 6);
@@ -45,9 +46,9 @@ static_assert(! regina::FaithfulAssignment<
 static_assert(regina::FaithfulAssignment<
     regina::NativeInteger<4>, regina::NativeInteger<8>>::value);
 static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, Integer>::value);
+    regina::NativeInteger<4>, regina::Integer>::value);
 static_assert(regina::FaithfulAssignment<
-    regina::NativeInteger<4>, LargeInteger>::value);
+    regina::NativeInteger<4>, regina::LargeInteger>::value);
 static_assert(! regina::FaithfulAssignment<
     regina::Integer, regina::NativeInteger<4>>::value);
 static_assert(regina::FaithfulAssignment<
