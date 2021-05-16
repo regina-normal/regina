@@ -206,9 +206,9 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
     // Verify the angle equations.
     unsigned row, col;
     for (row = 0; row < angleEqns->rows(); ++row) {
-        LargeInteger ans; // Initialised to zero.
+        Integer ans; // Initialised to zero.
         for (col = 0; col < angleEqns->columns(); ++col)
-            ans += (LargeInteger(angleEqns->entry(row, col)) * (*s->rawVector())[col]);
+            ans += (Integer(angleEqns->entry(row, col)) * (*s->rawVector())[col]);
         if (ans != 0) {
             delete tmpEqns;
             return false;
