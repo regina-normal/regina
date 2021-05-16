@@ -37,3 +37,26 @@ static_assert(regina::bitsRequired(33) == 6);
 
 static_assert(regina::nextPowerOfTwo(32) == 32);
 static_assert(regina::nextPowerOfTwo(33) == 64);
+
+static_assert(regina::FaithfulAssignment<
+    regina::NativeInteger<4>, regina::NativeInteger<4>>::value);
+static_assert(! regina::FaithfulAssignment<
+    regina::NativeInteger<8>, regina::NativeInteger<4>>::value);
+static_assert(regina::FaithfulAssignment<
+    regina::NativeInteger<4>, regina::NativeInteger<8>>::value);
+static_assert(regina::FaithfulAssignment<
+    regina::NativeInteger<4>, Integer>::value);
+static_assert(regina::FaithfulAssignment<
+    regina::NativeInteger<4>, LargeInteger>::value);
+static_assert(! regina::FaithfulAssignment<
+    regina::Integer, regina::NativeInteger<4>>::value);
+static_assert(regina::FaithfulAssignment<
+    regina::Integer, regina::Integer>::value);
+static_assert(regina::FaithfulAssignment<
+    regina::Integer, regina::LargeInteger>::value);
+static_assert(! regina::FaithfulAssignment<
+    regina::LargeInteger, regina::NativeInteger<4>>::value);
+static_assert(! regina::FaithfulAssignment<
+    regina::LargeInteger, regina::Integer>::value);
+static_assert(regina::FaithfulAssignment<
+    regina::LargeInteger, regina::LargeInteger>::value);
