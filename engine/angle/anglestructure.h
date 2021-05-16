@@ -82,7 +82,7 @@ typedef Matrix<Integer, true> MatrixInt;
  *
  * \ifacespython Not present.
  */
-class REGINA_API AngleStructureVector : public Vector<LargeInteger> {
+class REGINA_API AngleStructureVector : public Vector<Integer> {
     public:
         /**
          * Creates a new vector all of whose entries are initialised to
@@ -315,12 +315,12 @@ class REGINA_API AngleStructure :
 // Inline functions for AngleStructureVector
 
 inline AngleStructureVector::AngleStructureVector(size_t length) :
-        Vector<LargeInteger>(length) {
+        Vector<Integer>(length) {
 }
 
 template <typename T>
 inline AngleStructureVector::AngleStructureVector(const Vector<T>& cloneMe) :
-        Vector<LargeInteger>(cloneMe) {
+        Vector<Integer>(cloneMe) {
 }
 
 // Inline functions for AngleStructure

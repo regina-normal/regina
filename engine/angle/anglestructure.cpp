@@ -82,15 +82,11 @@ AngleStructure* AngleStructure::clone() const {
     return ans;
 }
 
-Rational AngleStructure::angle(size_t tetIndex, int edgePair)
-        const {
-    const LargeInteger& num = (*vector)[3 * tetIndex + edgePair];
-    const LargeInteger& den =
-        (*vector)[3 * triangulation_->size()];
+Rational AngleStructure::angle(size_t tetIndex, int edgePair) const {
+    const Integer& num = (*vector)[3 * tetIndex + edgePair];
+    const Integer& den = (*vector)[3 * triangulation_->size()];
 
-    LargeInteger gcd = den.gcd(num);
-    if (gcd < 0)
-        gcd.negate();
+    Integer gcd = den.gcd(num); // Guaranteed non-negative
     return Rational(num.divExact(gcd), den.divExact(gcd));
 }
 
@@ -114,7 +110,7 @@ void AngleStructure::writeXMLData(std::ostream& out) const {
     out << "  <struct len=\"" << vecLen << "\"> ";
 
     // Write the non-zero elements.
-    LargeInteger entry;
+    Integer entry;
     for (size_t i = 0; i < vecLen; i++) {
         entry = (*vector)[i];
         if (entry != 0)
@@ -141,7 +137,7 @@ void AngleStructure::calculateType() const {
     bool strict = true;
 
     // Run through the tetrahedra one by one.
-    const LargeInteger& scale = (*vector)[size - 1];
+    const Integer& scale = (*vector)[size - 1];
     size_t pair;
     for (size_t base = 0; base < size - 1; base += 3) {
         for (pair = 0; pair < 3; pair++) {

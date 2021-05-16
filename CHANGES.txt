@@ -25,6 +25,7 @@ Version 6.1  [ TODO ]
         Class AngleStructureVector:
             - The constructor that used to take a const Vector<LargeInteger>&
               is now a template constructor that takes any const Vector<T>&.
+            - Now derives from Vector<Integer>, not Vector<LargeInteger>.
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
         Class Base64SigEncoding:
