@@ -45,7 +45,7 @@
 #define __TREETRAVERSAL_IMPL_H
 #endif
 
-#include "angle/anglestructure.h"
+#include "angle/anglestructures.h"
 #include "enumerate/treetraversal.h"
 #include "progress/progresstracker.h"
 #include "surfaces/nsvectoranstandard.h"
@@ -149,7 +149,7 @@ AngleStructure* TreeTraversal<LPConstraint, BanConstraint, IntType>::
     if (coords_ != NS_ANGLE)
         return 0;
 
-    AngleStructureVector* v = new AngleStructureVector(3 * nTets_ + 1);
+    VectorInt* v = new VectorInt(3 * nTets_ + 1);
     lpSlot_[nTypes_]->extractSolution(*v, type_);
     return new AngleStructure(origTableaux_.tri(), v);
 }
@@ -198,21 +198,14 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
     // Rebuild the matching equations if necessary.
     MatrixInt* tmpEqns = 0;
     if (! angleEqns) {
-        tmpEqns = AngleStructureVector::makeAngleEquations(
-            origTableaux_.tri());
+        tmpEqns = regina::makeAngleEquations(origTableaux_.tri());
         angleEqns = tmpEqns;
     }
 
     // Verify the angle equations.
-    unsigned row, col;
-    for (row = 0; row < angleEqns->rows(); ++row) {
-        Integer ans; // Initialised to zero.
-        for (col = 0; col < angleEqns->columns(); ++col)
-            ans += (Integer(angleEqns->entry(row, col)) * (*s->rawVector())[col]);
-        if (ans != 0) {
-            delete tmpEqns;
-            return false;
-        }
+    if (! ((*angleEqns) * s->vector()).isZero()) {
+        delete tmpEqns;
+        return false;
     }
     delete tmpEqns;
 

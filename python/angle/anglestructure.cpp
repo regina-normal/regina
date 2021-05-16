@@ -40,12 +40,15 @@ using regina::AngleStructure;
 
 void addAngleStructure(pybind11::module_& m) {
     auto c = pybind11::class_<AngleStructure>(m, "AngleStructure")
+        .def(pybind11::init<const AngleStructure&>())
         .def("clone", &AngleStructure::clone)
         .def("angle", &AngleStructure::angle)
         .def("triangulation", &AngleStructure::triangulation)
         .def("isStrict", &AngleStructure::isStrict)
         .def("isTaut", &AngleStructure::isTaut)
         .def("isVeering", &AngleStructure::isVeering)
+        .def("vector", &AngleStructure::vector)
+        .def("rawVector", &AngleStructure::vector) // deprecated
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

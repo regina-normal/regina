@@ -44,10 +44,47 @@ namespace regina {
 
 typedef std::vector<AngleStructure*>::const_iterator StructureIteratorConst;
 
+MatrixInt* makeAngleEquations(const Triangulation<3>* tri) {
+    size_t n = tri->size();
+    size_t cols = 3 * n + 1;
+
+    // We have one equation per non-boundary edge plus one per tetrahedron.
+    long rows = long(tri->countEdges()) + long(tri->size());
+    for (BoundaryComponent<3>* bc : tri->boundaryComponents())
+        rows -= bc->countEdges();
+
+    MatrixInt* eqns = new MatrixInt(rows, cols);
+    size_t row = 0;
+
+    size_t index;
+    for (Edge<3>* edge : tri->edges()) {
+        if (edge->isBoundary())
+            continue;
+        for (auto& emb : *edge) {
+            index = emb.tetrahedron()->index();
+            if (emb.edge() < 3)
+                eqns->entry(row, 3 * index + emb.edge()) += 1;
+            else
+                eqns->entry(row, 3 * index + 5 - emb.edge()) += 1;
+        }
+        eqns->entry(row, cols - 1) = -2;
+        ++row;
+    }
+    for (index = 0; index < n; index++) {
+        eqns->entry(row, 3 * index) = 1;
+        eqns->entry(row, 3 * index + 1) = 1;
+        eqns->entry(row, 3 * index + 2) = 1;
+        eqns->entry(row, cols - 1) = -1;
+        ++row;
+    }
+
+    return eqns;
+}
+
 void AngleStructures::enumerateInternal(Triangulation<3>* triang,
         ProgressTracker* tracker) {
     // Form the matching equations.
-    MatrixInt* eqns = AngleStructureVector::makeAngleEquations(triang);
+    MatrixInt* eqns = regina::makeAngleEquations(triang);
 
     if (tautOnly_ && (! triang->isEmpty())) {
         // For now just stick to arbitrary precision arithmetic.
@@ -79,8 +116,8 @@ void AngleStructures::enumerateInternal(Triangulation<3>* triang,
             tracker->newStage("Enumerating vertex angle structures");
 
         // Find the angle structures.
-        DoubleDescription::enumerateExtremalRays<AngleStructureVector>(
-            StructureInserter(*this, triang), *eqns, 0 /* constraints */,
+        DoubleDescription::enumerateExtremalRays<VectorInt>(
+            StructureInserter(*this, triang), *eqns, nullptr /* constraints */,
             tracker);
 
         // All done!
@@ -111,7 +148,7 @@ AngleStructures* AngleStructures::enumerateTautDD(
     AngleStructures* ans = new AngleStructures(true /* taut only */);
 
     // Form the matching equations.
-    MatrixInt* eqns = AngleStructureVector::makeAngleEquations(owner);
+    MatrixInt* eqns = regina::makeAngleEquations(owner);
 
     // Form the taut constraints.
     EnumConstraints* constraints = new EnumConstraints(owner->size());
@@ -124,8 +161,9 @@ AngleStructures* AngleStructures::enumerateTautDD(
     }
 
     // Find the angle structures.
-    DoubleDescription::enumerateExtremalRays<AngleStructureVector>(
-        StructureInserter(*ans, owner), *eqns, constraints, 0 /* tracker */);
+    DoubleDescription::enumerateExtremalRays<VectorInt>(
+        StructureInserter(*ans, owner), *eqns, constraints,
+        nullptr /* tracker */);
 
     // All done!
     owner->insertChildLast(ans);
@@ -181,7 +219,7 @@ Packet* AngleStructures::internalClonePacket(Packet* /* parent */)
         const {
     AngleStructures* ans = new AngleStructures(tautOnly_);
     for (auto s : structures)
-        ans->structures.push_back(static_cast<AngleStructure*>(s->clone()));
+        ans->structures.push_back(new AngleStructure(*s));
 
     if (doesSpanStrict.known())
         ans->doesSpanStrict = doesSpanStrict;

@@ -41,7 +41,6 @@
 
 using regina::AngleStructure;
 using regina::AngleStructures;
-using regina::AngleStructureVector;
 using regina::Example;
 using regina::Tetrahedron;
 using regina::Triangulation;
@@ -390,8 +389,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             verifyTautVsAll(&triOneTet, "a standalone tetrahedron");
         }
 
-        static bool lexLess(const AngleStructureVector* a,
-                const AngleStructureVector* b) {
+        static bool lexLess(const VectorInt* a, const VectorInt* b) {
             for (unsigned i = 0; i < a->size(); ++i) {
                 if ((*a)[i] < (*b)[i])
                     return true;
@@ -410,14 +408,14 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             if (n == 0)
                 return true;
 
-            typedef const AngleStructureVector* VecPtr;
+            typedef const VectorInt* VecPtr;
             VecPtr* lhsRaw = new VecPtr[n];
             VecPtr* rhsRaw = new VecPtr[n];
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = lhs->structure(i)->rawVector();
-                rhsRaw[i] = rhs->structure(i)->rawVector();
+                lhsRaw[i] = &(lhs->structure(i)->vector());
+                rhsRaw[i] = &(rhs->structure(i)->vector());
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess);
@@ -443,7 +441,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             unsigned long nAll = all->size();
             unsigned long nTaut = taut->size();
 
-            typedef const AngleStructureVector* VecPtr;
+            typedef const VectorInt* VecPtr;
             VecPtr* allRaw = new VecPtr[nAll + 1];
             VecPtr* tautRaw = new VecPtr[nTaut + 1];
 
@@ -451,9 +449,9 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             unsigned long foundAll = 0;
             for (i = 0; i < nAll; ++i)
                 if (all->structure(i)->isTaut())
-                    allRaw[foundAll++] = all->structure(i)->rawVector();
+                    allRaw[foundAll++] = &(all->structure(i)->vector());
             for (i = 0; i < nTaut; ++i)
-                tautRaw[i] = taut->structure(i)->rawVector();
+                tautRaw[i] = &(taut->structure(i)->vector());
 
             if (foundAll != nTaut) {
                 delete[] allRaw;

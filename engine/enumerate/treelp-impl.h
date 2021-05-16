@@ -58,7 +58,7 @@
  */
 // #define REGINA_COUNT_PIVOTS
 
-#include "angle/anglestructure.h"
+#include "angle/anglestructures.h"
 #include "enumerate/treelp.h"
 #include "maths/matrixops.h"
 #include "surfaces/normalsurfaces.h"
@@ -132,11 +132,11 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         eqns_ = regina::makeMatchingEquations(tri, coords);
         scaling_ = 0;
     } else {
-        eqns_ = AngleStructureVector::makeAngleEquations(tri);
+        eqns_ = regina::makeAngleEquations(tri);
 
         // Scale each row so that the rightmost entry (used for
         // projectivising the angle structure polytope) is always -2.
-        // This is possible since the matrix returned by AngleStructureVector
+        // This is possible since the angle equation matrix
         // will have final entries of -1 and -2 only.
         scaling_ = -2;
         long rightmost;

@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "angle/anglestructure.h"
+#include "angle/anglestructures.h"
 #include "enumerate/treeconstraint.h"
 #include "enumerate/treelp.h"
 #include "triangulation/dim3.h"
@@ -84,7 +84,7 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
 
     // We have a strict angle structure: reconstruct it.
     unsigned long len = 3 * simplices_.size() + 1;
-    AngleStructureVector* v = new AngleStructureVector(len);
+    VectorInt* v = new VectorInt(len);
     lp.extractSolution(*v, nullptr /* type vector */);
     return (strictAngleStructure_ = new AngleStructure(this, v));
 }

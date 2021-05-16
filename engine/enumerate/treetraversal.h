@@ -458,7 +458,7 @@ class TreeTraversal : public BanConstraint {
          *
          * Instead of using the initial tableaux to verify the angle equations,
          * this routine goes back to the original angle equations matrix as
-         * constructed by AngleStructureVector::makeAngleEquations().
+         * constructed by regina::makeAngleEquations().
          * This ensures that the test is independent of any potential
          * problems with the tableaux.  You are not required to pass
          * your own angle equations (if you don't, they will be temporarily
@@ -478,7 +478,7 @@ class TreeTraversal : public BanConstraint {
          * @param angleEqns the angle equations to check against
          * the given angle structure; this may be 0, in which case the angle
          * equations will be temporarily reconstructed for you using
-         * AngleStructureVector::makeAngleEquations().
+         * regina::makeAngleEquations().
          * @return \c true if the given angle structure passes all of the tests
          * described above, or \c false if it fails one or more tests
          * (indicating a problem or error).

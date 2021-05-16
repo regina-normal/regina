@@ -266,13 +266,12 @@ class REGINA_API AngleStructures : public Packet {
          * An output iterator used to insert angle structures into an
          * AngleStructures list.
          *
-         * Objects of type <tt>AngleStructure*</tt> and
-         * <tt>AngleStructureVector*</tt> can be assigned to this
-         * iterator.  In the latter case, a surrounding AngleStructure
-         * will be automatically created.
+         * Objects of type <tt>AngleStructure*</tt> and <tt>VectorInt*</tt>
+         * can be assigned to this iterator.  In the latter case, a
+         * surrounding AngleStructure will be automatically created.
          */
         struct StructureInserter : public std::iterator<
-                std::output_iterator_tag, AngleStructureVector*> {
+                std::output_iterator_tag, VectorInt*> {
             AngleStructures* list;
                 /**< The list into which angle structures will be inserted. */
             Triangulation<3>* owner;
@@ -339,7 +338,7 @@ class REGINA_API AngleStructures : public Packet {
              * @param vector the vector of the angle structure to insert.
              * @return this output iterator.
              */
-            StructureInserter& operator =(AngleStructureVector* vector);
+            StructureInserter& operator =(VectorInt* vector);
 
             /**
              * Returns a reference to this output iterator.
@@ -385,18 +384,12 @@ class REGINA_API AngleStructures : public Packet {
 /**
  * Creates a new set of angle structure equations for the given triangulation.
  *
- * Each equation will be represented as a row of the matrix, and
- * each column will represent a coordinate in the underlying
- * coordinate system (which is described in the AngleStructureVector
- * class notes).
+ * Each equation will be represented as a row of the matrix, and each column
+ * will represent a coordinate in the underlying coordinate system (which is
+ * described in the notes for AngleStructure::vector()).
  *
  * The returned matrix will be newly allocated and its destruction
  * will be the responsibility of the caller of this routine.
- *
- * This routine is identical to the static class method
- * AngleStructureVector::makeAngleEquations().  It is offered again here
- * as a global routine so that it is accessible to Python users (who cannot
- * access the AngleStructureVector class).
  *
  * @param tri the triangulation upon which these angle structure
  * equations will be based.
@@ -464,7 +457,7 @@ inline AngleStructures::StructureInserter&
 
 inline AngleStructures::StructureInserter&
         AngleStructures::StructureInserter::operator =(
-        AngleStructureVector* vector) {
+        VectorInt* vector) {
     list->structures.push_back(new AngleStructure(owner, vector));
     return *this;
 }
@@ -482,10 +475,6 @@ inline AngleStructures::StructureInserter&
 inline AngleStructures::StructureInserter&
         AngleStructures::StructureInserter::operator ++(int) {
     return *this;
-}
-
-inline MatrixInt* makeAngleEquations(const Triangulation<3>* tri) {
-    return AngleStructureVector::makeAngleEquations(tri);
 }
 
 } // namespace regina

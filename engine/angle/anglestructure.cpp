@@ -37,54 +37,9 @@
 
 namespace regina {
 
-MatrixInt* AngleStructureVector::makeAngleEquations(
-        const Triangulation<3>* tri) {
-    size_t n = tri->size();
-    size_t cols = 3 * n + 1;
-
-    // We have one equation per non-boundary edge plus one per tetrahedron.
-    long rows = long(tri->countEdges()) + long(tri->size());
-    for (BoundaryComponent<3>* bc : tri->boundaryComponents())
-        rows -= bc->countEdges();
-
-    MatrixInt* eqns = new MatrixInt(rows, cols);
-    size_t row = 0;
-
-    size_t index;
-    for (Edge<3>* edge : tri->edges()) {
-        if (edge->isBoundary())
-            continue;
-        for (auto& emb : *edge) {
-            index = emb.tetrahedron()->index();
-            if (emb.edge() < 3)
-                eqns->entry(row, 3 * index + emb.edge()) += 1;
-            else
-                eqns->entry(row, 3 * index + 5 - emb.edge()) += 1;
-        }
-        eqns->entry(row, cols - 1) = -2;
-        ++row;
-    }
-    for (index = 0; index < n; index++) {
-        eqns->entry(row, 3 * index) = 1;
-        eqns->entry(row, 3 * index + 1) = 1;
-        eqns->entry(row, 3 * index + 2) = 1;
-        eqns->entry(row, cols - 1) = -1;
-        ++row;
-    }
-
-    return eqns;
-}
-
-AngleStructure* AngleStructure::clone() const {
-    AngleStructure* ans = new AngleStructure(triangulation_,
-        new AngleStructureVector(*vector));
-    ans->flags = flags;
-    return ans;
-}
-
 Rational AngleStructure::angle(size_t tetIndex, int edgePair) const {
-    const Integer& num = (*vector)[3 * tetIndex + edgePair];
-    const Integer& den = (*vector)[3 * triangulation_->size()];
+    const Integer& num = (*vector_)[3 * tetIndex + edgePair];
+    const Integer& den = (*vector_)[3 * triangulation_->size()];
 
     Integer gcd = den.gcd(num); // Guaranteed non-negative
     return Rational(num.divExact(gcd), den.divExact(gcd));
@@ -106,13 +61,13 @@ void AngleStructure::writeTextShort(std::ostream& out) const {
 
 void AngleStructure::writeXMLData(std::ostream& out) const {
     // Write the vector length.
-    size_t vecLen = vector->size();
+    size_t vecLen = vector_->size();
     out << "  <struct len=\"" << vecLen << "\"> ";
 
     // Write the non-zero elements.
     Integer entry;
     for (size_t i = 0; i < vecLen; i++) {
-        entry = (*vector)[i];
+        entry = (*vector_)[i];
         if (entry != 0)
             out << i << ' ' << entry << ' ';
     }
@@ -122,14 +77,14 @@ void AngleStructure::writeXMLData(std::ostream& out) const {
 }
 
 void AngleStructure::calculateType() const {
-    size_t size = vector->size();
+    size_t size = vector_->size();
     if (size == 1) {
         // We have no tetrahedra, which means this angle structure has it all:
         // strict, taut and veering.
-        flags |= flagStrict;
-        flags |= flagTaut;
-        flags |= flagVeering;
-        flags |= flagCalculatedType;
+        flags_ |= flagStrict;
+        flags_ |= flagTaut;
+        flags_ |= flagVeering;
+        flags_ |= flagCalculatedType;
         return;
     }
 
@@ -137,16 +92,16 @@ void AngleStructure::calculateType() const {
     bool strict = true;
 
     // Run through the tetrahedra one by one.
-    const Integer& scale = (*vector)[size - 1];
+    const Integer& scale = (*vector_)[size - 1];
     size_t pair;
     for (size_t base = 0; base < size - 1; base += 3) {
         for (pair = 0; pair < 3; pair++) {
-            if ((*vector)[base + pair] == scale) {
+            if ((*vector_)[base + pair] == scale) {
                 // We have a pi; thus all three angles in this
                 // tetrahedron are pi or zero.
                 strict = false;
                 break;
-            } else if ((*vector)[base + pair] == 0)
+            } else if ((*vector_)[base + pair] == 0)
                 strict = false;
             else
                 taut = false;
@@ -157,13 +112,13 @@ void AngleStructure::calculateType() const {
 
     // Update the flags as appropriate.
     if (strict)
-        flags |= flagStrict;
+        flags_ |= flagStrict;
     else
-        flags &= (~flagStrict);
+        flags_ &= (~flagStrict);
 
     if (taut) {
         // This structure is taut.
-        flags |= flagTaut;
+        flags_ |= flagTaut;
 
         // Is it veering also?
         bool veering = true;
@@ -178,7 +133,7 @@ void AngleStructure::calculateType() const {
                     ++i) {
                 tet = triangulation_->tetrahedron(i);
                 orient = tet->orientation();
-                if ((*vector)[3 * i] > 0) {
+                if ((*vector_)[3 * i] > 0) {
                     // Edges 0,5 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 1,4 vs 2,3 are of colour +1 vs -1.
@@ -205,7 +160,7 @@ void AngleStructure::calculateType() const {
                         veering = false;
                     else
                         edgeColour[e] = -orient;
-                } else if ((*vector)[3 * i + 1] > 0) {
+                } else if ((*vector_)[3 * i + 1] > 0) {
                     // Edges 1,4 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 2,3 vs 0,5 are of colour +1 vs -1.
@@ -232,7 +187,7 @@ void AngleStructure::calculateType() const {
                         veering = false;
                     else
                         edgeColour[e] = -orient;
-                } else if ((*vector)[3 * i + 2] > 0) {
+                } else if ((*vector_)[3 * i + 2] > 0) {
                     // Edges 2,3 are marked as pi.
                     // For a positively oriented tetrahedron:
                     // Edges 0,5 vs 1,4 are of colour +1 vs -1.
@@ -270,16 +225,16 @@ void AngleStructure::calculateType() const {
         }
 
         if (veering)
-            flags |= flagVeering;
+            flags_ |= flagVeering;
         else
-            flags &= (~flagVeering);
+            flags_ &= (~flagVeering);
     } else {
         // Not taut, and therefore not veering either.
-        flags &= (~flagTaut);
-        flags &= (~flagVeering);
+        flags_ &= (~flagTaut);
+        flags_ &= (~flagVeering);
     }
 
-    flags |= flagCalculatedType;
+    flags_ |= flagCalculatedType;
 }
 
 } // namespace regina

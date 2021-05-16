@@ -22,10 +22,16 @@ Version 6.1  [ TODO ]
         - Environment variables such as REGINA_HOME and REGINA_PYLIBDIR
           are more consistently used, and should need to be set less often.
     ENGINE:
-        Class AngleStructureVector:
-            - The constructor that used to take a const Vector<LargeInteger>&
-              is now a template constructor that takes any const Vector<T>&.
-            - Now derives from Vector<Integer>, not Vector<LargeInteger>.
+        Class AngleStructure, AngleStructureVector:
+            - The internal vector representation now uses Integer, not
+              LargeInteger.
+            - The class AngleStructureVector has been removed, and is now a
+              deprecated typedef for Vector<Integer>.
+            - Replaced rawVector() with vector(), which now returns a reference
+              (not a pointer) and is now accessible through python.  The old
+              rawVector() (with its pointer return type) is kept but deprecated.
+            - AngleStructure now has copy and move constructors.  The old
+              clone() is now deprecated; just use the copy constructor instead.
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
         Class Base64SigEncoding:

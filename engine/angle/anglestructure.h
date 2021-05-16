@@ -59,84 +59,40 @@ typedef Matrix<Integer, true> MatrixInt;
  */
 
 /**
- * A vector of integers used to indirectly store the individual angles
- * in an angle structure.
+ * Deprecated typedef for the vector type that Regina uses internally to
+ * store angle structures.
  *
- * This vector will contain one member per angle plus a final scaling
- * member; to obtain the actual angle in the angle structure one should
- * divide the corresonding angle member by the scaling member and then
- * multiply by <i>pi</i>.
+ * Before Regina 6.1, this was a subclass of Vector<LargeInteger> that
+ * merely added an extra static routine makeAngleEquations() that was
+ * identical to the global regina::makeAngleEquations().
  *
- * The reason for using this obfuscated representation is so we can
- * use the DoubleDescription vertex enumeration routines to
- * calculate vertex angle structures.
+ * As of Regina 6.1, angle structures use Integer (not LargeInteger)
+ * internally, and so this type has had to change in an incompatible way.
+ * Since it added nothing genuinely new, the subclass has been removed
+ * entirely; instead angle structures just use Vector<Integer> directly.
  *
- * If there are \a t tetrahedra in the underlying triangulation, there
- * will be precisely 3<i>t</i>+1 elements in this vector.  The first
- * three elements will be the angle members for the first tetrahedron,
- * the next three for the second tetrahedron and so on.  For each tetraheron,
- * the three individual elements are the angle members corresponding to
- * edges 0, 1 and 2 of the tetrahedron (and also their opposite edges
- * 5, 4 and 3 respectively).
- * The final element of the vector is the scaling member as described above.
+ * A side-effect is that the static makeAngleEquations() has been removed
+ * completely.  However, as always, you can still access the angle equations
+ * routine through the global regina::makeAngleEquations() instead.
  *
- * \ifacespython Not present.
+ * \deprecated Simply use Vector<Integer> (or the alias VectorInt) instead.
  */
-class REGINA_API AngleStructureVector : public Vector<Integer> {
-    public:
-        /**
-         * Creates a new vector all of whose entries are initialised to
-         * zero.
-         *
-         * @param length the number of elements in the new vector.
-         */
-        AngleStructureVector(size_t length);
-        /**
-         * Creates a new vector that is a clone of the given vector.
-         *
-         * @param cloneMe the vector to clone.
-         */
-        template <typename T>
-        AngleStructureVector(const Vector<T>& cloneMe);
-
-        /**
-         * Creates a new set of angle structure equations for the given
-         * triangulation.
-         *
-         * Each equation will be represented as a row of the matrix, and
-         * each column will represent a coordinate in the underlying
-         * coordinate system (which is described in the AngleStructureVector
-         * class notes).
-         *
-         * The returned matrix will be newly allocated and its destruction
-         * will be the responsibility of the caller of this routine.
-         *
-         * This is identical to the global function makeAngleEquations().
-         * It is offered again here in the vector class for consistency
-         * with the normal surface vector classes.
-         *
-         * @param tri the triangulation upon which these angle structure
-         * equations will be based.
-         * @return a newly allocated set of equations.
-         */
-        static MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
-};
+typedef Vector<Integer> AngleStructureVector [[deprecated]];
 
 /**
  * Represents an angle structure on a triangulation.
  * Once the underlying triangulation changes, this angle structure
  * is no longer valid.
  */
-class REGINA_API AngleStructure :
-        public ShortOutput<AngleStructure> {
+class REGINA_API AngleStructure : public ShortOutput<AngleStructure> {
     private:
-        AngleStructureVector* vector;
+        Vector<Integer>* vector_;
             /**< Stores (indirectly) the individual angles in this angle
              *   structure. */
         const Triangulation<3>* triangulation_;
             /**< The triangulation on which this angle structure is placed. */
 
-        mutable unsigned long flags;
+        mutable unsigned long flags_;
             /**< Stores a variety of angle structure properties as
              *   described by the flag constants in this class.
              *   Flags can be combined using bitwise OR. */
@@ -155,8 +111,34 @@ class REGINA_API AngleStructure :
 
     public:
         /**
+         * Creates a new copy of the given angle structure.
+         *
+         * @param other the angle structure to clone.
+         */
+        AngleStructure(const AngleStructure& other);
+
+        /**
+         * Moves the given angle structure into this new angle structure.
+         * This is a fast (constant time) operation.
+         *
+         * The angle structure that is passed (\a src) will no longer be usable.
+         *
+         * @param src the angle structure to move.
+         */
+        AngleStructure(AngleStructure&& src) noexcept;
+
+        /**
          * Creates a new angle structure on the given triangulation with
          * the given coordinate vector.
+         *
+         * This angle structure will claim ownership of the given vector,
+         * and so you should not change or destroy the vector yourself
+         * afterwards.
+         *
+         * \pre The given coordinate vector represents an angle structure on
+         * the given triangulation, according to the integer vector
+         * representation described in the notes for vector().
+         * \pre The given vector is not a null pointer.
          *
          * \ifacespython Not present.
          *
@@ -165,7 +147,7 @@ class REGINA_API AngleStructure :
          * angle structure.
          */
         AngleStructure(const Triangulation<3>* triang,
-            AngleStructureVector* newVector);
+            Vector<Integer>* newVector);
         /**
          * Destroys this angle structure.
          * The underlying vector of angles will also be deallocated.
@@ -173,11 +155,14 @@ class REGINA_API AngleStructure :
         ~AngleStructure();
 
         /**
-         * Creates a newly allocated clone of this angle structure.
+         * Deprecated routine that creates a newly allocated clone of this
+         * angle structure.
+         *
+         * \deprecated Simply use the copy constructor instead.
          *
          * @return a clone of this angle structure.
          */
-        AngleStructure* clone() const;
+        [[deprecated]] AngleStructure* clone() const;
 
         /**
          * Returns the requested angle in this angle structure.
@@ -262,18 +247,36 @@ class REGINA_API AngleStructure :
         bool isVeering() const;
 
         /**
-         * Gives read-only access to the raw vector that sits beneath this
-         * angle structure.
+         * Gives read-only access to the integer vector that Regina uses
+         * internally to represent this angle structure.
          *
-         * Generally users should not need this function.  However, it is
-         * provided here in case the need should arise (e.g., for reasons
-         * of efficiency).
+         * This vector contains one member per angle plus a final scaling
+         * member; to obtain the actual angle in the angle structure one should
+         * divide the corresonding angle member by the scaling member and then
+         * multiply by <i>pi</i>.
          *
-         * \ifacespython Not present.
+         * If there are \a t tetrahedra in the underlying triangulation, there
+         * will be precisely 3<i>t</i>+1 elements in this vector.  The first
+         * three elements will be the angle members for the first tetrahedron,
+         * the next three for the second tetrahedron and so on.  For each
+         * tetraheron, the three individual elements are the angle members
+         * corresponding to edges 0, 1 and 2 of the tetrahedron (and also their
+         * opposite edges 5, 4 and 3 respectively).  The final element of the
+         * vector is the scaling member as described above.
          *
-         * @return the underlying raw vector.
+         * @return the underlying integer vector.
          */
-        const AngleStructureVector* rawVector() const;
+        const Vector<Integer>& vector() const;
+
+        /**
+         * A deprecated alias for vector().
+         *
+         * \deprecated This routine has been renamed to vector().  Note that
+         * the replacement routine vector() returns a reference, not a pointer.
+         *
+         * @return the underlying integer vector.
+         */
+        [[deprecated]] const Vector<Integer>* rawVector() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -296,9 +299,9 @@ class REGINA_API AngleStructure :
          */
         void writeXMLData(std::ostream& out) const;
 
-        // Make this class non-copyable.
-        AngleStructure(const AngleStructure&) = delete;
+        // Make this class non-assignable.
         AngleStructure& operator = (const AngleStructure&) = delete;
+        AngleStructure& operator = (AngleStructure&&) = delete;
 
     protected:
         /**
@@ -312,26 +315,32 @@ class REGINA_API AngleStructure :
 
 /*@}*/
 
-// Inline functions for AngleStructureVector
-
-inline AngleStructureVector::AngleStructureVector(size_t length) :
-        Vector<Integer>(length) {
-}
-
-template <typename T>
-inline AngleStructureVector::AngleStructureVector(const Vector<T>& cloneMe) :
-        Vector<Integer>(cloneMe) {
-}
-
 // Inline functions for AngleStructure
 
 inline AngleStructure::AngleStructure(const Triangulation<3>* triang,
-        AngleStructureVector* newVector) : vector(newVector),
-        triangulation_(triang), flags(0) {
+        Vector<Integer>* newVector) : vector_(newVector),
+        triangulation_(triang), flags_(0) {
+}
+
+inline AngleStructure::AngleStructure(const AngleStructure& other) :
+        vector_(new Vector<Integer>(*other.vector_)),
+        triangulation_(other.triangulation_),
+        flags_(other.flags_) {
+}
+
+inline AngleStructure::AngleStructure(AngleStructure&& src) noexcept :
+        vector_(src.vector_),
+        triangulation_(src.triangulation_),
+        flags_(src.flags_) {
+    src.vector_ = nullptr;
 }
 
 inline AngleStructure::~AngleStructure() {
-    delete vector;
+    delete vector_;
+}
+
+inline AngleStructure* AngleStructure::clone() const {
+    return new AngleStructure(*this);
 }
 
 inline const Triangulation<3>* AngleStructure::triangulation() const {
@@ -339,25 +348,29 @@ inline const Triangulation<3>* AngleStructure::triangulation() const {
 }
 
 inline bool AngleStructure::isStrict() const {
-    if ((flags & flagCalculatedType) == 0)
+    if ((flags_ & flagCalculatedType) == 0)
         calculateType();
-    return ((flags & flagStrict) != 0);
+    return ((flags_ & flagStrict) != 0);
 }
 
 inline bool AngleStructure::isTaut() const {
-    if ((flags & flagCalculatedType) == 0)
+    if ((flags_ & flagCalculatedType) == 0)
         calculateType();
-    return ((flags & flagTaut) != 0);
+    return ((flags_ & flagTaut) != 0);
 }
 
 inline bool AngleStructure::isVeering() const {
-    if ((flags & flagCalculatedType) == 0)
+    if ((flags_ & flagCalculatedType) == 0)
         calculateType();
-    return ((flags & flagVeering) != 0);
+    return ((flags_ & flagVeering) != 0);
 }
 
-inline const AngleStructureVector* AngleStructure::rawVector() const {
-    return vector;
+inline const Vector<Integer>& AngleStructure::vector() const {
+    return *vector_;
+}
+
+inline const Vector<Integer>* AngleStructure::rawVector() const {
+    return vector_;
 }
 
 } // namespace regina

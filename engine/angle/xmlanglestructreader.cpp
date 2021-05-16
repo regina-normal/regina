@@ -53,7 +53,7 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
         return;
 
     // Create a new vector and read all non-zero entries.
-    AngleStructureVector* vec = new AngleStructureVector(vecLen);
+    VectorInt* vec = new VectorInt(vecLen);
 
     long pos;
     Integer value;
