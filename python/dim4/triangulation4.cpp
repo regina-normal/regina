@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "algebra/grouppresentation.h"
 #include "progress/progresstracker.h"
@@ -181,6 +182,11 @@ void addTriangulation4(pybind11::module_& m) {
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
             pybind11::arg("tracker") = nullptr)
+        .def("retriangulate", [](const Triangulation<4>& tri, int height,
+                const std::function<bool(const std::string&,
+                    Triangulation<4>&)>& action) {
+            return tri.retriangulate(height, 1, nullptr, action);
+        })
         .def("pachner", &Triangulation<4>::pachner<4>,
             pybind11::arg(),
             pybind11::arg("check") = true,

@@ -49,7 +49,7 @@ namespace regina::detail {
 /**
  * A traits class that deduces the type of the argument in a given position
  * for a callable object.  It can (amongst other things) work with
- * function pointers, member functions, and lambdas.
+ * function pointers, member functions, std::function wrappers, and lambdas.
  *
  * This struct provides a single member typedef, named \a type, which is
  * the type of the argument to \a Action that appears in position \a pos.
@@ -89,6 +89,20 @@ struct CallableArg<ReturnType(*)(Args...), pos> {
 // lambda implementation ultimately falls through to):
 template <typename Class, typename ReturnType, typename... Args, int pos>
 struct CallableArg<ReturnType(Class::*)(Args...) const, pos> {
+    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+};
+
+// Implementation for std::function objects:
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<std::function<ReturnType(Args...)>, pos> {
+    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+};
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<std::function<ReturnType(Args...)>&, pos> {
+    typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
+};
+template <typename ReturnType, typename... Args, int pos>
+struct CallableArg<const std::function<ReturnType(Args...)>&, pos> {
     typedef typename std::tuple_element<pos, std::tuple<Args...>>::type type;
 };
 

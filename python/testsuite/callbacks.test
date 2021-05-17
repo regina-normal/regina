@@ -1,0 +1,129 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2015-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Tests the use of pure Python functions as C++ callbacks.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+# License, or (at your option) any later version.
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+########################################################################
+# Callback actions that we pass to retriangulate() or rewrite():
+########################################################################
+
+def display(sig, tri):
+    # A callback that uses both sig and tri arguments.
+    print('    ' + sig, tri.size())
+    return False
+
+sigs = None
+def collect(sig, tri):
+    # A callback that uses a global variable.
+    global sigs
+    sigs.append(sig)
+
+count = None
+def stopAfter10(sig, tri):
+    # A callback that uses a global variable, and that also uses the
+    # return value to terminate the search.
+    global count
+    count = count + 1
+    return (count >= 10)
+
+########################################################################
+# Full tests that we can run on a triangulation or link:
+########################################################################
+
+def testDisplay(obj, height):
+    print(obj.label() + ' -> display, height =', height)
+    if obj.type() == PACKET_LINK:
+        obj.rewrite(height, display)
+    else:
+        obj.retriangulate(height, display)
+
+def testStopAfter10(obj, height):
+    print(obj.label() + ' -> stop after 10, height =', height)
+    global count
+    count = 0
+    if obj.type() == PACKET_LINK:
+        ans = obj.rewrite(height, stopAfter10)
+    else:
+        ans = obj.retriangulate(height, stopAfter10)
+    if ans:
+        print('    search terminated early, count:', count)
+    else:
+        print('    search ran to completion, count:', count)
+
+def testCollect(obj, height):
+    print(obj.label() + ' -> collect, height =', height)
+    global sigs
+    sigs = []
+    if obj.type() == PACKET_LINK:
+        ans = obj.rewrite(height, collect)
+    else:
+        ans = obj.retriangulate(height, collect)
+    sigs.sort()
+    for i in sigs:
+        print('    ' + i)
+
+########################################################################
+# Individual test cases:
+########################################################################
+
+tri = Example3.poincareHomologySphere()
+testDisplay(tri, 1)
+testStopAfter10(tri, 1)
+testCollect(tri, 1)
+print()
+
+tri = Example3.weeks()
+testDisplay(tri, 0)
+testStopAfter10(tri, 1)
+testCollect(tri, 0)
+print()
+
+tri = Example4.cappellShaneson()
+testDisplay(tri, 0)
+testStopAfter10(tri, 2)
+testCollect(tri, 2)
+print()
+
+link = ExampleLink.trefoil()
+testDisplay(link, 0)
+print()
+
+link = ExampleLink.figureEight()
+testStopAfter10(link, 1)
+testCollect(link, 1)
+print()
+
+link = ExampleLink.monster()
+testStopAfter10(link, 1)
+print()
+

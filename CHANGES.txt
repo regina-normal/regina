@@ -130,6 +130,10 @@ Version 6.1  [ TODO ]
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global regina::swap(Link&, Link&).
               As a result, Link now meets the C++ Swappable requirements.
+            - Overhauled rewrite() to be faster, more generic, and support
+              actions that take a knot signature as well as a full knot
+              diagram.  This function is now also available through Python,
+              and can take a pure Python function as its action argument.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
         Class LPConstraintEuler, LPConstraintEulerPositive:
@@ -282,12 +286,16 @@ Version 6.1  [ TODO ]
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
-              a full triangluation.
+              a full triangluation.  This function is now also available
+              through Python, and can take a pure Python function as its
+              action argument.
         Class Triangluation<4>:
             - All of the changes listed for Triangulation<dim> above.
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
-              a full triangluation.
+              a full triangluation.  This function is now also available
+              through Python, and can take a pure Python function as its
+              action argument.
         Class TrivialTri:
             - Class constants are now constexpr.
         Class Vector:

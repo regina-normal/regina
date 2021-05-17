@@ -1337,7 +1337,13 @@ class REGINA_API Triangulation<3> :
          *
          * \apinotfinal
          *
-         * \ifacespython Not present.
+         * \ifacespython This function is available in Python, and the
+         * \a action argument may be a pure Python function.  However, its
+         * form is more restricted: the arguments \a threads, \a tracker and
+         * \a args arguments are all removed, which means you call it as
+         * retriangulate(height, action).  Moreover, \a action must take exactly
+         * two arguments (const std::string&, Triangulation<3>&) representing
+         * the signature and triangulation, as described in option (b) above.
          *
          * @param height the maximum number of \e additional tetrahedra to
          * allow beyond the number of tetrahedra originally present in the
@@ -1345,7 +1351,7 @@ class REGINA_API Triangulation<3> :
          * @param nThreads the number of threads to use.  If this is
          * 1 or smaller then the routine will run single-threaded.
          * @param tracker a progress tracker through which progress will
-         * be reported, or \c nullptr if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * @param action a function (or other callable object) to call
          * for each triangulation that is found.
          * @param args any additional arguments that should be passed to

@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "link/link.h"
 #include "maths/laurent.h"
@@ -239,6 +240,10 @@ void addLink(pybind11::module_& m) {
              pybind11::arg("height") = 1,
              pybind11::arg("nThreads") = 1,
              pybind11::arg("tracker") = nullptr)
+        .def("rewrite", [](const Link& link, int height,
+                const std::function<bool(const std::string&, Link&)>& action) {
+            return link.rewrite(height, 1, nullptr, action);
+        })
         .def("insertTorusLink", &Link::insertTorusLink,
             pybind11::arg(),
             pybind11::arg(),

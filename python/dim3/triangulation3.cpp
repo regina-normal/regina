@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/stl.h"
 #include "algebra/grouppresentation.h"
 #include "angle/anglestructure.h"
@@ -266,6 +267,11 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("height") = 1,
             pybind11::arg("nThreads") = 1,
             pybind11::arg("tracker") = nullptr)
+        .def("retriangulate", [](const Triangulation<3>& tri, int height,
+                const std::function<bool(const std::string&,
+                    Triangulation<3>&)>& action) {
+            return tri.retriangulate(height, 1, nullptr, action);
+        })
         .def("minimiseBoundary", &Triangulation<3>::minimiseBoundary)
         .def("minimizeBoundary", &Triangulation<3>::minimizeBoundary)
         .def("pachner", &Triangulation<3>::pachner<3>,
