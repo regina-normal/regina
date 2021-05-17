@@ -1,24 +1,52 @@
-Poincaré homology sphere -> display, height = 1
+Poincaré homology sphere -> display, height = 1, threads = 1
     fvPQcdecedekrsnrs 5
     gvLQQcdfeeffnjqsspp 6
-Poincaré homology sphere -> stop after 10, height = 1
+Poincaré homology sphere -> display, height = 1, threads = 2
+    fvPQcdecedekrsnrs 5
+    gvLQQcdfeeffnjqsspp 6
+Poincaré homology sphere -> stop after 10, height = 1, threads = 1
     search ran to completion, count: 2
-Poincaré homology sphere -> collect, height = 1
+Poincaré homology sphere -> stop after 10, height = 1, threads = 2
+    search ran to completion, count: 2
+Poincaré homology sphere -> collect, height = 1, threads = 1
+    fvPQcdecedekrsnrs
+    gvLQQcdfeeffnjqsspp
+Poincaré homology sphere -> collect, height = 1, threads = 2
     fvPQcdecedekrsnrs
     gvLQQcdfeeffnjqsspp
 
-Weeks manifold -> display, height = 0
+Weeks manifold -> display, height = 0, threads = 1
     jLvAMPQadfgghhiiijaqgjqxims 9
-Weeks manifold -> stop after 10, height = 1
+Weeks manifold -> display, height = 0, threads = 2
+    jLvAMPQadfgghhiiijaqgjqxims 9
+Weeks manifold -> stop after 10, height = 1, threads = 1
     search terminated early, count: 10
-Weeks manifold -> collect, height = 0
+Weeks manifold -> stop after 10, height = 1, threads = 2
+    search terminated early, count: 10
+Weeks manifold -> collect, height = 0, threads = 1
+    jLvAMPQadfgghhiiijaqgjqxims
+Weeks manifold -> collect, height = 0, threads = 2
     jLvAMPQadfgghhiiijaqgjqxims
 
-Cappell-Shaneson knot complement -> display, height = 0
+Cappell-Shaneson knot complement -> display, height = 0, threads = 1
     cMkabbb+aAa3blb 2
-Cappell-Shaneson knot complement -> stop after 10, height = 2
+Cappell-Shaneson knot complement -> display, height = 0, threads = 2
+    cMkabbb+aAa3blb 2
+Cappell-Shaneson knot complement -> stop after 10, height = 2, threads = 1
     search ran to completion, count: 9
-Cappell-Shaneson knot complement -> collect, height = 2
+Cappell-Shaneson knot complement -> stop after 10, height = 2, threads = 2
+    search ran to completion, count: 9
+Cappell-Shaneson knot complement -> collect, height = 2, threads = 1
+    cMkabbb+aAa3blb
+    eLAQcabcdddd1azayajbVbVbVb
+    eLAQcabcdddd5asbCbRb3b3b3b
+    eLAQcabcdddd5asbCblaObObOb
+    eLAQcabcddddGavb6aia8a8a8a
+    eLMQcbbcdddd0bRb+aPbwawawa
+    eLMQcbbdccddaaaa1bHbibvafb
+    eLMQcbccddddHaJbyaXbPbSava
+    eLMQcbccddddMaobya1bPbRava
+Cappell-Shaneson knot complement -> collect, height = 2, threads = 2
     cMkabbb+aAa3blb
     eLAQcabcdddd1azayajbVbVbVb
     eLAQcabcdddd5asbCbRb3b3b3b
@@ -29,12 +57,25 @@ Cappell-Shaneson knot complement -> collect, height = 2
     eLMQcbccddddHaJbyaXbPbSava
     eLMQcbccddddMaobya1bPbRava
 
-Trefoil -> display, height = 0
+Trefoil -> display, height = 0, threads = 1
+    dabcabcv- 3
+Trefoil -> display, height = 0, threads = 2
     dabcabcv- 3
 
-Figure eight knot -> stop after 10, height = 1
+Figure eight knot -> stop after 10, height = 1, threads = 1
     search ran to completion, count: 8
-Figure eight knot -> collect, height = 1
+Figure eight knot -> stop after 10, height = 1, threads = 2
+    search ran to completion, count: 8
+Figure eight knot -> collect, height = 1, threads = 1
+    eabcdbadcvbZa
+    faabcdbedcePkBg
+    faabcdbedcePkNj
+    faabcdbedcevfBg
+    faabcdbedcevfNj
+    faabcdecbedPkpd
+    faabcdecbedvfpd
+    fabcadebcedtg5m
+Figure eight knot -> collect, height = 1, threads = 2
     eabcdbadcvbZa
     faabcdbedcePkBg
     faabcdbedcePkNj
@@ -44,6 +85,8 @@ Figure eight knot -> collect, height = 1
     faabcdecbedvfpd
     fabcadebcedtg5m
 
-Monster unknot -> stop after 10, height = 1
+Monster unknot -> stop after 10, height = 1, threads = 1
+    search terminated early, count: 10
+Monster unknot -> stop after 10, height = 1, threads = 2
     search terminated early, count: 10
 

@@ -240,9 +240,18 @@ void addLink(pybind11::module_& m) {
              pybind11::arg("height") = 1,
              pybind11::arg("nThreads") = 1,
              pybind11::arg("tracker") = nullptr)
-        .def("rewrite", [](const Link& link, int height,
+        .def("rewrite", [](const Link& link, int height, int threads,
                 const std::function<bool(const std::string&, Link&)>& action) {
-            return link.rewrite(height, 1, nullptr, action);
+            if (threads == 1) {
+                return link.rewrite(height, 1, nullptr, action);
+            } else {
+                pybind11::gil_scoped_release release;
+                return link.rewrite(height, threads, nullptr,
+                    [&](const std::string& sig, Link& link) -> bool {
+                        pybind11::gil_scoped_acquire acquire;
+                        return action(sig, link);
+                    });
+            }
         })
         .def("insertTorusLink", &Link::insertTorusLink,
             pybind11::arg(),

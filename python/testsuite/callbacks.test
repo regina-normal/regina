@@ -60,34 +60,38 @@ def stopAfter10(sig, tri):
 # Full tests that we can run on a triangulation or link:
 ########################################################################
 
-def testDisplay(obj, height):
-    print(obj.label() + ' -> display, height =', height)
-    if obj.type() == PACKET_LINK:
-        obj.rewrite(height, display)
-    else:
-        obj.retriangulate(height, display)
+def printBanner(obj, test, height, threads):
+    print(obj.label() + ' -> ' + test + ', height = ' + str(height) + \
+        ', threads = ' + str(threads))
 
-def testStopAfter10(obj, height):
-    print(obj.label() + ' -> stop after 10, height =', height)
+def testDisplay(obj, height, threads):
+    printBanner(obj, 'display', height, threads)
+    if obj.type() == PACKET_LINK:
+        obj.rewrite(height, threads, display)
+    else:
+        obj.retriangulate(height, threads, display)
+
+def testStopAfter10(obj, height, threads):
+    printBanner(obj, 'stop after 10', height, threads)
     global count
     count = 0
     if obj.type() == PACKET_LINK:
-        ans = obj.rewrite(height, stopAfter10)
+        ans = obj.rewrite(height, threads, stopAfter10)
     else:
-        ans = obj.retriangulate(height, stopAfter10)
+        ans = obj.retriangulate(height, threads, stopAfter10)
     if ans:
         print('    search terminated early, count:', count)
     else:
         print('    search ran to completion, count:', count)
 
-def testCollect(obj, height):
-    print(obj.label() + ' -> collect, height =', height)
+def testCollect(obj, height, threads):
+    printBanner(obj, 'collect', height, threads)
     global sigs
     sigs = []
     if obj.type() == PACKET_LINK:
-        ans = obj.rewrite(height, collect)
+        ans = obj.rewrite(height, threads, collect)
     else:
-        ans = obj.retriangulate(height, collect)
+        ans = obj.retriangulate(height, threads, collect)
     sigs.sort()
     for i in sigs:
         print('    ' + i)
@@ -97,33 +101,46 @@ def testCollect(obj, height):
 ########################################################################
 
 tri = Example3.poincareHomologySphere()
-testDisplay(tri, 1)
-testStopAfter10(tri, 1)
-testCollect(tri, 1)
+testDisplay(tri, 1, 1)
+testDisplay(tri, 1, 2)
+testStopAfter10(tri, 1, 1)
+testStopAfter10(tri, 1, 2)
+testCollect(tri, 1, 1)
+testCollect(tri, 1, 2)
 print()
 
 tri = Example3.weeks()
-testDisplay(tri, 0)
-testStopAfter10(tri, 1)
-testCollect(tri, 0)
+testDisplay(tri, 0, 1)
+testDisplay(tri, 0, 2)
+testStopAfter10(tri, 1, 1)
+testStopAfter10(tri, 1, 2)
+testCollect(tri, 0, 1)
+testCollect(tri, 0, 2)
 print()
 
 tri = Example4.cappellShaneson()
-testDisplay(tri, 0)
-testStopAfter10(tri, 2)
-testCollect(tri, 2)
+testDisplay(tri, 0, 1)
+testDisplay(tri, 0, 2)
+testStopAfter10(tri, 2, 1)
+testStopAfter10(tri, 2, 2)
+testCollect(tri, 2, 1)
+testCollect(tri, 2, 2)
 print()
 
 link = ExampleLink.trefoil()
-testDisplay(link, 0)
+testDisplay(link, 0, 1)
+testDisplay(link, 0, 2)
 print()
 
 link = ExampleLink.figureEight()
-testStopAfter10(link, 1)
-testCollect(link, 1)
+testStopAfter10(link, 1, 1)
+testStopAfter10(link, 1, 2)
+testCollect(link, 1, 1)
+testCollect(link, 1, 2)
 print()
 
 link = ExampleLink.monster()
-testStopAfter10(link, 1)
+testStopAfter10(link, 1, 1)
+testStopAfter10(link, 1, 2)
 print()
 

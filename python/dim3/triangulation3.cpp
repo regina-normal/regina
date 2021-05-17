@@ -268,9 +268,18 @@ void addTriangulation3(pybind11::module_& m) {
             pybind11::arg("nThreads") = 1,
             pybind11::arg("tracker") = nullptr)
         .def("retriangulate", [](const Triangulation<3>& tri, int height,
-                const std::function<bool(const std::string&,
+                int threads, const std::function<bool(const std::string&,
                     Triangulation<3>&)>& action) {
-            return tri.retriangulate(height, 1, nullptr, action);
+            if (threads == 1) {
+                return tri.retriangulate(height, 1, nullptr, action);
+            } else {
+                pybind11::gil_scoped_release release;
+                return tri.retriangulate(height, threads, nullptr,
+                    [&](const std::string& sig, Triangulation<3>& tri) -> bool {
+                        pybind11::gil_scoped_acquire acquire;
+                        return action(sig, tri);
+                    });
+            }
         })
         .def("minimiseBoundary", &Triangulation<3>::minimiseBoundary)
         .def("minimizeBoundary", &Triangulation<3>::minimizeBoundary)

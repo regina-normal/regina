@@ -1763,11 +1763,11 @@ class REGINA_API Link : public Packet {
          *
          * \ifacespython This function is available in Python, and the
          * \a action argument may be a pure Python function.  However, its
-         * form is more restricted: the arguments \a threads, \a tracker and
-         * \a args arguments are all removed, which means you call it as
-         * rewrite(height, action).  Moreover, \a action must take exactly
-         * two arguments (const std::string&, Link&) representing the
-         * signature and the knot diagram, as described in option (b) above.
+         * form is more restricted: the arguments \a tracker and \a args are
+         * removed, so you simply call it as rewrite(height, threads, action).
+         * Moreover, \a action must take exactly two arguments
+         * (const std::string&, Link&) representing the knot signature and the
+         * knot diagram, as described in option (b) above.
          *
          * @param height the maximum number of \e additional crossings to
          * allow beyond the number of crossings originally present in this
