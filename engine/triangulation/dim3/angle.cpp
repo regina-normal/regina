@@ -89,5 +89,101 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
     return (strictAngleStructure_ = new AngleStructure(this, v));
 }
 
+const AngleStructure* Triangulation<3>::generalAngleStructure() const {
+    if (generalAngleStructure_.known())
+        return generalAngleStructure_.value();
+
+    // There are some simple cases for which we can deduce the answer
+    // automatically.
+    if (simplices_.empty())
+        return (generalAngleStructure_ = nullptr);
+
+    if (! hasBoundaryTriangles()) {
+        // It is easy to prove that, if an angle structure exists,
+        // then we must have #edges = #tetrahedra.
+        if (countEdges() != simplices_.size())
+            return (generalAngleStructure_ = nullptr);
+    }
+
+    // We want *any* solution to the homogeneous angle structure equations
+    // where the final coordinate (representing the scaling factor) is non-zero.
+    // The MatrixInt::rowEchelonForm() routine is enough for this: if there is
+    // any solution where the final coordinate is non-zero, then the final
+    // column will not appear as a leading coefficient in row echelon form.
+
+    MatrixInt* eqns = regina::makeAngleEquations(this);
+    unsigned long rank = eqns->rowEchelonForm();
+
+    // Note: the rank is always positive, since the triangulation is
+    // non-empty and so we always have tetrahedron equations present.
+
+    // Go down through the matrix from top-left to bottom-right and work
+    // out where the leading coefficients of each row appear.
+    unsigned long* leading = new unsigned long[rank];
+    unsigned long row = 0;
+    unsigned long col = 0;
+
+    while (row < rank) {
+        if (eqns->entry(row, col) != 0) {
+            leading[row] = col;
+            ++row;
+        }
+        ++col;
+    }
+
+    if (leading[rank - 1] + 1 == eqns->columns()) {
+        // The final column appears as a leading coefficient.
+        delete[] leading;
+        delete eqns;
+        return (generalAngleStructure_ = nullptr);
+    }
+
+    // Build up the final vector from back to front.
+    VectorInt* v = new VectorInt(eqns->columns());
+    v->set(eqns->columns() - 1, 1);
+
+    // We currently have row == rank.
+    while (row > 0) {
+        // INV:
+        // - We have enforced equations row,...,(rank-1);
+        // - The current solution has gcd=1.
+
+        --row;
+        // Enforce equation #row.
+
+        col = leading[row];
+        Integer den = eqns->entry(row, col);
+
+        Integer num; // set to 0
+        for (++col; col < v->size(); ++col)
+            if (eqns->entry(row, col) != 0)
+                num += (eqns->entry(row, col) * (*v)[col]);
+
+        // Our row echelon form guarantees that den > 0.
+        // We need to set v[leading[row]] = -num/den.
+        if (den == 1) {
+            v->set(leading[row], -num);
+        } else {
+            Integer gcd = den.gcd(num); // guaranteed >= 0.
+            if (gcd > 1) {
+                den.divByExact(gcd);
+                num.divByExact(gcd);
+            }
+
+            // Still we have den > 0.
+            if (den > 1)
+                (*v) *= den;
+            // Now the current solution has gcd == den.
+
+            v->set(leading[row], -num);
+            // Since gcd(num, den) == 1, there is no need to scale down again.
+        }
+    }
+
+    delete[] leading;
+    delete eqns;
+    return (generalAngleStructure_ = new AngleStructure(this, v));
+}
+
 } // namespace regina
 

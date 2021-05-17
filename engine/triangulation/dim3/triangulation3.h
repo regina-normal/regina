@@ -179,7 +179,12 @@ class REGINA_API Triangulation<3> :
 
         mutable Property<AngleStructure, StoreManagedPtr>
                 strictAngleStructure_;
-            /**< A strict angle structure on this triangulation, or the
+            /**< A strict angle structure on this triangulation, or a
+                 null pointer if none exists. */
+
+        mutable Property<AngleStructure, StoreManagedPtr>
+                generalAngleStructure_;
+            /**< A generalised angle structure on this triangulation, or a
                  null pointer if none exists. */
 
         mutable Property<TreeDecomposition, StoreManagedPtr>
@@ -1022,6 +1027,33 @@ class REGINA_API Triangulation<3> :
          * or trivial to calculate.
          */
         bool knowsStrictAngleStructure() const;
+        /**
+         * Searches for a generalised angle structure on this triangulation.
+         * A \e generalised angle structure must satisfy the same matching
+         * equations as all angle structures do, but there is no constraint on
+         * the signs of the angles; in particular, negative angles are allowed.
+         *
+         * If a generalised angle structure does exist, then this routine is
+         * guaranteed to find one.
+         *
+         * The underlying algorithm simply solves a system of linear equations,
+         * and so should be fast even for large triangulations.
+         *
+         * The angle structure returned (if any) is cached internally
+         * alongside this triangulation.  This means that, as long as
+         * the triangulation does not change, subsequent calls to
+         * generalAngleStructure() will return identical pointers
+         * and will be essentially instantaneous.
+         *
+         * If the triangulation changes however, then the cached angle
+         * structure will be deleted.  This means that you should not
+         * store the returned pointer for later use; instead you should
+         * just call generalAngleStructure() again.
+         *
+         * @return a generalised angle structure on this triangulation, or
+         * \c nullptr if none exists.
+         */
+        const AngleStructure* generalAngleStructure() const;
 
         /*@}*/
         /**

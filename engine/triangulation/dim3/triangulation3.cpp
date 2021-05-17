@@ -67,6 +67,7 @@ void Triangulation<3>::clearAllProperties() {
     zeroEfficient_.clear();
     splittingSurface_.clear();
     strictAngleStructure_.clear();
+    generalAngleStructure_.clear();
     niceTreeDecomposition_.clear();
 
     // Properties of the manifold:
@@ -121,6 +122,7 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     haken_.swap(other.haken_);
 
     strictAngleStructure_.swap(other.strictAngleStructure_);
+    generalAngleStructure_.swap(other.generalAngleStructure_);
     niceTreeDecomposition_.swap(other.niceTreeDecomposition_);
 
     // Properties stored using std::... containers:
@@ -430,10 +432,18 @@ Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
 
     if (X.strictAngleStructure_.known()) {
         if (X.strictAngleStructure_.value())
-            strictAngleStructure_ = new AngleStructure(this,
-                new VectorInt(X.strictAngleStructure_.value()->vector()));
+            strictAngleStructure_ = new AngleStructure(
+                *X.strictAngleStructure_.value(), this);
         else
             strictAngleStructure_ = nullptr;
+    }
+
+    if (X.generalAngleStructure_.known()) {
+        if (X.generalAngleStructure_.value())
+            generalAngleStructure_ = new AngleStructure(
+                *X.generalAngleStructure_.value(), this);
+        else
+            generalAngleStructure_ = nullptr;
     }
 
     turaevViroCache_ = X.turaevViroCache_;

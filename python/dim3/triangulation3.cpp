@@ -255,6 +255,9 @@ void addTriangulation3(pybind11::module_& m) {
             &Triangulation<3>::hasStrictAngleStructure)
         .def("knowsStrictAngleStructure",
             &Triangulation<3>::knowsStrictAngleStructure)
+        .def("generalAngleStructure",
+            &Triangulation<3>::generalAngleStructure,
+            pybind11::return_value_policy::reference_internal)
         .def("intelligentSimplify", &Triangulation<3>::intelligentSimplify)
         .def("simplifyToLocalMinimum",
             &Triangulation<3>::simplifyToLocalMinimum,
