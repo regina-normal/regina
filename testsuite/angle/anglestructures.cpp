@@ -56,6 +56,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(taut);
     CPPUNIT_TEST(tautVsAll);
     CPPUNIT_TEST(tautStrictTreeVsDD);
+    CPPUNIT_TEST(generalAngleStructure);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -79,8 +80,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
         void setUp() {
             // Use pre-coded triangulations where we can.
-            copyAndDelete(triFigure8,
-                Example<3>::figureEight());
+            copyAndDelete(triFigure8, Example<3>::figureEight());
             copyAndDelete(triGieseking, Example<3>::gieseking());
 
             // Layered loops can be constructed automatically.
@@ -553,6 +553,44 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             runCensusAllIdeal(verifyTreeVsDD);
             runCensusAllClosed(verifyTreeVsDD); // Should be no solns.
             runCensusAllBounded(verifyTreeVsDD); // May have partial solns.
+        }
+
+        void verifyGeneralAngleStructure(Triangulation<3>* tri) {
+            const AngleStructure* ans = tri->generalAngleStructure();
+            if (ans) {
+                regina::MatrixInt* m = regina::makeAngleEquations(tri);
+
+                const regina::VectorInt& vec = ans->vector();
+                if (vec.size() != m->columns()) {
+                    std::ostringstream msg;
+                    msg << "Generalised angle structure vector has "
+                        "wrong size for " << tri->label() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                if (! ((*m) * vec).isZero()) {
+                    std::ostringstream msg;
+                    msg << "Generalised angle structure vector does not "
+                        "satisfy the angle equations for "
+                        << tri->label() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+
+                delete m;
+            } else {
+                if (tri->isIdeal() && tri->countEdges() == tri->size()) {
+                    std::ostringstream msg;
+                    msg << "No generalised angle structure for "
+                        << tri->label() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void generalAngleStructure() {
+            runCensusAllIdeal(verifyTreeVsDD);
+            runCensusAllClosed(verifyTreeVsDD);
+            runCensusAllBounded(verifyTreeVsDD);
         }
 };
 
