@@ -80,7 +80,6 @@ IMAGE_PATH           =
 # Alphabetical index options:
 
 ALPHABETICAL_INDEX   = YES
-IGNORE_PREFIX        = N
 
 # HTML related options:
 
