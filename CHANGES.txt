@@ -284,6 +284,7 @@ Version 6.1  [ TODO ]
             - FaceListSuite has been renamed to TriangulationFaceStorage.
         Class Triangulation<3>:
             - All of the changes listed for Triangulation<dim> above.
+            - New routine generalAngleStructure().
             - Overhauled retriangulate() to be faster, more generic, and
               support actions that take an isomorphism signature as well as
               a full triangluation.  This function is now also available
