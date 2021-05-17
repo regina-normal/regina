@@ -156,6 +156,16 @@ Version 6.1  [ TODO ]
         Class NormalInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
+        Class NormalHypersurface:
+            - Renamed rawVector() to vector().  The old name is kept but
+              deprecated.
+            - Added copy and move constructors.  The old clone() is now
+              deprecated; just use the copy constructor instead.
+        Class NormalSurface:
+            - Renamed rawVector() to vector().  The old name is kept but
+              deprecated.
+            - Added copy and move constructors.  The old clone() is now
+              deprecated; just use the copy constructor instead.
         Class NormalSurfaces:
             - New filter() method that takes a SurfaceFilter.
         Class NormalSurfaceVector, NormalHypersurfaceVector:

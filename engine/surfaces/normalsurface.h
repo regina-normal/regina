@@ -824,7 +824,7 @@ class REGINA_API NormalSurfaceVector {
  */
 class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
     protected:
-        NormalSurfaceVector* vector;
+        NormalSurfaceVector* vector_;
             /**< Contains the coordinates of the normal surface in whichever
              *   space is appropriate. */
         const Triangulation<3>* triangulation_;
@@ -842,20 +842,37 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
             /**< The Euler characteristic of this surface. */
         mutable Property<size_t> boundaries_;
             /**< The number of disjoint boundary curves on this surface. */
-        mutable Property<bool> orientable;
+        mutable Property<bool> orientable_;
             /**< Is this surface orientable? */
-        mutable Property<bool> twoSided;
+        mutable Property<bool> twoSided_;
             /**< Is this surface two-sided? */
-        mutable Property<bool> connected;
+        mutable Property<bool> connected_;
             /**< Is this surface connected? */
-        mutable Property<bool> realBoundary;
+        mutable Property<bool> realBoundary_;
             /**< Does this surface have real boundary (i.e. does it meet
              *   any boundary triangles)? */
-        mutable Property<bool> compact;
+        mutable Property<bool> compact_;
             /**< Is this surface compact (i.e. does it only contain
              *   finitely many discs)? */
 
     public:
+        /**
+         * Creates a new copy of the given normal surface.
+         *
+         * @param other the normal surface to clone.
+         */
+        NormalSurface(const NormalSurface& other);
+
+        /**
+         * Moves the given surface into this new normal surface.
+         * This is a fast (constant time) operation.
+         *
+         * The surface that is passed (\a src) will no longer be usable.
+         *
+         * @param src the normal surface to move.
+         */
+        NormalSurface(NormalSurface&& src) noexcept;
+
         /**
          * Creates a new normal surface inside the given triangulation
          * with the given coordinate vector.
@@ -909,14 +926,17 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
         ~NormalSurface();
 
         /**
-         * Creates a newly allocated clone of this normal surface.
+         * Deprecated routine that creates a newly allocated clone of this
+         * normal surface.
          *
          * The name of the normal surface will \e not be copied to the
          * clone; instead the clone will have an empty name.
          *
+         * \deprecated Simply use the copy constructor instead.
+         *
          * @return a clone of this normal surface.
          */
-        NormalSurface* clone() const;
+        [[deprecated]] NormalSurface* clone() const;
 
         /**
          * Creates a newly allocated surface that is the double of this
@@ -1707,7 +1727,18 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          *
          * @return the underlying raw vector.
          */
-        const Vector<LargeInteger>& rawVector() const;
+        const Vector<LargeInteger>& vector() const;
+
+        /**
+         * A deprecated alias for vector().
+         *
+         * \deprecated This routine has been renamed to vector().
+         *
+         * \ifacespython Not present.
+         *
+         * @return the underlying raw vector.
+         */
+        [[deprecated]] const Vector<LargeInteger>& rawVector() const;
 
         /**
          * Determines if the underlying coordinate system being used
@@ -1746,9 +1777,9 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
          */
         bool systemAllowsOriented() const;
 
-        // Make this class non-copyable.
-        NormalSurface(const NormalSurface&) = delete;
+        // Make this class non-assignable.
         NormalSurface& operator = (const NormalSurface&) = delete;
+        NormalSurface& operator = (NormalSurface&&) = delete;
 
     protected:
         /**
@@ -1829,38 +1860,74 @@ inline void NormalSurfaceVector::scaleDown() {
 
 // Inline functions for NormalSurface
 
+inline NormalSurface::NormalSurface(
+        const Triangulation<3>* triangulation, NormalSurfaceVector* newVector) :
+        vector_(newVector), triangulation_(triangulation) {
+}
+
+inline NormalSurface::NormalSurface(const NormalSurface& other) :
+        vector_(other.vector_->clone()),
+        triangulation_(other.triangulation_),
+        name_(other.name_),
+        // properties:
+        octPosition_(other.octPosition_),
+        eulerChar_(other.eulerChar_),
+        boundaries_(other.boundaries_),
+        orientable_(other.orientable_),
+        twoSided_(other.twoSided_),
+        connected_(other.connected_),
+        realBoundary_(other.realBoundary_),
+        compact_(other.compact_) {
+}
+
+inline NormalSurface::NormalSurface(NormalSurface&& src) noexcept :
+        vector_(src.vector_),
+        triangulation_(src.triangulation_),
+        name_(std::move(src.name_)),
+        // lightweight properties:
+        octPosition_(src.octPosition_),
+        eulerChar_(src.eulerChar_),
+        boundaries_(src.boundaries_),
+        orientable_(src.orientable_),
+        twoSided_(src.twoSided_),
+        connected_(src.connected_),
+        realBoundary_(src.realBoundary_),
+        compact_(src.compact_) {
+    src.vector_ = nullptr;
+}
+
 inline NormalSurface::~NormalSurface() {
-    delete vector;
+    delete vector_;
 }
 
 inline LargeInteger NormalSurface::triangles(size_t tetIndex,
         int vertex) const {
-    return vector->triangles(tetIndex, vertex, triangulation_);
+    return vector_->triangles(tetIndex, vertex, triangulation_);
 }
 inline LargeInteger NormalSurface::orientedTriangles(
         size_t tetIndex, int vertex, bool oriented) const {
-    return vector->orientedTriangles(tetIndex, vertex, triangulation_,
+    return vector_->orientedTriangles(tetIndex, vertex, triangulation_,
         oriented);
 }
 inline LargeInteger NormalSurface::quads(size_t tetIndex,
         int quadType) const {
-    return vector->quads(tetIndex, quadType, triangulation_);
+    return vector_->quads(tetIndex, quadType, triangulation_);
 }
 inline LargeInteger NormalSurface::orientedQuads(
         size_t tetIndex, int quadType, bool oriented) const {
-    return vector->orientedQuads(tetIndex, quadType, triangulation_,
+    return vector_->orientedQuads(tetIndex, quadType, triangulation_,
         oriented);
 }
 inline LargeInteger NormalSurface::octs(size_t tetIndex, int octType) const {
-    return vector->octs(tetIndex, octType, triangulation_);
+    return vector_->octs(tetIndex, octType, triangulation_);
 }
 inline LargeInteger NormalSurface::edgeWeight(size_t edgeIndex)
         const {
-    return vector->edgeWeight(edgeIndex, triangulation_);
+    return vector_->edgeWeight(edgeIndex, triangulation_);
 }
 inline LargeInteger NormalSurface::arcs(size_t triIndex,
         int triVertex) const {
-    return vector->arcs(triIndex, triVertex, triangulation_);
+    return vector_->arcs(triIndex, triVertex, triangulation_);
 }
 
 inline DiscType NormalSurface::octPosition() const {
@@ -1870,7 +1937,7 @@ inline DiscType NormalSurface::octPosition() const {
 }
 
 inline size_t NormalSurface::countCoords() const {
-    return vector->size();
+    return vector_->size();
 }
 inline const Triangulation<3>* NormalSurface::triangulation() const {
     return triangulation_;
@@ -1884,13 +1951,13 @@ inline void NormalSurface::setName(const std::string& newName) {
 }
 
 inline void NormalSurface::writeRawVector(std::ostream& out) const {
-    out << vector->coords();
+    out << vector_->coords();
 }
 
 inline bool NormalSurface::isCompact() const {
-    if (! compact.known())
-        compact = vector->isCompact(triangulation_);
-    return compact.value();
+    if (! compact_.known())
+        compact_ = vector_->isCompact(triangulation_);
+    return compact_.value();
 }
 
 inline LargeInteger NormalSurface::eulerChar() const {
@@ -1900,27 +1967,27 @@ inline LargeInteger NormalSurface::eulerChar() const {
 }
 
 inline bool NormalSurface::isOrientable() const {
-    if (! orientable.known())
+    if (! orientable_.known())
         calculateOrientable();
-    return orientable.value();
+    return orientable_.value();
 }
 
 inline bool NormalSurface::isTwoSided() const {
-    if (! twoSided.known())
+    if (! twoSided_.known())
         calculateOrientable();
-    return twoSided.value();
+    return twoSided_.value();
 }
 
 inline bool NormalSurface::isConnected() const {
-    if (! connected.known())
+    if (! connected_.known())
         calculateOrientable();
-    return connected.value();
+    return connected_.value();
 }
 
 inline bool NormalSurface::hasRealBoundary() const {
-    if (! realBoundary.known())
+    if (! realBoundary_.known())
         calculateRealBoundary();
-    return realBoundary.value();
+    return realBoundary_.value();
 }
 
 inline size_t NormalSurface::countBoundaries() const {
@@ -1930,44 +1997,48 @@ inline size_t NormalSurface::countBoundaries() const {
 }
 
 inline bool NormalSurface::isVertexLinking() const {
-    return vector->isVertexLinking(triangulation_);
+    return vector_->isVertexLinking(triangulation_);
 }
 
 inline const Vertex<3>* NormalSurface::isVertexLink() const {
-    return vector->isVertexLink(triangulation_);
+    return vector_->isVertexLink(triangulation_);
 }
 
 inline std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink()
         const {
-    return vector->isThinEdgeLink(triangulation_);
+    return vector_->isThinEdgeLink(triangulation_);
 }
 
 inline bool NormalSurface::isSplitting() const {
-    return vector->isSplitting(triangulation_);
+    return vector_->isSplitting(triangulation_);
 }
 
 inline LargeInteger NormalSurface::isCentral() const {
-    return vector->isCentral(triangulation_);
+    return vector_->isCentral(triangulation_);
 }
 
 inline bool NormalSurface::normal() const {
     return ! octPosition();
 }
 
+inline const Vector<LargeInteger>& NormalSurface::vector() const {
+    return vector_->coords();
+}
+
 inline const Vector<LargeInteger>& NormalSurface::rawVector() const {
-    return vector->coords();
+    return vector_->coords();
 }
 
 inline bool NormalSurface::systemAllowsAlmostNormal() const {
-    return vector->allowsAlmostNormal();
+    return vector_->allowsAlmostNormal();
 }
 
 inline bool NormalSurface::systemAllowsSpun() const {
-    return vector->allowsSpun();
+    return vector_->allowsSpun();
 }
 
 inline bool NormalSurface::systemAllowsOriented() const {
-    return vector->allowsOriented();
+    return vector_->allowsOriented();
 }
 
 } // namespace regina

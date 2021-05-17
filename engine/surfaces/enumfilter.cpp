@@ -45,7 +45,7 @@ NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter* filter) const {
 
     for (NormalSurface* s : surfaces)
         if (filter->accept(*s))
-            ans->surfaces.push_back(s->clone());
+            ans->surfaces.push_back(new NormalSurface(*s));
 
     triangulation()->insertChildLast(ans);
     return ans;
@@ -69,7 +69,7 @@ NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
                 continue;
 
             if ((*first)->locallyCompatible(**second)) {
-                ans->surfaces.push_back((*first)->clone());
+                ans->surfaces.push_back(new NormalSurface(**first));
                 break;
             }
         }
@@ -111,7 +111,7 @@ NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
                 continue;
 
             if ((*first)->disjoint(**second)) {
-                ans->surfaces.push_back((*first)->clone());
+                ans->surfaces.push_back(new NormalSurface(**first));
                 break;
             }
         }
@@ -151,7 +151,7 @@ NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
         // can happily be tossed away.
         t = (*it)->cutAlong();
         if (! t->hasSimpleCompressingDisc())
-            ans->surfaces.push_back((*it)->clone());
+            ans->surfaces.push_back(new NormalSurface(**it));
         delete t;
     }
 

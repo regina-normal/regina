@@ -66,16 +66,16 @@ void NormalSurface::calculateOrientable() const {
     // First check that the precondition (compactness) holds, since if
     // it doesn't we'll have a rather nasty crash (thanks Nathan).
     if (! isCompact()) {
-        orientable.clear();
-        twoSided.clear();
-        connected.clear();
+        orientable_.clear();
+        twoSided_.clear();
+        connected_.clear();
         return;
     }
 
     // All right.  Off we go.
-    orientable.clear();
-    twoSided.clear();
-    connected.clear();
+    orientable_.clear();
+    twoSided_.clear();
+    connected_.clear();
 
     DiscSetSurfaceData<OrientData> orients(*this);
         // Stores the orientation of each disc.
@@ -112,7 +112,7 @@ void NormalSurface::calculateOrientable() const {
                 if (noComponents)
                     noComponents = false;
                 else
-                    connected = false;
+                    connected_ = false;
             }
             ++it;
         }
@@ -153,7 +153,7 @@ void NormalSurface::calculateOrientable() const {
             // There is actually a disc glued along this arc.
             // Determine the desired properties of the adjacent disc.
 
-            if (! orientable.known()) {
+            if (! orientable_.known()) {
                 myOrient = discOrientationFollowsEdge(use.type,
                     arc[i][0], arc[i][1], arc[i][2]);
                 yourOrient = discOrientationFollowsEdge(adjDisc->type,
@@ -163,7 +163,7 @@ void NormalSurface::calculateOrientable() const {
             } else
                 sameOrient = true;
 
-            if (! twoSided.known()) {
+            if (! twoSided_.known()) {
                 mySides = numberDiscsAwayFromVertex(use.type, arc[i][0]);
                 yourSides = numberDiscsAwayFromVertex(
                     adjDisc->type, adjArc[0]);
@@ -181,33 +181,33 @@ void NormalSurface::calculateOrientable() const {
                     orients.data(use).sides : -orients.data(use).sides);
                 discQueue.push(*adjDisc);
             } else {
-                if (! orientable.known()) {
+                if (! orientable_.known()) {
                     if (sameOrient) {
                         if (orients.data(*adjDisc).orient !=
                                 orients.data(use).orient)
-                            orientable = false;
+                            orientable_ = false;
                     } else {
                         if (orients.data(*adjDisc).orient ==
                                 orients.data(use).orient)
-                            orientable = false;
+                            orientable_ = false;
                     }
                 }
-                if (! twoSided.known()) {
+                if (! twoSided_.known()) {
                     if (sameSides) {
                         if (orients.data(*adjDisc).sides !=
                                 orients.data(use).sides)
-                            twoSided = false;
+                            twoSided_ = false;
                     } else {
                         if (orients.data(*adjDisc).sides ==
                                 orients.data(use).sides)
-                            twoSided = false;
+                            twoSided_ = false;
                     }
                 }
             }
 
             // Tidy up.
             delete adjDisc;
-            if (orientable.known() && twoSided.known() && connected.known())
+            if (orientable_.known() && twoSided_.known() && connected_.known())
                 return;
         }
     }
@@ -215,12 +215,12 @@ void NormalSurface::calculateOrientable() const {
     // We made it through!  Any properties that weren't proven false
     // must be true.
 
-    if (! orientable.known())
-        orientable = true;
-    if (! twoSided.known())
-        twoSided = true;
-    if (! connected.known())
-        connected = true;
+    if (! orientable_.known())
+        orientable_ = true;
+    if (! twoSided_.known())
+        twoSided_ = true;
+    if (! connected_.known())
+        connected_ = true;
 }
 
 } // namespace regina

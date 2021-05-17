@@ -489,8 +489,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = &lhs->surface(i)->rawVector();
-                rhsRaw[i] = &rhs->surface(i)->rawVector();
+                lhsRaw[i] = &lhs->surface(i)->vector();
+                rhsRaw[i] = &rhs->surface(i)->vector();
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess<LargeInteger>);
@@ -1810,7 +1810,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         "chi = " << s->eulerChar() << ": " << tri.label();
                     CPPUNIT_FAIL(msg.str());
                 }
-                eulerZero.push_back(new Vector<LargeInteger>(s->rawVector()));
+                eulerZero.push_back(new Vector<LargeInteger>(s->vector()));
                 delete s;
             }
 
@@ -1821,7 +1821,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             for (size_t i = 0; i < all->size(); ++i) {
                 const NormalSurface* s = all->surface(i);
                 if (s->eulerChar() == 0)
-                    filtered.push_back(&s->rawVector());
+                    filtered.push_back(&s->vector());
             }
 
             // Ensure that every vertex surface with chi=0 was picked up

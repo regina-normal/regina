@@ -238,8 +238,8 @@ bool NormalSurface::disjoint(const NormalSurface& other) const {
     // Form the sum, pull it apart into connected components, and see
     // whether we get our original two surfaces back.
     NormalSurfaceVector* v =
-        static_cast<NormalSurfaceVector*>(vector->clone());
-    (*v) += *(other.vector);
+        static_cast<NormalSurfaceVector*>(vector_->clone());
+    (*v) += *(other.vector_);
     NormalSurface* sum = new NormalSurface(triangulation_, v);
 
     typedef std::vector<NormalSurface*> CompVector;

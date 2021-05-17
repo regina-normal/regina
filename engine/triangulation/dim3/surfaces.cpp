@@ -117,11 +117,11 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
         // We just need to pick out spheres and discs.
         if (s->eulerChar() == 2) {
             // Must be a sphere; no bounded surface has chi=2.
-            ans = s->clone();
+            ans = new NormalSurface(std::move(*s));
         } else if (s->eulerChar() == 1) {
             if (s->hasRealBoundary()) {
                 // Must be a disc.
-                ans = s->clone();
+                ans = new NormalSurface(std::move(*s));
             } else if (! s->isTwoSided()) {
                 // A projective plane that doubles to a sphere.
                 ans = s->doubleSurface();
@@ -204,7 +204,7 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
                 }
             if (found && ! broken) {
                 // This is it!
-                ans = s->clone();
+                ans = new NormalSurface(std::move(*s));
             }
         }
     }

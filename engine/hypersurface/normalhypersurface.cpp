@@ -59,17 +59,17 @@ bool NormalHypersurfaceVector::isCompact(const Triangulation<4>* triang)
     return true;
 }
 
-NormalHypersurface::NormalHypersurface(const Triangulation<4>* triangulation,
-        NormalHypersurfaceVector* vector) :
-        vector_(vector), triangulation_(triangulation) {
-}
-
 NormalHypersurface* NormalHypersurface::clone() const {
     NormalHypersurface* ans = new NormalHypersurface(triangulation_,
         dynamic_cast<NormalHypersurfaceVector*>(vector_->clone()));
 
+    ans->orientable_ = orientable_;
+    ans->twoSided_ = twoSided_;
+    ans->connected_ = connected_;
     ans->realBoundary_ = realBoundary_;
     ans->compact_ = compact_;
+    if (H1_.known())
+        ans->H1_ = new AbelianGroup(*H1_.value());
 
     return ans;
 }

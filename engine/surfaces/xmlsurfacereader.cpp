@@ -98,23 +98,23 @@ XMLElementReader* XMLNormalSurfaceReader::startSubElement(
     } else if (subTagName == "orbl") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface_->orientable = val;
+            surface_->orientable_ = val;
     } else if (subTagName == "twosided") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface_->twoSided = val;
+            surface_->twoSided_ = val;
     } else if (subTagName == "connected") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface_->connected = val;
+            surface_->connected_ = val;
     } else if (subTagName == "realbdry") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface_->realBoundary = val;
+            surface_->realBoundary_ = val;
     } else if (subTagName == "compact") {
         bool val;
         if (valueOf(props.lookup("value"), val))
-            surface_->compact = val;
+            surface_->compact_ = val;
     }
     return new XMLElementReader();
 }

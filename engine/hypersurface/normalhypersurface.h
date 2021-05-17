@@ -500,6 +500,23 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
 
     public:
         /**
+         * Creates a new copy of the given normal hypersurface.
+         *
+         * @param other the normal hypersurface to clone.
+         */
+        NormalHypersurface(const NormalHypersurface& other);
+
+        /**
+         * Moves the given hypersurface into this new normal hypersurface.
+         * This is a fast (constant time) operation.
+         *
+         * The hypersurface that is passed (\a src) will no longer be usable.
+         *
+         * @param src the normal hypersurface to move.
+         */
+        NormalHypersurface(NormalHypersurface&& src) noexcept;
+
+        /**
          * Creates a new normal hypersurface inside the given triangulation
          * with the given coordinate vector.
          *
@@ -520,6 +537,7 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
          */
         NormalHypersurface(const Triangulation<4>* triangulation,
             NormalHypersurfaceVector* vector);
+
         /**
          * A Python-only routine that creates a new normal hypersurface
          * inside the given triangulation with the given coordinate vector.
@@ -546,6 +564,7 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
         NormalHypersurface(const Triangulation<4>* triang,
             HyperCoords coordSystem, List allCoords);
         #endif
+
         /**
          * Destroys this normal hypersurface.
          * The underlying vector of coordinates will also be deallocated.
@@ -553,14 +572,17 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
         ~NormalHypersurface();
 
         /**
-         * Creates a newly allocated clone of this normal hypersurface.
+         * Deprecated routine that creates a newly allocated clone of this
+         * normal hypersurface.
          *
          * The name of the normal hypersurface will \e not be copied to the
          * clone; instead the clone will have an empty name.
          *
+         * \deprecated Simply use the copy constructor instead.
+         *
          * @return a clone of this normal hypersurface.
          */
-        NormalHypersurface* clone() const;
+        [[deprecated]] NormalHypersurface* clone() const;
 
         /**
          * Creates a newly allocated hypersurface that is the double of this
@@ -938,11 +960,22 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
          *
          * @return the underlying raw vector.
          */
-        const Vector<LargeInteger>& rawVector() const;
+        const Vector<LargeInteger>& vector() const;
 
-        // Make this class non-copyable.
-        NormalHypersurface(const NormalHypersurface&) = delete;
+        /**
+         * A deprecated alias for vector().
+         *
+         * \deprecated This routine has been renamed to vector().
+         *
+         * \ifacespython Not present.
+         *
+         * @return the underlying raw vector.
+         */
+        [[deprecated]] const Vector<LargeInteger>& rawVector() const;
+
+        // Make this class non-assignable.
         NormalHypersurface& operator = (const NormalHypersurface&) = delete;
+        NormalHypersurface& operator = (NormalHypersurface&&) = delete;
 
     protected:
         /**
@@ -1002,6 +1035,43 @@ inline void NormalHypersurfaceVector::scaleDown() {
 }
 
 // Inline functions for NormalHypersurface
+
+inline NormalHypersurface::NormalHypersurface(
+        const Triangulation<4>* triangulation,
+        NormalHypersurfaceVector* vector) :
+        vector_(vector), triangulation_(triangulation) {
+}
+
+inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other) :
+        vector_(other.vector_->clone()),
+        triangulation_(other.triangulation_),
+        name_(other.name_),
+        // properties by value:
+        orientable_(other.orientable_),
+        twoSided_(other.twoSided_),
+        connected_(other.connected_),
+        realBoundary_(other.realBoundary_),
+        compact_(other.compact_) {
+    // properties by pointer:
+    if (other.H1_.known())
+        H1_ = new AbelianGroup(*other.H1_.value());
+}
+
+inline NormalHypersurface::NormalHypersurface(NormalHypersurface&& src)
+        noexcept :
+        vector_(src.vector_),
+        triangulation_(src.triangulation_),
+        name_(std::move(src.name_)),
+        // lightweight properties:
+        orientable_(src.orientable_),
+        twoSided_(src.twoSided_),
+        connected_(src.connected_),
+        realBoundary_(src.realBoundary_),
+        compact_(src.compact_) {
+    src.vector_ = nullptr;
+    // heavyweight properties:
+    H1_.swap(src.H1_);
+}
 
 inline NormalHypersurface::~NormalHypersurface() {
     delete vector_;
@@ -1083,6 +1153,10 @@ inline const Vertex<4>* NormalHypersurface::isVertexLink() const {
 
 inline const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
     return vector_->isThinEdgeLink(triangulation_);
+}
+
+inline const Vector<LargeInteger>& NormalHypersurface::vector() const {
+    return vector_->coords();
 }
 
 inline const Vector<LargeInteger>& NormalHypersurface::rawVector() const {

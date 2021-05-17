@@ -240,7 +240,7 @@ Packet* NormalSurfaces::internalClonePacket(Packet* /* parent */) const {
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, which_, algorithm_);
     for (auto s : surfaces)
-        ans->surfaces.push_back(static_cast<NormalSurface*>(s->clone()));
+        ans->surfaces.push_back(new NormalSurface(*s));
     return ans;
 }
 

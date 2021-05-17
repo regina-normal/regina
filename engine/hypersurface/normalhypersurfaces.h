@@ -855,7 +855,7 @@ inline bool NormalHypersurfaces::VectorIterator::operator !=(
 
 inline const Vector<LargeInteger>&
         NormalHypersurfaces::VectorIterator::operator *() const {
-    return (*it_)->rawVector();
+    return (*it_)->vector();
 }
 
 inline NormalHypersurfaces::VectorIterator&

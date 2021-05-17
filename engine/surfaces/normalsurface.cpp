@@ -42,27 +42,29 @@ namespace regina {
 
 NormalSurface* NormalSurface::clone() const {
     NormalSurface* ans = new NormalSurface(triangulation_,
-        dynamic_cast<NormalSurfaceVector*>(vector->clone()));
+        dynamic_cast<NormalSurfaceVector*>(vector_->clone()));
 
+    ans->octPosition_ = octPosition_;
     ans->eulerChar_ = eulerChar_;
-    ans->orientable = orientable;
-    ans->twoSided = twoSided;
-    ans->connected = connected;
-    ans->realBoundary = realBoundary;
-    ans->compact = compact;
+    ans->boundaries_ = boundaries_;
+    ans->orientable_ = orientable_;
+    ans->twoSided_ = twoSided_;
+    ans->connected_ = connected_;
+    ans->realBoundary_ = realBoundary_;
+    ans->compact_ = compact_;
 
     return ans;
 }
 
 NormalSurface* NormalSurface::doubleSurface() const {
     NormalSurface* ans = new NormalSurface(triangulation_,
-        dynamic_cast<NormalSurfaceVector*>(vector->clone()));
+        dynamic_cast<NormalSurfaceVector*>(vector_->clone()));
 
-    *(ans->vector) += *(ans->vector);
+    *(ans->vector_) += *(ans->vector_);
 
     // Some properties can be copied straight across.
-    ans->realBoundary = realBoundary;
-    ans->compact = compact;
+    ans->realBoundary_ = realBoundary_;
+    ans->compact_ = compact_;
     if (eulerChar_.known())
         ans->eulerChar_ = eulerChar_.value() * 2;
 
@@ -70,24 +72,18 @@ NormalSurface* NormalSurface::doubleSurface() const {
     // they change in the clone.  However, until we sit down and check
     // through all possible cases we'll just leave them marked unknown.
 
-    // TODO: ans->orientable, ans->twoSided, ans->connected
+    // TODO: ans->orientable_, ans->twoSided_, ans->connected_
 
     // And some other properties are best left recalculated.
 
     return ans;
 }
 
-NormalSurface::NormalSurface(const Triangulation<3>* triang,
-        NormalSurfaceVector* newVector) :
-        vector(newVector),
-        triangulation_(triang) {
-}
-
 void NormalSurface::writeTextShort(std::ostream& out) const {
     size_t nTets = triangulation_->size();
     size_t tet;
     unsigned j;
-    bool almostNormal = vector->allowsAlmostNormal();
+    bool almostNormal = vector_->allowsAlmostNormal();
     for (tet=0; tet<nTets; tet++) {
         if (tet > 0)
             out << " || ";
@@ -189,7 +185,7 @@ LargeInteger NormalSurfaceVector::isCentral(const Triangulation<3>* triang)
 
 bool NormalSurface::isEmpty() const {
     size_t nTet = triangulation_->size();
-    bool checkAlmostNormal = vector->allowsAlmostNormal();
+    bool checkAlmostNormal = vector_->allowsAlmostNormal();
 
     size_t t;
     int i;
@@ -215,7 +211,7 @@ bool NormalSurface::isEmpty() const {
 bool NormalSurface::sameSurface(const NormalSurface& other) const {
     size_t nTet = triangulation_->size();
     bool checkAlmostNormal =
-        (vector->allowsAlmostNormal() || other.vector->allowsAlmostNormal());
+        (vector_->allowsAlmostNormal() || other.vector_->allowsAlmostNormal());
 
     size_t t;
     int i;
@@ -279,7 +275,7 @@ bool NormalSurface::locallyCompatible(const NormalSurface& other) const {
 }
 
 void NormalSurface::calculateOctPosition() const {
-    if (! vector->allowsAlmostNormal()) {
+    if (! vector_->allowsAlmostNormal()) {
         octPosition_ = DiscType();
         return;
     }
@@ -331,7 +327,7 @@ void NormalSurface::calculateEulerChar() const {
 
 void NormalSurface::calculateRealBoundary() const {
     if (triangulation_->isClosed()) {
-        realBoundary = false;
+        realBoundary_ = false;
         return;
     }
 
@@ -346,13 +342,13 @@ void NormalSurface::calculateRealBoundary() const {
             // Check for disk types with boundary
             for (type=0; type<3; type++) {
                 if (quads(index, type) > 0) {
-                    realBoundary = true;
+                    realBoundary_ = true;
                     return;
                 }
             }
             for (type=0; type<3; type++) {
                 if (octs(index, type) > 0) {
-                    realBoundary = true;
+                    realBoundary_ = true;
                     return;
                 }
             }
@@ -364,14 +360,14 @@ void NormalSurface::calculateRealBoundary() const {
                         if (face == type)
                             continue;
                         if (tet->adjacentTetrahedron(face) == 0) {
-                            realBoundary = true;
+                            realBoundary_ = true;
                             return;
                         }
                     }
                 }
         }
     }
-    realBoundary = false;
+    realBoundary_ = false;
 }
 
 MatrixInt* NormalSurface::boundaryIntersections() const {
@@ -384,7 +380,7 @@ MatrixInt* NormalSurface::boundaryIntersections() const {
     // Check the preconditions.
     if (! snapPea->isOriented())
         return 0;
-    if (vector->allowsAlmostNormal())
+    if (vector_->allowsAlmostNormal())
         return 0;
     for (Vertex<3>* v : snapPea->vertices()) {
         if (! v->isIdeal())
@@ -427,14 +423,14 @@ void NormalSurface::writeXMLData(std::ostream& out) const {
     using regina::xml::xmlValueTag;
 
     // Write the opening tag including vector length.
-    size_t vecLen = vector->size();
+    size_t vecLen = vector_->size();
     out << "  <surface len=\"" << vecLen << "\" name=\""
         << xmlEncodeSpecialChars(name_) << "\">";
 
     // Write all non-zero entries.
     LargeInteger entry;
     for (size_t i = 0; i < vecLen; i++) {
-        entry = (*vector)[i];
+        entry = (*vector_)[i];
         if (entry != 0)
             out << ' ' << i << ' ' << entry;
     }
@@ -442,16 +438,16 @@ void NormalSurface::writeXMLData(std::ostream& out) const {
     // Write properties.
     if (eulerChar_.known())
         out << "\n\t" << xmlValueTag("euler", eulerChar_.value());
-    if (orientable.known())
-        out << "\n\t" << xmlValueTag("orbl", orientable.value());
-    if (twoSided.known())
-        out << "\n\t" << xmlValueTag("twosided", twoSided.value());
-    if (connected.known())
-        out << "\n\t" << xmlValueTag("connected", connected.value());
-    if (realBoundary.known())
-        out << "\n\t" << xmlValueTag("realbdry", realBoundary.value());
-    if (compact.known())
-        out << "\n\t" << xmlValueTag("compact", compact.value());
+    if (orientable_.known())
+        out << "\n\t" << xmlValueTag("orbl", orientable_.value());
+    if (twoSided_.known())
+        out << "\n\t" << xmlValueTag("twosided", twoSided_.value());
+    if (connected_.known())
+        out << "\n\t" << xmlValueTag("connected", connected_.value());
+    if (realBoundary_.known())
+        out << "\n\t" << xmlValueTag("realbdry", realBoundary_.value());
+    if (compact_.known())
+        out << "\n\t" << xmlValueTag("compact", compact_.value());
 
     // Write the closing tag.
     out << " </surface>\n";

@@ -425,7 +425,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
     NormalSurfaceVector* v;
     std::vector<NormalSurface*>::const_iterator qit;
     for (qit = reducedList.begin(); qit != reducedList.end(); ++qit) {
-        v = Variant::ReducedVector::makeMirror((*qit)->rawVector(), owner);
+        v = Variant::ReducedVector::makeMirror((*qit)->vector(), owner);
         list[0].push_back(new RaySpec<BitmaskType>(v->coords()));
         delete v;
     }

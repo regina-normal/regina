@@ -389,7 +389,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             verifyTautVsAll(&triOneTet, "a standalone tetrahedron");
         }
 
-        static bool lexLess(const VectorInt* a, const VectorInt* b) {
+        static bool lexLess(const regina::VectorInt* a, const regina::VectorInt* b) {
             for (unsigned i = 0; i < a->size(); ++i) {
                 if ((*a)[i] < (*b)[i])
                     return true;
@@ -408,7 +408,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             if (n == 0)
                 return true;
 
-            typedef const VectorInt* VecPtr;
+            typedef const regina::VectorInt* VecPtr;
             VecPtr* lhsRaw = new VecPtr[n];
             VecPtr* rhsRaw = new VecPtr[n];
 
@@ -441,7 +441,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             unsigned long nAll = all->size();
             unsigned long nTaut = taut->size();
 
-            typedef const VectorInt* VecPtr;
+            typedef const regina::VectorInt* VecPtr;
             VecPtr* allRaw = new VecPtr[nAll + 1];
             VecPtr* tautRaw = new VecPtr[nTaut + 1];
 
