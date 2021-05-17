@@ -39,7 +39,6 @@
 #include "triangulation/dim2.h"
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
-#include "utilities/memutils.h"
 
 namespace regina {
 
@@ -245,7 +244,8 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
             if (! ((s >> c >> idx) && (c == 'b') && (idx > 0) &&
                     (idx <= nBags) && (! bags[idx - 1]))) {
                 std::cerr << "ERROR: Invalid bag line" << std::endl;
-                std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+                for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
+                    delete *bag;
                 delete[] bags;
                 return nullptr;
             }
@@ -259,7 +259,8 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
                             bags[idx]->elements_[bags[idx]->size_] <= 0 ||
                             bags[idx]->elements_[bags[idx]->size_] > nVert) {
                         std::cerr << "ERROR: Invalid bag contents" << std::endl;
-                        std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+                        for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
+                            delete *bag;
                         delete[] bags;
                         return nullptr;
                     } else {
@@ -281,7 +282,8 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
             for (i = 0; i + 1 < bags[idx]->size_; ++i)
                 if (bags[idx]->elements_[i] == bags[idx]->elements_[i + 1]) {
                     std::cerr << "ERROR: Duplicate bag element" << std::endl;
-                    std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+                    for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
+                        delete *bag;
                     delete[] bags;
                     return nullptr;
                 }
@@ -297,7 +299,8 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
             if (! ((s >> i >> j) && (i != j) && (i > 0) && (j > 0) &&
                     (i <= nBags) && (j <= nBags) && ! (s >> tmp))) {
                 std::cerr << "ERROR: Invalid connection line" << std::endl;
-                std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+                for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
+                    delete *bag;
                 delete[] bags;
                 return nullptr;
             }
@@ -329,7 +332,8 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
         } else {
             // We are not expecting any more data.
             std::cerr << "ERROR: Unexpected additional data" << std::endl;
-            std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+            for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
+                delete *bag;
             delete[] bags;
             return nullptr;
         }
@@ -338,7 +342,8 @@ TreeDecomposition* TreeDecomposition::fromPACE(std::istream& in) {
     if (! (bags && readBags == nBags && readJoins + 1 == nBags &&
             readMaxBagSize == maxBagSize)) {
         std::cerr << "ERROR: Mismatched max bag size" << std::endl;
-        std::for_each(bags, bags + nBags, FuncDelete<TreeBag>());
+        for (TreeBag** bag = bags; bag < bags + nBags; ++bag)
+            delete *bag;
         delete[] bags;
         return nullptr;
     }

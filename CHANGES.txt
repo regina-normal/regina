@@ -96,6 +96,10 @@ Version 6.1  [ TODO ]
               can be losslessly assigned to which others.
         Class FileInfo:
             - Class constant TYPE_XML is now constexpr.
+        Class FuncDelete, FuncNew, FuncNewCopyPtr, FuncNewCopyRef,
+                FuncNewCopyClonePtr:
+            - Deprecated.  Regina does not use these any more, and modern
+              C++ standards provide good alternatives nowadays.
         Class GlobalDirs:
             - Added deduceDirs() as an alternative to setDirs().  This new
               routine also supports running directly from the source tree, and

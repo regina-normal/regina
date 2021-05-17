@@ -31,14 +31,16 @@
  **************************************************************************/
 
 /*! \file utilities/memutils.h
- *  \brief Provides object creation and deletion functions for use with
- *  the Standard Template Library.
+ *  \brief Deprecated header that provides object creation and deletion
+ *  functions for use with the C++ Standard Library.
  */
 
 #ifndef __MEMUTILS_H
 #ifndef __DOXYGEN
 #define __MEMUTILS_H
 #endif
+
+#warning This header and all of its contents are deprecated.
 
 #include "regina-core.h"
 
@@ -51,16 +53,19 @@ namespace regina {
 
 /**
  * An adaptable generator used to create objects using default constructors.
- * This class is for use with the Standard Template Library.
+ * This class is for use with the C++ Standard Library.
  *
  * Note that the template argument need not be a pointer class.  If the
  * template argument is <tt>T</tt>, this generator will return a
  * \e pointer to a newly created object of type <tt>T</tt>.
  *
+ * \deprecated Regina no longer uses these ancient classes, and newer
+ * C++ standards provide good alternatives nowadays.
+ *
  * \ifacespython Not present.
  */
 template <class T>
-struct FuncNew {
+struct [[deprecated]] FuncNew {
     typedef T* result_type;
         /**< The return type for this generator. */
 
@@ -76,7 +81,7 @@ struct FuncNew {
 
 /**
  * An adaptable unary function used to create objects using copy constructors.
- * This class is for use with the Standard Template Library.
+ * This class is for use with the C++ Standard Library.
  *
  * Note that the template argument need not be a pointer class.  If the
  * template argument is <tt>T</tt>, this unary function will accept
@@ -84,10 +89,13 @@ struct FuncNew {
  * copy constructor to return a pointer to a newly created object of
  * type <tt>T</tt>.
  *
+ * \deprecated Regina no longer uses these ancient classes, and newer
+ * C++ standards provide good alternatives nowadays.
+ *
  * \ifacespython Not present.
  */
 template <class T>
-struct FuncNewCopyPtr {
+struct [[deprecated]] FuncNewCopyPtr {
     typedef const T* argument_type;
         /**< The argument type for this unary function. */
     typedef T* result_type;
@@ -107,7 +115,7 @@ struct FuncNewCopyPtr {
 
 /**
  * An adaptable unary function used to create objects using copy constructors.
- * This class is for use with the Standard Template Library.
+ * This class is for use with the C++ Standard Library.
  *
  * Note that the template argument need not be a pointer class.  If the
  * template argument is <tt>T</tt>, this unary function will accept
@@ -115,10 +123,13 @@ struct FuncNewCopyPtr {
  * copy constructor to return a pointer to a newly created object of
  * type <tt>T</tt>.
  *
+ * \deprecated Regina no longer uses these ancient classes, and newer
+ * C++ standards provide good alternatives nowadays.
+ *
  * \ifacespython Not present.
  */
 template <class T>
-struct FuncNewCopyRef {
+struct [[deprecated]] FuncNewCopyRef {
     typedef const T& argument_type;
         /**< The argument type for this unary function. */
     typedef T* result_type;
@@ -139,7 +150,7 @@ struct FuncNewCopyRef {
 /**
  * An adaptable unary function used to create objects using the
  * <tt>clone()</tt> method.
- * This class is for use with the Standard Template Library.
+ * This class is for use with the C++ Standard Library.
  *
  * Note that the template argument need not be a pointer class.  If the
  * template argument is <tt>T</tt>, this unary function will accept
@@ -151,10 +162,13 @@ struct FuncNewCopyRef {
  * declared return type may be different, but the result \e must
  * be castable to <tt>T*</tt>.
  *
+ * \deprecated Regina no longer uses these ancient classes, and newer
+ * C++ standards provide good alternatives nowadays.
+ *
  * \ifacespython Not present.
  */
 template <class T>
-struct FuncNewClonePtr {
+struct [[deprecated]] FuncNewClonePtr {
     typedef const T* argument_type;
         /**< The argument type for this unary function. */
     typedef T* result_type;
@@ -173,16 +187,19 @@ struct FuncNewClonePtr {
 
 /**
  * An adaptable unary function used to deallocate objects.
- * This class is for use with the Standard Template Library.
+ * This class is for use with the C++ Standard Library.
  *
  * Note that the template argument need not be a pointer class.  If the
  * template argument is <tt>T</tt>, this unary function will accept (and
  * call \c delete upon) \e pointers to <tt>T</tt>.
  *
+ * \deprecated Regina no longer uses these ancient classes, and newer
+ * C++ standards provide good alternatives nowadays.
+ *
  * \ifacespython Not present.
  */
 template <class T>
-struct FuncDelete {
+struct [[deprecated]] FuncDelete {
     typedef T* argument_type;
         /**< The argument type for this unary function. */
     typedef void result_type;
