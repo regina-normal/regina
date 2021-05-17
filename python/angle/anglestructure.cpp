@@ -41,6 +41,8 @@ using regina::AngleStructure;
 void addAngleStructure(pybind11::module_& m) {
     auto c = pybind11::class_<AngleStructure>(m, "AngleStructure")
         .def(pybind11::init<const AngleStructure&>())
+        .def(pybind11::init<const AngleStructure&,
+            const regina::Triangulation<3>*>())
         .def("clone", &AngleStructure::clone)
         .def("angle", &AngleStructure::angle)
         .def("triangulation", &AngleStructure::triangulation)

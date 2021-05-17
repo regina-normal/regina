@@ -64,6 +64,7 @@ namespace {
 void addNormalSurface(pybind11::module_& m) {
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
         .def(pybind11::init<const NormalSurface&>())
+        .def(pybind11::init<const NormalSurface&, const Triangulation<3>*>())
         .def(pybind11::init([](Triangulation<3>* t, regina::NormalCoords coords,
                 pybind11::list values) {
             regina::NormalSurfaceVector* v = regina::makeZeroVector(t, coords);

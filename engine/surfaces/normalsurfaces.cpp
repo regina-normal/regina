@@ -236,11 +236,13 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
         (*it)->writeXMLData(out);
 }
 
-Packet* NormalSurfaces::internalClonePacket(Packet* /* parent */) const {
+Packet* NormalSurfaces::internalClonePacket(Packet* parent) const {
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, which_, algorithm_);
-    for (auto s : surfaces)
-        ans->surfaces.push_back(new NormalSurface(*s));
+    for (auto s : surfaces) {
+        ans->surfaces.push_back(new NormalSurface(*s,
+            static_cast<Triangulation<3>*>(parent)));
+    }
     return ans;
 }
 

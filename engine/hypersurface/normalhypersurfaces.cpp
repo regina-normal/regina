@@ -172,11 +172,13 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out) const {
         (*it)->writeXMLData(out);
 }
 
-Packet* NormalHypersurfaces::internalClonePacket(Packet* /* parent */) const {
+Packet* NormalHypersurfaces::internalClonePacket(Packet* parent) const {
     NormalHypersurfaces* ans = new NormalHypersurfaces(
         coords_, which_, algorithm_);
-    for (auto s : surfaces_)
-        ans->surfaces_.push_back(new NormalHypersurface(*s));
+    for (auto s : surfaces_) {
+        ans->surfaces_.push_back(new NormalHypersurface(*s,
+            static_cast<Triangulation<4>*>(parent)));
+    }
     return ans;
 }
 

@@ -864,6 +864,20 @@ class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
         NormalSurface(const NormalSurface& other);
 
         /**
+         * Creates a new copy of the given normal surface.
+         *
+         * \pre The given triangulation is either the same as, or is
+         * combinatorially identical to, the triangulation in which
+         * \a other resides.
+         *
+         * @param other the normal surface to clone.
+         * @param triangulation the triangulation in which this new surface
+         * will reside.
+         */
+        NormalSurface(const NormalSurface& other,
+            const Triangulation<3>* triangulation);
+
+        /**
          * Moves the given surface into this new normal surface.
          * This is a fast (constant time) operation.
          *
@@ -1865,9 +1879,10 @@ inline NormalSurface::NormalSurface(
         vector_(newVector), triangulation_(triangulation) {
 }
 
-inline NormalSurface::NormalSurface(const NormalSurface& other) :
+inline NormalSurface::NormalSurface(const NormalSurface& other,
+        const Triangulation<3>* triangulation) :
         vector_(other.vector_->clone()),
-        triangulation_(other.triangulation_),
+        triangulation_(triangulation),
         name_(other.name_),
         // properties:
         octPosition_(other.octPosition_),
@@ -1878,6 +1893,10 @@ inline NormalSurface::NormalSurface(const NormalSurface& other) :
         connected_(other.connected_),
         realBoundary_(other.realBoundary_),
         compact_(other.compact_) {
+}
+
+inline NormalSurface::NormalSurface(const NormalSurface& other) :
+        NormalSurface(other, other.triangulation_) {
 }
 
 inline NormalSurface::NormalSurface(NormalSurface&& src) noexcept :

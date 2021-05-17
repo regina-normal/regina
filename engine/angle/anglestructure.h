@@ -118,6 +118,20 @@ class REGINA_API AngleStructure : public ShortOutput<AngleStructure> {
         AngleStructure(const AngleStructure& other);
 
         /**
+         * Creates a new copy of the given angle structure.
+         *
+         * \pre The given triangulation is either the same as, or is
+         * combinatorially identical to, the triangulation on which
+         * \a other is placed.
+         *
+         * @param other the angle structure to clone.
+         * @param triangulation the triangulation on which this new
+         * angle structure is placed.
+         */
+        AngleStructure(const AngleStructure& other,
+            const Triangulation<3>* triangulation);
+
+        /**
          * Moves the given angle structure into this new angle structure.
          * This is a fast (constant time) operation.
          *
@@ -322,10 +336,15 @@ inline AngleStructure::AngleStructure(const Triangulation<3>* triang,
         triangulation_(triang), flags_(0) {
 }
 
-inline AngleStructure::AngleStructure(const AngleStructure& other) :
+inline AngleStructure::AngleStructure(const AngleStructure& other,
+        const Triangulation<3>* triangulation) :
         vector_(new Vector<Integer>(*other.vector_)),
-        triangulation_(other.triangulation_),
+        triangulation_(triangulation),
         flags_(other.flags_) {
+}
+
+inline AngleStructure::AngleStructure(const AngleStructure& other) :
+        AngleStructure(other, other.triangulation_) {
 }
 
 inline AngleStructure::AngleStructure(AngleStructure&& src) noexcept :

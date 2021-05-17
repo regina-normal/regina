@@ -507,6 +507,20 @@ class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
         NormalHypersurface(const NormalHypersurface& other);
 
         /**
+         * Creates a new copy of the given normal hypersurface.
+         *
+         * \pre The given triangulation is either the same as, or is
+         * combinatorially identical to, the triangulation in which
+         * \a other resides.
+         *
+         * @param other the normal hypersurface to clone.
+         * @param triangulation the triangulation in which this new
+         * hypersurface will reside.
+         */
+        NormalHypersurface(const NormalHypersurface& other,
+            const Triangulation<4>* triangulation);
+
+        /**
          * Moves the given hypersurface into this new normal hypersurface.
          * This is a fast (constant time) operation.
          *
@@ -1042,9 +1056,10 @@ inline NormalHypersurface::NormalHypersurface(
         vector_(vector), triangulation_(triangulation) {
 }
 
-inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other) :
+inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other,
+        const Triangulation<4>* triangulation) :
         vector_(other.vector_->clone()),
-        triangulation_(other.triangulation_),
+        triangulation_(triangulation),
         name_(other.name_),
         // properties by value:
         orientable_(other.orientable_),
@@ -1055,6 +1070,10 @@ inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other) :
     // properties by pointer:
     if (other.H1_.known())
         H1_ = new AbelianGroup(*other.H1_.value());
+}
+
+inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other) :
+        NormalHypersurface(other, other.triangulation_) {
 }
 
 inline NormalHypersurface::NormalHypersurface(NormalHypersurface&& src)
