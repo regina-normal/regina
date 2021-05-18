@@ -1035,6 +1035,10 @@
 		0554CA7A1C5983870053461B /* generictriui.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA761C5983730053461B /* generictriui.cpp */; };
 		0554CA7B1C5983B00053461B /* generictriui.h in Sources */ = {isa = PBXBuildFile; fileRef = 0554CA771C5983730053461B /* generictriui.h */; };
 		05583A6219B8041F00076187 /* ReginaDocument.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05583A6119B8041F00076187 /* ReginaDocument.mm */; };
+		055BC3E92653380600E5E34C /* sigutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 055BC3E82653380600E5E34C /* sigutils.h */; };
+		055BC3EB265338E800E5E34C /* fromsiglist-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055BC3EA265338E800E5E34C /* fromsiglist-impl.h */; };
+		055BC3ED265338FC00E5E34C /* pd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055BC3EC265338FC00E5E34C /* pd.cpp */; };
+		055BC3EE265338FC00E5E34C /* pd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055BC3EC265338FC00E5E34C /* pd.cpp */; };
 		055D6C6719B6F10F0062F001 /* TempFile.m in Sources */ = {isa = PBXBuildFile; fileRef = 055D6C6619B6F10F0062F001 /* TempFile.m */; };
 		055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCED1808575300C973FB /* filterregistry-impl.h */; };
 		055DDCF01808575300C973FB /* surfacefiltertype.h in Headers */ = {isa = PBXBuildFile; fileRef = 055DDCEE1808575300C973FB /* surfacefiltertype.h */; };
@@ -3290,6 +3294,11 @@
 		055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "cusped-hyp-or-census-9.zsig"; sourceTree = "<group>"; };
 		055ABEA319B499DC00044C1B /* christy-knots-links.zsig */ = {isa = PBXFileReference; lastKnownFileType = file; path = "christy-knots-links.zsig"; sourceTree = "<group>"; };
 		055ABEA419B499DC00044C1B /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
+		055BC3E82653380600E5E34C /* sigutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sigutils.h; sourceTree = "<group>"; };
+		055BC3EA265338E800E5E34C /* fromsiglist-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "fromsiglist-impl.h"; sourceTree = "<group>"; };
+		055BC3EC265338FC00E5E34C /* pd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = pd.cpp; sourceTree = "<group>"; };
+		055BC3EF2653392000E5E34C /* compact-lmdb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "compact-lmdb.cpp"; sourceTree = "<group>"; };
+		055BC3F02653392000E5E34C /* optimise-lmdb.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = "optimise-lmdb.cpp"; sourceTree = "<group>"; };
 		055D6C6519B6F10F0062F001 /* TempFile.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TempFile.h; sourceTree = "<group>"; };
 		055D6C6619B6F10F0062F001 /* TempFile.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TempFile.m; sourceTree = "<group>"; };
 		055DDCED1808575300C973FB /* filterregistry-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "filterregistry-impl.h"; sourceTree = "<group>"; };
@@ -5487,6 +5496,7 @@
 				052F9CA8180600FA00FAE4DF /* CMakeLists.txt */,
 				052F9CAB180600FA00FAE4DF /* dehydration.cpp */,
 				052F9CAC180600FA00FAE4DF /* dehydration.h */,
+				055BC3EA265338E800E5E34C /* fromsiglist-impl.h */,
 				052F9CAD180600FA00FAE4DF /* isosig.cpp */,
 				052F9CAE180600FA00FAE4DF /* isosig.h */,
 				052F9CAF180600FA00FAE4DF /* orb.cpp */,
@@ -5958,6 +5968,7 @@
 				052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */,
 				052942CF1C5CDC8B0011C1E6 /* safeptr.h */,
 				0541AF511B8BE386002E166B /* sequence.h */,
+				055BC3E82653380600E5E34C /* sigutils.h */,
 				052F9E7B180600FB00FAE4DF /* stringutils-impl.h */,
 				052F9E7C180600FB00FAE4DF /* stringutils.cpp */,
 				052F9E7D180600FB00FAE4DF /* stringutils.h */,
@@ -6961,6 +6972,7 @@
 				05870CB11FAD250900835F9E /* modellinkgraph.cpp */,
 				05870CB01FAD250900835F9E /* modellinkgraph.h */,
 				0568742420C5D86B001C435B /* pass.cpp */,
+				055BC3EC265338FC00E5E34C /* pd.cpp */,
 				05721EDB1F97153C00A83FFC /* reidemeister.cpp */,
 				0568742320C5D86A001C435B /* reidemeister-tangle.cpp */,
 				0588C2A11FD8D1340093C2C9 /* rewrite.cpp */,
@@ -7326,9 +7338,11 @@
 				055ABE9F19B499DC00044C1B /* closed-nor-census-11.zsig */,
 				055ABEA019B499DC00044C1B /* closed-or-census-11.zsig */,
 				05B14EB019B4240D002138C0 /* CMakeLists.txt */,
+				055BC3EF2653392000E5E34C /* compact-lmdb.cpp */,
 				055ABEA119B499DC00044C1B /* cusped-hyp-nor-census-9.zsig */,
 				055ABEA219B499DC00044C1B /* cusped-hyp-or-census-9.zsig */,
 				05B14EB419B4240D002138C0 /* mkcensusdb.cpp */,
+				055BC3F02653392000E5E34C /* optimise-lmdb.cpp */,
 				055ABEA419B499DC00044C1B /* README.txt */,
 			);
 			path = census;
@@ -7589,6 +7603,7 @@
 				055115021DCDF63000EC753C /* triangulation.h in Headers */,
 				05721EFF1F9715C700A83FFC /* laurent2.h in Headers */,
 				055115011DCDF63000EC753C /* simplex.h in Headers */,
+				055BC3E92653380600E5E34C /* sigutils.h in Headers */,
 				0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */,
 				05A067331DFA68190047872E /* snappeacensustri.h in Headers */,
 				052F9EC9180600FB00FAE4DF /* hilbertdual-impl.h in Headers */,
@@ -7710,6 +7725,7 @@
 				054208C01DF0D2740018AB24 /* sfsaltset.h in Headers */,
 				0542087A1DF0D0B50018AB24 /* format.h in Headers */,
 				05431F801C40F3C9009BC072 /* reduction.h in Headers */,
+				055BC3EB265338E800E5E34C /* fromsiglist-impl.h in Headers */,
 				055114D51DCC71A700EC753C /* facetspec.h in Headers */,
 				052F9F4F180600FB00FAE4DF /* numbertheory.h in Headers */,
 				05B7002125AC2305003BAF5C /* nmz_nauty.h in Headers */,
@@ -9197,6 +9213,7 @@
 				054208C91DF0D29C0018AB24 /* graphtriple.cpp in Sources */,
 				05249F401DBC1722001FE29E /* examplesnappea.cpp in Sources */,
 				05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */,
+				055BC3EE265338FC00E5E34C /* pd.cpp in Sources */,
 				052FA1D91806129B00FAE4DF /* disc.cpp in Sources */,
 				052FA1A91806129B00FAE4DF /* pdf.cpp in Sources */,
 				05249EE21DBC16E4001FE29E /* face12.cpp in Sources */,
@@ -10022,6 +10039,7 @@
 				050C647B1DA1056700C9420F /* xmlanglestructreader.cpp in Sources */,
 				052F9FA3180600FB00FAE4DF /* transcendentals.c in Sources */,
 				05721EE81F97153E00A83FFC /* simplify.cpp in Sources */,
+				055BC3ED265338FC00E5E34C /* pd.cpp in Sources */,
 				052F9F0C180600FB00FAE4DF /* dehydration.cpp in Sources */,
 				052F9F4A180600FB00FAE4DF /* rational.cpp in Sources */,
 				054208B71DF0D2740018AB24 /* handlebody.cpp in Sources */,
