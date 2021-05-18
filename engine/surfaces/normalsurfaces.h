@@ -49,6 +49,7 @@
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalflags.h"
 #include "surfaces/normalcoords.h"
+#include "utilities/listview.h"
 
 namespace regina {
 
@@ -165,7 +166,7 @@ class REGINA_API NormalSurfaces : public Packet {
         class VectorIterator;
 
     protected:
-        std::vector<NormalSurface*> surfaces;
+        std::vector<NormalSurface*> surfaces_;
             /**< Contains the normal surfaces stored in this packet. */
         NormalCoords coords_;
             /**< Stores which coordinate system is being
@@ -349,6 +350,31 @@ class REGINA_API NormalSurfaces : public Packet {
          * @return the number of surfaces.
          */
         size_t size() const;
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all normal surfaces in this list.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (const NormalSurface* s : list.surfaces()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
+         * long as this normal surface list exists.
+         *
+         * \ifacespython This routine returns a Python list.
+         *
+         * @return access to the list of all normal surfaces.
+         */
+        auto surfaces() const;
         /**
          * Returns the surface at the requested index in this set.
          *
@@ -1520,7 +1546,7 @@ REGINA_API EnumConstraints* makeEmbeddedConstraints(
 // Inline functions for NormalSurfaces
 
 inline NormalSurfaces::~NormalSurfaces() {
-    for (auto s : surfaces)
+    for (auto s : surfaces_)
         delete s;
 }
 
@@ -1541,11 +1567,15 @@ inline bool NormalSurfaces::isEmbeddedOnly() const {
 }
 
 inline size_t NormalSurfaces::size() const {
-    return surfaces.size();
+    return surfaces_.size();
+}
+
+inline auto NormalSurfaces::surfaces() const {
+    return ListView(surfaces_);
 }
 
 inline const NormalSurface* NormalSurfaces::surface(size_t index) const {
-    return surfaces[index];
+    return surfaces_[index];
 }
 
 inline bool NormalSurfaces::dependsOnParent() const {
@@ -1555,7 +1585,7 @@ inline bool NormalSurfaces::dependsOnParent() const {
 template <typename Comparison>
 inline void NormalSurfaces::sort(Comparison&& comp) {
     ChangeEventSpan span(this);
-    std::stable_sort(surfaces.begin(), surfaces.end(), comp);
+    std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator() {
@@ -1604,12 +1634,12 @@ inline NormalSurfaces::VectorIterator::VectorIterator(
 
 inline NormalSurfaces::VectorIterator NormalSurfaces::beginVectors()
         const {
-    return VectorIterator(surfaces.begin());
+    return VectorIterator(surfaces_.begin());
 }
 
 inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors()
         const {
-    return VectorIterator(surfaces.end());
+    return VectorIterator(surfaces_.end());
 }
 
 inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
@@ -1620,14 +1650,14 @@ inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
 inline NormalSurfaces::SurfaceInserter&
         NormalSurfaces::SurfaceInserter::operator =(
         NormalSurface* surface) {
-    list->surfaces.push_back(surface);
+    list->surfaces_.push_back(surface);
     return *this;
 }
 
 inline NormalSurfaces::SurfaceInserter&
         NormalSurfaces::SurfaceInserter::operator =(
         NormalSurfaceVector* vector) {
-    list->surfaces.push_back(new NormalSurface(owner, vector));
+    list->surfaces_.push_back(new NormalSurface(owner, vector));
     return *this;
 }
 

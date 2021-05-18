@@ -154,7 +154,7 @@ namespace {
 }
 
 void NormalSurfaces::writeTextShort(std::ostream& out) const {
-    out << surfaces.size();
+    out << surfaces_.size();
 
     if (which_.has(regina::NS_EMBEDDED_ONLY))
         out << " embedded,";
@@ -175,7 +175,7 @@ void NormalSurfaces::writeTextShort(std::ostream& out) const {
         out << " unknown";
 
     out << " surface";
-    if (surfaces.size() != 1)
+    if (surfaces_.size() != 1)
         out << 's';
 
     out << " (";
@@ -232,15 +232,15 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
 
     // Write the individual surfaces.
     std::vector<NormalSurface*>::const_iterator it;
-    for (it = surfaces.begin(); it != surfaces.end(); it++)
-        (*it)->writeXMLData(out);
+    for (const NormalSurface* s : surfaces_)
+        s->writeXMLData(out);
 }
 
 Packet* NormalSurfaces::internalClonePacket(Packet* parent) const {
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, which_, algorithm_);
-    for (auto s : surfaces) {
-        ans->surfaces.push_back(new NormalSurface(*s,
+    for (auto s : surfaces_) {
+        ans->surfaces_.push_back(new NormalSurface(*s,
             static_cast<Triangulation<3>*>(parent)));
     }
     return ans;

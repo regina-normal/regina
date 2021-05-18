@@ -32,6 +32,8 @@ Version 6.1  [ TODO ]
               rawVector() (with its pointer return type) is kept but deprecated.
             - AngleStructure now has copy and move constructors.  The old
               clone() is now deprecated; just use the copy constructor instead.
+        Class AngleStructures:
+            - New function structures() for simpler iteration.
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
         Class Base64SigEncoding:
@@ -169,12 +171,15 @@ Version 6.1  [ TODO ]
               deprecated.
             - Added copy and move constructors.  The old clone() is now
               deprecated; just use the copy constructor instead.
+        Class NormalHypersurfaces:
+            - New function hypersurfaces() for simpler iteration.
         Class NormalSurface:
             - Renamed rawVector() to vector().  The old name is kept but
               deprecated.
             - Added copy and move constructors.  The old clone() is now
               deprecated; just use the copy constructor instead.
         Class NormalSurfaces:
+            - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
         Class NormalSurfaceVector, NormalHypersurfaceVector:
             - Renamed setElement() to set().  Since this is a virtual function,

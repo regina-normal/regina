@@ -69,6 +69,8 @@ void addNormalSurfaces(pybind11::module_& m) {
         .def("isEmbeddedOnly", &NormalSurfaces::isEmbeddedOnly)
         .def("triangulation", &NormalSurfaces::triangulation)
         .def("size", &NormalSurfaces::size)
+        .def("surfaces", &NormalSurfaces::surfaces,
+            pybind11::return_value_policy::reference_internal)
         .def("surface", &NormalSurfaces::surface,
             pybind11::return_value_policy::reference_internal)
         .def("writeAllSurfaces", [](const NormalSurfaces& s) {

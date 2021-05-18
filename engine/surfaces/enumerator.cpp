@@ -244,10 +244,10 @@ void NormalSurfaces::Enumerator::fillVertex() {
             tracker_->newStage("Expanding to standard solution set", 0.1);
         if (list_->coords_ == NS_STANDARD)
             list_->buildStandardFromReduced<NormalSpec>(triang_,
-                e.list_->surfaces, tracker_);
+                e.list_->surfaces_, tracker_);
         else
             list_->buildStandardFromReduced<AlmostNormalSpec>(triang_,
-                e.list_->surfaces, tracker_);
+                e.list_->surfaces_, tracker_);
 
         // Clean up.
         delete e.list_;
@@ -431,7 +431,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
     TreeEnumeration<typename LPArgs<Coords>::Constraint,
         BanNone, Integer> search(triang_, LPArgs<Coords>::coords_);
     while (search.next(tracker_)) {
-        list_->surfaces.push_back(search.buildSurface());
+        list_->surfaces_.push_back(search.buildSurface());
         if (tracker_ && tracker_->isCancelled())
             break;
     }
@@ -628,7 +628,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
                 if (! v) {
                     // Coordinate system not recognised.
                     // Return an empty list to indicate that something broke.
-                    list_->surfaces.clear();
+                    list_->surfaces_.clear();
                     break;
                 }
                 for (i = 0; i < dim; ++i) {
@@ -639,7 +639,7 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
                     tmpInt.tryReduce();
                     v->set(i, tmpInt);
                 }
-                list_->surfaces.push_back(new NormalSurface(triang_, v));
+                list_->surfaces_.push_back(new NormalSurface(triang_, v));
             }
         }
 

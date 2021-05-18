@@ -42,8 +42,6 @@
 
 namespace regina {
 
-typedef std::vector<AngleStructure*>::const_iterator StructureIteratorConst;
-
 MatrixInt* makeAngleEquations(const Triangulation<3>* tri) {
     size_t n = tri->size();
     size_t cols = 3 * n + 1;
@@ -95,7 +93,7 @@ void AngleStructures::enumerateInternal(Triangulation<3>* triang,
 
         TautEnumeration<LPConstraintNone, BanNone, Integer> search(triang);
         while (search.next(tracker)) {
-            structures.push_back(search.buildStructure());
+            structures_.push_back(search.buildStructure());
             if (tracker && tracker->isCancelled())
                 break;
         }
@@ -178,8 +176,8 @@ Triangulation<3>* AngleStructures::triangulation() const {
 }
 
 void AngleStructures::writeTextShort(std::ostream& o) const {
-    o << structures.size() << " vertex angle structure";
-    if (structures.size() != 1)
+    o << structures_.size() << " vertex angle structure";
+    if (structures_.size() != 1)
         o << 's';
     o << " (" << (tautOnly_ ? "taut only" : "no restrictions")  << ')';
 }
@@ -188,9 +186,8 @@ void AngleStructures::writeTextLong(std::ostream& o) const {
     writeTextShort(o);
     o << ":\n";
 
-    for (StructureIteratorConst it = structures.begin();
-            it != structures.end(); it++) {
-        (*it)->writeTextShort(o);
+    for (const AngleStructure* a : structures_) {
+        a->writeTextShort(o);
         o << '\n';
     }
 }
@@ -202,9 +199,8 @@ void AngleStructures::writeXMLPacketData(std::ostream& out) const {
     out << "  <angleparams tautonly=\"" << (tautOnly_ ? 'T' : 'F') << "\"/>\n";
 
     // Write the individual structures.
-    for (StructureIteratorConst it = structures.begin();
-            it != structures.end(); it++)
-        (*it)->writeXMLData(out);
+    for (const AngleStructure* a : structures_)
+        a->writeXMLData(out);
 
     // Write the properties.
     if (doesSpanStrict.known())
@@ -217,8 +213,8 @@ void AngleStructures::writeXMLPacketData(std::ostream& out) const {
 
 Packet* AngleStructures::internalClonePacket(Packet* parent) const {
     AngleStructures* ans = new AngleStructures(tautOnly_);
-    for (auto s : structures)
-        ans->structures.push_back(new AngleStructure(*s,
+    for (auto s : structures_)
+        ans->structures_.push_back(new AngleStructure(*s,
             static_cast<Triangulation<3>*>(parent)));
 
     if (doesSpanStrict.known())
@@ -230,7 +226,7 @@ Packet* AngleStructures::internalClonePacket(Packet* parent) const {
 }
 
 void AngleStructures::calculateSpanStrict() const {
-    if (structures.empty()) {
+    if (structures_.empty()) {
         doesSpanStrict = false;
         return;
     }
@@ -246,7 +242,7 @@ void AngleStructures::calculateSpanStrict() const {
     unsigned long nFixed = 0;
 
     // Get the list of bad unchanging angles from the first structure.
-    StructureIteratorConst it = structures.begin();
+    auto it = structures_.begin();
     const AngleStructure* s = *it;
 
     Rational angle;
@@ -270,7 +266,7 @@ void AngleStructures::calculateSpanStrict() const {
 
     // Run through the rest of the structures to see if these bad angles
     // do ever change.
-    for (it++; it != structures.end(); it++) {
+    for (it++; it != structures_.end(); it++) {
         s = *it;
         for (tet = 0; tet < nTets; tet++)
             for (edges = 0; edges < 3; edges++) {
@@ -295,7 +291,7 @@ void AngleStructures::calculateSpanStrict() const {
 }
 
 void AngleStructures::calculateSpanTaut() const {
-    for (const AngleStructure* s : structures) {
+    for (const AngleStructure* s : structures_) {
         if (s->isTaut()) {
             doesSpanTaut = true;
             return;

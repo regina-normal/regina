@@ -114,7 +114,7 @@ void XMLAngleStructuresReader::endContentSubElement(
     if (subTagName == "struct")
         if (AngleStructure* s =
                 dynamic_cast<XMLAngleStructureReader*>(subReader)->structure())
-            list->structures.push_back(s);
+            list->structures_.push_back(s);
 }
 
 XMLPacketReader* AngleStructures::xmlReader(Packet* parent,

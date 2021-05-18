@@ -49,6 +49,7 @@
 #include "hypersurface/hyperflags.h"
 #include "hypersurface/normalhypersurface.h"
 #include "packet/packet.h"
+#include "utilities/listview.h"
 
 namespace regina {
 
@@ -248,6 +249,31 @@ class REGINA_API NormalHypersurfaces : public Packet {
          * @return the number of hypersurfaces.
          */
         size_t size() const;
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all normal hypersurfaces in this list.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (const NormalHypersurface* s : list.hypersurfaces()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
+         * long as this normal hypersurface list exists.
+         *
+         * \ifacespython This routine returns a Python list.
+         *
+         * @return access to the list of all normal hypersurfaces.
+         */
+        auto hypersurfaces() const;
         /**
          * Returns the hypersurface at the requested index in this list.
          *
@@ -819,6 +845,10 @@ inline bool NormalHypersurfaces::isEmbeddedOnly() const {
 
 inline size_t NormalHypersurfaces::size() const {
     return surfaces_.size();
+}
+
+inline auto NormalHypersurfaces::hypersurfaces() const {
+    return ListView(surfaces_);
 }
 
 inline const NormalHypersurface* NormalHypersurfaces::hypersurface(

@@ -59,6 +59,8 @@ void addNormalHypersurfaces(pybind11::module_& m) {
         .def("isEmbeddedOnly", &NormalHypersurfaces::isEmbeddedOnly)
         .def("triangulation", &NormalHypersurfaces::triangulation)
         .def("size", &NormalHypersurfaces::size)
+        .def("hypersurfaces", &NormalHypersurfaces::hypersurfaces,
+            pybind11::return_value_policy::reference_internal)
         .def("hypersurface", &NormalHypersurfaces::hypersurface,
             pybind11::return_value_policy::reference_internal)
         .def_property_readonly_static("typeID", [](pybind11::object) {

@@ -46,6 +46,7 @@
 #include "regina-core.h"
 #include "angle/anglestructure.h"
 #include "packet/packet.h"
+#include "utilities/listview.h"
 #include "utilities/property.h"
 
 namespace regina {
@@ -81,7 +82,7 @@ class REGINA_API AngleStructures : public Packet {
     REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES)
 
     private:
-        std::vector<AngleStructure*> structures;
+        std::vector<AngleStructure*> structures_;
             /**< Contains the angle structures stored in this packet. */
         bool tautOnly_;
             /**< Stores whether we are only interested in taut structures.
@@ -127,6 +128,31 @@ class REGINA_API AngleStructures : public Packet {
          * @return the number of angle structures.
          */
         size_t size() const;
+        /**
+         * Returns an object that allows iteration through and random access
+         * to all angle structures in this list.
+         *
+         * The object that is returned is lightweight, and can be happily
+         * copied by value.  The C++ type of the object is subject to change,
+         * so C++ users should use \c auto (just like this declaration does).
+         *
+         * The returned object is guaranteed to be an instance of ListView,
+         * which means it offers basic container-like functions and supports
+         * C++11 range-based \c for loops.  Note that the elements of the list
+         * will be pointers, so your code might look like:
+         *
+         * \code{.cpp}
+         * for (const AngleStructure* s : list.structures()) { ... }
+         * \endcode
+         *
+         * The object that is returned will remain valid only for as
+         * long as this angle structure list exists.
+         *
+         * \ifacespython This routine returns a Python list.
+         *
+         * @return access to the list of all angle structures.
+         */
+        auto structures() const;
         /**
          * Returns the angle structure at the requested index in this
          * list.
@@ -402,7 +428,7 @@ REGINA_API MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
 // Inline functions for AngleStructures
 
 inline AngleStructures::~AngleStructures() {
-    for (auto a : structures)
+    for (auto a : structures_)
         delete a;
 }
 
@@ -411,12 +437,16 @@ inline bool AngleStructures::isTautOnly() const {
 }
 
 inline size_t AngleStructures::size() const {
-    return structures.size();
+    return structures_.size();
+}
+
+inline auto AngleStructures::structures() const {
+    return ListView(structures_);
 }
 
 inline const AngleStructure* AngleStructures::structure(
         size_t index) const {
-    return structures[index];
+    return structures_[index];
 }
 
 inline bool AngleStructures::spansStrict() const {
@@ -451,14 +481,14 @@ inline AngleStructures::StructureInserter::StructureInserter(
 inline AngleStructures::StructureInserter&
         AngleStructures::StructureInserter::operator =(
         AngleStructure* structure) {
-    list->structures.push_back(structure);
+    list->structures_.push_back(structure);
     return *this;
 }
 
 inline AngleStructures::StructureInserter&
         AngleStructures::StructureInserter::operator =(
         VectorInt* vector) {
-    list->structures.push_back(new AngleStructure(owner, vector));
+    list->structures_.push_back(new AngleStructure(owner, vector));
     return *this;
 }
 

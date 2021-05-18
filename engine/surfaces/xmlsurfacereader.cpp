@@ -162,7 +162,7 @@ void XMLNormalSurfacesReader::endContentSubElement(
             if (NormalSurface* s =
                     dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
                     surface())
-                list->surfaces.push_back(s);
+                list->surfaces_.push_back(s);
 }
 
 XMLPacketReader* NormalSurfaces::xmlReader(Packet* parent,

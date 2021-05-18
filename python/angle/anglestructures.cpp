@@ -48,6 +48,8 @@ void addAngleStructures(pybind11::module_& m) {
         .def("triangulation", &AngleStructures::triangulation)
         .def("isTautOnly", &AngleStructures::isTautOnly)
         .def("size", &AngleStructures::size)
+        .def("structures", &AngleStructures::structures,
+            pybind11::return_value_policy::reference_internal)
         .def("structure", &AngleStructures::structure,
             pybind11::return_value_policy::reference_internal)
         .def("spansStrict", &AngleStructures::spansStrict)

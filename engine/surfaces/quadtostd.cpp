@@ -332,7 +332,7 @@ NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
 
     if (! owner->isEmpty()) {
         // Run our internal conversion routine.
-        ans->buildStandardFromReduced<Variant>(owner, surfaces);
+        ans->buildStandardFromReduced<Variant>(owner, surfaces_);
     }
 
     // All done!
@@ -598,7 +598,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
 
     // All done!  Put the solutions into the normal surface list and clean up.
     for (auto ray : list[workingList]) {
-        surfaces.push_back(ray->
+        surfaces_.push_back(ray->
             template recover<typename Variant::StandardVector>(owner));
         delete ray;
     }
