@@ -175,11 +175,8 @@ struct HyperCountSet {
     homologyBounded.clear();
     nSpun = 0;
     
-    size_t n = self.packet->size();
-    const regina::NormalHypersurface* s;
     std::string homology;
-    for (size_t i = 0; i < n; ++i) {
-        s = self.packet->hypersurface(i);
+    for (const regina::NormalHypersurface* s : self.packet->hypersurfaces()) {
         if (! s->isCompact())
             ++nSpun;
         else {

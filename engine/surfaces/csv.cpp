@@ -163,7 +163,7 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
 
     unsigned long n = triangulation()->size();
 
-    unsigned long i, j;
+    unsigned long i;
 
     // Write the CSV header.
     writePropHeader(out, additionalFields);
@@ -193,34 +193,30 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
     out << std::endl;
 
     // Write the data for individual surfaces.
-    unsigned long tot = size();
-    const NormalSurface* s;
-    for (i = 0; i < tot; ++i) {
-        s = surface(i);
-
+    for (const NormalSurface* s : surfaces_) {
         writePropData(out, s, additionalFields);
 
-        for (j = 0; j < n; ++j) {
-            out << s->triangles(j, 0) << ',';
-            out << s->triangles(j, 1) << ',';
-            out << s->triangles(j, 2) << ',';
-            out << s->triangles(j, 3) << ',';
-            out << s->quads(j, 0) << ',';
-            out << s->quads(j, 1) << ',';
-            out << s->quads(j, 2);
+        for (i = 0; i < n; ++i) {
+            out << s->triangles(i, 0) << ',';
+            out << s->triangles(i, 1) << ',';
+            out << s->triangles(i, 2) << ',';
+            out << s->triangles(i, 3) << ',';
+            out << s->quads(i, 0) << ',';
+            out << s->quads(i, 1) << ',';
+            out << s->quads(i, 2);
 
             if (! allowsAlmostNormal()) {
-                if (j < n - 1)
+                if (i < n - 1)
                     out << ',';
                 continue;
             }
             out << ',';
 
-            out << s->octs(j, 0) << ',';
-            out << s->octs(j, 1) << ',';
-            out << s->octs(j, 2);
+            out << s->octs(i, 0) << ',';
+            out << s->octs(i, 1) << ',';
+            out << s->octs(i, 2);
 
-            if (j < n - 1)
+            if (i < n - 1)
                 out << ',';
         }
         out << std::endl;
@@ -238,7 +234,7 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
 
     unsigned long n = triangulation()->countEdges();
 
-    unsigned long i, j;
+    unsigned long i;
 
     // Write the CSV header.
     writePropHeader(out, additionalFields);
@@ -251,17 +247,13 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
     out << std::endl;
 
     // Write the data for individual surfaces.
-    unsigned long tot = size();
-    const NormalSurface* s;
-    for (i = 0; i < tot; ++i) {
-        s = surface(i);
-
+    for (const NormalSurface* s : surfaces_) {
         writePropData(out, s, additionalFields);
 
-        for (j = 0; j < n; ++j) {
-            out << s->edgeWeight(j);
+        for (i = 0; i < n; ++i) {
+            out << s->edgeWeight(i);
 
-            if (j < n - 1)
+            if (i < n - 1)
                 out << ',';
         }
         out << std::endl;

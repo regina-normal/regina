@@ -100,11 +100,8 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
     // appear as a vertex surface).  Otherwise fall back to standard coords.
     NormalSurfaces* surfaces = NormalSurfaces::enumerate(this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
-    const NormalSurface* s;
     NormalSurface* ans = nullptr;
-    for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
-        s = surfaces->surface(i);
-
+    for (const NormalSurface* s : surfaces->surfaces()) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are either (i) using standard coordinates, or
         // (ii) working with a non-ideal triangulation; we know the
@@ -118,13 +115,16 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
         if (s->eulerChar() == 2) {
             // Must be a sphere; no bounded surface has chi=2.
             ans = new NormalSurface(std::move(*s));
+            break;
         } else if (s->eulerChar() == 1) {
             if (s->hasRealBoundary()) {
                 // Must be a disc.
                 ans = new NormalSurface(std::move(*s));
+                break;
             } else if (! s->isTwoSided()) {
                 // A projective plane that doubles to a sphere.
                 ans = s->doubleSurface();
+                break;
             }
         }
     }
@@ -168,15 +168,12 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
 
     // Our vertex surfaces are guaranteed to be in smallest possible
     // integer coordinates, with at most one non-zero octagonal coordinate.
-    const NormalSurface* s;
     NormalSurface* ans = nullptr;
     unsigned long tet;
     unsigned oct;
     bool found, broken;
     LargeInteger coord;
-    for (size_t i = 0; i < surfaces->size() && ! ans; ++i) {
-        s = surfaces->surface(i);
-
+    for (const NormalSurface* s : surfaces->surfaces()) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are working with a non-ideal triangulation, we know the
         // vertex surfaces are compact.
@@ -205,6 +202,7 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
             if (found && ! broken) {
                 // This is it!
                 ans = new NormalSurface(std::move(*s));
+                break;
             }
         }
     }

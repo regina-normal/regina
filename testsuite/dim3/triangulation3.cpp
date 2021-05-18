@@ -2102,9 +2102,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 expected = true;
                 NormalSurfaces* s = NormalSurfaces::enumerate(
                     tri, regina::NS_STANDARD);
-                const NormalSurface* f;
-                for (size_t i = 0; i < s->size(); ++i) {
-                    f = s->surface(i);
+                for (const NormalSurface* f : s->surfaces()) {
                     if (f->eulerChar() == 2 &&
                             (! f->hasRealBoundary()) &&
                             ! f->isVertexLinking()) {

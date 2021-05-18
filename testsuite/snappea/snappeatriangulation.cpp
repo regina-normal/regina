@@ -524,8 +524,8 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
 
             regina::MatrixInt* m;
             bool found[4] = {}; // initialises to false
-            for (int i = 0; i < s->size(); ++i) {
-                m = s->surface(i)->boundaryIntersections();
+            for (const regina::NormalSurface* f : s->surfaces()) {
+                m = f->boundaryIntersections();
                 if (m->rows() != 1 || m->columns() != 2) {
                     CPPUNIT_FAIL(
                         "Figure 8 knot complement: boundaryIntersections() "

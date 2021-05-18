@@ -157,8 +157,6 @@ QWidget* SurfacesSummaryUI::getInterface() {
 }
 
 void SurfacesSummaryUI::refresh() {
-    unsigned long n = surfaces->size();
-
     unsigned long spun = 0;
     unsigned long bounded = 0;
     unsigned long closed = 0;
@@ -167,13 +165,9 @@ void SurfacesSummaryUI::refresh() {
     std::set<regina::LargeInteger> allECsClosed, allECsBounded;
     std::set<std::pair<int, int> > allTypesClosed, allTypesBounded;
 
-    const regina::NormalSurface* s;
     regina::LargeInteger euler;
     std::pair<int, int> type;
-    unsigned long i;
-    for (i = 0; i < n; ++i) {
-        s = surfaces->surface(i);
-
+    for (const regina::NormalSurface* s : surfaces->surfaces()) {
         if (! s->isCompact())
             ++spun;
         else if (s->hasRealBoundary()) {
@@ -199,6 +193,7 @@ void SurfacesSummaryUI::refresh() {
         }
     }
 
+    unsigned long n = surfaces->size();
     if (n == 0)
         tot->setText(tr("<qt><b>No surfaces at all.</b></qt>"));
     else if (n == 1)
@@ -226,15 +221,14 @@ void SurfacesSummaryUI::refresh() {
 
         tableClosed->setColumnCount(allTypesClosed.size() + 1);
         header = new QTreeWidgetItem();
-        for (i = 1, typeIt = allTypesClosed.begin();
-                typeIt != allTypesClosed.end(); ++i, ++typeIt) {
-            header->setText(i, tableHeader(typeIt->first, typeIt->second));
-            header->setTextAlignment(i, Qt::AlignRight);
+        for (col = 1, typeIt = allTypesClosed.begin();
+                typeIt != allTypesClosed.end(); ++col, ++typeIt) {
+            header->setText(col, tableHeader(typeIt->first, typeIt->second));
+            header->setTextAlignment(col, Qt::AlignRight);
         }
         tableClosed->setHeaderItem(header);
 
-        for (i = 1, ECIt = allECsClosed.begin();
-                ECIt != allECsClosed.end(); ++i, ++ECIt) {
+        for (ECIt = allECsClosed.begin(); ECIt != allECsClosed.end(); ++ECIt) {
             row = new QTreeWidgetItem();
             row->setText(0, tr("Euler = %1").
                 arg(ECIt->stringValue().c_str()));
@@ -271,15 +265,15 @@ void SurfacesSummaryUI::refresh() {
 
             tableBounded->setColumnCount(allTypesBounded.size() + 1);
             header = new QTreeWidgetItem();
-            for (i = 1, typeIt = allTypesBounded.begin();
-                    typeIt != allTypesBounded.end(); ++i, ++typeIt) {
-                header->setText(i, tableHeader(typeIt->first, typeIt->second));
-                header->setTextAlignment(i, Qt::AlignRight);
+            for (col = 1, typeIt = allTypesBounded.begin();
+                    typeIt != allTypesBounded.end(); ++col, ++typeIt) {
+                header->setText(col, tableHeader(typeIt->first, typeIt->second));
+                header->setTextAlignment(col, Qt::AlignRight);
             }
             tableBounded->setHeaderItem(header);
 
-            for (i = 0, ECIt = allECsBounded.begin();
-                    ECIt != allECsBounded.end(); ++i, ++ECIt) {
+            for (ECIt = allECsBounded.begin();
+                    ECIt != allECsBounded.end(); ++ECIt) {
                 row = new QTreeWidgetItem();
                 row->setText(0, tr("Euler = %1").
                     arg(ECIt->stringValue().c_str()));

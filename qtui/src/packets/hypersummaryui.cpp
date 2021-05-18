@@ -162,7 +162,6 @@ QWidget* HyperSummaryUI::getInterface() {
 }
 
 void HyperSummaryUI::refresh() {
-    size_t n = surfaces->size();
     bool unicode = ReginaPrefSet::global().displayUnicode;
 
     size_t spun = 0;
@@ -173,12 +172,9 @@ void HyperSummaryUI::refresh() {
     std::set<std::string> allHomClosed, allHomBounded;
     std::set<std::pair<int, int> > allTypesClosed, allTypesBounded;
 
-    const regina::NormalHypersurface* s;
     std::string homology;
     std::pair<int, int> type;
-    for (size_t i = 0; i < n; ++i) {
-        s = surfaces->hypersurface(i);
-
+    for (const regina::NormalHypersurface* s : surfaces->hypersurfaces()) {
         if (! s->isCompact())
             ++spun;
         else {
@@ -208,6 +204,7 @@ void HyperSummaryUI::refresh() {
         }
     }
 
+    size_t n = surfaces->size();
     if (n == 0)
         tot->setText(tr("<qt><b>No hypersurfaces at all.</b></qt>"));
     else if (n == 1)

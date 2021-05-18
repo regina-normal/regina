@@ -54,10 +54,9 @@ MatrixInt* NormalSurfaces::recreateMatchingEquations() const {
 }
 
 void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
-    unsigned long n = size();
-    out << "Number of surfaces is " << n << '\n';
-    for (unsigned long i = 0; i < n; i++) {
-        surface(i)->writeTextShort(out);
+    out << "Number of surfaces is " << size() << '\n';
+    for (const NormalSurface* s : surfaces_) {
+        s->writeTextShort(out);
         out << '\n';
     }
 }

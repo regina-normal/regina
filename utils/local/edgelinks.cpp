@@ -156,16 +156,15 @@ bool process(const std::string& filename) {
 
     Triangulation<3>* t;
     NormalSurfaces* s;
-    long n, i, links;
+    long links;
     for (Packet* p = tree; p; p = p->nextTreePacket())
         if (p->type() == PACKET_TRIANGULATION3) {
             t = static_cast<Triangulation<3>*>(p);
             s = NormalSurfaces::enumerate(t, NS_QUAD);
 
             links = 0;
-            n = s->size();
-            for (i = 0; i < n; ++i)
-                if (s->surface(i)->isThinEdgeLink().first)
+            for (auto f : s->surfaces())
+                if (f->isThinEdgeLink().first)
                     ++links;
             out << t->size() << ' ' << links << " \""
                 << t->label() << '"' << std::endl;

@@ -426,12 +426,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 bool realBdry, bool vertexLink, unsigned edgeLink,
                 unsigned long central, bool splitting) {
             unsigned long tot = 0;
-            unsigned long size = list->size();
 
-            const NormalSurface* s;
-            for (unsigned long i = 0; i < size; i++) {
-                s = list->surface(i);
-
+            for (const NormalSurface* s : list->surfaces()) {
                 if (s->eulerChar() == euler &&
                         s->isConnected() == connected &&
                         s->isOrientable() == orient &&
@@ -660,8 +656,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 &figure8, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 4);
-            for (unsigned long i = 0; i < list->size(); i++)
-                testSurface(list->surface(i),
+            for (const NormalSurface* s : list->surfaces())
+                testSurface(s,
                     "the figure eight knot complement", "spun surface",
                     0 /* euler, N/A */, 0 /* connected, N/A */,
                     0 /* orient, N/A */, 0 /* two-sided, N/A */,
@@ -1818,11 +1814,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             // only those with chi=0.
             std::vector<const Vector<LargeInteger>*> filtered;
             NormalSurfaces* all = NormalSurfaces::enumerate(&tri, NS_STANDARD);
-            for (size_t i = 0; i < all->size(); ++i) {
-                const NormalSurface* s = all->surface(i);
+            for (const NormalSurface* s : all->surfaces())
                 if (s->eulerChar() == 0)
                     filtered.push_back(&s->vector());
-            }
 
             // Ensure that every vertex surface with chi=0 was picked up
             // in our custom list.
@@ -2190,9 +2184,6 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         static void testCutAlong(Triangulation<3>* tri) {
             NormalSurfaces* list = NormalSurfaces::enumerate(
                 tri, NS_STANDARD);
-            unsigned long n = list->size();
-
-            const NormalSurface *s;
             std::unique_ptr<Triangulation<3>> t;
             std::unique_ptr<Container> comp;
             unsigned long nComp;
@@ -2208,8 +2199,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             Packet* p;
 
             // We use the fact that each normal surface is connected.
-            for (unsigned long i = 0; i < n; ++i) {
-                s = list->surface(i);
+            for (const NormalSurface* s : list->surfaces()) {
                 t.reset(s->cutAlong());
                 t->intelligentSimplify();
                 comp.reset(new Container());
@@ -2227,8 +2217,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 expected = (separating ? 2 : 1);
                 if (nComp != expected) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i << " for "
-                        << tri->label()
+                    msg << "Cutting along surface for " << tri->label()
                         << " gives " << nComp << " component(s), not "
                         << expected << " as expected.";
                     CPPUNIT_FAIL(msg.str());
@@ -2237,8 +2226,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 expected = (separating ? 3 : 2);
                 if (nCompDouble != expected) {
                     std::ostringstream msg;
-                    msg << "Cutting along double surface #" << i
-                        << " for " << tri->label()
+                    msg << "Cutting along double surface for " << tri->label()
                         << " gives " << nCompDouble << " component(s), not "
                         << expected << " as expected.";
                     CPPUNIT_FAIL(msg.str());
@@ -2246,47 +2234,41 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
                 if (! t->isValid()) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i << " for "
-                        << tri->label()
+                    msg << "Cutting along surface for " << tri->label()
                         << " gives an invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (! tDouble->isValid()) {
                     std::ostringstream msg;
-                    msg << "Cutting along double surface #" << i
-                        << " for " << tri->label()
+                    msg << "Cutting along double surface for " << tri->label()
                         << " gives an invalid triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
 
                 if (tri->isIdeal() && ! t->isIdeal()) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i
-                        << " for "
+                    msg << "Cutting along surface for "
                         << tri->label() << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (tri->isIdeal() && ! tDouble->isIdeal()) {
                     std::ostringstream msg;
-                    msg << "Cutting along double surface #" << i
-                        << " for "
+                    msg << "Cutting along double surface for "
                         << tri->label() << " (which is ideal)"
                         << " gives a non-ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if ((! tri->isIdeal()) && t->isIdeal()) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i
-                        << " for "
+                    msg << "Cutting along surface for "
                         << tri->label() << " (which is not ideal)"
                         << " gives an ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if ((! tri->isIdeal()) && tDouble->isIdeal()) {
                     std::ostringstream msg;
-                    msg << "Cutting along double surface #" << i
-                        << " for "
+                    msg << "Cutting along double surface for "
                         << tri->label() << " (which is not ideal)"
                         << " gives an ideal triangulation.";
                     CPPUNIT_FAIL(msg.str());
@@ -2294,16 +2276,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
                 if (tri->isOrientable() && ! t->isOrientable()) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i
-                        << " for "
+                    msg << "Cutting along surface for "
                         << tri->label() << " (which is orientable)"
                         << " gives a non-orientable triangulation.";
                     CPPUNIT_FAIL(msg.str());
                 }
                 if (tri->isOrientable() && ! tDouble->isOrientable()) {
                     std::ostringstream msg;
-                    msg << "Cutting along double surface #" << i
-                        << " for "
+                    msg << "Cutting along double surface for "
                         << tri->label() << " (which is orientable)"
                         << " gives a non-orientable triangulation.";
                     CPPUNIT_FAIL(msg.str());
@@ -2313,8 +2293,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     if (! static_cast<Triangulation<3>*>(p)->
                             hasBoundaryTriangles()) {
                         std::ostringstream msg;
-                        msg << "Cutting along surface #" << i
-                            << " for " << tri->label()
+                        msg << "Cutting along surface for " << tri->label()
                             << " gives a component with no boundary triangles.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -2322,8 +2301,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     if (! static_cast<Triangulation<3>*>(p)->
                             hasBoundaryTriangles()) {
                         std::ostringstream msg;
-                        msg << "Cutting along double surface #" << i
-                            << " for " << tri->label()
+                        msg << "Cutting along double surface for "
+                            << tri->label()
                             << " gives a component with no boundary triangles.";
                         CPPUNIT_FAIL(msg.str());
                     }
@@ -2351,8 +2330,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 if (t->countBoundaryComponents() !=
                         expectS + 2 * expectTwoCopies + expectDoubleCover) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i << " for "
-                        << tri->label()
+                    msg << "Cutting along surface for " << tri->label()
                         << " gives the wrong number of boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2363,8 +2341,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
                     std::ostringstream msg;
-                    msg << "Cutting along surface #" << i << " for "
-                        << tri->label()
+                    msg << "Cutting along surface for " << tri->label()
                         << " gives boundary components of the wrong type.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2386,8 +2363,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 if (tDouble->countBoundaryComponents() !=
                         expectS + 2 * expectTwoCopies + expectDoubleCover) {
                     std::ostringstream msg;
-                    msg << "Cutting along double surface #" << i
-                        << " for " << tri->label()
+                    msg << "Cutting along double surface for " << tri->label()
                         << " gives the wrong number of boundary components.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2398,8 +2374,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 if (foundS < expectS || foundTwoCopies < expectTwoCopies ||
                         foundDoubleCover < expectDoubleCover) {
                     std::ostringstream msg;
-                    msg << "Cutting along double surface #" << i
-                        << " for " << tri->label()
+                    msg << "Cutting along double surface for " << tri->label()
                         << " gives boundary components of the wrong type.";
                     CPPUNIT_FAIL(msg.str());
                 }
@@ -2419,8 +2394,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 }
                 if (! p) {
                     std::ostringstream msg;
-                    msg << "Cutting along double surface #" << i
-                        << " for " << tri->label()
+                    msg << "Cutting along double surface for " << tri->label()
                         << " does not yield a product piece as expected.";
                     CPPUNIT_FAIL(msg.str());
                 }
