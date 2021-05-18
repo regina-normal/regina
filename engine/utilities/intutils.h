@@ -321,7 +321,7 @@ template <int a, int b>
 struct FaithfulAssignment<NativeInteger<a>, NativeInteger<b>> :
     public std::integral_constant<bool, (a <= b)> {};
 
-template <int a, int b>
+template <bool a, bool b>
 struct FaithfulAssignment<IntegerBase<a>, IntegerBase<b>> :
     public std::integral_constant<bool, (b || ! a)> {};
 
