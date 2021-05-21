@@ -549,6 +549,34 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
         void verifyGeneralAngleStructure(Triangulation<3>* tri) {
             const AngleStructure* ans = tri->generalAngleStructure();
+
+            if (tri->isValid() && ! tri->hasBoundaryTriangles()) {
+                // A generalised angle structure exists iff every vertex
+                // link is a torus or Klein bottle.
+                for (const auto v : tri->vertices())
+                    if (v->linkEulerChar() != 0) {
+                        // There should be no generalised angle structure.
+                        if (ans) {
+                            std::ostringstream msg;
+                            msg << "Unexpected generalised angle structure "
+                                "found for " << tri->label() << ".";
+                            CPPUNIT_FAIL(msg.str());
+                        } else {
+                            // Indeed there is no solution.
+                            // Nothing more to do here.
+                            return;
+                        }
+                    }
+
+                // We *should* have a generalised angle structure.
+                if (! ans) {
+                    std::ostringstream msg;
+                    msg << "No generalised angle structure where one "
+                        "should exist for " << tri->label() << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+
             if (ans) {
                 regina::MatrixInt* m = regina::makeAngleEquations(tri);
 
@@ -569,13 +597,6 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 }
 
                 delete m;
-            } else {
-                if (tri->isIdeal() && tri->countEdges() == tri->size()) {
-                    std::ostringstream msg;
-                    msg << "No generalised angle structure for "
-                        << tri->label() << ".";
-                    CPPUNIT_FAIL(msg.str());
-                }
             }
         }
 

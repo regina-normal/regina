@@ -1050,6 +1050,13 @@ class REGINA_API Triangulation<3> :
          * store the returned pointer for later use; instead you should
          * just call generalAngleStructure() again.
          *
+         * \note For a valid triangulation with no boundary faces, a
+         * generalised angle structure exists if and only if every vertex link
+         * is a torus or Klein bottle.  The "only if" direction is a simple
+         * Euler characteristic calculation; for the "if" direction see
+         * "Angle structures and normal surfaces", Feng Luo and Stephan
+         * Tillmann, Trans. Amer. Math. Soc. 360:6 (2008), pp. 2849-2866).
+         *
          * @return a generalised angle structure on this triangulation, or
          * \c nullptr if none exists.
          */

@@ -103,6 +103,15 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
         // then we must have #edges = #tetrahedra.
         if (countEdges() != simplices_.size())
             return (generalAngleStructure_ = nullptr);
+
+        // If the triangulation is valid, we also need every vertex link
+        // to be a torus or Klein bottle.  The only way this can *not*
+        // happen at this point in the code, given that we know that
+        // #edges = #tetrahedra, is to have some combination of internal
+        // vertices and higher-genus vertex links.  This seems sufficiently
+        // exotic that we won't waste time testing it here; instead we
+        // just run the full linear algebra code (which still does the right
+        // thing if there is no solution).
     }
 
     // We want *any* solution to the homogeneous angle structure equations
