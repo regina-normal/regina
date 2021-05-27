@@ -31,9 +31,46 @@
  **************************************************************************/
 
 #include "link/link.h"
+#include <cctype>
+#include <climits>
+#include <cstdlib>
 #include <sstream>
 
 namespace regina {
+
+Link* Link::fromPD(const std::string& s) {
+    std::vector<std::array<long, 4>> tuples;
+
+    std::array<long, 4> tuple;
+    int index = 0;
+
+    const char* begin = s.c_str();
+    char* end;
+    while (true) {
+        // Find the next integer.
+        while (*begin && ! ::isdigit(*begin))
+            ++begin;
+        if (! *begin)
+            break;
+
+        long next = ::strtol(begin, &end, 10);
+        if (next <= 0 || next == LONG_MAX /* overflow */)
+            return nullptr;
+
+        tuple[index++] = next;
+        if (index == 4) {
+            tuples.push_back(tuple);
+            index = 0;
+        }
+
+        begin = end;
+    }
+
+    if (index != 0)
+        return nullptr;
+
+    return fromPD(tuples.begin(), tuples.end());
+}
 
 std::vector<std::array<int, 4>> Link::pdData() const {
     const int n = crossings_.size();

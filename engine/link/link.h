@@ -2728,10 +2728,10 @@ class REGINA_API Link : public Packet {
          *   in order from the first component to the last, and process
          *   each crossing when we enter it at the lower strand.
          *
-         * - When building each individual 4-tuple, some sources (e.g., Sage)
-         *   order the strands clockwise instead of counter-clockwise.
-         *   Regina follows the same counter-clockwise convention that is used
-         *   by the Knot Atlas and SnapPy.
+         * - When building each individual 4-tuple, some sources order the
+         *   strands clockwise instead of counter-clockwise.  Regina follows
+         *   the same counter-clockwise convention that is used by the
+         *   Knot Atlas and SnapPy.
          *
          * See pd() for a variant of this routine that returns a string.
          *
@@ -2759,7 +2759,6 @@ class REGINA_API Link : public Packet {
            \verbatim
            PD[X[1, 5, 2, 4], X[3, 1, 4, 6], X[5, 3, 6, 2]]
            \endverbatim
-         *
          *
          * See pdData() for a variant of this routine that returns
          * machine-readable data as opposed to human-readable data
@@ -3046,7 +3045,8 @@ class REGINA_API Link : public Packet {
          *   component).
          *
          * - The crossings of the knot must be labelled 1, 2, ..., \a n
-         *   (i.e., they cannot have be arbitrary natural numbers).
+         *   (i.e., they cannot be arbitrary natural numbers with "gaps",
+         *   and the numbering cannot use a different starting point).
          *
          * The format works as follows:
          *
@@ -3169,7 +3169,8 @@ class REGINA_API Link : public Packet {
          *   component).
          *
          * - The crossings of the knot must be labelled 1, 2, ..., \a n
-         *   (i.e., they cannot have be arbitrary natural numbers).
+         *   (i.e., they cannot be arbitrary natural numbers with "gaps",
+         *   and the numbering cannot use a different starting point).
          *
          * The format works as follows:
          *
@@ -3514,6 +3515,143 @@ class REGINA_API Link : public Packet {
          */
         template <typename Iterator>
         static Link* fromDT(Iterator begin, Iterator end);
+
+        /**
+         * Creates a new link from a planar diagram code.
+         *
+         * A planar diagram code for a link encodes the local information
+         * at each crossing.  Unlike other codes such as Gauss codes and
+         * Dowker-Thistlethwaite notation, Regina can work with planar
+         * diagram codes for links as well as knots.  The only
+         * constraints are that (i) a planar diagram code cannot encode
+         * zero-crossing unknot components; and (ii) the orientations of
+         * some unlinked unknot components may not be preserved when the
+         * link is reconstructed, as described in more detail below.
+         *
+         * A planar diagram code for an <i>n</i>-crossing link is formed
+         * from a sequence of <i>n</i> 4-tuples of integers.  Each tuple
+         * describes an individual crossing, and lists the strands that
+         * meet at that crossing in counter-clockwise order, beginning with
+         * the incoming lower strand.
+         *
+         * An example, you can construct the right-handed trefoil using
+         * the sequence:
+         *
+           \verbatim
+           [[1, 5, 2, 4], [3, 1, 4, 6], [5, 3, 6, 2]]
+           \endverbatim
+         *
+         * Regina imposes the following restrictions when reconstructing
+         * a link from a planar diagram code:
+         *
+         * - The strands must be labelled 1, 2, ..., 2<i>n</i>
+         *   (i.e., they cannot be arbitrary natural numbers with "gaps",
+         *   and the numbering cannot use a different starting point).
+         *
+         * Internally, Regina numbers crossings and components (but not
+         * strands).  It will do this as follows:
+         *
+         * - Regina will number crossings 0, 1, ..., \a n in the order that
+         *   they appear in the sequence.
+         *
+         * - The strand with the lowest index in the planar diagram code
+         *   (i.e., strand 1) will become component 0 in Regina, and
+         *   that strand will become the component's starting point.
+         *   Of the strands \e not used in that component, the strand
+         *   with the lowest remaining index in the planar diagram code
+         *   will become component 1 in Regina, and that strand will
+         *   become the component's starting point, and so on.
+         *
+         * - In particular be aware that StrandRef::id() will in general
+         *   have no relation to the strand numbers used in the planar
+         *   diagram code.
+         *
+         * There are two variants of this routine.  This variant takes a
+         * single string containing all 4<i>n</i> integers.  The other variant
+         * takes a sequence of tuples of integers, defined by a pair of
+         * iterators.
+         *
+         * In this variant (the string variant), the integers may be
+         * separated by any blocks of non-digit characters, and the string
+         * may containin additional non-digit prefix or suffix characters
+         * (which will be ignored).  Thus the follow strings all
+         * describe the same sequence:
+         *
+           \verbatim
+           [[1, 5, 2, 4], [3, 1, 4, 6], [5, 3, 6, 2]]
+           PD[X[1, 5, 2, 4], X[3, 1, 4, 6], X[5, 3, 6, 2]]
+           1 5 2 4 3 1 4 6 5 3 6 2
+           \endverbatim
+         *
+         * \warning If the link contains an unknotted loop that sits
+         * completely above all other link components (in other words,
+         * a link components that consists entire of over-crossings), then
+         * the orientation of this loop might not be reconstructed correctly.
+         * This is unavoidable: the planar diagram code simply does not
+         * contain this information.
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a link diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * @param str a planar diagram code for a link, as described above.
+         * @return a newly constructed link, or \c null if the input was
+         * found to be invalid.
+         */
+        static Link* fromPD(const std::string& str);
+
+        /**
+         * Creates a new link from a planar diagram code.
+         *
+         * See fromPD(const std::string&) for a detailed description of
+         * planar diagram codes as they are used in Regina.
+         *
+         * There are two variants of this routine.  The other variant
+         * (fromPD(const std::string&), which offers more detailed
+         * documentation) takes a single string, where the integers have been
+         * combined together and separated by non-digit characters.  This
+         * variant takes a sequence of 4-tuples of integers, defined by a
+         * pair of iterators.
+         *
+         * \pre \a Iterator is a random access iterator type.
+         *
+         * \pre If \a it is such an iterator, then <tt>(*it)[0]</tt>,
+         * <tt>(*it)[1]</tt>, <tt>(*it)[2]</tt> and <tt>(*it)[3]</tt>
+         * will give the elements of the corresponding 4-tuple, which
+         * can then be treated as native C++ integers.
+         *
+         * \warning If the link contains an unknotted loop that sits
+         * completely above all other link components (in other words,
+         * a link components that consists entire of over-crossings), then
+         * the orientation of this loop might not be reconstructed correctly.
+         * This is unavoidable: the planar diagram code simply does not
+         * contain this information.
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a link diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \ifacespython Instead of a pair of begin and past-the-end
+         * iterators, this routine takes a Python list.  Each element
+         * of the list should be convertible to a tuple of integers.
+         * In particular, a list of Python lists is fine, and a list of
+         * Python tuples is fine also.
+         *
+         * @param begin an iterator that points to the beginning of the
+         * sequence of 4-tuples for a planar diagram code.
+         * @param end an iterator that points past the end of the
+         * sequence of 4-tuples for a planar diagram code.
+         * @return a newly constructed link, or \c null if the input was
+         * found to be invalid.
+         */
+        template <typename Iterator>
+        static Link* fromPD(Iterator begin, Iterator end);
 
         /*@}*/
 
@@ -4416,6 +4554,7 @@ namespace std {
 #include "link/data-impl.h"
 #include "link/dt-impl.h"
 #include "link/gauss-impl.h"
+#include "link/pd-impl.h"
 
 #endif
 

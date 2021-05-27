@@ -42,6 +42,7 @@ if (${REGINA_INSTALL_DEV})
     graph.h
     link.h
     modellinkgraph.h
+    pd-impl.h
     tangle.h
     xmllinkreader.h
     DESTINATION "${INCLUDEDIR}/link" COMPONENT Development)

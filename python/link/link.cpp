@@ -126,6 +126,35 @@ void addLink(pybind11::module_& m) {
         .def_static("fromDT", [](const std::vector<int>& v) {
             return Link::fromDT(v.begin(), v.end());
         })
+        .def_static("fromPD", [](const std::string& s) {
+            return Link::fromPD(s);
+        })
+        .def_static("fromPD", [](pybind11::list l) {
+            std::vector<std::array<long, 4>> tuples;
+            pybind11::tuple pyTuple;
+            std::array<long, 4> cppTuple;
+            for (auto obj : l) {
+                try {
+                    pyTuple = obj.cast<pybind11::tuple>();
+                } catch (pybind11::cast_error const &) {
+                    throw std::invalid_argument("List element not "
+                        "convertible to a Python tuple");
+                }
+                if (pyTuple.size() != 4) {
+                    throw std::invalid_argument("List element is not "
+                        "a tuple of size 4");
+                }
+                try {
+                    for (int i = 0; i < 4; ++i)
+                        cppTuple[i] = pyTuple[i].cast<long>();
+                } catch (pybind11::cast_error const &) {
+                    throw std::invalid_argument("Tuple element not "
+                        "convertible to a C++ long integer");
+                }
+                tuples.push_back(cppTuple);
+            }
+            return Link::fromPD(tuples.begin(), tuples.end());
+        })
         .def_static("fromKnotSig", &Link::fromKnotSig)
         .def_static("fromSig", &Link::fromSig)
         .def("swap", &Link::swap)
