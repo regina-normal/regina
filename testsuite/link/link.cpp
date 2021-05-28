@@ -77,6 +77,7 @@ class LinkTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(dt);
     CPPUNIT_TEST(gauss);
     CPPUNIT_TEST(orientedGauss);
+    CPPUNIT_TEST(pdCode);
     CPPUNIT_TEST(rewrite);
     CPPUNIT_TEST(swapping);
 
@@ -2495,6 +2496,90 @@ class LinkTest : public CppUnit::TestFixture {
             verifyOrientedGauss(gst);
             verifyOrientedGauss(rht_rht);
             verifyOrientedGauss(rht_lht);
+        }
+
+        void verifyPDCode(const Link* link, const Link* expect = nullptr) {
+            // The PD code will throw away zero-crossing components;
+            // the "expect" argument should be the resulting diagram.
+            // If expect == nullptr then we will use the original link itself.
+            if (! expect)
+                expect = link;
+
+            std::string code = link->pd();
+
+            Link* recon = Link::fromPD(code);
+            if (! recon) {
+                std::ostringstream msg;
+                msg << link->label() << ": cannot reconstruct from code.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->size() != expect->size()) {
+                std::ostringstream msg;
+                msg << link->label() << ": reconstruction has "
+                    "incorrect size.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            if (recon->countComponents() != expect->countComponents()) {
+                std::ostringstream msg;
+                msg << link->label() << ": reconstruction has "
+                    "different number of components.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            /*
+            if (recon->orientedGauss() != code) {
+                std::ostringstream msg;
+                msg << l->label() << ": reconstruction has "
+                    "different code.";
+                CPPUNIT_FAIL(msg.str());
+            }
+            */
+            if (expect->size() <= 20) {
+                if (recon->homfly() != expect->homfly()) {
+                    std::ostringstream msg;
+                    msg << link->label() << ": reconstruction has "
+                        "different HOMFLY-PT polynomial.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            delete recon;
+        }
+
+        void pdCode() {
+            // The empty link:
+            verifyPDCode(empty);
+
+            // Single-component knots:
+            verifyPDCode(unknot1);
+            verifyPDCode(unknot3);
+            verifyPDCode(unknotMonster);
+            verifyPDCode(unknotGordian);
+            verifyPDCode(trefoilLeft);
+            verifyPDCode(trefoilRight);
+            verifyPDCode(trefoil_r1x2);
+            verifyPDCode(trefoil_r1x6);
+            verifyPDCode(figureEight);
+            verifyPDCode(figureEight_r1x2);
+            verifyPDCode(conway);
+            verifyPDCode(kinoshitaTerasaka);
+            verifyPDCode(gst);
+            verifyPDCode(rht_rht);
+            verifyPDCode(rht_lht);
+
+            // Links with multiple components:
+            verifyPDCode(unlink2_r2);
+            verifyPDCode(unlink2_r1r1);
+            verifyPDCode(hopf);
+            verifyPDCode(whitehead);
+            verifyPDCode(borromean);
+            verifyPDCode(trefoil_unknot1);
+            verifyPDCode(trefoil_unknot_overlap);
+            verifyPDCode(adams6_28);
+
+            // Cases where the PD code throws away zero-crossing components:
+            verifyPDCode(unknot0, empty);
+            verifyPDCode(unlink2_0, empty);
+            verifyPDCode(unlink3_0, empty);
+            verifyPDCode(trefoil_unknot0, trefoilRight);
         }
 
         void verifyRewrite(const Link& link, int height, int threads,
