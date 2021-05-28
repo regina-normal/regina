@@ -136,7 +136,7 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
                 pos = occ[s].first;
             pos.second ^= 2;
 
-            s = (*(it + pos.first))[pos.second] - 1;
+            s = (*(begin + pos.first))[pos.second] - 1;
             if (s == start)
                 break;
 
@@ -178,7 +178,7 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
                 pos = occ[s].first;
             pos.second ^= 2;
 
-            s = (*(it + pos.first))[pos.second] - 1;
+            s = (*(begin + pos.first))[pos.second] - 1;
             if (s == start)
                 break;
 
