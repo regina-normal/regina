@@ -3595,6 +3595,12 @@ class REGINA_API Link : public Packet {
            1 5 2 4 3 1 4 6 5 3 6 2
            \endverbatim
          *
+         * Some sources (such as the Knot Atlas) describe special symbols
+         * such as \c Xp, \c Xm and \c P, which change the meaning of the
+         * tuples.  Regina does \e not recognise these special symbols;
+         * any letters that appear in the string will be treated as separating
+         * characters between the integers, and nothing more.
+         *
          * \warning If the link contains an unknotted loop that sits
          * completely above all other link components (in other words,
          * a link components that consists entire of over-crossings), then
