@@ -2525,14 +2525,27 @@ class LinkTest : public CppUnit::TestFixture {
                     "different number of components.";
                 CPPUNIT_FAIL(msg.str());
             }
-            /*
-            if (recon->orientedGauss() != code) {
+            for (size_t i = 0; i < recon->countComponents(); ++i) {
+                if (recon->writheOfComponent(i) !=
+                        expect->writheOfComponent(i)) {
+                    std::ostringstream msg;
+                    msg << link->label() << ": reconstruction has "
+                        "different writhe for component " << i << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+            if (recon->writhe() != expect->writhe()) {
                 std::ostringstream msg;
-                msg << l->label() << ": reconstruction has "
-                    "different code.";
+                msg << link->label() << ": reconstruction has "
+                    "different writhe.";
                 CPPUNIT_FAIL(msg.str());
             }
-            */
+            if (recon->linking() != expect->linking()) {
+                std::ostringstream msg;
+                msg << link->label() << ": reconstruction has "
+                    "different linking number.";
+                CPPUNIT_FAIL(msg.str());
+            }
             if (expect->size() <= 20) {
                 if (recon->homfly() != expect->homfly()) {
                     std::ostringstream msg;
