@@ -82,6 +82,9 @@ std::vector<std::array<int, 4>> Link::pdData() const {
     int* strand = new int[2 * n];
     int next = 1;
     for (auto start : components_) {
+        if (! start)
+            continue;
+
         StrandRef s = start;
         do {
             strand[s.id()] = next++;
@@ -91,6 +94,9 @@ std::vector<std::array<int, 4>> Link::pdData() const {
 
     // Now process each crossing in turn:
     for (auto start : components_) {
+        if (! start)
+            continue;
+
         StrandRef s = start;
         do {
             const StrandRef next = s.next();
@@ -130,6 +136,9 @@ std::string Link::pd() const {
     int* strand = new int[2 * n];
     int next = 1;
     for (auto start : components_) {
+        if (! start)
+            continue;
+
         StrandRef s = start;
         do {
             strand[s.id()] = next++;
@@ -139,6 +148,9 @@ std::string Link::pd() const {
 
     // Now process each crossing in turn:
     for (auto start : components_) {
+        if (! start)
+            continue;
+
         StrandRef s = start;
         do {
             const StrandRef next = s.next();
