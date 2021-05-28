@@ -2696,10 +2696,22 @@ class REGINA_API Link : public Packet {
          * vector of 4-tuples.
          *
          * Planar diagram codes encode the local information at each
-         * crossing.  They are available for links as well as knots;
-         * their only restriction is that they cannot encode zero-crossing
-         * unknot components (i.e., components for which the component()
-         * function returns a null strand).
+         * crossing.  They are available for links as well as knots.
+         *
+         * When reconstructing a link from a planar diagram code, there
+         * are two ways in which information may be lost:
+         *
+         * - Planar diagram codes cannot encode zero-crossing unknot components
+         *   (i.e., components for which the component() function returns a
+         *   null strand).  Any such components will be missing from the
+         *   reconstructed link.
+         *
+         * - If a link has any components that consist entirely of
+         *   over-crossings (which must be unknots "placed on top of" the link
+         *   diagram), the planar diagram code does not carry enough data to
+         *   reconstruct the \e orientation of these components.  The topology
+         *   will be correct, but the combinatorics of the link diagram may not
+         *   be reconstructed faithfully.
          *
          * Regina adheres to a tight specification for the planar diagram codes
          * that it outputs, in order to ensure compatibility with other
@@ -2744,8 +2756,8 @@ class REGINA_API Link : public Packet {
          * a string.
          *
          * A planar diagram code consists of a list of 4-tuples; see
-         * pdData() for details on how this list is constructed and what
-         * it represents.
+         * pdData() for details on how this list is constructed, what it
+         * represents, and what information it omits.
          *
          * This routine formats the list as a string, in a way that is
          * consistent with the description in the Knot Atlas at
@@ -3526,7 +3538,7 @@ class REGINA_API Link : public Packet {
          * constraints are that (i) a planar diagram code cannot encode
          * zero-crossing unknot components; and (ii) the orientations of
          * some unlinked unknot components may not be preserved when the
-         * link is reconstructed, as described in more detail below.
+         * link is reconstructed, as described in detail in the warnings below.
          *
          * A planar diagram code for an <i>n</i>-crossing link is formed
          * from a sequence of <i>n</i> 4-tuples of integers.  Each tuple
