@@ -63,6 +63,9 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
     // The two occurrences of each strand in the PD code:
     typedef std::pair<PDPos, PDPos> PDOccurrence;
 
+    // The zero-based strand numbers that will begin each component:
+    std::vector<size_t> components;
+
     // Identify the two crossings that each strand meets.
     // A position of -1 in the 4-tuple means "not yet seen".
     PDOccurrence* occ = new PDOccurrence[2 * n];
@@ -106,6 +109,8 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
 
     // First walk through the crossings and work out what we can.
     for (it = begin, index = 0; it != end; ++it, ++index) {
+        // Examine the incoming lower strand (which is the only one
+        // whose direction is predetermined):
         auto start = (*it)[0] - 1;
         if (dir[start]) {
             // We have already processed this strand (and the entire
@@ -116,21 +121,76 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
         // We know that start is the incoming lower strand.
         // Follow this component around and identify the directions of
         // all strands on the component.
-        dir[start] = (occ[start].first.first == index &&
-            occ[start].first.second == 0 ? 1 : -1);
+        // As we do this, we will also collect the minimum strand label on the
+        // component (which will become its starting point).
+        PDPos pos { index, 0 };
+        dir[start] = (occ[start].first == pos ? -1 : 1);
+        size_t min = start;
 
         auto s = start;
         while (true) {
-            // TODO: Move s forward to the next strand on this component.
+            // Move s forward to the next strand on this component.
+            if (dir[s] > 0)
+                pos = occ[s].second;
+            else
+                pos = occ[s].first;
+            pos.second ^= 2;
+
+            s = (*(it + pos.first))[pos.second] - 1;
             if (s == start)
                 break;
+
             // Since we already know each strand appears exactly twice,
-            // dir[s] should be unknown at this point.
-            // Update it.
-            // TODO: Update dir[s]
+            // dir[s] should be unknown at this point.  Update it.
+            dir[s] = (occ[s].first == pos ? 1 : -1);
+
+            if (s < min)
+                min = s;
         }
+
+        // This finishes the current component.
+        // Collect its starting point.
+        components.push_back(min);
     }
 
+    // Look for any components that haven't been processed (because they
+    // consist entirely of overcrossings, and so the PD code does not
+    // define their orientation).
+    for (it = begin, index = 0; it != end; ++it, ++index) {
+        // This time we look at one of the two (connected) upper strands.
+        auto start = (*it)[1] - 1;
+        if (dir[start])
+            continue;
+
+        // We found a component that has not been processed.
+        // Follow the component as before, but this time we choose an
+        // arbitrary direction for the starting strand (since we cannot
+        // deduce this from the PD code).
+        PDPos pos { index, 1 };
+        dir[start] = 1;
+        size_t min = start;
+
+        auto s = start;
+        while (true) {
+            if (dir[s] > 0)
+                pos = occ[s].second;
+            else
+                pos = occ[s].first;
+            pos.second ^= 2;
+
+            s = (*(it + pos.first))[pos.second] - 1;
+            if (s == start)
+                break;
+
+            dir[s] = (occ[s].first == pos ? 1 : -1);
+
+            if (s < min)
+                min = s;
+        }
+        components.push_back(min);
+    }
+
+    /*
     for (size_t i = 0; i < 2 * n; ++i) {
         std::cerr << "Strand " << (i + 1) << ": ";
         if (dir[i] > 0) {
@@ -143,10 +203,45 @@ Link* Link::fromPD(Iterator begin, Iterator end) {
                 << "," << occ[i].second.second << ")" << std::endl;
         }
     }
+    */
+
+    // Build and hook together the final list of crossings.
+    Link* ans = new Link;
+    for (size_t i = 0; i < n; ++i)
+        ans->crossings_.push_back(new Crossing);
+    for (size_t i = 0; i < 2 * n; ++i) {
+        PDPos from, to;
+        if (dir[i] > 0) {
+            from = occ[i].first;
+            to = occ[i].second;
+        } else {
+            from = occ[i].second;
+            to = occ[i].first;
+        }
+        ans->join(
+            StrandRef(ans->crossings_[from.first], (from.second % 2 ? 1 : 0)),
+            StrandRef(ans->crossings_[to.first], (to.second % 2 ? 1 : 0)));
+
+        // If this strand exits from the upper side of its source crossing,
+        // use this to determine the crossing's sign.
+        if (from.second == 1)
+            ans->crossings_[from.first]->sign_ = 1;
+        else if (from.second == 3)
+            ans->crossings_[from.first]->sign_ = -1;
+    }
+
+    // Finally, mark the starting point of each component.
+    std::sort(components.begin(), components.end());
+    for (auto start : components) {
+        const PDPos& from = (dir[start] > 0 ? occ[start].first :
+            occ[start].second);
+        ans->components_.push_back(StrandRef(ans->crossings_[from.first],
+            (from.second % 2 ? 1 : 0)));
+    }
 
     delete[] dir;
     delete[] occ;
-    return nullptr;
+    return ans;
 }
 
 } // namespace regina
