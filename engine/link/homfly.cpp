@@ -2443,11 +2443,9 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
                             }
                             break;
                         case 12:
-                            // TODO: Find a test link that verifies this case.
                             if (pos[1][1] + 1 == pos[1][0]) {
                                 // c=b
                                 // Splice:
-                                std::cerr << "12a splice" << std::endl;
                                 kNew = *kChild;
                                 kNew[pos[1][1]] = id[0][0];
                                 kNew[pos[1][0]] = id[0][1];
@@ -2458,7 +2456,6 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
 
                                 if (pos[1][1] == kChild->size() - 2) {
                                     // Switch:
-                                    std::cerr << "12a switch" << std::endl;
                                     for (i = 0; i < kChild->size(); i += 2) {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + i,
@@ -2480,7 +2477,6 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
                             } else {
                                 if (pos[1][1] < pos[1][0]) {
                                     // Splice:
-                                    std::cerr << "12b splice" << std::endl;
                                     kNew = *kChild;
                                     kNew[pos[1][1]] = id[0][0];
                                     kNew[pos[1][0]] = id[0][1];
@@ -2490,7 +2486,6 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
                                             spliceValue(vChild, c));
                                 } else if (pos[1][0] + 1 == pos[1][1]) {
                                     // Pass and switch:
-                                    std::cerr << "12b pass/switch" << std::endl;
                                     for (i = 0; i < pos[1][0]; i += 2) {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + i,
