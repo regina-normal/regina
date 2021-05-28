@@ -125,7 +125,8 @@ Version 6.1  [ TODO ]
               types.
         Class Link:
             - New routines writheOfComponent() and selfFrame().
-            - New routines pd() and pdData() to create planar diagram codes.
+            - New routines pd(), pdData() and fromPD() to work with planar
+              diagram codes,
             - New alias fromSig(), which is is identical to fromKnotSig().
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.
