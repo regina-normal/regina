@@ -214,11 +214,14 @@ void addLink(pybind11::module_& m) {
         .def("gaussData", &Link::gaussData)
         .def("orientedGauss",
             overload_cast<>(&Link::orientedGauss, pybind11::const_))
+        .def("orientedGaussData", &Link::orientedGaussData)
         .def("jenkins",
             overload_cast<>(&Link::jenkins, pybind11::const_))
+        .def("jenkinsData", &Link::jenkinsData)
         .def("dt",
             overload_cast<bool>(&Link::dt, pybind11::const_),
             pybind11::arg("alpha") = false)
+        .def("dtData", &Link::dtData)
         .def("pdData", &Link::pdData)
         .def("pd",
             overload_cast<>(&Link::pd, pybind11::const_))

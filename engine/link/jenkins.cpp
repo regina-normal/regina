@@ -90,5 +90,41 @@ void Link::jenkins(std::ostream& out) const {
     }
 }
 
+std::vector<int> Link::jenkinsData() const {
+    std::vector<int> ans;
+    ans.push_back(components_.size());
+
+    StrandRef s;
+    size_t len;
+    for (StrandRef start : components_) {
+        if (! start)
+            ans.push_back(0);
+        else {
+            // Get the length of the component.
+            s = start;
+            len = 0;
+            do {
+                ++s; ++len;
+            } while (s != start);
+
+            // Output the component.
+            // Note that s == start at this point.
+            ans.push_back(len);
+            do {
+                ans.push_back(s.crossing()->index());
+                ans.push_back(s.strand() == 1 ? 1 : -1);
+                ++s;
+            } while (s != start);
+        }
+    }
+
+    for (auto c : crossings_) {
+        ans.push_back(c->index());
+        ans.push_back(c->sign());
+    }
+
+    return ans;
+}
+
 } // namespace regina
 

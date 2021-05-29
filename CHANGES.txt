@@ -127,8 +127,8 @@ Version 6.1  [ TODO ]
             - New routines writheOfComponent() and selfFrame().
             - New routines pd(), pdData(), pd(std::ostream&) and fromPD() to
               work with planar diagram codes,
-            - New routine gaussData() for generating codes in machine-readable
-              format.
+            - New routines gaussData(), orientedGaussData(), jenkinsData() and
+              dtData() for generating codes in machine-readable format.
             - New routine fromJenkins(Iterator, Iterator) for parsing codes in
               machine-readable format.
             - New alias fromSig(), which is is identical to fromKnotSig().

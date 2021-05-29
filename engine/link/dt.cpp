@@ -99,6 +99,47 @@ void Link::dt(std::ostream& out, bool alpha) const {
     delete[] oddCrossing;
 }
 
+std::vector<int> Link::dtData() const {
+    if (components_.size() != 1 || crossings_.empty())
+        return std::vector<int>();
+
+    // Dowker-Thistlethwaite notation requires us to start on the lower strand.
+    StrandRef start = components_.front();
+    if (start.strand() == 1)
+        start.jump();
+
+    size_t n = size();
+
+    // Odd steps in traversal -> crossing index
+    int* oddCrossing = new int[n];
+
+    // Crossing index -> even steps in traversal, negated if passing under
+    int* evenStep = new int[n];
+
+    StrandRef s = start;
+    unsigned step = 0;
+    do {
+        ++step;
+        if (step % 2 == 1) {
+            oddCrossing[step >> 1] = s.crossing()->index();
+        } else {
+            evenStep[s.crossing()->index()] = (s.strand() == 1 ? step : -step);
+        }
+        ++s;
+    } while (s != start);
+    assert(step == 2 * n);
+
+    std::vector<int> ans;
+    ans.reserve(n);
+
+    for (size_t i = 0; i < n; ++i)
+        ans.push_back(evenStep[oddCrossing[i]]);
+
+    delete[] evenStep;
+    delete[] oddCrossing;
+    return ans;
+}
+
 Link* Link::fromDT(const std::string& s) {
     // Do we have an alphabetical or numerical string?
     auto it = s.begin();

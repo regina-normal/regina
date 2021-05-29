@@ -32,6 +32,7 @@
 
 #include "link/tangle.h"
 #include "utilities/stringutils.h"
+#include <charconv>
 #include <iterator>
 
 namespace regina {
@@ -187,6 +188,45 @@ void Link::orientedGauss(std::ostream& out) const {
 
         ++s;
     } while (s != start);
+}
+
+std::vector<std::string> Link::orientedGaussData() const {
+    if (components_.size() != 1 || crossings_.empty())
+        return std::vector<std::string>();
+
+    std::vector<std::string> ans;
+    ans.reserve(2 * crossings_.size());
+
+    // It seems safe to use 2^64 as an upper bound on the number of crossings.
+    // On typical machines, size_t should not exceed this; moreover, even if
+    // we did have more crossings than this, none of Regina's algorithms
+    // would ever finish for a knot of this size.
+    //
+    // Since 2^64 is a 20-digit number in base 10, this gives a maximum token
+    // length of 22 (allowing for the prefixes +> +< -> -<).
+    static constexpr int maxTokenLen = 22;
+    char token[maxTokenLen + 1]; // allow for null termination
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    do {
+        token[0] = (s.strand() == 0 ? '-' : '+');
+        token[1] = ((s.strand() == 0 && s.crossing()->sign() < 0) ||
+            (s.strand() == 1 && s.crossing()->sign() > 0) ? '<' : '>');
+        auto result = std::to_chars(token + 2, token + maxTokenLen,
+            s.crossing()->index() + 1);
+        if (result.ec != std::errc()) {
+            std::cerr << "ERROR: orientedGaussData(): could not convert "
+                "crossing index " << s.crossing()->index() << " to string.";
+            return std::vector<std::string>();
+        }
+        *result.ptr = 0;
+        ans.push_back(token);
+
+        ++s;
+    } while (s != start);
+
+    return ans;
 }
 
 std::string Tangle::orientedGauss() const {

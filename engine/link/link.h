@@ -2581,11 +2581,40 @@ class REGINA_API Link : public Packet {
         std::string orientedGauss() const;
 
         /**
+         * Returns an oriented Gauss code for this knot, presented as a
+         * vector of string tokens.
+         *
+         * See orientedGauss() for a full description of oriented Gauss codes
+         * as they are used in Regina, as well as their limitations.
+         *
+         * For an <i>n</i>-crossing knot, the elements of the returned vector
+         * will be the 2<i>n</i> individual tokens of the form
+         * <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
+         * <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt> that would normally
+         * be joined with whitespace to form a complete oriented Gauss code.
+         * For example, for the left-hand trefoil, the vector might contain
+         * the six tokens:
+         *
+           \verbatim
+           { "+>1", "-<2", "+>3", "-<1", "+>2", "-<3" }
+           \endverbatim
+         *
+         * This routine returns machine-readable data (as a C++ vector);
+         * in contrast, orientedGauss() returns the same data in
+         * human-readable format (as a string).
+         *
+         * @return an oriented Gauss code for this knot in machine-readable
+         * form, or the empty vector if this link has zero or multiple
+         * components.
+         */
+        std::vector<std::string> orientedGaussData() const;
+
+        /**
          * Writes an oriented Gauss code for this knot to the given output
          * stream.
          *
          * See orientedGauss() for a full description of oriented Gauss codes
-         * as they are used in Regina.
+         * as they are used in Regina, as well as their limitations.
          *
          * The output from this routine is precisely the string that
          * would be returned by orientedGauss().  In particular, the output
@@ -2655,9 +2684,25 @@ class REGINA_API Link : public Packet {
          * \note There is another variant of this routine that, instead
          * of returning a string, writes directly to an output stream.
          *
-         * @return a description of this link using Jenkins' text format.
+         * @return a description of this link using Jenkins' format.
          */
         std::string jenkins() const;
+
+        /**
+         * Exports this knot using Bob Jenkins' text format, returning a
+         * vector of integers.
+         *
+         * See jenkins() for a full description of Jenkins' format as it
+         * is used in Regina.
+         *
+         * This routine returns machine-readable data (as a C++ vector);
+         * in contrast, jenkins() returns the same data in human-readable
+         * format (as a string).
+         *
+         * @return a description of this link using Jenkins' format
+         * in machine-readable form.
+         */
+        std::vector<int> jenkinsData() const;
 
         /**
          * Exports this knot to the given output stream using Bob Jenkins'
@@ -2727,6 +2772,28 @@ class REGINA_API Link : public Packet {
          * has more than 26 crossings.
          */
         std::string dt(bool alpha = false) const;
+
+        /**
+         * Exports this knot in numerical Dowker-Thistlethwaite notation,
+         * returning a vector of integers.
+         *
+         * See dt(bool) for a full description of Dowker-Thistlethwaite
+         * notation as it is used in Regina, as well as its limitations.
+         *
+         * Although Regina can work with both the numerical and alphabetical
+         * variants of Dowker-Thistlethwaite notation, this dtData() routine
+         * exports the numerical variant only.  If you wish to export the
+         * alphabetical variant, you can call <tt>dt(true)</tt>.
+         *
+         * This routine returns machine-readable data (as a C++ vector);
+         * in contrast, calling <tt>dt()</tt> returns the same integer
+         * sequence in human-readable format (as a string).
+         *
+         * @return the numerical Dowker-Thistlethwaite notation in
+         * machine-readable form, or the empty vector if this link has zero
+         * or multiple components.
+         */
+        std::vector<int> dtData() const;
 
         /**
          * Writes this knot to the given output stream using
@@ -2849,8 +2916,8 @@ class REGINA_API Link : public Packet {
          * Returns a planar diagram code for this link, presented as
          * vector of 4-tuples.
          *
-         * The documentation for pd() describes how this vector is constructed,
-         * what it represents, and what information it omits.
+         * See pd() for a full description of planar diagram codes as
+         * they are used in Regina, as well as their limitations.
          *
          * This routine returns machine-readable data (as a C++ vector);
          * in contrast, pd() returns the same data in human-readable format
@@ -3325,10 +3392,10 @@ class REGINA_API Link : public Packet {
          * <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt> that would normally
          * be joined with whitespace to form a complete oriented Gauss code.
          * For example, to describe the left-hand trefoil, the input sequence
-         * might contain the six tokens:
+         * could be a vector containing the six tokens:
          *
            \verbatim
-           +>1 -<2 +>3 -<1 +>2 -<3
+           { "+>1", "-<2", "+>3", "-<1", "+>2", "-<3" }
            \endverbatim
          *
          * Each individual token should \e not contain any whitespace;
