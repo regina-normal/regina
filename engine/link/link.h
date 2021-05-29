@@ -2543,15 +2543,35 @@ class REGINA_API Link : public Packet {
          * The oriented Gauss code, based on a format used by Andreeva et al.,
          * is an extension of the classical Gauss code with additional
          * characters to describe the orientation of the other strand
-         * passing by at each crossing.  For details of this format, see the
-         * documentation for fromOrientedGauss(const std::string&), which
-         * imports links in this format.
+         * passing by at each crossing.  This extra information removes
+         * both the topological ambiguities and the complexity in the
+         * reconstruction procedure for classical Gauss codes.
          *
-         * The key advantage of using the oriented Gauss code (as opposed to
-         * the classical Gauss code) is that an oriented Gauss code always
-         * describes a unique knot, and moreover (for knots that are not
-         * equivalent to their reflections) it describes a unique reflection
-         * of that knot.
+         * This "oriented" format is described at
+         * <http://www.javaview.de/services/knots/doc/description.html#gc>,
+         * and it works as follows:
+         *
+         * - Label the crossings arbitrarily as 1, 2, ..., \a n.
+         *
+         * - Start at some point on the knot and follow it around.
+         *   At every crossing that you pass, write a token of the form
+         *   <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
+         *   <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt>, where:
+         *
+         *     * the symbol <tt>+</tt> indicates that you are passing over the
+         *       crossing labelled \a k, and the symbol <tt>-</tt> indicates
+         *       that you are passing under the crossing labelled \a k;
+         *
+         *     * the symbol <tt>&lt;</tt> indicates that the other strand of
+         *       the crossing passes from right to left, and <tt>&gt;</tt>
+         *       indicates that the other strand passes from left to right.
+         *
+         * As an example, you can construct the left-hand trefoil
+         * using the following code:
+         *
+           \verbatim
+           +>1 -<2 +>3 -<1 +>2 -<3
+           \endverbatim
          *
          * Currently Regina only supports Gauss codes for knots,
          * not multiple-component links.  If this link does not have
@@ -2607,11 +2627,49 @@ class REGINA_API Link : public Packet {
          * HOMFLY polynomial software, which is available online from
          * <http://burtleburtle.net/bob/knot/homfly.html>.
          *
-         * Jenkins' text format uses a sequence of integers separated by
-         * whitespace.  For details of this format, see the documentation for
-         * fromJenkins(const std::string&), which imports links in this format.
+         * In Jenkins' format, a link is described by a sequence of integers
+         * separated by whitespace.
          *
-         * The string will contain multiple lines, and will end in a newline.
+         * We assume that there are \a n crossings in the link, labelled
+         * arbitrarily as 0, 1, ..., <i>n</i>-1.  The sequence of
+         * integers will contain, in order:
+         *
+         * - the number of components in the link;
+         *
+         * - for each link component:
+         *   + the number of times you pass a crossing when traversing the
+         *     component (i.e., the length of the component);
+         *   + two integers for each crossing that you pass in such a traversal:
+         *     the crossing label, and then either +1 or -1 according to
+         *     whether you pass over or under the crossing respectively;
+         *
+         * - for each crossing:
+         *   + the crossing label;
+         *   + the sign of the crossing (either +1 or -1).
+         *
+         * As an example, you could describe the left-hand trefoil
+         * using the following sequence:
+         *
+           \verbatim
+           1
+           6   0 1   1 -1   2 1   0 -1   1 1   2 -1
+           0 -1   1 -1   2 -1
+           \endverbatim
+         *
+         * Another example is the Hopf link, which you could describe
+         * using the following sequence:
+         *
+           \verbatim
+           2
+           2   0 1   1 -1
+           2   0 -1   1 1
+           0 1   1 1
+           \endverbatim
+         *
+         * The string that is returned will contain multiple lines,
+         * and will end in a newline.  The specific choice of whitespace
+         * (i.e., the "formatting" of the sequence) may change in future
+         * versions of Regina.
          *
          * \note There is another variant of this routine that, instead
          * of returning a string, writes directly to an output stream.
@@ -2760,6 +2818,19 @@ class REGINA_API Link : public Packet {
          *   reconstruct the \e orientation of these components.  The topology
          *   will be correct, but the combinatorics of the link diagram may not
          *   be reconstructed faithfully.
+         *
+         * A planar diagram code for an <i>n</i>-crossing link is formed
+         * from a sequence of <i>n</i> 4-tuples of integers.  Each tuple
+         * describes an individual crossing, and lists the strands that
+         * meet at that crossing in counter-clockwise order, beginning with
+         * the incoming lower strand.
+         *
+         * An example, you can construct the right-handed trefoil using
+         * the sequence:
+         *
+           \verbatim
+           [[1, 5, 2, 4], [3, 1, 4, 6], [5, 3, 6, 2]]
+           \endverbatim
          *
          * Regina adheres to a tight specification for the planar diagram codes
          * that it outputs, in order to ensure compatibility with other
@@ -3102,7 +3173,7 @@ class REGINA_API Link : public Packet {
            \endverbatim
          *
          * See gauss() for a full description of classical Gauss codes as
-         * they are used in Regina.
+         * they are used in Regina, as well as their limitations.
          *
          * Regina imposes the following restrictions when reconstructing
          * a knot from a classical Gauss code:
@@ -3123,8 +3194,9 @@ class REGINA_API Link : public Packet {
          * separated by whitespace.  The other variant takes a sequence of
          * integers, defined by a pair of iterators.
          *
-         * In this variant (the string variant), the given string may
-         * contain additional leading or trailing whitespace.
+         * In this variant (the string variant), the exact form of the
+         * whitespace does not matter, and additional whitespace at the
+         * beginning or end of the string is allowed.
          *
          * \warning In general, the classical Gauss code does not contain
          * enough information to uniquely reconstruct a knot.  For prime knots,
@@ -3200,74 +3272,44 @@ class REGINA_API Link : public Packet {
          * Creates a new knot from an "oriented" variant of the Gauss code,
          * presented as string.
          *
-         * Classical Gauss codes essentially describe the 4-valent graph
-         * of a knot but not the particular embedding in the plane.  As
-         * a result, there can be ambiguity in the orientation of the
-         * diagram, and (for composite knots) even the topology of the
-         * knot itself.  Furthermore, parsing a Gauss code is complex
-         * since it requires an embedding to be deduced using some variant
-         * of a planarity testing algorithm.
+         * Oriented gauss codes overcome the limitations of classical Gauss
+         * codes by encoding all of the data needed to quickly and correctly
+         * reconstruct a knot diagram.
          *
-         * Andreeva et al. describe a variant of the Gauss code that includes
-         * extra information about the embedding, so as to remove both the
-         * ambiguity and the complexity in the conversion procedure.
-         * With this extra information, the knot and its orientation are
-         * well-defined (but the diagram is still ambiguous - see the
-         * note below).
+         * The oriented Gauss code for an <i>n</i>-crossing knot is described
+         * by a sequence of 2<i>n</i> string tokens.  As an example, you can
+         * construct the left-hand trefoil using the code:
          *
-         * This "oriented" format is described at
-         * <http://www.javaview.de/services/knots/doc/description.html#gc>.
-         * Regina adds two additional restrictions on this format:
+           \verbatim
+           +>1 -<2 +>3 -<1 +>2 -<3
+           \endverbatim
          *
-         * - It can only be used for knots (i.e., links with exactly one
+         * See orientedGauss() for a full description of oriented Gauss codes
+         * as they are used in Regina (and in particular, what these tokens
+         * represent).
+         *
+         * Regina imposes the following restrictions when reconstructing
+         * a knot from an oriented Gauss code:
+         *
+         * - This can only be done for knots (i.e., links with exactly one
          *   component).
          *
          * - The crossings of the knot must be labelled 1, 2, ..., \a n
          *   (i.e., they cannot be arbitrary natural numbers with "gaps",
          *   and the numbering cannot use a different starting point).
          *
-         * The format works as follows:
-         *
-         * - Label the crossings arbitrarily as 1, 2, ..., \a n.
-         *
-         * - Start at some point on the knot and follow it around.
-         *   At every crossing that you pass, write a token of the form
-         *   <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
-         *   <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt>, where:
-         *
-         *     * the symbol <tt>+</tt> indicates that you are passing over the
-         *       crossing labelled \a k, and the symbol <tt>-</tt> indicates
-         *       that you are passing under the crossing labelled \a k;
-         *
-         *     * the symbol <tt>&lt;</tt> indicates that the other strand of
-         *       the crossing passes from right to left, and <tt>&gt;</tt>
-         *       indicates that the other strand passes from left to right.
-         *
          * Be aware that, once the knot has been constructed, the crossings
          * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
          * (since every Link object numbers its crossings starting from 0).
-         *
-         * As an example, you can construct the left-hand trefoil
-         * using the following code:
-         *
-           \verbatim
-           +>1 -<2 +>3 -<1 +>2 -<3
-           \endverbatim
-         *
-         * The topology of the knot is defined precisely by this data, but the
-         * precise embedding of the diagram in the plane remains ambiguous.
-         * To be exact: the embedding of the diagram in the \e 2-sphere is
-         * defined precisely, but there remains a choice of which 2-cell of
-         * this embedding will contain the point at infinity (i.e., which
-         * 2-cell becomes the exterior cell of the diagram in the plane).
          *
          * There are two variants of this routine.  This variant takes a
          * single string, where the tokens have been combined together and
          * separated by whitespace.  The other variant takes a sequence of
          * tokens, defined by a pair of iterators.
          *
-         * In this variant (the string variant), the given string may
-         * contain additional leading or trailing whitespace.
+         * In this variant (the string variant), the exact form of the
+         * whitespace does not matter, and additional whitespace at the
+         * beginning or end of the string is allowed.
          *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the diagram.
@@ -3340,44 +3382,12 @@ class REGINA_API Link : public Packet {
         /**
          * Creates a new link from Bob Jenkins' format, presented as a string.
          *
-         * This routine builds a link from the text representation described by
-         * Bob Jenkins.  Jenkins uses this representation in his
-         * HOMFLY polynomial software, which is available online from
-         * <http://burtleburtle.net/bob/knot/homfly.html>.
+         * Jenkins' format overcomes the limitations of classical Gauss
+         * codes by encoding all of the data needed to quickly and correctly
+         * reconstruct a link diagram.  It can work with links as well as knots.
          *
-         * In this format, a link is described by a sequence of integers
-         * separated by whitespace - the exact form of the whitespace
-         * does not matter, and additional whitespace at the beginning
-         * or end of this sequence is also allowed.
-         *
-         * We assume that there are \a n crossings in the link, labelled
-         * arbitrarily as 0, 1, ..., <i>n</i>-1.  The sequence of
-         * integers must contain, in order:
-         *
-         * - the number of components in the link;
-         *
-         * - for each link component:
-         *   + the number of times you pass a crossing when traversing the
-         *     component (i.e., the length of the component);
-         *   + two integers for each crossing that you pass in such a traversal:
-         *     the crossing label, and then either +1 or -1 according to
-         *     whether you pass over or under the crossing respectively;
-         *
-         * - for each crossing:
-         *   + the crossing label;
-         *   + the sign of the crossing (either +1 or -1).
-         *
-         * As an example, you could construct the left-hand trefoil
-         * using the following sequence:
-         *
-           \verbatim
-           1
-           6   0 1   1 -1   2 1   0 -1   1 1   2 -1
-           0 -1   1 -1   2 -1
-           \endverbatim
-         *
-         * Another example is the Hopf link, which you could construct
-         * using the following sequence:
+         * In Jenkins' format, a link is described by a sequence of integers.
+         * As an example, you could construct the Hopf link using the sequence:
          *
            \verbatim
            2
@@ -3386,17 +3396,18 @@ class REGINA_API Link : public Packet {
            0 1   1 1
            \endverbatim
          *
-         * The topology of the knot is defined precisely by this data, but the
-         * precise embedding of the diagram in the plane remains ambiguous.
-         * To be exact: the embedding of the diagram in the \e 2-sphere is
-         * defined precisely, but there remains a choice of which 2-cell of
-         * this embedding will contain the point at infinity (i.e., which
-         * 2-cell becomes the exterior cell of the diagram in the plane).
+         * See jenkins() for a full description of Jenkins' format (and
+         * in particular, what these integers represent).
          *
-         * There are two variants of this routine.  This variant takes a
-         * single string containing the integer sequence.  The other
-         * variant takes an input stream, from which the sequence of
-         * integers will be read.
+         * There are three variants of this routine.  This variant takes a
+         * single string, where the integers have been combined together and
+         * separated by whitespace.  The other variants take (i) a sequence of
+         * integers defined by a pair of iterators, or (ii) an input stream
+         * from which the integers will be read.
+         *
+         * In this variant (the string variant), the exact form of the
+         * whitespace does not matter, and additional whitespace at the
+         * beginning or end of the string is allowed.
          *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the diagram.
@@ -3405,11 +3416,8 @@ class REGINA_API Link : public Packet {
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \note You can export an existing link in Jenkins' format by
-         * calling the routine jenkins().
-         *
-         * @param str a string containing a sequence of integers
-         * separated by whitespace that describes a link, as detailed above.
+         * @param str a string describing a link in Jenkins' format,
+         * as described above.
          * @return a newly constructed link, or \c null if the input was
          * found to be invalid.
          */
@@ -3493,50 +3501,39 @@ class REGINA_API Link : public Packet {
          * Creates a new knot from either alphabetical or numerical
          * Dowker-Thistlethwaite notation, presented as a string.
          *
-         * For an <i>n</i>-crossing knot, the input may be in one of two
-         * forms:
-         *
-         * - \e numerical Dowker-Thistlethwaite notation, which is a sequence
-         *   of \a n even signed integers as described (amongst other places)
-         *   in Section 2.2 of C. C. Adams, "The knot book",
-         *   W. H. Freeman & Co., 1994;
-         *
-         * - \e alphabetical Dowker-Thistlethwaite notation, which transforms
-         *   the numerical notation into a sequence of letters by replacing
-         *   positive integers (2,4,6,...) with lower-case letters
-         *   (\c a,\c b,\c c,...), and replacing negative integers
-         *   (-2,-4,-6,...) with upper-case letters (\c A,\c B,\c C,...).
-         *   This alphabetical variant can only be used to describe knots with
-         *   26 crossings or fewer.
-         *
          * Dowker-Thistlethwaite notation essentially describes the 4-valent
          * graph of a knot but not the particular embedding in the plane.
-         * As a result, there can be ambiguity in the orientation of the
-         * diagram, and (for composite knots) even the topology of the knot
-         * itself.  Furthermore, parsing Dowker-Thistlethwaite notation is
-         * complex since it requires an embedding to be deduced using some
-         * variant of a planarity testing algorithm.  These issues are
-         * resolved using oriented Gauss codes, as used by the routines
-         * orientedGauss() and fromOrientedGauss().
+         * As a result, there can be topological ambiguities when a knot is
+         * reconstructed from Dowker-Thistlethwaite notation; these are
+         * described in the warnings below.
          *
-         * As an example, you can construct the trefoil using either of the
-         * following variants of Dowker-Thistlethwaite notation:
+         * Dowker-Thistlethwaite notation comes in two forms: numerical
+         * and alphabetical.  For an <i>n</i>-crossing knot, the numerical
+         * form is a sequence of \a n even signed integers, and the
+         * alphabetical form is a sequence of \a n case-sensitive letters.
+         * As an example, you can construct the trefoil using either of
+         * the following strings:
          *
            \verbatim
            4 6 2
            bca
            \endverbatim
          *
-         * There are two variants of this routine.  This variant takes a
-         * single string, which is either the alphabetical notation (in which
-         * any whitespace within the string will be ignored), or the numerical
-         * notation where the integers have been combined together and
-         * separated by whitespace.  The other variant of this routine
-         * is only for the numerical variant, and it takes a sequence of
-         * integers defined by a pair of iterators.
+         * See dt() for a full description of Dowker-Thistlethwaite notation
+         * as it is used in Regina, as well as its limitations.
          *
-         * In this variant (the string variant), the given string may
-         * contain additional leading or trailing whitespace.
+         * There are two variants of this routine.  This variant takes a single
+         * string, which is either (i) the alphabetical notation, in which any
+         * whitespace within the string will be ignored; or (ii) the numerical
+         * notation, in which the integers are combined together and
+         * separated by whitespace.  The other variant of this routine
+         * is only for numerical Dowker-Thistlethwaite notation, and it takes
+         * a sequence of integers defined by a pair of iterators.
+         *
+         * In this variant (the string variant), the string may
+         * contain additional leading or trailing whitespace; moreover,
+         * for numerical Dowker-Thistlethwaite notation, the exact form
+         * of the whitespace that separates the integers does not matter.
          *
          * \warning In general, Dowker-Thistlethwaite notation does not contain
          * enough information to uniquely reconstruct a knot.  For prime knots,
@@ -3621,57 +3618,54 @@ class REGINA_API Link : public Packet {
         /**
          * Creates a new link from a planar diagram code, presented as a string.
          *
-         * A planar diagram code for a link encodes the local information
-         * at each crossing.  Unlike other codes such as Gauss codes and
-         * Dowker-Thistlethwaite notation, Regina can work with planar
-         * diagram codes for links as well as knots.  The only
-         * constraints are that (i) a planar diagram code cannot encode
-         * zero-crossing unknot components; and (ii) the orientations of
-         * some unlinked unknot components may not be preserved when the
-         * link is reconstructed, as described in detail in the warnings below.
+         * Planar diagram codes overcome the limitations of classical Gauss
+         * codes by encoding the local information at each crossing, though
+         * they do introduce their own (less severe) ambiguities and
+         * computational difficulties, as described in the warnings below.
+         * They can work with links as well as knots, though they cannot
+         * encode zero-crossing unknot components.
          *
          * A planar diagram code for an <i>n</i>-crossing link is formed
-         * from a sequence of <i>n</i> 4-tuples of integers.  Each tuple
-         * describes an individual crossing, and lists the strands that
-         * meet at that crossing in counter-clockwise order, beginning with
-         * the incoming lower strand.
-         *
-         * An example, you can construct the right-handed trefoil using
-         * the sequence:
+         * from a sequence of <i>n</i> 4-tuples of integers.  An example,
+         * you can construct the right-handed trefoil using the sequence:
          *
            \verbatim
            [[1, 5, 2, 4], [3, 1, 4, 6], [5, 3, 6, 2]]
            \endverbatim
          *
+         * See pd() for a full description of planar diagram codes (and
+         * in particular, what these integers represent).
+         *
          * Regina imposes the following restrictions when reconstructing
          * a link from a planar diagram code:
          *
-         * - The strands must be labelled 1, 2, ..., 2<i>n</i>
-         *   (i.e., they cannot be arbitrary natural numbers with "gaps",
-         *   and the numbering cannot use a different starting point).
+         * - The integers used in the input sequence (which denote the
+         *   2<i>n</i> strands in the link diagram) must be in the range
+         *   1, 2, ..., 2<i>n</i>.  That is, they cannot be arbitrary natural
+         *   numbers with "gaps", and the numbering of strands cannot use a
+         *   different starting point.
          *
-         * Internally, Regina numbers crossings and components (but not
-         * strands).  It will do this as follows:
+         * When Regina builds the resulting link, it numbers the crossings
+         * and components (but not the strands).  It will do this as follows:
          *
-         * - Regina will number crossings 0, 1, ..., \a n in the order that
-         *   they appear in the sequence.
+         * - Each 4-tuple in the given sequence represents a single crossing.
+         *   Regina will number the crossings 0, 1, ..., \a n in the same
+         *   order as the corresponding 4-tuples appear in the sequence.
          *
-         * - The strand with the lowest index in the planar diagram code
-         *   (i.e., strand 1) will become component 0 in Regina, and
-         *   that strand will become the component's starting point.
-         *   Of the strands \e not used in that component, the strand
-         *   with the lowest remaining index in the planar diagram code
-         *   will become component 1 in Regina, and that strand will
-         *   become the component's starting point, and so on.
+         * - The integers in the given sequence represent strands in the
+         *   link diagram.  The strand numbered 1 will become the starting
+         *   point of component 0 in the final link.  Of the strands not
+         *   in that component, the lowest numbered strand remaining
+         *   will become the starting point of component 1, and so on.
          *
          * - In particular be aware that StrandRef::id() will in general
          *   have no relation to the strand numbers used in the planar
          *   diagram code.
          *
          * There are two variants of this routine.  This variant takes a
-         * single string containing all 4<i>n</i> integers.  The other variant
-         * takes a sequence of tuples of integers, defined by a pair of
-         * iterators.
+         * single string containing all 4<i>n</i> integers (see below
+         * for how this string may be formatted).  The other variant takes a
+         * sequence of 4-tuples of integers, defined by a pair of iterators.
          *
          * In this variant (the string variant), the integers may be
          * separated by any blocks of non-digit characters, and the string
@@ -3693,7 +3687,7 @@ class REGINA_API Link : public Packet {
          *
          * \warning If the link contains an unknotted loop that sits
          * completely above all other link components (in other words,
-         * a link components that consists entire of over-crossings), then
+         * a link components that consists entirely of over-crossings), then
          * the orientation of this loop might not be reconstructed correctly.
          * This is unavoidable: the planar diagram code simply does not
          * contain this information.
