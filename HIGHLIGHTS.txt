@@ -6,6 +6,25 @@ Regina - A Normal Surface Theory Calculator
     For a full list of changes, including all changes to the C++/Python API,
     see the file CHANGES.txt.
 
+Version 6.1  [ TODO ]
+
+    Overview:
+        - Regina now uses the C++17 standard, and no longer uses boost at all.
+        - Major overhaul and modernisation of core sections of the C++ API.
+          Python users should be largely unaffected by this.
+        - All of the code that was deprecated in version 6.0 has now been
+          removed entirely.  See http://regina-normal.github.io/regina5to6.html
+          for instructions on how to update your scripts.
+    Features:
+        - Support for planar diagram codes for links.
+        - Links can now self-frame (by adding twists so that all components
+          have zero writhe).
+        - Identifies generalised angle structures for ideal triangulations.
+    Python:
+        - Access to more of Regina's C++ classes and routines.
+        - Better facilities for iteration, string representation, and
+          compatibility with Sage.
+
 Version 6.0  [ 11 January, 2021 ]
 
     - Lots more polish and cleaning up of unfinished business from 5.96, which
