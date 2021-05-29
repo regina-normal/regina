@@ -767,7 +767,8 @@ class REGINA_API Link : public Packet {
          * - oriented Gauss codes, as used by fromOrientedGauss();
          * - classical Gauss codes, as used by fromGauss();
          * - numeric or alphabetical Dowker-Thistlethwaite strings, as
-         *   used by fromDT().
+         *   used by fromDT();
+         * - planar diagram codes, as used by fromPD().
          *
          * This list may grow in future versions of Regina.
          *

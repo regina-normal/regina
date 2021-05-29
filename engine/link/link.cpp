@@ -82,6 +82,9 @@ Link::Link(const std::string& description) {
     } else if ((attempt = fromDT(description))) {
         swap(*attempt);
         setLabel(description);
+    } else if ((attempt = fromPD(description))) {
+        swap(*attempt);
+        setLabel(description);
     }
 
     delete attempt;
