@@ -2495,8 +2495,8 @@ class REGINA_API Link : public Packet {
          * Returns a classical Gauss code for this knot, presented as a
          * vector of integers.
          *
-         * The documentation for gauss() describes how this vector is
-         * constructed, what it represents, and what information it omits.
+         * See gauss() for a full description of classical Gauss codes as
+         * they are used in Regina, as well as their limitations.
          *
          * This routine returns machine-readable data (as a C++ vector);
          * in contrast, gauss() returns the same data in human-readable format
@@ -2512,26 +2512,19 @@ class REGINA_API Link : public Packet {
          * Writes a classical Gauss code for this knot to the given output
          * stream.
          *
-         * In general, the classical Gauss code does not carry enough
-         * information to uniquely reconstruct the knot.  For instance,
-         * both a knot and its reflection can be described by the same
-         * Gauss code; moreover, for composite knots, the Gauss code can
-         * describe inequivalent knots (even when allowing for reflections).
-         * If you need a code that specifies the knot uniquely, consider
-         * using the \e oriented Gauss code instead.
+         * See gauss() for a full description of classical Gauss codes as
+         * they are used in Regina, as well as their limitations.
          *
-         * Currently Regina only supports Gauss codes for knots,
-         * not multiple-component links.  If this link does not have
-         * precisely one component then nothing will be output at all.
+         * The output from this routine is precisely the string that
+         * would be returned by gauss().  In particular, the output does
+         * not contain any newlines.
          *
-         * The output will not contain any newlines.
+         * See also gauss(), which returns the Gauss code as a
+         * human-readable string, and gaussData(), which returns it
+         * as a machine-readable sequence of integers.
          *
-         * \note There is another variant of this routine that, instead
-         * of using an output stream, simply returns a string.
-         *
-         * \ifacespython This routine is not available in Python.  Instead,
-         * Python users can use the variant gauss(), which takes no
-         * arguments and returns the output as a string.
+         * \ifacespython Not present; instead use the variants
+         * gauss() or gaussData().
          *
          * @param out the output stream to which to write.
          */
@@ -2591,31 +2584,19 @@ class REGINA_API Link : public Packet {
          * Writes an oriented Gauss code for this knot to the given output
          * stream.
          *
-         * The oriented Gauss code, based on a format used by Andreeva et al.,
-         * is an extension of the classical Gauss code with additional
-         * characters to describe the orientation of the other strand
-         * passing by at each crossing.  For details of this format, see the
-         * documentation for fromOrientedGauss(const std::string&), which
-         * imports links in this format.
+         * See orientedGauss() for a full description of oriented Gauss codes
+         * as they are used in Regina.
          *
-         * The key advantage of using the oriented Gauss code (as opposed to
-         * the classical Gauss code) is that an oriented Gauss code always
-         * describes a unique knot, and moreover (for knots that are not
-         * equivalent to their reflections) it describes a unique reflection
-         * of that knot.
+         * The output from this routine is precisely the string that
+         * would be returned by orientedGauss().  In particular, the output
+         * does not contain any newlines.
          *
-         * Currently Regina only supports Gauss codes for knots,
-         * not multiple-component links.  If this link does not have
-         * precisely one component then nothing will be output at all.
+         * See also orientedGauss(), which returns the oriented Gauss code as
+         * a human-readable string, and orientedGaussData(), which returns it
+         * as a machine-readable sequence of tokens.
          *
-         * The output will not contain any newlines.
-         *
-         * \note There is another variant of this routine that, instead
-         * of using an output stream, simply returns a string.
-         *
-         * \ifacespython This routine is not available in Python.  Instead,
-         * Python users can use the variant orientedGauss(), which takes no
-         * arguments and returns the output as a string.
+         * \ifacespython Not present; instead use the variants
+         * orientedGauss() or orientedGaussData().
          *
          * @param out the output stream to which to write.
          */
@@ -2679,23 +2660,22 @@ class REGINA_API Link : public Packet {
         std::string jenkins() const;
 
         /**
-         * Exports this link to the given output stream using the text
-         * representation described by Bob Jenkins.  Jenkins uses this
-         * representation in his HOMFLY polynomial software, which is available
-         * online from <http://burtleburtle.net/bob/knot/homfly.html>.
+         * Exports this knot to the given output stream using Bob Jenkins'
+         * text format.
          *
-         * Jenkins' text format uses a sequence of integers separated by
-         * whitespace.  For details of this format, see the documentation
-         * from fromJenkins(), which imports links using this format.
+         * See jenkins() for a full description of Jenkins' format as it
+         * is used in Regina.
          *
-         * The output will contain multiple lines, and will end in a newline.
+         * The output from this routine is precisely the string that
+         * would be returned by jenkins().  In particular, the output will
+         * typically span multiple lines, and will finish with a newline.
          *
-         * \note There is another variant of this routine that, instead
-         * of using an output stream, simply returns a string.
+         * See also jenkins(), which exports this link in Jenkins' format
+         * as a human-readable string, and jenkinsData(), which exports it
+         * as a machine-readable sequence of integers.
          *
-         * \ifacespython This routine is not available in Python.  Instead,
-         * Python users can use the variant jenkins(), which takes no
-         * arguments and returns the output as a string.
+         * \ifacespython Not present; instead use the variants
+         * jenkins() or jenkinsData().
          *
          * @param out the output stream to which to write.
          */
@@ -2752,44 +2732,24 @@ class REGINA_API Link : public Packet {
          * Writes this knot to the given output stream using
          * Dowker-Thistlethwaite notation.
          *
-         * For an <i>n</i>-crossing knot, Regina supports two variants
-         * of this notation:
+         * See dt(bool) for a full description of Dowker-Thistlethwaite
+         * notation as it is used in Regina, as well as its limitations.
          *
-         * - a \e numerical variant (the default), which is a sequence of
-         *   \a n even signed integers as described (amongst other places) in
-         *   Section 2.2 of C. C. Adams, "The knot book", W. H. Freeman & Co.,
-         *   1994;
+         * This routine can write either numerical or alphabetical
+         * Dowker-Thistlethwaite notation, as indicated by the optional
+         * argument \a alpha.
          *
-         * - an \e alphabetical variant, which transforms the numerical
-         *   notation into a sequence of letters by replacing positive
-         *   integers (2,4,6,...) with lower-case letters (\c a,\c b,\c c,...),
-         *   and replacing negative integers (-2,-4,-6,...) with upper-case
-         *   letters (\c A,\c B,\c C,...).  This alphabetical variant
-         *   can only be used for knots with 26 crossings or fewer; for
-         *   larger knots this routine will output nothing at all if
-         *   the alphabetical variant is requested.
+         * The output from this routine is precisely the string that
+         * would be returned by dt(bool).  In particular, the output does
+         * not contain any newlines.
          *
-         * In general, Dowker-Thistlethwaite notation does not carry enough
-         * information to uniquely reconstruct the knot.  For instance,
-         * both a knot and its reflection can be described by the same
-         * sequence of integers; moreover, for composite knots, the same
-         * Dowker-Thistlethwaite notation can describe inequivalent knots
-         * (even when allowing for reflections).  If you need notation that
-         * specifies the knot uniquely, consider using the oriented Gauss code
-         * instead, as output by orientedGauss().
+         * See also dtBool(bool), which can export either the numerical
+         * or alphabetical variant of Dowker-Thistlethwaite notation as a
+         * human-readable string, and dtData(), which exports the numerical
+         * variant only as a machine-readable sequence of integers.
          *
-         * Currently Regina only supports Dowker-Thistlethwaite notation for
-         * knots, not multiple-component links.  If this link does not have
-         * precisely one component then nothing will be output at all.
-         *
-         * The output will not contain any newlines.
-         *
-         * \note There is another variant of this routine that, instead
-         * of using an output stream, simply returns a string.
-         *
-         * \ifacespython This routine is not available in Python.  Instead,
-         * Python users can use the variant dt(), which takes just the optional
-         * \a alpha argument and returns the output as a string.
+         * \ifacespython Not present; instead use the variants
+         * dt(bool) or dtData().
          *
          * @param out the output stream to which to write.
          * @param alpha \c true to use alphabetical notation, or \c false
@@ -2899,6 +2859,28 @@ class REGINA_API Link : public Packet {
          * @return the planar diagram code in machine-readable form.
          */
         std::vector<std::array<int, 4>> pdData() const;
+
+        /**
+         * Writes a planar diagram code for this link to the given output
+         * stream.
+         *
+         * See pd() for a full description of planar diagram codes as
+         * they are used in Regina, as well as their limitations.
+         *
+         * The output from this routine is precisely the string that
+         * would be returned by pd().  In particular, the output does
+         * not contain any newlines.
+         *
+         * See also pd(), which returns the planar diagram code as a
+         * human-readable string, and pdData(), which returns it
+         * as a machine-readable sequence of 4-tuples of integers.
+         *
+         * \ifacespython Not present; instead use the variants
+         * pd() or pdData().
+         *
+         * @param out the output stream to which to write.
+         */
+        void pd(std::ostream& out) const;
 
         /**
          * Outputs the underlying planar 4-valent multigraph using the
@@ -3519,8 +3501,8 @@ class REGINA_API Link : public Packet {
            bca
            \endverbatim
          *
-         * See dt() for a full description of Dowker-Thistlethwaite notation
-         * as it is used in Regina, as well as its limitations.
+         * See dt(bool) for a full description of Dowker-Thistlethwaite
+         * notation as it is used in Regina, as well as its limitations.
          *
          * There are two variants of this routine.  This variant takes a single
          * string, which is either (i) the alphabetical notation, in which any
@@ -3564,8 +3546,8 @@ class REGINA_API Link : public Packet {
          * Creates a new knot from numerical Dowker-Thistlethwaite notation,
          * presented as an integer sequence.
          *
-         * See dt() for a full description of Dowker-Thistlethwaite notation as
-         * it is used in Regina, and see fromDT(const std::string&)
+         * See dt(bool) for a full description of Dowker-Thistlethwaite
+         * notation as it is used in Regina, and see fromDT(const std::string&)
          * for a detailed discussion of how Regina reconstructs knots
          * from such notation.
          *

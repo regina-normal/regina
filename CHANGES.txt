@@ -125,8 +125,8 @@ Version 6.1  [ TODO ]
               types.
         Class Link:
             - New routines writheOfComponent() and selfFrame().
-            - New routines pd(), pdData() and fromPD() to work with planar
-              diagram codes,
+            - New routines pd(), pdData(), pd(std::ostream&) and fromPD() to
+              work with planar diagram codes,
             - New routine gaussData() for generating codes in machine-readable
               format.
             - New routine fromJenkins(Iterator, Iterator) for parsing codes in

@@ -126,9 +126,14 @@ std::vector<std::array<int, 4>> Link::pdData() const {
 }
 
 std::string Link::pd() const {
+    std::ostringstream out;
+    pd(out);
+    return out.str();
+}
+
+void Link::pd(std::ostream& out) const {
     const int n = crossings_.size();
 
-    std::ostringstream out;
     out << "PD[";
     bool nonEmpty = false;
 
@@ -187,7 +192,6 @@ std::string Link::pd() const {
     delete[] strand;
 
     out << ']';
-    return out.str();
 }
 
 } // namespace regina
