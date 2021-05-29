@@ -207,6 +207,7 @@ void addLink(pybind11::module_& m) {
         .def("brief", &Link::brief)
         .def("gauss",
             overload_cast<>(&Link::gauss, pybind11::const_))
+        .def("gaussData", &Link::gaussData)
         .def("orientedGauss",
             overload_cast<>(&Link::orientedGauss, pybind11::const_))
         .def("jenkins",

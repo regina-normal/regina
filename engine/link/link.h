@@ -2436,29 +2436,77 @@ class REGINA_API Link : public Packet {
         std::string brief() const;
 
         /**
-         * Outputs a classical Gauss code for this knot.
+         * Outputs a classical Gauss code for this knot, presented as a string.
          *
-         * In general, the classical Gauss code does not carry enough
-         * information to uniquely reconstruct the knot.  For instance,
-         * both a knot and its reflection can be described by the same
-         * Gauss code; moreover, for composite knots, the Gauss code can
-         * describe inequivalent knots (even when allowing for reflections).
-         * If you need a code that specifies the knot uniquely, consider
-         * using the \e oriented Gauss code instead.
+         * Classical Gauss codes essentially describe the 4-valent graph
+         * of a knot but not the particular embedding in the plane.
+         * These codes come with two major restrictions:
          *
-         * Currently Regina only supports Gauss codes for knots,
-         * not multiple-component links.  If this link does not have
-         * precisely one component then the empty string will be returned.
+         * - In general, they do not carry enough information to uniquely
+         *   reconstruct a knot.  For instance, both a knot and its reflection
+         *   can be described by the same Gauss code; moreover, for composite
+         *   knots, the Gauss code can describe inequivalent knots (even when
+         *   allowing for reflections).
          *
-         * The string will not contain any newlines.
+         * - Parsing a Gauss code is complex, since it requires an embedding
+         *   to be deduced using some variant of a planarity testing algorithm.
          *
-         * \note There is another variant of this routine that, instead
-         * of returning a string, writes directly to an output stream.
+         * If you need a code that specifies the knot uniquely and/or that
+         * is fast to parse, consider using the \e oriented Gauss code instead,
+         * which resolves both of these issues.
          *
-         * @return a classical Gauss code for this knot, or the empty
-         * string if this is a link with zero or multiple components.
+         * A Gauss code for an <i>n</i>-crossing knot is described by
+         * a sequence of 2<i>n</i> positive and negative integers,
+         * representing strands that pass over and under crossings
+         * respectively.  The code is constructed as follows:
+         *
+         * - Label the crossings arbitrarily as 1, 2, ..., \a n.
+         *
+         * - Start at some point on the knot and follow it around.
+         *   Whenever you pass crossing \a k, write the integer
+         *   <tt><i>k</i></tt> if you pass over the crossing,
+         *   or <tt>-<i>k</i></tt> if you pass under the crossing.
+         *
+         * As an example, you can represent the trefoil using the code:
+         *
+           \verbatim
+           1 -2 3 -1 2 -3
+           \endverbatim
+         *
+         * Currently Regina only supports Gauss codes for knots (i.e., links
+         * with exactly one component).  If you attempt to create a Gauss code
+         * for a link with zero or multiple components, an empty code will be
+         * returned.
+         *
+         * This routine formats the list of integers as a string.  The integers
+         * will be separated by single spaces, and there will be no newlines.
+         *
+         * The routine gaussData() returns this same data in machine-readable
+         * format (as a C++ vector), instead of the human-readable format
+         * used here (a string).  There is also another variant of gauss()
+         * that writes directly to an output stream.
+         *
+         * @return a classical Gauss code as described above, or the empty
+         * string if this link has zero or multiple components.
          */
         std::string gauss() const;
+
+        /**
+         * Returns a classical Gauss code for this knot, presented as a
+         * vector of integers.
+         *
+         * The documentation for gauss() describes how this vector is
+         * constructed, what it represents, and what information it omits.
+         *
+         * This routine returns machine-readable data (as a C++ vector);
+         * in contrast, gauss() returns the same data in human-readable format
+         * (as a string).
+         *
+         * @return a classical Gauss code for this knot in machine-readable
+         * form, or the empty vector if this link has zero or multiple
+         * components.
+         */
+        std::vector<int> gaussData() const;
 
         /**
          * Writes a classical Gauss code for this knot to the given output
@@ -3040,45 +3088,34 @@ class REGINA_API Link : public Packet {
          *
          * Classical Gauss codes essentially describe the 4-valent graph
          * of a knot but not the particular embedding in the plane.  As
-         * a result, there can be ambiguity in the orientation of the
-         * diagram, and (for composite knots) even the topology of the
-         * knot itself.  Furthermore, parsing a Gauss code is complex
-         * since it requires an embedding to be deduced using some variant
-         * of a planarity testing algorithm.  These issues are resolved
-         * using \e oriented Gauss codes, as used by the routines
-         * orientedGauss() and fromOrientedGauss().
+         * a result, there can be topological ambiguities when a knot is
+         * reconstructed from a gauss code; these are described in the
+         * warnings below.
          *
          * The Gauss code for an <i>n</i>-crossing knot is described by
-         * a sequence of 2<i>n</i> positive and negative integers,
-         * representing strands that pass over and under crossings
-         * respectively.  Regina's implementation of Gauss codes comes
-         * with the following restrictions:
+         * a sequence of 2<i>n</i> positive and negative integers.
+         * As an example, you can construct the trefoil using the code:
          *
-         * - It can only be used for knots (i.e., links with exactly one
+           \verbatim
+           1 -2 3 -1 2 -3
+           \endverbatim
+         *
+         * See gauss() for a full description of classical Gauss codes as
+         * they are used in Regina.
+         *
+         * Regina imposes the following restrictions when reconstructing
+         * a knot from a classical Gauss code:
+         *
+         * - This can only be done for knots (i.e., links with exactly one
          *   component).
          *
          * - The crossings of the knot must be labelled 1, 2, ..., \a n
          *   (i.e., they cannot be arbitrary natural numbers with "gaps",
          *   and the numbering cannot use a different starting point).
          *
-         * The format works as follows:
-         *
-         * - Label the crossings arbitrarily as 1, 2, ..., \a n.
-         *
-         * - Start at some point on the knot and follow it around.
-         *   Whenever you pass crossing \a k, write the integer
-         *   <tt><i>k</i></tt> if you pass over the crossing,
-         *   or <tt>-<i>k</i></tt> if you pass under the crossing.
-         *
          * Be aware that, once the knot has been constructed, the crossings
          * 1, ..., \a n will have been reindexed as 0, ..., <i>n</i>-1
          * (since every Link object numbers its crossings starting from 0).
-         *
-         * As an example, you can construct the trefoil using the code:
-         *
-           \verbatim
-           1 -2 3 -1 2 -3
-           \endverbatim
          *
          * There are two variants of this routine.  This variant takes a
          * single string, where the integers have been combined together and
@@ -3114,14 +3151,15 @@ class REGINA_API Link : public Packet {
         /**
          * Creates a new knot from a classical Gauss code.
          *
-         * See fromGauss(const std::string&) for a detailed
-         * description of this format as it is used in Regina.
+         * See gauss() for a full description of classical Gauss codes as
+         * they are used in Regina, and see fromGauss(const std::string&)
+         * for a detailed discussion of how Regina reconstructs knots
+         * from such codes.
          *
-         * There are two variants of this routine.  The other variant
-         * (fromGauss(const std::string&), which offers more
-         * detailed documentation) takes a single string, where the integers
-         * have been combined together and separated by whitespace.  This
-         * variant takes a sequence of integers, defined by a pair of iterators.
+         * This routine is a variant of fromGauss(const std::string&) which,
+         * instead of taking a human-readable string, takes a machine-readable
+         * sequence of integers.  This sequence is given by passing a
+         * pair of begin/end iterators.
          *
          * \pre \a Iterator is a random access iterator type, and
          * dereferencing such an iterator produces an integer.

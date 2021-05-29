@@ -134,6 +134,28 @@ void Link::gauss(std::ostream& out) const {
     } while (s != start);
 }
 
+std::vector<int> Link::gaussData() const {
+    if (components_.size() != 1)
+        return std::vector<int>();
+    if (crossings_.empty())
+        return std::vector<int>();
+
+    std::vector<int> ans;
+    ans.reserve(crossings_.size() * 2);
+
+    StrandRef start = components_.front();
+    StrandRef s = start;
+    do {
+        if (s.strand() == 0)
+            ans.push_back(-static_cast<int>(s.crossing()->index() + 1));
+        else
+            ans.push_back(s.crossing()->index() + 1);
+        ++s;
+    } while (s != start);
+
+    return ans;
+}
+
 std::string Link::orientedGauss() const {
     std::ostringstream out;
     orientedGauss(out);
