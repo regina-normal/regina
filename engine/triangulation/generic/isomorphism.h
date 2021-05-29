@@ -135,6 +135,33 @@ class Isomorphism : public detail::IsomorphismBase<dim> {
          * @param src the isomorphism to move.
          */
         Isomorphism(Isomorphism&& src) noexcept = default;
+        /**
+         * Copies the given isomorphism into this isomorphism.
+         *
+         * It does not matter if this and the given isomorphism use different
+         * numbers of simplices; if they do then this isomorphism will be
+         * resized as a result.
+         *
+         * This operator induces a deep copy of \a src.
+         *
+         * @param src the isomorphism to copy.
+         * @return a reference to this isomorphism.
+         */
+        Isomorphism& operator = (const Isomorphism& src) = default;
+        /**
+         * Moves the given isomorphism into this isomorphism.
+         * This is a fast (constant time) operation.
+         *
+         * It does not matter if this and the given isomorphism use different
+         * numbers of simplices; if they do then this isomorphism will be
+         * resized as a result.
+         *
+         * The isomorphism that is passed (\a src) will no longer be usable.
+         *
+         * @param src the isomorphism to move.
+         * @return a reference to this isomorphism.
+         */
+        Isomorphism& operator = (Isomorphism&& src) noexcept = default;
 };
 
 /*@}*/
