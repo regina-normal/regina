@@ -3084,7 +3084,8 @@ class REGINA_API Link : public Packet {
         static Link* fromSig(const std::string& sig);
 
         /**
-         * Creates a new knot from a classical Gauss code.
+         * Creates a new knot from a classical Gauss code, presented as
+         * a string.
          *
          * Classical Gauss codes essentially describe the 4-valent graph
          * of a knot but not the particular embedding in the plane.  As
@@ -3149,7 +3150,8 @@ class REGINA_API Link : public Packet {
         static Link* fromGauss(const std::string& str);
 
         /**
-         * Creates a new knot from a classical Gauss code.
+         * Creates a new knot from a classical Gauss code, presented as
+         * an integer sequence.
          *
          * See gauss() for a full description of classical Gauss codes as
          * they are used in Regina, and see fromGauss(const std::string&)
@@ -3195,7 +3197,8 @@ class REGINA_API Link : public Packet {
         static Link* fromGauss(Iterator begin, Iterator end);
 
         /**
-         * Creates a new knot from an "oriented" variant of the Gauss code.
+         * Creates a new knot from an "oriented" variant of the Gauss code,
+         * presented as string.
          *
          * Classical Gauss codes essentially describe the 4-valent graph
          * of a knot but not the particular embedding in the plane.  As
@@ -3280,30 +3283,39 @@ class REGINA_API Link : public Packet {
         static Link* fromOrientedGauss(const std::string& str);
 
         /**
-         * Creates a new knot from an "oriented" variant of the Gauss code.
+         * Creates a new knot from an "oriented" variant of the Gauss code,
+         * presented as a sequence of string tokens.
          *
-         * This format is described by Andreeva et al. at
-         * <http://www.javaview.de/services/knots/doc/description.html#gc>,
-         * though Regina limits its use to knots (i.e., one-component links),
-         * and insists that the crossings be numbered 1, ..., \a n (not
-         * arbitrary natural numbers).
+         * See orientedGauss() for a full description of oriented Gauss codes
+         * as they are used in Regina, and see
+         * fromOrientedGauss(const std::string&) for a detailed discussion
+         * of how Regina reconstructs knots from such codes.
          *
-         * See fromOrientedGauss(const std::string&) for a detailed
-         * description of this format as it is used in Regina.
+         * This routine is a variant of fromOrientedGauss(const std::string&)
+         * which, instead of taking a human-readable string, takes a
+         * machine-readable sequence of string tokens.  This sequence is
+         * given by passing a pair of begin/end iterators.
          *
-         * There are two variants of this routine.  The other variant
-         * (fromOrientedGauss(const std::string&), which offers more
-         * detailed documentation) takes a single string, where the tokens
-         * have been combined together and separated by whitespace.  This
-         * variant takes a sequence of tokens, defined by a pair of iterators.
+         * The tokens in the input sequence should be the individual tokens of
+         * the form <tt>+&lt;<i>k</i></tt>, <tt>-&lt;<i>k</i></tt>,
+         * <tt>+&gt;<i>k</i></tt> or <tt>-&gt;<i>k</i></tt> that would normally
+         * be joined with whitespace to form a complete oriented Gauss code.
+         * For example, to describe the left-hand trefoil, the input sequence
+         * might contain the six tokens:
+         *
+           \verbatim
+           +>1 -<2 +>3 -<1 +>2 -<3
+           \endverbatim
+         *
+         * Each individual token should \e not contain any whitespace;
+         * otherwise this routine may fail to parse the token(s) and
+         * could return \c null as a result.
          *
          * \pre \a Iterator is a random access iterator type.
          *
          * \pre Dereferencing such an iterator produces either a
          * C-style string (which can be cast to <tt>const char*</tt>) or a
          * C++-style string (which can be cast to <tt>const std::string&</tt>).
-         *
-         * \pre The tokens in the input sequence do not contain any whitespace.
          *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the diagram.
@@ -3437,7 +3449,7 @@ class REGINA_API Link : public Packet {
 
         /**
          * Creates a new knot from either alphabetical or numerical
-         * Dowker-Thistlethwaite notation.
+         * Dowker-Thistlethwaite notation, presented as a string.
          *
          * For an <i>n</i>-crossing knot, the input may be in one of two
          * forms:
@@ -3510,26 +3522,23 @@ class REGINA_API Link : public Packet {
         static Link* fromDT(const std::string& str);
 
         /**
-         * Creates a new knot from an integer sequence using
-         * the numerical variant of Dowker-Thistlethwaite notation.
+         * Creates a new knot from numerical Dowker-Thistlethwaite notation,
+         * presented as an integer sequence.
          *
-         * For an <i>n</i>-crossing knot, this must be a sequence of \a n even
-         * signed integers as described (amongst other places) in Section 2.2
-         * of C. C. Adams, "The knot book", W. H. Freeman & Co., 1994.
+         * See dt() for a full description of Dowker-Thistlethwaite notation as
+         * it is used in Regina, and see fromDT(const std::string&)
+         * for a detailed discussion of how Regina reconstructs knots
+         * from such notation.
          *
-         * See fromDT(const std::string&) for a detailed
-         * description of this format as it is used in Regina.
+         * This routine is a variant of fromDT(const std::string&) which,
+         * instead of taking a human-readable string, takes a machine-readable
+         * sequence of integers.  This sequence is given by passing a
+         * pair of begin/end iterators.
          *
-         * Regina can also reconstruct a knot from \e alphabetical
-         * Dowker-Thistlethwaite notation, but for this you must use the other
-         * version of this routine that takes a single string argument.
-         *
-         * For numerical Dowker-Thistlethwaite notation, there are two variants
-         * of this routine that you can use.  The other variant
-         * (fromDT(const std::string&), which offers more
-         * detailed documentation) takes a single string, where the integers
-         * have been combined together and separated by whitespace.  This
-         * variant takes a sequence of integers, defined by a pair of iterators.
+         * This variant of fromDT() can only work with \e numerical
+         * Dowker-Thistlethwaite notation.  Regina does understand alphabetic
+         * Dowker-Thistlethwaite notation, but for this you will need to use
+         * the string-based variant of fromDT().
          *
          * \pre \a Iterator is a random access iterator type, and
          * dereferencing such an iterator produces an integer.
@@ -3568,7 +3577,7 @@ class REGINA_API Link : public Packet {
         static Link* fromDT(Iterator begin, Iterator end);
 
         /**
-         * Creates a new link from a planar diagram code.
+         * Creates a new link from a planar diagram code, presented as a string.
          *
          * A planar diagram code for a link encodes the local information
          * at each crossing.  Unlike other codes such as Gauss codes and
@@ -3661,17 +3670,18 @@ class REGINA_API Link : public Packet {
         static Link* fromPD(const std::string& str);
 
         /**
-         * Creates a new link from a planar diagram code.
+         * Creates a new link from a planar diagram code, presented as a
+         * sequence of 4-tuples.
          *
-         * See fromPD(const std::string&) for a detailed description of
-         * planar diagram codes as they are used in Regina.
+         * See pd() for a full description of planar diagram codes as
+         * they are used in Regina, and see fromPD(const std::string&)
+         * for a detailed discussion of how Regina reconstructs links
+         * from such codes.
          *
-         * There are two variants of this routine.  The other variant
-         * (fromPD(const std::string&), which offers more detailed
-         * documentation) takes a single string, where the integers have been
-         * combined together and separated by non-digit characters.  This
-         * variant takes a sequence of 4-tuples of integers, defined by a
-         * pair of iterators.
+         * This routine is a variant of fromPD(const std::string&) which,
+         * instead of taking a human-readable string, takes a machine-readable
+         * sequence of 4-tuples of integers.  This sequence is given by
+         * passing a pair of begin/end iterators.
          *
          * \pre \a Iterator is a random access iterator type.
          *
