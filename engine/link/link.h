@@ -2692,11 +2692,11 @@ class REGINA_API Link : public Packet {
         void dt(std::ostream& out, bool alpha = false) const;
 
         /**
-         * Returns a planar diagram code for this link, presented as
-         * vector of 4-tuples.
+         * Returns a planar diagram code for this link, presented as a string.
          *
          * Planar diagram codes encode the local information at each
-         * crossing.  They are available for links as well as knots.
+         * crossing, and present this information as a list of 4-tuples.
+         * They are available for links as well as knots.
          *
          * When reconstructing a link from a planar diagram code, there
          * are two ways in which information may be lost:
@@ -2745,22 +2745,8 @@ class REGINA_API Link : public Packet {
          *   the same counter-clockwise convention that is used by the
          *   Knot Atlas and SnapPy.
          *
-         * See pd() for a variant of this routine that returns a string.
-         *
-         * @return the planar diagram code, as described above.
-         */
-        std::vector<std::array<int, 4>> pdData() const;
-
-        /**
-         * Returns a planar diagram code for this link, presented as
-         * a string.
-         *
-         * A planar diagram code consists of a list of 4-tuples; see
-         * pdData() for details on how this list is constructed, what it
-         * represents, and what information it omits.
-         *
-         * This routine formats the list as a string, in a way that is
-         * consistent with the description in the Knot Atlas at
+         * This routine formats the list of 4-tuples as a string, in a way
+         * that is consistent with the description in the Knot Atlas at
          * http://katlas.org/wiki/Planar_Diagrams .
          *
          * In particular, each 4-tuple will be formatted with square
@@ -2772,13 +2758,28 @@ class REGINA_API Link : public Packet {
            PD[X[1, 5, 2, 4], X[3, 1, 4, 6], X[5, 3, 6, 2]]
            \endverbatim
          *
-         * See pdData() for a variant of this routine that returns
-         * machine-readable data as opposed to human-readable data
-         * (i.e., a vector of 4-tuples of integers).
+         * The routine pdData() returns this same data in machine-readable
+         * format (as a C++ vector), instead of the human-readable format
+         * used here (a string).
          *
-         * @return the planar diagram code in string form.
+         * @return the planar diagram code, as described above.
          */
         std::string pd() const;
+
+        /**
+         * Returns a planar diagram code for this link, presented as
+         * vector of 4-tuples.
+         *
+         * The documentation for pd() describes how this vector is constructed,
+         * what it represents, and what information it omits.
+         *
+         * This routine returns machine-readable data (as a C++ vector);
+         * in contrast, pd() returns the same data in human-readable format
+         * (as a string).
+         *
+         * @return the planar diagram code in machine-readable form.
+         */
+        std::vector<std::array<int, 4>> pdData() const;
 
         /**
          * Outputs the underlying planar 4-valent multigraph using the
