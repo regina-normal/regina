@@ -2392,9 +2392,9 @@ class REGINA_API Link : public Packet {
         /*@{*/
 
         /**
-         * Outputs this link in Regina's own brief format.
+         * Outputs this link in Regina's own brief write-only format.
          * This format is concise, but contains enough information to
-         * reconstruct the link.
+         * manually reconstruct the complete link diagram.
          *
          * This format cannot (yet) be used to read links back into Regina,
          * and so it is not good for external storage, or for passing links
@@ -2403,7 +2403,7 @@ class REGINA_API Link : public Packet {
          * was used to ensure that links with being created and/or manipulated
          * correctly.
          *
-         * The output will contains the following elements, separated by
+         * The output will contain the following elements, separated by
          * single spaces:
          *
          * - a sequence of signs (<tt>+</tt> or <tt>-</tt>), concatenated
@@ -2427,7 +2427,7 @@ class REGINA_API Link : public Packet {
            \endverbatim
          *
          * As a special case, if the link contains no crossings, then
-         * the format will not begin with a space; instead it will
+         * the output will not begin with a space; instead it will
          * simply be a sequence of the form <tt>( ) ( ) ... ( )</tt>.
          *
          * The string will not end in a newline.
@@ -2437,7 +2437,7 @@ class REGINA_API Link : public Packet {
         std::string brief() const;
 
         /**
-         * Outputs a classical Gauss code for this knot, presented as a string.
+         * Returns a classical Gauss code for this knot, presented as a string.
          *
          * Classical Gauss codes essentially describe the 4-valent graph
          * of a knot but not the particular embedding in the plane.
@@ -2475,9 +2475,9 @@ class REGINA_API Link : public Packet {
            \endverbatim
          *
          * Currently Regina only supports Gauss codes for knots (i.e., links
-         * with exactly one component).  If you attempt to create a Gauss code
-         * for a link with zero or multiple components, an empty code will be
-         * returned.
+         * with exactly one component).  If you attempt to create a classical
+         * Gauss code for a link with zero or multiple components, an empty
+         * string will be returned.
          *
          * This routine formats the list of integers as a string.  The integers
          * will be separated by single spaces, and there will be no newlines.
@@ -2532,7 +2532,7 @@ class REGINA_API Link : public Packet {
         void gauss(std::ostream& out) const;
 
         /**
-         * Outputs an oriented Gauss code for this knot.
+         * Returns an oriented Gauss code for this knot, presented as a string.
          *
          * The oriented Gauss code, based on a format used by Andreeva et al.,
          * is an extension of the classical Gauss code with additional
@@ -2560,23 +2560,29 @@ class REGINA_API Link : public Packet {
          *       the crossing passes from right to left, and <tt>&gt;</tt>
          *       indicates that the other strand passes from left to right.
          *
-         * As an example, you can construct the left-hand trefoil
-         * using the following code:
+         * As an example, you can represent the left-hand trefoil using the
+         * code:
          *
            \verbatim
            +>1 -<2 +>3 -<1 +>2 -<3
            \endverbatim
          *
-         * Currently Regina only supports Gauss codes for knots,
-         * not multiple-component links.  If this link does not have
-         * precisely one component then the empty string will be returned.
+         * Currently Regina only supports Gauss codes for knots (i.e., links
+         * with exactly one component).  If you attempt to create an oriented
+         * Gauss code for a link with zero or multiple components, an empty
+         * string will be returned.
          *
-         * The string will not contain any newlines.
+         * This routine joins the tokens together as a single string.  The
+         * tokens will be separated by single spaces, and there will be no
+         * newlines.
          *
-         * \note There is another variant of this routine that, instead
-         * of returning a string, writes directly to an output stream.
+         * The routine orientedGaussData() returns this same data in
+         * machine-readable format (as a C++ vector of string tokens), instead
+         * of the human-readable format used here (a single long string).
+         * There is also another variant of orientedGauss() that writes
+         * directly to an output stream.
          *
-         * @return an oriented Gauss code for this knot, or the empty
+         * @return an oriented Gauss code as described above, or the empty
          * string if this is a link with zero or multiple components.
          */
         std::string orientedGauss() const;
@@ -2633,30 +2639,35 @@ class REGINA_API Link : public Packet {
         void orientedGauss(std::ostream& out) const;
 
         /**
-         * Exports this link as a string using the text representation
-         * described by Bob Jenkins.  Jenkins uses this representation in his
-         * HOMFLY polynomial software, which is available online from
+         * Exports this link using Bob Jenkins' text format, returning a
+         * single string.
+         *
+         * Jenkins' format is lengthy.  However, in contrast to classical
+         * Gauss codes or Dowker-Thistlethwaite notation, there are no
+         * topological ambiguities in the format, and reconstructing a link
+         * from Jenkins' format is simple.  Moreover, the format is suitable
+         * for links with any number of components.
+         *
+         * Jenkins' format is described in his HOMFLY polynomial software,
+         * which is available online from
          * <http://burtleburtle.net/bob/knot/homfly.html>.
+         * The format consists of a sequence of integers separated by
+         * whitespace, constructed as follows:
          *
-         * In Jenkins' format, a link is described by a sequence of integers
-         * separated by whitespace.
+         * - Label the crossings arbitrarily as 0, 1, ..., <i>n</i>-1.
          *
-         * We assume that there are \a n crossings in the link, labelled
-         * arbitrarily as 0, 1, ..., <i>n</i>-1.  The sequence of
-         * integers will contain, in order:
+         * - Write the number of components in the link.
          *
-         * - the number of components in the link;
+         * - Next, for each link component:
+         *   + write the number of times you pass a crossing when traversing
+         *     the component (i.e., the length of the component);
+         *   + write two integers for each crossing that you pass in such a
+         *     traversal: the crossing label, and then +1 if you pass over
+         *     the crossing or -1 if you pass under the crossing.
          *
-         * - for each link component:
-         *   + the number of times you pass a crossing when traversing the
-         *     component (i.e., the length of the component);
-         *   + two integers for each crossing that you pass in such a traversal:
-         *     the crossing label, and then either +1 or -1 according to
-         *     whether you pass over or under the crossing respectively;
-         *
-         * - for each crossing:
-         *   + the crossing label;
-         *   + the sign of the crossing (either +1 or -1).
+         * - Finally, for each crossing:
+         *   + write the crossing label;
+         *   + write the sign of the crossing (either +1 or -1).
          *
          * As an example, you could describe the left-hand trefoil
          * using the following sequence:
@@ -2682,15 +2693,17 @@ class REGINA_API Link : public Packet {
          * (i.e., the "formatting" of the sequence) may change in future
          * versions of Regina.
          *
-         * \note There is another variant of this routine that, instead
-         * of returning a string, writes directly to an output stream.
+         * The routine jenkinsData() returns this same data in machine-readable
+         * format (as a C++ vector), instead of the human-readable format
+         * used here (a string).  There is also another variant of jenkins()
+         * that writes directly to an output stream.
          *
-         * @return a description of this link using Jenkins' format.
+         * @return a description of this link using Jenkins' text format.
          */
         std::string jenkins() const;
 
         /**
-         * Exports this knot using Bob Jenkins' text format, returning a
+         * Exports this link using Bob Jenkins' text format, returning a
          * vector of integers.
          *
          * See jenkins() for a full description of Jenkins' format as it
@@ -2706,7 +2719,7 @@ class REGINA_API Link : public Packet {
         std::vector<int> jenkinsData() const;
 
         /**
-         * Exports this knot to the given output stream using Bob Jenkins'
+         * Exports this link to the given output stream using Bob Jenkins'
          * text format.
          *
          * See jenkins() for a full description of Jenkins' format as it
@@ -2728,10 +2741,30 @@ class REGINA_API Link : public Packet {
         void jenkins(std::ostream& out) const;
 
         /**
-         * Outputs this knot using Dowker-Thistlethwaite notation.
+         * Exports this knot in either numerical or alphabetical
+         * Dowker-Thistlethwaite notation, returning a string.
+         *
+         * Like classical Gauss codes, Dowker-Thistlethwaite notation
+         * essentially describes the 4-valent graph of a knot but not the
+         * particular embedding in the plane.  It comes with two major
+         * restrictions:
+         *
+         * - In general, it does not carry enough information to uniquely
+         *   reconstruct a knot.  For instance, both a knot and its reflection
+         *   can be described by the same Dowker-Thistlethwaite notation;
+         *   moreover, for composite knots, the same notation can describe
+         *   inequivalent knots (even when allowing for reflections).
+         *
+         * - Parsing Dowker-Thistlethwaite notation is complex, since it
+         *   requires an embedding to be deduced using some variant of a
+         *   planarity testing algorithm.
+         *
+         * If you need a code that specifies the knot uniquely and/or that
+         * is fast to parse, consider using the \e oriented Gauss code instead,
+         * which resolves both of these issues.
          *
          * For an <i>n</i>-crossing knot, Regina supports two variants
-         * of this notation:
+         * of Dowker-Thistlethwaite notation:
          *
          * - a \e numerical variant (the default), which is a sequence of
          *   \a n even signed integers as described (amongst other places) in
@@ -2747,23 +2780,35 @@ class REGINA_API Link : public Packet {
          *   larger knots this routine will return the empty string if
          *   the alphabetical variant is requested.
          *
-         * In general, Dowker-Thistlethwaite notation does not carry enough
-         * information to uniquely reconstruct the knot.  For instance,
-         * both a knot and its reflection can be described by the same
-         * sequence of integers; moreover, for composite knots, the same
-         * Dowker-Thistlethwaite notation can describe inequivalent knots
-         * (even when allowing for reflections).  If you need notation that
-         * specifies the knot uniquely, consider using the oriented Gauss code
-         * instead, as output by orientedGauss().
+         * As an example, you can describe the trefoil using numerical
+         * Dowker-Thistlethwaite notation as:
+         *
+           \verbatim
+           4 6 2
+           \endverbatim
+         *
+         * In alphabetical Dowker-Thistlethwaite notation, this becomes:
+         *
+           \verbatim
+           bca
+           \endverbatim
          *
          * Currently Regina only supports Dowker-Thistlethwaite notation for
-         * knots, not multiple-component links.  If this link does not have
-         * precisely one component then the empty string will be returned.
+         * knots (i.e., links with exactly one component).  If you attempt to
+         * generate Dowker-Thistlethwaite notation for a link with zero or
+         * multiple components, an empty string will be returned.
          *
-         * The string will not contain any newlines.
+         * For numerical Dowker-Thistlethwaite notation, this routine will
+         * format the list of integers as a string.  The integers will be
+         * separated by single spaces, and there will be no newlines.
+         * For alphabetical Dowker-Thistlethwaite notation, the string that
+         * is returned will not contain any whitespace at all.
          *
-         * \note There is another variant of this routine that, instead
-         * of returning a string, writes directly to an output stream.
+         * For the numerical variant, the routine dtData() returns this same
+         * data in machine-readable format (as a C++ vector), instead of the
+         * human-readable format used here (a string).  There is also another
+         * variant of dt() that can write either the numerical or the
+         * alphabetical variant directly to an output stream.
          *
          * @param alpha \c true to use alphabetical notation, or \c false
          * (the default) to use numerical notation.
@@ -2830,42 +2875,31 @@ class REGINA_API Link : public Packet {
          *
          * Planar diagram codes encode the local information at each
          * crossing, and present this information as a list of 4-tuples.
-         * They are available for links as well as knots.
+         * These codes are available for links as well as knots, but they do
+         * come with some minor restrictions:
          *
-         * When reconstructing a link from a planar diagram code, there
-         * are two ways in which information may be lost:
-         *
-         * - Planar diagram codes cannot encode zero-crossing unknot components
-         *   (i.e., components for which the component() function returns a
-         *   null strand).  Any such components will be missing from the
-         *   reconstructed link.
+         * - They cannot encode zero-crossing unknot components (i.e.,
+         *   components for which the component() function returns a null
+         *   strand).  Any such components will simply be omitted from the code.
          *
          * - If a link has any components that consist entirely of
          *   over-crossings (which must be unknots "placed on top of" the link
-         *   diagram), the planar diagram code does not carry enough data to
+         *   diagram), a planar diagram code does not carry enough data to
          *   reconstruct the \e orientation of these components.  The topology
-         *   will be correct, but the combinatorics of the link diagram may not
-         *   be reconstructed faithfully.
+         *   will be preserved, but in general the combinatorics of such a link
+         *   diagram cannot be reconstructed faithfully.
          *
-         * A planar diagram code for an <i>n</i>-crossing link is formed
-         * from a sequence of <i>n</i> 4-tuples of integers.  Each tuple
-         * describes an individual crossing, and lists the strands that
-         * meet at that crossing in counter-clockwise order, beginning with
-         * the incoming lower strand.
-         *
-         * An example, you can construct the right-handed trefoil using
-         * the sequence:
-         *
-           \verbatim
-           [[1, 5, 2, 4], [3, 1, 4, 6], [5, 3, 6, 2]]
-           \endverbatim
+         * If you need a text code that can work with these types of
+         * link diagrams, you can always use Jenkins' format instead.
          *
          * Regina adheres to a tight specification for the planar diagram codes
          * that it outputs, in order to ensure compatibility with other
-         * software.  In particular, these codes are compatible with the
-         * Knot Atlas; see http://katlas.org/wiki/Planar_Diagrams for details.
+         * software.  In particular, Regina's codes are compatible with the
+         * Knot Atlas, as seen at http://katlas.org/wiki/Planar_Diagrams .
          *
-         * In detail, Regina constructs planar diagram codes as follows:
+         * In detail: a planar diagram code for an <i>n</i>-crossing link
+         * is formed from a sequence of <i>n</i> 4-tuples of integers.
+         * Regina constructs this sequence as follows:
          *
          * - Throw away any zero-crossing unknot components.
          *
@@ -2879,6 +2913,12 @@ class REGINA_API Link : public Packet {
          *   beginning from the incoming lower strand.
          *
          * - Return the resulting list of \a n 4-tuples.
+         *
+         * An example, you can represent the right-hand trefoil using the code:
+         *
+           \verbatim
+           [[1, 5, 2, 4], [3, 1, 4, 6], [5, 3, 6, 2]]
+           \endverbatim
          *
          * Some points to be aware of:
          *
@@ -2906,8 +2946,9 @@ class REGINA_API Link : public Packet {
            \endverbatim
          *
          * The routine pdData() returns this same data in machine-readable
-         * format (as a C++ vector), instead of the human-readable format
-         * used here (a string).
+         * format (as a C++ vector of 4-tuples of integers), instead of the
+         * human-readable format used here (a single string).  There is also
+         * another variant of pd() that writes directly to an output stream.
          *
          * @return the planar diagram code, as described above.
          */
@@ -3133,13 +3174,6 @@ class REGINA_API Link : public Packet {
          * trefoil = Link::fromData({ -1, -1, -1 }, { 1, -2, 3, -1, 2, -3 });
          * hopf = Link::fromData({ +1, +1 }, { 1, -2 }, { -1, 2 });
          * \endcode
-         *
-         * The topology of the link is defined precisely by this data, but the
-         * precise embedding of the diagram in the plane remains ambiguous.
-         * To be exact: the embedding of the diagram in the \e 2-sphere is
-         * defined precisely, but there remains a choice of which 2-cell of
-         * this embedding will contain the point at infinity (i.e., which
-         * 2-cell becomes the exterior cell of the diagram in the plane).
          *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the diagram.
