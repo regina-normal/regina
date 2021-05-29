@@ -529,15 +529,22 @@ std::string Link::brief() const {
     if (components_.empty())
         return std::string();
 
+    std::ostringstream out;
+    brief(out);
+    return out.str();
+}
+
+void Link::brief(std::ostream& out) const {
+    if (components_.empty())
+        return;
+
     if (crossings_.empty()) {
-        std::ostringstream out;
         out << "( )";
         for (size_t i = 1; i < components_.size(); ++i)
             out << " ( )";
-        return out.str();
+        return;
     }
 
-    std::ostringstream out;
     for (Crossing* c : crossings_)
         out << (c->sign() > 0 ? '+' : '-');
 
@@ -554,8 +561,6 @@ std::string Link::brief() const {
             out << " )";
         }
     }
-
-    return out.str();
 }
 
 void Link::composeWith(const Link& other) {

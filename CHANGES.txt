@@ -126,13 +126,12 @@ Version 6.1  [ TODO ]
         Class Link:
             - New routines writheOfComponent() and selfFrame().
             - New routines pd(), pdData(), pd(std::ostream&) and fromPD() to
-              work with planar diagram codes,
-            - The "magic" constructor that takes a string can now also
-              work with planar diagram codes.
-            - New routines gaussData(), orientedGaussData(), jenkinsData() and
-              dtData() for generating codes in machine-readable format.
-            - New routine fromJenkins(Iterator, Iterator) for parsing codes in
-              machine-readable format.
+              work with planar diagram codes.  The "magic" constructor that
+              takes a string can now also work with planar diagram codes.
+            - New routines gaussData(), orientedGaussData(), jenkinsData(),
+              dtData(), and fromJenkins(Iterator, Iterator) for working with
+              knot/link codes in machine-readable format.
+            - New routine brief(std::ostream&) to complement brief().
             - New alias fromSig(), which is is identical to fromKnotSig().
             - Class constants for Jones / HOMFLY-PT variable strings are
               now constexpr.

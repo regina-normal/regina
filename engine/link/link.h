@@ -2432,9 +2432,32 @@ class REGINA_API Link : public Packet {
          *
          * The string will not end in a newline.
          *
+         * There is also a variant of brief() that writes directly to an
+         * output stream.
+         *
          * @return a description of this link in Regina's brief format.
          */
         std::string brief() const;
+
+        /**
+         * Writes this link in Regina's own brief format to the given
+         * output stream.
+         *
+         * See brief() for a full description of Regina's brief format,
+         * as well as its limitations.
+         *
+         * The output from this routine is precisely the string that
+         * would be returned by brief().  In particular, the output does
+         * not contain any newlines.
+         *
+         * See also brief(), which returns the brief format as a string.
+         *
+         * \ifacespython Not present; instead use the variant
+         * brief() that returns a string.
+         *
+         * @param out the output stream to which to write.
+         */
+        void brief(std::ostream& out) const;
 
         /**
          * Returns a classical Gauss code for this knot, presented as a string.

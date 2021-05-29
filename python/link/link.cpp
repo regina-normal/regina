@@ -208,7 +208,8 @@ void addLink(pybind11::module_& m) {
         .def("niceTreeDecomposition", &Link::niceTreeDecomposition,
             pybind11::return_value_policy::reference_internal)
         .def("useTreeDecomposition", &Link::useTreeDecomposition)
-        .def("brief", &Link::brief)
+        .def("brief",
+            overload_cast<>(&Link::brief, pybind11::const_))
         .def("gauss",
             overload_cast<>(&Link::gauss, pybind11::const_))
         .def("gaussData", &Link::gaussData)
