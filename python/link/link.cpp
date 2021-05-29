@@ -118,8 +118,12 @@ void addLink(pybind11::module_& m) {
         .def_static("fromOrientedGauss", [](const std::vector<std::string>& v) {
             return Link::fromOrientedGauss(v.begin(), v.end());
         })
-        .def_static("fromJenkins",
-            overload_cast<const std::string&>(&Link::fromJenkins))
+        .def_static("fromJenkins", [](const std::string& s) {
+            return Link::fromJenkins(s);
+        })
+        .def_static("fromJenkins", [](const std::vector<int>& v) {
+            return Link::fromJenkins(v.begin(), v.end());
+        })
         .def_static("fromDT", [](const std::string& s) {
             return Link::fromDT(s);
         })

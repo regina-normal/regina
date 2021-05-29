@@ -3338,7 +3338,9 @@ class REGINA_API Link : public Packet {
         static Link* fromOrientedGauss(Iterator begin, Iterator end);
 
         /**
-         * Builds a link from the text representation described by
+         * Creates a new link from Bob Jenkins' format, presented as a string.
+         *
+         * This routine builds a link from the text representation described by
          * Bob Jenkins.  Jenkins uses this representation in his
          * HOMFLY polynomial software, which is available online from
          * <http://burtleburtle.net/bob/knot/homfly.html>.
@@ -3398,7 +3400,7 @@ class REGINA_API Link : public Packet {
          *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the diagram.
-         * That is, if the input describes a knot diagram that must be
+         * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
@@ -3414,31 +3416,34 @@ class REGINA_API Link : public Packet {
         static Link* fromJenkins(const std::string& str);
 
         /**
-         * Builds a link from the text representation described by
-         * Bob Jenkins.  Jenkins uses this representation in his
-         * HOMFLY polynomial software, which is available online from
-         * <http://burtleburtle.net/bob/knot/homfly.html>.
+         * Creates a new link from Bob Jenkins' format, read directly
+         * from an input stream.
          *
-         * See fromJenkins(const std::string&) for a detailed
-         * description of this format.
+         * See jenkins() for a full description of Bob Jenkins' format as
+         * it is used in Regina, and see fromJenkins(const std::string&)
+         * for a detailed discussion of how Regina reconstructs links
+         * from this format.
          *
-         * There are two variants of this routine.  The other variant takes a
-         * single string containing the integer sequence.  This variant takes
-         * an input stream, from which the sequence of integers will be read.
+         * This routine is a variant of fromJenkins(const std::string&) which,
+         * instead of taking a string as input, takes an input stream from
+         * which the sequence of integers describing the link will be read.
          *
-         * In this variant, this routine reads the integers that describe the
-         * link and then leaves the remainder of the input stream untouched
-         * (in particular, the stream may contain additional material,
-         * which can be read by the user after this routine has finished).
+         * Once this routine reads the integers that describe the link, or as
+         * soon as it encounters an error (e.g., invalid input data), it will
+         * stop reading and leave the remainder of the input stream untouched.
+         * This means that the stream may contain additional material,
+         * which can be read by the user after this routine has finished.
          *
          * \warning While this routine does some error checking on the
          * input, it does \e not test for planarity of the diagram.
-         * That is, if the input describes a knot diagram that must be
+         * That is, if the input describes a link diagram that must be
          * drawn on some higher-genus surface as opposed to the plane,
          * this will not be detected.  Of course such inputs are not
          * allowed, and it is currently up to the user to enforce this.
          *
-         * \ifacespython Not present.
+         * \ifacespython This routine is not available in Python.  Instead,
+         * Python users can use the variant fromJenkins(const std::string&),
+         * which takes the input as a string.
          *
          * @param in an input stream that begins with a sequence of integers
          * separated by whitespace that describes a link.
@@ -3446,6 +3451,43 @@ class REGINA_API Link : public Packet {
          * found to be invalid.
          */
         static Link* fromJenkins(std::istream& in);
+
+        /**
+         * Creates a new link from Bob Jenkins' format, presented as an
+         * integer sequence.
+         *
+         * See jenkins() for a full description of Bob Jenkins' format as
+         * it is used in Regina, and see fromJenkins(const std::string&)
+         * for a detailed discussion of how Regina reconstructs links
+         * from this format.
+         *
+         * This routine is a variant of fromJenkins(const std::string&) which,
+         * instead of taking a human-readable string, takes a machine-readable
+         * sequence of integers.  This sequence is given by passing a
+         * pair of begin/end iterators.
+         *
+         * \pre \a Iterator is a forward iterator type, and
+         * dereferencing such an iterator produces an integer.
+         *
+         * \warning While this routine does some error checking on the
+         * input, it does \e not test for planarity of the diagram.
+         * That is, if the input describes a link diagram that must be
+         * drawn on some higher-genus surface as opposed to the plane,
+         * this will not be detected.  Of course such inputs are not
+         * allowed, and it is currently up to the user to enforce this.
+         *
+         * \ifacespython Instead of a pair of begin and past-the-end
+         * iterators, this routine takes a Python list of integers.
+         *
+         * @param begin an iterator that points to the beginning of the
+         * sequence of integers that describes a link.
+         * @param end an iterator that points past the end of the
+         * sequence of integers that describes a link.
+         * @return a newly constructed link, or \c null if the input was
+         * found to be invalid.
+         */
+        template <typename Iterator>
+        static Link* fromJenkins(Iterator begin, Iterator end);
 
         /**
          * Creates a new knot from either alphabetical or numerical
@@ -4621,6 +4663,7 @@ namespace std {
 #include "link/data-impl.h"
 #include "link/dt-impl.h"
 #include "link/gauss-impl.h"
+#include "link/jenkins-impl.h"
 #include "link/pd-impl.h"
 
 #endif
