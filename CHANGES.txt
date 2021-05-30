@@ -114,8 +114,11 @@ Version 6.1  [ TODO ]
             - Several class constants are now constexpr.
         Class GroupExpression:
             - Added move constructors and move assignment operators.
+            - New variant of substitute() that can replace all generators
+              simultaneously.
         Class GroupPresentation:
             - Added move constructors and move assignment operators.
+            - New swap() member function.
             - Functions abelianisation() and markedAbelianisation() now
               return groups by value (which can then be moved from).
         Class HilbertCD, HilbertDual, HilbertPrimal:
@@ -130,6 +133,8 @@ Version 6.1  [ TODO ]
               just return an X by value (which can then be moved from).
             - Constructors that used to take a (const GroupPresentation&) for
               domain and range now take GroupPresentation arguments by value.
+            - The evaluate() and evaluateInv() functions now run in
+              linear time, not quadratic time.
         Class HomMarkedAbelianGroup:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.

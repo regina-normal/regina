@@ -543,9 +543,12 @@ class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
         bool simplify(bool cyclic = false);
         /**
          * Replaces every occurrence of the given generator with the
-         * given substite expression.  If the given generator was found,
+         * given substitute expression.  If the given generator was found,
          * the expression will be simplified once the substitution is
          * complete.
+         *
+         * \pre The given expansion is not the same GroupExpression
+         * object as this.
          *
          * @param generator the generator to be replaced.
          * @param expansion the substitute expression that will replace
@@ -556,6 +559,33 @@ class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
          */
         bool substitute(unsigned long generator,
             const GroupExpression& expansion, bool cyclic = false);
+        /**
+         * Replaces every generator in this expression with the
+         * corresponding substitute expression from the given map.
+         *
+         * Specifically, each generator \a i will be replaced with the
+         * expression <tt>expansions[i]</tt>.
+         *
+         * The expression will be simplified once all substitutions are
+         * complete.
+         *
+         * Unlike the single-generator verison of substitute(), it is
+         * perfectly fine if this GroupExpression object appears in the
+         * \a expansions list, and/or if the same GroupExpression object
+         * appears several times in the given list.
+         *
+         * \pre The length of \a expansions is at least <i>g</i>+1,
+         * where \a g is the largest generator that appears in this expression.
+         * In other words, <tt>expansions[i]</tt> exists for every generator
+         * \a i that appears in this expression.
+         *
+         * @param expansions the list of substitutes for all generators in
+         * this expression.
+         * @param cyclic \c true if and only if the expression may be
+         * assumed to be cyclic; see simplify() for further details.
+         */
+        void substitute(const std::vector<GroupExpression*>& expansions,
+            bool cyclic = false);
 
         /**
          * Determines whether or not one can relabel the generators in
@@ -761,6 +791,14 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          * @return a reference to this group presentation.
          */
         GroupPresentation& operator = (GroupPresentation&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given group presentation.
+         *
+         * @param other the group presentation whose contents should be
+         * swapped with this.
+         */
+        void swap(GroupPresentation& other);
 
         /**
          * Adds one or more generators to the group presentation.
@@ -1601,6 +1639,11 @@ inline GroupPresentation& GroupPresentation::operator = (
     relations.swap(src.relations);
     // Let src dispose of the original relations in its own destructor.
     return *this;
+}
+
+inline void GroupPresentation::swap(GroupPresentation& other) {
+    std::swap(nGenerators, other.nGenerators);
+    relations.swap(other.relations);
 }
 
 inline unsigned long GroupPresentation::addGenerator(unsigned long num) {

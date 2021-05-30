@@ -79,9 +79,9 @@ class GroupPresentation;
 class REGINA_API HomGroupPresentation :
         public Output<HomGroupPresentation> {
     private:
-        GroupPresentation* domain_;
+        GroupPresentation domain_;
             /**< The domain of the homomorphism. */
-        GroupPresentation* range_;
+        GroupPresentation range_;
             /**< The range of the homomorphism. */
         std::vector<GroupExpression*> map_;
             /**< A map whose ith element is the image in the range
@@ -439,9 +439,7 @@ inline HomGroupPresentation::HomGroupPresentation(
             GroupPresentation domain,
             GroupPresentation range,
             const std::vector<GroupExpression> &map ) :
-        domain_(new GroupPresentation(std::move(domain))),
-        range_(new GroupPresentation(std::move(range))),
-        inv_(nullptr) {
+        domain_(std::move(domain)), range_(std::move(range)), inv_(nullptr) {
     map_.resize(map.size());
     for (unsigned long i=0; i<map_.size(); i++)
         map_[i] = new GroupExpression(map[i]);
@@ -452,8 +450,7 @@ inline HomGroupPresentation::HomGroupPresentation(
             GroupPresentation range,
             const std::vector<GroupExpression> &map,
             const std::vector<GroupExpression> &inv ) :
-        domain_(new GroupPresentation(std::move(domain))),
-        range_(new GroupPresentation(std::move(range))),
+        domain_(std::move(domain)), range_(std::move(range)),
         inv_(new std::vector<GroupExpression*>) {
     map_.resize(map.size());
     inv_->resize(inv.size());
@@ -465,8 +462,7 @@ inline HomGroupPresentation::HomGroupPresentation(
 
 inline HomGroupPresentation::HomGroupPresentation(
         const HomGroupPresentation& cloneMe) :
-        domain_(new GroupPresentation(*cloneMe.domain_)),
-        range_(new GroupPresentation(*cloneMe.range_)) {
+        domain_(cloneMe.domain_), range_(cloneMe.range_) {
     map_.resize(cloneMe.map_.size());
     for (unsigned long i=0; i<map_.size(); i++)
         map_[i] = new GroupExpression(*(cloneMe.map_[i]));
@@ -481,10 +477,10 @@ inline HomGroupPresentation::HomGroupPresentation(
 
 inline HomGroupPresentation::HomGroupPresentation(
         HomGroupPresentation&& src) noexcept :
-        domain_(src.domain_), range_(src.range_), inv_(src.inv_) {
+        domain_(std::move(src.domain_)),
+        range_(std::move(src.range_)),
+        inv_(src.inv_) /* pointer */ {
     map_.swap(src.map_);
-    src.domain_ = nullptr;
-    src.range_ = nullptr;
     src.inv_ = nullptr;
 }
 
@@ -496,26 +492,24 @@ inline HomGroupPresentation::~HomGroupPresentation() {
             delete exp;
         delete inv_;
     }
-    delete domain_;
-    delete range_;
 }
 
 inline HomGroupPresentation& HomGroupPresentation::operator = (
         HomGroupPresentation&& src) noexcept {
-    std::swap(domain_, src.domain_);
-    std::swap(range_, src.range_);
+    domain_.swap(src.domain_);
+    range_.swap(src.range_);
     map_.swap(src.map_);
-    std::swap(inv_, src.inv_);
+    std::swap(inv_, src.inv_); // pointer
     // Let src dispose of the original data in its own destructor.
     return *this;
 }
 
 inline const GroupPresentation& HomGroupPresentation::domain() const {
-    return *domain_;
+    return domain_;
 }
 
 inline const GroupPresentation& HomGroupPresentation::range() const {
-    return *range_;
+    return range_;
 }
 
 inline bool HomGroupPresentation::knowsInverse() const {
@@ -524,6 +518,20 @@ inline bool HomGroupPresentation::knowsInverse() const {
 
 inline GroupExpression HomGroupPresentation::evaluate(unsigned long i) const {
     return *(map_[i]);
+}
+
+inline GroupExpression HomGroupPresentation::evaluate(
+        const GroupExpression &arg) const {
+    GroupExpression ans(arg);
+    ans.substitute(map_);
+    return ans;
+}
+
+inline GroupExpression HomGroupPresentation::invEvaluate(
+        const GroupExpression &arg) const {
+    GroupExpression ans(arg);
+    ans.substitute(*inv_);
+    return ans;
 }
 
 inline GroupExpression HomGroupPresentation::invEvaluate(unsigned long i)

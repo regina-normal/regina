@@ -168,7 +168,7 @@ bool GroupExpression::simplify(bool cyclic) {
 bool GroupExpression::substitute(unsigned long generator,
         const GroupExpression& expansion, bool cyclic) {
     bool changed = false;
-    GroupExpression* inverse = 0;
+    GroupExpression* inverse = nullptr;
     const GroupExpression* use;
     long exponent, i;
     for (TermIterator current = terms_.begin(); current != terms_.end(); ) {
@@ -180,7 +180,7 @@ bool GroupExpression::substitute(unsigned long generator,
                 if (exponent > 0)
                     use = &expansion;
                 else {
-                    if (inverse == 0)
+                    if (inverse == nullptr)
                         inverse = expansion.inverse();
                     use = inverse;
                     exponent = -exponent;
@@ -203,6 +203,30 @@ bool GroupExpression::substitute(unsigned long generator,
     if (changed)
         simplify(cyclic);
     return changed;
+}
+
+void GroupExpression::substitute(
+        const std::vector<GroupExpression*>& expansions, bool cyclic) {
+    std::list<GroupExpressionTerm> expanded;
+
+    long i;
+    for (auto t : terms_) {
+        if (t.exponent > 0) {
+            const GroupExpression* use = expansions[t.generator];
+            for (i = 0; i < t.exponent; ++i)
+                expanded.insert(expanded.end(),
+                    use->terms_.begin(), use->terms_.end());
+        } else if (t.exponent < 0) {
+            GroupExpression* use = expansions[t.generator]->inverse();
+            for (i = 0; i > t.exponent; --i)
+                expanded.insert(expanded.end(),
+                    use->terms_.begin(), use->terms_.end());
+            delete use;
+        }
+    }
+
+    terms_.swap(expanded);
+    simplify(cyclic);
 }
 
 GroupPresentation::GroupPresentation(const GroupPresentation& cloneMe) :
