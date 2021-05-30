@@ -668,16 +668,16 @@ class REGINA_API MarkedAbelianGroup :
         const Integer& coefficients() const;
 
         /**
-         *  Returns a MarkedAbelianGroup representing the torsion subgroup
-         *  of this group. 
+         * Returns a MarkedAbelianGroup representing the torsion subgroup
+         * of this group.
          */
-        std::unique_ptr<MarkedAbelianGroup> torsionSubgroup() const;
+        MarkedAbelianGroup torsionSubgroup() const;
 
         /**
-         *  Returns a HomMarkedAbelianGroup representing the inclusion of the
-         *  torsion subgroup into this group. 
+         * Returns a HomMarkedAbelianGroup representing the inclusion of the
+         * torsion subgroup into this group.
          */
-        std::unique_ptr<HomMarkedAbelianGroup> torsionInclusion() const;
+        HomMarkedAbelianGroup torsionInclusion() const;
 };
 
 /**
@@ -1030,7 +1030,7 @@ class REGINA_API HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * @return the inverse homomorphism, or the zero homomorphism if
          * this is not invertible.
          */
-        std::unique_ptr<HomMarkedAbelianGroup> inverseHom() const;
+        HomMarkedAbelianGroup inverseHom() const;
 
         /**
          * Returns the composition of two homomorphisms.
@@ -1040,16 +1040,15 @@ class REGINA_API HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * domain of this homomorphism.
          *
          * @param X the homomorphism to compose this with.
-         * @return a newly created composite homomorphism.
+         * @return the composite homomorphism.
          */
-        std::unique_ptr<HomMarkedAbelianGroup> operator * (
-            const HomMarkedAbelianGroup &X) const;
+        HomMarkedAbelianGroup operator * (const HomMarkedAbelianGroup &X) const;
 
         /**
-         *  Returns a HomMarkedAbelianGroup representing the induced map
-         *  on the torsion subgroups. 
+         * Returns a HomMarkedAbelianGroup representing the induced map
+         * on the torsion subgroups.
          */
-        std::unique_ptr<HomMarkedAbelianGroup> torsionSubgroup() const;
+        HomMarkedAbelianGroup torsionSubgroup() const;
 
         /**
          * Writes a human-readable version of the reduced matrix to the

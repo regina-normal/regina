@@ -123,6 +123,8 @@ Version 6.1  [ TODO ]
         Class HomMarkedAbelianGroup:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.
+            - All functions that used to return a std::unique_ptr<X> now
+              just return an X by value (which can then be moved from).
         Class HyperInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -163,6 +165,8 @@ Version 6.1  [ TODO ]
         Class MarkedAbelianGroup:
             - New move constructor.
             - New copy assignment and move assignment operators.
+            - All functions that used to return a std::unique_ptr<X> now
+              just return an X by value (which can then be moved from).
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.

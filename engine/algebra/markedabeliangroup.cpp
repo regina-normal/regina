@@ -676,26 +676,23 @@ std::vector<Integer> MarkedAbelianGroup::cycleProjection(
 
 
 // the trivially presented torsion subgroup
-std::unique_ptr<MarkedAbelianGroup> MarkedAbelianGroup::torsionSubgroup()
-        const {
+MarkedAbelianGroup MarkedAbelianGroup::torsionSubgroup() const {
     MatrixInt dM(1, countInvariantFactors() );
     MatrixInt dN(countInvariantFactors(), countInvariantFactors() );
     for (unsigned long i=0; i<countInvariantFactors(); i++)
         dN.entry(i,i) = invariantFactor(i);
-    return std::unique_ptr<MarkedAbelianGroup>(new MarkedAbelianGroup(dM, dN));
+    return MarkedAbelianGroup(dM, dN);
 }
 
 // and its canonical inclusion map
-std::unique_ptr<HomMarkedAbelianGroup> MarkedAbelianGroup::torsionInclusion()
-        const {
+HomMarkedAbelianGroup MarkedAbelianGroup::torsionInclusion() const {
     MatrixInt iM( rankCC(), countInvariantFactors() );
     for (unsigned long j=0; j<iM.columns(); j++) {
         std::vector<Integer> jtor( torsionRep(j) );
         for (unsigned long i=0; i<iM.rows(); i++)
             iM.entry(i,j) = jtor[i];
     }
-    return std::unique_ptr<HomMarkedAbelianGroup>(new HomMarkedAbelianGroup(
-        *torsionSubgroup(), (*this), iM));
+    return HomMarkedAbelianGroup(torsionSubgroup(), *this, iM);
 }
 
 
@@ -1009,11 +1006,9 @@ void HomMarkedAbelianGroup::computeImage() {
     }
 }
 
-std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::operator * (const 
-      HomMarkedAbelianGroup &X) const
-{
-    return std::unique_ptr<HomMarkedAbelianGroup>(new 
-        HomMarkedAbelianGroup(X.domain_, range_, matrix*X.matrix));
+HomMarkedAbelianGroup HomMarkedAbelianGroup::operator * (
+        const HomMarkedAbelianGroup &X) const {
+    return HomMarkedAbelianGroup(X.domain_, range_, matrix*X.matrix);
 }
 
 std::vector<Integer> HomMarkedAbelianGroup::evalCC(
@@ -1119,10 +1114,9 @@ bool HomMarkedAbelianGroup::isCycleMap() const
 
 //  Returns a HomMarkedAbelianGroup representing the induced map
 //  on the torsion subgroups. 
-std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::torsionSubgroup()
-        const {
-    std::unique_ptr<MarkedAbelianGroup> dom = domain_.torsionSubgroup();
-    std::unique_ptr<MarkedAbelianGroup> ran = range_.torsionSubgroup();
+HomMarkedAbelianGroup HomMarkedAbelianGroup::torsionSubgroup() const {
+    MarkedAbelianGroup dom = domain_.torsionSubgroup();
+    MarkedAbelianGroup ran = range_.torsionSubgroup();
 
     MatrixInt mat(range_.countInvariantFactors(),
         domain_.countInvariantFactors() );
@@ -1134,8 +1128,7 @@ std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::torsionSubgroup()
             mat.entry(i,j) = temp[i];
     }
 
-    return std::unique_ptr<HomMarkedAbelianGroup>(new HomMarkedAbelianGroup(
-        *dom, *ran, mat));
+    return HomMarkedAbelianGroup(dom, ran, mat);
 }
 
 
@@ -1148,8 +1141,7 @@ std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::torsionSubgroup()
  * @return true if and only if M1 == N3, M2 == N4 and diagram commutes
  *         commutes.
  */
-bool HomMarkedAbelianGroup::isChainMap(
-  const HomMarkedAbelianGroup &other) const
+bool HomMarkedAbelianGroup::isChainMap(const HomMarkedAbelianGroup &other) const
 {
  if ( (range().M().rows() != other.range().N().rows()) ||
       (range().M().columns() != other.range().N().columns()) ||
@@ -1184,12 +1176,11 @@ bool HomMarkedAbelianGroup::isChainMap(
 // computes the matrix representing the inverse automorphism.  
 // So to do this we'll need a new matrixops.cpp command -- call it 
 // torsionAutInverse.  
-std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::inverseHom() const
-{
+HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
  const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
  MatrixInt invMat( reducedMatrix_->columns(), reducedMatrix_->rows() );
- if (!isIsomorphism()) return std::unique_ptr<HomMarkedAbelianGroup>(
-     new HomMarkedAbelianGroup( invMat, range_, domain_ ));
+ if (!isIsomorphism())
+    return HomMarkedAbelianGroup( invMat, range_, domain_ );
  // get A, B, D from reducedMatrix
  // A must be square with domain/range_.countInvariantFactors() columns
  // D must be square with domain/range_.rank() columns
@@ -1266,11 +1257,8 @@ std::unique_ptr<HomMarkedAbelianGroup> HomMarkedAbelianGroup::inverseHom() const
  for (unsigned long i=0; i<Bi.rows(); i++) 
    for (unsigned long j=0; j<Bi.columns(); j++)
      invMat.entry(i,j+Ai->columns()) = Bi.entry(i,j);
- return std::unique_ptr<HomMarkedAbelianGroup>(
-   new HomMarkedAbelianGroup( invMat, range_, domain_ ));
+ return HomMarkedAbelianGroup(invMat, range_, domain_);
 }
-
-
 
 } // namespace regina
 
