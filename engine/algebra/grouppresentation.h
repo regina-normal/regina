@@ -1015,9 +1015,9 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          * The coordinates in the chain complex correspond
          * to the generators and relators for this group.
          *
-         * @return a newly allocated abelianisation of this group.
+         * @return the abelianisation of this group.
          */
-        std::unique_ptr<MarkedAbelianGroup> markedAbelianisation() const;
+        MarkedAbelianGroup markedAbelianisation() const;
 
         /**
          * Attempts to determine if the group is abelian.

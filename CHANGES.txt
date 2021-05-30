@@ -112,14 +112,22 @@ Version 6.1  [ TODO ]
               this path since Regina 5.0.
         Class GluingPermSearcher<dim> and subclasses:
             - Several class constants are now constexpr.
-        Class GroupExpression, GroupPresentation:
+        Class GroupExpression:
             - Added move constructors and move assignment operators.
+        Class GroupPresentation:
+            - Added move constructors and move assignment operators.
+            - Function markedAbelianisation() now returns a group by value
+              (which can then be moved from).
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
         Class HomGroupPresentation:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.
+            - All functions that used to return a std::unique_ptr<X> now
+              just return an X by value (which can then be moved from).
+            - Added operator * for composition; the old composeWith() is
+              now deprecated.
         Class HomMarkedAbelianGroup:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.

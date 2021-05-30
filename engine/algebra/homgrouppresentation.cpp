@@ -108,20 +108,17 @@ GroupExpression HomGroupPresentation::invEvaluate(
 
 }
 
-std::unique_ptr< HomMarkedAbelianGroup >
-    HomGroupPresentation::markedAbelianisation() const
-{
- std::unique_ptr<MarkedAbelianGroup> DOM( domain_->markedAbelianisation() );
- std::unique_ptr<MarkedAbelianGroup> RAN( range_->markedAbelianisation() );
- MatrixInt ccMat( RAN->rankCC(), DOM->rankCC() );
- for (unsigned long j=0; j<ccMat.columns(); j++)
-  {
-   GroupExpression COLj( evaluate(j) );
-   for (unsigned long i=0; i<COLj.countTerms(); i++)
-    ccMat.entry( COLj.generator(i), j ) += COLj.exponent(i);
-  }
- return std::unique_ptr<HomMarkedAbelianGroup>(
-        new HomMarkedAbelianGroup( *DOM, *RAN, ccMat ) );
+HomMarkedAbelianGroup HomGroupPresentation::markedAbelianisation() const {
+    MarkedAbelianGroup DOM = domain_->markedAbelianisation();
+    MarkedAbelianGroup RAN = range_->markedAbelianisation();
+    MatrixInt ccMat( RAN.rankCC(), DOM.rankCC() );
+    for (unsigned long j=0; j<ccMat.columns(); j++) {
+        GroupExpression COLj( evaluate(j) );
+        for (unsigned long i=0; i<COLj.countTerms(); i++)
+            ccMat.entry( COLj.generator(i), j ) += COLj.exponent(i);
+    }
+    return HomMarkedAbelianGroup(std::move(DOM), std::move(RAN),
+        std::move(ccMat));
 }
 
 void HomGroupPresentation::writeTextShort(std::ostream& out) const {
@@ -207,26 +204,37 @@ bool HomGroupPresentation::smallCancellation()
  return retval;
 }
 
-std::unique_ptr<HomGroupPresentation> HomGroupPresentation::composeWith(
-            const HomGroupPresentation& input) const
-{
- std::vector<GroupExpression> evalVec(input.domain_->countGenerators());
- for (unsigned long i=0; i<evalVec.size(); i++)
-  evalVec[i] = evaluate( input.evaluate(i) );
- if ( (! inv_) || (! input.inv_) )
-  return std::unique_ptr<HomGroupPresentation>(new HomGroupPresentation(
-    *input.domain_, *range_, evalVec) );
- else
-  {
-    std::vector<GroupExpression> invVec( range_->countGenerators());
-    for (unsigned long i=0; i<invVec.size(); i++)
-     invVec[i] = input.invEvaluate( invEvaluate(i) );
-    return std::unique_ptr<HomGroupPresentation>(new HomGroupPresentation(
-        *input.domain_, *range_, evalVec, invVec ) );
-  }
+HomGroupPresentation HomGroupPresentation::operator * (
+        const HomGroupPresentation& input) const {
+    std::vector<GroupExpression> evalVec(input.domain_->countGenerators());
+    for (unsigned long i=0; i<evalVec.size(); i++)
+        evalVec[i] = evaluate( input.evaluate(i) );
+    if ( (! inv_) || (! input.inv_) ) {
+        return HomGroupPresentation(*input.domain_, *range_, evalVec);
+    } else {
+        std::vector<GroupExpression> invVec( range_->countGenerators());
+        for (unsigned long i=0; i<invVec.size(); i++)
+            invVec[i] = input.invEvaluate( invEvaluate(i) );
+        return HomGroupPresentation(*input.domain_, *range_, evalVec, invVec );
+    }
 }
 
-
+HomGroupPresentation HomGroupPresentation::operator * (
+        HomGroupPresentation&& input) const {
+    std::vector<GroupExpression> evalVec(input.domain_->countGenerators());
+    for (unsigned long i=0; i<evalVec.size(); i++)
+        evalVec[i] = evaluate( input.evaluate(i) );
+    if ( (! inv_) || (! input.inv_) ) {
+        return HomGroupPresentation(std::move(*input.domain_), *range_,
+            evalVec);
+    } else {
+        std::vector<GroupExpression> invVec( range_->countGenerators());
+        for (unsigned long i=0; i<invVec.size(); i++)
+            invVec[i] = input.invEvaluate( invEvaluate(i) );
+        return HomGroupPresentation(std::move(*input.domain_), *range_,
+            evalVec, invVec );
+    }
+}
 
 bool HomGroupPresentation::intelligentNielsen()
 { // modelled on intelligentSimplify

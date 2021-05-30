@@ -225,9 +225,9 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                 i!=presList.end(); i++) {
             GroupPresentation tPres( *(*i) );
             tPres.homologicalAlignment();
-            std::unique_ptr<MarkedAbelianGroup> mab( tPres.markedAbelianisation() );
-            unsigned long N(mab->countInvariantFactors());
-            unsigned long M(mab->minNumberOfGenerators());
+            MarkedAbelianGroup mab = tPres.markedAbelianisation();
+            unsigned long N(mab.countInvariantFactors());
+            unsigned long M(mab.minNumberOfGenerators());
             /*
              * If the abelianisation of this group has rank N and M
              * invariant factors d0 | d2 | ... | d(M-1),
@@ -241,7 +241,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
             for (unsigned long j=0; j<tPres.countGenerators(); j++) {
                 std::vector<Integer> epsilon( tPres.countGenerators() );
                 epsilon[j] = 1;
-                std::vector<Integer> temp( mab->snfRep(epsilon) );
+                std::vector<Integer> temp( mab.snfRep(epsilon) );
 
                 for (unsigned long k=0; k<M; k++) {
                     // case 1: columns of torsion abelianisations
@@ -249,10 +249,10 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                         // check in temp if dj | entry(j) for all j != k
                         // and             GCD(dj,entry(j)) == 1  j == k
                         if (k==j) {
-                            if (temp[k].gcd( mab->invariantFactor(k) )!= 1)
+                            if (temp[k].gcd( mab.invariantFactor(k) )!= 1)
                                 CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 1.");
                         } else if ( k < N ) {
-                            if ( temp[k] % mab->invariantFactor(k) != 0 )
+                            if ( temp[k] % mab.invariantFactor(k) != 0 )
                                 CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 2.");
                         } else if ( temp[k] != 0 )
                             CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 3.");
@@ -267,7 +267,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
                             if (temp[k].abs() != 1)
                                 CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 4.");
                         } else if (k<N) {
-                            if (temp[k] % mab->invariantFactor(k) != 0)
+                            if (temp[k] % mab.invariantFactor(k) != 0)
                                 CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 5.");
                         } else if (temp[k] != 0)
                             CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 6.");
@@ -276,7 +276,7 @@ class GroupPresentationTest : public CppUnit::TestFixture {
 
                     // case 3: column should be zero (modulo d's)
                     if (k<N) {
-                        if (temp[k] % mab->invariantFactor(k) != 0)
+                        if (temp[k] % mab.invariantFactor(k) != 0)
                             CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 7.");
                     } else if (temp[k] != 0)
                         CPPUNIT_FAIL("GroupPresentation: homologicalAlignment Error 8.");

@@ -282,24 +282,58 @@ class REGINA_API HomGroupPresentation :
         bool smallCancellation();
 
         /**
-         * Composes this homomorphism with the given input homomorphism.
+         * Composes this homomorphism with the given homomorphism.
          *
          * Evaluating the composition on some group element \a x is the
-         * same as evaluating <tt>this(input(x))</tt>.
-         * In other words, in this composition, \a input is evaluated first
+         * same as evaluating <tt>this(rhs(x))</tt>.
+         * In other words, in this composition, \a rhs is evaluated first
          * and then the output of that is evaluated by this homomorphism.
          *
          * If both of the given homomorphisms are declared isomorphisms,
          * then the return value will be a declared isomoprhism also.
          *
-         * \pre the range of \a input must be the same as the domain of this
+         * \pre the range of \a rhs must be the same as the domain of this
          * homomorphism.
          *
-         * @param input the homomorphism to compose with this.
+         * @param rhs the homomorphism to compose this with.
          * @return the composition of both homomorphisms.
          */
-        std::unique_ptr<HomGroupPresentation> composeWith(
-            const HomGroupPresentation& input) const;
+        HomGroupPresentation operator * (const HomGroupPresentation& rhs) const;
+
+        /**
+         * Composes this homomorphism with the given homomorphism.
+         *
+         * Evaluating the composition on some group element \a x is the
+         * same as evaluating <tt>this(rhs(x))</tt>.
+         * In other words, in this composition, \a rhs is evaluated first
+         * and then the output of that is evaluated by this homomorphism.
+         *
+         * If both of the given homomorphisms are declared isomorphisms,
+         * then the return value will be a declared isomoprhism also.
+         *
+         * \pre the range of \a rhs must be the same as the domain of this
+         * homomorphism.
+         *
+         * @param rhs the homomorphism to compose this with.
+         * @return the composition of both homomorphisms.
+         */
+        HomGroupPresentation operator * (HomGroupPresentation&& rhs) const;
+
+        /**
+         * Deprecated routine that composes this homomorphism with the
+         * given homomorphism.
+         *
+         * \deprecated Instead of <tt>a.composeWith(b)</tt>, use the
+         * multiplication operator <tt>a * b</tt>.
+         *
+         * \pre the range of \a rhs must be the same as the domain of this
+         * homomorphism.
+         *
+         * @param rhs the homomorphism to compose this with.
+         * @return the composition of both homomorphisms.
+         */
+        [[deprecated]] HomGroupPresentation composeWith(
+            const HomGroupPresentation& rhs) const;
 
         /**
          * Inverts the homomorphism.
@@ -377,7 +411,7 @@ class REGINA_API HomGroupPresentation :
          *
          * @return the induced map on the abelianizations.
          */
-        std::unique_ptr< HomMarkedAbelianGroup > markedAbelianisation() const;
+        HomMarkedAbelianGroup markedAbelianisation() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -495,6 +529,11 @@ inline GroupExpression HomGroupPresentation::evaluate(unsigned long i) const {
 inline GroupExpression HomGroupPresentation::invEvaluate(unsigned long i)
         const {
     return *((*inv_)[i]);
+}
+
+inline HomGroupPresentation HomGroupPresentation::composeWith(
+        const HomGroupPresentation& rhs) const {
+    return (*this) * rhs;
 }
 
 } // namespace regina

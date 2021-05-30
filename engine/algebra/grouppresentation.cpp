@@ -311,11 +311,8 @@ std::unique_ptr<AbelianGroup> GroupPresentation::abelianisation() const
     return std::unique_ptr<AbelianGroup>(new AbelianGroup(M,N));
 }
 
-std::unique_ptr<MarkedAbelianGroup> GroupPresentation::markedAbelianisation()
-const
-{
+MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
     // create presentation matrices to pass to MarkedAbelianGroup(M, N)
-    MatrixInt M(1, countGenerators() ); // zero matrix
     MatrixInt N(countGenerators(), countRelations() );
     // run through rels, increment N entries appropriately
     for (unsigned long j=0; j<countRelations(); j++) {
@@ -323,7 +320,9 @@ const
         for (unsigned long i=0; i<Rj.countTerms(); i++)
             N.entry( Rj.generator(i), j ) += Rj.exponent(i);
     }
-    return std::unique_ptr<MarkedAbelianGroup>(new MarkedAbelianGroup(M,N));
+    return MarkedAbelianGroup(
+        MatrixInt(1, countGenerators()) /* zero matrix */,
+        std::move(N));
 }
 
 void GroupPresentation::dehnAlgorithmSubMetric(
@@ -778,27 +777,32 @@ GroupPresentation::intelligentSimplifyDetail()
             smallCancellationDetail() );
         if (tempHom.get()) {
             doRep = true;
-            if (!redHom.get()) redHom.reset( tempHom.release() );
-            else redHom.reset( tempHom->composeWith( *redHom.get() ).release() );
+            if (!redHom.get())
+                redHom.swap(tempHom);
+            else
+                *redHom = (*tempHom) * (*redHom);
         }
 
         std::unique_ptr<HomGroupPresentation> temp2Hom(
             intelligentNielsenDetail() );
         if (temp2Hom.get()) {
             doRep = true;
-            if (!redHom.get()) redHom.reset( temp2Hom.release() );
-            else redHom.reset( temp2Hom->composeWith( *redHom.get() ).release() );
+            if (!redHom.get())
+                redHom.swap(temp2Hom);
+            else
+                *redHom = (*temp2Hom) * (*redHom);
         }
     }
 
-    std::unique_ptr<HomGroupPresentation> temp3Hom(
-        prettyRewritingDetail() );
+    std::unique_ptr<HomGroupPresentation> temp3Hom( prettyRewritingDetail() );
     if (temp3Hom.get()) {
-        if (!redHom.get()) redHom.reset( temp3Hom.release() );
-        else redHom.reset( temp3Hom->composeWith( *redHom.get() ).release() );
+        if (!redHom.get())
+            redHom.swap(temp3Hom);
+        else
+            *redHom = (*temp3Hom) * (*redHom);
     }
 
-    return std::unique_ptr<HomGroupPresentation>( redHom.release() );
+    return redHom;
 }
 
 bool GroupPresentation::intelligentSimplify()
@@ -1102,13 +1106,15 @@ GroupPresentation::intelligentNielsenDetail()
             GroupPresentation newPres(*this);
             std::unique_ptr<HomGroupPresentation> tempHom(new
                     HomGroupPresentation(oldPres,newPres,DomToRan,RanToDom));
-            if (!retval.get()) retval.reset( tempHom.release() );
-            else retval.reset( tempHom->composeWith( *retval.get() ).release() );
+            if (!retval.get())
+                retval.swap(tempHom);
+            else
+                *retval = (*tempHom) * (*retval);
             // make the dom->ran and ran->dom vectors.
         }
     } // the while loop
 
-    return std::unique_ptr<HomGroupPresentation>(retval.release());
+    return retval;
 }
 
 bool GroupPresentation::homologicalAlignment()
@@ -1121,20 +1127,19 @@ GroupPresentation::homologicalAlignmentDetail()
 {
     std::unique_ptr<HomGroupPresentation> retval; // only allocate if appropriate.
     // step 1: compute abelianization and how generators map to abelianization.
-    std::unique_ptr< MarkedAbelianGroup > abelianized( markedAbelianisation() );
-    MatrixInt abMat( abelianized->minNumberOfGenerators(),
-                      countGenerators() );
+    MarkedAbelianGroup abelianized = markedAbelianisation();
+    MatrixInt abMat( abelianized.minNumberOfGenerators(), countGenerators() );
 
     for (unsigned long j=0; j<countGenerators(); j++) {
         std::vector<Integer> epsilon( countGenerators() );
         epsilon[j] = 1;
-        std::vector<Integer> temp( abelianized->snfRep(epsilon) );
-        for (unsigned long i=0; i<abelianized->minNumberOfGenerators(); i++)
+        std::vector<Integer> temp( abelianized.snfRep(epsilon) );
+        for (unsigned long i=0; i<abelianized.minNumberOfGenerators(); i++)
             abMat.entry(i,j) = temp[i]; // columns are snfreps of abelianized gens.
     }
 
-    unsigned long abNF( abelianized->countInvariantFactors() );
-    unsigned long abNG( abelianized->minNumberOfGenerators() );
+    unsigned long abNF( abelianized.countInvariantFactors() );
+    unsigned long abNG( abelianized.minNumberOfGenerators() );
     // step 2: we will mimic the simple smith normal form algorithm algorithm
     //         using corresponding moves on the group presentation.
     //         first the free generators.
@@ -1177,9 +1182,10 @@ GroupPresentation::homologicalAlignmentDetail()
             nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
             std::unique_ptr<HomGroupPresentation> tempHom(
                 new HomGroupPresentation( oldPres, *this, fVec, bVec ) );
-            if (!retval.get()) retval.reset( tempHom.release() );
+            if (!retval.get())
+                retval.swap(tempHom);
             else
-                retval.reset( tempHom->composeWith( *retval.get() ).release() );
+                *retval = (*tempHom) * (*retval);
         } // j0==j1 is the column such that entry (i,j1) is +-1.
         nielsenTransposition(i, j1);
         abMat.swapColumns(i, j1);
@@ -1199,17 +1205,17 @@ GroupPresentation::homologicalAlignmentDetail()
         unsigned long j0=0, j1=abMat.columns()-1;
         while (j0 < j1) {
             // if at j0 its zero, inc, if at j1 zero, dec
-            if ((abMat.entry(i,j0) % abelianized->invariantFactor(i)).isZero()) {
+            if ((abMat.entry(i,j0) % abelianized.invariantFactor(i)).isZero()) {
                 j0++;
                 continue;
             }
-            if ((abMat.entry(i,j1) % abelianized->invariantFactor(i)).isZero()) {
+            if ((abMat.entry(i,j1) % abelianized.invariantFactor(i)).isZero()) {
                 j1--;
                 continue;
             }
             // column op!
-            bool colFlag( (abMat.entry(i,j0) % abelianized->invariantFactor(i)).abs() <
-                          (abMat.entry(i,j1) % abelianized->invariantFactor(i)).abs() );
+            bool colFlag( (abMat.entry(i,j0) % abelianized.invariantFactor(i)).abs() <
+                          (abMat.entry(i,j1) % abelianized.invariantFactor(i)).abs() );
             Integer q = abMat.entry(i,colFlag ? j1 : j0) /
                         abMat.entry(i,colFlag ? j0 : j1);
 
@@ -1232,9 +1238,10 @@ GroupPresentation::homologicalAlignmentDetail()
             nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
             std::unique_ptr<HomGroupPresentation> tempHom(
                 new HomGroupPresentation( oldPres, *this, fVec, bVec ) );
-            if (!retval.get()) retval.reset( tempHom.release() );
+            if (!retval.get())
+                retval.swap(tempHom);
             else
-                retval.reset( tempHom->composeWith( *retval.get() ).release() );
+                *retval = (*tempHom) * (*retval);
         } // j0==j1 is the column such that entry (i,j1) is +-1.
         if (i!=j1) {
             nielsenTransposition(i, j1);
@@ -1246,11 +1253,14 @@ GroupPresentation::homologicalAlignmentDetail()
 
     // call prettify
     std::unique_ptr<HomGroupPresentation> tempHom( prettyRewritingDetail() );
-    if (!retval.get() && tempHom.get()) retval.reset( tempHom.release() );
-    else if (retval.get() && tempHom.get())
-        retval.reset( tempHom->composeWith( *retval.get() ).release() );
+    if (tempHom.get()) {
+        if (!retval.get())
+            retval.swap(tempHom);
+        else
+            *retval = (*tempHom) * (*retval);
+    }
 
-    return std::unique_ptr<HomGroupPresentation>( retval.release() );
+    return retval;
 }
 
 // This algorithm has to be at least moderately sophisticated to ensure it
@@ -1678,11 +1688,11 @@ GroupPresentation::identifyExtensionOverZ()
 {
     // step 1: let's build the abelianization homomorphism.
     homologicalAlignment();
-    std::unique_ptr< MarkedAbelianGroup > abelianized( markedAbelianisation() );
-    if (abelianized->rank() != 1) return
-            std::unique_ptr< HomGroupPresentation >();
-    if (abelianized->countInvariantFactors()>0)  // put Z generator at 0-th
-        nielsenTransposition(0, abelianized->countInvariantFactors() );
+    MarkedAbelianGroup abelianized = markedAbelianisation();
+    if (abelianized.rank() != 1)
+        return std::unique_ptr< HomGroupPresentation >();
+    if (abelianized.countInvariantFactors()>0)  // put Z generator at 0-th
+        nielsenTransposition(0, abelianized.countInvariantFactors() );
 
     // We have the presentation of this group in the form
     // < a, g1, g2, ..., gn | r1, ..., rm > with a->1, gi->0 under abelianization
@@ -2138,7 +2148,7 @@ std::unique_ptr<HomGroupPresentation> GroupPresentation::prettyRewritingDetail()
                 relations[i]->cycleRight();
         }
 
-    return std::unique_ptr<HomGroupPresentation>( redMap.release() );
+    return redMap;
 }
 
 
