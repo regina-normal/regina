@@ -379,6 +379,8 @@ Version 6.1  [ TODO ]
             - Both these functions are now inline and constexpr.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
+        Function preImageOfLattice():
+            - Now returns a MatrixInt by value.
         Function readSigList(), readIsoSigList():
             - The old readIsoSigList() is now deprecated, in favour of a new
               template function readSigList() that can work with knots and
@@ -387,6 +389,8 @@ Version 6.1  [ TODO ]
         Function smithNormalForm(), metricalSmithNormalForm():
             - The change of basis matrices no longer need to have the correct
               size (and may even be uninitialised) before they are passed in.
+        Function torsionAutInverse():
+            - Now returns a MatrixInt by value.
         Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
                 quadString:
             - These are all now inline constexpr.
