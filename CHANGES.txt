@@ -125,6 +125,11 @@ Version 6.1  [ TODO ]
             - Added copy assignment and move assignment operators.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
+            - Constructors that used to take (const MarkedAbelianGroup&) and
+              (const MatrixInt&) arguments now take MarkedAbelianGroup and
+              MatrixInt arguments by value.
+            - The composition operator (*) now has an overload whose argument
+              is an rvalue reference.
         Class HyperInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -167,6 +172,8 @@ Version 6.1  [ TODO ]
             - New copy assignment and move assignment operators.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
+            - Constructors that used to take (const MatrixInt&) arguments
+              now take a MatrixInt by value.
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.

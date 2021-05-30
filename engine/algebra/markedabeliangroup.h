@@ -171,7 +171,7 @@ class REGINA_API MarkedAbelianGroup :
          * @param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
          */
-        MarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N);
+        MarkedAbelianGroup(MatrixInt M, MatrixInt N);
 
         /**
          * Creates a marked abelian group from a chain complex with
@@ -188,8 +188,7 @@ class REGINA_API MarkedAbelianGroup :
          * \a pcoeff >= 0.  If you know beforehand that \a pcoeff=0, it's
          * more efficient to use the previous constructor.
          */
-        MarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N,
-            const Integer &pcoeff);
+        MarkedAbelianGroup(MatrixInt M, MatrixInt N, const Integer &pcoeff);
 
         /**
          * Creates a free Z_p-module of a given rank using the direct sum
@@ -438,8 +437,7 @@ class REGINA_API MarkedAbelianGroup :
          * where \a M is one of the matrices that defines the chain
          * complex; see the class notes for details.
          */
-        std::vector<Integer> ccRep(
-            const std::vector<Integer>& SNFRep) const;
+        std::vector<Integer> ccRep(const std::vector<Integer>& SNFRep) const;
 
         /**
          * Same as ccRep(const std::vector<Integer>&), but we assume you
@@ -797,9 +795,8 @@ class REGINA_API HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * @param mat the matrix that describes the homomorphism from 
          * \a dom to \a ran.
          */
-        HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
-                const MarkedAbelianGroup& ran,
-                const MatrixInt &mat);
+        HomMarkedAbelianGroup(MarkedAbelianGroup dom, MarkedAbelianGroup ran,
+            MatrixInt mat);
 
         /**
          * Creates a clone of the given homomorphism.
@@ -1042,7 +1039,19 @@ class REGINA_API HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * @param X the homomorphism to compose this with.
          * @return the composite homomorphism.
          */
-        HomMarkedAbelianGroup operator * (const HomMarkedAbelianGroup &X) const;
+        HomMarkedAbelianGroup operator * (const HomMarkedAbelianGroup& X) const;
+
+        /**
+         * Returns the composition of two homomorphisms.
+         *
+         * \pre the homomorphisms must be composable, meaning that the
+         * range of X must have the same presentation matrices as the
+         * domain of this homomorphism.
+         *
+         * @param X the homomorphism to compose this with.
+         * @return the composite homomorphism.
+         */
+        HomMarkedAbelianGroup operator * (HomMarkedAbelianGroup&& X) const;
 
         /**
          * Returns a HomMarkedAbelianGroup representing the induced map
@@ -1072,15 +1081,14 @@ class REGINA_API HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * map.  This is in the situation where the SNF coordinates have 
          * particular meaning to the user.  At present I only use this
          * for HomMarkedAbelianGroup::inverseHom().  Moreover, this routine 
-         * assumes tebeRedMat actually can be the reduced matrix of some 
+         * assumes redMat actually can be the reduced matrix of some 
          * chain map -- this is not a restriction in
          * the coeff==0 case, but it is if coeff > 0. 
          *
          * \todo Erase completely once made obsolete by right/left inverse.
          */
-        HomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
-                const MarkedAbelianGroup &dom, 
-                const MarkedAbelianGroup &ran);
+        HomMarkedAbelianGroup(MatrixInt redMat,
+                MarkedAbelianGroup dom, MarkedAbelianGroup ran);
 };
 
 /*@}*/
@@ -1175,12 +1183,10 @@ inline const Integer& MarkedAbelianGroup::coefficients() const {
 // Inline functions for HomMarkedAbelianGroup
 
 inline HomMarkedAbelianGroup::HomMarkedAbelianGroup(
-        const MarkedAbelianGroup& dom,
-        const MarkedAbelianGroup& ran,
-        const MatrixInt &mat) :
-        domain_(dom), range_(ran), matrix(mat),
-        reducedMatrix_(0), kernel_(0), coKernel_(0), image_(0),
-        reducedKernelLattice(0) {
+        MarkedAbelianGroup dom, MarkedAbelianGroup ran, MatrixInt mat) :
+        domain_(std::move(dom)), range_(std::move(ran)), matrix(std::move(mat)),
+        reducedMatrix_(nullptr), kernel_(nullptr), coKernel_(nullptr),
+        image_(nullptr), reducedKernelLattice(nullptr) {
 }
 
 inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {

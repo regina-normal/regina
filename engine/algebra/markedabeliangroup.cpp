@@ -59,14 +59,14 @@ MarkedAbelianGroup::MarkedAbelianGroup(unsigned long rk,
     if ( p != 1 ) snfrank = rk - ifNum;
 }
 
-MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N) :
-    OM(M), ON(N),
+MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN) :
+    OM(std::move(tmpM)), ON(std::move(tmpN)),
     rankOM(0),
-    InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0), 
-    coeff(Integer::zero), TORLoc(0), TORVec(0), tensorIfLoc(0), 
+    InvFacList(0), snfrank(0), snffreeindex(0), ifNum(0), ifLoc(0),
+    coeff(Integer::zero), TORLoc(0), TORVec(0), tensorIfLoc(0),
     tensorIfNum(0), tensorInvFacList(0)
 {
-    MatrixInt tM(M);
+    MatrixInt tM(OM);
 
     metricalSmithNormalForm(tM, &OMR, &OMRi, &OMC, &OMCi);
 
@@ -76,7 +76,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N) :
 
     // construct the internal presentation matrix.
     MatrixInt prod=OMRi*ON;
-    MatrixInt ORN(N.rows()-rankOM, N.columns());
+    MatrixInt ORN(ON.rows()-rankOM, ON.columns());
 
     for (unsigned long i=0;i<ORN.rows();i++) 
         for (unsigned long j=0;j<ORN.columns();j++)
@@ -118,14 +118,14 @@ MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N) :
 // be happy with. This has the added advantage of us being able to later easily 
 // implement the HomMarkedAbelianGroup maps for UCT later when we're interested
 //  in that kind of stuff. 
-MarkedAbelianGroup::MarkedAbelianGroup(const MatrixInt& M,
-            const MatrixInt& N, const Integer &pcoeff):
-        OM(M), ON(N),
+MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
+        const Integer &pcoeff):
+        OM(std::move(tmpM)), ON(std::move(tmpN)),
         rankOM(0), InvFacList(0), snfrank(0), snffreeindex(0),
-        ifNum(0), ifLoc(0), coeff(pcoeff), 
+        ifNum(0), ifLoc(0), coeff(pcoeff),
         TORLoc(0), TORVec(0), tensorIfLoc(0), tensorInvFacList(0) {
     // find SNF(M).
-    MatrixInt tM(M);
+    MatrixInt tM(OM);
 
     metricalSmithNormalForm(tM, &OMR, &OMRi, &OMC, &OMCi);
 
@@ -681,7 +681,7 @@ MarkedAbelianGroup MarkedAbelianGroup::torsionSubgroup() const {
     MatrixInt dN(countInvariantFactors(), countInvariantFactors() );
     for (unsigned long i=0; i<countInvariantFactors(); i++)
         dN.entry(i,i) = invariantFactor(i);
-    return MarkedAbelianGroup(dM, dN);
+    return MarkedAbelianGroup(std::move(dM), std::move(dN));
 }
 
 // and its canonical inclusion map
@@ -692,18 +692,17 @@ HomMarkedAbelianGroup MarkedAbelianGroup::torsionInclusion() const {
         for (unsigned long i=0; i<iM.rows(); i++)
             iM.entry(i,j) = jtor[i];
     }
-    return HomMarkedAbelianGroup(torsionSubgroup(), *this, iM);
+    return HomMarkedAbelianGroup(torsionSubgroup(), *this, std::move(iM));
 }
 
 
-HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
-        const MarkedAbelianGroup &dom,
-        const MarkedAbelianGroup &ran) :
-    domain_(dom), range_(ran), matrix(ran.M().columns(), dom.M().columns()),
-    reducedMatrix_(0), kernel_(0), coKernel_(0), image_(0), reducedKernelLattice(0)
-{
-    reducedMatrix_ = new MatrixInt(tobeRedMat);
-
+HomMarkedAbelianGroup::HomMarkedAbelianGroup(MatrixInt tmpRedMat,
+        MarkedAbelianGroup tmpDom, MarkedAbelianGroup tmpRan) :
+        domain_(std::move(tmpDom)), range_(std::move(tmpRan)),
+        matrix(range_.M().columns(), domain_.M().columns()),
+        reducedMatrix_(new MatrixInt(std::move(tmpRedMat))),
+        kernel_(nullptr), coKernel_(nullptr),
+        image_(nullptr), reducedKernelLattice(nullptr) {
     // If using mod p coeff, p != 0: 
     //
     // we build up the CC map in reverse from the way we computed
@@ -713,7 +712,7 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
     //                Truncate off first tensorIfLoc terms.
     //             1) SNF the combined matrix, truncate off ifLoc terms.
     //
-    // Step 1: ran.ornCi*[incl tobeRedMat]*[trunc dom.ornC] puts us in 
+    // Step 1: ran.ornCi*[incl redMat]*[trunc dom.ornC] puts us in 
     //         diagPres coords ran.ornCi.rows()-by-dom.ornC.rows()
     // Step 2: ran.otCi*(step 1)*[trunc dom.otC] puts us in trunc(SNF(M,M'))
     //         coords
@@ -727,28 +726,28 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
     //                        rankOM==TORLoc coords
     //                     1) SNF(N,N'), truncate off the first ifLoc terms.
     //
-    // Step 1: ran.ornCi*[incl tobeRedMat]*[trunc dom.ornC] puts us 
+    // Step 1: ran.ornCi*[incl redMat]*[trunc dom.ornC] puts us 
     //         in trunc(SNF(M,M')) coords
     // Step 2: --void--
     // Step 3: OMR*(step 1)*[trunc OMRi]
     // so we have a common Step 1. 
-    MatrixInt step1Mat(ran.ornCi.rows(), dom.ornC.rows());
+    MatrixInt step1Mat(range_.ornCi.rows(), domain_.ornC.rows());
     for (unsigned long i=0; i<step1Mat.rows(); i++) 
         for (unsigned long j=0; j<step1Mat.columns(); j++)
-    { // ran->ornCi.entry(i, k)*tobeRedMat.entry(k, l)*dom->ornC.entry(l, j)
-      for (unsigned long k=0; k<tobeRedMat.rows(); k++) 
-      for (unsigned long l=0;l<tobeRedMat.columns(); l++)
+    { // ran->ornCi.entry(i, k)*reducedMatrix_.entry(k, l)*dom->ornC.entry(l, j)
+      for (unsigned long k=0; k<reducedMatrix_->rows(); k++) 
+      for (unsigned long l=0;l<reducedMatrix_->columns(); l++)
         step1Mat.entry(i,j) += 
-        ran.ornCi.entry(i,k+ran.ifLoc)*tobeRedMat.entry(k,l)*
-         dom.ornC.entry(l+dom.ifLoc,j);
+        range_.ornCi.entry(i,k+range_.ifLoc)*reducedMatrix_->entry(k,l)*
+         domain_.ornC.entry(l+domain_.ifLoc,j);
     }
     // with mod p coefficients we have this fiddly middle step 2.
 
-    MatrixInt step2Mat( step1Mat.rows()+ran.tensorIfLoc, 
-                         step1Mat.columns()+dom.tensorIfLoc );
+    MatrixInt step2Mat( step1Mat.rows()+range_.tensorIfLoc, 
+                         step1Mat.columns()+domain_.tensorIfLoc );
     // if coeff==0, we'll just copy the step1Mat, if coeff>0 we multiply 
     // the tensor part by ran.otCi, dom.otC resp.
-    if (dom.coeff == 0)
+    if (domain_.coeff == 0)
         for (unsigned long i=0; i<step2Mat.rows(); i++) 
          for (unsigned long j=0; j<step2Mat.columns(); j++)
             step2Mat.entry(i,j) = step1Mat.entry(i,j);
@@ -757,53 +756,55 @@ HomMarkedAbelianGroup::HomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
       for (unsigned long j=0; j<step2Mat.columns(); j++)
        { // (ID_TOR xran->otCi.entry(i,k)*incl_tensorIfLoc)*step1Mat.entry(k,l)*
          // ID_TOR x trunc_tensorIfLoc*dom->otC.entry(l, j)) app shifted...
-        if (i < ran.TORVec.size()) 
+        if (i < range_.TORVec.size()) 
          {
-          if (j < dom.TORVec.size()) 
+          if (j < domain_.TORVec.size()) 
            { step2Mat.entry(i,j) = step1Mat.entry(i,j); } else
            { // [step1 UR corner] * [dom->otC first tensorIfLoc rows cropped]
-             for (unsigned long k=dom.tensorIfLoc; k<dom.otC.rows(); k++)
+             for (unsigned long k=domain_.tensorIfLoc; k<domain_.otC.rows(); k++)
              step2Mat.entry(i,j) += 
-             step1Mat.entry(i,k-dom.tensorIfLoc+dom.TORVec.size())*
-                dom.otC.entry(k,j-dom.TORVec.size());
-           }                                  
+             step1Mat.entry(i,k-domain_.tensorIfLoc+domain_.TORVec.size())*
+                domain_.otC.entry(k,j-domain_.TORVec.size());
+           }
          } else
-        if (j < dom.TORVec.size()) 
+        if (j < domain_.TORVec.size()) 
          {
-          for (unsigned long k=ran.tensorIfLoc; k<ran.otCi.columns(); k++) 
-           step2Mat.entry(i,j) += ran.otCi.entry(i-ran.TORVec.size(),k)*
-           step1Mat.entry(k-ran.tensorIfLoc+ran.TORVec.size(),j);
+          for (unsigned long k=range_.tensorIfLoc; k<range_.otCi.columns(); k++) 
+           step2Mat.entry(i,j) += range_.otCi.entry(i-range_.TORVec.size(),k)*
+           step1Mat.entry(k-range_.tensorIfLoc+range_.TORVec.size(),j);
          } else 
         {
-         for (unsigned long k=ran.tensorIfLoc; k<ran.otCi.rows(); k++) 
-         for (unsigned long l=dom.tensorIfLoc; l<dom.otC.rows(); l++)
-         step2Mat.entry(i,j) += ran.otCi.entry(i-ran.TORVec.size(),k)*
-         step1Mat.entry(k-ran.tensorIfLoc+ran.TORVec.size(),
-         l-dom.tensorIfLoc+dom.TORVec.size())*
-         dom.otC.entry(l,j-dom.TORVec.size());
+         for (unsigned long k=range_.tensorIfLoc; k<range_.otCi.rows(); k++) 
+         for (unsigned long l=domain_.tensorIfLoc; l<domain_.otC.rows(); l++)
+         step2Mat.entry(i,j) += range_.otCi.entry(i-range_.TORVec.size(),k)*
+         step1Mat.entry(k-range_.tensorIfLoc+range_.TORVec.size(),
+         l-domain_.tensorIfLoc+domain_.TORVec.size())*
+         domain_.otC.entry(l,j-domain_.TORVec.size());
         }
       }
     // now we rescale the TOR components appropriately, various row/column 
     // mult and divisions. multiply first ran.TORLoc rows by p/gcd(p,q)
     // divide first dom.TORLoc rows by p/gcd(p,q)
 
-    for (unsigned long i=0; i<ran.TORVec.size(); i++) 
+    for (unsigned long i=0; i<range_.TORVec.size(); i++) 
       for (unsigned long j=0; j<step2Mat.columns(); j++)
-        step2Mat.entry(i,j) *= ran.coeff.divExact(ran.coeff.gcd(ran.TORVec[i]));
+        step2Mat.entry(i,j) *=
+            range_.coeff.divExact(range_.coeff.gcd(range_.TORVec[i]));
     for (unsigned long i=0; i<step2Mat.rows(); i++) 
-      for (unsigned long j=0; j<dom.TORVec.size(); j++)
-        step2Mat.entry(i,j) /= dom.coeff.divExact(dom.coeff.gcd(dom.TORVec[j]));
+      for (unsigned long j=0; j<domain_.TORVec.size(); j++)
+        step2Mat.entry(i,j) /=
+            domain_.coeff.divExact(domain_.coeff.gcd(domain_.TORVec[j]));
     // previous line of code divisibility is good thing to check when debugging. 
     // step 3, move it all up to the CC coordinates.
     // ran.OMR * incl_ifLoc * step2Mat * proj_ifLoc * dom.OMRi
     for (unsigned long i=0; i<matrix.rows(); i++) 
      for (unsigned long j=0; j<matrix.columns(); j++)
     {
-     for (unsigned long k=ran.TORLoc; k<ran.OMR.columns(); k++) 
-       for (unsigned long l=dom.TORLoc;l<dom.OMRi.rows(); l++)
-          matrix.entry(i,j) += ran.OMR.entry(i,k) *
-          step2Mat.entry(k-ran.TORLoc,l-dom.TORLoc) *
-          dom.OMRi.entry(l,j);
+     for (unsigned long k=range_.TORLoc; k<range_.OMR.columns(); k++) 
+       for (unsigned long l=domain_.TORLoc;l<domain_.OMRi.rows(); l++)
+          matrix.entry(i,j) += range_.OMR.entry(i,k) *
+          step2Mat.entry(k-range_.TORLoc,l-domain_.TORLoc) *
+          domain_.OMRi.entry(l,j);
     }
  // done
 }
@@ -956,9 +957,8 @@ void HomMarkedAbelianGroup::computeKernel() {
                         R.entry(i,k) * C.entry(k,j) ) / dcLpreimage.entry(k,k);
                 }
 
-        MatrixInt dummy( 1, dcLpreimage.columns() );
-
-        kernel_ = new MarkedAbelianGroup(dummy, workMat);
+        kernel_ = new MarkedAbelianGroup(MatrixInt(1, dcLpreimage.columns()),
+            std::move(workMat));
     }
 }
 
@@ -978,9 +978,8 @@ void HomMarkedAbelianGroup::computeCokernel() {
             ccrelators.entry(i,i+reducedMatrix_->columns())=
                 range_.invariantFactor(i);
 
-        MatrixInt ccgenerators( 1, reducedMatrix_->rows() );
-
-        coKernel_ = new MarkedAbelianGroup(ccgenerators, ccrelators);
+        coKernel_ = new MarkedAbelianGroup(MatrixInt(1, reducedMatrix_->rows()),
+            std::move(ccrelators));
     }
 }
 
@@ -1002,13 +1001,22 @@ void HomMarkedAbelianGroup::computeImage() {
                 imgCCn.entry(i,j+domain_.countInvariantFactors()) =
                     dcLpreimage.entry(i,j);
 
-        image_ = new MarkedAbelianGroup(imgCCm, imgCCn);
+        image_ = new MarkedAbelianGroup(std::move(imgCCm), std::move(imgCCn));
     }
 }
 
 HomMarkedAbelianGroup HomMarkedAbelianGroup::operator * (
-        const HomMarkedAbelianGroup &X) const {
-    return HomMarkedAbelianGroup(X.domain_, range_, matrix*X.matrix);
+        const HomMarkedAbelianGroup& X) const {
+    // Induces a deep copy of X.domain_ and this->range_.
+    return HomMarkedAbelianGroup(X.domain_, range_,
+        matrix * X.matrix);
+}
+
+HomMarkedAbelianGroup HomMarkedAbelianGroup::operator * (
+        HomMarkedAbelianGroup&& X) const {
+    // Induces a deep copy of this->range_.
+    return HomMarkedAbelianGroup(std::move(X.domain_), range_,
+        matrix * X.matrix);
 }
 
 std::vector<Integer> HomMarkedAbelianGroup::evalCC(
@@ -1128,7 +1136,8 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::torsionSubgroup() const {
             mat.entry(i,j) = temp[i];
     }
 
-    return HomMarkedAbelianGroup(dom, ran, mat);
+    return HomMarkedAbelianGroup(std::move(dom), std::move(ran),
+        std::move(mat));
 }
 
 
@@ -1180,7 +1189,7 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
  const_cast<HomMarkedAbelianGroup*>(this)->computeReducedMatrix();
  MatrixInt invMat( reducedMatrix_->columns(), reducedMatrix_->rows() );
  if (!isIsomorphism())
-    return HomMarkedAbelianGroup( invMat, range_, domain_ );
+    return HomMarkedAbelianGroup( std::move(invMat), range_, domain_ );
  // get A, B, D from reducedMatrix
  // A must be square with domain/range_.countInvariantFactors() columns
  // D must be square with domain/range_.rank() columns
@@ -1257,7 +1266,7 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
  for (unsigned long i=0; i<Bi.rows(); i++) 
    for (unsigned long j=0; j<Bi.columns(); j++)
      invMat.entry(i,j+Ai->columns()) = Bi.entry(i,j);
- return HomMarkedAbelianGroup(invMat, range_, domain_);
+ return HomMarkedAbelianGroup(std::move(invMat), range_, domain_);
 }
 
 } // namespace regina
