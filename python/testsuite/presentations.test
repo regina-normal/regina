@@ -51,3 +51,13 @@ e.substitute([GroupExpression('aB'), \
               GroupExpression('g'), \
               GroupExpression('f')])
 print(e)
+
+e = GroupExpression('a^7dB^2D')
+e.addTermsLast(GroupExpression('c^2D'))
+e.addTermsFirst(GroupExpression('E^2f'))
+print(e)
+
+e = GroupExpression('a^7dB^2D')
+e.addTermsFirst(e)
+e.addTermsLast(e)
+print(e)

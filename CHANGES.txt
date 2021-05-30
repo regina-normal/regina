@@ -117,6 +117,8 @@ Version 6.1  [ TODO ]
             - New variant of substitute() that can replace all generators
               simultaneously.
             - Functions inverse() and power() now return by value, not pointer.
+            - Functions addTermsFirst() and addTermsLast() now take the
+              GroupExpression argument by value, not by const reference.
         Class GroupPresentation:
             - Added move constructors and move assignment operators.
             - New swap() member function.
@@ -134,7 +136,7 @@ Version 6.1  [ TODO ]
               just return an X by value (which can then be moved from).
             - Constructors that used to take a (const GroupPresentation&) for
               domain and range now take GroupPresentation arguments by value.
-            - The evaluate() and evaluateInv() functions now run in
+            - The evaluate() and invEvaluate() functions now run in
               linear time, not quadratic time.
         Class HomMarkedAbelianGroup:
             - Added a move constructor.

@@ -429,14 +429,14 @@ class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
          *
          * @param word the word to multiply with this expression.
          */
-        void addTermsFirst(const GroupExpression& word);
+        void addTermsFirst(GroupExpression word);
         /**
          * Multiplies this expression on the right by the given word.
          * This expression will be modified directly.
          *
          * @param word the word to multiply with this expression.
          */
-        void addTermsLast(const GroupExpression& word);
+        void addTermsLast(GroupExpression word);
 
         /**
          * Multiplies this expression on the left by the word
@@ -1609,6 +1609,14 @@ inline void GroupExpression::addTermLast(const GroupExpressionTerm& term) {
 inline void GroupExpression::addTermLast(unsigned long generator,
         long exponent) {
     terms_.push_back(GroupExpressionTerm(generator, exponent));
+}
+
+inline void GroupExpression::addTermsLast(GroupExpression word) {
+    terms_.splice(terms_.end(), std::move(word.terms_));
+}
+
+inline void GroupExpression::addTermsFirst(GroupExpression word) {
+    terms_.splice(terms_.begin(), std::move(word.terms_));
 }
 
 inline void GroupExpression::erase() {

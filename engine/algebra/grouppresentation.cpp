@@ -548,21 +548,6 @@ namespace { // anonymous namespace
     */
 }
 
-void GroupExpression::addTermsLast(const GroupExpression& word)
-{
-    std::list< GroupExpressionTerm >::const_iterator it;
-    for (it = word.terms_.begin(); it != word.terms_.end(); it++)
-        addTermLast( *it );
-}
-
-void GroupExpression::addTermsFirst(const GroupExpression& word)
-{
-    // traverse word's terms in reverse order.
-    std::list< GroupExpressionTerm >::const_reverse_iterator it;
-    for (it = word.terms_.rbegin(); it != word.terms_.rend(); it++)
-        addTermFirst( *it );
-}
-
 /**
  *  Given a word of the form g_i1^j1 g_i2^j2 ... g_in^jn
  * converts the word into g_i2^j2 ... g_in^jn g_i1^j1
@@ -730,7 +715,7 @@ bool GroupExpression::addStringFirst( const std::string& input)
     GroupExpression tword( input, &temp );
     if (!temp)
         return false;
-    addTermsFirst(tword);
+    addTermsFirst(std::move(tword));
     return true;
 }
 
@@ -740,7 +725,7 @@ bool GroupExpression::addStringLast( const std::string& input)
     GroupExpression tword( input, &temp );
     if (!temp)
         return false;
-    addTermsLast(tword);
+    addTermsLast(std::move(tword));
     return true;
 }
 
@@ -916,7 +901,8 @@ GroupPresentation::smallCancellationDetail()
                                 else complement.addTermLast( (*tit) );
                             }
                         }
-                        complement.addTermsLast(prefix);
+                        complement.addTermsLast(std::move(prefix));
+                        // WARNING: Cannot use prefix beyond here.
                         if (!inv) complement.invert();
                         // sub gi --> complement, in both substitutionTable and relatorList
                         for (unsigned long j=0; j<substitutionTable.size(); j++)
