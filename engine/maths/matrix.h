@@ -190,6 +190,23 @@ class Matrix : public Output<Matrix<T>> {
 
     public:
         /**
+         * Creates a new uninitialised matrix.
+         *
+         * You \e must initialise this matrix using the assignment operator
+         * before you can use it for any purpose.  The only exceptions are:
+         *
+         * - you can safely destroy an uninitialised matrix;
+         *
+         * - you can safely assign an uninitialised matrix to another matrix
+         *   (either via an assignment operator or copy constructor), in which
+         *   case the other matrix will become uninitialised also and subject
+         *   to similar constraints.
+         *
+         * \ifacespython Not present.
+         */
+        Matrix() : rows_(0), cols_(0), data_(nullptr) {
+        }
+        /**
          * Creates a new matrix of the given size.
          * All entries will be initialised using their default constructors.
          *
@@ -247,15 +264,22 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This constructor induces a deep copy of \a src.
          *
+         * This routine is safe to call even if \a src is uninitialised
+         * (in which case this matrix will become uninitialised also).
+         *
          * @param src the matrix to clone.
          */
-        Matrix(const Matrix& src) : rows_(src.rows_),
-                cols_(src.cols_), data_(new T*[src.rows_]) {
-            unsigned long r, c;
-            for (r = 0; r < rows_; r++) {
-                data_[r] = new T[cols_];
-                for (c = 0; c < cols_; c++)
-                    data_[r][c] = src.data_[r][c];
+        Matrix(const Matrix& src) : rows_(src.rows_), cols_(src.cols_) {
+            if (src.data_) {
+                data_ = new T*[src.rows_];
+                unsigned long r, c;
+                for (r = 0; r < rows_; r++) {
+                    data_[r] = new T[cols_];
+                    for (c = 0; c < cols_; c++)
+                        data_[r][c] = src.data_[r][c];
+                }
+            } else {
+                data_ = nullptr;
             }
         }
         /**
@@ -263,6 +287,9 @@ class Matrix : public Output<Matrix<T>> {
          * This is a fast (constant time) operation.
          *
          * The matrix that is passed (\a src) will no longer be usable.
+         *
+         * This routine is safe to call even if \a src is uninitialised
+         * (in which case this matrix will become uninitialised also).
          *
          * @param src the matrix to move.
          */
@@ -272,6 +299,8 @@ class Matrix : public Output<Matrix<T>> {
         }
         /**
          * Destroys this matrix.
+         *
+         * This destructor is safe to call even if \a src is uninitialised.
          */
         ~Matrix() {
             if (data_) {
@@ -289,25 +318,40 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This operator induces a deep copy of \a src.
          *
+         * This routine is safe to call even if \a src is uninitialised
+         * (in which case this matrix will become uninitialised also).
+         *
          * @param src the matrix to copy.
          * @return a reference to this matrix.
          */
         Matrix& operator = (const Matrix& src) {
-            if (rows_ != src.rows_ || cols_ != src.cols_) {
-                for (unsigned long i = 0; i < rows_; ++i)
-                    delete[] data_[i];
-                delete[] data_;
+            if (src.data_) {
+                if (rows_ != src.rows_ || cols_ != src.cols_ || ! data_) {
+                    if (data_) {
+                        for (unsigned long i = 0; i < rows_; ++i)
+                            delete[] data_[i];
+                        delete[] data_;
+                    }
 
-                rows_ = src.rows_;
-                cols_ = src.cols_;
+                    rows_ = src.rows_;
+                    cols_ = src.cols_;
 
-                data_ = new T*[rows_];
+                    data_ = new T*[rows_];
+                    for (unsigned long i = 0; i < rows_; ++i)
+                        data_[i] = new T[cols_];
+                }
+
                 for (unsigned long i = 0; i < rows_; ++i)
-                    data_[i] = new T[cols_];
+                    std::copy(src.data_[i], src.data_[i] + cols_, data_[i]);
+            } else {
+                if (data_) {
+                    for (unsigned long i = 0; i < rows_; ++i)
+                        delete[] data_[i];
+                    delete[] data_;
+                }
+                rows_ = cols_ = 0;
+                data_ = nullptr;
             }
-
-            for (unsigned long i = 0; i < rows_; ++i)
-                std::copy(src.data_[i], src.data_[i] + cols_, data_[i]);
             return *this;
         }
         /**
@@ -318,6 +362,9 @@ class Matrix : public Output<Matrix<T>> {
          * sizes; if they do then this matrix will be resized as a result.
          *
          * The matrix that is passed (\a src) will no longer be usable.
+         *
+         * This routine is safe to call even if \a src is uninitialised
+         * (in which case this matrix will become uninitialised also).
          *
          * @param src the matrix to move.
          * @return a reference to this matrix.
