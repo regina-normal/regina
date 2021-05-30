@@ -811,23 +811,16 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          * Adds the given relation to the group presentation.
          * The relation must be of the form <tt>expression = 1</tt>.
          *
-         * This presentation will take ownership of the given
-         * expression, may change it and will be responsible for its
-         * deallocation.
-         *
          * \warning This routine does not check whether or not your relation
          * is a word only in the generators of this group.  In other
          * words, it does not stop you from using generators beyond the
          * countGenerators() bound.
          *
-         * \ifacespython In Python, this routine clones its argument
-         * instead of claiming ownership of it.
-         *
          * @param rel the expression that the relation sets to 1; for
          * instance, if the relation is <tt>g1^2 g2 = 1</tt> then this
          * parameter should be the expression <tt>g1^2 g2</tt>.
          */
-        void addRelation(GroupExpression* rel);
+        void addRelation(GroupExpression rel);
 
         /**
          * Returns the number of generators in this group presentation.
@@ -1656,8 +1649,8 @@ inline unsigned long GroupPresentation::addGenerator(unsigned long num) {
     return (nGenerators_ += num);
 }
 
-inline void GroupPresentation::addRelation(GroupExpression* rel) {
-    relations_.push_back(rel);
+inline void GroupPresentation::addRelation(GroupExpression rel) {
+    relations_.push_back(new GroupExpression(std::move(rel)));
 }
 
 inline unsigned long GroupPresentation::countGenerators() const {

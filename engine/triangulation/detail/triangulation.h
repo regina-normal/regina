@@ -3229,7 +3229,7 @@ const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
     for (Face<dim, dim-2>* f : faces<dim-2>()) {
         if (! f->isBoundary()) {
             // Put in the relation corresponding to this triangle.
-            rel = new GroupExpression();
+            GroupExpression rel;
             for (auto& emb : *f) {
                 simp = emb.simplex();
                 facet = emb.vertices()[dim-1];
@@ -3242,12 +3242,12 @@ const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
                     // backwards as we walk around the (dim-2)-face f.
                     if ((gen->front().simplex() == simp) &&
                             (gen->front().face() == facet))
-                        rel->addTermLast(genIndex[gen->index()], 1);
+                        rel.addTermLast(genIndex[gen->index()], 1);
                     else
-                        rel->addTermLast(genIndex[gen->index()], -1);
+                        rel.addTermLast(genIndex[gen->index()], -1);
                 }
             }
-            ans->addRelation(rel);
+            ans->addRelation(std::move(rel));
         }
     }
 

@@ -1441,12 +1441,12 @@ GroupPresentation::identifyFreeProduct() const
         for (unsigned long i=0; i<relations_.size(); i++) {
             // check if relations_[i] generator is in *I
             if (I->find( relations_[i]->term(0).generator)!=I->end()) { // yes!
-                GroupExpression* newRel( new GroupExpression );
+                GroupExpression newRel;
                 for (std::list<GroupExpressionTerm>::const_iterator
                         ET=relations_[i]->terms().begin();
                         ET!=relations_[i]->terms().end(); ET++)
-                    newRel->addTermLast( downMap[ ET->generator ], ET->exponent );
-                newGrp->addRelation( newRel );
+                    newRel.addTermLast( downMap[ ET->generator ], ET->exponent );
+                newGrp->addRelation( std::move(newRel) );
             }
         } // end relations i loop
         retval.push_back( newGrp );
@@ -1883,7 +1883,7 @@ GroupPresentation::identifyExtensionOverZ()
         temp.simplify();
         if (temp.wordLength()>0) {
             tempTable.push_back(temp);
-            kerPres.addRelation( new GroupExpression(temp) );
+            kerPres.addRelation( std::move(temp) );
         }
     }
     if (!kerPres.isValid()) {
@@ -1907,7 +1907,7 @@ GroupPresentation::identifyExtensionOverZ()
                     J=genKiller.begin(); J!=genKiller.end(); J++)
                 I->substitute( J->first, J->second, false );
             // apply genKiller to reduce the words, and push to presentation
-            kerPres.addRelation( new GroupExpression( *I ) );
+            kerPres.addRelation( *I );
         }
     }
     // replace this presentation by the semi-direct product presentation.

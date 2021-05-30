@@ -66,16 +66,16 @@ const GroupPresentation* SnapPeaTriangulation::fundamentalGroupFilled(
     unsigned i;
     int *sReln, *sPos;
     int gen, currGen, currExp;
-    GroupExpression* rReln;
     for (i = 0; i < regina::snappea::fg_get_num_relations(pres); ++i) {
         sReln = regina::snappea::fg_get_relation(pres, i);
-        rReln = new GroupExpression();
+
+        GroupExpression rReln;
         currGen = currExp = 0;
         for (sPos = sReln; *sPos; ++sPos) {
             gen = (*sPos > 0 ? *sPos : -*sPos);
             if (gen != currGen) {
                 if (currExp)
-                    rReln->addTermLast(currGen - 1, currExp);
+                    rReln.addTermLast(currGen - 1, currExp);
                 currGen = gen;
                 currExp = 0;
             }
@@ -85,8 +85,8 @@ const GroupPresentation* SnapPeaTriangulation::fundamentalGroupFilled(
                 --currExp;
         }
         if (currExp)
-            rReln->addTermLast(currGen - 1, currExp);
-        ans->addRelation(rReln);
+            rReln.addTermLast(currGen - 1, currExp);
+        ans->addRelation(std::move(rReln));
         regina::snappea::fg_free_relation(sReln);
     }
 

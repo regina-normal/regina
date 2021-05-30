@@ -42,13 +42,13 @@ namespace {
     /**
      * Reads a single relation in a group presentation.
      */
-    class NExpressionReader : public XMLElementReader {
+    class ExpressionReader : public XMLElementReader {
         private:
             GroupExpression* exp;
             long nGens;
 
         public:
-            NExpressionReader(long newNGens) : exp(new GroupExpression()),
+            ExpressionReader(long newNGens) : exp(new GroupExpression()),
                     nGens(newNGens) {
             }
 
@@ -68,7 +68,7 @@ namespace {
                     split = (*it).find('^');
                     if (split == (*it).length()) {
                         delete exp;
-                        exp = 0;
+                        exp = nullptr;
                         break;
                     }
 
@@ -78,13 +78,13 @@ namespace {
 
                     if ((! valueOf(genStr, gen)) || (! valueOf(powStr, pow))) {
                         delete exp;
-                        exp = 0;
+                        exp = nullptr;
                         break;
                     } 
 
                     if (gen < 0 || gen >= nGens) {
                         delete exp;
-                        exp = 0;
+                        exp = nullptr;
                         break;
                     }
 
@@ -139,7 +139,7 @@ XMLElementReader* XMLGroupPresentationReader::startSubElement(
         const regina::xml::XMLPropertyDict& /* subTagProps */) {
     if (group_)
         if (subTagName == "reln")
-            return new NExpressionReader(group_->countGenerators());
+            return new ExpressionReader(group_->countGenerators());
     return new XMLElementReader();
 }
 
@@ -148,9 +148,11 @@ void XMLGroupPresentationReader::endSubElement(const std::string& subTagName,
     if (group_)
         if (subTagName == "reln") {
             GroupExpression* exp =
-                dynamic_cast<NExpressionReader*>(subReader)->getExpression();
-            if (exp)
-                group_->addRelation(exp);
+                dynamic_cast<ExpressionReader*>(subReader)->getExpression();
+            if (exp) {
+                group_->addRelation(std::move(*exp));
+                delete exp;
+            }
         }
 }
 

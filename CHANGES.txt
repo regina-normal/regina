@@ -124,6 +124,7 @@ Version 6.1  [ TODO ]
             - New swap() member function.
             - Functions abelianisation() and markedAbelianisation() now
               return groups by value (which can then be moved from).
+            - Function addRelation() now takes its argument by value.
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
