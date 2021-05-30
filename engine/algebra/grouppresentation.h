@@ -501,13 +501,12 @@ class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
         void cycleLeft();
 
         /**
-         * Returns a newly created expression that is the inverse of
-         * this expression.  The terms will be reversed and the
-         * exponents negated.
+         * Returns the inverse of this expression.
+         * The terms will be reversed and the exponents negated.
          *
          * @return the inverse of this expression.
          */
-        GroupExpression* inverse() const;
+        GroupExpression inverse() const;
 
         /**
          * Inverts this expression.  Does not allocate or deallocate anything.
@@ -515,14 +514,13 @@ class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
         void invert();
 
         /**
-         * Returns a newly created expression that is
-         * this expression raised to the given power.
-         * Note that the given exponent may be positive, zero or negative.
+         * Returns this expression raised to the given power.
+         * The given exponent may be positive, zero or negative.
          *
          * @param exponent the power to which this expression should be raised.
          * @return this expression raised to the given power.
          */
-        GroupExpression* power(long exponent) const;
+        GroupExpression power(long exponent) const;
         /**
          * Simplifies this expression.
          * Adjacent powers of the same generator will be combined, and

@@ -76,10 +76,10 @@ const GroupExpressionTerm& GroupExpression::term(size_t index) const {
     return *pos;
 }
 
-GroupExpression* GroupExpression::inverse() const {
-    GroupExpression* ans = new GroupExpression();
+GroupExpression GroupExpression::inverse() const {
+    GroupExpression ans;
     for (const GroupExpressionTerm& t : terms_)
-        ans->terms_.push_front(t.inverse());
+        ans.terms_.push_front(t.inverse());
     return ans;
 }
 
@@ -90,19 +90,17 @@ void GroupExpression::invert() {
         (*it).exponent = -(*it).exponent;
 }
 
-GroupExpression* GroupExpression::power(long exponent) const {
-    GroupExpression* ans = new GroupExpression();
-    if (exponent == 0)
-        return ans;
-
+GroupExpression GroupExpression::power(long exponent) const {
+    GroupExpression ans;
     long i;
-    if (exponent > 0)
-        for (i = 0; i < exponent; i++)
-            ans->terms_.insert(ans->terms_.end(), terms_.begin(), terms_.end());
-    else
-        for (i = 0; i > exponent; i--)
+    if (exponent > 0) {
+        for (i = 0; i < exponent; ++i)
+            ans.terms_.insert(ans.terms_.end(), terms_.begin(), terms_.end());
+    } else if (exponent < 0) {
+        for (i = 0; i > exponent; --i)
             for (const GroupExpressionTerm& t : terms_)
-                ans->terms_.push_front(t.inverse());
+                ans.terms_.push_front(t.inverse());
+    }
     return ans;
 }
 
@@ -180,8 +178,8 @@ bool GroupExpression::substitute(unsigned long generator,
                 if (exponent > 0)
                     use = &expansion;
                 else {
-                    if (inverse == nullptr)
-                        inverse = expansion.inverse();
+                    if (! inverse)
+                        inverse = new GroupExpression(expansion.inverse());
                     use = inverse;
                     exponent = -exponent;
                 }
@@ -198,8 +196,7 @@ bool GroupExpression::substitute(unsigned long generator,
             changed = true;
         }
     }
-    if (inverse)
-        delete inverse;
+    delete inverse;
     if (changed)
         simplify(cyclic);
     return changed;
@@ -217,11 +214,10 @@ void GroupExpression::substitute(
                 expanded.insert(expanded.end(),
                     use->terms_.begin(), use->terms_.end());
         } else if (t.exponent < 0) {
-            GroupExpression* use = expansions[t.generator]->inverse();
+            GroupExpression use = expansions[t.generator]->inverse();
             for (i = 0; i > t.exponent; --i)
                 expanded.insert(expanded.end(),
-                    use->terms_.begin(), use->terms_.end());
-            delete use;
+                    use.terms_.begin(), use.terms_.end());
         }
     }
 

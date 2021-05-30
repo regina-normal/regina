@@ -163,11 +163,10 @@ class GroupPresentationTest : public CppUnit::TestFixture {
         GroupExpression word2("cbaCBA");
         GroupExpression word3("abccbaBCCBA");
 
-        GroupExpression* word4( word1.inverse() );
-        if ( !( (*word4)==word2 ) )
+        GroupExpression word4 = word1.inverse();
+        if ( !( word4==word2 ) )
             CPPUNIT_FAIL("GroupExpression::inverse "+word2.str()+
-                std::string(" != ")+word4->str());
-        delete word4;
+                std::string(" != ")+word4.str());
 
         word1.simplify();
         word2.simplify();

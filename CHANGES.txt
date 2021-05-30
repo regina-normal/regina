@@ -116,6 +116,7 @@ Version 6.1  [ TODO ]
             - Added move constructors and move assignment operators.
             - New variant of substitute() that can replace all generators
               simultaneously.
+            - Functions inverse() and power() now return by value, not pointer.
         Class GroupPresentation:
             - Added move constructors and move assignment operators.
             - New swap() member function.
