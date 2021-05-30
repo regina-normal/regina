@@ -456,10 +456,10 @@ inline HomGroupPresentation::HomGroupPresentation(
 
 inline HomGroupPresentation::~HomGroupPresentation() {
     for (auto exp : map_)
-        delete exp_;
+        delete exp;
     if (inv_) {
         for (auto exp : *inv_)
-            delete exp_;
+            delete exp;
         delete inv_;
     }
     delete domain_;
@@ -473,6 +473,7 @@ inline HomGroupPresentation& HomGroupPresentation::operator = (
     map_.swap(src.map_);
     std::swap(inv_, src.inv_);
     // Let src dispose of the original data in its own destructor.
+    return *this;
 }
 
 inline const GroupPresentation& HomGroupPresentation::domain() const {

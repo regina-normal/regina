@@ -59,14 +59,14 @@ HomGroupPresentation& HomGroupPresentation::operator = (
     *range_ = *(src.range_);
 
     for (auto exp : map_)
-        delete exp_;
+        delete exp;
     map_.resize(src.map_.size());
     for (unsigned long i=0; i<map_.size(); i++)
         map_[i] = new GroupExpression(*src.map_[i]);
 
     if (inv_) {
         for (auto exp : *inv_)
-            delete exp_;
+            delete exp;
     }
     if (src.inv_) {
         if (! inv_)
@@ -80,6 +80,7 @@ HomGroupPresentation& HomGroupPresentation::operator = (
             inv_ = nullptr;
         }
     }
+    return *this;
 }
 
 GroupExpression HomGroupPresentation::evaluate(
