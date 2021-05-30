@@ -169,10 +169,10 @@ void smithNormalForm(MatrixInt& matrix,
     Integer d, u, v, a, b;
     Integer tmp;
 
-    rowSpaceBasis.makeIdentity();
-    rowSpaceBasisInv.makeIdentity();
-    colSpaceBasis.makeIdentity();
-    colSpaceBasisInv.makeIdentity();
+    rowSpaceBasis = MatrixInt::identity(matrix.columns());
+    rowSpaceBasisInv = MatrixInt::identity(matrix.columns());
+    colSpaceBasis = MatrixInt::identity(matrix.rows());
+    colSpaceBasisInv = MatrixInt::identity(matrix.rows());
 
     while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
         loopStart:
@@ -1117,10 +1117,15 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
 void metricalSmithNormalForm(MatrixInt& matrix,
         MatrixInt *rowSpaceBasis, MatrixInt *rowSpaceBasisInv,
         MatrixInt *colSpaceBasis, MatrixInt *colSpaceBasisInv) {
-    if (rowSpaceBasis) rowSpaceBasis->makeIdentity();    
-    if (rowSpaceBasisInv) rowSpaceBasisInv->makeIdentity();
-    if (colSpaceBasis) colSpaceBasis->makeIdentity();    
-    if (colSpaceBasisInv) colSpaceBasisInv->makeIdentity();
+    if (rowSpaceBasis)
+        *rowSpaceBasis = MatrixInt::identity(matrix.columns());
+    if (rowSpaceBasisInv)
+        *rowSpaceBasisInv = MatrixInt::identity(matrix.columns());
+    if (colSpaceBasis)
+        *colSpaceBasis = MatrixInt::identity(matrix.rows());
+    if (colSpaceBasisInv)
+        *colSpaceBasisInv = MatrixInt::identity(matrix.rows());
+
     // set up metrics. 
     std::vector<Integer> rowNorm(matrix.rows(), Integer::zero);
     std::vector<Integer> colNorm(matrix.columns(), Integer::zero);

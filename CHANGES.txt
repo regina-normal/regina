@@ -157,6 +157,9 @@ Version 6.1  [ TODO ]
         Class LPConstraintEulerZero:
             - New constraint to use with normal surface enumeration that
               fixes Euler characteristic to be zero.
+        Class MarkedAbelianGroup:
+            - New move constructor.
+            - New copy assignment and move assignment operators.
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.
@@ -352,6 +355,9 @@ Version 6.1  [ TODO ]
               template function readSigList() that can work with knots and
               also triangulations of any dimension.  The old readIsoSigList()
               has been kept as a deprecated alias.
+        Function smithNormalForm(), metricalSmithNormalForm():
+            - The change of basis matrices no longer need to have the correct
+              size (and may even be uninitialised) before they are passed in.
         Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
                 quadString:
             - These are all now inline constexpr.

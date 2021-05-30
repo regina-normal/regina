@@ -82,6 +82,11 @@ class HomMarkedAbelianGroup;
  * and is created by constructing the product MRBi() * \a N, and then
  * removing the first rankM() rows.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Calling a routine that returns a MarkedAbelianGroup should not perform any
+ * unwanted deep copies.
+ *
  * @author Ryan Budney
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
@@ -109,13 +114,13 @@ class REGINA_API MarkedAbelianGroup :
         // first rankOM rows.
 
         /** Internal change of basis. ornC * ORN * ornR is the SNF(ORN). */
-        std::unique_ptr<MatrixInt> ornR, ornC;
+        MatrixInt ornR, ornC;
         /** Internal change of basis. These are the inverses of ornR and ornC
             respectively. */
-        std::unique_ptr<MatrixInt> ornRi, ornCi; 
+        MatrixInt ornRi, ornCi; 
         /** Internal change of basis matrix for homology with coefficents.
             otC * tensorPres * otR == SNF(tensorPres) */
-        std::unique_ptr<MatrixInt> otR, otC, otRi, otCi;
+        MatrixInt otR, otC, otRi, otCi;
 
         /** Internal list of invariant factors. */
         std::vector<Integer> InvFacList;
@@ -202,10 +207,34 @@ class REGINA_API MarkedAbelianGroup :
 
         /**
          * Creates a clone of the given group.
-         *
-         * @param cloneMe the group to clone.
          */
-        MarkedAbelianGroup(const MarkedAbelianGroup& cloneMe);
+        MarkedAbelianGroup(const MarkedAbelianGroup&) = default;
+
+        /**
+         * Moves the contents of the given group to this new group.
+         * This is a fast (constant time) operation.
+         *
+         * The group that was passed will no longer be usable.
+         */
+        MarkedAbelianGroup(MarkedAbelianGroup&&) noexcept = default;
+
+        /**
+         * Sets this to be a clone of the given group.
+         *
+         * @return a reference to this group.
+         */
+        MarkedAbelianGroup& operator = (const MarkedAbelianGroup&) = default;
+
+        /**
+         * Moves the contents of the given group to this group.
+         * This is a fast (constant time) operation.
+         *
+         * The group that was passed will no longer be usable.
+         *
+         * @return a reference to this group.
+         */
+        MarkedAbelianGroup& operator = (MarkedAbelianGroup&&) noexcept =
+            default;
 
         /**
          * Determines whether or not the defining maps for this group
@@ -649,9 +678,6 @@ class REGINA_API MarkedAbelianGroup :
          *  torsion subgroup into this group. 
          */
         std::unique_ptr<HomMarkedAbelianGroup> torsionInclusion() const;
-
-        // Make this class non-assignable.
-        MarkedAbelianGroup& operator = (const MarkedAbelianGroup&) = delete;
 };
 
 /**
@@ -1059,21 +1085,6 @@ inline const MarkedAbelianGroup& HomMarkedAbelianGroup::cokernel() const {
 }
 
 // Inline functions for MarkedAbelianGroup
-
-// copy constructor
-inline MarkedAbelianGroup::MarkedAbelianGroup(const MarkedAbelianGroup& g) :
-        OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
-        rankOM(g.rankOM),
-        ornR(clonePtr(g.ornR)), ornC(clonePtr(g.ornC)),
-        ornRi(clonePtr(g.ornRi)), ornCi(clonePtr(g.ornCi)),
-        otR(clonePtr(g.otR)), otC(clonePtr(g.otC)),
-        otRi(clonePtr(g.otRi)), otCi(clonePtr(g.otCi)),
-        InvFacList(g.InvFacList), snfrank(g.snfrank),
-        snffreeindex(g.snffreeindex),
-        ifNum(g.ifNum), ifLoc(g.ifLoc), coeff(g.coeff), TORLoc(g.TORLoc),
-        TORVec(g.TORVec), tensorIfLoc(g.tensorIfLoc),
-        tensorIfNum(g.tensorIfNum), tensorInvFacList(g.tensorInvFacList) {
-}
 
 inline unsigned long MarkedAbelianGroup::torsionRank(unsigned long degree)
         const {
