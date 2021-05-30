@@ -116,8 +116,8 @@ Version 6.1  [ TODO ]
             - Added move constructors and move assignment operators.
         Class GroupPresentation:
             - Added move constructors and move assignment operators.
-            - Function markedAbelianisation() now returns a group by value
-              (which can then be moved from).
+            - Functions abelianisation() and markedAbelianisation() now
+              return groups by value (which can then be moved from).
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.

@@ -1006,9 +1006,9 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
         /**
          * Computes the abelianisation of this group.
          *
-         * @return a newly allocated abelianisation of this group.
+         * @return the abelianisation of this group.
          */
-        std::unique_ptr<AbelianGroup> abelianisation() const;
+        AbelianGroup abelianisation() const;
 
         /**
          * Computes the abelianisation of this group.
