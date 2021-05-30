@@ -711,9 +711,9 @@ class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
  */
 class REGINA_API GroupPresentation : public Output<GroupPresentation> {
     protected:
-        unsigned long nGenerators;
+        unsigned long nGenerators_;
             /**< The number of generators. */
-        std::vector<GroupExpression*> relations;
+        std::vector<GroupExpression*> relations_;
             /**< The relations between the generators. */
 
     public:
@@ -1625,63 +1625,63 @@ inline void GroupExpression::erase() {
 
 // Inline functions for GroupPresentation
 
-inline GroupPresentation::GroupPresentation() : nGenerators(0) {
+inline GroupPresentation::GroupPresentation() : nGenerators_(0) {
 }
 
 inline GroupPresentation::GroupPresentation(GroupPresentation&& src) noexcept :
-        nGenerators(src.nGenerators) {
-    relations.swap(src.relations);
+        nGenerators_(src.nGenerators_) {
+    relations_.swap(src.relations_);
     // Now src will have an empty relations list.
 }
 
 inline GroupPresentation::~GroupPresentation() {
-    for (auto r : relations)
+    for (auto r : relations_)
         delete r;
 }
 
 inline GroupPresentation& GroupPresentation::operator = (
         GroupPresentation&& src) noexcept {
-    std::swap(nGenerators, src.nGenerators);
-    relations.swap(src.relations);
+    std::swap(nGenerators_, src.nGenerators_);
+    relations_.swap(src.relations_);
     // Let src dispose of the original relations in its own destructor.
     return *this;
 }
 
 inline void GroupPresentation::swap(GroupPresentation& other) {
-    std::swap(nGenerators, other.nGenerators);
-    relations.swap(other.relations);
+    std::swap(nGenerators_, other.nGenerators_);
+    relations_.swap(other.relations_);
 }
 
 inline unsigned long GroupPresentation::addGenerator(unsigned long num) {
-    return (nGenerators += num);
+    return (nGenerators_ += num);
 }
 
 inline void GroupPresentation::addRelation(GroupExpression* rel) {
-    relations.push_back(rel);
+    relations_.push_back(rel);
 }
 
 inline unsigned long GroupPresentation::countGenerators() const {
-    return nGenerators;
+    return nGenerators_;
 }
 
 inline size_t GroupPresentation::countRelations() const {
-    return relations.size();
+    return relations_.size();
 }
 
 inline const GroupExpression& GroupPresentation::relation(
         size_t index) const {
-    return *relations[index];
+    return *relations_[index];
 }
 
 inline void GroupPresentation::writeTextShort(std::ostream& out) const {
-    out << "Group presentation: " << nGenerators << " generators, "
-        << relations.size() << " relations";
+    out << "Group presentation: " << nGenerators_ << " generators, "
+        << relations_.size() << " relations";
 }
 
 inline size_t GroupPresentation::relatorLength() const {
     size_t retval(0);
-    for (size_t i=0; i<relations.size(); i++)
-        retval += relations[i]->wordLength();
+    for (size_t i=0; i<relations_.size(); i++)
+        retval += relations_[i]->wordLength();
     return retval;
 }
 
