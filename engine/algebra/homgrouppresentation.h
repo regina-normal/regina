@@ -106,8 +106,8 @@ class REGINA_API HomGroupPresentation :
          *
          * \ifacespython Not present.
          */
-        HomGroupPresentation(const GroupPresentation &domain,
-                const GroupPresentation &range,
+        HomGroupPresentation(GroupPresentation domain,
+                GroupPresentation range,
                 const std::vector<GroupExpression> &map);
 
         /**
@@ -130,8 +130,8 @@ class REGINA_API HomGroupPresentation :
          * sends the <i>i</i>th generator of the range to the
          * element <tt>inv[i]</tt> of the domain.
          */
-        HomGroupPresentation(const GroupPresentation &domain,
-                const GroupPresentation &range,
+        HomGroupPresentation(GroupPresentation domain,
+                GroupPresentation range,
                 const std::vector<GroupExpression> &map,
                 const std::vector<GroupExpression> &inv);
 
@@ -436,11 +436,11 @@ class REGINA_API HomGroupPresentation :
 /*@}*/
 
 inline HomGroupPresentation::HomGroupPresentation(
-            const GroupPresentation &domain,
-            const GroupPresentation &range,
+            GroupPresentation domain,
+            GroupPresentation range,
             const std::vector<GroupExpression> &map ) :
-        domain_(new GroupPresentation(domain)),
-        range_(new GroupPresentation(range)),
+        domain_(new GroupPresentation(std::move(domain))),
+        range_(new GroupPresentation(std::move(range))),
         inv_(nullptr) {
     map_.resize(map.size());
     for (unsigned long i=0; i<map_.size(); i++)
@@ -448,12 +448,12 @@ inline HomGroupPresentation::HomGroupPresentation(
 }
 
 inline HomGroupPresentation::HomGroupPresentation(
-            const GroupPresentation &domain,
-            const GroupPresentation &range,
+            GroupPresentation domain,
+            GroupPresentation range,
             const std::vector<GroupExpression> &map,
             const std::vector<GroupExpression> &inv ) :
-        domain_(new GroupPresentation(domain)),
-        range_(new GroupPresentation(range)),
+        domain_(new GroupPresentation(std::move(domain))),
+        range_(new GroupPresentation(std::move(range))),
         inv_(new std::vector<GroupExpression*>) {
     map_.resize(map.size());
     inv_->resize(inv.size());

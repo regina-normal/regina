@@ -124,10 +124,12 @@ Version 6.1  [ TODO ]
         Class HomGroupPresentation:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.
-            - All functions that used to return a std::unique_ptr<X> now
-              just return an X by value (which can then be moved from).
             - Added operator * for composition; the old composeWith() is
               now deprecated.
+            - All functions that used to return a std::unique_ptr<X> now
+              just return an X by value (which can then be moved from).
+            - Constructors that used to take a (const GroupPresentation&) for
+              domain and range now take GroupPresentation arguments by value.
         Class HomMarkedAbelianGroup:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.

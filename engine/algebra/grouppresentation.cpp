@@ -961,7 +961,7 @@ found_a_generator_killer:
     if (didSomething) {
         // now we can initialize reductionMap
         return std::unique_ptr<HomGroupPresentation>(new HomGroupPresentation(
-                    oldGroup, *this, substitutionTable, revMap));
+            std::move(oldGroup), *this, substitutionTable, revMap));
     } else
         return std::unique_ptr<HomGroupPresentation>();
 }// end smallCancellation()
@@ -1101,9 +1101,9 @@ GroupPresentation::intelligentNielsenDetail()
                 DomToRan[ bSubi ].addTermFirst( GroupExpressionTerm( bSubj, 1 ) );
                 RanToDom[ bSubi ].addTermFirst( GroupExpressionTerm( bSubj, -1 ) );
             }
-            GroupPresentation newPres(*this);
-            std::unique_ptr<HomGroupPresentation> tempHom(new
-                    HomGroupPresentation(oldPres,newPres,DomToRan,RanToDom));
+            std::unique_ptr<HomGroupPresentation> tempHom(
+                new HomGroupPresentation(std::move(oldPres), *this,
+                    DomToRan,RanToDom));
             if (!retval.get())
                 retval.swap(tempHom);
             else
@@ -1179,7 +1179,7 @@ GroupPresentation::homologicalAlignmentDetail()
             // manufacture the Nielsen automorphism...
             nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
             std::unique_ptr<HomGroupPresentation> tempHom(
-                new HomGroupPresentation( oldPres, *this, fVec, bVec ) );
+                new HomGroupPresentation(std::move(oldPres), *this, fVec, bVec));
             if (!retval.get())
                 retval.swap(tempHom);
             else
@@ -1235,7 +1235,7 @@ GroupPresentation::homologicalAlignmentDetail()
             // manufacture the Nielsen automorphism...
             nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
             std::unique_ptr<HomGroupPresentation> tempHom(
-                new HomGroupPresentation( oldPres, *this, fVec, bVec ) );
+                new HomGroupPresentation(std::move(oldPres), *this, fVec, bVec));
             if (!retval.get())
                 retval.swap(tempHom);
             else
@@ -1917,6 +1917,9 @@ GroupPresentation::identifyExtensionOverZ()
             autVec[i] = temp;
         }
 
+    // TODO: Possibly we could use std::move() on one of the copies of
+    // kerPres in the line below, to save one of the two deep copies
+    // that we are currently making.
     std::unique_ptr< HomGroupPresentation > retval(
         new HomGroupPresentation( kerPres, kerPres, autVec ) );
     retval->intelligentSimplify();
@@ -2104,9 +2107,12 @@ std::unique_ptr<HomGroupPresentation> GroupPresentation::prettyRewritingDetail()
         }
         nGenerators -= genToDel.size();
         // assemble the reduction map
-        redMap.reset( new HomGroupPresentation( oldPres, *this,
+        redMap.reset( new HomGroupPresentation( std::move(oldPres), *this,
                       downSub, upSub ) );
     }
+
+    // WARNING: Do not use oldPres past this point, since we may have
+    // just moved its contents out.
 
     // step 2: sort by number of letters present, followed by word length
     //         to do this, we build a list of relators and a sorting criterion.
