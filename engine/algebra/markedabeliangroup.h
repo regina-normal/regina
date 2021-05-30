@@ -703,6 +703,11 @@ class REGINA_API MarkedAbelianGroup :
  * which means the domain has Z coefficients and the range has mod \a q
  * coefficients.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Calling a routine that returns a HomMarkedAbelianGroup should not perform
+ * any unwanted deep copies.
+ *
  * \todo \optlong preImageOf in CC and SNF coordinates.  This routine would
  * return a generating list of elements in the preimage, thought of as an
  * affine subspace. Or maybe just one element together with the kernel
@@ -724,8 +729,7 @@ class REGINA_API MarkedAbelianGroup :
  *
  * @author Ryan Budney
  */
-class REGINA_API HomMarkedAbelianGroup :
-        public Output<HomMarkedAbelianGroup> {
+class REGINA_API HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
     private:
         /** internal rep of domain of the homomorphism */
         MarkedAbelianGroup domain_;
@@ -742,27 +746,27 @@ class REGINA_API HomMarkedAbelianGroup :
             Normal form.  We also truncate off the trivial Z/Z factors so that
             reducedMatrix will not have the same dimensions as matrix. This
             means the torsion factors appear first, followed by the free
-            factors. */
+            factors.  This is \c null if it has not yet been computed. */
         MatrixInt* reducedMatrix_;
-        /** pointer to kernel of map */
+        /** pointer to kernel of map, or \c null if not yet computed. */
         MarkedAbelianGroup* kernel_;
-        /** pointer to coKernel of map */
+        /** pointer to coKernel of map, or \c null if not yet computed. */
         MarkedAbelianGroup* coKernel_;
-        /** pointer to image */
+        /** pointer to image, or \c null if not yet computed. */
         MarkedAbelianGroup* image_;
         /** pointer to a lattice which describes the kernel of the
-            homomorphism. */
+            homomorphism, or \c null if not yet computed. */
         MatrixInt* reducedKernelLattice;
 
-        /** compute the ReducedKernelLattice */
+        /** compute the ReducedKernelLattice if not yet done */
         void computeReducedKernelLattice();
-        /** compute the ReducedMatrix */
+        /** compute the ReducedMatrix if not yet done */
         void computeReducedMatrix();
-        /** compute the Kernel */
+        /** compute the Kernel if not yet done */
         void computeKernel();
-        /** compute the Cokernel */
+        /** compute the Cokernel if not yet done */
         void computeCokernel();
-        /** compute the Image */
+        /** compute the Image if not yet done */
         void computeImage();
 
     public:
@@ -798,15 +802,46 @@ class REGINA_API HomMarkedAbelianGroup :
                 const MatrixInt &mat);
 
         /**
-         * Copy constructor.
+         * Creates a clone of the given homomorphism.
          *
-         * @param h the homomorphism to clone.
+         * @param src the homomorphism to clone.
          */
-        HomMarkedAbelianGroup(const HomMarkedAbelianGroup& h);
+        HomMarkedAbelianGroup(const HomMarkedAbelianGroup& src);
+
         /**
-         * Destructor.
+         * Moves the contents of the given homomorphism into this new
+         * homomorphism.  This is a fast (constant time) operation.
+         *
+         * The homomorphism that was passed (\a src) will no longer be usable.
+         *
+         * @param src the homomorphism to move.
+         */
+        HomMarkedAbelianGroup(HomMarkedAbelianGroup&& src) noexcept;
+
+        /**
+         * Destroys this homomorphism.
          */
         ~HomMarkedAbelianGroup();
+
+        /**
+         * Sets this to be a clone of the given homomorphism.
+         *
+         * @param src the homomorphism to copy.
+         * @return a reference to this homomorphism.
+         */
+        HomMarkedAbelianGroup& operator = (const HomMarkedAbelianGroup& src);
+
+        /**
+         * Moves the contents of the given homomorphism to this homomorphism.
+         * This is a fast (constant time) operation.
+         *
+         * The homomorphism that was passed (\a src) will no longer be usable.
+         *
+         * @param src the homomorphism to move.
+         * @return a reference to this homomorphism.
+         */
+        HomMarkedAbelianGroup& operator = (HomMarkedAbelianGroup&& src)
+            noexcept;
 
         /**
          * Determines whether this and the given homomorphism together
@@ -961,8 +996,7 @@ class REGINA_API HomMarkedAbelianGroup :
          * @return the image of this vector in the range chain complex's
          * coordinates, of length range().M().columns().
          */
-        std::vector<Integer> evalCC(
-            const std::vector<Integer> &input) const; 
+        std::vector<Integer> evalCC(const std::vector<Integer> &input) const;
 
         /**
          * Evaluate the image of a vector under this homomorphism, using
@@ -979,8 +1013,7 @@ class REGINA_API HomMarkedAbelianGroup :
          * @return the image of this vector in the range chain complex's
          * coordinates, of length range().minNumberOfGenerators().
          */
-        std::vector<Integer> evalSNF(
-            const std::vector<Integer> &input) const;
+        std::vector<Integer> evalSNF(const std::vector<Integer> &input) const;
 
         /**
          * Returns the inverse to a HomMarkedAbelianGroup. If this
@@ -1032,10 +1065,6 @@ class REGINA_API HomMarkedAbelianGroup :
          * @param out the output stream.
          */
         void writeReducedMatrix(std::ostream& out) const;
-
-        // Make this class non-assignable.
-        HomMarkedAbelianGroup& operator = (const HomMarkedAbelianGroup&)
-            = delete;
 
     private:
         /**
@@ -1156,16 +1185,11 @@ inline HomMarkedAbelianGroup::HomMarkedAbelianGroup(
 }
 
 inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {
-    if (reducedMatrix_)
-        delete reducedMatrix_;
-    if (kernel_)
-        delete kernel_;
-    if (coKernel_)
-        delete coKernel_;
-    if (image_)
-        delete image_;
-    if (reducedKernelLattice)
-        delete reducedKernelLattice;
+    delete reducedMatrix_;
+    delete kernel_;
+    delete coKernel_;
+    delete image_;
+    delete reducedKernelLattice;
 }
 
 inline const MarkedAbelianGroup& HomMarkedAbelianGroup::domain() const {

@@ -120,6 +120,9 @@ Version 6.1  [ TODO ]
         Class HomGroupPresentation:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.
+        Class HomMarkedAbelianGroup:
+            - Added a move constructor.
+            - Added copy assignment and move assignment operators.
         Class HyperInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
