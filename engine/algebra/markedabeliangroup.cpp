@@ -879,6 +879,8 @@ HomMarkedAbelianGroup& HomMarkedAbelianGroup::operator =(
         reducedKernelLattice = new MatrixInt(*g.reducedKernelLattice);
     else
         reducedKernelLattice = nullptr;
+
+    return *this;
 }
 
 HomMarkedAbelianGroup& HomMarkedAbelianGroup::operator =(
@@ -892,6 +894,7 @@ HomMarkedAbelianGroup& HomMarkedAbelianGroup::operator =(
     std::swap(image_, g.image_);
     std::swap(reducedKernelLattice, g.reducedKernelLattice);
     // Let g dispose of the original data in its own destructor.
+    return *this;
 }
 
 void HomMarkedAbelianGroup::computeReducedMatrix()
