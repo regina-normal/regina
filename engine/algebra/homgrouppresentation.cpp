@@ -53,6 +53,35 @@ HomGroupPresentation::HomGroupPresentation(
     }
 }
 
+HomGroupPresentation& HomGroupPresentation::operator = (
+        const HomGroupPresentation& src) {
+    *domain_ = *(src.domain_);
+    *range_ = *(src.range_);
+
+    for (auto exp : map_)
+        delete exp_;
+    map_.resize(src.map_.size());
+    for (unsigned long i=0; i<map_.size(); i++)
+        map_[i] = new GroupExpression(*src.map_[i]);
+
+    if (inv_) {
+        for (auto exp : *inv_)
+            delete exp_;
+    }
+    if (src.inv_) {
+        if (! inv_)
+            inv_ = new std::vector<GroupExpression*>;
+        inv_->resize(src.inv_->size());
+        for (unsigned long i=0; i<inv_->size(); i++)
+            (*inv_)[i] = new GroupExpression(*(*src.inv_)[i]);
+    } else {
+        if (inv_) {
+            delete inv_;
+            inv_ = nullptr;
+        }
+    }
+}
+
 GroupExpression HomGroupPresentation::evaluate(
                         const GroupExpression &arg) const
  { // evaluate at arg

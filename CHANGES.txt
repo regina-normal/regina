@@ -22,6 +22,8 @@ Version 6.1  [ TODO ]
         - Environment variables such as REGINA_HOME and REGINA_PYLIBDIR
           are more consistently used, and should need to be set less often.
     ENGINE:
+        Class AbelianGroup:
+            - Added a move constructor and move assignment operator.
         Class AngleStructure, AngleStructureVector:
             - The internal vector representation now uses Integer, not
               LargeInteger.
@@ -110,9 +112,14 @@ Version 6.1  [ TODO ]
               this path since Regina 5.0.
         Class GluingPermSearcher<dim> and subclasses:
             - Several class constants are now constexpr.
+        Class GroupExpression, GroupPresentation:
+            - Added move constructors and move assignment operators.
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
+        Class HomGroupPresentation:
+            - Added a move constructor.
+            - Added copy assignment and move assignment operators.
         Class HyperInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).

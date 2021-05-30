@@ -84,19 +84,15 @@ struct REGINA_API GroupExpressionTerm {
     GroupExpressionTerm(unsigned long newGen, long newExp);
     /**
      * Creates a new term initialised to the given value.
-     *
-     * @param cloneMe a term whose data will be copied to the new term.
      */
-    GroupExpressionTerm(const GroupExpressionTerm& cloneMe) = default;
+    GroupExpressionTerm(const GroupExpressionTerm&) = default;
 
     /**
      * Makes this term identical to the given term.
      *
-     * @param cloneMe the term whose data will be copied to this term.
      * @return a reference to this term.
      */
-    GroupExpressionTerm& operator = (const GroupExpressionTerm& cloneMe)
-        = default;
+    GroupExpressionTerm& operator = (const GroupExpressionTerm&) = default;
     /**
      * Determines whether this and the given term contain identical data.
      *
@@ -174,9 +170,13 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains the
  * three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
  * order.
+ *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Calling a routine that returns a GroupExpression should not perform any
+ * unwanted deep copies.
  */
-class REGINA_API GroupExpression :
-        public ShortOutput<GroupExpression> {
+class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
     private:
         std::list<GroupExpressionTerm> terms_;
             /** The terms that make up this expression. */
@@ -187,12 +187,16 @@ class REGINA_API GroupExpression :
          */
         GroupExpression();
         /**
-         * Creates a new expression that is a clone of the given
-         * expression.
-         *
-         * @param cloneMe the expression to clone.
+         * Creates a new expression that is a clone of the given expression.
          */
-        GroupExpression(const GroupExpression& cloneMe) = default;
+        GroupExpression(const GroupExpression&) = default;
+        /**
+         * Moves the contents of the given expression to this new expression.
+         * This is a fast (constant time) operation.
+         *
+         * The expression that was passed will no longer be usable.
+         */
+        GroupExpression(GroupExpression&&) noexcept = default;
         /**
          * Attempts to interpret the given input string as a word in a group.
          * Regina can recognise strings in the following four basic forms:
@@ -226,10 +230,18 @@ class REGINA_API GroupExpression :
         /**
          * Makes this expression a clone of the given expression.
          *
-         * @param cloneMe the expression to clone.
          * @return a reference to this expression.
          */
-        GroupExpression& operator = (const GroupExpression& cloneMe) = default;
+        GroupExpression& operator = (const GroupExpression&) = default;
+        /**
+         * Moves the contents of the given expression to this expression.
+         * This is a fast (constant time) operation.
+         *
+         * The expression that was passed will no longer be usable.
+         *
+         * @return a reference to this expression.
+         */
+        GroupExpression& operator = (GroupExpression&&) noexcept = default;
 
         /**
          * Equality operator. Checks to see whether or not these two words
@@ -656,6 +668,11 @@ class REGINA_API GroupExpression :
  *
  * If there are \a g generators, they will be numbered 0, 1, ..., <i>g</i>-1.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Calling a routine that returns a GroupPresentation should not perform any
+ * unwanted deep copies.
+ *
  * \todo Let's make intelligent simplify a tad more intelligent, and the GUI
  * call a bit more safe.  Perhaps parallelize the GUI call, and give users
  * parameters to ensure it won't crash the computer.  Also look at the FPGroup
@@ -664,8 +681,7 @@ class REGINA_API GroupExpression :
  * GroupPresentation( numGens, "abAAB", "bccd" ) etc., with arbitrary
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
  */
-class REGINA_API GroupPresentation :
-        public Output<GroupPresentation> {
+class REGINA_API GroupPresentation : public Output<GroupPresentation> {
     protected:
         unsigned long nGenerators;
             /**< The number of generators. */
@@ -674,16 +690,25 @@ class REGINA_API GroupPresentation :
 
     public:
         /**
-         * Creates a new presentation with no generators and no
-         * relations.
+         * Creates a new presentation with no generators and no relations.
          */
         GroupPresentation();
         /**
          * Creates a clone of the given group presentation.
          *
-         * @param cloneMe the presentation to clone.
+         * @param src the group presentation to clone.
          */
-        GroupPresentation(const GroupPresentation& cloneMe);
+        GroupPresentation(const GroupPresentation& src);
+        /**
+         * Moves the contents of the given group presentation to this new
+         * group presentation.  This is a fast (constant time) operation.
+         *
+         * The group presentation that was passed (\a src) will no longer be
+         * usable.
+         *
+         * @param src the group presentation to move.
+         */
+        GroupPresentation(GroupPresentation&& src) noexcept;
         /**
          * Constructor that allows you to directly pass an arbitrary number
          * of relators in string format.
@@ -719,13 +744,23 @@ class REGINA_API GroupPresentation :
         ~GroupPresentation();
 
         /**
-         * Assignment operator.
+         * Sets this to be a clone of the given group presentation.
          *
-         * @param cloneMe the group presentation that this will become a
-         * copy of.
+         * @param src the group presentation to copy.
          * @return a reference to this group presentation.
          */
-        GroupPresentation& operator=(const GroupPresentation& cloneMe);
+        GroupPresentation& operator=(const GroupPresentation& src);
+        /**
+         * Moves the contents of the given group presentation to this
+         * group presentation.  This is a fast (constant time) operation.
+         *
+         * The group presentation that was passed (\a src) will no longer be
+         * usable.
+         *
+         * @param src the group presentation to move.
+         * @return a reference to this group presentation.
+         */
+        GroupPresentation& operator = (GroupPresentation&& src) noexcept;
 
         /**
          * Adds one or more generators to the group presentation.
@@ -1549,9 +1584,23 @@ inline void GroupExpression::erase() {
 inline GroupPresentation::GroupPresentation() : nGenerators(0) {
 }
 
+inline GroupPresentation::GroupPresentation(GroupPresentation&& src) noexcept :
+        nGenerators(src.nGenerators) {
+    relations.swap(src.relations);
+    // Now src will have an empty relations list.
+}
+
 inline GroupPresentation::~GroupPresentation() {
     for (auto r : relations)
         delete r;
+}
+
+inline GroupPresentation& GroupPresentation::operator = (
+        GroupPresentation&& src) noexcept {
+    std::swap(nGenerators, src.nGenerators);
+    relations.swap(src.relations);
+    // Let src dispose of the original relations in its own destructor.
+    return *this;
 }
 
 inline unsigned long GroupPresentation::addGenerator(unsigned long num) {

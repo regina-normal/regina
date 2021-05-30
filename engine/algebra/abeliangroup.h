@@ -67,6 +67,11 @@ typedef Matrix<Integer, true> MatrixInt;
  * <i>d0</i>|<i>d1</i>|...|<i>dn</i>.  Note that this representation is
  * unique.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Calling a routine that returns an AbelianGroup should not perform any
+ * unwanted deep copies.
+ *
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */
@@ -86,10 +91,15 @@ class REGINA_API AbelianGroup :
         AbelianGroup();
         /**
          * Creates a clone of the given group.
-         *
-         * @param cloneMe the group to clone.
          */
-        AbelianGroup(const AbelianGroup& cloneMe) = default;
+        AbelianGroup(const AbelianGroup&) = default;
+        /**
+         * Moves the contents of the given group to this new group.
+         * This is a fast (constant time) operation.
+         *
+         * The group that was passed will no longer be usable.
+         */
+        AbelianGroup(AbelianGroup&&) noexcept = default;
         /**
          * Creates an abelian group as the homology of a chain complex.
          *
@@ -339,9 +349,19 @@ class REGINA_API AbelianGroup :
         /**
          * Sets this to be a clone of the given group.
          *
-         * @param cloneMe the group to clone.
+         * @return a reference to this group.
          */
-        AbelianGroup& operator = (const AbelianGroup& cloneMe) = default;
+        AbelianGroup& operator = (const AbelianGroup&) = default;
+
+        /**
+         * Moves the contents of the given group to this group.
+         * This is a fast (constant time) operation.
+         *
+         * The group that was passed will no longer be usable.
+         *
+         * @return a reference to this group.
+         */
+        AbelianGroup& operator = (AbelianGroup&&) noexcept = default;
 
         /**
          * Writes a chunk of XML containing this abelian group.

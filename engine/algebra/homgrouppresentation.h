@@ -67,6 +67,11 @@ class GroupPresentation;
  * if a homomorphism is not a declared isomorphism, it might still be an
  * isomorphism; this just means that no inverse map was explicitly provided.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Calling a routine that returns a HomGroupPresentation should not perform any
+ * unwanted deep copies.
+ *
  * \apinotfinal
  *
  * \todo Add a routine to attempt to verify validity of homomorphism.
@@ -142,16 +147,45 @@ class REGINA_API HomGroupPresentation :
         HomGroupPresentation(const GroupPresentation& groupForIdentity);
 
         /**
-         * Creates a clone of the given group presentation.
+         * Creates a clone of the given homomorphism.
          *
-         * @param cloneMe the presentation to clone.
+         * @param src the homomorphism to clone.
          */
-        HomGroupPresentation(const HomGroupPresentation& cloneMe);
+        HomGroupPresentation(const HomGroupPresentation& src);
+
+        /**
+         * Moves the contents of the given homomorphism into this new
+         * homomorphism.  This is a fast (constant time) operation.
+         *
+         * The homomorphism that was passed (\a src) will no longer be usable.
+         *
+         * @param src the homomorphism to move.
+         */
+        HomGroupPresentation(HomGroupPresentation&& src) noexcept;
 
         /**
          * Destroys the group homomorphism.
          */
         ~HomGroupPresentation();
+
+        /**
+         * Sets this to be a clone of the given homomorphism.
+         *
+         * @param src the homomorphism to copy.
+         * @return a reference to this homomorphism.
+         */
+        HomGroupPresentation& operator = (const HomGroupPresentation& src);
+
+        /**
+         * Moves the contents of the given homomorphism to this homomorphism.
+         * This is a fast (constant time) operation.
+         *
+         * The homomorphism that was passed (\a src) will no longer be usable.
+         *
+         * @param src the homomorphism to move.
+         * @return a reference to this homomorphism.
+         */
+        HomGroupPresentation& operator = (HomGroupPresentation&& src) noexcept;
 
         /**
          * The domain of the map.
@@ -363,9 +397,6 @@ class REGINA_API HomGroupPresentation :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
-
-        // Make this class non-assignable.
-        HomGroupPresentation& operator = (const HomGroupPresentation&) = delete;
 };
 
 /*@}*/
@@ -376,7 +407,7 @@ inline HomGroupPresentation::HomGroupPresentation(
             const std::vector<GroupExpression> &map ) :
         domain_(new GroupPresentation(domain)),
         range_(new GroupPresentation(range)),
-        inv_(0) {
+        inv_(nullptr) {
     map_.resize(map.size());
     for (unsigned long i=0; i<map_.size(); i++)
         map_[i] = new GroupExpression(map[i]);
@@ -411,18 +442,37 @@ inline HomGroupPresentation::HomGroupPresentation(
         for (unsigned long i=0; i<inv_->size(); i++)
             (*inv_)[i] = new GroupExpression(*((*cloneMe.inv_)[i]));
     } else
-        inv_ = 0;
+        inv_ = nullptr;
+}
+
+inline HomGroupPresentation::HomGroupPresentation(
+        HomGroupPresentation&& src) noexcept :
+        domain_(src.domain_), range_(src.range_), inv_(src.inv_) {
+    map_.swap(src.map_);
+    src.domain_ = nullptr;
+    src.range_ = nullptr;
+    src.inv_ = nullptr;
 }
 
 inline HomGroupPresentation::~HomGroupPresentation() {
-    for (unsigned long i=0; i<map_.size(); i++)
-        delete map_[i];
+    for (auto exp : map_)
+        delete exp_;
     if (inv_) {
-        for (unsigned long i=0; i<inv_->size(); i++)
-            delete (*inv_)[i];
+        for (auto exp : *inv_)
+            delete exp_;
         delete inv_;
     }
-    delete domain_; delete range_;
+    delete domain_;
+    delete range_;
+}
+
+inline HomGroupPresentation& HomGroupPresentation::operator = (
+        HomGroupPresentation&& src) noexcept {
+    std::swap(domain_, src.domain_);
+    std::swap(range_, src.range_);
+    map_.swap(src.map_);
+    std::swap(inv_, src.inv_);
+    // Let src dispose of the original data in its own destructor.
 }
 
 inline const GroupPresentation& HomGroupPresentation::domain() const {
