@@ -179,6 +179,8 @@
 		051B97F62321C91A000A2DCA /* boundaries.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 051B97F42321C91A000A2DCA /* boundaries.cpp */; };
 		051CEA8A1F98969500971F25 /* Hypersurfaces.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA8C1F98969500971F25 /* Hypersurfaces.storyboard */; };
 		051CEA941F98995D00971F25 /* Link.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 051CEA961F98995D00971F25 /* Link.storyboard */; };
+		052121C02662F50A0041FD89 /* jenkins-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052121BE2662F50A0041FD89 /* jenkins-impl.h */; };
+		052121C12662F50A0041FD89 /* pd-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 052121BF2662F50A0041FD89 /* pd-impl.h */; };
 		0523D88A180B54850094DAAD /* PacketManagerIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0523D889180B54850094DAAD /* PacketManagerIOS.mm */; };
 		05249EA51DBC169D001FE29E /* globalarray.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5DD21B9BAB9C00C1F681 /* globalarray.cpp */; };
 		05249EA81DBC16A6001FE29E /* modulemain.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050F5D3D1B9BAB9C00C1F681 /* modulemain.cpp */; };
@@ -2707,6 +2709,8 @@
 		051B97F42321C91A000A2DCA /* boundaries.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = boundaries.cpp; sourceTree = "<group>"; };
 		051CEA8B1F98969500971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Hypersurfaces.storyboard; sourceTree = "<group>"; };
 		051CEA951F98995D00971F25 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Link.storyboard; sourceTree = "<group>"; };
+		052121BE2662F50A0041FD89 /* jenkins-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "jenkins-impl.h"; sourceTree = "<group>"; };
+		052121BF2662F50A0041FD89 /* pd-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "pd-impl.h"; sourceTree = "<group>"; };
 		052226CD1DCBBDC200AEBCB0 /* Launch.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; path = Launch.storyboard; sourceTree = "<group>"; };
 		0523D888180B54850094DAAD /* PacketManagerIOS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PacketManagerIOS.h; sourceTree = "<group>"; };
 		0523D889180B54850094DAAD /* PacketManagerIOS.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PacketManagerIOS.mm; sourceTree = "<group>"; };
@@ -6966,6 +6970,7 @@
 				05721ED91F97153C00A83FFC /* graph.h */,
 				05721EDA1F97153C00A83FFC /* homfly.cpp */,
 				05721ECE1F97153C00A83FFC /* jenkins.cpp */,
+				052121BE2662F50A0041FD89 /* jenkins-impl.h */,
 				05721ED41F97153C00A83FFC /* jones.cpp */,
 				05721EE01F97153C00A83FFC /* link.cpp */,
 				05721EDF1F97153C00A83FFC /* link.h */,
@@ -6973,6 +6978,7 @@
 				05870CB01FAD250900835F9E /* modellinkgraph.h */,
 				0568742420C5D86B001C435B /* pass.cpp */,
 				055BC3EC265338FC00E5E34C /* pd.cpp */,
+				052121BF2662F50A0041FD89 /* pd-impl.h */,
 				05721EDB1F97153C00A83FFC /* reidemeister.cpp */,
 				0568742320C5D86A001C435B /* reidemeister-tangle.cpp */,
 				0588C2A11FD8D1340093C2C9 /* rewrite.cpp */,
@@ -7624,6 +7630,7 @@
 				05FB46E71DD92D4A00BB00E5 /* grouppresentation.h in Headers */,
 				05431F7A1C40F3C9009BC072 /* matrix.h in Headers */,
 				0534FAE422DFDDA7000A96A3 /* zstr.h in Headers */,
+				052121C02662F50A0041FD89 /* jenkins-impl.h in Headers */,
 				052FA098180600FB00FAE4DF /* tritmask.h in Headers */,
 				052F9EFE180600FB00FAE4DF /* typetrie.h in Headers */,
 				05A0673D1DFA68190047872E /* trisolidtorus.h in Headers */,
@@ -7802,6 +7809,7 @@
 				05A067271DFA68190047872E /* plugtrisolidtorus.h in Headers */,
 				05A0672B1DFA68190047872E /* satblock.h in Headers */,
 				052FA097180600FB00FAE4DF /* trieset.h in Headers */,
+				052121C12662F50A0041FD89 /* pd-impl.h in Headers */,
 				05A067391DFA68190047872E /* spiralsolidtorus.h in Headers */,
 				05721EF21F97153E00A83FFC /* examplelink.h in Headers */,
 				052F9F9F180600FB00FAE4DF /* terse_triangulation.h in Headers */,
