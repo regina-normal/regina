@@ -67,6 +67,11 @@ class GroupPresentation;
  * if a homomorphism is not a declared isomorphism, it might still be an
  * isomorphism; this just means that no inverse map was explicitly provided.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Calling a routine that returns a HomGroupPresentation should not perform any
+ * unwanted deep copies.
+ *
  * \apinotfinal
  *
  * \todo Add a routine to attempt to verify validity of homomorphism.
@@ -74,9 +79,9 @@ class GroupPresentation;
 class REGINA_API HomGroupPresentation :
         public Output<HomGroupPresentation> {
     private:
-        GroupPresentation* domain_;
+        GroupPresentation domain_;
             /**< The domain of the homomorphism. */
-        GroupPresentation* range_;
+        GroupPresentation range_;
             /**< The range of the homomorphism. */
         std::vector<GroupExpression*> map_;
             /**< A map whose ith element is the image in the range
@@ -101,8 +106,8 @@ class REGINA_API HomGroupPresentation :
          *
          * \ifacespython Not present.
          */
-        HomGroupPresentation(const GroupPresentation &domain,
-                const GroupPresentation &range,
+        HomGroupPresentation(GroupPresentation domain,
+                GroupPresentation range,
                 const std::vector<GroupExpression> &map);
 
         /**
@@ -125,8 +130,8 @@ class REGINA_API HomGroupPresentation :
          * sends the <i>i</i>th generator of the range to the
          * element <tt>inv[i]</tt> of the domain.
          */
-        HomGroupPresentation(const GroupPresentation &domain,
-                const GroupPresentation &range,
+        HomGroupPresentation(GroupPresentation domain,
+                GroupPresentation range,
                 const std::vector<GroupExpression> &map,
                 const std::vector<GroupExpression> &inv);
 
@@ -142,16 +147,45 @@ class REGINA_API HomGroupPresentation :
         HomGroupPresentation(const GroupPresentation& groupForIdentity);
 
         /**
-         * Creates a clone of the given group presentation.
+         * Creates a clone of the given homomorphism.
          *
-         * @param cloneMe the presentation to clone.
+         * @param src the homomorphism to clone.
          */
-        HomGroupPresentation(const HomGroupPresentation& cloneMe);
+        HomGroupPresentation(const HomGroupPresentation& src);
+
+        /**
+         * Moves the contents of the given homomorphism into this new
+         * homomorphism.  This is a fast (constant time) operation.
+         *
+         * The homomorphism that was passed (\a src) will no longer be usable.
+         *
+         * @param src the homomorphism to move.
+         */
+        HomGroupPresentation(HomGroupPresentation&& src) noexcept;
 
         /**
          * Destroys the group homomorphism.
          */
         ~HomGroupPresentation();
+
+        /**
+         * Sets this to be a clone of the given homomorphism.
+         *
+         * @param src the homomorphism to copy.
+         * @return a reference to this homomorphism.
+         */
+        HomGroupPresentation& operator = (const HomGroupPresentation& src);
+
+        /**
+         * Moves the contents of the given homomorphism to this homomorphism.
+         * This is a fast (constant time) operation.
+         *
+         * The homomorphism that was passed (\a src) will no longer be usable.
+         *
+         * @param src the homomorphism to move.
+         * @return a reference to this homomorphism.
+         */
+        HomGroupPresentation& operator = (HomGroupPresentation&& src) noexcept;
 
         /**
          * The domain of the map.
@@ -248,24 +282,58 @@ class REGINA_API HomGroupPresentation :
         bool smallCancellation();
 
         /**
-         * Composes this homomorphism with the given input homomorphism.
+         * Composes this homomorphism with the given homomorphism.
          *
          * Evaluating the composition on some group element \a x is the
-         * same as evaluating <tt>this(input(x))</tt>.
-         * In other words, in this composition, \a input is evaluated first
+         * same as evaluating <tt>this(rhs(x))</tt>.
+         * In other words, in this composition, \a rhs is evaluated first
          * and then the output of that is evaluated by this homomorphism.
          *
          * If both of the given homomorphisms are declared isomorphisms,
          * then the return value will be a declared isomoprhism also.
          *
-         * \pre the range of \a input must be the same as the domain of this
+         * \pre the range of \a rhs must be the same as the domain of this
          * homomorphism.
          *
-         * @param input the homomorphism to compose with this.
+         * @param rhs the homomorphism to compose this with.
          * @return the composition of both homomorphisms.
          */
-        std::unique_ptr<HomGroupPresentation> composeWith(
-            const HomGroupPresentation& input) const;
+        HomGroupPresentation operator * (const HomGroupPresentation& rhs) const;
+
+        /**
+         * Composes this homomorphism with the given homomorphism.
+         *
+         * Evaluating the composition on some group element \a x is the
+         * same as evaluating <tt>this(rhs(x))</tt>.
+         * In other words, in this composition, \a rhs is evaluated first
+         * and then the output of that is evaluated by this homomorphism.
+         *
+         * If both of the given homomorphisms are declared isomorphisms,
+         * then the return value will be a declared isomoprhism also.
+         *
+         * \pre the range of \a rhs must be the same as the domain of this
+         * homomorphism.
+         *
+         * @param rhs the homomorphism to compose this with.
+         * @return the composition of both homomorphisms.
+         */
+        HomGroupPresentation operator * (HomGroupPresentation&& rhs) const;
+
+        /**
+         * Deprecated routine that composes this homomorphism with the
+         * given homomorphism.
+         *
+         * \deprecated Instead of <tt>a.composeWith(b)</tt>, use the
+         * multiplication operator <tt>a * b</tt>.
+         *
+         * \pre the range of \a rhs must be the same as the domain of this
+         * homomorphism.
+         *
+         * @param rhs the homomorphism to compose this with.
+         * @return the composition of both homomorphisms.
+         */
+        [[deprecated]] HomGroupPresentation composeWith(
+            const HomGroupPresentation& rhs) const;
 
         /**
          * Inverts the homomorphism.
@@ -343,7 +411,7 @@ class REGINA_API HomGroupPresentation :
          *
          * @return the induced map on the abelianizations.
          */
-        std::unique_ptr< HomMarkedAbelianGroup > markedAbelianisation() const;
+        HomMarkedAbelianGroup markedAbelianisation() const;
 
         /**
          * Writes a short text representation of this object to the
@@ -363,32 +431,26 @@ class REGINA_API HomGroupPresentation :
          * @param out the output stream to which to write.
          */
         void writeTextLong(std::ostream& out) const;
-
-        // Make this class non-assignable.
-        HomGroupPresentation& operator = (const HomGroupPresentation&) = delete;
 };
 
 /*@}*/
 
 inline HomGroupPresentation::HomGroupPresentation(
-            const GroupPresentation &domain,
-            const GroupPresentation &range,
+            GroupPresentation domain,
+            GroupPresentation range,
             const std::vector<GroupExpression> &map ) :
-        domain_(new GroupPresentation(domain)),
-        range_(new GroupPresentation(range)),
-        inv_(0) {
+        domain_(std::move(domain)), range_(std::move(range)), inv_(nullptr) {
     map_.resize(map.size());
     for (unsigned long i=0; i<map_.size(); i++)
         map_[i] = new GroupExpression(map[i]);
 }
 
 inline HomGroupPresentation::HomGroupPresentation(
-            const GroupPresentation &domain,
-            const GroupPresentation &range,
+            GroupPresentation domain,
+            GroupPresentation range,
             const std::vector<GroupExpression> &map,
             const std::vector<GroupExpression> &inv ) :
-        domain_(new GroupPresentation(domain)),
-        range_(new GroupPresentation(range)),
+        domain_(std::move(domain)), range_(std::move(range)),
         inv_(new std::vector<GroupExpression*>) {
     map_.resize(map.size());
     inv_->resize(inv.size());
@@ -400,8 +462,7 @@ inline HomGroupPresentation::HomGroupPresentation(
 
 inline HomGroupPresentation::HomGroupPresentation(
         const HomGroupPresentation& cloneMe) :
-        domain_(new GroupPresentation(*cloneMe.domain_)),
-        range_(new GroupPresentation(*cloneMe.range_)) {
+        domain_(cloneMe.domain_), range_(cloneMe.range_) {
     map_.resize(cloneMe.map_.size());
     for (unsigned long i=0; i<map_.size(); i++)
         map_[i] = new GroupExpression(*(cloneMe.map_[i]));
@@ -411,26 +472,44 @@ inline HomGroupPresentation::HomGroupPresentation(
         for (unsigned long i=0; i<inv_->size(); i++)
             (*inv_)[i] = new GroupExpression(*((*cloneMe.inv_)[i]));
     } else
-        inv_ = 0;
+        inv_ = nullptr;
+}
+
+inline HomGroupPresentation::HomGroupPresentation(
+        HomGroupPresentation&& src) noexcept :
+        domain_(std::move(src.domain_)),
+        range_(std::move(src.range_)),
+        inv_(src.inv_) /* pointer */ {
+    map_.swap(src.map_);
+    src.inv_ = nullptr;
 }
 
 inline HomGroupPresentation::~HomGroupPresentation() {
-    for (unsigned long i=0; i<map_.size(); i++)
-        delete map_[i];
+    for (auto exp : map_)
+        delete exp;
     if (inv_) {
-        for (unsigned long i=0; i<inv_->size(); i++)
-            delete (*inv_)[i];
+        for (auto exp : *inv_)
+            delete exp;
         delete inv_;
     }
-    delete domain_; delete range_;
+}
+
+inline HomGroupPresentation& HomGroupPresentation::operator = (
+        HomGroupPresentation&& src) noexcept {
+    domain_.swap(src.domain_);
+    range_.swap(src.range_);
+    map_.swap(src.map_);
+    std::swap(inv_, src.inv_); // pointer
+    // Let src dispose of the original data in its own destructor.
+    return *this;
 }
 
 inline const GroupPresentation& HomGroupPresentation::domain() const {
-    return *domain_;
+    return domain_;
 }
 
 inline const GroupPresentation& HomGroupPresentation::range() const {
-    return *range_;
+    return range_;
 }
 
 inline bool HomGroupPresentation::knowsInverse() const {
@@ -441,9 +520,28 @@ inline GroupExpression HomGroupPresentation::evaluate(unsigned long i) const {
     return *(map_[i]);
 }
 
+inline GroupExpression HomGroupPresentation::evaluate(
+        const GroupExpression &arg) const {
+    GroupExpression ans(arg);
+    ans.substitute(map_);
+    return ans;
+}
+
+inline GroupExpression HomGroupPresentation::invEvaluate(
+        const GroupExpression &arg) const {
+    GroupExpression ans(arg);
+    ans.substitute(*inv_);
+    return ans;
+}
+
 inline GroupExpression HomGroupPresentation::invEvaluate(unsigned long i)
         const {
     return *((*inv_)[i]);
+}
+
+inline HomGroupPresentation HomGroupPresentation::composeWith(
+        const HomGroupPresentation& rhs) const {
+    return (*this) * rhs;
 }
 
 } // namespace regina

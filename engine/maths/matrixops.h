@@ -79,9 +79,8 @@ REGINA_API void smithNormalForm(MatrixInt& matrix);
  * to all the row and column operations that were performed.
  *
  * The only input argument is \a matrix.  The four remaining arguments
- * (the change of basis matrices) will be refilled, though they must be
- * constructed with the correct dimensions as seen in the preconditions
- * below.  All five arguments are used to return information as follows.
+ * (the change of basis matrices) will be refilled.
+ * All five arguments are used to return information as follows.
  *
  * Let \a M be the initial value of \a matrix, and let \a S be the Smith
  * normal form of \a M.  After this routine exits:
@@ -92,13 +91,15 @@ REGINA_API void smithNormalForm(MatrixInt& matrix);
  * - <tt>colSpaceBasis * colSpaceBasisInv</tt> and
  *   <tt>rowSpaceBasis * rowSpaceBasisInv</tt> are both identity matrices.
  *
- * Thus, one obtains the Smith normal form the original matrix by multiplying
+ * Thus, one obtains the Smith normal form of the original matrix by multiplying
  * on the left by ColSpaceBasis and on the right by RowSpaceBasis.
  *
- * \pre The matrices \a rowSpaceBasis and \a rowSpaceBasisInv that are
- * passed are square, with side length matrix.columns().
- * \pre The matrices \a colSpaceBasis and \a colSpaceBasisInv that are
- * passed are square, with side length matrix.rows().
+ * The matrices \a rowSpaceBasis and \a rowSpaceBasisInv that are passed
+ * may be of any size, or they may even be uninitialised; upon return they
+ * will both be square with side length matrix.columns().
+ * Likewise, the matrices \a colSpaceBasis and \a colSpaceBasisInv that are
+ * passed may be of any size or may be uninitialised; upon return they
+ * will both be square with side length matrix.rows().
  *
  * @param matrix the original matrix to put into Smith Normal Form (this
  * need not be square).  When the algorithm terminates, this matrix \e is
@@ -123,9 +124,8 @@ REGINA_API void smithNormalForm(MatrixInt& matrix,
  * description of pivoting methods.
  *
  * The only input argument is \a matrix.  The four remaining arguments
- * (the change of basis matrices), if passed, will be refilled, though they
- * must be constructed with the correct dimensions as seen in the preconditions
- * below.  All five arguments are used to return information as follows.
+ * (the change of basis matrices), if passed, will be refilled.
+ * All five arguments are used to return information as follows.
  *
  * Let \a M be the initial value of \a matrix, and let \a S be the Smith
  * normal form of \a M.  After this routine exits:
@@ -139,10 +139,12 @@ REGINA_API void smithNormalForm(MatrixInt& matrix,
  * Thus, one obtains the Smith normal form the original matrix by multiplying
  * on the left by ColSpaceBasis and on the right by RowSpaceBasis.
  *
- * \pre The matrices \a rowSpaceBasis and \a rowSpaceBasisInv, if passed,
- *  must be square with side length matrix.columns().
- * \pre The matrices \a colSpaceBasis and \a colSpaceBasisInv, if passed,
- *  must be square, with side length matrix.rows().
+ * The matrices \a rowSpaceBasis and \a rowSpaceBasisInv, if passed,
+ * may be of any size, or they may even be uninitialised; upon return they
+ * will both be square with side length matrix.columns().
+ * Likewise, the matrices \a colSpaceBasis and \a colSpaceBasisInv, if passed,
+ * may be of any size or may be uninitialised; upon return they
+ * will both be square with side length matrix.rows().
  *
  * @param matrix the original matrix to put into Smith Normal Form (this
  * need not be square).  When the algorithm terminates, this matrix \e is

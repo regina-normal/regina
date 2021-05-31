@@ -1223,11 +1223,7 @@ void HomologicalData::computeTorsionLinkingForm() {
     //           put its info in a matrix.
 
     MatrixInt ON(mHomology1->N());
-    MatrixInt R(ON.columns(),ON.columns());
-    MatrixInt Ri(ON.columns(),ON.columns());
-    MatrixInt C(ON.rows(),ON.rows());
-    MatrixInt Ci(ON.rows(),ON.rows());
-
+    MatrixInt R, Ri, C, Ci;
     smithNormalForm(ON, R, Ri, C, Ci);
     // boundingMat=R*(divide by ON diag, rescale(C*areboundariesM))
     //                                             ---- stepa -----

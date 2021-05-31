@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "algebra/abeliangroup.h"
 #include "algebra/grouppresentation.h"
 #include "algebra/homgrouppresentation.h"
@@ -65,8 +66,9 @@ void addHomGroupPresentation(pybind11::module_& m) {
             &HomGroupPresentation::intelligentNielsen)
         .def("smallCancellation",
             &HomGroupPresentation::smallCancellation)
-        .def("composeWith",
-            &HomGroupPresentation::composeWith)
+        .def("composeWith", overload_cast<const HomGroupPresentation&>(
+            &HomGroupPresentation::operator *, pybind11::const_))
+        .def(pybind11::self * pybind11::self)
         .def("invert", &HomGroupPresentation::invert)
         .def("verify", &HomGroupPresentation::verify)
         .def("verifyIsomorphism", &HomGroupPresentation::verifyIsomorphism)

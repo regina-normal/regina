@@ -22,6 +22,8 @@ Version 6.1  [ TODO ]
         - Environment variables such as REGINA_HOME and REGINA_PYLIBDIR
           are more consistently used, and should need to be set less often.
     ENGINE:
+        Class AbelianGroup:
+            - Added a move constructor and move assignment operator.
         Class AngleStructure, AngleStructureVector:
             - The internal vector representation now uses Integer, not
               LargeInteger.
@@ -110,9 +112,39 @@ Version 6.1  [ TODO ]
               this path since Regina 5.0.
         Class GluingPermSearcher<dim> and subclasses:
             - Several class constants are now constexpr.
+        Class GroupExpression:
+            - Added move constructors and move assignment operators.
+            - New variant of substitute() that can replace all generators
+              simultaneously.
+        Class GroupPresentation:
+            - Added move constructors and move assignment operators.
+            - New swap() member function.
+            - Functions abelianisation() and markedAbelianisation() now
+              return groups by value (which can then be moved from).
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
+        Class HomGroupPresentation:
+            - Added a move constructor.
+            - Added copy assignment and move assignment operators.
+            - Added operator * for composition; the old composeWith() is
+              now deprecated.
+            - All functions that used to return a std::unique_ptr<X> now
+              just return an X by value (which can then be moved from).
+            - Constructors that used to take a (const GroupPresentation&) for
+              domain and range now take GroupPresentation arguments by value.
+            - The evaluate() and evaluateInv() functions now run in
+              linear time, not quadratic time.
+        Class HomMarkedAbelianGroup:
+            - Added a move constructor.
+            - Added copy assignment and move assignment operators.
+            - All functions that used to return a std::unique_ptr<X> now
+              just return an X by value (which can then be moved from).
+            - Constructors that used to take (const MarkedAbelianGroup&) and
+              (const MatrixInt&) arguments now take MarkedAbelianGroup and
+              MatrixInt arguments by value.
+            - The composition operator (*) now has an overload whose argument
+              is an rvalue reference.
         Class HyperInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -150,6 +182,13 @@ Version 6.1  [ TODO ]
         Class LPConstraintEulerZero:
             - New constraint to use with normal surface enumeration that
               fixes Euler characteristic to be zero.
+        Class MarkedAbelianGroup:
+            - New move constructor.
+            - New copy assignment and move assignment operators.
+            - All functions that used to return a std::unique_ptr<X> now
+              just return an X by value (which can then be moved from).
+            - Constructors that used to take (const MatrixInt&) arguments
+              now take a MatrixInt by value.
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.
@@ -161,6 +200,8 @@ Version 6.1  [ TODO ]
             - New operator * for multiplying a matrix by a vector.
             - New constructor that takes a hard-coded list of entries
               via a C++11 initialiser list.
+            - New default constructor that leaves the matrix in an
+              uninitialised state.
         Class ModelLinkGraph:
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
@@ -343,6 +384,9 @@ Version 6.1  [ TODO ]
               template function readSigList() that can work with knots and
               also triangulations of any dimension.  The old readIsoSigList()
               has been kept as a deprecated alias.
+        Function smithNormalForm(), metricalSmithNormalForm():
+            - The change of basis matrices no longer need to have the correct
+              size (and may even be uninitialised) before they are passed in.
         Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
                 quadString:
             - These are all now inline constexpr.

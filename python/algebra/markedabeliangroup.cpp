@@ -131,7 +131,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
         .def("evalCC", &HomMarkedAbelianGroup::evalCC)
         .def("evalSNF", &HomMarkedAbelianGroup::evalSNF)
         .def("inverseHom", &HomMarkedAbelianGroup::inverseHom)
-        .def(pybind11::self * pybind11::self) /* returns std::unique_ptr */
+        .def(pybind11::self * pybind11::self)
     ;
     regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);

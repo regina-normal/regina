@@ -82,6 +82,11 @@ class HomMarkedAbelianGroup;
  * and is created by constructing the product MRBi() * \a N, and then
  * removing the first rankM() rows.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Calling a routine that returns a MarkedAbelianGroup should not perform any
+ * unwanted deep copies.
+ *
  * @author Ryan Budney
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and the like.
@@ -109,13 +114,13 @@ class REGINA_API MarkedAbelianGroup :
         // first rankOM rows.
 
         /** Internal change of basis. ornC * ORN * ornR is the SNF(ORN). */
-        std::unique_ptr<MatrixInt> ornR, ornC;
+        MatrixInt ornR, ornC;
         /** Internal change of basis. These are the inverses of ornR and ornC
             respectively. */
-        std::unique_ptr<MatrixInt> ornRi, ornCi; 
+        MatrixInt ornRi, ornCi; 
         /** Internal change of basis matrix for homology with coefficents.
             otC * tensorPres * otR == SNF(tensorPres) */
-        std::unique_ptr<MatrixInt> otR, otC, otRi, otCi;
+        MatrixInt otR, otC, otRi, otCi;
 
         /** Internal list of invariant factors. */
         std::vector<Integer> InvFacList;
@@ -166,7 +171,7 @@ class REGINA_API MarkedAbelianGroup :
          * @param N the `left' matrix in the chain complex; that is, the
          * matrix that one takes the image of when computing homology.
          */
-        MarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N);
+        MarkedAbelianGroup(MatrixInt M, MatrixInt N);
 
         /**
          * Creates a marked abelian group from a chain complex with
@@ -183,8 +188,7 @@ class REGINA_API MarkedAbelianGroup :
          * \a pcoeff >= 0.  If you know beforehand that \a pcoeff=0, it's
          * more efficient to use the previous constructor.
          */
-        MarkedAbelianGroup(const MatrixInt& M, const MatrixInt& N,
-            const Integer &pcoeff);
+        MarkedAbelianGroup(MatrixInt M, MatrixInt N, const Integer &pcoeff);
 
         /**
          * Creates a free Z_p-module of a given rank using the direct sum
@@ -202,10 +206,34 @@ class REGINA_API MarkedAbelianGroup :
 
         /**
          * Creates a clone of the given group.
-         *
-         * @param cloneMe the group to clone.
          */
-        MarkedAbelianGroup(const MarkedAbelianGroup& cloneMe);
+        MarkedAbelianGroup(const MarkedAbelianGroup&) = default;
+
+        /**
+         * Moves the contents of the given group to this new group.
+         * This is a fast (constant time) operation.
+         *
+         * The group that was passed will no longer be usable.
+         */
+        MarkedAbelianGroup(MarkedAbelianGroup&&) noexcept = default;
+
+        /**
+         * Sets this to be a clone of the given group.
+         *
+         * @return a reference to this group.
+         */
+        MarkedAbelianGroup& operator = (const MarkedAbelianGroup&) = default;
+
+        /**
+         * Moves the contents of the given group to this group.
+         * This is a fast (constant time) operation.
+         *
+         * The group that was passed will no longer be usable.
+         *
+         * @return a reference to this group.
+         */
+        MarkedAbelianGroup& operator = (MarkedAbelianGroup&&) noexcept =
+            default;
 
         /**
          * Determines whether or not the defining maps for this group
@@ -409,8 +437,7 @@ class REGINA_API MarkedAbelianGroup :
          * where \a M is one of the matrices that defines the chain
          * complex; see the class notes for details.
          */
-        std::vector<Integer> ccRep(
-            const std::vector<Integer>& SNFRep) const;
+        std::vector<Integer> ccRep(const std::vector<Integer>& SNFRep) const;
 
         /**
          * Same as ccRep(const std::vector<Integer>&), but we assume you
@@ -639,19 +666,16 @@ class REGINA_API MarkedAbelianGroup :
         const Integer& coefficients() const;
 
         /**
-         *  Returns a MarkedAbelianGroup representing the torsion subgroup
-         *  of this group. 
+         * Returns a MarkedAbelianGroup representing the torsion subgroup
+         * of this group.
          */
-        std::unique_ptr<MarkedAbelianGroup> torsionSubgroup() const;
+        MarkedAbelianGroup torsionSubgroup() const;
 
         /**
-         *  Returns a HomMarkedAbelianGroup representing the inclusion of the
-         *  torsion subgroup into this group. 
+         * Returns a HomMarkedAbelianGroup representing the inclusion of the
+         * torsion subgroup into this group.
          */
-        std::unique_ptr<HomMarkedAbelianGroup> torsionInclusion() const;
-
-        // Make this class non-assignable.
-        MarkedAbelianGroup& operator = (const MarkedAbelianGroup&) = delete;
+        HomMarkedAbelianGroup torsionInclusion() const;
 };
 
 /**
@@ -677,6 +701,11 @@ class REGINA_API MarkedAbelianGroup :
  * which means the domain has Z coefficients and the range has mod \a q
  * coefficients.
  *
+ * This class is designed to avoid deep copies wherever possible.
+ * In particular, it supports C++11 move constructors and move assignment.
+ * Calling a routine that returns a HomMarkedAbelianGroup should not perform
+ * any unwanted deep copies.
+ *
  * \todo \optlong preImageOf in CC and SNF coordinates.  This routine would
  * return a generating list of elements in the preimage, thought of as an
  * affine subspace. Or maybe just one element together with the kernel
@@ -698,8 +727,7 @@ class REGINA_API MarkedAbelianGroup :
  *
  * @author Ryan Budney
  */
-class REGINA_API HomMarkedAbelianGroup :
-        public Output<HomMarkedAbelianGroup> {
+class REGINA_API HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
     private:
         /** internal rep of domain of the homomorphism */
         MarkedAbelianGroup domain_;
@@ -716,27 +744,27 @@ class REGINA_API HomMarkedAbelianGroup :
             Normal form.  We also truncate off the trivial Z/Z factors so that
             reducedMatrix will not have the same dimensions as matrix. This
             means the torsion factors appear first, followed by the free
-            factors. */
+            factors.  This is \c null if it has not yet been computed. */
         MatrixInt* reducedMatrix_;
-        /** pointer to kernel of map */
+        /** pointer to kernel of map, or \c null if not yet computed. */
         MarkedAbelianGroup* kernel_;
-        /** pointer to coKernel of map */
+        /** pointer to coKernel of map, or \c null if not yet computed. */
         MarkedAbelianGroup* coKernel_;
-        /** pointer to image */
+        /** pointer to image, or \c null if not yet computed. */
         MarkedAbelianGroup* image_;
         /** pointer to a lattice which describes the kernel of the
-            homomorphism. */
+            homomorphism, or \c null if not yet computed. */
         MatrixInt* reducedKernelLattice;
 
-        /** compute the ReducedKernelLattice */
+        /** compute the ReducedKernelLattice if not yet done */
         void computeReducedKernelLattice();
-        /** compute the ReducedMatrix */
+        /** compute the ReducedMatrix if not yet done */
         void computeReducedMatrix();
-        /** compute the Kernel */
+        /** compute the Kernel if not yet done */
         void computeKernel();
-        /** compute the Cokernel */
+        /** compute the Cokernel if not yet done */
         void computeCokernel();
-        /** compute the Image */
+        /** compute the Image if not yet done */
         void computeImage();
 
     public:
@@ -767,20 +795,50 @@ class REGINA_API HomMarkedAbelianGroup :
          * @param mat the matrix that describes the homomorphism from 
          * \a dom to \a ran.
          */
-        HomMarkedAbelianGroup(const MarkedAbelianGroup& dom,
-                const MarkedAbelianGroup& ran,
-                const MatrixInt &mat);
+        HomMarkedAbelianGroup(MarkedAbelianGroup dom, MarkedAbelianGroup ran,
+            MatrixInt mat);
 
         /**
-         * Copy constructor.
+         * Creates a clone of the given homomorphism.
          *
-         * @param h the homomorphism to clone.
+         * @param src the homomorphism to clone.
          */
-        HomMarkedAbelianGroup(const HomMarkedAbelianGroup& h);
+        HomMarkedAbelianGroup(const HomMarkedAbelianGroup& src);
+
         /**
-         * Destructor.
+         * Moves the contents of the given homomorphism into this new
+         * homomorphism.  This is a fast (constant time) operation.
+         *
+         * The homomorphism that was passed (\a src) will no longer be usable.
+         *
+         * @param src the homomorphism to move.
+         */
+        HomMarkedAbelianGroup(HomMarkedAbelianGroup&& src) noexcept;
+
+        /**
+         * Destroys this homomorphism.
          */
         ~HomMarkedAbelianGroup();
+
+        /**
+         * Sets this to be a clone of the given homomorphism.
+         *
+         * @param src the homomorphism to copy.
+         * @return a reference to this homomorphism.
+         */
+        HomMarkedAbelianGroup& operator = (const HomMarkedAbelianGroup& src);
+
+        /**
+         * Moves the contents of the given homomorphism to this homomorphism.
+         * This is a fast (constant time) operation.
+         *
+         * The homomorphism that was passed (\a src) will no longer be usable.
+         *
+         * @param src the homomorphism to move.
+         * @return a reference to this homomorphism.
+         */
+        HomMarkedAbelianGroup& operator = (HomMarkedAbelianGroup&& src)
+            noexcept;
 
         /**
          * Determines whether this and the given homomorphism together
@@ -935,8 +993,7 @@ class REGINA_API HomMarkedAbelianGroup :
          * @return the image of this vector in the range chain complex's
          * coordinates, of length range().M().columns().
          */
-        std::vector<Integer> evalCC(
-            const std::vector<Integer> &input) const; 
+        std::vector<Integer> evalCC(const std::vector<Integer> &input) const;
 
         /**
          * Evaluate the image of a vector under this homomorphism, using
@@ -953,8 +1010,7 @@ class REGINA_API HomMarkedAbelianGroup :
          * @return the image of this vector in the range chain complex's
          * coordinates, of length range().minNumberOfGenerators().
          */
-        std::vector<Integer> evalSNF(
-            const std::vector<Integer> &input) const;
+        std::vector<Integer> evalSNF(const std::vector<Integer> &input) const;
 
         /**
          * Returns the inverse to a HomMarkedAbelianGroup. If this
@@ -971,7 +1027,7 @@ class REGINA_API HomMarkedAbelianGroup :
          * @return the inverse homomorphism, or the zero homomorphism if
          * this is not invertible.
          */
-        std::unique_ptr<HomMarkedAbelianGroup> inverseHom() const;
+        HomMarkedAbelianGroup inverseHom() const;
 
         /**
          * Returns the composition of two homomorphisms.
@@ -981,16 +1037,27 @@ class REGINA_API HomMarkedAbelianGroup :
          * domain of this homomorphism.
          *
          * @param X the homomorphism to compose this with.
-         * @return a newly created composite homomorphism.
+         * @return the composite homomorphism.
          */
-        std::unique_ptr<HomMarkedAbelianGroup> operator * (
-            const HomMarkedAbelianGroup &X) const;
+        HomMarkedAbelianGroup operator * (const HomMarkedAbelianGroup& X) const;
 
         /**
-         *  Returns a HomMarkedAbelianGroup representing the induced map
-         *  on the torsion subgroups. 
+         * Returns the composition of two homomorphisms.
+         *
+         * \pre the homomorphisms must be composable, meaning that the
+         * range of X must have the same presentation matrices as the
+         * domain of this homomorphism.
+         *
+         * @param X the homomorphism to compose this with.
+         * @return the composite homomorphism.
          */
-        std::unique_ptr<HomMarkedAbelianGroup> torsionSubgroup() const;
+        HomMarkedAbelianGroup operator * (HomMarkedAbelianGroup&& X) const;
+
+        /**
+         * Returns a HomMarkedAbelianGroup representing the induced map
+         * on the torsion subgroups.
+         */
+        HomMarkedAbelianGroup torsionSubgroup() const;
 
         /**
          * Writes a human-readable version of the reduced matrix to the
@@ -1007,10 +1074,6 @@ class REGINA_API HomMarkedAbelianGroup :
          */
         void writeReducedMatrix(std::ostream& out) const;
 
-        // Make this class non-assignable.
-        HomMarkedAbelianGroup& operator = (const HomMarkedAbelianGroup&)
-            = delete;
-
     private:
         /**
          * For those situations where you want to define an 
@@ -1018,15 +1081,14 @@ class REGINA_API HomMarkedAbelianGroup :
          * map.  This is in the situation where the SNF coordinates have 
          * particular meaning to the user.  At present I only use this
          * for HomMarkedAbelianGroup::inverseHom().  Moreover, this routine 
-         * assumes tebeRedMat actually can be the reduced matrix of some 
+         * assumes redMat actually can be the reduced matrix of some 
          * chain map -- this is not a restriction in
          * the coeff==0 case, but it is if coeff > 0. 
          *
          * \todo Erase completely once made obsolete by right/left inverse.
          */
-        HomMarkedAbelianGroup(const MatrixInt &tobeRedMat,
-                const MarkedAbelianGroup &dom, 
-                const MarkedAbelianGroup &ran);
+        HomMarkedAbelianGroup(MatrixInt redMat,
+                MarkedAbelianGroup dom, MarkedAbelianGroup ran);
 };
 
 /*@}*/
@@ -1059,21 +1121,6 @@ inline const MarkedAbelianGroup& HomMarkedAbelianGroup::cokernel() const {
 }
 
 // Inline functions for MarkedAbelianGroup
-
-// copy constructor
-inline MarkedAbelianGroup::MarkedAbelianGroup(const MarkedAbelianGroup& g) :
-        OM(g.OM), ON(g.ON), OMR(g.OMR), OMC(g.OMC), OMRi(g.OMRi), OMCi(g.OMCi),
-        rankOM(g.rankOM),
-        ornR(clonePtr(g.ornR)), ornC(clonePtr(g.ornC)),
-        ornRi(clonePtr(g.ornRi)), ornCi(clonePtr(g.ornCi)),
-        otR(clonePtr(g.otR)), otC(clonePtr(g.otC)),
-        otRi(clonePtr(g.otRi)), otCi(clonePtr(g.otCi)),
-        InvFacList(g.InvFacList), snfrank(g.snfrank),
-        snffreeindex(g.snffreeindex),
-        ifNum(g.ifNum), ifLoc(g.ifLoc), coeff(g.coeff), TORLoc(g.TORLoc),
-        TORVec(g.TORVec), tensorIfLoc(g.tensorIfLoc),
-        tensorIfNum(g.tensorIfNum), tensorInvFacList(g.tensorInvFacList) {
-}
 
 inline unsigned long MarkedAbelianGroup::torsionRank(unsigned long degree)
         const {
@@ -1136,25 +1183,18 @@ inline const Integer& MarkedAbelianGroup::coefficients() const {
 // Inline functions for HomMarkedAbelianGroup
 
 inline HomMarkedAbelianGroup::HomMarkedAbelianGroup(
-        const MarkedAbelianGroup& dom,
-        const MarkedAbelianGroup& ran,
-        const MatrixInt &mat) :
-        domain_(dom), range_(ran), matrix(mat),
-        reducedMatrix_(0), kernel_(0), coKernel_(0), image_(0),
-        reducedKernelLattice(0) {
+        MarkedAbelianGroup dom, MarkedAbelianGroup ran, MatrixInt mat) :
+        domain_(std::move(dom)), range_(std::move(ran)), matrix(std::move(mat)),
+        reducedMatrix_(nullptr), kernel_(nullptr), coKernel_(nullptr),
+        image_(nullptr), reducedKernelLattice(nullptr) {
 }
 
 inline HomMarkedAbelianGroup::~HomMarkedAbelianGroup() {
-    if (reducedMatrix_)
-        delete reducedMatrix_;
-    if (kernel_)
-        delete kernel_;
-    if (coKernel_)
-        delete coKernel_;
-    if (image_)
-        delete image_;
-    if (reducedKernelLattice)
-        delete reducedKernelLattice;
+    delete reducedMatrix_;
+    delete kernel_;
+    delete coKernel_;
+    delete image_;
+    delete reducedKernelLattice;
 }
 
 inline const MarkedAbelianGroup& HomMarkedAbelianGroup::domain() const {

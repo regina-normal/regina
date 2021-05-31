@@ -93,8 +93,14 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("power", &GroupExpression::power)
         .def("simplify", &GroupExpression::simplify,
             pybind11::arg("cyclic") = false)
-        .def("substitute", &GroupExpression::substitute,
+        .def("substitute",
+            overload_cast<unsigned long, const GroupExpression&, bool>(
+                &GroupExpression::substitute),
             pybind11::arg(), pybind11::arg(), pybind11::arg("cyclic") = false)
+        .def("substitute",
+            overload_cast<const std::vector<GroupExpression*>&, bool>(
+                &GroupExpression::substitute),
+            pybind11::arg(), pybind11::arg("cyclic") = false)
         .def("toTeX", &GroupExpression::toTeX)
         .def("writeText", [](const GroupExpression& e, bool sw, bool utf8) {
             e.writeText(std::cout, sw, utf8);
@@ -109,6 +115,7 @@ void addGroupPresentation(pybind11::module_& m) {
     auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation")
         .def(pybind11::init<>())
         .def(pybind11::init<const GroupPresentation&>())
+        .def("swap", &GroupPresentation::swap)
         .def("addGenerator", &GroupPresentation::addGenerator,
             pybind11::arg("numToAdd") = 1)
         .def("addRelation", [](GroupPresentation& p, const GroupExpression& e) {
