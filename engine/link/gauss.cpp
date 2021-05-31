@@ -32,8 +32,26 @@
 
 #include "link/tangle.h"
 #include "utilities/stringutils.h"
-#include <charconv>
 #include <iterator>
+
+// We wish to use std::to_chars(), but GCC only implements it in gcc-8.1.
+// We will need a fallback option for (in particular) gcc-7.
+//
+// We only test the presence of the <charconv> include, not the feature test
+// macro __cpp_lib_to_chars, since although gcc-8.1 implements std::to_chars()
+// for integer types (which is enough for us), a full implementation for all
+// types (with the feature test macro now defined) only appeared in gcc-11.1.
+//
+#if __has_include(<charconv>)
+  #include <charconv>
+  // We can use std::to_chars().
+  #define __regina_has_to_chars 1
+#else
+  #warning This compiler does not support std::to_chars().
+  // Fall back to snprintf().
+  #include<cstdio>
+  #undef __regina_has_to_chars
+#endif
 
 namespace regina {
 
@@ -213,14 +231,27 @@ std::vector<std::string> Link::orientedGaussData() const {
         token[0] = (s.strand() == 0 ? '-' : '+');
         token[1] = ((s.strand() == 0 && s.crossing()->sign() < 0) ||
             (s.strand() == 1 && s.crossing()->sign() > 0) ? '<' : '>');
+#if __regina_has_to_chars
         auto result = std::to_chars(token + 2, token + maxTokenLen,
             s.crossing()->index() + 1);
         if (result.ec != std::errc()) {
             std::cerr << "ERROR: orientedGaussData(): could not convert "
-                "crossing index " << s.crossing()->index() << " to string.";
+                "crossing index " << (s.crossing()->index() + 1)
+                << " to a string via std::to_chars().";
             return std::vector<std::string>();
         }
         *result.ptr = 0;
+#else
+        int result = snprintf(token + 2,
+            maxTokenLen - 1 /* includes null terminator */, "%d",
+            s.crossing()->index() + 1);
+        if (result < 0 || result >= maxTokenLen - 1) {
+            std::cerr << "ERROR: orientedGaussData(): could not convert "
+                "crossing index " << (s.crossing()->index() + 1)
+                << " to a string via snprintf().";
+            return std::vector<std::string>();
+        }
+#endif
         ans.push_back(token);
 
         ++s;
