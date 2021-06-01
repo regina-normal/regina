@@ -21,6 +21,7 @@ Version 6.1  [ TODO ]
           doxygen can finally understand the code again.
         - Environment variables such as REGINA_HOME and REGINA_PYLIBDIR
           are more consistently used, and should need to be set less often.
+        - Removed REGINA_API and associated macros.
     ENGINE:
         Class AbelianGroup:
             - Added a move constructor and move assignment operator.

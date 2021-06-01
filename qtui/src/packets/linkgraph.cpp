@@ -64,8 +64,8 @@
 // #define LIBGVC_DYNAMIC_PLUGINS 1
 
 #ifndef LIBGVC_DYNAMIC_PLUGINS
-extern REGINA_HELPER_DLL_IMPORT gvplugin_library_t gvplugin_dot_layout_LTX_library;
-extern REGINA_HELPER_DLL_IMPORT gvplugin_library_t gvplugin_core_LTX_library;
+extern gvplugin_library_t gvplugin_dot_layout_LTX_library;
+extern gvplugin_library_t gvplugin_core_LTX_library;
 
 lt_symlist_t link_lt_preloaded_symbols[] = {
     { "gvplugin_dot_layout_LTX_library", &gvplugin_dot_layout_LTX_library },

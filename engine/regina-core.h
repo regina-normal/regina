@@ -44,54 +44,6 @@
  * @{
  */
 
-#ifdef __DOXYGEN
-  // Fake definitions just for doxygen.
-
-  /**
-   * All non-templated, non-static functions, classes and global variables
-   * that are part of Regina's public interface \b must be declared with
-   * REGINA_API.  Template classes or functions should not be declared
-   * with REGINA_API, but any explicit instantiations should.
-   * Global variables must also be declared with \c extern, as per normal.
-   *
-   * This is required for DLL linking under Windows, and also to avoid
-   * breakage with optimisations such as gcc's <tt>-fvisibility=hidden</tt>.
-   *
-   * Note:  When building the Regina calculation engine shared library,
-   * REGINA_DLL_EXPORTS must be defined (this ensures that API symbols are
-   * marked for export).  When importing (using) this library,
-   * REGINA_DLL_EXPORTS must \e not be defined (this ensures that API symbols
-   * are marked for import instead).
-   */
-  #define REGINA_API
-#else
-  // The real definitions go here.
-  // The macros below are modified from the instructions at
-  // http://gcc.gnu.org/wiki/Visibility (retrieved on 22 May 2011).
-  #if defined _WIN32 || defined __CYGWIN__
-    #define REGINA_HELPER_DLL_IMPORT __declspec(dllimport)
-    #define REGINA_HELPER_DLL_EXPORT __declspec(dllexport)
-  #else
-    #if __GNUC__ >= 4
-      #define REGINA_HELPER_DLL_IMPORT __attribute__ ((visibility("default")))
-      #define REGINA_HELPER_DLL_EXPORT __attribute__ ((visibility("default")))
-    #else
-      #define REGINA_HELPER_DLL_IMPORT
-      #define REGINA_HELPER_DLL_EXPORT
-    #endif
-  #endif
-
-  // Assume that the library is always built as a shared library (not static).
-  #if 0
-  #ifdef REGINA_DLL_EXPORTS
-    #define REGINA_API REGINA_HELPER_DLL_EXPORT
-  #else
-    #define REGINA_API REGINA_HELPER_DLL_IMPORT
-  #endif
-  #endif
-  #define REGINA_API
-#endif // doxygen
-
 namespace regina {
 
 /**
