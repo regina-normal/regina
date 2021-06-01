@@ -1450,11 +1450,6 @@ namespace regina {
 extern template class LPMatrix<Integer>;
 extern template class LPMatrix<NNativeLong>;
 
-extern template struct LPCol<LPConstraintNone>;
-extern template struct LPCol<LPConstraintEulerPositive>;
-extern template struct LPCol<LPConstraintEulerZero>;
-extern template struct LPCol<LPConstraintNonSpun>;
-
 extern template class LPInitialTableaux<LPConstraintNone>;
 extern template class LPInitialTableaux<LPConstraintEulerPositive>;
 extern template class LPInitialTableaux<LPConstraintEulerZero>;

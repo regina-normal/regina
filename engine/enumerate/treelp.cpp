@@ -42,11 +42,6 @@ namespace regina {
 template class LPMatrix<Integer>;
 template class LPMatrix<NNativeLong>;
 
-template class LPCol<LPConstraintNone>;
-template class LPCol<LPConstraintEulerPositive>;
-template class LPCol<LPConstraintEulerZero>;
-template class LPCol<LPConstraintNonSpun>;
-
 template class LPInitialTableaux<LPConstraintNone>;
 template class LPInitialTableaux<LPConstraintEulerPositive>;
 template class LPInitialTableaux<LPConstraintEulerZero>;
