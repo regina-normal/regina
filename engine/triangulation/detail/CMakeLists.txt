@@ -21,7 +21,6 @@ if (${REGINA_INSTALL_DEV})
     facenumbering.h
     facetpairing.h
     facetpairing-impl.h
-    isomorphism.h
     isosig-impl.h
     pachner-impl.h
     retriangulate.h

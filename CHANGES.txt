@@ -161,8 +161,10 @@ Version 6.1  [ TODO ]
             - The constructor that takes a NativeInteger is no longer explicit.
             - The constructors Integer(LargeInteger) and LargeInteger(Integer)
               are likewise no longer explicit.
-        Class Isomorphism<dim>:
-            - Added member and global swap() functions.
+        Class Isomorphism<dim>, IsomorphismBase<dim>:
+            - Added member and global swap() functions to Isomorphism<dim>.
+            - Removed the IsomorphismBase<dim> base class; all functionality
+              now lives directly within Isomorphism<dim>.
         Class IsReginaArbitraryPrecisionInteger:
             - New type trait to identify Regina's arbitrary precision integer
               types.
