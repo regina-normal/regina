@@ -54,11 +54,11 @@ void addHomGroupPresentation(pybind11::module_& m) {
         .def("knowsInverse", &HomGroupPresentation::knowsInverse)
         .def("evaluate", overload_cast<unsigned long>(
             &HomGroupPresentation::evaluate, pybind11::const_))
-        .def("evaluate", overload_cast<const GroupExpression&>(
+        .def("evaluate", overload_cast<GroupExpression>(
             &HomGroupPresentation::evaluate, pybind11::const_))
         .def("invEvaluate", overload_cast<unsigned long>(
             &HomGroupPresentation::invEvaluate, pybind11::const_))
-        .def("invEvaluate", overload_cast<const GroupExpression&>(
+        .def("invEvaluate", overload_cast<GroupExpression>(
             &HomGroupPresentation::invEvaluate, pybind11::const_))
         .def("intelligentSimplify",
             &HomGroupPresentation::intelligentSimplify)

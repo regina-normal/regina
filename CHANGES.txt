@@ -119,12 +119,17 @@ Version 6.1  [ TODO ]
             - Functions inverse() and power() now return by value, not pointer.
             - Functions addTermsFirst() and addTermsLast() now take the
               GroupExpression argument by value, not by const reference.
+            - Added member swap() function and a global regina::swap() function,
+              so now GroupExpression meets the C++ Swappable requirements.
         Class GroupPresentation:
             - Added move constructors and move assignment operators.
             - New swap() member function.
             - Functions abelianisation() and markedAbelianisation() now
               return groups by value (which can then be moved from).
             - Function addRelation() now takes its argument by value.
+            - Added a global regina::swap() function, so now GroupPresentation
+              meets the C++ Swappable requirements.
+            - Some major cleanup and reorganisation under the hood.
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
@@ -135,10 +140,10 @@ Version 6.1  [ TODO ]
               now deprecated.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
-            - Constructors that used to take a (const GroupPresentation&) for
-              domain and range now take GroupPresentation arguments by value.
-            - The evaluate() and invEvaluate() functions now run in
-              linear time, not quadratic time.
+            - Constructors that used to take a domain, range and map(s) by
+              reference now take these arguments by value.
+            - The evaluate() and invEvaluate() functions now run in linear
+              time, not quadratic time, and take their arguments by value.
         Class HomMarkedAbelianGroup:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.
