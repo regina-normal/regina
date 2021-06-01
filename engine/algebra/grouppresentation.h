@@ -244,6 +244,14 @@ class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
         GroupExpression& operator = (GroupExpression&&) noexcept = default;
 
         /**
+         * Swaps the contents of this and the given expression.
+         *
+         * @param other the expression whose contents should be swapped with
+         * this.
+         */
+        void swap(GroupExpression& other);
+
+        /**
          * Equality operator. Checks to see whether or not these two words
          * represent the same literal string.
          *
@@ -689,6 +697,19 @@ class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
 };
 
 /**
+ * Swaps the contents of the two given expressions.
+ *
+ * This global routine simply calls GroupExpression::swap(); it is provided
+ * so that GroupExpression meets the C++ Swappable requirements.
+ *
+ * See GroupExpression::swap() for more details.
+ *
+ * @param lhs the expression whose contents should be swapped with \a rhs.
+ * @param rhs the expression whose contents should be swapped with \a lhs.
+ */
+void swap(GroupExpression& lhs, GroupExpression& rhs);
+
+/**
  * Represents a finite presentation of a group.
  *
  * A presentation consists of a number of generators and a set of
@@ -713,7 +734,7 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
     protected:
         unsigned long nGenerators_;
             /**< The number of generators. */
-        std::vector<GroupExpression*> relations_;
+        std::vector<GroupExpression> relations_;
             /**< The relations between the generators. */
 
     public:
@@ -726,7 +747,7 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          *
          * @param src the group presentation to clone.
          */
-        GroupPresentation(const GroupPresentation& src);
+        GroupPresentation(const GroupPresentation& src) = default;
         /**
          * Moves the contents of the given group presentation to this new
          * group presentation.  This is a fast (constant time) operation.
@@ -736,7 +757,7 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          *
          * @param src the group presentation to move.
          */
-        GroupPresentation(GroupPresentation&& src) noexcept;
+        GroupPresentation(GroupPresentation&& src) noexcept = default;
         /**
          * Constructor that allows you to directly pass an arbitrary number
          * of relators in string format.
@@ -765,11 +786,6 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          */
         GroupPresentation(unsigned long nGens,
                 const std::vector<std::string> &rels);
-        /**
-         * Destroys the group presentation.
-         * All relations that are stored will be deallocated.
-         */
-        ~GroupPresentation();
 
         /**
          * Sets this to be a clone of the given group presentation.
@@ -777,7 +793,7 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          * @param src the group presentation to copy.
          * @return a reference to this group presentation.
          */
-        GroupPresentation& operator=(const GroupPresentation& src);
+        GroupPresentation& operator = (const GroupPresentation& src) = default;
         /**
          * Moves the contents of the given group presentation to this
          * group presentation.  This is a fast (constant time) operation.
@@ -788,7 +804,8 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          * @param src the group presentation to move.
          * @return a reference to this group presentation.
          */
-        GroupPresentation& operator = (GroupPresentation&& src) noexcept;
+        GroupPresentation& operator = (GroupPresentation&& src) noexcept =
+            default;
 
         /**
          * Swaps the contents of this and the given group presentation.
@@ -1415,7 +1432,7 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          *   sub_length == 5 makes sense, and is a cyclic variation
          *   on the above substitution, so the score is also 4.
          */
-        struct NWordSubstitutionData {
+        struct WordSubstitutionData {
                 unsigned long start_sub_at;
                     /**< Where in A do we start? */
                 unsigned long start_from;
@@ -1427,7 +1444,7 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
                 long int score;
                     /**< The score, i.e., the decrease in the word letter count
                          provided this substitution is made. */
-                bool operator<( const NWordSubstitutionData &other ) const {
+                bool operator<( const WordSubstitutionData &other ) const {
                         if (score < other.score) return false;
                         if (score > other.score) return true;
                         if (sub_length < other.sub_length) return false;
@@ -1480,7 +1497,7 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
         static void dehnAlgorithmSubMetric(
             const GroupExpression &this_word,
             const GroupExpression &that_word,
-            std::set< NWordSubstitutionData > &sub_list,
+            std::set<WordSubstitutionData> &sub_list,
             unsigned long step=1 );
 
         /**
@@ -1489,16 +1506,29 @@ class REGINA_API GroupPresentation : public Output<GroupPresentation> {
          *
          *  Given a word this_word and that_word, apply the substitution
          *  specified by sub_data to *this. See dehnAlgorithm() and struct
-         *  NWordSubstitutionData.  In particular sub_data needs to be a
+         *  WordSubstitutionData.  In particular sub_data needs to be a
          *  valid substitution, usually it will be generated by
          *  dehnAlgorithmSubMetric.
          */
         static void applySubstitution(
             GroupExpression& this_word,
             const GroupExpression &that_word,
-            const NWordSubstitutionData &sub_data );
+            const WordSubstitutionData &sub_data );
 
 };
+
+/**
+ * Swaps the contents of the two given group presentations.
+ *
+ * This global routine simply calls GroupPresentation::swap(); it is provided
+ * so that GroupPresentation meets the C++ Swappable requirements.
+ *
+ * See GroupPresentation::swap() for more details.
+ *
+ * @param lhs the presentation whose contents should be swapped with \a rhs.
+ * @param rhs the presentation whose contents should be swapped with \a lhs.
+ */
+void swap(GroupPresentation& lhs, GroupPresentation& rhs);
 
 /*@}*/
 
@@ -1543,6 +1573,10 @@ inline bool GroupExpressionTerm::operator < (
 // Inline functions for GroupExpression
 
 inline GroupExpression::GroupExpression() {
+}
+
+inline void GroupExpression::swap(GroupExpression& other) {
+    terms_.swap(other.terms_);
 }
 
 inline bool GroupExpression::operator ==(const GroupExpression& comp) const {
@@ -1616,28 +1650,13 @@ inline void GroupExpression::erase() {
     terms_.clear();
 }
 
+inline void swap(GroupExpression& lhs, GroupExpression& rhs) {
+    lhs.swap(rhs);
+}
+
 // Inline functions for GroupPresentation
 
 inline GroupPresentation::GroupPresentation() : nGenerators_(0) {
-}
-
-inline GroupPresentation::GroupPresentation(GroupPresentation&& src) noexcept :
-        nGenerators_(src.nGenerators_) {
-    relations_.swap(src.relations_);
-    // Now src will have an empty relations list.
-}
-
-inline GroupPresentation::~GroupPresentation() {
-    for (auto r : relations_)
-        delete r;
-}
-
-inline GroupPresentation& GroupPresentation::operator = (
-        GroupPresentation&& src) noexcept {
-    std::swap(nGenerators_, src.nGenerators_);
-    relations_.swap(src.relations_);
-    // Let src dispose of the original relations in its own destructor.
-    return *this;
 }
 
 inline void GroupPresentation::swap(GroupPresentation& other) {
@@ -1650,7 +1669,7 @@ inline unsigned long GroupPresentation::addGenerator(unsigned long num) {
 }
 
 inline void GroupPresentation::addRelation(GroupExpression rel) {
-    relations_.push_back(new GroupExpression(std::move(rel)));
+    relations_.push_back(std::move(rel));
 }
 
 inline unsigned long GroupPresentation::countGenerators() const {
@@ -1661,9 +1680,8 @@ inline size_t GroupPresentation::countRelations() const {
     return relations_.size();
 }
 
-inline const GroupExpression& GroupPresentation::relation(
-        size_t index) const {
-    return *relations_[index];
+inline const GroupExpression& GroupPresentation::relation(size_t index) const {
+    return relations_[index];
 }
 
 inline void GroupPresentation::writeTextShort(std::ostream& out) const {
@@ -1674,8 +1692,12 @@ inline void GroupPresentation::writeTextShort(std::ostream& out) const {
 inline size_t GroupPresentation::relatorLength() const {
     size_t retval(0);
     for (size_t i=0; i<relations_.size(); i++)
-        retval += relations_[i]->wordLength();
+        retval += relations_[i].wordLength();
     return retval;
+}
+
+inline void swap(GroupPresentation& lhs, GroupPresentation& rhs) {
+    lhs.swap(rhs);
 }
 
 } // namespace regina

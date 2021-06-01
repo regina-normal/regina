@@ -64,6 +64,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def(pybind11::init([](const std::string& str) {
             return new GroupExpression(str, nullptr);
         }))
+        .def("swap", &GroupExpression::swap)
         .def("terms", overload_cast<>(
             &GroupExpression::terms, pybind11::const_))
         .def("countTerms", &GroupExpression::countTerms)
@@ -111,6 +112,8 @@ void addGroupPresentation(pybind11::module_& m) {
     ;
     regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);
+
+    m.def("swap", (void(*)(GroupExpression&, GroupExpression&))(regina::swap));
 
     auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation")
         .def(pybind11::init<>())
@@ -166,5 +169,8 @@ void addGroupPresentation(pybind11::module_& m) {
     ;
     regina::python::add_output(c3);
     regina::python::add_eq_operators(c3);
+
+    m.def("swap",
+        (void(*)(GroupPresentation&, GroupPresentation&))(regina::swap));
 }
 
