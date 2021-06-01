@@ -67,10 +67,9 @@ typedef Matrix<Integer, true> MatrixInt;
  * <i>d0</i>|<i>d1</i>|...|<i>dn</i>.  Note that this representation is
  * unique.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Calling a routine that returns an AbelianGroup should not perform any
- * unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
@@ -363,6 +362,13 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
         AbelianGroup& operator = (AbelianGroup&&) noexcept = default;
 
         /**
+         * Swaps the contents of this and the given abelian group.
+         *
+         * @param other the group whose contents should be swapped with this.
+         */
+        void swap(AbelianGroup& other);
+
+        /**
          * Writes a chunk of XML containing this abelian group.
          *
          * \ifacespython Not present.
@@ -411,12 +417,27 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
         void replaceTorsion(const MatrixInt& matrix);
 };
 
+/**
+ * Swaps the contents of the two given abelian groups.
+ *
+ * This global routine simply calls AbelianGroup::swap(); it is provided
+ * so that AbelianGroup meets the C++ Swappable requirements.
+ *
+ * @param lhs the group whose contents should be swapped with \a rhs.
+ * @param rhs the group whose contents should be swapped with \a lhs.
+ */
+void swap(AbelianGroup& lhs, AbelianGroup& rhs);
 
 /*@}*/
 
 // Inline functions for AbelianGroup
 
 inline AbelianGroup::AbelianGroup() : rank_(0) {
+}
+
+inline void AbelianGroup::swap(AbelianGroup& other) {
+    std::swap(rank_, other.rank_);
+    invariantFactors.swap(other.invariantFactors);
 }
 
 inline void AbelianGroup::addRank(int extraRank) {
@@ -464,6 +485,10 @@ inline bool AbelianGroup::operator == (const AbelianGroup& other) const {
 
 inline bool AbelianGroup::operator != (const AbelianGroup& other) const {
     return (rank_ != other.rank_ || invariantFactors != other.invariantFactors);
+}
+
+inline void swap(AbelianGroup& a, AbelianGroup& b) {
+    a.swap(b);
 }
 
 } // namespace regina

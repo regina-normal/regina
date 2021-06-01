@@ -68,6 +68,7 @@ void addAbelianGroup(pybind11::module_& m) {
         .def(pybind11::init<const MatrixInt&, const MatrixInt&>())
         .def(pybind11::init<const MatrixInt&, const MatrixInt&,
             const Integer&>())
+        .def("swap", &AbelianGroup::swap)
         .def("addRank", &AbelianGroup::addRank,
             pybind11::arg("extraRank") = 1)
         .def("addTorsionElement",
@@ -97,5 +98,7 @@ void addAbelianGroup(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(AbelianGroup&, AbelianGroup&))(regina::swap));
 }
 

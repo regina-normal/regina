@@ -82,10 +82,9 @@ class HomMarkedAbelianGroup;
  * and is created by constructing the product MRBi() * \a N, and then
  * removing the first rankM() rows.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Calling a routine that returns a MarkedAbelianGroup should not perform any
- * unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * @author Ryan Budney
  *
@@ -233,6 +232,13 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          */
         MarkedAbelianGroup& operator = (MarkedAbelianGroup&&) noexcept =
             default;
+
+        /**
+         * Swaps the contents of this and the given abelian group.
+         *
+         * @param other the group whose contents should be swapped with this.
+         */
+        void swap(MarkedAbelianGroup& other);
 
         /**
          * Determines whether or not the defining maps for this group
@@ -678,6 +684,17 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
 };
 
 /**
+ * Swaps the contents of the two given abelian groups.
+ *
+ * This global routine simply calls MarkedAbelianGroup::swap(); it is provided
+ * so that MarkedAbelianGroup meets the C++ Swappable requirements.
+ *
+ * @param lhs the group whose contents should be swapped with \a rhs.
+ * @param rhs the group whose contents should be swapped with \a lhs.
+ */
+void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs);
+
+/**
  * Represents a homomorphism of finitely generated abelian groups.
  *
  * One initializes such a homomorphism by providing:
@@ -700,10 +717,9 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
  * which means the domain has Z coefficients and the range has mod \a q
  * coefficients.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Calling a routine that returns a HomMarkedAbelianGroup should not perform
- * any unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \todo \optlong preImageOf in CC and SNF coordinates.  This routine would
  * return a generating list of elements in the preimage, thought of as an
@@ -838,6 +854,14 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          */
         HomMarkedAbelianGroup& operator = (HomMarkedAbelianGroup&& src)
             noexcept;
+
+        /**
+         * Swaps the contents of this and the given homomorphism.
+         *
+         * @param other the homomorphism whose contents should be swapped with
+         * this.
+         */
+        void swap(HomMarkedAbelianGroup& other);
 
         /**
          * Determines whether this and the given homomorphism together
@@ -1090,6 +1114,17 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
                 MarkedAbelianGroup dom, MarkedAbelianGroup ran);
 };
 
+/**
+ * Swaps the contents of the two given homomorphisms.
+ *
+ * This global routine simply calls HomMarkedAbelianGroup::swap(); it is
+ * provided so that HomMarkedAbelianGroup meets the C++ Swappable requirements.
+ *
+ * @param lhs the homomorphism whose contents should be swapped with \a rhs.
+ * @param rhs the homomorphism whose contents should be swapped with \a lhs.
+ */
+void swap(HomMarkedAbelianGroup& lhs, HomMarkedAbelianGroup& rhs);
+
 /*@}*/
 
 // Inline functions that need to be defined before *other* inline funtions
@@ -1179,6 +1214,10 @@ inline const Integer& MarkedAbelianGroup::coefficients() const {
     return coeff;
 }
 
+inline void swap(MarkedAbelianGroup& a, MarkedAbelianGroup& b) {
+    a.swap(b);
+}
+
 // Inline functions for HomMarkedAbelianGroup
 
 inline HomMarkedAbelianGroup::HomMarkedAbelianGroup(
@@ -1228,6 +1267,10 @@ inline bool HomMarkedAbelianGroup::isIsomorphism() const {
 
 inline bool HomMarkedAbelianGroup::isZero() const {
     return image().isTrivial();
+}
+
+inline void swap(HomMarkedAbelianGroup& a, HomMarkedAbelianGroup& b) {
+    a.swap(b);
 }
 
 } // namespace regina

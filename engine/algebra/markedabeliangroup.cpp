@@ -215,6 +215,36 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
     }
 }
 
+void MarkedAbelianGroup::swap(MarkedAbelianGroup& other) {
+    // Woof.
+    OM.swap(other.OM);
+    ON.swap(other.ON);
+    OMR.swap(other.OMR);
+    OMC.swap(other.OMC);
+    OMRi.swap(other.OMRi);
+    OMCi.swap(other.OMCi);
+    std::swap(rankOM, other.rankOM);
+    ornR.swap(other.ornR);
+    ornC.swap(other.ornC);
+    ornRi.swap(other.ornRi);
+    ornCi.swap(other.ornCi);
+    otR.swap(other.otR);
+    otC.swap(other.otC);
+    otRi.swap(other.otRi);
+    otCi.swap(other.otCi);
+    InvFacList.swap(other.InvFacList);
+    std::swap(snfrank, other.snfrank);
+    std::swap(snffreeindex, other.snffreeindex);
+    std::swap(ifNum, other.ifNum);
+    std::swap(ifLoc, other.ifLoc);
+    coeff.swap(other.coeff);
+    std::swap(TORLoc, other.TORLoc);
+    TORVec.swap(other.TORVec);
+    std::swap(tensorIfLoc, other.tensorIfLoc);
+    std::swap(tensorIfNum, other.tensorIfNum);
+    tensorInvFacList.swap(other.tensorInvFacList);
+}
+
 bool MarkedAbelianGroup::isChainComplex() const
 {
     if (OM.columns() != ON.rows()) return false;
@@ -893,6 +923,17 @@ HomMarkedAbelianGroup& HomMarkedAbelianGroup::operator =(
     std::swap(reducedKernelLattice, g.reducedKernelLattice);
     // Let g dispose of the original data in its own destructor.
     return *this;
+}
+
+void HomMarkedAbelianGroup::swap(HomMarkedAbelianGroup& other) {
+    domain_.swap(other.domain_);
+    range_.swap(other.range_);
+    matrix.swap(other.matrix);
+    std::swap(reducedMatrix_, other.reducedMatrix_);
+    std::swap(kernel_, other.kernel_);
+    std::swap(coKernel_, other.coKernel_);
+    std::swap(image_, other.image_);
+    std::swap(reducedKernelLattice, other.reducedKernelLattice);
 }
 
 void HomMarkedAbelianGroup::computeReducedMatrix()

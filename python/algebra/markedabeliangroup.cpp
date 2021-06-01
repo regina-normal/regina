@@ -51,6 +51,7 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
             const Integer&>())
         .def(pybind11::init<unsigned long, const Integer&>())
         .def("isChainComplex", &MarkedAbelianGroup::isChainComplex)
+        .def("swap", &MarkedAbelianGroup::swap)
         .def("rank", &MarkedAbelianGroup::rank)
         .def("torsionRank", overload_cast<const regina::Integer&>(
             &MarkedAbelianGroup::torsionRank, pybind11::const_))
@@ -98,11 +99,15 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
     regina::python::add_output(c1);
     regina::python::add_eq_operators(c1);
 
+    m.def("swap",
+        (void(*)(MarkedAbelianGroup&, MarkedAbelianGroup&))(regina::swap));
+
     auto c2 = pybind11::class_<HomMarkedAbelianGroup>(m,
             "HomMarkedAbelianGroup")
         .def(pybind11::init<const MarkedAbelianGroup&,
                 const MarkedAbelianGroup&, const MatrixInt&>())
         .def(pybind11::init<const HomMarkedAbelianGroup&>())
+        .def("swap", &HomMarkedAbelianGroup::swap)
         .def("isChainMap", &HomMarkedAbelianGroup::isChainMap)
         .def("isCycleMap", &HomMarkedAbelianGroup::isCycleMap)
         .def("isEpic", &HomMarkedAbelianGroup::isEpic)
@@ -135,5 +140,8 @@ void addMarkedAbelianGroup(pybind11::module_& m) {
     ;
     regina::python::add_output(c2);
     regina::python::add_eq_operators(c2);
+
+    m.def("swap",
+        (void(*)(HomMarkedAbelianGroup&, HomMarkedAbelianGroup&))(regina::swap));
 }
 

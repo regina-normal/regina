@@ -47,6 +47,7 @@ void addHomGroupPresentation(pybind11::module_& m) {
     auto c = pybind11::class_<HomGroupPresentation>(m, "HomGroupPresentation")
         .def(pybind11::init<const HomGroupPresentation&>())
         .def(pybind11::init<const GroupPresentation&>())
+        .def("swap", &HomGroupPresentation::swap)
         .def("domain", &HomGroupPresentation::domain,
             pybind11::return_value_policy::reference_internal)
         .def("range", &HomGroupPresentation::range,
@@ -77,5 +78,8 @@ void addHomGroupPresentation(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(HomGroupPresentation&, HomGroupPresentation&))(regina::swap));
 }
 

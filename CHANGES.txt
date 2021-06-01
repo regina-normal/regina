@@ -25,6 +25,7 @@ Version 6.1  [ TODO ]
     ENGINE:
         Class AbelianGroup:
             - Added a move constructor and move assignment operator.
+            - Added member and global swap() functions.
         Class AngleStructure, AngleStructureVector:
             - The internal vector representation now uses Integer, not
               LargeInteger.
@@ -140,6 +141,7 @@ Version 6.1  [ TODO ]
             - Added copy assignment and move assignment operators.
             - Added operator * for composition; the old composeWith() is
               now deprecated.
+            - Added member and global swap() functions.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take a domain, range and map(s) by
@@ -149,6 +151,7 @@ Version 6.1  [ TODO ]
         Class HomMarkedAbelianGroup:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.
+            - Added member and global swap() functions.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take (const MarkedAbelianGroup&) and
@@ -204,6 +207,7 @@ Version 6.1  [ TODO ]
         Class MarkedAbelianGroup:
             - New move constructor.
             - New copy assignment and move assignment operators.
+            - Added member and global swap() functions.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
             - Constructors that used to take (const MatrixInt&) arguments

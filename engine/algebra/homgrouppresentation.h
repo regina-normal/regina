@@ -67,10 +67,9 @@ class GroupPresentation;
  * if a homomorphism is not a declared isomorphism, it might still be an
  * isomorphism; this just means that no inverse map was explicitly provided.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Calling a routine that returns a HomGroupPresentation should not perform any
- * unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \apinotfinal
  *
@@ -185,6 +184,14 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * @return a reference to this homomorphism.
          */
         HomGroupPresentation& operator = (HomGroupPresentation&& src) noexcept;
+
+        /**
+         * Swaps the contents of this and the given homomorphism.
+         *
+         * @param other the homomorphism whose contents should be swapped with
+         * this.
+         */
+        void swap(HomGroupPresentation& other);
 
         /**
          * The domain of the map.
@@ -432,6 +439,17 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
         void writeTextLong(std::ostream& out) const;
 };
 
+/**
+ * Swaps the contents of the two given homomorphisms.
+ *
+ * This global routine simply calls HomGroupPresentation::swap(); it is provided
+ * so that HomGroupPresentation meets the C++ Swappable requirements.
+ *
+ * @param lhs the homomorphism whose contents should be swapped with \a rhs.
+ * @param rhs the homomorphism whose contents should be swapped with \a lhs.
+ */
+void swap(HomGroupPresentation& lhs, HomGroupPresentation& rhs);
+
 /*@}*/
 
 inline HomGroupPresentation::HomGroupPresentation(
@@ -489,6 +507,13 @@ inline HomGroupPresentation& HomGroupPresentation::operator = (
     return *this;
 }
 
+inline void HomGroupPresentation::swap(HomGroupPresentation& other) {
+    domain_.swap(other.domain_);
+    range_.swap(other.range_);
+    map_.swap(other.map_);
+    std::swap(inv_, other.inv_); // pointer
+}
+
 inline const GroupPresentation& HomGroupPresentation::domain() const {
     return domain_;
 }
@@ -525,6 +550,10 @@ inline GroupExpression HomGroupPresentation::invEvaluate(unsigned long i)
 inline HomGroupPresentation HomGroupPresentation::composeWith(
         const HomGroupPresentation& rhs) const {
     return (*this) * rhs;
+}
+
+inline void swap(HomGroupPresentation& a, HomGroupPresentation& b) {
+    a.swap(b);
 }
 
 } // namespace regina
