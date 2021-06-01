@@ -64,13 +64,6 @@
    * are marked for import instead).
    */
   #define REGINA_API
-
-  /**
-   * Classes and functions that are local to the current compilation unit
-   * and should not be publicly exported may be declared with REGINA_LOCAL.
-   * Use of this macro is optional.
-   */
-  #define REGINA_LOCAL
 #else
   // The real definitions go here.
   // The macros below are modified from the instructions at
@@ -78,16 +71,13 @@
   #if defined _WIN32 || defined __CYGWIN__
     #define REGINA_HELPER_DLL_IMPORT __declspec(dllimport)
     #define REGINA_HELPER_DLL_EXPORT __declspec(dllexport)
-    #define REGINA_HELPER_DLL_LOCAL
   #else
     #if __GNUC__ >= 4
       #define REGINA_HELPER_DLL_IMPORT __attribute__ ((visibility("default")))
       #define REGINA_HELPER_DLL_EXPORT __attribute__ ((visibility("default")))
-      #define REGINA_HELPER_DLL_LOCAL  __attribute__ ((visibility("hidden")))
     #else
       #define REGINA_HELPER_DLL_IMPORT
       #define REGINA_HELPER_DLL_EXPORT
-      #define REGINA_HELPER_DLL_LOCAL
     #endif
   #endif
 
@@ -97,7 +87,6 @@
   #else
     #define REGINA_API REGINA_HELPER_DLL_IMPORT
   #endif
-  #define REGINA_LOCAL REGINA_HELPER_DLL_LOCAL
 #endif // doxygen
 
 namespace regina {
