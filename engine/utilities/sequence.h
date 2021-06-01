@@ -448,6 +448,9 @@ std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
 /**
  * Swaps the contents of the given sequences.
  *
+ * This global routine simply calls LightweightSequence<T>::swap(); it is
+ * provided so that LightweightSequence<T> meets the C++ Swappable requirements.
+ *
  * @param a the first sequence whose contents should be swapped.
  * @param b the second sequence whose contents should be swapped.
  */

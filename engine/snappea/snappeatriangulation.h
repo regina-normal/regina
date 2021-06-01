@@ -1465,7 +1465,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
  * This global routine simply calls SnapPeaTriangulation::swap(); it is
  * provided so that SnapPeaTriangulation meets the C++ Swappable requirements.
  *
- * See SnapPeaTriangulation::swap() for more details.
+ * See SnapPeaTriangulation::swap() for more details and caveats.
  *
  * \warning If you wish to swap the contents of two SnapPea triangulations,
  * you \e must cast both to SnapPeaTriangulation before calling swap().  If

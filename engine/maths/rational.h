@@ -208,8 +208,7 @@ class Rational {
         /**
          * Swaps the values of this and the given rational.
          *
-         * @param other the rational whose value will be swapped with
-         * this.
+         * @param other the rational whose value will be swapped with this.
          */
         void swap(Rational& other);
 

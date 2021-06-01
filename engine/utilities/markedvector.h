@@ -260,8 +260,6 @@ class MarkedVector : private std::vector<T*> {
         /**
          * Swaps the contents of this and the given vector.
          *
-         * This behaves correctly if \other is this vector.
-         *
          * @param other the vector whose contents are to be swapped with this.
          */
         inline void swap(MarkedVector<T>& other) {
@@ -326,7 +324,8 @@ class MarkedVector : private std::vector<T*> {
 /**
  * Swaps the contents of the given vectors.
  *
- * This behaves correctly if \a and \a b are the same vector.
+ * This global routine simply calls MarkedVector<T>::swap(); it is provided
+ * so that MarkedVector<T> meets the C++ Swappable requirements.
  *
  * @param a the first vector whose contents should be swapped.
  * @param b the second vector whose contents should be swapped.

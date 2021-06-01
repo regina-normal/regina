@@ -701,8 +701,6 @@ class GroupExpression : public ShortOutput<GroupExpression> {
  * This global routine simply calls GroupExpression::swap(); it is provided
  * so that GroupExpression meets the C++ Swappable requirements.
  *
- * See GroupExpression::swap() for more details.
- *
  * @param lhs the expression whose contents should be swapped with \a rhs.
  * @param rhs the expression whose contents should be swapped with \a lhs.
  */
@@ -1521,8 +1519,6 @@ class GroupPresentation : public Output<GroupPresentation> {
  *
  * This global routine simply calls GroupPresentation::swap(); it is provided
  * so that GroupPresentation meets the C++ Swappable requirements.
- *
- * See GroupPresentation::swap() for more details.
  *
  * @param lhs the presentation whose contents should be swapped with \a rhs.
  * @param rhs the presentation whose contents should be swapped with \a lhs.

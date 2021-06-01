@@ -414,6 +414,9 @@ class Isomorphism :
 /**
  * Swaps the contents of the given isomorphisms.
  *
+ * This global routine simply calls Isomorphism<dim>::swap(); it is provided
+ * so that Isomorphism<dim> meets the C++ Swappable requirements.
+ *
  * @param a the first isomorphism whose contents should be swapped.
  * @param b the second isomorphism whose contents should be swapped.
  */

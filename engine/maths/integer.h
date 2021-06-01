@@ -527,8 +527,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         /**
          * Swaps the values of this and the given integer.
          *
-         * @param other the integer whose value will be swapped with
-         * this.
+         * @param other the integer whose value will be swapped with this.
          */
         void swap(IntegerBase& other);
 
@@ -1651,8 +1650,7 @@ class NativeInteger {
         /**
          * Swaps the values of this and the given integer.
          *
-         * @param other the integer whose value will be swapped with
-         * this.
+         * @param other the integer whose value will be swapped with this.
          */
         void swap(NativeInteger& other);
 
