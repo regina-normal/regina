@@ -436,13 +436,6 @@ class GluingPerms {
 
 /*@}*/
 
-// Indicate which templates we explicitly instantiate in the shared library.
-#ifndef __DOXYGEN
-extern template class GluingPerms<2>;
-extern template class GluingPerms<3>;
-extern template class GluingPerms<4>;
-#endif // __DOXYGEN
-
 // Inline functions for GluingPerms
 
 template <int dim>

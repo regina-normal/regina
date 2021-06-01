@@ -1414,53 +1414,6 @@ class TreeSingleSoln :
 
 /*@}*/
 
-// Help the compiler by noting which explicit instantiations we offer.
-extern template class TreeTraversal<LPConstraintNone, BanNone, Integer>;
-extern template class TreeTraversal<LPConstraintNone, BanNone, NNativeLong>;
-extern template class TreeEnumeration<LPConstraintNone, BanNone, Integer>;
-extern template class TreeEnumeration<LPConstraintNone, BanNone, NNativeLong>;
-extern template class TautEnumeration<LPConstraintNone, BanNone, Integer>;
-extern template class TautEnumeration<LPConstraintNone, BanNone, NNativeLong>;
-
-extern template class TreeTraversal<LPConstraintNone, BanBoundary, Integer>;
-extern template class TreeTraversal<LPConstraintNone, BanBoundary, NNativeLong>;
-extern template class TreeEnumeration<LPConstraintNone, BanBoundary, Integer>;
-extern template class TreeEnumeration<LPConstraintNone, BanBoundary, NNativeLong>;
-
-extern template class TreeTraversal<LPConstraintEulerPositive, BanNone, Integer>;
-extern template class TreeTraversal<LPConstraintEulerPositive, BanNone, NNativeLong>;
-extern template class TreeSingleSoln<LPConstraintEulerPositive, BanNone, Integer>;
-extern template class TreeSingleSoln<LPConstraintEulerPositive, BanNone, NNativeLong>;
-
-extern template class TreeTraversal<LPConstraintEulerZero, BanNone, Integer>;
-extern template class TreeTraversal<LPConstraintEulerZero, BanNone, NNativeLong>;
-extern template class TreeEnumeration<LPConstraintEulerZero, BanNone, Integer>;
-extern template class TreeEnumeration<LPConstraintEulerZero, BanNone, NNativeLong>;
-
-extern template class TreeTraversal<LPConstraintNonSpun, BanNone, Integer>;
-extern template class TreeTraversal<LPConstraintNonSpun, BanNone, NNativeLong>;
-extern template class TreeEnumeration<LPConstraintNonSpun, BanNone, Integer>;
-extern template class TreeEnumeration<LPConstraintNonSpun, BanNone, NNativeLong>;
-
-#ifdef INT128_AVAILABLE
-extern template class TreeTraversal<LPConstraintNone, BanNone, NativeInteger<16> >;
-extern template class TreeEnumeration<LPConstraintNone, BanNone, NativeInteger<16> >;
-extern template class TautEnumeration<LPConstraintNone, BanNone, NativeInteger<16> >;
-
-extern template class TreeTraversal<LPConstraintNone, BanBoundary, NativeInteger<16>>;
-extern template class TreeEnumeration<LPConstraintNone, BanBoundary, NativeInteger<16>>;
-
-extern template class TreeTraversal<LPConstraintEulerPositive, BanNone, NativeInteger<16> >;
-extern template class TreeSingleSoln<LPConstraintEulerPositive, BanNone, NativeInteger<16> >;
-
-extern template class TreeTraversal<LPConstraintEulerZero, BanNone, NativeInteger<16> >;
-extern template class TreeEnumeration<LPConstraintEulerZero, BanNone, NativeInteger<16> >;
-
-extern template class TreeTraversal<LPConstraintNonSpun, BanNone, NativeInteger<16>>;
-extern template class TreeEnumeration<LPConstraintNonSpun, BanNone, NativeInteger<16>>;
-#endif
-
-
 // Inline functions
 
 template <class LPConstraint, typename BanConstraint, typename IntType>

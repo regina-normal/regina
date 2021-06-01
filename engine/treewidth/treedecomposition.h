@@ -1309,34 +1309,6 @@ class TreeDecomposition : public Output<TreeDecomposition> {
 
 /*@}*/
 
-// Help the compiler by noting which explicit instantiations we offer.
-
-// Hide these from doxygen, which seems to have trouble with templated
-// member functions of template classes.
-#ifndef __DOXYGEN
-extern template TreeDecomposition::TreeDecomposition(
-    const Triangulation<2>&, TreeDecompositionAlg);
-extern template TreeDecomposition::TreeDecomposition(
-    const Triangulation<3>&, TreeDecompositionAlg);
-extern template TreeDecomposition::TreeDecomposition(
-    const Triangulation<4>&, TreeDecompositionAlg);
-
-extern template TreeDecomposition::TreeDecomposition(
-    const FacetPairing<2>&, TreeDecompositionAlg);
-extern template TreeDecomposition::TreeDecomposition(
-    const FacetPairing<3>&, TreeDecompositionAlg);
-extern template TreeDecomposition::TreeDecomposition(
-    const FacetPairing<4>&, TreeDecompositionAlg);
-
-extern template TreeDecomposition::TreeDecomposition(
-    unsigned, bool const** const, TreeDecompositionAlg);
-extern template TreeDecomposition::TreeDecomposition(
-    unsigned, int const** const, TreeDecompositionAlg);
-
-extern template void TreeDecomposition::reroot(
-    const int*, const int*, const int*);
-#endif // ! __DOXYGEN
-
 // Inline functions for TreeBag
 
 inline TreeBag::TreeBag(int size) :
