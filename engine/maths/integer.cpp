@@ -1060,14 +1060,10 @@ template class IntegerBase<false>;
 template std::ostream& operator << (std::ostream&, const IntegerBase<true>&);
 template std::ostream& operator << (std::ostream&, const IntegerBase<false>&);
 
-template IntegerBase<true> operator +(long lhs,
-    const IntegerBase<true>& rhs);
-template IntegerBase<false> operator +(long lhs,
-    const IntegerBase<false>& rhs);
-template IntegerBase<true> operator *(long lhs,
-    const IntegerBase<true>& rhs);
-template IntegerBase<false> operator *(long lhs,
-    const IntegerBase<false>& rhs);
+template IntegerBase<true> operator +(long lhs, const IntegerBase<true>& rhs);
+template IntegerBase<false> operator +(long lhs, const IntegerBase<false>& rhs);
+template IntegerBase<true> operator *(long lhs, const IntegerBase<true>& rhs);
+template IntegerBase<false> operator *(long lhs, const IntegerBase<false>& rhs);
 
 } // namespace regina
 
