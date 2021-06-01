@@ -43,7 +43,6 @@
 #include "triangulation/facetpairing3.h"
 
 // Instantiate templates for standard dimensions.
-// The header has matching "extern template class" declarations.
 template class regina::GluingPerms<2>;
 template class regina::GluingPerms<3>;
 template class regina::GluingPerms<4>;

@@ -5,7 +5,6 @@ SET ( FILES
   treeconstraint.cpp
   treelp.cpp
   treetraversal.cpp
-  typetrie.cpp
   )
 
 # Prepend folder name

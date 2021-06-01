@@ -157,9 +157,6 @@ class TypeTrie {
 
 /*@}*/
 
-// Help the compiler by noting which explicit instantiations we offer.
-extern template class TypeTrie<7>;
-
 // Inline functions for TypeTrie
 
 template <int nTypes>
