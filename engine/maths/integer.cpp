@@ -88,16 +88,6 @@ namespace {
     bool randInitialised(false);
 }
 
-// Initialize const static data:
-template <bool supportInfinity>
-const IntegerBase<supportInfinity> IntegerBase<supportInfinity>::zero;
-
-template <bool supportInfinity>
-const IntegerBase<supportInfinity> IntegerBase<supportInfinity>::one(1);
-
-template <>
-const IntegerBase<true> IntegerBase<true>::infinity(false, false);
-
 // The use of errno in this file should be threadsafe, since (as I
 // understand it) each thread gets its own errno.  However, there may be
 // thread safety issues regarding locales when using strtol(), in

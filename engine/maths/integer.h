@@ -2235,6 +2235,14 @@ typedef NativeInteger<sizeof(long)> NNativeLong;
 // Inline functions for IntegerBase
 
 template <bool supportInfinity>
+inline const IntegerBase<supportInfinity> IntegerBase<supportInfinity>::zero;
+
+template <bool supportInfinity>
+inline const IntegerBase<supportInfinity> IntegerBase<supportInfinity>::one = 1;
+
+// We define infinity later, after the specialised infinity constructor.
+
+template <bool supportInfinity>
 inline IntegerBase<supportInfinity>::IntegerBase() :
         small_(0), large_(nullptr) {
 }
@@ -3189,6 +3197,8 @@ inline void IntegerBase<supportInfinity>::forceReduce() {
     large_ = nullptr;
 }
 
+#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
+
 template <>
 inline void IntegerBase<true>::makeFinite() {
     infinite_ = false;
@@ -3198,8 +3208,6 @@ template <>
 inline void IntegerBase<false>::makeFinite() {
 }
 
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-
 // This definition must come *after* the definition of makeInfinite()
 // to keep the compiler happy.
 template <>
@@ -3207,6 +3215,9 @@ inline IntegerBase<true>::IntegerBase(bool, bool) : large_(nullptr) {
     // The infinity constructor.
     makeInfinite();
 }
+
+template <>
+inline const IntegerBase<true> IntegerBase<true>::infinity(false, false);
 
 #endif // __DOXYGEN
 
