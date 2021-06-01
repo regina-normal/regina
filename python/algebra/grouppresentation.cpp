@@ -99,7 +99,7 @@ void addGroupPresentation(pybind11::module_& m) {
                 &GroupExpression::substitute),
             pybind11::arg(), pybind11::arg(), pybind11::arg("cyclic") = false)
         .def("substitute",
-            overload_cast<const std::vector<GroupExpression*>&, bool>(
+            overload_cast<const std::vector<GroupExpression>&, bool>(
                 &GroupExpression::substitute),
             pybind11::arg(), pybind11::arg("cyclic") = false)
         .def("toTeX", &GroupExpression::toTeX)
