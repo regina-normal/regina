@@ -119,16 +119,13 @@ Version 6.1  [ TODO ]
             - Functions inverse() and power() now return by value, not pointer.
             - Functions addTermsFirst() and addTermsLast() now take the
               GroupExpression argument by value, not by const reference.
-            - Added member swap() function and a global regina::swap() function,
-              so now GroupExpression meets the C++ Swappable requirements.
+            - Added member and global swap() functions.
         Class GroupPresentation:
             - Added move constructors and move assignment operators.
-            - New swap() member function.
             - Functions abelianisation() and markedAbelianisation() now
               return groups by value (which can then be moved from).
             - Function addRelation() now takes its argument by value.
-            - Added a global regina::swap() function, so now GroupPresentation
-              meets the C++ Swappable requirements.
+            - Added member and global swap() functions.
             - Some major cleanup and reorganisation under the hood.
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
@@ -184,7 +181,6 @@ Version 6.1  [ TODO ]
               now constexpr.
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global regina::swap(Link&, Link&).
-              As a result, Link now meets the C++ Swappable requirements.
             - Overhauled rewrite() to be faster, more generic, and support
               actions that take a knot signature as well as a full knot
               diagram.  This function is now also available through Python,
@@ -207,7 +203,7 @@ Version 6.1  [ TODO ]
         Class MarkedVector:
             - New convenience routine clear_destructive().
             - New typedef value_type.
-            - New global swap() routine, which will be used by std::swap().
+            - New global swap() to complement the existing member swap().
         Class Matrix:
             - New routine transpose().
             - New routines rowEchelonForm() and columnEchelonForm() for
@@ -220,8 +216,7 @@ Version 6.1  [ TODO ]
         Class ModelLinkGraph:
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
-              regina::swap(ModelLinkGraph&, ModelLinkGraph&).  As a result,
-              ModelLinkGraph now meets the C++ Swappable requirements.
+              regina::swap(ModelLinkGraph&, ModelLinkGraph&).
         Class NativeInteger<...>:
             - New do-nothing routines isInfinite() and tryReduce(), for
               compatibility with Integer and LargeInteger.
@@ -310,8 +305,7 @@ Version 6.1  [ TODO ]
         Class SnapPeaCensusManifold, SnapPeaCensusTri:
             - Class constants for the census sections are now constexpr.
         Class SnapPeaTriangulation:
-            - New member swap() and global swap() routines, which mean that
-              SnapPeaTriangulation now meets the C++ Swappable requirements.
+            - Added member and global swap() functions.
         Class SurfaceFilterInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -321,7 +315,6 @@ Version 6.1  [ TODO ]
         Class Tangle:
             - Renamed swapContents() to swap(); the old name is now a deprecated
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
-              As a result, Tangle now meets the C++ Swappable requirements.
         Class Triangulation<dim>:
             - New alias fromSig(), which is is identical to fromIsoSig().
             - Routine simplices(), faces(), components(), boundaryComponents(),
@@ -341,8 +334,6 @@ Version 6.1  [ TODO ]
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
               regina::swap(Triangulation<dim>&, Triangulation<dim>&).
-              As a result, Triangulation<dim> now meets the C++ Swappable
-              requirements.
             - Routine isoSig() now supports different encodings (but not
               different decodings), via a new template parameter.
             - Simplified the class hierarchy; BoundaryComponentCalculator,
