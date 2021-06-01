@@ -1046,24 +1046,11 @@ IntegerBase<supportInfinity>
 }
 
 // Instantiate templates for all possible template arguments.
-//
-// For the global functions below, the header has matching
-// "extern template" declarations.
-//
-// For the class IntegerBase, the header has no such
-// "extern template class" declaration (a side-effect of what
-// appears to be a catch-22 with dllexport/dllimport attributes and template
-// specialisations).  See the notes in the header for further discussion.
 template class IntegerBase<true>;
 template class IntegerBase<false>;
 
 template std::ostream& operator << (std::ostream&, const IntegerBase<true>&);
 template std::ostream& operator << (std::ostream&, const IntegerBase<false>&);
-
-template IntegerBase<true> operator +(long lhs, const IntegerBase<true>& rhs);
-template IntegerBase<false> operator +(long lhs, const IntegerBase<false>& rhs);
-template IntegerBase<true> operator *(long lhs, const IntegerBase<true>& rhs);
-template IntegerBase<false> operator *(long lhs, const IntegerBase<false>& rhs);
 
 } // namespace regina
 

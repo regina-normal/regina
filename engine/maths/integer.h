@@ -1479,17 +1479,6 @@ class IntegerBase : private InfinityBase<supportInfinity> {
         const IntegerBase<supportInfinity_>& large);
 };
 
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-extern template const IntegerBase<true> IntegerBase<true>::zero;
-extern template const IntegerBase<false> IntegerBase<false>::zero;
-extern template const IntegerBase<true> IntegerBase<true>::one;
-extern template const IntegerBase<false> IntegerBase<false>::one;
-
-// This class constant is specialised, even though the class itself is not.
-template <> const IntegerBase<true> IntegerBase<true>::infinity;
-extern template const IntegerBase<true> IntegerBase<true>::infinity;
-#endif // __DOXYGEN
-
 /**
  * LargeInteger is a typedef for IntegerBase<true>, which offers
  * arbitrary precision integers with support for infinity.
@@ -1517,14 +1506,6 @@ template <bool supportInfinity>
 std::ostream& operator << (std::ostream& out,
     const IntegerBase<supportInfinity>& i);
 
-// Help the compiler by noting which explicit instantiations we offer.
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-extern template std::ostream& operator << (std::ostream& out,
-    const IntegerBase<true>& i);
-extern template std::ostream& operator << (std::ostream& out,
-    const IntegerBase<false>& i);
-#endif // __DOXYGEN
-
 /**
  * Adds the given native integer to the given large integer.
  * If the large integer is infinite, the result will also be infinity.
@@ -1539,14 +1520,6 @@ template <bool supportInfinity>
 IntegerBase<supportInfinity> operator + (long lhs,
     const IntegerBase<supportInfinity>& rhs);
 
-// Help the compiler by noting which explicit instantiations we offer.
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-extern template IntegerBase<true> operator +(long lhs,
-    const IntegerBase<true>& rhs);
-extern template IntegerBase<false> operator +(long lhs,
-    const IntegerBase<false>& rhs);
-#endif // __DOXYGEN
-
 /**
  * Multiplies the given native integer with the given large integer.
  * If the large integer is infinite, the result will also be infinity.
@@ -1560,14 +1533,6 @@ extern template IntegerBase<false> operator +(long lhs,
 template <bool supportInfinity>
 IntegerBase<supportInfinity> operator * (long lhs,
     const IntegerBase<supportInfinity>& rhs);
-
-// Help the compiler by noting which explicit instantiations we offer.
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-extern template IntegerBase<true> operator *(long lhs,
-    const IntegerBase<true>& rhs);
-extern template IntegerBase<false> operator *(long lhs,
-    const IntegerBase<false>& rhs);
-#endif // __DOXYGEN
 
 /**
  * A wrapper class for a native, fixed-precision integer type of the
