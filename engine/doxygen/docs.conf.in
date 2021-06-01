@@ -110,6 +110,7 @@ PREDEFINED           = \
     __DOXYGEN \
     REGINA_ENABLE_FOR_RING(returnType)=returnType \
     REGINA_ENABLE_FOR_REGINA_INTEGER(returnType)=returnType \
+    ENABLE_MEMBER_FOR_REGINA_INTEGER(T,returnType)=returnType \
     "REGINA_ENABLE_FOR_RING_STATIC(returnType)=static returnType" \
     "REGINA_ENABLE_FOR_RING_DEPRECATED(returnType)=[[deprecated]] returnType"
 
