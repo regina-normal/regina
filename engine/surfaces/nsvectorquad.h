@@ -80,7 +80,7 @@ struct NormalInfo<NS_QUAD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSVectorQuad : public NSVectorMirrored {
+class NSVectorQuad : public NSVectorMirrored {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorQuad, NS_QUAD, NSVectorMirrored);
 
     public:

@@ -59,7 +59,7 @@ namespace regina {
  *
  * @return the version of this calculation engine.
  */
-REGINA_API const char* versionString();
+const char* versionString();
 
 /**
  * Returns the major version number of this calculation engine.
@@ -67,7 +67,7 @@ REGINA_API const char* versionString();
  *
  * @return the major version number of this calculation engine.
  */
-REGINA_API int versionMajor();
+int versionMajor();
 
 /**
  * Returns the minor version number of this calculation engine.
@@ -75,7 +75,7 @@ REGINA_API int versionMajor();
  *
  * @return the minor version number of this calculation engine.
  */
-REGINA_API int versionMinor();
+int versionMinor();
 
 /**
  * Did the given version of Regina consistently use UTF-8 in its data
@@ -103,7 +103,7 @@ REGINA_API int versionMinor();
  * \c false if the given version is an older version that did not pay
  * attention to character encodings.
  */
-REGINA_API bool versionUsesUTF8(const char* version);
+bool versionUsesUTF8(const char* version);
 
 /**
  * Returns the version of SnapPy whose underlying SnapPea kernel is built
@@ -119,7 +119,7 @@ REGINA_API bool versionUsesUTF8(const char* version);
  * @return the version of SnapPy whose underlying SnapPea kernel is
  * built into Regina.
  */
-REGINA_API const char* versionSnapPy();
+const char* versionSnapPy();
 
 /**
  * An alias for versionSnapPy(), which returns the version of SnapPy whose
@@ -130,7 +130,7 @@ REGINA_API const char* versionSnapPy();
  * @return the version of SnapPy whose underlying SnapPea kernel is
  * built into Regina.
  */
-REGINA_API const char* versionSnapPea();
+const char* versionSnapPea();
 
 /**
  * Does this particular build of Regina support native 128-bit arithmetic?
@@ -141,7 +141,7 @@ REGINA_API const char* versionSnapPea();
  *
  * @return \c true if and only if this build supports native 128-bit arithmetic.
  */
-REGINA_API bool hasInt128();
+bool hasInt128();
 
 /**
  * A suggestion for user interfaces as to how many threads should be
@@ -152,7 +152,7 @@ REGINA_API bool hasInt128();
  *
  * @return the suggested number of threads to use.
  */
-REGINA_API int politeThreads();
+int politeThreads();
 
 /**
  * Tests to see if an interface can successfully communicate with the
@@ -165,7 +165,7 @@ REGINA_API int politeThreads();
  * @param value any integer; this same integer will be returned.
  * @return the same integer that was passed as \a value.
  */
-REGINA_API int testEngine(int value);
+int testEngine(int value);
 
 /*@}*/
 

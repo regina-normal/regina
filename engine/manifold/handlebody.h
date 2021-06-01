@@ -55,7 +55,7 @@ namespace regina {
  * All optional Manifold routines except for Manifold::construct() are
  * implemented for this class.
  */
-class REGINA_API Handlebody : public Manifold {
+class Handlebody : public Manifold {
     private:
         unsigned long nHandles;
             /**< The number of handles. */

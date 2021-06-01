@@ -75,7 +75,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API SatBlockStarter {
+class SatBlockStarter {
     private:
         Triangulation<3> triangulation_;
             /**< The triangulation of the saturated block. */
@@ -143,7 +143,7 @@ class REGINA_API SatBlockStarter {
  *
  * \ifacespython Not present.
  */
-class REGINA_API SatBlockStarterSet : private ListOnCall<SatBlockStarter> {
+class SatBlockStarterSet : private ListOnCall<SatBlockStarter> {
     public:
         /**
          * An iterator over the starter blocks in this list.  This operates
@@ -223,7 +223,7 @@ class REGINA_API SatBlockStarterSet : private ListOnCall<SatBlockStarter> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API SatBlockStarterSearcher {
+class SatBlockStarterSearcher {
     protected:
         SatBlock::TetList usedTets;
             /**< Keeps track of which tetrahedra have used by the

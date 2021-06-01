@@ -194,7 +194,7 @@ enum NiceType {
  * TreeDecomposition::makeNice() then it is guaranteed that the root bag
  * will be empty).
  */
-class REGINA_API TreeBag : public ShortOutput<TreeBag> {
+class TreeBag : public ShortOutput<TreeBag> {
     private:
         int size_;
             /**< The number of nodes (of the graph \a G) stored in this bag. */
@@ -614,7 +614,7 @@ class REGINA_API TreeBag : public ShortOutput<TreeBag> {
  * underlying graph \a G is empty then the tree decomposition may
  * contain no bags at all.
  */
-class REGINA_API TreeDecomposition : public Output<TreeDecomposition> {
+class TreeDecomposition : public Output<TreeDecomposition> {
     protected:
         /**
          * Represents a graph, which may be directed or undirected.
@@ -1314,23 +1314,23 @@ class REGINA_API TreeDecomposition : public Output<TreeDecomposition> {
 // Hide these from doxygen, which seems to have trouble with templated
 // member functions of template classes.
 #ifndef __DOXYGEN
-extern template REGINA_API TreeDecomposition::TreeDecomposition(
+extern template TreeDecomposition::TreeDecomposition(
     const Triangulation<2>&, TreeDecompositionAlg);
-extern template REGINA_API TreeDecomposition::TreeDecomposition(
+extern template TreeDecomposition::TreeDecomposition(
     const Triangulation<3>&, TreeDecompositionAlg);
-extern template REGINA_API TreeDecomposition::TreeDecomposition(
+extern template TreeDecomposition::TreeDecomposition(
     const Triangulation<4>&, TreeDecompositionAlg);
 
-extern template REGINA_API TreeDecomposition::TreeDecomposition(
+extern template TreeDecomposition::TreeDecomposition(
     const FacetPairing<2>&, TreeDecompositionAlg);
-extern template REGINA_API TreeDecomposition::TreeDecomposition(
+extern template TreeDecomposition::TreeDecomposition(
     const FacetPairing<3>&, TreeDecompositionAlg);
-extern template REGINA_API TreeDecomposition::TreeDecomposition(
+extern template TreeDecomposition::TreeDecomposition(
     const FacetPairing<4>&, TreeDecompositionAlg);
 
-extern template REGINA_API TreeDecomposition::TreeDecomposition(
+extern template TreeDecomposition::TreeDecomposition(
     unsigned, bool const** const, TreeDecompositionAlg);
-extern template REGINA_API TreeDecomposition::TreeDecomposition(
+extern template TreeDecomposition::TreeDecomposition(
     unsigned, int const** const, TreeDecompositionAlg);
 #endif // ! __DOXYGEN
 

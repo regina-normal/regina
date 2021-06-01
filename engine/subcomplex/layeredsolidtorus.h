@@ -62,7 +62,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredSolidTorus : public StandardTriangulation {
+class LayeredSolidTorus : public StandardTriangulation {
     private:
         size_t nTetrahedra;
             /**< The number of tetrahedra in this torus. */

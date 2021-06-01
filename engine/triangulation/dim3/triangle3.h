@@ -66,7 +66,7 @@ namespace regina {
  * \headerfile triangulation/dim3.h
  */
 template <>
-class REGINA_API Face<3, 2> : public detail::FaceBase<3, 2> {
+class Face<3, 2> : public detail::FaceBase<3, 2> {
     public:
         /**
          * The \e type of a triangle, which indicates how the vertices and

@@ -86,7 +86,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredChain : public StandardTriangulation {
+class LayeredChain : public StandardTriangulation {
     private:
         Tetrahedron<3>* bottom_;
             /**< The bottom tetrahedron of this layered chain. */

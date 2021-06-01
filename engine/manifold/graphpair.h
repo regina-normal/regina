@@ -88,7 +88,7 @@ namespace regina {
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class REGINA_API GraphPair : public Manifold {
+class GraphPair : public Manifold {
     private:
         SFSpace* sfs_[2];
             /**< The two bounded Seifert fibred spaces that are joined

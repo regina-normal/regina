@@ -55,7 +55,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLSnapPeaReader : public XMLPacketReader {
+class XMLSnapPeaReader : public XMLPacketReader {
     private:
         SnapPeaTriangulation* snappea_;
             /**< The SnapPea triangulation currently being read. */

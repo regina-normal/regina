@@ -36,9 +36,8 @@
 
 namespace regina::detail {
 
-template REGINA_API BoundaryComponentBase<3>::~BoundaryComponentBase();
+template BoundaryComponentBase<3>::~BoundaryComponentBase();
 
-template REGINA_API Triangulation<2>*
-    BoundaryComponentBase<3>::buildRealBoundary() const;
+template Triangulation<2>* BoundaryComponentBase<3>::buildRealBoundary() const;
 
 } // namespace regina::detail

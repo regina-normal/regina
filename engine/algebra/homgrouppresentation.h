@@ -76,8 +76,7 @@ class GroupPresentation;
  *
  * \todo Add a routine to attempt to verify validity of homomorphism.
  */
-class REGINA_API HomGroupPresentation :
-        public Output<HomGroupPresentation> {
+class HomGroupPresentation : public Output<HomGroupPresentation> {
     private:
         GroupPresentation domain_;
             /**< The domain of the homomorphism. */

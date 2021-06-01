@@ -63,7 +63,7 @@ namespace regina {
  * by providing several more hard-coded constructions.
  */
 template <>
-class REGINA_API Example<2> : public detail::ExampleBase<2> {
+class Example<2> : public detail::ExampleBase<2> {
     public:
         /**
          * Returns a triangulation of the given orientable surface.

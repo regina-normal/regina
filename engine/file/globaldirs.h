@@ -63,7 +63,7 @@ namespace regina {
  * when your application starts.  Otherwise the directories that GlobalDirs
  * returns might be incorrect, and might not even exist.
  */
-class REGINA_API GlobalDirs {
+class GlobalDirs {
     public:
         /**
          * Returns Regina's primary home directory on the system.  This

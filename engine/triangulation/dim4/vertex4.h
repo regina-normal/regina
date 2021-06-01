@@ -66,7 +66,7 @@ namespace regina {
  * \headerfile triangulation/dim4.h
  */
 template <>
-class REGINA_API Face<4, 0> : public detail::FaceBase<4, 0> {
+class Face<4, 0> : public detail::FaceBase<4, 0> {
     private:
         Triangulation<3>* link_;
             /**< The link of this vertex, given as a full-blown

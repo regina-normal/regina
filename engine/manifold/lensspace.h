@@ -62,7 +62,7 @@ namespace regina {
  *
  * All optional Manifold routines are implemented for this class.
  */
-class REGINA_API LensSpace : public Manifold {
+class LensSpace : public Manifold {
     private:
         unsigned long p_;
             /**< The first parameter of the lens space. */

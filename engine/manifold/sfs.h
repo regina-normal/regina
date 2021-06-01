@@ -73,7 +73,7 @@ class LensSpace;
  * before being adapted to the new SFSFibre class (i.e., it may require
  * more than just substituting class names).
  */
-struct REGINA_API SFSFibre {
+struct SFSFibre {
     long alpha;
         /**< The first parameter of this (<i>alpha</i>, <i>beta</i>) fibre.
              Note that this is the index of the exceptional fibre.
@@ -148,7 +148,7 @@ struct REGINA_API SFSFibre {
  * @param f the fibre to write.
  * @return the output stream \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const SFSFibre& f);
+std::ostream& operator << (std::ostream& out, const SFSFibre& f);
 
 /**
  * Represents a general Seifert fibred space, which may be orientable or
@@ -200,7 +200,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const SFSFibre& f);
  * \todo \featurelong Implement triangulation construction and homology
  * calculation for more Seifert fibred spaces.
  */
-class REGINA_API SFSpace : public Manifold {
+class SFSpace : public Manifold {
     public:
         /**
          * Lists the six classes \c o1, \c o2, \c n1, \c n2, \c n3, \c n4

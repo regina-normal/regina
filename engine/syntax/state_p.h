@@ -60,7 +60,7 @@ namespace regina::syntax {
 class Context;
 class DefinitionData;
 
-class REGINA_API StateData
+class StateData
 {
 public:
     StateData();

@@ -108,9 +108,7 @@ struct PacketInfo<PACKET_TRIANGULATION3> {
  * \headerfile triangulation/dim3.h
  */
 template <>
-class REGINA_API Triangulation<3> :
-        public Packet,
-        public detail::TriangulationBase<3> {
+class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
     REGINA_PACKET(Triangulation<3>, PACKET_TRIANGULATION3)
 
     public:

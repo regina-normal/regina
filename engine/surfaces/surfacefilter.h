@@ -166,7 +166,7 @@ struct SurfaceFilterInfo<NS_FILTER_PROPERTIES> {
  *
  * \todo \feature Implement property \a lastAppliedTo.
  */
-class REGINA_API SurfaceFilter : public Packet {
+class SurfaceFilter : public Packet {
     REGINA_PACKET(SurfaceFilter, PACKET_SURFACEFILTER)
 
     public:
@@ -279,7 +279,7 @@ class REGINA_API SurfaceFilter : public Packet {
  * accepted if this is an \a and filter and rejected if this is an \a or
  * filter.
  */
-class REGINA_API SurfaceFilterCombination : public SurfaceFilter {
+class SurfaceFilterCombination : public SurfaceFilter {
     REGINA_SURFACE_FILTER(SurfaceFilterCombination, NS_FILTER_COMBINATION)
 
     private:
@@ -336,7 +336,7 @@ class REGINA_API SurfaceFilterCombination : public SurfaceFilter {
  * cannot be determined.  Then the surface will be accepted solely on the
  * basis of whether or not it is compact.
  */
-class REGINA_API SurfaceFilterProperties : public SurfaceFilter {
+class SurfaceFilterProperties : public SurfaceFilter {
     REGINA_SURFACE_FILTER(SurfaceFilterProperties, NS_FILTER_PROPERTIES)
 
     private:

@@ -62,7 +62,7 @@ namespace regina {
  * that this class now recognises is TYPE_XML (compressed or uncompressed
  * XML data files).
  */
-class REGINA_API FileInfo : public Output<FileInfo> {
+class FileInfo : public Output<FileInfo> {
     public:
         static constexpr int TYPE_XML = 2;
             /**< Represents a new-style XML data file. */

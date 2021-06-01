@@ -84,7 +84,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API TriSolidTorus : public StandardTriangulation {
+class TriSolidTorus : public StandardTriangulation {
     private:
         Tetrahedron<3>* tet[3];
             /**< The tetrahedra that make up this solid torus. */

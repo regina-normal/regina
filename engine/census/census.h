@@ -72,7 +72,7 @@ class CensusHitIterator;
  * should only search census databases using high-level routines such as
  * Census::lookup() and CensusDB::lookup().
  */
-class REGINA_API CensusDB {
+class CensusDB {
     private:
         std::string filename_;
             /**< The filename where the database is stored. */
@@ -167,7 +167,7 @@ class REGINA_API CensusDB {
  * CensusHits class, which essentially represents a list of individual
  * CensusHit objects.
  */
-class REGINA_API CensusHit {
+class CensusHit {
     private:
         const std::string name_;
             /**< The human-readable name associated with the triangulation
@@ -260,7 +260,7 @@ class REGINA_API CensusHit {
  * CensusHit::next() to retrieve the next hit in the list (this will return
  * \c null if no more hits were found).
  */
-class REGINA_API CensusHits {
+class CensusHits {
     private:
         CensusHit* first_;
             /**< The first hit in the list, or \c null if there are no hits. */
@@ -373,7 +373,7 @@ class REGINA_API CensusHits {
  * the next hit in the census or else throws a <tt>StopException</tt> if
  * there are no more hits to return.
  */
-class REGINA_API CensusHitIterator {
+class CensusHitIterator {
     private:
         const CensusHit* current_;
             /**< The hit that this iterator is pointing to, or
@@ -460,7 +460,7 @@ class REGINA_API CensusHitIterator {
  * A utility class used to search for triangulations across one or more
  * 3-manifold census databases.
  */
-class REGINA_API Census {
+class Census {
     private:
         static CensusDB* closedOr_;
             /**< The census of closed orientable prime 3-manifold

@@ -69,7 +69,7 @@ namespace regina::i18n {
  *
  * @return an iterator marking the end of the longest valid UTF-8 prefix.
  */
-REGINA_API std::string::const_iterator utf8ValidTo(const std::string& s);
+std::string::const_iterator utf8ValidTo(const std::string& s);
 
 /**
  * Identifies the longest prefix of the given string that is valid UTF-8.
@@ -83,7 +83,7 @@ REGINA_API std::string::const_iterator utf8ValidTo(const std::string& s);
  *
  * @return a pointer marking the end of the longest valid UTF-8 prefix.
  */
-REGINA_API const char* utf8ValidTo(const char* s);
+const char* utf8ValidTo(const char* s);
 
 /**
  * A simple class with static routines for querying information about the
@@ -92,7 +92,7 @@ REGINA_API const char* utf8ValidTo(const char* s);
  * These routines use ::setlocale() to determine the current locale,
  * which means they respect environment variables such as LANG and LC_ALL.
  */
-class REGINA_API Locale {
+class Locale {
     private:
         static bool initialised;
             /**< Have we determined the current locale yet?  This is
@@ -129,7 +129,7 @@ class REGINA_API Locale {
  * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
  * General Public License.
  */
-class REGINA_API IConvStreamBuffer : public std::streambuf {
+class IConvStreamBuffer : public std::streambuf {
     private:
         std::ostream* sink;
             /**< The destination output stream, or 0 if it has not yet
@@ -254,7 +254,7 @@ class REGINA_API IConvStreamBuffer : public std::streambuf {
  * copyright (c) 2003 by Tommi Maekitalo, and covered by the GNU Lesser
  * General Public License.
  */
-class REGINA_API IConvStream : public std::ostream {
+class IConvStream : public std::ostream {
     private:
         IConvStreamBuffer buf;
             /**< The IConvStreamBuffer that does all the actual work. */

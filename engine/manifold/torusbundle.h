@@ -74,7 +74,7 @@ namespace regina {
  * \todo \feature Implement the == operator for finding conjugate and
  * inverse matrices.
  */
-class REGINA_API TorusBundle : public Manifold {
+class TorusBundle : public Manifold {
     private:
         Matrix2 monodromy_;
             /**< The monodromy describing how the two torus boundaries

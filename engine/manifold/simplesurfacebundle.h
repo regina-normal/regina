@@ -56,7 +56,7 @@ namespace regina {
  *
  * All optional Manifold routines are implemented for this class.
  */
-class REGINA_API SimpleSurfaceBundle : public Manifold {
+class SimpleSurfaceBundle : public Manifold {
     public:
         /**
          * Represents the orientable 2-sphere bundle over the circle.

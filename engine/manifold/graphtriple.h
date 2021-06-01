@@ -138,7 +138,7 @@ namespace regina {
  * spaces by adding rank afterwards, instead of adding generators for
  * genus into the presentation matrix.
  */
-class REGINA_API GraphTriple : public Manifold {
+class GraphTriple : public Manifold {
     private:
         SFSpace* end_[2];
             /**< The two end spaces, i.e., the Seifert fibred spaces

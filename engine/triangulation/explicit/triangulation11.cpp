@@ -37,43 +37,29 @@
 
 namespace regina::detail {
 
-template REGINA_API std::string TriangulationBase<11>::isoSigFrom
+template std::string TriangulationBase<11>::isoSigFrom
     <IsoSigPrintable<11>>(size_t, const Perm<12>&, Isomorphism<11>*) const;
-template REGINA_API std::string TriangulationBase<11>::isoSig
+template std::string TriangulationBase<11>::isoSig
     <IsoSigPrintable<11>>(Isomorphism<11>**) const;
-template REGINA_API Triangulation<11>* TriangulationBase<11>::fromIsoSig(
+template Triangulation<11>* TriangulationBase<11>::fromIsoSig(
     const std::string&);
-template REGINA_API size_t TriangulationBase<11>::isoSigComponentSize(
-    const std::string&);
+template size_t TriangulationBase<11>::isoSigComponentSize(const std::string&);
 
-template REGINA_API void TriangulationBase<11>::calculateSkeleton();
-template REGINA_API void TriangulationBase<11>::clearBaseProperties();
-template REGINA_API void TriangulationBase<11>::swapBaseData(
-    TriangulationBase<11>&);
+template void TriangulationBase<11>::calculateSkeleton();
+template void TriangulationBase<11>::clearBaseProperties();
+template void TriangulationBase<11>::swapBaseData(TriangulationBase<11>&);
 
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 0>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 1>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 2>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 3>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 4>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 5>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 6>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 7>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 8>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 9>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 10>*, bool, bool);
-template REGINA_API bool TriangulationBase<11>::pachner(
-    Face<11, 11>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 0>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 1>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 2>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 3>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 4>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 5>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 6>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 7>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 8>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 9>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 10>*, bool, bool);
+template bool TriangulationBase<11>::pachner(Face<11, 11>*, bool, bool);
 
 } // namespace regina::detail

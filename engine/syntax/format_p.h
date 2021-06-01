@@ -62,7 +62,7 @@
 
 namespace regina::syntax {
 
-class REGINA_API FormatPrivate
+class FormatPrivate
 {
 public:
     FormatPrivate();

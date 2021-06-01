@@ -66,7 +66,7 @@ namespace regina {
  * \headerfile triangulation/dim4.h
  */
 template <>
-class REGINA_API Face<4, 1> : public detail::FaceBase<4, 1> {
+class Face<4, 1> : public detail::FaceBase<4, 1> {
     private:
         Triangulation<2>* link_;
             /**< A triangulation of the edge link.  This will only be

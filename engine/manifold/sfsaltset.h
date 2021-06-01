@@ -103,7 +103,7 @@ class SFSpace;
  *
  * \ifacespython Not present.
  */
-class REGINA_API SFSAltSet {
+class SFSAltSet {
     private:
         unsigned size_;
             /**< The number of alternative spaces in this set. */

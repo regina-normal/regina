@@ -142,7 +142,7 @@ Container* readSigList(const char *filename,
  * @return a new container, or \c null if an I/O error
  * occurred whilst reading the given file.
  */
-[[deprecated]] REGINA_API Container* readIsoSigList(const char *filename,
+[[deprecated]] Container* readIsoSigList(const char *filename,
     unsigned dimension = 3, unsigned colSigs = 0, int colLabels = -1,
     unsigned long ignoreLines = 0);
 

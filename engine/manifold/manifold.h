@@ -63,7 +63,7 @@ class AbelianGroup;
  * writeTextShort() or writeTextLong(), since these routines are \e not virtual,
  * and are provided by the base class Manifold.
  */
-class REGINA_API Manifold : public Output<Manifold> {
+class Manifold : public Output<Manifold> {
     public:
         /**
          * A destructor that does nothing.

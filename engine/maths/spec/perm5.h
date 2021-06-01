@@ -101,7 +101,7 @@ namespace regina {
  * made available under the name Perm5.
  */
 template <>
-class REGINA_API Perm<5> {
+class Perm<5> {
     private:
         /**
          * An array-like object used to implement Perm<5>::S5.

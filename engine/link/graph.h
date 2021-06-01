@@ -183,7 +183,7 @@ namespace graph {
      * in particular, the dereference operator may return by value).
      * This header also specialises std::iterator_traits for this iterator type.
      */
-    class REGINA_API AdjacentCrossingIterator {
+    class AdjacentCrossingIterator {
         private:
             Crossing* crossing_;
                 /**< The crossing whose adacent crossings we are iterating
@@ -306,8 +306,7 @@ namespace graph {
      * @param l the knot or link whose graph we are studying.
      * @return the range of all vertices of the corresponding graph.
      */
-    REGINA_API std::pair<CrossingIterator, CrossingIterator> vertices(
-        const Link& l);
+    std::pair<CrossingIterator, CrossingIterator> vertices(const Link& l);
 
     /**
      * Returns an iterator range containing all edges of the
@@ -321,7 +320,7 @@ namespace graph {
      * @param l the knot or link whose graph we are studying.
      * @return the range of all edges of the corresponding graph.
      */
-    REGINA_API std::pair<ArcIterator, ArcIterator> edges(const Link& l);
+    std::pair<ArcIterator, ArcIterator> edges(const Link& l);
 
     /**
      * Returns the number of vertices in the underlying graph of the given
@@ -335,7 +334,7 @@ namespace graph {
      * @param l the knot or link whose graph we are studying.
      * @return the number of vertices in the graph.
      */
-    REGINA_API size_t num_vertices(const Link& l);
+    size_t num_vertices(const Link& l);
 
     /**
      * Returns the number of edges in the graph of the given knot or link.
@@ -350,7 +349,7 @@ namespace graph {
      * @param l the knot or link whose graph we are studying.
      * @return the number of edges in the graph.
      */
-    REGINA_API size_t num_edges(const Link& l);
+    size_t num_edges(const Link& l);
 
     /**
      * Returns the source vertex of the given directed edge in the
@@ -362,7 +361,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the source vertex of the edge \a e.
      */
-    REGINA_API Crossing* source(const StrandRef& e, const Link& l);
+    Crossing* source(const StrandRef& e, const Link& l);
 
     /**
      * Returns the target vertex of the given directed edge in the
@@ -374,7 +373,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the target vertex of the edge \a e.
      */
-    REGINA_API Crossing* target(const StrandRef& e, const Link& l);
+    Crossing* target(const StrandRef& e, const Link& l);
 
     /**
      * Returns the total degree of the given vertex in the graph of the given
@@ -388,7 +387,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the degree of the vertex \a v.
      */
-    REGINA_API unsigned degree(Crossing* v, const Link& l);
+    unsigned degree(Crossing* v, const Link& l);
 
     /**
      * Returns the in-degree of the given vertex in the graph of the given
@@ -402,7 +401,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the number of directed arcs of the graph that enter \a v.
      */
-    REGINA_API unsigned in_degree(Crossing* v, const Link& l);
+    unsigned in_degree(Crossing* v, const Link& l);
 
     /**
      * Returns the out-degree of the given vertex in the graph of the given
@@ -416,7 +415,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the number of directed arcs of the graph that exit \a v.
      */
-    REGINA_API unsigned out_degree(Crossing* v, const Link& l);
+    unsigned out_degree(Crossing* v, const Link& l);
 
     /**
      * Returns an iterator range containing both vertices adjacent to the
@@ -429,8 +428,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the range of all vertices adjacent to \a v.
      */
-    REGINA_API std::pair<graph::AdjacentCrossingIterator,
-            graph::AdjacentCrossingIterator>
+    std::pair<graph::AdjacentCrossingIterator, graph::AdjacentCrossingIterator>
         adjacent_vertices(Crossing* v, const Link& l);
 
     /**
@@ -443,7 +441,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the range of all directed edges entering \a v.
      */
-    REGINA_API std::pair<graph::IncidentArcIterator<false>,
+    std::pair<graph::IncidentArcIterator<false>,
             graph::IncidentArcIterator<false>>
         in_edges(Crossing* v, const Link& l);
 
@@ -457,7 +455,7 @@ namespace graph {
      * @param l the graph itself (i.e., the underlying knot or link).
      * @return the range of all directed edges exiting \a v.
      */
-    REGINA_API std::pair<graph::IncidentArcIterator<true>,
+    std::pair<graph::IncidentArcIterator<true>,
             graph::IncidentArcIterator<true>>
         out_edges(Crossing* v, const Link& l);
 
@@ -475,7 +473,7 @@ namespace graph {
      * @param v the vertex of the knot/link graph that we are examining.
      * @return the index of the \a v in the knot/link graph.
      */
-    REGINA_API size_t get(graph::InherentLinkPropertyMap<boost::vertex_index_t>,
+    size_t get(graph::InherentLinkPropertyMap<boost::vertex_index_t>,
         Crossing* v);
 
     /**
@@ -495,7 +493,7 @@ namespace graph {
      *
      * @return a property map for querying indices of vertices.
      */
-    REGINA_API graph::InherentLinkPropertyMap<boost::vertex_index_t> get(
+    graph::InherentLinkPropertyMap<boost::vertex_index_t> get(
         boost::vertex_index_t, const Link&);
 
     /**
@@ -514,7 +512,7 @@ namespace graph {
      * @param v the vertex of the knot/link graph that we are examining.
      * @return the index of the \a v in the knot/link graph.
      */
-    REGINA_API size_t get(boost::vertex_index_t, const Link&, Crossing* v);
+    size_t get(boost::vertex_index_t, const Link&, Crossing* v);
 
 } // namespace regina
 

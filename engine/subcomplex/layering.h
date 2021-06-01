@@ -108,7 +108,7 @@ namespace regina {
  * how many additional tetrahedra have been layered upon this pair of triangles
  * according to the rules above.
  */
-class REGINA_API Layering {
+class Layering {
     private:
         unsigned long size_;
             /**< The number of tetrahedra that have been layered. */

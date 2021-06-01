@@ -86,7 +86,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLElementReader {
+class XMLElementReader {
     public:
         /**
          * Creates a new element reader.
@@ -203,7 +203,7 @@ class REGINA_API XMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLCharsReader : public XMLElementReader {
+class XMLCharsReader : public XMLElementReader {
     private:
         std::string readChars;
             /**< The characters stored in this XML element. */

@@ -71,7 +71,7 @@ namespace regina {
  * \headerfile triangulation/dim3.h
  */
 template <>
-class REGINA_API Face<3, 3> : public detail::SimplexBase<3> {
+class Face<3, 3> : public detail::SimplexBase<3> {
     public:
         /**
          * A dimension-specific alias for adjacentSimplex().

@@ -67,7 +67,7 @@ class SnappedBall;
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class REGINA_API SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
+class SnappedTwoSphere : public ShortOutput<SnappedTwoSphere> {
     private:
         SnappedBall* ball[2];
             /**< The two snapped 3-balls whose equators are joined. */

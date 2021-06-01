@@ -135,7 +135,7 @@ struct PacketInfo<PACKET_SNAPPEATRIANGULATION> {
  * be deleted and replaced with new ones (using fresh data re-fetched from
  * the SnapPea kernel).
  */
-class REGINA_API Cusp : public ShortOutput<Cusp> {
+class Cusp : public ShortOutput<Cusp> {
     private:
         Vertex<3>* vertex_;
             /**< The corresponding vertex of the Regina triangulation. */
@@ -328,8 +328,7 @@ class REGINA_API Cusp : public ShortOutput<Cusp> {
  * See http://snappy.computop.org/ for further information on
  * SnapPea and its successor SnapPy.
  */
-class REGINA_API SnapPeaTriangulation : public Triangulation<3>,
-        public PacketListener {
+class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
     REGINA_PACKET(SnapPeaTriangulation, PACKET_SNAPPEATRIANGULATION)
 
     public:

@@ -82,7 +82,7 @@ struct PacketInfo<PACKET_NORMALHYPERSURFACES> {
  *
  * Normal hypersurface lists should be created using the routine enumerate().
  */
-class REGINA_API NormalHypersurfaces : public Packet {
+class NormalHypersurfaces : public Packet {
     REGINA_PACKET(NormalHypersurfaces, PACKET_NORMALHYPERSURFACES)
 
     public:
@@ -772,8 +772,8 @@ class REGINA_API NormalHypersurfaces : public Packet {
  * constants in NormalHypersurfaces.
  * @return a new zero vector of the correct class and length.
  */
-REGINA_API NormalHypersurfaceVector* makeZeroVector(
-    const Triangulation<4>* triangulation, HyperCoords coords);
+NormalHypersurfaceVector* makeZeroVector(const Triangulation<4>* triangulation,
+    HyperCoords coords);
 /**
  * Creates a new set of normal hypersurface matching equations for the
  * given triangulation using the given coordinate system.
@@ -799,8 +799,8 @@ REGINA_API NormalHypersurfaceVector* makeZeroVector(
  * Regina is not able to construct them for the given combination of
  * triangulation and coordinate system.
  */
-REGINA_API MatrixInt* makeMatchingEquations(
-    const Triangulation<4>* triangulation, HyperCoords coords);
+MatrixInt* makeMatchingEquations(const Triangulation<4>* triangulation,
+    HyperCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal hypersurfaces be embedded.  The validity constraints will be expressed
@@ -815,8 +815,8 @@ REGINA_API MatrixInt* makeMatchingEquations(
  * constants in NormalHypersurfaces.
  * @return a newly allocated set of constraints.
  */
-REGINA_API EnumConstraints* makeEmbeddedConstraints(
-    const Triangulation<4>* triangulation, HyperCoords coords);
+EnumConstraints* makeEmbeddedConstraints(const Triangulation<4>* triangulation,
+    HyperCoords coords);
 
 /*@}*/
 

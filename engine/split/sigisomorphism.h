@@ -73,7 +73,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API SigPartialIsomorphism {
+class SigPartialIsomorphism {
     private:
         unsigned nLabels;
             /**< The number of symbols whose images are defined. */

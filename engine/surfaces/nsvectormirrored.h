@@ -74,7 +74,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSVectorMirrored : public NormalSurfaceVector {
+class NSVectorMirrored : public NormalSurfaceVector {
     private:
         NormalSurfaceVector* mirror;
             /**< The mirror vector. */

@@ -65,7 +65,7 @@ struct PacketInfo<PACKET_CONTAINER> {
  * A packet that simply contains other packets.  Such
  * a packet contains no real data.
  */
-class REGINA_API Container : public Packet {
+class Container : public Packet {
     REGINA_PACKET(Container, PACKET_CONTAINER)
 
     public:

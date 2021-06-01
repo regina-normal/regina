@@ -35,6 +35,6 @@
 
 namespace regina::detail {
 
-template REGINA_API BoundaryComponentBase<2>::~BoundaryComponentBase();
+template BoundaryComponentBase<2>::~BoundaryComponentBase();
 
 } // namespace regina::detail

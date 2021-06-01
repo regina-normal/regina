@@ -68,7 +68,7 @@ namespace regina {
  *
  * @param matrix the matrix to transform.
  */
-REGINA_API void smithNormalForm(MatrixInt& matrix);
+void smithNormalForm(MatrixInt& matrix);
 
 /**
  * A Smith normal form algorithm that also returns change of basis matrices.
@@ -113,7 +113,7 @@ REGINA_API void smithNormalForm(MatrixInt& matrix);
  *
  * \author Ryan Budney
  */
-REGINA_API void smithNormalForm(MatrixInt& matrix,
+void smithNormalForm(MatrixInt& matrix,
         MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
         MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv);
 
@@ -160,7 +160,7 @@ REGINA_API void smithNormalForm(MatrixInt& matrix,
  *
  * \author Ryan Budney
  */
-REGINA_API void metricalSmithNormalForm(MatrixInt& matrix,
+void metricalSmithNormalForm(MatrixInt& matrix,
         MatrixInt *rowSpaceBasis=nullptr, MatrixInt *rowSpaceBasisInv=nullptr,
         MatrixInt *colSpaceBasis=nullptr, MatrixInt *colSpaceBasisInv=nullptr);
 
@@ -180,7 +180,7 @@ REGINA_API void metricalSmithNormalForm(MatrixInt& matrix,
  * @param matrix the matrix to examine and rearrange.
  * @return the rank of the given matrix.
  */
-REGINA_API unsigned rowBasis(MatrixInt& matrix);
+unsigned rowBasis(MatrixInt& matrix);
 
 /**
  * Finds a basis for the row space of the given matrix, as well as an
@@ -217,8 +217,7 @@ REGINA_API unsigned rowBasis(MatrixInt& matrix);
  * "incremental" basis for the orthogonal complement of \a input.
  * @return the rank of the given matrix \a input.
  */
-REGINA_API unsigned rowBasisAndOrthComp(MatrixInt& input,
-    MatrixInt& complement);
+unsigned rowBasisAndOrthComp(MatrixInt& input, MatrixInt& complement);
 
 /**
  * Transforms a given matrix into column echelon form with respect to a
@@ -280,7 +279,7 @@ REGINA_API unsigned rowBasisAndOrthComp(MatrixInt& input,
  *
  * \author Ryan Budney
  */
-REGINA_API void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
+void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
         const std::vector<unsigned> &rowList);
 
 /**
@@ -312,7 +311,7 @@ REGINA_API void columnEchelonForm(MatrixInt &M, MatrixInt &R, MatrixInt &Ri,
  *
  * \author Ryan Budney
  */
-REGINA_API MatrixInt preImageOfLattice(const MatrixInt& hom,
+MatrixInt preImageOfLattice(const MatrixInt& hom,
         const std::vector<Integer>& sublattice);
 
 /**
@@ -341,7 +340,7 @@ REGINA_API MatrixInt preImageOfLattice(const MatrixInt& hom,
  *
  * \author Ryan Budney
  */
-REGINA_API MatrixInt torsionAutInverse(const MatrixInt& input,
+MatrixInt torsionAutInverse(const MatrixInt& input,
     const std::vector<Integer> &invF);
 
 /*@}*/

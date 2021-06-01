@@ -84,7 +84,7 @@ namespace regina {
  * implemented for most augmented triangular solid tori and
  * homology() is not implemented at all.
  */
-class REGINA_API AugTriSolidTorus : public StandardTriangulation {
+class AugTriSolidTorus : public StandardTriangulation {
     public:
         static constexpr int CHAIN_NONE = 0;
             /**< Indicates that this augmented triangular solid torus

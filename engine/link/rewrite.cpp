@@ -239,11 +239,11 @@ bool Link::rewriteInternal(int height, unsigned nThreads,
 // Instantiate all rewriteInternal() template functions
 // so the full implementation can stay out of the headers.
 
-template REGINA_API bool Link::rewriteInternal<true>(
+template bool Link::rewriteInternal<true>(
     int, unsigned, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, true>&&) const;
 
-template REGINA_API bool Link::rewriteInternal<false>(
+template bool Link::rewriteInternal<false>(
     int, unsigned, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Link, false>&&) const;
 

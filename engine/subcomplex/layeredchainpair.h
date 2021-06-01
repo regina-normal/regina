@@ -78,7 +78,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredChainPair : public StandardTriangulation {
+class LayeredChainPair : public StandardTriangulation {
     private:
         LayeredChain* chain_[2];
             /**< The two layered chains that make up this pair. */

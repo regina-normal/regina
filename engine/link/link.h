@@ -133,7 +133,7 @@ enum Framing {
  *   behave as expected: they follow the link forward and backward
  *   respectively along its orientation.
  */
-class REGINA_API StrandRef {
+class StrandRef {
     private:
         Crossing* crossing_;
             /**< The relevant crossing.  This may be null. */
@@ -417,7 +417,7 @@ std::ostream& operator << (std::ostream& out, const StrandRef& s);
  * such operations then you should use a pointer to the relevant Crossing
  * object instead.
  */
-class REGINA_API Crossing : public MarkedElement, public Output<Crossing> {
+class Crossing : public MarkedElement, public Output<Crossing> {
     private:
         int sign_;
             /**< The sign of the crossing, which must be +1 or -1.
@@ -598,7 +598,7 @@ struct PacketInfo<PACKET_LINK> {
  * and it also supports components with no crossings (which form additional
  * unknot components of the overall link).
  */
-class REGINA_API Link : public Packet {
+class Link : public Packet {
     REGINA_PACKET(Link, PACKET_LINK)
 
     private:
@@ -4168,7 +4168,7 @@ void swap(Link& lhs, Link& rhs);
  *
  * \ifacespython Not present.
  */
-class REGINA_API CrossingIterator {
+class CrossingIterator {
     private:
         const Link* link_;
             /**< The underlying link. */
@@ -4268,7 +4268,7 @@ class REGINA_API CrossingIterator {
  *
  * \ifacespython Not present.
  */
-class REGINA_API ArcIterator {
+class ArcIterator {
     private:
         const Link* link_;
             /**< The underlying link. */

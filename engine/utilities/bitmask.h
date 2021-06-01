@@ -85,7 +85,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API Bitmask {
+class Bitmask {
     private:
         typedef unsigned Piece;
             /**< The types of the machine-native pieces into which this
@@ -470,7 +470,7 @@ class REGINA_API Bitmask {
  * @param mask the bitmask to write.
  * @return a reference to the given output stream.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const Bitmask& mask);
+std::ostream& operator << (std::ostream& out, const Bitmask& mask);
 
 template <typename T>
 class Bitmask1;

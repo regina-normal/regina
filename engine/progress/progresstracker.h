@@ -116,7 +116,7 @@ namespace regina {
  * (according to whether you need percentage-based or open-ended
  * progress tracking respectively).
  */
-class REGINA_API ProgressTrackerBase {
+class ProgressTrackerBase {
     protected:
         std::string desc_;
             /**< The human-readable description of the current stage. */
@@ -232,7 +232,7 @@ class REGINA_API ProgressTrackerBase {
  * of the entire calculation is taken to be the weighted sum of the progress
  * of the individual stages.  The weights of all stages should sum to 1.
  */
-class REGINA_API ProgressTracker : public ProgressTrackerBase {
+class ProgressTracker : public ProgressTrackerBase {
     private:
         double percent_;
             /**< The percentage progress through the current stage.
@@ -366,7 +366,7 @@ class REGINA_API ProgressTracker : public ProgressTrackerBase {
  * upper bound on the number of steps, and indeed the end point is often
  * unknown until the operation has finished.
  */
-class REGINA_API ProgressTrackerOpen : public ProgressTrackerBase {
+class ProgressTrackerOpen : public ProgressTrackerBase {
     private:
         unsigned long steps_;
             /**< The number of steps completed over all stages. */

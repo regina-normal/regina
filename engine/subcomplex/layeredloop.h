@@ -77,7 +77,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredLoop : public StandardTriangulation {
+class LayeredLoop : public StandardTriangulation {
     private:
         unsigned long length_;
             /**< The length of this layered loop. */

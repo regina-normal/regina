@@ -122,7 +122,7 @@ class Matrix2;
  * so for instance the second triangle vertex roles for the saturated annulus
  * \a a can be modified by calling <tt>a.setRoles(1, newRoles)</tt>.
  */
-struct REGINA_API SatAnnulus {
+struct SatAnnulus {
     Tetrahedron<3>* tet[2];
         /**< Describes which tetrahedra provide the first and second
              triangles.  See the class notes for details. */

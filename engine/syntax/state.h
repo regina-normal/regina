@@ -64,7 +64,7 @@ class StateData;
  *  and allows concrete highlighter implementations to store state per
  *  line for fast re-highlighting of specific lines (e.g. during editing).
  */
-class REGINA_API State
+class State
 {
 public:
     /** Creates an initial state, ie. what should be used for the first line

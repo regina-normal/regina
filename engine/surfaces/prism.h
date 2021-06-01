@@ -63,7 +63,7 @@ class NormalSurface;
  * \pre This class should only be used with \a embedded
  * normal surfaces.
  */
-struct REGINA_API PrismSpec {
+struct PrismSpec {
     size_t tetIndex;
         /**< The index in the triangulation of the tetrahedron
              containing the prism. */
@@ -128,8 +128,7 @@ struct REGINA_API PrismSpec {
  * @param spec the prism specifier to write.
  * @return a reference to \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out,
-    const PrismSpec& spec);
+std::ostream& operator << (std::ostream& out, const PrismSpec& spec);
 
 /*@}*/
 

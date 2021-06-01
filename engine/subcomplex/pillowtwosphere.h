@@ -67,7 +67,7 @@ namespace regina {
  * 2-sphere was separating, the resulting triangulation will contain the
  * two terms of the corresponding connected sum.
  */
-class REGINA_API PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
+class PillowTwoSphere : public ShortOutput<PillowTwoSphere> {
     private:
         Triangle<3>* triangle_[2];
             /**< The two triangles whose edges are joined. */

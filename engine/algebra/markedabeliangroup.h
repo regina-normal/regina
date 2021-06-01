@@ -93,8 +93,7 @@ class HomMarkedAbelianGroup;
  * \todo Testsuite additions: isBoundary(), boundaryMap(), writeAsBdry(),
  * cycleGen().
  */
-class REGINA_API MarkedAbelianGroup :
-        public ShortOutput<MarkedAbelianGroup, true> {
+class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
     private:
         /** Internal original M */
         MatrixInt OM; // copy of initializing M
@@ -727,7 +726,7 @@ class REGINA_API MarkedAbelianGroup :
  *
  * @author Ryan Budney
  */
-class REGINA_API HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
+class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
     private:
         /** internal rep of domain of the homomorphism */
         MarkedAbelianGroup domain_;

@@ -78,7 +78,7 @@ class TxICore;
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredTorusBundle : public StandardTriangulation {
+class LayeredTorusBundle : public StandardTriangulation {
     private:
         const TxICore& core_;
             /**< The core <tt>T x I</tt> triangulation whose boundaries

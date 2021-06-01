@@ -1048,14 +1048,12 @@ IntegerBase<supportInfinity>
 // Instantiate templates for all possible template arguments.
 //
 // For the global functions below, the header has matching
-// "extern template REGINA_API" declarations.
+// "extern template" declarations.
 //
 // For the class IntegerBase, the header has no such
-// "extern template class REGINA_API" declaration (a side-effect of what
+// "extern template class" declaration (a side-effect of what
 // appears to be a catch-22 with dllexport/dllimport attributes and template
-// specialisations).  Instead we mark the template itself as REGINA_API, which
-// is possible because we instantiate it here for all possible template
-// parameters.  See the notes in the header for further discussion.
+// specialisations).  See the notes in the header for further discussion.
 template class IntegerBase<true>;
 template class IntegerBase<false>;
 

@@ -93,7 +93,7 @@ namespace regina {
  * implemented for most plugged triangular solid tori and
  * homology() is not implemented at all.
  */
-class REGINA_API PlugTriSolidTorus : public StandardTriangulation {
+class PlugTriSolidTorus : public StandardTriangulation {
     public:
         static constexpr int CHAIN_NONE = 0;
             /**< Indicates an annulus on the triangular solid torus

@@ -102,7 +102,7 @@ namespace regina {
  * made available under the name Perm4.
  */
 template <>
-class REGINA_API Perm<4> {
+class Perm<4> {
     private:
         /**
          * An array-like object used to implement Perm<4>::S4.

@@ -347,7 +347,7 @@ struct NormalInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NormalSurfaceVector {
+class NormalSurfaceVector {
     public:
         typedef LargeInteger Element;
             /**< The type of each element in the vector. */
@@ -822,7 +822,7 @@ class REGINA_API NormalSurfaceVector {
  * \todo \featurelong Determine which faces in the solution space a
  * normal surface belongs to.
  */
-class REGINA_API NormalSurface : public ShortOutput<NormalSurface> {
+class NormalSurface : public ShortOutput<NormalSurface> {
     protected:
         NormalSurfaceVector* vector_;
             /**< Contains the coordinates of the normal surface in whichever

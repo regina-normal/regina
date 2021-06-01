@@ -75,7 +75,7 @@ class XMLTreeResolver;
  * XMLTreeResolutionTask, and override resolve() to perform whatever
  * "fleshing out" procedure is required for its particular type of packet.
  */
-class REGINA_API XMLTreeResolutionTask {
+class XMLTreeResolutionTask {
     public:
         /**
          * A default construct that does nothing.
@@ -124,7 +124,7 @@ class REGINA_API XMLTreeResolutionTask {
  * whose virtual resolve() function is overridden to perform whatever
  * "fleshing out" work is required for the type of packet under consideration.
  */
-class REGINA_API XMLTreeResolver {
+class XMLTreeResolver {
     public:
         typedef std::map<std::string, Packet*> IDMap;
             /**< A type that maps internal IDs from the data file to the

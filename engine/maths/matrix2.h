@@ -58,7 +58,7 @@ namespace regina {
  * This class only contains four long integers, and so it may be considered
  * small enough to pass about by value.
  */
-class REGINA_API Matrix2 {
+class Matrix2 {
     private:
         long data[2][2];
             /**< The four entries in this matrix, indexed by row and
@@ -297,7 +297,7 @@ class REGINA_API Matrix2 {
  * @param mat the matrix to write.
  * @return a reference to \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const Matrix2& mat);
+std::ostream& operator << (std::ostream& out, const Matrix2& mat);
 
 /**
  * Determines whether the first given matrix is more aesthetically
@@ -311,7 +311,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const Matrix2& mat);
  * or \c false if either the matrices are equal or \a m2 is more
  * pleasing than \a m1.
  */
-REGINA_API bool simpler(const Matrix2& m1, const Matrix2& m2);
+bool simpler(const Matrix2& m1, const Matrix2& m2);
 
 /**
  * Determines whether the first given pair of matrices is more aesthetically
@@ -330,7 +330,7 @@ REGINA_API bool simpler(const Matrix2& m1, const Matrix2& m2);
  * the second pair, or \c false if either the ordered pairs are equal or
  * the second pair is more pleasing than the first.
  */
-REGINA_API bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
+bool simpler(const Matrix2& pair1first, const Matrix2& pair1second,
         const Matrix2& pair2first, const Matrix2& pair2second);
 
 /*@}*/

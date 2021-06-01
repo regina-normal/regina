@@ -216,9 +216,7 @@ struct PacketInfo;
  * \todo \feature Provide automatic name selection/specification upon
  * child packet insertion.
  */
-class REGINA_API Packet :
-        public Output<Packet>,
-        public SafePointeeBase<Packet> {
+class Packet : public Output<Packet>, public SafePointeeBase<Packet> {
     private:
         std::string label_;
             /**< The label for this individual packet of information. */
@@ -1574,7 +1572,7 @@ class REGINA_API Packet :
  * @param filename the pathname of the file to read from.
  * @return the packet tree read from file, or 0 on error (as explained above).
  */
-REGINA_API Packet* open(const char* filename);
+Packet* open(const char* filename);
 
 /**
  * Reads a Regina data file from the given input stream, and returns the
@@ -1594,7 +1592,7 @@ REGINA_API Packet* open(const char* filename);
  * @param in the input stream to read from.
  * @return the packet tree read from file, or 0 on error (as explained above).
  */
-REGINA_API Packet* open(std::istream& in);
+Packet* open(std::istream& in);
 
 /**
  * A forward iterator for iterating through all immediate children of a
@@ -1610,7 +1608,7 @@ REGINA_API Packet* open(std::istream& in);
  * the next child packet in the iteration or else throws a
  * <tt>StopException</tt> if there are no more children to return.
  */
-class REGINA_API ChildIterator {
+class ChildIterator {
     private:
         Packet* current_;
             /**< The child packet that this iterator is pointing to, or
@@ -1712,7 +1710,7 @@ class REGINA_API ChildIterator {
  * in the subtree iteration or else throws a <tt>StopException</tt> if there
  * are no more packets to return.
  */
-class REGINA_API SubtreeIterator {
+class SubtreeIterator {
     private:
         const Packet* subtree_;
             /**< The root of the packet subtree that we are iterating over. */
@@ -1859,7 +1857,7 @@ class REGINA_API SubtreeIterator {
  * the next child packet in the iteration or else throws a
  * <tt>StopException</tt> if there are no more children to return.
  */
-class REGINA_API PacketChildren {
+class PacketChildren {
     private:
         const Packet* parent_;
             /**< The packet whose children we are iterating through. */
@@ -1936,7 +1934,7 @@ class REGINA_API PacketChildren {
  * the next descendant packet in the iteration or else throws a
  * <tt>StopException</tt> if there are no more children to return.
  */
-class REGINA_API PacketDescendants {
+class PacketDescendants {
     private:
         const Packet* subtree_;
             /**< The packet whose strict descendants we are iterating over. */
@@ -1998,7 +1996,7 @@ class REGINA_API PacketDescendants {
  *
  * This is a lightweight class, and objects may be safely passed by value.
  */
-class REGINA_API PacketShell {
+class PacketShell {
     private:
         const Packet* packet_;
             /**< The raw pointer to the packet being destroyed. */
@@ -2152,7 +2150,7 @@ class REGINA_API PacketShell {
  * @param shell the packet shell to test against.
  * @return \c true if and only if the given shell refers to the given packet.
  */
-REGINA_API bool operator == (const Packet* packet, PacketShell shell);
+bool operator == (const Packet* packet, PacketShell shell);
 
 /**
  * Identifies if the given shell does not refer to the given packet.
@@ -2165,7 +2163,7 @@ REGINA_API bool operator == (const Packet* packet, PacketShell shell);
  * @return \c true if and only if the given shell does not refer to the
  * given packet.
  */
-REGINA_API bool operator != (const Packet* packet, PacketShell shell);
+bool operator != (const Packet* packet, PacketShell shell);
 
 /**
  * An object that can be registered to listen for packet events.
@@ -2213,7 +2211,7 @@ REGINA_API bool operator != (const Packet* packet, PacketShell shell);
  * and packets will call whichever functions you override when events occur,
  * just as they would for a native C++ subclass.
  */
-class REGINA_API PacketListener {
+class PacketListener {
     private:
         std::set<Packet*> packets;
             /**< The set of packets upon which this object is currently

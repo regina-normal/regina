@@ -58,7 +58,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLAbelianGroupReader : public XMLElementReader {
+class XMLAbelianGroupReader : public XMLElementReader {
     private:
         AbelianGroup* group_;
             /**< The abelian group currently being read. */
@@ -90,7 +90,7 @@ class REGINA_API XMLAbelianGroupReader : public XMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLGroupPresentationReader : public XMLElementReader {
+class XMLGroupPresentationReader : public XMLElementReader {
     private:
         GroupPresentation* group_;
             /**< The group presentation currently being read. */

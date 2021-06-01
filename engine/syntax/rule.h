@@ -65,7 +65,7 @@
 
 namespace regina::syntax {
 
-class REGINA_API Rule
+class Rule
 {
 public:
     Rule();
@@ -108,7 +108,7 @@ private:
 };
 
 
-class REGINA_API AnyChar : public Rule
+class AnyChar : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
@@ -121,7 +121,7 @@ public:
     const std::string& chars() const;
 };
 
-class REGINA_API DetectChar : public Rule
+class DetectChar : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
@@ -134,7 +134,7 @@ public:
     char matchChar() const;
 };
 
-class REGINA_API Detect2Char : public Rule
+class Detect2Char : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
@@ -149,25 +149,25 @@ public:
     char matchChar2() const;
 };
 
-class REGINA_API DetectIdentifier : public Rule
+class DetectIdentifier : public Rule
 {
 protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 };
 
-class REGINA_API DetectSpaces : public Rule
+class DetectSpaces : public Rule
 {
 protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 };
 
-class REGINA_API Float : public Rule
+class Float : public Rule
 {
 protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 };
 
-class REGINA_API IncludeRules : public Rule
+class IncludeRules : public Rule
 {
 public:
     const std::string& contextName() const;
@@ -184,37 +184,37 @@ private:
     bool m_includeAttribute;
 };
 
-class REGINA_API Int : public Rule
+class Int : public Rule
 {
 protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 };
 
-class REGINA_API HlCChar : public Rule
+class HlCChar : public Rule
 {
 protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 };
 
-class REGINA_API HlCHex : public Rule
+class HlCHex : public Rule
 {
 protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 };
 
-class REGINA_API HlCOct : public Rule
+class HlCOct : public Rule
 {
 protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 };
 
-class REGINA_API HlCStringChar : public Rule
+class HlCStringChar : public Rule
 {
 protected:
     MatchResult doMatch(Matcher& m, int offset) override;
 };
 
-class REGINA_API KeywordListRule : public Rule
+class KeywordListRule : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
@@ -232,7 +232,7 @@ public:
     bool caseSensitivity() const;
 };
 
-class REGINA_API LineContinue : public Rule
+class LineContinue : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
@@ -245,7 +245,7 @@ public:
     char continueChar() const;
 };
 
-class REGINA_API RangeDetect : public Rule
+class RangeDetect : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
@@ -260,7 +260,7 @@ public:
     char end() const;
 };
 
-class REGINA_API RegExpr : public Rule
+class RegExpr : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
@@ -283,7 +283,7 @@ public:
     void replaceRegEx(RegEx* re);
 };
 
-class REGINA_API StringDetect : public Rule
+class StringDetect : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;
@@ -298,7 +298,7 @@ public:
     bool caseSensitivity() const;
 };
 
-class REGINA_API WordDetect : public Rule
+class WordDetect : public Rule
 {
 protected:
     bool doLoad(xmlTextReaderPtr reader) override;

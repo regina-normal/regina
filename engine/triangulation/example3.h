@@ -64,7 +64,7 @@ namespace regina {
  * by providing several more hard-coded and parameterised constructions.
  */
 template <>
-class REGINA_API Example<3> : public detail::ExampleBase<3> {
+class Example<3> : public detail::ExampleBase<3> {
     public:
         /**
          * \name Closed Triangulations

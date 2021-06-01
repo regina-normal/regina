@@ -103,7 +103,7 @@ namespace regina {
  * to explicitly access the class GluingPermSearcher<3> through Python.
  */
 template <>
-class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
+class GluingPermSearcher<3> : public GluingPerms<3> {
     public:
         /**
          * A routine that can do arbitrary processing upon a set of gluing
@@ -625,7 +625,7 @@ class REGINA_API GluingPermSearcher<3> : public GluingPerms<3> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
+class EulerSearcher : public GluingPermSearcher<3> {
     protected:
         static constexpr char VLINK_CLOSED = 1;
             /**< Signifies that a vertex link has been closed off (i.e.,
@@ -1468,7 +1468,7 @@ class REGINA_API EulerSearcher : public GluingPermSearcher<3> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
+class CompactSearcher : public GluingPermSearcher<3> {
     protected:
         static constexpr char VLINK_CLOSED = 1;
             /**< Signifies that a vertex link has been closed off (i.e.,
@@ -2256,7 +2256,7 @@ class REGINA_API CompactSearcher : public GluingPermSearcher<3> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API ClosedPrimeMinSearcher : public CompactSearcher {
+class ClosedPrimeMinSearcher : public CompactSearcher {
     private:
         static constexpr unsigned EDGE_CHAIN_END = 1;
             /**< Represents the end of a one-ended chain in a face
@@ -2508,7 +2508,7 @@ class REGINA_API ClosedPrimeMinSearcher : public CompactSearcher {
  *
  * \ifacespython Not present.
  */
-class REGINA_API HyperbolicMinSearcher : public EulerSearcher {
+class HyperbolicMinSearcher : public EulerSearcher {
     private:
         static constexpr char ECLASS_TWISTED = 1;
             /**< Signifies that an edge has been identified with itself

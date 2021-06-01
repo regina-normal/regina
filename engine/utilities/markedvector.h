@@ -76,7 +76,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API MarkedElement {
+class MarkedElement {
     private:
         size_t marking_;
             /**< The index in the MarkedVector at which this object is

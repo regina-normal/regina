@@ -78,7 +78,7 @@ namespace regina {
  * class without reason).  This triangulation can be accessed through the
  * core() routine.
  */
-class REGINA_API TxICore : public Output<TxICore> {
+class TxICore : public Output<TxICore> {
     protected:
         Triangulation<3> core_;
             /**< A full copy of the <tt>T x I</tt> triangulation that is
@@ -377,7 +377,7 @@ class REGINA_API TxICore : public Output<TxICore> {
  *
  * \image html diag92.png
  */
-class REGINA_API TxIDiagonalCore : public TxICore {
+class TxIDiagonalCore : public TxICore {
     private:
         unsigned long size_;
             /**< The number of tetrahedra in this <tt>T x I</tt>
@@ -447,7 +447,7 @@ class REGINA_API TxIDiagonalCore : public TxICore {
  *
  * \image html parallel.png
  */
-class REGINA_API TxIParallelCore : public TxICore {
+class TxIParallelCore : public TxICore {
     public:
         /**
          * Creates a new copy of this <tt>T x I</tt> triangulation.

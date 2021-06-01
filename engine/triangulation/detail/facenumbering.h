@@ -537,7 +537,7 @@ class FaceNumberingImpl<1, 0, 0> : public FaceNumberingAPI<1, 0> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<2, 1, 0> : public FaceNumberingAPI<2, 1> {
+class FaceNumberingImpl<2, 1, 0> : public FaceNumberingAPI<2, 1> {
     private:
         /**
          * A hard-coded list of all return values for ordering(),
@@ -563,7 +563,7 @@ class REGINA_API FaceNumberingImpl<2, 1, 0> : public FaceNumberingAPI<2, 1> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<3, 1, 1> : public FaceNumberingAPI<3, 1> {
+class FaceNumberingImpl<3, 1, 1> : public FaceNumberingAPI<3, 1> {
     public:
         /**
          * A table that maps vertices of a tetrahedron to edge numbers.
@@ -630,7 +630,7 @@ class REGINA_API FaceNumberingImpl<3, 1, 1> : public FaceNumberingAPI<3, 1> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<3, 2, 0> : public FaceNumberingAPI<3, 2> {
+class FaceNumberingImpl<3, 2, 0> : public FaceNumberingAPI<3, 2> {
     private:
         /**
          * A hard-coded list of all return values for ordering(),
@@ -656,7 +656,7 @@ class REGINA_API FaceNumberingImpl<3, 2, 0> : public FaceNumberingAPI<3, 2> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<4, 1, 2> : public FaceNumberingAPI<4, 1> {
+class FaceNumberingImpl<4, 1, 2> : public FaceNumberingAPI<4, 1> {
     public:
         /**
          * A table that maps vertices of a pentachoron to edge numbers.
@@ -727,7 +727,7 @@ class REGINA_API FaceNumberingImpl<4, 1, 2> : public FaceNumberingAPI<4, 1> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<4, 2, 1> : public FaceNumberingAPI<4, 2> {
+class FaceNumberingImpl<4, 2, 1> : public FaceNumberingAPI<4, 2> {
     public:
         /**
          * A table that maps vertices of a pentachoron to triangle numbers.
@@ -808,7 +808,7 @@ class REGINA_API FaceNumberingImpl<4, 2, 1> : public FaceNumberingAPI<4, 2> {
 };
 
 template <>
-class REGINA_API FaceNumberingImpl<4, 3, 0> : public FaceNumberingAPI<4, 3> {
+class FaceNumberingImpl<4, 3, 0> : public FaceNumberingAPI<4, 3> {
     private:
         /**
          * A hard-coded list of all return values for ordering(),

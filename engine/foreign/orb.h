@@ -73,7 +73,7 @@ namespace regina {
  *
  * @author Ryan Budney, also with code from Damien Heard
  */
-REGINA_API Triangulation<3>* readOrb(const char *filename);
+Triangulation<3>* readOrb(const char *filename);
 
 /*@}*/
 

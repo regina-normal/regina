@@ -77,7 +77,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <>
-class REGINA_API GluingPermSearcher<2> : public GluingPerms<2> {
+class GluingPermSearcher<2> : public GluingPerms<2> {
     public:
         /**
          * A routine that can do arbitrary processing upon a set of gluing

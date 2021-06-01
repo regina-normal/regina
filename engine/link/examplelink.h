@@ -65,7 +65,7 @@ class Link;
  * Note that each of these routines constructs a new link from scratch.
  * It is up to the caller of each routine to destroy the link that is returned.
  */
-class REGINA_API ExampleLink {
+class ExampleLink {
     public:
         /**
          * Returns a zero-crossing diagram of the unknot.

@@ -66,7 +66,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLFilterReader : public XMLElementReader {
+class XMLFilterReader : public XMLElementReader {
     public:
         /**
          * Creates a new filter element reader.
@@ -100,7 +100,7 @@ class REGINA_API XMLFilterReader : public XMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLFilterPacketReader : public XMLPacketReader {
+class XMLFilterPacketReader : public XMLPacketReader {
     private:
         SurfaceFilter* filter_;
             /**< The surface filter currently being read. */

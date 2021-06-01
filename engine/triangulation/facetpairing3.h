@@ -63,7 +63,7 @@ class FacePair;
  * within the dual graph.
  */
 template <>
-class REGINA_API FacetPairing<3> : public detail::FacetPairingBase<3> {
+class FacetPairing<3> : public detail::FacetPairingBase<3> {
     public:
         /**
          * Creates a new face pairing that is a clone of the given face

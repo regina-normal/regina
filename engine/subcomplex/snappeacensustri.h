@@ -80,7 +80,7 @@ namespace regina {
  * All of the optional StandardTriangulation routines are implemented
  * for this class.
  */
-class REGINA_API SnapPeaCensusTri: public StandardTriangulation {
+class SnapPeaCensusTri: public StandardTriangulation {
     public:
         static constexpr char SEC_5 = 'm';
             /**< Represents the collection of triangulations formed from five

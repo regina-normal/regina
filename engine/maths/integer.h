@@ -151,7 +151,7 @@ struct InfinityBase<false> {
  * For \a supportInfinity = \c true, use the name LargeInteger.
  */
 template <bool supportInfinity = false>
-class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
+class IntegerBase : private InfinityBase<supportInfinity> {
     public:
         static const IntegerBase<supportInfinity> zero;
             /**< Globally available zero. */
@@ -1479,55 +1479,15 @@ class REGINA_API IntegerBase : private InfinityBase<supportInfinity> {
         const IntegerBase<supportInfinity_>& large);
 };
 
-// Although we explicitly instantiate IntegerBase in the library, we do not
-// declare this through an "extern template class REGINA_API ..." line here.
-//
-// The short story: windows is a nightmare.
-//
-// The long story:
-//
-// - Symbols that are part of the public library interface *must* be marked as
-//   dllexport; otherwise code that links with the library cannot use them.
-//
-// - It seems that the presence or absence of the dllexport attribute is
-//   determined at the *first* instantiation of a template class.  Typically
-//   this is either an implicit instantiation, or an "extern template class"
-//   line, whichever the compiler sees first.
-//
-// - In general we cannot control the attributes for implicit instantiations,
-//   since it does not make sense to mark an entire template as REGINA_API -
-//   generally a template is exported only for some template parameters.
-//
-// - This means that we typically use "extern template class" lines to manage
-//   the dllexport attribute.
-//
-// - HOWEVER: For IntegerBase, this breaks because:
-//
-//     * The "extern template class" lines must come after any specialisations
-//       of member functions (otherwise the compile fails);
-//
-//     * As a result, the specialisations trigger implicit instantiations,
-//       which render the "extern template class" lines ineffective.
-//
-// - The solution for IntegerBase is to mark the entire template as
-//   REGINA_API.  This is possible because our library explicitly instantiates
-//   IntegerBase for all possible template parameters.
-//
-// Note that we still do use "extern template" for class constants.
-//
-// I would *love* to hear of a better way of doing this that correctly
-// sets the dllexport / dllimport attributes under windows, and that
-// doesn't require marking the entire template as REGINA_API.
-
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-extern template REGINA_API const IntegerBase<true> IntegerBase<true>::zero;
-extern template REGINA_API const IntegerBase<false> IntegerBase<false>::zero;
-extern template REGINA_API const IntegerBase<true> IntegerBase<true>::one;
-extern template REGINA_API const IntegerBase<false> IntegerBase<false>::one;
+extern template const IntegerBase<true> IntegerBase<true>::zero;
+extern template const IntegerBase<false> IntegerBase<false>::zero;
+extern template const IntegerBase<true> IntegerBase<true>::one;
+extern template const IntegerBase<false> IntegerBase<false>::one;
 
 // This class constant is specialised, even though the class itself is not.
-template <> REGINA_API const IntegerBase<true> IntegerBase<true>::infinity;
-extern template REGINA_API const IntegerBase<true> IntegerBase<true>::infinity;
+template <> const IntegerBase<true> IntegerBase<true>::infinity;
+extern template const IntegerBase<true> IntegerBase<true>::infinity;
 #endif // __DOXYGEN
 
 /**
@@ -1559,9 +1519,9 @@ std::ostream& operator << (std::ostream& out,
 
 // Help the compiler by noting which explicit instantiations we offer.
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-extern template REGINA_API std::ostream& operator << (std::ostream& out,
+extern template std::ostream& operator << (std::ostream& out,
     const IntegerBase<true>& i);
-extern template REGINA_API std::ostream& operator << (std::ostream& out,
+extern template std::ostream& operator << (std::ostream& out,
     const IntegerBase<false>& i);
 #endif // __DOXYGEN
 
@@ -1581,9 +1541,9 @@ IntegerBase<supportInfinity> operator + (long lhs,
 
 // Help the compiler by noting which explicit instantiations we offer.
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-extern template REGINA_API IntegerBase<true> operator +(long lhs,
+extern template IntegerBase<true> operator +(long lhs,
     const IntegerBase<true>& rhs);
-extern template REGINA_API IntegerBase<false> operator +(long lhs,
+extern template IntegerBase<false> operator +(long lhs,
     const IntegerBase<false>& rhs);
 #endif // __DOXYGEN
 
@@ -1603,9 +1563,9 @@ IntegerBase<supportInfinity> operator * (long lhs,
 
 // Help the compiler by noting which explicit instantiations we offer.
 #ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-extern template REGINA_API IntegerBase<true> operator *(long lhs,
+extern template IntegerBase<true> operator *(long lhs,
     const IntegerBase<true>& rhs);
-extern template REGINA_API IntegerBase<false> operator *(long lhs,
+extern template IntegerBase<false> operator *(long lhs,
     const IntegerBase<false>& rhs);
 #endif // __DOXYGEN
 

@@ -133,7 +133,7 @@ class SatRegion;
  * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API BlockedSFSTriple : public StandardTriangulation {
+class BlockedSFSTriple : public StandardTriangulation {
     private:
         SatRegion* end_[2];
             /**< The two end regions, i.e., the saturated regions with

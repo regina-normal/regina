@@ -67,7 +67,7 @@ class Theme;
  *
  *  @see Theme
  */
-class REGINA_API Format
+class Format
 {
 public:
     /** Creates an empty/invalid format. */

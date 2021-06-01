@@ -75,7 +75,7 @@ typedef Matrix<Integer, true> MatrixInt;
  * \todo \optlong Look at using sparse matrices for storage of SNF and
  * the like.
  */
-class REGINA_API AbelianGroup : public ShortOutput<AbelianGroup, true> {
+class AbelianGroup : public ShortOutput<AbelianGroup, true> {
     protected:
         unsigned rank_;
             /**< The rank of the group (the number of Z components). */

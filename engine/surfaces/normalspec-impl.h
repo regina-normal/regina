@@ -66,7 +66,7 @@ class NSVectorQuadOct;
  * non-triangular disc types (e.g., the quadrilateral coordinates of
  * Tollefson).
  */
-struct REGINA_API NormalSurfaces::NormalSpec {
+struct NormalSurfaces::NormalSpec {
     /**
      * The underlying class for vectors in standard form.
      */
@@ -144,7 +144,7 @@ struct REGINA_API NormalSurfaces::NormalSpec {
  * non-triangular disc types (e.g., quad-oct coordinates for almost
  * normal surfaces).
  */
-struct REGINA_API NormalSurfaces::AlmostNormalSpec {
+struct NormalSurfaces::AlmostNormalSpec {
     /**
      * The underlying class for vectors in standard form.
      */

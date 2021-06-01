@@ -177,7 +177,7 @@ struct HyperInfo;
  *
  * \ifacespython Not present.
  */
-class REGINA_API NormalHypersurfaceVector {
+class NormalHypersurfaceVector {
     public:
         typedef LargeInteger Element;
             /**< The type of each element in the vector. */
@@ -472,7 +472,7 @@ class REGINA_API NormalHypersurfaceVector {
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * will return LargeInteger::infinity where appropriate.
  */
-class REGINA_API NormalHypersurface : public ShortOutput<NormalHypersurface> {
+class NormalHypersurface : public ShortOutput<NormalHypersurface> {
     protected:
         NormalHypersurfaceVector* vector_;
             /**< Contains the coordinates of the normal hypersurface in

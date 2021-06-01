@@ -70,7 +70,7 @@ namespace regina {
  * \ifacespython Not present.
  */
 template <typename T>
-class REGINA_API LightweightSequence {
+class LightweightSequence {
     public:
         typedef T* iterator;
             /**< An iterator type for read-write access to the elements
@@ -279,7 +279,7 @@ class REGINA_API LightweightSequence {
          *
          * \pre The type \a T supports the less-than operator.
          */
-        struct REGINA_API Less {
+        struct Less {
             /**
              * Compares two sequences lexicographically.  The sequences
              * need not be the same size.
@@ -330,7 +330,7 @@ class REGINA_API LightweightSequence {
          * versions of Regina the list of elements was copied on construction.
          */
         template <typename Iterator>
-        class REGINA_API SubsequenceCompareFirstPtr {
+        class SubsequenceCompareFirstPtr {
             private:
                 size_t nSub_;
                     /**< The number of elements to compare in each sequence. */

@@ -72,7 +72,7 @@ class ModelLinkGraphNode;
  *
  * These objects are small enough to pass around by value.
  */
-class REGINA_API ModelLinkGraphArc {
+class ModelLinkGraphArc {
     private:
         ModelLinkGraphNode* node_;
             /**< The node from which this arc exits.  This may be null. */
@@ -455,7 +455,7 @@ class ModelLinkGraphNode : public MarkedElement,
  * you include link/graph.h, you can use a Link directly as a directed graph
  * type with the Boost Graph Library.
  */
-class REGINA_API ModelLinkGraph : public Output<ModelLinkGraph> {
+class ModelLinkGraph : public Output<ModelLinkGraph> {
     public:
         /**
          * A routine that can do arbitrary processing upon a knot or link.
@@ -872,7 +872,7 @@ void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs);
  * At present, this class insists that each 2-cell is a topological disc.
  * As a consequence, this class cannot work with empty or disconnected graphs.
  */
-class REGINA_API ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
+class ModelLinkGraphCells : public Output<ModelLinkGraphCells> {
     private:
         ModelLinkGraphArc* arcs_;
             /**< Stores the boundary of each cell.  Specifically, for cell

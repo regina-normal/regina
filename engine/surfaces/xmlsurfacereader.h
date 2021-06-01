@@ -55,7 +55,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLNormalSurfaceReader : public XMLElementReader {
+class XMLNormalSurfaceReader : public XMLElementReader {
     private:
         NormalSurface* surface_;
             /**< The normal surface currently being read. */
@@ -103,7 +103,7 @@ class REGINA_API XMLNormalSurfaceReader : public XMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLNormalSurfacesReader : public XMLPacketReader {
+class XMLNormalSurfacesReader : public XMLPacketReader {
     private:
         NormalSurfaces* list;
             /**< The normal surface list currently being read. */

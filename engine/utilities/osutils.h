@@ -102,7 +102,7 @@ namespace regina {
  *
  * @param out the output stream to which usage information will be written.
  */
-REGINA_API void writeResUsage(std::ostream& out);
+void writeResUsage(std::ostream& out);
 
 /*@}*/
 

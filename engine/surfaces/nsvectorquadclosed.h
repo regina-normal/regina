@@ -103,7 +103,7 @@ struct NormalInfo<NS_QUAD_CLOSED> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSVectorQuadClosed : public NSVectorQuad {
+class NSVectorQuadClosed : public NSVectorQuad {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorQuadClosed, NS_QUAD_CLOSED,
         NSVectorQuad);
 

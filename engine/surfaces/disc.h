@@ -79,7 +79,7 @@ class DiscSpecIterator;
  * \pre This class should only be used with \a embedded
  * normal surfaces.
  */
-struct REGINA_API DiscSpec {
+struct DiscSpec {
     size_t tetIndex;
         /**< The index in the triangulation of the tetrahedron
              containing the disc. */
@@ -152,7 +152,7 @@ struct REGINA_API DiscSpec {
  * @param spec the disc specifier to write.
  * @return a reference to \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
+std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
 
 /**
  * Determines whether or not normal discs of the given type are
@@ -167,7 +167,7 @@ REGINA_API std::ostream& operator << (std::ostream& out, const DiscSpec& spec);
  * numbered away from the given vertex, or \c false if they are
  * numbered towards the given vertex.
  */
-REGINA_API bool numberDiscsAwayFromVertex(int discType, int vertex);
+bool numberDiscsAwayFromVertex(int discType, int vertex);
 
 /**
  * Determines whether or not the natural boundary orientation of a normal
@@ -186,7 +186,7 @@ REGINA_API bool numberDiscsAwayFromVertex(int discType, int vertex);
  * @param edgeEnd the end vertex of the edge to which the normal arc is
  * parallel.
  */
-REGINA_API bool discOrientationFollowsEdge(int discType, int vertex,
+bool discOrientationFollowsEdge(int discType, int vertex,
         int edgeStart, int edgeEnd);
 
 /**
@@ -207,7 +207,7 @@ REGINA_API bool discOrientationFollowsEdge(int discType, int vertex,
  * of normal discs of a given type does not fit into an <tt>unsigned
  * long</tt>.  See how this affects DiscSetTetData also.
  */
-class REGINA_API DiscSetTet {
+class DiscSetTet {
     protected:
         unsigned long internalNDiscs[10];
             /**< The number of discs of each type. */
@@ -482,7 +482,7 @@ class DiscSetTetData : public DiscSetTet {
  * \pre This class should only be used with \a embedded
  * normal surfaces.
  */
-class REGINA_API DiscSetSurface {
+class DiscSetSurface {
     protected:
         DiscSetTet** discSets;
             /**< The disc sets corresponding to each tetrahedron. */
@@ -724,7 +724,7 @@ class DiscSetSurfaceData : public DiscSetSurface {
  * next normal disc in the set or else throws a <tt>StopException</tt>
  * if there are no more discs to return.
  */
-class REGINA_API DiscSpecIterator {
+class DiscSpecIterator {
     protected:
         const DiscSetSurface* internalDiscSet;
             /**< The disc set through which we are iterating. */

@@ -72,7 +72,7 @@ namespace regina {
  * Note that this class tracks disc \a types, not discs themselves.
  * To track individual normal discs, see the DiscSpec class instead.
  */
-struct REGINA_API DiscType {
+struct DiscType {
     /**
      * Represents a null disc type, as described in the class notes.
      *
@@ -172,7 +172,7 @@ struct REGINA_API DiscType {
  * @param type the disc type to write.
  * @return a reference to the given output stream.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const DiscType& type);
+std::ostream& operator << (std::ostream& out, const DiscType& type);
 
 /*@}*/
 

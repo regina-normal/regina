@@ -88,7 +88,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API SpiralSolidTorus : public StandardTriangulation {
+class SpiralSolidTorus : public StandardTriangulation {
     private:
         size_t nTet;
             /**< The number of tetrahedra in this spiralled solid torus. */

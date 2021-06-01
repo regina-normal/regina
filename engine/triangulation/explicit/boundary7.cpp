@@ -36,11 +36,10 @@
 namespace regina::detail {
 
 // Don't cascade instantiations all the way down through the dimensions...
-extern template REGINA_API BoundaryComponentBase<6>::~BoundaryComponentBase();
+extern template BoundaryComponentBase<6>::~BoundaryComponentBase();
 
-template REGINA_API BoundaryComponentBase<7>::~BoundaryComponentBase();
+template BoundaryComponentBase<7>::~BoundaryComponentBase();
 
-template REGINA_API Triangulation<6>*
-    BoundaryComponentBase<7>::buildRealBoundary() const;
+template Triangulation<6>* BoundaryComponentBase<7>::buildRealBoundary() const;
 
 } // namespace regina::detail

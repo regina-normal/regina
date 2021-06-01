@@ -85,7 +85,7 @@ namespace regina {
  *
  * @author Ryan Budney, B.B.
  */
-class REGINA_API Primes {
+class Primes {
     private:
         static const unsigned long numPrimeSeeds;
             /**< The size of the hard-coded list of seed primes. */

@@ -65,7 +65,7 @@ class MarkedAbelianGroup;
 /**
  * Represents a power of a generator in a group presentation.
  */
-struct REGINA_API GroupExpressionTerm {
+struct GroupExpressionTerm {
     unsigned long generator;
         /**< The number that identifies the generator in this term. */
     long exponent;
@@ -158,8 +158,7 @@ struct REGINA_API GroupExpressionTerm {
  * @param term the term to write.
  * @return a reference to the given output stream.
  */
-REGINA_API std::ostream& operator << (std::ostream& out,
-    const GroupExpressionTerm& term);
+std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
 
 /**
  * Represents an expression involving generators from a group presentation
@@ -176,7 +175,7 @@ REGINA_API std::ostream& operator << (std::ostream& out,
  * Calling a routine that returns a GroupExpression should not perform any
  * unwanted deep copies.
  */
-class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
+class GroupExpression : public ShortOutput<GroupExpression> {
     private:
         std::list<GroupExpressionTerm> terms_;
             /** The terms that make up this expression. */
@@ -730,7 +729,7 @@ void swap(GroupExpression& lhs, GroupExpression& rhs);
  * GroupPresentation( numGens, "abAAB", "bccd" ) etc., with arbitrary
  * numbers of relators. Maybe std::tuple.  Or "variadic templates"?
  */
-class REGINA_API GroupPresentation : public Output<GroupPresentation> {
+class GroupPresentation : public Output<GroupPresentation> {
     protected:
         unsigned long nGenerators_;
             /**< The number of generators. */

@@ -69,7 +69,7 @@ struct PacketInfo<PACKET_PDF> {
  * This can be tested by calling isNull(), and can be changed by calling
  * reset().
  */
-class REGINA_API PDF : public Packet {
+class PDF : public Packet {
     REGINA_PACKET(PDF, PACKET_PDF)
 
     public:

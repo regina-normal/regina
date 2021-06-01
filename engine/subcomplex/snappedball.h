@@ -58,7 +58,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API SnappedBall : public StandardTriangulation {
+class SnappedBall : public StandardTriangulation {
     private:
         Tetrahedron<3>* tet;
             /**< The tetrahedron that forms the snapped ball. */

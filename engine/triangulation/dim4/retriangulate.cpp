@@ -142,11 +142,11 @@ bool Triangulation<4>::retriangulateInternal(int height, unsigned nThreads,
 // Instantiate all retriangulateInternal() template functions
 // so the full implementation can stay out of the headers.
 
-template REGINA_API bool Triangulation<4>::retriangulateInternal<true>(
+template bool Triangulation<4>::retriangulateInternal<true>(
     int, unsigned, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<4>, true>&&) const;
 
-template REGINA_API bool Triangulation<4>::retriangulateInternal<false>(
+template bool Triangulation<4>::retriangulateInternal<false>(
     int, unsigned, ProgressTrackerOpen*,
     regina::detail::RetriangulateActionFunc<Triangulation<4>, false>&&) const;
 

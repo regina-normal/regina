@@ -81,7 +81,7 @@ struct PacketInfo<PACKET_SCRIPT> {
  * - if \a P is deleted then \a V will take the value \c None, and the script
  *   will likewise notify listeners of the change.
  */
-class REGINA_API Script : public Packet, public PacketListener {
+class Script : public Packet, public PacketListener {
     REGINA_PACKET(Script, PACKET_SCRIPT)
 
     private:

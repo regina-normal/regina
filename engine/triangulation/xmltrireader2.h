@@ -60,8 +60,7 @@ namespace regina {
  * though this may change in future releases of Regina.
  */
 template <>
-class REGINA_API XMLTriangulationReader<2> :
-        public detail::XMLTriangulationReaderBase<2> {
+class XMLTriangulationReader<2> : public detail::XMLTriangulationReaderBase<2> {
     public:
         /**
          * Creates a new triangulation reader.

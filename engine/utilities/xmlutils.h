@@ -72,7 +72,7 @@ class XMLParser;
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLPropertyDict : private std::map<std::string, std::string> {
+class XMLPropertyDict : private std::map<std::string, std::string> {
     public:
         /**
          * Create a new map.
@@ -118,7 +118,7 @@ class REGINA_API XMLPropertyDict : private std::map<std::string, std::string> {
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
  */
-class REGINA_API XMLParserCallback {
+class XMLParserCallback {
     public:
         /**
          * Default destructor that does nothing.
@@ -203,7 +203,7 @@ class REGINA_API XMLParserCallback {
  * @author This class was taken and modified from the libxml++ library
  * (<tt>http://lusis.org/~ari/xml++/</tt>).
  */
-class REGINA_API XMLParser {
+class XMLParser {
     private:
         XMLParserCallback& _parser_callback;
             /**< Provides the callback routines to use with this parser. */
@@ -308,7 +308,7 @@ class REGINA_API XMLParser {
  * deallocated, or \c false if it should be preserved.
  * @return the given string as a C++ string.
  */
-REGINA_API std::string xmlString(xmlChar* str, bool free = true);
+std::string xmlString(xmlChar* str, bool free = true);
 
 /**
  * Returns the given string with special characters converted to XML
@@ -322,7 +322,7 @@ REGINA_API std::string xmlString(xmlChar* str, bool free = true);
  * @return the converted string with special characters replaced by
  * XML entities.
  */
-REGINA_API std::string xmlEncodeSpecialChars(const std::string& original);
+std::string xmlEncodeSpecialChars(const std::string& original);
 
 /**
  * Returns the given string encoded so it is suitable for use inside an
@@ -336,7 +336,7 @@ REGINA_API std::string xmlEncodeSpecialChars(const std::string& original);
  * changed.
  * @return the string converted to be usable inside an XML comment.
  */
-REGINA_API std::string xmlEncodeComment(const std::string& comment);
+std::string xmlEncodeComment(const std::string& comment);
 
 /**
  * Returns an XML tag with a single property containing the given value.

@@ -91,9 +91,7 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  * \headerfile triangulation/dim4.h
  */
 template <>
-class REGINA_API Triangulation<4> :
-        public Packet,
-        public detail::TriangulationBase<4> {
+class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
     REGINA_PACKET(Triangulation<4>, PACKET_TRIANGULATION4)
 
     public:

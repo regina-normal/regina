@@ -54,7 +54,7 @@ namespace regina {
  * BoolSet objects are small enough to pass about by value instead of
  * by reference.
  */
-class REGINA_API BoolSet {
+class BoolSet {
     private:
         unsigned char elements;
             /**< The first two bits of this character represent whether
@@ -357,7 +357,7 @@ class REGINA_API BoolSet {
  * @param set the boolean set to write.
  * @return a reference to \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, BoolSet set);
+std::ostream& operator << (std::ostream& out, BoolSet set);
 
 /*@}*/
 

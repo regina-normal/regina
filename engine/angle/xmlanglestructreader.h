@@ -55,7 +55,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLAngleStructureReader : public XMLElementReader {
+class XMLAngleStructureReader : public XMLElementReader {
     private:
         AngleStructure* angles;
             /**< The angle structure currently being read. */
@@ -97,7 +97,7 @@ class REGINA_API XMLAngleStructureReader : public XMLElementReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLAngleStructuresReader : public XMLPacketReader {
+class XMLAngleStructuresReader : public XMLPacketReader {
     private:
         AngleStructures* list;
             /**< The angle structure list currently being read. */

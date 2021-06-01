@@ -63,7 +63,7 @@ struct PacketInfo<PACKET_TEXT> {
 /**
  * A packet representing a text string.
  */
-class REGINA_API Text : public Packet {
+class Text : public Packet {
     REGINA_PACKET(Text, PACKET_TEXT)
 
     private:

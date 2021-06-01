@@ -61,7 +61,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API mem_istream : public std::istream {
+class mem_istream : public std::istream {
     public:
         /**
          * Initialies an input stream that reads from the given array of
@@ -90,7 +90,7 @@ class REGINA_API mem_istream : public std::istream {
  *
  * \ifacespython Not present.
  */
-class REGINA_API mem_streambuf : public std::streambuf {
+class mem_streambuf : public std::streambuf {
     public:
         /**
          * Initialies a read-only stream buffer that reads from the

@@ -92,8 +92,7 @@ class SigPartialIsomorphism;
  * <i>Minimal triangulations and normal surfaces</i>, Burton, PhD thesis,
  * available from the Regina website.
  */
-class REGINA_API Signature :
-        public ShortOutput<Signature> {
+class Signature : public ShortOutput<Signature> {
     private:
         unsigned order_;
             /**< The number of quads in this splitting surface. */

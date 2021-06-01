@@ -69,7 +69,7 @@ class ProgressTracker;
  *
  * \ifacespython Not present.
  */
-class REGINA_API DoubleDescription {
+class DoubleDescription {
     public:
         /**
          * Determines the extremal rays of the intersection of the

@@ -52,9 +52,6 @@ namespace regina {
 //
 // The following definitions and declarations should ensure that the
 // templates are fully instantiated where they need to be.
-//
-// Since the template funtcions are private, we do not need to declare
-// them with REGINA_API.
 
 NormalSurfaces* NormalSurfaces::quadToStandard() const {
     return internalReducedToStandard<NormalSpec>();

@@ -65,7 +65,7 @@ class IntegerBase;
  * @param str the C++ string to duplicate.
  * @return the new duplicate C string.
  */
-REGINA_API char* duplicate(const std::string& str);
+char* duplicate(const std::string& str);
 
 /**
  * Determines whether the given C++ string begins with the given prefix.
@@ -76,7 +76,7 @@ REGINA_API char* duplicate(const std::string& str);
  * @param prefix the prefix whose presence we are testing for.
  * @return \c true if and only if \a str begins with \a prefix.
  */
-REGINA_API bool startsWith(const std::string& str, const std::string& prefix);
+bool startsWith(const std::string& str, const std::string& prefix);
 
 /**
  * Strips all whitespace from the beginning and end of the given C++ string.
@@ -93,7 +93,7 @@ REGINA_API bool startsWith(const std::string& str, const std::string& prefix);
  * @param str the string to be stripped.
  * @return the resulting stripped string.
  */
-REGINA_API std::string stripWhitespace(const std::string& str);
+std::string stripWhitespace(const std::string& str);
 
 /**
  * Converts the entire given string to an 8-bit integer and reports whether
@@ -111,7 +111,7 @@ REGINA_API std::string stripWhitespace(const std::string& str);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, int8_t& dest);
+bool valueOf(const std::string& str, int8_t& dest);
 /**
  * Converts the entire given string to an unsigned 8-bit integer and reports
  * whether this conversion was successful.
@@ -129,7 +129,7 @@ REGINA_API bool valueOf(const std::string& str, int8_t& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, uint8_t& dest);
+bool valueOf(const std::string& str, uint8_t& dest);
 /**
  * Converts the entire given string to a short integer and reports whether
  * this conversion was successful.
@@ -146,7 +146,7 @@ REGINA_API bool valueOf(const std::string& str, uint8_t& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, short& dest);
+bool valueOf(const std::string& str, short& dest);
 /**
  * Converts the entire given string to an unsigned short integer and reports
  * whether this conversion was successful.
@@ -164,7 +164,7 @@ REGINA_API bool valueOf(const std::string& str, short& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, unsigned short& dest);
+bool valueOf(const std::string& str, unsigned short& dest);
 /**
  * Converts the entire given string to an integer and reports whether
  * this conversion was successful.
@@ -181,7 +181,7 @@ REGINA_API bool valueOf(const std::string& str, unsigned short& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, int& dest);
+bool valueOf(const std::string& str, int& dest);
 /**
  * Converts the entire given string to an unsigned integer and reports
  * whether this conversion was successful.
@@ -198,7 +198,7 @@ REGINA_API bool valueOf(const std::string& str, int& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, unsigned& dest);
+bool valueOf(const std::string& str, unsigned& dest);
 /**
  * Converts the entire given string to a long integer and reports whether
  * this conversion was successful.
@@ -215,7 +215,7 @@ REGINA_API bool valueOf(const std::string& str, unsigned& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, long& dest);
+bool valueOf(const std::string& str, long& dest);
 /**
  * Converts the entire given string to an unsigned long integer and reports
  * whether this conversion was successful.
@@ -233,7 +233,7 @@ REGINA_API bool valueOf(const std::string& str, long& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, unsigned long& dest);
+bool valueOf(const std::string& str, unsigned long& dest);
 /**
  * Converts the entire given string to a long long integer and reports whether
  * this conversion was successful.
@@ -250,7 +250,7 @@ REGINA_API bool valueOf(const std::string& str, unsigned long& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, long long& dest);
+bool valueOf(const std::string& str, long long& dest);
 /**
  * Converts the entire given string to an unsigned long long integer and reports
  * whether this conversion was successful.
@@ -268,7 +268,7 @@ REGINA_API bool valueOf(const std::string& str, long long& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, unsigned long long& dest);
+bool valueOf(const std::string& str, unsigned long long& dest);
 /**
  * Converts the entire given string to an arbitrary precision integer and
  * reports whether this conversion was successful.
@@ -304,7 +304,7 @@ bool valueOf(const std::string& str, IntegerBase<supportInfinity>& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, double& dest);
+bool valueOf(const std::string& str, double& dest);
 /**
  * Converts the entire given string to a boolean and reports whether
  * this conversion was successful.
@@ -323,7 +323,7 @@ REGINA_API bool valueOf(const std::string& str, double& dest);
  * @return \c true if the conversion was completely successful or \c false
  * otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, bool& dest);
+bool valueOf(const std::string& str, bool& dest);
 /**
  * Converts the entire given string to a set of booleans and reports whether
  * this conversion was successful.
@@ -339,7 +339,7 @@ REGINA_API bool valueOf(const std::string& str, bool& dest);
  * @param dest the variable in which to store the resulting set of booleans.
  * @return \c true if the conversion was successful or \c false otherwise.
  */
-REGINA_API bool valueOf(const std::string& str, BoolSet& dest);
+bool valueOf(const std::string& str, BoolSet& dest);
 
 /**
  * Decomposes the given string into tokens.
@@ -369,7 +369,7 @@ unsigned basicTokenise(OutputIterator results, const std::string& str);
  * @param str the string on which to base the token.
  * @return the corresponding token.
  */
-REGINA_API std::string stringToToken(const char* str);
+std::string stringToToken(const char* str);
 
 /**
  * Returns a token derived from the given string.
@@ -379,7 +379,7 @@ REGINA_API std::string stringToToken(const char* str);
  * @param str the string on which to base the token.
  * @return the corresponding token.
  */
-REGINA_API std::string stringToToken(const std::string& str);
+std::string stringToToken(const std::string& str);
 
 /**
  * Converts the given C++ integer into a unicode superscript string.

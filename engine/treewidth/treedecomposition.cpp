@@ -43,28 +43,27 @@
 namespace regina {
 
 // Instantiate templates for standard dimensions:
-template REGINA_API TreeDecomposition::TreeDecomposition(
+template TreeDecomposition::TreeDecomposition(
     const Triangulation<2>&, TreeDecompositionAlg);
-template REGINA_API TreeDecomposition::TreeDecomposition(
+template TreeDecomposition::TreeDecomposition(
     const Triangulation<3>&, TreeDecompositionAlg);
-template REGINA_API TreeDecomposition::TreeDecomposition(
+template TreeDecomposition::TreeDecomposition(
     const Triangulation<4>&, TreeDecompositionAlg);
 
-template REGINA_API TreeDecomposition::TreeDecomposition(
+template TreeDecomposition::TreeDecomposition(
     const FacetPairing<2>&, TreeDecompositionAlg);
-template REGINA_API TreeDecomposition::TreeDecomposition(
+template TreeDecomposition::TreeDecomposition(
     const FacetPairing<3>&, TreeDecompositionAlg);
-template REGINA_API TreeDecomposition::TreeDecomposition(
+template TreeDecomposition::TreeDecomposition(
     const FacetPairing<4>&, TreeDecompositionAlg);
 
 // Instantiate templates for common types:
-template REGINA_API TreeDecomposition::TreeDecomposition(
+template TreeDecomposition::TreeDecomposition(
     unsigned, bool const** const, TreeDecompositionAlg);
-template REGINA_API TreeDecomposition::TreeDecomposition(
+template TreeDecomposition::TreeDecomposition(
     unsigned, int const** const, TreeDecompositionAlg);
 
-template REGINA_API void TreeDecomposition::reroot(
-    const int*, const int*, const int*);
+template void TreeDecomposition::reroot(const int*, const int*, const int*);
 
 bool TreeBag::contains(int element) const {
     return std::binary_search(elements_, elements_ + size_, element);

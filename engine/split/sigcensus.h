@@ -75,7 +75,7 @@ typedef void (*UseSignature)(const Signature&, const SigIsoList&, void *);
  *
  * \ifacespython Not present.
  */
-class REGINA_API SigCensus {
+class SigCensus {
     private:
         Signature sig;
             /**< The signature being constructed. */
@@ -203,8 +203,8 @@ class REGINA_API SigCensus {
  * function \a use which will be called upon each signature found.
  * @return the total number of non-equivalent signatures that were found.
  */
-REGINA_API unsigned long formSigCensus(unsigned order, UseSignature use,
-    void* useArgs = 0);
+unsigned long formSigCensus(unsigned order, UseSignature use,
+    void* useArgs = nullptr);
 
 /*@}*/
 

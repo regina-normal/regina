@@ -72,7 +72,7 @@ namespace regina {
  * supplying the numerator and denominator separately), it is your
  * responsibility to ensure that the rational is in lowest terms.
  */
-class REGINA_API Rational {
+class Rational {
     public:
         static const Rational zero;
             /**< Globally available zero. */
@@ -465,7 +465,7 @@ class REGINA_API Rational {
  * @param rat the rational to write.
  * @return a reference to \a out.
  */
-REGINA_API std::ostream& operator << (std::ostream& out, const Rational& rat);
+std::ostream& operator << (std::ostream& out, const Rational& rat);
 
 /*@}*/
 

@@ -158,7 +158,7 @@ class TypeTrie {
 /*@}*/
 
 // Help the compiler by noting which explicit instantiations we offer.
-extern template class REGINA_API TypeTrie<7>;
+extern template class TypeTrie<7>;
 
 // Inline functions for TypeTrie
 

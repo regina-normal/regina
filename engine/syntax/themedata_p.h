@@ -63,7 +63,7 @@ namespace regina::syntax {
 /**
  * Data container for a Theme.
  */
-class REGINA_API ThemeData
+class ThemeData
 {
 public:
     static ThemeData* get(const Theme &theme);

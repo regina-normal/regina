@@ -83,7 +83,7 @@ namespace regina {
  * made available under the name Perm3.
  */
 template <>
-class REGINA_API Perm<3> {
+class Perm<3> {
     private:
         /**
          * An array-like object used to implement Perm<3>::S3.

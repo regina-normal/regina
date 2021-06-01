@@ -79,7 +79,7 @@ namespace regina {
  *
  * All of the optional Manifold routines are implemented for this class.
  */
-class REGINA_API SnapPeaCensusManifold : public Manifold {
+class SnapPeaCensusManifold : public Manifold {
     public:
         static constexpr char SEC_5 = 'm';
             /**< Represents the collection of manifolds formed from five or

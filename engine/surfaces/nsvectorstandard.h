@@ -82,7 +82,7 @@ struct NormalInfo<NS_STANDARD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API NSVectorStandard : public NormalSurfaceVector {
+class NSVectorStandard : public NormalSurfaceVector {
     REGINA_NORMAL_SURFACE_FLAVOUR(NSVectorStandard, NS_STANDARD,
         NormalSurfaceVector);
 

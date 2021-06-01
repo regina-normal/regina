@@ -68,7 +68,7 @@ namespace regina {
  * \headerfile triangulation/dim2.h
  */
 template <>
-class REGINA_API Component<2> : public detail::ComponentBase<2>,
+class Component<2> : public detail::ComponentBase<2>,
         public alias::FaceOfTriangulation<Component<2>, 2>,
         public alias::FacesOfTriangulation<Component<2>, 2> {
     private:

@@ -63,7 +63,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API LayeredLensSpace : public StandardTriangulation {
+class LayeredLensSpace : public StandardTriangulation {
     private:
         LayeredSolidTorus* torus_;
             /**< The layered solid torus that forms the basis of this

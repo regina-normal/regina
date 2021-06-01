@@ -82,7 +82,7 @@ class DefinitionData;
  *
  * @see Repository
  */
-class REGINA_API Definition
+class Definition
 {
 public:
     /**

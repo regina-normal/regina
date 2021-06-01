@@ -60,7 +60,7 @@ namespace regina::syntax {
 class Context;
 class Definition;
 
-class REGINA_API ContextSwitch
+class ContextSwitch
 {
 public:
     ContextSwitch();

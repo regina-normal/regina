@@ -69,7 +69,7 @@ class LayeredSolidTorus;
  * a degenerate (1,1,2) layered solid torus.  Note that the weight 2 edge
  * is the boundary edge of the Mobius strip.
  */
-class REGINA_API SatMobius : public SatBlock {
+class SatMobius : public SatBlock {
     private:
         int position_;
             /**< Describes how the Mobius band is attached to the
@@ -155,7 +155,7 @@ class REGINA_API SatMobius : public SatBlock {
  * see the SatAnnulus class notes for details on precisely what
  * vertical, horizontal and diagonal mean.
  */
-class REGINA_API SatLST : public SatBlock {
+class SatLST : public SatBlock {
     private:
         LayeredSolidTorus* lst_;
             /**< Contains details of the layered solid torus that this
@@ -257,7 +257,7 @@ class REGINA_API SatLST : public SatBlock {
  * of "horizontal" and the TriSolidTorus class notes for further
  * details regarding "major" and "minor".
  */
-class REGINA_API SatTriPrism : public SatBlock {
+class SatTriPrism : public SatBlock {
     private:
         bool major_;
             /**< Is this prism of major type or of minor type? */
@@ -362,7 +362,7 @@ class REGINA_API SatTriPrism : public SatBlock {
  * triangulations) this cube cannot be split vertically into two
  * triangular prisms.
  */
-class REGINA_API SatCube : public SatBlock {
+class SatCube : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
@@ -439,7 +439,7 @@ class REGINA_API SatCube : public SatBlock {
  * prisms that are joined together, or equivalently the number of
  * saturated annuli on the boundary.
  */
-class REGINA_API SatReflectorStrip : public SatBlock {
+class SatReflectorStrip : public SatBlock {
     public:
         /**
          * Constructs a clone of the given block structure.
@@ -529,7 +529,7 @@ class REGINA_API SatReflectorStrip : public SatBlock {
  * each annulus (with the fibres pinched together between the two
  * horizontal edges).
  */
-class REGINA_API SatLayering : public SatBlock {
+class SatLayering : public SatBlock {
     private:
         bool overHorizontal_;
             /**< Do we layer over the horizontal annulus edge, or the

@@ -1415,54 +1415,33 @@ class TreeSingleSoln :
 /*@}*/
 
 // Help the compiler by noting which explicit instantiations we offer.
-extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
-    Integer>;
-extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
-    NNativeLong>;
-extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
-    Integer>;
-extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
-    NNativeLong>;
-extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
-    Integer>;
-extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
-    NNativeLong>;
+extern template class TreeTraversal<LPConstraintNone, BanNone, Integer>;
+extern template class TreeTraversal<LPConstraintNone, BanNone, NNativeLong>;
+extern template class TreeEnumeration<LPConstraintNone, BanNone, Integer>;
+extern template class TreeEnumeration<LPConstraintNone, BanNone, NNativeLong>;
+extern template class TautEnumeration<LPConstraintNone, BanNone, Integer>;
+extern template class TautEnumeration<LPConstraintNone, BanNone, NNativeLong>;
 
-extern template class REGINA_API TreeTraversal<LPConstraintEulerPositive,
-    BanNone, Integer>;
-extern template class REGINA_API TreeTraversal<LPConstraintEulerPositive,
-    BanNone, NNativeLong>;
-extern template class REGINA_API TreeSingleSoln<LPConstraintEulerPositive,
-    BanNone, Integer>;
-extern template class REGINA_API TreeSingleSoln<LPConstraintEulerPositive,
-    BanNone, NNativeLong>;
+extern template class TreeTraversal<LPConstraintEulerPositive, BanNone, Integer>;
+extern template class TreeTraversal<LPConstraintEulerPositive, BanNone, NNativeLong>;
+extern template class TreeSingleSoln<LPConstraintEulerPositive, BanNone, Integer>;
+extern template class TreeSingleSoln<LPConstraintEulerPositive, BanNone, NNativeLong>;
 
-extern template class REGINA_API TreeTraversal<LPConstraintEulerZero,
-    BanNone, Integer>;
-extern template class REGINA_API TreeTraversal<LPConstraintEulerZero,
-    BanNone, NNativeLong>;
-extern template class REGINA_API TreeEnumeration<LPConstraintEulerZero,
-    BanNone, Integer>;
-extern template class REGINA_API TreeEnumeration<LPConstraintEulerZero,
-    BanNone, NNativeLong>;
+extern template class TreeTraversal<LPConstraintEulerZero, BanNone, Integer>;
+extern template class TreeTraversal<LPConstraintEulerZero, BanNone, NNativeLong>;
+extern template class TreeEnumeration<LPConstraintEulerZero, BanNone, Integer>;
+extern template class TreeEnumeration<LPConstraintEulerZero, BanNone, NNativeLong>;
 
 #ifdef INT128_AVAILABLE
-extern template class REGINA_API TreeTraversal<LPConstraintNone, BanNone,
-    NativeInteger<16> >;
-extern template class REGINA_API TreeEnumeration<LPConstraintNone, BanNone,
-    NativeInteger<16> >;
-extern template class REGINA_API TautEnumeration<LPConstraintNone, BanNone,
-    NativeInteger<16> >;
+extern template class TreeTraversal<LPConstraintNone, BanNone, NativeInteger<16> >;
+extern template class TreeEnumeration<LPConstraintNone, BanNone, NativeInteger<16> >;
+extern template class TautEnumeration<LPConstraintNone, BanNone, NativeInteger<16> >;
 
-extern template class REGINA_API TreeTraversal<LPConstraintEulerPositive,
-    BanNone, NativeInteger<16> >;
-extern template class REGINA_API TreeSingleSoln<LPConstraintEulerPositive,
-    BanNone, NativeInteger<16> >;
+extern template class TreeTraversal<LPConstraintEulerPositive, BanNone, NativeInteger<16> >;
+extern template class TreeSingleSoln<LPConstraintEulerPositive, BanNone, NativeInteger<16> >;
 
-extern template class REGINA_API TreeTraversal<LPConstraintEulerZero,
-    BanNone, NativeInteger<16> >;
-extern template class REGINA_API TreeEnumeration<LPConstraintEulerZero,
-    BanNone, NativeInteger<16> >;
+extern template class TreeTraversal<LPConstraintEulerZero, BanNone, NativeInteger<16> >;
+extern template class TreeEnumeration<LPConstraintEulerZero, BanNone, NativeInteger<16> >;
 #endif
 
 

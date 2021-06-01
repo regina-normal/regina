@@ -56,7 +56,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API TrivialTri : public StandardTriangulation {
+class TrivialTri : public StandardTriangulation {
     public:
         /**
          * Represents the two-tetrahedron four-vertex triangulation of

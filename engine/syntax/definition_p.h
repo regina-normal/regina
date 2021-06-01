@@ -67,7 +67,7 @@ namespace regina::syntax {
 class Definition;
 class Repository;
 
-class REGINA_API DefinitionData
+class DefinitionData
 {
 public:
     DefinitionData();

@@ -59,7 +59,7 @@ class SnapPeaTriangulation;
  * scratch.  It is up to the caller of each routine to destroy the
  * triangulation that is returned.
  */
-class REGINA_API ExampleSnapPea {
+class ExampleSnapPea {
     public:
         /**
          * Returns a new triangulation of the Gieseking manifold.

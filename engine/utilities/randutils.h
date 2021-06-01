@@ -88,7 +88,7 @@ namespace regina {
  * functions in this class (which still supports basic random number
  * generation as well as reseeding).
  */
-class REGINA_API RandomEngine : std::lock_guard<std::mutex> {
+class RandomEngine : std::lock_guard<std::mutex> {
     private:
         static std::default_random_engine engine_;
             /**< Regina's global uniform random bit generator. */

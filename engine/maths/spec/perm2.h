@@ -93,7 +93,7 @@ namespace regina {
  * made available under the name Perm2.
  */
 template <>
-class REGINA_API Perm<2> {
+class Perm<2> {
     private:
         /**
          * An array-like object used to implement Perm<2>::S2.

@@ -102,7 +102,7 @@ class SatRegion;
  * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API BlockedSFSLoop : public StandardTriangulation {
+class BlockedSFSLoop : public StandardTriangulation {
     private:
         SatRegion* region_;
             /**< The saturated region whose two torus boundaries are joined. */

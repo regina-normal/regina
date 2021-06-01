@@ -78,7 +78,7 @@ class XMLTreeResolver;
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLPacketReader : public XMLElementReader {
+class XMLPacketReader : public XMLElementReader {
     private:
         std::string childLabel;
             /**< The packet label to give the child packet currently

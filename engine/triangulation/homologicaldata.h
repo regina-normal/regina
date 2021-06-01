@@ -117,8 +117,7 @@ namespace regina {
  *
  * @author Ryan Budney
  */
-class REGINA_API HomologicalData :
-    public ShortOutput<HomologicalData> {
+class HomologicalData : public ShortOutput<HomologicalData> {
 private:
     /**
      * A fairly primitive class that implements sorted arrays of

@@ -101,7 +101,7 @@ class RepositoryPrivate;
  *
  * @see Format
  */
-class REGINA_API Theme
+class Theme
 {
 public:
     /**

@@ -75,7 +75,7 @@ struct HyperInfo<HS_STANDARD> {
  *
  * \ifacespython Not present.
  */
-class REGINA_API HSVectorStandard : public NormalHypersurfaceVector {
+class HSVectorStandard : public NormalHypersurfaceVector {
     REGINA_NORMAL_HYPERSURFACE_FLAVOUR(HSVectorStandard, HS_STANDARD,
         NormalHypersurfaceVector);
 

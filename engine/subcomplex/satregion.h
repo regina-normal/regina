@@ -86,7 +86,7 @@ namespace regina {
  * \ifacespython The data members \a block, \a refVert and \a refHoriz
  * are read-only.
  */
-struct REGINA_API SatBlockSpec {
+struct SatBlockSpec {
     SatBlock* block;
         /**< Details of the saturated block structure. */
     bool refVert;
@@ -196,7 +196,7 @@ struct REGINA_API SatBlockSpec {
  * with annuli grouped and oriented according to the region boundaries (as
  * opposed to individual block boundaries).
  */
-class REGINA_API SatRegion : public Output<SatRegion> {
+class SatRegion : public Output<SatRegion> {
     private:
         typedef std::vector<SatBlockSpec> BlockSet;
             /**< The data structure used to store the list of

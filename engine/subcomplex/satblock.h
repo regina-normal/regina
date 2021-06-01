@@ -109,7 +109,7 @@ class SFSpace;
  * triangulation-specific information stored in the subclass.  See the
  * transform() documentation for further details.
  */
-class REGINA_API SatBlock : public Output<SatBlock> {
+class SatBlock : public Output<SatBlock> {
     public:
         typedef std::set<Tetrahedron<3>*> TetList;
             /**< The data structure used to store a list of tetrahedra

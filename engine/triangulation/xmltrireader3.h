@@ -60,8 +60,7 @@ namespace regina {
  * reading optional properties specific to 3-dimensional triangulations.
  */
 template <>
-class REGINA_API XMLTriangulationReader<3> :
-        public detail::XMLTriangulationReaderBase<3> {
+class XMLTriangulationReader<3> : public detail::XMLTriangulationReaderBase<3> {
     public:
         /**
          * Creates a new triangulation reader.

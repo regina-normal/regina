@@ -37,25 +37,23 @@
 
 namespace regina::detail {
 
-template REGINA_API std::string TriangulationBase<5>::isoSigFrom
+template std::string TriangulationBase<5>::isoSigFrom
     <IsoSigPrintable<5>>(size_t, const Perm<6>&, Isomorphism<5>*) const;
-template REGINA_API std::string TriangulationBase<5>::isoSig
+template std::string TriangulationBase<5>::isoSig
     <IsoSigPrintable<5>>(Isomorphism<5>**) const;
-template REGINA_API Triangulation<5>* TriangulationBase<5>::fromIsoSig(
+template Triangulation<5>* TriangulationBase<5>::fromIsoSig(
     const std::string&);
-template REGINA_API size_t TriangulationBase<5>::isoSigComponentSize(
-    const std::string&);
+template size_t TriangulationBase<5>::isoSigComponentSize(const std::string&);
 
-template REGINA_API void TriangulationBase<5>::calculateSkeleton();
-template REGINA_API void TriangulationBase<5>::clearBaseProperties();
-template REGINA_API void TriangulationBase<5>::swapBaseData(
-    TriangulationBase<5>&);
+template void TriangulationBase<5>::calculateSkeleton();
+template void TriangulationBase<5>::clearBaseProperties();
+template void TriangulationBase<5>::swapBaseData(TriangulationBase<5>&);
 
-template REGINA_API bool TriangulationBase<5>::pachner(Face<5, 0>*, bool, bool);
-template REGINA_API bool TriangulationBase<5>::pachner(Face<5, 1>*, bool, bool);
-template REGINA_API bool TriangulationBase<5>::pachner(Face<5, 2>*, bool, bool);
-template REGINA_API bool TriangulationBase<5>::pachner(Face<5, 3>*, bool, bool);
-template REGINA_API bool TriangulationBase<5>::pachner(Face<5, 4>*, bool, bool);
-template REGINA_API bool TriangulationBase<5>::pachner(Face<5, 5>*, bool, bool);
+template bool TriangulationBase<5>::pachner(Face<5, 0>*, bool, bool);
+template bool TriangulationBase<5>::pachner(Face<5, 1>*, bool, bool);
+template bool TriangulationBase<5>::pachner(Face<5, 2>*, bool, bool);
+template bool TriangulationBase<5>::pachner(Face<5, 3>*, bool, bool);
+template bool TriangulationBase<5>::pachner(Face<5, 4>*, bool, bool);
+template bool TriangulationBase<5>::pachner(Face<5, 5>*, bool, bool);
 
 } // namespace regina::detail

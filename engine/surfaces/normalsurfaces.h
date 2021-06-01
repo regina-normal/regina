@@ -159,7 +159,7 @@ struct PacketInfo<PACKET_NORMALSURFACES> {
  * \todo \feature Generate facets of the solution space representing
  * embedded surfaces.
  */
-class REGINA_API NormalSurfaces : public Packet {
+class NormalSurfaces : public Packet {
     REGINA_PACKET(NormalSurfaces, PACKET_NORMALSURFACES)
 
     public:
@@ -1499,8 +1499,8 @@ class REGINA_API NormalSurfaces : public Packet {
  * @param coords the coordinate system to be used.
  * @return a new zero vector of the correct class and length.
  */
-REGINA_API NormalSurfaceVector* makeZeroVector(
-    const Triangulation<3>* triangulation, NormalCoords coords);
+NormalSurfaceVector* makeZeroVector(const Triangulation<3>* triangulation,
+    NormalCoords coords);
 /**
  * Creates a new set of normal surface matching equations for the
  * given triangulation using the given coordinate system.
@@ -1524,8 +1524,8 @@ REGINA_API NormalSurfaceVector* makeZeroVector(
  * Regina is not able to construct them for the given combination of
  * triangulation and coordinate system.
  */
-REGINA_API MatrixInt* makeMatchingEquations(
-    const Triangulation<3>* triangulation, NormalCoords coords);
+MatrixInt* makeMatchingEquations(const Triangulation<3>* triangulation,
+    NormalCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal surfaces be embedded.  The validity constraints will be expressed
@@ -1538,8 +1538,8 @@ REGINA_API MatrixInt* makeMatchingEquations(
  * @param coords the coordinate system to be used.
  * @return a newly allocated set of constraints.
  */
-REGINA_API EnumConstraints* makeEmbeddedConstraints(
-    const Triangulation<3>* triangulation, NormalCoords coords);
+EnumConstraints* makeEmbeddedConstraints(const Triangulation<3>* triangulation,
+    NormalCoords coords);
 
 /*@}*/
 

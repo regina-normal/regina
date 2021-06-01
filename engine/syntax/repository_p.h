@@ -61,7 +61,7 @@ class Definition;
 class Repository;
 class Theme;
 
-class REGINA_API RepositoryPrivate
+class RepositoryPrivate
 {
 public:
     RepositoryPrivate();

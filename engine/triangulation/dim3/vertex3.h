@@ -66,7 +66,7 @@ namespace regina {
  * \headerfile triangulation/dim3.h
  */
 template <>
-class REGINA_API Face<3, 0> : public detail::FaceBase<3, 0> {
+class Face<3, 0> : public detail::FaceBase<3, 0> {
     public:
         /**
          * Categorises the possible links of a vertex into a small number

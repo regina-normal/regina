@@ -115,7 +115,7 @@ class TxICore;
  * The optional StandardTriangulation routine manifold() is
  * implemented for this class, but homology() is not.
  */
-class REGINA_API PluggedTorusBundle : public StandardTriangulation {
+class PluggedTorusBundle : public StandardTriangulation {
     private:
         const TxICore& bundle_;
             /**< The thin I-bundle that appears within this triangulation.

@@ -72,7 +72,7 @@ class RegExpr;
 class StringDetect;
 class WordDetect;
 
-class REGINA_API RegEx {
+class RegEx {
     public:
         virtual ~RegEx() {}
 
@@ -84,7 +84,7 @@ class REGINA_API RegEx {
         RegEx() = default;
 };
 
-class REGINA_API MatchResult
+class MatchResult
 {
     public:
         MatchResult(int offset); // implicit
@@ -98,7 +98,7 @@ class REGINA_API MatchResult
         int m_skipOffset;
 };
 
-class REGINA_API Matcher {
+class Matcher {
     public:
         virtual bool textEmpty() const = 0;
         virtual size_t textSize() const = 0;

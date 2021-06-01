@@ -84,7 +84,7 @@ typedef Vector<Integer> AngleStructureVector [[deprecated]];
  * Once the underlying triangulation changes, this angle structure
  * is no longer valid.
  */
-class REGINA_API AngleStructure : public ShortOutput<AngleStructure> {
+class AngleStructure : public ShortOutput<AngleStructure> {
     private:
         Vector<Integer>* vector_;
             /**< Stores (indirectly) the individual angles in this angle

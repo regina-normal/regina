@@ -59,7 +59,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLCallback : public regina::xml::XMLParserCallback {
+class XMLCallback : public regina::xml::XMLParserCallback {
     public:
         /**
          * Used to indicate the state of a callback object.

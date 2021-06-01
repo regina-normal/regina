@@ -58,7 +58,7 @@ namespace regina {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLContainerReader : public XMLPacketReader {
+class XMLContainerReader : public XMLPacketReader {
     private:
         Container* container;
             /**< The container currently being read. */
@@ -80,7 +80,7 @@ class REGINA_API XMLContainerReader : public XMLPacketReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLPDFReader : public XMLPacketReader {
+class XMLPDFReader : public XMLPacketReader {
     private:
         PDF* pdf;
             /**< The PDF packet currently being read. */
@@ -107,7 +107,7 @@ class REGINA_API XMLPDFReader : public XMLPacketReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLScriptReader : public XMLPacketReader {
+class XMLScriptReader : public XMLPacketReader {
     private:
         Script* script;
             /**< The script currently being read. */
@@ -134,7 +134,7 @@ class REGINA_API XMLScriptReader : public XMLPacketReader {
  *
  * \ifacespython Not present.
  */
-class REGINA_API XMLTextReader : public XMLPacketReader {
+class XMLTextReader : public XMLPacketReader {
     private:
         Text* text;
             /**< The text packet currently being read. */

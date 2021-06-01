@@ -62,7 +62,7 @@ namespace regina {
  * All optional StandardTriangulation routines are implemented for this
  * class.
  */
-class REGINA_API L31Pillow : public StandardTriangulation {
+class L31Pillow : public StandardTriangulation {
     private:
         Tetrahedron<3>* tet[2];
             /**< The two tetrahedra in the triangular pillow. */

@@ -97,7 +97,7 @@ class Theme;
  *
  * @see Definition, Theme, AbstractHighlighter
  */
-class REGINA_API Repository
+class Repository
 {
 public:
     /**

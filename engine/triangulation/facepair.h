@@ -67,7 +67,7 @@ namespace regina {
  * The before-the-start and past-the-end values are internally
  * represented as (0,0) and (3,3) respectively.
  */
-class REGINA_API FacePair {
+class FacePair {
     private:
         unsigned first_;
             /**< The smaller of the two faces in this pair. */

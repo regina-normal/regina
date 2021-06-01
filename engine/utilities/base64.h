@@ -86,7 +86,7 @@ namespace regina {
  * @param bytes the number of raw input bytes.
  * @return the corresponding number of base64 printable output characters.
  */
-REGINA_API size_t base64Length(size_t bytes);
+size_t base64Length(size_t bytes);
 
 /**
  * Determines whether the given character is a base64 printable character as
@@ -103,7 +103,7 @@ REGINA_API size_t base64Length(size_t bytes);
  * @return \c true if the given character is one of the base64 printable
  * characters used in Regina, or \c false if it is not.
  */
-REGINA_API bool isBase64(char ch);
+bool isBase64(char ch);
 
 /**
  * Encodes the given sequence of raw bytes in base64, and writes the
@@ -132,8 +132,7 @@ REGINA_API bool isBase64(char ch);
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
  */
-REGINA_API void base64Encode(const char* in, size_t inlen, char* out,
-    size_t outlen);
+void base64Encode(const char* in, size_t inlen, char* out, size_t outlen);
 
 /**
  * Encodes the given sequence of raw bytes in base64, and passes back a
@@ -158,7 +157,7 @@ REGINA_API void base64Encode(const char* in, size_t inlen, char* out,
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
  */
-REGINA_API size_t base64Encode(const char* in, size_t inlen, char** out);
+size_t base64Encode(const char* in, size_t inlen, char** out);
 
 /**
  * Decodes the given sequence of base64 characters, and writes the
@@ -193,8 +192,7 @@ REGINA_API size_t base64Encode(const char* in, size_t inlen, char** out);
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
  */
-REGINA_API bool base64Decode(const char* in, size_t inlen, char* out,
-    size_t* outlen);
+bool base64Decode(const char* in, size_t inlen, char* out, size_t* outlen);
 
 /**
  * Decodes the given sequence of base64 characters, and passes back a
@@ -233,8 +231,7 @@ REGINA_API bool base64Decode(const char* in, size_t inlen, char* out,
  * base64.sourceforge.net.  The original was written by Bob Trower, and is
  * licensed under the MIT license.  See the base64.h notes for details.
  */
-REGINA_API bool base64Decode(const char* in, size_t inlen, char** out,
-    size_t* outlen);
+bool base64Decode(const char* in, size_t inlen, char** out, size_t* outlen);
 
 /*@}*/
 

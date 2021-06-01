@@ -62,7 +62,7 @@ namespace regina {
  * @param k the number to reduce modulo \a modBase.
  * @param modBase the modular base in which to work.
  */
-REGINA_API long reducedMod(long k, long modBase);
+long reducedMod(long k, long modBase);
 
 /**
  * Calculates the greatest common divisor of two signed integers.
@@ -75,7 +75,7 @@ REGINA_API long reducedMod(long k, long modBase);
  * @param b the other integer with which to work.
  * @return the greatest common divisor of \a a and \a b.
  */
-REGINA_API long gcd(long a, long b);
+long gcd(long a, long b);
 
 /**
  * Calculates the greatest common divisor of two given integers and finds the
@@ -108,7 +108,7 @@ REGINA_API long gcd(long a, long b);
  * placed.
  * @return the greatest common divisor of \a a and \a b.
  */
-REGINA_API long gcdWithCoeffs(long a, long b, long& u, long& v);
+long gcdWithCoeffs(long a, long b, long& u, long& v);
 
 /**
  * Calculates the lowest common multiple of two signed integers.
@@ -124,7 +124,7 @@ REGINA_API long gcdWithCoeffs(long a, long b, long& u, long& v);
  * @param b the other integer with which to work.
  * @return the lowest common multiple of \a a and \a b.
  */
-REGINA_API long lcm(long a, long b);
+long lcm(long a, long b);
 
 /**
  * Calculates the multiplicative inverse of one integer modulo another.
@@ -137,7 +137,7 @@ REGINA_API long lcm(long a, long b);
  * @param k the number whose multiplicative inverse should be found.
  * @return the inverse \a v for which <tt>k * v == 1 (mod n)</tt>.
  */
-REGINA_API unsigned long modularInverse(unsigned long n, unsigned long k);
+unsigned long modularInverse(unsigned long n, unsigned long k);
 
 /*@}*/
 

@@ -108,7 +108,6 @@ MACRO_EXPANSION      = YES
 EXPAND_ONLY_PREDEF   = YES
 PREDEFINED           = \
     __DOXYGEN \
-    REGINA_API= \
     REGINA_ENABLE_FOR_RING(returnType)=returnType \
     REGINA_ENABLE_FOR_REGINA_INTEGER(returnType)=returnType \
     "REGINA_ENABLE_FOR_RING_STATIC(returnType)=static returnType" \

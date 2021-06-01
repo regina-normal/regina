@@ -72,7 +72,7 @@ class Manifold;
  * of both routines, which call the pure virtual function writeName()
  * (which every subclass must override).
  */
-class REGINA_API StandardTriangulation : public Output<StandardTriangulation> {
+class StandardTriangulation : public Output<StandardTriangulation> {
     public:
         /**
          * A destructor that does nothing.

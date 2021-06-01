@@ -54,7 +54,7 @@ namespace regina {
 /**
  * An XML packet reader that reads a single knot or link.
  */
-class REGINA_API XMLLinkReader : public XMLPacketReader {
+class XMLLinkReader : public XMLPacketReader {
     private:
         Link* link_;
             /**< The link currently being read. */
@@ -80,7 +80,7 @@ class REGINA_API XMLLinkReader : public XMLPacketReader {
  * Helper class that reads the XML element containing basic information
  * about the crossings of a knot or link.
  */
-class REGINA_API XMLLinkCrossingsReader : public XMLElementReader {
+class XMLLinkCrossingsReader : public XMLElementReader {
     private:
         Link* link_;
             /**< The link currently being read. */
@@ -116,7 +116,7 @@ class REGINA_API XMLLinkCrossingsReader : public XMLElementReader {
  * Helper class that reads the XML element containing information on
  * connections between crossings of a knot or link.
  */
-class REGINA_API XMLLinkConnectionsReader : public XMLElementReader {
+class XMLLinkConnectionsReader : public XMLElementReader {
     private:
         Link* link_;
             /**< The link currently being read. */
@@ -147,7 +147,7 @@ class REGINA_API XMLLinkConnectionsReader : public XMLElementReader {
  * Helper class that reads the XML element containing information
  * about the individual components of a link.
  */
-class REGINA_API XMLLinkComponentsReader : public XMLElementReader {
+class XMLLinkComponentsReader : public XMLElementReader {
     private:
         Link* link_;
             /**< The link currently being read. */

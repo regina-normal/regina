@@ -56,7 +56,7 @@
 
 namespace regina::syntax {
 
-class REGINA_API TextStyleData
+class TextStyleData
 {
 public:
     // Constructor initializing all data.

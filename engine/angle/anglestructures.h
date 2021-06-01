@@ -78,7 +78,7 @@ struct PacketInfo<PACKET_ANGLESTRUCTURES> {
  * Angle structure lists should be created using the routine enumerate(),
  * which is new as of Regina 3.95.
  */
-class REGINA_API AngleStructures : public Packet {
+class AngleStructures : public Packet {
     REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES)
 
     private:
@@ -421,7 +421,7 @@ class REGINA_API AngleStructures : public Packet {
  * equations will be based.
  * @return a newly allocated set of equations.
  */
-REGINA_API MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
+MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
 
 /*@}*/
 
