@@ -40,6 +40,7 @@
 #endif
 
 #include "regina-core.h"
+#include <utility> // for std::swap
 
 namespace regina {
 
@@ -53,8 +54,8 @@ namespace regina {
  * held by value.  That is, upon assignment or initialisation the
  * underlying value will be copied into the Property wrapper.
  *
- * The property type \a T must have a default constructor, a copy constructor,
- * and a copy assignment operator.
+ * The property type \a T must support default construction, copy construction
+ * and copy assignment, and must adhere to the C++ Swappable requirement.
  *
  * See the Property class notes for details.
  *
@@ -111,7 +112,10 @@ class StoreValue {
          * @param other the value to swap with this.
          */
         void swap(StoreValue<T>& other) {
-            std::swap(value_, other.value_);
+            // Call a specialised swap() for T if there is one, and if
+            // not then fall back to std::swap().
+            using std::swap;
+            swap(value_, other.value_);
         }
 };
 
