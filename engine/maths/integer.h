@@ -102,6 +102,13 @@ struct InfinityBase<true> {
      */
     inline InfinityBase() : infinite_(false) {
     }
+    /**
+     * Copy constructor that sets this integer to be infinite if and only
+     * if the given integer is infinite.
+     *
+     * @param src the integer whose finiteness should be copied.
+     */
+    InfinityBase(const InfinityBase&) = default;
 };
 
 /**
@@ -140,6 +147,10 @@ struct InfinityBase<false> {
  * the (much more complex and powerful) lazy exact arithmetic in CGAL.
  * Thanks to Menelaos Karavelas for encouraging me to take another look at
  * these ideas.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \headers Parts of this template class are implemented in a C++ source
  * file that is not available through the headers.  However, this should
@@ -232,6 +243,26 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * @param value the new value of this integer.
          */
         IntegerBase(const IntegerBase<! supportInfinity>& value);
+        /**
+         * Moves the given integer into this new integer.
+         * This is a fast (constant time) operation.
+         *
+         * The integer that is passed (\a src) will no longer be usable.
+         *
+         * @param src the integer to move.
+         */
+        IntegerBase(IntegerBase<supportInfinity>&& src) noexcept;
+        /**
+         * Moves the given integer into this new integer.
+         * This is a fast (constant time) operation.
+         *
+         * The integer that is passed (\a src) will no longer be usable.
+         *
+         * \pre The given integer is not infinite.
+         *
+         * @param src the integer to move.
+         */
+        IntegerBase(IntegerBase<! supportInfinity>&& src) noexcept;
         /**
          * Initialises this integer to the given value.
          *
@@ -466,6 +497,28 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          * @return a reference to this integer with its new value.
          */
         IntegerBase& operator = (const IntegerBase<! supportInfinity>& value);
+        /**
+         * Moves the given integer into this integer.
+         * This is a fast (constant time) operation.
+         *
+         * The integer that is passed (\a src) will no longer be usable.
+         *
+         * @param src the integer to move.
+         * @return a reference to this integer.
+         */
+        IntegerBase& operator = (IntegerBase&& src) noexcept;
+        /**
+         * Moves the given integer into this integer.
+         * This is a fast (constant time) operation.
+         *
+         * The integer that is passed (\a src) will no longer be usable.
+         *
+         * \pre The given integer is not infinite.
+         *
+         * @param src the integer to move.
+         * @return a reference to this integer.
+         */
+        IntegerBase& operator = (IntegerBase<! supportInfinity>&& src) noexcept;
         /**
          * Sets this integer to the given value.
          *
@@ -2337,6 +2390,22 @@ inline IntegerBase<supportInfinity>::IntegerBase(
 }
 
 template <bool supportInfinity>
+inline IntegerBase<supportInfinity>::IntegerBase(
+        IntegerBase<supportInfinity>&& src) noexcept :
+        InfinityBase<supportInfinity>(src),
+        small_(src.small_), large_(src.large_) {
+    src.large_ = nullptr;
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>::IntegerBase(
+        IntegerBase<! supportInfinity>&& src) noexcept :
+        small_(src.small_), large_(src.large_) {
+    // The default InfinityBase constructor makes the integer finite.
+    src.large_ = nullptr;
+}
+
+template <bool supportInfinity>
 template <int bytes>
 inline IntegerBase<supportInfinity>::IntegerBase(
         const NativeInteger<bytes>& value) :
@@ -2509,9 +2578,7 @@ template <bool supportInfinity>
 inline IntegerBase<supportInfinity>&
         IntegerBase<supportInfinity>::operator =(
         const IntegerBase<! supportInfinity>& value) {
-    // If value is infinite, we cannot make this infinite.
-    // This is why we insist via preconditions that value is finite.
-    makeFinite();
+    makeFinite(); // Either this or src does not support infinity.
     if (value.large_) {
         if (large_)
             mpz_set(large_, value.large_);
@@ -2524,6 +2591,29 @@ inline IntegerBase<supportInfinity>&
         if (large_)
             clearLarge();
     }
+    return *this;
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>&
+        IntegerBase<supportInfinity>::operator =(
+        IntegerBase<supportInfinity>&& src) noexcept {
+    if constexpr (supportInfinity)
+        InfinityBase<true>::infinite_ = src.infinite_;
+    small_ = src.small_;
+    std::swap(large_, src.large_);
+    // Let src dispose of the original large_, if it was non-null.
+    return *this;
+}
+
+template <bool supportInfinity>
+inline IntegerBase<supportInfinity>&
+        IntegerBase<supportInfinity>::operator =(
+        IntegerBase<! supportInfinity>&& src) noexcept {
+    makeFinite(); // Either this or src does not support infinity.
+    small_ = src.small_;
+    std::swap(large_, src.large_);
+    // Let src dispose of the original large_, if it was non-null.
     return *this;
 }
 
@@ -2599,24 +2689,16 @@ inline IntegerBase<supportInfinity>&
     return (*this) = value.c_str();
 }
 
-#ifndef __DOXYGEN // Doxygen gets confused by the specialisations.
-
-template <>
-inline void IntegerBase<true>::swap(IntegerBase<true>& other) {
+template <bool supportInfinity>
+inline void IntegerBase<supportInfinity>::swap(
+        IntegerBase<supportInfinity>& other) {
     // This should just work, since large_ is a pointer.
-    std::swap(infinite_, other.infinite_);
+    if constexpr (supportInfinity)
+        std::swap(InfinityBase<true>::infinite_,
+            other.InfinityBase<true>::infinite_);
     std::swap(small_, other.small_);
     std::swap(large_, other.large_);
 }
-
-template <>
-inline void IntegerBase<false>::swap(IntegerBase<false>& other) {
-    // This should just work, since large_ is a pointer.
-    std::swap(small_, other.small_);
-    std::swap(large_, other.large_);
-}
-
-#endif // __DOXYGEN
 
 template <bool supportInfinity>
 inline bool IntegerBase<supportInfinity>::operator ==(

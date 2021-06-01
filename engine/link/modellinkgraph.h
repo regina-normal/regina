@@ -454,6 +454,10 @@ class ModelLinkGraphNode : public MarkedElement,
  * gives you direct access to the graph structure.  In particular, if
  * you include link/graph.h, you can use a Link directly as a directed graph
  * type with the Boost Graph Library.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class ModelLinkGraph : public Output<ModelLinkGraph> {
     public:
@@ -477,7 +481,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         MarkedVector<ModelLinkGraphNode> nodes_;
             /**< The nodes of this graph. */
         ModelLinkGraphCells* cells_;
-            /**< The induced cellular decomposition of the sphere, or 0
+            /**< The induced cellular decomposition of the sphere, or \c null
                  if this has not yet been computed. */
 
     public:
@@ -491,6 +495,19 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * @param copy the graph to copy.
          */
         ModelLinkGraph(const ModelLinkGraph& copy);
+        /**
+         * Moves the given graph into this new graph.
+         * This is a fast (constant time) operation.
+         *
+         * All nodes and cells that belong to \a src will be moved into this
+         * graph, and so any ModelLinkGraphNode or ModelLinkGraphCells
+         * pointers or references will remain valid.
+         *
+         * The graph that is passed (\a src) will no longer be usable.
+         *
+         * @param src the graph to move.
+         */
+        ModelLinkGraph(ModelLinkGraph&& src) noexcept;
 
         /**
          * Destroys this graph.
@@ -523,6 +540,21 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * @return the node at the given index.
          */
         ModelLinkGraphNode* node(size_t index) const;
+
+        /**
+         * Moves the contents of the given graph into this graph.
+         * This is a fast (constant time) operation.
+         *
+         * All nodes and cells that belong to \a src will be moved into this
+         * graph, and so any ModelLinkGraphNode or ModelLinkGraphCells
+         * pointers or references will remain valid.
+         *
+         * The graph that is passed (\a src) will no longer be usable.
+         *
+         * @param src the graph to move.
+         * @return a reference to this graph.
+         */
+        ModelLinkGraph& operator = (ModelLinkGraph&& src) noexcept;
 
         /**
          * Swaps the contents of this and the given graph.
@@ -842,7 +874,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          */
         static ModelLinkGraph* fromPlantri(const std::string& plantri);
 
-        // Make this class non-assignable.
+        // Make this class non-copy-assignable.
         ModelLinkGraph& operator = (const ModelLinkGraph&) = delete;
 };
 
@@ -1289,6 +1321,12 @@ inline void ModelLinkGraphNode::writeTextLong(std::ostream& out) const {
 inline ModelLinkGraph::ModelLinkGraph() : cells_(nullptr) {
 }
 
+inline ModelLinkGraph::ModelLinkGraph(ModelLinkGraph&& src) noexcept :
+        nodes_(std::move(src.nodes_)),
+        cells_(src.cells_) {
+    src.cells_ = nullptr;
+}
+
 inline ModelLinkGraph::~ModelLinkGraph() {
     delete cells_;
     for (ModelLinkGraphNode* n : nodes_)
@@ -1301,6 +1339,14 @@ inline size_t ModelLinkGraph::size() const {
 
 inline ModelLinkGraphNode* ModelLinkGraph::node(size_t index) const {
     return nodes_[index];
+}
+
+inline ModelLinkGraph& ModelLinkGraph::operator = (ModelLinkGraph&& src)
+        noexcept {
+    nodes_.swap(src.nodes_);
+    std::swap(cells_, src.cells_);
+    // Leave src to dispose of the original contents.
+    return *this;
 }
 
 inline void ModelLinkGraph::swap(ModelLinkGraph& other) {

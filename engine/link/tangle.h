@@ -80,6 +80,10 @@ namespace regina {
  * When traversing a tangle, if you reach one of the endpoints of a string
  * then the corresponding return value of Crossing::next() or
  * Crossing::prev() (whichever is relevant) will be a null strand reference.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class Tangle : public Output<Tangle> {
     private:
@@ -175,6 +179,19 @@ class Tangle : public Output<Tangle> {
          * @param copy the tangle to copy.
          */
         Tangle(const Tangle& copy);
+        /**
+         * Moves the given tangle into this new tangle.
+         * This is a fast (constant time) operation.
+         *
+         * All crossings that belong to \a src will be moved into this tangle,
+         * and so any Crossing pointers or StrandRef object will remain valid.
+         * Likewise, all cached properties will be moved into this tangle.
+         *
+         * The tangle that is passed (\a src) will no longer be usable.
+         *
+         * @param src the integer to move.
+         */
+        Tangle(Tangle&& src) noexcept;
 
         /**
          * Destroys this tangle.
@@ -276,6 +293,21 @@ class Tangle : public Output<Tangle> {
          * \name Editing
          */
         /*@{*/
+
+        /**
+         * Moves the contents of the given tangle into this tangle.
+         * This is a fast (constant time) operation.
+         *
+         * All crossings that belong to \a src will be moved into this tangle,
+         * and so any Crossing pointers or StrandRef object will remain valid.
+         * Likewise, all cached properties will be moved into this tangle.
+         *
+         * The tangle that is passed (\a src) will no longer be usable.
+         *
+         * @param src the tangle to move.
+         * @return a reference to this tangle.
+         */
+        Tangle& operator = (Tangle&& src) noexcept;
 
         /**
          * Swaps the contents of this and the given tangle.
@@ -742,7 +774,7 @@ class Tangle : public Output<Tangle> {
 
         /*@}*/
 
-        // Make this class non-assignable.
+        // Make this class non-copy-assignable.
         Tangle& operator = (const Tangle&) = delete;
 
     private:

@@ -223,6 +223,26 @@ Tangle::Tangle(const Tangle& cloneMe) : type_(cloneMe.type_) {
             end_[i][j] = translate(cloneMe.end_[i][j]);
 }
 
+Tangle::Tangle(Tangle&& src) noexcept :
+        type_(src.type_), crossings_(std::move(src.crossings_)) {
+    int i, j;
+    for (i = 0; i < 2; ++i)
+        for (j = 0; j < 2; ++j)
+            end_[i][j] = src.end_[i][j];
+}
+
+Tangle& Tangle::operator = (Tangle&& src) noexcept {
+    type_ = src.type_;
+    crossings_ = std::move(src.crossings_);
+
+    int i, j;
+    for (i = 0; i < 2; ++i)
+        for (j = 0; j < 2; ++j)
+            end_[i][j] = src.end_[i][j];
+
+    return *this;
+}
+
 void Tangle::swap(Tangle& other) {
     if (&other == this)
         return;

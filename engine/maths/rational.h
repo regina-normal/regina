@@ -71,6 +71,10 @@ namespace regina {
  * However, when constructing a rational number from scratch (e.g., by
  * supplying the numerator and denominator separately), it is your
  * responsibility to ensure that the rational is in lowest terms.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class Rational {
     public:
@@ -125,6 +129,15 @@ class Rational {
          * @param value the new rational value of this rational.
          */
         Rational(const Rational& value);
+        /**
+         * Moves the given rational into this new rational.
+         * This is a fast (constant time) operation.
+         *
+         * The rational that is passed (\a src) will no longer be usable.
+         *
+         * @param src the rational to move.
+         */
+        Rational(Rational&& src) noexcept;
         /**
          * Initialises to the given integer value.
          * The given integer may be infinite.
@@ -205,6 +218,16 @@ class Rational {
          * @return a reference to this rational with its new value.
          */
         Rational& operator = (long value);
+        /**
+         * Moves the given rational into this rational.
+         * This is a fast (constant time) operation.
+         *
+         * The rational that is passed (\a src) will no longer be usable.
+         *
+         * @param src the rational to move.
+         * @return a reference to this rational.
+         */
+        Rational& operator = (Rational&& src) noexcept;
         /**
          * Swaps the values of this and the given rational.
          *
@@ -489,6 +512,10 @@ inline Rational::Rational(const Rational& value) : flavour(value.flavour) {
     if (flavour == f_normal)
         mpq_set(data, value.data);
 }
+inline Rational::Rational(Rational&& src) noexcept : flavour(src.flavour) {
+    mpq_init(data); // we need to leave something for src to destroy.
+    mpq_swap(data, src.data);
+}
 template <bool supportInfinity>
 inline Rational::Rational(const IntegerBase<supportInfinity>& value) :
         flavour(f_normal) {
@@ -560,6 +587,13 @@ inline Rational& Rational::operator = (
 inline Rational& Rational::operator = (long value) {
     flavour = f_normal;
     mpq_set_si(data, value, 1);
+    return *this;
+}
+
+inline Rational& Rational::operator = (Rational&& src) noexcept {
+    flavour = src.flavour;
+    mpq_swap(data, src.data);
+    // Let src dispose of the original mpq data.
     return *this;
 }
 
