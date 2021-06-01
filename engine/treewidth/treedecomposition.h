@@ -1332,6 +1332,9 @@ extern template TreeDecomposition::TreeDecomposition(
     unsigned, bool const** const, TreeDecompositionAlg);
 extern template TreeDecomposition::TreeDecomposition(
     unsigned, int const** const, TreeDecompositionAlg);
+
+extern template void TreeDecomposition::reroot(
+    const int*, const int*, const int*);
 #endif // ! __DOXYGEN
 
 // Inline functions for TreeBag
