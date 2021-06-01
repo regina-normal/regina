@@ -155,6 +155,8 @@ Version 6.1  [ TODO ]
         Class IsReginaArbitraryPrecisionInteger:
             - New type trait to identify Regina's arbitrary precision integer
               types.
+        Class LightweightSequence<T>:
+            - Added member and global swap() functions.
         Class Link:
             - New routines writheOfComponent() and selfFrame().
             - New routines pd(), pdData(), pd(std::ostream&) and fromPD() to

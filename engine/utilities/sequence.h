@@ -244,6 +244,13 @@ class REGINA_API LightweightSequence {
         LightweightSequence<T>& operator = (LightweightSequence&& src) noexcept;
 
         /**
+         * Swaps the contents of this and the given sequence.
+         *
+         * @param other the sequence whose contents are to be swapped with this.
+         */
+        void swap(LightweightSequence<T>& other);
+
+        /**
          * Tests whether this and the given sequence are identical.
          *
          * The sequences need not be the same size, though if the sizes
@@ -438,6 +445,15 @@ class REGINA_API LightweightSequence {
 template <typename T>
 std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
 
+/**
+ * Swaps the contents of the given sequences.
+ *
+ * @param a the first sequence whose contents should be swapped.
+ * @param b the second sequence whose contents should be swapped.
+ */
+template <typename T>
+void swap(LightweightSequence<T>& a, LightweightSequence<T>& b);
+
 /*@}*/
 
 // Inline functions:
@@ -539,6 +555,12 @@ inline LightweightSequence<T>& LightweightSequence<T>::operator = (
 }
 
 template <typename T>
+inline void LightweightSequence<T>::swap(LightweightSequence<T>& other) {
+    std::swap(size_, other.size);
+    std::swap(data_, other.data_);
+}
+
+template <typename T>
 inline bool LightweightSequence<T>::operator == (
         const LightweightSequence& rhs) const {
     if (size_ != rhs.size_)
@@ -627,6 +649,11 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
         else if ((*(a->first))[sub_[i]] > (*(b->first))[sub_[i]])
             return false;
     return false;
+}
+
+template <typename T>
+inline void swap(LightweightSequence<T>& a, LightweightSequence<T>& b) {
+    a.swap(b);
 }
 
 } // namespace regina
