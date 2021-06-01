@@ -58,6 +58,7 @@ void addCyclotomic(pybind11::module_& m) {
         .def("polynomial", &Cyclotomic::polynomial)
         .def("evaluate", &Cyclotomic::evaluate,
             pybind11::arg("whichRoot") = 1)
+        .def("swap", &Cyclotomic::swap)
         .def("negate", &Cyclotomic::invert)
         .def("invert", &Cyclotomic::invert)
         .def("inverse", &Cyclotomic::inverse)
@@ -86,5 +87,7 @@ void addCyclotomic(pybind11::module_& m) {
     ;
     regina::python::add_output(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(Cyclotomic&, Cyclotomic&))(regina::swap));
 }
 

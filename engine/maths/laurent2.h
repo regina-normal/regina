@@ -70,11 +70,9 @@ namespace regina {
  * are supported, but native data types such as int and long are not
  * (since they have no zero-initialising default constructor).
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Functions that take or return objects by value are designed to be just as
- * efficient as working with references or pointers, and long chains of
- * operators such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * The underlying storage method for this class is sparse: only the
  * non-zero coefficients are stored.
@@ -459,6 +457,18 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
     // operations on these polynomials.
     friend class Link;
 };
+
+/**
+ * Swaps the contents of the given polynomials.
+ *
+ * This global routine simply calls Laurent2<T>::swap(); it is provided
+ * so that Laurent2<T> meets the C++ Swappable requirements.
+ *
+ * @param a the first polynomial whose contents should be swapped.
+ * @param b the second polynomial whose contents should be swapped.
+ */
+template <typename T>
+void swap(Laurent2<T>& a, Laurent2<T>& b);
 
 /**
  * Multiplies the given polynomial by the given scalar constant.
@@ -917,6 +927,11 @@ void Laurent2<T>::removeZeroes() {
             it = coeff_.erase(it); // C++11: returns next element.
         else
             ++it;
+}
+
+template <typename T>
+inline void swap(Laurent2<T>& a, Laurent2<T>& b) {
+    a.swap(b);
 }
 
 template <typename T>

@@ -167,13 +167,11 @@ std::ostream& operator << (std::ostream& out, const GroupExpressionTerm& term);
  * of a generator corresponds to an individual GroupExpressionTerm.
  *
  * For instance, the expression <tt>g1^2 g3^-1 g6</tt> contains the
- * three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that
- * order.
+ * three terms <tt>g1^2</tt>, <tt>g3^-1</tt> and <tt>g6^1</tt> in that order.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Calling a routine that returns a GroupExpression should not perform any
- * unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class GroupExpression : public ShortOutput<GroupExpression> {
     private:
@@ -714,10 +712,9 @@ void swap(GroupExpression& lhs, GroupExpression& rhs);
  *
  * If there are \a g generators, they will be numbered 0, 1, ..., <i>g</i>-1.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Calling a routine that returns a GroupPresentation should not perform any
- * unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \todo Let's make intelligent simplify a tad more intelligent, and the GUI
  * call a bit more safe.  Perhaps parallelize the GUI call, and give users

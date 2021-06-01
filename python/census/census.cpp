@@ -60,8 +60,11 @@ void addCensus(pybind11::module_& m) {
         .def("filename", &CensusDB::filename)
         .def("desc", &CensusDB::desc)
         .def("lookup", &CensusDB::lookup)
+        .def("swap", &CensusDB::swap)
     ;
     regina::python::add_eq_operators(db);
+
+    m.def("swap", (void(*)(CensusDB&, CensusDB&))(regina::swap));
 
     auto h = pybind11::class_<CensusHit>(m, "CensusHit")
         .def("name", &CensusHit::name)

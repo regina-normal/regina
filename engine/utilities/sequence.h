@@ -64,8 +64,9 @@ namespace regina {
  * sequence and forces a reallocation of the underlying storage.
  * See init() for details.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move construtors and move assignment.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \ifacespython Not present.
  */

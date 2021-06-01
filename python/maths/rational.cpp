@@ -89,6 +89,8 @@ void addRational(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
     regina::python::add_output_ostream(c, true /* __repr__ */);
 
+    m.def("swap", (void(*)(Rational&, Rational&))(regina::swap));
+
     pybind11::implicitly_convertible<Integer, Rational>();
     pybind11::implicitly_convertible<LargeInteger, Rational>();
     pybind11::implicitly_convertible<long, Rational>();

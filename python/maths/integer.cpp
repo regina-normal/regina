@@ -127,6 +127,8 @@ void addInteger(pybind11::module_& m) {
     regina::python::add_eq_operators(c);
     regina::python::add_output_ostream(c, true /* __repr__ */);
 
+    m.def("swap", (void(*)(Integer&, Integer&))(regina::swap));
+
     pybind11::implicitly_convertible<long, Integer>();
     pybind11::implicitly_convertible<std::string, Integer>();
 }

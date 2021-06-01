@@ -75,11 +75,9 @@ namespace regina {
  *
  * This class requires that the order \a n is strictly positive.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Functions that take or return objects by value are designed to be just as
- * efficient as working with references or pointers, and long chains of
- * operators such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * Although this class makes use of global data in its implementation, all
  * of its methods are thread-safe.
@@ -436,6 +434,20 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
         Cyclotomic& operator = (const Rational& scalar);
 
         /**
+         * Swaps the contents of this and the given field element.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given field element do not need to belong to the
+         * same cyclotomic field, and indeed one or both of them may be
+         * uninitialised.  The underlying fields (if different) will be
+         * swapped accordingly.
+         *
+         * @param other the field element whose contents should be swapped
+         * with this.
+         */
+        void swap(Cyclotomic& other);
+
+        /**
          * Negates this field element.
          * This field element is changed directly.
          */
@@ -638,6 +650,17 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
     friend Cyclotomic operator - (const Cyclotomic& lhs, const Cyclotomic& rhs);
     friend Cyclotomic operator * (const Cyclotomic& lhs, const Cyclotomic& rhs);
 };
+
+/**
+ * Swaps the contents of the given field elements.
+ *
+ * This global routine simply calls Cyclotomic::swap(); it is provided
+ * so that Cyclotomic meets the C++ Swappable requirements.
+ *
+ * @param a the first field element whose contents should be swapped.
+ * @param b the second field element whose contents should be swapped.
+ */
+void swap(Cyclotomic& a, Cyclotomic& b);
 
 /**
  * Multiplies the given field element by the given rational.
@@ -917,6 +940,12 @@ inline Cyclotomic& Cyclotomic::operator = (const Rational& scalar) {
     return *this;
 }
 
+inline void Cyclotomic::swap(Cyclotomic& other) {
+    std::swap(field_, other.field_);
+    std::swap(degree_, other.degree_);
+    std::swap(coeff_, other.coeff_);
+}
+
 inline void Cyclotomic::negate() {
     for (size_t i = 0; i < degree_; ++i)
         coeff_[i].negate();
@@ -965,6 +994,10 @@ inline std::string Cyclotomic::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
     return out.str();
+}
+
+inline void swap(Cyclotomic& a, Cyclotomic& b) {
+    a.swap(b);
 }
 
 inline Cyclotomic operator * (Cyclotomic elt, const Rational& scalar) {

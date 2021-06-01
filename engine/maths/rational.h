@@ -454,6 +454,17 @@ class Rational {
 };
 
 /**
+ * Swaps the contents of the given rationals.
+ *
+ * This global routine simply calls Rational::swap(); it is provided
+ * so that Rational meets the C++ Swappable requirements.
+ *
+ * @param a the first rational whose contents should be swapped.
+ * @param b the second rational whose contents should be swapped.
+ */
+void swap(Rational& a, Rational& b);
+
+/**
  * Writes the given rational to the given output stream.
  * Infinity will be written as <tt>Inf</tt>.  Undefined will be written
  * as <tt>Undef</tt>.  A rational with denominator one will be written
@@ -570,6 +581,10 @@ inline bool Rational::operator >= (const Rational& compare) const {
 }
 inline bool Rational::operator != (const Rational& compare) const {
     return ! (*this == compare);
+}
+
+inline void swap(Rational& a, Rational& b) {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -142,6 +142,10 @@ class MarkedElement {
  * member function and a global swap() function, all of which preserve this
  * constraint.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \pre The type \a T is a class derived from MarkedElement.
  *
  * \ifacespython Not present.

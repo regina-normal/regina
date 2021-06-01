@@ -82,5 +82,8 @@ void addLaurent2(pybind11::module_& m) {
     ;
     regina::python::add_output(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(Laurent2<regina::Integer>&,
+        Laurent2<regina::Integer>&))(regina::swap));
 }
 

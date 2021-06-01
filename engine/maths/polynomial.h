@@ -71,12 +71,9 @@ namespace regina {
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Functions that take or return objects by value are designed to be just as
- * efficient as working with references or pointers (any variations to
- * this are noted in the method documentation), and long chains of operators
- * such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \ifacespython In Python, the class Polynomial refers to the specific
  * template class Polynomial<Rational>.
@@ -641,6 +638,18 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
     template <typename U>
     friend Polynomial<U> operator *(const Polynomial<U>&, const Polynomial<U>&);
 };
+
+/**
+ * Swaps the contents of the given polynomials.
+ *
+ * This global routine simply calls Polynomial<T>::swap(); it is provided
+ * so that Polynomial<T> meets the C++ Swappable requirements.
+ *
+ * @param a the first polynomial whose contents should be swapped.
+ * @param b the second polynomial whose contents should be swapped.
+ */
+template <typename T>
+void swap(Polynomial<T>& a, Polynomial<T>& b);
 
 /**
  * Multiplies the given polynomial by the given scalar constant.
@@ -1449,6 +1458,11 @@ inline Polynomial<T>& Polynomial<T>::subtractFrom(const Polynomial<T>& other) {
     fixDegree();
 
     return *this;
+}
+
+template <typename T>
+inline void swap(Polynomial<T>& a, Polynomial<T>& b) {
+    a.swap(b);
 }
 
 template <typename T>

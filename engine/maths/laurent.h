@@ -69,12 +69,9 @@ namespace regina {
  * are supported, but native data types such as int and long are not
  * (since they have no zero-initialising default constructor).
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Functions that take or return objects by value are designed to be just as
- * efficient as working with references or pointers (any variations to
- * this are noted in the method documentation), and long chains of operators
- * such as <tt>a = b * c + d</tt> do not make unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * The underlying storage method for this class is dense (i.e., all
  * coefficients are explicitly stored, including zero coefficients).
@@ -620,6 +617,18 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
     template <typename U>
     friend Laurent<U> operator * (const Laurent<U>&, const Laurent<U>&);
 };
+
+/**
+ * Swaps the contents of the given polynomials.
+ *
+ * This global routine simply calls Laurent<T>::swap(); it is provided
+ * so that Laurent<T> meets the C++ Swappable requirements.
+ *
+ * @param a the first polynomial whose contents should be swapped.
+ * @param b the second polynomial whose contents should be swapped.
+ */
+template <typename T>
+void swap(Laurent<T>& a, Laurent<T>& b);
 
 /**
  * Multiplies the given polynomial by the given scalar constant.
@@ -1419,6 +1428,11 @@ inline Laurent<T>& Laurent<T>::subtractFrom(const Laurent<T>& other) {
     // We might have zeroed out some coefficients.
     fixDegrees();
     return *this;
+}
+
+template <typename T>
+inline void swap(Laurent<T>& a, Laurent<T>& b) {
+    a.swap(b);
 }
 
 template <typename T>

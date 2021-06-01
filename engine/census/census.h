@@ -71,6 +71,10 @@ class CensusHitIterator;
  * detail that may change in future releases of Regina.  End users
  * should only search census databases using high-level routines such as
  * Census::lookup() and CensusDB::lookup().
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class CensusDB {
     private:
@@ -156,7 +160,26 @@ class CensusDB {
          * The reference that was passed will no longer be usable.
          */
         CensusDB& operator = (CensusDB&&) noexcept = default;
+
+        /**
+         * Swaps the contents of this and the given database reference.
+         *
+         * @param other the database reference whose contents are to be
+         * swapped with this.
+         */
+        void swap(CensusDB& other);
 };
+
+/**
+ * Swaps the contents of the given database references.
+ *
+ * This global routine simply calls CensusDB::swap(); it is provided
+ * so that CensusDB meets the C++ Swappable requirements.
+ *
+ * @param a the first database reference whose contents should be swapped.
+ * @param b the second database reference whose contents should be swapped.
+ */
+void swap(CensusDB& a, CensusDB& b);
 
 /**
  * Stores a single "hit" indicating that some given triangulation has
@@ -607,6 +630,15 @@ inline const std::string& CensusDB::filename() const {
 
 inline const std::string& CensusDB::desc() const {
     return desc_;
+}
+
+inline void CensusDB::swap(CensusDB& other) {
+    filename_.swap(other.filename_);
+    desc_.swap(other.desc_);
+}
+
+inline void swap(CensusDB& a, CensusDB& b) {
+    a.swap(b);
 }
 
 // Inline functions for CensusHit:

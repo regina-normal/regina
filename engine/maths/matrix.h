@@ -153,11 +153,9 @@ template <class> class Vector;
  * The header maths/matrixops.h contains several other algorithms that
  * work with the specific class Matrix<Integer>.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Functions that take or return objects by value are designed to be just as
- * efficient as working with references or pointers, and long chains of
- * operators such as <tt>a = b * c * d</tt> do not make unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \ifacespython Not present in general, although the specific type
  * Matrix<Integer> is available under the name MatrixInt.
@@ -407,6 +405,17 @@ class Matrix : public Output<Matrix<T>> {
          */
         void initialise(List allValues);
 #endif
+
+        /**
+         * Swaps the contents of this and the given matrix.
+         *
+         * @param other the matrix whose contents are to be swapped with this.
+         */
+        inline void swap(Matrix& other) {
+            std::swap(rows_, other.rows_);
+            std::swap(cols_, other.cols_);
+            std::swap(data_, other.data_);
+        }
 
         /**
          * Returns the number of rows in this matrix.
@@ -1261,6 +1270,20 @@ class Matrix : public Output<Matrix<T>> {
             return currCol;
         }
 };
+
+/**
+ * Swaps the contents of the given matrices.
+ *
+ * This global routine simply calls Matrix<T>::swap(); it is provided
+ * so that Matrix<T> meets the C++ Swappable requirements.
+ *
+ * @param a the first matrix whose contents should be swapped.
+ * @param b the second matrix whose contents should be swapped.
+ */
+template <typename T>
+inline void swap(Matrix<T>& a, Matrix<T>& b) {
+    a.swap(b);
+}
 
 /**
  * A matrix of arbitrary-precision integers.

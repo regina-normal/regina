@@ -70,11 +70,9 @@ class Rational;
  * arbitrary precision integers), and so creations and operations are kept
  * to a minimum.
  *
- * This class is designed to avoid deep copies wherever possible.
- * In particular, it supports C++11 move constructors and move assignment.
- * Functions that take or return vectors by value are designed to be just as
- * efficient as working with references or pointers, and long chains of
- * operators such as <tt>a = b + c + d</tt> do not make unwanted deep copies.
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  *
  * \warning As of Regina 4.90, this class merges the old functionality of
  * NFastVector and the NVector hierarchy from Regina 4.6.  As a side-effect,
@@ -341,6 +339,15 @@ class Vector : public ShortOutput<Vector<T>> {
             std::swap(end, src.end);
             // Let src dispose of the original elements in its own destructor.
             return *this;
+        }
+        /**
+         * Swaps the contents of this and the given vector.
+         *
+         * @param other the vector whose contents are to be swapped with this.
+         */
+        inline void swap(Vector& other) {
+            std::swap(elements, other.elements);
+            std::swap(end, other.end);
         }
         /**
          * Adds the given vector to this vector.
@@ -622,6 +629,20 @@ class Vector : public ShortOutput<Vector<T>> {
                 }
         }
 };
+
+/**
+ * Swaps the contents of the given vectors.
+ *
+ * This global routine simply calls Vector<T>::swap(); it is provided
+ * so that Vector<T> meets the C++ Swappable requirements.
+ *
+ * @param a the first vector whose contents should be swapped.
+ * @param b the second vector whose contents should be swapped.
+ */
+template <typename T>
+inline void swap(Vector<T>& a, Vector<T>& b) {
+    a.swap(b);
+}
 
 /**
  * Writes the given vector to the given output stream.

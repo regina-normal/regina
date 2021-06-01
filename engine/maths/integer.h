@@ -1495,6 +1495,19 @@ typedef IntegerBase<true> LargeInteger;
 typedef IntegerBase<false> Integer;
 
 /**
+ * Swaps the contents of the given integers.
+ *
+ * This global routine simply calls IntegerBase<supportInfinity>::swap();
+ * it is provided so that IntegerBase<supportInfinity> meets the C++ Swappable
+ * requirements.
+ *
+ * @param a the first integer whose contents should be swapped.
+ * @param b the second integer whose contents should be swapped.
+ */
+template <bool supportInfinity>
+void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b);
+
+/**
  * Writes the given integer to the given output stream.
  *
  * @param out the output stream to which to write.
@@ -2209,6 +2222,18 @@ class NativeInteger {
     friend std::ostream& operator << (std::ostream& out,
         const NativeInteger<bytes_>& large);
 };
+
+/**
+ * Swaps the contents of the given integers.
+ *
+ * This global routine simply calls NativeInteger<bytes>::swap(); it is
+ * provided so that NativeInteger<bytes> meets the C++ Swappable requirements.
+ *
+ * @param a the first integer whose contents should be swapped.
+ * @param b the second integer whose contents should be swapped.
+ */
+template <int bytes>
+void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b);
 
 /**
  * Writes the given integer to the given output stream.
@@ -3219,6 +3244,12 @@ inline const IntegerBase<true> IntegerBase<true>::infinity(false, false);
 
 #endif // __DOXYGEN
 
+template <bool supportInfinity>
+inline void swap(IntegerBase<supportInfinity>& a,
+        IntegerBase<supportInfinity>& b) {
+    a.swap(b);
+}
+
 // Inline functions for NativeInteger
 
 template <int bytes>
@@ -3651,6 +3682,11 @@ inline std::ostream& operator << (std::ostream& out,
 #endif
 
 #endif // __DOXYGEN
+
+template <int bytes>
+inline void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) {
+    a.swap(b);
+}
 
 } // namespace regina
 

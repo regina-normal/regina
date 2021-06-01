@@ -65,6 +65,8 @@ Version 6.1  [ TODO ]
         Class BoundaryComponent<4>:
             - All of the changes listed for BoundaryComponent<dim> above.
             - Added eulerChar().
+        Class CensusDB:
+            - Added member and global swap() functions.
         Class Component<dim>:
             - Routines simplices(), boundaryComponents(), faces(), and the
               aliases vertices(), edges(), etc. no longer return a
@@ -73,6 +75,8 @@ Version 6.1  [ TODO ]
               C++ users should just use auto, and Python users are unaffected.
               See the analagous Triangulation<dim> changes for further details.
             - New compile-time constant dimension.
+        Class Cyclotomic:
+            - Added member and global swap() functions.
         Class DiscType:
             - Almost everything in this class is now constexpr.
             - The class constant NONE is deprecated.  Just use DiscType().
@@ -159,6 +163,7 @@ Version 6.1  [ TODO ]
             - The constructor that takes a NativeInteger is no longer explicit.
             - The constructors Integer(LargeInteger) and LargeInteger(Integer)
               are likewise no longer explicit.
+            - Added a global swap() to complement the member swap().
         Class Isomorphism<dim>, IsomorphismBase<dim>:
             - Added member and global swap() functions to Isomorphism<dim>.
             - Removed the IsomorphismBase<dim> base class; all functionality
@@ -166,6 +171,8 @@ Version 6.1  [ TODO ]
         Class IsReginaArbitraryPrecisionInteger:
             - New type trait to identify Regina's arbitrary precision integer
               types.
+        Class Laurent, Laurent2:
+            - Added member and global swap() functions.
         Class LightweightSequence<T>:
             - Added member and global swap() functions.
         Class Link:
@@ -214,6 +221,7 @@ Version 6.1  [ TODO ]
               via a C++11 initialiser list.
             - New default constructor that leaves the matrix in an
               uninitialised state.
+            - Added member and global swap() functions.
         Class ModelLinkGraph:
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
@@ -221,6 +229,7 @@ Version 6.1  [ TODO ]
         Class NativeInteger<...>:
             - New do-nothing routines isInfinite() and tryReduce(), for
               compatibility with Integer and LargeInteger.
+            - Added a global swap() to complement the member swap().
         Class NormalInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -293,10 +302,14 @@ Version 6.1  [ TODO ]
               (in particular, composition and inverses).
         Class PlugTriSolidTorus:
             - Class constants are now constexpr.
+        Class Polynomial:
+            - Added member and global swap() functions.
         Class Ray:
             - All of the old Ray functionality is now merged into
               Vector<LargeInteger>, and you should use that class directly.
               The name Ray is kept as a deprecated typedef.
+        Class Rational:
+            - Added a global swap() to complement the member swap().
         Class SimpleSurfaceBundle:
             - Class constants are now constexpr.
         Class Simplex<dim>:
@@ -374,6 +387,7 @@ Version 6.1  [ TODO ]
               the typedef VectorInt (in a similar way to MatrixInt).
             - Deprecated class constants zero, one and minusOne; just use
               0, 1 and -1 instead.
+            - Added member and global swap() functions.
         Class VectorInt:
             - New typedef for Vector<Integer>, for compatibility with MatrixInt.
         Class XMLCallback:
