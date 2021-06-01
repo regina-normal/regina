@@ -69,12 +69,12 @@ namespace {
 
 // Structures originally provided in casson.h:
 
-struct REGINA_LOCAL TetEdgeInfo {
+struct TetEdgeInfo {
         int             tet_index,f1,f2;
         TetEdgeInfo     *prev,
                         *next;
 };
-struct REGINA_LOCAL EdgeInfo {
+struct EdgeInfo {
         int             index,
                         singular_index;
         double          singular_order;
@@ -83,7 +83,7 @@ struct REGINA_LOCAL EdgeInfo {
         EdgeInfo        *prev,
                         *next;
 };
-struct REGINA_LOCAL CassonFormat {
+struct CassonFormat {
         int             num_tet;
         EdgeInfo        *head;
 };
