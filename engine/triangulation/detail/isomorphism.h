@@ -151,6 +151,14 @@ class IsomorphismBase :
         IsomorphismBase& operator = (IsomorphismBase&& src) noexcept;
 
         /**
+         * Swaps the contents of this and the given isomorphism.
+         *
+         * @param other the isomorphism whose contents are to be swapped with
+         * this.
+         */
+        void swap(IsomorphismBase& other);
+
+        /**
          * Returns the number of simplices in the source triangulation
          * associated with this isomorphism.  Note that this is always
          * less than or equal to the number of simplices in the
@@ -428,6 +436,13 @@ IsomorphismBase<dim>& IsomorphismBase<dim>::operator = (
     std::swap(facetPerm_, src.facetPerm_);
     // Let src dispose of the original contents in its own destructor.
     return *this;
+}
+
+template <int dim>
+void IsomorphismBase<dim>::swap(IsomorphismBase<dim>& other) {
+    std::swap(nSimplices_, other.nSimplices_);
+    std::swap(simpImage_, other.simpImage_);
+    std::swap(facetPerm_, other.facetPerm_);
 }
 
 template <int dim>

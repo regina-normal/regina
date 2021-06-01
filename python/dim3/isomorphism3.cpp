@@ -40,6 +40,7 @@ using regina::Isomorphism;
 void addIsomorphism3(pybind11::module_& m) {
     auto c = pybind11::class_<Isomorphism<3>>(m, "Isomorphism3")
         .def(pybind11::init<const Isomorphism<3>&>())
+        .def("swap", &Isomorphism<3>::swap)
         .def("size", &Isomorphism<3>::size)
         .def("simpImage", overload_cast<unsigned>(
             &Isomorphism<3>::simpImage, pybind11::const_))
@@ -59,5 +60,7 @@ void addIsomorphism3(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(Isomorphism<3>&, Isomorphism<3>&))(regina::swap));
 }
 

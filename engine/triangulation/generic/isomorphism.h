@@ -164,6 +164,15 @@ class Isomorphism : public detail::IsomorphismBase<dim> {
         Isomorphism& operator = (Isomorphism&& src) noexcept = default;
 };
 
+/**
+ * Swaps the contents of the given isomorphisms.
+ *
+ * @param a the first isomorphism whose contents should be swapped.
+ * @param b the second isomorphism whose contents should be swapped.
+ */
+template <int dim>
+void swap(Isomorphism<dim>& a, Isomorphism<dim>& b);
+
 /*@}*/
 
 // Inline functions for Isomorphism
@@ -171,6 +180,11 @@ class Isomorphism : public detail::IsomorphismBase<dim> {
 template <int dim>
 inline Isomorphism<dim>::Isomorphism(unsigned nSimplices) :
         detail::IsomorphismBase<dim>(nSimplices) {
+}
+
+template <int dim>
+inline void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) {
+    a.swap(b);
 }
 
 } // namespace regina

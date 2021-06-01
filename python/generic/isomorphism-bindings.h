@@ -41,6 +41,7 @@ template <int dim>
 void addIsomorphism(pybind11::module_& m, const char* name) {
     auto c = pybind11::class_<Isomorphism<dim>>(m, name)
         .def(pybind11::init<const Isomorphism<dim>&>())
+        .def("swap", &Isomorphism<dim>::swap)
         .def("size", &Isomorphism<dim>::size)
         .def("simpImage", overload_cast<unsigned>(
             &Isomorphism<dim>::simpImage, pybind11::const_))
@@ -56,5 +57,8 @@ void addIsomorphism(pybind11::module_& m, const char* name) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(Isomorphism<dim>&, Isomorphism<dim>&))(regina::swap));
 }
 
