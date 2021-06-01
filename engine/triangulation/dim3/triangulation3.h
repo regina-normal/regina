@@ -94,6 +94,11 @@ struct PacketInfo<PACKET_TRIANGULATION3> {
  * This 3-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 3-manifolds.
  *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, like all packet types, it does
+ * \e not implement a move constructor or move assignment, since this would
+ * interfere with the structure of the packet tree.
+ *
  * \todo \feature Is the boundary incompressible?
  * \todo \featurelong Am I obviously a handlebody?  (Simplify and see
  * if there is nothing left).  Am I obviously not a handlebody?

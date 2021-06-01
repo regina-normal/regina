@@ -1566,6 +1566,11 @@ IntegerBase<supportInfinity> operator * (long lhs,
  * their code, or support both Integer and NativeInteger types as
  * template arguments.
  *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions, for compatibility with Integer.
+ * However, it does not implement a move constructor or move assignment,
+ * since its internal data is so small that copying is just as efficient.
+ *
  * \pre The system must support integers of the given size; in particular,
  * there must be an appropriate specialisation IntOfSize<bytes>.
  *

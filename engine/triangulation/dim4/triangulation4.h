@@ -88,6 +88,11 @@ struct PacketInfo<PACKET_TRIANGULATION4> {
  * A 4-manifold triangulation is built from pentachora: a \e pentachoron is a
  * 4-dimensional simplex, with five vertices.
  *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, like all packet types, it does
+ * \e not implement a move constructor or move assignment, since this would
+ * interfere with the structure of the packet tree.
+ *
  * \headerfile triangulation/dim4.h
  */
 template <>

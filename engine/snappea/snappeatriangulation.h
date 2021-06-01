@@ -311,6 +311,11 @@ class Cusp : public ShortOutput<Cusp> {
  * into exceptions (subclassed from SnapPeaException), which can be caught
  * and handled politely.
  *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, like all packet types, it does
+ * \e not implement a move constructor or move assignment, since this would
+ * interfere with the structure of the packet tree.
+ *
  * Regina uses the variant of the SnapPea kernel that is shipped with
  * SnapPy (standard precision), as well as some additional code
  * written explicitly for SnapPy.  The header regina-config.h includes a

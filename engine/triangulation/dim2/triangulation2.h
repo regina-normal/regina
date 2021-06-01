@@ -80,6 +80,11 @@ struct PacketInfo<PACKET_TRIANGULATION2> {
  * This 2-dimensional specialisation offers significant extra functionality,
  * including many functions specific to 2-manifolds.
  *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, like all packet types, it does
+ * \e not implement a move constructor or move assignment, since this would
+ * interfere with the structure of the packet tree.
+ *
  * \headerfile triangulation/dim2.h
  */
 template <>

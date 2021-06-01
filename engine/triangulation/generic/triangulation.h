@@ -112,6 +112,11 @@ namespace regina {
  * Likewise, if the triangulation is deleted then all component objects
  * will be deleted alongside it.
  *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, like all packet types, it does
+ * \e not implement a move constructor or move assignment, since this would
+ * interfere with the structure of the packet tree.
+ *
  * For Regina's \ref stddim "standard dimensions", this template is specialised
  * and offers \e much more functionality.  In order to use these specialised
  * classes, you will need to include the corresponding headers (e.g.,

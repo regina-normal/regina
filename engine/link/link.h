@@ -597,6 +597,11 @@ struct PacketInfo<PACKET_LINK> {
  * This class supports links with any number of components (including zero),
  * and it also supports components with no crossings (which form additional
  * unknot components of the overall link).
+ *
+ * This class implements the C++ Swappable requirement by providing member
+ * and global swap() functions.  However, like all packet types, it does
+ * \e not implement a move constructor or move assignment, since this would
+ * interfere with the structure of the packet tree.
  */
 class Link : public Packet {
     REGINA_PACKET(Link, PACKET_LINK)
