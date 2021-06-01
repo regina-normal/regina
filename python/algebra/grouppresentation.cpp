@@ -118,10 +118,7 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("swap", &GroupPresentation::swap)
         .def("addGenerator", &GroupPresentation::addGenerator,
             pybind11::arg("numToAdd") = 1)
-        .def("addRelation", [](GroupPresentation& p, const GroupExpression& e) {
-            // Clone the expression instead of claiming ownership over it.
-            p.addRelation(new regina::GroupExpression(e));
-        })
+        .def("addRelation", &GroupPresentation::addRelation)
         .def("countGenerators", &GroupPresentation::countGenerators)
         .def("countRelations", &GroupPresentation::countRelations)
         .def("relation", &GroupPresentation::relation,

@@ -1,0 +1,63 @@
+# Regina - A Normal Surface Theory Calculator
+# Python Test Suite Component
+#
+# Copyright (c) 2007-2021, Ben Burton
+# For further details contact Ben Burton (bab@debian.org).
+#
+# Provides various tests for group presentation.
+#
+# This file is a single component of Regina's python test suite.  To run
+# the python test suite, move to the main python directory in the source
+# tree and run "make check".
+#
+# This program is free software; you can redistribute it and/or
+# modify it under the terms of the GNU General Public License as
+# published by the Free Software Foundation; either version 2 of the
+#
+# As an exception, when this program is distributed through (i) the
+# App Store by Apple Inc.; (ii) the Mac App Store by Apple Inc.; or
+# (iii) Google Play by Google Inc., then that store may impose any
+# digital rights management, device limits and/or redistribution
+# restrictions that are required by its terms of service.
+# License, or (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful, but
+# WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# General Public License for more details.
+#
+# You should have received a copy of the GNU General Public
+# License along with this program; if not, write to the Free
+# Software Foundation, Inc., 51 Franklin St, Fifth Floor, Boston,
+# MA 02110-1301, USA.
+
+from __future__ import print_function
+
+e = GroupExpression('a^7dB^2D')
+print(e)
+print(e.inverse())
+print(e.power(-2))
+print(e.power(-1))
+print(e.power(0))
+print(e.power(1))
+print(e.power(2))
+e.substitute(3, GroupExpression('Eg'))
+print(e)
+e.substitute([GroupExpression('aB'), \
+              GroupExpression('c'), \
+              GroupExpression(''), \
+              GroupExpression('B^2'), \
+              GroupExpression('A'), \
+              GroupExpression('g'), \
+              GroupExpression('f')])
+print(e)
+
+e = GroupExpression('a^7dB^2D')
+e.addTermsLast(GroupExpression('c^2D'))
+e.addTermsFirst(GroupExpression('E^2f'))
+print(e)
+
+e = GroupExpression('a^7dB^2D')
+e.addTermsFirst(e)
+e.addTermsLast(e)
+print(e)

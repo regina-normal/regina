@@ -294,7 +294,8 @@ void GAPRunner::processOutput(const QString& output) {
             return;
         case GAP_newrelseach:
             if ((reln = parseRelation(use))) {
-                newGroup->addRelation(reln);
+                newGroup->addRelation(std::move(*reln));
+                delete reln;
                 stageWhichReln++;
                 if (stageWhichReln == newRelnCount) {
                     // All finished!
@@ -359,7 +360,7 @@ regina::GroupExpression* GAPRunner::parseRelation(const QString& reln) {
     if (terms.isEmpty()) {
         error(tr("GAP produced empty output where a group relator "
             "was expected."));
-        return 0;
+        return nullptr;
     }
 
     std::unique_ptr<regina::GroupExpression> ans(new regina::GroupExpression);
@@ -376,7 +377,7 @@ regina::GroupExpression* GAPRunner::parseRelation(const QString& reln) {
         if (! reGAPTerm.exactMatch(*it)) {
             error(tr("GAP produced the following group relator, which could "
                 "not be understood:<p><tt>%1</tt>").arg(escape(reln)));
-            return 0;
+            return nullptr;
         }
 
         genStr = reGAPTerm.cap(1);
@@ -385,7 +386,7 @@ regina::GroupExpression* GAPRunner::parseRelation(const QString& reln) {
             error(tr("GAP produced the following group relator, which "
                 "includes the unknown generator <i>%1</i>:<p>"
                 "<tt>%2</tt>").arg(genStr).arg(escape(reln)));
-            return 0;
+            return nullptr;
         } else {
             gen = (*genPos).second;
         }

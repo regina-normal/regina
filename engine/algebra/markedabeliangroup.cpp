@@ -932,7 +932,7 @@ void HomMarkedAbelianGroup::computeReducedKernelLattice() {
             else
                 dcL[i]=Integer::zero;
 
-        reducedKernelLattice = preImageOfLattice( redMatrix, dcL ).release();
+        reducedKernelLattice = new MatrixInt(preImageOfLattice(redMatrix, dcL));
     }
 }
 
@@ -1221,7 +1221,7 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
  std::vector<Integer> invF(domain_.countInvariantFactors());
  for (unsigned long i=0; i<invF.size(); i++) 
     invF[i] = domain_.invariantFactor(i);
- std::unique_ptr<MatrixInt> Ai = torsionAutInverse( A, invF);
+ MatrixInt Ai = torsionAutInverse( A, invF);
  // then Bi is given by Bi = -AiBDi
     MatrixInt Bi(range_.countInvariantFactors(), domain_.rank());
     MatrixInt Btemp(range_.countInvariantFactors(), domain_.rank());
@@ -1233,15 +1233,15 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
             Btemp.entry(i,j) -= B.entry(i,k)*Di.entry(k,j);
     for (unsigned long i=0; i<Bi.rows(); i++) 
       for (unsigned long j=0; j<Bi.columns(); j++)
-        for (unsigned long k=0; k<Ai->columns(); k++)
-            Bi.entry(i,j) += Ai->entry(i,k)*Btemp.entry(k,j);
+        for (unsigned long k=0; k<Ai.columns(); k++)
+            Bi.entry(i,j) += Ai.entry(i,k)*Btemp.entry(k,j);
     // reduce Ai and Bi respectively. 
-    for (unsigned long i=0; i<Ai->rows(); i++)
+    for (unsigned long i=0; i<Ai.rows(); i++)
     {
-     for (unsigned long j=0; j<Ai->columns(); j++)
+     for (unsigned long j=0; j<Ai.columns(); j++)
       {
-       Ai->entry(i,j) %= domain_.invariantFactor(i);
-       if (Ai->entry(i,j) < 0) Ai->entry(i,j) += domain_.invariantFactor(i);
+       Ai.entry(i,j) %= domain_.invariantFactor(i);
+       if (Ai.entry(i,j) < 0) Ai.entry(i,j) += domain_.invariantFactor(i);
       }
      for (unsigned long j=0; j<Bi.columns(); j++)
       {
@@ -1257,15 +1257,15 @@ HomMarkedAbelianGroup HomMarkedAbelianGroup::inverseHom() const {
  //                       [-----]
  //                       [0 |D'] 
 
- for (unsigned long i=0; i<Ai->rows(); i++) 
-   for (unsigned long j=0; j<Ai->columns(); j++)
-     invMat.entry(i,j) = Ai->entry(i,j);
+ for (unsigned long i=0; i<Ai.rows(); i++) 
+   for (unsigned long j=0; j<Ai.columns(); j++)
+     invMat.entry(i,j) = Ai.entry(i,j);
  for (unsigned long i=0; i<Di.rows(); i++) 
    for (unsigned long j=0; j<Di.columns(); j++)
-     invMat.entry(i+Ai->rows(),j+Ai->columns()) = Di.entry(i,j);
+     invMat.entry(i+Ai.rows(),j+Ai.columns()) = Di.entry(i,j);
  for (unsigned long i=0; i<Bi.rows(); i++) 
    for (unsigned long j=0; j<Bi.columns(); j++)
-     invMat.entry(i,j+Ai->columns()) = Bi.entry(i,j);
+     invMat.entry(i,j+Ai.columns()) = Bi.entry(i,j);
  return HomMarkedAbelianGroup(std::move(invMat), range_, domain_);
 }
 
