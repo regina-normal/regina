@@ -82,11 +82,14 @@
   #endif
 
   // Assume that the library is always built as a shared library (not static).
+  #if 0
   #ifdef REGINA_DLL_EXPORTS
     #define REGINA_API REGINA_HELPER_DLL_EXPORT
   #else
     #define REGINA_API REGINA_HELPER_DLL_IMPORT
   #endif
+  #endif
+  #define REGINA_API
 #endif // doxygen
 
 namespace regina {

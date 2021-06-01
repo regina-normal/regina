@@ -47,6 +47,11 @@ SET_SOURCE_FILES_PROPERTIES( ${SOURCES_C_AS_CPP} PROPERTIES LANGUAGE CXX )
 
 ADD_DEFINITIONS(-DREGINA_DLL_EXPORTS=1)
 
+# Ensure that, when building under Windows, the linker is given the full list
+# of symbols to export in the DLL.  This avoids the need to manage attributes
+# such as __declspec(dllexport) and __declspec(dllimport) within the C++ code.
+SET(CMAKE_WINDOWS_EXPORT_ALL_SYMBOLS ON)
+
 ADD_LIBRARY("regina-engine" SHARED ${SOURCES} )
 # All of the libraries that appear in ENGINE_LINK_LIBRARIES feature in
 # the engine headers, which means they may be expose to third-party apps
