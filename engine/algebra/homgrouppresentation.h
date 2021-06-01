@@ -83,10 +83,10 @@ class REGINA_API HomGroupPresentation :
             /**< The domain of the homomorphism. */
         GroupPresentation range_;
             /**< The range of the homomorphism. */
-        std::vector<GroupExpression*> map_;
+        std::vector<GroupExpression> map_;
             /**< A map whose ith element is the image in the range
                  of the ith generator from the domain. */
-        std::vector<GroupExpression*>* inv_;
+        std::vector<GroupExpression>* inv_;
             /**< Null unless this is a declared isomorphism, in which case
                  this will be a map whose ith element is the image in the
                  domain of the ith generator from the range. */
@@ -108,7 +108,7 @@ class REGINA_API HomGroupPresentation :
          */
         HomGroupPresentation(GroupPresentation domain,
                 GroupPresentation range,
-                const std::vector<GroupExpression> &map);
+                std::vector<GroupExpression> map);
 
         /**
          * Creates a declared isomorphism from the given data.
@@ -132,8 +132,8 @@ class REGINA_API HomGroupPresentation :
          */
         HomGroupPresentation(GroupPresentation domain,
                 GroupPresentation range,
-                const std::vector<GroupExpression> &map,
-                const std::vector<GroupExpression> &inv);
+                std::vector<GroupExpression> map,
+                std::vector<GroupExpression> inv);
 
         /**
          * Creates a new identity homomorphism for the given group.
@@ -218,7 +218,7 @@ class REGINA_API HomGroupPresentation :
          * @param arg an element of the domain.
          * @return the image of this element in the range.
          */
-        GroupExpression evaluate(const GroupExpression &arg) const;
+        GroupExpression evaluate(GroupExpression arg) const;
 
         /**
          * Evaluate the homomorphism at a generator of the domain.
@@ -238,7 +238,7 @@ class REGINA_API HomGroupPresentation :
          * @param arg an element of the range.
          * @return the image of this element in the domain.
          */
-        GroupExpression invEvaluate(const GroupExpression &arg) const;
+        GroupExpression invEvaluate(GroupExpression arg) const;
         /**
          * Evaluate the isomorphism at a generator of the range.
          *
@@ -438,40 +438,32 @@ class REGINA_API HomGroupPresentation :
 inline HomGroupPresentation::HomGroupPresentation(
             GroupPresentation domain,
             GroupPresentation range,
-            const std::vector<GroupExpression> &map ) :
-        domain_(std::move(domain)), range_(std::move(range)), inv_(nullptr) {
-    map_.resize(map.size());
-    for (unsigned long i=0; i<map_.size(); i++)
-        map_[i] = new GroupExpression(map[i]);
+            std::vector<GroupExpression> map ) :
+        domain_(std::move(domain)),
+        range_(std::move(range)),
+        map_(std::move(map)),
+        inv_(nullptr) {
 }
 
 inline HomGroupPresentation::HomGroupPresentation(
             GroupPresentation domain,
             GroupPresentation range,
-            const std::vector<GroupExpression> &map,
-            const std::vector<GroupExpression> &inv ) :
-        domain_(std::move(domain)), range_(std::move(range)),
-        inv_(new std::vector<GroupExpression*>) {
-    map_.resize(map.size());
-    inv_->resize(inv.size());
-    for (unsigned long i=0; i<map_.size(); i++)
-        map_[i] = new GroupExpression(map[i]);
-    for (unsigned long i=0; i<inv_->size(); i++)
-        (*inv_)[i] = new GroupExpression(inv[i]);
+            std::vector<GroupExpression> map,
+            std::vector<GroupExpression> inv ) :
+        domain_(std::move(domain)),
+        range_(std::move(range)),
+        map_(std::move(map)),
+        inv_(new std::vector<GroupExpression>(std::move(inv))) {
 }
 
 inline HomGroupPresentation::HomGroupPresentation(
         const HomGroupPresentation& cloneMe) :
-        domain_(cloneMe.domain_), range_(cloneMe.range_) {
-    map_.resize(cloneMe.map_.size());
-    for (unsigned long i=0; i<map_.size(); i++)
-        map_[i] = new GroupExpression(*(cloneMe.map_[i]));
-    if (cloneMe.inv_) {
-        inv_ = new std::vector<GroupExpression*>;
-        inv_->resize(cloneMe.inv_->size());
-        for (unsigned long i=0; i<inv_->size(); i++)
-            (*inv_)[i] = new GroupExpression(*((*cloneMe.inv_)[i]));
-    } else
+        domain_(cloneMe.domain_),
+        range_(cloneMe.range_),
+        map_(cloneMe.map_) {
+    if (cloneMe.inv_)
+        inv_ = new std::vector<GroupExpression>(*cloneMe.inv_);
+    else
         inv_ = nullptr;
 }
 
@@ -479,19 +471,13 @@ inline HomGroupPresentation::HomGroupPresentation(
         HomGroupPresentation&& src) noexcept :
         domain_(std::move(src.domain_)),
         range_(std::move(src.range_)),
+        map_(std::move(src.map_)),
         inv_(src.inv_) /* pointer */ {
-    map_.swap(src.map_);
     src.inv_ = nullptr;
 }
 
 inline HomGroupPresentation::~HomGroupPresentation() {
-    for (auto exp : map_)
-        delete exp;
-    if (inv_) {
-        for (auto exp : *inv_)
-            delete exp;
-        delete inv_;
-    }
+    delete inv_;
 }
 
 inline HomGroupPresentation& HomGroupPresentation::operator = (
@@ -517,26 +503,24 @@ inline bool HomGroupPresentation::knowsInverse() const {
 }
 
 inline GroupExpression HomGroupPresentation::evaluate(unsigned long i) const {
-    return *(map_[i]);
+    return map_[i];
 }
 
-inline GroupExpression HomGroupPresentation::evaluate(
-        const GroupExpression &arg) const {
-    GroupExpression ans(arg);
-    ans.substitute(map_);
-    return ans;
+inline GroupExpression HomGroupPresentation::evaluate(GroupExpression arg)
+        const {
+    arg.substitute(map_);
+    return arg;
 }
 
-inline GroupExpression HomGroupPresentation::invEvaluate(
-        const GroupExpression &arg) const {
-    GroupExpression ans(arg);
-    ans.substitute(*inv_);
-    return ans;
+inline GroupExpression HomGroupPresentation::invEvaluate(GroupExpression arg)
+        const {
+    arg.substitute(*inv_);
+    return arg;
 }
 
 inline GroupExpression HomGroupPresentation::invEvaluate(unsigned long i)
         const {
-    return *((*inv_)[i]);
+    return (*inv_)[i];
 }
 
 inline HomGroupPresentation HomGroupPresentation::composeWith(

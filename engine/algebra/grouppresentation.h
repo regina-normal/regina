@@ -590,7 +590,7 @@ class REGINA_API GroupExpression : public ShortOutput<GroupExpression> {
          * @param cyclic \c true if and only if the expression may be
          * assumed to be cyclic; see simplify() for further details.
          */
-        void substitute(const std::vector<GroupExpression*>& expansions,
+        void substitute(const std::vector<GroupExpression>& expansions,
             bool cyclic = false);
 
         /**

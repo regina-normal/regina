@@ -42,37 +42,27 @@ HomGroupPresentation::HomGroupPresentation(
             const GroupPresentation& groupForIdentity) :
         domain_(groupForIdentity), range_(groupForIdentity),
         map_(groupForIdentity.countGenerators()),
-        inv_(new std::vector<GroupExpression*>(
+        inv_(new std::vector<GroupExpression>(
             groupForIdentity.countGenerators())) {
-    for (unsigned long i=0; i<map_.size(); i++) {
-        map_[i] = new GroupExpression();
-        (*inv_)[i] = new GroupExpression();
-        map_[i]->addTermFirst(i, 1);
-        (*inv_)[i]->addTermFirst(i,1);
-    }
+    unsigned long i = 0;
+    for (auto& e : map_)
+        e.addTermFirst(i++, 1);
+    i = 0;
+    for (auto& e : *inv_)
+        e.addTermFirst(i++, 1);
 }
 
 HomGroupPresentation& HomGroupPresentation::operator = (
         const HomGroupPresentation& src) {
     domain_ = src.domain_;
     range_ = src.range_;
+    map_ = src.map_;
 
-    for (auto exp : map_)
-        delete exp;
-    map_.resize(src.map_.size());
-    for (unsigned long i=0; i<map_.size(); i++)
-        map_[i] = new GroupExpression(*src.map_[i]);
-
-    if (inv_) {
-        for (auto exp : *inv_)
-            delete exp;
-    }
     if (src.inv_) {
-        if (! inv_)
-            inv_ = new std::vector<GroupExpression*>;
-        inv_->resize(src.inv_->size());
-        for (unsigned long i=0; i<inv_->size(); i++)
-            (*inv_)[i] = new GroupExpression(*(*src.inv_)[i]);
+        if (inv_)
+            *inv_ = *src.inv_;
+        else
+            inv_ = new std::vector<GroupExpression>(*src.inv_);
     } else {
         if (inv_) {
             delete inv_;
@@ -97,20 +87,19 @@ HomMarkedAbelianGroup HomGroupPresentation::markedAbelianisation() const {
 
 void HomGroupPresentation::writeTextShort(std::ostream& out) const {
     if (inv_)
-     out << "Isomorphism from ";
+        out << "Isomorphism from ";
     else
-     out << "Homomorphism from ";
+        out << "Homomorphism from ";
     domain_.writeTextShort(out);
     out << " to ";
     range_.writeTextShort(out);
 }
 
-void HomGroupPresentation::writeTextLong(std::ostream& out) const
-{
+void HomGroupPresentation::writeTextLong(std::ostream& out) const {
     if (inv_)
-     out << "Isomorphism with ";
+        out << "Isomorphism with ";
     else
-     out << "Homomorphism with ";
+        out << "Homomorphism with ";
     out<<"domain ";
     domain_.writeTextCompact(out);
     out<<" "; // std::endl;
@@ -120,8 +109,8 @@ void HomGroupPresentation::writeTextLong(std::ostream& out) const
         if (i!=0) out<<", ";
         if (domain_.countGenerators()<=26) out<<char('a' + i)<<" --> ";
         else  out<<"g"<<i<<" --> ";
-        if (range_.countGenerators()<=26) map_[i]->writeText(out, true);
-        else map_[i]->writeText(out, false);
+        if (range_.countGenerators()<=26) map_[i].writeText(out, true);
+        else map_[i].writeText(out, false);
     }
     out<<"] ";
 
@@ -130,48 +119,38 @@ void HomGroupPresentation::writeTextLong(std::ostream& out) const
     out<<std::endl;
 }
 
-bool HomGroupPresentation::smallCancellation()
-{
- std::unique_ptr<regina::HomGroupPresentation> rangeMap =
-    range_.smallCancellationDetail();
- std::unique_ptr<regina::HomGroupPresentation> domainMap =
-    domain_.smallCancellationDetail();
- if (! domainMap.get())
-    domainMap.reset(new HomGroupPresentation(domain_));
- if (! rangeMap.get())
-    rangeMap.reset(new HomGroupPresentation(range_));
- bool retval = rangeMap.get() || domainMap.get();
- std::vector< GroupExpression > newMap( domain_.countGenerators() );
- for (unsigned long i=0; i<newMap.size(); i++)
-  newMap[i].addTermsLast( rangeMap->evaluate(
-    evaluate( domainMap->invEvaluate(i) ) ) );
- std::vector< GroupExpression > newInvMap;
- if (inv_) {
-     newInvMap.resize( range_.countGenerators() );
-     for (unsigned long i=0; i<newInvMap.size(); i++)
-       newInvMap[i].addTermsLast( domainMap->evaluate(
-         invEvaluate( rangeMap->invEvaluate(i) ) ) );
- }
- for (unsigned long i=0; i<map_.size(); i++) delete map_[i];
- map_.resize( newMap.size() );
- if (inv_) {
-     for (unsigned long i=0; i<inv_->size(); i++) delete (*inv_)[i];
-     inv_->resize( newInvMap.size() );
- }
+bool HomGroupPresentation::smallCancellation() {
+    std::unique_ptr<regina::HomGroupPresentation> rangeMap =
+        range_.smallCancellationDetail();
+    std::unique_ptr<regina::HomGroupPresentation> domainMap =
+        domain_.smallCancellationDetail();
+    if (! domainMap.get())
+        domainMap.reset(new HomGroupPresentation(domain_));
+    if (! rangeMap.get())
+        rangeMap.reset(new HomGroupPresentation(range_));
+    bool retval = rangeMap.get() || domainMap.get();
+    std::vector< GroupExpression > newMap( domain_.countGenerators() );
+    for (unsigned long i=0; i<newMap.size(); i++)
+        newMap[i] = rangeMap->evaluate( evaluate( domainMap->invEvaluate(i) ) );
+    std::vector< GroupExpression > newInvMap;
+    if (inv_) {
+        newInvMap.resize( range_.countGenerators() );
+        for (unsigned long i=0; i<newInvMap.size(); i++)
+            newInvMap[i] = domainMap->evaluate( invEvaluate(
+                rangeMap->invEvaluate(i) ) );
+    }
 
- for (unsigned long i=0; i<map_.size(); i++)
-       {
-        map_[i] = new GroupExpression(newMap[i]);
-        range_.simplifyWord(*map_[i]);
-       }
- if (inv_)
-     for (unsigned long i=0; i<inv_->size(); i++)
-           {
-            (*inv_)[i] = new GroupExpression(newInvMap[i]);
-            domain_.simplifyWord(*(*inv_)[i]);
-           }
+    map_ = newMap;
+    for (auto& e : map_)
+        range_.simplifyWord(e);
 
- return retval;
+    if (inv_) {
+        *inv_ = newInvMap;
+        for (auto& e : *inv_)
+            domain_.simplifyWord(e);
+    }
+
+    return retval;
 }
 
 HomGroupPresentation HomGroupPresentation::operator * (
@@ -218,33 +197,24 @@ bool HomGroupPresentation::intelligentNielsen()
  bool retval = rangeMap.get() || domainMap.get();
  std::vector< GroupExpression > newMap( domain_.countGenerators() );
  for (unsigned long i=0; i<newMap.size(); i++)
-  newMap[i].addTermsLast( rangeMap->evaluate(
-     evaluate( domainMap->invEvaluate(i) ) ) );
+  newMap[i] = rangeMap->evaluate( evaluate( domainMap->invEvaluate(i) ) );
  std::vector< GroupExpression > newInvMap;
  if (inv_) {
      newInvMap.resize( range_.countGenerators() );
      for (unsigned long i=0; i<newInvMap.size(); i++)
-       newInvMap[i].addTermsLast( domainMap->evaluate( invEvaluate(
-          rangeMap->invEvaluate(i) ) ) );
- }
- for (unsigned long i=0; i<map_.size(); i++) delete map_[i];
- map_.resize( newMap.size() );
- if (inv_) {
-     for (unsigned long i=0; i<inv_->size(); i++) delete (*inv_)[i];
-     inv_->resize( newInvMap.size() );
+       newInvMap[i] = domainMap->evaluate( invEvaluate(
+          rangeMap->invEvaluate(i) ) );
  }
 
- for (unsigned long i=0; i<map_.size(); i++)
-       {
-        map_[i] = new GroupExpression(newMap[i]);
-        range_.simplifyWord(*map_[i]);
-       }
- if (inv_)
-     for (unsigned long i=0; i<inv_->size(); i++)
-           {
-            (*inv_)[i] = new GroupExpression(newInvMap[i]);
-            domain_.simplifyWord(*(*inv_)[i]);
-           }
+ map_ = newMap;
+ for (auto& e : map_)
+     range_.simplifyWord(e);
+
+ if (inv_) {
+     *inv_ = newInvMap;
+     for (auto& e : *inv_)
+         domain_.simplifyWord(e);
+ }
 
  return retval;
 }
@@ -268,35 +238,25 @@ bool HomGroupPresentation::intelligentSimplify()
  bool retval = rangeMap.get() || domainMap.get();
  std::vector< GroupExpression > newMap( domain_.countGenerators() );
  for (unsigned long i=0; i<newMap.size(); i++)
-  newMap[i].addTermsLast( rangeMap->evaluate(
-     evaluate( domainMap->invEvaluate(i) ) ) );
+  newMap[i] = rangeMap->evaluate( evaluate( domainMap->invEvaluate(i) ) );
  std::vector< GroupExpression > newInvMap;
  if (inv_) {
      newInvMap.resize( range_.countGenerators() );
      for (unsigned long i=0; i<newInvMap.size(); i++)
-       newInvMap[i].addTermsLast( domainMap->evaluate(
-          invEvaluate( rangeMap->invEvaluate(i) ) ) );
+       newInvMap[i] = domainMap->evaluate(
+          invEvaluate( rangeMap->invEvaluate(i) ) );
  }
 
  // step 3: rewrite this map, and simplify
- for (unsigned long i=0; i<map_.size(); i++) delete map_[i];
- map_.resize( newMap.size() );
- if (inv_) {
-     for (unsigned long i=0; i<inv_->size(); i++) delete (*inv_)[i];
-     inv_->resize( newInvMap.size() );
- }
+ map_ = newMap;
+ for (auto& e : map_)
+     range_.simplifyWord(e);
 
- for (unsigned long i=0; i<map_.size(); i++)
-       {
-        map_[i] = new GroupExpression(newMap[i]);
-        range_.simplifyWord(*map_[i]);
-       }
- if (inv_)
-     for (unsigned long i=0; i<inv_->size(); i++)
-           {
-            (*inv_)[i] = new GroupExpression(newInvMap[i]);
-            domain_.simplifyWord(*(*inv_)[i]);
-           }
+ if (inv_) {
+     *inv_ = newInvMap;
+     for (auto& e : *inv_)
+         domain_.simplifyWord(e);
+ }
 
  return retval;
 }

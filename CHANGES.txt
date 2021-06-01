@@ -140,10 +140,10 @@ Version 6.1  [ TODO ]
               now deprecated.
             - All functions that used to return a std::unique_ptr<X> now
               just return an X by value (which can then be moved from).
-            - Constructors that used to take a (const GroupPresentation&) for
-              domain and range now take GroupPresentation arguments by value.
-            - The evaluate() and invEvaluate() functions now run in
-              linear time, not quadratic time.
+            - Constructors that used to take a domain, range and map(s) by
+              reference now take these arguments by value.
+            - The evaluate() and invEvaluate() functions now run in linear
+              time, not quadratic time, and take their arguments by value.
         Class HomMarkedAbelianGroup:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.

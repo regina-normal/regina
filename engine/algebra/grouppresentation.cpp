@@ -196,19 +196,19 @@ bool GroupExpression::substitute(unsigned long generator,
     return changed;
 }
 
-void GroupExpression::substitute(
-        const std::vector<GroupExpression*>& expansions, bool cyclic) {
+void GroupExpression::substitute(const std::vector<GroupExpression>& expansions,
+        bool cyclic) {
     std::list<GroupExpressionTerm> expanded;
 
     long i;
     for (const auto& t : terms_) {
         if (t.exponent > 0) {
-            const GroupExpression* use = expansions[t.generator];
+            const GroupExpression& use = expansions[t.generator];
             for (i = 0; i < t.exponent; ++i)
                 expanded.insert(expanded.end(),
-                    use->terms_.begin(), use->terms_.end());
+                    use.terms_.begin(), use.terms_.end());
         } else if (t.exponent < 0) {
-            GroupExpression use = expansions[t.generator]->inverse();
+            GroupExpression use = expansions[t.generator].inverse();
             for (i = 0; i > t.exponent; --i)
                 expanded.insert(expanded.end(),
                     use.terms_.begin(), use.terms_.end());
