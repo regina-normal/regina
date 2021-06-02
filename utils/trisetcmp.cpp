@@ -42,16 +42,16 @@ bool subcomplexTesting = false;
 
 bool compare(Triangulation<3>* t1, Triangulation<3>* t2) {
     if (subcomplexTesting)
-        return t1->isContainedIn(*t2).get();
+        return t1->isContainedIn(*t2).has_value();
     else
-        return t1->isIsomorphicTo(*t2).get();
+        return t1->isIsomorphicTo(*t2).has_value();
 }
 
 bool compare(Triangulation<4>* t1, Triangulation<4>* t2) {
     if (subcomplexTesting)
-        return t1->isContainedIn(*t2).get();
+        return t1->isContainedIn(*t2).has_value();
     else
-        return t1->isIsomorphicTo(*t2).get();
+        return t1->isIsomorphicTo(*t2).has_value();
 }
 
 void usage(const char* progName, const std::string& error = std::string()) {

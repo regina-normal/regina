@@ -682,7 +682,7 @@ Packet* Triangulation<3>::makeZeroEfficient() {
         // Prime.
         Triangulation<3>* newTri = dynamic_cast<Triangulation<3>*>(
             connSum->lastChild());
-        if (! isIsomorphicTo(*newTri).get()) {
+        if (! isIsomorphicTo(*newTri)) {
             removeAllTetrahedra();
             insertTriangulation(*newTri);
         }

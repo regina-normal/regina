@@ -479,7 +479,7 @@ struct PachnerHelperCollapseEdge<dim, true> {
             CPPUNIT_FAIL(msg.str());
         }
 
-        if (! copy.isIsomorphicTo(orig).get()) {
+        if (! copy.isIsomorphicTo(orig)) {
             std::ostringstream msg;
             msg << orig.label() << ", simplex " << simplex << ": "
                 << "1-5 move: recollapse is not isomorphic.";
@@ -620,7 +620,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     << " is not seen to be oriented.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! oriented->isIsomorphicTo(*original).get()) {
+            if (! oriented->isIsomorphicTo(*original)) {
                 std::ostringstream msg;
                 msg << "Oriented version of " << original->label()
                     << " is not isomorphic to the original.";
@@ -667,7 +667,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 t->makeCanonical();
                 clearProperties(*t);
 
-                if (! t->isIsomorphicTo(*tri).get()) {
+                if (! t->isIsomorphicTo(*tri)) {
                     std::ostringstream msg;
                     msg << "Canonical form for "
                         << tri->label() << " is non-isomorphic.";
@@ -725,7 +725,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     "signature \"" << sig << "\".";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! rebuild->isIsomorphicTo(*tri).get()) {
+            if (! rebuild->isIsomorphicTo(*tri)) {
                 std::ostringstream msg;
                 msg << tri->label()
                     << ": Reconstruction from \"" << sig
@@ -744,7 +744,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     "signature \"" << sig << "\" with whitespace.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! rebuild->isIsomorphicTo(*tri).get()) {
+            if (! rebuild->isIsomorphicTo(*tri)) {
                 std::ostringstream msg;
                 msg << tri->label()
                     << ": Reconstruction from \"" << sig
@@ -871,7 +871,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                 Triangulation<dim>* child = static_cast<Triangulation<dim>*>(
                     parent.firstChild());
                 while (child) {
-                    if (! tri->isIsomorphicTo(*child).get()) {
+                    if (! tri->isIsomorphicTo(*child)) {
                         std::ostringstream msg;
                         msg << tri->label()
                             << ": Orientable double cover "
@@ -1249,7 +1249,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                     }
                 }
 
-                if (dim != 2 && large.isIsomorphicTo(*tri).get()) {
+                if (dim != 2 && large.isIsomorphicTo(*tri)) {
                     std::ostringstream msg;
                     msg << tri->label() << ", face " << i << ": "
                         << (dim + 1 - k) << '-' << (k + 1) << " move "
@@ -1289,7 +1289,7 @@ class TriangulationTest : public CppUnit::TestFixture {
                         CPPUNIT_FAIL(msg.str());
                     }
 
-                    if (! copy.isIsomorphicTo(*tri).get()) {
+                    if (! copy.isIsomorphicTo(*tri)) {
                         std::ostringstream msg;
                         msg << tri->label() << ", face " << i << ": "
                             << (dim + 1 - k) << '-' << (k + 1) << " move "

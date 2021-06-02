@@ -303,13 +303,13 @@ void Tri3CompositionUI::updateIsoPanel() {
 
     // Run the isomorphism tests.
     if (comparingTri) {
-        if ((isomorphism = tri->isIsomorphicTo(*comparingTri)).get()) {
+        if ((isomorphism = tri->isIsomorphicTo(*comparingTri))) {
             isoResult->setText(tr("Result: Isomorphic (this = T)"));
             isoType = IsIsomorphic;
-        } else if ((isomorphism = tri->isContainedIn(*comparingTri)).get()) {
+        } else if ((isomorphism = tri->isContainedIn(*comparingTri))) {
             isoResult->setText(tr("Result: Subcomplex (this < T)"));
             isoType = IsSubcomplex;
-        } else if ((isomorphism = comparingTri->isContainedIn(*tri)).get()) {
+        } else if ((isomorphism = comparingTri->isContainedIn(*tri))) {
             isoResult->setText(tr("Result: Subcomplex (T < this)"));
             isoType = IsSupercomplex;
         } else {
@@ -322,7 +322,7 @@ void Tri3CompositionUI::updateIsoPanel() {
         isoType = NoRelationship;
     }
 
-    isoView->setEnabled(isomorphism.get());
+    isoView->setEnabled(isomorphism.has_value());
 }
 
 void Tri3CompositionUI::viewIsomorphism() {

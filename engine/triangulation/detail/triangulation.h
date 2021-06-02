@@ -41,7 +41,7 @@
 
 #include <iomanip>
 #include <iostream>
-#include <memory>
+#include <optional>
 #include <sstream>
 #include <string>
 #include <vector>
@@ -1321,13 +1321,8 @@ class TriangulationBase :
          *
          * If the triangulations are isomorphic, then this routine returns
          * one such boundary complete isomorphism (i.e., one such relabelling).
-         * The isomorphism will be newly constructed, and to assist with
-         * memory management, it will be returned as a std::unique_ptr.
-         * Thus, to test whether an isomorphism exists without having to
-         * explicitly manage with the isomorphism itself, you can just call
-         * <tt>if (isIsomorphicTo(other).get())</tt>, in which case the newly
-         * created isomorphism (if it exists) will be automatically
-         * destroyed.
+         * Otherwise it returns no value.  Thus, to test whether an isomorphism
+         * exists, you can just call <tt>if (isIsomorphicTo(other))</tt>.
          *
          * There may be many such isomorphisms between the two triangulations.
          * If you need to find \e all such isomorphisms, you may call
@@ -1348,9 +1343,9 @@ class TriangulationBase :
          *
          * @param other the triangulation to compare with this one.
          * @return details of the isomorphism if the two triangulations
-         * are combinatorially isomorphic, or a null pointer otherwise.
+         * are combinatorially isomorphic, or no value otherwise.
          */
-        std::unique_ptr<Isomorphism<dim>> isIsomorphicTo(
+        std::optional<Isomorphism<dim>> isIsomorphicTo(
             const Triangulation<dim>& other) const;
 
         /**
@@ -1369,14 +1364,8 @@ class TriangulationBase :
          * top-dimensional simplices than this triangulation.
          *
          * If a boundary incomplete isomorphism is found, the details of
-         * this isomorphism are returned.  The isomorphism is newly
-         * constructed, and so to assist with memory management is
-         * returned as a std::unique_ptr.  Thus, to test whether an
-         * isomorphism exists without having to explicitly deal with the
-         * isomorphism itself, you can call
-         * <tt>if (isContainedIn(other).get())</tt> and the newly
-         * created isomorphism (if it exists) will be automatically
-         * destroyed.
+         * this isomorphism are returned.  Thus, to test whether an isomorphism
+         * exists, you can just call <tt>if (isContainedIn(other))</tt>.
          *
          * If more than one such isomorphism exists, only one will be
          * returned.  For a routine that returns all such isomorphisms,
@@ -1389,9 +1378,9 @@ class TriangulationBase :
          * @param other the triangulation in which to search for an
          * isomorphic copy of this triangulation.
          * @return details of the isomorphism if such a copy is found,
-         * or a null pointer otherwise.
+         * or no value otherwise.
          */
-        std::unique_ptr<Isomorphism<dim>> isContainedIn(
+        std::optional<Isomorphism<dim>> isContainedIn(
             const Triangulation<dim>& other) const;
 
         /**
@@ -2492,23 +2481,29 @@ bool TriangulationBase<dim>::isIdenticalTo(const Triangulation<dim>& other)
 }
 
 template <int dim>
-inline std::unique_ptr<Isomorphism<dim>> TriangulationBase<dim>::isIsomorphicTo(
+inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isIsomorphicTo(
         const Triangulation<dim>& other) const {
-    Isomorphism<dim>* results[1];
-    if (findIsomorphisms(other, results, true, true))
-        return std::unique_ptr<Isomorphism<dim>>(results[0]);
-    else
-        return nullptr;
+    Isomorphism<dim>* result;
+    if (findIsomorphisms(other, &result, true, true)) {
+        // result now points to a new isomorphism.
+        std::optional<Isomorphism<dim>> ans = std::move(*result);
+        delete result;
+        return ans;
+    } else
+        return std::nullopt;
 }
 
 template <int dim>
-inline std::unique_ptr<Isomorphism<dim>> TriangulationBase<dim>::isContainedIn(
+inline std::optional<Isomorphism<dim>> TriangulationBase<dim>::isContainedIn(
         const Triangulation<dim>& other) const {
-    Isomorphism<dim>* results[1];
-    if (findIsomorphisms(other, results, false, true))
-        return std::unique_ptr<Isomorphism<dim>>(results[0]);
-    else
-        return nullptr;
+    Isomorphism<dim>* result;
+    if (findIsomorphisms(other, &result, false, true)) {
+        // result now points to a new isomorphism.
+        std::optional<Isomorphism<dim>> ans = std::move(*result);
+        delete result;
+        return ans;
+    } else
+        return std::nullopt;
 }
 
 template <int dim>

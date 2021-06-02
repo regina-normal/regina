@@ -86,7 +86,7 @@ class ElementaryMovesTest : public CppUnit::TestFixture {
                 caseName + " case", done);
             CPPUNIT_ASSERT_MESSAGE(
                 "A 2-0 edge move produced an incorrect result for the " +
-                caseName + " case", tri->isIsomorphicTo(*result).get());
+                caseName + " case", tri->isIsomorphicTo(*result));
         }
 
         void verify20EdgeInvalid(Triangulation<3>* tri,

@@ -1536,7 +1536,7 @@ class Triangulation4Test : public TriangulationTest<4> {
                         perm[1-j]));
 
                     if (! e->hasBadIdentification()) {
-                        if (! match->buildLink()->isIsomorphicTo(*link).get()) {
+                        if (! match->buildLink()->isIsomorphicTo(*link)) {
                             std::ostringstream msg;
                             msg << tri->label() << ", edge "
                                 << i << ": "

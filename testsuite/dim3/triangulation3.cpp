@@ -3867,7 +3867,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            if (! rehydrate.isIsomorphicTo(tri).get()) {
+            if (! rehydrate.isIsomorphicTo(tri)) {
                 std::ostringstream msg;
                 msg << tri.label()
                     << ": Rehydration of \"" << dehydrate
@@ -4135,28 +4135,28 @@ class Triangulation3Test : public TriangulationTest<3> {
             e.reorderTetrahedraBFS(true);
             clearProperties(e);
 
-            if (! t->isIsomorphicTo(a).get()) {
+            if (! t->isIsomorphicTo(a)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << t->label()
                     << " changes its isomorphism class when its tetrahedra "
                     "are reordered in the forward direction.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t->isIsomorphicTo(b).get()) {
+            if (! t->isIsomorphicTo(b)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << t->label()
                     << " changes its isomorphism class when its tetrahedra "
                     "are reordered in the reverse direction.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t->isIsomorphicTo(*c).get()) {
+            if (! t->isIsomorphicTo(*c)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << t->label()
                     << " changes its isomorphism class when a random "
                     "isomorphism is applied.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t->isIsomorphicTo(d).get()) {
+            if (! t->isIsomorphicTo(d)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << t->label()
                     << " changes its isomorphism class when a random "
@@ -4164,7 +4164,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     "reordered in the forward direction.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t->isIsomorphicTo(e).get()) {
+            if (! t->isIsomorphicTo(e)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << t->label()
                     << " changes its isomorphism class when a random "
@@ -4455,7 +4455,7 @@ class Triangulation3Test : public TriangulationTest<3> {
                     compare.insertLayeredLensSpace(lensP, lensQ);
                     compare.intelligentSimplify();
 
-                    if (! t.isIsomorphicTo(compare).get()) {
+                    if (! t.isIsomorphicTo(compare)) {
                         std::ostringstream msg;
                         msg << "Filling (" << p1 << "," << q1 << "," << r1
                             << ") <-> (" << p2 << "," << q2 << "," << r2

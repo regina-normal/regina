@@ -230,7 +230,7 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                 return;
 
             Triangulation<3>* image = iso.apply(&rp2xs1);
-            if (! rp2xs1.isIsomorphicTo(*image).get()) {
+            if (! rp2xs1.isIsomorphicTo(*image)) {
                 std::ostringstream msg;
                 msg << "Isomorphism #" << which << " created a triangulation "
                     "that was not isomorphic to the original.";
@@ -247,13 +247,13 @@ class Isomorphism3Test : public CppUnit::TestFixture {
                 const char* name, unsigned long symmetries) {
             Triangulation<3> t2(t);
 
-            if (! t2.isIsomorphicTo(t).get()) {
+            if (! t2.isIsomorphicTo(t)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name <<
                     " is not isomorphic to itself.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (! t2.isContainedIn(t).get()) {
+            if (! t2.isContainedIn(t)) {
                 std::ostringstream msg;
                 msg << "Triangulation " << name <<
                     " is not a subcomplex of itself.";
@@ -290,13 +290,13 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             // Unglue a face of t2.
             if (! standalone) {
                 t2.tetrahedron(0)->unjoin(2);
-                if (! t2.isContainedIn(t).get()) {
+                if (! t2.isContainedIn(t)) {
                     std::ostringstream msg;
                     msg << "Unjoining a face of " << name <<
                         " does not result in a subcomplex.";
                     CPPUNIT_FAIL(msg.str());
                 }
-                if (t.isContainedIn(t2).get()) {
+                if (t.isContainedIn(t2)) {
                     std::ostringstream msg;
                     msg << "Unjoining a face of " << name <<
                         " results in a supercomplex (and should not).";
@@ -306,13 +306,13 @@ class Isomorphism3Test : public CppUnit::TestFixture {
 
             // Completely remove a tetrahedron of t2.
             t2.removeTetrahedronAt(0);
-            if (! t2.isContainedIn(t).get()) {
+            if (! t2.isContainedIn(t)) {
                 std::ostringstream msg;
                 msg << "Removing a tetrahedron of " << name <<
                     " does not result in a subcomplex.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if (t.isContainedIn(t2).get()) {
+            if (t.isContainedIn(t2)) {
                 std::ostringstream msg;
                 msg << "Removing a tetrahedron of " << name <<
                     " results in a supercomplex (and should not).";
@@ -321,13 +321,13 @@ class Isomorphism3Test : public CppUnit::TestFixture {
 
             // Add a lone tetrahedron.
             Tetrahedron<3>* tet = t2.newTetrahedron();
-            if (! t2.isContainedIn(t).get()) {
+            if (! t2.isContainedIn(t)) {
                 std::ostringstream msg;
                 msg << "Isolating a tetrahedron of " << name <<
                     " does not result in a subcomplex.";
                 CPPUNIT_FAIL(msg.str());
             }
-            if ((! standalone) && t.isContainedIn(t2).get()) {
+            if ((! standalone) && t.isContainedIn(t2)) {
                 std::ostringstream msg;
                 msg << "Isolating a tetrahedron of " << name <<
                     " results in a supercomplex (and should not).";
@@ -337,13 +337,13 @@ class Isomorphism3Test : public CppUnit::TestFixture {
             // Make it no longer a subcomplex.
             // Do this by joining things together in a wacky invalid way.
             tet->join(0, tet, regina::Perm<4>(3, 2, 1, 0));
-            if (t2.isContainedIn(t).get()) {
+            if (t2.isContainedIn(t)) {
                 std::ostringstream msg;
                 msg << "Making a tetrahedron of " << name <<
                     " invalid results in a subcomplex (and should not).";
                 CPPUNIT_FAIL(msg.str());
             }
-            if ((! standalone) && t.isContainedIn(t2).get()) {
+            if ((! standalone) && t.isContainedIn(t2)) {
                 std::ostringstream msg;
                 msg << "Making a tetrahedron of " << name <<
                     " invalid results in a supercomplex (and should not).";

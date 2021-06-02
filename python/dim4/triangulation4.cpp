@@ -121,15 +121,9 @@ void addTriangulation4(pybind11::module_& m) {
         .def("tetrahedron", &Triangulation<4>::tetrahedron,
             pybind11::return_value_policy::reference_internal)
         .def("isIdenticalTo", &Triangulation<4>::isIdenticalTo)
-        .def("isIsomorphicTo", [](const Triangulation<4>& t,
-                const Triangulation<4>& s) {
-            return t.isIsomorphicTo(s).release();
-        })
+        .def("isIsomorphicTo", &Triangulation<4>::isIsomorphicTo)
         .def("makeCanonical", &Triangulation<4>::makeCanonical)
-        .def("isContainedIn", [](const Triangulation<4>& t,
-                const Triangulation<4>& s) {
-            return t.isContainedIn(s).release();
-        })
+        .def("isContainedIn", &Triangulation<4>::isContainedIn)
         .def("findAllIsomorphisms", [](const Triangulation<4>& t,
                 const Triangulation<4>& other) {
             std::list<regina::Isomorphism<4>*> isos;

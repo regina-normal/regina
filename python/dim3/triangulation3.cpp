@@ -166,10 +166,7 @@ void addTriangulation3(pybind11::module_& m) {
         .def("triangle", &Triangulation<3>::triangle,
             pybind11::return_value_policy::reference_internal)
         .def("isIdenticalTo", &Triangulation<3>::isIdenticalTo)
-        .def("isIsomorphicTo", [](const Triangulation<3>& t,
-                const Triangulation<3>& s) {
-            return t.isIsomorphicTo(s).release();
-        })
+        .def("isIsomorphicTo", &Triangulation<3>::isIsomorphicTo)
         .def("findAllIsomorphisms", [](const Triangulation<3>& t,
                 const Triangulation<3>& other) {
             std::list<regina::Isomorphism<3>*> isos;
@@ -183,10 +180,7 @@ void addTriangulation3(pybind11::module_& m) {
             return isos;
         })
         .def("makeCanonical", &Triangulation<3>::makeCanonical)
-        .def("isContainedIn", [](const Triangulation<3>& t,
-                const Triangulation<3>& s) {
-            return t.isContainedIn(s).release();
-        })
+        .def("isContainedIn", &Triangulation<3>::isContainedIn)
         .def("hasTwoSphereBoundaryComponents",
             &Triangulation<3>::hasTwoSphereBoundaryComponents)
         .def("hasNegativeIdealBoundaryComponents",

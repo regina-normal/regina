@@ -374,6 +374,10 @@ Version 6.1  [ TODO ]
               regina::swap(Triangulation<dim>&, Triangulation<dim>&).
             - Routine isoSig() now supports different encodings (but not
               different decodings), via a new template parameter.
+            - Functions isIsomorphicTo() and isContainedIn() now return a
+              std::optional<Isomorphism>, not a std::unique_ptr<Isomorphism>.
+              The C++ syntax should be largely unaffected, and the Python
+              behaviour (returns None if there is no isomorphism) is the same.
             - Simplified the class hierarchy; BoundaryComponentCalculator,
               EulerCalculator, FaceCalculator, FaceList and PachnerHelper are
               now gone, and there are a lot fewer regina::alias classes.

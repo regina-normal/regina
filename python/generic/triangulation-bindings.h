@@ -158,14 +158,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("finiteToIdeal", &Triangulation<dim>::finiteToIdeal)
         .def("makeDoubleCover", &Triangulation<dim>::makeDoubleCover)
         .def("isIdenticalTo", &Triangulation<dim>::isIdenticalTo)
-        .def("isIsomorphicTo", [](const Triangulation<dim>& t,
-                const Triangulation<dim>& s) {
-            return t.isIsomorphicTo(s).release();
-        })
-        .def("isContainedIn", [](const Triangulation<dim>& t,
-                const Triangulation<dim>& s) {
-            return t.isContainedIn(s).release();
-        })
+        .def("isIsomorphicTo", &Triangulation<dim>::isIsomorphicTo)
+        .def("isContainedIn", &Triangulation<dim>::isContainedIn)
         .def("findAllIsomorphisms", [](const Triangulation<dim>& t,
                 const Triangulation<dim>& other) {
             std::list<regina::Isomorphism<dim>*> isos;

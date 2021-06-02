@@ -109,10 +109,7 @@ void addTriangulation2(pybind11::module_& m) {
         .def("edge", &Triangulation<2>::edge,
             pybind11::return_value_policy::reference_internal)
         .def("isIdenticalTo", &Triangulation<2>::isIdenticalTo)
-        .def("isIsomorphicTo", [](const Triangulation<2>& t,
-                const Triangulation<2>& s) {
-            return t.isIsomorphicTo(s).release();
-        })
+        .def("isIsomorphicTo", &Triangulation<2>::isIsomorphicTo)
         .def("findAllIsomorphisms", [](const Triangulation<2>& t,
                 const Triangulation<2>& other) {
             std::list<regina::Isomorphism<2>*> isos;
@@ -120,10 +117,7 @@ void addTriangulation2(pybind11::module_& m) {
             return isos;
         })
         .def("makeCanonical", &Triangulation<2>::makeCanonical)
-        .def("isContainedIn", [](const Triangulation<2>& t,
-                const Triangulation<2>& s) {
-            return t.isContainedIn(s).release();
-        })
+        .def("isContainedIn", &Triangulation<2>::isContainedIn)
         .def("findAllSubcomplexesIn", [](const Triangulation<2>& t,
                 const Triangulation<2>& other) {
             std::list<regina::Isomorphism<2>*> isos;

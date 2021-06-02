@@ -1289,7 +1289,7 @@ void Tri3GluingsUI::makeZeroEfficient() {
                         tr("<qt>I have instead converted it to a minimal "
                         "two-tetrahedron triangulation of "
                         "RP<sup>3</sup>.</qt>"));
-                else if (orig->isIsomorphicTo(*tri).get())
+                else if (orig->isIsomorphicTo(*tri))
                     ReginaSupport::info(ui,
                         tr("<qt>This is the 3-manifold "
                         "RP<sup>3</sup>, which does not have a 0-efficient "
