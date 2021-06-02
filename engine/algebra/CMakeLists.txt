@@ -6,7 +6,6 @@ SET ( FILES
   grouppresentation.cpp
   homgrouppresentation.cpp
   markedabeliangroup.cpp
-  xmlalgebrareader.cpp
   )
 
 # Prepend folder name
@@ -21,6 +20,5 @@ if (${REGINA_INSTALL_DEV})
     grouppresentation.h
     homgrouppresentation.h
     markedabeliangroup.h
-    xmlalgebrareader.h
     DESTINATION "${INCLUDEDIR}/algebra" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

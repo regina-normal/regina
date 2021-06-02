@@ -47,7 +47,7 @@
 #include <cassert>
 
 #include "utilities/stringutils.h"
-#include "utilities/xmlutils.h"
+#include "file/xml/xmlreader.h"
 
 namespace regina::syntax {
 

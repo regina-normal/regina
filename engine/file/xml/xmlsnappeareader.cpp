@@ -30,28 +30,39 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/xmlalgebrareader.h"
-#include "triangulation/dim4.h"
-#include "triangulation/xmltrireader4.h"
-#include "utilities/property.h"
+#include "file/xml/xmlsnappeareader.h"
+#include "snappea/snappeatriangulation.h"
+#include "snappea/kernel/unix_file_io.h"
 
 namespace regina {
 
-XMLElementReader* XMLTriangulationReader<4>::startPropertySubElement(
-        const std::string& subTagName,
-        const regina::xml::XMLPropertyDict& props) {
-    XMLElementReader* base = propertyReader(subTagName, props);
-    if (base)
-        return base;
+void XMLSnapPeaReader::endContentSubElement(
+        const std::string& subTagName, XMLElementReader* subReader) {
+    if (subTagName == "snappea") {
+        if (snappea_->data_) {
+            // We can't have two <snappea>..</snappea> blocks.
+            return;
+        }
 
-    if (subTagName == "H2")
-        return new AbelianGroupPropertyReader(tri_->H2_);
-    return new XMLElementReader();
+        try {
+            regina::snappea::Triangulation* data =
+                regina::snappea::read_triangulation_from_string(
+                dynamic_cast<XMLCharsReader*>(subReader)->chars().c_str());
+            if (data) {
+                regina::snappea::find_complete_hyperbolic_structure(data);
+                regina::snappea::do_Dehn_filling(data);
+                snappea_->reset(data);
+            }
+        } catch (regina::SnapPeaFatalError& err) {
+            if (snappea_->data_)
+                snappea_->reset(0);
+        }
+    }
 }
 
-XMLPacketReader* Triangulation<4>::xmlReader(Packet*,
+XMLPacketReader* SnapPeaTriangulation::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
-    return new XMLTriangulationReader<4>(resolver);
+    return new XMLSnapPeaReader(resolver);
 }
 
 } // namespace regina

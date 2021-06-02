@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include "link/link.h"
-#include "link/xmllinkreader.h"
+#include "file/xml/xmllinkreader.h"
 #include <sstream>
 
 namespace regina {

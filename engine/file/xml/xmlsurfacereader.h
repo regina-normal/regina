@@ -30,18 +30,18 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file surfaces/xmlfilterreader.h
- *  \brief Deals with parsing XML data for normal surface filters.
+/*! \file surfaces/xmlsurfacereader.h
+ *  \brief Deals with parsing XML data for normal surface lists.
  */
 
-#ifndef __XMLFILTERREADER_H
+#ifndef __XMLSURFACEREADER_H
 #ifndef __DOXYGEN
-#define __XMLFILTERREADER_H
+#define __XMLSURFACEREADER_H
 #endif
 
 #include "regina-core.h"
-#include "packet/xmlpacketreader.h"
-#include "surfaces/surfacefilter.h"
+#include "file/xml/xmlpacketreader.h"
+#include "surfaces/normalsurfaces.h"
 
 namespace regina {
 
@@ -51,72 +51,75 @@ namespace regina {
  */
 
 /**
- * An XML element reader that reads the specific details of a normal
- * surface filter.  These details are generally contained within a
- * <tt>\<filter\></tt> ... <tt>\</filter\></tt> pair.
- *
- * Generally a subclass of XMLFilterReader will be used to receive and
- * store filters that you care about.  However, if you simply wish to
- * ignore a particular filter (and all of its descendants), you can use
- * class XMLFilterReader itself for the filter(s) you wish to ignore.
- *
- * Routine filter() is used to return the filter that was read; see
- * its documentation for further notes on how the filter should be
- * constructed.
+ * An XML element reader that reads a single normal surface.
  *
  * \ifacespython Not present.
  */
-class XMLFilterReader : public XMLElementReader {
+class XMLNormalSurfaceReader : public XMLElementReader {
+    private:
+        NormalSurface* surface_;
+            /**< The normal surface currently being read. */
+        const Triangulation<3>* tri;
+            /**< The triangulation in which this surface lives. */
+        NormalCoords coords;
+            /**< The coordinate system used by this surface. */
+        long vecLen;
+            /**< The length of corresponding normal surface vector. */
+        std::string name;
+            /**< The optional name associated with this normal surface. */
+
     public:
         /**
-         * Creates a new filter element reader.
+         * Creates a new normal surface reader.
+         *
+         * @param newTri the triangulation in which this normal surface lives.
+         * @param newCoords the coordinate system used by this normal surface.
          */
-        XMLFilterReader();
+        XMLNormalSurfaceReader(const Triangulation<3>* newTri,
+            NormalCoords newCoords);
 
         /**
-         * Returns the newly allocated filter that has been read by
-         * this element reader.
+         * Returns the normal surface that has been read.
          *
-         * Deallocation of this new filter is not the responsibility of
-         * this class.  Once this routine gives a non-zero return value,
-         * it should continue to give the same non-zero return value
-         * from this point onwards.
-         *
-         * The default implementation returns 0.
-         *
-         * @return the filter that has been read, or 0 if filter reading
-         * is incomplete, the filter should be ignored or an error
+         * @return the newly allocated normal surface, or 0 if an error
          * occurred.
          */
-        virtual SurfaceFilter* filter();
+        NormalSurface* surface();
+
+        virtual void startElement(const std::string& tagName,
+            const regina::xml::XMLPropertyDict& tagProps,
+            XMLElementReader* parentReader) override;
+        virtual void initialChars(const std::string& chars) override;
+        virtual XMLElementReader* startSubElement(
+            const std::string& subTagName,
+            const regina::xml::XMLPropertyDict& subTagProps) override;
 };
 
 /**
- * An XML packet reader that reads a single surface filter.
- * The filter type will be determined by this class and an appropriate
- * XMLFilterReader will be used to process the type-specific details.
+ * An XML packet reader that reads a single normal surface list.
  *
- * \pre The parent XML element reader is in fact an XMLPacketReader.
+ * \pre The parent XML element reader is in fact an
+ * XMLTriangulationReader<3>.
  *
  * \ifacespython Not present.
  */
-class XMLFilterPacketReader : public XMLPacketReader {
+class XMLNormalSurfacesReader : public XMLPacketReader {
     private:
-        SurfaceFilter* filter_;
-            /**< The surface filter currently being read. */
-        Packet* parent_;
-            /**< The parent packet of the filter currently being read. */
+        NormalSurfaces* list;
+            /**< The normal surface list currently being read. */
+        const Triangulation<3>* tri;
+            /**< The triangulation in which these normal surfaces live. */
 
     public:
         /**
-         * Creates a new surface filter packet reader.
+         * Creates a new normal surface list reader.
          *
-         * @param newParent the parent packet of the filter to be read,
-         * or 0 if this filter is to be tree matriarch.
+         * @param newTri the triangulation in which these normal surfaces live.
          * @param resolver the master resolver that will be used to fix
          * dangling packet references after the entire XML file has been read.
          */
-        XMLFilterPacketReader(Packet* newParent, XMLTreeResolver& resolver);
+        XMLNormalSurfacesReader(const Triangulation<3>* newTri,
+            XMLTreeResolver& resolver);
 
         virtual Packet* packet() override;
         virtual XMLElementReader* startContentSubElement(
@@ -128,24 +131,26 @@ class XMLFilterPacketReader : public XMLPacketReader {
 
 /*@}*/
 
-// Inline functions for XMLFilterReader
+// Inline functions for XMLNormalSurfaceReader
 
-inline XMLFilterReader::XMLFilterReader() {
+inline XMLNormalSurfaceReader::XMLNormalSurfaceReader(
+        const Triangulation<3>* newTri, NormalCoords newCoords) :
+        surface_(0), tri(newTri), coords(newCoords), vecLen(-1) {
 }
 
-inline SurfaceFilter* XMLFilterReader::filter() {
-    return 0;
+inline NormalSurface* XMLNormalSurfaceReader::surface() {
+    return surface_;
 }
 
-// Inline functions for XMLFilterPacketReader
+// Inline functions for XMLNormalSurfacesReader
 
-inline XMLFilterPacketReader::XMLFilterPacketReader(Packet* newParent,
-        XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), filter_(0), parent_(newParent) {
+inline XMLNormalSurfacesReader::XMLNormalSurfacesReader(
+        const Triangulation<3>* newTri, XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), list(0), tri(newTri) {
 }
 
-inline Packet* XMLFilterPacketReader::packet() {
-    return filter_;
+inline Packet* XMLNormalSurfacesReader::packet() {
+    return list;
 }
 
 } // namespace regina

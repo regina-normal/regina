@@ -33,11 +33,11 @@
 #include <cstring>
 #include <fstream>
 #include "core/engine.h"
+#include "file/xml/xmlcallback.h"
+#include "file/xml/xmlpacketreader.h"
+#include "file/xml/xmltreeresolver.h"
+#include "file/xml/xmltrireader.h"
 #include "packet/container.h"
-#include "packet/xmlpacketreader.h"
-#include "packet/xmltreeresolver.h"
-#include "triangulation/xmltrireader.h"
-#include "utilities/xmlcallback.h"
 #include "utilities/stringutils.h"
 #include "utilities/zstr.h"
 

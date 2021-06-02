@@ -30,74 +30,29 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file snappea/xmlsnappeareader.h
- *  \brief Deals with parsing XML data for SnapPea triangulations.
- */
-
-#ifndef __XMLSNAPPEAREADER_H
-#ifndef __DOXYGEN
-#define __XMLSNAPPEAREADER_H
-#endif
-
-#include "regina-core.h"
-#include "packet/xmlpacketreader.h"
-#include "snappea/snappeatriangulation.h"
+#include "file/xml/xmlalgebrareader.h"
+#include "file/xml/xmltrireader4.h"
+#include "triangulation/dim4.h"
+#include "utilities/property.h"
 
 namespace regina {
 
-/**
- * \weakgroup snappea
- * @{
- */
+XMLElementReader* XMLTriangulationReader<4>::startPropertySubElement(
+        const std::string& subTagName,
+        const regina::xml::XMLPropertyDict& props) {
+    XMLElementReader* base = propertyReader(subTagName, props);
+    if (base)
+        return base;
 
-/**
- * An XML packet reader that reads a single SnapPea triangulation.
- *
- * \ifacespython Not present.
- */
-class XMLSnapPeaReader : public XMLPacketReader {
-    private:
-        SnapPeaTriangulation* snappea_;
-            /**< The SnapPea triangulation currently being read. */
-
-    public:
-        /**
-         * Creates a new SnapPea triangulation reader.
-         *
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
-         */
-        XMLSnapPeaReader(XMLTreeResolver& resolver);
-
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
-            const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
-            XMLElementReader* subReader) override;
-};
-
-/*@}*/
-
-// Inline functions for XMLSnapPeaReader
-
-inline XMLSnapPeaReader::XMLSnapPeaReader(XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver), snappea_(new SnapPeaTriangulation()) {
+    if (subTagName == "H2")
+        return new AbelianGroupPropertyReader(tri_->H2_);
+    return new XMLElementReader();
 }
 
-inline Packet* XMLSnapPeaReader::packet() {
-    return snappea_;
-}
-
-inline XMLElementReader* XMLSnapPeaReader::startContentSubElement(
-        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
-    if (subTagName == "snappea")
-        return new XMLCharsReader();
-    else
-        return new XMLElementReader();
+XMLPacketReader* Triangulation<4>::xmlReader(Packet*,
+        XMLTreeResolver& resolver) {
+    return new XMLTriangulationReader<4>(resolver);
 }
 
 } // namespace regina
-
-#endif
 

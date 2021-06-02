@@ -30,8 +30,8 @@
  *                                                                        *
  **************************************************************************/
 
-#include "packet/xmlpacketreaders.h"
-#include "packet/xmltreeresolver.h"
+#include "file/xml/xmlpacketreaders.h"
+#include "file/xml/xmltreeresolver.h"
 #include "utilities/base64.h"
 #include <cctype>
 #include <string>

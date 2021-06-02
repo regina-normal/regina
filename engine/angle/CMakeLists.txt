@@ -4,7 +4,6 @@
 SET ( FILES
   anglestructure.cpp
   anglestructures.cpp
-  xmlanglestructreader.cpp
   )
 
 # Prepend folder name
@@ -17,6 +16,5 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     anglestructure.h
     anglestructures.h
-    xmlanglestructreader.h
     DESTINATION "${INCLUDEDIR}/angle" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

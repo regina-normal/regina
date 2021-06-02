@@ -63,6 +63,8 @@
 
 namespace regina {
 
+template <int dim> class XMLTriangulationReaderBase;
+
 /**
  * The default encoding to use for isomorphism signatures.
  * This encoding represents an isomorphism signature as a std::string,
@@ -151,8 +153,6 @@ class IsoSigPrintable : public Base64SigEncoding {
  *   regina::detail) might change in subsequent releases without notice.
  */
 namespace detail {
-
-template <int dim> class XMLTriangulationReaderBase;
 
 /**
  * \addtogroup detail Implementation details
@@ -2109,7 +2109,7 @@ class TriangulationBase :
         };
 
     template <int, int...> friend class BoundaryComponentFaceStorage;
-    friend class regina::detail::XMLTriangulationReaderBase<dim>;
+    friend class regina::XMLTriangulationReaderBase<dim>;
 };
 
 } // namespace regina::detail -> namespace regina

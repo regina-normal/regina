@@ -2,7 +2,7 @@
 /**************************************************************************
  *                                                                        *
  *  Regina - A Normal Surface Theory Calculator                           *
- *  Computational Engine                                                  *
+ *  Python Interface                                                      *
  *                                                                        *
  *  Copyright (c) 1999-2021, Ben Burton                                   *
  *  For further details contact Ben Burton (bab@debian.org).              *
@@ -30,40 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-#include "snappea/snappeatriangulation.h"
-#include "snappea/xmlsnappeareader.h"
-#include "snappea/kernel/unix_file_io.h"
+#include "../pybind11/pybind11.h"
+#include "utilities/xmlutils.h"
 
-namespace regina {
+using pybind11::overload_cast;
 
-void XMLSnapPeaReader::endContentSubElement(
-        const std::string& subTagName, XMLElementReader* subReader) {
-    if (subTagName == "snappea") {
-        if (snappea_->data_) {
-            // We can't have two <snappea>..</snappea> blocks.
-            return;
-        }
-
-        try {
-            regina::snappea::Triangulation* data =
-                regina::snappea::read_triangulation_from_string(
-                dynamic_cast<XMLCharsReader*>(subReader)->chars().c_str());
-            if (data) {
-                regina::snappea::find_complete_hyperbolic_structure(data);
-                regina::snappea::do_Dehn_filling(data);
-                snappea_->reset(data);
-            }
-        } catch (regina::SnapPeaFatalError& err) {
-            if (snappea_->data_)
-                snappea_->reset(0);
-        }
-    }
+void addXMLUtils(pybind11::module_& m) {
+    m.def("xmlEncodeComment", &regina::xml::xmlEncodeComment);
+    m.def("xmlEncodeSpecialChars", &regina::xml::xmlEncodeSpecialChars);
 }
-
-XMLPacketReader* SnapPeaTriangulation::xmlReader(Packet*,
-        XMLTreeResolver& resolver) {
-    return new XMLSnapPeaReader(resolver);
-}
-
-} // namespace regina
 

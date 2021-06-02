@@ -38,6 +38,7 @@ void addBoolSet(pybind11::module_& m);
 void addOSUtils(pybind11::module_& m);
 void addRandUtils(pybind11::module_& m);
 void addStringUtils(pybind11::module_& m);
+void addXMLUtils(pybind11::module_& m);
 
 void addUtilitiesClasses(pybind11::module_& m) {
     addIntUtils(m);
@@ -46,5 +47,6 @@ void addUtilitiesClasses(pybind11::module_& m) {
     addOSUtils(m);
     addRandUtils(m);
     addStringUtils(m);
+    addXMLUtils(m);
 }
 

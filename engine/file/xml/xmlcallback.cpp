@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <iomanip>
-#include "utilities/xmlcallback.h"
+#include "file/xml/xmlcallback.h"
 
 namespace regina {
 

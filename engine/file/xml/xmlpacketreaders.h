@@ -40,7 +40,7 @@
 #endif
 
 #include "regina-core.h"
-#include "packet/xmlpacketreader.h"
+#include "file/xml/xmlpacketreader.h"
 #include "packet/container.h"
 #include "packet/pdf.h"
 #include "packet/script.h"

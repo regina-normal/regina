@@ -8,9 +8,6 @@ SET ( FILES
   facetpairing3.cpp
   facepair.cpp
   homologicaldata.cpp
-  xmltrireader2.cpp
-  xmltrireader3.cpp
-  xmltrireader4.cpp
   )
 
 # Prepend folder name
@@ -48,9 +45,5 @@ if (${REGINA_INSTALL_DEV})
     graph.h
     homologicaldata.h
     pachner.h
-    xmltrireader.h
-    xmltrireader2.h
-    xmltrireader3.h
-    xmltrireader4.h
     DESTINATION "${INCLUDEDIR}/triangulation" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

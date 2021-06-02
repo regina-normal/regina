@@ -30,7 +30,7 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/xmlalgebrareader.h"
+#include "file/xml/xmlalgebrareader.h"
 #include "utilities/stringutils.h"
 
 namespace regina {

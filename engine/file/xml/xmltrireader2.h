@@ -30,16 +30,17 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file triangulation/xmltrireader.h
- *  \brief Deals with parsing XML data for triangulation packets.
+/*! \file triangulation/xmltrireader2.h
+ *  \brief Deals with parsing XML data for 2-dimensional triangulation packets.
  */
 
-#ifndef __XMLTRIREADER_H
+#ifndef __XMLTRIREADER2_H
 #ifndef __DOXYGEN
-#define __XMLTRIREADER_H
+#define __XMLTRIREADER2_H
 #endif
 
-#include "triangulation/detail/xmltrireader.h"
+#include "regina-core.h"
+#include "file/xml/xmltrireader.h"
 
 namespace regina {
 
@@ -49,26 +50,17 @@ namespace regina {
  */
 
 /**
- * An XML packet reader that reads a single <i>dim</i>-dimensional
- * triangulation.
+ * An XML packet reader that reads a single 2-dimensional triangulation.
  *
- * In some dimensions this template is specialised so that it can read in
- * additional properties of the triangulation.  In order to use these
- * specialised classes, you will need to include the corresponding headers
- * (e.g., triangulation/xmltrireader3.h for \a dim = 3).
+ * This is a specialisation of the generic XMLTriangulationReader class
+ * template; see the XMLTriangulationReader documentation for an
+ * overview of how this class works.
  *
- * \ifacespython Not present.
- *
- * \tparam dim The dimension of the triangulation being read.
- * This must be between 2 and 15 inclusive.
+ * This 2-dimensional specialisation contains no extra functionality,
+ * though this may change in future releases of Regina.
  */
-template <int dim>
-class XMLTriangulationReader :
-        public detail::XMLTriangulationReaderBase<dim> {
-    static_assert(! standardDim(dim),
-        "The generic implementation of XMLTriangulationReader<dim> "
-        "should not be used for Regina's standard dimensions.");
-
+template <>
+class XMLTriangulationReader<2> : public XMLTriangulationReaderBase<2> {
     public:
         /**
          * Creates a new triangulation reader.
@@ -102,24 +94,16 @@ class XMLTriangulationReader :
             const regina::xml::XMLPropertyDict& subTagProps);
 };
 
-// Note that some of our classes are specialised elsewhere.
-// Do not explicitly drag in the specialised headers for now.
-template <> class XMLTriangulationReader<2>;
-template <> class XMLTriangulationReader<3>;
-template <> class XMLTriangulationReader<4>;
-
 /*@}*/
 
-// Inline functions for XMLTriangulationReader
+// Inline functions for XMLTriangulationReader<2>
 
-template <int dim>
-inline XMLTriangulationReader<dim>::XMLTriangulationReader(
+inline XMLTriangulationReader<2>::XMLTriangulationReader(
         XMLTreeResolver& resolver) :
-        detail::XMLTriangulationReaderBase<dim>(resolver) {
+        XMLTriangulationReaderBase<2>(resolver) {
 }
 
-template <int dim>
-inline XMLElementReader* XMLTriangulationReader<dim>::startPropertySubElement(
+inline XMLElementReader* XMLTriangulationReader<2>::startPropertySubElement(
         const std::string&, const regina::xml::XMLPropertyDict&) {
     return new XMLElementReader();
 }

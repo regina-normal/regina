@@ -23,8 +23,6 @@ SET ( FILES
   nsvectorstandard.cpp
   prism.cpp
   surfacefilter.cpp
-  xmlfilterreader.cpp
-  xmlsurfacereader.cpp
   orientable.cpp
   quadtostd.cpp
   stdtoquad.cpp
@@ -63,7 +61,5 @@ if (${REGINA_INSTALL_DEV})
     prism.h
     surfacefilter.h
     surfacefiltertype.h
-    xmlfilterreader.h
-    xmlsurfacereader.h
     DESTINATION "${INCLUDEDIR}/surfaces" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

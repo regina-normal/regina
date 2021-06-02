@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "hypersurface/normalhypersurfaces.h"
-#include "packet/xmlpacketreader.h"
+#include "file/xml/xmlpacketreader.h"
 
 namespace regina {
 

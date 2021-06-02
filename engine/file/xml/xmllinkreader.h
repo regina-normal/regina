@@ -41,7 +41,7 @@
 
 #include "regina-core.h"
 #include "link/link.h"
-#include "packet/xmlpacketreader.h"
+#include "file/xml/xmlpacketreader.h"
 #include "utilities/stringutils.h"
 
 namespace regina {

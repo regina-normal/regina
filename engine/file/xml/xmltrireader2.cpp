@@ -30,69 +30,14 @@
  *                                                                        *
  **************************************************************************/
 
-#include "algebra/xmlalgebrareader.h"
-#include "triangulation/dim3.h"
-#include "triangulation/xmltrireader3.h"
+#include "triangulation/dim2.h"
+#include "file/xml/xmltrireader2.h"
 
 namespace regina {
 
-XMLElementReader* XMLTriangulationReader<3>::startPropertySubElement(
-        const std::string& subTagName,
-        const regina::xml::XMLPropertyDict& props) {
-    XMLElementReader* base = propertyReader(subTagName, props);
-    if (base)
-        return base;
-
-    // We don't read boundary component properties since they're stored
-    // across multiple property tags and they're easy to calculate anyway.
-    if (subTagName == "zeroeff") {
-        bool b;
-        if (valueOf(props.lookup("value"), b))
-            tri_->zeroEfficient_ = b;
-    } else if (subTagName == "splitsfce") {
-        bool b;
-        if (valueOf(props.lookup("value"), b))
-            tri_->splittingSurface_ = b;
-    } else if (subTagName == "threesphere") {
-        bool b;
-        if (valueOf(props.lookup("value"), b))
-            tri_->threeSphere_ = b;
-    } else if (subTagName == "threeball") {
-        bool b;
-        if (valueOf(props.lookup("value"), b))
-            tri_->threeBall_ = b;
-    } else if (subTagName == "solidtorus") {
-        bool b;
-        if (valueOf(props.lookup("value"), b))
-            tri_->solidTorus_ = b;
-    } else if (subTagName == "txi") {
-        bool b;
-        if (valueOf(props.lookup("value"), b))
-            tri_->TxI_ = b;
-    } else if (subTagName == "irreducible") {
-        bool b;
-        if (valueOf(props.lookup("value"), b))
-            tri_->irreducible_ = b;
-    } else if (subTagName == "compressingdisc") {
-        bool b;
-        if (valueOf(props.lookup("compressingdisc"), b))
-            tri_->compressingDisc_ = b;
-    } else if (subTagName == "haken") {
-        bool b;
-        if (valueOf(props.lookup("haken"), b))
-            tri_->haken_ = b;
-    } else if (subTagName == "H1Rel")
-        return new AbelianGroupPropertyReader(tri_->H1Rel_);
-    else if (subTagName == "H1Bdry")
-        return new AbelianGroupPropertyReader(tri_->H1Bdry_);
-    else if (subTagName == "H2")
-        return new AbelianGroupPropertyReader(tri_->H2_);
-    return new XMLElementReader();
-}
-
-XMLPacketReader* Triangulation<3>::xmlReader(Packet*,
+XMLPacketReader* Triangulation<2>::xmlReader(Packet*,
         XMLTreeResolver& resolver) {
-    return new XMLTriangulationReader<3>(resolver);
+    return new XMLTriangulationReader<2>(resolver);
 }
 
 } // namespace regina

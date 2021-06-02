@@ -9,7 +9,6 @@ SET ( FILES
   osutils.cpp
   randutils.cpp
   stringutils.cpp
-  xmlcallback.cpp
   xmlutils.cpp
   )
 
@@ -50,8 +49,6 @@ if (${REGINA_INSTALL_DEV})
     trieset.h
     tritmask.h
     typeutils.h
-    xmlcallback.h
-    xmlelementreader.h
     xmlutils.h
     DESTINATION "${INCLUDEDIR}/utilities" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

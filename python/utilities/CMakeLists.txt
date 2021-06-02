@@ -9,6 +9,7 @@ SET ( FILES
   pyutilities.cpp
   randutils.cpp
   stringutils.cpp
+  xmlutils.cpp
   )
 
 # Prepend folder name

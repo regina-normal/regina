@@ -30,113 +30,71 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file algebra/xmlalgebrareader.h
- *  \brief Deals with parsing XML data for various algebraic structures.
+/*! \file snappea/xmlsnappeareader.h
+ *  \brief Deals with parsing XML data for SnapPea triangulations.
  */
 
-#ifndef __XMLALGEBRAREADER_H
+#ifndef __XMLSNAPPEAREADER_H
 #ifndef __DOXYGEN
-#define __XMLALGEBRAREADER_H
+#define __XMLSNAPPEAREADER_H
 #endif
 
 #include "regina-core.h"
-#include "algebra/abeliangroup.h"
-#include "algebra/grouppresentation.h"
-#include "utilities/xmlelementreader.h"
+#include "file/xml/xmlpacketreader.h"
+#include "snappea/snappeatriangulation.h"
 
 namespace regina {
 
 /**
- * \weakgroup algebra
+ * \weakgroup snappea
  * @{
  */
 
 /**
- * An XML element reader that reads a single abelian group.
- * An abelian group is generally contained within an
- * <tt>\<abeliangroup\></tt> ... <tt>\</abeliangroup\></tt> pair.
+ * An XML packet reader that reads a single SnapPea triangulation.
  *
  * \ifacespython Not present.
  */
-class XMLAbelianGroupReader : public XMLElementReader {
+class XMLSnapPeaReader : public XMLPacketReader {
     private:
-        AbelianGroup* group_;
-            /**< The abelian group currently being read. */
+        SnapPeaTriangulation* snappea_;
+            /**< The SnapPea triangulation currently being read. */
 
     public:
         /**
-         * Creates a new abelian group reader.
-         */
-        XMLAbelianGroupReader();
-
-        /**
-         * Returns the newly allocated abelian group that has been read by
-         * this element reader.
+         * Creates a new SnapPea triangulation reader.
          *
-         * @return the group that has been read, or 0 if an error occurred.
+         * @param resolver the master resolver that will be used to fix
+         * dangling packet references after the entire XML file has been read.
          */
-        AbelianGroup* group();
+        XMLSnapPeaReader(XMLTreeResolver& resolver);
 
-        virtual void startElement(const std::string& tagName,
-            const regina::xml::XMLPropertyDict& tagProps,
-            XMLElementReader* parentReader) override;
-        virtual void initialChars(const std::string& chars) override;
-};
-
-/**
- * An XML element reader that reads a single group presentation.
- * A group presentation is generally contained within a
- * <tt>\<group\></tt> ... <tt>\</group\></tt> pair.
- *
- * \ifacespython Not present.
- */
-class XMLGroupPresentationReader : public XMLElementReader {
-    private:
-        GroupPresentation* group_;
-            /**< The group presentation currently being read. */
-
-    public:
-        /**
-         * Creates a new group presentation reader.
-         */
-        XMLGroupPresentationReader();
-
-        /**
-         * Returns the newly allocated group presentation that has been read by
-         * this element reader.
-         *
-         * @return the group that has been read, or 0 if an error occurred.
-         */
-        GroupPresentation* group();
-
-        virtual void startElement(const std::string& tagName,
-            const regina::xml::XMLPropertyDict& tagProps,
-            XMLElementReader* parentReader) override;
-        virtual XMLElementReader* startSubElement(
+        virtual Packet* packet() override;
+        virtual XMLElementReader* startContentSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endSubElement(const std::string& subTagName,
+        virtual void endContentSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
 /*@}*/
 
-// Inline functions for XMLAbelianGroupReader
+// Inline functions for XMLSnapPeaReader
 
-inline XMLAbelianGroupReader::XMLAbelianGroupReader() : group_(0) {
+inline XMLSnapPeaReader::XMLSnapPeaReader(XMLTreeResolver& resolver) :
+        XMLPacketReader(resolver), snappea_(new SnapPeaTriangulation()) {
 }
 
-inline AbelianGroup* XMLAbelianGroupReader::group() {
-    return group_;
+inline Packet* XMLSnapPeaReader::packet() {
+    return snappea_;
 }
 
-// Inline functions for XMLGroupPresentationReader
-
-inline XMLGroupPresentationReader::XMLGroupPresentationReader() : group_(0) {
-}
-
-inline GroupPresentation* XMLGroupPresentationReader::group() {
-    return group_;
+inline XMLElementReader* XMLSnapPeaReader::startContentSubElement(
+        const std::string& subTagName, const regina::xml::XMLPropertyDict&) {
+    if (subTagName == "snappea")
+        return new XMLCharsReader();
+    else
+        return new XMLElementReader();
 }
 
 } // namespace regina

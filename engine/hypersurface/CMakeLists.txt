@@ -7,7 +7,6 @@ SET ( FILES
   hsvectorstandard.cpp
   normalhypersurface.cpp
   normalhypersurfaces.cpp
-  xmlhypersurfacereader.cpp
   triangulate.cpp
   )
 
@@ -28,6 +27,5 @@ if (${REGINA_INSTALL_DEV})
     hyperflags.h
     normalhypersurface.h
     normalhypersurfaces.h
-    xmlhypersurfacereader.h
     DESTINATION "${INCLUDEDIR}/hypersurface" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

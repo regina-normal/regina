@@ -6,7 +6,6 @@ SET ( FILES
   homology.cpp
   examplesnappea.cpp
   snappeatriangulation.cpp
-  xmlsnappeareader.cpp
   uimessages.cpp)
 
 
@@ -27,7 +26,6 @@ if (${REGINA_INSTALL_DEV})
   INSTALL(FILES
     examplesnappea.h
     snappeatriangulation.h
-    xmlsnappeareader.h
     DESTINATION "${INCLUDEDIR}/snappea" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
 

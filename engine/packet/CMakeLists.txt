@@ -7,8 +7,6 @@ SET ( FILES
   pdf.cpp
   script.cpp
   text.cpp
-  xmlpacketreader.cpp
-  xmlpacketreaders.cpp
   )
 
 # Prepend folder name
@@ -24,9 +22,6 @@ if (${REGINA_INSTALL_DEV})
     container.h
     packet.h
     pdf.h
-    xmlpacketreader.h
-    xmlpacketreaders.h
-    xmltreeresolver.h
     packetregistry.h
     packetregistry-impl.h
     packettype.h

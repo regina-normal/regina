@@ -29,6 +29,5 @@ if (${REGINA_INSTALL_DEV})
     skeleton-impl.h
     strings.h
     triangulation.h
-    xmltrireader.h
     DESTINATION "${INCLUDEDIR}/triangulation/detail" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})

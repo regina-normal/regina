@@ -31,7 +31,7 @@
  **************************************************************************/
 
 #include <vector>
-#include "hypersurface/xmlhypersurfacereader.h"
+#include "file/xml/xmlhypersurfacereader.h"
 #include "hypersurface/hscoordregistry.h"
 #include "triangulation/dim4.h"
 #include "utilities/stringutils.h"

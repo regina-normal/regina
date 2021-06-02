@@ -30,123 +30,113 @@
  *                                                                        *
  **************************************************************************/
 
-/*! \file angle/xmlanglestructreader.h
- *  \brief Deals with parsing XML data for angle structure lists.
+/*! \file algebra/xmlalgebrareader.h
+ *  \brief Deals with parsing XML data for various algebraic structures.
  */
 
-#ifndef __XMLANGLESTRUCTREADER_H
+#ifndef __XMLALGEBRAREADER_H
 #ifndef __DOXYGEN
-#define __XMLANGLESTRUCTREADER_H
+#define __XMLALGEBRAREADER_H
 #endif
 
 #include "regina-core.h"
-#include "packet/xmlpacketreader.h"
-#include "angle/anglestructures.h"
+#include "algebra/abeliangroup.h"
+#include "algebra/grouppresentation.h"
+#include "file/xml/xmlelementreader.h"
 
 namespace regina {
 
 /**
- * \weakgroup angle
+ * \weakgroup algebra
  * @{
  */
 
 /**
- * An XML element reader that reads a single angle structure.
+ * An XML element reader that reads a single abelian group.
+ * An abelian group is generally contained within an
+ * <tt>\<abeliangroup\></tt> ... <tt>\</abeliangroup\></tt> pair.
  *
  * \ifacespython Not present.
  */
-class XMLAngleStructureReader : public XMLElementReader {
+class XMLAbelianGroupReader : public XMLElementReader {
     private:
-        AngleStructure* angles;
-            /**< The angle structure currently being read. */
-        Triangulation<3>* tri;
-            /**< The triangulation on which this angle structure is placed. */
-        long vecLen;
-            /**< The length of corresponding angle structure vector. */
+        AbelianGroup* group_;
+            /**< The abelian group currently being read. */
 
     public:
         /**
-         * Creates a new angle structure reader.
-         *
-         * @param newTri the triangulation on which this angle structure lies.
+         * Creates a new abelian group reader.
          */
-        XMLAngleStructureReader(Triangulation<3>* newTri);
+        XMLAbelianGroupReader();
 
         /**
-         * Returns the angle structure that has been read.
+         * Returns the newly allocated abelian group that has been read by
+         * this element reader.
          *
-         * @return the newly allocated angle structure, or 0 if an error
-         * occurred.
+         * @return the group that has been read, or 0 if an error occurred.
          */
-        AngleStructure* structure();
+        AbelianGroup* group();
 
         virtual void startElement(const std::string& tagName,
             const regina::xml::XMLPropertyDict& tagProps,
             XMLElementReader* parentReader) override;
         virtual void initialChars(const std::string& chars) override;
-        virtual XMLElementReader* startSubElement(
-            const std::string& subTagName,
-            const regina::xml::XMLPropertyDict& subTagProps) override;
 };
 
 /**
- * An XML packet reader that reads a single angle structure list.
- *
- * \pre The parent XML element reader is in fact an
- * XMLTriangulationReader<3>.
+ * An XML element reader that reads a single group presentation.
+ * A group presentation is generally contained within a
+ * <tt>\<group\></tt> ... <tt>\</group\></tt> pair.
  *
  * \ifacespython Not present.
  */
-class XMLAngleStructuresReader : public XMLPacketReader {
+class XMLGroupPresentationReader : public XMLElementReader {
     private:
-        AngleStructures* list;
-            /**< The angle structure list currently being read. */
-        Triangulation<3>* tri;
-            /**< The triangulation on which these angle structures
-                 are placed. */
+        GroupPresentation* group_;
+            /**< The group presentation currently being read. */
 
     public:
         /**
-         * Creates a new angle structure list reader.
-         *
-         * @param newTri the triangulation on which these angle
-         * structures are placed.
-         * @param resolver the master resolver that will be used to fix
-         * dangling packet references after the entire XML file has been read.
+         * Creates a new group presentation reader.
          */
-        XMLAngleStructuresReader(Triangulation<3>* newTri,
-            XMLTreeResolver& resolver);
+        XMLGroupPresentationReader();
 
-        virtual Packet* packet() override;
-        virtual XMLElementReader* startContentSubElement(
+        /**
+         * Returns the newly allocated group presentation that has been read by
+         * this element reader.
+         *
+         * @return the group that has been read, or 0 if an error occurred.
+         */
+        GroupPresentation* group();
+
+        virtual void startElement(const std::string& tagName,
+            const regina::xml::XMLPropertyDict& tagProps,
+            XMLElementReader* parentReader) override;
+        virtual XMLElementReader* startSubElement(
             const std::string& subTagName,
             const regina::xml::XMLPropertyDict& subTagProps) override;
-        virtual void endContentSubElement(const std::string& subTagName,
+        virtual void endSubElement(const std::string& subTagName,
             XMLElementReader* subReader) override;
 };
 
 /*@}*/
 
-// Inline functions for XMLAngleStructureReader
+// Inline functions for XMLAbelianGroupReader
 
-inline XMLAngleStructureReader::XMLAngleStructureReader(
-        Triangulation<3>* newTri) : angles(0), tri(newTri), vecLen(-1) {
+inline XMLAbelianGroupReader::XMLAbelianGroupReader() : group_(0) {
 }
 
-inline AngleStructure* XMLAngleStructureReader::structure() {
-    return angles;
+inline AbelianGroup* XMLAbelianGroupReader::group() {
+    return group_;
 }
 
-// Inline functions for XMLAngleStructuresReader
+// Inline functions for XMLGroupPresentationReader
 
-inline XMLAngleStructuresReader::XMLAngleStructuresReader(
-        Triangulation<3>* newTri, XMLTreeResolver& resolver) :
-        XMLPacketReader(resolver),
-        list(new AngleStructures(false)), tri(newTri) {
+inline XMLGroupPresentationReader::XMLGroupPresentationReader() : group_(0) {
 }
 
-inline Packet* XMLAngleStructuresReader::packet() {
-    return list;
+inline GroupPresentation* XMLGroupPresentationReader::group() {
+    return group_;
 }
 
 } // namespace regina

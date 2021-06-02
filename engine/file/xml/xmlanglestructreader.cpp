@@ -31,22 +31,20 @@
  **************************************************************************/
 
 #include <vector>
-#include "surfaces/coordregistry.h"
-#include "surfaces/xmlsurfacereader.h"
+#include "file/xml/xmlanglestructreader.h"
 #include "triangulation/dim3.h"
 #include "utilities/stringutils.h"
 
 namespace regina {
 
-void XMLNormalSurfaceReader::startElement(const std::string&,
+void XMLAngleStructureReader::startElement(const std::string&,
         const regina::xml::XMLPropertyDict& props,
         XMLElementReader*) {
     if (! valueOf(props.lookup("len"), vecLen))
         vecLen = -1;
-    name = props.lookup("name");
 }
 
-void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
+void XMLAngleStructureReader::initialChars(const std::string& chars) {
     if (vecLen < 0 || tri == 0)
         return;
 
@@ -55,17 +53,10 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
 
     // Create a new vector and read all non-zero entries.
-    // Bring in cases from the coordinate system registry...
-    NormalSurfaceVector* vec;
-    if (coords == NS_AN_LEGACY)
-        vec = new NSVectorANStandard(vecLen);
-    else
-        vec = forCoords(coords, NewFunction<NormalSurfaceVector>(), 0, vecLen);
-    if (! vec)
-        return;
+    VectorInt* vec = new VectorInt(vecLen);
 
     long pos;
-    LargeInteger value;
+    Integer value;
     for (unsigned long i = 0; i < tokens.size(); i += 2) {
         if (valueOf(tokens[i], pos))
             if (valueOf(tokens[i + 1], value))
@@ -80,94 +71,55 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
     }
 
-    surface_ = new NormalSurface(tri, vec);
-    if (! name.empty())
-        surface_->setName(name);
+    angles = new AngleStructure(tri, vec);
 }
 
-XMLElementReader* XMLNormalSurfaceReader::startSubElement(
+XMLElementReader* XMLAngleStructureReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    if (! surface_)
+    if (! angles)
         return new XMLElementReader();
 
-    if (subTagName == "euler") {
-        LargeInteger val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->eulerChar_ = val;
-    } else if (subTagName == "orbl") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->orientable_ = val;
-    } else if (subTagName == "twosided") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->twoSided_ = val;
-    } else if (subTagName == "connected") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->connected_ = val;
-    } else if (subTagName == "realbdry") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->realBoundary_ = val;
-    } else if (subTagName == "compact") {
-        bool val;
-        if (valueOf(props.lookup("value"), val))
-            surface_->compact_ = val;
-    }
     return new XMLElementReader();
 }
 
-XMLElementReader* XMLNormalSurfacesReader::startContentSubElement(
+XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& props) {
-    if (list) {
-        // The surface list has already been created.
-        if (subTagName == "surface")
-            return new XMLNormalSurfaceReader(tri, list->coords_);
-    } else {
-        // The surface list has not yet been created.
-        if (subTagName == "params") {
-            long coords;
-            int listType, algorithm;
-            bool embedded;
-            if (valueOf(props.lookup("flavourid"), coords)) {
-                if (valueOf(props.lookup("type"), listType) &&
-                        valueOf(props.lookup("algorithm"), algorithm)) {
-                    // Parameters look sane; create the empty list.
-                    list = new NormalSurfaces(
-                        static_cast<NormalCoords>(coords),
-                        NormalList::fromInt(listType),
-                        NormalAlg::fromInt(algorithm));
-                } else if (valueOf(props.lookup("embedded"), embedded)) {
-                    // Parameters look sane but use the old format.
-                    list = new NormalSurfaces(
-                        static_cast<NormalCoords>(coords),
-                        NS_LEGACY | (embedded ?
-                            NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
-                        NS_ALG_LEGACY);
-                }
-            }
-        }
+    bool b;
+    if (subTagName == "angleparams") {
+        if (valueOf(props.lookup("tautonly"), b))
+            list->tautOnly_ = b;
+    } else if (subTagName == "struct") {
+        return new XMLAngleStructureReader(tri);
+    } else if (subTagName == "spanstrict") {
+        if (valueOf(props.lookup("value"), b))
+            list->doesSpanStrict = b;
+    } else if (subTagName == "spantaut") {
+        if (valueOf(props.lookup("value"), b))
+            list->doesSpanTaut = b;
+    } else if (subTagName == "allowstrict") {
+        if (valueOf(props.lookup("value"), b))
+            list->doesSpanStrict = b;
+    } else if (subTagName == "allowtaut") {
+        if (valueOf(props.lookup("value"), b))
+            list->doesSpanTaut = b;
     }
     return new XMLElementReader();
 }
 
-void XMLNormalSurfacesReader::endContentSubElement(
+void XMLAngleStructuresReader::endContentSubElement(
         const std::string& subTagName,
         XMLElementReader* subReader) {
-    if (list)
-        if (subTagName == "surface")
-            if (NormalSurface* s =
-                    dynamic_cast<XMLNormalSurfaceReader*>(subReader)->
-                    surface())
-                list->surfaces_.push_back(s);
+    if (subTagName == "struct")
+        if (AngleStructure* s =
+                dynamic_cast<XMLAngleStructureReader*>(subReader)->structure())
+            list->structures_.push_back(s);
 }
 
-XMLPacketReader* NormalSurfaces::xmlReader(Packet* parent,
+XMLPacketReader* AngleStructures::xmlReader(Packet* parent,
         XMLTreeResolver& resolver) {
-    return new XMLNormalSurfacesReader(
+    return new XMLAngleStructuresReader(
         dynamic_cast<Triangulation<3>*>(parent), resolver);
 }
 

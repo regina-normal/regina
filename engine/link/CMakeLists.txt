@@ -21,7 +21,6 @@ SET ( FILES
   sig.cpp
   simplify.cpp
   tangle.cpp
-  xmllinkreader.cpp
   )
 
 # Prepend folder name
@@ -45,6 +44,5 @@ if (${REGINA_INSTALL_DEV})
     modellinkgraph.h
     pd-impl.h
     tangle.h
-    xmllinkreader.h
     DESTINATION "${INCLUDEDIR}/link" COMPONENT Development)
 endif (${REGINA_INSTALL_DEV})
