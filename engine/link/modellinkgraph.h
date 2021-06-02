@@ -542,6 +542,13 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
         ModelLinkGraphNode* node(size_t index) const;
 
         /**
+         * Sets this to be a (deep) copy of the given graph.
+         *
+         * @param copy the graph to copy.
+         * @return a reference to this graph.
+         */
+        ModelLinkGraph& operator = (const ModelLinkGraph& src);
+        /**
          * Moves the contents of the given graph into this graph.
          * This is a fast (constant time) operation.
          *
@@ -873,9 +880,6 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          * was found to be invalid.
          */
         static ModelLinkGraph* fromPlantri(const std::string& plantri);
-
-        // Make this class non-copy-assignable.
-        ModelLinkGraph& operator = (const ModelLinkGraph&) = delete;
 };
 
 /**

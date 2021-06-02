@@ -295,6 +295,14 @@ class Tangle : public Output<Tangle> {
         /*@{*/
 
         /**
+         * Sets this to be a (deep) copy of the given tangle.
+         *
+         * @param copy the tangle to copy.
+         * @return a reference to this tangle.
+         */
+        Tangle& operator = (const Tangle& src);
+
+        /**
          * Moves the contents of the given tangle into this tangle.
          * This is a fast (constant time) operation.
          *
@@ -773,9 +781,6 @@ class Tangle : public Output<Tangle> {
         static Tangle* fromOrientedGauss(Iterator begin, Iterator end);
 
         /*@}*/
-
-        // Make this class non-copy-assignable.
-        Tangle& operator = (const Tangle&) = delete;
 
     private:
         /**

@@ -217,6 +217,7 @@ Version 6.1  [ TODO ]
             - New convenience routine clear_destructive().
             - New typedef value_type.
             - New global swap() to complement the existing member swap().
+            - Granted access to the reserve() member function.
         Class Matrix:
             - New routine transpose().
             - New routines rowEchelonForm() and columnEchelonForm() for
@@ -228,6 +229,7 @@ Version 6.1  [ TODO ]
               uninitialised state.
             - Added member and global swap() functions.
         Class ModelLinkGraph:
+            - Added a copy assignment operator.
             - Added a move constructor and move assignment operator.
             - Renamed swapContents() to swap(); the old name is now a
               deprecated alias.  Also added a global
@@ -334,6 +336,7 @@ Version 6.1  [ TODO ]
             - Routines that took a (const BoolSet&) now just take a
               BoolSet by value.
         Class Tangle:
+            - Added a copy assignment operator.
             - Added a move constructor and move assignment operator.
             - Renamed swapContents() to swap(); the old name is now a deprecated
               alias.  Also added a global regina::swap(Tangle&, Tangle&).

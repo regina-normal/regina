@@ -46,6 +46,7 @@ namespace {
 
 ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
         cells_(nullptr) {
+    nodes_.reserve(cloneMe.nodes_.size());
     for (ModelLinkGraphNode* n : cloneMe.nodes_)
         nodes_.push_back(new ModelLinkGraphNode());
 
@@ -61,6 +62,35 @@ ModelLinkGraph::ModelLinkGraph(const ModelLinkGraph& cloneMe) :
     // The cellular decomposition takes linear time to copy and linear
     // time to compute, so just recompute it on demand and don't attempt
     // to copy it here.
+}
+
+ModelLinkGraph& ModelLinkGraph::operator = (const ModelLinkGraph& src) {
+    for (ModelLinkGraphNode* n : nodes_)
+        delete n;
+    nodes_.clear();
+
+    nodes_.reserve(src.nodes_.size());
+    for (ModelLinkGraphNode* n : src.nodes_)
+        nodes_.push_back(new ModelLinkGraphNode());
+
+    auto it = src.nodes_.begin();
+    for (ModelLinkGraphNode* n : nodes_) {
+        for (int i = 0; i < 4; ++i) {
+            n->adj_[i].node_ = nodes_[(*it)->adj_[i].node_->index()];
+            n->adj_[i].arc_ = (*it)->adj_[i].arc_;
+        }
+        ++it;
+    }
+
+    // The cellular decomposition takes linear time to copy and linear
+    // time to compute, so just recompute it on demand and don't attempt
+    // to copy it here.
+    if (cells_) {
+        delete cells_;
+        cells_ = nullptr;
+    }
+
+    return *this;
 }
 
 void ModelLinkGraph::reflect() {

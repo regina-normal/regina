@@ -205,6 +205,7 @@ Tangle::Tangle(const Link& knot) : type_(TANGLE_HORIZONTAL) {
 }
 
 Tangle::Tangle(const Tangle& cloneMe) : type_(cloneMe.type_) {
+    crossings_.reserve(cloneMe.crossings_.size());
     for (Crossing* c : cloneMe.crossings_)
         crossings_.push_back(new Crossing(c->sign()));
 
@@ -229,6 +230,34 @@ Tangle::Tangle(Tangle&& src) noexcept :
     for (i = 0; i < 2; ++i)
         for (j = 0; j < 2; ++j)
             end_[i][j] = src.end_[i][j];
+}
+
+Tangle& Tangle::operator = (const Tangle& src) {
+    type_ = src.type_;
+
+    for (Crossing* c : crossings_)
+        delete c;
+    crossings_.clear();
+
+    crossings_.reserve(src.crossings_.size());
+    for (Crossing* c : src.crossings_)
+        crossings_.push_back(new Crossing(c->sign()));
+
+    int i, j;
+    auto it = src.crossings_.begin();
+    for (Crossing* c : crossings_) {
+        for (i = 0; i < 2; ++i) {
+            c->next_[i] = translate((*it)->next_[i]);
+            c->prev_[i] = translate((*it)->prev_[i]);
+        }
+        ++it;
+    }
+
+    for (i = 0; i < 2; ++i)
+        for (j = 0; j < 2; ++j)
+            end_[i][j] = translate(src.end_[i][j]);
+
+    return *this;
 }
 
 Tangle& Tangle::operator = (Tangle&& src) noexcept {
