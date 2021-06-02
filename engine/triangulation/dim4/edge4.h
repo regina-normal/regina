@@ -209,7 +209,7 @@ inline const Triangulation<2>* Face<4, 1>::buildLink() const {
     if (! link_) {
         // This is a construct-on-demand member; cast away constness to
         // set it here.
-        const_cast<Edge<4>*>(this)->link_ = buildLinkDetail(false, 0);
+        const_cast<Edge<4>*>(this)->link_ = buildLinkDetail(false);
     }
     return link_;
 }

@@ -309,7 +309,7 @@ inline const Triangulation<2>* Face<3, 0>::buildLink() const {
     if (! linkTri_) {
         // This is a construct-on-demand member: cast away constness to
         // set it here.
-        const_cast<Vertex<3>*>(this)->linkTri_ = buildLinkDetail(false, 0);
+        const_cast<Vertex<3>*>(this)->linkTri_ = buildLinkDetail(false);
     }
     return linkTri_;
 }
