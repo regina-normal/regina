@@ -572,6 +572,10 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * In particular, any pointers or references to Tetrahedron<3>,
          * Face<3, subdim> and/or Cusp objects will remain valid.
          *
+         * The structure of the packet tree will \e not be swapped:
+         * both packets being swapped will remain with their original parents,
+         * and their original children will remain with them.
+         *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *

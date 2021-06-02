@@ -225,6 +225,10 @@ class Triangulation<2> : public Packet, public detail::TriangulationBase<2> {
          * In particular, any pointers or references to Triangle<2> and/or
          * Face<2, subdim> objects will remain valid.
          *
+         * The structure of the packet tree will \e not be swapped:
+         * both packets being swapped will remain with their original parents,
+         * and their original children will remain with them.
+         *
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *

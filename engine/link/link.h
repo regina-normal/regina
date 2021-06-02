@@ -937,6 +937,10 @@ class Link : public Packet {
          * In particular, any Crossing pointers or references and any
          * StrandRef objects will remain valid.
          *
+         * The structure of the packet tree will \e not be swapped:
+         * both packets being swapped will remain with their original parents,
+         * and their original children will remain with them.
+         *
          * This routine will behave correctly if \a other is in fact
          * this link.
          *
