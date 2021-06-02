@@ -132,6 +132,11 @@ Version 6.1  [ TODO ]
               return groups by value (which can then be moved from).
             - Function addRelation() now takes its argument by value.
             - Added member and global swap() functions.
+            - The simplification functions now return a
+              std::optional<HomGroupPresentation> instead of a
+              std::unique_ptr<HomGroupPresentation>.  Other than the type, the
+              C++ syntax should be largely unaffected, and the Python behaviour
+              (returning None if there is no homomorphism) remains the same.
             - Some major cleanup and reorganisation under the hood.
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
@@ -148,6 +153,10 @@ Version 6.1  [ TODO ]
               reference now take these arguments by value.
             - The evaluate() and invEvaluate() functions now run in linear
               time, not quadratic time, and take their arguments by value.
+            - Fixed an issue where intelligentSimplify(), intelligentNielsen()
+              and smallCancellation() would always return true, regardless
+              of what happened.  All three routines now return true if and
+              only if either presentatation and/or the map has changed.
         Class HomMarkedAbelianGroup:
             - Added a move constructor.
             - Added copy assignment and move assignment operators.

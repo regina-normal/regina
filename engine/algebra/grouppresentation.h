@@ -41,6 +41,7 @@
 
 #include <algorithm>
 #include <list>
+#include <optional>
 #include <vector>
 #include <set>
 #include <map>
@@ -898,10 +899,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * @return a newly allocated homomorphism describing the
          * reduction map from the original presentation to the new
-         * presentation, or a null pointer if this presentation was not
-         * changed.
+         * presentation, or no value if this presentation was not changed.
          */
-        std::unique_ptr<HomGroupPresentation> intelligentSimplifyDetail();
+        std::optional<HomGroupPresentation> intelligentSimplifyDetail();
 
         /**
          * Attempts to simplify the group presentation using only small
@@ -936,10 +936,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * @return a newly allocated homomorphism describing the
          * reduction map from the original presentation to the new
-         * presentation, or a null pointer if this presentation was not
-         * changed.
+         * presentation, or no value if this presentation was not changed.
          */
-        std::unique_ptr<HomGroupPresentation> smallCancellationDetail();
+        std::optional<HomGroupPresentation> smallCancellationDetail();
 
         /**
          * Uses small cancellation theory to reduce the input word,
@@ -1162,9 +1161,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * @return a newly allocated homomorphism describing the
          * map from the original presentation to the new presentation,
-         * or a null pointer if no move was performed.
+         * or no value if no move was performed.
          */
-        std::unique_ptr<HomGroupPresentation> intelligentNielsenDetail();
+        std::optional<HomGroupPresentation> intelligentNielsenDetail();
 
         /**
          * Rewrites the presentation so that generators
@@ -1202,10 +1201,10 @@ class GroupPresentation : public Output<GroupPresentation> {
          * notes for details on what this means.
          *
          * @return a newly allocated homomorphism giving the reduction map
-         * from the old presentation to the new, or a null pointer if
+         * from the old presentation to the new, or no value if
          * this presentation was not changed.
          */
-        std::unique_ptr<HomGroupPresentation> homologicalAlignmentDetail();
+        std::optional<HomGroupPresentation> homologicalAlignmentDetail();
 
         /**
          * An entirely cosmetic re-writing of the presentation, which is
@@ -1245,9 +1244,9 @@ class GroupPresentation : public Output<GroupPresentation> {
          *
          * @return a newly allocated homomorphism describing the
          * map from the original presentation to the new presentation,
-         * or a null pointer if the choice of generators did not change.
+         * or no value if the choice of generators did not change.
          */
-        std::unique_ptr<HomGroupPresentation> prettyRewritingDetail();
+        std::optional<HomGroupPresentation> prettyRewritingDetail();
 
         /**
          * Attempts to prove that this and the given group presentation are
@@ -1371,7 +1370,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * This is an algorithmic
          * implementation of the Reidemeister-Schrier algorithm, which isn't
          * actually an algorithm.  So sometimes this procedure works, and
-         * sometimes it does not.  The return value is an allocated unique_ptr
+         * sometimes it does not.  This function will return a value
          * if and only if the algorithm is successful.  Even if the algorithm
          * is unsuccessful, its application will likely result in a
          * modification of the presentation.
@@ -1380,12 +1379,12 @@ class GroupPresentation : public Output<GroupPresentation> {
          * in future versions of this software, perhaps incorporated into a
          * bigger-and-better future algorithm.
          *
-         * @return a newly allocated homomorphism if and only
-         * if the algorithm is successful.  When this pointer is allocated
-         * it will be an automorphism of a presentation of the kernel of the
-         * map this to the integers.
+         * @return a homomorphism if the algorithm was successful, or no value
+         * if it was not.  If a homomorphism is returned, it will be an
+         * automorphism of a presentation of the kernel of the map this to the
+         * integers.
          */
-        std::unique_ptr< HomGroupPresentation > identifyExtensionOverZ();
+        std::optional<HomGroupPresentation> identifyExtensionOverZ();
 
         /**
          * Attempts to determine if this group is clearly a free

@@ -267,7 +267,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Uses the underlying GroupPresentation::intelligentSimplify().
          * See that routine for details.
          *
-         * @return \c true if the presentations or map have changed.
+         * @return \c true if and only if either presentation and/or the
+         * map was changed.
          */
         bool intelligentSimplify();
 
@@ -275,7 +276,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Simplifies the domain and range using only Nielsen moves, keeping
          * track of the resulting map in the progress.
          *
-         * @return \c true if and only if either presentation was changed.
+         * @return \c true if and only if either presentation and/or the
+         * map was changed.
          */
         bool intelligentNielsen();
 
@@ -283,7 +285,8 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * Simplifies the domain and range using only small cancellation
          * theory.
          *
-         * @return \c true if and only if either presentation was changed.
+         * @return \c true if and only if either presentation and/or the
+         * map was changed.
          */
         bool smallCancellation();
 

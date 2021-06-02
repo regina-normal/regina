@@ -252,11 +252,10 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
     //   for those.
     if (ab.rank()==1) {
         GroupPresentation presCopy( *this );
-        std::unique_ptr< HomGroupPresentation > AUT(
-            presCopy.identifyExtensionOverZ() );
-        if (AUT.get() != nullptr) {
+        auto AUT = presCopy.identifyExtensionOverZ();
+        if (AUT) {
             // Let's try to identify the fibre.
-            std::string domStr( AUT.get()->domain().recogniseGroup(moreUtf8) );
+            std::string domStr( AUT->domain().recogniseGroup(moreUtf8) );
             if (domStr.length()>0) { {
                 if (moreUtf8)
                     out << "\u2124~"; // unicode blackboard bold Z
@@ -264,14 +263,13 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
                     out << "Z~";
                 out << domStr << " w/monodromy ";
             }
-            unsigned long numGen(
-                AUT.get()->domain().countGenerators() );
+            unsigned long numGen = AUT->domain().countGenerators();
             for (unsigned long i=0; i<numGen; i++) {
               if (i!=0) out<<", ";
               if (numGen<27) out<<( (char) (i+97) );
               else out<<"g"<<i;
               out<<" \u21A6 "; // mapsto symbol in unicode
-              AUT.get()->evaluate(i).writeText(out, (numGen<27), moreUtf8);
+              AUT->evaluate(i).writeText(out, (numGen<27), moreUtf8);
               }
              return out.str();
             } // domain not recognised, but it is an extension
@@ -761,40 +759,35 @@ bool GroupPresentation::simplifyWord( GroupExpression &input ) const
 // 3) Loop back to (1) until nothing happens in either (1) or (2).
 // TODO: consider a homological alignment call if the abelianization
 //       has rank 1 or any other situation where we know it can be useful.
-std::unique_ptr<HomGroupPresentation>
+std::optional<HomGroupPresentation>
 GroupPresentation::intelligentSimplifyDetail()
 {
     bool doRep(true);
-    std::unique_ptr<HomGroupPresentation> redHom;
+    std::optional<HomGroupPresentation> redHom;
     while (doRep) {
         doRep = false;
-        std::unique_ptr<HomGroupPresentation> tempHom(
-            smallCancellationDetail() );
-        if (tempHom.get()) {
+        if (auto h = smallCancellationDetail()) {
             doRep = true;
-            if (!redHom.get())
-                redHom.swap(tempHom);
+            if (!redHom)
+                redHom = std::move(*h);
             else
-                *redHom = (*tempHom) * (*redHom);
+                *redHom = (*h) * (*redHom);
         }
 
-        std::unique_ptr<HomGroupPresentation> temp2Hom(
-            intelligentNielsenDetail() );
-        if (temp2Hom.get()) {
+        if (auto h = intelligentNielsenDetail()) {
             doRep = true;
-            if (!redHom.get())
-                redHom.swap(temp2Hom);
+            if (!redHom)
+                redHom = std::move(*h);
             else
-                *redHom = (*temp2Hom) * (*redHom);
+                *redHom = (*h) * (*redHom);
         }
     }
 
-    std::unique_ptr<HomGroupPresentation> temp3Hom( prettyRewritingDetail() );
-    if (temp3Hom.get()) {
-        if (!redHom.get())
-            redHom.swap(temp3Hom);
+    if (auto h = prettyRewritingDetail()) {
+        if (!redHom)
+            redHom = std::move(*h);
         else
-            *redHom = (*temp3Hom) * (*redHom);
+            *redHom = (*h) * (*redHom);
     }
 
     return redHom;
@@ -802,15 +795,15 @@ GroupPresentation::intelligentSimplifyDetail()
 
 bool GroupPresentation::intelligentSimplify()
 {
-    return intelligentSimplifyDetail().get();
+    return intelligentSimplifyDetail().has_value();
 }
 
 bool GroupPresentation::smallCancellation()
 {
-    return smallCancellationDetail().get();
+    return smallCancellationDetail().has_value();
 }
 
-std::unique_ptr<HomGroupPresentation>
+std::optional<HomGroupPresentation>
 GroupPresentation::smallCancellationDetail()
 {
     bool didSomething(false);
@@ -954,24 +947,24 @@ found_a_generator_killer:
 
     if (didSomething) {
         // now we can initialize reductionMap
-        return std::unique_ptr<HomGroupPresentation>(new HomGroupPresentation(
-            std::move(oldGroup), *this, substitutionTable, revMap));
+        return HomGroupPresentation(std::move(oldGroup), *this,
+            substitutionTable, revMap);
     } else
-        return std::unique_ptr<HomGroupPresentation>();
+        return std::nullopt;
 }// end smallCancellation()
 
 bool GroupPresentation::intelligentNielsen()
 {
-    return intelligentNielsenDetail().get();
+    return intelligentNielsenDetail().has_value();
 }
 
-std::unique_ptr<HomGroupPresentation>
+std::optional<HomGroupPresentation>
 GroupPresentation::intelligentNielsenDetail()
 {
-    if (nGenerators_ < 2) return std::unique_ptr<HomGroupPresentation>();
+    if (nGenerators_ < 2) return std::nullopt;
     // let's keep a record of the best possible substitution,
     bool didSomething(true);
-    std::unique_ptr<HomGroupPresentation> retval;
+    std::optional<HomGroupPresentation> retval;
     while (didSomething) {
         didSomething = false;
         unsigned long bSubi(0), bSubj(0), bSubType(0); // IJ IJi JI or JIi 0,1,2,3
@@ -1082,13 +1075,12 @@ GroupPresentation::intelligentNielsenDetail()
                 DomToRan[ bSubi ].addTermFirst( GroupExpressionTerm( bSubj, 1 ) );
                 RanToDom[ bSubi ].addTermFirst( GroupExpressionTerm( bSubj, -1 ) );
             }
-            std::unique_ptr<HomGroupPresentation> tempHom(
-                new HomGroupPresentation(std::move(oldPres), *this,
-                    DomToRan,RanToDom));
-            if (!retval.get())
-                retval.swap(tempHom);
+            HomGroupPresentation tempHom(std::move(oldPres), *this,
+                    DomToRan,RanToDom);
+            if (!retval)
+                retval = std::move(tempHom);
             else
-                *retval = (*tempHom) * (*retval);
+                *retval = tempHom * (*retval);
             // make the dom->ran and ran->dom vectors.
         }
     } // the while loop
@@ -1098,13 +1090,13 @@ GroupPresentation::intelligentNielsenDetail()
 
 bool GroupPresentation::homologicalAlignment()
 {
-    return homologicalAlignmentDetail().get();
+    return homologicalAlignmentDetail().has_value();
 }
 
-std::unique_ptr<HomGroupPresentation>
+std::optional<HomGroupPresentation>
 GroupPresentation::homologicalAlignmentDetail()
 {
-    std::unique_ptr<HomGroupPresentation> retval; // only allocate if appropriate.
+    std::optional<HomGroupPresentation> retval; // only allocate if appropriate.
     // step 1: compute abelianization and how generators map to abelianization.
     MarkedAbelianGroup abelianized = markedAbelianisation();
     MatrixInt abMat( abelianized.minNumberOfGenerators(), countGenerators() );
@@ -1159,12 +1151,11 @@ GroupPresentation::homologicalAlignmentDetail()
             }
             // manufacture the Nielsen automorphism...
             nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
-            std::unique_ptr<HomGroupPresentation> tempHom(
-                new HomGroupPresentation(std::move(oldPres), *this, fVec, bVec));
-            if (!retval.get())
-                retval.swap(tempHom);
+            HomGroupPresentation tempHom(std::move(oldPres), *this, fVec, bVec);
+            if (!retval)
+                retval = std::move(tempHom);
             else
-                *retval = (*tempHom) * (*retval);
+                *retval = tempHom * (*retval);
         } // j0==j1 is the column such that entry (i,j1) is +-1.
         nielsenTransposition(i, j1);
         abMat.swapColumns(i, j1);
@@ -1215,12 +1206,11 @@ GroupPresentation::homologicalAlignmentDetail()
             }
             // manufacture the Nielsen automorphism...
             nielsenCombine(colFlag ? j1 : j0, colFlag ? j0 : j1, -q.longValue() );
-            std::unique_ptr<HomGroupPresentation> tempHom(
-                new HomGroupPresentation(std::move(oldPres), *this, fVec, bVec));
-            if (!retval.get())
-                retval.swap(tempHom);
+            HomGroupPresentation tempHom(std::move(oldPres), *this, fVec, bVec);
+            if (!retval)
+                retval = std::move(tempHom);
             else
-                *retval = (*tempHom) * (*retval);
+                *retval = tempHom * (*retval);
         } // j0==j1 is the column such that entry (i,j1) is +-1.
         if (i!=j1) {
             nielsenTransposition(i, j1);
@@ -1231,12 +1221,11 @@ GroupPresentation::homologicalAlignmentDetail()
     //              [ 0 D 0 ] so we're essentially done.
 
     // call prettify
-    std::unique_ptr<HomGroupPresentation> tempHom( prettyRewritingDetail() );
-    if (tempHom.get()) {
-        if (!retval.get())
-            retval.swap(tempHom);
+    if (auto h = prettyRewritingDetail()) {
+        if (!retval)
+            retval = std::move(*h);
         else
-            *retval = (*tempHom) * (*retval);
+            *retval = (*h) * (*retval);
     }
 
     return retval;
@@ -1645,14 +1634,13 @@ bool GroupPresentation::nielsenCombine(unsigned long i, unsigned long j,
 // Short-term we can recognise the fibre as being abelian and check
 // invertibility using HomMarkedAbelianGroup routines.
 //
-std::unique_ptr< HomGroupPresentation >
-GroupPresentation::identifyExtensionOverZ()
+std::optional<HomGroupPresentation> GroupPresentation::identifyExtensionOverZ()
 {
     // step 1: let's build the abelianization homomorphism.
     homologicalAlignment();
     MarkedAbelianGroup abelianized = markedAbelianisation();
     if (abelianized.rank() != 1)
-        return std::unique_ptr< HomGroupPresentation >();
+        return std::nullopt;
     if (abelianized.countInvariantFactors()>0)  // put Z generator at 0-th
         nielsenTransposition(0, abelianized.countInvariantFactors() );
 
@@ -1762,7 +1750,7 @@ GroupPresentation::identifyExtensionOverZ()
     // generators
     unsigned long nGm1( nGenerators_ - 1 );
     if ( (maxKiller.size() != nGm1) || (minKiller.size() != nGm1) )
-        return std::unique_ptr< HomGroupPresentation >();
+        return std::nullopt;
 
     unsigned long maxWidth(0);
     unsigned long liftCount(0); // how many lifts of our generators do we need?
@@ -1875,29 +1863,28 @@ GroupPresentation::identifyExtensionOverZ()
     // TODO: Possibly we could use std::move() on one of the copies of
     // kerPres in the line below, to save one of the two deep copies
     // that we are currently making.
-    std::unique_ptr< HomGroupPresentation > retval(
-        new HomGroupPresentation( kerPres, kerPres, autVec ) );
-    retval->intelligentSimplify();
+    HomGroupPresentation retval( kerPres, kerPres, autVec );
+    retval.intelligentSimplify();
 
     // Modify this presentation to reflect the semi-direct product
     //        structure we've discovered!
     // deallocate relations, and resize and repopulate with copies of kerPres's
     //  relations.
 
-    nGenerators_ = retval->domain().nGenerators_ + 1;
-    relations_.resize( retval->domain().nGenerators_ +
-                       retval->domain().relations_.size() );
+    nGenerators_ = retval.domain().nGenerators_ + 1;
+    relations_.resize( retval.domain().nGenerators_ +
+                       retval.domain().relations_.size() );
 
-    for (unsigned long i=0; i<retval->domain().relations_.size(); i++)
-        relations_[i] = retval->domain().relations_[i];
+    for (unsigned long i=0; i<retval.domain().relations_.size(); i++)
+        relations_[i] = retval.domain().relations_[i];
 
     // And now all the b^-1g_ib = genKiller(i) and b^-1g_ib = g_{i+1} relations.
-    for (unsigned long i=0; i<retval->domain().nGenerators_; i++) {
-        GroupExpression temp = retval->evaluate(i);
-        temp.addTermFirst( retval->domain().nGenerators_, 1);
+    for (unsigned long i=0; i<retval.domain().nGenerators_; i++) {
+        GroupExpression temp = retval.evaluate(i);
+        temp.addTermFirst( retval.domain().nGenerators_, 1);
         temp.addTermFirst( i, -1);
-        temp.addTermFirst( retval->domain().nGenerators_, -1);
-        relations_[ i+retval->domain().relations_.size() ] = std::move(temp);
+        temp.addTermFirst( retval.domain().nGenerators_, -1);
+        relations_[ i+retval.domain().relations_.size() ] = std::move(temp);
     }
 
     return retval;
@@ -1981,13 +1968,12 @@ namespace { // anonymous namespace
 } // end anonymous namespace
 
 bool GroupPresentation::prettyRewriting() {
-    return prettyRewritingDetail().get();
+    return prettyRewritingDetail().has_value();
 }
 
 // this routine iteratively finds length 1 relators, and uses them to simplify
 // other relators.  In the end it deletes all length 0 relators and re-indexes.
-std::unique_ptr<HomGroupPresentation> GroupPresentation::prettyRewritingDetail()
-{
+std::optional<HomGroupPresentation> GroupPresentation::prettyRewritingDetail() {
     GroupPresentation oldPres(*this);
 
     // move the relators into a separate list for now.
@@ -2029,7 +2015,7 @@ std::unique_ptr<HomGroupPresentation> GroupPresentation::prettyRewritingDetail()
     // We are not planning to delete any more relations, and so we work
     // directly with the relations_ vector from here on.
 
-    std::unique_ptr< HomGroupPresentation > redMap;
+    std::optional<HomGroupPresentation> redMap;
     if (genToDel.size()>0) {
         std::set< unsigned long > interval, compDelete; // complement
         for (unsigned long i=0; i<nGenerators_; i++)
@@ -2053,8 +2039,7 @@ std::unique_ptr<HomGroupPresentation> GroupPresentation::prettyRewritingDetail()
         }
         nGenerators_ -= genToDel.size();
         // assemble the reduction map
-        redMap.reset( new HomGroupPresentation( std::move(oldPres), *this,
-                      downSub, upSub ) );
+        redMap = HomGroupPresentation(std::move(oldPres), *this, downSub, upSub);
     }
 
     // WARNING: Do not use oldPres past this point, since we may have
