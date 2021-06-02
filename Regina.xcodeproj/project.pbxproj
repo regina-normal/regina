@@ -54,9 +54,6 @@
 		050C646D1DA101A900C9420F /* anglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64651DA1019B00C9420F /* anglestructure.cpp */; };
 		050C646E1DA101A900C9420F /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64671DA1019B00C9420F /* anglestructures.cpp */; };
 		050C64731DA101D700C9420F /* anglestructure.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C646F1DA101CC00C9420F /* anglestructure.cpp */; };
-		050C647B1DA1056700C9420F /* xmlanglestructreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64791DA1056700C9420F /* xmlanglestructreader.cpp */; };
-		050C647C1DA1056700C9420F /* xmlanglestructreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C647A1DA1056700C9420F /* xmlanglestructreader.h */; };
-		050C647D1DA1057000C9420F /* xmlanglestructreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64791DA1056700C9420F /* xmlanglestructreader.cpp */; };
 		050C64801DA10A0700C9420F /* anglestructures.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C647E1DA109FD00C9420F /* anglestructures.cpp */; };
 		050C64851DA1249600C9420F /* fileinfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 050C64811DA1249600C9420F /* fileinfo.cpp */; };
 		050C64861DA1249600C9420F /* fileinfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 050C64821DA1249600C9420F /* fileinfo.h */; };
@@ -453,10 +450,6 @@
 		052F9F5C180600FB00FAE4DF /* script.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D06180600FA00FAE4DF /* script.h */; };
 		052F9F5D180600FB00FAE4DF /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* text.cpp */; };
 		052F9F5E180600FB00FAE4DF /* text.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D08180600FA00FAE4DF /* text.h */; };
-		052F9F5F180600FB00FAE4DF /* xmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */; };
-		052F9F60180600FB00FAE4DF /* xmlpacketreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0A180600FA00FAE4DF /* xmlpacketreader.h */; };
-		052F9F61180600FB00FAE4DF /* xmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */; };
-		052F9F62180600FB00FAE4DF /* xmlpacketreaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0C180600FA00FAE4DF /* xmlpacketreaders.h */; };
 		052F9F63180600FB00FAE4DF /* packetregistry.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D0D180600FA00FAE4DF /* packetregistry.h */; };
 		052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D12180600FA00FAE4DF /* progresstracker.h */; };
 		052F9F69180600FB00FAE4DF /* regina-core.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9D17180600FA00FAE4DF /* regina-core.h */; };
@@ -568,10 +561,6 @@
 		052FA043180600FB00FAE4DF /* nsvectorstandard.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1D180600FB00FAE4DF /* nsvectorstandard.h */; };
 		052FA044180600FB00FAE4DF /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */; };
 		052FA045180600FB00FAE4DF /* surfacefilter.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E1F180600FB00FAE4DF /* surfacefilter.h */; };
-		052FA048180600FB00FAE4DF /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */; };
-		052FA049180600FB00FAE4DF /* xmlfilterreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E23180600FB00FAE4DF /* xmlfilterreader.h */; };
-		052FA04B180600FB00FAE4DF /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */; };
-		052FA04C180600FB00FAE4DF /* xmlsurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E26180600FB00FAE4DF /* xmlsurfacereader.h */; };
 		052FA04D180600FB00FAE4DF /* orientable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E27180600FB00FAE4DF /* orientable.cpp */; };
 		052FA04E180600FB00FAE4DF /* quadtostd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E28180600FB00FAE4DF /* quadtostd.cpp */; };
 		052FA054180600FB00FAE4DF /* stdtoquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E2E180600FB00FAE4DF /* stdtoquad.cpp */; };
@@ -664,8 +653,6 @@
 		052FA1A91806129B00FAE4DF /* pdf.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D03180600FA00FAE4DF /* pdf.cpp */; };
 		052FA1AA1806129B00FAE4DF /* script.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D05180600FA00FAE4DF /* script.cpp */; };
 		052FA1AB1806129B00FAE4DF /* text.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D07180600FA00FAE4DF /* text.cpp */; };
-		052FA1AC1806129B00FAE4DF /* xmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */; };
-		052FA1AD1806129B00FAE4DF /* xmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */; };
 		052FA1B01806129B00FAE4DF /* snappeatriangulation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D92180600FB00FAE4DF /* snappeatriangulation.cpp */; };
 		052FA1B11806129B00FAE4DF /* uimessages.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D99180600FB00FAE4DF /* uimessages.cpp */; };
 		052FA1B21806129B00FAE4DF /* sigcensus.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9D9C180600FB00FAE4DF /* sigcensus.cpp */; };
@@ -688,8 +675,6 @@
 		052FA1E21806129B00FAE4DF /* nsvectorquadoct.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1A180600FB00FAE4DF /* nsvectorquadoct.cpp */; };
 		052FA1E31806129B00FAE4DF /* nsvectorstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1C180600FB00FAE4DF /* nsvectorstandard.cpp */; };
 		052FA1E41806129B00FAE4DF /* surfacefilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */; };
-		052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */; };
-		052FA1E81806129B00FAE4DF /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */; };
 		052FA1E91806129B00FAE4DF /* orientable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E27180600FB00FAE4DF /* orientable.cpp */; };
 		052FA1EA1806129B00FAE4DF /* quadtostd.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E28180600FB00FAE4DF /* quadtostd.cpp */; };
 		052FA1EE1806129B00FAE4DF /* stdtoquad.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 052F9E2E180600FB00FAE4DF /* stdtoquad.cpp */; };
@@ -1011,16 +996,6 @@
 		055114CE1DCC476A00EC753C /* pachner.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114CC1DCC476A00EC753C /* pachner.h */; };
 		055114D41DCC71A700EC753C /* facenumbering.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D01DCC71A700EC753C /* facenumbering.h */; };
 		055114D51DCC71A700EC753C /* facetspec.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D11DCC71A700EC753C /* facetspec.h */; };
-		055114D61DCC71A700EC753C /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D21DCC71A700EC753C /* xmltrireader.h */; };
-		055114DE1DCC85F200EC753C /* xmltrireader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114D81DCC85F100EC753C /* xmltrireader2.cpp */; };
-		055114DF1DCC85F200EC753C /* xmltrireader2.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114D91DCC85F200EC753C /* xmltrireader2.h */; };
-		055114E01DCC85F200EC753C /* xmltrireader3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114DA1DCC85F200EC753C /* xmltrireader3.cpp */; };
-		055114E11DCC85F200EC753C /* xmltrireader3.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114DB1DCC85F200EC753C /* xmltrireader3.h */; };
-		055114E21DCC85F200EC753C /* xmltrireader4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114DC1DCC85F200EC753C /* xmltrireader4.cpp */; };
-		055114E31DCC85F200EC753C /* xmltrireader4.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114DD1DCC85F200EC753C /* xmltrireader4.h */; };
-		055114E41DCC860200EC753C /* xmltrireader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114D81DCC85F100EC753C /* xmltrireader2.cpp */; };
-		055114E51DCC860200EC753C /* xmltrireader3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114DA1DCC85F200EC753C /* xmltrireader3.cpp */; };
-		055114E61DCC860200EC753C /* xmltrireader4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 055114DC1DCC85F200EC753C /* xmltrireader4.cpp */; };
 		055114EE1DCD5D0500EC753C /* gluingpermsearcher.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114ED1DCD5D0500EC753C /* gluingpermsearcher.h */; };
 		055114FC1DCDF63000EC753C /* boundarycomponent.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F51DCDF63000EC753C /* boundarycomponent.h */; };
 		055114FD1DCDF63000EC753C /* component.h in Headers */ = {isa = PBXBuildFile; fileRef = 055114F61DCDF63000EC753C /* component.h */; };
@@ -1184,7 +1159,6 @@
 		057118D419B30BC0009FEDC5 /* snappea-census-sec7o.dat in CopyFiles */ = {isa = PBXBuildFile; fileRef = 057118B719B308F8009FEDC5 /* snappea-census-sec7o.dat */; };
 		05721EE21F97153E00A83FFC /* jenkins.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721ECE1F97153C00A83FFC /* jenkins.cpp */; };
 		05721EE31F97153E00A83FFC /* data-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721ECF1F97153C00A83FFC /* data-impl.h */; };
-		05721EE41F97153E00A83FFC /* xmllinkreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721ED11F97153C00A83FFC /* xmllinkreader.h */; };
 		05721EE51F97153E00A83FFC /* gauss.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721ED21F97153C00A83FFC /* gauss.cpp */; };
 		05721EE61F97153E00A83FFC /* jones.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721ED41F97153C00A83FFC /* jones.cpp */; };
 		05721EE71F97153E00A83FFC /* examplelink.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721ED61F97153C00A83FFC /* examplelink.cpp */; };
@@ -1194,7 +1168,6 @@
 		05721EEC1F97153E00A83FFC /* reidemeister.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EDB1F97153C00A83FFC /* reidemeister.cpp */; };
 		05721EED1F97153E00A83FFC /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EDC1F97153C00A83FFC /* complement.cpp */; };
 		05721EEE1F97153E00A83FFC /* gauss-impl.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721EDD1F97153C00A83FFC /* gauss-impl.h */; };
-		05721EEF1F97153E00A83FFC /* xmllinkreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EDE1F97153C00A83FFC /* xmllinkreader.cpp */; };
 		05721EF01F97153E00A83FFC /* link.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721EDF1F97153C00A83FFC /* link.h */; };
 		05721EF11F97153E00A83FFC /* link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EE01F97153C00A83FFC /* link.cpp */; };
 		05721EF21F97153E00A83FFC /* examplelink.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721EE11F97153C00A83FFC /* examplelink.h */; };
@@ -1206,7 +1179,6 @@
 		05721EF81F97156600A83FFC /* homfly.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EDA1F97153C00A83FFC /* homfly.cpp */; };
 		05721EF91F97156600A83FFC /* reidemeister.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EDB1F97153C00A83FFC /* reidemeister.cpp */; };
 		05721EFA1F97156600A83FFC /* complement.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EDC1F97153C00A83FFC /* complement.cpp */; };
-		05721EFB1F97156600A83FFC /* xmllinkreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EDE1F97153C00A83FFC /* xmllinkreader.cpp */; };
 		05721EFC1F97156600A83FFC /* link.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05721EE01F97153C00A83FFC /* link.cpp */; };
 		05721EFF1F9715C700A83FFC /* laurent2.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721EFD1F9715C600A83FFC /* laurent2.h */; };
 		05721F001F9715C700A83FFC /* laurent.h in Headers */ = {isa = PBXBuildFile; fileRef = 05721EFE1F9715C700A83FFC /* laurent.h */; };
@@ -1411,14 +1383,11 @@
 		0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D31C4F750200793A9C /* normalhypersurface.h */; };
 		0591E7E21C4F750200793A9C /* normalhypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */; };
 		0591E7E31C4F750200793A9C /* normalhypersurfaces.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D51C4F750200793A9C /* normalhypersurfaces.h */; };
-		0591E7E41C4F750200793A9C /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */; };
-		0591E7E51C4F750200793A9C /* xmlhypersurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */; };
 		0591E7E61C4F750200793A9C /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D81C4F750200793A9C /* triangulate.cpp */; };
 		0591E7E71C4F751B00793A9C /* links.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7CE1C4F750200793A9C /* links.cpp */; };
 		0591E7E81C4F751B00793A9C /* hsvectorstandard.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D01C4F750200793A9C /* hsvectorstandard.cpp */; };
 		0591E7E91C4F751B00793A9C /* normalhypersurface.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D21C4F750200793A9C /* normalhypersurface.cpp */; };
 		0591E7EA1C4F751B00793A9C /* normalhypersurfaces.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */; };
-		0591E7EB1C4F751B00793A9C /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */; };
 		0591E7EC1C4F751B00793A9C /* triangulate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7D81C4F750200793A9C /* triangulate.cpp */; };
 		0591E7F31C4F75C300793A9C /* gluingpermsearcher4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E7EF1C4F75C300793A9C /* gluingpermsearcher4.cpp */; };
 		0591E7F41C4F75C300793A9C /* gluingpermsearcher4.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E7F01C4F75C300793A9C /* gluingpermsearcher4.h */; };
@@ -1453,7 +1422,6 @@
 		0591E8501C4F777100793A9C /* facetpairing4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E84A1C4F776A00793A9C /* facetpairing4.cpp */; };
 		0591E8571C4F77A400793A9C /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* triangulation4.cpp */; };
 		0591E8581C4F77A400793A9C /* triangulation4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E8531C4F779B00793A9C /* triangulation4.cpp */; };
-		0591E85B1C50527100793A9C /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E85A1C50527100793A9C /* xmltrireader.h */; };
 		0591E85E1C50D28700793A9C /* enumerate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E85C1C50D28700793A9C /* enumerate.cpp */; };
 		0591E85F1C50D28700793A9C /* hyperflags.h in Headers */ = {isa = PBXBuildFile; fileRef = 0591E85D1C50D28700793A9C /* hyperflags.h */; };
 		0591E8601C50D28D00793A9C /* enumerate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0591E85C1C50D28700793A9C /* enumerate.cpp */; };
@@ -1471,6 +1439,51 @@
 		059474EE1F981E5700F04273 /* Tri2.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F01F981E5700F04273 /* Tri2.storyboard */; };
 		059474F11F981F0300F04273 /* Tri3.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F31F981F0300F04273 /* Tri3.storyboard */; };
 		059474F41F981F1800F04273 /* Tri4.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 059474F61F981F1800F04273 /* Tri4.storyboard */; };
+		059802DD26683C6D002D5D57 /* xmlsnappeareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802BD26683C6D002D5D57 /* xmlsnappeareader.h */; };
+		059802DE26683C6D002D5D57 /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802BF26683C6D002D5D57 /* xmlsurfacereader.cpp */; };
+		059802DF26683C6D002D5D57 /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C026683C6D002D5D57 /* xmlhypersurfacereader.cpp */; };
+		059802E026683C6D002D5D57 /* xmllinkreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802C126683C6D002D5D57 /* xmllinkreader.h */; };
+		059802E126683C6D002D5D57 /* xmlfilterreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802C226683C6D002D5D57 /* xmlfilterreader.h */; };
+		059802E226683C6D002D5D57 /* xmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C326683C6D002D5D57 /* xmlpacketreader.cpp */; };
+		059802E326683C6D002D5D57 /* xmlsnappeareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C426683C6D002D5D57 /* xmlsnappeareader.cpp */; };
+		059802E426683C6D002D5D57 /* xmltrireader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802C526683C6D002D5D57 /* xmltrireader.h */; };
+		059802E526683C6D002D5D57 /* xmltreeresolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802C626683C6D002D5D57 /* xmltreeresolver.h */; };
+		059802E626683C6D002D5D57 /* xmltrireader3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C726683C6D002D5D57 /* xmltrireader3.cpp */; };
+		059802E726683C6D002D5D57 /* xmltrireader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C826683C6D002D5D57 /* xmltrireader2.cpp */; };
+		059802E826683C6D002D5D57 /* xmltrireader2.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802C926683C6D002D5D57 /* xmltrireader2.h */; };
+		059802E926683C6D002D5D57 /* xmlhypersurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802CA26683C6D002D5D57 /* xmlhypersurfacereader.h */; };
+		059802EA26683C6D002D5D57 /* xmlreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802CB26683C6D002D5D57 /* xmlreader.h */; };
+		059802EB26683C6D002D5D57 /* xmltrireader4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802CC26683C6D002D5D57 /* xmltrireader4.cpp */; };
+		059802EC26683C6D002D5D57 /* xmlanglestructreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802CD26683C6D002D5D57 /* xmlanglestructreader.cpp */; };
+		059802ED26683C6D002D5D57 /* xmlcallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802CE26683C6D002D5D57 /* xmlcallback.cpp */; };
+		059802EE26683C6D002D5D57 /* xmlreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802CF26683C6D002D5D57 /* xmlreader.cpp */; };
+		059802EF26683C6D002D5D57 /* xmlpacketreaders.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802D026683C6D002D5D57 /* xmlpacketreaders.h */; };
+		059802F026683C6D002D5D57 /* xmltrireader3.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802D126683C6D002D5D57 /* xmltrireader3.h */; };
+		059802F126683C6D002D5D57 /* xmlanglestructreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802D226683C6D002D5D57 /* xmlanglestructreader.h */; };
+		059802F226683C6D002D5D57 /* xmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802D326683C6D002D5D57 /* xmlpacketreaders.cpp */; };
+		059802F326683C6D002D5D57 /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802D426683C6D002D5D57 /* xmlfilterreader.cpp */; };
+		059802F426683C6D002D5D57 /* xmlelementreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802D526683C6D002D5D57 /* xmlelementreader.h */; };
+		059802F526683C6D002D5D57 /* xmlalgebrareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802D626683C6D002D5D57 /* xmlalgebrareader.h */; };
+		059802F626683C6D002D5D57 /* xmlpacketreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802D726683C6D002D5D57 /* xmlpacketreader.h */; };
+		059802F726683C6D002D5D57 /* xmllinkreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802D826683C6D002D5D57 /* xmllinkreader.cpp */; };
+		059802F826683C6D002D5D57 /* xmlcallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802D926683C6D002D5D57 /* xmlcallback.h */; };
+		059802F926683C6D002D5D57 /* xmlsurfacereader.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802DA26683C6D002D5D57 /* xmlsurfacereader.h */; };
+		059802FA26683C6D002D5D57 /* xmlalgebrareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802DB26683C6D002D5D57 /* xmlalgebrareader.cpp */; };
+		059802FB26683C6D002D5D57 /* xmltrireader4.h in Headers */ = {isa = PBXBuildFile; fileRef = 059802DC26683C6D002D5D57 /* xmltrireader4.h */; };
+		059802FC26683C9F002D5D57 /* xmlanglestructreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802CD26683C6D002D5D57 /* xmlanglestructreader.cpp */; };
+		059802FD26683C9F002D5D57 /* xmlsurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802BF26683C6D002D5D57 /* xmlsurfacereader.cpp */; };
+		059802FE26683C9F002D5D57 /* xmlreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802CF26683C6D002D5D57 /* xmlreader.cpp */; };
+		059802FF26683C9F002D5D57 /* xmlhypersurfacereader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C026683C6D002D5D57 /* xmlhypersurfacereader.cpp */; };
+		0598030026683C9F002D5D57 /* xmlpacketreaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802D326683C6D002D5D57 /* xmlpacketreaders.cpp */; };
+		0598030126683C9F002D5D57 /* xmlpacketreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C326683C6D002D5D57 /* xmlpacketreader.cpp */; };
+		0598030226683C9F002D5D57 /* xmlcallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802CE26683C6D002D5D57 /* xmlcallback.cpp */; };
+		0598030326683C9F002D5D57 /* xmlfilterreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802D426683C6D002D5D57 /* xmlfilterreader.cpp */; };
+		0598030426683C9F002D5D57 /* xmltrireader3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C726683C6D002D5D57 /* xmltrireader3.cpp */; };
+		0598030526683C9F002D5D57 /* xmllinkreader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802D826683C6D002D5D57 /* xmllinkreader.cpp */; };
+		0598030626683C9F002D5D57 /* xmlalgebrareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802DB26683C6D002D5D57 /* xmlalgebrareader.cpp */; };
+		0598030726683C9F002D5D57 /* xmlsnappeareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C426683C6D002D5D57 /* xmlsnappeareader.cpp */; };
+		0598030826683C9F002D5D57 /* xmltrireader4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802CC26683C6D002D5D57 /* xmltrireader4.cpp */; };
+		0598030926683C9F002D5D57 /* xmltrireader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C826683C6D002D5D57 /* xmltrireader2.cpp */; };
 		0598F9761DBC9D3700E6CE11 /* PythonConsoleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */; };
 		05998ED219F9362D00855238 /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECB19F9360200855238 /* closed-hyp-census.rga */; };
 		05998ED319F9362D00855238 /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECC19F9360200855238 /* closed-nor-census.rga */; };
@@ -1656,19 +1669,12 @@
 		05A6A66E258AD0FB00A05E70 /* polynomial.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A6A66C258AD0FB00A05E70 /* polynomial.cpp */; };
 		05A73C7519B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
 		05A73C7619B2EDBF0099C617 /* hyperbolic.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */; };
-		05A73C7A19B2EDFC0099C617 /* xmlcallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */; };
-		05A73C7B19B2EDFC0099C617 /* xmlcallback.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */; };
-		05A73C7C19B2EDFC0099C617 /* xmlcallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A73C7819B2EDFC0099C617 /* xmlcallback.h */; };
-		05A73C7D19B2EDFC0099C617 /* xmlelementreader.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A73C7919B2EDFC0099C617 /* xmlelementreader.h */; };
 		05A73C8419B2EEC50099C617 /* csv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8319B2EEC50099C617 /* csv.cpp */; };
 		05A73C8519B2EEC50099C617 /* csv.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8319B2EEC50099C617 /* csv.cpp */; };
 		05A73C8A19B2EF130099C617 /* fundgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8619B2EF130099C617 /* fundgroup.cpp */; };
 		05A73C8B19B2EF130099C617 /* fundgroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8619B2EF130099C617 /* fundgroup.cpp */; };
 		05A73C8C19B2EF130099C617 /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8719B2EF130099C617 /* homology.cpp */; };
 		05A73C8D19B2EF130099C617 /* homology.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8719B2EF130099C617 /* homology.cpp */; };
-		05A73C8E19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8819B2EF130099C617 /* xmlsnappeareader.cpp */; };
-		05A73C8F19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C8819B2EF130099C617 /* xmlsnappeareader.cpp */; };
-		05A73C9019B2EF130099C617 /* xmlsnappeareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A73C8919B2EF130099C617 /* xmlsnappeareader.h */; };
 		05A73C9A19B2EF5A0099C617 /* abelian_group.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9119B2EF5A0099C617 /* abelian_group.c */; };
 		05A73C9B19B2EF5A0099C617 /* abelian_group.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9119B2EF5A0099C617 /* abelian_group.c */; };
 		05A73C9C19B2EF5A0099C617 /* fundamental_group.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9219B2EF5A0099C617 /* fundamental_group.c */; };
@@ -1683,7 +1689,6 @@
 		05A73CA519B2EF5A0099C617 /* Moebius_transformations.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9619B2EF5A0099C617 /* Moebius_transformations.c */; };
 		05A73CA619B2EF5A0099C617 /* sl2c_matrices.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9719B2EF5A0099C617 /* sl2c_matrices.c */; };
 		05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */ = {isa = PBXBuildFile; fileRef = 05A73C9719B2EF5A0099C617 /* sl2c_matrices.c */; };
-		05A73CAC19B2EFF90099C617 /* xmltreeresolver.h in Headers */ = {isa = PBXBuildFile; fileRef = 05A73CAA19B2EFF90099C617 /* xmltreeresolver.h */; };
 		05A73CAD19B2EFF90099C617 /* open.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CAB19B2EFF90099C617 /* open.cpp */; };
 		05A73CAE19B2EFF90099C617 /* open.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CAB19B2EFF90099C617 /* open.cpp */; };
 		05A73CCA19B2F1AB0099C617 /* groupwidget.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05A73CBC19B2F1AB0099C617 /* groupwidget.cpp */; };
@@ -2053,13 +2058,10 @@
 		05FB46E91DD92D4A00BB00E5 /* homgrouppresentation.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FB46DF1DD92D4A00BB00E5 /* homgrouppresentation.h */; };
 		05FB46EA1DD92D4A00BB00E5 /* markedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */; };
 		05FB46EB1DD92D4A00BB00E5 /* markedabeliangroup.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */; };
-		05FB46EC1DD92D4A00BB00E5 /* xmlalgebrareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46E21DD92D4A00BB00E5 /* xmlalgebrareader.cpp */; };
-		05FB46ED1DD92D4A00BB00E5 /* xmlalgebrareader.h in Headers */ = {isa = PBXBuildFile; fileRef = 05FB46E31DD92D4A00BB00E5 /* xmlalgebrareader.h */; };
 		05FB46EE1DD92D5100BB00E5 /* abeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46DA1DD92D4A00BB00E5 /* abeliangroup.cpp */; };
 		05FB46EF1DD92D5100BB00E5 /* grouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46DC1DD92D4A00BB00E5 /* grouppresentation.cpp */; };
 		05FB46F01DD92D5100BB00E5 /* homgrouppresentation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46DE1DD92D4A00BB00E5 /* homgrouppresentation.cpp */; };
 		05FB46F11DD92D5100BB00E5 /* markedabeliangroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */; };
-		05FB46F21DD92D5100BB00E5 /* xmlalgebrareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FB46E21DD92D4A00BB00E5 /* xmlalgebrareader.cpp */; };
 		05FC5CFC1F98063200F732E0 /* NewLinkController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 05FC5CF81F98060D00F732E0 /* NewLinkController.mm */; };
 		05FEA07A19C1890900A31924 /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* examplesnappea.cpp */; };
 		05FEA07B19C1890900A31924 /* examplesnappea.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05FEA07819C1890900A31924 /* examplesnappea.cpp */; };
@@ -2494,8 +2496,6 @@
 		050C64671DA1019B00C9420F /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
 		050C64681DA1019B00C9420F /* anglestructures.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = anglestructures.h; sourceTree = "<group>"; };
 		050C646F1DA101CC00C9420F /* anglestructure.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructure.cpp; sourceTree = "<group>"; };
-		050C64791DA1056700C9420F /* xmlanglestructreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlanglestructreader.cpp; sourceTree = "<group>"; };
-		050C647A1DA1056700C9420F /* xmlanglestructreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlanglestructreader.h; sourceTree = "<group>"; };
 		050C647E1DA109FD00C9420F /* anglestructures.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = anglestructures.cpp; sourceTree = "<group>"; };
 		050C64811DA1249600C9420F /* fileinfo.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = fileinfo.cpp; sourceTree = "<group>"; };
 		050C64821DA1249600C9420F /* fileinfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = fileinfo.h; sourceTree = "<group>"; };
@@ -2813,10 +2813,6 @@
 		052F9D06180600FA00FAE4DF /* script.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = script.h; sourceTree = "<group>"; };
 		052F9D07180600FA00FAE4DF /* text.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = text.cpp; sourceTree = "<group>"; };
 		052F9D08180600FA00FAE4DF /* text.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = text.h; sourceTree = "<group>"; };
-		052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlpacketreader.cpp; sourceTree = "<group>"; };
-		052F9D0A180600FA00FAE4DF /* xmlpacketreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlpacketreader.h; sourceTree = "<group>"; };
-		052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlpacketreaders.cpp; sourceTree = "<group>"; };
-		052F9D0C180600FA00FAE4DF /* xmlpacketreaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlpacketreaders.h; sourceTree = "<group>"; };
 		052F9D0D180600FA00FAE4DF /* packetregistry.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetregistry.h; sourceTree = "<group>"; };
 		052F9D0F180600FA00FAE4DF /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		052F9D12180600FA00FAE4DF /* progresstracker.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = progresstracker.h; sourceTree = "<group>"; };
@@ -2967,10 +2963,6 @@
 		052F9E1D180600FB00FAE4DF /* nsvectorstandard.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = nsvectorstandard.h; sourceTree = "<group>"; };
 		052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = surfacefilter.cpp; sourceTree = "<group>"; };
 		052F9E1F180600FB00FAE4DF /* surfacefilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = surfacefilter.h; sourceTree = "<group>"; };
-		052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlfilterreader.cpp; sourceTree = "<group>"; };
-		052F9E23180600FB00FAE4DF /* xmlfilterreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlfilterreader.h; sourceTree = "<group>"; };
-		052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlsurfacereader.cpp; sourceTree = "<group>"; };
-		052F9E26180600FB00FAE4DF /* xmlsurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlsurfacereader.h; sourceTree = "<group>"; };
 		052F9E27180600FB00FAE4DF /* orientable.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = orientable.cpp; sourceTree = "<group>"; };
 		052F9E28180600FB00FAE4DF /* quadtostd.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = quadtostd.cpp; sourceTree = "<group>"; };
 		052F9E2E180600FB00FAE4DF /* stdtoquad.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = stdtoquad.cpp; sourceTree = "<group>"; };
@@ -3263,13 +3255,6 @@
 		055114CC1DCC476A00EC753C /* pachner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = pachner.h; sourceTree = "<group>"; };
 		055114D01DCC71A700EC753C /* facenumbering.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facenumbering.h; sourceTree = "<group>"; };
 		055114D11DCC71A700EC753C /* facetspec.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = facetspec.h; sourceTree = "<group>"; };
-		055114D21DCC71A700EC753C /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
-		055114D81DCC85F100EC753C /* xmltrireader2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmltrireader2.cpp; sourceTree = "<group>"; };
-		055114D91DCC85F200EC753C /* xmltrireader2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader2.h; sourceTree = "<group>"; };
-		055114DA1DCC85F200EC753C /* xmltrireader3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmltrireader3.cpp; sourceTree = "<group>"; };
-		055114DB1DCC85F200EC753C /* xmltrireader3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader3.h; sourceTree = "<group>"; };
-		055114DC1DCC85F200EC753C /* xmltrireader4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmltrireader4.cpp; sourceTree = "<group>"; };
-		055114DD1DCC85F200EC753C /* xmltrireader4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader4.h; sourceTree = "<group>"; };
 		055114ED1DCD5D0500EC753C /* gluingpermsearcher.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluingpermsearcher.h; sourceTree = "<group>"; };
 		055114F51DCDF63000EC753C /* boundarycomponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boundarycomponent.h; sourceTree = "<group>"; };
 		055114F61DCDF63000EC753C /* component.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = component.h; sourceTree = "<group>"; };
@@ -3659,7 +3644,6 @@
 		05721ECE1F97153C00A83FFC /* jenkins.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jenkins.cpp; sourceTree = "<group>"; };
 		05721ECF1F97153C00A83FFC /* data-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "data-impl.h"; sourceTree = "<group>"; };
 		05721ED01F97153C00A83FFC /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
-		05721ED11F97153C00A83FFC /* xmllinkreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmllinkreader.h; sourceTree = "<group>"; };
 		05721ED21F97153C00A83FFC /* gauss.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gauss.cpp; sourceTree = "<group>"; };
 		05721ED41F97153C00A83FFC /* jones.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = jones.cpp; sourceTree = "<group>"; };
 		05721ED61F97153C00A83FFC /* examplelink.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplelink.cpp; sourceTree = "<group>"; };
@@ -3669,7 +3653,6 @@
 		05721EDB1F97153C00A83FFC /* reidemeister.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = reidemeister.cpp; sourceTree = "<group>"; };
 		05721EDC1F97153C00A83FFC /* complement.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = complement.cpp; sourceTree = "<group>"; };
 		05721EDD1F97153C00A83FFC /* gauss-impl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "gauss-impl.h"; sourceTree = "<group>"; };
-		05721EDE1F97153C00A83FFC /* xmllinkreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmllinkreader.cpp; sourceTree = "<group>"; };
 		05721EDF1F97153C00A83FFC /* link.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = link.h; sourceTree = "<group>"; };
 		05721EE01F97153C00A83FFC /* link.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = link.cpp; sourceTree = "<group>"; };
 		05721EE11F97153C00A83FFC /* examplelink.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = examplelink.h; sourceTree = "<group>"; };
@@ -3910,8 +3893,6 @@
 		0591E7D31C4F750200793A9C /* normalhypersurface.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalhypersurface.h; sourceTree = "<group>"; };
 		0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = normalhypersurfaces.cpp; sourceTree = "<group>"; };
 		0591E7D51C4F750200793A9C /* normalhypersurfaces.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = normalhypersurfaces.h; sourceTree = "<group>"; };
-		0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlhypersurfacereader.cpp; sourceTree = "<group>"; };
-		0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlhypersurfacereader.h; sourceTree = "<group>"; };
 		0591E7D81C4F750200793A9C /* triangulate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulate.cpp; sourceTree = "<group>"; };
 		0591E7EF1C4F75C300793A9C /* gluingpermsearcher4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = gluingpermsearcher4.cpp; sourceTree = "<group>"; };
 		0591E7F01C4F75C300793A9C /* gluingpermsearcher4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gluingpermsearcher4.h; sourceTree = "<group>"; };
@@ -3947,7 +3928,6 @@
 		0591E8521C4F779B00793A9C /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		0591E8531C4F779B00793A9C /* triangulation4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation4.cpp; sourceTree = "<group>"; };
 		0591E8541C4F779B00793A9C /* testdim4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = testdim4.h; sourceTree = "<group>"; };
-		0591E85A1C50527100793A9C /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
 		0591E85C1C50D28700793A9C /* enumerate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = enumerate.cpp; sourceTree = "<group>"; };
 		0591E85D1C50D28700793A9C /* hyperflags.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = hyperflags.h; sourceTree = "<group>"; };
 		0591E8611C50D2A900793A9C /* hyperflags.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = hyperflags.cpp; sourceTree = "<group>"; };
@@ -3986,6 +3966,38 @@
 		0598027E2667067C002D5D57 /* index.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = index.test; sourceTree = "<group>"; };
 		0598027F2667067C002D5D57 /* presentations.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = presentations.test; sourceTree = "<group>"; };
 		059802802667067C002D5D57 /* swapping.test */ = {isa = PBXFileReference; lastKnownFileType = text; path = swapping.test; sourceTree = "<group>"; };
+		059802BD26683C6D002D5D57 /* xmlsnappeareader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlsnappeareader.h; sourceTree = "<group>"; };
+		059802BE26683C6D002D5D57 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
+		059802BF26683C6D002D5D57 /* xmlsurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlsurfacereader.cpp; sourceTree = "<group>"; };
+		059802C026683C6D002D5D57 /* xmlhypersurfacereader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlhypersurfacereader.cpp; sourceTree = "<group>"; };
+		059802C126683C6D002D5D57 /* xmllinkreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmllinkreader.h; sourceTree = "<group>"; };
+		059802C226683C6D002D5D57 /* xmlfilterreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlfilterreader.h; sourceTree = "<group>"; };
+		059802C326683C6D002D5D57 /* xmlpacketreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlpacketreader.cpp; sourceTree = "<group>"; };
+		059802C426683C6D002D5D57 /* xmlsnappeareader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlsnappeareader.cpp; sourceTree = "<group>"; };
+		059802C526683C6D002D5D57 /* xmltrireader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader.h; sourceTree = "<group>"; };
+		059802C626683C6D002D5D57 /* xmltreeresolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltreeresolver.h; sourceTree = "<group>"; };
+		059802C726683C6D002D5D57 /* xmltrireader3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmltrireader3.cpp; sourceTree = "<group>"; };
+		059802C826683C6D002D5D57 /* xmltrireader2.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmltrireader2.cpp; sourceTree = "<group>"; };
+		059802C926683C6D002D5D57 /* xmltrireader2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader2.h; sourceTree = "<group>"; };
+		059802CA26683C6D002D5D57 /* xmlhypersurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlhypersurfacereader.h; sourceTree = "<group>"; };
+		059802CB26683C6D002D5D57 /* xmlreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlreader.h; sourceTree = "<group>"; };
+		059802CC26683C6D002D5D57 /* xmltrireader4.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmltrireader4.cpp; sourceTree = "<group>"; };
+		059802CD26683C6D002D5D57 /* xmlanglestructreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlanglestructreader.cpp; sourceTree = "<group>"; };
+		059802CE26683C6D002D5D57 /* xmlcallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlcallback.cpp; sourceTree = "<group>"; };
+		059802CF26683C6D002D5D57 /* xmlreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlreader.cpp; sourceTree = "<group>"; };
+		059802D026683C6D002D5D57 /* xmlpacketreaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlpacketreaders.h; sourceTree = "<group>"; };
+		059802D126683C6D002D5D57 /* xmltrireader3.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader3.h; sourceTree = "<group>"; };
+		059802D226683C6D002D5D57 /* xmlanglestructreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlanglestructreader.h; sourceTree = "<group>"; };
+		059802D326683C6D002D5D57 /* xmlpacketreaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlpacketreaders.cpp; sourceTree = "<group>"; };
+		059802D426683C6D002D5D57 /* xmlfilterreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlfilterreader.cpp; sourceTree = "<group>"; };
+		059802D526683C6D002D5D57 /* xmlelementreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlelementreader.h; sourceTree = "<group>"; };
+		059802D626683C6D002D5D57 /* xmlalgebrareader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlalgebrareader.h; sourceTree = "<group>"; };
+		059802D726683C6D002D5D57 /* xmlpacketreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlpacketreader.h; sourceTree = "<group>"; };
+		059802D826683C6D002D5D57 /* xmllinkreader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmllinkreader.cpp; sourceTree = "<group>"; };
+		059802D926683C6D002D5D57 /* xmlcallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlcallback.h; sourceTree = "<group>"; };
+		059802DA26683C6D002D5D57 /* xmlsurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlsurfacereader.h; sourceTree = "<group>"; };
+		059802DB26683C6D002D5D57 /* xmlalgebrareader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlalgebrareader.cpp; sourceTree = "<group>"; };
+		059802DC26683C6D002D5D57 /* xmltrireader4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader4.h; sourceTree = "<group>"; };
 		0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonConsoleController.h; sourceTree = "<group>"; };
 		0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonConsoleController.mm; sourceTree = "<group>"; };
 		05998ECB19F9360200855238 /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
@@ -4111,14 +4123,9 @@
 		05A47FA01809CB7600F86BFD /* README.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = README.txt; sourceTree = "<group>"; };
 		05A6A66C258AD0FB00A05E70 /* polynomial.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = polynomial.cpp; sourceTree = "<group>"; };
 		05A73C7419B2EDBF0099C617 /* hyperbolic.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = hyperbolic.cpp; path = engine/census/hyperbolic.cpp; sourceTree = SOURCE_ROOT; };
-		05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlcallback.cpp; sourceTree = "<group>"; };
-		05A73C7819B2EDFC0099C617 /* xmlcallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlcallback.h; sourceTree = "<group>"; };
-		05A73C7919B2EDFC0099C617 /* xmlelementreader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlelementreader.h; sourceTree = "<group>"; };
 		05A73C8319B2EEC50099C617 /* csv.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = csv.cpp; sourceTree = "<group>"; };
 		05A73C8619B2EF130099C617 /* fundgroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = fundgroup.cpp; path = engine/snappea/fundgroup.cpp; sourceTree = SOURCE_ROOT; };
 		05A73C8719B2EF130099C617 /* homology.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = homology.cpp; path = engine/snappea/homology.cpp; sourceTree = SOURCE_ROOT; };
-		05A73C8819B2EF130099C617 /* xmlsnappeareader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = xmlsnappeareader.cpp; path = engine/snappea/xmlsnappeareader.cpp; sourceTree = SOURCE_ROOT; };
-		05A73C8919B2EF130099C617 /* xmlsnappeareader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = xmlsnappeareader.h; path = engine/snappea/xmlsnappeareader.h; sourceTree = SOURCE_ROOT; };
 		05A73C9119B2EF5A0099C617 /* abelian_group.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = abelian_group.c; sourceTree = "<group>"; };
 		05A73C9219B2EF5A0099C617 /* fundamental_group.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = fundamental_group.c; sourceTree = "<group>"; };
 		05A73C9319B2EF5A0099C617 /* homology.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = homology.c; sourceTree = "<group>"; };
@@ -4128,7 +4135,6 @@
 		05A73C9719B2EF5A0099C617 /* sl2c_matrices.c */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.cpp; fileEncoding = 4; path = sl2c_matrices.c; sourceTree = "<group>"; };
 		05A73C9819B2EF5A0099C617 /* sync_with_snappy.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = sync_with_snappy.sh; sourceTree = "<group>"; };
 		05A73C9919B2EF5A0099C617 /* regina.patch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = regina.patch; sourceTree = "<group>"; };
-		05A73CAA19B2EFF90099C617 /* xmltreeresolver.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltreeresolver.h; sourceTree = "<group>"; };
 		05A73CAB19B2EFF90099C617 /* open.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = open.cpp; sourceTree = "<group>"; };
 		05A73CB419B2F1280099C617 /* CMakeLists.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CMakeLists.txt; sourceTree = "<group>"; };
 		05A73CB519B2F1280099C617 /* triangulationtest.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = triangulationtest.h; sourceTree = "<group>"; };
@@ -4427,8 +4433,6 @@
 		05FB46DF1DD92D4A00BB00E5 /* homgrouppresentation.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = homgrouppresentation.h; sourceTree = "<group>"; };
 		05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = markedabeliangroup.cpp; sourceTree = "<group>"; };
 		05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markedabeliangroup.h; sourceTree = "<group>"; };
-		05FB46E21DD92D4A00BB00E5 /* xmlalgebrareader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlalgebrareader.cpp; sourceTree = "<group>"; };
-		05FB46E31DD92D4A00BB00E5 /* xmlalgebrareader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlalgebrareader.h; sourceTree = "<group>"; };
 		05FC5CF81F98060D00F732E0 /* NewLinkController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = NewLinkController.mm; sourceTree = "<group>"; };
 		05FC5CF91F98061000F732E0 /* NewLinkController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NewLinkController.h; sourceTree = "<group>"; };
 		05FEA07819C1890900A31924 /* examplesnappea.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = examplesnappea.cpp; sourceTree = "<group>"; };
@@ -5414,8 +5418,6 @@
 				05FB46DF1DD92D4A00BB00E5 /* homgrouppresentation.h */,
 				05FB46E01DD92D4A00BB00E5 /* markedabeliangroup.cpp */,
 				05FB46E11DD92D4A00BB00E5 /* markedabeliangroup.h */,
-				05FB46E21DD92D4A00BB00E5 /* xmlalgebrareader.cpp */,
-				05FB46E31DD92D4A00BB00E5 /* xmlalgebrareader.h */,
 			);
 			path = algebra;
 			sourceTree = "<group>";
@@ -5428,8 +5430,6 @@
 				050C64661DA1019B00C9420F /* anglestructure.h */,
 				050C64671DA1019B00C9420F /* anglestructures.cpp */,
 				050C64681DA1019B00C9420F /* anglestructures.h */,
-				050C64791DA1056700C9420F /* xmlanglestructreader.cpp */,
-				050C647A1DA1056700C9420F /* xmlanglestructreader.h */,
 			);
 			path = angle;
 			sourceTree = "<group>";
@@ -5505,6 +5505,7 @@
 				050C64821DA1249600C9420F /* fileinfo.h */,
 				050C64831DA1249600C9420F /* globaldirs.cpp */,
 				050C64841DA1249600C9420F /* globaldirs.h */,
+				059802BC26683C6D002D5D57 /* xml */,
 			);
 			path = file;
 			sourceTree = "<group>";
@@ -5609,11 +5610,6 @@
 				052F9D06180600FA00FAE4DF /* script.h */,
 				052F9D07180600FA00FAE4DF /* text.cpp */,
 				052F9D08180600FA00FAE4DF /* text.h */,
-				052F9D09180600FA00FAE4DF /* xmlpacketreader.cpp */,
-				052F9D0A180600FA00FAE4DF /* xmlpacketreader.h */,
-				052F9D0B180600FA00FAE4DF /* xmlpacketreaders.cpp */,
-				052F9D0C180600FA00FAE4DF /* xmlpacketreaders.h */,
-				05A73CAA19B2EFF90099C617 /* xmltreeresolver.h */,
 			);
 			path = packet;
 			sourceTree = "<group>";
@@ -5638,8 +5634,6 @@
 				052F9D1E180600FA00FAE4DF /* kernel */,
 				052F9D92180600FB00FAE4DF /* snappeatriangulation.cpp */,
 				052F9D93180600FB00FAE4DF /* snappeatriangulation.h */,
-				05A73C8819B2EF130099C617 /* xmlsnappeareader.cpp */,
-				05A73C8919B2EF130099C617 /* xmlsnappeareader.h */,
 				052F9D94180600FB00FAE4DF /* snappy */,
 				052F9D99180600FB00FAE4DF /* uimessages.cpp */,
 			);
@@ -5902,10 +5896,6 @@
 				052F9E1E180600FB00FAE4DF /* surfacefilter.cpp */,
 				052F9E1F180600FB00FAE4DF /* surfacefilter.h */,
 				055DDCEE1808575300C973FB /* surfacefiltertype.h */,
-				052F9E22180600FB00FAE4DF /* xmlfilterreader.cpp */,
-				052F9E23180600FB00FAE4DF /* xmlfilterreader.h */,
-				052F9E25180600FB00FAE4DF /* xmlsurfacereader.cpp */,
-				052F9E26180600FB00FAE4DF /* xmlsurfacereader.h */,
 			);
 			path = surfaces;
 			sourceTree = "<group>";
@@ -5944,13 +5934,6 @@
 				052F9E46180600FB00FAE4DF /* homologicaldata.cpp */,
 				052F9E47180600FB00FAE4DF /* homologicaldata.h */,
 				055114CC1DCC476A00EC753C /* pachner.h */,
-				055114D81DCC85F100EC753C /* xmltrireader2.cpp */,
-				055114D91DCC85F200EC753C /* xmltrireader2.h */,
-				055114DA1DCC85F200EC753C /* xmltrireader3.cpp */,
-				055114DB1DCC85F200EC753C /* xmltrireader3.h */,
-				055114DC1DCC85F200EC753C /* xmltrireader4.cpp */,
-				055114DD1DCC85F200EC753C /* xmltrireader4.h */,
-				055114D21DCC71A700EC753C /* xmltrireader.h */,
 			);
 			path = triangulation;
 			sourceTree = "<group>";
@@ -5993,9 +5976,6 @@
 				052F9E75180600FB00FAE4DF /* trieset.h */,
 				052F9E76180600FB00FAE4DF /* tritmask.h */,
 				05199A5B25C63CCE0006B8FA /* typeutils.h */,
-				05A73C7719B2EDFC0099C617 /* xmlcallback.cpp */,
-				05A73C7819B2EDFC0099C617 /* xmlcallback.h */,
-				05A73C7919B2EDFC0099C617 /* xmlelementreader.h */,
 				052F9E7F180600FB00FAE4DF /* xmlutils.cpp */,
 				052F9E80180600FB00FAE4DF /* xmlutils.h */,
 				0534FAE022DFDDA7000A96A3 /* zstr.h */,
@@ -6344,7 +6324,6 @@
 				05C1BE971DCA7C77007C946B /* skeleton-impl.h */,
 				054C6A7D1DCC20DA005373F0 /* strings.h */,
 				05431F1F1C40F260009BC072 /* triangulation.h */,
-				0591E85A1C50527100793A9C /* xmltrireader.h */,
 			);
 			path = detail;
 			sourceTree = "<group>";
@@ -6999,8 +6978,6 @@
 				05721ED71F97153C00A83FFC /* simplify.cpp */,
 				0568742220C5D86A001C435B /* tangle.cpp */,
 				0568741F20C5D868001C435B /* tangle.h */,
-				05721EDE1F97153C00A83FFC /* xmllinkreader.cpp */,
-				05721ED11F97153C00A83FFC /* xmllinkreader.h */,
 			);
 			path = link;
 			sourceTree = "<group>";
@@ -7161,8 +7138,6 @@
 				0591E7D41C4F750200793A9C /* normalhypersurfaces.cpp */,
 				0591E7D51C4F750200793A9C /* normalhypersurfaces.h */,
 				0591E7D81C4F750200793A9C /* triangulate.cpp */,
-				0591E7D61C4F750200793A9C /* xmlhypersurfacereader.cpp */,
-				0591E7D71C4F750200793A9C /* xmlhypersurfacereader.h */,
 			);
 			path = hypersurface;
 			sourceTree = "<group>";
@@ -7254,6 +7229,45 @@
 				0506EC1C19F65B43003E455B /* iPhone.storyboard */,
 			);
 			name = Storyboards;
+			sourceTree = "<group>";
+		};
+		059802BC26683C6D002D5D57 /* xml */ = {
+			isa = PBXGroup;
+			children = (
+				059802BE26683C6D002D5D57 /* CMakeLists.txt */,
+				059802DB26683C6D002D5D57 /* xmlalgebrareader.cpp */,
+				059802D626683C6D002D5D57 /* xmlalgebrareader.h */,
+				059802CD26683C6D002D5D57 /* xmlanglestructreader.cpp */,
+				059802D226683C6D002D5D57 /* xmlanglestructreader.h */,
+				059802CE26683C6D002D5D57 /* xmlcallback.cpp */,
+				059802D926683C6D002D5D57 /* xmlcallback.h */,
+				059802D526683C6D002D5D57 /* xmlelementreader.h */,
+				059802D426683C6D002D5D57 /* xmlfilterreader.cpp */,
+				059802C226683C6D002D5D57 /* xmlfilterreader.h */,
+				059802C026683C6D002D5D57 /* xmlhypersurfacereader.cpp */,
+				059802CA26683C6D002D5D57 /* xmlhypersurfacereader.h */,
+				059802D826683C6D002D5D57 /* xmllinkreader.cpp */,
+				059802C126683C6D002D5D57 /* xmllinkreader.h */,
+				059802C326683C6D002D5D57 /* xmlpacketreader.cpp */,
+				059802D726683C6D002D5D57 /* xmlpacketreader.h */,
+				059802D326683C6D002D5D57 /* xmlpacketreaders.cpp */,
+				059802D026683C6D002D5D57 /* xmlpacketreaders.h */,
+				059802CF26683C6D002D5D57 /* xmlreader.cpp */,
+				059802CB26683C6D002D5D57 /* xmlreader.h */,
+				059802C426683C6D002D5D57 /* xmlsnappeareader.cpp */,
+				059802BD26683C6D002D5D57 /* xmlsnappeareader.h */,
+				059802BF26683C6D002D5D57 /* xmlsurfacereader.cpp */,
+				059802DA26683C6D002D5D57 /* xmlsurfacereader.h */,
+				059802C626683C6D002D5D57 /* xmltreeresolver.h */,
+				059802C526683C6D002D5D57 /* xmltrireader.h */,
+				059802C826683C6D002D5D57 /* xmltrireader2.cpp */,
+				059802C926683C6D002D5D57 /* xmltrireader2.h */,
+				059802C726683C6D002D5D57 /* xmltrireader3.cpp */,
+				059802D126683C6D002D5D57 /* xmltrireader3.h */,
+				059802CC26683C6D002D5D57 /* xmltrireader4.cpp */,
+				059802DC26683C6D002D5D57 /* xmltrireader4.h */,
+			);
+			path = xml;
 			sourceTree = "<group>";
 		};
 		05998ECA19F9360200855238 /* ios */ = {
@@ -7551,7 +7565,6 @@
 				054208BC1DF0D2740018AB24 /* manifold.h in Headers */,
 				052FA03F180600FB00FAE4DF /* nsvectorquad.h in Headers */,
 				05431F861C40F3C9009BC072 /* vector_operations.h in Headers */,
-				05A73C9019B2EF130099C617 /* xmlsnappeareader.h in Headers */,
 				052F9E9C180600FB00FAE4DF /* gluingpermsearcher2.h in Headers */,
 				052942D31C5CDC8B0011C1E6 /* safeptr.h in Headers */,
 				052FA033180600FB00FAE4DF /* normalspec-impl.h in Headers */,
@@ -7565,6 +7578,7 @@
 				05A0670F1DFA68190047872E /* blockedsfspair.h in Headers */,
 				052F9ECA180600FB00FAE4DF /* hilbertdual.h in Headers */,
 				0542087E1DF0D0B50018AB24 /* repository_p.h in Headers */,
+				059802FB26683C6D002D5D57 /* xmltrireader4.h in Headers */,
 				05C1BE981DCA7C77007C946B /* boundarycomponent-impl.h in Headers */,
 				055114C61DCC45FD00EC753C /* example2.h in Headers */,
 				05431F201C40F260009BC072 /* canonical-impl.h in Headers */,
@@ -7582,10 +7596,10 @@
 				052FA045180600FB00FAE4DF /* surfacefilter.h in Headers */,
 				05431F141C40F257009BC072 /* simplex.h in Headers */,
 				053CAB2E1DA710FE00A92F98 /* perm4.h in Headers */,
-				052FA049180600FB00FAE4DF /* xmlfilterreader.h in Headers */,
 				052F9EC6180600FB00FAE4DF /* hilbertcd-impl.h in Headers */,
 				052F9EFB180600FB00FAE4DF /* treetraversal.h in Headers */,
 				052F9FA4180600FB00FAE4DF /* triangulation.h in Headers */,
+				059802DD26683C6D002D5D57 /* xmlsnappeareader.h in Headers */,
 				052F9ECC180600FB00FAE4DF /* hilbertprimal-impl.h in Headers */,
 				05431F271C40F260009BC072 /* isosig-impl.h in Headers */,
 				052F9F2B180600FB00FAE4DF /* notation.h in Headers */,
@@ -7599,9 +7613,9 @@
 				054208761DF0D0B50018AB24 /* definition.h in Headers */,
 				05A067251DFA68190047872E /* pluggedtorusbundle.h in Headers */,
 				055115001DCDF63000EC753C /* isomorphism.h in Headers */,
+				059802E826683C6D002D5D57 /* xmltrireader2.h in Headers */,
 				05A0672F1DFA68190047872E /* satblocktypes.h in Headers */,
 				054209261DF28C990018AB24 /* keywordlist.h in Headers */,
-				055114E11DCC85F200EC753C /* xmltrireader3.h in Headers */,
 				054208C21DF0D2740018AB24 /* simplesurfacebundle.h in Headers */,
 				052F9F8D180600FB00FAE4DF /* kernel_prototypes.h in Headers */,
 				052FA08D180600FB00FAE4DF /* boolset.h in Headers */,
@@ -7617,10 +7631,10 @@
 				052FA08F180600FB00FAE4DF /* markedvector.h in Headers */,
 				054208891DF0D0B50018AB24 /* themedata_p.h in Headers */,
 				05F0A04A1DBF0B5E00117BFC /* tetrahedron3.h in Headers */,
-				05A73C7D19B2EDFC0099C617 /* xmlelementreader.h in Headers */,
 				055115021DCDF63000EC753C /* triangulation.h in Headers */,
 				05721EFF1F9715C700A83FFC /* laurent2.h in Headers */,
 				055115011DCDF63000EC753C /* simplex.h in Headers */,
+				059802F626683C6D002D5D57 /* xmlpacketreader.h in Headers */,
 				055BC3E92653380600E5E34C /* sigutils.h in Headers */,
 				0591E7E11C4F750200793A9C /* normalhypersurface.h in Headers */,
 				05A067331DFA68190047872E /* snappeacensustri.h in Headers */,
@@ -7628,11 +7642,10 @@
 				052F9FE5180600FB00FAE4DF /* signature.h in Headers */,
 				055DDCEF1808575300C973FB /* filterregistry-impl.h in Headers */,
 				052F9FA5180600FB00FAE4DF /* triangulation_io.h in Headers */,
-				055114D61DCC71A700EC753C /* xmltrireader.h in Headers */,
 				052F9F99180600FB00FAE4DF /* SnapPea.h in Headers */,
 				052FA063180600FB00FAE4DF /* example3.h in Headers */,
 				054208B21DF0D2740018AB24 /* graphloop.h in Headers */,
-				05FB46ED1DD92D4A00BB00E5 /* xmlalgebrareader.h in Headers */,
+				059802EA26683C6D002D5D57 /* xmlreader.h in Headers */,
 				05F0A04E1DBF0B5E00117BFC /* triangulation3.h in Headers */,
 				05870CB21FAD250900835F9E /* modellinkgraph.h in Headers */,
 				052F9F8C180600FB00FAE4DF /* kernel.h in Headers */,
@@ -7647,7 +7660,6 @@
 				052F9EFE180600FB00FAE4DF /* typetrie.h in Headers */,
 				05A0673D1DFA68190047872E /* trisolidtorus.h in Headers */,
 				05B4D2C0229F376B00B7B11C /* nmz_config.h in Headers */,
-				052FA04C180600FB00FAE4DF /* xmlsurfacereader.h in Headers */,
 				052FA031180600FB00FAE4DF /* normalcoords.h in Headers */,
 				052FA024180600FB00FAE4DF /* filterregistry.h in Headers */,
 				052FA043180600FB00FAE4DF /* nsvectorstandard.h in Headers */,
@@ -7656,9 +7668,11 @@
 				05F09FD91DBF01B600117BFC /* triangle2.h in Headers */,
 				052F9FE1180600FB00FAE4DF /* sigcensus.h in Headers */,
 				054208831DF0D0B50018AB24 /* state_p.h in Headers */,
+				059802F026683C6D002D5D57 /* xmltrireader3.h in Headers */,
 				05A067311DFA68190047872E /* satregion.h in Headers */,
 				05431F221C40F260009BC072 /* face.h in Headers */,
 				052F9F0F180600FB00FAE4DF /* isosig.h in Headers */,
+				059802F826683C6D002D5D57 /* xmlcallback.h in Headers */,
 				052F9F5C180600FB00FAE4DF /* script.h in Headers */,
 				05B4D2BA229F376B00B7B11C /* project_and_lift.h in Headers */,
 				05431F701C40F3C9009BC072 /* HilbertSeries.h in Headers */,
@@ -7678,7 +7692,6 @@
 				0591E7F41C4F75C300793A9C /* gluingpermsearcher4.h in Headers */,
 				05F09FDB1DBF01B600117BFC /* triangulation2.h in Headers */,
 				05F0A0511DBF0B5E00117BFC /* vertex3.h in Headers */,
-				0591E85B1C50527100793A9C /* xmltrireader.h in Headers */,
 				052F9F0D180600FB00FAE4DF /* dehydration.h in Headers */,
 				052F9F86180600FB00FAE4DF /* homology.h in Headers */,
 				05B7002325AC2305003BAF5C /* options.h in Headers */,
@@ -7690,6 +7703,7 @@
 				052F9EF5180600FB00FAE4DF /* treelp-impl.h in Headers */,
 				052F9F4B180600FB00FAE4DF /* rational.h in Headers */,
 				05431F211C40F260009BC072 /* component.h in Headers */,
+				059802F126683C6D002D5D57 /* xmlanglestructreader.h in Headers */,
 				05A0672D1DFA68190047872E /* satblockstarter.h in Headers */,
 				052F9EC5180600FB00FAE4DF /* enumconstraints.h in Headers */,
 				0591E7DB1C4F750200793A9C /* hypercoords.h in Headers */,
@@ -7708,6 +7722,7 @@
 				05199A5D25C63CCE0006B8FA /* typeutils.h in Headers */,
 				05A0671D1DFA68190047872E /* layeredsolidtorus.h in Headers */,
 				052FA088180600FB00FAE4DF /* i18nutils.h in Headers */,
+				059802E426683C6D002D5D57 /* xmltrireader.h in Headers */,
 				054209271DF28C990018AB24 /* rule.h in Headers */,
 				055114EE1DCD5D0500EC753C /* gluingpermsearcher.h in Headers */,
 				05431F241C40F260009BC072 /* facetpairing-impl.h in Headers */,
@@ -7715,6 +7730,7 @@
 				0541AF601B8BE40B002E166B /* treedecomposition-impl.h in Headers */,
 				052FA02A180600FB00FAE4DF /* disc.h in Headers */,
 				05431F9E1C40F537009BC072 /* testgeneric.h in Headers */,
+				059802F926683C6D002D5D57 /* xmlsurfacereader.h in Headers */,
 				052F9EF7180600FB00FAE4DF /* treelp.h in Headers */,
 				059D023A25BB08B7004150F7 /* retriangulate-impl.h in Headers */,
 				052F9F5E180600FB00FAE4DF /* text.h in Headers */,
@@ -7734,7 +7750,6 @@
 				05B44D1521914FA300B1D343 /* binom.h in Headers */,
 				052F9F8B180600FB00FAE4DF /* isometry.h in Headers */,
 				052FA0A2180600FB00FAE4DF /* xmlutils.h in Headers */,
-				050C647C1DA1056700C9420F /* xmlanglestructreader.h in Headers */,
 				054208BE1DF0D2740018AB24 /* sfs.h in Headers */,
 				05A067131DFA68190047872E /* l31pillow.h in Headers */,
 				0541AF4D1B8BE2F5002E166B /* polynomial.h in Headers */,
@@ -7748,8 +7763,8 @@
 				055114D51DCC71A700EC753C /* facetspec.h in Headers */,
 				052F9F4F180600FB00FAE4DF /* numbertheory.h in Headers */,
 				05B7002125AC2305003BAF5C /* nmz_nauty.h in Headers */,
+				059802E026683C6D002D5D57 /* xmllinkreader.h in Headers */,
 				05431F751C40F3C9009BC072 /* libnormaliz.h in Headers */,
-				055114DF1DCC85F200EC753C /* xmltrireader2.h in Headers */,
 				05DC137E1FEB869200171D66 /* pachner-impl.h in Headers */,
 				05431F251C40F260009BC072 /* facetpairing.h in Headers */,
 				05F0A04C1DBF0B5E00117BFC /* triangle3.h in Headers */,
@@ -7758,14 +7773,12 @@
 				05F0A0391DBF0B5E00117BFC /* component3.h in Headers */,
 				05B7002225AC2305003BAF5C /* dynamic_bitset.h in Headers */,
 				052FA03B180600FB00FAE4DF /* nsvectororiented.h in Headers */,
-				0591E7E51C4F750200793A9C /* xmlhypersurfacereader.h in Headers */,
 				052F9F6D180600FB00FAE4DF /* canonize.h in Headers */,
 				05DC13861FEB942B00171D66 /* nsvectorquadoctclosed.h in Headers */,
 				054208BA1DF0D2740018AB24 /* lensspace.h in Headers */,
 				052FA030180600FB00FAE4DF /* normalsurfaces.h in Headers */,
 				052FA086180600FB00FAE4DF /* flags.h in Headers */,
 				054209241DF28C990018AB24 /* contextswitch.h in Headers */,
-				055114E31DCC85F200EC753C /* xmltrireader4.h in Headers */,
 				0534FAE522DFDDA7000A96A3 /* memstream.h in Headers */,
 				054209251DF28C990018AB24 /* definitionref.h in Headers */,
 				0591E7DF1C4F750200793A9C /* hsvectorstandard.h in Headers */,
@@ -7774,12 +7787,11 @@
 				052F9EC7180600FB00FAE4DF /* hilbertcd.h in Headers */,
 				05431F231C40F260009BC072 /* facenumbering.h in Headers */,
 				052F9FDC180600FB00FAE4DF /* snappeatriangulation.h in Headers */,
-				052F9F60180600FB00FAE4DF /* xmlpacketreader.h in Headers */,
 				05A067171DFA68190047872E /* layeredchainpair.h in Headers */,
-				05721EE41F97153E00A83FFC /* xmllinkreader.h in Headers */,
 				050C646C1DA1019B00C9420F /* anglestructures.h in Headers */,
 				058E398D1DCBC67C00D463A4 /* generic.h in Headers */,
 				052FA041180600FB00FAE4DF /* nsvectorquadoct.h in Headers */,
+				059802EF26683C6D002D5D57 /* xmlpacketreaders.h in Headers */,
 				05F0A0001DBF078800117BFC /* pentachoron4.h in Headers */,
 				057EE4351C6009A700C4D155 /* perm-impl.h in Headers */,
 				055114D41DCC71A700EC753C /* facenumbering.h in Headers */,
@@ -7792,6 +7804,7 @@
 				05AC685D1DFE729100FF1A4C /* layeredtorusbundle.h in Headers */,
 				054208B81DF0D2740018AB24 /* handlebody.h in Headers */,
 				054208781DF0D0B50018AB24 /* format_p.h in Headers */,
+				059802E926683C6D002D5D57 /* xmlhypersurfacereader.h in Headers */,
 				0583656D18DB8B68008B08D9 /* kernel_namespace.h in Headers */,
 				05754CE7258D7D6400236ED7 /* randutils.h in Headers */,
 				05431F131C40F257009BC072 /* facenumber.h in Headers */,
@@ -7805,15 +7818,16 @@
 				052F9ED0180600FB00FAE4DF /* maxadmissible.h in Headers */,
 				052F9F9E180600FB00FAE4DF /* tables.h in Headers */,
 				053CAB2C1DA710FE00A92F98 /* perm2.h in Headers */,
+				059802F526683C6D002D5D57 /* xmlalgebrareader.h in Headers */,
 				053CAB2F1DA710FE00A92F98 /* perm5.h in Headers */,
 				052F9F66180600FB00FAE4DF /* progresstracker.h in Headers */,
 				05721EEE1F97153E00A83FFC /* gauss-impl.h in Headers */,
 				052FA02C180600FB00FAE4DF /* disctype.h in Headers */,
 				05721EF01F97153E00A83FFC /* link.h in Headers */,
-				05A73CAC19B2EFF90099C617 /* xmltreeresolver.h in Headers */,
 				05FEA07C19C1890900A31924 /* examplesnappea.h in Headers */,
 				052FA036180600FB00FAE4DF /* prism.h in Headers */,
 				052F9EAA180600FB00FAE4DF /* gluingpermsearcher3.h in Headers */,
+				059802E526683C6D002D5D57 /* xmltreeresolver.h in Headers */,
 				052F9EFF180600FB00FAE4DF /* ordering.h in Headers */,
 				05431F871C40F3C9009BC072 /* version.h in Headers */,
 				052FA084180600FB00FAE4DF /* bitmanip.h in Headers */,
@@ -7835,9 +7849,9 @@
 				05A067291DFA68190047872E /* satannulus.h in Headers */,
 				055114C81DCC45FD00EC753C /* example4.h in Headers */,
 				05B27D521E96681D00E2B7C4 /* nsvectorquadclosed.h in Headers */,
-				05A73C7C19B2EDFC0099C617 /* xmlcallback.h in Headers */,
 				05B7002625AC2305003BAF5C /* list_and_map_operations.h in Headers */,
 				05431F121C40F257009BC072 /* face.h in Headers */,
+				059802F426683C6D002D5D57 /* xmlelementreader.h in Headers */,
 				05431F281C40F260009BC072 /* simplex.h in Headers */,
 				054208C41DF0D2740018AB24 /* snappeacensusmfd.h in Headers */,
 				05F09FC11DBEF01800117BFC /* dim4.h in Headers */,
@@ -7855,13 +7869,13 @@
 				052F9F69180600FB00FAE4DF /* regina-core.h in Headers */,
 				052FA032180600FB00FAE4DF /* normalflags.h in Headers */,
 				05431F7B1C40F3C9009BC072 /* my_omp.h in Headers */,
-				052F9F62180600FB00FAE4DF /* xmlpacketreaders.h in Headers */,
 				052FA08E180600FB00FAE4DF /* listoncall.h in Headers */,
 				052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */,
 				052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */,
 				052FA092180600FB00FAE4DF /* property.h in Headers */,
 				052F9ECF180600FB00FAE4DF /* maxadmissible-impl.h in Headers */,
 				05A0670D1DFA68190047872E /* blockedsfsloop.h in Headers */,
+				059802E126683C6D002D5D57 /* xmlfilterreader.h in Headers */,
 				050C64861DA1249600C9420F /* fileinfo.h in Headers */,
 				05A0673F1DFA68190047872E /* trivialtri.h in Headers */,
 				052F9EF9180600FB00FAE4DF /* treetraversal-impl.h in Headers */,
@@ -8938,6 +8952,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				0598030926683C9F002D5D57 /* xmltrireader2.cpp in Sources */,
 				0542090C1DF0DA450018AB24 /* lensspace.cpp in Sources */,
 				05249F6E1DBC1747001FE29E /* boundarycomponent3.cpp in Sources */,
 				05C0644F1C55A5C1006E6483 /* HyperCompat.mm in Sources */,
@@ -8971,13 +8986,13 @@
 				05249F311DBC1711001FE29E /* perm4.cpp in Sources */,
 				054208941DF0D0CF0018AB24 /* themedata.cpp in Sources */,
 				05249EC01DBC16CA001FE29E /* example4.cpp in Sources */,
-				055114E51DCC860200EC753C /* xmltrireader3.cpp in Sources */,
 				05FB46F01DD92D5100BB00E5 /* homgrouppresentation.cpp in Sources */,
 				05721F101F97162600A83FFC /* examplelink.cpp in Sources */,
 				058641F019D77D820019E056 /* TextHelper.mm in Sources */,
 				05249F721DBC1747001FE29E /* facepair.cpp in Sources */,
 				054C6A741DCC1FF4005373F0 /* example8.cpp in Sources */,
 				052FA229180612DD00FAE4DF /* identify_solution_type.c in Sources */,
+				0598030426683C9F002D5D57 /* xmltrireader3.cpp in Sources */,
 				055114C91DCC460600EC753C /* example2.cpp in Sources */,
 				052FA1B41806129B00FAE4DF /* signature.cpp in Sources */,
 				05249F341DBC1711001FE29E /* primes.cpp in Sources */,
@@ -9010,6 +9025,7 @@
 				05A066C21DFA67D50047872E /* satannulus.cpp in Sources */,
 				052FA1A51806129B00FAE4DF /* seedprimes.cpp in Sources */,
 				059BC6951DC7F7A300AB4206 /* boundarycomponent14.cpp in Sources */,
+				059802FD26683C9F002D5D57 /* xmlsurfacereader.cpp in Sources */,
 				05A73CA719B2EF5A0099C617 /* sl2c_matrices.c in Sources */,
 				05721F051F97160900A83FFC /* laurent.cpp in Sources */,
 				05249F3B1DBC1718001FE29E /* pypacket.cpp in Sources */,
@@ -9043,7 +9059,6 @@
 				05249EEE1DBC16EA001FE29E /* facetpairing10.cpp in Sources */,
 				05249F741DBC1747001FE29E /* homologicaldata.cpp in Sources */,
 				052FA1361806103000FAE4DF /* main.m in Sources */,
-				052FA1AD1806129B00FAE4DF /* xmlpacketreaders.cpp in Sources */,
 				0591E8601C50D28D00793A9C /* enumerate.cpp in Sources */,
 				05249F361DBC1711001FE29E /* rational.cpp in Sources */,
 				05A066BC1DFA67D50047872E /* layeredsolidtorus.cpp in Sources */,
@@ -9093,7 +9108,6 @@
 				052FA1E31806129B00FAE4DF /* nsvectorstandard.cpp in Sources */,
 				05721EF91F97156600A83FFC /* reidemeister.cpp in Sources */,
 				0591E84E1C4F777000793A9C /* facetpairing4.cpp in Sources */,
-				052FA1E61806129B00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				05F0A05D1DBF0B7000117BFC /* simplify.cpp in Sources */,
 				0586426E19D982D00019E056 /* SpreadHelper.mm in Sources */,
 				05D1174319EE01A1003BEC55 /* census2.cpp in Sources */,
@@ -9113,6 +9127,7 @@
 				05D1C17219C7F95100CF92F2 /* EditableTableViewController.mm in Sources */,
 				05249EB61DBC16C4001FE29E /* edge2.cpp in Sources */,
 				058FADAB19D38BFC0001B5B5 /* SnapPeaViewController.mm in Sources */,
+				0598030726683C9F002D5D57 /* xmlsnappeareader.cpp in Sources */,
 				0568743120C5D8D3001C435B /* tangle.cpp in Sources */,
 				059BC6941DC7F7A300AB4206 /* boundarycomponent13.cpp in Sources */,
 				052FA1E01806129B00FAE4DF /* nsvectororientedquad.cpp in Sources */,
@@ -9146,7 +9161,6 @@
 				05249ED71DBC16DF001FE29E /* component13.cpp in Sources */,
 				059BC6961DC7F7A300AB4206 /* boundarycomponent15.cpp in Sources */,
 				05721F1D1F97165E00A83FFC /* link.cpp in Sources */,
-				055114E41DCC860200EC753C /* xmltrireader2.cpp in Sources */,
 				05721EF71F97156600A83FFC /* simplify.cpp in Sources */,
 				05F23E1619C13432005B53B5 /* NewFilterController.mm in Sources */,
 				0589FACC1814BECF0064CD57 /* PacketListenerIOS.mm in Sources */,
@@ -9155,6 +9169,7 @@
 				052FA211180612DD00FAE4DF /* canonize.c in Sources */,
 				0591E7E71C4F751B00793A9C /* links.cpp in Sources */,
 				05F0A0171DBF079600117BFC /* triangulation4.cpp in Sources */,
+				0598030326683C9F002D5D57 /* xmlfilterreader.cpp in Sources */,
 				05249EB01DBC16BA001FE29E /* pyangle.cpp in Sources */,
 				05249ECD1DBC16D6001FE29E /* orb.cpp in Sources */,
 				05249F031DBC16F6001FE29E /* simplex7.cpp in Sources */,
@@ -9178,7 +9193,6 @@
 				05249EB11DBC16BE001FE29E /* census.cpp in Sources */,
 				05249ED61DBC16DF001FE29E /* component12.cpp in Sources */,
 				05249F3F1DBC171D001FE29E /* pyprogress.cpp in Sources */,
-				055114E61DCC860200EC753C /* xmltrireader4.cpp in Sources */,
 				05249ECC1DBC16D6001FE29E /* isosig.cpp in Sources */,
 				05A0675C1DFA68470047872E /* trisolidtorus.cpp in Sources */,
 				05B7FFA825AC22D2003BAF5C /* cone_property.cpp in Sources */,
@@ -9201,6 +9215,7 @@
 				052FA21D180612DD00FAE4DF /* cusp_neighborhoods.c in Sources */,
 				052FA1E91806129B00FAE4DF /* orientable.cpp in Sources */,
 				054208901DF0D0CF0018AB24 /* repository.cpp in Sources */,
+				0598030026683C9F002D5D57 /* xmlpacketreaders.cpp in Sources */,
 				059BC6931DC7F7A300AB4206 /* boundarycomponent12.cpp in Sources */,
 				054209101DF0DA450018AB24 /* snappeacensusmfd.cpp in Sources */,
 				0591E7F61C4F75CE00793A9C /* gluingpermsearcher4.cpp in Sources */,
@@ -9208,6 +9223,7 @@
 				05F09FE11DBF01D100117BFC /* skeleton.cpp in Sources */,
 				055114CA1DCC460900EC753C /* example4.cpp in Sources */,
 				05FB46D91DD92D2900BB00E5 /* markedabeliangroup.cpp in Sources */,
+				0598030226683C9F002D5D57 /* xmlcallback.cpp in Sources */,
 				05249F011DBC16F6001FE29E /* simplex5.cpp in Sources */,
 				058FADA819D388920001B5B5 /* SurfacesViewController.mm in Sources */,
 				052FA20C1806129B00FAE4DF /* osutils.cpp in Sources */,
@@ -9315,6 +9331,7 @@
 				05249F261DBC170A001FE29E /* pymanifold.cpp in Sources */,
 				05249ED11DBC16DF001FE29E /* component7.cpp in Sources */,
 				052FA16C1806129B00FAE4DF /* gluingpermsearcher2.cpp in Sources */,
+				059802FC26683C9F002D5D57 /* xmlanglestructreader.cpp in Sources */,
 				059BC6901DC7F7A300AB4206 /* boundarycomponent9.cpp in Sources */,
 				05249F781DBC1747001FE29E /* triangulation3.cpp in Sources */,
 				05937AD719CECF4300160F9A /* MDSpreadViewHeaderCell.m in Sources */,
@@ -9351,7 +9368,6 @@
 				052FA1D41806129B00FAE4DF /* enumerator.cpp in Sources */,
 				05B7FFA525AC22D2003BAF5C /* reduction.cpp in Sources */,
 				05A066C61DFA67D50047872E /* snappeacensustri.cpp in Sources */,
-				05A73C8F19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */,
 				05A067571DFA68470047872E /* snappeacensustri.cpp in Sources */,
 				05F0A0641DBF0B7000117BFC /* triangulation3.cpp in Sources */,
 				05D1172F19EE0172003BEC55 /* homologicaldata.cpp in Sources */,
@@ -9366,6 +9382,7 @@
 				05249F681DBC1737001FE29E /* prism.cpp in Sources */,
 				059BC6911DC7F7A300AB4206 /* boundarycomponent10.cpp in Sources */,
 				05249F371DBC1718001FE29E /* container.cpp in Sources */,
+				059802FE26683C9F002D5D57 /* xmlreader.cpp in Sources */,
 				052FA1DA1806129B00FAE4DF /* disctype.cpp in Sources */,
 				05A066C81DFA67D50047872E /* snappedtwosphere.cpp in Sources */,
 				050AFC5C19DCB9B200835ED6 /* SnapPeaGluings.mm in Sources */,
@@ -9379,6 +9396,7 @@
 				052FA17E1806129B00FAE4DF /* treeconstraint.cpp in Sources */,
 				050313C11812DB06007F0CBE /* TextViewController.mm in Sources */,
 				05FB46EF1DD92D5100BB00E5 /* grouppresentation.cpp in Sources */,
+				059802FF26683C9F002D5D57 /* xmlhypersurfacereader.cpp in Sources */,
 				05249F711DBC1747001FE29E /* example3.cpp in Sources */,
 				05721F121F97162600A83FFC /* pylink.cpp in Sources */,
 				05249ED21DBC16DF001FE29E /* component8.cpp in Sources */,
@@ -9393,7 +9411,6 @@
 				05A0675A1DFA68470047872E /* spiralsolidtorus.cpp in Sources */,
 				05F0A00F1DBF079600117BFC /* homology.cpp in Sources */,
 				05C1BEE61DCA89E3007C946B /* triangulation6.cpp in Sources */,
-				05721EFB1F97156600A83FFC /* xmllinkreader.cpp in Sources */,
 				052FA21B180612DD00FAE4DF /* current_curve_basis.c in Sources */,
 				052FA1DE1806129B00FAE4DF /* nsvectoranstandard.cpp in Sources */,
 				05C064411C55922A006E6483 /* HyperViewController.mm in Sources */,
@@ -9441,8 +9458,6 @@
 				054208CC1DF0D29C0018AB24 /* manifold.cpp in Sources */,
 				052FA222180612DD00FAE4DF /* filling.c in Sources */,
 				05249F171DBC1704001FE29E /* hypercoords.cpp in Sources */,
-				05FB46F21DD92D5100BB00E5 /* xmlalgebrareader.cpp in Sources */,
-				052FA1E81806129B00FAE4DF /* xmlsurfacereader.cpp in Sources */,
 				05A067461DFA68470047872E /* blockedsfstriple.cpp in Sources */,
 				05A0674B1DFA68470047872E /* layeredloop.cpp in Sources */,
 				05C064731C56E460006E6483 /* Tri4Skeleton.mm in Sources */,
@@ -9457,8 +9472,8 @@
 				05249F751DBC1747001FE29E /* isomorphism3.cpp in Sources */,
 				05F0A0131DBF079600117BFC /* skeleton.cpp in Sources */,
 				05B7708719CA4FF100E2E558 /* FilterViewController.mm in Sources */,
-				052FA1AC1806129B00FAE4DF /* xmlpacketreader.cpp in Sources */,
 				057F317419B8935800D30520 /* Example.mm in Sources */,
+				0598030126683C9F002D5D57 /* xmlpacketreader.cpp in Sources */,
 				052FA1991806129B00FAE4DF /* order.cpp in Sources */,
 				054C6A771DCC1FF4005373F0 /* example11.cpp in Sources */,
 				05754CD5258B814D00236ED7 /* cyclotomic.cpp in Sources */,
@@ -9493,6 +9508,7 @@
 				05A066B91DFA67D50047872E /* layeredchainpair.cpp in Sources */,
 				052FA23C180612DD00FAE4DF /* update_shapes.c in Sources */,
 				052FA23A180612DD00FAE4DF /* triangulations.c in Sources */,
+				0598030826683C9F002D5D57 /* xmltrireader4.cpp in Sources */,
 				05249EA51DBC169D001FE29E /* globalarray.cpp in Sources */,
 				05D1172919EDF43F003BEC55 /* WelcomeViewController.mm in Sources */,
 				05C064681C56C135006E6483 /* Tri4Graph.mm in Sources */,
@@ -9500,6 +9516,7 @@
 				05F0A05C1DBF0B7000117BFC /* retriangulate.cpp in Sources */,
 				0591E7EC1C4F751B00793A9C /* triangulate.cpp in Sources */,
 				0542088C1DF0D0CF0018AB24 /* contextswitch.cpp in Sources */,
+				0598030626683C9F002D5D57 /* xmlalgebrareader.cpp in Sources */,
 				05B7FFAD25AC22D2003BAF5C /* full_cone.cpp in Sources */,
 				05C1BEBE1DCA7CB3007C946B /* boundary8.cpp in Sources */,
 				05249EAF1DBC16BA001FE29E /* anglestructures.cpp in Sources */,
@@ -9509,7 +9526,6 @@
 				052FA228180612DD00FAE4DF /* hyperbolic_structure.c in Sources */,
 				05D1173D19EE0197003BEC55 /* perm5.cpp in Sources */,
 				05249F151DBC16FA001FE29E /* triangulation14.cpp in Sources */,
-				05A73C7B19B2EDFC0099C617 /* xmlcallback.cpp in Sources */,
 				05754CC3258B38C100236ED7 /* laurent2.cpp in Sources */,
 				05B7FF8B25AC22AA003BAF5C /* options.cpp in Sources */,
 				05A066C51DFA67D50047872E /* satregion.cpp in Sources */,
@@ -9521,6 +9537,7 @@
 				059BC68C1DC7F7A300AB4206 /* boundarycomponent5.cpp in Sources */,
 				05249EE31DBC16E4001FE29E /* face13.cpp in Sources */,
 				0542088D1DF0D0CF0018AB24 /* definition.cpp in Sources */,
+				0598030526683C9F002D5D57 /* xmllinkreader.cpp in Sources */,
 				05C064551C55C811006E6483 /* HyperSummary.mm in Sources */,
 				05B7FF8F25AC22AA003BAF5C /* general.cpp in Sources */,
 				0568742A20C5D86B001C435B /* tangle.cpp in Sources */,
@@ -9551,7 +9568,6 @@
 				054F7E29180B93770090B1F3 /* WelcomePopupController.m in Sources */,
 				05D1173119EE0172003BEC55 /* triangulation3.cpp in Sources */,
 				05249EC61DBC16CA001FE29E /* vertex4.cpp in Sources */,
-				0591E7EB1C4F751B00793A9C /* xmlhypersurfacereader.cpp in Sources */,
 				05B7FFAA25AC22D2003BAF5C /* matrix.cpp in Sources */,
 				052FA216180612DD00FAE4DF /* chern_simons.c in Sources */,
 				05FEA07B19C1890900A31924 /* examplesnappea.cpp in Sources */,
@@ -9561,7 +9577,6 @@
 				05DADB1921928EC500DC80E1 /* binom.cpp in Sources */,
 				05A066C31DFA67D50047872E /* satblock.cpp in Sources */,
 				052FA235180612DD00FAE4DF /* subdivide.c in Sources */,
-				050C647D1DA1057000C9420F /* xmlanglestructreader.cpp in Sources */,
 				05F0A00E1DBF079600117BFC /* edge4.cpp in Sources */,
 				05249F761DBC1747001FE29E /* tetrahedron3.cpp in Sources */,
 				05249F291DBC1711001FE29E /* largeinteger.cpp in Sources */,
@@ -9913,11 +9928,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				05A0672C1DFA68190047872E /* satblockstarter.cpp in Sources */,
+				059802E226683C6D002D5D57 /* xmlpacketreader.cpp in Sources */,
 				05C1BEDA1DCA89DA007C946B /* triangulation8.cpp in Sources */,
 				05C1BEAC1DCA7CA9007C946B /* boundary4.cpp in Sources */,
 				05F0A0011DBF078800117BFC /* simplify.cpp in Sources */,
 				05B7FFC625AC22D3003BAF5C /* project_and_lift.cpp in Sources */,
-				05FB46EC1DD92D4A00BB00E5 /* xmlalgebrareader.cpp in Sources */,
 				05B7FF8825AC22AA003BAF5C /* automorph.cpp in Sources */,
 				05F0A03B1DBF0B5E00117BFC /* decompose.cpp in Sources */,
 				05FB46E41DD92D4A00BB00E5 /* abeliangroup.cpp in Sources */,
@@ -9928,7 +9943,6 @@
 				05F0A0401DBF0B5E00117BFC /* hydrate.cpp in Sources */,
 				052FA044180600FB00FAE4DF /* surfacefilter.cpp in Sources */,
 				0588C2A91FD8D1750093C2C9 /* representations.c in Sources */,
-				05721EEF1F97153E00A83FFC /* xmllinkreader.cpp in Sources */,
 				052F9FD8180600FB00FAE4DF /* update_shapes.c in Sources */,
 				05C1BED71DCA89DA007C946B /* triangulation5.cpp in Sources */,
 				054208BF1DF0D2740018AB24 /* sfsaltset.cpp in Sources */,
@@ -9943,13 +9957,14 @@
 				0591E7DE1C4F750200793A9C /* hsvectorstandard.cpp in Sources */,
 				05721EF11F97153E00A83FFC /* link.cpp in Sources */,
 				0568742D20C5D86B001C435B /* pass.cpp in Sources */,
-				05A73C8E19B2EF130099C617 /* xmlsnappeareader.cpp in Sources */,
 				05721EE71F97153E00A83FFC /* examplelink.cpp in Sources */,
 				052FA028180600FB00FAE4DF /* links.cpp in Sources */,
 				05A067281DFA68190047872E /* satannulus.cpp in Sources */,
 				05F0A0461DBF0B5E00117BFC /* skeleton.cpp in Sources */,
 				054208B11DF0D2740018AB24 /* graphloop.cpp in Sources */,
+				059802EE26683C6D002D5D57 /* xmlreader.cpp in Sources */,
 				05B7FFCB25AC22D3003BAF5C /* cone.cpp in Sources */,
+				059802EB26683C6D002D5D57 /* xmltrireader4.cpp in Sources */,
 				052F9F52180600FB00FAE4DF /* seedprimes.cpp in Sources */,
 				05F0A0411DBF0B5E00117BFC /* insertlayered.cpp in Sources */,
 				05C1BEAA1DCA7CA9007C946B /* boundary2.cpp in Sources */,
@@ -9957,19 +9972,19 @@
 				05B7FFC725AC22D3003BAF5C /* HilbertSeries.cpp in Sources */,
 				0541AF4B1B8BE2F5002E166B /* cyclotomic.cpp in Sources */,
 				054208841DF0D0B50018AB24 /* state.cpp in Sources */,
+				059802ED26683C6D002D5D57 /* xmlcallback.cpp in Sources */,
 				053ED8121D8B836C00628652 /* snappy_get_gluing_equations.c in Sources */,
 				05A067301DFA68190047872E /* satregion.cpp in Sources */,
 				05F0A0421DBF0B5E00117BFC /* reorder.cpp in Sources */,
 				05A0673E1DFA68190047872E /* trivialtri.cpp in Sources */,
-				052F9F61180600FB00FAE4DF /* xmlpacketreaders.cpp in Sources */,
 				0591E7E01C4F750200793A9C /* normalhypersurface.cpp in Sources */,
-				055114E01DCC85F200EC753C /* xmltrireader3.cpp in Sources */,
 				052FA037180600FB00FAE4DF /* nsvectoranstandard.cpp in Sources */,
 				05C1BED81DCA89DA007C946B /* triangulation6.cpp in Sources */,
 				05F09FDA1DBF01B600117BFC /* triangulation2.cpp in Sources */,
 				054208871DF0D0B50018AB24 /* theme.cpp in Sources */,
 				052FA02F180600FB00FAE4DF /* normalsurfaces.cpp in Sources */,
 				0591E7DC1C4F750200793A9C /* links.cpp in Sources */,
+				059802F726683C6D002D5D57 /* xmllinkreader.cpp in Sources */,
 				05C1BEB71DCA7CA9007C946B /* boundary15.cpp in Sources */,
 				052F9F39180600FB00FAE4DF /* matrixops.cpp in Sources */,
 				052FA021180600FB00FAE4DF /* crushandcut.cpp in Sources */,
@@ -9986,9 +10001,11 @@
 				05A73C9C19B2EF5A0099C617 /* fundamental_group.c in Sources */,
 				052F9F4E180600FB00FAE4DF /* numbertheory.cpp in Sources */,
 				05C1BEB61DCA7CA9007C946B /* boundary14.cpp in Sources */,
+				059802F326683C6D002D5D57 /* xmlfilterreader.cpp in Sources */,
 				052F9F54180600FB00FAE4DF /* packet.cpp in Sources */,
 				05F0A0091DBF078800117BFC /* triangulation4.cpp in Sources */,
 				054208731DF0D0B50018AB24 /* contextswitch.cpp in Sources */,
+				059802E626683C6D002D5D57 /* xmltrireader3.cpp in Sources */,
 				052F9F75180600FB00FAE4DF /* complex.c in Sources */,
 				05C1BEB21DCA7CA9007C946B /* boundary10.cpp in Sources */,
 				052F9FDB180600FB00FAE4DF /* snappeatriangulation.cpp in Sources */,
@@ -9998,6 +10015,7 @@
 				05DC13811FEB86E900171D66 /* retriangulate.cpp in Sources */,
 				052F9F87180600FB00FAE4DF /* hyperbolic_structure.c in Sources */,
 				052F9F6F180600FB00FAE4DF /* canonize_part_2.c in Sources */,
+				059802EC26683C6D002D5D57 /* xmlanglestructreader.cpp in Sources */,
 				05FB46EA1DD92D4A00BB00E5 /* markedabeliangroup.cpp in Sources */,
 				052F9F42180600FB00FAE4DF /* perm3.cpp in Sources */,
 				052F9FA6180600FB00FAE4DF /* triangulations.c in Sources */,
@@ -10018,7 +10036,6 @@
 				05F0A0041DBF078800117BFC /* subdivide.cpp in Sources */,
 				052FA062180600FB00FAE4DF /* example3.cpp in Sources */,
 				05C1BEB11DCA7CA9007C946B /* boundary9.cpp in Sources */,
-				052F9F5F180600FB00FAE4DF /* xmlpacketreader.cpp in Sources */,
 				052FA020180600FB00FAE4DF /* components.cpp in Sources */,
 				052FA035180600FB00FAE4DF /* prism.cpp in Sources */,
 				05F09FFC1DBF078800117BFC /* edge4.cpp in Sources */,
@@ -10054,7 +10071,6 @@
 				0568742B20C5D86B001C435B /* reidemeister-tangle.cpp in Sources */,
 				05A067081DFA68190047872E /* augtrisolidtorus.cpp in Sources */,
 				054208791DF0D0B50018AB24 /* format.cpp in Sources */,
-				050C647B1DA1056700C9420F /* xmlanglestructreader.cpp in Sources */,
 				052F9FA3180600FB00FAE4DF /* transcendentals.c in Sources */,
 				05721EE81F97153E00A83FFC /* simplify.cpp in Sources */,
 				055BC3ED265338FC00E5E34C /* pd.cpp in Sources */,
@@ -10111,6 +10127,8 @@
 				052F9F8A180600FB00FAE4DF /* intersection_numbers.c in Sources */,
 				052F9F7A180600FB00FAE4DF /* cusp_neighborhoods.c in Sources */,
 				0542087C1DF0D0B50018AB24 /* keywordlist.cpp in Sources */,
+				059802FA26683C6D002D5D57 /* xmlalgebrareader.cpp in Sources */,
+				059802E726683C6D002D5D57 /* xmltrireader2.cpp in Sources */,
 				05B7FF8A25AC22AA003BAF5C /* options.cpp in Sources */,
 				052F9FA1180600FB00FAE4DF /* tet_shapes.c in Sources */,
 				052FA06A180600FB00FAE4DF /* homologicaldata.cpp in Sources */,
@@ -10122,7 +10140,6 @@
 				05A73CAD19B2EFF90099C617 /* open.cpp in Sources */,
 				052F9F59180600FB00FAE4DF /* pdf.cpp in Sources */,
 				054208C11DF0D2740018AB24 /* simplesurfacebundle.cpp in Sources */,
-				052FA04B180600FB00FAE4DF /* xmlsurfacereader.cpp in Sources */,
 				052FA065180600FB00FAE4DF /* facepair.cpp in Sources */,
 				05870CB31FAD250900835F9E /* modellinkgraph.cpp in Sources */,
 				05AA71EE1FB17E0100186E30 /* flype.cpp in Sources */,
@@ -10151,7 +10168,6 @@
 				052F9F74180600FB00FAE4DF /* close_cusps.c in Sources */,
 				050C64691DA1019B00C9420F /* anglestructure.cpp in Sources */,
 				05C1BEDC1DCA89DA007C946B /* triangulation10.cpp in Sources */,
-				0591E7E41C4F750200793A9C /* xmlhypersurfacereader.cpp in Sources */,
 				052F9FDF180600FB00FAE4DF /* uimessages.cpp in Sources */,
 				055114C51DCC45FD00EC753C /* example2.cpp in Sources */,
 				05F2033720A17C6000FC74ED /* knot.cpp in Sources */,
@@ -10159,6 +10175,8 @@
 				05C1BEAF1DCA7CA9007C946B /* boundary7.cpp in Sources */,
 				05A73CA419B2EF5A0099C617 /* Moebius_transformations.c in Sources */,
 				052F9EF6180600FB00FAE4DF /* treelp.cpp in Sources */,
+				059802F226683C6D002D5D57 /* xmlpacketreaders.cpp in Sources */,
+				059802DF26683C6D002D5D57 /* xmlhypersurfacereader.cpp in Sources */,
 				052F9FA7180600FB00FAE4DF /* unix_file_io.c in Sources */,
 				052FA029180600FB00FAE4DF /* disc.cpp in Sources */,
 				05F09FFE1DBF078800117BFC /* homology.cpp in Sources */,
@@ -10188,9 +10206,9 @@
 				052F9F84180600FB00FAE4DF /* gluing_equations.c in Sources */,
 				05B7FFC825AC22D3003BAF5C /* full_cone.cpp in Sources */,
 				054208BB1DF0D2740018AB24 /* manifold.cpp in Sources */,
-				055114E21DCC85F200EC753C /* xmltrireader4.cpp in Sources */,
 				05C1BEB31DCA7CA9007C946B /* boundary11.cpp in Sources */,
 				052F9EF3180600FB00FAE4DF /* treeconstraint.cpp in Sources */,
+				059802E326683C6D002D5D57 /* xmlsnappeareader.cpp in Sources */,
 				05A067101DFA68190047872E /* blockedsfstriple.cpp in Sources */,
 				05721EEB1F97153E00A83FFC /* homfly.cpp in Sources */,
 				052F9E94180600FB00FAE4DF /* compact.cpp in Sources */,
@@ -10205,14 +10223,12 @@
 				052F9F10180600FB00FAE4DF /* orb.cpp in Sources */,
 				052FA03C180600FB00FAE4DF /* nsvectororientedquad.cpp in Sources */,
 				05F0A00B1DBF078800117BFC /* vertex4.cpp in Sources */,
-				05A73C7A19B2EDFC0099C617 /* xmlcallback.cpp in Sources */,
+				059802DE26683C6D002D5D57 /* xmlsurfacereader.cpp in Sources */,
 				052F9F0E180600FB00FAE4DF /* isosig.cpp in Sources */,
 				050C646B1DA1019B00C9420F /* anglestructures.cpp in Sources */,
-				055114DE1DCC85F200EC753C /* xmltrireader2.cpp in Sources */,
 				052FA087180600FB00FAE4DF /* i18nutils.cpp in Sources */,
 				05B7FF8E25AC22AA003BAF5C /* general.cpp in Sources */,
 				052FA042180600FB00FAE4DF /* nsvectorstandard.cpp in Sources */,
-				052FA048180600FB00FAE4DF /* xmlfilterreader.cpp in Sources */,
 				052F9F7D180600FB00FAE4DF /* Dehn_coefficients.c in Sources */,
 				052F9F5B180600FB00FAE4DF /* script.cpp in Sources */,
 				05F09FD81DBF01B600117BFC /* skeleton.cpp in Sources */,
