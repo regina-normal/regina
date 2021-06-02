@@ -499,11 +499,11 @@ inline HomGroupPresentation::~HomGroupPresentation() {
 
 inline HomGroupPresentation& HomGroupPresentation::operator = (
         HomGroupPresentation&& src) noexcept {
-    domain_.swap(src.domain_);
-    range_.swap(src.range_);
-    map_.swap(src.map_);
+    domain_ = std::move(src.domain_);
+    range_ = std::move(src.range_);
+    map_ = std::move(src.map_);
     std::swap(inv_, src.inv_); // pointer
-    // Let src dispose of the original data in its own destructor.
+    // Let src dispose of the original inv_ in its own destructor.
     return *this;
 }
 

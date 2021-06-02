@@ -1050,9 +1050,9 @@ Polynomial<T>& Polynomial<T>::operator = (const Polynomial<U>& value) {
 template <typename T>
 inline Polynomial<T>& Polynomial<T>::operator = (Polynomial<T>&& value)
         noexcept {
+    degree_ = value.degree_;
     std::swap(coeff_, value.coeff_);
-    std::swap(degree_, value.degree_);
-    // Let value dispose of the original contents in its own destructor.
+    // Let value dispose of the original coefficients in its own destructor.
     return *this;
 }
 

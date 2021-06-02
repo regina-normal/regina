@@ -925,10 +925,9 @@ inline Cyclotomic& Cyclotomic::operator = (const Cyclotomic& other) {
 }
 
 inline Cyclotomic& Cyclotomic::operator = (Cyclotomic&& other) noexcept {
-    // Strictly speaking we could just assign field_ and degree_.
-    std::swap(field_, other.field_);
-    std::swap(degree_, other.degree_);
-    // Let other dispose of the original contents in its own destructor.
+    field_ = other.field_;
+    degree_ = other.degree_;
+    // Let other dispose of the original coefficients in its own destructor.
     std::swap(coeff_, other.coeff_);
     return *this;
 }

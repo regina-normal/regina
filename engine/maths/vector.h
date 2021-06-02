@@ -336,7 +336,7 @@ class Vector : public ShortOutput<Vector<T>> {
          */
         inline Vector& operator = (Vector&& src) noexcept {
             std::swap(elements, src.elements);
-            std::swap(end, src.end);
+            end = src.end;
             // Let src dispose of the original elements in its own destructor.
             return *this;
         }

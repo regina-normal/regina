@@ -477,8 +477,7 @@ Isomorphism<dim>& Isomorphism<dim>::operator = (const Isomorphism<dim>& src) {
 template <int dim>
 Isomorphism<dim>& Isomorphism<dim>::operator = (Isomorphism<dim>&& src)
         noexcept{
-    // Strictly speaking, we could just assign nSimplices_ instead of swapping.
-    std::swap(nSimplices_, src.nSimplices_);
+    nSimplices_ = src.nSimplices_;
     std::swap(simpImage_, src.simpImage_);
     std::swap(facetPerm_, src.facetPerm_);
     // Let src dispose of the original contents in its own destructor.

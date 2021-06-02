@@ -551,8 +551,7 @@ inline LightweightSequence<T>& LightweightSequence<T>::operator = (
 template <typename T>
 inline LightweightSequence<T>& LightweightSequence<T>::operator = (
         LightweightSequence&& src) noexcept {
-    // Strictly speaking, we could just assign size_ instead of swapping.
-    std::swap(size_, src.size_);
+    size_ = src.size_;
     std::swap(data_, src.data_);
     // Let src dispose of the original contents in its own destructor.
     return *this;

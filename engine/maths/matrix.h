@@ -368,10 +368,10 @@ class Matrix : public Output<Matrix<T>> {
          * @return a reference to this matrix.
          */
         Matrix& operator = (Matrix&& src) noexcept {
-            // Strictly speaking, we could just assign cols_ instead of
-            // swapping.
+            // We need to swap rows_, because src needs this information in
+            // order to dispose of our original data properly.
             std::swap(rows_, src.rows_);
-            std::swap(cols_, src.cols_);
+            cols_ = src.cols_;
             std::swap(data_, src.data_);
             // Let src dispose of the original contents in its own destructor.
             return *this;
