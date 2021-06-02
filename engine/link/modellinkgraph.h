@@ -673,7 +673,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * \apinotfinal
          */
-        void generateMinimalLinks(Use use, void* useArgs = 0) const;
+        void generateMinimalLinks(Use use, void* useArgs = nullptr) const;
 
         /**
          * Outputs this graph in the ASCII text format used by \e plantri.

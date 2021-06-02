@@ -230,7 +230,7 @@ class Face<3, 0> : public detail::FaceBase<3, 0> {
          * @return a newly constructed triangulation of the link of this vertex.
          */
         Triangulation<2>* buildLinkDetail(bool labels = true,
-            Isomorphism<3>** inclusion = 0) const;
+            Isomorphism<3>** inclusion = nullptr) const;
 
         /**
          * Determines if the link of this vertex is closed.

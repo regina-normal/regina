@@ -578,7 +578,7 @@ class GluingPermSearcher<4> : public GluingPerms<4> {
         GluingPermSearcher(const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
-                GluingPermSearcher<4>::Use use, void* useArgs = 0);
+                GluingPermSearcher<4>::Use use, void* useArgs = nullptr);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -602,7 +602,7 @@ class GluingPermSearcher<4> : public GluingPerms<4> {
          * @param useArgs as for the main GluingPermSearcher<4> constructor.
          */
         GluingPermSearcher(std::istream& in,
-            GluingPermSearcher<4>::Use use, void* useArgs = 0);
+            GluingPermSearcher<4>::Use use, void* useArgs = nullptr);
 
         /**
          * Destroys this search manager and all supporting data
@@ -710,7 +710,7 @@ class GluingPermSearcher<4> : public GluingPerms<4> {
         static void findAllPerms(const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
-                GluingPermSearcher<4>::Use use, void* useArgs = 0);
+                GluingPermSearcher<4>::Use use, void* useArgs = nullptr);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -743,7 +743,7 @@ class GluingPermSearcher<4> : public GluingPerms<4> {
                 const FacetPairing<4>* pairing,
                 const FacetPairing<4>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly,
-                GluingPermSearcher<4>::Use use, void* useArgs = 0);
+                GluingPermSearcher<4>::Use use, void* useArgs = nullptr);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -773,7 +773,7 @@ class GluingPermSearcher<4> : public GluingPerms<4> {
          * @param in the input stream from which to read.
          */
         static GluingPermSearcher<4>* readTaggedData(std::istream& in,
-                GluingPermSearcher<4>::Use use, void* useArgs = 0);
+                GluingPermSearcher<4>::Use use, void* useArgs = nullptr);
 
         // Make this class non-copyable.
         // The base class GluingPerms already makes it non-assignable.

@@ -230,7 +230,7 @@ class AngleStructures : public Packet {
          * returns 0 (and no angle structure list is created).
          */
         static AngleStructures* enumerate(Triangulation<3>* owner,
-            bool tautOnly = false, ProgressTracker* tracker = 0);
+            bool tautOnly = false, ProgressTracker* tracker = nullptr);
 
         /**
          * A slower, alternative method to enumerate all taut angle structures
@@ -402,7 +402,7 @@ class AngleStructures : public Packet {
          * capabilities are not required.
          */
         void enumerateInternal(Triangulation<3>* triang,
-            ProgressTracker* tracker = 0);
+            ProgressTracker* tracker = nullptr);
 
     friend class regina::XMLAngleStructuresReader;
 };

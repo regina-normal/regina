@@ -161,7 +161,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
         return false;
 
     // Rebuild the matching equations if necessary.
-    MatrixInt* tmpEqns = 0;
+    MatrixInt* tmpEqns = nullptr;
     if (! matchingEqns) {
         tmpEqns = regina::makeMatchingEquations(
             origTableaux_.tri(), coords_);
@@ -196,7 +196,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
         return false;
 
     // Rebuild the matching equations if necessary.
-    MatrixInt* tmpEqns = 0;
+    MatrixInt* tmpEqns = nullptr;
     if (! angleEqns) {
         tmpEqns = regina::makeAngleEquations(origTableaux_.tri());
         angleEqns = tmpEqns;

@@ -197,7 +197,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
         GluingPermSearcher(const FacetPairing<2>* pairing,
                 const FacetPairing<2>::IsoList* autos,
                 bool orientableOnly, GluingPermSearcher<2>::Use use,
-                void* useArgs = 0);
+                void* useArgs = nullptr);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -221,7 +221,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * @param useArgs as for the main GluingPermSearcher<2> constructor.
          */
         GluingPermSearcher(std::istream& in,
-            GluingPermSearcher<2>::Use use, void* useArgs = 0);
+            GluingPermSearcher<2>::Use use, void* useArgs = nullptr);
 
         /**
          * Destroys this search manager and all supporting data
@@ -329,7 +329,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
         static void findAllPerms(const FacetPairing<2>* pairing,
                 const FacetPairing<2>::IsoList* autos,
                 bool orientableOnly, GluingPermSearcher<2>::Use use,
-                void* useArgs = 0);
+                void* useArgs = nullptr);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -362,7 +362,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
                 const FacetPairing<2>* pairing,
                 const FacetPairing<2>::IsoList* autos,
                 bool orientableOnly, GluingPermSearcher<2>::Use use,
-                void* useArgs = 0);
+                void* useArgs = nullptr);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -392,7 +392,7 @@ class GluingPermSearcher<2> : public GluingPerms<2> {
          * @param in the input stream from which to read.
          */
         static GluingPermSearcher<2>* readTaggedData(std::istream& in,
-                GluingPermSearcher<2>::Use use, void* useArgs = 0);
+                GluingPermSearcher<2>::Use use, void* useArgs = nullptr);
 
         // Make this class non-copyable.
         // The base class GluingPerms already makes it non-assignable.

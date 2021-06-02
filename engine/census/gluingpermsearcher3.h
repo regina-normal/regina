@@ -315,7 +315,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
         GluingPermSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -339,7 +339,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * @param useArgs as for the main GluingPermSearcher<3> constructor.
          */
         GluingPermSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         /**
          * Destroys this search manager and all supporting data
@@ -447,7 +447,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
         static void findAllPerms(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         /**
          * Constructs a search manager of the best possible class for the
@@ -480,7 +480,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
                 const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, bool finiteOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         /**
          * Creates a new search manager based on tagged data read from
@@ -510,7 +510,7 @@ class GluingPermSearcher<3> : public GluingPerms<3> {
          * @param in the input stream from which to read.
          */
         static GluingPermSearcher<3>* readTaggedData(std::istream& in,
-                GluingPermSearcher<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         // Make this class non-copyable.
         // The base class GluingPerms already makes it non-assignable.
@@ -1101,7 +1101,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
         EulerSearcher(int useEuler, const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1126,7 +1126,7 @@ class EulerSearcher : public GluingPermSearcher<3> {
          * @param in the input stream from which to read.
          */
         EulerSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         /**
          * Destroys this search manager and all supporting data
@@ -1894,7 +1894,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
         CompactSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, int whichPurge,
-                GluingPermSearcher<3>::Use use, void* useArgs = 0);
+                GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -1919,7 +1919,7 @@ class CompactSearcher : public GluingPermSearcher<3> {
          * @param in the input stream from which to read.
          */
         CompactSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         /**
          * Destroys this search manager and all supporting data
@@ -2411,7 +2411,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
         ClosedPrimeMinSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, GluingPermSearcher<3>::Use use,
-                void* useArgs = 0);
+                void* useArgs = nullptr);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2436,7 +2436,7 @@ class ClosedPrimeMinSearcher : public CompactSearcher {
          * @param in the input stream from which to read.
          */
         ClosedPrimeMinSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         /**
          * Destroys this search manager and all supporting data
@@ -2553,7 +2553,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
         HyperbolicMinSearcher(const FacetPairing<3>* pairing,
                 const FacetPairing<3>::IsoList* autos,
                 bool orientableOnly, GluingPermSearcher<3>::Use use,
-                void* useArgs = 0);
+                void* useArgs = nullptr);
 
         /**
          * Initialises a new search manager based on data read from the
@@ -2578,7 +2578,7 @@ class HyperbolicMinSearcher : public EulerSearcher {
          * @param in the input stream from which to read.
          */
         HyperbolicMinSearcher(std::istream& in,
-            GluingPermSearcher<3>::Use use, void* useArgs = 0);
+            GluingPermSearcher<3>::Use use, void* useArgs = nullptr);
 
         // Overridden methods:
         virtual void dumpData(std::ostream& out) const override;

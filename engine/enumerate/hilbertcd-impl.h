@@ -109,8 +109,8 @@ void HilbertCD::enumerateUsingBitmask(OutputIterator results,
     // Convert the set of constraints into bitmasks, where for every
     // original coordinate listed in the constraint, the corresponding
     // bit is set to 1.
-    BitmaskType* constraintsBegin = 0;
-    BitmaskType* constraintsEnd = 0;
+    BitmaskType* constraintsBegin = nullptr;
+    BitmaskType* constraintsEnd = nullptr;
     if (constraints && ! constraints->empty()) {
         constraintsBegin = new BitmaskType[constraints->size()];
 

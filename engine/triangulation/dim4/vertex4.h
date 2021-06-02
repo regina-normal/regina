@@ -184,7 +184,7 @@ class Face<4, 0> : public detail::FaceBase<4, 0> {
          * @return a newly constructed triangulation of the link of this vertex.
          */
         Triangulation<3>* buildLinkDetail(bool labels = true,
-            Isomorphism<4>** inclusion = 0) const;
+            Isomorphism<4>** inclusion = nullptr) const;
 
         /**
          * Determines if this vertex is an ideal vertex.

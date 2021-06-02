@@ -1612,7 +1612,7 @@ class ChildIterator {
     private:
         Packet* current_;
             /**< The child packet that this iterator is pointing to, or
-                 0 for a past-the-end iterator. */
+                 \c null for a past-the-end iterator. */
 
     public:
         /**
@@ -1716,7 +1716,7 @@ class SubtreeIterator {
             /**< The root of the packet subtree that we are iterating over. */
         Packet* current_;
             /**< The packet that this iterator is pointing to, or
-                 0 for a past-the-end iterator. */
+                 \c null for a past-the-end iterator. */
 
     public:
         /**

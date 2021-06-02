@@ -505,7 +505,7 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
          * fewer pentachora.
          */
         bool simplifyExhaustive(int height = 1, unsigned nThreads = 1,
-            ProgressTrackerOpen* tracker = 0);
+            ProgressTrackerOpen* tracker = nullptr);
 
         /**
          * Explores all triangulations that can be reached from this via

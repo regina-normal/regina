@@ -181,7 +181,7 @@ class Face<4, 1> : public detail::FaceBase<4, 1> {
          * @return a newly constructed triangulation of the link of this edge.
          */
         Triangulation<2>* buildLinkDetail(bool labels = true,
-            Isomorphism<4>** inclusion = 0) const;
+            Isomorphism<4>** inclusion = nullptr) const;
 
     private:
         /**
