@@ -129,10 +129,10 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("isValid", &GroupPresentation::isValid)
         .def("intelligentSimplify", &GroupPresentation::intelligentSimplify)
         .def("intelligentSimplifyDetail",
-            &GroupPresentation::intelligentSimplifyDetail)
+            &GroupPresentation::intelligentSimplify) // deprecated
         .def("smallCancellation", &GroupPresentation::smallCancellation)
         .def("smallCancellationDetail",
-            &GroupPresentation::smallCancellationDetail)
+            &GroupPresentation::smallCancellation) // deprecated
         .def("simplifyWord", &GroupPresentation::simplifyWord)
         .def("proliferateRelators", &GroupPresentation::proliferateRelators,
             pybind11::arg("depth") = 1)
@@ -144,13 +144,13 @@ void addGroupPresentation(pybind11::module_& m) {
             pybind11::arg("rightMult") = true)
         .def("intelligentNielsen", &GroupPresentation::intelligentNielsen)
         .def("intelligentNielsenDetail",
-            &GroupPresentation::intelligentNielsenDetail)
+            &GroupPresentation::intelligentNielsen) // deprecated
         .def("homologicalAlignment", &GroupPresentation::homologicalAlignment)
         .def("homologicalAlignmentDetail",
-            &GroupPresentation::homologicalAlignmentDetail)
+            &GroupPresentation::homologicalAlignment) // deprecated
         .def("prettyRewriting", &GroupPresentation::prettyRewriting)
         .def("prettyRewritingDetail",
-            &GroupPresentation::prettyRewritingDetail)
+            &GroupPresentation::prettyRewriting) // deprecated
         .def("identifySimplyIsomorphicTo",
             &GroupPresentation::identifySimplyIsomorphicTo)
         .def("recogniseGroup", &GroupPresentation::recogniseGroup,

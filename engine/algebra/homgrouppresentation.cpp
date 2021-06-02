@@ -120,8 +120,8 @@ void HomGroupPresentation::writeTextLong(std::ostream& out) const {
 }
 
 bool HomGroupPresentation::smallCancellation() {
-    auto rangeMap = range_.smallCancellationDetail();
-    auto domainMap = domain_.smallCancellationDetail();
+    auto rangeMap = range_.smallCancellation();
+    auto domainMap = domain_.smallCancellation();
     bool retval = rangeMap || domainMap;
     if (! domainMap)
         domainMap = HomGroupPresentation(domain_);
@@ -184,8 +184,8 @@ HomGroupPresentation HomGroupPresentation::operator * (
 
 bool HomGroupPresentation::intelligentNielsen()
 { // modelled on intelligentSimplify
- auto rangeMap = range_.intelligentNielsenDetail();
- auto domainMap = domain_.intelligentNielsenDetail();
+ auto rangeMap = range_.intelligentNielsen();
+ auto domainMap = domain_.intelligentNielsen();
  bool retval = rangeMap || domainMap;
  if (! domainMap)
     domainMap = HomGroupPresentation(domain_);
@@ -218,8 +218,8 @@ bool HomGroupPresentation::intelligentNielsen()
 bool HomGroupPresentation::intelligentSimplify()
 {
  // step 1: simplify presentation of domain and range
- auto rangeMap = range_.intelligentSimplifyDetail();
- auto domainMap = domain_.intelligentSimplifyDetail();
+ auto rangeMap = range_.intelligentSimplify();
+ auto domainMap = domain_.intelligentSimplify();
  bool retval = rangeMap || domainMap;
 
  // build identity maps if either of the above is null.

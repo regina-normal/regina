@@ -52,6 +52,8 @@
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
 
+// There are more includes at the end of this file.
+
 namespace regina {
 
 class AbelianGroup;
@@ -877,18 +879,6 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Attempts to simplify the group presentation as intelligently
          * as possible without further input.
          *
-         * See intelligentSimplifyDetail() for further details on how
-         * the simplification is done.
-         *
-         * @return \c true if and only if the group presentation was changed.
-         * You can call intelligentSimplifyDetail() to get the isomorphism.
-         */
-        bool intelligentSimplify();
-
-        /**
-         * Attempts to simplify the group presentation as intelligently
-         * as possible without further input.
-         *
          * The current simplification method uses a combination of small
          * cancellation theory and Nielsen moves.
          *
@@ -897,23 +887,29 @@ class GroupPresentation : public Output<GroupPresentation> {
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
-         * @return a newly allocated homomorphism describing the
-         * reduction map from the original presentation to the new
-         * presentation, or no value if this presentation was not changed.
+         * \note If you all care about is whether the presentation changed,
+         * you can simply cast the return value to a \c bool.  This will
+         * then mirror the behaviour of intelligentSimplify() from Regina 6.0
+         * and earlier, when the return type was simply \c bool.
+         *
+         * @return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or no value if
+         * this presentation was not changed.
          */
-        std::optional<HomGroupPresentation> intelligentSimplifyDetail();
+        std::optional<HomGroupPresentation> intelligentSimplify();
 
         /**
-         * Attempts to simplify the group presentation using only small
-         * cancellation theory.
+         * Deprecated routine that attempts to simplify the group presentation
+         * as intelligently as possible without further input.
          *
-         * See smallCancellationDetail() for further details on how
-         * the simplification is done.
+         * \deprecated This routine has been renamed to intelligentSimplify().
          *
-         * @return \c true if and only if the group presentation was changed.
-         * You can call smallCancellationDetail() to get the isomorphism.
+         * @return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or no value if
+         * this presentation was not changed.
          */
-        bool smallCancellation();
+        [[deprecated]] std::optional<HomGroupPresentation>
+            intelligentSimplifyDetail();
 
         /**
          * Attempts to simplify the group presentation using small cancellation
@@ -930,15 +926,33 @@ class GroupPresentation : public Output<GroupPresentation> {
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
+         * \note If you all care about is whether the presentation changed,
+         * you can simply cast the return value to a \c bool.  This will
+         * then mirror the behaviour of smallCancellation() from Regina 6.0
+         * and earlier, when the return type was simply \c bool.
+         *
          * \todo \optlong This routine could use some small tweaks -
          * recognition of utility of some score==0 moves, such as
          * commutators, for example.
          *
-         * @return a newly allocated homomorphism describing the
-         * reduction map from the original presentation to the new
-         * presentation, or no value if this presentation was not changed.
+         * @return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or no value if
+         * this presentation was not changed.
          */
-        std::optional<HomGroupPresentation> smallCancellationDetail();
+        std::optional<HomGroupPresentation> smallCancellation();
+
+        /**
+         * Deprecated routine that attempts to simplify the group presentation
+         * using small cancellation theory.
+         *
+         * \deprecated This routine has been renamed to smallCancellation().
+         *
+         * @return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or no value if
+         * this presentation was not changed.
+         */
+        [[deprecated]] std::optional<HomGroupPresentation>
+            smallCancellationDetail();
 
         /**
          * Uses small cancellation theory to reduce the input word,
@@ -1145,40 +1159,34 @@ class GroupPresentation : public Output<GroupPresentation> {
          * Looks for Nielsen moves that will simplify the presentation.
          * Performs one of the most-effective moves, if it can find any.
          *
-         * @return \c true if and only if it performed a Nielsen move.
-         * You can call intelligentNielsen() to get the isomorphism.
-         */
-        bool intelligentNielsen();
-
-        /**
-         * Looks for Nielsen moves that will simplify the presentation.
-         * Performs one of the most-effective moves, if it can find any.
-         *
          * If this routine does return a homomorphism (because some
          * move was performed), then this homomorphsm will in fact be
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
-         * @return a newly allocated homomorphism describing the
-         * map from the original presentation to the new presentation,
-         * or no value if no move was performed.
+         * \note If you all care about is whether the presentation changed,
+         * you can simply cast the return value to a \c bool.  This will
+         * then mirror the behaviour of intelligentNielsen() from Regina 6.0
+         * and earlier, when the return type was simply \c bool.
+         *
+         * @return an isomorphism describing the map from the
+         * original presentation to the new presentation, or no value if
+         * this presentation was not changed.
          */
-        std::optional<HomGroupPresentation> intelligentNielsenDetail();
+        std::optional<HomGroupPresentation> intelligentNielsen();
 
         /**
-         * Rewrites the presentation so that generators
-         * of the group map to generators of the abelianisation, with any
-         * left-over generators mapping to zero (if possible).  Consider this a
-         * \e homological-alignment of the presentation.
+         * Deprecated routine that looks for Nielsen moves that will
+         * simplify the presentation.
          *
-         * See homologicalAlignmentDetail() for further details on what
-         * this routine does.
+         * \deprecated This routine has been renamed to intelligentNielsen().
          *
-         * @return \c true if presentation was changed, or \c false if
-         * the presentation was already homologically aligned.
-         * See homologicalAlignmentDetail() if you wish to get the isomorphism.
+         * @return an isomorphism describing the map from the
+         * original presentation to the new presentation, or no value if
+         * this presentation was not changed.
          */
-        bool homologicalAlignment();
+        [[deprecated]] std::optional<HomGroupPresentation>
+            intelligentNielsenDetail();
 
         /**
          * Rewrites the presentation so that generators
@@ -1200,24 +1208,30 @@ class GroupPresentation : public Output<GroupPresentation> {
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
-         * @return a newly allocated homomorphism giving the reduction map
-         * from the old presentation to the new, or no value if
+         * \note If you all care about is whether the presentation changed,
+         * you can simply cast the return value to a \c bool.  This will
+         * then mirror the behaviour of homologicalAlignment() from Regina 6.0
+         * and earlier, when the return type was simply \c bool.
+         *
+         * @return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or no value if
          * this presentation was not changed.
          */
-        std::optional<HomGroupPresentation> homologicalAlignmentDetail();
+        std::optional<HomGroupPresentation> homologicalAlignment();
 
         /**
-         * An entirely cosmetic re-writing of the presentation, which is
-         * fast and superficial.
+         * Deprecated routine that wewrites the presentation so that generators
+         * of the group map to generators of the abelianisation, with any
+         * left-over generators mapping to zero (if possible).
          *
-         * See prettyRewritingDetail() for further details on what
-         * this routine does.
+         * \deprecated This routine has been renamed to homologicalAlignment().
          *
-         * @return \c true if and only if the choice of generators for the
-         * group has changed.  You can call prettyRewritingDetail() to get the
-         * the isomorphism.
+         * @return an isomorphism describing the reduction map from the
+         * original presentation to the new presentation, or no value if
+         * this presentation was not changed.
          */
-        bool prettyRewriting();
+        [[deprecated]] std::optional<HomGroupPresentation>
+            homologicalAlignmentDetail();
 
         /**
          * An entirely cosmetic re-writing of the presentation, which is
@@ -1239,14 +1253,32 @@ class GroupPresentation : public Output<GroupPresentation> {
          * a declared isomorphism.  See the HomGroupPresentation class
          * notes for details on what this means.
          *
+         * \note If you all care about is whether the presentation changed,
+         * you can simply cast the return value to a \c bool.  This will
+         * then mirror the behaviour of prettyRewriting() from Regina 6.0
+         * and earlier, when the return type was simply \c bool.
+         *
          * \todo As a final step, make elementary simplifications to aid in
          * seeing standard relators like commutators.
          *
-         * @return a newly allocated homomorphism describing the
-         * map from the original presentation to the new presentation,
-         * or no value if the choice of generators did not change.
+         * @return an isomorphism describing the map from the
+         * original presentation to the new presentation, or no value if
+         * this presentation was not changed.
          */
-        std::optional<HomGroupPresentation> prettyRewritingDetail();
+        std::optional<HomGroupPresentation> prettyRewriting();
+
+        /**
+         * Deprecated routine that performs an entirely cosmetic re-writing
+         * of the presentation, which is fast and superficial.
+         *
+         * \deprecated This routine has been renamed to prettyRewriting().
+         *
+         * @return an isomorphism describing the map from the
+         * original presentation to the new presentation, or no value if
+         * this presentation was not changed.
+         */
+        [[deprecated]] std::optional<HomGroupPresentation>
+            prettyRewritingDetail();
 
         /**
          * Attempts to prove that this and the given group presentation are
@@ -1689,6 +1721,39 @@ inline size_t GroupPresentation::relatorLength() const {
 
 inline void swap(GroupPresentation& lhs, GroupPresentation& rhs) {
     lhs.swap(rhs);
+}
+
+} // namespace regina
+
+// Several of our functions have a return type that requres a fully defined
+// HomGroupPresentation.
+#include "algebra/homgrouppresentation.h"
+
+namespace regina {
+
+inline std::optional<HomGroupPresentation>
+        GroupPresentation::intelligentSimplifyDetail() {
+    return intelligentSimplify();
+}
+
+inline std::optional<HomGroupPresentation>
+        GroupPresentation::smallCancellationDetail() {
+    return smallCancellation();
+}
+
+inline std::optional<HomGroupPresentation>
+        GroupPresentation::intelligentNielsenDetail() {
+    return intelligentNielsen();
+}
+
+inline std::optional<HomGroupPresentation>
+        GroupPresentation::homologicalAlignmentDetail() {
+    return homologicalAlignment();
+}
+
+inline std::optional<HomGroupPresentation>
+        GroupPresentation::prettyRewritingDetail() {
+    return prettyRewriting();
 }
 
 } // namespace regina

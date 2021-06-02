@@ -132,12 +132,16 @@ Version 6.1  [ TODO ]
               return groups by value (which can then be moved from).
             - Function addRelation() now takes its argument by value.
             - Added member and global swap() functions.
-            - The simplification functions now return a
-              std::optional<HomGroupPresentation> instead of a
-              std::unique_ptr<HomGroupPresentation>.  Other than the type, the
-              C++ syntax should be largely unaffected, and the Python behaviour
-              (returning None if there is no homomorphism) remains the same.
-            - Some major cleanup and reorganisation under the hood.
+            - Functions intelligentSimplify(), smallCancellation(),
+              intelligentNielsen(), homologicalAlignment() and prettyRewriting()
+              now return a std::optional<HomGroupPresentation>, not a bool
+              (but this can be cast to a bool to give the previous behaviour).
+              The corresponding ...Detail() functions are now deprecated
+              aliases, and return this same std::optional<HomGroupPresentation>
+              instead of a std::unique_ptr<HomGroupPresentation>.  The C++
+              syntax should be largely unaffected, and the Python behaviour
+              (returns None if there is no homomorphism) should remain the same.
+            - Other major cleanup and reorganisation under the hood.
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.

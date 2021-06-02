@@ -759,14 +759,12 @@ bool GroupPresentation::simplifyWord( GroupExpression &input ) const
 // 3) Loop back to (1) until nothing happens in either (1) or (2).
 // TODO: consider a homological alignment call if the abelianization
 //       has rank 1 or any other situation where we know it can be useful.
-std::optional<HomGroupPresentation>
-GroupPresentation::intelligentSimplifyDetail()
-{
+std::optional<HomGroupPresentation> GroupPresentation::intelligentSimplify() {
     bool doRep(true);
     std::optional<HomGroupPresentation> redHom;
     while (doRep) {
         doRep = false;
-        if (auto h = smallCancellationDetail()) {
+        if (auto h = smallCancellation()) {
             doRep = true;
             if (!redHom)
                 redHom = std::move(*h);
@@ -774,7 +772,7 @@ GroupPresentation::intelligentSimplifyDetail()
                 *redHom = (*h) * (*redHom);
         }
 
-        if (auto h = intelligentNielsenDetail()) {
+        if (auto h = intelligentNielsen()) {
             doRep = true;
             if (!redHom)
                 redHom = std::move(*h);
@@ -783,7 +781,7 @@ GroupPresentation::intelligentSimplifyDetail()
         }
     }
 
-    if (auto h = prettyRewritingDetail()) {
+    if (auto h = prettyRewriting()) {
         if (!redHom)
             redHom = std::move(*h);
         else
@@ -793,19 +791,7 @@ GroupPresentation::intelligentSimplifyDetail()
     return redHom;
 }
 
-bool GroupPresentation::intelligentSimplify()
-{
-    return intelligentSimplifyDetail().has_value();
-}
-
-bool GroupPresentation::smallCancellation()
-{
-    return smallCancellationDetail().has_value();
-}
-
-std::optional<HomGroupPresentation>
-GroupPresentation::smallCancellationDetail()
-{
+std::optional<HomGroupPresentation> GroupPresentation::smallCancellation() {
     bool didSomething(false);
     // start by taking a copy of *this group, for construction of reductionMap
     GroupPresentation oldGroup( *this );
@@ -953,14 +939,7 @@ found_a_generator_killer:
         return std::nullopt;
 }// end smallCancellation()
 
-bool GroupPresentation::intelligentNielsen()
-{
-    return intelligentNielsenDetail().has_value();
-}
-
-std::optional<HomGroupPresentation>
-GroupPresentation::intelligentNielsenDetail()
-{
+std::optional<HomGroupPresentation> GroupPresentation::intelligentNielsen() {
     if (nGenerators_ < 2) return std::nullopt;
     // let's keep a record of the best possible substitution,
     bool didSomething(true);
@@ -1088,14 +1067,7 @@ GroupPresentation::intelligentNielsenDetail()
     return retval;
 }
 
-bool GroupPresentation::homologicalAlignment()
-{
-    return homologicalAlignmentDetail().has_value();
-}
-
-std::optional<HomGroupPresentation>
-GroupPresentation::homologicalAlignmentDetail()
-{
+std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
     std::optional<HomGroupPresentation> retval; // only allocate if appropriate.
     // step 1: compute abelianization and how generators map to abelianization.
     MarkedAbelianGroup abelianized = markedAbelianisation();
@@ -1221,7 +1193,7 @@ GroupPresentation::homologicalAlignmentDetail()
     //              [ 0 D 0 ] so we're essentially done.
 
     // call prettify
-    if (auto h = prettyRewritingDetail()) {
+    if (auto h = prettyRewriting()) {
         if (!retval)
             retval = std::move(*h);
         else
@@ -1967,13 +1939,9 @@ namespace { // anonymous namespace
     }
 } // end anonymous namespace
 
-bool GroupPresentation::prettyRewriting() {
-    return prettyRewritingDetail().has_value();
-}
-
 // this routine iteratively finds length 1 relators, and uses them to simplify
 // other relators.  In the end it deletes all length 0 relators and re-indexes.
-std::optional<HomGroupPresentation> GroupPresentation::prettyRewritingDetail() {
+std::optional<HomGroupPresentation> GroupPresentation::prettyRewriting() {
     GroupPresentation oldPres(*this);
 
     // move the relators into a separate list for now.
