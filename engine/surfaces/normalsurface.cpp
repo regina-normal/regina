@@ -370,34 +370,34 @@ void NormalSurface::calculateRealBoundary() const {
     realBoundary_ = false;
 }
 
-MatrixInt* NormalSurface::boundaryIntersections() const {
+std::optional<MatrixInt> NormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
     const SnapPeaTriangulation* snapPea =
         dynamic_cast<const SnapPeaTriangulation*>(&triangulation());
     if (! snapPea)
-        return nullptr;
+        return std::nullopt;
 
     // Check the preconditions.
     if (! snapPea->isOriented())
-        return nullptr;
+        return std::nullopt;
     if (vector_->allowsAlmostNormal())
-        return nullptr;
+        return std::nullopt;
     for (Vertex<3>* v : snapPea->vertices()) {
         if (! v->isIdeal())
-            return nullptr;
+            return std::nullopt;
         if (! v->isLinkOrientable())
-            return nullptr;
+            return std::nullopt;
         if (v->linkEulerChar() != 0)
-            return nullptr;
+            return std::nullopt;
     }
 
-    MatrixInt* equations = snapPea->slopeEquations();
+    std::optional<MatrixInt> equations = snapPea->slopeEquations();
     if (! equations)
-        return nullptr;
+        return std::nullopt;
 
     size_t cusps = equations->rows() / 2;
     size_t numTet = snapPea->size();
-    MatrixInt* slopes = new MatrixInt(cusps, 2);
+    MatrixInt slopes(cusps, 2);
     for(unsigned int i=0; i < cusps; i++) {
         Integer meridian; // constructor sets this to 0
         Integer longitude; // constructor sets this to 0
@@ -411,10 +411,9 @@ MatrixInt* NormalSurface::boundaryIntersections() const {
                 equations->entry(2*i+1, 3*j+1) * Integer(quads(j, quadSeparating[0][2])) +
                 equations->entry(2*i+1, 3*j+2) * Integer(quads(j, quadSeparating[0][3]));
         }
-        slopes->entry(i,0) = meridian;
-        slopes->entry(i,1) = longitude;
+        slopes.entry(i,0) = meridian;
+        slopes.entry(i,1) = longitude;
     }
-    delete equations;
     return slopes;
 }
 

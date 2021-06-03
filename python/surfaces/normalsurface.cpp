@@ -32,13 +32,14 @@
 
 #include "../pybind11/pybind11.h"
 #include "maths/matrix.h"
+#include "surfaces/coordregistry.h"
 #include "surfaces/normalsurface.h"
-#include "surfaces/normalsurfaces.h" // for makeZeroVector()
 #include "triangulation/dim3.h"
 #include "../globalarray.h"
 #include "../helpers.h"
 
 using regina::NormalSurface;
+using regina::NormalSurfaceVector;
 using regina::Triangulation;
 using regina::python::GlobalArray;
 using regina::python::GlobalArray2D;
@@ -59,15 +60,23 @@ namespace {
     GlobalArray2D<regina::Perm<4>> triDiscArcs_arr(regina::triDiscArcs, 4);
     GlobalArray2D<regina::Perm<4>> quadDiscArcs_arr(regina::quadDiscArcs, 3);
     GlobalArray2D<regina::Perm<4>> octDiscArcs_arr(regina::octDiscArcs, 3);
+
+    struct ZeroVector : public regina::Returns<NormalSurfaceVector*> {
+        template <typename Coords>
+        inline NormalSurfaceVector* operator() (const Triangulation<3>& tri) {
+            return new typename Coords::Class(Coords::dimension(tri.size()));
+        }
+    };
 }
 
 void addNormalSurface(pybind11::module_& m) {
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
         .def(pybind11::init<const NormalSurface&>())
         .def(pybind11::init<const NormalSurface&, const Triangulation<3>*>())
-        .def(pybind11::init([](Triangulation<3>* t, regina::NormalCoords coords,
+        .def(pybind11::init([](Triangulation<3>& t, regina::NormalCoords coords,
                 pybind11::list values) {
-            regina::NormalSurfaceVector* v = regina::makeZeroVector(t, coords);
+            regina::NormalSurfaceVector* v = forCoords(coords, ZeroVector(),
+                nullptr, t);
             if (values.size() != v->size()) {
                 delete v;
                 throw pybind11::index_error(
@@ -83,7 +92,7 @@ void addNormalSurface(pybind11::module_& m) {
                 throw std::invalid_argument(
                     "List element not convertible to LargeInteger");
             }
-            return new NormalSurface(t, v);
+            return new NormalSurface(&t, v);
         }))
         .def("clone", &NormalSurface::clone)
         .def("doubleSurface", &NormalSurface::doubleSurface)

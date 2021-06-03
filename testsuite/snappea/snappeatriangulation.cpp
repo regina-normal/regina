@@ -522,10 +522,14 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                     "The figure 8 knot complement should have 4 vertex "
                     "surfaces in quad space.");
 
-            regina::MatrixInt* m;
             bool found[4] = {}; // initialises to false
             for (const regina::NormalSurface* f : s->surfaces()) {
-                m = f->boundaryIntersections();
+                std::optional<regina::MatrixInt> m = f->boundaryIntersections();
+                if (! m) {
+                    CPPUNIT_FAIL(
+                        "Figure 8 knot complement: boundaryIntersections() "
+                        "returned no value.");
+                }
                 if (m->rows() != 1 || m->columns() != 2) {
                     CPPUNIT_FAIL(
                         "Figure 8 knot complement: boundaryIntersections() "
@@ -546,7 +550,6 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                         << m->entry(0, 0) << ", " << m->entry(0, 1) << ").";
                     CPPUNIT_FAIL(msg.str());
                 }
-                delete m;
             }
 
             if (! found[0])

@@ -41,11 +41,6 @@
 
 namespace regina {
 
-NormalSurfaceVector* NSVectorQuadOctClosed::makeZeroVector(
-        const Triangulation<3>* triangulation) {
-    return new NSVectorQuadOctClosed(6 * triangulation->size());
-}
-
 std::optional<MatrixInt> NSVectorQuadOctClosed::makeMatchingEquations(
         const Triangulation<3>& triangulation) {
     // Enforce our basic preconditions.
@@ -59,10 +54,9 @@ std::optional<MatrixInt> NSVectorQuadOctClosed::makeMatchingEquations(
     // enforce closed surfaces.  Before doing anything else, see whether
     // SnapPea is going to play along.
     SnapPeaTriangulation snapPea(triangulation, false);
-    MatrixInt* coeffs = snapPea.slopeEquations();
+    std::optional<MatrixInt> coeffs = snapPea.slopeEquations();
     if (! (coeffs && snapPea.isIdenticalTo(triangulation))) {
         // SnapPea either couldn't handle it, or else it retriangulated on us.
-        delete coeffs;
         return std::nullopt;
     }
 
@@ -120,7 +114,6 @@ std::optional<MatrixInt> NSVectorQuadOctClosed::makeMatchingEquations(
         row += 2;
     }
 
-    delete coeffs;
     return ans;
 }
 

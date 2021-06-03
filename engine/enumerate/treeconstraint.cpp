@@ -127,13 +127,12 @@ bool LPConstraintNonSpun::addRows(
 
     // Compute the two slope equations for the torus cusp, if we can.
     SnapPeaTriangulation snapPea(tri, false);
-    MatrixInt* coeffs = snapPea.slopeEquations();
+    std::optional<MatrixInt> coeffs = snapPea.slopeEquations();
     if (! coeffs)
         return false;
 
     // Check that SnapPea hasn't changed the triangulation on us.
     if (! snapPea.isIdenticalTo(tri)) {
-        delete coeffs;
         return false;
     }
 
@@ -149,7 +148,6 @@ bool LPConstraintNonSpun::addRows(
         col[i].longitude = coeffs->entry(1, columnPerm[i]).longValue();
     }
 
-    delete coeffs;
     return true;
 }
 

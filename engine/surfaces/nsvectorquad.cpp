@@ -41,11 +41,6 @@
 
 namespace regina {
 
-NormalSurfaceVector* NSVectorQuad::makeZeroVector(
-        const Triangulation<3>* triangulation) {
-    return new NSVectorQuad(3 * triangulation->size());
-}
-
 std::optional<MatrixInt> NSVectorQuad::makeMatchingEquations(
         const Triangulation<3>& triangulation) {
     unsigned long nCoords = 3 * triangulation.size();
@@ -77,15 +72,15 @@ std::optional<MatrixInt> NSVectorQuad::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NSVectorQuad::makeEmbeddedConstraints(
-        const Triangulation<3>* triangulation) {
-    EnumConstraints* ans = new EnumConstraints(triangulation->size());
+EnumConstraints NSVectorQuad::makeEmbeddedConstraints(
+        const Triangulation<3>& triangulation) {
+    EnumConstraints ans(triangulation.size());
 
     unsigned long base = 0;
-    for (unsigned c = 0; c < ans->size(); ++c) {
-        (*ans)[c].insert((*ans)[c].end(), base);
-        (*ans)[c].insert((*ans)[c].end(), base + 1);
-        (*ans)[c].insert((*ans)[c].end(), base + 2);
+    for (unsigned c = 0; c < ans.size(); ++c) {
+        ans[c].insert(ans[c].end(), base);
+        ans[c].insert(ans[c].end(), base + 1);
+        ans[c].insert(ans[c].end(), base + 2);
         base += 3;
     }
 

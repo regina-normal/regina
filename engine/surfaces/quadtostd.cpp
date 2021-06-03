@@ -390,19 +390,17 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     // constraints for almost normal surfaces) as bitmasks.
     // Since we have a non-empty triangulation, we know the list of
     // constraints is non-empty.
-    EnumConstraints* constraints =
-        Variant::StandardVector::makeEmbeddedConstraints(&owner);
+    EnumConstraints constraints =
+        Variant::StandardVector::makeEmbeddedConstraints(owner);
 
-    BitmaskType* constraintsBegin = new BitmaskType[constraints->size()];
+    BitmaskType* constraintsBegin = new BitmaskType[constraints.size()];
     BitmaskType* constraintsEnd = constraintsBegin;
 
-    for (EnumConstraints::const_iterator cit = constraints->begin();
-            cit != constraints->end(); ++cit, ++constraintsEnd) {
+    for (EnumConstraints::const_iterator cit = constraints.begin();
+            cit != constraints.end(); ++cit, ++constraintsEnd) {
         constraintsEnd->reset(slen);
         constraintsEnd->set(cit->begin(), cit->end(), true);
     }
-
-    delete constraints;
 
     // Create all vertex links.
     typename Variant::StandardVector** link =

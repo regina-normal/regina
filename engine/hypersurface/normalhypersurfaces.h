@@ -739,26 +739,6 @@ class NormalHypersurfaces : public Packet {
 };
 
 /**
- * Returns a new normal hypersurface vector of the appropriate length for the
- * given triangulation and the given coordinate system.
- * All elements of this vector will be initialised to zero.
- *
- * The new vector will be of the subclass of NormalHypersurfaceVector
- * corresponding to the given coordinate system.  The caller
- * of this routine is responsible for destroying the new vector.
- *
- * \ifacespython Not present.
- *
- * @param triangulation the triangulation upon which the underlying
- * coordinate system is based.
- * @param coords the coordinate system to be used;
- * this must be one of the predefined coordinate system
- * constants in NormalHypersurfaces.
- * @return a new zero vector of the correct class and length.
- */
-NormalHypersurfaceVector* makeZeroVector(const Triangulation<4>* triangulation,
-    HyperCoords coords);
-/**
  * Generates the set of normal hypersurface matching equations for the
  * given triangulation using the given coordinate system.
  *
@@ -784,7 +764,7 @@ NormalHypersurfaceVector* makeZeroVector(const Triangulation<4>* triangulation,
 std::optional<MatrixInt> makeMatchingEquations(
     const Triangulation<4>& triangulation, HyperCoords coords);
 /**
- * Creates a new set of validity constraints representing the condition that
+ * Generates the validity constraints representing the condition that
  * normal hypersurfaces be embedded.  The validity constraints will be expressed
  * relative to the given coordinate system.
  *
@@ -795,9 +775,9 @@ std::optional<MatrixInt> makeMatchingEquations(
  * @param coords the coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NormalHypersurfaces.
- * @return a newly allocated set of constraints.
+ * @return the set of validity constraints.
  */
-EnumConstraints* makeEmbeddedConstraints(const Triangulation<4>* triangulation,
+EnumConstraints makeEmbeddedConstraints(const Triangulation<4>& triangulation,
     HyperCoords coords);
 
 /*@}*/

@@ -620,12 +620,11 @@ MatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
 /**
  * Written by William Pettersson, 2011.
  */
-MatrixInt* SnapPeaTriangulation::slopeEquations() const {
+std::optional<MatrixInt> SnapPeaTriangulation::slopeEquations() const {
     if (! data_)
-        return nullptr;
+        return std::nullopt;
 
-    MatrixInt* matrix =
-        new MatrixInt(2*data_->num_cusps, 3*data_->num_tetrahedra);
+    MatrixInt matrix(2*data_->num_cusps, 3*data_->num_tetrahedra);
     int i,j;
     for(i=0; i< data_->num_cusps; i++) {
         int numRows;
@@ -644,17 +643,17 @@ MatrixInt* SnapPeaTriangulation::slopeEquations() const {
         int *equations =
             regina::snappea::get_cusp_equation(data_, i, 1, 0, &numRows);
         for(j=0; j< data_->num_tetrahedra; j++) {
-            matrix->entry(2*i,3*j) = equations[3*j+1] - equations[3*j+2];
-            matrix->entry(2*i,3*j+1) = equations[3*j+2] - equations[3*j];
-            matrix->entry(2*i,3*j+2) = equations[3*j] - equations[3*j+1];
+            matrix.entry(2*i,3*j) = equations[3*j+1] - equations[3*j+2];
+            matrix.entry(2*i,3*j+1) = equations[3*j+2] - equations[3*j];
+            matrix.entry(2*i,3*j+2) = equations[3*j] - equations[3*j+1];
         }
         regina::snappea::free_cusp_equation(equations);
         equations =
             regina::snappea::get_cusp_equation(data_, i, 0, 1, &numRows);
         for(j=0; j< data_->num_tetrahedra; j++) {
-            matrix->entry(2*i+1,3*j) = equations[3*j+1] - equations[3*j+2];
-            matrix->entry(2*i+1,3*j+1) = equations[3*j+2] - equations[3*j];
-            matrix->entry(2*i+1,3*j+2) = equations[3*j] - equations[3*j+1];
+            matrix.entry(2*i+1,3*j) = equations[3*j+1] - equations[3*j+2];
+            matrix.entry(2*i+1,3*j+1) = equations[3*j+2] - equations[3*j];
+            matrix.entry(2*i+1,3*j+2) = equations[3*j] - equations[3*j+1];
         }
         regina::snappea::free_cusp_equation(equations);
     }

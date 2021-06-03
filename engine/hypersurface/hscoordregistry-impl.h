@@ -70,6 +70,18 @@ forCoords(HyperCoords coords, FunctionObject&& func,
 }
 
 template <typename FunctionObject, typename... Args>
+inline typename ReturnsTraits<FunctionObject>::ReturnType
+forCoords(HyperCoords coords, FunctionObject&& func, ReturnDefault,
+        Args&&... args) {
+    switch (coords) {
+        case HS_STANDARD : return
+            func.template operator()<HyperInfo<HS_STANDARD>>(
+            std::forward<Args>(args)...);
+        default: return typename ReturnsTraits<FunctionObject>::ReturnType();
+    }
+}
+
+template <typename FunctionObject, typename... Args>
 inline typename ReturnsTraits<FunctionObject>::Void
 forCoords(HyperCoords coords, FunctionObject&& func, Args&&... args) {
     switch (coords) {

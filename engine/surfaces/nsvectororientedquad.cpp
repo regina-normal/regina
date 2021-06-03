@@ -41,11 +41,6 @@
 
 namespace regina {
 
-NormalSurfaceVector* NSVectorOrientedQuad::makeZeroVector(
-        const Triangulation<3>* triangulation) {
-    return new NSVectorOrientedQuad(6 * triangulation->size());
-}
-
 std::optional<MatrixInt> NSVectorOrientedQuad::makeMatchingEquations(
         const Triangulation<3>& triangulation) {
     size_t nCoords = 6 * triangulation.size();
@@ -86,19 +81,19 @@ std::optional<MatrixInt> NSVectorOrientedQuad::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NSVectorOrientedQuad::makeEmbeddedConstraints(
-        const Triangulation<3>* triangulation) {
-    EnumConstraints* ans = new EnumConstraints(8 * triangulation->size());
+EnumConstraints NSVectorOrientedQuad::makeEmbeddedConstraints(
+        const Triangulation<3>& triangulation) {
+    EnumConstraints ans(8 * triangulation.size());
 
     unsigned base = 0;
     unsigned c = 0;
-    while (c < ans->size()) {
+    while (c < ans.size()) {
         for (int a = 0 ; a < 2; a++) {
             for (int b = 0 ; b < 2; b++) {
                 for (int d = 0 ; d < 2; d++) {
-                    (*ans)[c].insert((*ans)[c].end(), base + a);
-                    (*ans)[c].insert((*ans)[c].end(), base + b + 2);
-                    (*ans)[c].insert((*ans)[c].end(), base + d + 4);
+                    ans[c].insert(ans[c].end(), base + a);
+                    ans[c].insert(ans[c].end(), base + b + 2);
+                    ans[c].insert(ans[c].end(), base + d + 4);
                     ++c;
                 }
             }

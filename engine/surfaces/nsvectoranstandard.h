@@ -65,6 +65,7 @@ struct NormalInfo<NS_AN_STANDARD> {
         spun = 0,
         oriented = 0
     };
+    static constexpr size_t dimension(size_t n) { return 10 * n; }
 };
 #endif
 
@@ -116,12 +117,10 @@ class NSVectorANStandard : public NormalSurfaceVector {
         virtual LargeInteger arcs(size_t triIndex,
             int triVertex, const Triangulation<3>* triang) const override;
 
-        static NormalSurfaceVector* makeZeroVector(
-            const Triangulation<3>* triangulation);
         static std::optional<MatrixInt> makeMatchingEquations(
             const Triangulation<3>& triangulation);
-        static EnumConstraints* makeEmbeddedConstraints(
-            const Triangulation<3>* triangulation);
+        static EnumConstraints makeEmbeddedConstraints(
+            const Triangulation<3>& triangulation);
 };
 
 /*@}*/

@@ -163,7 +163,8 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
             if (! s->isCompact()) {
-                regina::MatrixInt* slopes = s->boundaryIntersections();
+                std::optional<regina::MatrixInt> slopes =
+                    s->boundaryIntersections();
                 if (slopes) {
                     QString ans = tr("Spun:");
                     // Display each boundary slope as (nu(L), -nu(M)).

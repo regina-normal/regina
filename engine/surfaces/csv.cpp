@@ -107,7 +107,7 @@ namespace {
         }
         if (fields & surfaceExportBdry) {
             if (! s->isCompact()) {
-                regina::MatrixInt* slopes = s->boundaryIntersections();
+                std::optional<MatrixInt> slopes = s->boundaryIntersections();
                 if (slopes) {
                     out << "\"spun:";
                     for (unsigned i = 0; i < slopes->rows(); ++i)

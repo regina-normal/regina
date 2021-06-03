@@ -64,6 +64,7 @@ struct NormalInfo<NS_QUAD> {
         spun = 1,
         oriented = 0
     };
+    static constexpr size_t dimension(size_t n) { return 3 * n; }
 };
 #endif
 
@@ -111,12 +112,10 @@ class NSVectorQuad : public NSVectorMirrored {
         virtual LargeInteger octs(size_t tetIndex,
             int octType, const Triangulation<3>* triang) const override;
 
-        static NormalSurfaceVector* makeZeroVector(
-            const Triangulation<3>* triangulation);
         static std::optional<MatrixInt> makeMatchingEquations(
             const Triangulation<3>& triangulation);
-        static EnumConstraints* makeEmbeddedConstraints(
-            const Triangulation<3>* triangulation);
+        static EnumConstraints makeEmbeddedConstraints(
+            const Triangulation<3>& triangulation);
 };
 
 /*@}*/

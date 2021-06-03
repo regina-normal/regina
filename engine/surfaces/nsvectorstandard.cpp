@@ -72,11 +72,6 @@ LargeInteger NSVectorStandard::arcs(size_t triIndex,
     return ans;
 }
 
-NormalSurfaceVector* NSVectorStandard::makeZeroVector(
-        const Triangulation<3>* triangulation) {
-    return new NSVectorStandard(7 * triangulation->size());
-}
-
 std::optional<MatrixInt> NSVectorStandard::makeMatchingEquations(
         const Triangulation<3>& triangulation) {
     size_t nCoords = 7 * triangulation.size();
@@ -114,15 +109,15 @@ std::optional<MatrixInt> NSVectorStandard::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NSVectorStandard::makeEmbeddedConstraints(
-        const Triangulation<3>* triangulation) {
-    EnumConstraints* ans = new EnumConstraints(triangulation->size());
+EnumConstraints NSVectorStandard::makeEmbeddedConstraints(
+        const Triangulation<3>& triangulation) {
+    EnumConstraints ans(triangulation.size());
 
     unsigned base = 0;
-    for (unsigned c = 0; c < ans->size(); ++c) {
-        (*ans)[c].insert((*ans)[c].end(), base + 4);
-        (*ans)[c].insert((*ans)[c].end(), base + 5);
-        (*ans)[c].insert((*ans)[c].end(), base + 6);
+    for (unsigned c = 0; c < ans.size(); ++c) {
+        ans[c].insert(ans[c].end(), base + 4);
+        ans[c].insert(ans[c].end(), base + 5);
+        ans[c].insert(ans[c].end(), base + 6);
         base += 7;
     }
 

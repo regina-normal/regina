@@ -40,6 +40,7 @@
 #define __NORMALSURFACE_H
 #endif
 
+#include <optional>
 #include <utility>
 #include "regina-core.h"
 #include "core/output.h"
@@ -229,7 +230,10 @@ typedef Matrix<Integer, true> MatrixInt;
  *   whether the coordinate system allows almost normal, spun and/or
  *   transversely oriented surfaces;
  * - a static constexpr member <tt>const char* name</tt>, which gives
- *   the human-readable name of the coordinate system.
+ *   the human-readable name of the coordinate system;
+ * - a static constexpr function <tt>size_t dimension(size_t)</tt> which,
+ *   given the number of tetrahedra in a triangulation, returns the
+ *   dimension of the coordinate system (i.e., the length of the vector).
  *
  * \ifacespython Not present.
  *
@@ -336,12 +340,10 @@ struct NormalInfo;
  *   orientedTriangles() and orientedQuads() must be
  *   implemented if your coordinate system supports transverse orientation.
  *   Otherwise you can use the default implementations (which returns zero).
- *   <li>Static public functions <tt>void
- *   makeZeroVector(const Triangulation<3>*)</tt>,
- *   <tt>std::optional<MatrixInt>
- *   makeMatchingEquations(const Triangulation<3>&)</tt> and
- *   makeEmbeddedConstraints(const Triangulation<3>&) must be
- *   declared and implemented.</li>
+ *   <li>Static public functions
+ *   std::optional<MatrixInt> makeMatchingEquations(const Triangulation<3>&) and
+ *   makeEmbeddedConstraints(const Triangulation<3>&) must be declared and
+ *   implemented.</li>
  * </ul>
  *
  * \todo \optlong Investigate using sparse vectors for storage.
@@ -751,22 +753,6 @@ class NormalSurfaceVector {
             int triVertex, const Triangulation<3>* triang) const = 0;
 
         /**
-         * Returns a new normal surface vector of the appropriate length
-         * for the given triangulation and for the coordinate
-         * system corresponding to this subclass of NormalSurfaceVector.
-         * All elements of the new vector will be initialised to zero.
-         *
-         * See regina::makeZeroVector() for further details.
-         *
-         * @param triangulation the triangulation upon which the
-         * underlying coordinate system is based.
-         * @return a new zero vector of the correct class and length.
-         */
-        #ifdef __DOXYGEN
-            static NormalSurfaceVector* makeZeroVector(
-                const Triangulation<3>* triangulation);
-        #endif
-        /**
          * Generates the set of normal surface matching equations for
          * the given triangulation using the coordinate
          * system corresponding to this particular subclass of
@@ -794,8 +780,8 @@ class NormalSurfaceVector {
          * @return a newly allocated set of constraints.
          */
         #ifdef __DOXYGEN
-            static EnumConstraints* makeEmbeddedConstraints(
-                const Triangulation<3>* triangulation);
+            static EnumConstraints makeEmbeddedConstraints(
+                const Triangulation<3>& triangulation);
         #endif
 
         // Make this class non-assignable, since we do not want to
@@ -1679,7 +1665,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * its own Triangulation<3> class.  Therefore, if the underlying
          * triangulation (as returned by triangulation()) is not of the
          * subclass SnapPeaTriangulation, this routine will simply return
-         * \c null.
+         * no value.
          *
          * All cusps are treated as complete.  That is, any Dehn fillings
          * stored in the SnapPea triangulation will be ignored.
@@ -1711,17 +1697,17 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * triangulation is oriented, if every vertex link in the
          * triangulation is a torus, and if the underlying coordinate system
          * is for normal surfaces (not almost normal surfaces).  If these
-         * conditions are not met, this routine will return \c null.
+         * conditions are not met, this routine will return no value.
          *
          * @author William Pettersson and Stephan Tillmann
          *
-         * @return a newly allocated matrix with \a number_of_vertices
-         * rows and two columns as described above, or \c null if the boundary
-         * slopes cannot be computed (e.g., if the underlying triangulation
-         * is not of type SnapPeaTriangulation, or if it fails to meet the
-         * preconditions outlined above).
+         * @return a matrix with \a number_of_vertices rows and two columns
+         * as described above, or no value if the boundary slopes cannot be
+         * computed (e.g., if the underlying triangulation is not of type
+         * SnapPeaTriangulation, or if it fails to meet the preconditions
+         * outlined above).
          */
-        MatrixInt* boundaryIntersections() const;
+        std::optional<MatrixInt> boundaryIntersections() const;
 
         /**
          * Gives read-only access to the raw vector that sits beneath this

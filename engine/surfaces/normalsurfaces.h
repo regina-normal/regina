@@ -1455,24 +1455,6 @@ class NormalSurfaces : public Packet {
 };
 
 /**
- * Returns a new normal surface vector of the appropriate length for the
- * given triangulation and the given coordinate system.
- * All elements of this vector will be initialised to zero.
- *
- * The new vector will be of the subclass of NormalSurfaceVector
- * corresponding to the given coordinate system.  The caller
- * of this routine is responsible for destroying the new vector.
- *
- * \ifacespython Not present.
- *
- * @param triangulation the triangulation upon which the underlying
- * coordinate system is based.
- * @param coords the coordinate system to be used.
- * @return a new zero vector of the correct class and length.
- */
-NormalSurfaceVector* makeZeroVector(const Triangulation<3>* triangulation,
-    NormalCoords coords);
-/**
  * Generates the set of normal surface matching equations for the
  * given triangulation using the given coordinate system.
  *
@@ -1496,7 +1478,7 @@ NormalSurfaceVector* makeZeroVector(const Triangulation<3>* triangulation,
 std::optional<MatrixInt> makeMatchingEquations(
     const Triangulation<3>& triangulation, NormalCoords coords);
 /**
- * Creates a new set of validity constraints representing the condition that
+ * Generates the validity constraints representing the condition that
  * normal surfaces be embedded.  The validity constraints will be expressed
  * relative to the given coordinate system.
  *
@@ -1505,9 +1487,9 @@ std::optional<MatrixInt> makeMatchingEquations(
  * @param triangulation the triangulation upon which these validity constraints
  * will be based.
  * @param coords the coordinate system to be used.
- * @return a newly allocated set of constraints.
+ * @return the set of validity constraints.
  */
-EnumConstraints* makeEmbeddedConstraints(const Triangulation<3>* triangulation,
+EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
     NormalCoords coords);
 
 /*@}*/

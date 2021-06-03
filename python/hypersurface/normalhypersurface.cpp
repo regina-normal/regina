@@ -31,24 +31,35 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "hypersurface/hscoordregistry.h"
 #include "hypersurface/normalhypersurface.h"
-#include "hypersurface/normalhypersurfaces.h" // for makeZeroVector()
 #include "triangulation/dim3.h"
 #include "triangulation/dim4.h"
 #include "../helpers.h"
 
 using regina::NormalHypersurface;
+using regina::NormalHypersurfaceVector;
 using regina::Triangulation;
+
+namespace {
+    struct ZeroVector : public regina::Returns<NormalHypersurfaceVector*> {
+        template <typename Coords>
+        inline NormalHypersurfaceVector* operator() (
+                const Triangulation<4>& tri) {
+            return new typename Coords::Class(Coords::dimension(tri.size()));
+        }
+    };
+}
 
 void addNormalHypersurface(pybind11::module_& m) {
     auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface")
         .def(pybind11::init<const NormalHypersurface&>())
         .def(pybind11::init<const NormalHypersurface&,
             const Triangulation<4>*>())
-        .def(pybind11::init([](Triangulation<4>* t, regina::HyperCoords coords,
+        .def(pybind11::init([](Triangulation<4>& t, regina::HyperCoords coords,
                 pybind11::list values) {
-            regina::NormalHypersurfaceVector* v =
-                regina::makeZeroVector(t, coords);
+            regina::NormalHypersurfaceVector* v = forCoords(
+                coords, ZeroVector(), nullptr, t);
             if (values.size() != v->size()) {
                 delete v;
                 throw pybind11::index_error(
@@ -64,7 +75,7 @@ void addNormalHypersurface(pybind11::module_& m) {
                 throw std::invalid_argument(
                     "List element not convertible to LargeInteger");
             }
-            return new NormalHypersurface(t, v);
+            return new NormalHypersurface(&t, v);
         }))
         .def("clone", &NormalHypersurface::clone)
         .def("doubleHypersurface", &NormalHypersurface::doubleHypersurface)

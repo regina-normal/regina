@@ -79,7 +79,10 @@ typedef Matrix<Integer, true> MatrixInt;
  * - a typedef \a Class that represents the corresponding
  *   NormalHypersurfaceVector subclass;
  * - a static constexpr member <tt>const char* name</tt>, which gives
- *   the human-readable name of the coordinate system.
+ *   the human-readable name of the coordinate system;
+ * - a static constexpr function <tt>size_t dimension(size_t)</tt> which,
+ *   given the number of pentachora in a triangulation, returns the
+ *   dimension of the coordinate system (i.e., the length of the vector).
  *
  * \ifacespython Not present.
  *
@@ -168,12 +171,10 @@ struct HyperInfo;
  *   \e total number of pieces of the requested type; if your new coordinate
  *   system adorns pieces with extra information (such as orientation) then
  *   your implementation must compute the appropriate sum.</li>
- *   <li>Static public functions <tt>void
- *   makeZeroVector(const Triangulation<4>*)</tt>,
- *   <tt>std::optional<MatrixInt> makeMatchingEquations(
- *   const Triangulation<4>&)</tt> and
- *   makeEmbeddedConstraints(const Triangulation<4>&) must be
- *   declared and implemented.</li>
+ *   <li>Static public functions
+ *   std::optional<MatrixInt> makeMatchingEquations(const Triangulation<4>&) and
+ *   makeEmbeddedConstraints(const Triangulation<4>&) must be declared and
+ *   implemented.</li>
  * </ul>
  *
  * \ifacespython Not present.
@@ -406,22 +407,6 @@ class NormalHypersurfaceVector {
             const Triangulation<4>* triang) const = 0;
 
         /**
-         * Returns a new normal hypersurface vector of the appropriate length
-         * for the given triangulation and for the coordinate
-         * system corresponding to this subclass of NormalHypersurfaceVector.
-         * All elements of the new vector will be initialised to zero.
-         *
-         * See ::makeZeroVector() for further details.
-         *
-         * @param triangulation the triangulation upon which the
-         * underlying coordinate system is based.
-         * @return a new zero vector of the correct class and length.
-         */
-        #ifdef __DOXYGEN
-            static NormalHypersurfaceVector* makeZeroVector(
-                const Triangulation<4>* triangulation);
-        #endif
-        /**
          * Generates the set of normal hypersurface matching equations for
          * the given triangulation using the coordinate
          * system corresponding to this particular subclass of
@@ -449,8 +434,8 @@ class NormalHypersurfaceVector {
          * @return a newly allocated set of constraints.
          */
         #ifdef __DOXYGEN
-            static EnumConstraints* makeEmbeddedConstraints(
-                const Triangulation<4>* triangulation);
+            static EnumConstraints makeEmbeddedConstraints(
+                const Triangulation<4>& triangulation);
         #endif
 
         // Make this class non-assignable, since we do not want to

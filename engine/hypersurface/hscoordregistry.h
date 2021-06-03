@@ -85,12 +85,26 @@ namespace regina {
  * coordinate system as described above, then forCoords() will pass back
  * \a defaultReturn instead.
  *
- * There is also a variant of forCoords() that works with void functions,
- * and so does not take the extra \a defaultReturn argument.
+ * There are two other ways in which you can call forCoords() (these are
+ * declared separately below):
  *
- * \pre The function object must have a typedef \a ReturnType indicating
- * the return type of the corresponding templated bracket operator.
- * Inheriting from Returns<...> is a convenient way to ensure this.
+ * - If you do not with to supply your own \a defaultReturn (e.g., objects of
+ *   the return type are expensive to construct), you can pass a ReturnDefault
+ *   object in its place.  In this case, if \a coords does not denote a
+ *   valid coordinate system, Regina will pass back a default-constructed
+ *   value of the correct return type.
+ *
+ * - If \a func is a void function, then forCoords() will be void also,
+ *   and there is no \a defaultReturn argument to pass at all.
+ *
+ * \pre If \a func returns a value, then the function object must have a
+ * typedef \a ReturnType indicating the return type of the corresponding
+ * templated bracket operator.  Inheriting from Returns<...> is a convenient
+ * way to ensure this.
+ *
+ * \pre If \a func does not return a value, then the type
+ * \a FunctionObject::ReturnType must not exist (even after any reference
+ * specifiers are removed from the type \a FunctionObject).
  *
  * \ifacespython Not present.
  *
@@ -113,36 +127,11 @@ forCoords(HyperCoords coords, FunctionObject&& func,
         Args&&... args);
 
 /**
- * Allows the user to call a template function whose template parameter
- * matches a given value of HyperCoords, which is not known
- * until runtime.  In essence, this routine contains a switch/case statement
- * that runs through all possible coordinate sytems.
+ * A variant of forCoords() for normal hypersurface coordinates that does
+ * not require the user to specify a default return value in advance.
  *
- * The advantages of this routine are that (i) the user does not need to
- * repeatedly type such switch/case statements themselves; and (ii) if
- * a new coordinate system is added then only a small amount of code
- * needs to be extended to incorporate it.
- *
- * This function can only work with coordinate systems in which
- * you can create and store normal hypersurfaces.  All other coordinate
- * systems are considered invalid for our purposes here.
- *
- * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func.operator()<HyperInfo<c>>(...)</tt> is
- * defined for any valid HyperCoords enum value \a c.  Then,
- * when the user calls <tt>forCoords(coords, func, ...)</tt>, this routine
- * will call <tt>func.operator()<HyperInfo<coords>>(...)</tt> in turn.
- * If \a coords does not denote a valid coordinate system as described above,
- * then forCoords() will do nothing.
- *
- * There is also a variant of forCoords() that works with functions with
- * return values, and which takes an extra \a defaultReturn argument.
- *
- * \pre There must not exist a type \a FunctionObject::ReturnType.
- * (or, if \a FunctionObject is a reference to a class/struct \a F,
- * there must likewise not exist a type \a F::ReturnType).
- * The existence of a type \a FunctionObject::ReturnType will cause the
- * non-void variant of forCoords() to be used instead.
+ * For detailed documentation, see the full version
+ * forCoords(coords, func, defaultReturn, args...).
  *
  * \ifacespython Not present.
  *
@@ -152,8 +141,30 @@ forCoords(HyperCoords coords, FunctionObject&& func,
  * @param args any additional arguments to pass to the bracket operator
  * for \a func.  These will be copied/moved, so if you wish to pass
  * references then you may need to wrap them in std::ref or std::cref.
- * @return nothing; the return type <tt>ReturnsTraits<FunctionObject>::Void</tt>
- * simply evaluates to \c void.
+ * @return the return value from the corresponding bracket
+ * operator of \a func, or a default-constructed return value if the given
+ * coordinate system is invalid.
+ */
+template <typename FunctionObject, typename... Args>
+typename ReturnsTraits<FunctionObject>::ReturnType
+forCoords(HyperCoords coords, FunctionObject&& func, ReturnDefault,
+        Args&&... args);
+
+/**
+ * A variant of forCoords() for normal hypersurface coordinates that is
+ * used for void functions.
+ *
+ * For detailed documentation, see the full version
+ * forCoords(coords, func, defaultReturn, args...).
+ *
+ * \ifacespython Not present.
+ *
+ * @param coords the given normal hypersurface coordinate system.
+ * @param func the function object whose bracket operator we will
+ * call with a HyperInfo<coords> object.
+ * @param args any additional arguments to pass to the bracket operator
+ * for \a func.  These will be copied/moved, so if you wish to pass
+ * references then you may need to wrap them in std::ref or std::cref.
  */
 template <typename FunctionObject, typename... Args>
 typename ReturnsTraits<FunctionObject>::Void

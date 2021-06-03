@@ -58,6 +58,7 @@ template <>
 struct HyperInfo<HS_STANDARD> {
     typedef HSVectorStandard Class;
     static constexpr const char* name = "Standard normal (tet-prism)";
+    static constexpr size_t dimension(size_t n) { return 15 * n; }
 };
 #endif
 
@@ -102,12 +103,10 @@ class HSVectorStandard : public NormalHypersurfaceVector {
         virtual LargeInteger edgeWeight(size_t edgeIndex,
             const Triangulation<4>* triang) const override;
 
-        static NormalHypersurfaceVector* makeZeroVector(
-            const Triangulation<4>* triangulation);
         static std::optional<MatrixInt> makeMatchingEquations(
             const Triangulation<4>& triangulation);
-        static EnumConstraints* makeEmbeddedConstraints(
-            const Triangulation<4>* triangulation);
+        static EnumConstraints makeEmbeddedConstraints(
+            const Triangulation<4>& triangulation);
 };
 
 /*@}*/

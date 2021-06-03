@@ -42,6 +42,7 @@
 #include "regina-core.h"
 #include "triangulation/dim3.h"
 #include <complex>
+#include <optional>
 
 // Forward declaration of SnapPea structures.
 namespace regina::snappea {
@@ -1067,9 +1068,9 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *
          * @return a newly allocated matrix with (2 * \a number_of_cusps) rows
          * and (3 * \a number_of_tetrahedra) columns as described above,
-         * or \c nullptr if this is a null triangulation.
+         * or no value if this is a null triangulation.
          */
-        MatrixInt* slopeEquations() const;
+        std::optional<MatrixInt> slopeEquations() const;
 
         /*@}*/
         /**

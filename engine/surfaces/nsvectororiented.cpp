@@ -72,11 +72,6 @@ LargeInteger NSVectorOriented::arcs(size_t triIndex,
     return ans;
 }
 
-NormalSurfaceVector* NSVectorOriented::makeZeroVector(
-        const Triangulation<3>* triangulation) {
-    return new NSVectorOriented(14 * triangulation->size());
-}
-
 std::optional<MatrixInt> NSVectorOriented::makeMatchingEquations(
         const Triangulation<3>& triangulation) {
     size_t nCoords = 14 * triangulation.size();
@@ -134,21 +129,21 @@ std::optional<MatrixInt> NSVectorOriented::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NSVectorOriented::makeEmbeddedConstraints(
-        const Triangulation<3>* triangulation) {
+EnumConstraints NSVectorOriented::makeEmbeddedConstraints(
+        const Triangulation<3>& triangulation) {
     // TODO: Must be a neater way of doing this, but might mean re-working
     // bitmasks.
-    EnumConstraints* ans = new EnumConstraints(8 * triangulation->size());
+    EnumConstraints ans(8 * triangulation.size());
 
     unsigned base = 0;
     unsigned c = 0;
-    while (c < ans->size()) {
+    while (c < ans.size()) {
         for (unsigned d = 0; d < 2; d++) {
             for (unsigned e = 0; e < 2; e++) {
                 for (unsigned f = 0; f < 2; f++) {
-                    (*ans)[c].insert((*ans)[c].end(), base + 8 + d);
-                    (*ans)[c].insert((*ans)[c].end(), base + 10 + e);
-                    (*ans)[c].insert((*ans)[c].end(), base + 12 + f);
+                    ans[c].insert(ans[c].end(), base + 8 + d);
+                    ans[c].insert(ans[c].end(), base + 10 + e);
+                    ans[c].insert(ans[c].end(), base + 12 + f);
                     ++c;
                 }
             }

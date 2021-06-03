@@ -41,11 +41,6 @@
 
 namespace regina {
 
-NormalSurfaceVector* NSVectorQuadOct::makeZeroVector(
-        const Triangulation<3>* triangulation) {
-    return new NSVectorQuadOct(6 * triangulation->size());
-}
-
 std::optional<MatrixInt> NSVectorQuadOct::makeMatchingEquations(
         const Triangulation<3>& triangulation) {
     unsigned long nCoords = 6 * triangulation.size();
@@ -81,24 +76,24 @@ std::optional<MatrixInt> NSVectorQuadOct::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NSVectorQuadOct::makeEmbeddedConstraints(
-        const Triangulation<3>* triangulation) {
+EnumConstraints NSVectorQuadOct::makeEmbeddedConstraints(
+        const Triangulation<3>& triangulation) {
     // At most one quad/oct per tetrahedron.
     // At most one oct type overall.
-    EnumConstraints* ans = new EnumConstraints(triangulation->size() + 1);
+    EnumConstraints ans(triangulation.size() + 1);
 
     unsigned base = 0;
-    for (unsigned c = 1; c < ans->size(); ++c) {
-        (*ans)[c].insert((*ans)[c].end(), base);
-        (*ans)[c].insert((*ans)[c].end(), base + 1);
-        (*ans)[c].insert((*ans)[c].end(), base + 2);
-        (*ans)[c].insert((*ans)[c].end(), base + 3);
-        (*ans)[c].insert((*ans)[c].end(), base + 4);
-        (*ans)[c].insert((*ans)[c].end(), base + 5);
+    for (unsigned c = 1; c < ans.size(); ++c) {
+        ans[c].insert(ans[c].end(), base);
+        ans[c].insert(ans[c].end(), base + 1);
+        ans[c].insert(ans[c].end(), base + 2);
+        ans[c].insert(ans[c].end(), base + 3);
+        ans[c].insert(ans[c].end(), base + 4);
+        ans[c].insert(ans[c].end(), base + 5);
 
-        (*ans)[0].insert((*ans)[0].end(), base + 3);
-        (*ans)[0].insert((*ans)[0].end(), base + 4);
-        (*ans)[0].insert((*ans)[0].end(), base + 5);
+        ans[0].insert(ans[0].end(), base + 3);
+        ans[0].insert(ans[0].end(), base + 4);
+        ans[0].insert(ans[0].end(), base + 5);
 
         base += 6;
     }

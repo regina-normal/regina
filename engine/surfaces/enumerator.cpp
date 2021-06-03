@@ -255,13 +255,14 @@ void NormalSurfaces::Enumerator::fillVertex() {
 
 template <typename Coords>
 void NormalSurfaces::Enumerator::fillVertexDD() {
-    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
-        makeEmbeddedConstraints(triang_, list_->coords_) : 0);
-
-    DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-        SurfaceInserter(*list_, *triang_), eqns_, constraints, tracker_);
-
-    delete constraints;
+    if (list_->which_.has(NS_EMBEDDED_ONLY)) {
+        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
+            SurfaceInserter(*list_, *triang_), eqns_, &c, tracker_);
+    } else {
+        DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
+            SurfaceInserter(*list_, *triang_), eqns_, nullptr, tracker_);
+    }
 }
 
 template <typename Coords>
@@ -473,13 +474,14 @@ void NormalSurfaces::Enumerator::fillFundamentalDual() {
     if (tracker_)
         tracker_->newStage("Enumerating Hilbert basis\n(dual method)");
 
-    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
-        makeEmbeddedConstraints(triang_, list_->coords_) : 0);
-
-    HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-        SurfaceInserter(*list_, *triang_), eqns_, constraints, tracker_);
-
-    delete constraints;
+    if (list_->which_.has(NS_EMBEDDED_ONLY)) {
+        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
+            SurfaceInserter(*list_, *triang_), eqns_, &c, tracker_);
+    } else {
+        HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
+            SurfaceInserter(*list_, *triang_), eqns_, nullptr, tracker_);
+    }
 }
 
 template <typename Coords>
@@ -490,13 +492,14 @@ void NormalSurfaces::Enumerator::fillFundamentalCD() {
         tracker_->newStage(
             "Enumerating Hilbert basis\n(Contejean-Devie method)");
 
-    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
-        makeEmbeddedConstraints(triang_, list_->coords_) : 0);
-
-    HilbertCD::enumerateHilbertBasis<typename Coords::Class>(
-        SurfaceInserter(*list_, *triang_), eqns_, constraints);
-
-    delete constraints;
+    if (list_->which_.has(NS_EMBEDDED_ONLY)) {
+        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        HilbertCD::enumerateHilbertBasis<typename Coords::Class>(
+            SurfaceInserter(*list_, *triang_), eqns_, &c);
+    } else {
+        HilbertCD::enumerateHilbertBasis<typename Coords::Class>(
+            SurfaceInserter(*list_, *triang_), eqns_, nullptr);
+    }
 }
 
 template <typename Coords>
@@ -507,10 +510,6 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
 
     if (tracker_)
         tracker_->newStage("Initialising Hilbert basis enumeration", 0.1);
-
-    // Fetch validity constraints from the registry.
-    EnumConstraints* constraints = (list_->which_.has(NS_EMBEDDED_ONLY) ?
-        makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     // Enumerate all vertex normal surfaces.
     if (tracker_)
@@ -533,12 +532,18 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
     if (tracker_)
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
-    HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-        SurfaceInserter(*list_, *triang_),
-        vtx->beginVectors(), vtx->endVectors(), constraints, tracker_);
+    if (list_->which_.has(NS_EMBEDDED_ONLY)) {
+        EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
+        HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
+            SurfaceInserter(*list_, *triang_),
+            vtx->beginVectors(), vtx->endVectors(), &c, tracker_);
+    } else {
+        HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
+            SurfaceInserter(*list_, *triang_),
+            vtx->beginVectors(), vtx->endVectors(), nullptr, tracker_);
+    }
 
     delete vtx;
-    delete constraints;
 }
 
 template <typename Coords>
@@ -588,14 +593,14 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         // Fetch validity constraints from the registry.
         EnumConstraints* constraints =
             (list_->which_.has(NS_EMBEDDED_ONLY) ?
-            makeEmbeddedConstraints(triang_, list_->coords_) : 0);
+            new EnumConstraints(
+                makeEmbeddedConstraints(*triang_, list_->coords_)) :
+            nullptr);
 
         bool broken;
         int nonZero;
         int i;
         std::vector<std::vector<mpz_class> >::const_iterator hlit;
-        EnumConstraints::const_iterator eit;
-        std::set<unsigned long>::const_iterator sit;
         NormalSurfaceVector* v;
         LargeInteger tmpInt;
 
@@ -604,11 +609,10 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
         for (hlit = basis.begin(); hlit != basis.end(); ++hlit) {
             broken = false;
             if (constraints) {
-                for (eit = constraints->begin(); eit != constraints->end();
-                        ++eit) {
+                for (const auto& posSet : *constraints) {
                     nonZero = 0;
-                    for (sit = eit->begin(); sit != eit->end(); ++sit) {
-                        if ((*hlit)[*sit] != 0) {
+                    for (auto pos : posSet) {
+                        if ((*hlit)[pos] != 0) {
                             if (++nonZero > 1)
                                 break;
                         }

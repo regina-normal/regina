@@ -64,20 +64,6 @@ void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
 }
 
 namespace {
-    struct ZeroVector : public Returns<NormalSurfaceVector*> {
-        template <typename Coords>
-        inline NormalSurfaceVector* operator() (const Triangulation<3>* tri) {
-            return Coords::Class::makeZeroVector(tri);
-        }
-    };
-}
-
-NormalSurfaceVector* makeZeroVector(const Triangulation<3>* triangulation,
-        NormalCoords coords) {
-    return forCoords(coords, ZeroVector(), 0, triangulation);
-}
-
-namespace {
     struct MatchingEquations : public Returns<std::optional<MatrixInt>> {
         template <typename Coords>
         inline std::optional<MatrixInt> operator() (
@@ -93,17 +79,18 @@ std::optional<MatrixInt> makeMatchingEquations(
 }
 
 namespace {
-    struct EmbeddedConstraints : public Returns<EnumConstraints*> {
+    struct EmbeddedConstraints : public Returns<EnumConstraints> {
         template <typename Coords>
-        inline EnumConstraints* operator() (const Triangulation<3>* tri) {
+        inline EnumConstraints operator() (const Triangulation<3>& tri) {
             return Coords::Class::makeEmbeddedConstraints(tri);
         }
     };
 }
 
-EnumConstraints* makeEmbeddedConstraints(
-        const Triangulation<3>* triangulation, NormalCoords coords) {
-    return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
+EnumConstraints makeEmbeddedConstraints(
+        const Triangulation<3>& triangulation, NormalCoords coords) {
+    return forCoords(coords, EmbeddedConstraints(), ReturnDefault(),
+        triangulation);
 }
 
 const Triangulation<3>& NormalSurfaces::triangulation() const {

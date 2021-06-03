@@ -166,6 +166,16 @@ struct ReturnsTraits : public ReturnsTraitsImplementation<T,
 };
 
 /**
+ * An empty placeholder object used to indicate a default-constructed
+ * return value.
+ *
+ * Some of Regina's functions (e.g., the surface registry functions)
+ * will accept a ReturnDefault as an alternative to the user having to
+ * explicitly supply a return value to use in case of error.
+ */
+struct ReturnDefault { };
+
+/**
  * A function object that creates a new object subclassed from \a Base,
  * where the particular subclass is chosen according to the template argument
  * to operator().  The template argument to the bracket operator would

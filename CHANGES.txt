@@ -275,6 +275,8 @@ Version 6.1  [ TODO ]
             - Added copy and move constructors.  The old clone() is now
               deprecated; just use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
+            - Changed boundaryIntersections() to return a
+              std::optional<MatrixInt>, not a pointer that could be null.
         Class NormalSurfaces:
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
@@ -356,6 +358,8 @@ Version 6.1  [ TODO ]
             - Class constants for the census sections are now constexpr.
         Class SnapPeaTriangulation:
             - Added member and global swap() functions.
+            - Changed slopeEquations() to return a std::optional<MatrixInt>,
+              not a pointer that could be null.
         Class SurfaceFilterInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -445,12 +449,20 @@ Version 6.1  [ TODO ]
             - Both these functions are now inline and constexpr.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
+        Function forCoords():
+            - You can now pass ReturnDefault() instead of an explicitly
+              supplied return value for the error case.
         Function makeAngleEquations():
             - Now takes a const reference (not a const pointer), and returns
               a MatrixInt by value (not by newly allocated pointer).
+        Function makeEmbeddedConstraints():
+            - Now takes a const reference (not a const pointer), and returns an
+              EnumConstraints by value (not by newly allocated pointer).
         Function makeMatchingEquations():
             - Now takes a const reference (not a const pointer), and returns a
               std::optional<MatrixInt> instead of a pointer that could be null.
+        Function makeZeroVector():
+            - Removed completely.
         Function preImageOfLattice():
             - Now returns a MatrixInt by value.
         Function readSigList(), readIsoSigList():

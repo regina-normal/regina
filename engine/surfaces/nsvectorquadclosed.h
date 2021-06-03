@@ -64,6 +64,7 @@ struct NormalInfo<NS_QUAD_CLOSED> {
         spun = 0,
         oriented = 0
     };
+    static constexpr size_t dimension(size_t n) { return 3 * n; }
 };
 #endif
 
@@ -123,8 +124,6 @@ class NSVectorQuadClosed : public NSVectorQuad {
         template <typename T>
         NSVectorQuadClosed(const Vector<T>& cloneMe);
 
-        static NormalSurfaceVector* makeZeroVector(
-            const Triangulation<3>* triangulation);
         static std::optional<MatrixInt> makeMatchingEquations(
             const Triangulation<3>& triangulation);
 };

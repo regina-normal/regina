@@ -80,11 +80,6 @@ LargeInteger NSVectorANStandard::arcs(size_t triIndex,
     return ans;
 }
 
-NormalSurfaceVector* NSVectorANStandard::makeZeroVector(
-        const Triangulation<3>* triangulation) {
-    return new NSVectorANStandard(10 * triangulation->size());
-}
-
 std::optional<MatrixInt> NSVectorANStandard::makeMatchingEquations(
         const Triangulation<3>& triangulation) {
     size_t nCoords = 10 * triangulation.size();
@@ -131,24 +126,24 @@ std::optional<MatrixInt> NSVectorANStandard::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* NSVectorANStandard::makeEmbeddedConstraints(
-        const Triangulation<3>* triangulation) {
+EnumConstraints NSVectorANStandard::makeEmbeddedConstraints(
+        const Triangulation<3>& triangulation) {
     // At most one quad/oct per tetrahedron.
     // Also at most one oct type overall.
-    EnumConstraints* ans = new EnumConstraints(triangulation->size() + 1);
+    EnumConstraints ans(triangulation.size() + 1);
 
     unsigned base = 0;
-    for (unsigned c = 1; c < ans->size(); ++c) {
-        (*ans)[c].insert((*ans)[c].end(), base + 4);
-        (*ans)[c].insert((*ans)[c].end(), base + 5);
-        (*ans)[c].insert((*ans)[c].end(), base + 6);
-        (*ans)[c].insert((*ans)[c].end(), base + 7);
-        (*ans)[c].insert((*ans)[c].end(), base + 8);
-        (*ans)[c].insert((*ans)[c].end(), base + 9);
+    for (unsigned c = 1; c < ans.size(); ++c) {
+        ans[c].insert(ans[c].end(), base + 4);
+        ans[c].insert(ans[c].end(), base + 5);
+        ans[c].insert(ans[c].end(), base + 6);
+        ans[c].insert(ans[c].end(), base + 7);
+        ans[c].insert(ans[c].end(), base + 8);
+        ans[c].insert(ans[c].end(), base + 9);
 
-        (*ans)[0].insert((*ans)[0].end(), base + 7);
-        (*ans)[0].insert((*ans)[0].end(), base + 8);
-        (*ans)[0].insert((*ans)[0].end(), base + 9);
+        ans[0].insert(ans[0].end(), base + 7);
+        ans[0].insert(ans[0].end(), base + 8);
+        ans[0].insert(ans[0].end(), base + 9);
 
         base += 10;
     }

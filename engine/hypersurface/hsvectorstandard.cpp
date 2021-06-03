@@ -62,11 +62,6 @@ LargeInteger HSVectorStandard::edgeWeight(
     return ans;
 }
 
-NormalHypersurfaceVector* HSVectorStandard::makeZeroVector(
-        const Triangulation<4>* triangulation) {
-    return new HSVectorStandard(15 * triangulation->size());
-}
-
 std::optional<MatrixInt> HSVectorStandard::makeMatchingEquations(
         const Triangulation<4>& triangulation) {
     size_t nCoords = 15 * triangulation.size();
@@ -125,32 +120,32 @@ std::optional<MatrixInt> HSVectorStandard::makeMatchingEquations(
     return ans;
 }
 
-EnumConstraints* HSVectorStandard::makeEmbeddedConstraints(
-        const Triangulation<4>* triangulation) {
-    EnumConstraints* ans = new EnumConstraints(30 * triangulation->size());
+EnumConstraints HSVectorStandard::makeEmbeddedConstraints(
+        const Triangulation<4>& triangulation) {
+    EnumConstraints ans(30 * triangulation.size());
 
     size_t base = 5;
     unsigned edge1, edge2;
     size_t c = 0;
     size_t pent;
     unsigned i;
-    for (pent = 0; pent < triangulation->size(); ++pent) {
+    for (pent = 0; pent < triangulation.size(); ++pent) {
         for (edge1 = 0; edge1 < 10; ++edge1)
             for (i = 0; i < 3; ++i) {
                 edge2 = Edge<4>::edgeNumber[
                     Edge<4>::edgeVertex[edge1][0]][
                     Triangle<4>::triangleVertex[edge1][i]];
                 if (edge1 < edge2) {
-                    (*ans)[c].insert((*ans)[c].end(), base + edge1);
-                    (*ans)[c].insert((*ans)[c].end(), base + edge2);
+                    ans[c].insert(ans[c].end(), base + edge1);
+                    ans[c].insert(ans[c].end(), base + edge2);
                     ++c;
                 }
                 edge2 = Edge<4>::edgeNumber[
                     Edge<4>::edgeVertex[edge1][1]][
                     Triangle<4>::triangleVertex[edge1][i]];
                 if (edge1 < edge2) {
-                    (*ans)[c].insert((*ans)[c].end(), base + edge1);
-                    (*ans)[c].insert((*ans)[c].end(), base + edge2);
+                    ans[c].insert(ans[c].end(), base + edge1);
+                    ans[c].insert(ans[c].end(), base + edge2);
                     ++c;
                 }
             }

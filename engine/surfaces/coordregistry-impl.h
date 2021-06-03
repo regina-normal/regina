@@ -98,6 +98,39 @@ forCoords(NormalCoords coords, FunctionObject&& func,
 }
 
 template <typename FunctionObject, typename... Args>
+inline typename ReturnsTraits<FunctionObject>::ReturnType
+forCoords(NormalCoords coords, FunctionObject&& func, ReturnDefault,
+        Args&&... args) {
+    switch (coords) {
+        case NS_STANDARD : return
+            func.template operator()<NormalInfo<NS_STANDARD>>(
+            std::forward<Args>(args)...);
+        case NS_AN_STANDARD : return
+            func.template operator()<NormalInfo<NS_AN_STANDARD>>(
+            std::forward<Args>(args)...);
+        case NS_QUAD : return
+            func.template operator()<NormalInfo<NS_QUAD>>(
+            std::forward<Args>(args)...);
+        case NS_QUAD_CLOSED : return
+            func.template operator()<NormalInfo<NS_QUAD_CLOSED>>(
+            std::forward<Args>(args)...);
+        case NS_AN_QUAD_OCT : return
+            func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(
+            std::forward<Args>(args)...);
+        case NS_AN_QUAD_OCT_CLOSED : return
+            func.template operator()<NormalInfo<NS_AN_QUAD_OCT_CLOSED>>(
+            std::forward<Args>(args)...);
+        case NS_ORIENTED : return
+            func.template operator()<NormalInfo<NS_ORIENTED>>(
+            std::forward<Args>(args)...);
+        case NS_ORIENTED_QUAD : return
+            func.template operator()<NormalInfo<NS_ORIENTED_QUAD>>(
+            std::forward<Args>(args)...);
+        default: return typename ReturnsTraits<FunctionObject>::ReturnType();
+    }
+}
+
+template <typename FunctionObject, typename... Args>
 inline typename ReturnsTraits<FunctionObject>::Void
 forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args) {
     switch (coords) {
