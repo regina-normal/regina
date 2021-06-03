@@ -256,7 +256,7 @@ struct BoundaryHelper {
                     built->template countFaces<subdim>()) {
                 std::ostringstream msg;
                 msg << "Boundary component " << bc->index()
-                    << " of triangulation " << bc->triangulation()->label()
+                    << " of triangulation " << bc->triangulation().label()
                     << " does not give additional " << subdim << "-faces"
                     << " when triangulated, even though a face is pinched."
                     << std::endl;
@@ -275,7 +275,7 @@ struct BoundaryHelper {
                 built->template countFaces<subdim>()) {
             std::ostringstream msg;
             msg << "Boundary component " << bc->index()
-                << " of triangulation " << bc->triangulation()->label()
+                << " of triangulation " << bc->triangulation().label()
                 << " gives the wrong number of " << subdim << "-faces"
                 << " when triangulated."
                 << std::endl;
@@ -297,7 +297,7 @@ struct BoundaryHelper {
                         outerFace) {
                     std::ostringstream msg;
                     msg << "Boundary component " << bc->index()
-                        << " of triangulation " << bc->triangulation()->label()
+                        << " of triangulation " << bc->triangulation().label()
                         << " gives mismatched " << subdim << "-face indices"
                         << " when triangulated."
                         << std::endl;
@@ -311,7 +311,7 @@ struct BoundaryHelper {
                 if (innerPerm.trunc(subdim+1) != outerPerm.trunc(subdim+1)) {
                     std::ostringstream msg;
                     msg << "Boundary component " << bc->index()
-                        << " of triangulation " << bc->triangulation()->label()
+                        << " of triangulation " << bc->triangulation().label()
                         << " gives mismatched " << subdim << "-face labelling"
                         << " when triangulated."
                         << std::endl;

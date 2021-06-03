@@ -38,8 +38,11 @@ Version 6.1  [ TODO ]
               rawVector() (with its pointer return type) is kept but deprecated.
             - AngleStructure now has copy and move constructors.  The old
               clone() is now deprecated; just use the copy constructor instead.
+            - Changed triangulation() to return a reference, not a pointer.
         Class AngleStructures:
             - New function structures() for simpler iteration.
+            - Changed triangulation() to return a const reference, not a
+              non-const pointer.
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
         Class Base64SigEncoding:
@@ -261,16 +264,22 @@ Version 6.1  [ TODO ]
               deprecated.
             - Added copy and move constructors.  The old clone() is now
               deprecated; just use the copy constructor instead.
+            - Changed triangulation() to return a reference, not a pointer.
         Class NormalHypersurfaces:
             - New function hypersurfaces() for simpler iteration.
+            - Changed triangulation() to return a const reference, not a
+              non-const pointer.
         Class NormalSurface:
             - Renamed rawVector() to vector().  The old name is kept but
               deprecated.
             - Added copy and move constructors.  The old clone() is now
               deprecated; just use the copy constructor instead.
+            - Changed triangulation() to return a reference, not a pointer.
         Class NormalSurfaces:
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
+            - Changed triangulation() to return a const reference, not a
+              non-const pointer.
         Class NormalSurfaceVector, NormalHypersurfaceVector:
             - Renamed setElement() to set().  Since this is a virtual function,
               the old name has been removed completely.  If you have a
@@ -280,6 +289,9 @@ Version 6.1  [ TODO ]
               is now a template constructor that takes any const Vector<T>&.
             - Operator += now returns a reference, as it should.
             - New typedef Element, for better compatibility with Vector.
+        Class NSVectorMirrored:
+            - Changed makeMirror() to take its triangulation by reference,
+              not by pointer.
         Class PacketInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
@@ -355,6 +367,9 @@ Version 6.1  [ TODO ]
             - Added a move constructor and move assignment operator.
             - Renamed swapContents() to swap(); the old name is now a deprecated
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
+        Class TreeTraversal<...>
+            - The verify() routines no longer allow a ready-made matrix of
+              matching/angle equations to be passed.
         Class Triangulation<dim>:
             - New alias fromSig(), which is is identical to fromIsoSig().
             - Routine simplices(), faces(), components(), boundaryComponents(),
@@ -430,6 +445,12 @@ Version 6.1  [ TODO ]
             - Both these functions are now inline and constexpr.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
+        Function makeAngleEquations():
+            - Now takes a const reference (not a const pointer), and returns
+              a MatrixInt by value (not by newly allocated pointer).
+        Function makeMatchingEquations():
+            - Now takes a const reference (not a const pointer), and returns a
+              std::optional<MatrixInt> instead of a pointer that could be null.
         Function preImageOfLattice():
             - Now returns a MatrixInt by value.
         Function readSigList(), readIsoSigList():

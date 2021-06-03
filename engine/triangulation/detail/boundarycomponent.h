@@ -287,9 +287,10 @@ class BoundaryComponentFaceStorage :
         /**
          * Returns the triangulation to which this boundary component belongs.
          *
-         * @return the triangulation containing this boundary component.
+         * @return a reference to the triangulation containing this boundary
+         * component.
          */
-        Triangulation<dim>* triangulation() const {
+        Triangulation<dim>& triangulation() const {
             // There may be no (dim-1)-simplices, but there is always a vertex.
             return std::get<0>(faces_).front()->triangulation();
         }
@@ -547,7 +548,7 @@ class BoundaryComponentFaceStorage :
                 // of *boundary* useDim-faces in this d-dim triang.
                 // We leave the other values of the map uninitialised.
                 Face<dim - 1, useDim>** map = new Face<dim - 1, useDim>*[
-                    std::get<useDim>(faces_).front()->triangulation()->
+                    std::get<useDim>(faces_).front()->triangulation().
                     template countFaces<useDim>()];
 
                 for (Face<dim - 1, useDim>* f : tri->template faces<useDim>()) {
@@ -783,9 +784,10 @@ class BoundaryComponentFaceStorage<dim, facetDim> {
         /**
          * Returns the triangulation to which this boundary component belongs.
          *
-         * @return the triangulation containing this boundary component.
+         * @return a reference to the triangulation containing this boundary
+         * component.
          */
-        Triangulation<dim>* triangulation() const {
+        Triangulation<dim>& triangulation() const {
             return facets_.front()->triangulation();
         }
 

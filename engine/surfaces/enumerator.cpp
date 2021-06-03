@@ -88,22 +88,24 @@ NormalSurfaces* NormalSurfaces::enumerate(
         Triangulation<3>* owner, NormalCoords coords,
         NormalList which, NormalAlg algHints,
         ProgressTracker* tracker) {
-    MatrixInt* eqns = makeMatchingEquations(owner, coords);
+    std::optional<MatrixInt> eqns = makeMatchingEquations(*owner, coords);
     if (! eqns) {
         if (tracker)
             tracker->setFinished();
-        return 0;
+        return nullptr;
     }
 
-    NormalSurfaces* list = new NormalSurfaces(
-        coords, which, algHints);
+    NormalSurfaces* list = new NormalSurfaces(coords, which, algHints);
 
     if (tracker) {
-        std::thread([=]{
-            forCoords(coords, Enumerator(list, owner, eqns, tracker));
-        }).detach();
+        // We pass the matching equations as an argument to the thread
+        // function so we can be sure that the equations are moved into
+        // the thread before they are destroyed.
+        std::thread([=](MatrixInt e) {
+            forCoords(coords, Enumerator(list, owner, e, tracker));
+        }, std::move(*eqns)).detach();
     } else
-        forCoords(coords, Enumerator(list, owner, eqns, tracker));
+        forCoords(coords, Enumerator(list, owner, *eqns, tracker));
     return list;
 }
 
@@ -128,9 +130,6 @@ void NormalSurfaces::Enumerator::operator() () {
 
     if (tracker_)
         tracker_->setFinished();
-
-    // Clean up.
-    delete eqns_; // This might or might not have been done by fill...().
 }
 
 template <typename Coords>
@@ -219,7 +218,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
                 (list_->coords_ == NS_STANDARD ? NS_QUAD : NS_AN_QUAD_OCT),
                 list_->which_, list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED),
             triang_,
-            makeMatchingEquations(triang_,
+            *makeMatchingEquations(*triang_,
                 list_->coords_ == NS_STANDARD ? NS_QUAD : NS_AN_QUAD_OCT),
             tracker_);
         if (list_->algorithm_.has(NS_VERTEX_TREE)) {
@@ -243,10 +242,10 @@ void NormalSurfaces::Enumerator::fillVertex() {
         if (tracker_)
             tracker_->newStage("Expanding to standard solution set", 0.1);
         if (list_->coords_ == NS_STANDARD)
-            list_->buildStandardFromReduced<NormalSpec>(triang_,
+            list_->buildStandardFromReduced<NormalSpec>(*triang_,
                 e.list_->surfaces_, tracker_);
         else
-            list_->buildStandardFromReduced<AlmostNormalSpec>(triang_,
+            list_->buildStandardFromReduced<AlmostNormalSpec>(*triang_,
                 e.list_->surfaces_, tracker_);
 
         // Clean up.
@@ -260,7 +259,7 @@ void NormalSurfaces::Enumerator::fillVertexDD() {
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-        SurfaceInserter(*list_, triang_), *eqns_, constraints, tracker_);
+        SurfaceInserter(*list_, *triang_), eqns_, constraints, tracker_);
 
     delete constraints;
 }
@@ -290,7 +289,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // The matching equation matrix that will be used by the tree traversal
     // tableaux, which is always based on NS_STANDARD or NSQUAD (even
     // for almost normal surfaces):
-    MatrixInt* eqns;
+    MatrixInt eqns;
 
     // The maximum number of columns in the tableaux that could be added
     // to form the right hand side, as a consequence of either
@@ -299,19 +298,19 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     switch (list_->coords_) {
         case NS_STANDARD:
-            eqns = makeMatchingEquations(triang_, NS_STANDARD);
+            eqns = *makeMatchingEquations(*triang_, NS_STANDARD);
             maxColsRHS = triang_->size() * 5;
             break;
         case NS_QUAD:
-            eqns = makeMatchingEquations(triang_, NS_QUAD);
+            eqns = *makeMatchingEquations(*triang_, NS_QUAD);
             maxColsRHS = triang_->size();
             break;
         case NS_AN_STANDARD:
-            eqns = makeMatchingEquations(triang_, NS_STANDARD);
+            eqns = *makeMatchingEquations(*triang_, NS_STANDARD);
             maxColsRHS = triang_->size() * 5 + 1;
             break;
         case NS_AN_QUAD_OCT:
-            eqns = makeMatchingEquations(triang_, NS_QUAD);
+            eqns = *makeMatchingEquations(*triang_, NS_QUAD);
             maxColsRHS = triang_->size() + 1;
             break;
         // TODO: Support NS_QUAD_CLOSED and NS_AN_QUAD_OCT_CLOSED here.
@@ -326,13 +325,13 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     Integer tmp;
 
     // The rank of the matching equation matrix:
-    unsigned long rank = rowBasis(*eqns);
+    unsigned long rank = rowBasis(eqns);
 
     // The maximum entry in the matching equation matrix:
     Integer maxEqnEntry = 0;
     for (i = 0; i < rank; ++i)
-        for (j = 0; j < eqns->columns(); ++j) {
-            tmp = eqns->entry(i, j).abs();
+        for (j = 0; j < eqns.columns(); ++j) {
+            tmp = eqns.entry(i, j).abs();
             if (tmp > maxEqnEntry)
                 maxEqnEntry = tmp;
         }
@@ -345,10 +344,10 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // of the original tableaux (noting that for almost normal surfaces,
     // the octagon column will be the sum of two original columns):
     Integer maxOrigColSum = 0;
-    for (i = 0; i < eqns->columns(); ++i) {
+    for (i = 0; i < eqns.columns(); ++i) {
         tmp = 0;
         for (j = 0; j < rank; ++j)
-            tmp += Integer(eqns->entry(j, i).abs());
+            tmp += Integer(eqns.entry(j, i).abs());
         if (tmp > maxOrigColSum)
             maxOrigColSum = tmp;
     }
@@ -357,18 +356,16 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 
     // The square of the Hadamard bound for the original tableaux:
     Integer hadamardSquare = 1;
-    Integer* colNorm = new Integer[eqns->columns()];
-    for (i = 0; i < eqns->columns(); ++i) {
+    Integer* colNorm = new Integer[eqns.columns()];
+    for (i = 0; i < eqns.columns(); ++i) {
         colNorm[i] = 0;
         for (j = 0; j < rank; ++j)
-            colNorm[i] += Integer(eqns->entry(j, i) * eqns->entry(j, i));
+            colNorm[i] += Integer(eqns.entry(j, i) * eqns.entry(j, i));
     }
-    std::sort(colNorm, colNorm + eqns->columns());
+    std::sort(colNorm, colNorm + eqns.columns());
     for (i = 0; i < rank; ++i)
-        hadamardSquare *= colNorm[eqns->columns() - 1 - i];
+        hadamardSquare *= colNorm[eqns.columns() - 1 - i];
     delete[] colNorm;
-
-    delete eqns; // We are done with the matching equations now.
 
     if (Coords::almostNormal) {
         // The octagon column is the sum of two quadrilateral columns.
@@ -429,7 +426,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
 template <typename Coords, typename Integer>
 void NormalSurfaces::Enumerator::fillVertexTreeWith() {
     TreeEnumeration<typename LPArgs<Coords>::Constraint,
-        BanNone, Integer> search(triang_, LPArgs<Coords>::coords_);
+        BanNone, Integer> search(*triang_, LPArgs<Coords>::coords_);
     while (search.next(tracker_)) {
         list_->surfaces_.push_back(search.buildSurface());
         if (tracker_ && tracker_->isCancelled())
@@ -480,7 +477,7 @@ void NormalSurfaces::Enumerator::fillFundamentalDual() {
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-        SurfaceInserter(*list_, triang_), *eqns_, constraints, tracker_);
+        SurfaceInserter(*list_, *triang_), eqns_, constraints, tracker_);
 
     delete constraints;
 }
@@ -497,7 +494,7 @@ void NormalSurfaces::Enumerator::fillFundamentalCD() {
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     HilbertCD::enumerateHilbertBasis<typename Coords::Class>(
-        SurfaceInserter(*list_, triang_), *eqns_, constraints);
+        SurfaceInserter(*list_, *triang_), eqns_, constraints);
 
     delete constraints;
 }
@@ -523,9 +520,10 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
         NS_VERTEX | (list_->which_.has(NS_EMBEDDED_ONLY) ?
             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
-    Enumerator e(vtx, triang_, eqns_, nullptr /* no inner progress tracker */);
-    eqns_ = nullptr; // The inner enumerator's destructor will delete eqns_.
+    Enumerator e(vtx, triang_, std::move(eqns_), nullptr);
     e.fillVertex<Coords>();
+
+    // We cannot use eqns below here, since we moved it into e.
 
     // Finalise the algorithm flags for this list: combine NS_HILBERT_PRIMAL
     // with whatever vertex enumeration flags were used.
@@ -536,7 +534,7 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-        SurfaceInserter(*list_, triang_),
+        SurfaceInserter(*list_, *triang_),
         vtx->beginVectors(), vtx->endVectors(), constraints, tracker_);
 
     delete vtx;
@@ -555,8 +553,8 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
     // This is okay, since fillFundamentalFullCone() is only used as a
     // top-level enumeration routine (and is never used at all unless
     // the user explicitly chooses this algorithm).
-    unsigned rank = rowBasis(*eqns_);
-    unsigned long dim = eqns_->columns();
+    unsigned rank = rowBasis(const_cast<MatrixInt&>(eqns_));
+    unsigned long dim = eqns_.columns();
 
     std::vector<std::vector<mpz_class> > input;
     unsigned r, c;
@@ -564,9 +562,9 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
     for (r = 0; r < rank; ++r) {
         input.push_back(std::vector<mpz_class>());
         std::vector<mpz_class>& v(input.back());
-        v.reserve(eqns_->columns());
-        for (c = 0; c < eqns_->columns(); ++c) {
-            Integer& entry(eqns_->entry(r, c));
+        v.reserve(eqns_.columns());
+        for (c = 0; c < eqns_.columns(); ++c) {
+            const Integer& entry(eqns_.entry(r, c));
             if (entry.isNative())
                 v.push_back(mpz_class(entry.longValue()));
             else

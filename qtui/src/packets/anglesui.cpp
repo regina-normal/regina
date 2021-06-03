@@ -204,7 +204,7 @@ AngleStructureUI::AngleStructureUI(AngleStructures* packet,
 
     // Listen for renaming events on the parent triangulation, since we
     // display its label in the header.
-    packet->triangulation()->listen(this);
+    packet->parent()->listen(this);
 }
 
 AngleStructureUI::~AngleStructureUI() {
@@ -267,13 +267,13 @@ void AngleStructureUI::refreshHeader() {
         "<qt>%1<br>%2<br>Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(span).
-        arg(QString(model->structures()->triangulation()->
+        arg(QString(model->structures()->triangulation().
             humanLabel().c_str()).toHtmlEscaped()));
 }
 
 void AngleStructureUI::viewTriangulation() {
     enclosingPane->getMainWindow()->packetView(
-        model->structures()->triangulation(),
+        model->structures()->parent(),
         false /* visible in tree */, false /* select in tree */);
 }
 

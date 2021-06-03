@@ -47,7 +47,7 @@ NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter* filter) const {
         if (filter->accept(*s))
             ans->surfaces_.push_back(new NormalSurface(*s));
 
-    triangulation()->insertChildLast(ans);
+    parent()->insertChildLast(ans);
     return ans;
 }
 
@@ -75,7 +75,7 @@ NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
         }
     }
 
-    triangulation()->insertChildLast(ans);
+    parent()->insertChildLast(ans);
     return ans;
 }
 
@@ -116,7 +116,7 @@ NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
         }
     }
 
-    triangulation()->insertChildLast(ans);
+    parent()->insertChildLast(ans);
     return ans;
 }
 
@@ -153,7 +153,7 @@ NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
         delete t;
     }
 
-    triangulation()->insertChildLast(ans);
+    parent()->insertChildLast(ans);
     return ans;
 }
 

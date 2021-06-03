@@ -486,7 +486,7 @@ class DiscSetSurface {
     protected:
         DiscSetTet** discSets;
             /**< The disc sets corresponding to each tetrahedron. */
-        const Triangulation<3>* triangulation;
+        const Triangulation<3>& triangulation;
             /**< The triangulation in which the normal surface lives. */
 
     protected:
@@ -505,7 +505,7 @@ class DiscSetSurface {
          * in the \a discSets array <b>must</b> be created, since the
          * \a DiscSetSurface destructor will attempt to destroy them!
          * The \a discSets array will have size
-         * <tt>surface.triangulation()->size()</tt>.
+         * <tt>surface.triangulation().size()</tt>.
          *
          * @param surface the normal surface whose discs we shall use.
          * @param b this parameter is ignored.
@@ -660,7 +660,7 @@ class DiscSetSurfaceData : public DiscSetSurface {
          */
         DiscSetSurfaceData(const NormalSurface& surface) :
                 DiscSetSurface(surface, true) {
-            size_t tot = triangulation->size();
+            size_t tot = triangulation.size();
             if (tot)
                 for (size_t index = 0; index < tot; index++)
                     discSets[index] = new DiscSetTetData<T>(surface, index);
@@ -677,7 +677,7 @@ class DiscSetSurfaceData : public DiscSetSurface {
          */
         DiscSetSurfaceData(const NormalSurface& surface, const T& initValue) :
                 DiscSetSurface(surface, true) {
-            size_t tot = triangulation->size();
+            size_t tot = triangulation.size();
             if (tot)
                 for (size_t index = 0; index < tot; index++)
                     discSets[index] = new DiscSetTetData<T>(surface, index,
@@ -902,7 +902,7 @@ inline unsigned long DiscSetTet::nDiscs(int type) const {
 // Inline functions for DiscSetSurface
 
 inline size_t DiscSetSurface::nTets() const {
-    return triangulation->size();
+    return triangulation.size();
 }
 
 inline unsigned long DiscSetSurface::nDiscs(size_t tetIndex, int type) const {
@@ -919,7 +919,7 @@ inline DiscSpecIterator DiscSetSurface::begin() const {
 
 inline DiscSpecIterator DiscSetSurface::end() const {
     DiscSpecIterator ans(*this);
-    ans.current.tetIndex = triangulation->size();
+    ans.current.tetIndex = triangulation.size();
     ans.current.type = 0;
     ans.current.number = 0;
     return ans;

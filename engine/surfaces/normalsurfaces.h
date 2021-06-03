@@ -42,9 +42,11 @@
 
 #include <algorithm>
 #include <iterator>
+#include <optional>
 #include <vector>
 #include "regina-core.h"
 #include "enumerate/enumconstraints.h"
+#include "maths/matrix.h"
 #include "packet/packet.h"
 #include "surfaces/normalsurface.h"
 #include "surfaces/normalflags.h"
@@ -341,9 +343,19 @@ class NormalSurfaces : public Packet {
         /**
          * Returns the triangulation in which these normal surfaces live.
          * 
-         * @return the triangulation in which these surfaces live.
+         * The triangulation is also accessible via the packet tree as
+         * parent(); this routine simply adds the convenience of casting
+         * down to the correct triangulation class.
+         *
+         * If you need non-const access to the triangulation (e.g., to
+         * rename the packet), use parent(); however, remember that a
+         * triangulation that owns angle structures or normal surfaces
+         * must \e not change its tetrahedra or their gluings.
+         *
+         * @return a reference to the triangulation in which these surfaces
+         * live.
          */
-        Triangulation<3>* triangulation() const;
+        const Triangulation<3>& triangulation() const;
         /**
          * Returns the number of surfaces stored in this list.
          *
@@ -731,28 +743,26 @@ class NormalSurfaces : public Packet {
         NormalSurfaces* filterForPotentiallyIncompressible() const;
 
         /**
-         * Returns a newly created matrix containing the matching
-         * equations that were used to create this normal surface list.
-         * The destruction of this matrix is the responsibility of the
-         * caller of this routine.  Multiple calls to this routine will
-         * result in the construction of multiple matrices.  This
-         * routine in fact merely calls makeMatchingEquations() with the
+         * Returns the matching equations that were used to create this
+         * normal surface list.  The matrix is not cached: multiple calls to
+         * this routine will result in the construction of multiple matrices.
+         * This routine in fact merely calls makeMatchingEquations() with the
          * appropriate parameters.
          *
          * The format of the matrix is identical to that returned by
          * makeMatchingEquations().
          *
          * Note that there are situations in which makeMatchingEquations()
-         * returns \c null (because the triangulation is not supported
-         * by the chosen coordinate system).  However, this routine should
-         * never return \c null, because if makeMatchingEquations() had
-         * returned \c null then this normal surface list would not have
+         * returns no value (because the triangulation is not supported
+         * by the chosen coordinate system).  However, this routine will
+         * always returns a value, because if makeMatchingEquations() had
+         * returned no value then this normal surface list would not have
          * been created in the first place.
          *
          * @return the matching equations used to create this normal
          * surface list.
          */
-        MatrixInt* recreateMatchingEquations() const;
+        MatrixInt recreateMatchingEquations() const;
 
         /**
          * Exports this list of normal surfaces as a plain text CSV
@@ -1002,7 +1012,7 @@ class NormalSurfaces : public Packet {
                 std::output_iterator_tag, NormalSurfaceVector*> {
             NormalSurfaces* list;
                 /**< The list into which surfaces will be inserted. */
-            Triangulation<3>* owner;
+            const Triangulation<3>& owner;
                 /**< The triangulation in which the surfaces to be
                  *   inserted are contained. */
 
@@ -1016,7 +1026,7 @@ class NormalSurfaces : public Packet {
              * to be inserted are contained.
              */
             SurfaceInserter(NormalSurfaces& newList,
-                Triangulation<3>* newOwner);
+                const Triangulation<3>& newOwner);
             /**
              * Creates a new output iterator that is a clone of the
              * given iterator.
@@ -1024,15 +1034,6 @@ class NormalSurfaces : public Packet {
              * @param cloneMe the output iterator to clone.
              */
             SurfaceInserter(const SurfaceInserter& cloneMe) = default;
-
-            /**
-             * Sets this iterator to be a clone of the given output iterator.
-             *
-             * @param cloneMe the output iterator to clone.
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator =(const SurfaceInserter& cloneMe) =
-                default;
 
             /**
              * Appends a normal surface to the end of the appropriate
@@ -1081,6 +1082,9 @@ class NormalSurfaces : public Packet {
              * @return this output iterator.
              */
             SurfaceInserter& operator ++(int);
+
+            SurfaceInserter& operator =(const SurfaceInserter& cloneMe) =
+                delete;
         };
 
     private:
@@ -1160,7 +1164,7 @@ class NormalSurfaces : public Packet {
          * and cancellation requests, or \c null if this is not required.
          */
         template <class Variant>
-        void buildStandardFromReduced(Triangulation<3>* owner,
+        void buildStandardFromReduced(const Triangulation<3>& owner,
             const std::vector<NormalSurface*>& reducedList,
             ProgressTracker* tracker = nullptr);
 
@@ -1181,7 +1185,7 @@ class NormalSurfaces : public Packet {
          * the number of tetrahedra in the given triangulation.
          */
         template <class Variant, class BitmaskType>
-        void buildStandardFromReducedUsing(Triangulation<3>* owner,
+        void buildStandardFromReducedUsing(const Triangulation<3>& owner,
             const std::vector<NormalSurface*>& reducedList,
             ProgressTracker* tracker);
 
@@ -1228,7 +1232,7 @@ class NormalSurfaces : public Packet {
                     /**< The surface list to be filled. */
                 Triangulation<3>* triang_;
                     /**< The triangulation in which these surfaces lie. */
-                MatrixInt* eqns_;
+                const MatrixInt& eqns_;
                     /**< The matching equations for the given triangulation in
                          the coordinate system corresponding to list_. */
                 ProgressTracker* tracker_;
@@ -1244,16 +1248,13 @@ class NormalSurfaces : public Packet {
                  * @param triang the triangulation in which these surfaces lie.
                  * @param eqns the matching equations for the given
                  * triangulation in the coordinate system corresopnding to
-                 * \a list.  This object will take ownership of \a eqns, and
-                 * the bracket operator will delete it once the enumeration
-                 * has finished.  This pointer \e must be non-null, i.e., Regina
-                 * must have been able to construct the matching equations.
+                 * \a list.
                  * @param tracker the progress tracker to use for progress
                  * reporting and cancellation polling, or \c null if these
                  * capabilities are not required.
                  */
                 Enumerator(NormalSurfaces* list, Triangulation<3>* triang,
-                    MatrixInt* eqns, ProgressTracker* tracker);
+                    const MatrixInt& eqns, ProgressTracker* tracker);
 
                 /**
                  * Default move constructor.
@@ -1271,9 +1272,6 @@ class NormalSurfaces : public Packet {
                  * This routine fills \a list_ with surfaces, and then once
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
-                 *
-                 * The matching equation matrix \a eqns_ will be deleted
-                 * during this routine.
                  *
                  * \tparam Coords an instance of the NormalInfo<> template
                  * class.
@@ -1303,9 +1301,6 @@ class NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillVertex();
@@ -1327,9 +1322,6 @@ class NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillFundamental();
@@ -1345,9 +1337,6 @@ class NormalSurfaces : public Packet {
                  * If \a tracker_ is non-null, this routine assumes that
                  * an appropriate tracker stage has already been
                  * declared, and works through that stage only.
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1366,9 +1355,6 @@ class NormalSurfaces : public Packet {
                  * an appropriate tracker stage has already been
                  * declared, and works through that stage only.
                  *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
-                 *
                  * \pre We are enumerating embedded surfaces only.
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1382,9 +1368,6 @@ class NormalSurfaces : public Packet {
                  * This does all of the work for fillVertexTree(), aside
                  * from the initial selection of an integer type.  See
                  * the nodes for fillVertexTree() for further details.
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre We are enumerating embedded surfaces only.
                  * \pre The underlying triangulation is non-empty.
@@ -1408,9 +1391,6 @@ class NormalSurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
-                 *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Coords>
@@ -1428,9 +1408,6 @@ class NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1450,9 +1427,6 @@ class NormalSurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
-                 *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Coords>
@@ -1470,9 +1444,6 @@ class NormalSurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -1502,12 +1473,10 @@ class NormalSurfaces : public Packet {
 NormalSurfaceVector* makeZeroVector(const Triangulation<3>* triangulation,
     NormalCoords coords);
 /**
- * Creates a new set of normal surface matching equations for the
+ * Generates the set of normal surface matching equations for the
  * given triangulation using the given coordinate system.
- * The returned matrix will be newly allocated and its destruction will
- * be the responsibility of the caller of this routine.
  *
- * Each equation will be represented as a row of the matrix.
+ * Each equation will be represented as a row of the resulting matrix.
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
  *
@@ -1515,17 +1484,17 @@ NormalSurfaceVector* makeZeroVector(const Triangulation<3>* triangulation,
  * equations for all triangulations (these coordinate systems are explicitly
  * mentioned as such in the NormalCoords enum documentation).  If Regina
  * cannot create the matching equations as requested, this routine will
- * return \c null instead.
+ * return no value instead.
  *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
  * @param coords the coordinate system to be used.
- * @return a newly allocated set of matching equations, or \c null if
+ * @return the resulting set of matching equations, or no value if
  * Regina is not able to construct them for the given combination of
  * triangulation and coordinate system.
  */
-MatrixInt* makeMatchingEquations(const Triangulation<3>* triangulation,
-    NormalCoords coords);
+std::optional<MatrixInt> makeMatchingEquations(
+    const Triangulation<3>& triangulation, NormalCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal surfaces be embedded.  The validity constraints will be expressed
@@ -1643,7 +1612,7 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors()
 }
 
 inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
-        NormalSurfaces& newList, Triangulation<3>* newOwner) :
+        NormalSurfaces& newList, const Triangulation<3>& newOwner) :
         list(&newList), owner(newOwner) {
 }
 
@@ -1657,7 +1626,7 @@ inline NormalSurfaces::SurfaceInserter&
 inline NormalSurfaces::SurfaceInserter&
         NormalSurfaces::SurfaceInserter::operator =(
         NormalSurfaceVector* vector) {
-    list->surfaces_.push_back(new NormalSurface(owner, vector));
+    list->surfaces_.push_back(new NormalSurface(&owner, vector));
     return *this;
 }
 
@@ -1682,8 +1651,10 @@ inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
 }
 
 inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
-        Triangulation<3>* triang, MatrixInt* eqns, ProgressTracker* tracker) :
-        list_(list), triang_(triang), eqns_(eqns), tracker_(tracker) {
+        Triangulation<3>* triang, const MatrixInt& eqns,
+        ProgressTracker* tracker) :
+        list_(list), triang_(triang), eqns_(eqns),
+        tracker_(tracker) {
 }
 
 } // namespace regina

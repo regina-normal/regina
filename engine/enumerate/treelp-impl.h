@@ -121,7 +121,7 @@ void LPMatrix<IntType>::dump(std::ostream& out) const {
 
 template <class LPConstraint>
 LPInitialTableaux<LPConstraint>::LPInitialTableaux(
-        const Triangulation<3>* tri, NormalCoords coords, bool enumeration) :
+        const Triangulation<3>& tri, NormalCoords coords, bool enumeration) :
         tri_(tri), coords_(coords) {
     unsigned r, c;
 
@@ -129,7 +129,7 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
     if (coords_ != NS_ANGLE) {
         // Here coords must be one of NS_QUAD or NS_STANDARD, and so we
         // know that makeMatchingEquations() must succeed.
-        eqns_ = regina::makeMatchingEquations(tri, coords);
+        eqns_ = *regina::makeMatchingEquations(tri, coords);
         scaling_ = 0;
     } else {
         eqns_ = regina::makeAngleEquations(tri);
@@ -140,29 +140,29 @@ LPInitialTableaux<LPConstraint>::LPInitialTableaux(
         // will have final entries of -1 and -2 only.
         scaling_ = -2;
         long rightmost;
-        for (r = 0; r < eqns_->rows(); ++r) {
-            rightmost = eqns_->entry(r, eqns_->columns() - 1).longValue();
+        for (r = 0; r < eqns_.rows(); ++r) {
+            rightmost = eqns_.entry(r, eqns_.columns() - 1).longValue();
             if (rightmost != scaling_)
-                for (c = 0; c < eqns_->columns(); ++c)
-                    eqns_->entry(r, c) *= (scaling_ / rightmost);
+                for (c = 0; c < eqns_.columns(); ++c)
+                    eqns_.entry(r, c) *= (scaling_ / rightmost);
         }
     }
 
     // Compute the rank of the matrix, and reorder its rows so
     // the first \a rank_ rows are full rank.
-    rank_ = regina::rowBasis(*eqns_);
+    rank_ = regina::rowBasis(eqns_);
 
     // Reorder the columns using a good heuristic.
-    cols_ = eqns_->columns() + LPConstraint::nConstraints;
+    cols_ = eqns_.columns() + LPConstraint::nConstraints;
     columnPerm_ = new int[cols_];
     reorder(enumeration);
 
     // Create and fill the sparse columns.
     col_ = new LPCol<LPConstraint>[cols_];
-    for (c = 0; c < eqns_->columns() - (scaling_ ? 1 : 0); ++c)
+    for (c = 0; c < eqns_.columns() - (scaling_ ? 1 : 0); ++c)
         for (r = 0; r < rank_; ++r)
-            if (eqns_->entry(r, c) != 0)
-                col_[c].push(r, eqns_->entry(r, c).longValue());
+            if (eqns_.entry(r, c) != 0)
+                col_[c].push(r, eqns_.entry(r, c).longValue());
 
     // Add in the final row(s) for any additional constraints.
     constraintsBroken_ = ! LPConstraint::addRows(col_, columnPerm_, tri);
@@ -183,7 +183,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
         // Keep the tetrahedra in the same order, but move
         // quadrilaterals to the front and triangles to the back
         // as required by columnPerm().
-        int n = tri_->size();
+        int n = tri_.size();
         for (i = 0; i < n; ++i) {
             columnPerm_[3 * i] = 7 * i + 4;
             columnPerm_[3 * i + 1] = 7 * i + 5;
@@ -202,22 +202,22 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
     //
     // From here on we copy code directly from the "real" reorder()
     // below.
-    int* tmp = new int[eqns_->columns()];
-    std::copy(columnPerm_, columnPerm_ + eqns_->columns(), tmp);
-    for (i = 0; i < eqns_->columns(); ++i) {
+    int* tmp = new int[eqns_.columns()];
+    std::copy(columnPerm_, columnPerm_ + eqns_.columns(), tmp);
+    for (i = 0; i < eqns_.columns(); ++i) {
         // Column tmp[i] of the matrix should be moved to
         // column i.
         if (tmp[i] == i)
             continue;
 
-        eqns_->swapColumns(i, tmp[i]);
+        eqns_.swapColumns(i, tmp[i]);
 
         // Adjust links to the old column i, which is now column tmp[i].
-        for (j = i + 1; j < eqns_->columns(); ++j)
+        for (j = i + 1; j < eqns_.columns(); ++j)
             if (tmp[j] == i)
                 break; // This is the link we need to change.
 #ifdef REGINA_VERIFY_LPDATA
-        if (j == eqns_->columns()) {
+        if (j == eqns_.columns()) {
             std::cerr << "ERROR: Sorting error." << std::endl;
             ::exit(1);
         }
@@ -236,7 +236,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
 #else
 template <class LPConstraint>
 void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
-    int n = tri_->size();
+    int n = tri_.size();
     int i, j, k;
 
     // Fill the columnPerm_ array according to what kind of
@@ -307,15 +307,15 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
                     if (coords_ == NS_QUAD) {
                         // We're in quadrilateral or angle structure
                         // coordinates.
-                        if (eqns_->entry(j, 3 * k) != 0 ||
-                                eqns_->entry(j, 3 * k + 1) != 0 ||
-                                eqns_->entry(j, 3 * k + 2) != 0)
+                        if (eqns_.entry(j, 3 * k) != 0 ||
+                                eqns_.entry(j, 3 * k + 1) != 0 ||
+                                eqns_.entry(j, 3 * k + 2) != 0)
                             ++curr;
                     } else {
                         // We're in standard coordinates.
-                        if (eqns_->entry(j, 7 * k + 4) != 0 ||
-                                eqns_->entry(j, 7 * k + 5) != 0 ||
-                                eqns_->entry(j, 7 * k + 6) != 0)
+                        if (eqns_.entry(j, 7 * k + 4) != 0 ||
+                                eqns_.entry(j, 7 * k + 5) != 0 ||
+                                eqns_.entry(j, 7 * k + 6) != 0)
                             ++curr;
                     }
                     if (curr >= best)
@@ -337,9 +337,9 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
                     continue;
                 if (coords_ == NS_QUAD) {
                     // We're in quadrilateral or angle structure coordinates.
-                    if ((eqns_->entry(bestRow, 3 * k) != 0 ||
-                            eqns_->entry(bestRow, 3 * k + 1) != 0 ||
-                            eqns_->entry(bestRow, 3 * k + 2) != 0)) {
+                    if ((eqns_.entry(bestRow, 3 * k) != 0 ||
+                            eqns_.entry(bestRow, 3 * k + 1) != 0 ||
+                            eqns_.entry(bestRow, 3 * k + 2) != 0)) {
                         touched[k] = true;
 
                         columnPerm_[3 * (n - nTouched) - 3] = 3 * k;
@@ -350,9 +350,9 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
                     }
                 } else {
                     // We're in standard coordinates.
-                    if ((eqns_->entry(bestRow, 7 * k + 4) != 0 ||
-                            eqns_->entry(bestRow, 7 * k + 5) != 0 ||
-                            eqns_->entry(bestRow, 7 * k + 6) != 0)) {
+                    if ((eqns_.entry(bestRow, 7 * k + 4) != 0 ||
+                            eqns_.entry(bestRow, 7 * k + 5) != 0 ||
+                            eqns_.entry(bestRow, 7 * k + 6) != 0)) {
                         touched[k] = true;
 
                         // The quadrilateral columns...
@@ -409,22 +409,22 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
     // from LPConstraint, which we will deal with later).
     //
     // Now go ahead and actually move the columns around accordingly.
-    int* tmp = new int[eqns_->columns()];
-    std::copy(columnPerm_, columnPerm_ + eqns_->columns(), tmp);
-    for (i = 0; i < eqns_->columns(); ++i) {
+    int* tmp = new int[eqns_.columns()];
+    std::copy(columnPerm_, columnPerm_ + eqns_.columns(), tmp);
+    for (i = 0; i < eqns_.columns(); ++i) {
         // Column tmp[i] of the matrix should be moved to
         // column i.
         if (tmp[i] == i)
             continue;
 
-        eqns_->swapColumns(i, tmp[i]);
+        eqns_.swapColumns(i, tmp[i]);
 
         // Adjust links to the old column i, which is now column tmp[i].
-        for (j = i + 1; j < eqns_->columns(); ++j)
+        for (j = i + 1; j < eqns_.columns(); ++j)
             if (tmp[j] == i)
                 break; // This is the link we need to change.
 #ifdef REGINA_VERIFY_LPDATA
-        if (j == eqns_->columns()) {
+        if (j == eqns_.columns()) {
             std::cerr << "ERROR: Sorting error." << std::endl;
             ::exit(1);
         }
@@ -919,13 +919,13 @@ void LPData<LPConstraint, IntType>::extractSolution(
             // constrained to be positive is the final scaling coordinate.
             // Even better, this coordinate is never moved by the column
             // permutation.
-            pos = 3 * origTableaux_->tri()->size();
+            pos = 3 * origTableaux_->tri().size();
             v.set(pos, v[pos] + lcm);
         } else {
             // For strict angle structures, we pass type == 0, and we
             // constrain *all* coordinates as positive.
             for (pos = 0;
-                    pos <= 3 * origTableaux_->tri()->size();
+                    pos <= 3 * origTableaux_->tri().size();
                     ++pos)
                 v.set(pos, v[pos] + lcm);
         }
@@ -933,7 +933,7 @@ void LPData<LPConstraint, IntType>::extractSolution(
         // For normal and almost normal surfaces, we need to work through
         // each past call to constrainPositive() and/or constrainOct().
         const unsigned long nTets =
-            origTableaux_->tri()->size();
+            origTableaux_->tri().size();
 
         // First take into account the quadrilateral types...
         for (i = 0; i < nTets; ++i)

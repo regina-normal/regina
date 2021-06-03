@@ -123,8 +123,8 @@ class NSVectorOriented : public NormalSurfaceVector {
 
         static NormalSurfaceVector* makeZeroVector(
             const Triangulation<3>* triangulation);
-        static MatrixInt* makeMatchingEquations(
-            const Triangulation<3>* triangulation);
+        static std::optional<MatrixInt> makeMatchingEquations(
+            const Triangulation<3>& triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
             const Triangulation<3>* triangulation);
 };

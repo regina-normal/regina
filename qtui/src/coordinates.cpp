@@ -197,46 +197,48 @@ namespace Coordinates {
                 coordSystem == regina::NS_AN_QUAD_OCT_CLOSED);
     }
 
-    size_t numColumns(NormalCoords coordSystem, regina::Triangulation<3>* tri) {
+    size_t numColumns(NormalCoords coordSystem,
+            const regina::Triangulation<3>& tri) {
         if (coordSystem == regina::NS_STANDARD)
-            return tri->size() * 7;
+            return tri.size() * 7;
         else if (coordSystem == regina::NS_AN_STANDARD)
-            return tri->size() * 10;
+            return tri.size() * 10;
         else if (coordSystem == regina::NS_AN_LEGACY)
-            return tri->size() * 10;
+            return tri.size() * 10;
         else if (coordSystem == regina::NS_QUAD)
-            return tri->size() * 3;
+            return tri.size() * 3;
         else if (coordSystem == regina::NS_QUAD_CLOSED)
-            return tri->size() * 3;
+            return tri.size() * 3;
         else if (coordSystem == regina::NS_AN_QUAD_OCT)
-            return tri->size() * 6;
+            return tri.size() * 6;
         else if (coordSystem == regina::NS_AN_QUAD_OCT_CLOSED)
-            return tri->size() * 6;
+            return tri.size() * 6;
         else if (coordSystem == regina::NS_EDGE_WEIGHT)
-            return tri->countEdges();
+            return tri.countEdges();
         else if (coordSystem == regina::NS_TRIANGLE_ARCS)
-            return tri->countTriangles() * 3;
+            return tri.countTriangles() * 3;
         else if (coordSystem == regina::NS_ORIENTED)
-            return tri->size() * 14;
+            return tri.size() * 14;
         else if (coordSystem == regina::NS_ORIENTED_QUAD)
-            return tri->size() * 6;
+            return tri.size() * 6;
         else
             return 0;
     }
 
-    size_t numColumns(HyperCoords coordSystem, regina::Triangulation<4>* tri) {
+    size_t numColumns(HyperCoords coordSystem,
+            const regina::Triangulation<4>& tri) {
         if (coordSystem == regina::HS_STANDARD)
-            return tri->size() * 15;
+            return tri.size() * 15;
         else if (coordSystem == regina::HS_PRISM)
-            return tri->size() * 10;
+            return tri.size() * 10;
         else if (coordSystem == regina::HS_EDGE_WEIGHT)
-            return tri->countEdges();
+            return tri.countEdges();
         else
             return 0;
     }
 
     QString columnName(NormalCoords coordSystem, size_t whichCoord,
-            regina::Triangulation<3>* tri) {
+            const regina::Triangulation<3>& tri) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return QString("%1: %2").arg(whichCoord / 7).
@@ -268,14 +270,14 @@ namespace Coordinates {
                 return QString("K%1: %2").arg(whichCoord / 6).
                     arg(regina::quadString[(whichCoord % 6) - 3]);
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
-            if (! (tri && tri->edge(whichCoord)->isBoundary()))
+            if (! tri.edge(whichCoord)->isBoundary())
                 return QString::number(whichCoord);
             else if (ReginaPrefSet::global().displayUnicode)
                 return QString("%1: \u2202").arg(whichCoord);
             else
                 return QString("%1 (B)").arg(whichCoord);
         } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
-            if (! (tri && tri->triangle(whichCoord / 3)->isBoundary()))
+            if (! tri.triangle(whichCoord / 3)->isBoundary())
                 return QString("%1: %2").
                     arg(whichCoord / 3).arg(whichCoord % 3);
             else if (ReginaPrefSet::global().displayUnicode)
@@ -326,7 +328,7 @@ namespace Coordinates {
     }
 
     QString columnName(HyperCoords coordSystem, size_t whichCoord,
-            regina::Triangulation<4>* tri) {
+            const regina::Triangulation<4>& tri) {
         if (coordSystem == regina::HS_STANDARD) {
             if (whichCoord % 15 < 5)
                 return QString("%1: %2").arg(whichCoord / 15).
@@ -344,7 +346,7 @@ namespace Coordinates {
                 arg(regina::FaceNumbering<4, 1>::edgeVertex
                     [whichCoord % 10][1]);
         } else if (coordSystem == regina::HS_EDGE_WEIGHT) {
-            if (! (tri && tri->edge(whichCoord)->isBoundary()))
+            if (! tri.edge(whichCoord)->isBoundary())
                 return QString::number(whichCoord);
             else if (ReginaPrefSet::global().displayUnicode)
                 return QString("%1: \u2202").arg(whichCoord);
@@ -356,7 +358,7 @@ namespace Coordinates {
     }
 
     QString columnDesc(NormalCoords coordSystem, size_t whichCoord,
-            const QObject *context, regina::Triangulation<3>* tri) {
+            const QObject *context, const regina::Triangulation<3>& tri) {
         if (coordSystem == regina::NS_STANDARD) {
             if (whichCoord % 7 < 4)
                 return context->tr("Tetrahedron %1, triangle about vertex %2").
@@ -394,17 +396,14 @@ namespace Coordinates {
                     arg(whichCoord / 6).
                     arg(regina::quadString[(whichCoord % 6) - 3]);
         } else if (coordSystem == regina::NS_EDGE_WEIGHT) {
-            if (tri) {
-                if (tri->edge(whichCoord)->isBoundary())
-                    return context->tr("Weight of (boundary) edge %1").
-                        arg(whichCoord);
-                else
-                    return context->tr("Weight of (internal) edge %1").
-                        arg(whichCoord);
-            } else
-                return context->tr("Weight of edge %1").arg(whichCoord);
+            if (tri.edge(whichCoord)->isBoundary())
+                return context->tr("Weight of (boundary) edge %1").
+                    arg(whichCoord);
+            else
+                return context->tr("Weight of (internal) edge %1").
+                    arg(whichCoord);
         } else if (coordSystem == regina::NS_TRIANGLE_ARCS) {
-            if (! (tri && tri->triangle(whichCoord / 3)->isBoundary()))
+            if (! tri.triangle(whichCoord / 3)->isBoundary())
                 return context->tr(
                     "Arcs on (internal) triangle %1 crossing triangle vertex %2").
                     arg(whichCoord / 3).arg(whichCoord % 3);
@@ -466,7 +465,7 @@ namespace Coordinates {
     }
 
     QString columnDesc(HyperCoords coordSystem, size_t whichCoord,
-            const QObject *context, regina::Triangulation<4>* tri) {
+            const QObject *context, const regina::Triangulation<4>& tri) {
         if (coordSystem == regina::HS_STANDARD) {
             if (whichCoord % 15 < 5)
                 return context->tr(
@@ -489,15 +488,12 @@ namespace Coordinates {
                 arg(regina::FaceNumbering<4, 1>::edgeVertex
                     [whichCoord % 10][1]);
         } else if (coordSystem == regina::HS_EDGE_WEIGHT) {
-            if (tri) {
-                if (tri->edge(whichCoord)->isBoundary())
-                    return context->tr("Weight of (boundary) edge %1").
-                        arg(whichCoord);
-                else
-                    return context->tr("Weight of (internal) edge %1").
-                        arg(whichCoord);
-            } else
-                return context->tr("Weight of edge %1").arg(whichCoord);
+            if (tri.edge(whichCoord)->isBoundary())
+                return context->tr("Weight of (boundary) edge %1").
+                    arg(whichCoord);
+            else
+                return context->tr("Weight of (internal) edge %1").
+                    arg(whichCoord);
         }
 
         return context->tr("This coordinate system is not known");

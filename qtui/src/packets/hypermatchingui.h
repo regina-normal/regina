@@ -56,7 +56,7 @@ class HyperMatchingModel : public QAbstractItemModel {
         /**
          * Details of the matching equations being displayed
          */
-        std::unique_ptr<regina::MatrixInt> eqns_;
+        std::optional<regina::MatrixInt> eqns_;
         regina::NormalHypersurfaces* surfaces_;
 
     public:
@@ -145,7 +145,7 @@ inline regina::NormalHypersurfaces* HyperMatchingModel::surfaces() const {
 
 inline QModelIndex HyperMatchingModel::index(int row, int column,
         const QModelIndex& /* unused parent */) const {
-    if (eqns_.get())
+    if (eqns_)
         return createIndex(row, column,
             quintptr(eqns_->columns() * row + column));
     else

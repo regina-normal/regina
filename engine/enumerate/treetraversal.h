@@ -413,38 +413,23 @@ class TreeTraversal : public BanConstraint {
          * equations, this routine goes back to the original matching
          * equations matrix as constructed by regina::makeMatchingEquations().
          * This ensures that the test is independent of any potential
-         * problems with the tableaux.  You are not required to pass
-         * your own matching equations (if you don't, they will be temporarily
-         * reconstructed for you); however, you may pass your own if you
-         * wish to use a non-standard matching equation matrix, and/or
-         * reuse the same matrix to avoid the overhead of reconstructing it
-         * every time this routine is called.
+         * problems with the tableaux.
          *
-         * If you do not pass your own matching equations and Regina is
-         * unable to construct them (which can happen when the underlying
-         * triangulation is not supported by the normal coordinate system),
-         * then this routine will return \c false.
+         * If Regina is unable to construct the matching equations (which can
+         * happen when the underlying triangulation is not supported by the
+         * normal coordinate system), then this routine will return \c false.
          *
          * \pre The normal or almost normal surface \a s uses the same
          * coordinate system as was passed to the TreeTraversal constructor.
          * Moreover, this coordinate system is in fact a normal or
          * almost normal coordinate system (i.e., not NS_ANGLE).
          *
-         * \pre If \a matchingEqns is non-null, then the number of columns
-         * in \a matchingEqns is equal to the number of coordinates in the
-         * underlying normal or almost normal coordinate system.
-         *
          * @param s the normal surface to verify.
-         * @param matchingEqns the matching equations to check against
-         * the given surface; this may be 0, in which case the matching
-         * equations will be temporarily reconstructed for you using
-         * regina::makeMatchingEquations().
          * @return \c true if the given surface passes all of the tests
          * described above, or \c false if it fails one or more tests
          * (indicating a problem or error).
          */
-        bool verify(const NormalSurface* s,
-                const MatrixInt* matchingEqns = nullptr) const;
+        bool verify(const NormalSurface* s) const;
 
         /**
          * Ensures that the given angle structure satisfies
@@ -460,31 +445,17 @@ class TreeTraversal : public BanConstraint {
          * this routine goes back to the original angle equations matrix as
          * constructed by regina::makeAngleEquations().
          * This ensures that the test is independent of any potential
-         * problems with the tableaux.  You are not required to pass
-         * your own angle equations (if you don't, they will be temporarily
-         * reconstructed for you); however, you may pass your own if you
-         * wish to use a non-standard angle equation matrix, and/or
-         * reuse the same matrix to avoid the overhead of reconstructing it
-         * every time this routine is called.
+         * problems with the tableaux.
          *
          * \pre The coordinate system passed to the TreeTraversal constructor
          * was NS_ANGLE.
          *
-         * \pre If \a angleEqns is non-null, then the number of columns
-         * in \a angleEqns is equal to the number of coordinates in the
-         * underlying angle structure coordinate system.
-         *
          * @param s the angle structure to verify.
-         * @param angleEqns the angle equations to check against
-         * the given angle structure; this may be 0, in which case the angle
-         * equations will be temporarily reconstructed for you using
-         * regina::makeAngleEquations().
          * @return \c true if the given angle structure passes all of the tests
          * described above, or \c false if it fails one or more tests
          * (indicating a problem or error).
          */
-        bool verify(const AngleStructure* s,
-                const MatrixInt* angleEqns = nullptr) const;
+        bool verify(const AngleStructure* s) const;
 
         // Mark this class as non-copyable.
         TreeTraversal(const TreeTraversal&) = delete;
@@ -519,7 +490,7 @@ class TreeTraversal : public BanConstraint {
          * or \c false if we should optimise the tableaux for an existence test
          * (such as searching for a non-trivial normal disc or sphere).
          */
-        TreeTraversal(const Triangulation<3>* tri, NormalCoords coords,
+        TreeTraversal(const Triangulation<3>& tri, NormalCoords coords,
                 int branchesPerQuad, int branchesPerTri, bool enumeration);
 
         /**
@@ -765,7 +736,7 @@ class TreeEnumeration :
          * vertex surfaces.  This must be one of NS_QUAD, NS_STANDARD,
          * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        TreeEnumeration(const Triangulation<3>* tri, NormalCoords coords);
+        TreeEnumeration(const Triangulation<3>& tri, NormalCoords coords);
 
         /**
          * Returns the total number of vertex normal or almost normal surfaces
@@ -1033,7 +1004,7 @@ class TautEnumeration :
          * @param tri the triangulation in which we wish to enumerate
          * taut angle structures.
          */
-        TautEnumeration(const Triangulation<3>* tri);
+        TautEnumeration(const Triangulation<3>& tri);
 
         /**
          * Returns the total number of taut angle structures
@@ -1362,7 +1333,7 @@ class TreeSingleSoln :
          * which to work.  This must be one of NS_QUAD, NS_STANDARD,
          * NS_AN_QUAD_OCT, or NS_AN_STANDARD.
          */
-        TreeSingleSoln(const Triangulation<3>* tri, NormalCoords coords);
+        TreeSingleSoln(const Triangulation<3>& tri, NormalCoords coords);
 
         /**
          * Runs the tree traversal algorithm until it finds some non-trivial
@@ -1455,7 +1426,7 @@ inline int TreeTraversal<LPConstraint, BanConstraint, IntType>::
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline TreeEnumeration<LPConstraint, BanConstraint, IntType>::TreeEnumeration(
-        const Triangulation<3>* tri, NormalCoords coords) :
+        const Triangulation<3>& tri, NormalCoords coords) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              7 : 4) /* branches per quad */,
@@ -1500,7 +1471,7 @@ inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline TautEnumeration<LPConstraint, BanConstraint, IntType>::TautEnumeration(
-        const Triangulation<3>* tri) :
+        const Triangulation<3>& tri) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, NS_ANGLE,
             3 /* branches per quad */,
             0 /* branches per triangle; irrelevant here */,
@@ -1533,7 +1504,7 @@ inline bool TautEnumeration<LPConstraint, BanConstraint, IntType>::writeTypes(
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 inline TreeSingleSoln<LPConstraint, BanConstraint, IntType>::TreeSingleSoln(
-        const Triangulation<3>* tri, NormalCoords coords) :
+        const Triangulation<3>& tri, NormalCoords coords) :
         TreeTraversal<LPConstraint, BanConstraint, IntType>(tri, coords,
             (coords == NS_AN_QUAD_OCT || coords == NS_AN_STANDARD ?
              6 : 3) /* branches per quad */,

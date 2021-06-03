@@ -62,10 +62,10 @@ NormalSurfaces* NormalSurfaces::quadOctToStandardAN() const {
 }
 
 template void NormalSurfaces::buildStandardFromReduced<
-        NormalSurfaces::NormalSpec>(Triangulation<3>*,
+        NormalSurfaces::NormalSpec>(const Triangulation<3>&,
         const std::vector<NormalSurface*>&, ProgressTracker*);
 template void NormalSurfaces::buildStandardFromReduced<
-        NormalSurfaces::AlmostNormalSpec>(Triangulation<3>*,
+        NormalSurfaces::AlmostNormalSpec>(const Triangulation<3>&,
         const std::vector<NormalSurface*>&, ProgressTracker*);
 
 /**
@@ -284,13 +284,13 @@ namespace {
              * @return a newly created normal surface based on this vector.
              */
             template <class VectorClass>
-            NormalSurface* recover(Triangulation<3>* tri) const {
+            NormalSurface* recover(const Triangulation<3>& tri) const {
                 VectorClass* v = new VectorClass(size());
 
                 for (size_t i = 0; i < size(); ++i)
                     v->set(i, elements[i]);
 
-                return new NormalSurface(tri, v);
+                return new NormalSurface(&tri, v);
             }
 
             /**
@@ -312,14 +312,14 @@ namespace {
 
 template <class Variant>
 NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
-    Triangulation<3>* owner = triangulation();
+    const Triangulation<3>& owner = triangulation();
 
     // Basic sanity checks:
     if (coords_ != Variant::reducedCoords)
         return nullptr;
     if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
         return nullptr;
-    if (owner->isIdeal() || ! owner->isValid())
+    if (owner.isIdeal() || ! owner.isValid())
         return nullptr;
 
     // Prepare a final surface list.
@@ -327,21 +327,21 @@ NormalSurfaces* NormalSurfaces::internalReducedToStandard() const {
         Variant::standardCoords, NS_EMBEDDED_ONLY | NS_VERTEX,
         algorithm_ | NS_VERTEX_VIA_REDUCED);
 
-    if (! owner->isEmpty()) {
+    if (! owner.isEmpty()) {
         // Run our internal conversion routine.
         ans->buildStandardFromReduced<Variant>(owner, surfaces_);
     }
 
     // All done!
-    owner->insertChildLast(ans);
+    parent()->insertChildLast(ans);
     return ans;
 }
 
 template <class Variant>
-void NormalSurfaces::buildStandardFromReduced(Triangulation<3>* owner,
+void NormalSurfaces::buildStandardFromReduced(const Triangulation<3>& owner,
         const std::vector<NormalSurface*>& reducedList,
         ProgressTracker* tracker) {
-    size_t nFacets = Variant::stdLen(owner->size());
+    size_t nFacets = Variant::stdLen(owner.size());
 
     // Choose a bitmask type for representing the set of facets that a
     // ray belongs to; in particular, use a (much faster) optimised
@@ -375,13 +375,14 @@ void NormalSurfaces::buildStandardFromReduced(Triangulation<3>* owner,
 }
 
 template <class Variant, class BitmaskType>
-void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
+void NormalSurfaces::buildStandardFromReducedUsing(
+        const Triangulation<3>& owner,
         const std::vector<NormalSurface*>& reducedList,
         ProgressTracker* tracker) {
     // Prepare for the reduced-to-standard double description run.
-    unsigned long n = owner->size();
+    unsigned long n = owner.size();
     size_t slen = Variant::stdLen(n); // # standard coordinates
-    unsigned long llen = owner->countVertices(); // # vertex links
+    unsigned long llen = owner.countVertices(); // # vertex links
 
     unsigned i;
 
@@ -390,7 +391,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
     // Since we have a non-empty triangulation, we know the list of
     // constraints is non-empty.
     EnumConstraints* constraints =
-        Variant::StandardVector::makeEmbeddedConstraints(owner);
+        Variant::StandardVector::makeEmbeddedConstraints(&owner);
 
     BitmaskType* constraintsBegin = new BitmaskType[constraints->size()];
     BitmaskType* constraintsEnd = constraintsBegin;
@@ -410,7 +411,7 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
     for (i = 0; i < llen; ++i) {
         link[i] = new typename Variant::StandardVector(slen);
 
-        for (auto& emb : *owner->vertex(i))
+        for (auto& emb : *owner.vertex(i))
             link[i]->set(Variant::stdPos(
                 emb.tetrahedron()->markedIndex(), emb.vertex()), 1);
     }
@@ -455,10 +456,10 @@ void NormalSurfaces::buildStandardFromReducedUsing(Triangulation<3>* owner,
         linkSpec = new RaySpec<BitmaskType>(link[vtx]->coords());
         delete link[vtx];
 
-        list[workingList].push_back(new RaySpec<BitmaskType>(owner, vtx,
+        list[workingList].push_back(new RaySpec<BitmaskType>(&owner, vtx,
             Variant::totalPerTet));
 
-        for (auto& emb : *owner->vertex(vtx)) {
+        for (auto& emb : *owner.vertex(vtx)) {
             // Update the state of progress and test for cancellation.
             if (tracker && ! tracker->setPercent(25.0 * slices++ / n)) {
                 for (auto r : list[workingList])

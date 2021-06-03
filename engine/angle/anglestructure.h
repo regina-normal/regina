@@ -200,9 +200,9 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         /**
          * Returns the triangulation on which this angle structure lies.
          *
-         * @return the underlying triangulation.
+         * @return a reference to the underlying triangulation.
          */
-        const Triangulation<3>* triangulation() const;
+        const Triangulation<3>& triangulation() const;
 
         /**
          * Determines whether this is a strict angle structure.
@@ -362,8 +362,8 @@ inline AngleStructure* AngleStructure::clone() const {
     return new AngleStructure(*this);
 }
 
-inline const Triangulation<3>* AngleStructure::triangulation() const {
-    return triangulation_;
+inline const Triangulation<3>& AngleStructure::triangulation() const {
+    return *triangulation_;
 }
 
 inline bool AngleStructure::isStrict() const {

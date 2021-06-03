@@ -60,17 +60,18 @@ NormalHypersurfaceVector* makeZeroVector(
 }
 
 namespace {
-    struct MatchingEquations : public Returns<MatrixInt*> {
+    struct MatchingEquations : public Returns<std::optional<MatrixInt>> {
         template <typename Coords>
-        inline MatrixInt* operator() (const Triangulation<4>* tri) {
+        inline std::optional<MatrixInt> operator() (
+                const Triangulation<4>& tri) {
             return Coords::Class::makeMatchingEquations(tri);
         }
     };
 }
 
-MatrixInt* makeMatchingEquations(const Triangulation<4>* triangulation,
-        HyperCoords coords) {
-    return forCoords(coords, MatchingEquations(), 0, triangulation);
+std::optional<MatrixInt> makeMatchingEquations(
+        const Triangulation<4>& triangulation, HyperCoords coords) {
+    return forCoords(coords, MatchingEquations(), std::nullopt, triangulation);
 }
 
 namespace {
@@ -87,8 +88,8 @@ EnumConstraints* makeEmbeddedConstraints(
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
-Triangulation<4>* NormalHypersurfaces::triangulation() const {
-    return dynamic_cast<Triangulation<4>*>(parent());
+const Triangulation<4>& NormalHypersurfaces::triangulation() const {
+    return *dynamic_cast<Triangulation<4>*>(parent());
 }
 
 namespace {

@@ -281,7 +281,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 const char* listType, unsigned long expectedSize) {
             std::ostringstream msg;
             msg << "Number of " << listType << " for "
-                << list->triangulation()->label()
+                << list->triangulation().label()
                 << " should be " << expectedSize << ", not "
                 << list->size() << '.';
 
@@ -453,7 +453,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             std::ostringstream msg;
             msg << "Number of " << surfaceType << " in "
-                    << list->triangulation()->label()
+                    << list->triangulation().label()
                     << " should be " << expectedCount << ", not "
                     << tot << '.';
             CPPUNIT_ASSERT_MESSAGE(msg.str(), expectedCount == tot);
@@ -1797,7 +1797,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             // Collect all vertex surfaces with the chi=0 constraint.
             std::vector<Vector<LargeInteger>*> eulerZero;
             regina::TreeEnumeration<regina::LPConstraintEulerZero> tree(
-                &tri, NS_STANDARD);
+                tri, NS_STANDARD);
             while (tree.next()) {
                 NormalSurface* s = tree.buildSurface();
                 if (s->eulerChar() != 0) {

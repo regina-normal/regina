@@ -71,9 +71,9 @@ Triangulation<dim-1>* BoundaryComponentBase<dim>::buildRealBoundary() const {
     // The way we build it ensures that (dim-1)-faces are added to the
     // new boundary triangulation in the same order as they appear in
     // the boundary component's list of (dim-1)-faces.
-    Triangulation<dim>* mainTri = allFacets.front()->triangulation();
+    Triangulation<dim>& mainTri = allFacets.front()->triangulation();
     Simplex<dim-1>** bdrySimplex = new Simplex<dim-1>*[
-        mainTri->template countFaces<dim-1>()];
+        mainTri.template countFaces<dim-1>()];
 
     Triangulation<dim-1>* ans = new Triangulation<dim-1>();
     typename Triangulation<dim-1>::ChangeEventSpan span(ans);

@@ -48,20 +48,20 @@ using regina::Packet;
 
 void MatchingModel::rebuild() {
     beginResetModel();
-    eqns_.reset(surfaces_->recreateMatchingEquations());
+    eqns_ = surfaces_->recreateMatchingEquations();
     endResetModel();
 }
 
 int MatchingModel::rowCount(const QModelIndex& /* unused parent */) const {
-    return (eqns_.get() ? eqns_->rows() : 0);
+    return (eqns_ ? eqns_->rows() : 0);
 }
 
 int MatchingModel::columnCount(const QModelIndex& /* unused parent */) const {
-    return (eqns_.get() ? eqns_->columns() : 0);
+    return (eqns_ ? eqns_->columns() : 0);
 }
 
 QVariant MatchingModel::data(const QModelIndex& index, int role) const {
-    if (! eqns_.get())
+    if (! eqns_)
         return QVariant();
 
     if (role == Qt::DisplayRole) {

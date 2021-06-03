@@ -46,15 +46,15 @@ NormalSurfaceVector* NSVectorOrientedQuad::makeZeroVector(
     return new NSVectorOrientedQuad(6 * triangulation->size());
 }
 
-MatrixInt* NSVectorOrientedQuad::makeMatchingEquations(
-        const Triangulation<3>* triangulation) {
-    size_t nCoords = 6 * triangulation->size();
+std::optional<MatrixInt> NSVectorOrientedQuad::makeMatchingEquations(
+        const Triangulation<3>& triangulation) {
+    size_t nCoords = 6 * triangulation.size();
     // Two equation per non-boundary edge.
-    long nEquations = 2*long(triangulation->countEdges());
-    for (BoundaryComponent<3>* bc : triangulation->boundaryComponents())
+    long nEquations = 2*long(triangulation.countEdges());
+    for (BoundaryComponent<3>* bc : triangulation.boundaryComponents())
         nEquations -= 2*bc->countEdges();
 
-    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
+    MatrixInt ans(nEquations, nCoords);
     size_t row = 0;
 
     // Run through each internal edge and add the corresponding
@@ -62,22 +62,22 @@ MatrixInt* NSVectorOrientedQuad::makeMatchingEquations(
     Perm<4> perm;
     size_t tetIndex;
     bool flip;
-    for (Edge<3>* e : triangulation->edges()) {
+    for (Edge<3>* e : triangulation.edges()) {
         if (! e->isBoundary()) {
             for (auto& emb : *e) {
                 tetIndex = emb.tetrahedron()->index();
                 perm = emb.vertices();
 
                 flip = (perm[0] == 0 || perm[2] == 0);
-                ans->entry(row, 6 * tetIndex +
+                ans.entry(row, 6 * tetIndex +
                     2*quadSeparating[perm[0]][perm[2]] + (flip ? 0 : 1)) += 1;
-                ans->entry(row+1, 6 * tetIndex +
+                ans.entry(row+1, 6 * tetIndex +
                     2*quadSeparating[perm[0]][perm[2]] + (flip ? 1 : 0)) += 1;
 
                 flip = (perm[0] == 0 || perm[3] == 0);
-                ans->entry(row, 6 * tetIndex +
+                ans.entry(row, 6 * tetIndex +
                     2*quadSeparating[perm[0]][perm[3]] + (flip ? 0 : 1)) -= 1;
-                ans->entry(row+1, 6 * tetIndex +
+                ans.entry(row+1, 6 * tetIndex +
                     2*quadSeparating[perm[0]][perm[3]] + (flip ? 1 : 0)) -= 1;
             }
             row+=2;
@@ -130,10 +130,10 @@ namespace {
 }
 
 NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
-        const Vector<LargeInteger>& original, const Triangulation<3>* triang) {
+        const Vector<LargeInteger>& original, const Triangulation<3>& triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
-    size_t nRows = 14 * triang->size();
+    size_t nRows = 14 * triang.size();
     NSVectorOriented* ans = new NSVectorOriented(nRows);
 
     // Set every triangular coordinate in the answer to infinity.
@@ -173,7 +173,7 @@ NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
         Perm<4> tetPerm, adjPerm;
         size_t tetIndex, adjIndex;
         LargeInteger expect;
-        for (Vertex<3>* v : triang->vertices()) {
+        for (Vertex<3>* v : triang.vertices()) {
             usedEdges[0].clear(); usedEdges[1].clear();
             examine.clear();
             broken = false;

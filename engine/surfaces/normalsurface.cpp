@@ -373,27 +373,27 @@ void NormalSurface::calculateRealBoundary() const {
 MatrixInt* NormalSurface::boundaryIntersections() const {
     // Make sure this is really a SnapPea triangulation.
     const SnapPeaTriangulation* snapPea =
-        dynamic_cast<const SnapPeaTriangulation*>(triangulation());
+        dynamic_cast<const SnapPeaTriangulation*>(&triangulation());
     if (! snapPea)
-        return 0;
+        return nullptr;
 
     // Check the preconditions.
     if (! snapPea->isOriented())
-        return 0;
+        return nullptr;
     if (vector_->allowsAlmostNormal())
-        return 0;
+        return nullptr;
     for (Vertex<3>* v : snapPea->vertices()) {
         if (! v->isIdeal())
-            return 0;
+            return nullptr;
         if (! v->isLinkOrientable())
-            return 0;
+            return nullptr;
         if (v->linkEulerChar() != 0)
-            return 0;
+            return nullptr;
     }
 
     MatrixInt* equations = snapPea->slopeEquations();
     if (! equations)
-        return 0;
+        return nullptr;
 
     size_t cusps = equations->rows() / 2;
     size_t numTet = snapPea->size();

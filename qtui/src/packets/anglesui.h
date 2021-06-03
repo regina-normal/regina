@@ -153,7 +153,7 @@ class AngleStructureUI : public QObject, public PacketReadOnlyUI,
 
 inline AngleModel::AngleModel(regina::AngleStructures* structures) :
         structures_(structures),
-        nCoords(3 * structures_->triangulation()->size()) {
+        nCoords(3 * structures_->triangulation().size()) {
 }
 
 inline regina::AngleStructures* AngleModel::structures() const {

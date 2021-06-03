@@ -50,13 +50,13 @@ void NormalSurface::calculateBoundaries() const {
     general algorithm originally given by Agol, Hass and Thurston.
     */
 
-    const Triangulation<3>* tri = triangulation();
+    const Triangulation<3>& tri = triangulation();
 
     // Assign intervals to each boundary edge of tri, where the length of the
     // assigned interval corresponds to the weight of the given surf at edge i.
     std::map<long, std::pair<long, long>> intervals;
     long weight, totalWeight = 0;
-    for (const Edge<3>* e : tri->edges())
+    for (const Edge<3>* e : tri.edges())
         if (e->isBoundary()) {
             weight = edgeWeight(e->index()).longValue();
             intervals[e->index()] =
@@ -67,7 +67,7 @@ void NormalSurface::calculateBoundaries() const {
     // Encode interval isometries as a vector mapping each number k to the
     // set of all images of k under the isometries.
     std::vector<std::vector<long>> mappings(totalWeight);
-    for (const Triangle<3>* face : tri->triangles()) {
+    for (const Triangle<3>* face : tri.triangles()) {
         if (! face->isBoundary())
             continue;
 

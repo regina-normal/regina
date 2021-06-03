@@ -45,6 +45,7 @@
 #include <vector>
 #include "regina-core.h"
 #include "angle/anglestructure.h"
+#include "maths/matrix.h"
 #include "packet/packet.h"
 #include "utilities/listview.h"
 #include "utilities/property.h"
@@ -108,9 +109,18 @@ class AngleStructures : public Packet {
         /**
          * Returns the triangulation on which these angle structures lie.
          *
-         * @return the corresponding triangulation.
+         * The triangulation is also accessible via the packet tree as
+         * parent(); this routine simply adds the convenience of casting
+         * down to the correct triangulation class.
+         *
+         * If you need non-const access to the triangulation (e.g., to
+         * rename the packet), use parent(); however, remember that a
+         * triangulation that owns angle structures or normal surfaces
+         * must \e not change its tetrahedra or their gluings.
+         *
+         * @return a reference to the corresponding triangulation.
          */
-        Triangulation<3>* triangulation() const;
+        const Triangulation<3>& triangulation() const;
 
         /**
          * Returns whether this list was produced by enumerating taut angle
@@ -300,17 +310,10 @@ class AngleStructures : public Packet {
                 std::output_iterator_tag, VectorInt*> {
             AngleStructures* list;
                 /**< The list into which angle structures will be inserted. */
-            Triangulation<3>* owner;
+            const Triangulation<3>& owner;
                 /**< The triangulation on which the angle structures to
                  *   be inserted lie. */
 
-            /**
-             * Creates a new uninitialised output iterator.
-             *
-             * \warning This iterator must not be used until its
-             * structure list and triangulation have been initialised.
-             */
-            StructureInserter();
             /**
              * Creates a new output iterator.  The member variables of
              * this iterator will be initialised according to the
@@ -322,7 +325,7 @@ class AngleStructures : public Packet {
              * to be inserted lie.
              */
             StructureInserter(AngleStructures& newList,
-                Triangulation<3>* newOwner);
+                const Triangulation<3>& newOwner);
             /**
              * Creates a new output iterator that is a clone of the
              * given iterator.
@@ -330,15 +333,6 @@ class AngleStructures : public Packet {
              * @param cloneMe the output iterator to clone.
              */
             StructureInserter(const StructureInserter& cloneMe) = default;
-
-            /**
-             * Sets this iterator to be a clone of the given output iterator.
-             *
-             * @param cloneMe the output iterator to clone.
-             * @return this output iterator.
-             */
-            StructureInserter& operator =(const StructureInserter& cloneMe)
-                = default;
 
             /**
              * Appends an angle structure to the end of the appropriate
@@ -384,6 +378,9 @@ class AngleStructures : public Packet {
              * @return this output iterator.
              */
             StructureInserter& operator ++(int);
+
+            StructureInserter& operator =(const StructureInserter& cloneMe)
+                = delete;
         };
 
     private:
@@ -408,20 +405,17 @@ class AngleStructures : public Packet {
 };
 
 /**
- * Creates a new set of angle structure equations for the given triangulation.
+ * Generates the set of angle structure equations for the given triangulation.
  *
- * Each equation will be represented as a row of the matrix, and each column
- * will represent a coordinate in the underlying coordinate system (which is
- * described in the notes for AngleStructure::vector()).
- *
- * The returned matrix will be newly allocated and its destruction
- * will be the responsibility of the caller of this routine.
+ * Each equation will be represented as a row of the resulting matrix, and each
+ * column will represent a coordinate in the underlying coordinate system
+ * (which is described in the notes for AngleStructure::vector()).
  *
  * @param tri the triangulation upon which these angle structure
  * equations will be based.
- * @return a newly allocated set of equations.
+ * @return the resulting set of angle structure equations.
  */
-MatrixInt* makeAngleEquations(const Triangulation<3>* tri);
+MatrixInt makeAngleEquations(const Triangulation<3>& tri);
 
 /*@}*/
 
@@ -469,12 +463,8 @@ inline AngleStructures::AngleStructures(bool tautOnly) :
         tautOnly_(tautOnly) {
 }
 
-inline AngleStructures::StructureInserter::StructureInserter() : list(0),
-        owner(0) {
-}
-
 inline AngleStructures::StructureInserter::StructureInserter(
-        AngleStructures& newList, Triangulation<3>* newOwner) :
+        AngleStructures& newList, const Triangulation<3>& newOwner) :
         list(&newList), owner(newOwner) {
 }
 
@@ -488,7 +478,7 @@ inline AngleStructures::StructureInserter&
 inline AngleStructures::StructureInserter&
         AngleStructures::StructureInserter::operator =(
         VectorInt* vector) {
-    list->structures_.push_back(new AngleStructure(owner, vector));
+    list->structures_.push_back(new AngleStructure(&owner, vector));
     return *this;
 }
 

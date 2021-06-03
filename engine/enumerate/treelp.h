@@ -494,13 +494,13 @@ struct LPCol : public LPConstraint::Coefficients {
 template <class LPConstraint>
 class LPInitialTableaux {
     private:
-        const Triangulation<3>* tri_;
+        const Triangulation<3>& tri_;
             /**< The underlying triangulation. */
         NormalCoords coords_;
             /**< The coordinate system used for the matrix of matching
                  equations; this must be one of NS_QUAD, NS_STANDARD,
                  or NS_ANGLE. */
-        MatrixInt* eqns_;
+        MatrixInt eqns_;
             /**< The adjusted matching equation matrix, in dense form.
                  The precise adjustments that we make are described in the
                  LPInitialTableaux class notes. */
@@ -557,7 +557,7 @@ class LPInitialTableaux {
          * (such as searching for a non-trivial normal disc or sphere, or
          * a strict angle structure).
          */
-        LPInitialTableaux(const Triangulation<3>* tri,
+        LPInitialTableaux(const Triangulation<3>& tri,
             NormalCoords coords, bool enumeration);
 
         /**
@@ -571,7 +571,7 @@ class LPInitialTableaux {
          *
          * @return the underlying triangulation.
          */
-        inline const Triangulation<3>* tri() const;
+        inline const Triangulation<3>& tri() const;
 
         /**
          * Returns the coordinate system that is used for the matrix of
@@ -1548,13 +1548,12 @@ inline void LPCol<LPConstraint>::push(unsigned row, int val) {
 
 template <class LPConstraint>
 inline LPInitialTableaux<LPConstraint>::~LPInitialTableaux() {
-    delete eqns_;
     delete[] col_;
     delete[] columnPerm_;
 }
 
 template <class LPConstraint>
-inline const Triangulation<3>* LPInitialTableaux<LPConstraint>::tri() const {
+inline const Triangulation<3>& LPInitialTableaux<LPConstraint>::tri() const {
     return tri_;
 }
 
@@ -1575,7 +1574,7 @@ inline unsigned LPInitialTableaux<LPConstraint>::columns() const {
 
 template <class LPConstraint>
 inline unsigned LPInitialTableaux<LPConstraint>::coordinateColumns() const {
-    return eqns_->columns();
+    return eqns_.columns();
 }
 
 template <class LPConstraint>

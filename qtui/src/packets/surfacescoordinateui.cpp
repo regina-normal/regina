@@ -329,11 +329,11 @@ QVariant SurfaceModel::headerData(int section, Qt::Orientation orientation,
                 surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
         if (coordSystem_ == regina::NS_EDGE_WEIGHT) {
-            if (section >= propertyColCount() && surfaces_->triangulation()->
+            if (section >= propertyColCount() && surfaces_->triangulation().
                     edge(section - propertyColCount())->isBoundary())
                 return QColor(Qt::darkYellow);
         } else if (coordSystem_ == regina::NS_TRIANGLE_ARCS) {
-            if (section >= propertyColCount() && surfaces_->triangulation()->
+            if (section >= propertyColCount() && surfaces_->triangulation().
                     triangle((section - propertyColCount()) / 3)->isBoundary())
                 return QColor(Qt::darkYellow);
         }
@@ -660,7 +660,7 @@ void SurfacesCoordinateUI::cutAlong() {
     // Be nice and simplify the triangulation, which could be very large.
     regina::Triangulation<3>* ans = toCutAlong->cutAlong();
     ans->intelligentSimplify();
-    ans->setLabel(surfaces->triangulation()->adornedLabel(
+    ans->setLabel(surfaces->triangulation().adornedLabel(
         "Cut #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);
 
@@ -688,7 +688,7 @@ void SurfacesCoordinateUI::crush() {
 
     // Go ahead and crush it.
     regina::Triangulation<3>* ans = toCrush->crush();
-    ans->setLabel(surfaces->triangulation()->adornedLabel(
+    ans->setLabel(surfaces->triangulation().adornedLabel(
         "Crushed #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);
 

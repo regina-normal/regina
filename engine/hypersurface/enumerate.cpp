@@ -47,22 +47,25 @@ NormalHypersurfaces* NormalHypersurfaces::enumerate(
         Triangulation<4>* owner, HyperCoords coords,
         HyperList which, HyperAlg algHints,
         ProgressTracker* tracker) {
-    MatrixInt* eqns = makeMatchingEquations(owner, coords);
+    std::optional<MatrixInt> eqns = makeMatchingEquations(*owner, coords);
     if (! eqns) {
         if (tracker)
             tracker->setFinished();
-        return 0;
+        return nullptr;
     }
 
     NormalHypersurfaces* list = new NormalHypersurfaces(
         coords, which, algHints);
 
     if (tracker) {
-        std::thread([=]{
-            forCoords(coords, Enumerator(list, owner, eqns, tracker));
-        }).detach();
+        // We pass the matching equations as an argument to the thread
+        // function so we can be sure that the equations are moved into
+        // the thread before they are destroyed.
+        std::thread([=](MatrixInt e) {
+            forCoords(coords, Enumerator(list, owner, e, tracker));
+        }, std::move(*eqns)).detach();
     } else
-        forCoords(coords, Enumerator(list, owner, eqns, tracker));
+        forCoords(coords, Enumerator(list, owner, *eqns, tracker));
     return list;
 }
 
@@ -87,9 +90,6 @@ void NormalHypersurfaces::Enumerator::operator() () {
 
     if (tracker_)
         tracker_->setFinished();
-
-    // Clean up.
-    delete eqns_; // This might or might not have been done by fill...().
 }
 
 template <typename Coords>
@@ -117,10 +117,10 @@ void NormalHypersurfaces::Enumerator::fillVertex() {
 template <typename Coords>
 void NormalHypersurfaces::Enumerator::fillVertexDD() {
     EnumConstraints* constraints = (list_->which_.has(HS_EMBEDDED_ONLY) ?
-        makeEmbeddedConstraints(triang_, list_->coords_) : 0);
+        makeEmbeddedConstraints(triang_, list_->coords_) : nullptr);
 
     DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
-        HypersurfaceInserter(*list_, triang_), *eqns_, constraints, tracker_);
+        HypersurfaceInserter(*list_, *triang_), eqns_, constraints, tracker_);
 
     delete constraints;
 }
@@ -172,9 +172,10 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
         HS_VERTEX | (list_->which_.has(HS_EMBEDDED_ONLY) ?
             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
-    Enumerator e(vtx, triang_, eqns_, nullptr /* no inner progress tracker */);
-    eqns_ = nullptr; // The inner enumerator's destructor will delete eqns_.
+    Enumerator e(vtx, triang_, std::move(eqns_), nullptr);
     e.fillVertex<Coords>();
+
+    // We cannot use eqns_ beyond this point, since we moved it into e.
 
     // Finalise the algorithm flags for this list: combine HS_HILBERT_PRIMAL
     // with whatever vertex enumeration flags were used.
@@ -185,7 +186,7 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
         tracker_->newStage("Expanding to Hilbert basis", 0.5);
 
     HilbertPrimal::enumerateHilbertBasis<typename Coords::Class>(
-        HypersurfaceInserter(*list_, triang_),
+        HypersurfaceInserter(*list_, *triang_),
         vtx->beginVectors(), vtx->endVectors(), constraints, tracker_);
 
     delete vtx;
@@ -203,7 +204,7 @@ void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
         makeEmbeddedConstraints(triang_, list_->coords_) : 0);
 
     HilbertDual::enumerateHilbertBasis<typename Coords::Class>(
-        HypersurfaceInserter(*list_, triang_), *eqns_, constraints, tracker_);
+        HypersurfaceInserter(*list_, *triang_), eqns_, constraints, tracker_);
 
     delete constraints;
 }

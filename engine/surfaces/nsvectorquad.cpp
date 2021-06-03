@@ -46,29 +46,29 @@ NormalSurfaceVector* NSVectorQuad::makeZeroVector(
     return new NSVectorQuad(3 * triangulation->size());
 }
 
-MatrixInt* NSVectorQuad::makeMatchingEquations(
-        const Triangulation<3>* triangulation) {
-    unsigned long nCoords = 3 * triangulation->size();
+std::optional<MatrixInt> NSVectorQuad::makeMatchingEquations(
+        const Triangulation<3>& triangulation) {
+    unsigned long nCoords = 3 * triangulation.size();
     // One equation per non-boundary edge.
-    long nEquations = long(triangulation->countEdges());
-    for (BoundaryComponent<3>* bc : triangulation->boundaryComponents())
+    long nEquations = long(triangulation.countEdges());
+    for (BoundaryComponent<3>* bc : triangulation.boundaryComponents())
         nEquations -= bc->countEdges();
 
-    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
+    MatrixInt ans(nEquations, nCoords);
     unsigned long row = 0;
 
     // Run through each internal edge and add the corresponding
     // equation.
     Perm<4> perm;
     unsigned long tetIndex;
-    for (Edge<3>* e : triangulation->edges()) {
+    for (Edge<3>* e : triangulation.edges()) {
         if (! e->isBoundary()) {
             for (auto& emb : *e) {
                 tetIndex = emb.tetrahedron()->index();
                 perm = emb.vertices();
-                ans->entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[2]])
+                ans.entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[2]])
                     += 1;
-                ans->entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[3]])
+                ans.entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[3]])
                     -= 1;
             }
             row++;
@@ -113,10 +113,10 @@ namespace {
 }
 
 NormalSurfaceVector* NSVectorQuad::makeMirror(
-        const Vector<LargeInteger>& original, const Triangulation<3>* triang) {
+        const Vector<LargeInteger>& original, const Triangulation<3>& triang) {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
-    unsigned long nRows = 7 * triang->size();
+    unsigned long nRows = 7 * triang.size();
     NSVectorStandard* ans = new NSVectorStandard(nRows);
 
     // Set every triangular coordinate in the answer to infinity.
@@ -151,7 +151,7 @@ NormalSurfaceVector* NSVectorQuad::makeMirror(
     Perm<4> tetPerm, adjPerm;
     unsigned long tetIndex, adjIndex;
     LargeInteger expect;
-    for (Vertex<3>* v : triang->vertices()) {
+    for (Vertex<3>* v : triang.vertices()) {
         usedEdges[0].clear(); usedEdges[1].clear();
         examine.clear();
         broken = false;

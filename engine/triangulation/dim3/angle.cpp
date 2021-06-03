@@ -62,7 +62,7 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
     if (knowsStrictAngleStructure())
         return strictAngleStructure_.value();
 
-    LPInitialTableaux<LPConstraintNone> eqns(this, NS_ANGLE, false);
+    LPInitialTableaux<LPConstraintNone> eqns(*this, NS_ANGLE, false);
 
     LPData<LPConstraintNone, Integer> lp;
     lp.reserve(&eqns);
@@ -120,8 +120,8 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
     // any solution where the final coordinate is non-zero, then the final
     // column will not appear as a leading coefficient in row echelon form.
 
-    MatrixInt* eqns = regina::makeAngleEquations(this);
-    unsigned long rank = eqns->rowEchelonForm();
+    MatrixInt eqns = regina::makeAngleEquations(*this);
+    unsigned long rank = eqns.rowEchelonForm();
 
     // Note: the rank is always positive, since the triangulation is
     // non-empty and so we always have tetrahedron equations present.
@@ -133,23 +133,22 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
     unsigned long col = 0;
 
     while (row < rank) {
-        if (eqns->entry(row, col) != 0) {
+        if (eqns.entry(row, col) != 0) {
             leading[row] = col;
             ++row;
         }
         ++col;
     }
 
-    if (leading[rank - 1] + 1 == eqns->columns()) {
+    if (leading[rank - 1] + 1 == eqns.columns()) {
         // The final column appears as a leading coefficient.
         delete[] leading;
-        delete eqns;
         return (generalAngleStructure_ = nullptr);
     }
 
     // Build up the final vector from back to front.
-    VectorInt* v = new VectorInt(eqns->columns());
-    v->set(eqns->columns() - 1, 1);
+    VectorInt* v = new VectorInt(eqns.columns());
+    v->set(eqns.columns() - 1, 1);
 
     // We currently have row == rank.
     while (row > 0) {
@@ -161,12 +160,12 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
         // Enforce equation #row.
 
         col = leading[row];
-        Integer den = eqns->entry(row, col);
+        Integer den = eqns.entry(row, col);
 
         Integer num; // set to 0
         for (++col; col < v->size(); ++col)
-            if (eqns->entry(row, col) != 0)
-                num += (eqns->entry(row, col) * (*v)[col]);
+            if (eqns.entry(row, col) != 0)
+                num += (eqns.entry(row, col) * (*v)[col]);
 
         // Our row echelon form guarantees that den > 0.
         // We need to set v[leading[row]] = -num/den.
@@ -190,7 +189,6 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
     }
 
     delete[] leading;
-    delete eqns;
     return (generalAngleStructure_ = new AngleStructure(this, v));
 }
 

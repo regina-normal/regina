@@ -186,7 +186,7 @@ namespace {
 
         // Create the set of normal surfaces!
         // Note that all vectors are automagically initialised to zero.
-        const Triangulation<3>* tri = s.triangulation();
+        const Triangulation<3>& tri = s.triangulation();
         NormalSurfaceVector** ans = new NormalSurfaceVector*[compID];
 
         NormalSurfaceVector* vec;
@@ -194,7 +194,7 @@ namespace {
         if (s.systemAllowsAlmostNormal()) {
             for (i = 0; i < compID; ++i)
                 ans[i] = new NSVectorANStandard(
-                    10 * tri->size());
+                    10 * tri.size());
 
             for (const auto& disc : components) {
                 vec = ans[components.data(disc).id];
@@ -204,7 +204,7 @@ namespace {
         } else {
             for (i = 0; i < compID; ++i)
                 ans[i] = new NSVectorStandard(
-                    7 * tri->size());
+                    7 * tri.size());
 
             for (const auto& disc : components) {
                 vec = ans[components.data(disc).id];
@@ -214,7 +214,7 @@ namespace {
         }
 
         for (i = 0; i < compID; ++i)
-            dest.push_back(new NormalSurface(tri, ans[i]));
+            dest.push_back(new NormalSurface(&tri, ans[i]));
         delete[] ans;
 
         // All done!

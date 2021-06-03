@@ -94,58 +94,42 @@ namespace Coordinates {
      * system.
      */
     size_t numColumns(regina::NormalCoords coordSystem,
-        regina::Triangulation<3>* tri);
+        const regina::Triangulation<3>& tri);
 
     /**
      * Return the number of coordinate columns in the given coordinate
      * system.
      */
     size_t numColumns(regina::HyperCoords coordSystem,
-        regina::Triangulation<4>* tri);
+        const regina::Triangulation<4>& tri);
 
     /**
      * Return a column header for the given coordinate of the given
      * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
      */
     QString columnName(regina::NormalCoords coordSystem,
-        size_t whichCoord, regina::Triangulation<3>* tri = nullptr);
+        size_t whichCoord, const regina::Triangulation<3>& tri);
 
     /**
      * Return a column header for the given coordinate of the given
      * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
      */
     QString columnName(regina::HyperCoords coordSystem,
-        size_t whichCoord, regina::Triangulation<4>* tri = nullptr);
+        size_t whichCoord, const regina::Triangulation<4>& tri);
 
     /**
      * Return a column description for the given coordinate of the given
      * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
      */
     QString columnDesc(regina::NormalCoords coordSystem, size_t whichCoord,
-        const QObject *context, regina::Triangulation<3>* tri = nullptr);
+        const QObject *context, const regina::Triangulation<3>& tri);
 
     /**
      * Return a column description for the given coordinate of the given
      * coordinate system.
-     *
-     * The associated triangulation may be passed so that more precise
-     * information can be returned, though this routine will behave
-     * well without it.
      */
     QString columnDesc(regina::HyperCoords coordSystem, size_t whichCoord,
-        const QObject *context, regina::Triangulation<4>* tri = nullptr);
+        const QObject *context, const regina::Triangulation<4>& tri);
 
     /**
      * Return a particular coordinate of a normal surface in the given

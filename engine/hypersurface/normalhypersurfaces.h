@@ -42,12 +42,14 @@
 
 #include <algorithm>
 #include <iterator>
+#include <optional>
 #include <vector>
 #include "regina-core.h"
 #include "enumerate/enumconstraints.h"
 #include "hypersurface/hypercoords.h"
 #include "hypersurface/hyperflags.h"
 #include "hypersurface/normalhypersurface.h"
+#include "maths/matrix.h"
 #include "packet/packet.h"
 #include "utilities/listview.h"
 
@@ -239,9 +241,19 @@ class NormalHypersurfaces : public Packet {
         /**
          * Returns the triangulation in which these normal hypersurfaces live.
          *
-         * @return the triangulation in which these hypersurfaces live.
+         * The triangulation is also accessible via the packet tree as
+         * parent(); this routine simply adds the convenience of casting
+         * down to the correct triangulation class.
+         *
+         * If you need non-const access to the triangulation (e.g., to
+         * rename the packet), use parent(); however, remember that a
+         * triangulation that owns normal hypersurfaces must \e not change
+         * its tetrahedra or their gluings.
+         *
+         * @return a reference to the triangulation in which these
+         * hypersurfaces live.
          */
-        Triangulation<4>* triangulation() const;
+        const Triangulation<4>& triangulation() const;
 
         /**
          * Returns the number of hypersurfaces stored in this list.
@@ -310,10 +322,9 @@ class NormalHypersurfaces : public Packet {
         void sort(Comparison&& comp);
 
         /**
-         * Returns a newly created matrix containing the matching
-         * equations that were used to create this normal hypersurface list.
-         * The destruction of this matrix is the responsibility of the
-         * caller of this routine.  Multiple calls to this routine will
+         * Returns the matching equations that were used to create this
+         * normal hypersurface list.
+         * This matrix is not cached: multiple calls to this routine will
          * result in the construction of multiple matrices.  This
          * routine in fact merely calls makeMatchingEquations() with the
          * appropriate parameters.
@@ -322,16 +333,16 @@ class NormalHypersurfaces : public Packet {
          * makeMatchingEquations().
          *
          * Note that there are situations in which makeMatchingEquations()
-         * returns \c null (because the triangulation is not supported
-         * by the chosen coordinate system).  However, this routine should
-         * never return \c null, because if makeMatchingEquations() had
-         * returned \c null then this normal hypersurface list would not have
+         * returns no value (because the triangulation is not supported
+         * by the chosen coordinate system).  However, this routine will
+         * always return a value, because if makeMatchingEquations() had
+         * returned no value then this normal hypersurface list would not have
          * been created in the first place.
          *
          * @return the matching equations used to create this normal
          * hypersurface list.
          */
-        MatrixInt* recreateMatchingEquations() const;
+        MatrixInt recreateMatchingEquations() const;
 
         /**
          * An iterator that gives access to the raw vectors for hypersurfaces
@@ -492,7 +503,7 @@ class NormalHypersurfaces : public Packet {
                 std::output_iterator_tag, NormalHypersurfaceVector*> {
             NormalHypersurfaces* list_;
                 /**< The list into which hypersurfaces will be inserted. */
-            Triangulation<4>* owner_;
+            const Triangulation<4>& owner_;
                 /**< The triangulation in which the hypersurfaces to be
                  *   inserted are contained. */
 
@@ -506,7 +517,7 @@ class NormalHypersurfaces : public Packet {
              * to be inserted are contained.
              */
             HypersurfaceInserter(NormalHypersurfaces& list,
-                Triangulation<4>* owner);
+                const Triangulation<4>& owner);
             /**
              * Creates a new output iterator that is a clone of the
              * given iterator.
@@ -514,15 +525,6 @@ class NormalHypersurfaces : public Packet {
              * @param cloneMe the output iterator to clone.
              */
             HypersurfaceInserter(const HypersurfaceInserter& cloneMe) = default;
-
-            /**
-             * Sets this iterator to be a clone of the given output iterator.
-             *
-             * @param cloneMe the output iterator to clone.
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator = (
-                const HypersurfaceInserter& cloneMe) = default;
 
             /**
              * Appends a normal hypersurface to the end of the appropriate
@@ -570,6 +572,9 @@ class NormalHypersurfaces : public Packet {
              * @return this output iterator.
              */
             HypersurfaceInserter& operator ++(int);
+
+            HypersurfaceInserter& operator = (
+                const HypersurfaceInserter& cloneMe) = delete;
         };
 
     private:
@@ -582,7 +587,7 @@ class NormalHypersurfaces : public Packet {
                     /**< The hypersurface list to be filled. */
                 Triangulation<4>* triang_;
                     /**< The triangulation in which these hypersurfaces lie. */
-                MatrixInt* eqns_;
+                const MatrixInt& eqns_;
                     /**< The matching equations for the given triangulation in
                          the coordinate system corresponding to \a list_. */
                 ProgressTracker* tracker_;
@@ -599,16 +604,13 @@ class NormalHypersurfaces : public Packet {
                  * hypersurfaces lie.
                  * @param eqns the matching equations for the given
                  * triangulation in the coordinate system corresponding to
-                 * \a list.  This object will take ownership of \a eqns, and
-                 * the bracket operator will delete it once the enumeration
-                 * has finished.  This pointer \e must be non-null, i.e., Regina
-                 * must have been able to construct the matching equations.
+                 * \a list.
                  * @param tracker the progress tracker to use for
                  * progress reporting and cancellation polling, or \c null if
                  * these capabilities are not required.
                  */
                 Enumerator(NormalHypersurfaces* list, Triangulation<4>* triang,
-                    MatrixInt* eqns, ProgressTracker* tracker);
+                    const MatrixInt& eqns, ProgressTracker* tracker);
 
                 /**
                  * Default move constructor.
@@ -626,9 +628,6 @@ class NormalHypersurfaces : public Packet {
                  * This routine fills \a list_ with surfaces, and then once
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
-                 *
-                 * The matching equation matrix \a eqns_ will be deleted
-                 * during this routine.
                  *
                  * \tparam Coords an instance of the HyperInfo<> template class.
                  */
@@ -657,9 +656,6 @@ class NormalHypersurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillVertex();
@@ -681,9 +677,6 @@ class NormalHypersurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  */
                 template <typename Coords>
                 void fillFundamental();
@@ -699,9 +692,6 @@ class NormalHypersurfaces : public Packet {
                  * If \a tracker_ is non-null, this routine assumes that
                  * an appropriate tracker stage has already been
                  * declared, and works through that stage only.
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -721,9 +711,6 @@ class NormalHypersurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
-                 *
                  * \pre The underlying triangulation is non-empty.
                  */
                 template <typename Coords>
@@ -741,9 +728,6 @@ class NormalHypersurfaces : public Packet {
                  * work through a series of tracker stages whose
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
-                 *
-                 * This routine \e may delete the matching equation matrix
-                 * \a eqns_; if it does then it will set \a eqns_ to \c null.
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
@@ -775,12 +759,10 @@ class NormalHypersurfaces : public Packet {
 NormalHypersurfaceVector* makeZeroVector(const Triangulation<4>* triangulation,
     HyperCoords coords);
 /**
- * Creates a new set of normal hypersurface matching equations for the
+ * Generates the set of normal hypersurface matching equations for the
  * given triangulation using the given coordinate system.
- * The returned matrix will be newly allocated and its destruction will
- * be the responsibility of the caller of this routine.
  *
- * Each equation will be represented as a row of the matrix.
+ * Each equation will be represented as a row of the resulting matrix.
  * Each column of the matrix represents a coordinate in the given
  * coordinate system.
  *
@@ -788,19 +770,19 @@ NormalHypersurfaceVector* makeZeroVector(const Triangulation<4>* triangulation,
  * equations for all triangulations (any such coordinate systems will be
  * explicitly mentioned as such in the HyperCoords enum documentation).  If
  * Regina cannot create the matching equations as requested, this routine will
- * return \c null instead.
+ * return no value instead.
  *
  * @param triangulation the triangulation upon which these matching equations
  * will be based.
  * @param coords the coordinate system to be used;
  * this must be one of the predefined coordinate system
  * constants in NormalHypersurfaces.
- * @return a newly allocated set of matching equations, or \c null if
+ * @return the resulting set of matching equations, or no value if
  * Regina is not able to construct them for the given combination of
  * triangulation and coordinate system.
  */
-MatrixInt* makeMatchingEquations(const Triangulation<4>* triangulation,
-    HyperCoords coords);
+std::optional<MatrixInt> makeMatchingEquations(
+    const Triangulation<4>& triangulation, HyperCoords coords);
 /**
  * Creates a new set of validity constraints representing the condition that
  * normal hypersurfaces be embedded.  The validity constraints will be expressed
@@ -866,8 +848,10 @@ inline void NormalHypersurfaces::sort(Comparison&& comp) {
     std::stable_sort(surfaces_.begin(), surfaces_.end(), comp);
 }
 
-inline MatrixInt* NormalHypersurfaces::recreateMatchingEquations() const {
-    return makeMatchingEquations(triangulation(), coords_);
+inline MatrixInt NormalHypersurfaces::recreateMatchingEquations() const {
+    // Although makeMatchingEquations() returns a std::optional, we are
+    // guaranteed in our scenario here that this will always contain a value.
+    return *makeMatchingEquations(triangulation(), coords_);
 }
 
 inline NormalHypersurfaces::VectorIterator::VectorIterator() {
@@ -925,7 +909,7 @@ inline NormalHypersurfaces::VectorIterator
 }
 
 inline NormalHypersurfaces::HypersurfaceInserter::HypersurfaceInserter(
-        NormalHypersurfaces& list, Triangulation<4>* owner) :
+        NormalHypersurfaces& list, const Triangulation<4>& owner) :
         list_(&list), owner_(owner) {
 }
 
@@ -939,7 +923,7 @@ inline NormalHypersurfaces::HypersurfaceInserter&
 inline NormalHypersurfaces::HypersurfaceInserter&
         NormalHypersurfaces::HypersurfaceInserter::operator =(
         NormalHypersurfaceVector* vector) {
-    list_->surfaces_.push_back(new NormalHypersurface(owner_, vector));
+    list_->surfaces_.push_back(new NormalHypersurface(&owner_, vector));
     return *this;
 }
 
@@ -965,8 +949,9 @@ inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
 
 inline NormalHypersurfaces::Enumerator::Enumerator(
         NormalHypersurfaces* list, Triangulation<4>* triang,
-        MatrixInt* eqns, ProgressTracker* tracker) :
-        list_(list), triang_(triang), eqns_(eqns), tracker_(tracker) {
+        const MatrixInt& eqns, ProgressTracker* tracker) :
+        list_(list), triang_(triang), eqns_(eqns),
+        tracker_(tracker) {
 }
 
 } // namespace regina

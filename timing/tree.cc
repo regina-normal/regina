@@ -61,7 +61,7 @@ void usage(const char* program) {
  */
 template <class LPConstraint, typename BanConstraint>
 bool writeTypesAndVerify(
-        const TreeEnumeration<LPConstraint, BanConstraint>& tree, void* eqns) {
+        const TreeEnumeration<LPConstraint, BanConstraint>& tree, void*) {
     /*
     std::cout << "SOLN #" << tree.nSolns() << ": ";
     tree.dumpTypes(std::cout);
@@ -69,7 +69,7 @@ bool writeTypesAndVerify(
     */
 
     NormalSurface* s = tree.buildSurface();
-    if (! tree.verify(s, static_cast<const MatrixInt*>(eqns)))
+    if (! tree.verify(s))
         std::cout << "ERROR: Verification failed." << std::endl;
 
     return true;
@@ -131,25 +131,20 @@ int main(int argc, char* argv[]) {
                     mode == 'q' ? NS_QUAD :
                     mode == 'a' ? NS_AN_STANDARD :
                     NS_AN_QUAD_OCT);
-                TreeEnumeration<> search(t, coords);
+                TreeEnumeration<> search(*t, coords);
                 if (search.constraintsBroken())
                     std::cerr << "ERROR: Constraints broken." << std::endl;
                 else {
-                    // Build the matching equations for sanity checking.
-                    MatrixInt* eqns = regina::makeMatchingEquations(t, coords);
-
-                    search.run(&writeTypesAndVerify<LPConstraintNone,
-                        BanNone>, eqns);
+                    search.run(&writeTypesAndVerify<LPConstraintNone, BanNone>,
+                        nullptr);
                     std::cout << "# solutions = " << search.nSolns()
                         << std::endl;
                     std::cout << "# nodes visited = " << search.nVisited() 
                         << std::endl;
-
-                    delete eqns;
                 }
             } else {
                 TreeSingleSoln<LPConstraintEulerPositive>
-                    search(t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
+                    search(*t, mode == '3' ? NS_AN_STANDARD : NS_STANDARD);
                 if (search.constraintsBroken())
                     std::cerr << "ERROR: Constraints broken." << std::endl;
                 else if (search.find()) {

@@ -578,25 +578,23 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             }
 
             if (ans) {
-                regina::MatrixInt* m = regina::makeAngleEquations(tri);
+                regina::MatrixInt m = regina::makeAngleEquations(*tri);
 
                 const regina::VectorInt& vec = ans->vector();
-                if (vec.size() != m->columns()) {
+                if (vec.size() != m.columns()) {
                     std::ostringstream msg;
                     msg << "Generalised angle structure vector has "
                         "wrong size for " << tri->label() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
 
-                if (! ((*m) * vec).isZero()) {
+                if (! (m * vec).isZero()) {
                     std::ostringstream msg;
                     msg << "Generalised angle structure vector does not "
                         "satisfy the angle equations for "
                         << tri->label() << ".";
                     CPPUNIT_FAIL(msg.str());
                 }
-
-                delete m;
             }
         }
 

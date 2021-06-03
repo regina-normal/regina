@@ -235,7 +235,7 @@ class SimplexBase :
          * Returns the index of this simplex in the underlying triangulation.
          *
          * The index will be an integer between 0 and
-         * <tt>triangulation()->size()-1</tt> inclusive.
+         * <tt>triangulation().size()-1</tt> inclusive.
          *
          * Note that indexing may change when a simplex is added to or removed
          * from the underlying triangulation.
@@ -376,9 +376,9 @@ class SimplexBase :
         /**
          * Returns the triangulation to which this simplex belongs.
          *
-         * @return the triangulation containing this simplex.
+         * @return a reference to the triangulation containing this simplex.
          */
-        Triangulation<dim>* triangulation() const;
+        Triangulation<dim>& triangulation() const;
 
         /**
          * Returns the connected component of the triangulation to
@@ -686,39 +686,39 @@ inline Perm<dim+1> SimplexBase<dim>::adjacentGluing(int face) const {
 }
 
 template <int dim>
-inline Triangulation<dim>* SimplexBase<dim>::triangulation() const {
-    return tri_;
+inline Triangulation<dim>& SimplexBase<dim>::triangulation() const {
+    return *tri_;
 }
 
 template <int dim>
 inline Component<dim>* SimplexBase<dim>::component() const {
-    triangulation()->ensureSkeleton();
+    triangulation().ensureSkeleton();
     return component_;
 }
 
 template <int dim>
 template <int subdim>
 inline Face<dim, subdim>* SimplexBase<dim>::face(int face) const {
-    triangulation()->ensureSkeleton();
+    triangulation().ensureSkeleton();
     return std::get<subdim>(this->faces_)[face];
 }
 
 template <int dim>
 template <int subdim>
 inline Perm<dim + 1> SimplexBase<dim>::faceMapping(int face) const {
-    triangulation()->ensureSkeleton();
+    triangulation().ensureSkeleton();
     return std::get<subdim>(this->mappings_)[face];
 }
 
 template <int dim>
 inline int SimplexBase<dim>::orientation() const {
-    triangulation()->ensureSkeleton();
+    triangulation().ensureSkeleton();
     return orientation_;
 }
 
 template <int dim>
 inline bool SimplexBase<dim>::facetInMaximalForest(int facet) const {
-    triangulation()->ensureSkeleton();
+    triangulation().ensureSkeleton();
     return dualForest_ & (FacetMask(1) << facet);
 }
 

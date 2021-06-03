@@ -48,43 +48,43 @@
 
 namespace {
     bool has51(regina::Vertex<4>* v) {
-        return v->triangulation()->pachner(v, true, false);
+        return v->triangulation().pachner(v, true, false);
     }
 
     bool has42(regina::Edge<4>* e) {
-        return e->triangulation()->pachner(e, true, false);
+        return e->triangulation().pachner(e, true, false);
     }
 
     bool has33(regina::Triangle<4>* f) {
-        return f->triangulation()->pachner(f, true, false);
+        return f->triangulation().pachner(f, true, false);
     }
 
     bool has24(regina::Tetrahedron<4>* f) {
-        return f->triangulation()->pachner(f, true, false);
+        return f->triangulation().pachner(f, true, false);
     }
 
     bool has20t(regina::Triangle<4>* t) {
-        return t->triangulation()->twoZeroMove(t, true, false);
+        return t->triangulation().twoZeroMove(t, true, false);
     }
 
     bool has20e(regina::Edge<4>* e) {
-        return e->triangulation()->twoZeroMove(e, true, false);
+        return e->triangulation().twoZeroMove(e, true, false);
     }
 
     bool has20v(regina::Vertex<4>* v) {
-        return v->triangulation()->twoZeroMove(v, true, false);
+        return v->triangulation().twoZeroMove(v, true, false);
     }
 
     bool hasOpenBook(regina::Tetrahedron<4>* t) {
-        return t->triangulation()->openBook(t, true, false);
+        return t->triangulation().openBook(t, true, false);
     }
 
     bool hasShellBoundary(regina::Pentachoron<4>* p) {
-        return p->triangulation()->shellBoundary(p, true, false);
+        return p->triangulation().shellBoundary(p, true, false);
     }
 
     bool hasCollapseEdge(regina::Edge<4>* e) {
-        return e->triangulation()->collapseEdge(e, true, false);
+        return e->triangulation().collapseEdge(e, true, false);
     }
 }
 

@@ -77,14 +77,14 @@ NormalSurfaceVector* NSVectorOriented::makeZeroVector(
     return new NSVectorOriented(14 * triangulation->size());
 }
 
-MatrixInt* NSVectorOriented::makeMatchingEquations(
-        const Triangulation<3>* triangulation) {
-    size_t nCoords = 14 * triangulation->size();
+std::optional<MatrixInt> NSVectorOriented::makeMatchingEquations(
+        const Triangulation<3>& triangulation) {
+    size_t nCoords = 14 * triangulation.size();
     // Six equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
-    long nEquations = 6 * (4 * long(triangulation->size()) -
-        long(triangulation->countTriangles()));
-    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
+    long nEquations = 6 * (4 * long(triangulation.size()) -
+        long(triangulation.countTriangles()));
+    MatrixInt ans(nEquations, nCoords);
 
     // Run through each internal triangle and add the corresponding three
     // equations.
@@ -93,7 +93,7 @@ MatrixInt* NSVectorOriented::makeMatchingEquations(
     size_t tet0, tet1;
     Perm<4> perm0, perm1;
     bool natural;
-    for (Triangle<3>* t : triangulation->triangles()) {
+    for (Triangle<3>* t : triangulation.triangles()) {
         if (! t->isBoundary()) {
             tet0 = t->embedding(0).tetrahedron()->index();
             tet1 = t->embedding(1).tetrahedron()->index();
@@ -104,26 +104,26 @@ MatrixInt* NSVectorOriented::makeMatchingEquations(
                 // row+1: oriented towards the opposite face
 
                 // Triangles:
-                ans->entry(row, 14*tet0 + 2*perm0[i]) += 1;
-                ans->entry(row+1, 14*tet0 + 2*perm0[i] + 1) += 1;
+                ans.entry(row, 14*tet0 + 2*perm0[i]) += 1;
+                ans.entry(row+1, 14*tet0 + 2*perm0[i] + 1) += 1;
 
-                ans->entry(row, 14*tet1 + 2*perm1[i]) -= 1;
-                ans->entry(row+1, 14*tet1 + 2*perm1[i] + 1) -= 1;
+                ans.entry(row, 14*tet1 + 2*perm1[i]) -= 1;
+                ans.entry(row+1, 14*tet1 + 2*perm1[i] + 1) -= 1;
 
                 // Quads:
                 natural = (perm0[i] == 0 || perm0[3] == 0);
-                ans->entry(row, 14*tet0 + 8 +
+                ans.entry(row, 14*tet0 + 8 +
                     2*quadSeparating[perm0[i]][perm0[3]] +
                         (natural ? 0 : 1)) += 1;
-                ans->entry(row+1, 14*tet0 + 8 +
+                ans.entry(row+1, 14*tet0 + 8 +
                     2*quadSeparating[perm0[i]][perm0[3]] +
                         (natural ? 1 : 0)) += 1;
 
                 natural = (perm1[i] == 0 || perm1[3] == 0);
-                ans->entry(row, 14*tet1 + 8 +
+                ans.entry(row, 14*tet1 + 8 +
                     2*quadSeparating[perm1[i]][perm1[3]] +
                         (natural ? 0 : 1)) -= 1;
-                ans->entry(row+1, 14*tet1 + 8 +
+                ans.entry(row+1, 14*tet1 + 8 +
                     2*quadSeparating[perm1[i]][perm1[3]] +
                         (natural ? 1 : 0)) -= 1;
 

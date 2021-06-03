@@ -646,7 +646,7 @@ namespace {
 
     inline Tetrahedron<3>* Block::layeringTetrahedron() {
         return (innerTet_[nInnerTet_++] =
-            innerTet_[0]->triangulation()->newTetrahedron());
+            innerTet_[0]->triangulation().newTetrahedron());
     }
 
     inline void Block::attachVertexNbd(Tetrahedron<3>* nbd, int vertex) {
@@ -1027,7 +1027,7 @@ namespace {
             quadType_ = -1;
         }
 
-        const Tetrahedron<3>* tet = s->triangulation()->tetrahedron(tetIndex);
+        const Tetrahedron<3>* tet = s->triangulation().tetrahedron(tetIndex);
 
         // Build the blocks.
         // Note in all of this that we insert an extra "fake" triangle at each
@@ -1156,7 +1156,7 @@ Triangulation<3>* NormalSurface::cutAlong() const {
     Triangulation<3>* ans = new Triangulation<3>();
     Packet::ChangeEventSpan span(ans);
 
-    unsigned long nTet = triangulation()->size();
+    unsigned long nTet = triangulation().size();
     if (nTet == 0)
         return ans;
 
@@ -1170,7 +1170,7 @@ Triangulation<3>* NormalSurface::cutAlong() const {
     int fromVertex0, fromVertex1;
     Perm<4> gluing;
     unsigned long quadBlocks;
-    for (Triangle<3>* f : triangulation()->triangles()) {
+    for (Triangle<3>* f : triangulation().triangles()) {
         if (f->isBoundary())
             continue;
 
@@ -1304,7 +1304,7 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
     // Count the number of boundary spheres that our triangulation has
     // to begin with.
     unsigned long origSphereCount = 0;
-    for (BoundaryComponent<3>* bc : triangulation()->boundaryComponents())
+    for (BoundaryComponent<3>* bc : triangulation().boundaryComponents())
         if (bc->eulerChar() == 2)
             ++origSphereCount;
 
@@ -1314,7 +1314,7 @@ bool NormalSurface::isCompressingDisc(bool knownConnected) const {
     std::unique_ptr<Triangulation<3>> cut(cutAlong());
 
     if (cut->countBoundaryComponents() ==
-            triangulation()->countBoundaryComponents()) {
+            triangulation().countBoundaryComponents()) {
         // The boundary of the disc is not a separating curve in the
         // boundary of the triangulation.  Therefore we might end up
         // converting a torus boundary into a sphere boundary, but the
@@ -1453,7 +1453,7 @@ namespace {
                     }
 
                     TreeSingleSoln<LPConstraintEulerPositive, BanNone> search(
-                        t_[side], NS_STANDARD);
+                        *t_[side], NS_STANDARD);
                     {
                         std::lock_guard<std::mutex> lock(searchMutex_[side]);
                         currSearch_[side] = &search;

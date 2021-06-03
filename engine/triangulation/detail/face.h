@@ -560,9 +560,9 @@ class FaceBase :
         /**
          * Returns the triangulation to which this face belongs.
          *
-         * @return the triangulation containing this face.
+         * @return a reference to the triangulation containing this face.
          */
-        Triangulation<dim>* triangulation() const;
+        Triangulation<dim>& triangulation() const;
         /**
          * Returns the component of the triangulation to which this
          * face belongs.
@@ -1017,7 +1017,7 @@ inline size_t FaceBase<dim, subdim>::index() const {
 }
 
 template <int dim, int subdim>
-inline Triangulation<dim>* FaceBase<dim, subdim>::triangulation() const {
+inline Triangulation<dim>& FaceBase<dim, subdim>::triangulation() const {
     return FaceStorage<dim, dim - subdim>::front().simplex()->triangulation();
 }
 

@@ -338,8 +338,9 @@ struct NormalInfo;
  *   Otherwise you can use the default implementations (which returns zero).
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const Triangulation<3>*)</tt>,
- *   <tt>MatrixInt* makeMatchingEquations(const Triangulation<3>*)</tt> and
- *   makeEmbeddedConstraints(const Triangulation<3>*) must be
+ *   <tt>std::optional<MatrixInt>
+ *   makeMatchingEquations(const Triangulation<3>&)</tt> and
+ *   makeEmbeddedConstraints(const Triangulation<3>&) must be
  *   declared and implemented.</li>
  * </ul>
  *
@@ -766,7 +767,7 @@ class NormalSurfaceVector {
                 const Triangulation<3>* triangulation);
         #endif
         /**
-         * Creates a new set of normal surface matching equations for
+         * Generates the set of normal surface matching equations for
          * the given triangulation using the coordinate
          * system corresponding to this particular subclass of
          * NormalSurfaceVector.
@@ -775,11 +776,11 @@ class NormalSurfaceVector {
          *
          * @param triangulation the triangulation upon which these
          * matching equations will be based.
-         * @return a newly allocated set of matching equations.
+         * @return the set of normal surface matching equations.
          */
         #ifdef __DOXYGEN
-            static MatrixInt* makeMatchingEquations(
-                const Triangulation<3>* triangulation);
+            static std::optional<MatrixInt> makeMatchingEquations(
+                const Triangulation<3>& triangulation);
         #endif
         /**
          * Creates a new set of validity constraints representing
@@ -1159,9 +1160,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         /**
          * Returns the triangulation in which this normal surface resides.
          *
-         * @return the underlying triangulation.
+         * @return a reference to the underlying triangulation.
          */
-        const Triangulation<3>* triangulation() const;
+        const Triangulation<3>& triangulation() const;
 
         /**
          * Returns the name associated with this normal surface.
@@ -1958,8 +1959,8 @@ inline DiscType NormalSurface::octPosition() const {
 inline size_t NormalSurface::countCoords() const {
     return vector_->size();
 }
-inline const Triangulation<3>* NormalSurface::triangulation() const {
-    return triangulation_;
+inline const Triangulation<3>& NormalSurface::triangulation() const {
+    return *triangulation_;
 }
 
 inline const std::string& NormalSurface::name() const {

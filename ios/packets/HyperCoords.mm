@@ -137,7 +137,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
                 tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"2"] : [RegularSpreadHeaderCell cellSizeFor:@"Sides"]).width;
                 break;
             case PROP_BDRY:
-                if (self.packet->triangulation()->isClosed())
+                if (self.packet->triangulation().isClosed())
                     tmp = (self.compact.on ? [RegularSpreadViewCell cellSizeFor:@"—"] : [RegularSpreadHeaderCell cellSizeFor:@"Bdry"]).width;
                 else // TODO: fix this when we support prism coordinates: if (! self.packet->allowsSpun())
                     tmp = [RegularSpreadViewCell cellSizeFor:@"Real"].width;
@@ -225,7 +225,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
     
     regina::Triangulation<3>* ans = s->triangulate();
     ans->intelligentSimplify();
-    ans->setLabel(self.packet->triangulation()->adornedLabel("Hypersurface #" + std::to_string(selectedRow - 1)));
+    ans->setLabel(self.packet->triangulation().adornedLabel("Hypersurface #" + std::to_string(selectedRow - 1)));
     self.packet->insertChildLast(ans);
     [ReginaHelper viewPacket:ans];
 }
@@ -295,7 +295,7 @@ static NSArray* nonEmbProps = @[@PROP_BDRY, @PROP_LINK];
                                             whichCoord:coord
                                                    tri:self.packet->triangulation()];
 
-    if (viewCoords == regina::HS_EDGE_WEIGHT && self.packet->triangulation()->edge(coord)->isBoundary())
+    if (viewCoords == regina::HS_EDGE_WEIGHT && self.packet->triangulation().edge(coord)->isBoundary())
         cell.textLabel.textColor = headerBdry;
 
     return cell;

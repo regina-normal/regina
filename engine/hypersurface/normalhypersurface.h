@@ -170,8 +170,9 @@ struct HyperInfo;
  *   your implementation must compute the appropriate sum.</li>
  *   <li>Static public functions <tt>void
  *   makeZeroVector(const Triangulation<4>*)</tt>,
- *   <tt>MatrixInt* makeMatchingEquations(const Triangulation<4>*)</tt> and
- *   makeEmbeddedConstraints(const Triangulation<4>*) must be
+ *   <tt>std::optional<MatrixInt> makeMatchingEquations(
+ *   const Triangulation<4>&)</tt> and
+ *   makeEmbeddedConstraints(const Triangulation<4>&) must be
  *   declared and implemented.</li>
  * </ul>
  *
@@ -421,7 +422,7 @@ class NormalHypersurfaceVector {
                 const Triangulation<4>* triangulation);
         #endif
         /**
-         * Creates a new set of normal hypersurface matching equations for
+         * Generates the set of normal hypersurface matching equations for
          * the given triangulation using the coordinate
          * system corresponding to this particular subclass of
          * NormalHypersurfaceVector.
@@ -430,11 +431,11 @@ class NormalHypersurfaceVector {
          *
          * @param triangulation the triangulation upon which these
          * matching equations will be based.
-         * @return a newly allocated set of matching equations.
+         * @return the set of normal hypersurface matching equations.
          */
         #ifdef __DOXYGEN
-            static MatrixInt* makeMatchingEquations(
-                const Triangulation<4>* triangulation);
+            static std::optional<MatrixInt> makeMatchingEquations(
+                const Triangulation<4>& triangulation);
         #endif
         /**
          * Creates a new set of validity constraints representing
@@ -671,9 +672,9 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         /**
          * Returns the triangulation in which this normal hypersurface resides.
          *
-         * @return the underlying triangulation.
+         * @return a reference to the underlying triangulation.
          */
-        const Triangulation<4>* triangulation() const;
+        const Triangulation<4>& triangulation() const;
 
         /**
          * Returns the name associated with this normal hypersurface.
@@ -1111,8 +1112,8 @@ inline LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
 inline size_t NormalHypersurface::countCoords() const {
     return vector_->size();
 }
-inline const Triangulation<4>* NormalHypersurface::triangulation() const {
-    return triangulation_;
+inline const Triangulation<4>& NormalHypersurface::triangulation() const {
+    return *triangulation_;
 }
 
 inline const std::string& NormalHypersurface::name() const {

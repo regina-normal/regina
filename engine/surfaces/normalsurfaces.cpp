@@ -49,8 +49,10 @@ namespace {
 // to the specialised Triangulation<3>.  A forward declaration of the
 // specialisation is not enough to stop it.  I wish I understood how to
 // avoid this, but in the meantime, here we are.
-MatrixInt* NormalSurfaces::recreateMatchingEquations() const {
-    return makeMatchingEquations(triangulation(), coords_);
+MatrixInt NormalSurfaces::recreateMatchingEquations() const {
+    // Although makeMatchingEquations() returns a std::optional, we are
+    // guaranteed in our scenario here that this will always contain a value.
+    return *makeMatchingEquations(triangulation(), coords_);
 }
 
 void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
@@ -76,17 +78,18 @@ NormalSurfaceVector* makeZeroVector(const Triangulation<3>* triangulation,
 }
 
 namespace {
-    struct MatchingEquations : public Returns<MatrixInt*> {
+    struct MatchingEquations : public Returns<std::optional<MatrixInt>> {
         template <typename Coords>
-        inline MatrixInt* operator() (const Triangulation<3>* tri) {
+        inline std::optional<MatrixInt> operator() (
+                const Triangulation<3>& tri) {
             return Coords::Class::makeMatchingEquations(tri);
         }
     };
 }
 
-MatrixInt* makeMatchingEquations(const Triangulation<3>* triangulation,
-        NormalCoords coords) {
-    return forCoords(coords, MatchingEquations(), 0, triangulation);
+std::optional<MatrixInt> makeMatchingEquations(
+        const Triangulation<3>& triangulation, NormalCoords coords) {
+    return forCoords(coords, MatchingEquations(), std::nullopt, triangulation);
 }
 
 namespace {
@@ -103,8 +106,8 @@ EnumConstraints* makeEmbeddedConstraints(
     return forCoords(coords, EmbeddedConstraints(), 0, triangulation);
 }
 
-Triangulation<3>* NormalSurfaces::triangulation() const {
-    return dynamic_cast<Triangulation<3>*>(parent());
+const Triangulation<3>& NormalSurfaces::triangulation() const {
+    return *dynamic_cast<Triangulation<3>*>(parent());
 }
 
 namespace {

@@ -57,14 +57,14 @@ NormalSurfaces* NormalSurfaces::standardANToQuadOct() const {
 template <class Variant>
 NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     // And off we go!
-    Triangulation<3>* owner = triangulation();
+    const Triangulation<3>& owner = triangulation();
 
     // Basic sanity checks:
     if (coords_ != Variant::standardCoords)
         return nullptr;
     if (which_ != (NS_EMBEDDED_ONLY | NS_VERTEX))
         return nullptr;
-    if (owner->isIdeal() || ! owner->isValid())
+    if (owner.isIdeal() || ! owner.isValid())
         return nullptr;
 
     // Prepare a final surface list.
@@ -72,9 +72,9 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
         Variant::reducedCoords, NS_EMBEDDED_ONLY | NS_VERTEX, NS_ALG_CUSTOM);
 
     // Get the empty triangulation out of the way now.
-    unsigned long n = owner->size();
+    unsigned long n = owner.size();
     if (n == 0) {
-        owner->insertChildLast(ans);
+        parent()->insertChildLast(ans);
         return ans;
     }
 
@@ -139,7 +139,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
                 for (quad = 0; quad < Variant::reducedPerTet; ++quad)
                     v->set(pos++,
                         (*use[i])[Variant::stdPos(tet, 4 + quad)]);
-            ans->surfaces_.push_back(new NormalSurface(owner, v));
+            ans->surfaces_.push_back(new NormalSurface(&owner, v));
         } else if (strict) {
             // We can drop this surface entirely from our list.
             // We don't want it for our final solution set, and if
@@ -156,7 +156,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     delete[] use;
 
     // All done!
-    owner->insertChildLast(ans);
+    parent()->insertChildLast(ans);
     return ans;
 }
 

@@ -161,7 +161,7 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = triangulation()->size();
+    unsigned long n = triangulation().size();
 
     unsigned long i;
 
@@ -232,7 +232,7 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
     if (! out)
         return false;
 
-    unsigned long n = triangulation()->countEdges();
+    unsigned long n = triangulation().countEdges();
 
     unsigned long i;
 

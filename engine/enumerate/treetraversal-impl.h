@@ -102,7 +102,7 @@ NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
     lpSlot_[nTypes_]->extractSolution(*v, type_);
 
     if (coords_ == NS_QUAD || coords_ == NS_STANDARD)
-        return new NormalSurface(origTableaux_.tri(), v);
+        return new NormalSurface(&origTableaux_.tri(), v);
 
     // We have an almost normal surface: restore the octagon
     // coordinates.
@@ -138,7 +138,7 @@ NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         }
     }
     delete v;
-    return new NormalSurface(origTableaux_.tri(), an);
+    return new NormalSurface(&origTableaux_.tri(), an);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -151,25 +151,21 @@ AngleStructure* TreeTraversal<LPConstraint, BanConstraint, IntType>::
 
     VectorInt* v = new VectorInt(3 * nTets_ + 1);
     lpSlot_[nTypes_]->extractSolution(*v, type_);
-    return new AngleStructure(origTableaux_.tri(), v);
+    return new AngleStructure(&origTableaux_.tri(), v);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const NormalSurface* s, const MatrixInt* matchingEqns) const {
+        const NormalSurface* s) const {
     if (coords_ == NS_ANGLE)
         return false;
 
-    // Rebuild the matching equations if necessary.
-    MatrixInt* tmpEqns = nullptr;
+    // Rebuild the matching equations.
+    std::optional<MatrixInt> matchingEqns = regina::makeMatchingEquations(
+        origTableaux_.tri(), coords_);
     if (! matchingEqns) {
-        tmpEqns = regina::makeMatchingEquations(
-            origTableaux_.tri(), coords_);
-        if (! tmpEqns) {
-            // The matching equations could not be constructed.
-            return false;
-        }
-        matchingEqns = tmpEqns;
+        // The matching equations could not be constructed.
+        return false;
     }
 
     // Verify the matching equations.
@@ -178,12 +174,9 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
         LargeInteger ans; // Initialised to zero.
         for (col = 0; col < matchingEqns->columns(); ++col)
             ans += (LargeInteger(matchingEqns->entry(row, col)) * (s->vector())[col]);
-        if (ans != 0) {
-            delete tmpEqns;
+        if (ans != 0)
             return false;
-        }
     }
-    delete tmpEqns;
 
     // Verify any additional constraints.
     return LPConstraint::verify(s);
@@ -191,23 +184,16 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const AngleStructure* s, const MatrixInt* angleEqns) const {
+        const AngleStructure* s) const {
     if (coords_ != NS_ANGLE)
         return false;
 
-    // Rebuild the matching equations if necessary.
-    MatrixInt* tmpEqns = nullptr;
-    if (! angleEqns) {
-        tmpEqns = regina::makeAngleEquations(origTableaux_.tri());
-        angleEqns = tmpEqns;
-    }
+    // Rebuild the matching equations.
+    MatrixInt angleEqns = regina::makeAngleEquations(origTableaux_.tri());
 
     // Verify the angle equations.
-    if (! ((*angleEqns) * s->vector()).isZero()) {
-        delete tmpEqns;
+    if (! (angleEqns * s->vector()).isZero())
         return false;
-    }
-    delete tmpEqns;
 
     // Verify any additional constraints.
     return LPConstraint::verify(s);
@@ -215,7 +201,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
-        const Triangulation<3>* tri, NormalCoords coords,
+        const Triangulation<3>& tri, NormalCoords coords,
         int branchesPerQuad, int branchesPerTri, bool enumeration) :
         BanConstraint(tri, coords),
         origTableaux_(tri,
@@ -224,7 +210,7 @@ TreeTraversal<LPConstraint, BanConstraint, IntType>::TreeTraversal(
              coords),
             enumeration),
         coords_(coords),
-        nTets_(tri->size()),
+        nTets_(tri.size()),
         nTypes_(coords == NS_QUAD || coords == NS_AN_QUAD_OCT ||
             coords == NS_ANGLE ? nTets_ : 5 * nTets_),
         /* Each time we branch, one LP can be solved in-place:

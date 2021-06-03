@@ -38,15 +38,15 @@ namespace regina {
 
 bool LPConstraintEulerPositive::addRows(
         LPCol<regina::LPConstraintEulerPositive>* col,
-        const int* columnPerm, const Triangulation<3>* tri) {
-    int* obj = new int[7 * tri->size()];
+        const int* columnPerm, const Triangulation<3>& tri) {
+    int* obj = new int[7 * tri.size()];
     unsigned tet, i;
     Perm<4> p;
-    for (i = 0; i < 7 * tri->size(); ++i)
+    for (i = 0; i < 7 * tri.size(); ++i)
         obj[i] = 1;
-    for (i = 0; i < tri->countTriangles(); ++i) {
-        tet = tri->triangle(i)->front().tetrahedron()->index();
-        p = tri->triangle(i)->front().vertices();
+    for (i = 0; i < tri.countTriangles(); ++i) {
+        tet = tri.triangle(i)->front().tetrahedron()->index();
+        p = tri.triangle(i)->front().vertices();
         --obj[7 * tet + p[0]];
         --obj[7 * tet + p[1]];
         --obj[7 * tet + p[2]];
@@ -54,19 +54,19 @@ bool LPConstraintEulerPositive::addRows(
         --obj[7 * tet + 5];
         --obj[7 * tet + 6];
     }
-    for (i = 0; i < tri->countEdges(); ++i) {
-        tet = tri->edge(i)->front().tetrahedron()->index();
-        p = tri->edge(i)->front().vertices();
+    for (i = 0; i < tri.countEdges(); ++i) {
+        tet = tri.edge(i)->front().tetrahedron()->index();
+        p = tri.edge(i)->front().vertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];
         ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][0]];
         ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][1]];
     }
 
-    for (i = 0; i < 7 * tri->size(); ++i)
+    for (i = 0; i < 7 * tri.size(); ++i)
         col[i].euler = obj[columnPerm[i]];
 
-    col[7 * tri->size()].euler = -1;
+    col[7 * tri.size()].euler = -1;
 
     delete[] obj;
     return true;
@@ -74,15 +74,15 @@ bool LPConstraintEulerPositive::addRows(
 
 bool LPConstraintEulerZero::addRows(
         LPCol<regina::LPConstraintEulerZero>* col,
-        const int* columnPerm, const Triangulation<3>* tri) {
-    int* obj = new int[7 * tri->size()];
+        const int* columnPerm, const Triangulation<3>& tri) {
+    int* obj = new int[7 * tri.size()];
     unsigned tet, i;
     Perm<4> p;
-    for (i = 0; i < 7 * tri->size(); ++i)
+    for (i = 0; i < 7 * tri.size(); ++i)
         obj[i] = 1;
-    for (i = 0; i < tri->countTriangles(); ++i) {
-        tet = tri->triangle(i)->front().tetrahedron()->index();
-        p = tri->triangle(i)->front().vertices();
+    for (i = 0; i < tri.countTriangles(); ++i) {
+        tet = tri.triangle(i)->front().tetrahedron()->index();
+        p = tri.triangle(i)->front().vertices();
         --obj[7 * tet + p[0]];
         --obj[7 * tet + p[1]];
         --obj[7 * tet + p[2]];
@@ -90,19 +90,19 @@ bool LPConstraintEulerZero::addRows(
         --obj[7 * tet + 5];
         --obj[7 * tet + 6];
     }
-    for (i = 0; i < tri->countEdges(); ++i) {
-        tet = tri->edge(i)->front().tetrahedron()->index();
-        p = tri->edge(i)->front().vertices();
+    for (i = 0; i < tri.countEdges(); ++i) {
+        tet = tri.edge(i)->front().tetrahedron()->index();
+        p = tri.edge(i)->front().vertices();
         ++obj[7 * tet + p[0]];
         ++obj[7 * tet + p[1]];
         ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][0]];
         ++obj[7 * tet + 4 + quadMeeting[p[0]][p[1]][1]];
     }
 
-    for (i = 0; i < 7 * tri->size(); ++i)
+    for (i = 0; i < 7 * tri.size(); ++i)
         col[i].euler = obj[columnPerm[i]];
 
-    col[7 * tri->size()].euler = -1;
+    col[7 * tri.size()].euler = -1;
 
     delete[] obj;
     return true;
@@ -110,29 +110,29 @@ bool LPConstraintEulerZero::addRows(
 
 bool LPConstraintNonSpun::addRows(
         LPCol<regina::LPConstraintNonSpun>* col,
-        const int* columnPerm, const Triangulation<3>* tri) {
+        const int* columnPerm, const Triangulation<3>& tri) {
     // Regardless of whether the constraints are broken,
     // we need to ensure that the matrix has full rank.
     // Therefore add the coefficients for the two new variables now.
-    col[3 * tri->size()].meridian = -1;
-    col[3 * tri->size() + 1].longitude = -1;
+    col[3 * tri.size()].meridian = -1;
+    col[3 * tri.size() + 1].longitude = -1;
 
     // For the time being we insist on one vertex, which must be
     // ideal with torus link.
-    if (tri->countVertices() != 1 ||
-            (! tri->vertex(0)->isIdeal()) ||
-            (! tri->vertex(0)->isLinkOrientable()) ||
-            tri->vertex(0)->linkEulerChar() != 0)
+    if (tri.countVertices() != 1 ||
+            (! tri.vertex(0)->isIdeal()) ||
+            (! tri.vertex(0)->isLinkOrientable()) ||
+            tri.vertex(0)->linkEulerChar() != 0)
         return false;
 
     // Compute the two slope equations for the torus cusp, if we can.
-    SnapPeaTriangulation snapPea(*tri, false);
+    SnapPeaTriangulation snapPea(tri, false);
     MatrixInt* coeffs = snapPea.slopeEquations();
     if (! coeffs)
         return false;
 
     // Check that SnapPea hasn't changed the triangulation on us.
-    if (! snapPea.isIdenticalTo(*tri)) {
+    if (! snapPea.isIdenticalTo(tri)) {
         delete coeffs;
         return false;
     }
@@ -144,7 +144,7 @@ bool LPConstraintNonSpun::addRows(
     // SnapPy's get_cusp_equation(), which works in native
     // integers; therefore we will happily convert them back to
     // native integers now.
-    for (int i = 0; i < 3 * tri->size(); ++i) {
+    for (int i = 0; i < 3 * tri.size(); ++i) {
         col[i].meridian = coeffs->entry(0, columnPerm[i]).longValue();
         col[i].longitude = coeffs->entry(1, columnPerm[i]).longValue();
     }
@@ -153,12 +153,12 @@ bool LPConstraintNonSpun::addRows(
     return true;
 }
 
-BanConstraintBase::BanConstraintBase(const Triangulation<3>* tri, int coords) :
+BanConstraintBase::BanConstraintBase(const Triangulation<3>& tri, int coords) :
         tri_(tri), coords_(coords) {
     unsigned nCols = (coords == NS_QUAD || coords == NS_AN_QUAD_OCT ?
-            3 * tri->size() :
-        coords == NS_ANGLE ? 3 * tri->size() + 1 :
-        7 * tri->size());
+            3 * tri.size() :
+        coords == NS_ANGLE ? 3 * tri.size() + 1 :
+        7 * tri.size());
     banned_ = new bool[nCols];
     marked_ = new bool[nCols];
     std::fill(banned_, banned_ + nCols, false);
@@ -166,7 +166,7 @@ BanConstraintBase::BanConstraintBase(const Triangulation<3>* tri, int coords) :
 }
 
 void BanBoundary::init(const int* columnPerm) {
-    unsigned n = tri_->size();
+    unsigned n = tri_.size();
     unsigned tet, type, i, k;
 
     bool quadOnly = (coords_ == NS_QUAD || coords_ == NS_AN_QUAD_OCT);
@@ -184,7 +184,7 @@ void BanBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
 
         for (k = 0; k < 4; ++k)
-            if (! tri_->tetrahedron(tet)->adjacentTetrahedron(k)) {
+            if (! tri_.tetrahedron(tet)->adjacentTetrahedron(k)) {
                 banned_[i] = true;
                 break;
             }
@@ -199,8 +199,7 @@ void BanBoundary::init(const int* columnPerm) {
 
             for (k = 0; k < 4; ++k)
                 if (k != type &&
-                        ! tri_->tetrahedron(tet)->
-                        adjacentTetrahedron(k)) {
+                        ! tri_.tetrahedron(tet)->adjacentTetrahedron(k)) {
                     banned_[i] = true;
                     break;
                 }
@@ -208,22 +207,22 @@ void BanBoundary::init(const int* columnPerm) {
 }
 
 void BanTorusBoundary::init(const int* columnPerm) {
-    unsigned n = tri_->size();
+    unsigned n = tri_.size();
     unsigned tet, type, i, k;
 
     // Which boundary faces are we banning?
-    unsigned nTriangles = tri_->countTriangles();
+    unsigned nTriangles = tri_.countTriangles();
     bool* banTriangle = new bool[nTriangles];
     std::fill(banTriangle, banTriangle + nTriangles, false);
 
     // Which vertex links are we marking normal triangles around?
-    unsigned nVertices = tri_->countVertices();
+    unsigned nVertices = tri_.countVertices();
     bool* markVtx = new bool[nVertices];
     std::fill(markVtx, markVtx + nVertices, false);
 
     BoundaryComponent<3>* bc;
-    for (i = 0; i < tri_->countBoundaryComponents(); ++i) {
-        bc = tri_->boundaryComponent(i);
+    for (i = 0; i < tri_.countBoundaryComponents(); ++i) {
+        bc = tri_.boundaryComponent(i);
         if ((! bc->isIdeal()) && bc->isOrientable() &&
                 bc->eulerChar() == 0) {
             // We've found a real torus boundary.
@@ -248,7 +247,7 @@ void BanTorusBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
 
         for (k = 0; k < 4; ++k)
-            if (banTriangle[tri_->tetrahedron(tet)->triangle(k)->
+            if (banTriangle[tri_.tetrahedron(tet)->triangle(k)->
                     markedIndex()]) {
                 banned_[i] = true;
                 break;
@@ -263,13 +262,13 @@ void BanTorusBoundary::init(const int* columnPerm) {
             tet = columnPerm[i] / 7;
             type = columnPerm[i] % 7;
 
-            if (markVtx[tri_->tetrahedron(tet)->vertex(type)->
+            if (markVtx[tri_.tetrahedron(tet)->vertex(type)->
                     markedIndex()])
                 marked_[i] = true;
 
             for (k = 0; k < 4; ++k)
                 if (k != type &&
-                        banTriangle[tri_->tetrahedron(tet)->triangle(k)->
+                        banTriangle[tri_.tetrahedron(tet)->triangle(k)->
                         markedIndex()]) {
                     banned_[i] = true;
                     break;

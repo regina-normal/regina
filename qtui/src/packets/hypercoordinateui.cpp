@@ -236,7 +236,7 @@ QVariant HyperModel::headerData(int section, Qt::Orientation orientation,
                 surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
         if (coordSystem_ == regina::HS_EDGE_WEIGHT)
-            if (section >= propertyColCount() && surfaces_->triangulation()->
+            if (section >= propertyColCount() && surfaces_->triangulation().
                     edge(section - propertyColCount())->isBoundary())
                 return QColor(Qt::darkYellow);
         return QVariant();
@@ -488,7 +488,7 @@ void HyperCoordinateUI::triangulate() {
 
     // Go ahead and triangulate it.
     regina::Triangulation<3>* ans = use->triangulate();
-    ans->setLabel(surfaces->triangulation()->adornedLabel(
+    ans->setLabel(surfaces->triangulation().adornedLabel(
         "Hypersurface #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);
 

@@ -101,8 +101,8 @@ class NSVectorQuad : public NSVectorMirrored {
 
         static NormalSurfaceVector* makeMirror(
             const Vector<LargeInteger>& original,
-            const Triangulation<3>* triang);
-        virtual NormalSurfaceVector* makeMirror(const Triangulation<3>* triang)
+            const Triangulation<3>& triang);
+        virtual NormalSurfaceVector* makeMirror(const Triangulation<3>& triang)
             const override;
 
         virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang)
@@ -113,8 +113,8 @@ class NSVectorQuad : public NSVectorMirrored {
 
         static NormalSurfaceVector* makeZeroVector(
             const Triangulation<3>* triangulation);
-        static MatrixInt* makeMatchingEquations(
-            const Triangulation<3>* triangulation);
+        static std::optional<MatrixInt> makeMatchingEquations(
+            const Triangulation<3>& triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
             const Triangulation<3>* triangulation);
 };
@@ -132,7 +132,7 @@ inline NSVectorQuad::NSVectorQuad(const Vector<T>& cloneMe) :
 }
 
 inline NormalSurfaceVector* NSVectorQuad::makeMirror(
-        const Triangulation<3>* triang) const {
+        const Triangulation<3>& triang) const {
     return makeMirror(coords(), triang);
 }
 

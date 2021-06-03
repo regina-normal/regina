@@ -220,18 +220,18 @@ namespace {
 // ------------------------------------------------------------------------
 
 Triangulation<3>* NormalHypersurface::triangulate() const {
-    const Triangulation<4>* outer = triangulation();
+    const Triangulation<4>& outer = triangulation();
     Triangulation<3>* inner = new Triangulation<3>();
 
     // Get rid of an empty *outer* triangulation now.
-    if (outer->isEmpty())
+    if (outer.isEmpty())
         return inner;
 
     // Set up one DiscSetTetData for each tetrahedron, storing the
     // relevant DiscData maps.  We don't actually need this for the
     // boundary tetrahedra, but for now we'll just do everything.
     typedef DiscSetTetData<DiscData> TetData;
-    size_t nTets = outer->countTetrahedra();
+    size_t nTets = outer.countTetrahedra();
     TetData** tetData = new TetData*[nTets];
 
     const Pentachoron<4>* outerPent;
@@ -241,7 +241,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
     size_t tet;
     size_t pent;
     for (tet = 0; tet < nTets; ++tet) {
-        outerTet = outer->tetrahedron(tet);
+        outerTet = outer.tetrahedron(tet);
         outerPent = outerTet->front().pentachoron();
         outerTetEmb = outerTet->front().vertices();
         pent = outerPent->index();
@@ -284,7 +284,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
     }
 
     // Run through normal tetrahedra, setting up DiscData maps as we go.
-    size_t nPents = outer->size();
+    size_t nPents = outer.size();
 
     int type;
     unsigned long pieceNumber;
@@ -297,7 +297,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
     int facet;
 
     for (pent = 0; pent < nPents; ++pent) {
-        outerPent = outer->pentachoron(pent);
+        outerPent = outer.pentachoron(pent);
         for (type = 0; type < 5; ++type)
             for (pieceNumber = 0;
                     pieceNumber < tetrahedra(pent, type).longValue();
@@ -340,7 +340,7 @@ Triangulation<3>* NormalHypersurface::triangulate() const {
     int e0, e1, f0, f1, f2; // Vertices of the pentachoron that play
                             // various roles in the location of the prism.
     for (pent = 0; pent < nPents; ++pent) {
-        outerPent = outer->pentachoron(pent);
+        outerPent = outer.pentachoron(pent);
         for (type = 0; type < 10; ++type) {
             e0 = Edge<4>::edgeVertex[type][0];
             e1 = Edge<4>::edgeVertex[type][1];

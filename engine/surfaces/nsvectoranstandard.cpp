@@ -85,14 +85,14 @@ NormalSurfaceVector* NSVectorANStandard::makeZeroVector(
     return new NSVectorANStandard(10 * triangulation->size());
 }
 
-MatrixInt* NSVectorANStandard::makeMatchingEquations(
-        const Triangulation<3>* triangulation) {
-    size_t nCoords = 10 * triangulation->size();
+std::optional<MatrixInt> NSVectorANStandard::makeMatchingEquations(
+        const Triangulation<3>& triangulation) {
+    size_t nCoords = 10 * triangulation.size();
     // Three equations per non-boundary triangle.
     // F_boundary + 2 F_internal = 4 T
-    long nEquations = 3 * (4 * long(triangulation->size()) -
-        long(triangulation->countTriangles()));
-    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
+    long nEquations = 3 * (4 * long(triangulation.size()) -
+        long(triangulation.countTriangles()));
+    MatrixInt ans(nEquations, nCoords);
 
     // Run through each internal triangle and add the corresponding three
     // equations.
@@ -100,7 +100,7 @@ MatrixInt* NSVectorANStandard::makeMatchingEquations(
     int i;
     size_t tet0, tet1;
     Perm<4> perm0, perm1;
-    for (Triangle<3>* t : triangulation->triangles()) {
+    for (Triangle<3>* t : triangulation.triangles()) {
         if (! t->isBoundary()) {
             tet0 = t->embedding(0).tetrahedron()->index();
             tet1 = t->embedding(1).tetrahedron()->index();
@@ -108,21 +108,21 @@ MatrixInt* NSVectorANStandard::makeMatchingEquations(
             perm1 = t->embedding(1).vertices();
             for (i=0; i<3; i++) {
                 // Triangles:
-                ans->entry(row, 10*tet0 + perm0[i]) += 1;
-                ans->entry(row, 10*tet1 + perm1[i]) -= 1;
+                ans.entry(row, 10*tet0 + perm0[i]) += 1;
+                ans.entry(row, 10*tet1 + perm1[i]) -= 1;
                 // Quads:
-                ans->entry(row, 10*tet0 + 4 +
+                ans.entry(row, 10*tet0 + 4 +
                     quadSeparating[perm0[i]][perm0[3]]) += 1;
-                ans->entry(row, 10*tet1 + 4 +
+                ans.entry(row, 10*tet1 + 4 +
                     quadSeparating[perm1[i]][perm1[3]]) -= 1;
                 // Octagons:
-                ans->entry(row, 10*tet0 + 7 +
+                ans.entry(row, 10*tet0 + 7 +
                     quadMeeting[perm0[i]][perm0[3]][0]) += 1;
-                ans->entry(row, 10*tet1 + 7 +
+                ans.entry(row, 10*tet1 + 7 +
                     quadMeeting[perm1[i]][perm1[3]][0]) -= 1;
-                ans->entry(row, 10*tet0 + 7 +
+                ans.entry(row, 10*tet0 + 7 +
                     quadMeeting[perm0[i]][perm0[3]][1]) += 1;
-                ans->entry(row, 10*tet1 + 7 +
+                ans.entry(row, 10*tet1 + 7 +
                     quadMeeting[perm1[i]][perm1[3]][1]) -= 1;
                 row++;
             }

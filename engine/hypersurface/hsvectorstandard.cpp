@@ -67,14 +67,14 @@ NormalHypersurfaceVector* HSVectorStandard::makeZeroVector(
     return new HSVectorStandard(15 * triangulation->size());
 }
 
-MatrixInt* HSVectorStandard::makeMatchingEquations(
-        const Triangulation<4>* triangulation) {
-    size_t nCoords = 15 * triangulation->size();
+std::optional<MatrixInt> HSVectorStandard::makeMatchingEquations(
+        const Triangulation<4>& triangulation) {
+    size_t nCoords = 15 * triangulation.size();
     // Seven equations per non-boundary facet.
     // T_boundary + 2 T_internal = 5 P
-    long nEquations = 7 * (5 * long(triangulation->size()) -
-        long(triangulation->countTetrahedra()));
-    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
+    long nEquations = 7 * (5 * long(triangulation.size()) -
+        long(triangulation.countTetrahedra()));
+    MatrixInt ans(nEquations, nCoords);
 
     // Run through each internal facet and add the corresponding seven
     // equations.
@@ -82,7 +82,7 @@ MatrixInt* HSVectorStandard::makeMatchingEquations(
     int i;
     size_t pent0, pent1;
     Perm<5> perm0, perm1;
-    for (Tetrahedron<4>* tet : triangulation->tetrahedra()) {
+    for (Tetrahedron<4>* tet : triangulation.tetrahedra()) {
         if (! tet->isBoundary()) {
             pent0 = tet->embedding(0).pentachoron()->index();
             pent1 = tet->embedding(1).pentachoron()->index();
@@ -92,13 +92,13 @@ MatrixInt* HSVectorStandard::makeMatchingEquations(
             // Triangles:
             for (i=0; i<4; i++) {
                 // Tetrahedra that meet this triangle:
-                ans->entry(row, 15 * pent0 + perm0[i]) += 1;
-                ans->entry(row, 15 * pent1 + perm1[i]) -= 1;
+                ans.entry(row, 15 * pent0 + perm0[i]) += 1;
+                ans.entry(row, 15 * pent1 + perm1[i]) -= 1;
 
                 // Prisms that meet this triangle:
-                ans->entry(row, 15 * pent0 + 5 +
+                ans.entry(row, 15 * pent0 + 5 +
                     Edge<4>::edgeNumber[perm0[i]][perm0[4]]) += 1;
-                ans->entry(row, 15 * pent1 + 5 +
+                ans.entry(row, 15 * pent1 + 5 +
                     Edge<4>::edgeNumber[perm1[i]][perm1[4]]) -= 1;
                 row++;
             }
@@ -106,16 +106,16 @@ MatrixInt* HSVectorStandard::makeMatchingEquations(
             // Quads:
             for (i=0; i<3; i++) {
                 // Prisms that meet this quad:
-                ans->entry(row, 15 * pent0 + 5 +
+                ans.entry(row, 15 * pent0 + 5 +
                     Edge<4>::edgeNumber[perm0[quadDefn[i][0]]]
                                         [perm0[quadDefn[i][1]]]) += 1;
-                ans->entry(row, 15 * pent0 + 5 +
+                ans.entry(row, 15 * pent0 + 5 +
                     Edge<4>::edgeNumber[perm0[quadDefn[i][2]]]
                                         [perm0[quadDefn[i][3]]]) += 1;
-                ans->entry(row, 15 * pent1 + 5 +
+                ans.entry(row, 15 * pent1 + 5 +
                     Edge<4>::edgeNumber[perm1[quadDefn[i][0]]]
                                         [perm1[quadDefn[i][1]]]) -= 1;
-                ans->entry(row, 15 * pent1 + 5 +
+                ans.entry(row, 15 * pent1 + 5 +
                     Edge<4>::edgeNumber[perm1[quadDefn[i][2]]]
                                         [perm1[quadDefn[i][3]]]) -= 1;
                 row++;

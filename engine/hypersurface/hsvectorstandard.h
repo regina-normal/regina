@@ -104,8 +104,8 @@ class HSVectorStandard : public NormalHypersurfaceVector {
 
         static NormalHypersurfaceVector* makeZeroVector(
             const Triangulation<4>* triangulation);
-        static MatrixInt* makeMatchingEquations(
-            const Triangulation<4>* triangulation);
+        static std::optional<MatrixInt> makeMatchingEquations(
+            const Triangulation<4>& triangulation);
         static EnumConstraints* makeEmbeddedConstraints(
             const Triangulation<4>* triangulation);
 };

@@ -46,47 +46,47 @@ NormalSurfaceVector* NSVectorQuadClosed::makeZeroVector(
     return new NSVectorQuadClosed(3 * triangulation->size());
 }
 
-MatrixInt* NSVectorQuadClosed::makeMatchingEquations(
-        const Triangulation<3>* triangulation) {
+std::optional<MatrixInt> NSVectorQuadClosed::makeMatchingEquations(
+        const Triangulation<3>& triangulation) {
     // Enforce our basic preconditions.
-    if (! (triangulation->isOriented() && triangulation->isIdeal() &&
-            triangulation->countBoundaryComponents() == 1 &&
-            triangulation->countVertices() == 1 &&
-            triangulation->vertex(0)->link() == Vertex<3>::TORUS))
-        return 0;
+    if (! (triangulation.isOriented() && triangulation.isIdeal() &&
+            triangulation.countBoundaryComponents() == 1 &&
+            triangulation.countVertices() == 1 &&
+            triangulation.vertex(0)->link() == Vertex<3>::TORUS))
+        return std::nullopt;
 
     // We will use SnapPea to build the additional constraint that
     // enforce closed surfaces.  Before doing anything else, see whether
     // SnapPea is going to play along.
-    SnapPeaTriangulation snapPea(*triangulation, false);
+    SnapPeaTriangulation snapPea(triangulation, false);
     MatrixInt* coeffs = snapPea.slopeEquations();
-    if (! (coeffs && snapPea.isIdenticalTo(*triangulation))) {
+    if (! (coeffs && snapPea.isIdenticalTo(triangulation))) {
         // SnapPea either couldn't handle it, or else it retriangulated on us.
         delete coeffs;
-        return 0;
+        return std::nullopt;
     }
 
-    unsigned long nCoords = 3 * triangulation->size();
+    unsigned long nCoords = 3 * triangulation.size();
     // One equation per edge, plus two per ideal vertex.
     // (This code is written a little more generically, in order to
     // support multiple ideal vertices at some later date.)
-    long nEquations = long(triangulation->countEdges() +
-        2 * triangulation->countBoundaryComponents());
+    long nEquations = long(triangulation.countEdges() +
+        2 * triangulation.countBoundaryComponents());
 
-    MatrixInt* ans = new MatrixInt(nEquations, nCoords);
+    MatrixInt ans(nEquations, nCoords);
     unsigned long row = 0;
 
     // Run through each internal edge and add the corresponding
     // equation.
     Perm<4> perm;
     unsigned long tetIndex;
-    for (auto e : triangulation->edges()) {
+    for (auto e : triangulation.edges()) {
         for (auto& emb : *e) {
             tetIndex = emb.tetrahedron()->index();
             perm = emb.vertices();
-            ans->entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[2]])
+            ans.entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[2]])
                 += 1;
-            ans->entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[3]])
+            ans.entry(row, 3 * tetIndex + quadSeparating[perm[0]][perm[3]])
                 -= 1;
         }
         ++row;
@@ -95,10 +95,10 @@ MatrixInt* NSVectorQuadClosed::makeMatchingEquations(
     // Run through each ideal vertex and add the corresponding meridian
     // and longitude equations.
     int i, j;
-    for (i = 0; i < triangulation->countBoundaryComponents(); ++i) {
-        for (j = 0; j < 3 * triangulation->size(); ++j) {
-            ans->entry(row, j) = coeffs->entry(2 * i, j);
-            ans->entry(row + 1, j) = coeffs->entry(2 * i + 1, j);
+    for (i = 0; i < triangulation.countBoundaryComponents(); ++i) {
+        for (j = 0; j < 3 * triangulation.size(); ++j) {
+            ans.entry(row, j) = coeffs->entry(2 * i, j);
+            ans.entry(row + 1, j) = coeffs->entry(2 * i + 1, j);
         }
 
         row += 2;

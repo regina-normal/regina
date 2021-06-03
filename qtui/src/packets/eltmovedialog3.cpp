@@ -49,47 +49,47 @@
 
 namespace {
     bool has41(regina::Vertex<3>* v) {
-        return v->triangulation()->pachner(v, true, false);
+        return v->triangulation().pachner(v, true, false);
     }
 
     bool has20v(regina::Vertex<3>* v) {
-        return v->triangulation()->twoZeroMove(v, true, false);
+        return v->triangulation().twoZeroMove(v, true, false);
     }
 
     bool has32(regina::Edge<3>* e) {
-        return e->triangulation()->pachner(e, true, false);
+        return e->triangulation().pachner(e, true, false);
     }
 
     bool has20e(regina::Edge<3>* e) {
-        return e->triangulation()->twoZeroMove(e, true, false);
+        return e->triangulation().twoZeroMove(e, true, false);
     }
 
     bool hasCloseBook(regina::Edge<3>* e) {
-        return e->triangulation()->closeBook(e, true, false);
+        return e->triangulation().closeBook(e, true, false);
     }
 
     bool hasCollapseEdge(regina::Edge<3>* e) {
-        return e->triangulation()->collapseEdge(e, true, false);
+        return e->triangulation().collapseEdge(e, true, false);
     }
 
     bool has44(regina::Edge<3>* e, int axis) {
-        return e->triangulation()->fourFourMove(e, axis, true, false);
+        return e->triangulation().fourFourMove(e, axis, true, false);
     }
 
     bool has21(regina::Edge<3>* e, int end) {
-        return e->triangulation()->twoOneMove(e, end, true, false);
+        return e->triangulation().twoOneMove(e, end, true, false);
     }
 
     bool has23(regina::Triangle<3>* f) {
-        return f->triangulation()->pachner(f, true, false);
+        return f->triangulation().pachner(f, true, false);
     }
 
     bool hasOpenBook(regina::Triangle<3>* f) {
-        return f->triangulation()->openBook(f, true, false);
+        return f->triangulation().openBook(f, true, false);
     }
 
     bool hasShellBoundary(regina::Tetrahedron<3>* t) {
-        return t->triangulation()->shellBoundary(t, true, false);
+        return t->triangulation().shellBoundary(t, true, false);
     }
 }
 

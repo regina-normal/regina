@@ -42,37 +42,37 @@
 
 namespace regina {
 
-MatrixInt* makeAngleEquations(const Triangulation<3>* tri) {
-    size_t n = tri->size();
+MatrixInt makeAngleEquations(const Triangulation<3>& tri) {
+    size_t n = tri.size();
     size_t cols = 3 * n + 1;
 
     // We have one equation per non-boundary edge plus one per tetrahedron.
-    long rows = long(tri->countEdges()) + long(tri->size());
-    for (BoundaryComponent<3>* bc : tri->boundaryComponents())
+    long rows = long(tri.countEdges()) + long(tri.size());
+    for (BoundaryComponent<3>* bc : tri.boundaryComponents())
         rows -= bc->countEdges();
 
-    MatrixInt* eqns = new MatrixInt(rows, cols);
+    MatrixInt eqns(rows, cols);
     size_t row = 0;
 
     size_t index;
-    for (Edge<3>* edge : tri->edges()) {
+    for (Edge<3>* edge : tri.edges()) {
         if (edge->isBoundary())
             continue;
         for (auto& emb : *edge) {
             index = emb.tetrahedron()->index();
             if (emb.edge() < 3)
-                eqns->entry(row, 3 * index + emb.edge()) += 1;
+                eqns.entry(row, 3 * index + emb.edge()) += 1;
             else
-                eqns->entry(row, 3 * index + 5 - emb.edge()) += 1;
+                eqns.entry(row, 3 * index + 5 - emb.edge()) += 1;
         }
-        eqns->entry(row, cols - 1) = -2;
+        eqns.entry(row, cols - 1) = -2;
         ++row;
     }
     for (index = 0; index < n; index++) {
-        eqns->entry(row, 3 * index) = 1;
-        eqns->entry(row, 3 * index + 1) = 1;
-        eqns->entry(row, 3 * index + 2) = 1;
-        eqns->entry(row, cols - 1) = -1;
+        eqns.entry(row, 3 * index) = 1;
+        eqns.entry(row, 3 * index + 1) = 1;
+        eqns.entry(row, 3 * index + 2) = 1;
+        eqns.entry(row, cols - 1) = -1;
         ++row;
     }
 
@@ -82,7 +82,7 @@ MatrixInt* makeAngleEquations(const Triangulation<3>* tri) {
 void AngleStructures::enumerateInternal(Triangulation<3>* triang,
         ProgressTracker* tracker) {
     // Form the matching equations.
-    MatrixInt* eqns = regina::makeAngleEquations(triang);
+    MatrixInt eqns = regina::makeAngleEquations(*triang);
 
     if (tautOnly_ && (! triang->isEmpty())) {
         // For now just stick to arbitrary precision arithmetic.
@@ -91,7 +91,7 @@ void AngleStructures::enumerateInternal(Triangulation<3>* triang,
         if (tracker)
             tracker->newStage("Enumerating taut angle structures");
 
-        TautEnumeration<LPConstraintNone, BanNone, Integer> search(triang);
+        TautEnumeration<LPConstraintNone, BanNone, Integer> search(*triang);
         while (search.next(tracker)) {
             structures_.push_back(search.buildStructure());
             if (tracker && tracker->isCancelled())
@@ -115,7 +115,7 @@ void AngleStructures::enumerateInternal(Triangulation<3>* triang,
 
         // Find the angle structures.
         DoubleDescription::enumerateExtremalRays<VectorInt>(
-            StructureInserter(*this, triang), *eqns, nullptr /* constraints */,
+            StructureInserter(*this, *triang), eqns, nullptr /* constraints */,
             tracker);
 
         // All done!
@@ -125,8 +125,6 @@ void AngleStructures::enumerateInternal(Triangulation<3>* triang,
         if (tracker)
             tracker->setFinished();
     }
-
-    delete eqns;
 }
 
 AngleStructures* AngleStructures::enumerate(Triangulation<3>* owner,
@@ -146,7 +144,7 @@ AngleStructures* AngleStructures::enumerateTautDD(
     AngleStructures* ans = new AngleStructures(true /* taut only */);
 
     // Form the matching equations.
-    MatrixInt* eqns = regina::makeAngleEquations(owner);
+    MatrixInt eqns = regina::makeAngleEquations(*owner);
 
     // Form the taut constraints.
     EnumConstraints* constraints = new EnumConstraints(owner->size());
@@ -160,19 +158,18 @@ AngleStructures* AngleStructures::enumerateTautDD(
 
     // Find the angle structures.
     DoubleDescription::enumerateExtremalRays<VectorInt>(
-        StructureInserter(*ans, owner), *eqns, constraints,
+        StructureInserter(*ans, *owner), eqns, constraints,
         nullptr /* tracker */);
 
     // All done!
     owner->insertChildLast(ans);
 
-    delete eqns;
     delete constraints;
     return ans;
 }
 
-Triangulation<3>* AngleStructures::triangulation() const {
-    return dynamic_cast<Triangulation<3>*>(parent());
+const Triangulation<3>& AngleStructures::triangulation() const {
+    return *dynamic_cast<Triangulation<3>*>(parent());
 }
 
 void AngleStructures::writeTextShort(std::ostream& o) const {
@@ -231,7 +228,7 @@ void AngleStructures::calculateSpanStrict() const {
         return;
     }
 
-    unsigned long nTets = triangulation()->size();
+    unsigned long nTets = triangulation().size();
     if (nTets == 0) {
         doesSpanStrict = true;
         return;

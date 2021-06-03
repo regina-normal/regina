@@ -98,7 +98,7 @@ HyperHeaderUI::HyperHeaderUI(regina::NormalHypersurfaces* packet,
 
     // Listen for renaming events on the parent triangulation, since we
     // display its label in the header.
-    packet->triangulation()->listen(this);
+    packet->parent()->listen(this);
 }
 
 regina::Packet* HyperHeaderUI::getPacket() {
@@ -148,12 +148,12 @@ void HyperHeaderUI::refresh() {
         "Triangulation: <a href=\"#\">%3</a></qt>").
         arg(count).
         arg(header->tr(Coordinates::name(surfaces->coords(), false))).
-        arg(QString(surfaces->triangulation()->humanLabel().c_str()).
+        arg(QString(surfaces->triangulation().humanLabel().c_str()).
             toHtmlEscaped()));
 }
 
 void HyperHeaderUI::viewTriangulation() {
-    enclosingPane->getMainWindow()->packetView(surfaces->triangulation(),
+    enclosingPane->getMainWindow()->packetView(surfaces->parent(),
         false /* visible in tree */, false /* select in tree */);
 }
 
