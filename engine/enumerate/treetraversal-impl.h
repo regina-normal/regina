@@ -102,7 +102,7 @@ NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
     lpSlot_[nTypes_]->extractSolution(*v, type_);
 
     if (coords_ == NS_QUAD || coords_ == NS_STANDARD)
-        return new NormalSurface(&origTableaux_.tri(), v);
+        return new NormalSurface(origTableaux_.tri(), v);
 
     // We have an almost normal surface: restore the octagon
     // coordinates.
@@ -138,7 +138,7 @@ NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         }
     }
     delete v;
-    return new NormalSurface(&origTableaux_.tri(), an);
+    return new NormalSurface(origTableaux_.tri(), an);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -151,7 +151,7 @@ AngleStructure* TreeTraversal<LPConstraint, BanConstraint, IntType>::
 
     VectorInt* v = new VectorInt(3 * nTets_ + 1);
     lpSlot_[nTypes_]->extractSolution(*v, type_);
-    return new AngleStructure(&origTableaux_.tri(), v);
+    return new AngleStructure(origTableaux_.tri(), v);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
@@ -1181,8 +1181,7 @@ bool TreeSingleSoln<LPConstraint, BanConstraint, IntType>::find() {
                 NormalSurfaceVector* v =
                     new NSVectorStandard(7 * nTets_);
                 lpSlot_[level_ + 1]->extractSolution(*v, type_);
-                NormalSurface* f = new NormalSurface(
-                    origTableaux_.tri(), v);
+                NormalSurface* f = new NormalSurface(origTableaux_.tri(), v);
                 std::cout << f->str() << std::endl;
                 delete f;
             }

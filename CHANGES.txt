@@ -39,6 +39,8 @@ Version 6.1  [ TODO ]
             - AngleStructure now has copy and move constructors.  The old
               clone() is now deprecated; just use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
+            - Constructors now take a reference to the triangulation, not a
+              pointer.
         Class AngleStructures:
             - New function structures() for simpler iteration.
             - Changed triangulation() to return a const reference, not a
@@ -265,6 +267,8 @@ Version 6.1  [ TODO ]
             - Added copy and move constructors.  The old clone() is now
               deprecated; just use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
+            - Constructors now take a reference to the triangulation, not a
+              pointer.
         Class NormalHypersurfaces:
             - New function hypersurfaces() for simpler iteration.
             - Changed triangulation() to return a const reference, not a
@@ -277,6 +281,8 @@ Version 6.1  [ TODO ]
             - Changed triangulation() to return a reference, not a pointer.
             - Changed boundaryIntersections() to return a
               std::optional<MatrixInt>, not a pointer that could be null.
+            - Constructors now take a reference to the triangulation, not a
+              pointer.
         Class NormalSurfaces:
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.

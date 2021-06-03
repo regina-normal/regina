@@ -290,7 +290,7 @@ namespace {
                 for (size_t i = 0; i < size(); ++i)
                     v->set(i, elements[i]);
 
-                return new NormalSurface(&tri, v);
+                return new NormalSurface(tri, v);
             }
 
             /**

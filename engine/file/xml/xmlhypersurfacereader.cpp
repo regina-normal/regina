@@ -77,7 +77,7 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
         return;
     }
 
-    surface_ = new NormalHypersurface(tri_, vec);
+    surface_ = new NormalHypersurface(*tri_, vec);
     if (! name_.empty())
         surface_->setName(name_);
 }

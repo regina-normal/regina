@@ -478,7 +478,7 @@ inline AngleStructures::StructureInserter&
 inline AngleStructures::StructureInserter&
         AngleStructures::StructureInserter::operator =(
         VectorInt* vector) {
-    list->structures_.push_back(new AngleStructure(&owner, vector));
+    list->structures_.push_back(new AngleStructure(owner, vector));
     return *this;
 }
 

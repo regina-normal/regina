@@ -86,7 +86,7 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
     unsigned long len = 3 * simplices_.size() + 1;
     VectorInt* v = new VectorInt(len);
     lp.extractSolution(*v, nullptr /* type vector */);
-    return (strictAngleStructure_ = new AngleStructure(this, v));
+    return (strictAngleStructure_ = new AngleStructure(*this, v));
 }
 
 const AngleStructure* Triangulation<3>::generalAngleStructure() const {
@@ -189,7 +189,7 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
     }
 
     delete[] leading;
-    return (generalAngleStructure_ = new AngleStructure(this, v));
+    return (generalAngleStructure_ = new AngleStructure(*this, v));
 }
 
 } // namespace regina

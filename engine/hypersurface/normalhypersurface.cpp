@@ -89,7 +89,7 @@ NormalHypersurface* NormalHypersurface::doubleHypersurface() const {
 }
 
 void NormalHypersurface::writeTextShort(std::ostream& out) const {
-    size_t nPents = triangulation_->size();
+    size_t nPents = triangulation_.size();
     size_t pent;
     unsigned j;
     for (pent=0; pent < nPents; pent++) {
@@ -131,7 +131,7 @@ void NormalHypersurface::writeXMLData(std::ostream& out) const {
 }
 
 bool NormalHypersurface::isEmpty() const {
-    size_t nPents = triangulation_->size();
+    size_t nPents = triangulation_.size();
 
     size_t p;
     int i;
@@ -150,7 +150,7 @@ bool NormalHypersurface::isEmpty() const {
 }
 
 bool NormalHypersurface::sameSurface(const NormalHypersurface& other) const {
-    size_t nPents = triangulation_->size();
+    size_t nPents = triangulation_.size();
 
     size_t p;
     int i;
@@ -169,7 +169,7 @@ bool NormalHypersurface::sameSurface(const NormalHypersurface& other) const {
 }
 
 bool NormalHypersurface::embedded() const {
-    size_t nPent = triangulation_->size();
+    size_t nPent = triangulation_.size();
 
     int type;
     int found, prism[2];
@@ -198,7 +198,7 @@ bool NormalHypersurface::embedded() const {
 
 bool NormalHypersurface::locallyCompatible(const NormalHypersurface& other)
         const {
-    size_t nPent = triangulation_->size();
+    size_t nPent = triangulation_.size();
 
     int type;
     int found, prism[2];
@@ -226,18 +226,18 @@ bool NormalHypersurface::locallyCompatible(const NormalHypersurface& other)
 }
 
 void NormalHypersurface::calculateRealBoundary() const {
-    if (triangulation_->isClosed()) {
+    if (triangulation_.isClosed()) {
         realBoundary_ = false;
         return;
     }
 
     size_t index;
-    size_t tot = triangulation_->size();
+    size_t tot = triangulation_.size();
     const Pentachoron<4>* pent;
     int type, facet;
 
     for (index = 0; index < tot; index++) {
-        pent = triangulation_->pentachoron(index);
+        pent = triangulation_.pentachoron(index);
         if (pent->hasBoundary()) {
             // Check for piece types with boundary
             for (type = 0; type < 10; type++) {

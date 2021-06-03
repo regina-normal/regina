@@ -814,7 +814,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         NormalSurfaceVector* vector_;
             /**< Contains the coordinates of the normal surface in whichever
              *   space is appropriate. */
-        const Triangulation<3>* triangulation_;
+        const Triangulation<3>& triangulation_;
             /**< The triangulation in which this normal surface resides. */
 
         std::string name_;
@@ -862,7 +862,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * will reside.
          */
         NormalSurface(const NormalSurface& other,
-            const Triangulation<3>* triangulation);
+            const Triangulation<3>& triangulation);
 
         /**
          * Moves the given surface into this new normal surface.
@@ -892,7 +892,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * @param newVector a vector containing the coordinates of the
          * normal surface in whichever space is appropriate.
          */
-        NormalSurface(const Triangulation<3>* triang,
+        NormalSurface(const Triangulation<3>& triang,
             NormalSurfaceVector* newVector);
 
         /**
@@ -916,7 +916,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * converted internally to LargeInteger objects.
          */
         #ifdef __DOXYGEN
-        NormalSurface(const Triangulation<3>* triang, NormalCoords coordSystem,
+        NormalSurface(const Triangulation<3>& triang, NormalCoords coordSystem,
             List allCoords);
         #endif
 
@@ -1862,12 +1862,12 @@ inline void NormalSurfaceVector::scaleDown() {
 // Inline functions for NormalSurface
 
 inline NormalSurface::NormalSurface(
-        const Triangulation<3>* triangulation, NormalSurfaceVector* newVector) :
+        const Triangulation<3>& triangulation, NormalSurfaceVector* newVector) :
         vector_(newVector), triangulation_(triangulation) {
 }
 
 inline NormalSurface::NormalSurface(const NormalSurface& other,
-        const Triangulation<3>* triangulation) :
+        const Triangulation<3>& triangulation) :
         vector_(other.vector_->clone()),
         triangulation_(triangulation),
         name_(other.name_),
@@ -1908,32 +1908,32 @@ inline NormalSurface::~NormalSurface() {
 
 inline LargeInteger NormalSurface::triangles(size_t tetIndex,
         int vertex) const {
-    return vector_->triangles(tetIndex, vertex, triangulation_);
+    return vector_->triangles(tetIndex, vertex, &triangulation_);
 }
 inline LargeInteger NormalSurface::orientedTriangles(
         size_t tetIndex, int vertex, bool oriented) const {
-    return vector_->orientedTriangles(tetIndex, vertex, triangulation_,
+    return vector_->orientedTriangles(tetIndex, vertex, &triangulation_,
         oriented);
 }
 inline LargeInteger NormalSurface::quads(size_t tetIndex,
         int quadType) const {
-    return vector_->quads(tetIndex, quadType, triangulation_);
+    return vector_->quads(tetIndex, quadType, &triangulation_);
 }
 inline LargeInteger NormalSurface::orientedQuads(
         size_t tetIndex, int quadType, bool oriented) const {
-    return vector_->orientedQuads(tetIndex, quadType, triangulation_,
+    return vector_->orientedQuads(tetIndex, quadType, &triangulation_,
         oriented);
 }
 inline LargeInteger NormalSurface::octs(size_t tetIndex, int octType) const {
-    return vector_->octs(tetIndex, octType, triangulation_);
+    return vector_->octs(tetIndex, octType, &triangulation_);
 }
 inline LargeInteger NormalSurface::edgeWeight(size_t edgeIndex)
         const {
-    return vector_->edgeWeight(edgeIndex, triangulation_);
+    return vector_->edgeWeight(edgeIndex, &triangulation_);
 }
 inline LargeInteger NormalSurface::arcs(size_t triIndex,
         int triVertex) const {
-    return vector_->arcs(triIndex, triVertex, triangulation_);
+    return vector_->arcs(triIndex, triVertex, &triangulation_);
 }
 
 inline DiscType NormalSurface::octPosition() const {
@@ -1946,7 +1946,7 @@ inline size_t NormalSurface::countCoords() const {
     return vector_->size();
 }
 inline const Triangulation<3>& NormalSurface::triangulation() const {
-    return *triangulation_;
+    return triangulation_;
 }
 
 inline const std::string& NormalSurface::name() const {
@@ -1962,7 +1962,7 @@ inline void NormalSurface::writeRawVector(std::ostream& out) const {
 
 inline bool NormalSurface::isCompact() const {
     if (! compact_.known())
-        compact_ = vector_->isCompact(triangulation_);
+        compact_ = vector_->isCompact(&triangulation_);
     return compact_.value();
 }
 
@@ -2003,24 +2003,24 @@ inline size_t NormalSurface::countBoundaries() const {
 }
 
 inline bool NormalSurface::isVertexLinking() const {
-    return vector_->isVertexLinking(triangulation_);
+    return vector_->isVertexLinking(&triangulation_);
 }
 
 inline const Vertex<3>* NormalSurface::isVertexLink() const {
-    return vector_->isVertexLink(triangulation_);
+    return vector_->isVertexLink(&triangulation_);
 }
 
 inline std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink()
         const {
-    return vector_->isThinEdgeLink(triangulation_);
+    return vector_->isThinEdgeLink(&triangulation_);
 }
 
 inline bool NormalSurface::isSplitting() const {
-    return vector_->isSplitting(triangulation_);
+    return vector_->isSplitting(&triangulation_);
 }
 
 inline LargeInteger NormalSurface::isCentral() const {
-    return vector_->isCentral(triangulation_);
+    return vector_->isCentral(&triangulation_);
 }
 
 inline bool NormalSurface::normal() const {

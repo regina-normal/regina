@@ -212,7 +212,7 @@ Packet* AngleStructures::internalClonePacket(Packet* parent) const {
     AngleStructures* ans = new AngleStructures(tautOnly_);
     for (auto s : structures_)
         ans->structures_.push_back(new AngleStructure(*s,
-            static_cast<Triangulation<3>*>(parent)));
+            *static_cast<Triangulation<3>*>(parent)));
 
     if (doesSpanStrict.known())
         ans->doesSpanStrict = doesSpanStrict;

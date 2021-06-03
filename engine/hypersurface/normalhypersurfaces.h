@@ -903,7 +903,7 @@ inline NormalHypersurfaces::HypersurfaceInserter&
 inline NormalHypersurfaces::HypersurfaceInserter&
         NormalHypersurfaces::HypersurfaceInserter::operator =(
         NormalHypersurfaceVector* vector) {
-    list_->surfaces_.push_back(new NormalHypersurface(&owner_, vector));
+    list_->surfaces_.push_back(new NormalHypersurface(owner_, vector));
     return *this;
 }
 

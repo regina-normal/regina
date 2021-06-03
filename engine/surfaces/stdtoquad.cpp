@@ -139,7 +139,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
                 for (quad = 0; quad < Variant::reducedPerTet; ++quad)
                     v->set(pos++,
                         (*use[i])[Variant::stdPos(tet, 4 + quad)]);
-            ans->surfaces_.push_back(new NormalSurface(&owner, v));
+            ans->surfaces_.push_back(new NormalSurface(owner, v));
         } else if (strict) {
             // We can drop this surface entirely from our list.
             // We don't want it for our final solution set, and if

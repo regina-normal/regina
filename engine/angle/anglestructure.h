@@ -89,7 +89,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
         Vector<Integer>* vector_;
             /**< Stores (indirectly) the individual angles in this angle
              *   structure. */
-        const Triangulation<3>* triangulation_;
+        const Triangulation<3>& triangulation_;
             /**< The triangulation on which this angle structure is placed. */
 
         mutable unsigned long flags_;
@@ -129,7 +129,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * angle structure is placed.
          */
         AngleStructure(const AngleStructure& other,
-            const Triangulation<3>* triangulation);
+            const Triangulation<3>& triangulation);
 
         /**
          * Moves the given angle structure into this new angle structure.
@@ -160,7 +160,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * @param newVector a vector containing the individual angles in the
          * angle structure.
          */
-        AngleStructure(const Triangulation<3>* triang,
+        AngleStructure(const Triangulation<3>& triang,
             Vector<Integer>* newVector);
         /**
          * Destroys this angle structure.
@@ -331,13 +331,13 @@ class AngleStructure : public ShortOutput<AngleStructure> {
 
 // Inline functions for AngleStructure
 
-inline AngleStructure::AngleStructure(const Triangulation<3>* triang,
+inline AngleStructure::AngleStructure(const Triangulation<3>& triang,
         Vector<Integer>* newVector) : vector_(newVector),
         triangulation_(triang), flags_(0) {
 }
 
 inline AngleStructure::AngleStructure(const AngleStructure& other,
-        const Triangulation<3>* triangulation) :
+        const Triangulation<3>& triangulation) :
         vector_(new Vector<Integer>(*other.vector_)),
         triangulation_(triangulation),
         flags_(other.flags_) {
@@ -363,7 +363,7 @@ inline AngleStructure* AngleStructure::clone() const {
 }
 
 inline const Triangulation<3>& AngleStructure::triangulation() const {
-    return *triangulation_;
+    return triangulation_;
 }
 
 inline bool AngleStructure::isStrict() const {

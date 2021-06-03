@@ -230,7 +230,7 @@ Packet* NormalSurfaces::internalClonePacket(Packet* parent) const {
         coords_, which_, algorithm_);
     for (auto s : surfaces_) {
         ans->surfaces_.push_back(new NormalSurface(*s,
-            static_cast<Triangulation<3>*>(parent)));
+            *static_cast<Triangulation<3>*>(parent)));
     }
     return ans;
 }

@@ -1608,7 +1608,7 @@ inline NormalSurfaces::SurfaceInserter&
 inline NormalSurfaces::SurfaceInserter&
         NormalSurfaces::SurfaceInserter::operator =(
         NormalSurfaceVector* vector) {
-    list->surfaces_.push_back(new NormalSurface(&owner, vector));
+    list->surfaces_.push_back(new NormalSurface(owner, vector));
     return *this;
 }
 

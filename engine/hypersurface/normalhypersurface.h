@@ -463,7 +463,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         NormalHypersurfaceVector* vector_;
             /**< Contains the coordinates of the normal hypersurface in
              *   whichever space is appropriate. */
-        const Triangulation<4>* triangulation_;
+        const Triangulation<4>& triangulation_;
             /**< The triangulation in which this normal hypersurface resides. */
 
         std::string name_;
@@ -504,7 +504,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * hypersurface will reside.
          */
         NormalHypersurface(const NormalHypersurface& other,
-            const Triangulation<4>* triangulation);
+            const Triangulation<4>& triangulation);
 
         /**
          * Moves the given hypersurface into this new normal hypersurface.
@@ -535,7 +535,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * @param vector a vector containing the coordinates of the
          * normal hypersurface in whichever space is appropriate.
          */
-        NormalHypersurface(const Triangulation<4>* triangulation,
+        NormalHypersurface(const Triangulation<4>& triangulation,
             NormalHypersurfaceVector* vector);
 
         /**
@@ -561,7 +561,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * converted internally to LargeInteger objects.
          */
         #ifdef __DOXYGEN
-        NormalHypersurface(const Triangulation<4>* triang,
+        NormalHypersurface(const Triangulation<4>& triang,
             HyperCoords coordSystem, List allCoords);
         #endif
 
@@ -1037,13 +1037,13 @@ inline void NormalHypersurfaceVector::scaleDown() {
 // Inline functions for NormalHypersurface
 
 inline NormalHypersurface::NormalHypersurface(
-        const Triangulation<4>* triangulation,
+        const Triangulation<4>& triangulation,
         NormalHypersurfaceVector* vector) :
         vector_(vector), triangulation_(triangulation) {
 }
 
 inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other,
-        const Triangulation<4>* triangulation) :
+        const Triangulation<4>& triangulation) :
         vector_(other.vector_->clone()),
         triangulation_(triangulation),
         name_(other.name_),
@@ -1084,21 +1084,21 @@ inline NormalHypersurface::~NormalHypersurface() {
 
 inline LargeInteger NormalHypersurface::tetrahedra(
         size_t pentIndex, int vertex) const {
-    return vector_->tetrahedra(pentIndex, vertex, triangulation_);
+    return vector_->tetrahedra(pentIndex, vertex, &triangulation_);
 }
 inline LargeInteger NormalHypersurface::prisms(
         size_t pentIndex, int prismType) const {
-    return vector_->prisms(pentIndex, prismType, triangulation_);
+    return vector_->prisms(pentIndex, prismType, &triangulation_);
 }
 inline LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
-    return vector_->edgeWeight(edgeIndex, triangulation_);
+    return vector_->edgeWeight(edgeIndex, &triangulation_);
 }
 
 inline size_t NormalHypersurface::countCoords() const {
     return vector_->size();
 }
 inline const Triangulation<4>& NormalHypersurface::triangulation() const {
-    return *triangulation_;
+    return triangulation_;
 }
 
 inline const std::string& NormalHypersurface::name() const {
@@ -1114,7 +1114,7 @@ inline void NormalHypersurface::writeRawVector(std::ostream& out) const {
 
 inline bool NormalHypersurface::isCompact() const {
     if (! compact_.known())
-        compact_ = vector_->isCompact(triangulation_);
+        compact_ = vector_->isCompact(&triangulation_);
     return compact_.value();
 }
 
@@ -1149,15 +1149,15 @@ inline const AbelianGroup& NormalHypersurface::homology() const {
 }
 
 inline bool NormalHypersurface::isVertexLinking() const {
-    return vector_->isVertexLinking(triangulation_);
+    return vector_->isVertexLinking(&triangulation_);
 }
 
 inline const Vertex<4>* NormalHypersurface::isVertexLink() const {
-    return vector_->isVertexLink(triangulation_);
+    return vector_->isVertexLink(&triangulation_);
 }
 
 inline const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
-    return vector_->isThinEdgeLink(triangulation_);
+    return vector_->isThinEdgeLink(&triangulation_);
 }
 
 inline const Vector<LargeInteger>& NormalHypersurface::vector() const {

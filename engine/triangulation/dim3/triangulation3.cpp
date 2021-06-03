@@ -433,7 +433,7 @@ Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
     if (X.strictAngleStructure_.known()) {
         if (X.strictAngleStructure_.value())
             strictAngleStructure_ = new AngleStructure(
-                *X.strictAngleStructure_.value(), this);
+                *X.strictAngleStructure_.value(), *this);
         else
             strictAngleStructure_ = nullptr;
     }
@@ -441,7 +441,7 @@ Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
     if (X.generalAngleStructure_.known()) {
         if (X.generalAngleStructure_.value())
             generalAngleStructure_ = new AngleStructure(
-                *X.generalAngleStructure_.value(), this);
+                *X.generalAngleStructure_.value(), *this);
         else
             generalAngleStructure_ = nullptr;
     }

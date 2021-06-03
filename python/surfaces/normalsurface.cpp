@@ -72,7 +72,7 @@ namespace {
 void addNormalSurface(pybind11::module_& m) {
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
         .def(pybind11::init<const NormalSurface&>())
-        .def(pybind11::init<const NormalSurface&, const Triangulation<3>*>())
+        .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>())
         .def(pybind11::init([](Triangulation<3>& t, regina::NormalCoords coords,
                 pybind11::list values) {
             regina::NormalSurfaceVector* v = forCoords(coords, ZeroVector(),
@@ -92,7 +92,7 @@ void addNormalSurface(pybind11::module_& m) {
                 throw std::invalid_argument(
                     "List element not convertible to LargeInteger");
             }
-            return new NormalSurface(&t, v);
+            return new NormalSurface(t, v);
         }))
         .def("clone", &NormalSurface::clone)
         .def("doubleSurface", &NormalSurface::doubleSurface)

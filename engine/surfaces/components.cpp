@@ -214,7 +214,7 @@ namespace {
         }
 
         for (i = 0; i < compID; ++i)
-            dest.push_back(new NormalSurface(&tri, ans[i]));
+            dest.push_back(new NormalSurface(tri, ans[i]));
         delete[] ans;
 
         // All done!

@@ -71,7 +71,7 @@ void XMLAngleStructureReader::initialChars(const std::string& chars) {
         return;
     }
 
-    angles = new AngleStructure(tri, vec);
+    angles = new AngleStructure(*tri, vec);
 }
 
 XMLElementReader* XMLAngleStructureReader::startSubElement(

@@ -39,14 +39,14 @@ namespace regina {
 
 Rational AngleStructure::angle(size_t tetIndex, int edgePair) const {
     const Integer& num = (*vector_)[3 * tetIndex + edgePair];
-    const Integer& den = (*vector_)[3 * triangulation_->size()];
+    const Integer& den = (*vector_)[3 * triangulation_.size()];
 
     Integer gcd = den.gcd(num); // Guaranteed non-negative
     return Rational(num.divExact(gcd), den.divExact(gcd));
 }
 
 void AngleStructure::writeTextShort(std::ostream& out) const {
-    size_t nTets = triangulation_->size();
+    size_t nTets = triangulation_.size();
     unsigned j;
     for (size_t tet = 0; tet < nTets; tet++) {
         if (tet > 0)
@@ -122,16 +122,16 @@ void AngleStructure::calculateType() const {
 
         // Is it veering also?
         bool veering = true;
-        if (triangulation_->isOrientable()) {
-            long nEdges = triangulation_->countEdges();
+        if (triangulation_.isOrientable()) {
+            long nEdges = triangulation_.countEdges();
             int* edgeColour = new int[nEdges];
             std::fill(edgeColour, edgeColour + nEdges, (int)0);
             const Tetrahedron<3>* tet;
             int orient;
             long e;
-            for (unsigned i = 0; i < triangulation_->size();
+            for (unsigned i = 0; i < triangulation_.size();
                     ++i) {
-                tet = triangulation_->tetrahedron(i);
+                tet = triangulation_.tetrahedron(i);
                 orient = tet->orientation();
                 if ((*vector_)[3 * i] > 0) {
                     // Edges 0,5 are marked as pi.

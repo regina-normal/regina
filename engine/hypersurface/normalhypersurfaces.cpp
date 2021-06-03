@@ -164,7 +164,7 @@ Packet* NormalHypersurfaces::internalClonePacket(Packet* parent) const {
         coords_, which_, algorithm_);
     for (auto s : surfaces_) {
         ans->surfaces_.push_back(new NormalHypersurface(*s,
-            static_cast<Triangulation<4>*>(parent)));
+            *static_cast<Triangulation<4>*>(parent)));
     }
     return ans;
 }

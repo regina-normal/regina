@@ -80,7 +80,7 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
         return;
     }
 
-    surface_ = new NormalSurface(tri, vec);
+    surface_ = new NormalSurface(*tri, vec);
     if (! name.empty())
         surface_->setName(name);
 }
