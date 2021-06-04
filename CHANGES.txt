@@ -459,9 +459,9 @@ Version 6.1  [ TODO ]
             - Both these functions are now inline and constexpr.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
-        Function forCoords():
+        Function forCoords(), forFilter():
             - Completely rewritten to take advantage of C++14 generic lambdas.
-              Any code that used forCoords() will need to be completely
+              Any code that used these functions will need to be completely
               rewritten (but should now become substantially simpler).
         Function makeAngleEquations():
             - Now takes a const reference (not a const pointer), and returns

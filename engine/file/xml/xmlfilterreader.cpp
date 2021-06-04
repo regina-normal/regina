@@ -140,16 +140,6 @@ namespace {
                 }
             }
     };
-
-    /**
-     * Helper class for using forFilter().
-     */
-    struct XMLReaderFunction : public Returns<XMLElementReader*> {
-        template <typename Filter>
-        inline XMLElementReader* operator() (Packet* parent) {
-            return Filter::Class::xmlFilterReader(parent);
-        }
-    };
 }
 
 XMLElementReader* XMLFilterPacketReader::startContentSubElement(
@@ -160,8 +150,9 @@ XMLElementReader* XMLFilterPacketReader::startContentSubElement(
             int type;
             if (valueOf(props.lookup("typeid"), type)) {
                 XMLElementReader* ans = forFilter(
-                    static_cast<SurfaceFilterType>(type),
-                    XMLReaderFunction(), 0, parent_);
+                    static_cast<SurfaceFilterType>(type), [=](auto info) {
+                        return decltype(info)::Class::xmlFilterReader(parent_);
+                    }, nullptr);
                 if (ans)
                     return ans;
                 else

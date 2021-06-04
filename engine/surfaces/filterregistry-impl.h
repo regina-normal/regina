@@ -54,39 +54,34 @@
 
 namespace regina {
 
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::ReturnType
-forFilter(SurfaceFilterType filter, FunctionObject&& func,
-        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
-        Args&&... args) {
+template <typename FunctionObject, typename ReturnType>
+inline auto forFilter(SurfaceFilterType filter, FunctionObject&& func,
+        ReturnType&& defaultReturn) {
+    typedef decltype(func(SurfaceFilterInfo<NS_FILTER_DEFAULT>()))
+        RealReturnType;
     switch (filter) {
-        case NS_FILTER_DEFAULT : return
-            func.template operator()<SurfaceFilterInfo<NS_FILTER_DEFAULT>>(
-            std::forward<Args>(args)...);
-        case NS_FILTER_PROPERTIES : return
-            func.template operator()<SurfaceFilterInfo<NS_FILTER_PROPERTIES>>(
-            std::forward<Args>(args)...);
-        case NS_FILTER_COMBINATION : return
-            func.template operator()<SurfaceFilterInfo<NS_FILTER_COMBINATION>>(
-            std::forward<Args>(args)...);
-        default: return defaultReturn;
+        case NS_FILTER_DEFAULT :
+            return func(SurfaceFilterInfo<NS_FILTER_DEFAULT>());
+        case NS_FILTER_PROPERTIES :
+            return func(SurfaceFilterInfo<NS_FILTER_PROPERTIES>());
+        case NS_FILTER_COMBINATION :
+            return func(SurfaceFilterInfo<NS_FILTER_COMBINATION>());
+        default: return static_cast<RealReturnType>(defaultReturn);
     }
 }
 
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::Void
-forFilter(SurfaceFilterType filter, FunctionObject&& func, Args&&... args) {
+template <typename FunctionObject>
+inline auto forFilter(SurfaceFilterType filter, FunctionObject&& func) {
+    typedef decltype(func(SurfaceFilterInfo<NS_FILTER_DEFAULT>()))
+        RealReturnType;
     switch (filter) {
         case NS_FILTER_DEFAULT :
-            func.template operator()<SurfaceFilterInfo<NS_FILTER_DEFAULT>>(
-            std::forward<Args>(args)...); break;
+            return func(SurfaceFilterInfo<NS_FILTER_DEFAULT>());
         case NS_FILTER_PROPERTIES :
-            func.template operator()<SurfaceFilterInfo<NS_FILTER_PROPERTIES>>(
-            std::forward<Args>(args)...); break;
+            return func(SurfaceFilterInfo<NS_FILTER_PROPERTIES>());
         case NS_FILTER_COMBINATION :
-            func.template operator()<SurfaceFilterInfo<NS_FILTER_COMBINATION>>(
-            std::forward<Args>(args)...); break;
-        default: break;
+            return func(SurfaceFilterInfo<NS_FILTER_COMBINATION>());
+        default: return RealReturnType();
     }
 }
 
