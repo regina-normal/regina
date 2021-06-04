@@ -99,9 +99,9 @@ Manifold* L31Pillow::manifold() const {
     return new LensSpace(3, 1);
 }
 
-AbelianGroup* L31Pillow::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addTorsionElement(3);
+std::optional<AbelianGroup> L31Pillow::homology() const {
+    AbelianGroup ans;
+    ans.addTorsionElement(3);
     return ans;
 }
 

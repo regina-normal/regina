@@ -166,7 +166,7 @@ Manifold* SnapPeaCensusTri::manifold() const {
     return new SnapPeaCensusManifold(section_, index_);
 }
 
-AbelianGroup* SnapPeaCensusTri::homology() const {
+std::optional<AbelianGroup> SnapPeaCensusTri::homology() const {
     return SnapPeaCensusManifold(section_, index_).homology();
 }
 

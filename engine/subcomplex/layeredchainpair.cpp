@@ -197,7 +197,7 @@ Manifold* LayeredChainPair::manifold() const {
     return ans;
 }
 
-AbelianGroup* LayeredChainPair::homology() const {
+std::optional<AbelianGroup> LayeredChainPair::homology() const {
     // The first homology group can be obtained from the matrix:
     //
     //   [  1  -1   1 ]
@@ -206,13 +206,13 @@ AbelianGroup* LayeredChainPair::homology() const {
     //
     // This is established simply by examining the edges on the boundary
     // of each layered chain.
-    AbelianGroup* ans = new AbelianGroup();
+    AbelianGroup ans;
     MatrixInt mat(3, 3);
     mat.initialise(1);
     mat.entry(0, 1) = mat.entry(2, 2) = -1;
     mat.entry(1, 0) = chain_[0]->index();
     mat.entry(2, 1) = chain_[1]->index();
-    ans->addGroup(mat);
+    ans.addGroup(mat);
     return ans;
 }
 

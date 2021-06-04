@@ -143,12 +143,12 @@ Manifold* LayeredLensSpace::manifold() const {
     return new LensSpace(p_, q_);
 }
 
-AbelianGroup* LayeredLensSpace::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
+std::optional<AbelianGroup> LayeredLensSpace::homology() const {
+    AbelianGroup ans;
     if (p_ == 0)
-        ans->addRank();
+        ans.addRank();
     else if (p_ > 1)
-        ans->addTorsionElement(p_);
+        ans.addTorsionElement(p_);
     return ans;
 }
 

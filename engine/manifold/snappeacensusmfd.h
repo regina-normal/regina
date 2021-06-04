@@ -190,7 +190,7 @@ class SnapPeaCensusManifold : public Manifold {
             const SnapPeaCensusManifold& cloneMe) = default;
 
         Triangulation<3>* construct() const override;
-        AbelianGroup* homology() const override;
+        std::optional<AbelianGroup> homology() const override;
         bool isHyperbolic() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;

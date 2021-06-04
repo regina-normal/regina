@@ -232,7 +232,7 @@ class SpiralSolidTorus : public StandardTriangulation {
                 Perm<4> useVertexRoles);
 
         Manifold* manifold() const override;
-        AbelianGroup* homology() const override;
+        std::optional<AbelianGroup> homology() const override;
         std::ostream& writeName(std::ostream& out) const override;
         std::ostream& writeTeXName(std::ostream& out) const override;
         void writeTextLong(std::ostream& out) const override;

@@ -35,10 +35,10 @@
 
 namespace regina {
 
-AbelianGroup* Handlebody::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
+std::optional<AbelianGroup> Handlebody::homology() const {
+    AbelianGroup ans;
     if (nHandles)
-        ans->addRank(nHandles);
+        ans.addRank(nHandles);
     return ans;
 }
 

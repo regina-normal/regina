@@ -141,14 +141,14 @@ Manifold* TrivialTri::manifold() const {
     return 0;
 }
 
-AbelianGroup* TrivialTri::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
+std::optional<AbelianGroup> TrivialTri::homology() const {
+    AbelianGroup ans;
 
     if (type_ == N2)
-        ans->addRank();
+        ans.addRank();
     else if (type_ == N3_1 || type_ == N3_2) {
-        ans->addRank();
-        ans->addTorsionElement(2);
+        ans.addRank();
+        ans.addTorsionElement(2);
     }
 
     return ans;

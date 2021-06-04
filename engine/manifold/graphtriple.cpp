@@ -68,14 +68,14 @@ bool GraphTriple::operator < (const GraphTriple& compare) const {
     return simpler(matchingReln_[1], compare.matchingReln_[1]);
 }
 
-AbelianGroup* GraphTriple::homology() const {
+std::optional<AbelianGroup> GraphTriple::homology() const {
     // Just for safety (this should always be true anyway):
     if (end_[0]->punctures(false) != 1 || end_[0]->punctures(true) != 0)
-        return 0;
+        return std::nullopt;
     if (end_[1]->punctures(false) != 1 || end_[1]->punctures(true) != 0)
-        return 0;
+        return std::nullopt;
     if (centre_->punctures(false) != 2 || centre_->punctures(true) != 0)
-        return 0;
+        return std::nullopt;
 
     // Construct a matrix.
     // Generators:
@@ -195,8 +195,8 @@ AbelianGroup* GraphTriple::homology() const {
     reln++;
 
     // Phew.
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addGroup(m);
+    AbelianGroup ans;
+    ans.addGroup(m);
     return ans;
 }
 

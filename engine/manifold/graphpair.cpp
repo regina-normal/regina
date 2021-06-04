@@ -57,12 +57,12 @@ bool GraphPair::operator < (const GraphPair& compare) const {
     return simpler(matchingReln_, compare.matchingReln_);
 }
 
-AbelianGroup* GraphPair::homology() const {
+std::optional<AbelianGroup> GraphPair::homology() const {
     // Just for safety (this should always be true anyway):
     if (sfs_[0]->punctures(false) != 1 || sfs_[0]->punctures(true) != 0)
-        return 0;
+        return std::nullopt;
     if (sfs_[1]->punctures(false) != 1 || sfs_[1]->punctures(true) != 0)
-        return 0;
+        return std::nullopt;
 
     // Construct a matrix.
     // Generators: fibre 0, base curves 0, base boundary 0,
@@ -165,8 +165,8 @@ AbelianGroup* GraphPair::homology() const {
     m.entry(7 + fibres0 + fibres1 + ref0 + ref1, 1 + genus0) =
         matchingReln_[1][1];
 
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addGroup(m);
+    AbelianGroup ans;
+    ans.addGroup(m);
     return ans;
 }
 

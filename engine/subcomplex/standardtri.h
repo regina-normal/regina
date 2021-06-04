@@ -39,8 +39,10 @@
 #define __STANDARDTRI_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
+#include "algebra/abeliangroup.h"
 #include "triangulation/forward.h"
 
 namespace regina {
@@ -99,13 +101,13 @@ class StandardTriangulation : public Output<StandardTriangulation> {
         std::string TeXName() const;
         /**
          * Returns the 3-manifold represented by this triangulation, if
-         * such a recognition routine has been implemented.  If the
-         * 3-manifold cannot be recognised then this routine will return 0.
+         * such a recognition routine has been implemented.  If the 3-manifold
+         * cannot be recognised then this routine will return \c null.
          *
          * The details of which standard triangulations have 3-manifold
          * recognition routines can be found in the notes for the
          * corresponding subclasses of StandardTriangulation.  The
-         * default implementation of this routine returns 0.
+         * default implementation of this routine returns \c null.
          *
          * It is expected that the number of triangulations whose
          * underlying 3-manifolds can be recognised will grow between
@@ -121,7 +123,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * Returns the expected first homology group of this triangulation,
          * if such a routine has been implemented.  If the calculation of
          * homology has not yet been implemented for this triangulation
-         * then this routine will return 0.
+         * then this routine will return no value.
          *
          * This routine does not work by calling Triangulation<3>::homology()
          * on the associated real triangulation.  Instead the homology is
@@ -131,10 +133,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * The details of which standard triangulations have homology
          * calculation routines can be found in the notes for the
          * corresponding subclasses of StandardTriangulation.  The
-         * default implementation of this routine returns 0.
-         *
-         * The homology group will be newly allocated and must be
-         * destroyed by the caller of this routine.
+         * default implementation of this routine returns no value.
          *
          * If this StandardTriangulation describes an entire Triangulation<3>
          * (and not just a part thereof) then the results of this routine
@@ -144,41 +143,17 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          * This routine can also be accessed via the alias homologyH1()
          * (a name that is more specific, but a little longer to type).
          *
-         * @return the first homology group of this triangulation, or 0 if
-         * the appropriate calculation routine has not yet been implemented.
+         * @return the first homology group of this triangulation, or no value
+         * if the appropriate calculation routine has not yet been implemented.
          */
-        virtual AbelianGroup* homology() const;
+        virtual std::optional<AbelianGroup> homology() const;
         /**
-         * Returns the expected first homology group of this triangulation,
-         * if such a routine has been implemented.  If the calculation of
-         * homology has not yet been implemented for this triangulation
-         * then this routine will return 0.
+         * An alias for homology().  See homology() for further details.
          *
-         * This routine does not work by calling Triangulation<3>::homology()
-         * on the associated real triangulation.  Instead the homology is
-         * calculated directly from the known properties of this
-         * standard triangulation.
-         *
-         * The details of which standard triangulations have homology
-         * calculation routines can be found in the notes for the
-         * corresponding subclasses of StandardTriangulation.  The
-         * default implementation of this routine returns 0.
-         *
-         * The homology group will be newly allocated and must be
-         * destroyed by the caller of this routine.
-         *
-         * If this StandardTriangulation describes an entire Triangulation<3>
-         * (and not just a part thereof) then the results of this routine
-         * should be identical to the homology group obtained by calling
-         * Triangulation<3>::homology() upon the associated real triangulation.
-         *
-         * This routine can also be accessed via the alias homology()
-         * (a name that is less specific, but a little easier to type).
-         *
-         * @return the first homology group of this triangulation, or 0 if
-         * the appropriate calculation routine has not yet been implemented.
+         * @return the first homology group of this triangulation, or no value
+         * if the appropriate calculation routine has not yet been implemented.
          */
-        AbelianGroup* homologyH1() const;
+        std::optional<AbelianGroup> homologyH1() const;
 
         /**
          * Writes the name of this triangulation as a human-readable
@@ -254,7 +229,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          *
          * @param component the triangulation component under examination.
          * @return the details of the standard triangulation if the
-         * given component is recognised, or 0 otherwise.
+         * given component is recognised, or \c null otherwise.
          */
         static StandardTriangulation* isStandardTriangulation(
             Component<3>* component);
@@ -276,7 +251,7 @@ class StandardTriangulation : public Output<StandardTriangulation> {
          *
          * @param tri the triangulation under examination.
          * @return the details of the standard triangualation if the
-         * given triangulation is recognised, or 0 otherwise.
+         * given triangulation is recognised, or \c null otherwise.
          */
         static StandardTriangulation* isStandardTriangulation(
             Triangulation<3>* tri);
@@ -306,14 +281,14 @@ inline StandardTriangulation::~StandardTriangulation() {
 }
 
 inline Manifold* StandardTriangulation::manifold() const {
-    return 0;
+    return nullptr;
 }
 
-inline AbelianGroup* StandardTriangulation::homology() const {
-    return 0;
+inline std::optional<AbelianGroup> StandardTriangulation::homology() const {
+    return std::nullopt;
 }
 
-inline AbelianGroup* StandardTriangulation::homologyH1() const {
+inline std::optional<AbelianGroup> StandardTriangulation::homologyH1() const {
     return homology();
 }
 

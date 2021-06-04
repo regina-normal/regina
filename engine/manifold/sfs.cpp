@@ -789,17 +789,17 @@ Triangulation<3>* SFSpace::construct() const {
     return ans;
 }
 
-AbelianGroup* SFSpace::homology() const {
+std::optional<AbelianGroup> SFSpace::homology() const {
     if (punctures_ || puncturesTwisted_) {
         // Not just now.
-        return 0;
+        return std::nullopt;
     }
 
     // Construct the presentation of the fundamental group and
     // abelianise.  The presentation without reflectors is given on
     // p91 of Orlik [1972].  Each reflector gives additional generators
     // y and z, for which y acts as a boundary component and z^2 = fibre.
-    AbelianGroup* ans = new AbelianGroup();
+    AbelianGroup ans;
     unsigned long nRef = reflectors_ + reflectorsTwisted_;
     bool twisted = fibreReversing();
 
@@ -844,8 +844,8 @@ AbelianGroup* SFSpace::homology() const {
         else if (twisted)
             pres.entry(nFibres_ + nRef + 1, nFibres_) = 2;
 
-        ans->addGroup(pres);
-        ans->addRank(2 * genus_);
+        ans.addGroup(pres);
+        ans.addRank(2 * genus_);
     } else {
         // Non-orientable base surface.
         // Generators: v_1, v_2, ..., v_g, q_1, q_2, ..., q_r, h,
@@ -888,7 +888,7 @@ AbelianGroup* SFSpace::homology() const {
         else if (twisted)
             pres.entry(nFibres_ + nRef + 1, nFibres_ + genus_) = 2;
 
-        ans->addGroup(pres);
+        ans.addGroup(pres);
     }
 
     return ans;

@@ -177,9 +177,9 @@ TriSolidTorus* TriSolidTorus::formsTriSolidTorus(Tetrahedron<3>* tet,
     return ans;
 }
 
-AbelianGroup* TriSolidTorus::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addRank();
+std::optional<AbelianGroup> TriSolidTorus::homology() const {
+    AbelianGroup ans;
+    ans.addRank();
     return ans;
 }
 

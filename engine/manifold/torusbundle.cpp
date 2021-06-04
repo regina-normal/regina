@@ -36,7 +36,7 @@
 
 namespace regina {
 
-AbelianGroup* TorusBundle::homology() const {
+std::optional<AbelianGroup> TorusBundle::homology() const {
     MatrixInt relns(2, 2);
 
     relns.entry(0, 0) = monodromy_[0][0] - 1;
@@ -44,9 +44,9 @@ AbelianGroup* TorusBundle::homology() const {
     relns.entry(1, 0) = monodromy_[1][0];
     relns.entry(1, 1) = monodromy_[1][1] - 1;
 
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addGroup(relns);
-    ans->addRank();
+    AbelianGroup ans;
+    ans.addGroup(relns);
+    ans.addRank();
 
     return ans;
 }

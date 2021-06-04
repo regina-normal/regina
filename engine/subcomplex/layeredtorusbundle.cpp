@@ -171,7 +171,7 @@ Manifold* LayeredTorusBundle::manifold() const {
     return new TorusBundle(core_.parallelReln() * reln_);
 }
 
-AbelianGroup* LayeredTorusBundle::homology() const {
+std::optional<AbelianGroup> LayeredTorusBundle::homology() const {
     // It's implemented in TorusBundle, so ride on that for now.
     // We'll implement it directly here in good time.
     return TorusBundle(core_.parallelReln() * reln_).homology();

@@ -107,10 +107,10 @@ Manifold* LayeredChain::manifold() const {
     return new Handlebody(index_ <= 1 ? 0 : 1, true);
 }
 
-AbelianGroup* LayeredChain::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
+std::optional<AbelianGroup> LayeredChain::homology() const {
+    AbelianGroup ans;
     if (index_ > 1)
-        ans->addRank();
+        ans.addRank();
     return ans;
 }
 

@@ -197,9 +197,9 @@ Manifold* SpiralSolidTorus::manifold() const {
     return new Handlebody(1, true);
 }
 
-AbelianGroup* SpiralSolidTorus::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addRank();
+std::optional<AbelianGroup> SpiralSolidTorus::homology() const {
+    AbelianGroup ans;
+    ans.addRank();
     return ans;
 }
 

@@ -66,12 +66,12 @@ Triangulation<3>* LensSpace::construct() const {
     return ans;
 }
 
-AbelianGroup* LensSpace::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
+std::optional<AbelianGroup> LensSpace::homology() const {
+    AbelianGroup ans;
     if (p_ == 0)
-        ans->addRank();
+        ans.addRank();
     else if (p_ > 1)
-        ans->addTorsionElement(p_);
+        ans.addTorsionElement(p_);
     return ans;
 }
 

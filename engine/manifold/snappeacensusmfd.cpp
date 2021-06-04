@@ -135,7 +135,7 @@ Triangulation<3>* SnapPeaCensusManifold::construct() const {
     return ans;
 }
 
-AbelianGroup* SnapPeaCensusManifold::homology() const {
+std::optional<AbelianGroup> SnapPeaCensusManifold::homology() const {
     // Fetch the relevant data from the census dehydration files.
     std::string file = GlobalDirs::data() + "/snappea";
     switch (section_) {
@@ -150,13 +150,13 @@ AbelianGroup* SnapPeaCensusManifold::homology() const {
         case SEC_7_NOR:
             file += "/snappea-census-sec7n.dat"; break;
         default:
-            return 0;
+            return std::nullopt;
     }
 
     FILE* dat = fopen(file.c_str(), "r");
     if (! dat) {
         std::cerr << "Cannot open data file: " << file << std::endl;
-        return 0;
+        return std::nullopt;
     }
     char tri[30], hom[30]; /* Long enough to deal with the snappea census
                               files for <= 7 tetrahedra. */
@@ -167,34 +167,30 @@ AbelianGroup* SnapPeaCensusManifold::homology() const {
                     << file << std::endl;
             else
                 std::cerr << "Error reading data file: " << file << std::endl;
-            return 0;
+            return std::nullopt;
         }
     }
     fclose(dat);
 
-    AbelianGroup* ans = new AbelianGroup();
+    AbelianGroup ans;
     char* c;
     int val;
 
     // First character of the homology string represents rank.
     val = homDecode(hom[0]); // Empty string is picked up and dealt with here.
-    if (val < 0) {
-        delete ans;
-        return 0;
-    }
-    ans->addRank(val);
+    if (val < 0)
+        return std::nullopt;
+    ans.addRank(val);
 
     // The remaining characters represent torsion.
     std::multiset<Integer> torsion;
     for (c = hom + 1; *c; ++c) {
         val = homDecode(*c);
-        if (val < 0) {
-            delete ans;
-            return 0;
-        }
+        if (val < 0)
+            return std::nullopt;
         torsion.insert(val);
     }
-    ans->addTorsionElements(torsion);
+    ans.addTorsionElements(torsion);
     return ans;
 }
 

@@ -67,8 +67,8 @@ Manifold* SnappedBall::manifold() const {
     return new Handlebody(0, true);
 }
 
-AbelianGroup* SnappedBall::homology() const {
-    return new AbelianGroup();
+std::optional<AbelianGroup> SnappedBall::homology() const {
+    return AbelianGroup();
 }
 
 } // namespace regina

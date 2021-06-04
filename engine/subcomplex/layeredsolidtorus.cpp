@@ -662,9 +662,9 @@ Manifold* LayeredSolidTorus::manifold() const {
     return new Handlebody(1, true);
 }
 
-AbelianGroup* LayeredSolidTorus::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addRank();
+std::optional<AbelianGroup> LayeredSolidTorus::homology() const {
+    AbelianGroup ans;
+    ans.addRank();
     return ans;
 }
 

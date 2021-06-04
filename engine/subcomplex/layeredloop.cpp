@@ -200,18 +200,18 @@ LayeredLoop* LayeredLoop::isLayeredLoop(const Component<3>* comp) {
     return 0;
 }
 
-AbelianGroup* LayeredLoop::homology() const {
-    AbelianGroup* ans = new AbelianGroup();
+std::optional<AbelianGroup> LayeredLoop::homology() const {
+    AbelianGroup ans;
     if (hinge_[1]) {
         // Untwisted.
         if (length_ > 1)
-            ans->addTorsionElement(length_);
+            ans.addTorsionElement(length_);
     } else {
         // Twisted.
         if (length_ % 2 == 0)
-            ans->addTorsionElement(2, 2);
+            ans.addTorsionElement(2, 2);
         else
-            ans->addTorsionElement(4);
+            ans.addTorsionElement(4);
     }
     return ans;
 }

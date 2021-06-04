@@ -39,8 +39,9 @@
 #define __MANIFOLD_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
-#include "core/output.h"
+#include "algebra/abeliangroup.h"
 #include "triangulation/forward.h"
 
 namespace regina {
@@ -106,13 +107,13 @@ class Manifold : public Output<Manifold> {
          * has yet been implemented for this 3-manifold (for instance,
          * if this 3-manifold is a Seifert fibred space with
          * sufficiently many exceptional fibres) then this routine will
-         * return 0.
+         * return \c null.
          *
          * The details of which 3-manifolds have construction routines
          * can be found in the notes for the corresponding subclasses of
-         * Manifold.  The default implemention of this routine returns 0.
+         * Manifold.  The default implemention of this routine returns \c null.
          *
-         * @return a triangulation of this 3-manifold, or 0 if the
+         * @return a triangulation of this 3-manifold, or \c null if the
          * appropriate construction routine has not yet been implemented.
          */
         virtual Triangulation<3>* construct() const;
@@ -120,42 +121,26 @@ class Manifold : public Output<Manifold> {
          * Returns the first homology group of this 3-manifold, if such
          * a routine has been implemented.  If the calculation of
          * homology has not yet been implemented for this 3-manifold
-         * then this routine will return 0.
+         * then this routine will return no value.
          *
          * The details of which 3-manifolds have homology calculation routines
          * can be found in the notes for the corresponding subclasses of
-         * Manifold.  The default implemention of this routine returns 0.
-         *
-         * The homology group will be newly allocated and must be destroyed
-         * by the caller of this routine.
+         * Manifold.  The default implemention of this routine returns no value.
          *
          * This routine can also be accessed via the alias homologyH1()
          * (a name that is more specific, but a little longer to type).
          *
-         * @return the first homology group of this 3-manifold, or 0 if
+         * @return the first homology group of this 3-manifold, or no value if
          * the appropriate calculation routine has not yet been implemented.
          */
-        virtual AbelianGroup* homology() const;
+        virtual std::optional<AbelianGroup> homology() const;
         /**
-         * Returns the first homology group of this 3-manifold, if such
-         * a routine has been implemented.  If the calculation of
-         * homology has not yet been implemented for this 3-manifold
-         * then this routine will return 0.
+         * An alias for homology().  See homology() for further details.
          *
-         * The details of which 3-manifolds have homology calculation routines
-         * can be found in the notes for the corresponding subclasses of
-         * Manifold.  The default implemention of this routine returns 0.
-         *
-         * The homology group will be newly allocated and must be destroyed
-         * by the caller of this routine.
-         *
-         * This routine can also be accessed via the alias homology()
-         * (a name that is less specific, but a little easier to type).
-         *
-         * @return the first homology group of this 3-manifold, or 0 if
+         * @return the first homology group of this 3-manifold, or no value if
          * the appropriate calculation routine has not yet been implemented.
          */
-        AbelianGroup* homologyH1() const;
+        std::optional<AbelianGroup> homologyH1() const;
 
         /**
          * Returns whether or not this is a finite-volume hyperbolic manifold.
@@ -289,14 +274,14 @@ inline Manifold::~Manifold() {
 }
 
 inline Triangulation<3>* Manifold::construct() const {
-    return 0;
+    return nullptr;
 }
 
-inline AbelianGroup* Manifold::homology() const {
-    return 0;
+inline std::optional<AbelianGroup> Manifold::homology() const {
+    return std::nullopt;
 }
 
-inline AbelianGroup* Manifold::homologyH1() const {
+inline std::optional<AbelianGroup> Manifold::homologyH1() const {
     return homology();
 }
 

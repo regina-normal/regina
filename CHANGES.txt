@@ -232,6 +232,9 @@ Version 6.1  [ TODO ]
         Class LPConstraintEulerZero:
             - New constraint to use with normal surface enumeration that
               fixes Euler characteristic to be zero.
+        Class Manifold:
+            - Routine homology() now returns a std::optional<AbelianGroup>,
+              not a newly allocated pointer that could be null.
         Class MarkedAbelianGroup:
             - New move constructor.
             - New copy assignment and move assignment operators.
@@ -385,6 +388,9 @@ Version 6.1  [ TODO ]
             - Added member and global swap() functions.
             - Changed slopeEquations() to return a std::optional<MatrixInt>,
               not a pointer that could be null.
+        Class StandardTriangulation:
+            - Routine homology() now returns a std::optional<AbelianGroup>,
+              not a newly allocated pointer that could be null.
         Class SurfaceFilterInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
