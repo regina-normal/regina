@@ -149,6 +149,8 @@ Version 6.1  [ TODO ]
               syntax should be largely unaffected, and the Python behaviour
               (returns None if there is no homomorphism) should remain the same.
             - Other major cleanup and reorganisation under the hood.
+        Class HasReturnType:
+            - Removed completely.
         Class HilbertCD, HilbertDual, HilbertPrimal:
             - Can now output to either of Regina's arbitrary precision
               integer types, not only LargeInteger.
@@ -358,6 +360,8 @@ Version 6.1  [ TODO ]
         Class Rational:
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
+        Class Returns, ReturnsTraits:
+            - Removed completely.
         Class SimpleSurfaceBundle:
             - Class constants are now constexpr.
         Class Simplex<dim>:
@@ -459,7 +463,7 @@ Version 6.1  [ TODO ]
             - Both these functions are now inline and constexpr.
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
-        Function forCoords(), forFilter():
+        Function forCoords(), forFilter(), forPacket():
             - Completely rewritten to take advantage of C++14 generic lambdas.
               Any code that used these functions will need to be completely
               rewritten (but should now become substantially simpler).
@@ -495,9 +499,11 @@ Version 6.1  [ TODO ]
               once again genuine 2-D arrays.  Unfortunately this change is not
               backward compatible: you must now use foo[i][j], not foo(i,j).
               Python users are unaffected.
-        Macro:
-            - New macro ENABLE_MEMBER_FOR_REGINA_INTEGER for conditionally
-              enabling or disabling member functions in template classes.
+        Macro ENABLE_MEMBER_FOR_REGINA_INTEGER:
+            - New macro for conditionally enabling or disabling member
+              functions in template classes.
+        Header utilities/registryutils.h:
+            - Removed completely.
     PYTHON:
         - Updated the included pybind11 library from 2.6.1 to 2.6.2.
         - All face embedding classes now have a __repr__() for easier printing.

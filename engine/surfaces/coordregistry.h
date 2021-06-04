@@ -60,7 +60,6 @@
 #endif
 
 #include "surfaces/normalcoords.h"
-#include "utilities/registryutils.h"
 
 namespace regina {
 

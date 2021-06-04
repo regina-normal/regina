@@ -52,7 +52,6 @@
 #endif
 
 #include "hypersurface/hypercoords.h"
-#include "utilities/registryutils.h"
 
 namespace regina {
 

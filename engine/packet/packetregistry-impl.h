@@ -144,169 +144,120 @@ struct PacketInfo<PACKET_TRIANGULATION15> {
 // Implementations of forPacket()
 // ----------------------------------------------------------------------
 
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::ReturnType
-forPacket(PacketType packetType, FunctionObject&& func,
-        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
-        Args&&... args) {
+template <typename FunctionObject, typename ReturnType>
+inline auto forPacket(PacketType packetType, FunctionObject&& func,
+        ReturnType&& defaultReturn) {
+    typedef decltype(func(PacketInfo<PACKET_CONTAINER>())) RealReturnType;
     switch (packetType) {
-        case PACKET_CONTAINER : return
-            func.template operator()<PacketInfo<PACKET_CONTAINER>>(
-            std::forward<Args>(args)...);
-        case PACKET_TEXT : return
-            func.template operator()<PacketInfo<PACKET_TEXT>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION3 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION3>>(
-            std::forward<Args>(args)...);
-        case PACKET_NORMALSURFACES : return
-            func.template operator()<PacketInfo<PACKET_NORMALSURFACES>>(
-            std::forward<Args>(args)...);
-        case PACKET_SCRIPT : return
-            func.template operator()<PacketInfo<PACKET_SCRIPT>>(
-            std::forward<Args>(args)...);
-        case PACKET_SURFACEFILTER : return
-            func.template operator()<PacketInfo<PACKET_SURFACEFILTER>>(
-            std::forward<Args>(args)...);
-        case PACKET_ANGLESTRUCTURES : return
-            func.template operator()<PacketInfo<PACKET_ANGLESTRUCTURES>>(
-            std::forward<Args>(args)...);
-        case PACKET_PDF : return
-            func.template operator()<PacketInfo<PACKET_PDF>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION2 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION2>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION4 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION4>>(
-            std::forward<Args>(args)...);
-        case PACKET_NORMALHYPERSURFACES : return
-            func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACES>>(
-            std::forward<Args>(args)...);
-        case PACKET_SNAPPEATRIANGULATION : return
-            func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
-            std::forward<Args>(args)...);
-        case PACKET_LINK : return
-            func.template operator()<PacketInfo<PACKET_LINK>>(
-            std::forward<Args>(args)...);
+        case PACKET_CONTAINER :
+            return func(PacketInfo<PACKET_CONTAINER>());
+        case PACKET_TEXT :
+            return func(PacketInfo<PACKET_TEXT>());
+        case PACKET_TRIANGULATION3 :
+            return func(PacketInfo<PACKET_TRIANGULATION3>());
+        case PACKET_NORMALSURFACES :
+            return func(PacketInfo<PACKET_NORMALSURFACES>());
+        case PACKET_SCRIPT :
+            return func(PacketInfo<PACKET_SCRIPT>());
+        case PACKET_SURFACEFILTER :
+            return func(PacketInfo<PACKET_SURFACEFILTER>());
+        case PACKET_ANGLESTRUCTURES :
+            return func(PacketInfo<PACKET_ANGLESTRUCTURES>());
+        case PACKET_PDF :
+            return func(PacketInfo<PACKET_PDF>());
+        case PACKET_TRIANGULATION2 :
+            return func(PacketInfo<PACKET_TRIANGULATION2>());
+        case PACKET_TRIANGULATION4 :
+            return func(PacketInfo<PACKET_TRIANGULATION4>());
+        case PACKET_NORMALHYPERSURFACES :
+            return func(PacketInfo<PACKET_NORMALHYPERSURFACES>());
+        case PACKET_SNAPPEATRIANGULATION :
+            return func(PacketInfo<PACKET_SNAPPEATRIANGULATION>());
+        case PACKET_LINK :
+            return func(PacketInfo<PACKET_LINK>());
 #ifndef REGINA_LOWDIMONLY
-        case PACKET_TRIANGULATION5 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION6 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION6>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION7 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION7>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION8 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION8>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION9 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION9>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION10 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION10>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION11 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION11>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION12 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION12>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION13 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION13>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION14 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION14>>(
-            std::forward<Args>(args)...);
-        case PACKET_TRIANGULATION15 : return
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION15>>(
-            std::forward<Args>(args)...);
+        case PACKET_TRIANGULATION5 :
+            return func(PacketInfo<PACKET_TRIANGULATION5>());
+        case PACKET_TRIANGULATION6 :
+            return func(PacketInfo<PACKET_TRIANGULATION6>());
+        case PACKET_TRIANGULATION7 :
+            return func(PacketInfo<PACKET_TRIANGULATION7>());
+        case PACKET_TRIANGULATION8 :
+            return func(PacketInfo<PACKET_TRIANGULATION8>());
+        case PACKET_TRIANGULATION9 :
+            return func(PacketInfo<PACKET_TRIANGULATION9>());
+        case PACKET_TRIANGULATION10 :
+            return func(PacketInfo<PACKET_TRIANGULATION10>());
+        case PACKET_TRIANGULATION11 :
+            return func(PacketInfo<PACKET_TRIANGULATION11>());
+        case PACKET_TRIANGULATION12 :
+            return func(PacketInfo<PACKET_TRIANGULATION12>());
+        case PACKET_TRIANGULATION13 :
+            return func(PacketInfo<PACKET_TRIANGULATION13>());
+        case PACKET_TRIANGULATION14 :
+            return func(PacketInfo<PACKET_TRIANGULATION14>());
+        case PACKET_TRIANGULATION15 :
+            return func(PacketInfo<PACKET_TRIANGULATION15>());
 #endif /* ! REGINA_LOWDIMONLY */
-        default: return defaultReturn;
+        default: return static_cast<RealReturnType>(defaultReturn);
     }
 }
 
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::Void
-forPacket(PacketType packetType, FunctionObject&& func, Args&&... args) {
+template <typename FunctionObject>
+inline auto forPacket(PacketType packetType, FunctionObject&& func) {
+    typedef decltype(func(PacketInfo<PACKET_CONTAINER>())) RealReturnType;
     switch (packetType) {
         case PACKET_CONTAINER :
-            func.template operator()<PacketInfo<PACKET_CONTAINER>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_CONTAINER>());
         case PACKET_TEXT :
-            func.template operator()<PacketInfo<PACKET_TEXT>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TEXT>());
         case PACKET_TRIANGULATION3 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION3>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION3>());
         case PACKET_NORMALSURFACES :
-            func.template operator()<PacketInfo<PACKET_NORMALSURFACES>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_NORMALSURFACES>());
         case PACKET_SCRIPT :
-            func.template operator()<PacketInfo<PACKET_SCRIPT>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_SCRIPT>());
         case PACKET_SURFACEFILTER :
-            func.template operator()<PacketInfo<PACKET_SURFACEFILTER>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_SURFACEFILTER>());
         case PACKET_ANGLESTRUCTURES :
-            func.template operator()<PacketInfo<PACKET_ANGLESTRUCTURES>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_ANGLESTRUCTURES>());
         case PACKET_PDF :
-            func.template operator()<PacketInfo<PACKET_PDF>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_PDF>());
         case PACKET_TRIANGULATION2 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION2>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION2>());
         case PACKET_TRIANGULATION4 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION4>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION4>());
         case PACKET_NORMALHYPERSURFACES :
-            func.template operator()<PacketInfo<PACKET_NORMALHYPERSURFACES>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_NORMALHYPERSURFACES>());
         case PACKET_SNAPPEATRIANGULATION :
-            func.template operator()<PacketInfo<PACKET_SNAPPEATRIANGULATION>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_SNAPPEATRIANGULATION>());
         case PACKET_LINK :
-            func.template operator()<PacketInfo<PACKET_LINK>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_LINK>());
 #ifndef REGINA_LOWDIMONLY
         case PACKET_TRIANGULATION5 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION5>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION5>());
         case PACKET_TRIANGULATION6 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION6>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION6>());
         case PACKET_TRIANGULATION7 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION7>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION7>());
         case PACKET_TRIANGULATION8 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION8>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION8>());
         case PACKET_TRIANGULATION9 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION9>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION9>());
         case PACKET_TRIANGULATION10 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION10>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION10>());
         case PACKET_TRIANGULATION11 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION11>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION11>());
         case PACKET_TRIANGULATION12 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION12>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION12>());
         case PACKET_TRIANGULATION13 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION13>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION13>());
         case PACKET_TRIANGULATION14 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION14>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION14>());
         case PACKET_TRIANGULATION15 :
-            func.template operator()<PacketInfo<PACKET_TRIANGULATION15>>(
-            std::forward<Args>(args)...); break;
+            return func(PacketInfo<PACKET_TRIANGULATION15>());
 #endif /* ! REGINA_LOWDIMONLY */
-        default: break;
+        default: return RealReturnType();
     }
 }
 

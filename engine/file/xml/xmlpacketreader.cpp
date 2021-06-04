@@ -39,16 +39,6 @@
 
 namespace regina {
 
-namespace {
-    struct XMLReaderFunction : public Returns<XMLElementReader*> {
-        template <typename PacketInfo>
-        inline XMLElementReader* operator() (Packet* me,
-                XMLTreeResolver& resolver) {
-            return PacketInfo::Class::xmlReader(me, resolver);
-        }
-    };
-}
-
 XMLElementReader* XMLPacketReader::startSubElement(
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict& subTagProps) {
@@ -81,7 +71,9 @@ XMLElementReader* XMLPacketReader::startSubElement(
             return new XMLPacketReader(resolver_);
 
         XMLElementReader* ans = forPacket(static_cast<PacketType>(typeID),
-            XMLReaderFunction(), 0, me, resolver_);
+            [=](auto info) {
+                return decltype(info)::Class::xmlReader(me, this->resolver_);
+            }, nullptr);
         if (ans)
             return ans;
         else

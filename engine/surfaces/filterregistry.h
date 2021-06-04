@@ -60,7 +60,6 @@
 #endif
 
 #include "surfaces/surfacefiltertype.h"
-#include "utilities/registryutils.h"
 
 namespace regina {
 

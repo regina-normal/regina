@@ -58,7 +58,6 @@
 #endif
 
 #include "packet/packettype.h"
-#include "utilities/registryutils.h"
 
 namespace regina {
 
@@ -68,93 +67,80 @@ namespace regina {
  */
 
 /**
- * Allows the user to call a template function whose template parameter
- * matches a given value of PacketType, which is not known
- * until runtime.  In essence, this routine contains a switch/case statement
- * that runs through all possible packet types known to Regina.
+ * Allows the user to execute a generic lambda whose argument type depends
+ * upon the given packet type, which is not known until runtime.
+ * In particular, the lambda will have \e compile-time access
+ * to the given packet type.  In essence, this routine acts as a
+ * switch/case statement that runs through all possible packet types.
  *
- * The advantages of this routine are that (i) the user does not need to
- * repeatedly type such switch/case statements themselves; and (ii) if
- * a new packet type is added then only a small amount of code
- * needs to be extended to incorporate it.
+ * The advantages of this routine are that (i) you do not need to repeatedly
+ * type such switch/case statements yourself; (ii) you can make use of
+ * compile-time access to the packet type and associated data types; and
+ * (iii) only a small amount of code needs to be added to incorporate a new
+ * packet type into Regina.
  *
- * In detail: the function object \a func must define a templated bracket
- * operator, so that <tt>func.operator()<PacketInfo<t>>(...)</tt> is defined
- * for any valid PacketType enum value \a t.  Then, when the user calls
- * <tt>forPacket(packetType, func, defaultReturn, ...)</tt>, this routine
- * will call <tt>func.operator()<PacketInfo<packetType>>(...)</tt> and pass
- * back the corresponding return value.  If \a packetType does not denote a
- * valid packet type, then forPacket() will pass back \a defaultReturn instead.
+ * The given function \a func must be generic, and must accept a single
+ * argument of type PacketInfo<t> for any PacketType enum value \a t.
+ * When the user calls <tt>forPacket(packetType, func, defaultReturn)</tt>,
+ * this routine will call <tt>func(PacketInfo<packetType>())</tt> and pass back
+ * the corresponding return value.  If \a packetType does not denote a valid
+ * packet type, then forPacket() will pass back \a defaultReturn instead.
+ * If you need to pass additional data to \a func, this can be done via
+ * lambda captures.
  *
- * There is also a variant of forPacket() that works with void functions,
- * and so does not take the extra \a defaultReturn argument.
+ * The return value from \a func must always be the same type, regardless of
+ * which packet type is being used (otherwise the compiler cannot
+ * determine the final return type for forPacket()).  However, the fallback
+ * argument \a defaultReturn does \e not need to be this same type (so, for
+ * instance, you can happily pass \c nullptr or std::nullopt here); it will
+ * be cast to the correct type if it is needed.
  *
- * \pre The function object must have a typedef \a ReturnType indicating
- * the return type of the corresponding templated bracket operator.
- * Inheriting from Returns<...> is a convenient way to ensure this.
+ * There are two scenarios in which you might \e not want to pass a fallback
+ * value \a defaultReturn:
+ *
+ * - if \a func is a void function; or
+ *
+ * - if it is expensive to construct a default return value, and so you do not
+ *   want to do this unless absolutely necessary.
+ *
+ * In both cases you can simply omit the \a defaultReturn argument.
+ * In this case, if \a func needs to return a value and the given packet type
+ * is not valid, it will simply return a default-constructed object of
+ * the appropriate return type.
  *
  * \ifacespython Not present.
  *
  * @param packetType the given packet type.
- * @param func the function object whose bracket operator we will
- * call with a PacketInfo<packetType> object.
- * @param defaultReturn the value to return if the given packet type
- * is not valid.
- * @param args any additional arguments to pass to the bracket operator
- * for \a func.  These will be copied/moved, so if you wish to pass
- * references then you may need to wrap them in std::ref or std::cref.
- * @return the return value from the corresponding bracket
- * operator of \a func, or \a defaultReturn if the given packet type
- * is not valid.
+ * @param func the generic function (typically a lambda) that we will call
+ * with a PacketInfo<packetType> object.
+ * @param defaultReturn the value to return if the given packet type is invalid.
+ * @return the return value from \a func, or \a defaultReturn if the given
+ * packet type is invalid.
  */
-template <typename FunctionObject, typename... Args>
-typename ReturnsTraits<FunctionObject>::ReturnType
-forPacket(PacketType packetType, FunctionObject&& func,
-        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
-        Args&&... args);
+template <typename FunctionObject, typename ReturnType>
+auto forPacket(PacketType packetType, FunctionObject&& func,
+        ReturnType&& defaultReturn);
 
 /**
- * Allows the user to call a template function whose template parameter
- * matches a given value of PacketType, which is not known
- * until runtime.  In essence, this routine contains a switch/case statement
- * that runs through all possible packet types known to Regina.
+ * A variant of forPacket() that does not require the user to specify a
+ * default return value in advance.
  *
- * The advantages of this routine are that (i) the user does not need to
- * repeatedly type such switch/case statements themselves; and (ii) if
- * a new packet type is added then only a small amount of code
- * needs to be extended to incorporate it.
+ * This can be used for void functions, or for situations where a
+ * default return value is expensive to construct in advance.
  *
- * In detail: the function object \a func must define a templated
- * bracket operator, so that <tt>func.operator()<PacketInfo<t>>(...)</tt> is
- * defined for any valid PacketType enum value \a t.  Then,
- * when the user calls <tt>forPacket(packetType, func, ...)</tt>, this routine
- * will call <tt>func.operator()<PacketInfo<packetType>>(...)</tt> in turn.
- * If \a packetType does not denote a valid packet type, then forPacket()
- * will do nothing.
- *
- * There is also a variant of forPacket() that works with functions with
- * return values, and which takes an extra \a defaultReturn argument.
- *
- * \pre There must not exist a type \a FunctionObject::ReturnType
- * (or, if \a FunctionObject is a reference to a class/struct \a F,
- * there must likewise not exist a type \a F::ReturnType).
- * The existence of a type \a FunctionObject::ReturnType will cause the
- * non-void variant of forPacket() to be used instead.
+ * For detailed documentation, see the full version
+ * forPacket(packetType, func, defaultReturn).
  *
  * \ifacespython Not present.
  *
  * @param packetType the given packet type.
- * @param func the function object whose bracket operator we will
- * call with a PacketInfo<packetType> object.
- * @param args any additional arguments to pass to the bracket operator
- * for \a func.  These will be copied/moved, so if you wish to pass
- * references then you may need to wrap them in std::ref or std::cref.
- * @return nothing; the return type <tt>ReturnsTraits<FunctionObject>::Void</tt>
- * simply evaluates to \c void.
+ * @param func the generic function (typically a lambda) that we will call
+ * with a PacketInfo<packetType> object.
+ * @return the return value from \a func, or a default-constructed return value
+ * if \a packetType is invalid, or nothing at all if \a func is a void function.
  */
-template <typename FunctionObject, typename... Args>
-typename ReturnsTraits<FunctionObject>::Void
-forPacket(PacketType packetType, FunctionObject&& func, Args&&... args);
+template <typename FunctionObject>
+auto forPacket(PacketType packetType, FunctionObject&& func);
 
 /*@}*/
 
