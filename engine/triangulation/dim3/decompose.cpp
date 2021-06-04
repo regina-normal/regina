@@ -891,7 +891,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
                     // This mirrors the code for non-orientable
                     // triangulations; see that later block for details.
                     NormalSurfaces* q = NormalSurfaces::enumerate(
-                        use, NS_STANDARD);
+                        *use, NS_STANDARD);
 
                     for (const NormalSurface* s : q->surfaces()) {
                         if (s->isCompressingDisc(true)) {
@@ -949,7 +949,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
         // use standard coordinates.  Jaco, Letscher and Rubinstein mention
         // quad space, but don't give details (which I'd prefer to see).
         // Leave it in standard coordinates for now.
-        NormalSurfaces* q = NormalSurfaces::enumerate(use, NS_STANDARD);
+        NormalSurfaces* q = NormalSurfaces::enumerate(*use, NS_STANDARD);
 
         // Run through all vertex surfaces looking for a compressing disc.
         for (const NormalSurface* s : q->surfaces()) {
@@ -1164,7 +1164,7 @@ bool Triangulation<3>::isHaken() const {
 
     // Enumerate vertex normal surfaces in quad coordinates.
     // std::cout << "Enumerating surfaces..." << std::endl;
-    NormalSurfaces* list = NormalSurfaces::enumerate(&t, NS_QUAD);
+    NormalSurfaces* list = NormalSurfaces::enumerate(t, NS_QUAD);
 
     // Run through each surface, one at a time.
     // Sort them first however, so we process the (easier) smaller genus

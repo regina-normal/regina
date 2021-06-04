@@ -100,9 +100,9 @@ void NormalSurface::writeTextShort(std::ostream& out) const {
     }
 }
 
-bool NormalSurfaceVector::hasMultipleOctDiscs(const Triangulation<3>* triang)
+bool NormalSurfaceVector::hasMultipleOctDiscs(const Triangulation<3>& triang)
         const {
-    size_t nTets = triang->size();
+    size_t nTets = triang.size();
     int oct;
     LargeInteger coord;
     for (size_t tet=0; tet<nTets; tet++)
@@ -119,8 +119,8 @@ bool NormalSurfaceVector::hasMultipleOctDiscs(const Triangulation<3>* triang)
     return false;
 }
 
-bool NormalSurfaceVector::isCompact(const Triangulation<3>* triang) const {
-    size_t nTets = triang->size();
+bool NormalSurfaceVector::isCompact(const Triangulation<3>& triang) const {
+    size_t nTets = triang.size();
     size_t tet;
     int type;
     for (tet = 0; tet < nTets; tet++) {
@@ -139,8 +139,8 @@ bool NormalSurfaceVector::isCompact(const Triangulation<3>* triang) const {
     return true;
 }
 
-bool NormalSurfaceVector::isSplitting(const Triangulation<3>* triang) const {
-    size_t nTets = triang->size();
+bool NormalSurfaceVector::isSplitting(const Triangulation<3>& triang) const {
+    size_t nTets = triang.size();
     size_t tet;
     int type;
     LargeInteger tot;
@@ -162,9 +162,9 @@ bool NormalSurfaceVector::isSplitting(const Triangulation<3>* triang) const {
     return true;
 }
 
-LargeInteger NormalSurfaceVector::isCentral(const Triangulation<3>* triang)
+LargeInteger NormalSurfaceVector::isCentral(const Triangulation<3>& triang)
         const {
-    size_t nTets = triang->size();
+    size_t nTets = triang.size();
     size_t tet;
     int type;
     LargeInteger tot, tetTot;
@@ -455,12 +455,12 @@ void NormalSurface::writeXMLData(std::ostream& out) const {
 // Default implementations for oriented surfaces. Returns zero as any
 // coordinate system which supports orientation should override these.
 LargeInteger NormalSurfaceVector::orientedTriangles(
-        size_t, int, const Triangulation<3>*, bool) const {
+        size_t, int, const Triangulation<3>&, bool) const {
     return LargeInteger::zero;
 };
 
 LargeInteger NormalSurfaceVector::orientedQuads(
-        size_t, int, const Triangulation<3>*, bool) const {
+        size_t, int, const Triangulation<3>&, bool) const {
     return LargeInteger::zero;
 };
 

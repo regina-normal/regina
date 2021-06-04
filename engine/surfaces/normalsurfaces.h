@@ -263,7 +263,7 @@ class NormalSurfaces : public Packet {
          * filled when this routine returns.  If an error occurs (as
          * described above) then this routine will return \c null instead.
          */
-        static NormalSurfaces* enumerate(Triangulation<3>* owner,
+        static NormalSurfaces* enumerate(Triangulation<3>& owner,
             NormalCoords coords,
             NormalList which = NS_LIST_DEFAULT,
             NormalAlg algHints = NS_ALG_DEFAULT,

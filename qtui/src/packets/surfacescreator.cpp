@@ -203,7 +203,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalSurfaces* ans = NormalSurfaces::enumerate(
-            tri,
+            *tri,
             coordSystem,
             regina::NS_VERTEX | (embedded->isChecked() ?
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),
@@ -246,7 +246,7 @@ regina::Packet* SurfacesCreator::createPacket(regina::Packet* parent,
             parentWidget);
 
         NormalSurfaces* ans = NormalSurfaces::enumerate(
-            tri,
+            *tri,
             coordSystem,
             regina::NS_FUNDAMENTAL | (embedded->isChecked() ?
                 regina::NS_EMBEDDED_ONLY : regina::NS_IMMERSED_SINGULAR),

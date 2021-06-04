@@ -519,7 +519,7 @@ class NormalSurfaceVector {
          * @return \c true if and only if there is an octagonal disc type
          * present and its coordinate is greater than one.
          */
-        virtual bool hasMultipleOctDiscs(const Triangulation<3>* triang) const;
+        virtual bool hasMultipleOctDiscs(const Triangulation<3>& triang) const;
         /**
          * Determines if the normal surface represented is compact (has
          * finitely many discs).
@@ -534,7 +534,7 @@ class NormalSurfaceVector {
          * @return \c true if and only if the normal surface represented
          * is compact.
          */
-        virtual bool isCompact(const Triangulation<3>* triang) const;
+        virtual bool isCompact(const Triangulation<3>& triang) const;
         /**
          * Determines if the normal surface represented is vertex
          * linking.  A <i>vertex linking</i> surface contains only
@@ -550,7 +550,7 @@ class NormalSurfaceVector {
          * @return \c true if and only if the normal surface represented
          * is vertex linking.
          */
-        virtual bool isVertexLinking(const Triangulation<3>* triang) const;
+        virtual bool isVertexLinking(const Triangulation<3>& triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the link of a single vertex.
@@ -564,7 +564,7 @@ class NormalSurfaceVector {
          * @return the vertex linked by this surface, or \c null if this
          * surface is not the link of a single vertex.
          */
-        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang) const;
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>& triang) const;
         /**
          * Determines if a rational multiple of the normal surface represented
          * is the thin link of a single edge.
@@ -588,7 +588,7 @@ class NormalSurfaceVector {
          * as described above.
          */
         virtual std::pair<const Edge<3>*, const Edge<3>*> isThinEdgeLink(
-            const Triangulation<3>* triang) const;
+            const Triangulation<3>& triang) const;
         /**
          * Determines if the normal surface represented is a splitting
          * surface in the given triangulation.  A \a splitting surface
@@ -605,7 +605,7 @@ class NormalSurfaceVector {
          * @return \c true if and only if the normal surface represented
          * is a splitting surface.
          */
-        virtual bool isSplitting(const Triangulation<3>* triang) const;
+        virtual bool isSplitting(const Triangulation<3>& triang) const;
         /**
          * Determines if the normal surface represented is a central
          * surface in the given triangulation.  A \a central surface
@@ -623,7 +623,7 @@ class NormalSurfaceVector {
          * @return the number of tetrahedra that the surface meets if it
          * is a central surface, or \c null if it is not a central surface.
          */
-        virtual LargeInteger isCentral(const Triangulation<3>* triang) const;
+        virtual LargeInteger isCentral(const Triangulation<3>& triang) const;
 
         /**
          * Returns the number of triangular discs of the given type in
@@ -641,7 +641,7 @@ class NormalSurfaceVector {
          * @return the number of triangular discs of the given type.
          */
         virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const Triangulation<3>* triang) const = 0;
+            int vertex, const Triangulation<3>& triang) const = 0;
 
         /**
          * Returns the number of oriented triangular discs of the given type in
@@ -664,7 +664,7 @@ class NormalSurfaceVector {
          * @return the number of triangular discs of the given type.
          */
         virtual LargeInteger orientedTriangles(size_t tetIndex,
-            int vertex, const Triangulation<3>* triang, bool orientation) const;
+            int vertex, const Triangulation<3>& triang, bool orientation) const;
 
         /**
          * Returns the number of quadrilateral discs of the given type
@@ -681,7 +681,7 @@ class NormalSurfaceVector {
          * @return the number of quadrilateral discs of the given type.
          */
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang) const = 0;
+            int quadType, const Triangulation<3>& triang) const = 0;
 
         /**
          * Returns the number of oriented quadrilateral discs of the given type
@@ -703,7 +703,7 @@ class NormalSurfaceVector {
          * @return the number of quadrilateral discs of the given type.
          */
         virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang, bool orientation) const;
+            int quadType, const Triangulation<3>& triang, bool orientation) const;
         /**
          * Returns the number of octagonal discs of the given type
          * in this normal surface.
@@ -719,7 +719,7 @@ class NormalSurfaceVector {
          * @return the number of octagonal discs of the given type.
          */
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const Triangulation<3>* triang) const = 0;
+            int octType, const Triangulation<3>& triang) const = 0;
         /**
          * Returns the number of times this normal surface crosses the
          * given edge.
@@ -733,7 +733,7 @@ class NormalSurfaceVector {
          * given edge.
          */
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Triangulation<3>* triang) const = 0;
+            const Triangulation<3>& triang) const = 0;
         /**
          * Returns the number of arcs in which this normal surface
          * intersects the given triangle in the given direction.
@@ -750,7 +750,7 @@ class NormalSurfaceVector {
          * given triangle with the given arc type.
          */
         virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const Triangulation<3>* triang) const = 0;
+            int triVertex, const Triangulation<3>& triang) const = 0;
 
         /**
          * Generates the set of normal surface matching equations for
@@ -1908,32 +1908,29 @@ inline NormalSurface::~NormalSurface() {
 
 inline LargeInteger NormalSurface::triangles(size_t tetIndex,
         int vertex) const {
-    return vector_->triangles(tetIndex, vertex, &triangulation_);
+    return vector_->triangles(tetIndex, vertex, triangulation_);
 }
 inline LargeInteger NormalSurface::orientedTriangles(
         size_t tetIndex, int vertex, bool oriented) const {
-    return vector_->orientedTriangles(tetIndex, vertex, &triangulation_,
+    return vector_->orientedTriangles(tetIndex, vertex, triangulation_,
         oriented);
 }
 inline LargeInteger NormalSurface::quads(size_t tetIndex,
         int quadType) const {
-    return vector_->quads(tetIndex, quadType, &triangulation_);
+    return vector_->quads(tetIndex, quadType, triangulation_);
 }
 inline LargeInteger NormalSurface::orientedQuads(
         size_t tetIndex, int quadType, bool oriented) const {
-    return vector_->orientedQuads(tetIndex, quadType, &triangulation_,
-        oriented);
+    return vector_->orientedQuads(tetIndex, quadType, triangulation_, oriented);
 }
 inline LargeInteger NormalSurface::octs(size_t tetIndex, int octType) const {
-    return vector_->octs(tetIndex, octType, &triangulation_);
+    return vector_->octs(tetIndex, octType, triangulation_);
 }
-inline LargeInteger NormalSurface::edgeWeight(size_t edgeIndex)
-        const {
-    return vector_->edgeWeight(edgeIndex, &triangulation_);
+inline LargeInteger NormalSurface::edgeWeight(size_t edgeIndex) const {
+    return vector_->edgeWeight(edgeIndex, triangulation_);
 }
-inline LargeInteger NormalSurface::arcs(size_t triIndex,
-        int triVertex) const {
-    return vector_->arcs(triIndex, triVertex, &triangulation_);
+inline LargeInteger NormalSurface::arcs(size_t triIndex, int triVertex) const {
+    return vector_->arcs(triIndex, triVertex, triangulation_);
 }
 
 inline DiscType NormalSurface::octPosition() const {
@@ -1962,7 +1959,7 @@ inline void NormalSurface::writeRawVector(std::ostream& out) const {
 
 inline bool NormalSurface::isCompact() const {
     if (! compact_.known())
-        compact_ = vector_->isCompact(&triangulation_);
+        compact_ = vector_->isCompact(triangulation_);
     return compact_.value();
 }
 
@@ -2003,24 +2000,24 @@ inline size_t NormalSurface::countBoundaries() const {
 }
 
 inline bool NormalSurface::isVertexLinking() const {
-    return vector_->isVertexLinking(&triangulation_);
+    return vector_->isVertexLinking(triangulation_);
 }
 
 inline const Vertex<3>* NormalSurface::isVertexLink() const {
-    return vector_->isVertexLink(&triangulation_);
+    return vector_->isVertexLink(triangulation_);
 }
 
 inline std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink()
         const {
-    return vector_->isThinEdgeLink(&triangulation_);
+    return vector_->isThinEdgeLink(triangulation_);
 }
 
 inline bool NormalSurface::isSplitting() const {
-    return vector_->isSplitting(&triangulation_);
+    return vector_->isSplitting(triangulation_);
 }
 
 inline LargeInteger NormalSurface::isCentral() const {
-    return vector_->isCentral(&triangulation_);
+    return vector_->isCentral(triangulation_);
 }
 
 inline bool NormalSurface::normal() const {

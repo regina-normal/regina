@@ -106,7 +106,7 @@ class NSVectorQuadOct : public NSVectorMirrored {
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>& triang)
             const override;
 
-        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang)
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>& triang)
             const override;
 
         static std::optional<MatrixInt> makeMatchingEquations(
@@ -133,7 +133,7 @@ inline NormalSurfaceVector* NSVectorQuadOct::makeMirror(
 }
 
 inline const Vertex<3>* NSVectorQuadOct::isVertexLink(
-        const Triangulation<3>*) const {
+        const Triangulation<3>&) const {
     // Quad-oct space does not contain vertex links at all.
     return 0;
 }

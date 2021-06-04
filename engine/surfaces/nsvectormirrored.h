@@ -152,21 +152,21 @@ class NSVectorMirrored : public NormalSurfaceVector {
         virtual void scaleDown() override;
 
         virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const Triangulation<3>* triang) const override;
+            int vertex, const Triangulation<3>& triang) const override;
         virtual LargeInteger orientedTriangles(size_t tetIndex,
-            int vertex, const Triangulation<3>* triang, bool orientation) const
+            int vertex, const Triangulation<3>& triang, bool orientation) const
             override;
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang) const override;
+            int quadType, const Triangulation<3>& triang) const override;
         virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang, bool orientation) const
+            int quadType, const Triangulation<3>& triang, bool orientation) const
             override;
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const Triangulation<3>* triang) const override;
+            int octType, const Triangulation<3>& triang) const override;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Triangulation<3>* triang) const override;
+            const Triangulation<3>& triang) const override;
         virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const Triangulation<3>* triang) const override;
+            int triVertex, const Triangulation<3>& triang) const override;
 };
 
 /*@}*/
@@ -202,57 +202,57 @@ inline void NSVectorMirrored::scaleDown() {
 }
 
 inline LargeInteger NSVectorMirrored::triangles(
-        size_t tetIndex, int vertex, const Triangulation<3>* triang) const {
+        size_t tetIndex, int vertex, const Triangulation<3>& triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
-            makeMirror(*triang);
+            makeMirror(triang);
     return mirror->triangles(tetIndex, vertex, triang);
 }
 inline LargeInteger NSVectorMirrored::orientedTriangles(
-        size_t tetIndex, int vertex, const Triangulation<3>* triang,
+        size_t tetIndex, int vertex, const Triangulation<3>& triang,
         bool orientation) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
-            makeMirror(*triang);
+            makeMirror(triang);
     return mirror->orientedTriangles(tetIndex, vertex, triang,
         orientation);
 }
 inline LargeInteger NSVectorMirrored::quads(
-        size_t tetIndex, int quadType, const Triangulation<3>* triang) const {
+        size_t tetIndex, int quadType, const Triangulation<3>& triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
-            makeMirror(*triang);
+            makeMirror(triang);
     return mirror->quads(tetIndex, quadType, triang);
 }
 inline LargeInteger NSVectorMirrored::orientedQuads(
-        size_t tetIndex, int quadType, const Triangulation<3>* triang,
+        size_t tetIndex, int quadType, const Triangulation<3>& triang,
         bool orientation) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
-            makeMirror(*triang);
+            makeMirror(triang);
     return mirror->orientedQuads(tetIndex, quadType, triang,
         orientation);
 }
 inline LargeInteger NSVectorMirrored::octs(
-        size_t tetIndex, int octType, const Triangulation<3>* triang) const {
+        size_t tetIndex, int octType, const Triangulation<3>& triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
-            makeMirror(*triang);
+            makeMirror(triang);
     return mirror->octs(tetIndex, octType, triang);
 }
 inline LargeInteger NSVectorMirrored::edgeWeight(
-        size_t edgeIndex, const Triangulation<3>* triang) const {
+        size_t edgeIndex, const Triangulation<3>& triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
-            makeMirror(*triang);
+            makeMirror(triang);
     return mirror->edgeWeight(edgeIndex, triang);
 }
 inline LargeInteger NSVectorMirrored::arcs(
         size_t triIndex, int triVertex,
-        const Triangulation<3>* triang) const {
+        const Triangulation<3>& triang) const {
     if (! mirror)
         const_cast<NSVectorMirrored*>(this)->mirror =
-            makeMirror(*triang);
+            makeMirror(triang);
     return mirror->arcs(triIndex, triVertex, triang);
 }
 

@@ -35,9 +35,9 @@
 
 namespace regina {
 
-bool NormalHypersurfaceVector::isVertexLinking(const Triangulation<4>* triang)
+bool NormalHypersurfaceVector::isVertexLinking(const Triangulation<4>& triang)
         const {
-    size_t nPents = triang->size();
+    size_t nPents = triang.size();
     size_t pent;
     int type;
     for (pent = 0; pent < nPents; pent++) {
@@ -49,8 +49,8 @@ bool NormalHypersurfaceVector::isVertexLinking(const Triangulation<4>* triang)
 }
 
 const Vertex<4>* NormalHypersurfaceVector::isVertexLink(
-        const Triangulation<4>* triang) const {
-    size_t nPents = triang->size();
+        const Triangulation<4>& triang) const {
+    size_t nPents = triang.size();
     size_t pent;
     int type;
 
@@ -69,7 +69,7 @@ const Vertex<4>* NormalHypersurfaceVector::isVertexLink(
     LargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {
-        p = triang->pentachoron(pent);
+        p = triang.pentachoron(pent);
         for (type = 0; type < 5; type++) {
             coord = tetrahedra(pent, type, triang);
 
@@ -107,8 +107,8 @@ const Vertex<4>* NormalHypersurfaceVector::isVertexLink(
 }
 
 const Edge<4>* NormalHypersurfaceVector::isThinEdgeLink(
-        const Triangulation<4>* triang) const {
-    size_t nPents = triang->size();
+        const Triangulation<4>& triang) const {
+    size_t nPents = triang.size();
     size_t pent;
     int type;
 
@@ -120,7 +120,7 @@ const Edge<4>* NormalHypersurfaceVector::isThinEdgeLink(
     LargeInteger coord;
 
     for (pent = 0; pent < nPents; pent++) {
-        p = triang->pentachoron(pent);
+        p = triang.pentachoron(pent);
         for (type = 0; type < 10; type++) {
             coord = prisms(pent, type, triang);
 
@@ -157,7 +157,7 @@ const Edge<4>* NormalHypersurfaceVector::isThinEdgeLink(
     bool crosses;
     int i;
     for (pent = 0; pent < nPents; pent++) {
-        p = triang->pentachoron(pent);
+        p = triang.pentachoron(pent);
         for (type = 0; type < 5; type++) {
             v = p->vertex(type);
 

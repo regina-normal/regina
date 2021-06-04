@@ -45,6 +45,8 @@ Version 6.1  [ TODO ]
             - New function structures() for simpler iteration.
             - Changed triangulation() to return a const reference, not a
               non-const pointer.
+            - Changed enumerate() and enumerateTautDD() to take the
+              triangulation argument by reference, not by pointer.
         Class AugTriSolidTorus:
             - Class constants are now constexpr.
         Class Base64SigEncoding:
@@ -282,6 +284,8 @@ Version 6.1  [ TODO ]
             - New function hypersurfaces() for simpler iteration.
             - Changed triangulation() to return a const reference, not a
               non-const pointer.
+            - Changed enumerate() to take the triangulation argument by
+              reference, not by pointer.
         Class NormalSurface:
             - Renamed rawVector() to vector().  The old name is kept but
               deprecated.
@@ -297,6 +301,8 @@ Version 6.1  [ TODO ]
             - New filter() method that takes a SurfaceFilter.
             - Changed triangulation() to return a const reference, not a
               non-const pointer.
+            - Changed enumerate() to take the triangulation argument by
+              reference, not by pointer.
         Class NormalSurfaceVector, NormalHypersurfaceVector:
             - Renamed setElement() to set().  Since this is a virtual function,
               the old name has been removed completely.  If you have a
@@ -306,6 +312,8 @@ Version 6.1  [ TODO ]
               is now a template constructor that takes any const Vector<T>&.
             - Operator += now returns a reference, as it should.
             - New typedef Element, for better compatibility with Vector.
+            - All query routines now take the triangulation by reference,
+              not by pointer.
         Class NSVectorMirrored:
             - Changed makeMirror() to take its triangulation by reference,
               not by pointer.

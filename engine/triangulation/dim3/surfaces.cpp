@@ -98,7 +98,7 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
     // For valid, non-ideal triangulations we can do this in quad
     // coordinates (where a non-trivial sphere or disc is guaranteed to
     // appear as a vertex surface).  Otherwise fall back to standard coords.
-    NormalSurfaces* surfaces = NormalSurfaces::enumerate(this,
+    NormalSurfaces* surfaces = NormalSurfaces::enumerate(*this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
     NormalSurface* ans = nullptr;
     for (const NormalSurface* s : surfaces->surfaces()) {
@@ -163,8 +163,7 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
     // Given our preconditions, we can do this in quadrilateral-octagon
     // coordinates; for details see "Quadrilateral-octagon coordinates for
     // almost normal surfaces", B.B., Experiment. Math. 19 (2010), 285-315.
-    NormalSurfaces* surfaces = NormalSurfaces::enumerate(this,
-        NS_AN_QUAD_OCT);
+    NormalSurfaces* surfaces = NormalSurfaces::enumerate(*this, NS_AN_QUAD_OCT);
 
     // Our vertex surfaces are guaranteed to be in smallest possible
     // integer coordinates, with at most one non-zero octagonal coordinate.

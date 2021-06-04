@@ -923,7 +923,7 @@ class LinkTest : public CppUnit::TestFixture {
 
             // Find a separating sphere.
             regina::NormalSurfaces* vtx =
-                regina::NormalSurfaces::enumerate(c, regina::NS_STANDARD);
+                regina::NormalSurfaces::enumerate(*c, regina::NS_STANDARD);
             for (const regina::NormalSurface* s : vtx->surfaces()) {
                 if (s->eulerChar() != 2)
                     continue;

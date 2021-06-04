@@ -79,19 +79,19 @@ MatrixInt makeAngleEquations(const Triangulation<3>& tri) {
     return eqns;
 }
 
-void AngleStructures::enumerateInternal(Triangulation<3>* triang,
+void AngleStructures::enumerateInternal(Triangulation<3>& triang,
         ProgressTracker* tracker) {
     // Form the matching equations.
-    MatrixInt eqns = regina::makeAngleEquations(*triang);
+    MatrixInt eqns = regina::makeAngleEquations(triang);
 
-    if (tautOnly_ && (! triang->isEmpty())) {
+    if (tautOnly_ && (! triang.isEmpty())) {
         // For now just stick to arbitrary precision arithmetic.
         // TODO: Use native integer types when the angle equation matrix
         // is sufficiently small / simple.
         if (tracker)
             tracker->newStage("Enumerating taut angle structures");
 
-        TautEnumeration<LPConstraintNone, BanNone, Integer> search(*triang);
+        TautEnumeration<LPConstraintNone, BanNone, Integer> search(triang);
         while (search.next(tracker)) {
             structures_.push_back(search.buildStructure());
             if (tracker && tracker->isCancelled())
@@ -99,7 +99,7 @@ void AngleStructures::enumerateInternal(Triangulation<3>* triang,
         }
 
         if (! (tracker && tracker->isCancelled()))
-            triang->insertChildLast(this);
+            triang.insertChildLast(this);
 
         if (tracker)
             tracker->setFinished();
@@ -115,39 +115,38 @@ void AngleStructures::enumerateInternal(Triangulation<3>* triang,
 
         // Find the angle structures.
         DoubleDescription::enumerateExtremalRays<VectorInt>(
-            StructureInserter(*this, *triang), eqns, nullptr /* constraints */,
+            StructureInserter(*this, triang), eqns, nullptr /* constraints */,
             tracker);
 
         // All done!
         if (! (tracker && tracker->isCancelled()))
-            triang->insertChildLast(this);
+            triang.insertChildLast(this);
 
         if (tracker)
             tracker->setFinished();
     }
 }
 
-AngleStructures* AngleStructures::enumerate(Triangulation<3>* owner,
+AngleStructures* AngleStructures::enumerate(Triangulation<3>& owner,
         bool tautOnly, ProgressTracker* tracker) {
     AngleStructures* ans = new AngleStructures(tautOnly);
 
     if (tracker)
         std::thread(&AngleStructures::enumerateInternal,
-            ans, owner, tracker).detach();
+            ans, std::ref(owner), tracker).detach();
     else
         ans->enumerateInternal(owner);
     return ans;
 }
 
-AngleStructures* AngleStructures::enumerateTautDD(
-        Triangulation<3>* owner) {
+AngleStructures* AngleStructures::enumerateTautDD(Triangulation<3>& owner) {
     AngleStructures* ans = new AngleStructures(true /* taut only */);
 
     // Form the matching equations.
-    MatrixInt eqns = regina::makeAngleEquations(*owner);
+    MatrixInt eqns = regina::makeAngleEquations(owner);
 
     // Form the taut constraints.
-    EnumConstraints* constraints = new EnumConstraints(owner->size());
+    EnumConstraints* constraints = new EnumConstraints(owner.size());
 
     unsigned base = 0;
     for (unsigned c = 0; c < constraints->size(); ++c) {
@@ -158,11 +157,11 @@ AngleStructures* AngleStructures::enumerateTautDD(
 
     // Find the angle structures.
     DoubleDescription::enumerateExtremalRays<VectorInt>(
-        StructureInserter(*ans, *owner), eqns, constraints,
+        StructureInserter(*ans, owner), eqns, constraints,
         nullptr /* tracker */);
 
     // All done!
-    owner->insertChildLast(ans);
+    owner.insertChildLast(ans);
 
     delete constraints;
     return ans;

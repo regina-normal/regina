@@ -102,15 +102,15 @@ class NSVectorStandard : public NormalSurfaceVector {
         NSVectorStandard(const Vector<T>& cloneMe);
 
         virtual LargeInteger triangles(size_t tetIndex,
-            int vertex, const Triangulation<3>* triang) const override;
+            int vertex, const Triangulation<3>& triang) const override;
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang) const override;
+            int quadType, const Triangulation<3>& triang) const override;
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const Triangulation<3>* triang) const override;
+            int octType, const Triangulation<3>& triang) const override;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Triangulation<3>* triang) const override;
+            const Triangulation<3>& triang) const override;
         virtual LargeInteger arcs(size_t triIndex,
-            int triVertex, const Triangulation<3>* triang) const override;
+            int triVertex, const Triangulation<3>& triang) const override;
 
         static std::optional<MatrixInt> makeMatchingEquations(
             const Triangulation<3>& triangulation);
@@ -131,15 +131,15 @@ inline NSVectorStandard::NSVectorStandard(const Vector<T>& cloneMe) :
 }
 
 inline LargeInteger NSVectorStandard::triangles(
-        size_t tetIndex, int vertex, const Triangulation<3>*) const {
+        size_t tetIndex, int vertex, const Triangulation<3>&) const {
     return coords_[7 * tetIndex + vertex];
 }
 inline LargeInteger NSVectorStandard::quads(
-        size_t tetIndex, int quadType, const Triangulation<3>*) const {
+        size_t tetIndex, int quadType, const Triangulation<3>&) const {
     return coords_[7 * tetIndex + 4 + quadType];
 }
 inline LargeInteger NSVectorStandard::octs(
-        size_t, int, const Triangulation<3>*) const {
+        size_t, int, const Triangulation<3>&) const {
     return LargeInteger::zero;
 }
 

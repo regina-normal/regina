@@ -97,11 +97,11 @@ class HSVectorStandard : public NormalHypersurfaceVector {
         HSVectorStandard(const Vector<T>& cloneMe);
 
         virtual LargeInteger tetrahedra(size_t pentIndex,
-            int vertex, const Triangulation<4>* triang) const override;
+            int vertex, const Triangulation<4>& triang) const override;
         virtual LargeInteger prisms(size_t pentIndex,
-            int prismType, const Triangulation<4>* triang) const override;
+            int prismType, const Triangulation<4>& triang) const override;
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Triangulation<4>* triang) const override;
+            const Triangulation<4>& triang) const override;
 
         static std::optional<MatrixInt> makeMatchingEquations(
             const Triangulation<4>& triangulation);
@@ -122,11 +122,11 @@ inline HSVectorStandard::HSVectorStandard(const Vector<T>& cloneMe) :
 }
 
 inline LargeInteger HSVectorStandard::tetrahedra(
-        size_t pentIndex, int vertex, const Triangulation<4>*) const {
+        size_t pentIndex, int vertex, const Triangulation<4>&) const {
     return coords_[15 * pentIndex + vertex];
 }
 inline LargeInteger HSVectorStandard::prisms(
-        size_t pentIndex, int prismType, const Triangulation<4>*) const {
+        size_t pentIndex, int prismType, const Triangulation<4>&) const {
     return coords_[15 * pentIndex + 5 + prismType];
 }
 

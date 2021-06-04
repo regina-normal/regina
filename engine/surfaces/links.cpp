@@ -38,8 +38,8 @@
 
 namespace regina {
 
-bool NormalSurfaceVector::isVertexLinking(const Triangulation<3>* triang) const {
-    unsigned long nTets = triang->size();
+bool NormalSurfaceVector::isVertexLinking(const Triangulation<3>& triang) const {
+    unsigned long nTets = triang.size();
     unsigned long tet;
     int type;
     for (tet = 0; tet < nTets; tet++) {
@@ -55,9 +55,9 @@ bool NormalSurfaceVector::isVertexLinking(const Triangulation<3>* triang) const 
     return true;
 }
 
-const Vertex<3>* NormalSurfaceVector::isVertexLink(const Triangulation<3>* triang)
+const Vertex<3>* NormalSurfaceVector::isVertexLink(const Triangulation<3>& triang)
         const {
-    unsigned long nTets = triang->size();
+    unsigned long nTets = triang.size();
     unsigned long tet;
     int type;
 
@@ -84,7 +84,7 @@ const Vertex<3>* NormalSurfaceVector::isVertexLink(const Triangulation<3>* trian
     LargeInteger coord;
 
     for (tet = 0; tet < nTets; tet++) {
-        t = triang->tetrahedron(tet);
+        t = triang.tetrahedron(tet);
         for (type = 0; type < 4; type++) {
             v = t->vertex(type);
             coord = triangles(tet, type, triang);
@@ -130,8 +130,8 @@ const Vertex<3>* NormalSurfaceVector::isVertexLink(const Triangulation<3>* trian
 }
 
 std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
-        const Triangulation<3>* triang) const {
-    unsigned long nTets = triang->size();
+        const Triangulation<3>& triang) const {
+    unsigned long nTets = triang.size();
     unsigned long tet;
     int type;
 
@@ -156,7 +156,7 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
     int i;
 
     for (tet = 0; tet < nTets; tet++) {
-        t = triang->tetrahedron(tet);
+        t = triang.tetrahedron(tet);
         for (type = 0; type < 3; type++) {
             coord = quads(tet, type, triang);
             e[0] = t->edge(Edge<3>::edgeNumber[quadDefn[type][0]]
@@ -265,7 +265,7 @@ std::pair<const Edge<3>*, const Edge<3>*> NormalSurfaceVector::isThinEdgeLink(
     bool expectZero[2];
     int j;
     for (tet = 0; tet < nTets; tet++) {
-        t = triang->tetrahedron(tet);
+        t = triang.tetrahedron(tet);
         for (type = 0; type < 4; type++) {
             v = t->vertex(type);
             coord = triangles(tet, type, triang);

@@ -93,7 +93,7 @@ regina::Packet* AngleStructureCreator::createPacket(
         ui->tr("Enumerating vertex angle structures..."), parentWidget);
 
     regina::AngleStructures* ans = regina::AngleStructures::enumerate(
-            dynamic_cast<regina::Triangulation<3>*>(parentPacket),
+            *dynamic_cast<regina::Triangulation<3>*>(parentPacket),
             tautOnly->isChecked(), &tracker);
 
     if (dlg.run()) {

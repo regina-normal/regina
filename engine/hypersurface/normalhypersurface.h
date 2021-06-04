@@ -305,7 +305,7 @@ class NormalHypersurfaceVector {
          * @return \c true if and only if the normal hypersurface represented
          * is compact.
          */
-        virtual bool isCompact(const Triangulation<4>* triang) const;
+        virtual bool isCompact(const Triangulation<4>& triang) const;
         /**
          * Determines if the normal hypersurface represented is vertex
          * linking.  A <i>vertex linking</i> hypersurface contains only
@@ -322,7 +322,7 @@ class NormalHypersurfaceVector {
          * @return \c true if and only if the normal hypersurface represented
          * is vertex linking.
          */
-        virtual bool isVertexLinking(const Triangulation<4>* triang) const;
+        virtual bool isVertexLinking(const Triangulation<4>& triang) const;
         /**
          * Determines if a rational multiple of the normal hypersurface
          * represented is the link of a single vertex.
@@ -337,7 +337,7 @@ class NormalHypersurfaceVector {
          * @return the vertex linked by this hypersurface, or \c null if this
          * hypersurface is not the link of a single vertex.
          */
-        virtual const Vertex<4>* isVertexLink(const Triangulation<4>* triang)
+        virtual const Vertex<4>* isVertexLink(const Triangulation<4>& triang)
             const;
         /**
          * Determines if a rational multiple of the normal hypersurface
@@ -353,7 +353,7 @@ class NormalHypersurfaceVector {
          * @return the edge linked by this hypersurface, or \c null if this
          * hypersurface is not a thin edge link.
          */
-        virtual const Edge<4>* isThinEdgeLink(const Triangulation<4>* triang)
+        virtual const Edge<4>* isThinEdgeLink(const Triangulation<4>& triang)
             const;
 
         /**
@@ -372,7 +372,7 @@ class NormalHypersurfaceVector {
          * @return the number of tetrahedron pieces of the given type.
          */
         virtual LargeInteger tetrahedra(size_t pentIndex,
-            int vertex, const Triangulation<4>* triang) const = 0;
+            int vertex, const Triangulation<4>& triang) const = 0;
         /**
          * Returns the number of prism pieces of the given type
          * in this normal hypersurface.
@@ -389,7 +389,7 @@ class NormalHypersurfaceVector {
          * @return the number of prism pieces of the given type.
          */
         virtual LargeInteger prisms(size_t pentIndex,
-            int prismType, const Triangulation<4>* triang) const = 0;
+            int prismType, const Triangulation<4>& triang) const = 0;
         /**
          * Returns the number of times this normal hypersurface crosses the
          * given edge.
@@ -404,7 +404,7 @@ class NormalHypersurfaceVector {
          * given edge.
          */
         virtual LargeInteger edgeWeight(size_t edgeIndex,
-            const Triangulation<4>* triang) const = 0;
+            const Triangulation<4>& triang) const = 0;
 
         /**
          * Generates the set of normal hypersurface matching equations for
@@ -1084,14 +1084,14 @@ inline NormalHypersurface::~NormalHypersurface() {
 
 inline LargeInteger NormalHypersurface::tetrahedra(
         size_t pentIndex, int vertex) const {
-    return vector_->tetrahedra(pentIndex, vertex, &triangulation_);
+    return vector_->tetrahedra(pentIndex, vertex, triangulation_);
 }
 inline LargeInteger NormalHypersurface::prisms(
         size_t pentIndex, int prismType) const {
-    return vector_->prisms(pentIndex, prismType, &triangulation_);
+    return vector_->prisms(pentIndex, prismType, triangulation_);
 }
 inline LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
-    return vector_->edgeWeight(edgeIndex, &triangulation_);
+    return vector_->edgeWeight(edgeIndex, triangulation_);
 }
 
 inline size_t NormalHypersurface::countCoords() const {
@@ -1114,7 +1114,7 @@ inline void NormalHypersurface::writeRawVector(std::ostream& out) const {
 
 inline bool NormalHypersurface::isCompact() const {
     if (! compact_.known())
-        compact_ = vector_->isCompact(&triangulation_);
+        compact_ = vector_->isCompact(triangulation_);
     return compact_.value();
 }
 
@@ -1149,15 +1149,15 @@ inline const AbelianGroup& NormalHypersurface::homology() const {
 }
 
 inline bool NormalHypersurface::isVertexLinking() const {
-    return vector_->isVertexLinking(&triangulation_);
+    return vector_->isVertexLinking(triangulation_);
 }
 
 inline const Vertex<4>* NormalHypersurface::isVertexLink() const {
-    return vector_->isVertexLink(&triangulation_);
+    return vector_->isVertexLink(triangulation_);
 }
 
 inline const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
-    return vector_->isThinEdgeLink(&triangulation_);
+    return vector_->isThinEdgeLink(triangulation_);
 }
 
 inline const Vector<LargeInteger>& NormalHypersurface::vector() const {

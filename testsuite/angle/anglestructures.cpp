@@ -152,8 +152,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void empty() {
-            AngleStructures* list = AngleStructures::enumerate(
-                &triEmpty);
+            AngleStructures* list = AngleStructures::enumerate(triEmpty);
 
             testSize(list, "the empty triangulation", 1, true, true);
 
@@ -161,8 +160,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void oneTet() {
-            AngleStructures* list = AngleStructures::enumerate(
-                &triOneTet);
+            AngleStructures* list = AngleStructures::enumerate(triOneTet);
 
             testSize(list, "a standalone tetrahedron", 3, true, true);
             countStructures(list, "a standalone tetrahedron", 3,
@@ -172,8 +170,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void gieseking() {
-            AngleStructures* list = AngleStructures::enumerate(
-                &triGieseking);
+            AngleStructures* list = AngleStructures::enumerate(triGieseking);
 
             testSize(list, "the Gieseking manifold", 3, true, true);
             countStructures(list, "the Gieseking manifold", 3,
@@ -183,8 +180,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void figure8() {
-            AngleStructures* list = AngleStructures::enumerate(
-                &triFigure8);
+            AngleStructures* list = AngleStructures::enumerate(triFigure8);
 
             testSize(list, "the figure eight knot complement", 5, true, true);
             countStructures(list, "the figure eight knot complement", 3,
@@ -196,8 +192,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void loopC2() {
-            AngleStructures* list = AngleStructures::enumerate(
-                &triLoopC2);
+            AngleStructures* list = AngleStructures::enumerate(triLoopC2);
 
             testSize(list, "the untwisted layered loop C(2)", 0, false, false);
 
@@ -212,7 +207,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            AngleStructures* a = AngleStructures::enumerate(tri, true);
+            AngleStructures* a = AngleStructures::enumerate(*tri, true);
             if (a->size() != nTaut) {
                 std::ostringstream msg;
                 msg << "Taut angle structures for " << isoSig << ": "
@@ -314,8 +309,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         void verifyTautVsAll(Triangulation<3>* t, const char* name) {
-            AngleStructures* all = AngleStructures::enumerate(t, false);
-            AngleStructures* taut = AngleStructures::enumerate(t, true);
+            AngleStructures* all = AngleStructures::enumerate(*t, false);
+            AngleStructures* taut = AngleStructures::enumerate(*t, true);
 
             if (all->isTautOnly()) {
                 std::ostringstream msg;
@@ -467,12 +462,9 @@ class AngleStructuresTest : public CppUnit::TestFixture {
         }
 
         static void verifyTreeVsDD(Triangulation<3>* tri) {
-            AngleStructures* all = AngleStructures::enumerate(
-                tri, false);
-            AngleStructures* tautTree = AngleStructures::enumerate(
-                tri, true);
-            AngleStructures* tautDD = AngleStructures::enumerateTautDD(
-                tri);
+            AngleStructures* all = AngleStructures::enumerate(*tri, false);
+            AngleStructures* tautTree = AngleStructures::enumerate(*tri, true);
+            AngleStructures* tautDD = AngleStructures::enumerateTautDD(*tri);
             bool strictTree = tri->hasStrictAngleStructure();
 
             if (all->isTautOnly()) {

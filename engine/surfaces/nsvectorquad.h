@@ -104,11 +104,11 @@ class NSVectorQuad : public NSVectorMirrored {
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>& triang)
             const override;
 
-        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang)
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>& triang)
             const override;
 
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const Triangulation<3>* triang) const override;
+            int octType, const Triangulation<3>& triang) const override;
 
         static std::optional<MatrixInt> makeMatchingEquations(
             const Triangulation<3>& triangulation);
@@ -134,13 +134,13 @@ inline NormalSurfaceVector* NSVectorQuad::makeMirror(
 }
 
 inline const Vertex<3>* NSVectorQuad::isVertexLink(
-        const Triangulation<3>*) const {
+        const Triangulation<3>&) const {
     // Quad space does not contain vertex links at all.
     return 0;
 }
 
 inline LargeInteger NSVectorQuad::octs(
-        size_t, int, const Triangulation<3>*) const {
+        size_t, int, const Triangulation<3>&) const {
     return LargeInteger::zero;
 }
 

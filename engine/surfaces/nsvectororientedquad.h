@@ -109,16 +109,16 @@ class NSVectorOrientedQuad : public NSVectorMirrored {
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>& triang)
             const override;
 
-        virtual const Vertex<3>* isVertexLink(const Triangulation<3>* triang)
+        virtual const Vertex<3>* isVertexLink(const Triangulation<3>& triang)
             const override;
 
         virtual LargeInteger quads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang) const override;
+            int quadType, const Triangulation<3>& triang) const override;
         virtual LargeInteger orientedQuads(size_t tetIndex,
-            int quadType, const Triangulation<3>* triang, bool orientation)
+            int quadType, const Triangulation<3>& triang, bool orientation)
             const override;
         virtual LargeInteger octs(size_t tetIndex,
-            int octType, const Triangulation<3>* triang) const override;
+            int octType, const Triangulation<3>& triang) const override;
 
         static std::optional<MatrixInt> makeMatchingEquations(
             const Triangulation<3>& triangulation);
@@ -144,26 +144,26 @@ inline NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
 }
 
 inline LargeInteger NSVectorOrientedQuad::quads(
-        size_t tetIndex, int quadType, const Triangulation<3>* tri) const {
+        size_t tetIndex, int quadType, const Triangulation<3>& tri) const {
     return orientedQuads(tetIndex, quadType, tri, true)
            + orientedQuads(tetIndex, quadType, tri, false);
 }
 
 inline LargeInteger NSVectorOrientedQuad::orientedQuads(
-        size_t tetIndex, int quadType, const Triangulation<3>*, 
+        size_t tetIndex, int quadType, const Triangulation<3>&,
         bool orientation) const {
     return coords_[6 * tetIndex + 2 * quadType +
         (orientation ? 0 : 1)];
 }
 
 inline const Vertex<3>* NSVectorOrientedQuad::isVertexLink(
-        const Triangulation<3>*) const {
+        const Triangulation<3>&) const {
     // Quad space does not contain vertex links at all.
     return 0;
 }
 
 inline LargeInteger NSVectorOrientedQuad::octs(
-        size_t, int, const Triangulation<3>*) const {
+        size_t, int, const Triangulation<3>&) const {
     return LargeInteger::zero;
 }
 

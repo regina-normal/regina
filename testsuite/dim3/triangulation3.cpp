@@ -2101,7 +2101,7 @@ class Triangulation3Test : public TriangulationTest<3> {
             else {
                 expected = true;
                 NormalSurfaces* s = NormalSurfaces::enumerate(
-                    tri, regina::NS_STANDARD);
+                    *tri, regina::NS_STANDARD);
                 for (const NormalSurface* f : s->surfaces()) {
                     if (f->eulerChar() == 2 &&
                             (! f->hasRealBoundary()) &&

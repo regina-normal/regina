@@ -39,9 +39,9 @@
 namespace regina {
 
 LargeInteger NSVectorOriented::edgeWeight(
-        size_t edgeIndex, const Triangulation<3>* triang) const {
+        size_t edgeIndex, const Triangulation<3>& triang) const {
     // Find a tetrahedron next to the edge in question.
-    const EdgeEmbedding<3>& emb = triang->edge(edgeIndex)->front();
+    const EdgeEmbedding<3>& emb = triang.edge(edgeIndex)->front();
     long tetIndex = emb.tetrahedron()->index();
     int start = emb.vertices()[0];
     int end = emb.vertices()[1];
@@ -57,9 +57,9 @@ LargeInteger NSVectorOriented::edgeWeight(
 }
 
 LargeInteger NSVectorOriented::arcs(size_t triIndex,
-        int triVertex, const Triangulation<3>* triang) const {
+        int triVertex, const Triangulation<3>& triang) const {
     // Find a tetrahedron next to the triangle in question.
-    const TriangleEmbedding<3>& emb = triang->triangles()[triIndex]->front();
+    const TriangleEmbedding<3>& emb = triang.triangles()[triIndex]->front();
     long tetIndex = emb.tetrahedron()->index();
     int vertex = emb.vertices()[triVertex];
     int backOfFace = emb.vertices()[3];

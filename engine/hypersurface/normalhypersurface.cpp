@@ -43,9 +43,9 @@
 
 namespace regina {
 
-bool NormalHypersurfaceVector::isCompact(const Triangulation<4>* triang)
+bool NormalHypersurfaceVector::isCompact(const Triangulation<4>& triang)
         const {
-    size_t nPents = triang->size();
+    size_t nPents = triang.size();
     size_t pent;
     int type;
     for (pent = 0; pent < nPents; pent++) {

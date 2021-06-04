@@ -232,14 +232,14 @@ class AngleStructures : public Packet {
          * enuemrated, or \c false if we should enumerate all vertices
          * of the angle structure solution space; this defaults to \c false.
          * @param tracker a progress tracker through which progress will
-         * be reported, or 0 if no progress reporting is required.
+         * be reported, or \c null if no progress reporting is required.
          * @return the newly created angle structure list.  Note that if
          * a progress tracker is passed then this list may not be completely
          * filled when this routine returns.  If a progress tracker is
          * passed and a new thread could not be started, this routine
-         * returns 0 (and no angle structure list is created).
+         * returns \c null (and no angle structure list is created).
          */
-        static AngleStructures* enumerate(Triangulation<3>* owner,
+        static AngleStructures* enumerate(Triangulation<3>& owner,
             bool tautOnly = false, ProgressTracker* tracker = nullptr);
 
         /**
@@ -264,7 +264,7 @@ class AngleStructures : public Packet {
          * will be enumerated.
          * @return the newly created angle structure list.
          */
-        static AngleStructures* enumerateTautDD(Triangulation<3>* owner);
+        static AngleStructures* enumerateTautDD(Triangulation<3>& owner);
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
@@ -395,10 +395,10 @@ class AngleStructures : public Packet {
          * @param triang the triangulation upon which this angle
          * structure list will be based.
          * @param tracker the progress tracker to use for progress
-         * reporting and cancellation polling, or 0 if these
+         * reporting and cancellation polling, or \c null if these
          * capabilities are not required.
          */
-        void enumerateInternal(Triangulation<3>* triang,
+        void enumerateInternal(Triangulation<3>& triang,
             ProgressTracker* tracker = nullptr);
 
     friend class regina::XMLAngleStructuresReader;

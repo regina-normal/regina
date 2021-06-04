@@ -186,7 +186,7 @@ class NormalHypersurfaces : public Packet {
          * filled when this routine returns.  If an error occurs (as
          * described above) then this routine will return \c null instead.
          */
-        static NormalHypersurfaces* enumerate(Triangulation<4>* owner,
+        static NormalHypersurfaces* enumerate(Triangulation<4>& owner,
             HyperCoords coords,
             HyperList which = HS_LIST_DEFAULT,
             HyperAlg algHints = HS_ALG_DEFAULT,
