@@ -165,47 +165,6 @@ struct ReturnsTraits : public ReturnsTraitsImplementation<T,
         HasReturnType<typename std::remove_reference<T>::type>::value> {
 };
 
-/**
- * An empty placeholder object used to indicate a default-constructed
- * return value.
- *
- * Some of Regina's functions (e.g., the surface registry functions)
- * will accept a ReturnDefault as an alternative to the user having to
- * explicitly supply a return value to use in case of error.
- */
-struct ReturnDefault { };
-
-/**
- * A function object that creates a new object subclassed from \a Base,
- * where the particular subclass is chosen according to the template argument
- * to operator().  The template argument to the bracket operator would
- * typically be one of the registry helper classes, such as PacketInfo or
- * NormalInfo.
- *
- * This routine is intended for use with registry routines, such as the
- * non-void variants of forPacket() and forCoords().
- *
- * \ifacespython Not present.
- */
-template <class Base>
-struct NewFunction : public Returns<Base*> {
-    /**
-     * Creates a new object of the subclass Info::Class.
-     *
-     * \pre It is known in advance that Info::Class will be a subclass of
-     * \a Base.
-     *
-     * @param args any additional arguments to pass to the Info::Class
-     * constructor.  These will be copied/moved, so if you wish to pass
-     * a reference then you should wrap it in std::ref or std::cref.
-     * @return a new object of the subclass Info::Class.
-     */
-    template <typename Info, typename... Args>
-    inline Base* operator() (Args&&... args) const {
-        return new typename Info::Class(std::forward<Args>(args)...);
-    }
-};
-
 /*@}*/
 
 } // namespace regina

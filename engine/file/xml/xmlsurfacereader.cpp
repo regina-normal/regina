@@ -60,7 +60,10 @@ void XMLNormalSurfaceReader::initialChars(const std::string& chars) {
     if (coords == NS_AN_LEGACY)
         vec = new NSVectorANStandard(vecLen);
     else
-        vec = forCoords(coords, NewFunction<NormalSurfaceVector>(), 0, vecLen);
+        vec = forCoords(coords, [=](auto info) {
+            return static_cast<NormalSurfaceVector*>(
+                new typename decltype(info)::Class(vecLen));
+        }, nullptr);
     if (! vec)
         return;
 

@@ -1224,8 +1224,13 @@ class NormalSurfaces : public Packet {
         NormalSurfaces* internalStandardToReduced() const;
 
         /**
-         * A functor that performs all normal surface enumeration.
+         * Contains the code responsible for all normal surface enumeration,
+         * in a setting where the underlying coordinate system is known
+         * at compile time.
+         *
+         * \tparam Coords an instance of the NormalInfo<> template class.
          */
+        template <typename Coords>
         class Enumerator {
             private:
                 NormalSurfaces* list_;
@@ -1262,9 +1267,7 @@ class NormalSurfaces : public Packet {
                 Enumerator(Enumerator&&) = default;
 
                 /**
-                 * Performs the real enumeration work, in a setting
-                 * where the underlying coordinate system is
-                 * a compile-time constant.
+                 * Performs the real enumeration work.
                  *
                  * We assume here that neither list_->which_ nor
                  * list_->algorithm_ have been sanity-checked.
@@ -1272,12 +1275,8 @@ class NormalSurfaces : public Packet {
                  * This routine fills \a list_ with surfaces, and then once
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
-                 *
-                 * \tparam Coords an instance of the NormalInfo<> template
-                 * class.
                  */
-                template <typename Coords>
-                void operator() ();
+                void enumerate();
 
                 // Make this class non-copyable.
                 Enumerator(const Enumerator&) = delete;
@@ -1286,7 +1285,7 @@ class NormalSurfaces : public Packet {
             private:
                 /**
                  * The enumeration code for enumerating vertex surfaces.
-                 * This is internal to operator().
+                 * This is internal to enumerate().
                  *
                  * We assume that the flag set which_ is set correctly,
                  * and we do not alter it here.
@@ -1302,12 +1301,11 @@ class NormalSurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  */
-                template <typename Coords>
                 void fillVertex();
 
                 /**
                  * The enumeration code for enumerating fundamental surfaces.
-                 * This is internal to operator().
+                 * This is internal to enumerate().
                  *
                  * We assume that the flag set which_ is set correctly,
                  * and we do not alter it here.
@@ -1323,7 +1321,6 @@ class NormalSurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  */
-                template <typename Coords>
                 void fillFundamental();
 
                 /**
@@ -1340,7 +1337,6 @@ class NormalSurfaces : public Packet {
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
-                template <typename Coords>
                 void fillVertexDD();
 
                 /**
@@ -1358,7 +1354,6 @@ class NormalSurfaces : public Packet {
                  * \pre We are enumerating embedded surfaces only.
                  * \pre The underlying triangulation is non-empty.
                  */
-                template <typename Coords>
                 void fillVertexTree();
 
                 /**
@@ -1375,7 +1370,7 @@ class NormalSurfaces : public Packet {
                  * (i.e., will not overflow) for the enumeration problem
                  * under consideration.
                  */
-                template <typename Coords, typename Integer>
+                template <typename Integer>
                 void fillVertexTreeWith();
 
                 /**
@@ -1393,7 +1388,6 @@ class NormalSurfaces : public Packet {
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
-                template <typename Coords>
                 void fillFundamentalPrimal();
 
                 /**
@@ -1411,7 +1405,6 @@ class NormalSurfaces : public Packet {
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
-                template <typename Coords>
                 void fillFundamentalDual();
 
                 /**
@@ -1429,7 +1422,6 @@ class NormalSurfaces : public Packet {
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
-                template <typename Coords>
                 void fillFundamentalCD();
 
                 /**
@@ -1447,8 +1439,10 @@ class NormalSurfaces : public Packet {
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
-                template <typename Coords>
                 void fillFundamentalFullCone();
+
+            friend class Enumerator<typename Coords::Standard>;
+            friend class Enumerator<typename Coords::Reduced>;
         };
 
     friend class XMLNormalSurfacesReader;
@@ -1632,7 +1626,8 @@ inline NormalSurfaces::NormalSurfaces(NormalCoords coords,
         coords_(coords), which_(which), algorithm_(algorithm) {
 }
 
-inline NormalSurfaces::Enumerator::Enumerator(NormalSurfaces* list,
+template <typename Coords>
+inline NormalSurfaces::Enumerator<Coords>::Enumerator(NormalSurfaces* list,
         Triangulation<3>* triang, const MatrixInt& eqns,
         ProgressTracker* tracker) :
         list_(list), triang_(triang), eqns_(eqns),

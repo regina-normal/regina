@@ -62,15 +62,19 @@ NormalHypersurfaces* NormalHypersurfaces::enumerate(
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
         std::thread([=](MatrixInt e) {
-            forCoords(coords, Enumerator(list, owner, e, tracker));
+            forCoords(coords, [=, &e](auto info) {
+                Enumerator<decltype(info)>(list, owner, e, tracker).enumerate();
+            });
         }, std::move(*eqns)).detach();
     } else
-        forCoords(coords, Enumerator(list, owner, *eqns, tracker));
+        forCoords(coords, [=, &eqns](auto info) {
+            Enumerator<decltype(info)>(list, owner, *eqns, tracker).enumerate();
+        });
     return list;
 }
 
 template <typename Coords>
-void NormalHypersurfaces::Enumerator::operator() () {
+void NormalHypersurfaces::Enumerator<Coords>::enumerate() {
     // Clean up the "type of list" flag.
     list_->which_ &= (
         HS_EMBEDDED_ONLY | HS_IMMERSED_SINGULAR | HS_VERTEX | HS_FUNDAMENTAL);
@@ -80,9 +84,9 @@ void NormalHypersurfaces::Enumerator::operator() () {
 
     // Farm out the real work to list-type-specific routines.
     if (list_->which_.has(HS_VERTEX))
-        fillVertex<Coords>();
+        fillVertex();
     else
-        fillFundamental<Coords>();
+        fillFundamental();
 
     // Insert the results into the packet tree, but only once they are ready.
     if (! (tracker_ && tracker_->isCancelled()))
@@ -93,7 +97,7 @@ void NormalHypersurfaces::Enumerator::operator() () {
 }
 
 template <typename Coords>
-void NormalHypersurfaces::Enumerator::fillVertex() {
+void NormalHypersurfaces::Enumerator<Coords>::fillVertex() {
     // ----- Decide which algorithm to use -----
 
     // Here we will set the algorithm_ flag to precisely what we plan to do.
@@ -110,12 +114,12 @@ void NormalHypersurfaces::Enumerator::fillVertex() {
         if (tracker_)
             tracker_->newStage("Enumerating vertex hypersurfaces\n"
                 "(double description method)");
-        fillVertexDD<Coords>();
+        fillVertexDD();
     }
 }
 
 template <typename Coords>
-void NormalHypersurfaces::Enumerator::fillVertexDD() {
+void NormalHypersurfaces::Enumerator<Coords>::fillVertexDD() {
     if (list_->which_.has(HS_EMBEDDED_ONLY)) {
         EnumConstraints c = makeEmbeddedConstraints(
             *triang_, list_->coords_);
@@ -128,7 +132,7 @@ void NormalHypersurfaces::Enumerator::fillVertexDD() {
 }
 
 template <typename Coords>
-void NormalHypersurfaces::Enumerator::fillFundamental() {
+void NormalHypersurfaces::Enumerator<Coords>::fillFundamental() {
     // Get the empty triangulation out of the way separately.
     if (triang_->isEmpty()) {
         list_->algorithm_ = HS_HILBERT_DUAL; /* shrug */
@@ -148,13 +152,13 @@ void NormalHypersurfaces::Enumerator::fillFundamental() {
 
     // Run the chosen algorithm.
     if (list_->algorithm_.has(HS_HILBERT_PRIMAL))
-        fillFundamentalPrimal<Coords>();
+        fillFundamentalPrimal();
     else
-        fillFundamentalDual<Coords>();
+        fillFundamentalDual();
 }
 
 template <typename Coords>
-void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
+void NormalHypersurfaces::Enumerator<Coords>::fillFundamentalPrimal() {
     // We will not set algorithm_ until after the extremal ray
     // enumeration has finished (since we might want to pass additional flags
     // to and/or from that routine).
@@ -170,8 +174,8 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
         HS_VERTEX | (list_->which_.has(HS_EMBEDDED_ONLY) ?
             HS_EMBEDDED_ONLY : HS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
-    Enumerator e(vtx, triang_, std::move(eqns_), nullptr);
-    e.fillVertex<Coords>();
+    Enumerator<Coords> e(vtx, triang_, std::move(eqns_), nullptr);
+    e.fillVertex();
 
     // We cannot use eqns_ beyond this point, since we moved it into e.
 
@@ -198,7 +202,7 @@ void NormalHypersurfaces::Enumerator::fillFundamentalPrimal() {
 }
 
 template <typename Coords>
-void NormalHypersurfaces::Enumerator::fillFundamentalDual() {
+void NormalHypersurfaces::Enumerator<Coords>::fillFundamentalDual() {
     list_->algorithm_ = HS_HILBERT_DUAL;
 
     if (tracker_)

@@ -63,83 +63,45 @@ void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
     }
 }
 
-namespace {
-    struct MatchingEquations : public Returns<std::optional<MatrixInt>> {
-        template <typename Coords>
-        inline std::optional<MatrixInt> operator() (
-                const Triangulation<3>& tri) {
-            return Coords::Class::makeMatchingEquations(tri);
-        }
-    };
-}
-
 std::optional<MatrixInt> makeMatchingEquations(
         const Triangulation<3>& triangulation, NormalCoords coords) {
-    return forCoords(coords, MatchingEquations(), std::nullopt, triangulation);
-}
-
-namespace {
-    struct EmbeddedConstraints : public Returns<EnumConstraints> {
-        template <typename Coords>
-        inline EnumConstraints operator() (const Triangulation<3>& tri) {
-            return Coords::Class::makeEmbeddedConstraints(tri);
-        }
-    };
+    return forCoords(coords, [&](auto info) {
+        return decltype(info)::Class::makeMatchingEquations(triangulation);
+    }, std::nullopt);
 }
 
 EnumConstraints makeEmbeddedConstraints(
         const Triangulation<3>& triangulation, NormalCoords coords) {
-    return forCoords(coords, EmbeddedConstraints(), ReturnDefault(),
-        triangulation);
+    return forCoords(coords, [&](auto info) {
+        return decltype(info)::Class::makeEmbeddedConstraints(triangulation);
+    });
 }
 
 const Triangulation<3>& NormalSurfaces::triangulation() const {
     return *dynamic_cast<Triangulation<3>*>(parent());
 }
 
-namespace {
-    struct AlmostNormalFunction : public Returns<bool> {
-        template <typename Coords>
-        inline bool operator() () { return Coords::almostNormal; }
-    };
-}
-
 bool NormalSurfaces::allowsAlmostNormal() const {
     if (coords_ == NS_AN_LEGACY)
         return true;
     else
-        return forCoords(coords_, AlmostNormalFunction(), false);
-}
-
-namespace {
-    struct SpunFunction : public Returns<bool> {
-        template <typename Coords>
-        inline bool operator() () { return Coords::spun; }
-    };
+        return forCoords(coords_, [](auto info) {
+            return decltype(info)::almostNormal;
+        }, false);
 }
 
 bool NormalSurfaces::allowsSpun() const {
     // Both the default and the NS_AN_LEGACY cases should return false.
-    return forCoords(coords_, SpunFunction(), false);
-}
-
-namespace {
-    struct OrientedFunction : public Returns<bool> {
-        template <typename Coords>
-        inline bool operator() () { return Coords::oriented; }
-    };
+    return forCoords(coords_, [](auto info) {
+        return decltype(info)::spun;
+    }, false);
 }
 
 bool NormalSurfaces::allowsOriented() const {
     // Both the default and the NS_AN_LEGACY cases should return false.
-    return forCoords(coords_, OrientedFunction(), false);
-}
-
-namespace {
-    struct NameFunction : public Returns<const char*> {
-        template <typename Coords>
-        inline const char* operator() () { return Coords::name; }
-    };
+    return forCoords(coords_, [](auto info) {
+        return decltype(info)::oriented;
+    }, false);
 }
 
 void NormalSurfaces::writeTextShort(std::ostream& out) const {
@@ -171,7 +133,9 @@ void NormalSurfaces::writeTextShort(std::ostream& out) const {
     if (coords_ == NS_AN_LEGACY)
         out << AN_LEGACY_NAME;
     else
-        out << forCoords(coords_, NameFunction(), "Unknown");
+        out << forCoords(coords_, [](auto info) {
+            return decltype(info)::name;
+        }, "Unknown");
     out << ')';
 }
 
@@ -200,7 +164,10 @@ void NormalSurfaces::writeTextLong(std::ostream& out) const {
     if (coords_ == NS_AN_LEGACY)
         out << AN_LEGACY_NAME << '\n';
     else
-        out << forCoords(coords_, NameFunction(), "Unknown") << '\n';
+        out << forCoords(coords_, [](auto info) {
+                    return decltype(info)::name;
+                }, "Unknown")
+            << '\n';
 
     writeAllSurfaces(out);
 }
@@ -215,8 +182,10 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
     if (coords_ == NS_AN_LEGACY)
         out << regina::xml::xmlEncodeSpecialChars(AN_LEGACY_NAME);
     else
-        out << regina::xml::xmlEncodeSpecialChars(forCoords(
-            coords_, NameFunction(), "Unknown"));
+        out << regina::xml::xmlEncodeSpecialChars(
+            forCoords(coords_, [](auto info) {
+                return decltype(info)::name;
+            }, "Unknown"));
     out << "\"/>\n";
 
     // Write the individual surfaces.

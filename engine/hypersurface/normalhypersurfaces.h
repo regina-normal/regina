@@ -579,8 +579,13 @@ class NormalHypersurfaces : public Packet {
 
     private:
         /**
-         * A functor that performs all normal hypersurface enumeration.
+         * Contains the code responsible for all normal hypersurface
+         * enumeration, in a setting where the underlying coordinate system
+         * is known at compile time.
+         *
+         * \tparam Coords an instance of the HyperInfo<> template class.
          */
+        template <typename Coords>
         class Enumerator {
             private:
                 NormalHypersurfaces* list_;
@@ -618,9 +623,7 @@ class NormalHypersurfaces : public Packet {
                 Enumerator(Enumerator&&) = default;
 
                 /**
-                 * Performs the real enumeration work, in a setting
-                 * where the underlying coordinate system is
-                 * a compile-time constant.
+                 * Performs the real enumeration work.
                  *
                  * We assume here that neither list_->which_ nor
                  * list_->algorithm_ have been sanity-checked.
@@ -628,11 +631,8 @@ class NormalHypersurfaces : public Packet {
                  * This routine fills \a list_ with surfaces, and then once
                  * this is finished it inserts \a list_ into the packet
                  * tree as a child of \a triang_.
-                 *
-                 * \tparam Coords an instance of the HyperInfo<> template class.
                  */
-                template <typename Coords>
-                void operator() ();
+                void enumerate();
 
                 // Make this class non-copyable.
                 Enumerator(const Enumerator&) = delete;
@@ -641,7 +641,7 @@ class NormalHypersurfaces : public Packet {
             private:
                 /**
                  * The enumeration code for enumerating vertex hypersurfaces.
-                 * This is internal to operator().
+                 * This is internal to enumerate().
                  *
                  * We assume that the flag set which_ is set correctly,
                  * and we do not alter it here.
@@ -657,12 +657,11 @@ class NormalHypersurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  */
-                template <typename Coords>
                 void fillVertex();
 
                 /**
                  * The enumeration code for enumerating fundamental
-                 * hypersurfaces.  This is internal to operator().
+                 * hypersurfaces.  This is internal to enumerate().
                  *
                  * We assume that the flag set which_ is set correctly,
                  * and we do not alter it here.
@@ -678,7 +677,6 @@ class NormalHypersurfaces : public Packet {
                  * combined weights sum to 1.  It will not, however,
                  * call ProgressTracker::setFinished().
                  */
-                template <typename Coords>
                 void fillFundamental();
 
                 /**
@@ -695,7 +693,6 @@ class NormalHypersurfaces : public Packet {
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
-                template <typename Coords>
                 void fillVertexDD();
 
                 /**
@@ -713,7 +710,6 @@ class NormalHypersurfaces : public Packet {
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
-                template <typename Coords>
                 void fillFundamentalPrimal();
 
                 /**
@@ -731,7 +727,6 @@ class NormalHypersurfaces : public Packet {
                  *
                  * \pre The underlying triangulation is non-empty.
                  */
-                template <typename Coords>
                 void fillFundamentalDual();
         };
 
@@ -927,7 +922,8 @@ inline NormalHypersurfaces::NormalHypersurfaces(HyperCoords coords,
         coords_(coords), which_(which), algorithm_(algorithm) {
 }
 
-inline NormalHypersurfaces::Enumerator::Enumerator(
+template <typename Coords>
+inline NormalHypersurfaces::Enumerator<Coords>::Enumerator(
         NormalHypersurfaces* list, Triangulation<4>* triang,
         const MatrixInt& eqns, ProgressTracker* tracker) :
         list_(list), triang_(triang), eqns_(eqns),

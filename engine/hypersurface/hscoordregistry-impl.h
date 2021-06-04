@@ -56,39 +56,22 @@
 
 namespace regina {
 
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::ReturnType
-forCoords(HyperCoords coords, FunctionObject&& func,
-        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
-        Args&&... args) {
+template <typename FunctionObject, typename ReturnType>
+inline auto forCoords(HyperCoords coords, FunctionObject&& func,
+        ReturnType&& defaultReturn) {
+    typedef decltype(func(HyperInfo<HS_STANDARD>())) RealReturnType;
     switch (coords) {
-        case HS_STANDARD : return
-            func.template operator()<HyperInfo<HS_STANDARD>>(
-            std::forward<Args>(args)...);
-        default: return defaultReturn;
+        case HS_STANDARD : return func(HyperInfo<HS_STANDARD>());
+        default: return static_cast<RealReturnType>(defaultReturn);
     }
 }
 
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::ReturnType
-forCoords(HyperCoords coords, FunctionObject&& func, ReturnDefault,
-        Args&&... args) {
+template <typename FunctionObject>
+inline auto forCoords(HyperCoords coords, FunctionObject&& func) {
+    typedef decltype(func(HyperInfo<HS_STANDARD>())) RealReturnType;
     switch (coords) {
-        case HS_STANDARD : return
-            func.template operator()<HyperInfo<HS_STANDARD>>(
-            std::forward<Args>(args)...);
-        default: return typename ReturnsTraits<FunctionObject>::ReturnType();
-    }
-}
-
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::Void
-forCoords(HyperCoords coords, FunctionObject&& func, Args&&... args) {
-    switch (coords) {
-        case HS_STANDARD :
-            func.template operator()<HyperInfo<HS_STANDARD>>(
-            std::forward<Args>(args)...); break;
-        default: break;
+        case HS_STANDARD : return func(HyperInfo<HS_STANDARD>());
+        default: return RealReturnType();
     }
 }
 
@@ -96,5 +79,5 @@ forCoords(HyperCoords coords, FunctionObject&& func, Args&&... args) {
 
 } // namespace regina
 
-#endif // include guard __HSCOORDREGISTRY_IMPL_H
+#endif
 

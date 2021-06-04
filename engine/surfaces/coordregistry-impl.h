@@ -63,102 +63,38 @@
 
 namespace regina {
 
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::ReturnType
-forCoords(NormalCoords coords, FunctionObject&& func,
-        typename ReturnsTraits<FunctionObject>::ReturnType defaultReturn,
-        Args&&... args) {
+template <typename FunctionObject, typename ReturnType>
+inline auto forCoords(NormalCoords coords, FunctionObject&& func,
+        ReturnType&& defaultReturn) {
+    typedef decltype(func(NormalInfo<NS_STANDARD>())) RealReturnType;
     switch (coords) {
-        case NS_STANDARD : return
-            func.template operator()<NormalInfo<NS_STANDARD>>(
-            std::forward<Args>(args)...);
-        case NS_AN_STANDARD : return
-            func.template operator()<NormalInfo<NS_AN_STANDARD>>(
-            std::forward<Args>(args)...);
-        case NS_QUAD : return
-            func.template operator()<NormalInfo<NS_QUAD>>(
-            std::forward<Args>(args)...);
-        case NS_QUAD_CLOSED : return
-            func.template operator()<NormalInfo<NS_QUAD_CLOSED>>(
-            std::forward<Args>(args)...);
-        case NS_AN_QUAD_OCT : return
-            func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(
-            std::forward<Args>(args)...);
-        case NS_AN_QUAD_OCT_CLOSED : return
-            func.template operator()<NormalInfo<NS_AN_QUAD_OCT_CLOSED>>(
-            std::forward<Args>(args)...);
-        case NS_ORIENTED : return
-            func.template operator()<NormalInfo<NS_ORIENTED>>(
-            std::forward<Args>(args)...);
-        case NS_ORIENTED_QUAD : return
-            func.template operator()<NormalInfo<NS_ORIENTED_QUAD>>(
-            std::forward<Args>(args)...);
-        default: return defaultReturn;
-    }
-}
-
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::ReturnType
-forCoords(NormalCoords coords, FunctionObject&& func, ReturnDefault,
-        Args&&... args) {
-    switch (coords) {
-        case NS_STANDARD : return
-            func.template operator()<NormalInfo<NS_STANDARD>>(
-            std::forward<Args>(args)...);
-        case NS_AN_STANDARD : return
-            func.template operator()<NormalInfo<NS_AN_STANDARD>>(
-            std::forward<Args>(args)...);
-        case NS_QUAD : return
-            func.template operator()<NormalInfo<NS_QUAD>>(
-            std::forward<Args>(args)...);
-        case NS_QUAD_CLOSED : return
-            func.template operator()<NormalInfo<NS_QUAD_CLOSED>>(
-            std::forward<Args>(args)...);
-        case NS_AN_QUAD_OCT : return
-            func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(
-            std::forward<Args>(args)...);
-        case NS_AN_QUAD_OCT_CLOSED : return
-            func.template operator()<NormalInfo<NS_AN_QUAD_OCT_CLOSED>>(
-            std::forward<Args>(args)...);
-        case NS_ORIENTED : return
-            func.template operator()<NormalInfo<NS_ORIENTED>>(
-            std::forward<Args>(args)...);
-        case NS_ORIENTED_QUAD : return
-            func.template operator()<NormalInfo<NS_ORIENTED_QUAD>>(
-            std::forward<Args>(args)...);
-        default: return typename ReturnsTraits<FunctionObject>::ReturnType();
-    }
-}
-
-template <typename FunctionObject, typename... Args>
-inline typename ReturnsTraits<FunctionObject>::Void
-forCoords(NormalCoords coords, FunctionObject&& func, Args&&... args) {
-    switch (coords) {
-        case NS_STANDARD :
-            func.template operator()<NormalInfo<NS_STANDARD>>(
-            std::forward<Args>(args)...); break;
-        case NS_AN_STANDARD :
-            func.template operator()<NormalInfo<NS_AN_STANDARD>>(
-            std::forward<Args>(args)...); break;
-        case NS_QUAD :
-            func.template operator()<NormalInfo<NS_QUAD>>(
-            std::forward<Args>(args)...); break;
-        case NS_QUAD_CLOSED :
-            func.template operator()<NormalInfo<NS_QUAD_CLOSED>>(
-            std::forward<Args>(args)...); break;
-        case NS_AN_QUAD_OCT :
-            func.template operator()<NormalInfo<NS_AN_QUAD_OCT>>(
-            std::forward<Args>(args)...); break;
+        case NS_STANDARD : return func(NormalInfo<NS_STANDARD>());
+        case NS_AN_STANDARD : return func(NormalInfo<NS_AN_STANDARD>());
+        case NS_QUAD : return func(NormalInfo<NS_QUAD>());
+        case NS_QUAD_CLOSED : return func(NormalInfo<NS_QUAD_CLOSED>());
+        case NS_AN_QUAD_OCT : return func(NormalInfo<NS_AN_QUAD_OCT>());
         case NS_AN_QUAD_OCT_CLOSED :
-            func.template operator()<NormalInfo<NS_AN_QUAD_OCT_CLOSED>>(
-            std::forward<Args>(args)...); break;
-        case NS_ORIENTED :
-            func.template operator()<NormalInfo<NS_ORIENTED>>(
-            std::forward<Args>(args)...); break;
-        case NS_ORIENTED_QUAD :
-            func.template operator()<NormalInfo<NS_ORIENTED_QUAD>>(
-            std::forward<Args>(args)...); break;
-        default: break;
+            return func(NormalInfo<NS_AN_QUAD_OCT_CLOSED>());
+        case NS_ORIENTED : return func(NormalInfo<NS_ORIENTED>());
+        case NS_ORIENTED_QUAD : return func(NormalInfo<NS_ORIENTED_QUAD>());
+        default: return static_cast<RealReturnType>(defaultReturn);
+    }
+}
+
+template <typename FunctionObject>
+inline auto forCoords(NormalCoords coords, FunctionObject&& func) {
+    typedef decltype(func(NormalInfo<NS_STANDARD>())) RealReturnType;
+    switch (coords) {
+        case NS_STANDARD : return func(NormalInfo<NS_STANDARD>());
+        case NS_AN_STANDARD : return func(NormalInfo<NS_AN_STANDARD>());
+        case NS_QUAD : return func(NormalInfo<NS_QUAD>());
+        case NS_QUAD_CLOSED : return func(NormalInfo<NS_QUAD_CLOSED>());
+        case NS_AN_QUAD_OCT : return func(NormalInfo<NS_AN_QUAD_OCT>());
+        case NS_AN_QUAD_OCT_CLOSED :
+            return func(NormalInfo<NS_AN_QUAD_OCT_CLOSED>());
+        case NS_ORIENTED : return func(NormalInfo<NS_ORIENTED>());
+        case NS_ORIENTED_QUAD : return func(NormalInfo<NS_ORIENTED_QUAD>());
+        default: return RealReturnType();
     }
 }
 

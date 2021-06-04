@@ -258,9 +258,13 @@ Version 6.1  [ TODO ]
             - New do-nothing routines isInfinite() and tryReduce(), for
               compatibility with Integer and LargeInteger.
             - Added a global swap() to complement the member swap().
+        Class NewFunction<...>:
+            - Removed completely.
         Class NormalInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).
+            - Class constants almostNormal, spun and oriented are now
+              static constexpr bool, not enum constants.
         Class NormalHypersurface:
             - Renamed rawVector() to vector().  The old name is kept but
               deprecated.
@@ -456,8 +460,9 @@ Version 6.1  [ TODO ]
         Function faceOppositeEdge<dim>():
             - These functions are now constexpr.
         Function forCoords():
-            - You can now pass ReturnDefault() instead of an explicitly
-              supplied return value for the error case.
+            - Completely rewritten to take advantage of C++14 generic lambdas.
+              Any code that used forCoords() will need to be completely
+              rewritten (but should now become substantially simpler).
         Function makeAngleEquations():
             - Now takes a const reference (not a const pointer), and returns
               a MatrixInt by value (not by newly allocated pointer).

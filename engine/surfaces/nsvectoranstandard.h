@@ -60,11 +60,9 @@ struct NormalInfo<NS_AN_STANDARD> {
     typedef NormalInfo<NS_AN_STANDARD> Standard;
     typedef NormalInfo<NS_AN_QUAD_OCT> Reduced;
     static constexpr const char* name = "Standard almost normal (tri-quad-oct)";
-    enum {
-        almostNormal = 1,
-        spun = 0,
-        oriented = 0
-    };
+    static constexpr bool almostNormal = true;
+    static constexpr bool spun = false;
+    static constexpr bool oriented = false;
     static constexpr size_t dimension(size_t n) { return 10 * n; }
 };
 #endif

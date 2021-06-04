@@ -44,45 +44,22 @@
 
 namespace regina {
 
-namespace {
-    struct MatchingEquations : public Returns<std::optional<MatrixInt>> {
-        template <typename Coords>
-        inline std::optional<MatrixInt> operator() (
-                const Triangulation<4>& tri) {
-            return Coords::Class::makeMatchingEquations(tri);
-        }
-    };
-}
-
 std::optional<MatrixInt> makeMatchingEquations(
         const Triangulation<4>& triangulation, HyperCoords coords) {
-    return forCoords(coords, MatchingEquations(), std::nullopt, triangulation);
-}
-
-namespace {
-    struct EmbeddedConstraints : public Returns<EnumConstraints> {
-        template <typename Coords>
-        inline EnumConstraints operator() (const Triangulation<4>& tri) {
-            return Coords::Class::makeEmbeddedConstraints(tri);
-        }
-    };
+    return forCoords(coords, [&](auto info) {
+        return decltype(info)::Class::makeMatchingEquations(triangulation);
+    }, std::nullopt);
 }
 
 EnumConstraints makeEmbeddedConstraints(
         const Triangulation<4>& triangulation, HyperCoords coords) {
-    return forCoords(coords, EmbeddedConstraints(), ReturnDefault(),
-        triangulation);
+    return forCoords(coords, [&](auto info) {
+        return decltype(info)::Class::makeEmbeddedConstraints(triangulation);
+    });
 }
 
 const Triangulation<4>& NormalHypersurfaces::triangulation() const {
     return *dynamic_cast<Triangulation<4>*>(parent());
-}
-
-namespace {
-    struct NameFunction : public Returns<const char*> {
-        template <typename Coords>
-        inline const char* operator() () { return Coords::name; }
-    };
 }
 
 void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
@@ -109,7 +86,11 @@ void NormalHypersurfaces::writeTextShort(std::ostream& out) const {
     out << " hypersurface";
     if (surfaces_.size() != 1)
         out << 's';
-    out << " (" << forCoords(coords_, NameFunction(), "Unknown") << ')';
+    out << " ("
+        << forCoords(coords_, [](auto info) {
+                return decltype(info)::name;
+            }, "Unknown")
+        << ')';
 }
 
 void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
@@ -133,7 +114,10 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
 
     out << " hypersurfaces\n";
 
-    out << "Coordinates: " << forCoords(coords_, NameFunction(), "Unknown")
+    out << "Coordinates: "
+        << forCoords(coords_, [](auto info) {
+                return decltype(info)::name;
+            }, "Unknown")
         << '\n';
 
     size_t n = surfaces_.size();
@@ -151,8 +135,11 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out) const {
         << "algorithm=\"" << algorithm_.intValue() << "\" "
         << "flavourid=\"" << coords_ << "\"\n";
     out << "\tflavour=\""
-        << regina::xml::xmlEncodeSpecialChars(forCoords(
-           coords_, NameFunction(), "Unknown")) << "\"/>\n";
+        << regina::xml::xmlEncodeSpecialChars(
+            forCoords(coords_, [](auto info) {
+                return decltype(info)::name;
+            }, "Unknown"))
+        << "\"/>\n";
 
     // Write the individual hypersurfaces.
     for (auto it = surfaces_.begin(); it != surfaces_.end(); it++)

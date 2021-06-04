@@ -102,15 +102,19 @@ NormalSurfaces* NormalSurfaces::enumerate(
         // function so we can be sure that the equations are moved into
         // the thread before they are destroyed.
         std::thread([=](MatrixInt e) {
-            forCoords(coords, Enumerator(list, owner, e, tracker));
+            forCoords(coords, [=, &e](auto info) {
+                Enumerator<decltype(info)>(list, owner, e, tracker).enumerate();
+            });
         }, std::move(*eqns)).detach();
     } else
-        forCoords(coords, Enumerator(list, owner, *eqns, tracker));
+        forCoords(coords, [=, &eqns](auto info) {
+            Enumerator<decltype(info)>(list, owner, *eqns, tracker).enumerate();
+        });
     return list;
 }
 
 template <typename Coords>
-void NormalSurfaces::Enumerator::operator() () {
+void NormalSurfaces::Enumerator<Coords>::enumerate() {
     // Clean up the "type of list" flag.
     list_->which_ &= (
         NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR | NS_VERTEX | NS_FUNDAMENTAL);
@@ -120,9 +124,9 @@ void NormalSurfaces::Enumerator::operator() () {
 
     // Farm out the real work to list-type-specific routines.
     if (list_->which_.has(NS_VERTEX))
-        fillVertex<Coords>();
+        fillVertex();
     else
-        fillFundamental<Coords>();
+        fillFundamental();
 
     // Insert the results into the packet tree, but only once they are ready.
     if (! (tracker_ && tracker_->isCancelled()))
@@ -133,7 +137,7 @@ void NormalSurfaces::Enumerator::operator() () {
 }
 
 template <typename Coords>
-void NormalSurfaces::Enumerator::fillVertex() {
+void NormalSurfaces::Enumerator<Coords>::fillVertex() {
     // ----- Decide which algorithm to use -----
 
     // Here we will set the algorithm_ flag to precisely what we plan to do.
@@ -197,12 +201,12 @@ void NormalSurfaces::Enumerator::fillVertex() {
             if (tracker_)
                 tracker_->newStage(
                     "Enumerating vertex surfaces\n(tree traversal method)");
-            fillVertexTree<Coords>();
+            fillVertexTree();
         } else {
             if (tracker_)
                 tracker_->newStage(
                     "Enumerating vertex surfaces\n(double description method)");
-            fillVertexDD<Coords>();
+            fillVertexDD();
         }
     } else {
         // Enumerate in the reduced coordinate system, and then convert
@@ -214,7 +218,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
         // for other, unsupported coordinate systems.
 
         // Enumerate in reduced (quad / quad-oct) form.
-        Enumerator e(new NormalSurfaces(
+        Enumerator<typename Coords::Reduced> e(new NormalSurfaces(
                 (list_->coords_ == NS_STANDARD ? NS_QUAD : NS_AN_QUAD_OCT),
                 list_->which_, list_->algorithm_ ^ NS_VERTEX_VIA_REDUCED),
             triang_,
@@ -225,12 +229,12 @@ void NormalSurfaces::Enumerator::fillVertex() {
             if (tracker_)
                 tracker_->newStage("Enumerating reduced solution set\n"
                     "(tree traversal method)", 0.9);
-            e.fillVertexTree<typename Coords::Reduced>();
+            e.fillVertexTree();
         } else {
             if (tracker_)
                 tracker_->newStage("Enumerating reduced solution set\n"
                     "(double description method)", 0.9);
-            e.fillVertexDD<typename Coords::Reduced>();
+            e.fillVertexDD();
         }
 
         if (tracker_ && tracker_->isCancelled()) {
@@ -254,7 +258,7 @@ void NormalSurfaces::Enumerator::fillVertex() {
 }
 
 template <typename Coords>
-void NormalSurfaces::Enumerator::fillVertexDD() {
+void NormalSurfaces::Enumerator<Coords>::fillVertexDD() {
     if (list_->which_.has(NS_EMBEDDED_ONLY)) {
         EnumConstraints c = makeEmbeddedConstraints(*triang_, list_->coords_);
         DoubleDescription::enumerateExtremalRays<typename Coords::Class>(
@@ -266,7 +270,7 @@ void NormalSurfaces::Enumerator::fillVertexDD() {
 }
 
 template <typename Coords>
-void NormalSurfaces::Enumerator::fillVertexTree() {
+void NormalSurfaces::Enumerator<Coords>::fillVertexTree() {
     // We can always do this with the arbitrary-precision Integer,
     // but it will be much faster if we can get away with native
     // integers instead.  To do this, though, we need to be able to
@@ -318,7 +322,7 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
         default:
             // NS_QUAD_CLOSED / NS_AN_QUAD_OCT_CLOSED fall through to here.
             // Just use arbitrary precision arithmetic.
-            fillVertexTreeWith<Coords, Integer>();
+            fillVertexTreeWith<Integer>();
             return;
     }
 
@@ -412,20 +416,21 @@ void NormalSurfaces::Enumerator::fillVertexTree() {
     // Now we can select an appropriate integer type.
     if (worst <= LONG_MAX) {
         // std::cerr << "Using NNativeLong." << std::endl;
-        fillVertexTreeWith<Coords, NNativeLong>();
+        fillVertexTreeWith<NNativeLong>();
 #ifdef INT128_AVAILABLE
     } else if (worst <= maxSigned128) {
         // std::cerr << "Using NativeInteger<16>." << std::endl;
-        fillVertexTreeWith<Coords, NativeInteger<16> >();
+        fillVertexTreeWith<NativeInteger<16> >();
 #endif
     } else {
         // std::cerr << "Using the fallback Integer." << std::endl;
-        fillVertexTreeWith<Coords, Integer>();
+        fillVertexTreeWith<Integer>();
     }
 }
 
-template <typename Coords, typename Integer>
-void NormalSurfaces::Enumerator::fillVertexTreeWith() {
+template <typename Coords>
+template <typename Integer>
+void NormalSurfaces::Enumerator<Coords>::fillVertexTreeWith() {
     TreeEnumeration<typename LPArgs<Coords>::Constraint,
         BanNone, Integer> search(*triang_, LPArgs<Coords>::coords_);
     while (search.next(tracker_)) {
@@ -436,7 +441,7 @@ void NormalSurfaces::Enumerator::fillVertexTreeWith() {
 }
 
 template <typename Coords>
-void NormalSurfaces::Enumerator::fillFundamental() {
+void NormalSurfaces::Enumerator<Coords>::fillFundamental() {
     // Get the empty triangulation out of the way separately.
     if (triang_->isEmpty()) {
         list_->algorithm_ = NS_HILBERT_DUAL; /* shrug */
@@ -458,17 +463,17 @@ void NormalSurfaces::Enumerator::fillFundamental() {
 
     // Run the chosen algorithm.
     if (list_->algorithm_.has(NS_HILBERT_PRIMAL))
-        fillFundamentalPrimal<Coords>();
+        fillFundamentalPrimal();
     else if (list_->algorithm_.has(NS_HILBERT_DUAL))
-        fillFundamentalDual<Coords>();
+        fillFundamentalDual();
     else if (list_->algorithm_.has(NS_HILBERT_CD))
-        fillFundamentalCD<Coords>();
+        fillFundamentalCD();
     else
-        fillFundamentalFullCone<Coords>();
+        fillFundamentalFullCone();
 }
 
 template <typename Coords>
-void NormalSurfaces::Enumerator::fillFundamentalDual() {
+void NormalSurfaces::Enumerator<Coords>::fillFundamentalDual() {
     list_->algorithm_ = NS_HILBERT_DUAL;
 
     if (tracker_)
@@ -485,7 +490,7 @@ void NormalSurfaces::Enumerator::fillFundamentalDual() {
 }
 
 template <typename Coords>
-void NormalSurfaces::Enumerator::fillFundamentalCD() {
+void NormalSurfaces::Enumerator<Coords>::fillFundamentalCD() {
     list_->algorithm_ = NS_HILBERT_CD;
 
     if (tracker_)
@@ -503,7 +508,7 @@ void NormalSurfaces::Enumerator::fillFundamentalCD() {
 }
 
 template <typename Coords>
-void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
+void NormalSurfaces::Enumerator<Coords>::fillFundamentalPrimal() {
     // We will not set algorithm_ until after the extremal ray
     // enumeration has finished (since we might want to pass additional flags
     // to and/or from that routine).
@@ -520,7 +525,7 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
             NS_EMBEDDED_ONLY : NS_IMMERSED_SINGULAR),
         list_->algorithm_ /* passes through any vertex enumeration flags */);
     Enumerator e(vtx, triang_, std::move(eqns_), nullptr);
-    e.fillVertex<Coords>();
+    e.fillVertex();
 
     // We cannot use eqns below here, since we moved it into e.
 
@@ -547,7 +552,7 @@ void NormalSurfaces::Enumerator::fillFundamentalPrimal() {
 }
 
 template <typename Coords>
-void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
+void NormalSurfaces::Enumerator<Coords>::fillFundamentalFullCone() {
     list_->algorithm_ = NS_HILBERT_FULLCONE;
 
     if (tracker_)
@@ -625,8 +630,10 @@ void NormalSurfaces::Enumerator::fillFundamentalFullCone() {
             }
             if (! broken) {
                 // Insert a new surface.
-                v = forCoords(list_->coords_,
-                    NewFunction<NormalSurfaceVector>(), 0, dim);
+                v = forCoords(list_->coords_, [=](auto info) {
+                    return static_cast<NormalSurfaceVector*>(
+                        new typename decltype(info)::Class(dim));
+                }, nullptr);
                 if (! v) {
                     // Coordinate system not recognised.
                     // Return an empty list to indicate that something broke.

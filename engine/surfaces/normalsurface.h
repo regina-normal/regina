@@ -226,9 +226,9 @@ typedef Matrix<Integer, true> MatrixInt;
  *   for the corresponding coordinate systems with and without triangles
  *   (if this is not meaningful then both typedefs should just identify this
  *   system);
- * - enum constants \a almostNormal, \a spun and \a oriented, which indicate
- *   whether the coordinate system allows almost normal, spun and/or
- *   transversely oriented surfaces;
+ * - static constexpr boolean constants \a almostNormal, \a spun and
+ *   \a oriented, which indicate whether the coordinate system allows
+ *   almost normal, spun and/or transversely oriented surfaces;
  * - a static constexpr member <tt>const char* name</tt>, which gives
  *   the human-readable name of the coordinate system;
  * - a static constexpr function <tt>size_t dimension(size_t)</tt> which,

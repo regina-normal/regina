@@ -41,16 +41,6 @@ using regina::NormalHypersurface;
 using regina::NormalHypersurfaceVector;
 using regina::Triangulation;
 
-namespace {
-    struct ZeroVector : public regina::Returns<NormalHypersurfaceVector*> {
-        template <typename Coords>
-        inline NormalHypersurfaceVector* operator() (
-                const Triangulation<4>& tri) {
-            return new typename Coords::Class(Coords::dimension(tri.size()));
-        }
-    };
-}
-
 void addNormalHypersurface(pybind11::module_& m) {
     auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface")
         .def(pybind11::init<const NormalHypersurface&>())
@@ -58,8 +48,12 @@ void addNormalHypersurface(pybind11::module_& m) {
             const Triangulation<4>&>())
         .def(pybind11::init([](Triangulation<4>& t, regina::HyperCoords coords,
                 pybind11::list values) {
-            regina::NormalHypersurfaceVector* v = forCoords(
-                coords, ZeroVector(), nullptr, t);
+            regina::NormalHypersurfaceVector* v =
+                forCoords(coords, [&](auto info) {
+                    typedef decltype(info) Coords;
+                    return static_cast<NormalHypersurfaceVector*>(
+                        new typename Coords::Class(Coords::dimension(t.size())));
+                }, nullptr);
             if (values.size() != v->size()) {
                 delete v;
                 throw pybind11::index_error(

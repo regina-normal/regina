@@ -56,8 +56,10 @@ void XMLNormalHypersurfaceReader::initialChars(const std::string& chars) {
 
     // Create a new vector and read all non-zero entries.
     // Bring in cases from the coordinate system registry...
-    NormalHypersurfaceVector* vec = forCoords(coords_,
-        NewFunction<NormalHypersurfaceVector>(), 0, vecLen_);
+    NormalHypersurfaceVector* vec = forCoords(coords_, [=](auto info) {
+        return static_cast<NormalHypersurfaceVector*>(
+            new typename decltype(info)::Class(vecLen_));
+    }, nullptr);
     if (! vec)
         return;
 

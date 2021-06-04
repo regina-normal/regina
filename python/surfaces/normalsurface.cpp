@@ -60,13 +60,6 @@ namespace {
     GlobalArray2D<regina::Perm<4>> triDiscArcs_arr(regina::triDiscArcs, 4);
     GlobalArray2D<regina::Perm<4>> quadDiscArcs_arr(regina::quadDiscArcs, 3);
     GlobalArray2D<regina::Perm<4>> octDiscArcs_arr(regina::octDiscArcs, 3);
-
-    struct ZeroVector : public regina::Returns<NormalSurfaceVector*> {
-        template <typename Coords>
-        inline NormalSurfaceVector* operator() (const Triangulation<3>& tri) {
-            return new typename Coords::Class(Coords::dimension(tri.size()));
-        }
-    };
 }
 
 void addNormalSurface(pybind11::module_& m) {
@@ -75,8 +68,11 @@ void addNormalSurface(pybind11::module_& m) {
         .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>())
         .def(pybind11::init([](Triangulation<3>& t, regina::NormalCoords coords,
                 pybind11::list values) {
-            regina::NormalSurfaceVector* v = forCoords(coords, ZeroVector(),
-                nullptr, t);
+            regina::NormalSurfaceVector* v = forCoords(coords, [&](auto info) {
+                typedef decltype(info) Coords;
+                return static_cast<NormalSurfaceVector*>(
+                    new typename Coords::Class(Coords::dimension(t.size())));
+            }, nullptr);
             if (values.size() != v->size()) {
                 delete v;
                 throw pybind11::index_error(
