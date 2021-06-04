@@ -112,7 +112,10 @@ Version 6.1  [ TODO ]
             - New type trait to identify which of Regina's integer types
               can be losslessly assigned to which others.
         Class FileInfo:
+            - Added a move constructor and move assignment operator.
             - Class constant TYPE_XML is now constexpr.
+            - Routine identify() now returns a std::optional<FileInfo>,
+              not a newly allocated pointer that could be null.
         Class FuncDelete, FuncNew, FuncNewCopyPtr, FuncNewCopyRef,
                 FuncNewCopyClonePtr:
             - Deprecated.  Regina does not use these any more, and modern

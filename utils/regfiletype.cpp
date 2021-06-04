@@ -47,17 +47,15 @@ int main(int argc, char* argv[]) {
     if (argc < 2)
         usage(argv[0], "Please specify one or more files.");
 
-    regina::FileInfo* info;
     for (int i = 1; i < argc; i++) {
         if (argc != 2)
             std::cout << "[ " << argv[i] << " ]\n";
 
-        info = regina::FileInfo::identify(argv[i]);
+        auto info = regina::FileInfo::identify(argv[i]);
         if (info)
             info->writeTextLong(std::cout);
         else
             std::cout << "Unknown file format or file could not be opened.\n";
-        delete info;
 
         if (argc != 2)
             std::cout << std::endl;

@@ -39,6 +39,7 @@
 #define __FILEINFO_H
 #endif
 
+#include <optional>
 #include "regina-core.h"
 #include "core/output.h"
 
@@ -61,6 +62,11 @@ namespace regina {
  * These have not been in use for over a decade.  The only file type
  * that this class now recognises is TYPE_XML (compressed or uncompressed
  * XML data files).
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement, though it does not implement (or need) its own custom swap()
+ * function.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class FileInfo : public Output<FileInfo> {
     public:
@@ -90,6 +96,12 @@ class FileInfo : public Output<FileInfo> {
          * Creates a new copy of the given file information.
          */
         FileInfo(const FileInfo&) = default;
+        /**
+         * Moves the contents of the given file information to this new object.
+         *
+         * The object that was passed will no longer be usable.
+         */
+        FileInfo(FileInfo&&) noexcept = default;
         /**
          * Returns the pathname of the data file being described.
          *
@@ -139,6 +151,14 @@ class FileInfo : public Output<FileInfo> {
          * Sets this to be a copy of the given file information.
          */
         FileInfo& operator = (const FileInfo&) = default;
+        /**
+         * Moves the contents of the given file information to this new object.
+         *
+         * The object that was passed will no longer be usable.
+         *
+         * @return a reference to this object.
+         */
+        FileInfo& operator = (FileInfo&&) noexcept = default;
 
         /**
          * Return information about the given Regina data file.
@@ -150,11 +170,10 @@ class FileInfo : public Output<FileInfo> {
          * routine will use the same encoding that is passed here.
          *
          * @param idPathname the pathname of the data file to be examined.
-         * @return a newly created FileInfo structure containing
-         * information about the given file, or 0 if the file type could not
-         * be identified.
+         * @return a FileInfo structure containing information about the
+         * given file, or no value if the file type could not be identified.
          */
-        static FileInfo* identify(const std::string& idPathname);
+        static std::optional<FileInfo> identify(std::string idPathname);
 
         /**
          * Writes a short text representation of this object to the
