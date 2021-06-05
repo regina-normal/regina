@@ -94,16 +94,16 @@ XMLElementReader* XMLAngleStructuresReader::startContentSubElement(
         return new XMLAngleStructureReader(tri);
     } else if (subTagName == "spanstrict") {
         if (valueOf(props.lookup("value"), b))
-            list->doesSpanStrict = b;
+            list->doesSpanStrict_ = b;
     } else if (subTagName == "spantaut") {
         if (valueOf(props.lookup("value"), b))
-            list->doesSpanTaut = b;
+            list->doesSpanTaut_ = b;
     } else if (subTagName == "allowstrict") {
         if (valueOf(props.lookup("value"), b))
-            list->doesSpanStrict = b;
+            list->doesSpanStrict_ = b;
     } else if (subTagName == "allowtaut") {
         if (valueOf(props.lookup("value"), b))
-            list->doesSpanTaut = b;
+            list->doesSpanTaut_ = b;
     }
     return new XMLElementReader();
 }

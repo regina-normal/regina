@@ -50,7 +50,6 @@
 #include "surfaces/normalcoords.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
-#include "utilities/property.h"
 
 namespace regina {
 
@@ -825,25 +824,25 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         std::string name_;
             /**< An optional name associated with this surface. */
 
-        mutable Property<DiscType> octPosition_;
+        mutable std::optional<DiscType> octPosition_;
             /**< The position of the first non-zero octagonal coordinate,
                  or a null disc type if there is no non-zero octagonal
                  coordinate.  Here DiscType::type is an octagon type
                  between 0 and 2 inclusive. */
-        mutable Property<LargeInteger> eulerChar_;
+        mutable std::optional<LargeInteger> eulerChar_;
             /**< The Euler characteristic of this surface. */
-        mutable Property<size_t> boundaries_;
+        mutable std::optional<size_t> boundaries_;
             /**< The number of disjoint boundary curves on this surface. */
-        mutable Property<bool> orientable_;
+        mutable std::optional<bool> orientable_;
             /**< Is this surface orientable? */
-        mutable Property<bool> twoSided_;
+        mutable std::optional<bool> twoSided_;
             /**< Is this surface two-sided? */
-        mutable Property<bool> connected_;
+        mutable std::optional<bool> connected_;
             /**< Is this surface connected? */
-        mutable Property<bool> realBoundary_;
+        mutable std::optional<bool> realBoundary_;
             /**< Does this surface have real boundary (i.e. does it meet
              *   any boundary triangles)? */
-        mutable Property<bool> compact_;
+        mutable std::optional<bool> compact_;
             /**< Is this surface compact (i.e. does it only contain
              *   finitely many discs)? */
 
@@ -1950,16 +1949,16 @@ inline NormalSurface::NormalSurface(const NormalSurface& other) :
 inline NormalSurface::NormalSurface(NormalSurface&& src) noexcept :
         vector_(src.vector_),
         triangulation_(src.triangulation_),
+
         name_(std::move(src.name_)),
-        // lightweight properties:
-        octPosition_(src.octPosition_),
-        eulerChar_(src.eulerChar_),
-        boundaries_(src.boundaries_),
-        orientable_(src.orientable_),
-        twoSided_(src.twoSided_),
-        connected_(src.connected_),
-        realBoundary_(src.realBoundary_),
-        compact_(src.compact_) {
+        octPosition_(std::move(src.octPosition_)),
+        eulerChar_(std::move(src.eulerChar_)),
+        boundaries_(std::move(src.boundaries_)),
+        orientable_(std::move(src.orientable_)),
+        twoSided_(std::move(src.twoSided_)),
+        connected_(std::move(src.connected_)),
+        realBoundary_(std::move(src.realBoundary_)),
+        compact_(std::move(src.compact_)) {
     src.vector_ = nullptr;
 }
 
@@ -1993,16 +1992,16 @@ inline NormalSurface& NormalSurface::operator = (NormalSurface&& value)
     std::swap(vector_, value.vector_);
 
     triangulation_ = value.triangulation_;
-    name_ = std::move(value.name_);
 
-    octPosition_ = value.octPosition_;
-    eulerChar_ = value.eulerChar_;
-    boundaries_ = value.boundaries_;
-    orientable_ = value.orientable_;
-    twoSided_ = value.twoSided_;
-    connected_ = value.connected_;
-    realBoundary_ = value.realBoundary_;
-    compact_ = value.compact_;
+    name_ = std::move(value.name_);
+    octPosition_ = std::move(value.octPosition_);
+    eulerChar_ = std::move(value.eulerChar_);
+    boundaries_ = std::move(value.boundaries_);
+    orientable_ = std::move(value.orientable_);
+    twoSided_ = std::move(value.twoSided_);
+    connected_ = std::move(value.connected_);
+    realBoundary_ = std::move(value.realBoundary_);
+    compact_ = std::move(value.compact_);
 
     return *this;
 }
@@ -2049,9 +2048,9 @@ inline LargeInteger NormalSurface::arcs(size_t triIndex, int triVertex) const {
 }
 
 inline DiscType NormalSurface::octPosition() const {
-    if (! octPosition_.known())
+    if (! octPosition_.has_value())
         calculateOctPosition();
-    return octPosition_.value();
+    return *octPosition_;
 }
 
 inline size_t NormalSurface::countCoords() const {
@@ -2073,45 +2072,45 @@ inline void NormalSurface::writeRawVector(std::ostream& out) const {
 }
 
 inline bool NormalSurface::isCompact() const {
-    if (! compact_.known())
+    if (! compact_.has_value())
         compact_ = vector_->isCompact(*triangulation_);
-    return compact_.value();
+    return *compact_;
 }
 
 inline LargeInteger NormalSurface::eulerChar() const {
-    if (! eulerChar_.known())
+    if (! eulerChar_.has_value())
         calculateEulerChar();
-    return eulerChar_.value();
+    return *eulerChar_;
 }
 
 inline bool NormalSurface::isOrientable() const {
-    if (! orientable_.known())
+    if (! orientable_.has_value())
         calculateOrientable();
-    return orientable_.value();
+    return *orientable_;
 }
 
 inline bool NormalSurface::isTwoSided() const {
-    if (! twoSided_.known())
+    if (! twoSided_.has_value())
         calculateOrientable();
-    return twoSided_.value();
+    return *twoSided_;
 }
 
 inline bool NormalSurface::isConnected() const {
-    if (! connected_.known())
+    if (! connected_.has_value())
         calculateOrientable();
-    return connected_.value();
+    return *connected_;
 }
 
 inline bool NormalSurface::hasRealBoundary() const {
-    if (! realBoundary_.known())
+    if (! realBoundary_.has_value())
         calculateRealBoundary();
-    return realBoundary_.value();
+    return *realBoundary_;
 }
 
 inline size_t NormalSurface::countBoundaries() const {
-    if (! boundaries_.known())
+    if (! boundaries_.has_value())
         calculateBoundaries();
-    return boundaries_.value();
+    return *boundaries_;
 }
 
 inline bool NormalSurface::isVertexLinking() const {

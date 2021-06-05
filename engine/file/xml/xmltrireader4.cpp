@@ -33,7 +33,6 @@
 #include "file/xml/xmlalgebrareader.h"
 #include "file/xml/xmltrireader4.h"
 #include "triangulation/dim4.h"
-#include "utilities/property.h"
 
 namespace regina {
 

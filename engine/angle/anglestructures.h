@@ -42,13 +42,13 @@
 
 #include <algorithm>
 #include <iterator>
+#include <optional>
 #include <vector>
 #include "regina-core.h"
 #include "angle/anglestructure.h"
 #include "maths/matrix.h"
 #include "packet/packet.h"
 #include "utilities/listview.h"
-#include "utilities/property.h"
 
 namespace regina {
 
@@ -90,12 +90,12 @@ class AngleStructures : public Packet {
                  This is an option selected by the user before enumeration
                  takes place. */
 
-        mutable Property<bool> doesSpanStrict;
+        mutable std::optional<bool> doesSpanStrict_;
             /**< Does the convex span of this list include a strict
                  angle structure?
                  This is determined by looking at the output angle structues
                  after enumeration has taken place. */
-        mutable Property<bool> doesSpanTaut;
+        mutable std::optional<bool> doesSpanTaut_;
             /**< Does this list include a taut structure?
                  This is determined by looking at the output angle structues
                  after enumeration has taken place. */
@@ -444,15 +444,15 @@ inline const AngleStructure* AngleStructures::structure(
 }
 
 inline bool AngleStructures::spansStrict() const {
-    if (! doesSpanStrict.known())
+    if (! doesSpanStrict_.has_value())
         calculateSpanStrict();
-    return doesSpanStrict.value();
+    return *doesSpanStrict_;
 }
 
 inline bool AngleStructures::spansTaut() const {
-    if (! doesSpanTaut.known())
+    if (! doesSpanTaut_.has_value())
         calculateSpanTaut();
-    return doesSpanTaut.value();
+    return *doesSpanTaut_;
 }
 
 inline bool AngleStructures::dependsOnParent() const {

@@ -199,11 +199,11 @@ void AngleStructures::writeXMLPacketData(std::ostream& out) const {
         a->writeXMLData(out);
 
     // Write the properties.
-    if (doesSpanStrict.known())
-        out << "  " << xmlValueTag("spanstrict", doesSpanStrict.value())
+    if (doesSpanStrict_.has_value())
+        out << "  " << xmlValueTag("spanstrict", *doesSpanStrict_)
             << '\n';
-    if (doesSpanTaut.known())
-        out << "  " << xmlValueTag("spantaut", doesSpanTaut.value())
+    if (doesSpanTaut_.has_value())
+        out << "  " << xmlValueTag("spantaut", *doesSpanTaut_)
             << '\n';
 }
 
@@ -213,23 +213,21 @@ Packet* AngleStructures::internalClonePacket(Packet* parent) const {
         ans->structures_.push_back(new AngleStructure(*s,
             *static_cast<Triangulation<3>*>(parent)));
 
-    if (doesSpanStrict.known())
-        ans->doesSpanStrict = doesSpanStrict;
-    if (doesSpanTaut.known())
-        ans->doesSpanTaut = doesSpanTaut;
+    ans->doesSpanStrict_ = doesSpanStrict_;
+    ans->doesSpanTaut_ = doesSpanTaut_;
 
     return ans;
 }
 
 void AngleStructures::calculateSpanStrict() const {
     if (structures_.empty()) {
-        doesSpanStrict = false;
+        doesSpanStrict_ = false;
         return;
     }
 
     unsigned long nTets = triangulation().size();
     if (nTets == 0) {
-        doesSpanStrict = true;
+        doesSpanStrict_ = true;
         return;
     }
 
@@ -255,7 +253,7 @@ void AngleStructures::calculateSpanStrict() const {
         }
 
     if (nFixed == 0) {
-        doesSpanStrict = true;
+        doesSpanStrict_ = true;
         delete[] fixedAngles;
         return;
     }
@@ -273,7 +271,7 @@ void AngleStructures::calculateSpanStrict() const {
                     fixedAngles[3 * tet + edges] = Rational::undefined;
                     nFixed--;
                     if (nFixed == 0) {
-                        doesSpanStrict = true;
+                        doesSpanStrict_ = true;
                         delete[] fixedAngles;
                         return;
                     }
@@ -282,18 +280,18 @@ void AngleStructures::calculateSpanStrict() const {
     }
 
     // Some of the bad angles never changed.
-    doesSpanStrict = false;
+    doesSpanStrict_ = false;
     delete[] fixedAngles;
 }
 
 void AngleStructures::calculateSpanTaut() const {
     for (const AngleStructure* s : structures_) {
         if (s->isTaut()) {
-            doesSpanTaut = true;
+            doesSpanTaut_ = true;
             return;
         }
     }
-    doesSpanTaut = false;
+    doesSpanTaut_ = false;
 }
 
 } // namespace regina

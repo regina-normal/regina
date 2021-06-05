@@ -63,20 +63,16 @@ void NormalSurface::calculateOrientable() const {
     // This is going to be ghastly.
     // We will create an orientation and side selection for every disc.
 
+    orientable_.reset();
+    twoSided_.reset();
+    connected_.reset();
+
     // First check that the precondition (compactness) holds, since if
     // it doesn't we'll have a rather nasty crash (thanks Nathan).
-    if (! isCompact()) {
-        orientable_.clear();
-        twoSided_.clear();
-        connected_.clear();
+    if (! isCompact())
         return;
-    }
 
     // All right.  Off we go.
-    orientable_.clear();
-    twoSided_.clear();
-    connected_.clear();
-
     DiscSetSurfaceData<OrientData> orients(*this);
         // Stores the orientation of each disc.
     std::queue<DiscSpec> discQueue;
@@ -153,7 +149,7 @@ void NormalSurface::calculateOrientable() const {
             // There is actually a disc glued along this arc.
             // Determine the desired properties of the adjacent disc.
 
-            if (! orientable_.known()) {
+            if (! orientable_.has_value()) {
                 myOrient = discOrientationFollowsEdge(use.type,
                     arc[i][0], arc[i][1], arc[i][2]);
                 yourOrient = discOrientationFollowsEdge(adjDisc->type,
@@ -163,7 +159,7 @@ void NormalSurface::calculateOrientable() const {
             } else
                 sameOrient = true;
 
-            if (! twoSided_.known()) {
+            if (! twoSided_.has_value()) {
                 mySides = numberDiscsAwayFromVertex(use.type, arc[i][0]);
                 yourSides = numberDiscsAwayFromVertex(
                     adjDisc->type, adjArc[0]);
@@ -181,7 +177,7 @@ void NormalSurface::calculateOrientable() const {
                     orients.data(use).sides : -orients.data(use).sides);
                 discQueue.push(*adjDisc);
             } else {
-                if (! orientable_.known()) {
+                if (! orientable_.has_value()) {
                     if (sameOrient) {
                         if (orients.data(*adjDisc).orient !=
                                 orients.data(use).orient)
@@ -192,7 +188,7 @@ void NormalSurface::calculateOrientable() const {
                             orientable_ = false;
                     }
                 }
-                if (! twoSided_.known()) {
+                if (! twoSided_.has_value()) {
                     if (sameSides) {
                         if (orients.data(*adjDisc).sides !=
                                 orients.data(use).sides)
@@ -207,7 +203,8 @@ void NormalSurface::calculateOrientable() const {
 
             // Tidy up.
             delete adjDisc;
-            if (orientable_.known() && twoSided_.known() && connected_.known())
+            if (orientable_.has_value() && twoSided_.has_value() &&
+                    connected_.has_value())
                 return;
         }
     }
@@ -215,11 +212,11 @@ void NormalSurface::calculateOrientable() const {
     // We made it through!  Any properties that weren't proven false
     // must be true.
 
-    if (! orientable_.known())
+    if (! orientable_.has_value())
         orientable_ = true;
-    if (! twoSided_.known())
+    if (! twoSided_.has_value())
         twoSided_ = true;
-    if (! connected_.known())
+    if (! connected_.has_value())
         connected_ = true;
 }
 

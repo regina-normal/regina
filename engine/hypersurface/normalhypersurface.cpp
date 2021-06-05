@@ -68,8 +68,7 @@ NormalHypersurface* NormalHypersurface::clone() const {
     ans->connected_ = connected_;
     ans->realBoundary_ = realBoundary_;
     ans->compact_ = compact_;
-    if (H1_.known())
-        ans->H1_ = new AbelianGroup(*H1_.value());
+    ans->H1_ = H1_;
 
     return ans;
 }
@@ -121,10 +120,10 @@ void NormalHypersurface::writeXMLData(std::ostream& out) const {
     }
 
     // Write properties.
-    if (realBoundary_.known())
-        out << "\n\t" << xmlValueTag("realbdry", realBoundary_.value());
-    if (compact_.known())
-        out << "\n\t" << xmlValueTag("compact", compact_.value());
+    if (realBoundary_.has_value())
+        out << "\n\t" << xmlValueTag("realbdry", *realBoundary_);
+    if (compact_.has_value())
+        out << "\n\t" << xmlValueTag("compact", *compact_);
 
     // Write the closing tag.
     out << " </hypersurface>\n";
@@ -265,15 +264,11 @@ void NormalHypersurface::calculateRealBoundary() const {
 }
 
 void NormalHypersurface::calculateFromTriangulation() const {
-    orientable_.clear();
-    twoSided_.clear();
-    connected_.clear();
-    H1_.clear();
-
     Triangulation<3>* me = triangulate();
+
     orientable_ = me->isOrientable();
     connected_ = me->isConnected();
-    H1_ = new AbelianGroup(me->homology());
+    H1_ = me->homology();
     size_t nComp = me->countComponents();
     delete me;
 

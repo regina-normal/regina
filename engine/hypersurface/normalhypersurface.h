@@ -48,7 +48,6 @@
 #include "maths/vector.h"
 #include "triangulation/forward.h"
 #include "utilities/boolset.h"
-#include "utilities/property.h"
 
 namespace regina {
 
@@ -474,19 +473,19 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         std::string name_;
             /**< An optional name associated with this hypersurface. */
 
-        mutable Property<bool> orientable_;
+        mutable std::optional<bool> orientable_;
             /**< Is this hypersurface orientable? */
-        mutable Property<bool> twoSided_;
+        mutable std::optional<bool> twoSided_;
             /**< Is this hypersurface two-sided? */
-        mutable Property<bool> connected_;
+        mutable std::optional<bool> connected_;
             /**< Is this hypersurface connected? */
-        mutable Property<bool> realBoundary_;
+        mutable std::optional<bool> realBoundary_;
             /**< Does this hypersurface have real boundary (i.e. does it meet
                  any boundary facets)? */
-        mutable Property<bool> compact_;
+        mutable std::optional<bool> compact_;
             /**< Is this hypersurface compact (i.e., does it only
                  contain finitely many pieces)? */
-        mutable Property<AbelianGroup, StoreManagedPtr> H1_;
+        mutable std::optional<AbelianGroup> H1_;
             /**< First homology group of the hypersurface. */
 
     public:
@@ -1113,10 +1112,8 @@ inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other,
         twoSided_(other.twoSided_),
         connected_(other.connected_),
         realBoundary_(other.realBoundary_),
-        compact_(other.compact_) {
-    // properties by pointer:
-    if (other.H1_.known())
-        H1_ = new AbelianGroup(*other.H1_.value());
+        compact_(other.compact_),
+        H1_(other.H1_) {
 }
 
 inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other) :
@@ -1128,15 +1125,13 @@ inline NormalHypersurface::NormalHypersurface(NormalHypersurface&& src)
         vector_(src.vector_),
         triangulation_(src.triangulation_),
         name_(std::move(src.name_)),
-        // lightweight properties:
-        orientable_(src.orientable_),
-        twoSided_(src.twoSided_),
-        connected_(src.connected_),
-        realBoundary_(src.realBoundary_),
-        compact_(src.compact_) {
+        orientable_(std::move(src.orientable_)),
+        twoSided_(std::move(src.twoSided_)),
+        connected_(std::move(src.connected_)),
+        realBoundary_(std::move(src.realBoundary_)),
+        compact_(std::move(src.compact_)),
+        H1_(std::move(src.H1_)) {
     src.vector_ = nullptr;
-    // heavyweight properties:
-    H1_.swap(src.H1_);
 }
 
 inline NormalHypersurface::~NormalHypersurface() {
@@ -1151,18 +1146,12 @@ inline NormalHypersurface& NormalHypersurface::operator = (
     triangulation_ = value.triangulation_;
     name_ = value.name_;
 
-    // properties by value:
     orientable_ = value.orientable_;
     twoSided_ = value.twoSided_;
     connected_ = value.connected_;
     realBoundary_ = value.realBoundary_;
     compact_ = value.compact_;
-
-    // properties by pointer:
-    if (value.H1_.known())
-        H1_ = new AbelianGroup(*value.H1_.value());
-    else
-        H1_.clear();
+    H1_ = value.H1_;
 
     return *this;
 }
@@ -1173,13 +1162,15 @@ inline NormalHypersurface& NormalHypersurface::operator =
     std::swap(vector_, value.vector_);
 
     triangulation_ = value.triangulation_;
+
     name_ = std::move(value.name_);
-    orientable_ = value.orientable_;
-    twoSided_ = value.twoSided_;
-    connected_ = value.connected_;
-    realBoundary_ = value.realBoundary_;
-    compact_ = value.compact_;
+    orientable_ = std::move(value.orientable_);
+    twoSided_ = std::move(value.twoSided_);
+    connected_ = std::move(value.connected_);
+    realBoundary_ = std::move(value.realBoundary_);
+    compact_ = std::move(value.compact_);
     H1_ = std::move(value.H1_);
+
     return *this;
 }
 
@@ -1226,39 +1217,39 @@ inline void NormalHypersurface::writeRawVector(std::ostream& out) const {
 }
 
 inline bool NormalHypersurface::isCompact() const {
-    if (! compact_.known())
+    if (! compact_.has_value())
         compact_ = vector_->isCompact(*triangulation_);
-    return compact_.value();
+    return *compact_;
 }
 
 inline bool NormalHypersurface::isOrientable() const {
-    if (! orientable_.known())
+    if (! orientable_.has_value())
         calculateFromTriangulation();
-    return orientable_.value();
+    return *orientable_;
 }
 
 inline bool NormalHypersurface::isTwoSided() const {
-    if (! twoSided_.known())
+    if (! twoSided_.has_value())
         calculateFromTriangulation();
-    return twoSided_.value();
+    return *twoSided_;
 }
 
 inline bool NormalHypersurface::isConnected() const {
-    if (! connected_.known())
+    if (! connected_.has_value())
         calculateFromTriangulation();
-    return connected_.value();
+    return *connected_;
 }
 
 inline bool NormalHypersurface::hasRealBoundary() const {
-    if (! realBoundary_.known())
+    if (! realBoundary_.has_value())
         calculateRealBoundary();
-    return realBoundary_.value();
+    return *realBoundary_;
 }
 
 inline const AbelianGroup& NormalHypersurface::homology() const {
-    if (! H1_.known())
+    if (! H1_.has_value())
         calculateFromTriangulation();
-    return *H1_.value();
+    return *H1_;
 }
 
 inline bool NormalHypersurface::isVertexLinking() const {

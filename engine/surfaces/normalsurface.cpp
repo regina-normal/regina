@@ -65,8 +65,8 @@ NormalSurface* NormalSurface::doubleSurface() const {
     // Some properties can be copied straight across.
     ans->realBoundary_ = realBoundary_;
     ans->compact_ = compact_;
-    if (eulerChar_.known())
-        ans->eulerChar_ = eulerChar_.value() * 2;
+    if (eulerChar_.has_value())
+        ans->eulerChar_ = (*eulerChar_) * 2;
 
     // The following three properties can be used together to deduce how
     // they change in the clone.  However, until we sit down and check
@@ -435,18 +435,18 @@ void NormalSurface::writeXMLData(std::ostream& out) const {
     }
 
     // Write properties.
-    if (eulerChar_.known())
-        out << "\n\t" << xmlValueTag("euler", eulerChar_.value());
-    if (orientable_.known())
-        out << "\n\t" << xmlValueTag("orbl", orientable_.value());
-    if (twoSided_.known())
-        out << "\n\t" << xmlValueTag("twosided", twoSided_.value());
-    if (connected_.known())
-        out << "\n\t" << xmlValueTag("connected", connected_.value());
-    if (realBoundary_.known())
-        out << "\n\t" << xmlValueTag("realbdry", realBoundary_.value());
-    if (compact_.known())
-        out << "\n\t" << xmlValueTag("compact", compact_.value());
+    if (eulerChar_.has_value())
+        out << "\n\t" << xmlValueTag("euler", *eulerChar_);
+    if (orientable_.has_value())
+        out << "\n\t" << xmlValueTag("orbl", *orientable_);
+    if (twoSided_.has_value())
+        out << "\n\t" << xmlValueTag("twosided", *twoSided_);
+    if (connected_.has_value())
+        out << "\n\t" << xmlValueTag("connected", *connected_);
+    if (realBoundary_.has_value())
+        out << "\n\t" << xmlValueTag("realbdry", *realBoundary_);
+    if (compact_.has_value())
+        out << "\n\t" << xmlValueTag("compact", *compact_);
 
     // Write the closing tag.
     out << " </surface>\n";
