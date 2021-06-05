@@ -146,97 +146,6 @@ class StoreValue {
 
 /**
  * A Property storage policy indicating that the property should be
- * held by constant pointer.  The property assignment and query routines
- * will also use constant pointers, and the Property wrapper takes no
- * responsibility for memory management of the held value.
- *
- * Properties that use this storage policy are copyable, moveable and swappable.
- *
- * See the Property class notes for details.
- *
- * \ifacespython Not present.
- */
-template <typename T>
-class StoreConstPtr {
-    public:
-        typedef const T* InitType;
-            /**< The type by which new values for the underlying
-                 property are passed. */
-        typedef const T* QueryType;
-            /**< The type by which the property value is returned to the
-                 user. */
-
-    protected:
-        const T* value_;
-            /**< The held property value. */
-
-    public:
-        /**
-         * Constructor that sets the held pointer to \c null.
-         */
-        StoreConstPtr() : value_(nullptr) {
-        }
-
-        /**
-         * Create a clone of the given property value.
-         *
-         * This always clones the given pointer, regardless of whether
-         * the property is known or unknown.
-         */
-        StoreConstPtr(const StoreConstPtr&) = default;
-
-        /**
-         * Moves the contents of the given property value into this new value.
-         *
-         * This always moves the given pointer, regardless of whether
-         * the property is uninitialised and/or unknown.
-         *
-         * The property value that was passed will no longer be usable.
-         */
-        StoreConstPtr(StoreConstPtr&&) noexcept = default;
-
-        /**
-         * Sets this to be a clone of the given property value.
-         *
-         * This always clones the given pointer, regardless of whether
-         * the property is known or unknown.
-         */
-        StoreConstPtr& operator = (const StoreConstPtr&) = default;
-
-        /**
-         * Moves the contents of the given property value into this value.
-         *
-         * This always moves the given pointer, regardless of whether
-         * the property is uninitialised and/or unknown.
-         *
-         * The property value that was passed will no longer be usable.
-         *
-         * @return a reference to this property value.
-         */
-        StoreConstPtr& operator = (StoreConstPtr&&) noexcept = default;
-
-        /**
-         * Cleans up any currently held value before the property value is
-         * changed or cleared.
-         *
-         * This implementation resets the held pointer to \c null.
-         */
-        void clear() {
-            value_ = nullptr;
-        }
-
-        /**
-         * Swaps this with the given value.
-         *
-         * @param other the value to swap with this.
-         */
-        void swap(StoreConstPtr<T>& other) {
-            std::swap(value_, other.value_);
-        }
-};
-
-/**
- * A Property storage policy indicating that the property should be
  * held by pointer and that the property wrapper will also take
  * responsibility for memory management.  The property assignment and
  * query routines will also use pointers; in particular the query
@@ -356,7 +265,6 @@ class StoreManagedPtr {
  * always copyable: this depends upon the particular choice of storage policy.
  *
  * \see StoreValue
- * \see StoreConstPtr
  * \see StoreManagedPtr
  *
  * \ifacespython Not present.

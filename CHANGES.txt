@@ -373,6 +373,7 @@ Version 6.1  [ TODO ]
         Class Property<...>:
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
+            - Removed the StoreConstPtr storage policy, which was never used.
         Class Ray:
             - All of the old Ray functionality is now merged into
               Vector<LargeInteger>, and you should use that class directly.
