@@ -457,14 +457,19 @@ class NormalHypersurfaceVector {
  * Note that non-compact surfaces (surfaces with infinitely many pieces,
  * are allowed; in these cases, the corresponding coordinate lookup routines
  * will return LargeInteger::infinity where appropriate.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class NormalHypersurface : public ShortOutput<NormalHypersurface> {
     protected:
         NormalHypersurfaceVector* vector_;
             /**< Contains the coordinates of the normal hypersurface in
              *   whichever space is appropriate. */
-        const Triangulation<4>& triangulation_;
-            /**< The triangulation in which this normal hypersurface resides. */
+        const Triangulation<4>* triangulation_;
+            /**< The triangulation in which this normal hypersurface resides.
+                 This must never be \c null. */
 
         std::string name_;
             /**< An optional name associated with this hypersurface. */
@@ -583,6 +588,54 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * @return a clone of this normal hypersurface.
          */
         [[deprecated]] NormalHypersurface* clone() const;
+
+        /**
+         * Sets this to be a copy of the given normal hypersurface.
+         *
+         * This and the given normal hypersurface do not need to live in the
+         * same underlying triangulation, and they do not need to have the same
+         * length vectors or use the same normal coordinate system - if any of
+         * these properties differs then this hypersurface will be adjusted
+         * accordingly.
+         *
+         * This operator induces a deep copy of the given normal hypersurface.
+         *
+         * @param value the normal hypersurface to copy.
+         * @return a reference to this normal hypersurface.
+         */
+        NormalHypersurface& operator = (const NormalHypersurface& value);
+
+        /**
+         * Moves the contents of the given normal hypersurface to this
+         * hypersurface.  This is a fast (constant time) operation.
+         *
+         * This and the given normal hypersurface do not need to live in the
+         * same underlying triangulation, and they do not need to have the same
+         * length vectors or use the same normal coordinate system - if any of
+         * these properties differs then this hypersurface will be adjusted
+         * accordingly.
+         *
+         * The hypersurface that was passed (\a value) will no longer be usable.
+         *
+         * @param value the normal hypersurface to move.
+         * @return a reference to this normal hypersurface.
+         */
+        NormalHypersurface& operator = (NormalHypersurface&& value) noexcept;
+
+        /**
+         * Swaps the contents of this and the given normal hypersurface.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given normal hypersurface do not need to live in the
+         * same underlying triangulation, and they do not need to have the same
+         * length vectors or use the same normal coordinate system - if any of
+         * these properties differs then the two hypersurfaces will be adjusted
+         * accordingly.
+         *
+         * @param other the normal hypersurface whose contents should be swapped
+         * with this.
+         */
+        void swap(NormalHypersurface& other);
 
         /**
          * Creates a newly allocated hypersurface that is the double of this
@@ -973,10 +1026,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          */
         [[deprecated]] const Vector<LargeInteger>& rawVector() const;
 
-        // Make this class non-assignable.
-        NormalHypersurface& operator = (const NormalHypersurface&) = delete;
-        NormalHypersurface& operator = (NormalHypersurface&&) = delete;
-
     protected:
         /**
          * Calculates whether this hypersurface has any real boundary and
@@ -991,6 +1040,18 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
 
     friend class XMLNormalHypersurfaceReader;
 };
+
+/**
+ * Swaps the contents of the given normal hypersurfaces.
+ * This is a fast (constant time) operation.
+ *
+ * This global routine simply calls NormalHypersurface::swap(); it is provided
+ * so that NormalHypersurface meets the C++ Swappable requirements.
+ *
+ * @param a the first normal hypersurface whose contents should be swapped.
+ * @param b the second normal hypersurface whose contents should be swapped.
+ */
+void swap(NormalHypersurface& a, NormalHypersurface& b);
 
 /*@}*/
 
@@ -1039,13 +1100,13 @@ inline void NormalHypersurfaceVector::scaleDown() {
 inline NormalHypersurface::NormalHypersurface(
         const Triangulation<4>& triangulation,
         NormalHypersurfaceVector* vector) :
-        vector_(vector), triangulation_(triangulation) {
+        vector_(vector), triangulation_(&triangulation) {
 }
 
 inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other,
         const Triangulation<4>& triangulation) :
         vector_(other.vector_->clone()),
-        triangulation_(triangulation),
+        triangulation_(&triangulation),
         name_(other.name_),
         // properties by value:
         orientable_(other.orientable_),
@@ -1059,7 +1120,7 @@ inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other,
 }
 
 inline NormalHypersurface::NormalHypersurface(const NormalHypersurface& other) :
-        NormalHypersurface(other, other.triangulation_) {
+        NormalHypersurface(other, *other.triangulation_) {
 }
 
 inline NormalHypersurface::NormalHypersurface(NormalHypersurface&& src)
@@ -1082,23 +1143,75 @@ inline NormalHypersurface::~NormalHypersurface() {
     delete vector_;
 }
 
-inline LargeInteger NormalHypersurface::tetrahedra(
-        size_t pentIndex, int vertex) const {
-    return vector_->tetrahedra(pentIndex, vertex, triangulation_);
+inline NormalHypersurface& NormalHypersurface::operator = (
+        const NormalHypersurface& value) {
+    delete vector_;
+    vector_ = value.vector_->clone();
+
+    triangulation_ = value.triangulation_;
+    name_ = value.name_;
+
+    // properties by value:
+    orientable_ = value.orientable_;
+    twoSided_ = value.twoSided_;
+    connected_ = value.connected_;
+    realBoundary_ = value.realBoundary_;
+    compact_ = value.compact_;
+
+    // properties by pointer:
+    if (value.H1_.known())
+        H1_ = new AbelianGroup(*value.H1_.value());
+    else
+        H1_.clear();
+
+    return *this;
+}
+
+inline NormalHypersurface& NormalHypersurface::operator =
+        (NormalHypersurface&& value) noexcept {
+    // Let value dispose of the original vector.
+    std::swap(vector_, value.vector_);
+
+    triangulation_ = value.triangulation_;
+    name_ = std::move(value.name_);
+    orientable_ = value.orientable_;
+    twoSided_ = value.twoSided_;
+    connected_ = value.connected_;
+    realBoundary_ = value.realBoundary_;
+    compact_ = value.compact_;
+    H1_ = std::move(value.H1_);
+    return *this;
+}
+
+inline void NormalHypersurface::swap(NormalHypersurface& other) {
+    std::swap(vector_, other.vector_);
+    std::swap(triangulation_, other.triangulation_);
+    name_.swap(other.name_);
+    orientable_.swap(other.orientable_);
+    twoSided_.swap(other.twoSided_);
+    connected_.swap(other.connected_);
+    realBoundary_.swap(other.realBoundary_);
+    compact_.swap(other.compact_);
+    H1_.swap(other.H1_);
+}
+
+inline LargeInteger NormalHypersurface::tetrahedra(size_t pentIndex, int vertex)
+        const {
+    return vector_->tetrahedra(pentIndex, vertex, *triangulation_);
 }
 inline LargeInteger NormalHypersurface::prisms(
         size_t pentIndex, int prismType) const {
-    return vector_->prisms(pentIndex, prismType, triangulation_);
+    return vector_->prisms(pentIndex, prismType, *triangulation_);
 }
 inline LargeInteger NormalHypersurface::edgeWeight(size_t edgeIndex) const {
-    return vector_->edgeWeight(edgeIndex, triangulation_);
+    return vector_->edgeWeight(edgeIndex, *triangulation_);
 }
 
 inline size_t NormalHypersurface::countCoords() const {
     return vector_->size();
 }
 inline const Triangulation<4>& NormalHypersurface::triangulation() const {
-    return triangulation_;
+    return *triangulation_;
 }
 
 inline const std::string& NormalHypersurface::name() const {
@@ -1114,7 +1227,7 @@ inline void NormalHypersurface::writeRawVector(std::ostream& out) const {
 
 inline bool NormalHypersurface::isCompact() const {
     if (! compact_.known())
-        compact_ = vector_->isCompact(triangulation_);
+        compact_ = vector_->isCompact(*triangulation_);
     return compact_.value();
 }
 
@@ -1149,15 +1262,15 @@ inline const AbelianGroup& NormalHypersurface::homology() const {
 }
 
 inline bool NormalHypersurface::isVertexLinking() const {
-    return vector_->isVertexLinking(triangulation_);
+    return vector_->isVertexLinking(*triangulation_);
 }
 
 inline const Vertex<4>* NormalHypersurface::isVertexLink() const {
-    return vector_->isVertexLink(triangulation_);
+    return vector_->isVertexLink(*triangulation_);
 }
 
 inline const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
-    return vector_->isThinEdgeLink(triangulation_);
+    return vector_->isThinEdgeLink(*triangulation_);
 }
 
 inline const Vector<LargeInteger>& NormalHypersurface::vector() const {
@@ -1166,6 +1279,10 @@ inline const Vector<LargeInteger>& NormalHypersurface::vector() const {
 
 inline const Vector<LargeInteger>& NormalHypersurface::rawVector() const {
     return vector_->coords();
+}
+
+inline void swap(NormalHypersurface& a, NormalHypersurface& b) {
+    a.swap(b);
 }
 
 } // namespace regina

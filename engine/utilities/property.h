@@ -55,9 +55,12 @@ namespace regina {
  * underlying value will be copied into the Property wrapper.
  *
  * The property type \a T must support default construction, copy construction
- * and copy assignment, and must adhere to the C++ Swappable requirement.
+ * and copy assignment, move construction and move assignment, and must adhere
+ * to the C++ Swappable requirement.
  *
- * See the Property class notes for details.
+ * Properties that use this storage policy are copyable, moveable and swappable.
+ *
+ * See the Property class notes for further details.
  *
  * \ifacespython Not present.
  */
@@ -84,18 +87,40 @@ class StoreValue {
         /**
          * Create a clone of the given property value.
          *
-         * This clones the given property's value, regardless of whether
+         * This always clones the given value, regardless of whether
          * the property is uninitialised and/or unknown.
          */
         StoreValue(const StoreValue&) = default;
 
         /**
+         * Moves the contents of the given property value into this new value.
+         *
+         * This always moves the given value, regardless of whether
+         * the property is uninitialised and/or unknown.
+         *
+         * The property value that was passed will no longer be usable.
+         */
+        StoreValue(StoreValue&&) noexcept = default;
+
+        /**
          * Sets this to be a clone of the given property value.
          *
-         * This clones the given property's value, regardless of whether
+         * This always clones the given value, regardless of whether
          * the property is uninitialised and/or unknown.
          */
         StoreValue& operator = (const StoreValue&) = default;
+
+        /**
+         * Moves the contents of the given property value into this value.
+         *
+         * This always moves the given value, regardless of whether
+         * the property is uninitialised and/or unknown.
+         *
+         * The property value that was passed will no longer be usable.
+         *
+         * @return a reference to this property value.
+         */
+        StoreValue& operator = (StoreValue&&) noexcept = default;
 
         /**
          * Cleans up any currently held value before the property value is
@@ -125,6 +150,8 @@ class StoreValue {
  * will also use constant pointers, and the Property wrapper takes no
  * responsibility for memory management of the held value.
  *
+ * Properties that use this storage policy are copyable, moveable and swappable.
+ *
  * See the Property class notes for details.
  *
  * \ifacespython Not present.
@@ -153,18 +180,40 @@ class StoreConstPtr {
         /**
          * Create a clone of the given property value.
          *
-         * This clones the given property's pointer, regardless of whether
+         * This always clones the given pointer, regardless of whether
          * the property is known or unknown.
          */
         StoreConstPtr(const StoreConstPtr&) = default;
 
         /**
+         * Moves the contents of the given property value into this new value.
+         *
+         * This always moves the given pointer, regardless of whether
+         * the property is uninitialised and/or unknown.
+         *
+         * The property value that was passed will no longer be usable.
+         */
+        StoreConstPtr(StoreConstPtr&&) noexcept = default;
+
+        /**
          * Sets this to be a clone of the given property value.
          *
-         * This clones the given property's pointer, regardless of whether
+         * This always clones the given pointer, regardless of whether
          * the property is known or unknown.
          */
         StoreConstPtr& operator = (const StoreConstPtr&) = default;
+
+        /**
+         * Moves the contents of the given property value into this value.
+         *
+         * This always moves the given pointer, regardless of whether
+         * the property is uninitialised and/or unknown.
+         *
+         * The property value that was passed will no longer be usable.
+         *
+         * @return a reference to this property value.
+         */
+        StoreConstPtr& operator = (StoreConstPtr&&) noexcept = default;
 
         /**
          * Cleans up any currently held value before the property value is
@@ -195,6 +244,9 @@ class StoreConstPtr {
  * changed or the Property wrapper is destroyed, any currently held
  * value will be destroyed automatically.
  *
+ * Properties that use this storage policy are moveable and swappable,
+ * but not copyable.
+ *
  * See the Property class notes for details.
  *
  * \ifacespython Not present.
@@ -221,6 +273,45 @@ class StoreManagedPtr {
         }
 
         /**
+         * Moves the contents of the given property value into this new value.
+         *
+         * This always moves the given pointer, regardless of whether
+         * the property is uninitialised and/or unknown.
+         *
+         * The property value that was passed will no longer be usable.
+         *
+         * @param other the property value to move.
+         */
+        StoreManagedPtr(StoreManagedPtr&& other) noexcept :
+                value_(other.value_) {
+            other.value_ = nullptr;
+        }
+
+        /**
+         * Destroys the currently held value if one exists.
+         */
+        ~StoreManagedPtr() {
+            delete value_;
+        }
+
+        /**
+         * Moves the contents of the given property value into this value.
+         *
+         * This always moves the given pointer, regardless of whether
+         * the property is uninitialised and/or unknown.
+         *
+         * The property value that was passed will no longer be usable.
+         *
+         * @param other the property value to move.
+         * @return a reference to this property value.
+         */
+        StoreManagedPtr& operator = (StoreManagedPtr&& other) noexcept {
+            // Let value dispose of the original contents.
+            std::swap(value_, other.value_);
+            return *this;
+        }
+
+        /**
          * Cleans up any currently held value before the property value is
          * changed or cleared.
          *
@@ -234,19 +325,6 @@ class StoreManagedPtr {
             }
         }
 
-        // Explicitly disallow cloning properties of this type.
-        StoreManagedPtr(const StoreManagedPtr&) = delete;
-        StoreManagedPtr& operator = (const StoreManagedPtr&) = delete;
-
-    protected:
-        /**
-         * Destroys the currently held value if one exists.
-         */
-        ~StoreManagedPtr() {
-            if (value_)
-                delete value_;
-        }
-
         /**
          * Swaps this with the given value.
          *
@@ -255,6 +333,10 @@ class StoreManagedPtr {
         void swap(StoreManagedPtr<T>& other) {
             std::swap(value_, other.value_);
         }
+
+        // Explicitly disallow copying properties of this type.
+        StoreManagedPtr(const StoreManagedPtr&) = delete;
+        StoreManagedPtr& operator = (const StoreManagedPtr&) = delete;
 };
 
 /**
@@ -265,6 +347,13 @@ class StoreManagedPtr {
  * internally stored.  Storage options range from simple storage by value
  * (see class StoreValue) to more intelligent storage options that include
  * memory management of pointers (see class StoreManagedPtr).
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
+ * Although properties are always moveable and swappable, they are \e not
+ * always copyable: this depends upon the particular choice of storage policy.
  *
  * \see StoreValue
  * \see StoreConstPtr
@@ -314,6 +403,25 @@ class Property : protected Storage<T> {
             if (known_)
                 Storage<T>::operator = (newValue);
         }
+
+        /**
+         * Moves the contents of the given property into this new property.
+         * This is a fast (constant time) operation.
+         *
+         * The property that was passed will no longer be usable.
+         */
+        Property(Property<T, Storage>&&) noexcept = default;
+
+        /**
+         * Moves the contents of the given property into this property.
+         * This is a fast (constant time) operation.
+         *
+         * The property that was passed will no longer be usable.
+         *
+         * @return a reference to this property.
+         */
+        Property<T, Storage>& operator = (Property<T, Storage>&&) noexcept
+            = default;
 
         /**
          * Returns whether or not this property is currently marked as
@@ -395,6 +503,22 @@ class Property : protected Storage<T> {
             Storage<T>::swap(other);
         }
 };
+
+/**
+ * Swaps the contents of the given properties.
+ *
+ * This global routine simply calls Property<T, Storage>::swap(); it is
+ * provided so that Property meets the C++ Swappable requirements.
+ *
+ * @param a the first property whose contents should be swapped.
+ * @param b the second property whose contents should be swapped.
+ *
+ * \ifacespython Not present.
+ */
+template <typename T, template <typename> class Storage>
+void swap(Property<T, Storage>& a, Property<T, Storage>& b) {
+    a.swap(b);
+}
 
 /*@}*/
 

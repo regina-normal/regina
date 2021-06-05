@@ -44,6 +44,7 @@ void addAngleStructure(pybind11::module_& m) {
         .def(pybind11::init<const AngleStructure&,
             const regina::Triangulation<3>&>())
         .def("clone", &AngleStructure::clone)
+        .def("swap", &AngleStructure::swap)
         .def("angle", &AngleStructure::angle)
         .def("triangulation", &AngleStructure::triangulation)
         .def("isStrict", &AngleStructure::isStrict)
@@ -54,5 +55,7 @@ void addAngleStructure(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(AngleStructure&, AngleStructure&))(regina::swap));
 }
 

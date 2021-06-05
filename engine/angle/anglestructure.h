@@ -83,14 +83,19 @@ typedef Vector<Integer> AngleStructureVector [[deprecated]];
  * Represents an angle structure on a triangulation.
  * Once the underlying triangulation changes, this angle structure
  * is no longer valid.
+ *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
  */
 class AngleStructure : public ShortOutput<AngleStructure> {
     private:
         Vector<Integer>* vector_;
             /**< Stores (indirectly) the individual angles in this angle
              *   structure. */
-        const Triangulation<3>& triangulation_;
-            /**< The triangulation on which this angle structure is placed. */
+        const Triangulation<3>* triangulation_;
+            /**< The triangulation on which this angle structure is placed.
+                 This must never be \c null. */
 
         mutable unsigned long flags_;
             /**< Stores a variety of angle structure properties as
@@ -177,6 +182,51 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * @return a clone of this angle structure.
          */
         [[deprecated]] AngleStructure* clone() const;
+
+        /**
+         * Sets this to be a copy of the given angle structure.
+         *
+         * This and the given angle structure do not need to be on the same
+         * underlying triangulation, and they do not need to have the same
+         * length vectors (but of course if either property differs then
+         * this structure will be adjusted accordingly).
+         *
+         * This operator induces a deep copy of the given angle structure.
+         *
+         * @param value the angle structure to copy.
+         * @return a reference to this angle structure.
+         */
+        AngleStructure& operator = (const AngleStructure& value);
+
+        /**
+         * Moves the contents of the given angle structure to this structure.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given angle structure do not need to be on the same
+         * underlying triangulation, and they do not need to have the same
+         * length vectors (but of course if either property differs then
+         * this structure will be adjusted accordingly).
+         *
+         * The structure that was passed (\a value) will no longer be usable.
+         *
+         * @param value the angle structure to move.
+         * @return a reference to this angle structure.
+         */
+        AngleStructure& operator = (AngleStructure&& value) noexcept;
+
+        /**
+         * Swaps the contents of this and the given angle structure.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given angle structure do not need to be on the same
+         * underlying triangulation, and they do not need to have the same
+         * length vectors (but of course if either property differs then
+         * these features will be adjusted accordingly).
+         *
+         * @param other the angle structure whose contents should be swapped
+         * with this.
+         */
+        void swap(AngleStructure& other);
 
         /**
          * Returns the requested angle in this angle structure.
@@ -313,10 +363,6 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          */
         void writeXMLData(std::ostream& out) const;
 
-        // Make this class non-assignable.
-        AngleStructure& operator = (const AngleStructure&) = delete;
-        AngleStructure& operator = (AngleStructure&&) = delete;
-
     protected:
         /**
          * Calculates the structure type (strict or taut) and stores it
@@ -327,24 +373,37 @@ class AngleStructure : public ShortOutput<AngleStructure> {
     friend class regina::XMLAngleStructureReader;
 };
 
+/**
+ * Swaps the contents of the given angle structures.
+ *
+ * This global routine simply calls AngleStructure::swap(); it is provided
+ * so that AngleStructure meets the C++ Swappable requirements.
+ *
+ * @param a the first angle structure whose contents should be swapped.
+ * @param b the second angle structure whose contents should be swapped.
+ */
+void swap(AngleStructure& a, AngleStructure& b);
+
 /*@}*/
 
 // Inline functions for AngleStructure
 
 inline AngleStructure::AngleStructure(const Triangulation<3>& triang,
         Vector<Integer>* newVector) : vector_(newVector),
-        triangulation_(triang), flags_(0) {
+        triangulation_(&triang), flags_(0) {
 }
 
 inline AngleStructure::AngleStructure(const AngleStructure& other,
         const Triangulation<3>& triangulation) :
         vector_(new Vector<Integer>(*other.vector_)),
-        triangulation_(triangulation),
+        triangulation_(&triangulation),
         flags_(other.flags_) {
 }
 
 inline AngleStructure::AngleStructure(const AngleStructure& other) :
-        AngleStructure(other, other.triangulation_) {
+        vector_(new Vector<Integer>(*other.vector_)),
+        triangulation_(other.triangulation_),
+        flags_(other.flags_) {
 }
 
 inline AngleStructure::AngleStructure(AngleStructure&& src) noexcept :
@@ -362,8 +421,32 @@ inline AngleStructure* AngleStructure::clone() const {
     return new AngleStructure(*this);
 }
 
+inline AngleStructure& AngleStructure::operator = (
+        const AngleStructure& value) {
+    vector_ = new Vector<Integer>(*value.vector_);
+    triangulation_ = value.triangulation_;
+    flags_ = value.flags_;
+    return *this;
+}
+
+inline AngleStructure& AngleStructure::operator = (AngleStructure&& value)
+        noexcept {
+    // Let value dispose of the original vector contents.
+    std::swap(vector_, value.vector_);
+
+    triangulation_ = value.triangulation_;
+    flags_ = value.flags_;
+    return *this;
+}
+
+inline void AngleStructure::swap(AngleStructure& other) {
+    std::swap(vector_, other.vector_);
+    std::swap(triangulation_, other.triangulation_);
+    std::swap(flags_, other.flags_);
+}
+
 inline const Triangulation<3>& AngleStructure::triangulation() const {
-    return triangulation_;
+    return *triangulation_;
 }
 
 inline bool AngleStructure::isStrict() const {
@@ -390,6 +473,10 @@ inline const Vector<Integer>& AngleStructure::vector() const {
 
 inline const Vector<Integer>* AngleStructure::rawVector() const {
     return vector_;
+}
+
+inline void swap(AngleStructure& a, AngleStructure& b) {
+    a.swap(b);
 }
 
 } // namespace regina

@@ -240,7 +240,7 @@ bool NormalSurface::disjoint(const NormalSurface& other) const {
     NormalSurfaceVector* v =
         static_cast<NormalSurfaceVector*>(vector_->clone());
     (*v) += *(other.vector_);
-    NormalSurface* sum = new NormalSurface(triangulation_, v);
+    NormalSurface* sum = new NormalSurface(*triangulation_, v);
 
     typedef std::vector<NormalSurface*> CompVector;
     CompVector bits;

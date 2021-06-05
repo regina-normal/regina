@@ -72,6 +72,7 @@ void addNormalHypersurface(pybind11::module_& m) {
             return new NormalHypersurface(t, v);
         }))
         .def("clone", &NormalHypersurface::clone)
+        .def("swap", &NormalHypersurface::swap)
         .def("doubleHypersurface", &NormalHypersurface::doubleHypersurface)
         .def("tetrahedra", &NormalHypersurface::tetrahedra)
         .def("prisms", &NormalHypersurface::prisms)
@@ -103,5 +104,8 @@ void addNormalHypersurface(pybind11::module_& m) {
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
+
+    m.def("swap",
+        (void(*)(NormalHypersurface&, NormalHypersurface&))(regina::swap));
 }
 

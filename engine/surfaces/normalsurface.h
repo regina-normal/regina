@@ -804,6 +804,10 @@ class NormalSurfaceVector {
  * corresponding coordinate lookup routines will return
  * LargeInteger::infinity where appropriate.
  *
+ * This class implements C++ move semantics and adheres to the C++ Swappable
+ * requirement.  It is designed to avoid deep copies wherever possible,
+ * even when passing or returning objects by value.
+ *
  * \todo \feature Calculation of Euler characteristic and orientability
  * for non-compact surfaces.
  * \todo \featurelong Determine which faces in the solution space a
@@ -814,8 +818,9 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         NormalSurfaceVector* vector_;
             /**< Contains the coordinates of the normal surface in whichever
              *   space is appropriate. */
-        const Triangulation<3>& triangulation_;
-            /**< The triangulation in which this normal surface resides. */
+        const Triangulation<3>* triangulation_;
+            /**< The triangulation in which this normal surface resides.
+                 This must never be \c null. */
 
         std::string name_;
             /**< An optional name associated with this surface. */
@@ -938,6 +943,54 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * @return a clone of this normal surface.
          */
         [[deprecated]] NormalSurface* clone() const;
+
+        /**
+         * Sets this to be a copy of the given normal surface.
+         *
+         * This and the given normal surface do not need to live in the same
+         * underlying triangulation, and they do not need to have the same
+         * length vectors or use the same normal coordinate system - if any of
+         * these properties differs then this surface will be adjusted
+         * accordingly.
+         *
+         * This operator induces a deep copy of the given normal surface.
+         *
+         * @param value the normal surface to copy.
+         * @return a reference to this normal surface.
+         */
+        NormalSurface& operator = (const NormalSurface& value);
+
+        /**
+         * Moves the contents of the given normal surface to this surface.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given normal surface do not need to live in the same
+         * underlying triangulation, and they do not need to have the same
+         * length vectors or use the same normal coordinate system - if any of
+         * these properties differs then this surface will be adjusted
+         * accordingly.
+         *
+         * The surface that was passed (\a value) will no longer be usable.
+         *
+         * @param value the normal surface to move.
+         * @return a reference to this normal surface.
+         */
+        NormalSurface& operator = (NormalSurface&& value) noexcept;
+
+        /**
+         * Swaps the contents of this and the given normal surface.
+         * This is a fast (constant time) operation.
+         *
+         * This and the given normal surface do not need to live in the
+         * same underlying triangulation, and they do not need to have the same
+         * length vectors or use the same normal coordinate system - if any of
+         * these properties differs then the two surfaces will be adjusted
+         * accordingly.
+         *
+         * @param other the normal surface whose contents should be swapped
+         * with this.
+         */
+        void swap(NormalSurface& other);
 
         /**
          * Creates a newly allocated surface that is the double of this
@@ -1778,10 +1831,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          */
         bool systemAllowsOriented() const;
 
-        // Make this class non-assignable.
-        NormalSurface& operator = (const NormalSurface&) = delete;
-        NormalSurface& operator = (NormalSurface&&) = delete;
-
     protected:
         /**
          * Calculates the position of the first non-zero octagon
@@ -1817,6 +1866,18 @@ class NormalSurface : public ShortOutput<NormalSurface> {
 
     friend class XMLNormalSurfaceReader;
 };
+
+/**
+ * Swaps the contents of the given normal surfaces.
+ * This is a fast (constant time) operation.
+ *
+ * This global routine simply calls NormalSurface::swap(); it is provided
+ * so that NormalSurface meets the C++ Swappable requirements.
+ *
+ * @param a the first normal surface whose contents should be swapped.
+ * @param b the second normal surface whose contents should be swapped.
+ */
+void swap(NormalSurface& a, NormalSurface& b);
 
 /*@}*/
 
@@ -1863,13 +1924,13 @@ inline void NormalSurfaceVector::scaleDown() {
 
 inline NormalSurface::NormalSurface(
         const Triangulation<3>& triangulation, NormalSurfaceVector* newVector) :
-        vector_(newVector), triangulation_(triangulation) {
+        vector_(newVector), triangulation_(&triangulation) {
 }
 
 inline NormalSurface::NormalSurface(const NormalSurface& other,
         const Triangulation<3>& triangulation) :
         vector_(other.vector_->clone()),
-        triangulation_(triangulation),
+        triangulation_(&triangulation),
         name_(other.name_),
         // properties:
         octPosition_(other.octPosition_),
@@ -1883,7 +1944,7 @@ inline NormalSurface::NormalSurface(const NormalSurface& other,
 }
 
 inline NormalSurface::NormalSurface(const NormalSurface& other) :
-        NormalSurface(other, other.triangulation_) {
+        NormalSurface(other, *other.triangulation_) {
 }
 
 inline NormalSurface::NormalSurface(NormalSurface&& src) noexcept :
@@ -1906,31 +1967,85 @@ inline NormalSurface::~NormalSurface() {
     delete vector_;
 }
 
-inline LargeInteger NormalSurface::triangles(size_t tetIndex,
-        int vertex) const {
-    return vector_->triangles(tetIndex, vertex, triangulation_);
+inline NormalSurface& NormalSurface::operator = (const NormalSurface& value) {
+    delete vector_;
+    vector_ = value.vector_->clone();
+
+    triangulation_ = value.triangulation_;
+    name_ = value.name_;
+
+    // properties by value:
+    octPosition_ = value.octPosition_;
+    eulerChar_ = value.eulerChar_;
+    boundaries_ = value.boundaries_;
+    orientable_ = value.orientable_;
+    twoSided_ = value.twoSided_;
+    connected_ = value.connected_;
+    realBoundary_ = value.realBoundary_;
+    compact_ = value.compact_;
+
+    return *this;
+}
+
+inline NormalSurface& NormalSurface::operator = (NormalSurface&& value)
+        noexcept {
+    // Let value dispose of the original vector.
+    std::swap(vector_, value.vector_);
+
+    triangulation_ = value.triangulation_;
+    name_ = std::move(value.name_);
+
+    octPosition_ = value.octPosition_;
+    eulerChar_ = value.eulerChar_;
+    boundaries_ = value.boundaries_;
+    orientable_ = value.orientable_;
+    twoSided_ = value.twoSided_;
+    connected_ = value.connected_;
+    realBoundary_ = value.realBoundary_;
+    compact_ = value.compact_;
+
+    return *this;
+}
+
+inline void NormalSurface::swap(NormalSurface& other) {
+    std::swap(vector_, other.vector_);
+    std::swap(triangulation_, other.triangulation_);
+    name_.swap(other.name_);
+    octPosition_.swap(other.octPosition_);
+    eulerChar_.swap(other.eulerChar_);
+    boundaries_.swap(other.boundaries_);
+    orientable_.swap(other.orientable_);
+    twoSided_.swap(other.twoSided_);
+    connected_.swap(other.connected_);
+    realBoundary_.swap(other.realBoundary_);
+    compact_.swap(other.compact_);
+}
+
+inline LargeInteger NormalSurface::triangles(size_t tetIndex, int vertex)
+        const {
+    return vector_->triangles(tetIndex, vertex, *triangulation_);
 }
 inline LargeInteger NormalSurface::orientedTriangles(
         size_t tetIndex, int vertex, bool oriented) const {
-    return vector_->orientedTriangles(tetIndex, vertex, triangulation_,
+    return vector_->orientedTriangles(tetIndex, vertex, *triangulation_,
         oriented);
 }
 inline LargeInteger NormalSurface::quads(size_t tetIndex,
         int quadType) const {
-    return vector_->quads(tetIndex, quadType, triangulation_);
+    return vector_->quads(tetIndex, quadType, *triangulation_);
 }
 inline LargeInteger NormalSurface::orientedQuads(
         size_t tetIndex, int quadType, bool oriented) const {
-    return vector_->orientedQuads(tetIndex, quadType, triangulation_, oriented);
+    return vector_->orientedQuads(tetIndex, quadType, *triangulation_, oriented);
 }
 inline LargeInteger NormalSurface::octs(size_t tetIndex, int octType) const {
-    return vector_->octs(tetIndex, octType, triangulation_);
+    return vector_->octs(tetIndex, octType, *triangulation_);
 }
 inline LargeInteger NormalSurface::edgeWeight(size_t edgeIndex) const {
-    return vector_->edgeWeight(edgeIndex, triangulation_);
+    return vector_->edgeWeight(edgeIndex, *triangulation_);
 }
 inline LargeInteger NormalSurface::arcs(size_t triIndex, int triVertex) const {
-    return vector_->arcs(triIndex, triVertex, triangulation_);
+    return vector_->arcs(triIndex, triVertex, *triangulation_);
 }
 
 inline DiscType NormalSurface::octPosition() const {
@@ -1943,7 +2058,7 @@ inline size_t NormalSurface::countCoords() const {
     return vector_->size();
 }
 inline const Triangulation<3>& NormalSurface::triangulation() const {
-    return triangulation_;
+    return *triangulation_;
 }
 
 inline const std::string& NormalSurface::name() const {
@@ -1959,7 +2074,7 @@ inline void NormalSurface::writeRawVector(std::ostream& out) const {
 
 inline bool NormalSurface::isCompact() const {
     if (! compact_.known())
-        compact_ = vector_->isCompact(triangulation_);
+        compact_ = vector_->isCompact(*triangulation_);
     return compact_.value();
 }
 
@@ -2000,24 +2115,24 @@ inline size_t NormalSurface::countBoundaries() const {
 }
 
 inline bool NormalSurface::isVertexLinking() const {
-    return vector_->isVertexLinking(triangulation_);
+    return vector_->isVertexLinking(*triangulation_);
 }
 
 inline const Vertex<3>* NormalSurface::isVertexLink() const {
-    return vector_->isVertexLink(triangulation_);
+    return vector_->isVertexLink(*triangulation_);
 }
 
 inline std::pair<const Edge<3>*, const Edge<3>*> NormalSurface::isThinEdgeLink()
         const {
-    return vector_->isThinEdgeLink(triangulation_);
+    return vector_->isThinEdgeLink(*triangulation_);
 }
 
 inline bool NormalSurface::isSplitting() const {
-    return vector_->isSplitting(triangulation_);
+    return vector_->isSplitting(*triangulation_);
 }
 
 inline LargeInteger NormalSurface::isCentral() const {
-    return vector_->isCentral(triangulation_);
+    return vector_->isCentral(*triangulation_);
 }
 
 inline bool NormalSurface::normal() const {
@@ -2042,6 +2157,10 @@ inline bool NormalSurface::systemAllowsSpun() const {
 
 inline bool NormalSurface::systemAllowsOriented() const {
     return vector_->allowsOriented();
+}
+
+inline void swap(NormalSurface& a, NormalSurface& b) {
+    a.swap(b);
 }
 
 } // namespace regina

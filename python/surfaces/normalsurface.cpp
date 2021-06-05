@@ -91,6 +91,7 @@ void addNormalSurface(pybind11::module_& m) {
             return new NormalSurface(t, v);
         }))
         .def("clone", &NormalSurface::clone)
+        .def("swap", &NormalSurface::swap)
         .def("doubleSurface", &NormalSurface::doubleSurface)
         .def("triangles", &NormalSurface::triangles)
         .def("orientedTriangles", &NormalSurface::orientedTriangles)
@@ -150,5 +151,7 @@ void addNormalSurface(pybind11::module_& m) {
     m.attr("triDiscArcs") = &triDiscArcs_arr;
     m.attr("quadDiscArcs") = &quadDiscArcs_arr;
     m.attr("octDiscArcs") = &octDiscArcs_arr;
+
+    m.def("swap", (void(*)(NormalSurface&, NormalSurface&))(regina::swap));
 }
 

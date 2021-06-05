@@ -41,7 +41,7 @@
 namespace regina {
 
 NormalSurface* NormalSurface::clone() const {
-    NormalSurface* ans = new NormalSurface(triangulation_,
+    NormalSurface* ans = new NormalSurface(*triangulation_,
         dynamic_cast<NormalSurfaceVector*>(vector_->clone()));
 
     ans->octPosition_ = octPosition_;
@@ -57,7 +57,7 @@ NormalSurface* NormalSurface::clone() const {
 }
 
 NormalSurface* NormalSurface::doubleSurface() const {
-    NormalSurface* ans = new NormalSurface(triangulation_,
+    NormalSurface* ans = new NormalSurface(*triangulation_,
         dynamic_cast<NormalSurfaceVector*>(vector_->clone()));
 
     *(ans->vector_) += *(ans->vector_);
@@ -80,7 +80,7 @@ NormalSurface* NormalSurface::doubleSurface() const {
 }
 
 void NormalSurface::writeTextShort(std::ostream& out) const {
-    size_t nTets = triangulation_.size();
+    size_t nTets = triangulation_->size();
     size_t tet;
     unsigned j;
     bool almostNormal = vector_->allowsAlmostNormal();
@@ -184,7 +184,7 @@ LargeInteger NormalSurfaceVector::isCentral(const Triangulation<3>& triang)
 }
 
 bool NormalSurface::isEmpty() const {
-    size_t nTet = triangulation_.size();
+    size_t nTet = triangulation_->size();
     bool checkAlmostNormal = vector_->allowsAlmostNormal();
 
     size_t t;
@@ -209,7 +209,7 @@ bool NormalSurface::isEmpty() const {
 }
 
 bool NormalSurface::sameSurface(const NormalSurface& other) const {
-    size_t nTet = triangulation_.size();
+    size_t nTet = triangulation_->size();
     bool checkAlmostNormal =
         (vector_->allowsAlmostNormal() || other.vector_->allowsAlmostNormal());
 
@@ -235,7 +235,7 @@ bool NormalSurface::sameSurface(const NormalSurface& other) const {
 }
 
 bool NormalSurface::embedded() const {
-    size_t nTets = triangulation_.size();
+    size_t nTets = triangulation_->size();
 
     int type;
     int found;
@@ -255,7 +255,7 @@ bool NormalSurface::embedded() const {
 }
 
 bool NormalSurface::locallyCompatible(const NormalSurface& other) const {
-    size_t nTets = triangulation_.size();
+    size_t nTets = triangulation_->size();
 
     int type;
     int found;
@@ -283,7 +283,7 @@ void NormalSurface::calculateOctPosition() const {
     size_t tetIndex;
     int type;
 
-    for (tetIndex = 0; tetIndex < triangulation_.size(); ++tetIndex)
+    for (tetIndex = 0; tetIndex < triangulation_->size(); ++tetIndex)
         for (type = 0; type < 3; ++type)
             if (octs(tetIndex, type) != 0) {
                 octPosition_ = DiscType(tetIndex, type);
@@ -300,18 +300,18 @@ void NormalSurface::calculateEulerChar() const {
     LargeInteger ans = LargeInteger::zero;
 
     // Add vertices.
-    tot = triangulation_.countEdges();
+    tot = triangulation_->countEdges();
     for (index = 0; index < tot; index++)
         ans += edgeWeight(index);
 
     // Subtract edges.
-    tot = triangulation_.countTriangles();
+    tot = triangulation_->countTriangles();
     for (index = 0; index < tot; index++)
         for (type = 0; type < 3; type++)
             ans -= arcs(index, type);
 
     // Add faces.
-    tot = triangulation_.size();
+    tot = triangulation_->size();
     for (index = 0; index < tot; index++) {
         for (type=0; type<4; type++)
             ans += triangles(index, type);
@@ -326,18 +326,18 @@ void NormalSurface::calculateEulerChar() const {
 }
 
 void NormalSurface::calculateRealBoundary() const {
-    if (triangulation_.isClosed()) {
+    if (triangulation_->isClosed()) {
         realBoundary_ = false;
         return;
     }
 
     size_t index;
-    size_t tot = triangulation_.size();
+    size_t tot = triangulation_->size();
     const Tetrahedron<3>* tet;
     int type, face;
 
     for (index = 0; index < tot; index++) {
-        tet = triangulation_.tetrahedron(index);
+        tet = triangulation_->tetrahedron(index);
         if (tet->hasBoundary()) {
             // Check for disk types with boundary
             for (type=0; type<3; type++) {

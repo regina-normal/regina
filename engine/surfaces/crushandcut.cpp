@@ -1210,7 +1210,7 @@ Triangulation<3>* NormalSurface::cutAlong() const {
 // ------------------------------------------------------------------------
 
 Triangulation<3>* NormalSurface::crush() const {
-    Triangulation<3>* ans = new Triangulation<3>(triangulation_, false);
+    Triangulation<3>* ans = new Triangulation<3>(*triangulation_, false);
     unsigned long nTet = ans->size();
     if (nTet == 0)
         return ans;

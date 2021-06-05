@@ -36,8 +36,9 @@ Version 6.1  [ TODO ]
             - Replaced rawVector() with vector(), which now returns a reference
               (not a pointer) and is now accessible through python.  The old
               rawVector() (with its pointer return type) is kept but deprecated.
-            - AngleStructure now has copy and move constructors.  The old
-              clone() is now deprecated; just use the copy constructor instead.
+            - AngleStructure now has copy and move constructors, copy and move
+              assignment, and member and global swap() functions.  The old
+              clone() is now deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
             - Constructors now take a reference to the triangulation, not a
               pointer.
@@ -278,8 +279,9 @@ Version 6.1  [ TODO ]
         Class NormalHypersurface:
             - Renamed rawVector() to vector().  The old name is kept but
               deprecated.
-            - Added copy and move constructors.  The old clone() is now
-              deprecated; just use the copy constructor instead.
+            - Added copy and move constructors, copy and move assignment
+              operators, and member and global swap() functions.  The old
+              clone() now is deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
             - Constructors now take a reference to the triangulation, not a
               pointer.
@@ -292,8 +294,9 @@ Version 6.1  [ TODO ]
         Class NormalSurface:
             - Renamed rawVector() to vector().  The old name is kept but
               deprecated.
-            - Added copy and move constructors.  The old clone() is now
-              deprecated; just use the copy constructor instead.
+            - Added copy and move constructors, copy and move assignment
+              operators, and member and global swap() functions.  The old
+              clone() now is deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
             - Changed boundaryIntersections() to return a
               std::optional<MatrixInt>, not a pointer that could be null.
@@ -367,6 +370,9 @@ Version 6.1  [ TODO ]
             - Class constants are now constexpr.
         Class Polynomial:
             - Added member and global swap() functions.
+        Class Property<...>:
+            - Added a move constructor and move assignment operator.
+            - Added a global swap() to complement the member swap().
         Class Ray:
             - All of the old Ray functionality is now merged into
               Vector<LargeInteger>, and you should use that class directly.
