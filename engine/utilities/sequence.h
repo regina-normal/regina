@@ -249,7 +249,7 @@ class LightweightSequence {
          *
          * @param other the sequence whose contents are to be swapped with this.
          */
-        void swap(LightweightSequence<T>& other);
+        void swap(LightweightSequence<T>& other) noexcept;
 
         /**
          * Tests whether this and the given sequence are identical.
@@ -456,7 +456,7 @@ std::ostream& operator << (std::ostream& out, const LightweightSequence<T>& s);
  * @param b the second sequence whose contents should be swapped.
  */
 template <typename T>
-void swap(LightweightSequence<T>& a, LightweightSequence<T>& b);
+void swap(LightweightSequence<T>& a, LightweightSequence<T>& b) noexcept;
 
 /*@}*/
 
@@ -558,7 +558,8 @@ inline LightweightSequence<T>& LightweightSequence<T>::operator = (
 }
 
 template <typename T>
-inline void LightweightSequence<T>::swap(LightweightSequence<T>& other) {
+inline void LightweightSequence<T>::swap(LightweightSequence<T>& other)
+        noexcept {
     std::swap(size_, other.size);
     std::swap(data_, other.data_);
 }
@@ -655,7 +656,8 @@ inline bool LightweightSequence<T>::SubsequenceCompareFirstPtr<Iterator>::
 }
 
 template <typename T>
-inline void swap(LightweightSequence<T>& a, LightweightSequence<T>& b) {
+inline void swap(LightweightSequence<T>& a, LightweightSequence<T>& b)
+        noexcept {
     a.swap(b);
 }
 

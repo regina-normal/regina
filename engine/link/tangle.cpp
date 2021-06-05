@@ -272,7 +272,7 @@ Tangle& Tangle::operator = (Tangle&& src) noexcept {
     return *this;
 }
 
-void Tangle::swap(Tangle& other) {
+void Tangle::swap(Tangle& other) noexcept {
     if (&other == this)
         return;
 

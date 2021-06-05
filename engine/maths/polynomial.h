@@ -369,7 +369,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
          * @param other the polynomial whose contents should be swapped
          * with this.
          */
-        void swap(Polynomial<T>& other);
+        void swap(Polynomial<T>& other) noexcept;
 
         /**
          * Negates this polynomial.
@@ -649,7 +649,7 @@ class Polynomial : public ShortOutput<Polynomial<T>, true> {
  * @param b the second polynomial whose contents should be swapped.
  */
 template <typename T>
-void swap(Polynomial<T>& a, Polynomial<T>& b);
+void swap(Polynomial<T>& a, Polynomial<T>& b) noexcept;
 
 /**
  * Multiplies the given polynomial by the given scalar constant.
@@ -1057,7 +1057,7 @@ inline Polynomial<T>& Polynomial<T>::operator = (Polynomial<T>&& value)
 }
 
 template <typename T>
-inline void Polynomial<T>::swap(Polynomial<T>& other) {
+inline void Polynomial<T>::swap(Polynomial<T>& other) noexcept {
     std::swap(degree_, other.degree_);
     std::swap(coeff_, other.coeff_);
 }
@@ -1461,7 +1461,7 @@ inline Polynomial<T>& Polynomial<T>::subtractFrom(const Polynomial<T>& other) {
 }
 
 template <typename T>
-inline void swap(Polynomial<T>& a, Polynomial<T>& b) {
+inline void swap(Polynomial<T>& a, Polynomial<T>& b) noexcept {
     a.swap(b);
 }
 

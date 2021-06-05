@@ -390,7 +390,7 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * @param other the polynomial whose contents should be swapped
          * with this.
          */
-        void swap(Laurent<T>& other);
+        void swap(Laurent<T>& other) noexcept;
 
         /**
          * Multiplies this polynomial by <tt>x^s</tt> for some integer \a s.
@@ -628,7 +628,7 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
  * @param b the second polynomial whose contents should be swapped.
  */
 template <typename T>
-void swap(Laurent<T>& a, Laurent<T>& b);
+void swap(Laurent<T>& a, Laurent<T>& b) noexcept;
 
 /**
  * Multiplies the given polynomial by the given scalar constant.
@@ -1070,7 +1070,7 @@ inline Laurent<T>& Laurent<T>::operator = (Laurent<T>&& other) noexcept {
 }
 
 template <typename T>
-inline void Laurent<T>::swap(Laurent<T>& other) {
+inline void Laurent<T>::swap(Laurent<T>& other) noexcept {
     std::swap(minExp_, other.minExp_);
     std::swap(maxExp_, other.maxExp_);
     std::swap(base_, other.base_);
@@ -1430,7 +1430,7 @@ inline Laurent<T>& Laurent<T>::subtractFrom(const Laurent<T>& other) {
 }
 
 template <typename T>
-inline void swap(Laurent<T>& a, Laurent<T>& b) {
+inline void swap(Laurent<T>& a, Laurent<T>& b) noexcept {
     a.swap(b);
 }
 

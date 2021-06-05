@@ -577,7 +577,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * @param other the graph whose contents should be swapped with this.
          */
-        void swap(ModelLinkGraph& other);
+        void swap(ModelLinkGraph& other) noexcept;
 
         /**
          * Deprecated routine that swaps the contents of this and the
@@ -587,7 +587,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
          *
          * @param other the graph whose contents should be swapped with this.
          */
-        [[deprecated]] void swapContents(ModelLinkGraph& other);
+        [[deprecated]] void swapContents(ModelLinkGraph& other) noexcept;
 
         /**
          * Converts this graph into its reflection.
@@ -893,7 +893,7 @@ class ModelLinkGraph : public Output<ModelLinkGraph> {
  * @param lhs the graph whose contents should be swapped with \a rhs.
  * @param rhs the graph whose contents should be swapped with \a lhs.
  */
-void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs);
+void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept;
 
 /**
  * Describes the cellular decomposition of the sphere that is induced by a
@@ -1353,14 +1353,14 @@ inline ModelLinkGraph& ModelLinkGraph::operator = (ModelLinkGraph&& src)
     return *this;
 }
 
-inline void ModelLinkGraph::swap(ModelLinkGraph& other) {
+inline void ModelLinkGraph::swap(ModelLinkGraph& other) noexcept {
     if (&other != this) {
         nodes_.swap(other.nodes_);
         std::swap(cells_, other.cells_);
     }
 }
 
-inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) {
+inline void ModelLinkGraph::swapContents(ModelLinkGraph& other) noexcept {
     swap(other);
 }
 
@@ -1377,7 +1377,7 @@ inline ModelLinkGraph* ModelLinkGraph::flype(const ModelLinkGraphArc& from)
     return (use.first ? flype(from, use.first, use.second) : nullptr);
 }
 
-inline void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) {
+inline void swap(ModelLinkGraph& lhs, ModelLinkGraph& rhs) noexcept {
     lhs.swap(rhs);
 }
 

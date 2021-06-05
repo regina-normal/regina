@@ -345,7 +345,7 @@ class Vector : public ShortOutput<Vector<T>> {
          *
          * @param other the vector whose contents are to be swapped with this.
          */
-        inline void swap(Vector& other) {
+        inline void swap(Vector& other) noexcept {
             std::swap(elements, other.elements);
             std::swap(end, other.end);
         }
@@ -640,7 +640,7 @@ class Vector : public ShortOutput<Vector<T>> {
  * @param b the second vector whose contents should be swapped.
  */
 template <typename T>
-inline void swap(Vector<T>& a, Vector<T>& b) {
+inline void swap(Vector<T>& a, Vector<T>& b) noexcept {
     a.swap(b);
 }
 

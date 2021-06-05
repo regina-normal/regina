@@ -366,7 +366,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
          *
          * @param other the group whose contents should be swapped with this.
          */
-        void swap(AbelianGroup& other);
+        void swap(AbelianGroup& other) noexcept;
 
         /**
          * Writes a chunk of XML containing this abelian group.
@@ -426,7 +426,7 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
  * @param lhs the group whose contents should be swapped with \a rhs.
  * @param rhs the group whose contents should be swapped with \a lhs.
  */
-void swap(AbelianGroup& lhs, AbelianGroup& rhs);
+void swap(AbelianGroup& lhs, AbelianGroup& rhs) noexcept;
 
 /*@}*/
 
@@ -435,7 +435,7 @@ void swap(AbelianGroup& lhs, AbelianGroup& rhs);
 inline AbelianGroup::AbelianGroup() : rank_(0) {
 }
 
-inline void AbelianGroup::swap(AbelianGroup& other) {
+inline void AbelianGroup::swap(AbelianGroup& other) noexcept {
     std::swap(rank_, other.rank_);
     invariantFactors.swap(other.invariantFactors);
 }
@@ -487,7 +487,7 @@ inline bool AbelianGroup::operator != (const AbelianGroup& other) const {
     return (rank_ != other.rank_ || invariantFactors != other.invariantFactors);
 }
 
-inline void swap(AbelianGroup& a, AbelianGroup& b) {
+inline void swap(AbelianGroup& a, AbelianGroup& b) noexcept {
     a.swap(b);
 }
 

@@ -332,7 +332,7 @@ class Tangle : public Output<Tangle> {
          *
          * @param other the tangle whose contents should be swapped with this.
          */
-        void swap(Tangle& other);
+        void swap(Tangle& other) noexcept;
 
         /**
          * Deprecated routine that swaps the contents of this and the
@@ -342,7 +342,7 @@ class Tangle : public Output<Tangle> {
          *
          * @param other the tangle whose contents should be swapped with this.
          */
-        [[deprecated]] void swapContents(Tangle& other);
+        [[deprecated]] void swapContents(Tangle& other) noexcept;
 
         /**
          * Adds a twist to the right-hand end of this tangle.
@@ -864,7 +864,7 @@ class Tangle : public Output<Tangle> {
  * @param lhs the tangle whose contents should be swapped with \a rhs.
  * @param rhs the tangle whose contents should be swapped with \a lhs.
  */
-void swap(Tangle& lhs, Tangle& rhs);
+void swap(Tangle& lhs, Tangle& rhs) noexcept;
 
 /*@}*/
 
@@ -879,7 +879,7 @@ inline Tangle::~Tangle() {
         delete c;
 }
 
-inline void Tangle::swapContents(Tangle& other) {
+inline void Tangle::swapContents(Tangle& other) noexcept {
     swap(other);
 }
 
@@ -913,7 +913,7 @@ inline bool Tangle::r2(Crossing* crossing, bool check, bool perform) {
     return r2(StrandRef(crossing, 1), check, perform);
 }
 
-inline void swap(Tangle& lhs, Tangle& rhs) {
+inline void swap(Tangle& lhs, Tangle& rhs) noexcept {
     lhs.swap(rhs);
 }
 

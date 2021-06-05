@@ -267,7 +267,7 @@ class MarkedVector : private std::vector<T*> {
          *
          * @param other the vector whose contents are to be swapped with this.
          */
-        inline void swap(MarkedVector<T>& other) {
+        inline void swap(MarkedVector<T>& other) noexcept {
             std::vector<T*>::swap(other);
         }
 
@@ -336,7 +336,7 @@ class MarkedVector : private std::vector<T*> {
  * @param b the second vector whose contents should be swapped.
  */
 template <typename T>
-void swap(MarkedVector<T>& a, MarkedVector<T>& b);
+void swap(MarkedVector<T>& a, MarkedVector<T>& b) noexcept;
 
 /*@}*/
 
@@ -347,7 +347,7 @@ inline size_t MarkedElement::markedIndex() const {
 }
 
 template <typename T>
-inline void swap(MarkedVector<T>& a, MarkedVector<T>& b) {
+inline void swap(MarkedVector<T>& a, MarkedVector<T>& b) noexcept {
     a.swap(b);
 }
 

@@ -193,7 +193,7 @@ class Isomorphism :
          * @param other the isomorphism whose contents are to be swapped with
          * this.
          */
-        void swap(Isomorphism& other);
+        void swap(Isomorphism& other) noexcept;
 
         /**
          * Returns the number of simplices in the source triangulation
@@ -420,7 +420,7 @@ class Isomorphism :
  * @param b the second isomorphism whose contents should be swapped.
  */
 template <int dim>
-void swap(Isomorphism<dim>& a, Isomorphism<dim>& b);
+void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) noexcept;
 
 /*@}*/
 
@@ -485,7 +485,7 @@ Isomorphism<dim>& Isomorphism<dim>::operator = (Isomorphism<dim>&& src)
 }
 
 template <int dim>
-void Isomorphism<dim>::swap(Isomorphism<dim>& other) {
+void Isomorphism<dim>::swap(Isomorphism<dim>& other) noexcept {
     std::swap(nSimplices_, other.nSimplices_);
     std::swap(simpImage_, other.simpImage_);
     std::swap(facetPerm_, other.facetPerm_);
@@ -637,7 +637,7 @@ Isomorphism<dim> Isomorphism<dim>::random(unsigned nSimplices, bool even) {
 }
 
 template <int dim>
-inline void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) {
+inline void swap(Isomorphism<dim>& a, Isomorphism<dim>& b) noexcept {
     a.swap(b);
 }
 

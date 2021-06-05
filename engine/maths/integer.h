@@ -582,7 +582,7 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          *
          * @param other the integer whose value will be swapped with this.
          */
-        void swap(IntegerBase& other);
+        void swap(IntegerBase& other) noexcept;
 
         /**
          * Determines if this is equal to the given integer.
@@ -1558,7 +1558,8 @@ typedef IntegerBase<false> Integer;
  * @param b the second integer whose contents should be swapped.
  */
 template <bool supportInfinity>
-void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b);
+void swap(IntegerBase<supportInfinity>& a, IntegerBase<supportInfinity>& b)
+    noexcept;
 
 /**
  * Writes the given integer to the given output stream.
@@ -1723,7 +1724,7 @@ class NativeInteger {
          *
          * @param other the integer whose value will be swapped with this.
          */
-        void swap(NativeInteger& other);
+        void swap(NativeInteger& other) noexcept;
 
         /**
          * Determines if this is equal to the given integer.
@@ -2291,7 +2292,7 @@ class NativeInteger {
  * @param b the second integer whose contents should be swapped.
  */
 template <int bytes>
-void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b);
+void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept;
 
 /**
  * Writes the given integer to the given output stream.
@@ -2691,7 +2692,7 @@ inline IntegerBase<supportInfinity>&
 
 template <bool supportInfinity>
 inline void IntegerBase<supportInfinity>::swap(
-        IntegerBase<supportInfinity>& other) {
+        IntegerBase<supportInfinity>& other) noexcept {
     // This should just work, since large_ is a pointer.
     if constexpr (supportInfinity)
         std::swap(InfinityBase<true>::infinite_,
@@ -3333,7 +3334,7 @@ inline const IntegerBase<true> IntegerBase<true>::infinity(false, false);
 
 template <bool supportInfinity>
 inline void swap(IntegerBase<supportInfinity>& a,
-        IntegerBase<supportInfinity>& b) {
+        IntegerBase<supportInfinity>& b) noexcept {
     a.swap(b);
 }
 
@@ -3390,7 +3391,7 @@ inline NativeInteger<bytes>& NativeInteger<bytes>::operator =(Native value) {
 }
 
 template <int bytes>
-inline void NativeInteger<bytes>::swap(NativeInteger<bytes>& other) {
+inline void NativeInteger<bytes>::swap(NativeInteger<bytes>& other) noexcept {
     std::swap(data_, other.data_);
 }
 
@@ -3771,7 +3772,7 @@ inline std::ostream& operator << (std::ostream& out,
 #endif // __DOXYGEN
 
 template <int bytes>
-inline void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) {
+inline void swap(NativeInteger<bytes>& a, NativeInteger<bytes>& b) noexcept {
     a.swap(b);
 }
 

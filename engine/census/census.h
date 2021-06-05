@@ -167,7 +167,7 @@ class CensusDB {
          * @param other the database reference whose contents are to be
          * swapped with this.
          */
-        void swap(CensusDB& other);
+        void swap(CensusDB& other) noexcept;
 };
 
 /**
@@ -179,7 +179,7 @@ class CensusDB {
  * @param a the first database reference whose contents should be swapped.
  * @param b the second database reference whose contents should be swapped.
  */
-void swap(CensusDB& a, CensusDB& b);
+void swap(CensusDB& a, CensusDB& b) noexcept;
 
 /**
  * Stores a single "hit" indicating that some given triangulation has
@@ -632,12 +632,12 @@ inline const std::string& CensusDB::desc() const {
     return desc_;
 }
 
-inline void CensusDB::swap(CensusDB& other) {
+inline void CensusDB::swap(CensusDB& other) noexcept {
     filename_.swap(other.filename_);
     desc_.swap(other.desc_);
 }
 
-inline void swap(CensusDB& a, CensusDB& b) {
+inline void swap(CensusDB& a, CensusDB& b) noexcept {
     a.swap(b);
 }
 

@@ -238,7 +238,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
          *
          * @param other the group whose contents should be swapped with this.
          */
-        void swap(MarkedAbelianGroup& other);
+        void swap(MarkedAbelianGroup& other) noexcept;
 
         /**
          * Determines whether or not the defining maps for this group
@@ -692,7 +692,7 @@ class MarkedAbelianGroup : public ShortOutput<MarkedAbelianGroup, true> {
  * @param lhs the group whose contents should be swapped with \a rhs.
  * @param rhs the group whose contents should be swapped with \a lhs.
  */
-void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs);
+void swap(MarkedAbelianGroup& lhs, MarkedAbelianGroup& rhs) noexcept;
 
 /**
  * Represents a homomorphism of finitely generated abelian groups.
@@ -861,7 +861,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
          * @param other the homomorphism whose contents should be swapped with
          * this.
          */
-        void swap(HomMarkedAbelianGroup& other);
+        void swap(HomMarkedAbelianGroup& other) noexcept;
 
         /**
          * Determines whether this and the given homomorphism together
@@ -1123,7 +1123,7 @@ class HomMarkedAbelianGroup : public Output<HomMarkedAbelianGroup> {
  * @param lhs the homomorphism whose contents should be swapped with \a rhs.
  * @param rhs the homomorphism whose contents should be swapped with \a lhs.
  */
-void swap(HomMarkedAbelianGroup& lhs, HomMarkedAbelianGroup& rhs);
+void swap(HomMarkedAbelianGroup& lhs, HomMarkedAbelianGroup& rhs) noexcept;
 
 /*@}*/
 
@@ -1214,7 +1214,7 @@ inline const Integer& MarkedAbelianGroup::coefficients() const {
     return coeff;
 }
 
-inline void swap(MarkedAbelianGroup& a, MarkedAbelianGroup& b) {
+inline void swap(MarkedAbelianGroup& a, MarkedAbelianGroup& b) noexcept {
     a.swap(b);
 }
 
@@ -1269,7 +1269,7 @@ inline bool HomMarkedAbelianGroup::isZero() const {
     return image().isTrivial();
 }
 
-inline void swap(HomMarkedAbelianGroup& a, HomMarkedAbelianGroup& b) {
+inline void swap(HomMarkedAbelianGroup& a, HomMarkedAbelianGroup& b) noexcept {
     a.swap(b);
 }
 

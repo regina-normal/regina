@@ -445,7 +445,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * @param other the field element whose contents should be swapped
          * with this.
          */
-        void swap(Cyclotomic& other);
+        void swap(Cyclotomic& other) noexcept;
 
         /**
          * Negates this field element.
@@ -660,7 +660,7 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
  * @param a the first field element whose contents should be swapped.
  * @param b the second field element whose contents should be swapped.
  */
-void swap(Cyclotomic& a, Cyclotomic& b);
+void swap(Cyclotomic& a, Cyclotomic& b) noexcept;
 
 /**
  * Multiplies the given field element by the given rational.
@@ -939,7 +939,7 @@ inline Cyclotomic& Cyclotomic::operator = (const Rational& scalar) {
     return *this;
 }
 
-inline void Cyclotomic::swap(Cyclotomic& other) {
+inline void Cyclotomic::swap(Cyclotomic& other) noexcept {
     std::swap(field_, other.field_);
     std::swap(degree_, other.degree_);
     std::swap(coeff_, other.coeff_);
@@ -995,7 +995,7 @@ inline std::string Cyclotomic::utf8(const char* variable) const {
     return out.str();
 }
 
-inline void swap(Cyclotomic& a, Cyclotomic& b) {
+inline void swap(Cyclotomic& a, Cyclotomic& b) noexcept {
     a.swap(b);
 }
 

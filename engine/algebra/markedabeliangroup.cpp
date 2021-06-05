@@ -215,7 +215,7 @@ MarkedAbelianGroup::MarkedAbelianGroup(MatrixInt tmpM, MatrixInt tmpN,
     }
 }
 
-void MarkedAbelianGroup::swap(MarkedAbelianGroup& other) {
+void MarkedAbelianGroup::swap(MarkedAbelianGroup& other) noexcept {
     // Woof.
     OM.swap(other.OM);
     ON.swap(other.ON);
@@ -925,7 +925,7 @@ HomMarkedAbelianGroup& HomMarkedAbelianGroup::operator =(
     return *this;
 }
 
-void HomMarkedAbelianGroup::swap(HomMarkedAbelianGroup& other) {
+void HomMarkedAbelianGroup::swap(HomMarkedAbelianGroup& other) noexcept {
     domain_.swap(other.domain_);
     range_.swap(other.range_);
     matrix.swap(other.matrix);

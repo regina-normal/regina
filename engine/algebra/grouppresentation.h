@@ -249,7 +249,7 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          * @param other the expression whose contents should be swapped with
          * this.
          */
-        void swap(GroupExpression& other);
+        void swap(GroupExpression& other) noexcept;
 
         /**
          * Equality operator. Checks to see whether or not these two words
@@ -705,7 +705,7 @@ class GroupExpression : public ShortOutput<GroupExpression> {
  * @param lhs the expression whose contents should be swapped with \a rhs.
  * @param rhs the expression whose contents should be swapped with \a lhs.
  */
-void swap(GroupExpression& lhs, GroupExpression& rhs);
+void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept;
 
 /**
  * Represents a finite presentation of a group.
@@ -810,7 +810,7 @@ class GroupPresentation : public Output<GroupPresentation> {
          * @param other the group presentation whose contents should be
          * swapped with this.
          */
-        void swap(GroupPresentation& other);
+        void swap(GroupPresentation& other) noexcept;
 
         /**
          * Adds one or more generators to the group presentation.
@@ -1551,7 +1551,7 @@ class GroupPresentation : public Output<GroupPresentation> {
  * @param lhs the presentation whose contents should be swapped with \a rhs.
  * @param rhs the presentation whose contents should be swapped with \a lhs.
  */
-void swap(GroupPresentation& lhs, GroupPresentation& rhs);
+void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept;
 
 /*@}*/
 
@@ -1598,7 +1598,7 @@ inline bool GroupExpressionTerm::operator < (
 inline GroupExpression::GroupExpression() {
 }
 
-inline void GroupExpression::swap(GroupExpression& other) {
+inline void GroupExpression::swap(GroupExpression& other) noexcept {
     terms_.swap(other.terms_);
 }
 
@@ -1673,7 +1673,7 @@ inline void GroupExpression::erase() {
     terms_.clear();
 }
 
-inline void swap(GroupExpression& lhs, GroupExpression& rhs) {
+inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {
     lhs.swap(rhs);
 }
 
@@ -1682,7 +1682,7 @@ inline void swap(GroupExpression& lhs, GroupExpression& rhs) {
 inline GroupPresentation::GroupPresentation() : nGenerators_(0) {
 }
 
-inline void GroupPresentation::swap(GroupPresentation& other) {
+inline void GroupPresentation::swap(GroupPresentation& other) noexcept {
     std::swap(nGenerators_, other.nGenerators_);
     relations_.swap(other.relations_);
 }
@@ -1719,7 +1719,7 @@ inline size_t GroupPresentation::relatorLength() const {
     return retval;
 }
 
-inline void swap(GroupPresentation& lhs, GroupPresentation& rhs) {
+inline void swap(GroupPresentation& lhs, GroupPresentation& rhs) noexcept {
     lhs.swap(rhs);
 }
 

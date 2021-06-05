@@ -411,7 +411,7 @@ class Matrix : public Output<Matrix<T>> {
          *
          * @param other the matrix whose contents are to be swapped with this.
          */
-        inline void swap(Matrix& other) {
+        inline void swap(Matrix& other) noexcept {
             std::swap(rows_, other.rows_);
             std::swap(cols_, other.cols_);
             std::swap(data_, other.data_);
@@ -1281,7 +1281,7 @@ class Matrix : public Output<Matrix<T>> {
  * @param b the second matrix whose contents should be swapped.
  */
 template <typename T>
-inline void swap(Matrix<T>& a, Matrix<T>& b) {
+inline void swap(Matrix<T>& a, Matrix<T>& b) noexcept {
     a.swap(b);
 }
 

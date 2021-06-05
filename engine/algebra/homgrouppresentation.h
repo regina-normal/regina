@@ -191,7 +191,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
          * @param other the homomorphism whose contents should be swapped with
          * this.
          */
-        void swap(HomGroupPresentation& other);
+        void swap(HomGroupPresentation& other) noexcept;
 
         /**
          * The domain of the map.
@@ -451,7 +451,7 @@ class HomGroupPresentation : public Output<HomGroupPresentation> {
  * @param lhs the homomorphism whose contents should be swapped with \a rhs.
  * @param rhs the homomorphism whose contents should be swapped with \a lhs.
  */
-void swap(HomGroupPresentation& lhs, HomGroupPresentation& rhs);
+void swap(HomGroupPresentation& lhs, HomGroupPresentation& rhs) noexcept;
 
 /*@}*/
 
@@ -510,7 +510,7 @@ inline HomGroupPresentation& HomGroupPresentation::operator = (
     return *this;
 }
 
-inline void HomGroupPresentation::swap(HomGroupPresentation& other) {
+inline void HomGroupPresentation::swap(HomGroupPresentation& other) noexcept {
     domain_.swap(other.domain_);
     range_.swap(other.range_);
     map_.swap(other.map_);
@@ -555,7 +555,7 @@ inline HomGroupPresentation HomGroupPresentation::composeWith(
     return (*this) * rhs;
 }
 
-inline void swap(HomGroupPresentation& a, HomGroupPresentation& b) {
+inline void swap(HomGroupPresentation& a, HomGroupPresentation& b) noexcept {
     a.swap(b);
 }
 
