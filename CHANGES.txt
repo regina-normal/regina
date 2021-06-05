@@ -394,6 +394,10 @@ Version 6.1  [ TODO ]
             - Added member and global swap() functions.
             - Changed slopeEquations() to return a std::optional<MatrixInt>,
               not a pointer that could be null.
+            - Changed gluingEquations() and gluingEquationsRect() to return a
+              MatrixInt by value (not by pointer), and added a precondition
+              that this must not be a null SnapPea triangulation (instead of
+              returning a null pointer in this scenario).
         Class StandardTriangulation:
             - Routine homology() now returns a std::optional<AbelianGroup>,
               not a newly allocated pointer that could be null.

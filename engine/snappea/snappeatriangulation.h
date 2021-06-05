@@ -779,11 +779,12 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.gluing_equations()</tt>.
          *
-         * @return a newly allocated matrix with (\a number_of_rows +
-         * \a number_of_cusps) rows and (3 * \a number_of_tetrahedra) columns
-         * as described above, or \c nullptr if this is a null triangulation.
+         * \pre This is not a null triangulation.
+         *
+         * @return a matrix with (\a number_of_rows + \a number_of_cusps) rows
+         * and (3 * \a number_of_tetrahedra) columns as described above.
          */
-        MatrixInt* gluingEquations() const;
+        MatrixInt gluingEquations() const;
 
         /**
          * Returns a matrix describing Thurston's gluing equations in a
@@ -812,12 +813,12 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * \snappy In SnapPy, this routine corresponds to calling
          * <tt>Manifold.gluing_equations(form='rect')</tt>.
          *
-         * @return a newly allocated matrix with (\a number_of_rows +
-         * \a number_of_cusps) rows and (2 * \a number_of_tetrahedra + 1)
-         * columns as described above, or \c nullptr if this is a null
-         * triangulation.
+         * \pre This is not a null triangulation.
+         *
+         * @return a matrix with (\a number_of_rows + \a number_of_cusps) rows
+         * and (2 * \a number_of_tetrahedra + 1) columns as described above.
          */
-        MatrixInt* gluingEquationsRect() const;
+        MatrixInt gluingEquationsRect() const;
 
         /*@}*/
         /**

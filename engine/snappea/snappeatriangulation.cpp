@@ -484,12 +484,11 @@ void SnapPeaTriangulation::randomize() {
     sync();
 }
 
-MatrixInt* SnapPeaTriangulation::gluingEquations() const {
+MatrixInt SnapPeaTriangulation::gluingEquations() const {
     if (! data_)
-        return nullptr;
+        return MatrixInt(); // Should never happen, due to preconditions
 
-    MatrixInt* matrix = new MatrixInt(
-        countEdges() + data_->num_cusps + countCompleteCusps(),
+    MatrixInt matrix(countEdges() + data_->num_cusps + countCompleteCusps(),
         3 * size());
 
     int numRows, numCols;
@@ -499,7 +498,7 @@ MatrixInt* SnapPeaTriangulation::gluingEquations() const {
         &numRows, &numCols);
     for (row = 0; row < numRows; ++row)
         for (j = 0; j < numCols; ++j)
-            matrix->entry(row, j) = edgeEqns[row][j];
+            matrix.entry(row, j) = edgeEqns[row][j];
     regina::snappea::free_gluing_equations(edgeEqns, numRows);
 
     int c;
@@ -509,21 +508,21 @@ MatrixInt* SnapPeaTriangulation::gluingEquations() const {
             cuspEqn = regina::snappea::get_cusp_equation(
                 data_, c, 1, 0, &numCols);
             for (j = 0; j < numCols; ++j)
-                matrix->entry(row, j) = cuspEqn[j];
+                matrix.entry(row, j) = cuspEqn[j];
             regina::snappea::free_cusp_equation(cuspEqn);
             ++row;
 
             cuspEqn = regina::snappea::get_cusp_equation(
                 data_, c, 0, 1, &numCols);
             for (j = 0; j < numCols; ++j)
-                matrix->entry(row, j) = cuspEqn[j];
+                matrix.entry(row, j) = cuspEqn[j];
             regina::snappea::free_cusp_equation(cuspEqn);
             ++row;
         } else {
             cuspEqn = regina::snappea::get_cusp_equation(
                 data_, c, cusp_[c].m_, cusp_[c].l_, &numCols);
             for (j = 0; j < numCols; ++j)
-                matrix->entry(row, j) = cuspEqn[j];
+                matrix.entry(row, j) = cuspEqn[j];
             regina::snappea::free_cusp_equation(cuspEqn);
             ++row;
         }
@@ -532,14 +531,13 @@ MatrixInt* SnapPeaTriangulation::gluingEquations() const {
     return matrix;
 }
 
-MatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
+MatrixInt SnapPeaTriangulation::gluingEquationsRect() const {
     if (! data_)
-        return nullptr;
+        return MatrixInt(); // Should never happen, due to preconditions
 
     unsigned n = size();
 
-    MatrixInt* matrix = new MatrixInt(
-        countEdges() + data_->num_cusps + countCompleteCusps(),
+    MatrixInt matrix(countEdges() + data_->num_cusps + countCompleteCusps(),
         2 * n + 1);
     // Note: all entries are automatically initialised to zero.
 
@@ -552,14 +550,14 @@ MatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
     for (row = 0; row < numRows; ++row) {
         parity = 0;
         for (j = 0; j < n; ++j) {
-            matrix->entry(row, j) += edgeEqns[row][3 * j];
-            matrix->entry(row, j + n) -= edgeEqns[row][3 * j + 1];
-            matrix->entry(row, j) -= edgeEqns[row][3 * j + 2];
-            matrix->entry(row, j + n) += edgeEqns[row][3 * j + 2];
+            matrix.entry(row, j) += edgeEqns[row][3 * j];
+            matrix.entry(row, j + n) -= edgeEqns[row][3 * j + 1];
+            matrix.entry(row, j) -= edgeEqns[row][3 * j + 2];
+            matrix.entry(row, j + n) += edgeEqns[row][3 * j + 2];
             if (edgeEqns[row][3 * j + 2] % 2)
                 parity ^= 1;
         }
-        matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+        matrix.entry(row, 2 * n) = (parity ? -1 : 1);
     }
     regina::snappea::free_gluing_equations(edgeEqns, numRows);
 
@@ -571,14 +569,14 @@ MatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
                 data_, c, 1, 0, &numCols);
             parity = 0;
             for (j = 0; j < n; ++j) {
-                matrix->entry(row, j) += cuspEqn[3 * j];
-                matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
-                matrix->entry(row, j) -= cuspEqn[3 * j + 2];
-                matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
+                matrix.entry(row, j) += cuspEqn[3 * j];
+                matrix.entry(row, j + n) -= cuspEqn[3 * j + 1];
+                matrix.entry(row, j) -= cuspEqn[3 * j + 2];
+                matrix.entry(row, j + n) += cuspEqn[3 * j + 2];
                 if (cuspEqn[3 * j + 2] % 2)
                     parity ^= 1;
             }
-            matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+            matrix.entry(row, 2 * n) = (parity ? -1 : 1);
             regina::snappea::free_cusp_equation(cuspEqn);
             ++row;
 
@@ -586,14 +584,14 @@ MatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
                 data_, c, 0, 1, &numCols);
             parity = 0;
             for (j = 0; j < n; ++j) {
-                matrix->entry(row, j) += cuspEqn[3 * j];
-                matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
-                matrix->entry(row, j) -= cuspEqn[3 * j + 2];
-                matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
+                matrix.entry(row, j) += cuspEqn[3 * j];
+                matrix.entry(row, j + n) -= cuspEqn[3 * j + 1];
+                matrix.entry(row, j) -= cuspEqn[3 * j + 2];
+                matrix.entry(row, j + n) += cuspEqn[3 * j + 2];
                 if (cuspEqn[3 * j + 2] % 2)
                     parity ^= 1;
             }
-            matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+            matrix.entry(row, 2 * n) = (parity ? -1 : 1);
             regina::snappea::free_cusp_equation(cuspEqn);
             ++row;
         } else {
@@ -601,14 +599,14 @@ MatrixInt* SnapPeaTriangulation::gluingEquationsRect() const {
                 data_, c, cusp_[c].m_, cusp_[c].l_, &numCols);
             parity = 0;
             for (j = 0; j < n; ++j) {
-                matrix->entry(row, j) += cuspEqn[3 * j];
-                matrix->entry(row, j + n) -= cuspEqn[3 * j + 1];
-                matrix->entry(row, j) -= cuspEqn[3 * j + 2];
-                matrix->entry(row, j + n) += cuspEqn[3 * j + 2];
+                matrix.entry(row, j) += cuspEqn[3 * j];
+                matrix.entry(row, j + n) -= cuspEqn[3 * j + 1];
+                matrix.entry(row, j) -= cuspEqn[3 * j + 2];
+                matrix.entry(row, j + n) += cuspEqn[3 * j + 2];
                 if (cuspEqn[3 * j + 2] % 2)
                     parity ^= 1;
             }
-            matrix->entry(row, 2 * n) = (parity ? -1 : 1);
+            matrix.entry(row, 2 * n) = (parity ? -1 : 1);
             regina::snappea::free_cusp_equation(cuspEqn);
             ++row;
         }
