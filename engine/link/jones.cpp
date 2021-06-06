@@ -132,7 +132,7 @@ size_t Link::resolutionLoops(unsigned long mask, size_t* loopIDs,
     return loops;
 }
 
-Laurent<Integer>* Link::bracketNaive(ProgressTracker* tracker) const {
+Laurent<Integer> Link::bracketNaive(ProgressTracker* tracker) const {
     /**
      * \ /         \ /            \_/
      *  /   ->   A | |   +   A^-1  _
@@ -142,7 +142,7 @@ Laurent<Integer>* Link::bracketNaive(ProgressTracker* tracker) const {
      */
 
     if (components_.size() == 0)
-        return new Laurent<Integer>();
+        return Laurent<Integer>();
 
     size_t n = crossings_.size();
     if (n >= sizeof(long) * 8) {
@@ -200,10 +200,10 @@ Laurent<Integer>* Link::bracketNaive(ProgressTracker* tracker) const {
 
     if (tracker && tracker->isCancelled()) {
         delete[] count;
-        return nullptr;
+        return Laurent<Integer>();
     }
 
-    Laurent<Integer>* ans = new Laurent<Integer>;
+    Laurent<Integer> ans;
 
     Laurent<Integer> loopPoly;
     loopPoly.set(0, -1);
@@ -215,7 +215,7 @@ Laurent<Integer>* Link::bracketNaive(ProgressTracker* tracker) const {
         // std::cerr << "count[" << loops << "] = " << count[loops] << std::endl;
         if (! count[loops].isZero()) {
             count[loops] *= loopPow;
-            (*ans) += count[loops];
+            ans += count[loops];
         }
 
         loopPow *= loopPoly;
@@ -225,7 +225,7 @@ Laurent<Integer>* Link::bracketNaive(ProgressTracker* tracker) const {
     return ans;
 }
 
-Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
+Laurent<Integer> Link::bracketTreewidth(ProgressTracker* tracker) const {
     if (crossings_.empty())
         return bracketNaive(tracker);
 
@@ -608,7 +608,7 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
                 delete partial[i];
             }
         delete[] partial;
-        return nullptr;
+        return Value();
     }
 
     // Collect the final answer from partial[nBags - 1].
@@ -616,12 +616,11 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
     if (! tracker)
         std::cerr << "FINISH" << std::endl;
 #endif
-    Value* ans = partial[nBags - 1]->begin()->second;
+    Value ans = std::move(*partial[nBags - 1]->begin()->second);
 
     for (auto& soln : *(partial[nBags - 1])) {
         delete soln.first;
-        if (soln.second != ans)
-            delete soln.second;
+        delete soln.second;
     }
     delete partial[nBags - 1];
 
@@ -630,22 +629,22 @@ Laurent<Integer>* Link::bracketTreewidth(ProgressTracker* tracker) const {
     // Finally, factor in any zero-crossing components.
     for (StrandRef s : components_)
         if (! s)
-            (*ans) *= loopPoly;
+            ans *= loopPoly;
 
     return ans;
 }
 
 const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
         const {
-    if (bracket_.known()) {
+    if (bracket_.has_value()) {
         if (tracker)
             tracker->setFinished();
-        return *bracket_.value();
+        return *bracket_;
     }
 
     if (tracker) {
         std::thread([=]{
-            Laurent<Integer>* ans;
+            Laurent<Integer> ans;
             switch (alg) {
                 case ALG_NAIVE:
                     ans = bracketNaive(tracker);
@@ -656,9 +655,7 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
             }
 
             if (! tracker->isCancelled())
-                setPropertiesFromBracket(ans);
-            else
-                delete ans; // in case the user cancelled *after* returning ans
+                setPropertiesFromBracket(std::move(ans));
 
             tracker->setFinished();
         }).detach();
@@ -668,7 +665,7 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
         // computation is complete.
         return noResult;
     } else {
-        Laurent<Integer>* ans;
+        Laurent<Integer> ans;
         switch (alg) {
             case ALG_NAIVE:
                 ans = bracketNaive(nullptr);
@@ -677,17 +674,17 @@ const Laurent<Integer>& Link::bracket(Algorithm alg, ProgressTracker* tracker)
                 ans = bracketTreewidth(nullptr);
                 break;
         }
-        setPropertiesFromBracket(ans);
-        return *bracket_.value();
+        setPropertiesFromBracket(std::move(ans));
+        return *bracket_;
     }
 }
 
 const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker)
         const {
     if (tracker) {
-        if (jones_.known()) {
+        if (jones_.has_value()) {
             tracker->setFinished();
-            return *jones_.value();
+            return *jones_;
         }
 
         // Start the bracket computation in a new thread.  This computes
@@ -698,31 +695,31 @@ const Laurent<Integer>& Link::jones(Algorithm alg, ProgressTracker* tracker)
         // find out when the computation is actually complete.
         return noResult;
     } else {
-        if (jones_.known()) {
-            return *jones_.value();
+        if (jones_.has_value()) {
+            return *jones_;
         }
 
         // Computing bracket_ will also set jones_.
         bracket(alg);
-        return *jones_.value();
+        return *jones_;
     }
 }
 
-void Link::setPropertiesFromBracket(Laurent<Integer>* bracket) const {
-    bracket_ = bracket;
+void Link::setPropertiesFromBracket(Laurent<Integer>&& bracket) const {
+    bracket_ = std::move(bracket);
 
     // Convert bracket into jones:
     // (-A^3)^(-w) * bracket, then multiply all exponents by -1/4.
-    Laurent<Integer>* jones = new Laurent<Integer>(*bracket);
+    Laurent<Integer> jones(*bracket_);
     long w = writhe();
-    jones->shift(-3 * w);
+    jones.shift(-3 * w);
     if (w % 2)
-        jones->negate();
+        jones.negate();
 
     // We only scale exponents by -1/2, since we are returning a Laurent
     // polynomial in sqrt(t).
-    jones->scaleDown(-2);
-    jones_ = jones;
+    jones.scaleDown(-2);
+    jones_ = std::move(jones);
 }
 
 void Link::optimiseForJones(TreeDecomposition& td) const {

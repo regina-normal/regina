@@ -41,7 +41,7 @@ bool Triangulation<3>::knowsStrictAngleStructure() const {
     // There are some simple cases for which we can deduce the answer
     // automatically.
     if (simplices_.empty()) {
-        strictAngleStructure_ = nullptr;
+        strictAngleStructure_ = true; // confirmed: no solution
         return true;
     }
 
@@ -49,18 +49,23 @@ bool Triangulation<3>::knowsStrictAngleStructure() const {
         // It is easy to prove that, if an angle structure exists,
         // then we must have #edges = #tetrahedra.
         if (countEdges() != simplices_.size()) {
-            strictAngleStructure_ = nullptr;
+            strictAngleStructure_ = true; // confirmed: no solution
             return true;
         }
     }
 
-    return strictAngleStructure_.known();
+    return std::holds_alternative<AngleStructure>(strictAngleStructure_) ||
+        std::get<bool>(strictAngleStructure_);
 }
 
 const AngleStructure* Triangulation<3>::strictAngleStructure() const {
     // The following test also catches any easy cases.
-    if (knowsStrictAngleStructure())
-        return strictAngleStructure_.value();
+    if (knowsStrictAngleStructure()) {
+        if (std::holds_alternative<AngleStructure>(strictAngleStructure_))
+            return &std::get<AngleStructure>(strictAngleStructure_);
+        else
+            return nullptr; // known to have no solution
+    }
 
     LPInitialTableaux<LPConstraintNone> eqns(*this, NS_ANGLE, false);
 
@@ -79,30 +84,40 @@ const AngleStructure* Triangulation<3>::strictAngleStructure() const {
     }
 
     // Test for a solution!
-    if (! lp.isFeasible())
-        return (strictAngleStructure_ = nullptr);
+    if (! lp.isFeasible()) {
+        strictAngleStructure_ = true; // confirmed: no solution
+        return nullptr;
+    }
 
     // We have a strict angle structure: reconstruct it.
     unsigned long len = 3 * simplices_.size() + 1;
     VectorInt* v = new VectorInt(len);
     lp.extractSolution(*v, nullptr /* type vector */);
-    return (strictAngleStructure_ = new AngleStructure(*this, v));
+    strictAngleStructure_ = AngleStructure(*this, v);
+    return &std::get<AngleStructure>(strictAngleStructure_);
 }
 
 const AngleStructure* Triangulation<3>::generalAngleStructure() const {
-    if (generalAngleStructure_.known())
-        return generalAngleStructure_.value();
+    if (std::holds_alternative<AngleStructure>(generalAngleStructure_)) {
+        return &std::get<AngleStructure>(generalAngleStructure_);
+    } else if (std::get<bool>(generalAngleStructure_)) {
+        return nullptr; // known to have no solution
+    }
 
     // There are some simple cases for which we can deduce the answer
     // automatically.
-    if (simplices_.empty())
-        return (generalAngleStructure_ = nullptr);
+    if (simplices_.empty()) {
+        generalAngleStructure_ = true; // confirmed: no solution
+        return nullptr;
+    }
 
     if (! hasBoundaryTriangles()) {
         // It is easy to prove that, if an angle structure exists,
         // then we must have #edges = #tetrahedra.
-        if (countEdges() != simplices_.size())
-            return (generalAngleStructure_ = nullptr);
+        if (countEdges() != simplices_.size()) {
+            generalAngleStructure_ = true; // confirmed: no solution
+            return nullptr;
+        }
 
         // If the triangulation is valid, we also need every vertex link
         // to be a torus or Klein bottle.  The only way this can *not*
@@ -143,7 +158,8 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
     if (leading[rank - 1] + 1 == eqns.columns()) {
         // The final column appears as a leading coefficient.
         delete[] leading;
-        return (generalAngleStructure_ = nullptr);
+        generalAngleStructure_ = true; // confirmed: no solution
+        return nullptr;
     }
 
     // Build up the final vector from back to front.
@@ -189,7 +205,8 @@ const AngleStructure* Triangulation<3>::generalAngleStructure() const {
     }
 
     delete[] leading;
-    return (generalAngleStructure_ = new AngleStructure(*this, v));
+    generalAngleStructure_ = AngleStructure(*this, v);
+    return &std::get<AngleStructure>(generalAngleStructure_);
 }
 
 } // namespace regina

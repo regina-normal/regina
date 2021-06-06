@@ -43,7 +43,8 @@
 
 namespace regina {
 
-Triangulation<3>::Triangulation(const std::string& description) {
+Triangulation<3>::Triangulation(const std::string& description) :
+        strictAngleStructure_(false), generalAngleStructure_(false) {
     Triangulation<3>* attempt;
 
     if ((attempt = fromIsoSig(description))) {
@@ -64,26 +65,26 @@ void Triangulation<3>::clearAllProperties() {
     clearBaseProperties();
 
     // Properties of the triangulation:
-    zeroEfficient_.clear();
-    splittingSurface_.clear();
-    strictAngleStructure_.clear();
-    generalAngleStructure_.clear();
-    niceTreeDecomposition_.clear();
+    zeroEfficient_.reset();
+    splittingSurface_.reset();
+    strictAngleStructure_ = false; // computation not attempted
+    generalAngleStructure_ = false; // computation not attempted
+    niceTreeDecomposition_.reset();
 
     // Properties of the manifold:
     if (! topologyLock_) {
-        H1Rel_.clear();
-        H1Bdry_.clear();
-        H2_.clear();
-        twoSphereBoundaryComponents_.clear();
-        negativeIdealBoundaryComponents_.clear();
-        threeSphere_.clear();
-        threeBall_.clear();
-        solidTorus_.clear();
-        TxI_.clear();
-        irreducible_.clear();
-        compressingDisc_.clear();
-        haken_.clear();
+        H1Rel_.reset();
+        H1Bdry_.reset();
+        H2_.reset();
+        twoSphereBoundaryComponents_.reset();
+        negativeIdealBoundaryComponents_.reset();
+        threeSphere_.reset();
+        threeBall_.reset();
+        solidTorus_.reset();
+        TxI_.reset();
+        irreducible_.reset();
+        compressingDisc_.reset();
+        haken_.reset();
         turaevViroCache_.clear();
     }
 }
@@ -101,7 +102,7 @@ void Triangulation<3>::swap(Triangulation<3>& other) {
     std::swap(ideal_, other.ideal_);
     std::swap(standard_, other.standard_);
 
-    // Properties stored using the Property<...> template class:
+    // Properties stored using std::... helper classes:
     H1Rel_.swap(other.H1Rel_);
     H1Bdry_.swap(other.H1Bdry_);
     H2_.swap(other.H2_);
@@ -236,49 +237,45 @@ void Triangulation<3>::writeXMLPacketData(std::ostream& out) const {
 
     writeXMLBaseProperties(out);
 
-    if (H1Rel_.known()) {
+    if (H1Rel_.has_value()) {
         out << "  <H1Rel>";
-        H1Rel_.value()->writeXMLData(out);
+        H1Rel_->writeXMLData(out);
         out << "</H1Rel>\n";
     }
-    if (H1Bdry_.known()) {
+    if (H1Bdry_.has_value()) {
         out << "  <H1Bdry>";
-        H1Bdry_.value()->writeXMLData(out);
+        H1Bdry_->writeXMLData(out);
         out << "</H1Bdry>\n";
     }
-    if (H2_.known()) {
+    if (H2_.has_value()) {
         out << "  <H2>";
-        H2_.value()->writeXMLData(out);
+        H2_->writeXMLData(out);
         out << "</H2>\n";
     }
-    if (twoSphereBoundaryComponents_.known())
+    if (twoSphereBoundaryComponents_.has_value())
         out << "  " << xmlValueTag("twosphereboundarycomponents",
-            twoSphereBoundaryComponents_.value()) << '\n';
-    if (negativeIdealBoundaryComponents_.known())
+            *twoSphereBoundaryComponents_) << '\n';
+    if (negativeIdealBoundaryComponents_.has_value())
         out << "  " << xmlValueTag("negativeidealboundarycomponents",
-            negativeIdealBoundaryComponents_.value()) << '\n';
-    if (zeroEfficient_.known())
-        out << "  " << xmlValueTag("zeroeff", zeroEfficient_.value())
-            << '\n';
-    if (splittingSurface_.known())
-        out << "  " << xmlValueTag("splitsfce", splittingSurface_.value())
-            << '\n';
-    if (threeSphere_.known())
-        out << "  " << xmlValueTag("threesphere", threeSphere_.value()) << '\n';
-    if (threeBall_.known())
-        out << "  " << xmlValueTag("threeball", threeBall_.value()) << '\n';
-    if (solidTorus_.known())
-        out << "  " << xmlValueTag("solidtorus", solidTorus_.value()) << '\n';
-    if (TxI_.known())
-        out << "  " << xmlValueTag("txi", TxI_.value()) << '\n';
-    if (irreducible_.known())
-        out << "  " << xmlValueTag("irreducible", irreducible_.value())
-            << '\n';
-    if (compressingDisc_.known())
-        out << "  " << xmlValueTag("compressingdisc", compressingDisc_.value())
-            << '\n';
-    if (haken_.known())
-        out << "  " << xmlValueTag("haken", haken_.value()) << '\n';
+            *negativeIdealBoundaryComponents_) << '\n';
+    if (zeroEfficient_.has_value())
+        out << "  " << xmlValueTag("zeroeff", *zeroEfficient_) << '\n';
+    if (splittingSurface_.has_value())
+        out << "  " << xmlValueTag("splitsfce", *splittingSurface_) << '\n';
+    if (threeSphere_.has_value())
+        out << "  " << xmlValueTag("threesphere", *threeSphere_) << '\n';
+    if (threeBall_.has_value())
+        out << "  " << xmlValueTag("threeball", *threeBall_) << '\n';
+    if (solidTorus_.has_value())
+        out << "  " << xmlValueTag("solidtorus", *solidTorus_) << '\n';
+    if (TxI_.has_value())
+        out << "  " << xmlValueTag("txi", *TxI_) << '\n';
+    if (irreducible_.has_value())
+        out << "  " << xmlValueTag("irreducible", *irreducible_) << '\n';
+    if (compressingDisc_.has_value())
+        out << "  " << xmlValueTag("compressingdisc", *compressingDisc_) << '\n';
+    if (haken_.has_value())
+        out << "  " << xmlValueTag("haken", *haken_) << '\n';
 }
 
 Triangulation<3>* Triangulation<3>::enterTextTriangulation(std::istream& in,
@@ -406,17 +403,15 @@ long Triangulation<3>::eulerCharManifold() const {
 }
 
 Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
-        TriangulationBase<3>(X, cloneProps) {
+        TriangulationBase<3>(X, cloneProps),
+        strictAngleStructure_(false), generalAngleStructure_(false) {
     if (! cloneProps)
         return;
 
     // Clone properties:
-    if (X.H1Rel_.known())
-        H1Rel_ = new AbelianGroup(*(X.H1Rel_.value()));
-    if (X.H1Bdry_.known())
-        H1Bdry_ = new AbelianGroup(*(X.H1Bdry_.value()));
-    if (X.H2_.known())
-        H2_ = new AbelianGroup(*(X.H2_.value()));
+    H1Rel_ = X.H1Rel_;
+    H1Bdry_ = X.H1Bdry_;
+    H2_ = X.H2_;
 
     twoSphereBoundaryComponents_ = X.twoSphereBoundaryComponents_;
     negativeIdealBoundaryComponents_ = X.negativeIdealBoundaryComponents_;
@@ -430,21 +425,17 @@ Triangulation<3>::Triangulation(const Triangulation<3>& X, bool cloneProps) :
     compressingDisc_ = X.compressingDisc_;
     haken_ = X.haken_;
 
-    if (X.strictAngleStructure_.known()) {
-        if (X.strictAngleStructure_.value())
-            strictAngleStructure_ = new AngleStructure(
-                *X.strictAngleStructure_.value(), *this);
-        else
-            strictAngleStructure_ = nullptr;
-    }
-
-    if (X.generalAngleStructure_.known()) {
-        if (X.generalAngleStructure_.value())
-            generalAngleStructure_ = new AngleStructure(
-                *X.generalAngleStructure_.value(), *this);
-        else
-            generalAngleStructure_ = nullptr;
-    }
+    // Any cached angle structures must be remade to live in this triangulation.
+    if (std::holds_alternative<AngleStructure>(X.strictAngleStructure_))
+        strictAngleStructure_ = AngleStructure(
+            std::get<AngleStructure>(X.strictAngleStructure_), *this);
+    else
+        strictAngleStructure_ = std::get<bool>(X.strictAngleStructure_);
+    if (std::holds_alternative<AngleStructure>(X.generalAngleStructure_))
+        generalAngleStructure_ = AngleStructure(
+            std::get<AngleStructure>(X.generalAngleStructure_), *this);
+    else
+        generalAngleStructure_ = std::get<bool>(X.generalAngleStructure_);
 
     turaevViroCache_ = X.turaevViroCache_;
 }

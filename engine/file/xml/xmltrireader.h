@@ -227,7 +227,7 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
          */
         class AbelianGroupPropertyReader : public XMLElementReader {
             public:
-                typedef Property<AbelianGroup, StoreManagedPtr> PropType;
+                typedef std::optional<AbelianGroup> PropType;
                     /**< The type of the property currently being read. */
 
             private:
@@ -257,7 +257,7 @@ class XMLTriangulationReaderBase : public XMLPacketReader {
          */
         class GroupPresentationPropertyReader : public XMLElementReader {
             public:
-                typedef Property<GroupPresentation, StoreManagedPtr> PropType;
+                typedef std::optional<GroupPresentation> PropType;
                     /**< The type of the property currently being read. */
 
             private:
@@ -504,7 +504,7 @@ inline XMLElementReader* XMLTriangulationReaderBase<dim>::
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
     if (subTagName == "abeliangroup")
-        if (! prop_.known())
+        if (! prop_.has_value())
             return new XMLAbelianGroupReader();
     return new XMLElementReader();
 }
@@ -516,8 +516,10 @@ inline void XMLTriangulationReaderBase<dim>::AbelianGroupPropertyReader::
     if (subTagName == "abeliangroup") {
         AbelianGroup* ans = dynamic_cast<XMLAbelianGroupReader*>(subReader)->
             group();
-        if (ans)
-            prop_ = ans;
+        if (ans) {
+            prop_ = std::move(*ans);
+            delete ans;
+        }
     }
 }
 
@@ -535,7 +537,7 @@ inline XMLElementReader* XMLTriangulationReaderBase<dim>::
         const std::string& subTagName,
         const regina::xml::XMLPropertyDict&) {
     if (subTagName == "group")
-        if (! prop_.known())
+        if (! prop_.has_value())
             return new XMLGroupPresentationReader();
     return new XMLElementReader();
 }
@@ -547,8 +549,10 @@ inline void XMLTriangulationReaderBase<dim>::GroupPresentationPropertyReader::
     if (subTagName == "group") {
         GroupPresentation* ans = dynamic_cast<
             XMLGroupPresentationReader*>(subReader)->group();
-        if (ans)
-            prop_ = ans;
+        if (ans) {
+            prop_ = std::move(*ans);
+            delete ans;
+        }
     }
 }
 

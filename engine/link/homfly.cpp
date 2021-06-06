@@ -912,7 +912,7 @@ namespace {
     }
 }
 
-Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
+Laurent2<Integer> Link::homflyKauffman(ProgressTracker* tracker) const {
     // Throughout this code, delta = (alpha - alpha^-1) / z.
 
     // We know from the preconditions that there is at least one crossing.
@@ -1224,12 +1224,12 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
 
     if (tracker && tracker->isCancelled()) {
         delete[] coeff;
-        return nullptr;
+        return Laurent2<Integer>();
     }
 
     // Piece together the final polynomial.
 
-    Laurent2<Integer>* ans = new Laurent2<Integer>;
+    Laurent2<Integer> ans;
 
     Laurent2<Integer> delta(1, -1);
     delta.set(-1, -1, -1);
@@ -1240,7 +1240,7 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
     for (size_t i = 0; i < maxComp; ++i) {
         if (! coeff[i].isZero()) {
             coeff[i] *= deltaPow;
-            (*ans) += coeff[i];
+            ans += coeff[i];
         }
         deltaPow *= delta;
     }
@@ -1249,7 +1249,7 @@ Laurent2<Integer>* Link::homflyKauffman(ProgressTracker* tracker) const {
     return ans;
 }
 
-Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
+Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
     // We know from the precondition that there is at least one crossing.
 
     Laurent2<Integer> delta(1, -1);
@@ -3193,19 +3193,18 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
                 delete partial[i];
             }
         delete[] partial;
-        return nullptr;
+        return Value();
     }
 
     // Collect the final answer from partial[nBags - 1].
 #ifdef DUMP_STAGES
     std::cerr << "FINISH" << std::endl;
 #endif
-    Value* ans = partial[nBags - 1]->begin()->second;
+    Value ans = std::move(*partial[nBags - 1]->begin()->second);
 
     for (auto& soln : *(partial[nBags - 1])) {
         delete soln.first;
-        if (soln.second != ans)
-            delete soln.second;
+        delete soln.second;
     }
     delete partial[nBags - 1];
 
@@ -3214,25 +3213,25 @@ Laurent2<Integer>* Link::homflyTreewidth(ProgressTracker* tracker) const {
     // Finally, factor in any zero-crossing components.
     for (StrandRef s : components_)
         if (! s)
-            (*ans) *= delta;
+            ans *= delta;
 
     return ans;
 }
 
 const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
         ProgressTracker* tracker) const {
-    if (homflyAZ_.known()) {
+    if (homflyAZ_.has_value()) {
         if (tracker)
             tracker->setFinished();
-        return *homflyAZ_.value();
+        return *homflyAZ_;
     }
 
     if (crossings_.empty()) {
         if (components_.empty()) {
-            homflyAZ_ = new Laurent2<Integer>();
+            homflyAZ_ = Laurent2<Integer>();
             if (tracker)
                 tracker->setFinished();
-            return *homflyAZ_.value();
+            return *homflyAZ_;
         }
 
         // We have an unlink with no crossings.
@@ -3241,19 +3240,19 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
         delta.set(-1, -1, -1);
 
         // The following constructor initialises ans to 1.
-        Laurent2<Integer>* ans = new Laurent2<Integer>(0, 0);
+        Laurent2<Integer> ans(0, 0);
         for (size_t i = 1; i < components_.size(); ++i)
-            (*ans) *= delta;
+            ans *= delta;
 
-        homflyAZ_ = ans;
+        homflyAZ_ = std::move(ans);
         if (tracker)
             tracker->setFinished();
-        return *ans;
+        return *homflyAZ_;
     }
 
     if (tracker) {
         std::thread([=]{
-            Laurent2<Integer>* ans;
+            Laurent2<Integer> ans;
             switch (alg) {
                 case ALG_NAIVE:
                 case ALG_BACKTRACK:
@@ -3265,9 +3264,7 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
             }
 
             if (! tracker->isCancelled())
-                homflyAZ_ = ans;
-            else
-                delete ans; // in case the user cancelled *after* returning ans
+                homflyAZ_ = std::move(ans);
 
             tracker->setFinished();
         }).detach();
@@ -3286,32 +3283,32 @@ const Laurent2<Integer>& Link::homflyAZ(Algorithm alg,
                 homflyAZ_ = homflyTreewidth(nullptr);
                 break;
         }
-        return *homflyAZ_.value();
+        return *homflyAZ_;
     }
 }
 
 const Laurent2<Integer>& Link::homflyLM(Algorithm alg,
         ProgressTracker* tracker) const {
     if (tracker) {
-        if (homflyLM_.known()) {
+        if (homflyLM_.has_value()) {
             tracker->setFinished();
-            return *homflyLM_.value();
+            return *homflyLM_;
         }
 
-        if (homflyAZ_.known()) {
+        if (homflyAZ_.has_value()) {
             // Although we haven't computed HOMFLY(l,m) explicitly, it's a
             // trivial conversion from HOMFLY(a,z).  Do it in this thread.
-            Laurent2<Integer>* ans = new Laurent2<Integer>(*homflyAZ_.value());
+            Laurent2<Integer> ans(*homflyAZ_);
 
             // Negate all coefficients for a^i z^j where i-j == 2 (mod 4).
             // Note that i-j should always be 0 or 2 (mod 4), never odd.
-            for (auto& term : ans->coeff_)
+            for (auto& term : ans.coeff_)
                 if ((term.first.first - term.first.second) % 4 != 0)
                     term.second.negate();
 
-            homflyLM_ = ans;
+            homflyLM_ = std::move(ans);
             tracker->setFinished();
-            return *ans;
+            return *homflyLM_;
         }
 
         // Start the full HOMFLY computation in a new thread, and return
@@ -3319,15 +3316,15 @@ const Laurent2<Integer>& Link::homflyLM(Algorithm alg,
         homflyAZ(alg, tracker);
         return noResult;
     } else {
-        if (homflyLM_.known())
-            return *homflyLM_.value();
+        if (homflyLM_.has_value())
+            return *homflyLM_;
 
         // Compute HOMFLY(a,z) and convert to HOMFLY(l,m) as above.
-        Laurent2<Integer>* ans = new Laurent2<Integer>(homflyAZ(alg));
-        for (auto& term : ans->coeff_)
+        Laurent2<Integer> ans(homflyAZ(alg));
+        for (auto& term : ans.coeff_)
             if ((term.first.first - term.first.second) % 4 != 0)
                 term.second.negate();
-        return *(homflyLM_ = ans);
+        return *(homflyLM_ = std::move(ans));
     }
 }
 

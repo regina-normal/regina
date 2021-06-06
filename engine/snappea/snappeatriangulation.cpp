@@ -69,7 +69,7 @@ void Cusp::writeTextShort(std::ostream& out) const {
 SnapPeaTriangulation::SnapPeaTriangulation(
         const std::string& fileNameOrContents) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), syncing_(false) {
+        filledCusps_(0), h1Filled_(false), syncing_(false) {
     try {
         if (startsWith(fileNameOrContents, "% Triangulation"))
             data_ = regina::snappea::read_triangulation_from_string(
@@ -90,7 +90,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(
 
 SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), syncing_(false) {
+        filledCusps_(0), h1Filled_(false), syncing_(false) {
     if (tri.data_) {
         regina::snappea::copy_triangulation(tri.data_, &data_);
         sync();
@@ -100,7 +100,7 @@ SnapPeaTriangulation::SnapPeaTriangulation(const SnapPeaTriangulation& tri) :
 
 SnapPeaTriangulation::SnapPeaTriangulation(const Triangulation<3>& tri, bool) :
         data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), syncing_(false) {
+        filledCusps_(0), h1Filled_(false), syncing_(false) {
     const SnapPeaTriangulation* clone =
         dynamic_cast<const SnapPeaTriangulation*>(&tri);
     if (clone) {
@@ -842,8 +842,8 @@ void SnapPeaTriangulation::syncFillings() {
 
 void SnapPeaTriangulation::fillingsHaveChanged() {
     // Clear properties that depend on the fillings.
-    fundGroupFilled_.clear();
-    h1Filled_.clear();
+    fundGroupFilled_.reset();
+    h1Filled_ = false;
 
     delete[] shape_;
 

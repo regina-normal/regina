@@ -57,14 +57,10 @@ Link::Link(const Link& cloneMe, bool cloneProps) {
         return;
 
     // Clone properties:
-    if (cloneMe.jones_.known())
-        jones_ = new Laurent<Integer>(*(cloneMe.jones_.value()));
-    if (cloneMe.homflyAZ_.known())
-        homflyAZ_ = new Laurent2<Integer>(*(cloneMe.homflyAZ_.value()));
-    if (cloneMe.homflyLM_.known())
-        homflyLM_ = new Laurent2<Integer>(*(cloneMe.homflyLM_.value()));
-    if (cloneMe.bracket_.known())
-        bracket_ = new Laurent<Integer>(*(cloneMe.bracket_.value()));
+    jones_ = cloneMe.jones_;
+    homflyAZ_ = cloneMe.homflyAZ_;
+    homflyLM_ = cloneMe.homflyLM_;
+    bracket_ = cloneMe.bracket_;
 }
 
 Link::Link(const std::string& description) {

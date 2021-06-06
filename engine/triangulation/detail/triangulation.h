@@ -58,7 +58,6 @@
 #include "triangulation/alias/face.h"
 #include "triangulation/alias/simplex.h"
 #include "utilities/listview.h"
-#include "utilities/property.h"
 #include "utilities/sigutils.h"
 
 namespace regina {
@@ -347,9 +346,9 @@ class TriangulationBase :
         bool orientable_;
             /**< Is the triangulation orientable?  This property is only set
                  if/when the skeleton of the triangulation is computed. */
-        mutable Property<GroupPresentation, StoreManagedPtr> fundGroup_;
+        mutable std::optional<GroupPresentation> fundGroup_;
             /**< Fundamental group of the triangulation. */
-        mutable Property<AbelianGroup, StoreManagedPtr> H1_;
+        mutable std::optional<AbelianGroup> H1_;
             /**< First homology group of the triangulation. */
 
     public:
@@ -947,10 +946,9 @@ class TriangulationBase :
          */
         const GroupPresentation& fundamentalGroup() const;
         /**
-         * Notifies the triangulation that you have simplified the
-         * presentation of its fundamental group.  The old group
-         * presentation will be destroyed, and this triangulation will take
-         * ownership of the new (hopefully simpler) group that is passed.
+         * Notifies the triangulation that you have simplified the presentation
+         * of its fundamental group.  The old group presentation will be
+         * replaced by the (hopefully simpler) group that is passed.
          *
          * This routine is useful for situations in which some external
          * body (such as GAP) has simplified the group presentation
@@ -960,17 +958,17 @@ class TriangulationBase :
          * equivalent to the old, since this is - well, hard.
          *
          * If the fundamental group has not yet been calculated for this
-         * triangulation, this routine will nevertheless take ownership
-         * of the new group, under the assumption that you have worked
-         * out the group through some other clever means without ever
-         * having needed to call fundamentalGroup() at all.
+         * triangulation, then this routine will store the new group as the
+         * fundamental group, under the assumption that you have worked out
+         * the group through some other clever means without ever having
+         * needed to call fundamentalGroup() at all.
          *
          * Note that this routine will not fire a packet change event.
          *
          * @param newGroup a new (and hopefully simpler) presentation of
          * the fundamental group of this triangulation.
          */
-        void simplifiedFundamentalGroup(GroupPresentation* newGroup);
+        void simplifiedFundamentalGroup(GroupPresentation newGroup);
 
         /**
          * Returns the first homology group for this triangulation.
@@ -2225,10 +2223,8 @@ TriangulationBase<dim>::TriangulationBase(const TriangulationBase<dim>& copy,
 
     // Clone properties:
     if (cloneProps) {
-        if (copy.fundGroup_.known())
-            fundGroup_ = new GroupPresentation(*(copy.fundGroup_.value()));
-        if (copy.H1_.known())
-            H1_ = new AbelianGroup(*(copy.H1_.value()));
+        fundGroup_ = copy.fundGroup_;
+        H1_ = copy.H1_;
     }
 }
 
@@ -3104,8 +3100,8 @@ size_t TriangulationBase<dim>::splitIntoComponents(Packet* componentParent,
 
 template <int dim>
 inline void TriangulationBase<dim>::simplifiedFundamentalGroup(
-        GroupPresentation* newGroup) {
-    fundGroup_ = newGroup;
+        GroupPresentation newGroup) {
+    fundGroup_ = std::move(newGroup);
 }
 
 template <int dim>
@@ -3115,11 +3111,11 @@ inline const AbelianGroup& TriangulationBase<dim>::homologyH1() const {
 
 template <int dim>
 const AbelianGroup& TriangulationBase<dim>::homology() const {
-    if (H1_.known())
-        return *H1_.value();
+    if (H1_.has_value())
+        return *H1_;
 
     if (isEmpty())
-        return *(H1_ = new AbelianGroup());
+        return *(H1_ = AbelianGroup());
 
     // Calculate a maximal forest in the dual 1-skeleton.
     ensureSkeleton();
@@ -3179,20 +3175,20 @@ const AbelianGroup& TriangulationBase<dim>::homology() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addGroup(pres);
-    return *(H1_ = ans);
+    AbelianGroup ans;
+    ans.addGroup(pres);
+    return *(H1_ = std::move(ans));
 }
 
 template <int dim>
 const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
-    if (fundGroup_.known())
-        return *fundGroup_.value();
+    if (fundGroup_.has_value())
+        return *fundGroup_;
 
-    GroupPresentation* ans = new GroupPresentation();
+    GroupPresentation ans;
 
     if (isEmpty())
-        return *(fundGroup_ = ans);
+        return *(fundGroup_ = std::move(ans));
 
     // Calculate a maximal forest in the dual 1-skeleton.
     ensureSkeleton();
@@ -3207,7 +3203,7 @@ const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
         - static_cast<long>(size());
 
     // Insert the generators.
-    ans->addGenerator(nGens);
+    ans.addGenerator(nGens);
 
     // Find out which (dim-1)-face corresponds to which generator.
     long* genIndex = new long[countFaces<dim-1>()];
@@ -3242,27 +3238,27 @@ const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
                         rel.addTermLast(genIndex[gen->index()], -1);
                 }
             }
-            ans->addRelation(std::move(rel));
+            ans.addRelation(std::move(rel));
         }
     }
 
     // Tidy up.
     delete[] genIndex;
-    ans->intelligentSimplify();
+    ans.intelligentSimplify();
 
-    return *(fundGroup_ = ans);
+    return *(fundGroup_ = std::move(ans));
 }
 
 template <int dim>
 void TriangulationBase<dim>::writeXMLBaseProperties(std::ostream& out) const {
-    if (fundGroup_.known()) {
+    if (fundGroup_.has_value()) {
         out << "  <fundgroup>\n";
-        fundGroup_.value()->writeXMLData(out);
+        fundGroup_->writeXMLData(out);
         out << "  </fundgroup>\n";
     }
-    if (H1_.known()) {
+    if (H1_.has_value()) {
         out << "  <H1>";
-        H1_.value()->writeXMLData(out);
+        H1_->writeXMLData(out);
         out << "</H1>\n";
     }
 }

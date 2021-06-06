@@ -272,8 +272,10 @@ void Tri3HomologyFundUI::refresh() {
 
 void Tri3HomologyFundUI::fundGroupSimplified() {
     regina::GroupPresentation* simp = fgGroup->takeSimplifiedGroup();
-    if (simp)
-        tri->simplifiedFundamentalGroup(simp);
+    if (simp) {
+        tri->simplifiedFundamentalGroup(std::move(*simp));
+        delete simp;
+    }
 }
 
 void Tri3HomologyFundUI::refreshLabels() {

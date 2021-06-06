@@ -146,11 +146,8 @@ void addTriangulation(pybind11::module_& m, const char* name) {
         .def("eulerCharTri", &Triangulation<dim>::eulerCharTri)
         .def("fundamentalGroup", &Triangulation<dim>::fundamentalGroup,
             pybind11::return_value_policy::reference_internal)
-        .def("simplifiedFundamentalGroup", [](Triangulation<dim>& t,
-                const regina::GroupPresentation& group) {
-            // Clone the given group to avoid claiming ownership of it.
-            t.simplifiedFundamentalGroup(new regina::GroupPresentation(group));
-        })
+        .def("simplifiedFundamentalGroup",
+            &Triangulation<dim>::simplifiedFundamentalGroup)
         .def("homology", &Triangulation<dim>::homology,
             pybind11::return_value_policy::reference_internal)
         .def("homologyH1", &Triangulation<dim>::homologyH1,

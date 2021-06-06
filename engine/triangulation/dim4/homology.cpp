@@ -38,11 +38,11 @@
 namespace regina {
 
 const AbelianGroup& Triangulation<4>::homologyH2() const {
-    if (H2_.known())
-        return *H2_.value();
+    if (H2_.has_value())
+        return *H2_;
 
     if (isEmpty())
-        return *(H2_ = new AbelianGroup());
+        return *(H2_ = AbelianGroup());
 
     ensureSkeleton();
 
@@ -174,8 +174,8 @@ const AbelianGroup& Triangulation<4>::homologyH2() const {
     // Pair of boundary maps to abelian group
     // --------------------------------------
 
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addGroup(bdry32);
+    AbelianGroup ans;
+    ans.addGroup(bdry32);
 
     smithNormalForm(bdry21);
     unsigned long lim = (bdry21.rows() < bdry21.columns() ?
@@ -188,8 +188,8 @@ const AbelianGroup& Triangulation<4>::homologyH2() const {
             break;
         }
 
-    ans->addRank(-extra);
-    return *(H2_ = ans);
+    ans.addRank(-extra);
+    return *(H2_ = std::move(ans));
 }
 
 } // namespace regina

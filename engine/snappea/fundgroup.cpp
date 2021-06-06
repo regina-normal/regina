@@ -35,15 +35,18 @@
 
 namespace regina {
 
-const GroupPresentation* SnapPeaTriangulation::fundamentalGroupFilled(
+const GroupPresentation& SnapPeaTriangulation::fundamentalGroupFilled(
             bool simplifyPresentation,
             bool fillingsMayAffectGenerators,
             bool minimiseNumberOfGenerators,
             bool tryHardToShortenRelators) const {
-    if (fundGroupFilled_.known())
-        return fundGroupFilled_.value();
-    if (! data_)
-        return 0;
+    if (fundGroupFilled_.has_value())
+        return *fundGroupFilled_;
+    if (! data_) {
+        // The user has violated the precondition.
+        // We need to return a reference to *something*.
+        return *(fundGroupFilled_ = GroupPresentation());
+    }
 
     // Note: TRUE and FALSE are #defines in SnapPea, and so don't live in any
     // namespace.  We avoid them here, and directly use 0 and 1 instead.
@@ -61,8 +64,8 @@ const GroupPresentation* SnapPeaTriangulation::fundamentalGroupFilled(
     // gives a sequence of (generator, exponent) pairs.  Therefore we
     // "compress" relations below to group consecutive occurrences of
     // the same generator, even if simplifyPresentation is false.
-    GroupPresentation* ans = new GroupPresentation();
-    ans->addGenerator(regina::snappea::fg_get_num_generators(pres));
+    GroupPresentation ans;
+    ans.addGenerator(regina::snappea::fg_get_num_generators(pres));
     unsigned i;
     int *sReln, *sPos;
     int gen, currGen, currExp;
@@ -86,12 +89,12 @@ const GroupPresentation* SnapPeaTriangulation::fundamentalGroupFilled(
         }
         if (currExp)
             rReln.addTermLast(currGen - 1, currExp);
-        ans->addRelation(std::move(rReln));
+        ans.addRelation(std::move(rReln));
         regina::snappea::fg_free_relation(sReln);
     }
 
     regina::snappea::free_group_presentation(pres);
-    return (fundGroupFilled_ = ans);
+    return *(fundGroupFilled_ = std::move(ans));
 }
 
 } // namespace regina

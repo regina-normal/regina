@@ -354,7 +354,7 @@ QWidget* Tri3SurfacesUI::getInterface() {
 void Tri3SurfacesUI::refresh() {
     int autoCalcThreshold = ReginaPrefSet::global().triSurfacePropsThreshold;
 
-    regina::Property<bool> isHyp;
+    std::optional<bool> isHyp;
     if (! tri->isValid())
         isHyp = false;
 
@@ -694,8 +694,8 @@ void Tri3SurfacesUI::refresh() {
             btnStrict->setEnabled(true);
         }
 
-        if (isHyp.known()) {
-            if (isHyp.value()) {
+        if (isHyp.has_value()) {
+            if (*isHyp) {
                 hyperbolic->setText("Yes");
                 QPalette pal = hyperbolic->palette();
                 pal.setColor(hyperbolic->foregroundRole(), Qt::darkGreen);

@@ -42,7 +42,6 @@
 #include "regina-core.h"
 #include "triangulation/dim3.h"
 #include <complex>
-#include <optional>
 
 // Forward declaration of SnapPea structures.
 namespace regina::snappea {
@@ -392,13 +391,15 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
         unsigned filledCusps_;
             /**< The number of cusps that are currently filled. */
 
-        mutable Property<GroupPresentation, StoreManagedPtr> fundGroupFilled_;
-            /**< The fundamental group of the filled triangulation,
-                 or \c nullptr if this cannot be computed (e.g., if SnapPea
-                 does not return a matrix of relations). */
-        mutable Property<AbelianGroup, StoreManagedPtr> h1Filled_;
+        mutable std::optional<GroupPresentation> fundGroupFilled_;
+            /**< The fundamental group of the filled triangulation, or
+                 no value if this has not yet been computed. */
+        mutable std::variant<bool, AbelianGroup> h1Filled_;
             /**< The first homology group of the filled triangulation,
-                 or \c nullptr if this cannot be computed. */
+                 or a boolean if this unknown.  The boolean will be
+                 \c false if if the computation has not yet been attempted,
+                 or \c true if the computation failed (which means SnapPea
+                 overflowed when building the matrix of relations). */
 
         bool syncing_;
             /**< Set to \c true whilst sync() is being called.  This allows the
@@ -1092,7 +1093,7 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *   a combination of both SnapPea's and Regina's code to compute
          *   homology groups.  There may be situations in which the SnapPea
          *   kernel cannot perform its part of the computation (see below),
-         *   in which case this routine will return a null pointer.
+         *   in which case this routine will return \c null.
          *
          * - The inherited homology() routine uses only Regina's code, and
          *   works purely within Regina's parent Triangulation<3> class.
@@ -1104,20 +1105,14 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * This routine uses exact arithmetic, and so you are guaranteed
          * that - if it returns a result at all - that this result does
          * not suffer from integer overflows.  Essentially, the process
-         * is this: SnapPea constructs a filled relation matrix using
-         * machine integer arithmetic (but detects overflow and returns
-         * \c null in such cases), and then Regina uses exact integer
-         * arithmetic to solve for the abelian group invariants (i.e.,
-         * Smith normal form).
+         * is this:
          *
-         * The situations in which this routine might return \c null are
-         * the following:
+         * - SnapPea constructs a filled relation matrix using machine integer
+         *   arithmetic, but detects overflow (in which case this routine
+         *   will return \c null);
          *
-         * - This is a null triangulation (i.e., isNull() returns \c true);
-         *
-         * - The filling coefficients as stored in SnapPea are integers,
-         *   but are so large that SnapPea was not able to build the
-         *   relation matrix without integer overflow.
+         * - Regina then uses exact integer arithmetic to solve for the
+         *   abelian group invariants (i.e., Smith normal form).
          *
          * Note that each time the triangulation changes, the homology
          * group will be deleted.  Thus the pointer that is returned
@@ -1125,8 +1120,10 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * homologyFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
          *
+         * \pre This is not a null triangulation.
+         *
          * @return the first homology group of the filled manifold, or
-         * \c nullptr if this could not be computed.
+         * \c null if an overflow occurred inside the SnapPea kernel.
          */
         const AbelianGroup* homologyFilled() const;
 
@@ -1148,10 +1145,12 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          *   to SnapPea triangulations) will be ignored.
          *
          * Note that each time the triangulation changes, the fundamental
-         * group will be deleted.  Thus the pointer that is returned
+         * group will be deleted.  Thus the reference that is returned
          * from this routine should not be kept for later use.  Instead,
          * fundamentalGroupFilled() should be called again; this will be
          * instantaneous if the group has already been calculated.
+         *
+         * \pre This is not a null triangulation.
          *
          * @param simplifyPresentation \c true if SnapPea should attempt
          * to simplify the group presentation, or \c false if it should
@@ -1169,10 +1168,9 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * simplification code should try to reduce the length of the relations
          * by inserting one relation into another.  In general this is a
          * good thing, but it can be very costly for large presentations.
-         * @return the fundamental group of the filled manifold, or
-         * \c nullptr if this could not be computed.
+         * @return the fundamental group of the filled manifold.
          */
-        const GroupPresentation* fundamentalGroupFilled(
+        const GroupPresentation& fundamentalGroupFilled(
             bool simplifyPresentation = true,
             bool fillingsMayAffectGenerators = true,
             bool minimiseNumberOfGenerators = true,
@@ -1525,7 +1523,7 @@ inline int Cusp::l() const {
 
 inline SnapPeaTriangulation::SnapPeaTriangulation() :
         data_(nullptr), shape_(nullptr), cusp_(nullptr),
-        filledCusps_(0), syncing_(false) {
+        filledCusps_(0), h1Filled_(false), syncing_(false) {
     listen(this);
 }
 

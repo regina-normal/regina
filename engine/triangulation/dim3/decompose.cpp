@@ -49,7 +49,7 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
         return 0;
 
     // Do we already know the answer?
-    if (threeSphere_.known() && threeSphere_.value())
+    if (threeSphere_.has_value() && *threeSphere_)
         return 0;
 
     if (! primeParent)
@@ -230,7 +230,7 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
         zeroEfficient_ = false;
     } else if (whichComp == 1) {
         threeSphere_ = false;
-        if (! irreducible_.known()) {
+        if (! irreducible_.has_value()) {
             // If our manifold is S2xS1 or S2x~S1 then it is *not* irreducible;
             // however, in this case we will have already set irreducible
             // to false when putting back the S2xS1 or S2x~S1 summands above
@@ -247,8 +247,8 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
 }
 
 bool Triangulation<3>::isThreeSphere() const {
-    if (threeSphere_.known())
-        return threeSphere_.value();
+    if (threeSphere_.has_value())
+        return *threeSphere_;
 
     // Basic property checks.
     if (! (isValid() && isClosed() && isOrientable() && isConnected() &&
@@ -369,7 +369,7 @@ bool Triangulation<3>::isThreeSphere() const {
 }
 
 bool Triangulation<3>::knowsThreeSphere() const {
-    if (threeSphere_.known())
+    if (threeSphere_.has_value())
         return true;
 
     // Run some very fast prelimiary tests before we give up and say no.
@@ -383,8 +383,8 @@ bool Triangulation<3>::knowsThreeSphere() const {
 }
 
 bool Triangulation<3>::isBall() const {
-    if (threeBall_.known())
-        return threeBall_.value();
+    if (threeBall_.has_value())
+        return *threeBall_;
 
     // Basic property checks.
     if (! (isValid() && hasBoundaryTriangles() && isOrientable() && isConnected()
@@ -408,11 +408,11 @@ bool Triangulation<3>::isBall() const {
     working.intelligentSimplify();
 
     threeBall_ = working.isThreeSphere();
-    return threeBall_.value();
+    return *threeBall_;
 }
 
 bool Triangulation<3>::knowsBall() const {
-    if (threeBall_.known())
+    if (threeBall_.has_value())
         return true;
 
     // Run some very fast prelimiary tests before we give up and say no.
@@ -428,15 +428,15 @@ bool Triangulation<3>::knowsBall() const {
 }
 
 bool Triangulation<3>::isSolidTorus() const {
-    if (solidTorus_.known())
-        return solidTorus_.value();
+    if (solidTorus_.has_value())
+        return *solidTorus_;
 
     // Basic property checks.
     if (! (isValid() && isOrientable() && isConnected() &&
             countBoundaryComponents() == 1 &&
             boundaryComponents().front()->eulerChar() == 0 &&
             boundaryComponents().front()->isOrientable()))
-        return (solidTorus_ = false);
+        return *(solidTorus_ = false);
 
     // If it's ideal, make it a triangulation with real boundary.
     // If it's not ideal, clone it anyway so we can modify it.
@@ -450,7 +450,7 @@ bool Triangulation<3>::isSolidTorus() const {
     // Check homology.
     if (! (working->homology().isZ())) {
         delete working;
-        return (solidTorus_ = false);
+        return *(solidTorus_ = false);
     }
 
     // So:
@@ -486,7 +486,7 @@ bool Triangulation<3>::isSolidTorus() const {
         if (! s) {
             // No non-trivial normal disc.  This cannot be a solid torus.
             delete working;
-            return (solidTorus_ = false);
+            return *(solidTorus_ = false);
         }
 
         // Crush it and see what happens.
@@ -510,7 +510,7 @@ bool Triangulation<3>::isSolidTorus() const {
                 // Must be a 3-sphere, or else we didn't have a solid torus.
                 if (! comp->isThreeSphere()) {
                     delete crushed;
-                    return (solidTorus_ = false);
+                    return *(solidTorus_ = false);
                 }
             } else if (comp->countBoundaryComponents() > 1) {
                 // Multiple boundaries on the same component.
@@ -521,13 +521,13 @@ bool Triangulation<3>::isSolidTorus() const {
 
                 // At any rate, it means we did not have a solid torus.
                 delete crushed;
-                return (solidTorus_ = false);
+                return *(solidTorus_ = false);
             } else if (comp->boundaryComponent(0)->eulerChar() == 2) {
                 // A component with sphere boundary.
                 // Must be a 3-ball, or else we didn't have a solid torus.
                 if (! comp->isBall()) {
                     delete crushed;
-                    return (solidTorus_ = false);
+                    return *(solidTorus_ = false);
                 }
             } else {
                 // The only other possibility is a component with torus
@@ -552,7 +552,7 @@ bool Triangulation<3>::isSolidTorus() const {
             // (and we crushed and/or cut along a compressing disc
             // during the crushing operation).
             delete crushed;
-            return (solidTorus_ = true);
+            return *(solidTorus_ = true);
         }
 
         // We have the original manifold in working, but this time with
@@ -563,7 +563,7 @@ bool Triangulation<3>::isSolidTorus() const {
 }
 
 bool Triangulation<3>::knowsSolidTorus() const {
-    if (solidTorus_.known())
+    if (solidTorus_.has_value())
         return true;
 
     // Run some very fast prelimiary tests before we give up and say no.
@@ -592,7 +592,7 @@ bool Triangulation<3>::isTxI() const {
     // This call to knowsTxI checks basic things including validity and also
     // the number topology of the boundary components.
     if (knowsTxI())
-        return TxI_.value();
+        return *TxI_;
 
     Triangulation<3> working(*this, false);
     working.intelligentSimplify();
@@ -601,7 +601,7 @@ bool Triangulation<3>::isTxI() const {
 
     // If it's not a homology T2xI, we're done.
     if ((! working.homology().isFree(2)) || (! working.homologyRel().isZ())) {
-        return (TxI_ = false);
+        return *(TxI_ = false);
     }
 
     // At this point we should already have boundary components with
@@ -634,16 +634,16 @@ bool Triangulation<3>::isTxI() const {
     for (int i = 0; i < 3; ++i) {
         t0->join(p0[3], t1, p1 * Perm<4>(i, (i+1) % 3) * p0.inverse());
         if (! working.isSolidTorus())
-            return (TxI_ = false);
+            return *(TxI_ = false);
         t0->unjoin(p0[3]);
     }
 
     // All three fillings give a solid torus!
-    return (TxI_ = true);
+    return *(TxI_ = true);
 }
 
 bool Triangulation<3>::knowsTxI() const {
-    if (TxI_.known())
+    if (TxI_.has_value())
         return true;
 
     // Run some very fast prelimiary tests before we give up and say no.
@@ -700,8 +700,8 @@ Packet* Triangulation<3>::makeZeroEfficient() {
 }
 
 bool Triangulation<3>::isIrreducible() const {
-    if (irreducible_.known())
-        return irreducible_.value();
+    if (irreducible_.has_value())
+        return *irreducible_;
 
     // Precondition checks.
     if (! (isValid() && isClosed() && isOrientable() && isConnected()))
@@ -800,7 +800,7 @@ bool Triangulation<3>::isIrreducible() const {
                         threeSphere_ = false; // Implied by reducibility.
                         zeroEfficient_ = false; // Implied by reducibility.
                         delete processing;
-                        return (irreducible_ = false);
+                        return *(irreducible_ = false);
                     }
                     ++summands;
 
@@ -825,33 +825,33 @@ bool Triangulation<3>::isIrreducible() const {
         // The manifold must be reducible.
         threeSphere_ = false; // Implied by reducibility.
         zeroEfficient_ = false; // Implied by reducibility.
-        return (irreducible_ = false);
+        return *(irreducible_ = false);
     }
     if (summands + Z2 + Z3 > 1) {
         // At least two summands were found and/or crushed away: the
         // manifold must be composite.
         threeSphere_ = false; // Implied by reducibility.
         zeroEfficient_ = false; // Implied by reducibility.
-        return (irreducible_ = false);
+        return *(irreducible_ = false);
     }
 
     // There are no S2xS1 summands, and the manifold is prime.
-    return (irreducible_ = true);
+    return *(irreducible_ = true);
 }
 
 bool Triangulation<3>::knowsIrreducible() const {
-    return irreducible_.known();
+    return irreducible_.has_value();
 }
 
 bool Triangulation<3>::hasCompressingDisc() const {
-    if (compressingDisc_.known())
-        return compressingDisc_.value();
+    if (compressingDisc_.has_value())
+        return *compressingDisc_;
 
     // Some sanity checks; also enforce preconditions.
     if (! hasBoundaryTriangles())
-        return (compressingDisc_ = false);
+        return *(compressingDisc_ = false);
     if ((! isValid()) || isIdeal())
-        return (compressingDisc_ = false);
+        return *(compressingDisc_ = false);
 
     long minBdryEuler = 2;
     for (auto bc : boundaryComponents()) {
@@ -859,7 +859,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
             minBdryEuler = bc->eulerChar();
     }
     if (minBdryEuler == 2)
-        return (compressingDisc_ = false);
+        return *(compressingDisc_ = false);
 
     // Off we go.
     // Work with a simplified triangulation.
@@ -869,7 +869,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
     // Try for a fast answer first.
     if (use->hasSimpleCompressingDisc()) {
         delete use;
-        return (compressingDisc_ = true);
+        return *(compressingDisc_ = true);
     }
 
     // Nope.  Decide whether we can use the fast linear programming
@@ -896,13 +896,13 @@ bool Triangulation<3>::hasCompressingDisc() const {
                     for (const NormalSurface* s : q->surfaces()) {
                         if (s->isCompressingDisc(true)) {
                             delete use;
-                            return (compressingDisc_ = true);
+                            return *(compressingDisc_ = true);
                         }
                     }
 
                     // No compressing discs!
                     delete use;
-                    return (compressingDisc_ = false);
+                    return *(compressingDisc_ = false);
                 }
             }
 
@@ -910,7 +910,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
             if (! search.find()) {
                 // No compressing discs!
                 delete use;
-                return (compressingDisc_ = false);
+                return *(compressingDisc_ = false);
             }
 
             ans = search.buildSurface();
@@ -936,7 +936,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
 
             if (! comp) {
                 // We must have compressed.
-                return (compressingDisc_ = true);
+                return *(compressingDisc_ = true);
             }
 
             // Around we go again, but this time with a smaller triangulation.
@@ -956,18 +956,18 @@ bool Triangulation<3>::hasCompressingDisc() const {
             // Use the fact that all vertex normal surfaces are connected.
             if (s->isCompressingDisc(true)) {
                 delete use;
-                return (compressingDisc_ = true);
+                return *(compressingDisc_ = true);
             }
         }
 
         // No compressing discs!
         delete use;
-        return (compressingDisc_ = false);
+        return *(compressingDisc_ = false);
     }
 }
 
 bool Triangulation<3>::knowsCompressingDisc() const {
-    if (compressingDisc_.known())
+    if (compressingDisc_.has_value())
         return true;
 
     // Quickly check for non-spherical boundary components before we give up.
@@ -998,7 +998,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
                 c->countVertices() == 1) {
             // Because we know the triangulation is valid, this rules out
             // all one-tetrahedron triangulations except for LST(1,2,3).
-            return (compressingDisc_ = true);
+            return *(compressingDisc_ = true);
         }
 
     // Open up as many boundary triangles as possible (to make it easier to
@@ -1048,7 +1048,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
         // non-separating in the manifold boundary and is therefore a
         // non-trivial curve.
         if (cut.countBoundaryComponents() == use.countBoundaryComponents())
-            return (compressingDisc_ = true);
+            return *(compressingDisc_ = true);
 
         newSphereCount = 0;
         for (auto bc : cut.boundaryComponents())
@@ -1057,7 +1057,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 
         // Was the boundary of the disc non-trivial?
         if (newSphereCount == origSphereCount)
-            return (compressingDisc_ = true);
+            return *(compressingDisc_ = true);
     }
 
     // Look for a tetrahedron with two faces folded together, giving a
@@ -1102,7 +1102,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
         // non-separating in the manifold boundary and is therefore a
         // non-trivial curve.
         if (cut.countBoundaryComponents() == use.countBoundaryComponents())
-            return (compressingDisc_ = true);
+            return *(compressingDisc_ = true);
 
         newSphereCount = 0;
         for (auto bc : cut.boundaryComponents())
@@ -1111,7 +1111,7 @@ bool Triangulation<3>::hasSimpleCompressingDisc() const {
 
         // Was the boundary of the disc non-trivial?
         if (newSphereCount == origSphereCount)
-            return (compressingDisc_ = true);
+            return *(compressingDisc_ = true);
     }
 
     // Nothing found.
@@ -1138,8 +1138,8 @@ namespace {
 }
 
 bool Triangulation<3>::isHaken() const {
-    if (haken_.known())
-        return haken_.value();
+    if (haken_.has_value())
+        return *haken_;
 
     // Check basic preconditions.
     if (! (isValid() && isOrientable() && isClosed() && isConnected()))
@@ -1159,7 +1159,7 @@ bool Triangulation<3>::isHaken() const {
     // First check for an easy answer via homology:
     if (t.homology().rank() > 0) {
         threeSphere_ = false; // Implied by Hakenness.
-        return (haken_ = true);
+        return *(haken_ = true);
     }
 
     // Enumerate vertex normal surfaces in quad coordinates.
@@ -1182,16 +1182,16 @@ bool Triangulation<3>::isHaken() const {
         if (list->surface(id[i].index)->isIncompressible()) {
             delete[] id;
             threeSphere_ = false; // Implied by Hakenness.
-            return (haken_ = true);
+            return *(haken_ = true);
         }
     }
 
     delete[] id;
-    return (haken_ = false);
+    return *(haken_ = false);
 }
 
 bool Triangulation<3>::knowsHaken() const {
-    return haken_.known();
+    return haken_.has_value();
 }
 
 } // namespace regina

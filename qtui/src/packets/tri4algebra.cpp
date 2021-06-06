@@ -160,8 +160,10 @@ void Tri4HomologyFundUI::refresh() {
 
 void Tri4HomologyFundUI::fundGroupSimplified() {
     regina::GroupPresentation* simp = fgGroup->takeSimplifiedGroup();
-    if (simp)
-        tri->simplifiedFundamentalGroup(simp);
+    if (simp) {
+        tri->simplifiedFundamentalGroup(std::move(*simp));
+        delete simp;
+    }
 }
 
 void Tri4HomologyFundUI::refreshLabels() {

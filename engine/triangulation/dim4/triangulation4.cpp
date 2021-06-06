@@ -196,19 +196,17 @@ void Triangulation<4>::writeXMLPacketData(std::ostream& out) const {
 
     writeXMLBaseProperties(out);
 
-    if (H2_.known()) {
+    if (H2_.has_value()) {
         out << "  <H2>";
-        H2_.value()->writeXMLData(out);
+        H2_->writeXMLData(out);
         out << "</H2>\n";
     }
 }
 
 Triangulation<4>::Triangulation(const Triangulation& X) :
         TriangulationBase<4>(X),
-        knownSimpleLinks_(X.knownSimpleLinks_) {
-    // Clone properties:
-    if (X.H2_.known())
-        H2_ = new AbelianGroup(*(X.H2_.value()));
+        knownSimpleLinks_(X.knownSimpleLinks_),
+        H2_(X.H2_) {
 }
 
 Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
@@ -218,8 +216,7 @@ Triangulation<4>::Triangulation(const Triangulation& X, bool cloneProps) :
     if (! cloneProps)
         return;
 
-    if (X.H2_.known())
-        H2_ = new AbelianGroup(*(X.H2_.value()));
+    H2_ = X.H2_;
 }
 
 void Triangulation<4>::clearAllProperties() {
@@ -227,7 +224,7 @@ void Triangulation<4>::clearAllProperties() {
 
     if (! topologyLock_) {
         knownSimpleLinks_ = false;
-        H2_.clear();
+        H2_.reset();
     }
 }
 
@@ -244,7 +241,7 @@ void Triangulation<4>::swap(Triangulation<4>& other) {
     std::swap(knownSimpleLinks_, other.knownSimpleLinks_);
     std::swap(ideal_, other.ideal_);
 
-    // Properties stored using the Property<...> template class:
+    // Properties stored using std::... helper classes:
     H2_.swap(other.H2_);
 }
 

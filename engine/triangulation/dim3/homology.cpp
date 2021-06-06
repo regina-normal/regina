@@ -36,11 +36,11 @@
 namespace regina {
 
 const AbelianGroup& Triangulation<3>::homologyRel() const {
-    if (H1Rel_.known())
-        return *H1Rel_.value();
+    if (H1Rel_.has_value())
+        return *H1Rel_;
 
     if (countBoundaryComponents() == 0)
-        return *(H1Rel_ = new AbelianGroup(homology()));
+        return *(H1Rel_ = homology());
 
     // Calculate the relative first homology wrt the boundary.
 
@@ -114,14 +114,14 @@ const AbelianGroup& Triangulation<3>::homologyRel() const {
     delete[] genIndex;
 
     // Build the group from the presentation matrix and tidy up.
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addGroup(pres);
-    return *(H1Rel_ = ans);
+    AbelianGroup ans;
+    ans.addGroup(pres);
+    return *(H1Rel_ = std::move(ans));
 }
 
 const AbelianGroup& Triangulation<3>::homologyBdry() const {
-    if (H1Bdry_.known())
-        return *H1Bdry_.value();
+    if (H1Bdry_.has_value())
+        return *H1Bdry_;
 
     // Run through the individual boundary components and add the
     // appropriate pieces to the homology group.
@@ -141,18 +141,18 @@ const AbelianGroup& Triangulation<3>::homologyBdry() const {
     }
 
     // Build the group and tidy up.
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addRank(rank);
-    ans->addTorsionElement(2, z2rank);
-    return *(H1Bdry_ = ans);
+    AbelianGroup ans;
+    ans.addRank(rank);
+    ans.addTorsionElement(2, z2rank);
+    return *(H1Bdry_ = std::move(ans));
 }
 
 const AbelianGroup& Triangulation<3>::homologyH2() const {
-    if (H2_.known())
-        return *H2_.value();
+    if (H2_.has_value())
+        return *H2_;
 
     if (isEmpty())
-        return *(H2_ = new AbelianGroup());
+        return *(H2_ = AbelianGroup());
 
     // Calculations are different for orientable vs non-orientable
     // components.
@@ -178,11 +178,11 @@ const AbelianGroup& Triangulation<3>::homologyH2() const {
     }
 
     // Build the new group and tidy up.
-    AbelianGroup* ans = new AbelianGroup();
-    ans->addRank(rank);
+    AbelianGroup ans;
+    ans.addRank(rank);
     if (z2rank)
-        ans->addTorsionElement(2, z2rank);
-    return *(H2_ = ans);
+        ans.addTorsionElement(2, z2rank);
+    return *(H2_ = std::move(ans));
 }
 
 } // namespace regina

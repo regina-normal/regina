@@ -44,6 +44,7 @@
 
 #include <map>
 #include <memory>
+#include <variant>
 #include <vector>
 #include <set>
 
@@ -142,56 +143,57 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
         bool standard_;
             /**< Is the triangulation standard? */
 
-        mutable Property<AbelianGroup, StoreManagedPtr> H1Rel_;
+        mutable std::optional<AbelianGroup> H1Rel_;
             /**< Relative first homology group of the triangulation
              *   with respect to the boundary. */
-        mutable Property<AbelianGroup, StoreManagedPtr> H1Bdry_;
+        mutable std::optional<AbelianGroup> H1Bdry_;
             /**< First homology group of the boundary. */
-        mutable Property<AbelianGroup, StoreManagedPtr> H2_;
+        mutable std::optional<AbelianGroup> H2_;
             /**< Second homology group of the triangulation. */
 
-        mutable Property<bool> twoSphereBoundaryComponents_;
+        mutable std::optional<bool> twoSphereBoundaryComponents_;
             /**< Does the triangulation contain any 2-sphere boundary
                  components? */
-        mutable Property<bool> negativeIdealBoundaryComponents_;
+        mutable std::optional<bool> negativeIdealBoundaryComponents_;
             /**< Does the triangulation contain any boundary components
                  that are ideal and have negative Euler characteristic? */
 
-        mutable Property<bool> zeroEfficient_;
+        mutable std::optional<bool> zeroEfficient_;
             /**< Is the triangulation zero-efficient? */
-        mutable Property<bool> splittingSurface_;
+        mutable std::optional<bool> splittingSurface_;
             /**< Does the triangulation have a normal splitting surface? */
 
-        mutable Property<bool> threeSphere_;
+        mutable std::optional<bool> threeSphere_;
             /**< Is this a triangulation of a 3-sphere? */
-        mutable Property<bool> threeBall_;
+        mutable std::optional<bool> threeBall_;
             /**< Is this a triangulation of a 3-dimensional ball? */
-        mutable Property<bool> solidTorus_;
+        mutable std::optional<bool> solidTorus_;
             /**< Is this a triangulation of the solid torus? */
-        mutable Property<bool> TxI_;
+        mutable std::optional<bool> TxI_;
             /**< Is this a triangulation of the product TxI? */
-        mutable Property<bool> irreducible_;
+        mutable std::optional<bool> irreducible_;
             /**< Is this 3-manifold irreducible? */
-        mutable Property<bool> compressingDisc_;
+        mutable std::optional<bool> compressingDisc_;
             /**< Does this 3-manifold contain a compressing disc? */
-        mutable Property<bool> haken_;
+        mutable std::optional<bool> haken_;
             /**< Is this 3-manifold Haken?
                  This property must only be stored for triangulations
                  that are known to represent closed, connected,
                  orientable, irreducible 3-manifolds. */
 
-        mutable Property<AngleStructure, StoreManagedPtr>
-                strictAngleStructure_;
+        mutable std::variant<bool, AngleStructure> strictAngleStructure_;
             /**< A strict angle structure on this triangulation, or a
-                 null pointer if none exists. */
+                 boolean if we do not have one.  The boolean will be \c false
+                 if the computation has not yet been attempted, or \c true if
+                 it is confirmed that no such angle structure exists. */
 
-        mutable Property<AngleStructure, StoreManagedPtr>
-                generalAngleStructure_;
+        mutable std::variant<bool, AngleStructure> generalAngleStructure_;
             /**< A generalised angle structure on this triangulation, or a
-                 null pointer if none exists. */
+                 boolean if we do not have one.  The boolean will be \c false
+                 if the computation has not yet been attempted, or \c true if
+                 it is confirmed that no such angle structure exists. */
 
-        mutable Property<TreeDecomposition, StoreManagedPtr>
-                niceTreeDecomposition_;
+        mutable std::unique_ptr<TreeDecomposition> niceTreeDecomposition_;
             /**< A nice tree decomposition of the face pairing graph of
                  this triangulation. */
 
@@ -3273,7 +3275,8 @@ namespace regina {
 
 // Inline functions for Triangulation<3>
 
-inline Triangulation<3>::Triangulation() {
+inline Triangulation<3>::Triangulation() :
+        strictAngleStructure_(false), generalAngleStructure_(false) {
 }
 
 inline Triangulation<3>::Triangulation(const Triangulation<3>& copy) :
@@ -3313,15 +3316,15 @@ inline void Triangulation<3>::swapContents(Triangulation<3>& other) {
 }
 
 inline bool Triangulation<3>::hasTwoSphereBoundaryComponents() const {
-    if (! twoSphereBoundaryComponents_.known())
+    if (! twoSphereBoundaryComponents_.has_value())
         calculateBoundaryProperties();
-    return twoSphereBoundaryComponents_.value();
+    return *twoSphereBoundaryComponents_;
 }
 
 inline bool Triangulation<3>::hasNegativeIdealBoundaryComponents() const {
-    if (! negativeIdealBoundaryComponents_.known())
+    if (! negativeIdealBoundaryComponents_.has_value())
         calculateBoundaryProperties();
-    return negativeIdealBoundaryComponents_.value();
+    return *negativeIdealBoundaryComponents_;
 }
 
 inline bool Triangulation<3>::isIdeal() const {
@@ -3340,7 +3343,7 @@ inline bool Triangulation<3>::isClosed() const {
 }
 
 inline bool Triangulation<3>::knowsZeroEfficient() const {
-    return zeroEfficient_.known();
+    return zeroEfficient_.has_value();
 }
 
 inline NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
@@ -3357,9 +3360,14 @@ inline const AngleStructure* Triangulation<3>::findStrictAngleStructure()
 }
 
 inline bool Triangulation<3>::hasStrictAngleStructure() const {
-    if (! strictAngleStructure_.known())
-        strictAngleStructure();
-    return (strictAngleStructure_.value() != nullptr);
+    if (std::holds_alternative<AngleStructure>(strictAngleStructure_)) {
+        return true; // already known to have a solution
+    } else if (std::get<bool>(strictAngleStructure_)) {
+        return false; // already known to have no solution
+    } else {
+        // Not yet computed.
+        return (strictAngleStructure() != nullptr);
+    }
 }
 
 inline unsigned long Triangulation<3>::homologyH2Z2() const {
@@ -3392,12 +3400,14 @@ inline bool Triangulation<3>::minimizeBoundary() {
 
 inline const TreeDecomposition& Triangulation<3>::niceTreeDecomposition()
         const {
-    if (niceTreeDecomposition_.known())
-        return *niceTreeDecomposition_.value();
+    if (niceTreeDecomposition_)
+        return *niceTreeDecomposition_;
 
     TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
     ans->makeNice();
-    return *(niceTreeDecomposition_ = ans);
+    niceTreeDecomposition_.reset(ans);
+
+    return *ans;
 }
 
 inline void Triangulation<3>::writeTextShort(std::ostream& out) const {

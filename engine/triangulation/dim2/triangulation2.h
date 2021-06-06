@@ -47,7 +47,6 @@
 #include "regina-core.h"
 #include "triangulation/generic/triangulation.h"
 #include "utilities/markedvector.h"
-#include "utilities/property.h"
 
 // NOTE: More #includes for faces, components and boundary components
 // follow after the class declarations.

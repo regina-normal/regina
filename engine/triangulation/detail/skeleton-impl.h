@@ -573,8 +573,8 @@ void TriangulationBase<dim>::clearBaseProperties() {
 
     // Clear properties.
     if (! topologyLock_) {
-        fundGroup_.clear();
-        H1_.clear();
+        fundGroup_.reset();
+        H1_.reset();
     }
 }
 
@@ -597,8 +597,6 @@ void TriangulationBase<dim>::swapBaseData(TriangulationBase<dim>& other) {
     components_.swap(other.components_);
     boundaryComponents_.swap(other.boundaryComponents_);
     this->faces_.swap(other.faces_);
-
-    // Properties stored using the Property<...> class template:
     fundGroup_.swap(other.fundGroup_);
     H1_.swap(other.H1_);
 }

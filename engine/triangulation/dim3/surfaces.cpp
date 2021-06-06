@@ -75,7 +75,7 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
         return nullptr;
 
     // Do we already know the answer?
-    if (zeroEfficient_.known() && zeroEfficient_.value())
+    if (zeroEfficient_.has_value() && *zeroEfficient_)
         return nullptr;
 
     // Use combinatorial optimisation if we can.
@@ -211,7 +211,7 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
 }
 
 bool Triangulation<3>::isZeroEfficient() {
-    if (! zeroEfficient_.known()) {
+    if (! zeroEfficient_.has_value()) {
         if (hasTwoSphereBoundaryComponents())
             zeroEfficient_ = false;
         else {
@@ -231,15 +231,15 @@ bool Triangulation<3>::isZeroEfficient() {
             }
         }
     }
-    return zeroEfficient_.value();
+    return *zeroEfficient_;
 }
 
 bool Triangulation<3>::hasSplittingSurface() const {
-    if (splittingSurface_.known())
-        return splittingSurface_.value();
+    if (splittingSurface_.has_value())
+        return *splittingSurface_;
 
     if (isEmpty())
-        return splittingSurface_ = false;
+        return *(splittingSurface_ = false);
 
     // In the main loop of this procedure, we assume the triangulation is
     // connected.  If it isn't connected, we see instead if each component
@@ -253,9 +253,9 @@ bool Triangulation<3>::hasSplittingSurface() const {
         const_cast<Triangulation<3>*>(this)->splitIntoComponents(&c);
         for (Packet* child : c.children())
             if (! static_cast<Triangulation<3>*>(child)->hasSplittingSurface())
-                return splittingSurface_ = false;
+                return *(splittingSurface_ = false);
         // All the components have splitting surfaces.
-        return splittingSurface_ = true;
+        return *(splittingSurface_ = true);
     }
 
     // Now we can assume the triangulation is connected.
@@ -338,13 +338,13 @@ bool Triangulation<3>::hasSplittingSurface() const {
             // with two opposite disjoint edges per tetrahedron.
             // Thus there is a splitting surface.
             delete[] state;
-            return splittingSurface_ = true;
+            return *(splittingSurface_ = true);
         }
     } // End search for splitting surfaces along each edge of tri.
 
     // We found no splitting surfaces; there is none.
     delete[] state;
-    return splittingSurface_ = false;
+    return *(splittingSurface_ = false);
 }
 
 } // namespace regina

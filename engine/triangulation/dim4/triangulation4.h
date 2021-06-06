@@ -130,7 +130,7 @@ class Triangulation<4> : public Packet, public detail::TriangulationBase<4> {
         bool ideal_;
             /**< Is the triangulation ideal? */
 
-        mutable Property<AbelianGroup, StoreManagedPtr> H2_;
+        mutable std::optional<AbelianGroup> H2_;
             /**< Second homology group of the triangulation. */
 
     public:

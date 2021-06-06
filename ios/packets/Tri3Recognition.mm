@@ -70,7 +70,7 @@
 @interface Tri3Recognition () <UITableViewDataSource> {
     NSMutableArray* propertyList;
     NSString* manifoldName;
-    regina::Property<bool> isHyp;
+    std::optional<bool> isHyp;
 }
 @property (weak, nonatomic) IBOutlet UILabel *header;
 @property (weak, nonatomic) IBOutlet UILabel *volume;
@@ -104,7 +104,7 @@
         [static_cast<Tri3ViewController*>(self.parentViewController) updateHeader:self.header lockIcon:self.lockIcon];
 
     manifoldName = nil;
-    isHyp.clear();
+    isHyp.reset();
 
     // Basic tests.
     if (! self.packet->isValid())
@@ -235,7 +235,7 @@
 // Note: Does not update the table display.  This should always be followed by [self.properties reloadData].
 - (void)updateHyperbolic
 {
-    if (isHyp.known())
+    if (isHyp.has_value())
         return;
 
     if (self.packet->isClosed() && self.packet->knowsThreeSphere() && self.packet->isThreeSphere())
@@ -299,7 +299,7 @@
             return nil;
         case PROP_HYPERBOLIC:
             if (isHyp.known())
-                return [TextHelper yesNoString:isHyp.value() yes:@"Yes" no:@"No"];
+                return [TextHelper yesNoString:*isHyp yes:@"Yes" no:@"No"];
             return nil;
         default:
             return nil;

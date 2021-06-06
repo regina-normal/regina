@@ -371,6 +371,8 @@ Version 6.1  [ TODO ]
         Class Polynomial:
             - Added member and global swap() functions.
         Class Property<...>:
+            - Removed completely.  Use either std::optional<...> or
+              std::unique_ptr<...> instead (according to your storage policy).
             - Added a move constructor and move assignment operator.
             - Added a global swap() to complement the member swap().
             - Removed the StoreConstPtr storage policy, which was never used.
@@ -396,9 +398,13 @@ Version 6.1  [ TODO ]
             - Changed slopeEquations() to return a std::optional<MatrixInt>,
               not a pointer that could be null.
             - Changed gluingEquations() and gluingEquationsRect() to return a
-              MatrixInt by value (not by pointer), and added a precondition
+              MatrixInt by value, not by pointer.
+            - Changed fundGroupFilled() to return a GroupPresentation by
+              reference, not by pointer.
+            - Routines gluingEquations(), gluingEquationsRect(),
+              fundGroupFilled() and homologyFilled() now have a precondition
               that this must not be a null SnapPea triangulation (instead of
-              returning a null pointer in this scenario).
+              the old behaviour of returning a null pointer).
         Class StandardTriangulation:
             - Routine homology() now returns a std::optional<AbelianGroup>,
               not a newly allocated pointer that could be null.
@@ -530,6 +536,8 @@ Version 6.1  [ TODO ]
         Macro ENABLE_MEMBER_FOR_REGINA_INTEGER:
             - New macro for conditionally enabling or disabling member
               functions in template classes.
+        Header utilities/property.h:
+            - Removed completely.
         Header utilities/registryutils.h:
             - Removed completely.
     PYTHON:

@@ -41,6 +41,8 @@
 
 #include <array>
 #include <functional>
+#include <memory>
+#include <optional>
 #include <vector>
 #include "regina-core.h"
 #include "maths/integer.h"
@@ -51,7 +53,6 @@
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
 #include "utilities/markedvector.h"
-#include "utilities/property.h"
 
 namespace regina {
 
@@ -616,23 +617,23 @@ class Link : public Packet {
                  crossings, then it is represented in this array by a
                  null reference. */
 
-        mutable Property<Laurent<Integer>, StoreManagedPtr> jones_;
+        mutable std::optional<Laurent<Integer>> jones_;
             /**< The Jones polynomial of the link. */
-        mutable Property<Laurent2<Integer>, StoreManagedPtr> homflyLM_;
+        mutable std::optional<Laurent2<Integer>> homflyLM_;
             /**< The HOMFLY polynomial of the link, as a polynomial in
                  \a l and \a m.  This property will be known if and only
                  if \a homflyAZ_ is known. */
-        mutable Property<Laurent2<Integer>, StoreManagedPtr> homflyAZ_;
+        mutable std::optional<Laurent2<Integer>> homflyAZ_;
             /**< The HOMFLY polynomial of the link, as a polynomial in
                  \a alpha and \a z.  This property will be known if and
                  only if \a homflyLM_ is known. */
-        mutable Property<Laurent<Integer>, StoreManagedPtr> bracket_;
+        mutable std::optional<Laurent<Integer>> bracket_;
             /**< The Kauffman bracket polynomial of the link diagram. */
 
-        mutable Property<TreeDecomposition, StoreManagedPtr>
-                niceTreeDecomposition_;
+        mutable std::unique_ptr<TreeDecomposition> niceTreeDecomposition_;
             /**< A nice tree decomposition of the planar 4-valent multigraph
-                 formed by the link diagram. */
+                 formed by the link diagram, or \c null if one has not yet
+                 been computed. */
 
     public:
         /**
@@ -4056,7 +4057,7 @@ class Link : public Packet {
          *
          * See bracket() for further details.
          */
-        Laurent<Integer>* bracketNaive(ProgressTracker* tracker) const;
+        Laurent<Integer> bracketNaive(ProgressTracker* tracker) const;
 
         /**
          * Compute the Kauffman bracket polynomial using a fixed-parameter
@@ -4067,7 +4068,7 @@ class Link : public Packet {
          *
          * See bracket() for further details.
          */
-        Laurent<Integer>* bracketTreewidth(ProgressTracker* tracker) const;
+        Laurent<Integer> bracketTreewidth(ProgressTracker* tracker) const;
 
         /**
          * Compute the HOMFLY polynomial of this link, as a polynomial
@@ -4077,7 +4078,7 @@ class Link : public Packet {
          *
          * \pre This link contains at least one crossing.
          */
-        Laurent2<Integer>* homflyKauffman(ProgressTracker* tracker) const;
+        Laurent2<Integer> homflyKauffman(ProgressTracker* tracker) const;
 
         /**
          * Compute the HOMFLY polynomial of this link, as a polynomial
@@ -4088,7 +4089,7 @@ class Link : public Packet {
          *
          * \pre This link contains at least one crossing.
          */
-        Laurent2<Integer>* homflyTreewidth(ProgressTracker* tracker) const;
+        Laurent2<Integer> homflyTreewidth(ProgressTracker* tracker) const;
 
         /**
          * Optimises the given tree decomposition for computing the
@@ -4120,13 +4121,12 @@ class Link : public Packet {
          * Sets the cached Kauffman bracket polynomial and Jones polynomial.
          *
          * The Kauffman bracket polynomial will be set to the argument
-         * \a bracket, and the Jones polynomial will be derived from it.
-         *
-         * This link will claim ownership of the given polynomial.
+         * \a bracket (using a move, not a deep copy), and the
+         * Jones polynomial will be derived from it.
          *
          * @param bracket the Kauffman bracket polynomial of this link.
          */
-        void setPropertiesFromBracket(Laurent<Integer>* bracket) const;
+        void setPropertiesFromBracket(Laurent<Integer>&& bracket) const;
 
         /**
          * A much less templated version of rewrite().
@@ -4376,11 +4376,11 @@ class ArcIterator {
 // that use them (this fixes DLL-related warnings in the windows port)
 
 inline void Link::clearAllProperties() {
-    jones_.clear();
-    homflyAZ_.clear();
-    homflyLM_.clear();
-    bracket_.clear();
-    niceTreeDecomposition_.clear();
+    jones_.reset();
+    homflyAZ_.reset();
+    homflyLM_.reset();
+    bracket_.reset();
+    niceTreeDecomposition_.reset();
 }
 
 inline Link::~Link() {
@@ -4596,14 +4596,14 @@ inline const Laurent2<Integer>& Link::homfly(Algorithm alg,
 }
 
 inline bool Link::knowsBracket() const {
-    return bracket_.known();
+    return bracket_.has_value();
 }
 inline bool Link::knowsJones() const {
-    return jones_.known();
+    return jones_.has_value();
 }
 inline bool Link::knowsHomfly() const {
     // Either both homflyAZ_ and homflyLM_ are known, or neither are known.
-    return homflyAZ_.known();
+    return homflyAZ_.has_value();
 }
 inline bool Link::r2(Crossing* crossing, bool check, bool perform) {
     return r2(StrandRef(crossing, 1), check, perform);
@@ -4624,18 +4624,20 @@ inline bool Link::r3(Crossing* crossing, int side, bool check, bool perform) {
 }
 
 inline const TreeDecomposition& Link::niceTreeDecomposition() const {
-    if (niceTreeDecomposition_.known())
-        return *niceTreeDecomposition_.value();
+    if (niceTreeDecomposition_)
+        return *niceTreeDecomposition_;
 
     TreeDecomposition* ans = new TreeDecomposition(*this, TD_UPPER);
     prepareTreeDecomposition(*ans);
-    return *(niceTreeDecomposition_ = ans);
+    niceTreeDecomposition_.reset(ans);
+
+    return *ans;
 }
 
 inline void Link::useTreeDecomposition(const TreeDecomposition& td) {
     TreeDecomposition* use = new TreeDecomposition(td);
     prepareTreeDecomposition(*use);
-    niceTreeDecomposition_ = use;
+    niceTreeDecomposition_.reset(use);
 }
 
 inline bool Link::dependsOnParent() const {

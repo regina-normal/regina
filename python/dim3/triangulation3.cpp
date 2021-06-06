@@ -202,11 +202,8 @@ void addTriangulation3(pybind11::module_& m) {
         .def("isConnected", &Triangulation<3>::isConnected)
         .def("fundamentalGroup", &Triangulation<3>::fundamentalGroup,
             pybind11::return_value_policy::reference_internal)
-        .def("simplifiedFundamentalGroup", [](Triangulation<3>& t,
-                const regina::GroupPresentation& group) {
-            // Clone the given group to avoid claiming ownership of it.
-            t.simplifiedFundamentalGroup(new regina::GroupPresentation(group));
-        })
+        .def("simplifiedFundamentalGroup",
+            &Triangulation<3>::simplifiedFundamentalGroup)
         .def("homology", &Triangulation<3>::homology,
             pybind11::return_value_policy::reference_internal)
         .def("homologyH1", &Triangulation<3>::homologyH1,
