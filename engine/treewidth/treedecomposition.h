@@ -35,9 +35,9 @@
  *  for facet pairing graphs.
  */
 
-#ifndef __TREEDECOMPOSITION_H
+#ifndef __REGINA_TREEDECOMPOSITION_H
 #ifndef __DOXYGEN
-#define __TREEDECOMPOSITION_H
+#define __REGINA_TREEDECOMPOSITION_H
 #endif
 
 #include "regina-core.h"

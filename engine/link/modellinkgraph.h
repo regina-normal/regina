@@ -34,9 +34,9 @@
  *  \brief Deals with model 4-valent planar graphs for knots and links.
  */
 
-#ifndef __MODELLINKGRAPH_H
+#ifndef __REGINA_MODELLINKGRAPH_H
 #ifndef __DOXYGEN
-#define __MODELLINKGRAPH_H
+#define __REGINA_MODELLINKGRAPH_H
 #endif
 
 #include <vector>

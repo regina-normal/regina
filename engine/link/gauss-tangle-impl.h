@@ -38,9 +38,9 @@
  *  for end users to include it explicitly.
  */
 
-#ifndef __GAUSS_TANGLE_IMPL_H
+#ifndef __REGINA_GAUSS_TANGLE_IMPL_H
 #ifndef __DOXYGEN
-#define __GAUSS_TANGLE_IMPL_H
+#define __REGINA_GAUSS_TANGLE_IMPL_H
 #endif
 
 #include <algorithm>

@@ -38,9 +38,9 @@
  *  there is no need for end users to include this header explicitly.
  */
 
-#ifndef __ISOMORPHISM_H
+#ifndef __REGINA_ISOMORPHISM_H
 #ifndef __DOXYGEN
-#define __ISOMORPHISM_H
+#define __REGINA_ISOMORPHISM_H
 #endif
 
 #include "regina-core.h"

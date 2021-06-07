@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __PRIMES_H
+#ifndef __REGINA_PRIMES_H
 #ifndef __DOXYGEN
-#define __PRIMES_H
+#define __REGINA_PRIMES_H
 #endif
 
 /*! \file maths/primes.h

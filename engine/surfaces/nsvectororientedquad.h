@@ -35,9 +35,9 @@
  *  transversely oriented quad coordinates.
  */
 
-#ifndef __NSVECTORORIENTEDQUAD_H
+#ifndef __REGINA_NSVECTORORIENTEDQUAD_H
 #ifndef __DOXYGEN
-#define __NSVECTORORIENTEDQUAD_H
+#define __REGINA_NSVECTORORIENTEDQUAD_H
 #endif
 #include "regina-core.h"
 #include "enumerate/enumconstraints.h"

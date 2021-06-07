@@ -35,9 +35,9 @@
  *  points for recognising larger Seifert fibred spaces.
  */
 
-#ifndef __SATBLOCKSTARTER_H
+#ifndef __REGINA_SATBLOCKSTARTER_H
 #ifndef __DOXYGEN
-#define __SATBLOCKSTARTER_H
+#define __REGINA_SATBLOCKSTARTER_H
 #endif
 
 #include "regina-core.h"

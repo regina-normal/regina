@@ -35,9 +35,9 @@
  *  particular pairing of facets of simplices in an n-manifold triangulation.
  */
 
-#ifndef __GLUINGPERMS_H
+#ifndef __REGINA_GLUINGPERMS_H
 #ifndef __DOXYGEN
-#define __GLUINGPERMS_H
+#define __REGINA_GLUINGPERMS_H
 #endif
 
 #include "regina-core.h"

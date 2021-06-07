@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for normal surface lists.
  */
 
-#ifndef __XMLSURFACEREADER_H
+#ifndef __REGINA_XMLSURFACEREADER_H
 #ifndef __DOXYGEN
-#define __XMLSURFACEREADER_H
+#define __REGINA_XMLSURFACEREADER_H
 #endif
 
 #include "regina-core.h"

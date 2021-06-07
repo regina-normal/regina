@@ -35,9 +35,9 @@
  *  retriangulation or link rewriting functions.
  */
 
-#ifndef __RETRIANGULATE_H_DETAIL
+#ifndef __REGINA_RETRIANGULATE_H_DETAIL
 #ifndef __DOXYGEN
-#define __RETRIANGULATE_H_DETAIL
+#define __REGINA_RETRIANGULATE_H_DETAIL
 #endif
 
 #include <functional>

@@ -34,9 +34,9 @@
  *  \brief Deals with the underlying 3-manifolds of triangulations.
  */
 
-#ifndef __MANIFOLD_H
+#ifndef __REGINA_MANIFOLD_H
 #ifndef __DOXYGEN
-#define __MANIFOLD_H
+#define __REGINA_MANIFOLD_H
 #endif
 
 #include <optional>

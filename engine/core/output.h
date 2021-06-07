@@ -34,9 +34,9 @@
  *  \brief Provides a common interface for human-readable text output.
  */
 
-#ifndef __OUTPUT_H
+#ifndef __REGINA_OUTPUT_H
 #ifndef __DOXYGEN
-#define __OUTPUT_H
+#define __REGINA_OUTPUT_H
 #endif
 
 #include <sstream>

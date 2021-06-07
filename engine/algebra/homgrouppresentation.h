@@ -34,9 +34,9 @@
  *  \brief Deals with finite presentations of groups.
  */
 
-#ifndef __HOMGROUPPRESENTATION_H
+#ifndef __REGINA_HOMGROUPPRESENTATION_H
 #ifndef __DOXYGEN
-#define __HOMGROUPPRESENTATION_H
+#define __REGINA_HOMGROUPPRESENTATION_H
 #endif
 
 #include <vector>

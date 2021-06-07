@@ -34,9 +34,9 @@
  *  \brief Deals with angle structures on triangulations.
  */
 
-#ifndef __ANGLESTRUCTURE_H
+#ifndef __REGINA_ANGLESTRUCTURE_H
 #ifndef __DOXYGEN
-#define __ANGLESTRUCTURE_H
+#define __REGINA_ANGLESTRUCTURE_H
 #endif
 
 #include "regina-core.h"

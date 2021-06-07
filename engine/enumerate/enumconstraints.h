@@ -34,9 +34,9 @@
  *  \brief Deals with validity constraints in polytope vertex enumeration.
  */
 
-#ifndef __ENUMCONSTRAINTS_H
+#ifndef __REGINA_ENUMCONSTRAINTS_H
 #ifndef __DOXYGEN
-#define __ENUMCONSTRAINTS_H
+#define __REGINA_ENUMCONSTRAINTS_H
 #endif
 
 #include <cstddef>

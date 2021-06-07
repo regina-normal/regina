@@ -35,9 +35,9 @@
  *  gluing permutations for a given triangle edge pairing.
  */
 
-#ifndef __GLUINGPERMSEARCHER2_H
+#ifndef __REGINA_GLUINGPERMSEARCHER2_H
 #ifndef __DOXYGEN
-#define __GLUINGPERMSEARCHER2_H
+#define __REGINA_GLUINGPERMSEARCHER2_H
 #endif
 
 #include "regina-core.h"

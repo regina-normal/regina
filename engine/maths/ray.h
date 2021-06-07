@@ -34,9 +34,9 @@
  *  \brief Deprecated header.
  */
 
-#ifndef __RAY_H
+#ifndef __REGINA_RAY_H
 #ifndef __DOXYGEN
-#define __RAY_H
+#define __REGINA_RAY_H
 #endif
 
 #warning This header is deprecated; please use maths/vector.h instead.

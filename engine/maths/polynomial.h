@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __POLYNOMIAL_H
+#ifndef __REGINA_POLYNOMIAL_H
 #ifndef __DOXYGEN
-#define __POLYNOMIAL_H
+#define __REGINA_POLYNOMIAL_H
 #endif
 
 /*! \file maths/polynomial.h

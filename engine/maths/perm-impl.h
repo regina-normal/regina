@@ -45,8 +45,8 @@
 #ifndef __DOXYGEN
 // Hide the entire implementation from doxygen, since it cannot handle
 // specialisations.
-#ifndef __PERM_IMPL_H
-#define __PERM_IMPL_H
+#ifndef __REGINA_PERM_IMPL_H
+#define __REGINA_PERM_IMPL_H
 
 // Import the specialised template classes.
 #include "maths/spec/perm2.h"

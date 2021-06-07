@@ -35,9 +35,9 @@
  *  of Seifert fibred spaces.
  */
 
-#ifndef __SATREGION_H
+#ifndef __REGINA_SATREGION_H
 #ifndef __DOXYGEN
-#define __SATREGION_H
+#define __REGINA_SATREGION_H
 #endif
 
 #include "regina-core.h"

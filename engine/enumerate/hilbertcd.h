@@ -35,9 +35,9 @@
  * enumeration.
  */
 
-#ifndef __HILBERTCD_H
+#ifndef __REGINA_HILBERTCD_H
 #ifndef __DOXYGEN
-#define __HILBERTCD_H
+#define __REGINA_HILBERTCD_H
 #endif
 
 #include "regina-core.h"

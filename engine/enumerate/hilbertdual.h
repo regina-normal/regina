@@ -34,9 +34,9 @@
  *  \brief Provides a modified dual algorithm for Hilbert basis enumeration.
  */
 
-#ifndef __HILBERTDUAL_H
+#ifndef __REGINA_HILBERTDUAL_H
 #ifndef __DOXYGEN
-#define __HILBERTDUAL_H
+#define __REGINA_HILBERTDUAL_H
 #endif
 
 #include "regina-core.h"

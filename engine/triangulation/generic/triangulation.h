@@ -38,9 +38,9 @@
  *  there is no need for end users to include this header explicitly.
  */
 
-#ifndef __TRIANGULATION_H
+#ifndef __REGINA_TRIANGULATION_H
 #ifndef __DOXYGEN
-#define __TRIANGULATION_H
+#define __REGINA_TRIANGULATION_H
 #endif
 
 namespace regina {

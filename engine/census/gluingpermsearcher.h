@@ -35,9 +35,9 @@
  *  for a given facet pairing.
  */
 
-#ifndef __GLUINGPERMSEARCHER_H
+#ifndef __REGINA_GLUINGPERMSEARCHER_H
 #ifndef __DOXYGEN
-#define __GLUINGPERMSEARCHER_H
+#define __REGINA_GLUINGPERMSEARCHER_H
 #endif
 
 #include "regina-core.h"

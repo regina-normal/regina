@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __FACETPAIRING3_H
+#ifndef __REGINA_FACETPAIRING3_H
 #ifndef __DOXYGEN
-#define __FACETPAIRING3_H
+#define __REGINA_FACETPAIRING3_H
 #endif
 
 /*! \file triangulation/facetpairing3.h

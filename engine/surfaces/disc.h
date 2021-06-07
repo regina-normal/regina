@@ -35,9 +35,9 @@
  *  in a normal surface.
  */
 
-#ifndef __DISC_H
+#ifndef __REGINA_DISC_H
 #ifndef __DOXYGEN
-#define __DISC_H
+#define __REGINA_DISC_H
 #endif
 
 #include <cassert>

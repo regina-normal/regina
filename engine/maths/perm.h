@@ -38,9 +38,9 @@
  *  specialisations.
  */
 
-#ifndef __PERM_H
+#ifndef __REGINA_PERM_H
 #ifndef __DOXYGEN
-#define __PERM_H
+#define __REGINA_PERM_H
 #endif
 
 #include <cstdlib>

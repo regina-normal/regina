@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __CYCLOTOMIC_H
+#ifndef __REGINA_CYCLOTOMIC_H
 #ifndef __DOXYGEN
-#define __CYCLOTOMIC_H
+#define __REGINA_CYCLOTOMIC_H
 #endif
 
 /*! \file maths/cyclotomic.h

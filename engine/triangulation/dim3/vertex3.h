@@ -42,9 +42,9 @@
 // This header will be re-included from within triangulation3.h.
 #include "triangulation/dim3/triangulation3.h"
 
-#ifndef __VERTEX3_H
+#ifndef __REGINA_VERTEX3_H
 #ifndef __DOXYGEN
-#define __VERTEX3_H
+#define __REGINA_VERTEX3_H
 #endif
 
 namespace regina {

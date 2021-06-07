@@ -36,9 +36,9 @@
  *  class FacetPairing<dim> for all \a dim &ne; 3.
  */
 
-#ifndef __FACETPAIRING_H
+#ifndef __REGINA_FACETPAIRING_H
 #ifndef __DOXYGEN
-#define __FACETPAIRING_H
+#define __REGINA_FACETPAIRING_H
 #endif
 
 #include "triangulation/generic/facetpairing.h"

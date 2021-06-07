@@ -34,9 +34,9 @@
  *  \brief Defines constants and flags for normal surface enumeration.
  */
 
-#ifndef __NORMALFLAGS_H
+#ifndef __REGINA_NORMALFLAGS_H
 #ifndef __DOXYGEN
-#define __NORMALFLAGS_H
+#define __REGINA_NORMALFLAGS_H
 #endif
 
 #include "regina-core.h"

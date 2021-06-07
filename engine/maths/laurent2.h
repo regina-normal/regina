@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __LAURENT2_H
+#ifndef __REGINA_LAURENT2_H
 #ifndef __DOXYGEN
-#define __LAURENT2_H
+#define __REGINA_LAURENT2_H
 #endif
 
 /*! \file maths/laurent2.h

@@ -35,9 +35,9 @@
  *  complete packet tree has been read from file.
  */
 
-#ifndef __XMLTREERESOLVER_H
+#ifndef __REGINA_XMLTREERESOLVER_H
 #ifndef __DOXYGEN
-#define __XMLTREERESOLVER_H
+#define __REGINA_XMLTREERESOLVER_H
 #endif
 
 #include "regina-core.h"

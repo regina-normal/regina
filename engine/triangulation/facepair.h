@@ -34,9 +34,9 @@
  *  \brief Deals with simple pairs of face numbers.
  */
 
-#ifndef __FACEPAIR_H
+#ifndef __REGINA_FACEPAIR_H
 #ifndef __DOXYGEN
-#define __FACEPAIR_H
+#define __REGINA_FACEPAIR_H
 #endif
 
 #include "regina-core.h"

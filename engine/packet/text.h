@@ -34,9 +34,9 @@
  *  \brief Contains a packet representing a text string.
  */
 
-#ifndef __TEXT_H
+#ifndef __REGINA_TEXT_H
 #ifndef __DOXYGEN
-#define __TEXT_H
+#define __REGINA_TEXT_H
 #endif
 
 #include "regina-core.h"

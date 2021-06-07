@@ -39,9 +39,9 @@
  *  Therefore end users should never need to include this header.
  */
 
-#ifndef __ISOSIG_IMPL_H_DETAIL
+#ifndef __REGINA_ISOSIG_IMPL_H_DETAIL
 #ifndef __DOXYGEN
-#define __ISOSIG_IMPL_H_DETAIL
+#define __REGINA_ISOSIG_IMPL_H_DETAIL
 #endif
 
 #include <algorithm>

@@ -35,9 +35,9 @@
  *  enumeration and optimisation.
  */
 
-#ifndef __TREETRAVERSAL_H
+#ifndef __REGINA_TREETRAVERSAL_H
 #ifndef __DOXYGEN
-#define __TREETRAVERSAL_H
+#define __REGINA_TREETRAVERSAL_H
 #endif
 
 #include <mutex>

@@ -35,9 +35,9 @@
  *  and character encodings.
  */
 
-#ifndef __I18NUTILS_H
+#ifndef __REGINA_I18NUTILS_H
 #ifndef __DOXYGEN
-#define __I18NUTILS_H
+#define __REGINA_I18NUTILS_H
 #endif
 
 #include "regina-core.h"

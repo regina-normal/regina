@@ -34,9 +34,9 @@
  *  \brief A supporting data structure for tree traversal enumeration methods.
  */
 
-#ifndef __TYPETRIE_H
+#ifndef __REGINA_TYPETRIE_H
 #ifndef __DOXYGEN
-#define __TYPETRIE_H
+#define __REGINA_TYPETRIE_H
 #endif
 
 #include "regina-core.h"

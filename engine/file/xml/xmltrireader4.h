@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for 4-dimensional triangulation packets.
  */
 
-#ifndef __XMLTRIREADER4_H
+#ifndef __REGINA_XMLTRIREADER4_H
 #ifndef __DOXYGEN
-#define __XMLTRIREADER4_H
+#define __REGINA_XMLTRIREADER4_H
 #endif
 
 #include "regina-core.h"

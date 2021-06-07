@@ -34,9 +34,9 @@
  *  \brief Allows reading lists of dehydrated triangulations.
  */
 
-#ifndef __DEHYDRATION_H
+#ifndef __REGINA_DEHYDRATION_H
 #ifndef __DOXYGEN
-#define __DEHYDRATION_H
+#define __REGINA_DEHYDRATION_H
 #endif
 
 #include "regina-core.h"

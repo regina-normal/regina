@@ -34,9 +34,9 @@
  *  \brief Allows reading Orb / Casson triangulation files.
  */
 
-#ifndef __ORB_H
+#ifndef __REGINA_ORB_H
 #ifndef __DOXYGEN
-#define __ORB_H
+#define __REGINA_ORB_H
 #endif
 
 #include <string>

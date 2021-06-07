@@ -34,9 +34,9 @@
  *  \brief Allows reading lists of isomorphism signatures and knot signatures.
  */
 
-#ifndef __ISOSIG_H
+#ifndef __REGINA_ISOSIG_H
 #ifndef __DOXYGEN
-#define __ISOSIG_H
+#define __REGINA_ISOSIG_H
 #endif
 
 #include "regina-core.h"

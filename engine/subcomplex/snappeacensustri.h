@@ -34,9 +34,9 @@
  *  \brief Deals with 3-manifold triangulations from the SnapPea census.
  */
 
-#ifndef __SNAPPEACENSUSTRI_H
+#ifndef __REGINA_SNAPPEACENSUSTRI_H
 #ifndef __DOXYGEN
-#define __SNAPPEACENSUSTRI_H
+#define __REGINA_SNAPPEACENSUSTRI_H
 #endif
 
 #include "regina-core.h"

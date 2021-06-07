@@ -34,9 +34,9 @@
  *  \brief Deals with general Seifert fibred spaces.
  */
 
-#ifndef __SFS_H
+#ifndef __REGINA_SFS_H
 #ifndef __DOXYGEN
-#define __SFS_H
+#define __REGINA_SFS_H
 #endif
 
 #include <list>

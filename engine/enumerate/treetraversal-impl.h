@@ -40,9 +40,9 @@
  *  of these classes for common combinations of template arguments.
  */
 
-#ifndef __TREETRAVERSAL_IMPL_H
+#ifndef __REGINA_TREETRAVERSAL_IMPL_H
 #ifndef __DOXYGEN
-#define __TREETRAVERSAL_IMPL_H
+#define __REGINA_TREETRAVERSAL_IMPL_H
 #endif
 
 #include "angle/anglestructures.h"

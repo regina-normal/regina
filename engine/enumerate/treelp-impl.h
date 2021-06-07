@@ -40,9 +40,9 @@
  *  of these classes for common combinations of template arguments.
  */
 
-#ifndef __TREELP_IMPL_H
+#ifndef __REGINA_TREELP_IMPL_H
 #ifndef __DOXYGEN
-#define __TREELP_IMPL_H
+#define __REGINA_TREELP_IMPL_H
 #endif
 
 /**

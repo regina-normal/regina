@@ -34,9 +34,9 @@
  *  \brief Deals with general lens spaces.
  */
 
-#ifndef __LENSSPACE_H
+#ifndef __REGINA_LENSSPACE_H
 #ifndef __DOXYGEN
-#define __LENSSPACE_H
+#define __REGINA_LENSSPACE_H
 #endif
 
 #include "regina-core.h"

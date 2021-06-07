@@ -34,9 +34,9 @@
  *  \brief Implements normal surface vectors using transversly oriented 
  *  normal surface coordinates.*/
 
-#ifndef __NSVECTORORIENTED_H
+#ifndef __REGINA_NSVECTORORIENTED_H
 #ifndef __DOXYGEN
-#define __NSVECTORORIENTED_H
+#define __REGINA_NSVECTORORIENTED_H
 #endif
 
 

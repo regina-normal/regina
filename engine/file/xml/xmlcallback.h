@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML program data at the file level.
  */
 
-#ifndef __XMLCALLBACK_H
+#ifndef __REGINA_XMLCALLBACK_H
 #ifndef __DOXYGEN
-#define __XMLCALLBACK_H
+#define __REGINA_XMLCALLBACK_H
 #endif
 
 #include <iostream>

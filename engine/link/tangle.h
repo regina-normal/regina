@@ -34,9 +34,9 @@
  *  \brief Deals with 2-tangles in the 3-ball.
  */
 
-#ifndef __TANGLE_H
+#ifndef __REGINA_TANGLE_H
 #ifndef __DOXYGEN
-#define __TANGLE_H
+#define __REGINA_TANGLE_H
 #endif
 
 #include "link/link.h"

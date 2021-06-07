@@ -38,9 +38,9 @@
  *  for end users to include it explicitly.
  */
 
-#ifndef __PD_IMPL_H
+#ifndef __REGINA_PD_IMPL_H
 #ifndef __DOXYGEN
-#define __PD_IMPL_H
+#define __REGINA_PD_IMPL_H
 #endif
 
 #include <algorithm>

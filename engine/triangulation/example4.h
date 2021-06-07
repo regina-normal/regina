@@ -35,9 +35,9 @@
  *  points for testing code or getting used to Regina.
  */
 
-#ifndef __EXAMPLE4_H
+#ifndef __REGINA_EXAMPLE4_H
 #ifndef __DOXYGEN
-#define __EXAMPLE4_H
+#define __REGINA_EXAMPLE4_H
 #endif
 
 #include "regina-core.h"

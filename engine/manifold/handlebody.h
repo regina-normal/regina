@@ -34,9 +34,9 @@
  *  \brief Deals with arbitrary handlebodies.
  */
 
-#ifndef __HANDLEBODY_H
+#ifndef __REGINA_HANDLEBODY_H
 #ifndef __DOXYGEN
-#define __HANDLEBODY_H
+#define __REGINA_HANDLEBODY_H
 #endif
 
 #include "regina-core.h"

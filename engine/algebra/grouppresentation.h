@@ -34,9 +34,9 @@
  *  \brief Deals with finite presentations of groups.
  */
 
-#ifndef __GROUPPRESENTATION_H
+#ifndef __REGINA_GROUPPRESENTATION_H
 #ifndef __DOXYGEN
-#define __GROUPPRESENTATION_H
+#define __REGINA_GROUPPRESENTATION_H
 #endif
 
 #include <algorithm>

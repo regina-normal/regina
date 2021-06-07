@@ -35,9 +35,9 @@
  *  calculation engine.
  */
 
-#ifndef __ENGINE_H
+#ifndef __REGINA_ENGINE_H
 #ifndef __DOXYGEN
-#define __ENGINE_H
+#define __REGINA_ENGINE_H
 #endif
 
 #include "regina-core.h"

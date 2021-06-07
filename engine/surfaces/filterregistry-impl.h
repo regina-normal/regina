@@ -45,9 +45,9 @@
  * is no need for end users to include it explicitly.
  */
 
-#ifndef __FILTERREGISTRY_IMPL_H
+#ifndef __REGINA_FILTERREGISTRY_IMPL_H
 #ifndef __DOXYGEN
-#define __FILTERREGISTRY_IMPL_H
+#define __REGINA_FILTERREGISTRY_IMPL_H
 #endif
 
 #include "surfaces/surfacefilter.h"

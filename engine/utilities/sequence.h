@@ -34,9 +34,9 @@
  *  \brief Support for temporary lightweight sequences.
  */
 
-#ifndef __SEQUENCE_H
+#ifndef __REGINA_SEQUENCE_H
 #ifndef __DOXYGEN
-#define __SEQUENCE_H
+#define __REGINA_SEQUENCE_H
 #endif
 
 #include <iostream>

@@ -35,9 +35,9 @@
  *  structures on a triangulation.
  */
 
-#ifndef __ANGLESTRUCTURES_H
+#ifndef __REGINA_ANGLESTRUCTURES_H
 #ifndef __DOXYGEN
-#define __ANGLESTRUCTURES_H
+#define __REGINA_ANGLESTRUCTURES_H
 #endif
 
 #include <algorithm>

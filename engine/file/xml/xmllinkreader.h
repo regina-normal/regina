@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for knot/link packets.
  */
 
-#ifndef __XMLLINKREADER_H
+#ifndef __REGINA_XMLLINKREADER_H
 #ifndef __DOXYGEN
-#define __XMLLINKREADER_H
+#define __REGINA_XMLLINKREADER_H
 #endif
 
 #include "regina-core.h"

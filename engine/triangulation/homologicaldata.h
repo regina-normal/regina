@@ -34,9 +34,9 @@
  *  \brief Deals with all the details of the cellular homology of a manifold.
  */
 
-#ifndef __HOMOLOGICALDATA_H
+#ifndef __REGINA_HOMOLOGICALDATA_H
 #ifndef __DOXYGEN
-#define __HOMOLOGICALDATA_H
+#define __REGINA_HOMOLOGICALDATA_H
 #endif
 
 #include "regina-core.h"

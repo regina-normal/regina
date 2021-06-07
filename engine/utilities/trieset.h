@@ -34,9 +34,9 @@
  *  \brief Provides a trie-like structure for storing sets.
  */
 
-#ifndef __TRIESET_H
+#ifndef __REGINA_TRIESET_H
 #ifndef __DOXYGEN
-#define __TRIESET_H
+#define __REGINA_TRIESET_H
 #endif
 
 #include "regina-core.h"

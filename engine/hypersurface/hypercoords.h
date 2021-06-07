@@ -34,9 +34,9 @@
  *  \brief Defines constants for normal hypersurface coordinate systems.
  */
 
-#ifndef __HYPERCOORDS_H
+#ifndef __REGINA_HYPERCOORDS_H
 #ifndef __DOXYGEN
-#define __HYPERCOORDS_H
+#define __REGINA_HYPERCOORDS_H
 #endif
 
 #include "regina-core.h"

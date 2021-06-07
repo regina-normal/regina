@@ -43,9 +43,9 @@
 // This header will be re-included from within triangulation4.h.
 #include "triangulation/dim4/triangulation4.h"
 
-#ifndef __COMPONENT4_H
+#ifndef __REGINA_COMPONENT4_H
 #ifndef __DOXYGEN
-#define __COMPONENT4_H
+#define __REGINA_COMPONENT4_H
 #endif
 
 namespace regina {

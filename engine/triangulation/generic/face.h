@@ -37,9 +37,9 @@
  *  there is no need for end users to include this header explicitly.
  */
 
-#ifndef __FACE_H
+#ifndef __REGINA_FACE_H
 #ifndef __DOXYGEN
-#define __FACE_H
+#define __REGINA_FACE_H
 #endif
 
 #include "triangulation/detail/face.h"

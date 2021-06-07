@@ -35,9 +35,9 @@
  *  each dimension.
  */
 
-#ifndef __STRINGS_H_DETAIL
+#ifndef __REGINA_STRINGS_H_DETAIL
 #ifndef __DOXYGEN
-#define __STRINGS_H_DETAIL
+#define __REGINA_STRINGS_H_DETAIL
 #endif
 
 namespace regina::detail {

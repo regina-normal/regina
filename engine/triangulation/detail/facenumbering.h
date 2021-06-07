@@ -35,9 +35,9 @@
  *  are numbered within a <i>dim</i>-dimensional simplex.
  */
 
-#ifndef __FACENUMBERING_H_DETAIL
+#ifndef __REGINA_FACENUMBERING_H_DETAIL
 #ifndef __DOXYGEN
-#define __FACENUMBERING_H_DETAIL
+#define __REGINA_FACENUMBERING_H_DETAIL
 #endif
 
 #include <algorithm>

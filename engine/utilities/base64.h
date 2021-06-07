@@ -61,9 +61,9 @@
  *  SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
  */
 
-#ifndef __BASE64_H
+#ifndef __REGINA_BASE64_H
 #ifndef __DOXYGEN
-#define __BASE64_H
+#define __REGINA_BASE64_H
 #endif
 
 #include "regina-core.h"

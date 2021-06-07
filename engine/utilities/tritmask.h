@@ -34,9 +34,9 @@
  *  \brief Provides optimised "ternary bitmasks" of fixed length.
  */
 
-#ifndef __TRITMASK_H
+#ifndef __REGINA_TRITMASK_H
 #ifndef __DOXYGEN
-#define __TRITMASK_H
+#define __REGINA_TRITMASK_H
 #endif
 
 #include <algorithm>

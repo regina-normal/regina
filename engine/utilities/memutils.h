@@ -35,9 +35,9 @@
  *  functions for use with the C++ Standard Library.
  */
 
-#ifndef __MEMUTILS_H
+#ifndef __REGINA_MEMUTILS_H
 #ifndef __DOXYGEN
-#define __MEMUTILS_H
+#define __REGINA_MEMUTILS_H
 #endif
 
 #warning This header and all of its contents are deprecated.

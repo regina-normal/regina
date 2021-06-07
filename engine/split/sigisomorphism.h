@@ -35,9 +35,9 @@
  *  signatures.
  */
 
-#ifndef __SIGISOMORPHISM_H
+#ifndef __REGINA_SIGISOMORPHISM_H
 #ifndef __DOXYGEN
-#define __SIGISOMORPHISM_H
+#define __REGINA_SIGISOMORPHISM_H
 #endif
 
 #include "regina-core.h"

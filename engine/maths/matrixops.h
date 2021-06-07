@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __MATRIXOPS_H
+#ifndef __REGINA_MATRIXOPS_H
 #ifndef __DOXYGEN
-#define __MATRIXOPS_H
+#define __REGINA_MATRIXOPS_H
 #endif
 
 /*! \file maths/matrixops.h

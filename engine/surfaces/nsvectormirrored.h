@@ -35,9 +35,9 @@
  *  coordinate system to avoid frequent lengthy calculations.
  */
 
-#ifndef __NSVECTORMIRRORED_H
+#ifndef __REGINA_NSVECTORMIRRORED_H
 #ifndef __DOXYGEN
-#define __NSVECTORMIRRORED_H
+#define __REGINA_NSVECTORMIRRORED_H
 #endif
 
 #include "regina-core.h"

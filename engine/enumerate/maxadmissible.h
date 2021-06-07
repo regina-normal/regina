@@ -35,9 +35,9 @@
  *  polyhedral cone that satisfy a set of admissibility constraints.
  */
 
-#ifndef __MAXADMISSIBLE_H
+#ifndef __REGINA_MAXADMISSIBLE_H
 #ifndef __DOXYGEN
-#define __MAXADMISSIBLE_H
+#define __REGINA_MAXADMISSIBLE_H
 #endif
 
 #include "regina-core.h"

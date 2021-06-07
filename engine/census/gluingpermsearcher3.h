@@ -35,9 +35,9 @@
  *  gluing permutations for a given tetrahedron face pairing.
  */
 
-#ifndef __GLUINGPERMSEARCHER3_H
+#ifndef __REGINA_GLUINGPERMSEARCHER3_H
 #ifndef __DOXYGEN
-#define __GLUINGPERMSEARCHER3_H
+#define __REGINA_GLUINGPERMSEARCHER3_H
 #endif
 
 #include "regina-core.h"

@@ -34,9 +34,9 @@
  *  \brief Provides a base class for objects pointable by SafePtr.
  */
 
-#ifndef __SAFEPOINTEEBASE_H
+#ifndef __REGINA_SAFEPOINTEEBASE_H
 #ifndef __DOXYGEN
-#define __SAFEPOINTEEBASE_H
+#define __REGINA_SAFEPOINTEEBASE_H
 #endif
 
 #include <atomic>

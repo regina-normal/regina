@@ -34,9 +34,9 @@
  *  \brief Offers several ready-made example SnapPea triangulations.
  */
 
-#ifndef __EXAMPLESNAPPEA_H
+#ifndef __REGINA_EXAMPLESNAPPEA_H
 #ifndef __DOXYGEN
-#define __EXAMPLESNAPPEA_H
+#define __REGINA_EXAMPLESNAPPEA_H
 #endif
 
 #include "regina-core.h"

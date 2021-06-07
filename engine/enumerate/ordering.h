@@ -35,9 +35,9 @@
  *  equations) when performing normal surface enumeration.
  */
 
-#ifndef __ORDERING_H
+#ifndef __REGINA_ORDERING_H
 #ifndef __DOXYGEN
-#define __ORDERING_H
+#define __REGINA_ORDERING_H
 #endif
 
 #include "regina-core.h"

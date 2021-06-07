@@ -34,9 +34,9 @@
  *  \brief Lightweight objects that offer access to lists.
  */
 
-#ifndef __LISTVIEW_H
+#ifndef __REGINA_LISTVIEW_H
 #ifndef __DOXYGEN
-#define __LISTVIEW_H
+#define __REGINA_LISTVIEW_H
 #endif
 
 #include "regina-core.h"

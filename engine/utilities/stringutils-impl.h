@@ -40,9 +40,9 @@
 // Make sure stringutils.h is included first.
 #include "utilities/stringutils.h"
 
-#ifndef __STRINGUTILS_IMPL_H
+#ifndef __REGINA_STRINGUTILS_IMPL_H
 #ifndef __DOXYGEN
-#define __STRINGUTILS_IMPL_H
+#define __REGINA_STRINGUTILS_IMPL_H
 #endif
 
 #include <cctype>

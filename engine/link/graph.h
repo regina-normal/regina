@@ -40,9 +40,9 @@
  *  developers know.
  */
 
-#ifndef __LINK_GRAPH_H
+#ifndef __REGINA_LINK_GRAPH_H
 #ifndef __DOXYGEN
-#define __LINK_GRAPH_H
+#define __REGINA_LINK_GRAPH_H
 #endif
 
 #include <link/link.h>

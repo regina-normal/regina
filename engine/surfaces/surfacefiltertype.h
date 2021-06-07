@@ -34,9 +34,9 @@
  *  \brief Defines constants for normal surface filter types.
  */
 
-#ifndef __SURFACEFILTERTYPE_H
+#ifndef __REGINA_SURFACEFILTERTYPE_H
 #ifndef __DOXYGEN
-#define __SURFACEFILTERTYPE_H
+#define __REGINA_SURFACEFILTERTYPE_H
 #endif
 
 #include "regina-core.h"

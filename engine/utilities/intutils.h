@@ -35,9 +35,9 @@
  *  integer types at compile time.
  */
 
-#ifndef __INTUTILS_H
+#ifndef __REGINA_INTUTILS_H
 #ifndef __DOXYGEN
-#define __INTUTILS_H
+#define __REGINA_INTUTILS_H
 #endif
 
 #include "regina-core.h"

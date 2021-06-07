@@ -34,9 +34,9 @@
  *  \brief Deals with finitely generated abelian groups.
  */
 
-#ifndef __ABELIANGROUP_H
+#ifndef __REGINA_ABELIANGROUP_H
 #ifndef __DOXYGEN
-#define __ABELIANGROUP_H
+#define __REGINA_ABELIANGROUP_H
 #endif
 
 #include <set>

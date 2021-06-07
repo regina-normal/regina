@@ -34,9 +34,9 @@
  *  \brief Deals with layered solid tori in a triangulation.
  */
 
-#ifndef __LAYEREDSOLIDTORUS_H
+#ifndef __REGINA_LAYEREDSOLIDTORUS_H
 #ifndef __DOXYGEN
-#define __LAYEREDSOLIDTORUS_H
+#define __REGINA_LAYEREDSOLIDTORUS_H
 #endif
 
 #include "regina-core.h"

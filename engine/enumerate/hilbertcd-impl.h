@@ -37,9 +37,9 @@
  *  is no need for end users to include it explicitly.
  */
 
-#ifndef __HILBERTCD_IMPL_H
+#ifndef __REGINA_HILBERTCD_IMPL_H
 #ifndef __DOXYGEN
-#define __HILBERTCD_IMPL_H
+#define __REGINA_HILBERTCD_IMPL_H
 #endif
 
 #include "regina-core.h"

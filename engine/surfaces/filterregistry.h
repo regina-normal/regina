@@ -54,9 +54,9 @@
 #error "The old REGISTER_FILTER macros have been removed.  Use forFilter() instead."
 #endif
 
-#ifndef __FILTERREGISTRY_H
+#ifndef __REGINA_FILTERREGISTRY_H
 #ifndef __DOXYGEN
-#define __FILTERREGISTRY_H
+#define __REGINA_FILTERREGISTRY_H
 #endif
 
 #include "surfaces/surfacefiltertype.h"

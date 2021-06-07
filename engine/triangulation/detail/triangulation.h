@@ -34,9 +34,9 @@
  *  \brief Implementation details for triangulations of arbitrary dimension.
  */
 
-#ifndef __TRIANGULATION_H_DETAIL
+#ifndef __REGINA_TRIANGULATION_H_DETAIL
 #ifndef __DOXYGEN
-#define __TRIANGULATION_H_DETAIL
+#define __REGINA_TRIANGULATION_H_DETAIL
 #endif
 
 #include <iomanip>

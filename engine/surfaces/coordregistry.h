@@ -54,9 +54,9 @@
 #error "The old REGISTER_FLAVOUR macros have been removed.  Use forCoords() instead."
 #endif
 
-#ifndef __COORDREGISTRY_H
+#ifndef __REGINA_COORDREGISTRY_H
 #ifndef __DOXYGEN
-#define __COORDREGISTRY_H
+#define __REGINA_COORDREGISTRY_H
 #endif
 
 #include "surfaces/normalcoords.h"

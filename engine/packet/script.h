@@ -34,9 +34,9 @@
  *  \brief Contains a packet representing a script.
  */
 
-#ifndef __SCRIPT_H
+#ifndef __REGINA_SCRIPT_H
 #ifndef __DOXYGEN
-#define __SCRIPT_H
+#define __REGINA_SCRIPT_H
 #endif
 
 #include <map>

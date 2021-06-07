@@ -34,9 +34,9 @@
  *  \brief A packet that contains a PDF document.
  */
 
-#ifndef __PDF_H
+#ifndef __REGINA_PDF_H
 #ifndef __DOXYGEN
-#define __PDF_H
+#define __REGINA_PDF_H
 #endif
 
 #include <cstdlib>

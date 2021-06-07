@@ -34,9 +34,9 @@
  *  \brief Provides various types that extend the standard boolean.
  */
 
-#ifndef __BOOLSET_H
+#ifndef __REGINA_BOOLSET_H
 #ifndef __DOXYGEN
-#define __BOOLSET_H
+#define __REGINA_BOOLSET_H
 #endif
 
 #include <iostream>

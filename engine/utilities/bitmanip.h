@@ -35,9 +35,9 @@
  *  native data types.
  */
 
-#ifndef __BITMANIP_H
+#ifndef __REGINA_BITMANIP_H
 #ifndef __DOXYGEN
-#define __BITMANIP_H
+#define __REGINA_BITMANIP_H
 #endif
 
 #include "regina-core.h"

@@ -35,9 +35,9 @@
  *  when required.
  */
 
-#ifndef __LISTONCALL_H
+#ifndef __REGINA_LISTONCALL_H
 #ifndef __DOXYGEN
-#define __LISTONCALL_H
+#define __REGINA_LISTONCALL_H
 #endif
 
 #include "regina-core.h"

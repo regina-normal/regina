@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __BINOM_H
+#ifndef __REGINA_BINOM_H
 #ifndef __DOXYGEN
-#define __BINOM_H
+#define __REGINA_BINOM_H
 #endif
 
 /*! \file maths/binom.h

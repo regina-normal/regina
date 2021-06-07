@@ -34,9 +34,9 @@
  *  \brief A template class for handling bitwise combinations of enum flags.
  */
 
-#ifndef __FLAGS_H
+#ifndef __REGINA_FLAGS_H
 #ifndef __DOXYGEN
-#define __FLAGS_H
+#define __REGINA_FLAGS_H
 #endif
 
 namespace regina {

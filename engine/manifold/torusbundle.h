@@ -34,9 +34,9 @@
  *  \brief Deals with torus bundles over the circle.
  */
 
-#ifndef __TORUSBUNDLE_H
+#ifndef __REGINA_TORUSBUNDLE_H
 #ifndef __DOXYGEN
-#define __TORUSBUNDLE_H
+#define __REGINA_TORUSBUNDLE_H
 #endif
 
 #include "regina-core.h"

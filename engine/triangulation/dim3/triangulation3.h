@@ -37,9 +37,9 @@
  *  no need for end users to include this header explicitly.
  */
 
-#ifndef __TRIANGULATION3_H
+#ifndef __REGINA_TRIANGULATION3_H
 #ifndef __DOXYGEN
-#define __TRIANGULATION3_H
+#define __REGINA_TRIANGULATION3_H
 #endif
 
 #include <map>

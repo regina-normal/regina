@@ -35,9 +35,9 @@
  *  spaces.
  */
 
-#ifndef __SATBLOCK_H
+#ifndef __REGINA_SATBLOCK_H
 #ifndef __DOXYGEN
-#define __SATBLOCK_H
+#define __REGINA_SATBLOCK_H
 #endif
 
 #include "regina-core.h"

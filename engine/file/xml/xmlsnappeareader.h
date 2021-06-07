@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for SnapPea triangulations.
  */
 
-#ifndef __XMLSNAPPEAREADER_H
+#ifndef __REGINA_XMLSNAPPEAREADER_H
 #ifndef __DOXYGEN
-#define __XMLSNAPPEAREADER_H
+#define __REGINA_XMLSNAPPEAREADER_H
 #endif
 
 #include "regina-core.h"

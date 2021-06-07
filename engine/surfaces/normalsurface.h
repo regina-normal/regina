@@ -35,9 +35,9 @@
  *  triangulation.
  */
 
-#ifndef __NORMALSURFACE_H
+#ifndef __REGINA_NORMALSURFACE_H
 #ifndef __DOXYGEN
-#define __NORMALSURFACE_H
+#define __REGINA_NORMALSURFACE_H
 #endif
 
 #include <optional>

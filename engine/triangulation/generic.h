@@ -38,9 +38,9 @@
  *  the isomorphism class Isomorphism<\a dim>, for all dimensions \a dim &ge; 5.
  */
 
-#ifndef __GENERIC_H
+#ifndef __REGINA_GENERIC_H
 #ifndef __DOXYGEN
-#define __GENERIC_H
+#define __REGINA_GENERIC_H
 #endif
 
 #include "triangulation/generic/boundarycomponent.h"

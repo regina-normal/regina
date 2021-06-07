@@ -37,9 +37,9 @@
  *  for end users to include it explicitly.
  */
 
-#ifndef __GAUSS_IMPL_H
+#ifndef __REGINA_GAUSS_IMPL_H
 #ifndef __DOXYGEN
-#define __GAUSS_IMPL_H
+#define __REGINA_GAUSS_IMPL_H
 #endif
 
 #include <algorithm>

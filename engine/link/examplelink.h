@@ -34,9 +34,9 @@
  *  \brief Offers several ready-made examples of knots and links.
  */
 
-#ifndef __EXAMPLELINK_H
+#ifndef __REGINA_EXAMPLELINK_H
 #ifndef __DOXYGEN
-#define __EXAMPLELINK_H
+#define __REGINA_EXAMPLELINK_H
 #endif
 
 #include "regina-core.h"

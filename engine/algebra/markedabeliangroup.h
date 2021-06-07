@@ -34,9 +34,9 @@
  *  \brief Deals with abelian groups given by chain complexes.
  */
 
-#ifndef __MARKEDABELIANGROUP_H
+#ifndef __REGINA_MARKEDABELIANGROUP_H
 #ifndef __DOXYGEN
-#define __MARKEDABELIANGROUP_H
+#define __REGINA_MARKEDABELIANGROUP_H
 #endif
 
 #include <vector>

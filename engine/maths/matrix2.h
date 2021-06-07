@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __MATRIX2_H
+#ifndef __REGINA_MATRIX2_H
 #ifndef __DOXYGEN
-#define __MATRIX2_H
+#define __REGINA_MATRIX2_H
 #endif
 
 #include <iostream>

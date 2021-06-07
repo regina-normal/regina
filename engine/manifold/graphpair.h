@@ -35,9 +35,9 @@
  *  spaces.
  */
 
-#ifndef __GRAPHPAIR_H
+#ifndef __REGINA_GRAPHPAIR_H
 #ifndef __DOXYGEN
-#define __GRAPHPAIR_H
+#define __REGINA_GRAPHPAIR_H
 #endif
 
 #include "regina-core.h"

@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for normal hypersurface lists.
  */
 
-#ifndef __XMLHYPERSURFACEREADER_H
+#ifndef __REGINA_XMLHYPERSURFACEREADER_H
 #ifndef __DOXYGEN
-#define __XMLHYPERSURFACEREADER_H
+#define __REGINA_XMLHYPERSURFACEREADER_H
 #endif
 
 #include "regina-core.h"

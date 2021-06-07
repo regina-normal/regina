@@ -35,9 +35,9 @@
  *  triangle-quad coordinates.
  */
 
-#ifndef __NSVECTORSTANDARD_H
+#ifndef __REGINA_NSVECTORSTANDARD_H
 #ifndef __DOXYGEN
-#define __NSVECTORSTANDARD_H
+#define __REGINA_NSVECTORSTANDARD_H
 #endif
 
 #include "regina-core.h"

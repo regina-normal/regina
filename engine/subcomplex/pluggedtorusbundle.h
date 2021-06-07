@@ -35,9 +35,9 @@
  *  triangulated using a combination of thin I-bundles and saturated blocks.
  */
 
-#ifndef __PLUGGEDTORUSBUNDLE_H
+#ifndef __REGINA_PLUGGEDTORUSBUNDLE_H
 #ifndef __DOXYGEN
-#define __PLUGGEDTORUSBUNDLE_H
+#define __REGINA_PLUGGEDTORUSBUNDLE_H
 #endif
 
 #include "regina-core.h"

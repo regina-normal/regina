@@ -39,9 +39,9 @@
  *  covered by the GNU Lesser General Public License.
  */
 
-#ifndef __XMLREADER_H
+#ifndef __REGINA_XMLREADER_H
 #ifndef __DOXYGEN
-#define __XMLREADER_H
+#define __REGINA_XMLREADER_H
 #endif
 
 #include <map>

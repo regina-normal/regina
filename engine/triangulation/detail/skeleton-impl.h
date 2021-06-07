@@ -39,9 +39,9 @@
  *  Therefore end users should never need to include this header.
  */
 
-#ifndef __SKELETON_IMPL_H_DETAIL
+#ifndef __REGINA_SKELETON_IMPL_H_DETAIL
 #ifndef __DOXYGEN
-#define __SKELETON_IMPL_H_DETAIL
+#define __REGINA_SKELETON_IMPL_H_DETAIL
 #endif
 
 #include "triangulation/generic/triangulation.h"

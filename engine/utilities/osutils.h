@@ -35,9 +35,9 @@
  *  particular operating systems.
  */
 
-#ifndef __OSUTILS_H
+#ifndef __REGINA_OSUTILS_H
 #ifndef __DOXYGEN
-#define __OSUTILS_H
+#define __REGINA_OSUTILS_H
 #endif
 
 #include <iostream>

@@ -34,9 +34,9 @@
  *  \brief Deals with triangulations whose structures are well-understood.
  */
 
-#ifndef __STANDARDTRI_H
+#ifndef __REGINA_STANDARDTRI_H
 #ifndef __DOXYGEN
-#define __STANDARDTRI_H
+#define __REGINA_STANDARDTRI_H
 #endif
 
 #include <optional>

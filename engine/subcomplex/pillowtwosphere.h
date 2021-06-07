@@ -35,9 +35,9 @@
  *  three edges.
  */
 
-#ifndef __PILLOWTWOSPHERE_H
+#ifndef __REGINA_PILLOWTWOSPHERE_H
 #ifndef __DOXYGEN
-#define __PILLOWTWOSPHERE_H
+#define __REGINA_PILLOWTWOSPHERE_H
 #endif
 
 #include "regina-core.h"

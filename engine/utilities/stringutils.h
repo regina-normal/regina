@@ -34,9 +34,9 @@
  *  \brief Provides various routines for use with C++ strings.
  */
 
-#ifndef __STRINGUTILS_H
+#ifndef __REGINA_STRINGUTILS_H
 #ifndef __DOXYGEN
-#define __STRINGUTILS_H
+#define __REGINA_STRINGUTILS_H
 #endif
 
 #include <string>

@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for normal surface filters.
  */
 
-#ifndef __XMLFILTERREADER_H
+#ifndef __REGINA_XMLFILTERREADER_H
 #ifndef __DOXYGEN
-#define __XMLFILTERREADER_H
+#define __REGINA_XMLFILTERREADER_H
 #endif
 
 #include "regina-core.h"

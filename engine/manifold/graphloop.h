@@ -35,9 +35,9 @@
  *  fibred spaces.
  */
 
-#ifndef __GRAPHLOOP_H
+#ifndef __REGINA_GRAPHLOOP_H
 #ifndef __DOXYGEN
-#define __GRAPHLOOP_H
+#define __REGINA_GRAPHLOOP_H
 #endif
 
 #include "regina-core.h"

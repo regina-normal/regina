@@ -45,9 +45,9 @@
  *  Triangulation<dim-1>, Triangulation<dim-2>, ..., Triangulation<2>.
  */
 
-#ifndef __BOUNDARYCOMPONENT_IMPL_H_DETAIL
+#ifndef __REGINA_BOUNDARYCOMPONENT_IMPL_H_DETAIL
 #ifndef __DOXYGEN
-#define __BOUNDARYCOMPONENT_IMPL_H_DETAIL
+#define __REGINA_BOUNDARYCOMPONENT_IMPL_H_DETAIL
 #endif
 
 #include "triangulation/generic/boundarycomponent.h"

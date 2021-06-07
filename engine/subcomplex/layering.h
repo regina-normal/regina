@@ -34,9 +34,9 @@
  *  \brief Assists with the analysis of layerings upon a torus boundary.
  */
 
-#ifndef __LAYERING_H
+#ifndef __REGINA_LAYERING_H
 #ifndef __DOXYGEN
-#define __LAYERING_H
+#define __REGINA_LAYERING_H
 #endif
 
 #include "regina-core.h"

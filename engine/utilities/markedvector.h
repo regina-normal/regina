@@ -34,9 +34,9 @@
  *  \brief Provides space-efficient arrays with fast object-to-index lookup.
  */
 
-#ifndef __MARKEDVECTOR_H
+#ifndef __REGINA_MARKEDVECTOR_H
 #ifndef __DOXYGEN
-#define __MARKEDVECTOR_H
+#define __REGINA_MARKEDVECTOR_H
 #endif
 
 #include <vector>

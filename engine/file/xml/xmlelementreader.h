@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML program data at the tag level.
  */
 
-#ifndef __XMLELEMENTREADER_H
+#ifndef __REGINA_XMLELEMENTREADER_H
 #ifndef __DOXYGEN
-#define __XMLELEMENTREADER_H
+#define __REGINA_XMLELEMENTREADER_H
 #endif
 
 #include "regina-core.h"

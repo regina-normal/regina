@@ -35,9 +35,9 @@
  *  fibred spaces.
  */
 
-#ifndef __GRAPHTRIPLE_H
+#ifndef __REGINA_GRAPHTRIPLE_H
 #ifndef __DOXYGEN
-#define __GRAPHTRIPLE_H
+#define __REGINA_GRAPHTRIPLE_H
 #endif
 
 #include "regina-core.h"

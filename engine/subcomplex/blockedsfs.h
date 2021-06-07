@@ -35,9 +35,9 @@
  *  saturated blocks.
  */
 
-#ifndef __BLOCKEDSFS_H
+#ifndef __REGINA_BLOCKEDSFS_H
 #ifndef __DOXYGEN
-#define __BLOCKEDSFS_H
+#define __REGINA_BLOCKEDSFS_H
 #endif
 
 #include "regina-core.h"

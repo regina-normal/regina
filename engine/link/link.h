@@ -34,9 +34,9 @@
  *  \brief Deals with knots and links in the 3-sphere.
  */
 
-#ifndef __LINK_H
+#ifndef __REGINA_LINK_H
 #ifndef __DOXYGEN
-#define __LINK_H
+#define __REGINA_LINK_H
 #endif
 
 #include <array>

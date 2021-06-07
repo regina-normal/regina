@@ -39,9 +39,9 @@
  *  Therefore end users should never need to include this header.
  */
 
-#ifndef __PACHNER_IMPL_H_DETAIL
+#ifndef __REGINA_PACHNER_IMPL_H_DETAIL
 #ifndef __DOXYGEN
-#define __PACHNER_IMPL_H_DETAIL
+#define __REGINA_PACHNER_IMPL_H_DETAIL
 #endif
 
 #include "triangulation/generic/triangulation.h"

@@ -37,9 +37,9 @@
  *  BoundaryComponent<3>, and the isomorphism class Isomorphism<3>.
  */
 
-#ifndef __DIM3_H
+#ifndef __REGINA_DIM3_H
 #ifndef __DOXYGEN
-#define __DIM3_H
+#define __REGINA_DIM3_H
 #endif
 
 #include "triangulation/dim3/triangulation3.h"

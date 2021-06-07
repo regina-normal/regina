@@ -34,9 +34,9 @@
  *  \brief Implements normal surface vectors using quad coordinates.
  */
 
-#ifndef __NSVECTORQUAD_H
+#ifndef __REGINA_NSVECTORQUAD_H
 #ifndef __DOXYGEN
-#define __NSVECTORQUAD_H
+#define __REGINA_NSVECTORQUAD_H
 #endif
 
 #include "regina-core.h"

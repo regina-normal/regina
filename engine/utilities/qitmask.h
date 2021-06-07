@@ -34,9 +34,9 @@
  *  \brief Provides optimised "base 4 bitmasks" of fixed length.
  */
 
-#ifndef __QITMASK_H
+#ifndef __REGINA_QITMASK_H
 #ifndef __DOXYGEN
-#define __QITMASK_H
+#define __REGINA_QITMASK_H
 #endif
 
 #include <algorithm>

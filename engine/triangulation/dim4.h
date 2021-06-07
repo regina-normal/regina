@@ -37,9 +37,9 @@
  *  BoundaryComponent<4>, and the isomorphism class Isomorphism<4>.
  */
 
-#ifndef __DIM4_H
+#ifndef __REGINA_DIM4_H
 #ifndef __DOXYGEN
-#define __DIM4_H
+#define __REGINA_DIM4_H
 #endif
 
 #include "triangulation/dim4/triangulation4.h"

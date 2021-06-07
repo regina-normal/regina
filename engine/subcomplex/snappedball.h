@@ -34,9 +34,9 @@
  *  \brief Deals with snapped 3-balls in a triangulation.
  */
 
-#ifndef __SNAPPEDBALL_H
+#ifndef __REGINA_SNAPPEDBALL_H
 #ifndef __DOXYGEN
-#define __SNAPPEDBALL_H
+#define __REGINA_SNAPPEDBALL_H
 #endif
 
 #include "regina-core.h"

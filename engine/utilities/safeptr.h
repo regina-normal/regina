@@ -34,9 +34,9 @@
  *  cannot be dangling.
  */
 
-#ifndef __SAFEPTR_H
+#ifndef __REGINA_SAFEPTR_H
 #ifndef __DOXYGEN
-#define __SAFEPTR_H
+#define __REGINA_SAFEPTR_H
 #endif
 
 namespace regina {

@@ -34,9 +34,9 @@
  *  \brief Deals with triangular solid tori in a triangulation.
  */
 
-#ifndef __TRISOLIDTORUS_H
+#ifndef __REGINA_TRISOLIDTORUS_H
 #ifndef __DOXYGEN
-#define __TRISOLIDTORUS_H
+#define __REGINA_TRISOLIDTORUS_H
 #endif
 
 #include "regina-core.h"

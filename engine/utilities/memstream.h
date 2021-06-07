@@ -34,9 +34,9 @@
  *  \brief Supports input streams that read directly from memory.
  */
 
-#ifndef __MEMSTREAM_H
+#ifndef __REGINA_MEMSTREAM_H
 #ifndef __DOXYGEN
-#define __MEMSTREAM_H
+#define __REGINA_MEMSTREAM_H
 #endif
 
 #include <iostream>

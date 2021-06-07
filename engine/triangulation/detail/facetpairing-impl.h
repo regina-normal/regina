@@ -38,9 +38,9 @@
  *  no need for end users to include it explicitly.
  */
 
-#ifndef __FACETPAIRING_IMPL_H
+#ifndef __REGINA_FACETPAIRING_IMPL_H
 #ifndef __DOXYGEN
-#define __FACETPAIRING_IMPL_H
+#define __REGINA_FACETPAIRING_IMPL_H
 #endif
 
 #include <algorithm>

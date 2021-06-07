@@ -34,9 +34,9 @@
  *  \brief Provides optimised bitmasks of arbitrary length.
  */
 
-#ifndef __BITMASK_H
+#ifndef __REGINA_BITMASK_H
 #ifndef __DOXYGEN
-#define __BITMASK_H
+#define __REGINA_BITMASK_H
 #endif
 
 #include <algorithm>

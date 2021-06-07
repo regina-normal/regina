@@ -35,9 +35,9 @@
  *  gluing permutations for a given pentachoron facet pairing.
  */
 
-#ifndef __GLUINGPERMSEARCHER4_H
+#ifndef __REGINA_GLUINGPERMSEARCHER4_H
 #ifndef __DOXYGEN
-#define __GLUINGPERMSEARCHER4_H
+#define __REGINA_GLUINGPERMSEARCHER4_H
 #endif
 
 #include "regina-core.h"

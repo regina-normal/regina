@@ -35,9 +35,9 @@
  *  triangulated using saturated blocks.
  */
 
-#ifndef __BLOCKEDSFSLOOP_H
+#ifndef __REGINA_BLOCKEDSFSLOOP_H
 #ifndef __DOXYGEN
-#define __BLOCKEDSFSLOOP_H
+#define __REGINA_BLOCKEDSFSLOOP_H
 #endif
 
 #include "regina-core.h"

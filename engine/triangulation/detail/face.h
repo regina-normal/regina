@@ -34,9 +34,9 @@
  *  \brief Implementation details for lower-dimensional faces of triangulations.
  */
 
-#ifndef __FACE_H_DETAIL
+#ifndef __REGINA_FACE_H_DETAIL
 #ifndef __DOXYGEN
-#define __FACE_H_DETAIL
+#define __REGINA_FACE_H_DETAIL
 #endif
 
 #include "regina-core.h"

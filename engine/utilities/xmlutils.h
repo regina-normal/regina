@@ -38,9 +38,9 @@
  *  covered by the GNU Lesser General Public License.
  */
 
-#ifndef __XMLUTILS_H
+#ifndef __REGINA_XMLUTILS_H
 #ifndef __DOXYGEN
-#define __XMLUTILS_H
+#define __REGINA_XMLUTILS_H
 #endif
 
 #include <map>

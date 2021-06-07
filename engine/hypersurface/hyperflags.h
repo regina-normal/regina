@@ -34,9 +34,9 @@
  *  \brief Defines constants and flags for normal hypersurface enumeration.
  */
 
-#ifndef __HYPERFLAGS_H
+#ifndef __REGINA_HYPERFLAGS_H
 #ifndef __DOXYGEN
-#define __HYPERFLAGS_H
+#define __REGINA_HYPERFLAGS_H
 #endif
 
 #include "regina-core.h"

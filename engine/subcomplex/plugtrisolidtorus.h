@@ -35,9 +35,9 @@
  *  triangulation.
  */
 
-#ifndef __PLUGTRISOLIDTORUS_H
+#ifndef __REGINA_PLUGTRISOLIDTORUS_H
 #ifndef __DOXYGEN
-#define __PLUGTRISOLIDTORUS_H
+#define __REGINA_PLUGTRISOLIDTORUS_H
 #endif
 
 #include "regina-core.h"

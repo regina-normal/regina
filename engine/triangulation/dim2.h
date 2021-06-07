@@ -37,9 +37,9 @@
  *  BoundaryComponent<2>, and the isomorphism class Isomorphism<2>.
  */
 
-#ifndef __DIM2_H
+#ifndef __REGINA_DIM2_H
 #ifndef __DOXYGEN
-#define __DIM2_H
+#define __REGINA_DIM2_H
 #endif
 
 #include "triangulation/dim2/triangulation2.h"

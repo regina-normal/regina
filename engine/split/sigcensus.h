@@ -34,9 +34,9 @@
  *  \brief Deals with forming a census of splitting surface signatures.
  */
 
-#ifndef __SIGCENSUS_H
+#ifndef __REGINA_SIGCENSUS_H
 #ifndef __DOXYGEN
-#define __SIGCENSUS_H
+#define __REGINA_SIGCENSUS_H
 #endif
 
 #include <list>

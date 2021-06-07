@@ -34,9 +34,9 @@
  *  \brief Linear programming code for tree traversal enumeration methods.
  */
 
-#ifndef __TREELP_H
+#ifndef __REGINA_TREELP_H
 #ifndef __DOXYGEN
-#define __TREELP_H
+#define __REGINA_TREELP_H
 #endif
 
 #include "maths/integer.h"

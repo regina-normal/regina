@@ -34,9 +34,9 @@
  *  \brief Deals with simple closed surface bundles.
  */
 
-#ifndef __SIMPLESURFACEBUNDLE_H
+#ifndef __REGINA_SIMPLESURFACEBUNDLE_H
 #ifndef __DOXYGEN
-#define __SIMPLESURFACEBUNDLE_H
+#define __REGINA_SIMPLESURFACEBUNDLE_H
 #endif
 
 #include "regina-core.h"

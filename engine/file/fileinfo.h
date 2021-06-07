@@ -34,9 +34,9 @@
  *  \brief Deals with determining information about Regina data files.
  */
 
-#ifndef __FILEINFO_H
+#ifndef __REGINA_FILEINFO_H
 #ifndef __DOXYGEN
-#define __FILEINFO_H
+#define __REGINA_FILEINFO_H
 #endif
 
 #include <optional>

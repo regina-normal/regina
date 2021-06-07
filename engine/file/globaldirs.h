@@ -34,9 +34,9 @@
  *  \brief Gives information about system installation directories.
  */
 
-#ifndef __GLOBALDIRS_H
+#ifndef __REGINA_GLOBALDIRS_H
 #ifndef __DOXYGEN
-#define __GLOBALDIRS_H
+#define __REGINA_GLOBALDIRS_H
 #endif
 
 #include <string>

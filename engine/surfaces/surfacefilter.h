@@ -34,9 +34,9 @@
  *  \brief Contains a packet that filters through normal surfaces.
  */
 
-#ifndef __SURFACEFILTER_H
+#ifndef __REGINA_SURFACEFILTER_H
 #ifndef __DOXYGEN
-#define __SURFACEFILTER_H
+#define __REGINA_SURFACEFILTER_H
 #endif
 
 #include <set>

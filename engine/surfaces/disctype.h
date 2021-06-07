@@ -34,9 +34,9 @@
  *  \brief Deals with normal and almost normal disc types.
  */
 
-#ifndef __DISCTYPE_H
+#ifndef __REGINA_DISCTYPE_H
 #ifndef __DOXYGEN
-#define __DISCTYPE_H
+#define __REGINA_DISCTYPE_H
 #endif
 
 #include <iostream>

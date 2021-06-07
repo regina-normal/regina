@@ -44,9 +44,9 @@
  * is no need for end users to include it explicitly.
  */
 
-#ifndef __PACKETREGISTRY_IMPL_H
+#ifndef __REGINA_PACKETREGISTRY_IMPL_H
 #ifndef __DOXYGEN
-#define __PACKETREGISTRY_IMPL_H
+#define __REGINA_PACKETREGISTRY_IMPL_H
 #endif
 
 #include "packet/container.h"

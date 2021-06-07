@@ -35,9 +35,9 @@
  *  in arbitrary dimension.
  */
 
-#ifndef __EXAMPLE_H_DETAIL
+#ifndef __REGINA_EXAMPLE_H_DETAIL
 #ifndef __DOXYGEN
-#define __EXAMPLE_H_DETAIL
+#define __REGINA_EXAMPLE_H_DETAIL
 #endif
 
 #include "maths/perm.h"

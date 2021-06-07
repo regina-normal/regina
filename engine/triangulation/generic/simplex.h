@@ -38,9 +38,9 @@
  *  there is no need for end users to include this header explicitly.
  */
 
-#ifndef __SIMPLEX_H
+#ifndef __REGINA_SIMPLEX_H
 #ifndef __DOXYGEN
-#define __SIMPLEX_H
+#define __REGINA_SIMPLEX_H
 #endif
 
 #include "triangulation/detail/simplex.h"

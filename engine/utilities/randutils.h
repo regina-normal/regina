@@ -34,9 +34,9 @@
  *  \brief Provides threadsafe random number generation.
  */
 
-#ifndef __RANDUTILS_H
+#ifndef __REGINA_RANDUTILS_H
 #ifndef __DOXYGEN
-#define __RANDUTILS_H
+#define __REGINA_RANDUTILS_H
 #endif
 
 #include <mutex>

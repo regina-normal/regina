@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for angle structure lists.
  */
 
-#ifndef __XMLANGLESTRUCTREADER_H
+#ifndef __REGINA_XMLANGLESTRUCTREADER_H
 #ifndef __DOXYGEN
-#define __XMLANGLESTRUCTREADER_H
+#define __REGINA_XMLANGLESTRUCTREADER_H
 #endif
 
 #include "regina-core.h"

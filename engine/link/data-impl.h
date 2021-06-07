@@ -38,9 +38,9 @@
  *  for end users to include it explicitly.
  */
 
-#ifndef __DATA_IMPL_H
+#ifndef __REGINA_DATA_IMPL_H
 #ifndef __DOXYGEN
-#define __DATA_IMPL_H
+#define __REGINA_DATA_IMPL_H
 #endif
 
 namespace regina {

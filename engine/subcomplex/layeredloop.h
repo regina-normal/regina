@@ -34,9 +34,9 @@
  *  \brief Deals with layered loop components of a triangulation.
  */
 
-#ifndef __LAYEREDLOOP_H
+#ifndef __REGINA_LAYEREDLOOP_H
 #ifndef __DOXYGEN
-#define __LAYEREDLOOP_H
+#define __REGINA_LAYEREDLOOP_H
 #endif
 
 #include "regina-core.h"

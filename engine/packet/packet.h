@@ -35,9 +35,9 @@
  *  objects.
  */
 
-#ifndef __PACKET_H
+#ifndef __REGINA_PACKET_H
 #ifndef __DOXYGEN
-#define __PACKET_H
+#define __REGINA_PACKET_H
 #endif
 
 #include <iostream>

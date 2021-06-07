@@ -35,9 +35,9 @@
  *  tetrahedron-prism coordinates.
  */
 
-#ifndef __HSVECTORSTANDARD_H
+#ifndef __REGINA_HSVECTORSTANDARD_H
 #ifndef __DOXYGEN
-#define __HSVECTORSTANDARD_H
+#define __REGINA_HSVECTORSTANDARD_H
 #endif
 
 #include "regina-core.h"

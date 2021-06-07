@@ -38,9 +38,9 @@
  *  is no need for end users to include it explicitly.
  */
 
-#ifndef __DOUBLEDESCRIPTION_IMPL_H
+#ifndef __REGINA_DOUBLEDESCRIPTION_IMPL_H
 #ifndef __DOXYGEN
-#define __DOUBLEDESCRIPTION_IMPL_H
+#define __REGINA_DOUBLEDESCRIPTION_IMPL_H
 #endif
 
 #include <algorithm>

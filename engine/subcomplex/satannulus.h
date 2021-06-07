@@ -35,9 +35,9 @@
  *  Seifert fibred space.
  */
 
-#ifndef __SATANNULUS_H
+#ifndef __REGINA_SATANNULUS_H
 #ifndef __DOXYGEN
-#define __SATANNULUS_H
+#define __REGINA_SATANNULUS_H
 #endif
 
 #include "regina-core.h"

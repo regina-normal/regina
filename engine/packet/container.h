@@ -35,9 +35,9 @@
  *  other packets.
  */
 
-#ifndef __CONTAINER_H
+#ifndef __REGINA_CONTAINER_H
 #ifndef __DOXYGEN
-#define __CONTAINER_H
+#define __REGINA_CONTAINER_H
 #endif
 
 #include "regina-core.h"

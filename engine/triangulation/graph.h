@@ -40,9 +40,9 @@
  *  developers know.
  */
 
-#ifndef __TRIANGULATION_GRAPH_H
+#ifndef __REGINA_TRIANGULATION_GRAPH_H
 #ifndef __DOXYGEN
-#define __TRIANGULATION_GRAPH_H
+#define __REGINA_TRIANGULATION_GRAPH_H
 #endif
 
 #include <iostream>

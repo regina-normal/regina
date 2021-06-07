@@ -34,9 +34,9 @@
  *  \brief Facilitates progress tracking and cancellation for long operations.
  */
 
-#ifndef __PROGRESSTRACKER_H
+#ifndef __REGINA_PROGRESSTRACKER_H
 #ifndef __DOXYGEN
-#define __PROGRESSTRACKER_H
+#define __REGINA_PROGRESSTRACKER_H
 #endif
 
 #include "regina-core.h"

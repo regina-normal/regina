@@ -34,9 +34,9 @@
  *  \brief Deals with layered chain pair components of a triangulation.
  */
 
-#ifndef __LAYEREDCHAINPAIR_H
+#ifndef __REGINA_LAYEREDCHAINPAIR_H
 #ifndef __DOXYGEN
-#define __LAYEREDCHAINPAIR_H
+#define __REGINA_LAYEREDCHAINPAIR_H
 #endif
 
 #include "regina-core.h"

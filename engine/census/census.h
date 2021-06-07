@@ -35,9 +35,9 @@
  *  Regina's in-built census databases.
  */
 
-#ifndef __CENSUS_H
+#ifndef __REGINA_CENSUS_H
 #ifndef __DOXYGEN
-#define __CENSUS_H
+#define __REGINA_CENSUS_H
 #endif
 
 #include "regina-core.h"

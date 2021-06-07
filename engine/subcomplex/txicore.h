@@ -35,9 +35,9 @@
  *  and the interval.
  */
 
-#ifndef __TXICORE_H
+#ifndef __REGINA_TXICORE_H
 #ifndef __DOXYGEN
-#define __TXICORE_H
+#define __REGINA_TXICORE_H
 #endif
 
 #include "regina-core.h"

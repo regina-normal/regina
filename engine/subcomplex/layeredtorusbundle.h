@@ -34,9 +34,9 @@
  *  \brief Deals with layered surface bundle triangulations.
  */
 
-#ifndef __LAYEREDTORUSBUNDLE_H
+#ifndef __REGINA_LAYEREDTORUSBUNDLE_H
 #ifndef __DOXYGEN
-#define __LAYEREDTORUSBUNDLE_H
+#define __REGINA_LAYEREDTORUSBUNDLE_H
 #endif
 
 #include <memory>

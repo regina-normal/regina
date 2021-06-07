@@ -46,9 +46,9 @@
  *  no need for end users to include it explicitly.
  */
 
-#ifndef __HSCOORDREGISTRY_IMPL_H
+#ifndef __REGINA_HSCOORDREGISTRY_IMPL_H
 #ifndef __DOXYGEN
-#define __HSCOORDREGISTRY_IMPL_H
+#define __REGINA_HSCOORDREGISTRY_IMPL_H
 #endif
 
 #include "hypersurface/hscoordregistry.h"

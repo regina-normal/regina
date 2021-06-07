@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __NUMBERTHEORY_H
+#ifndef __REGINA_NUMBERTHEORY_H
 #ifndef __DOXYGEN
-#define __NUMBERTHEORY_H
+#define __REGINA_NUMBERTHEORY_H
 #endif
 
 /*! \file maths/numbertheory.h

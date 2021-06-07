@@ -35,9 +35,9 @@
  *  quad coordinates.
  */
 
-#ifndef __NSVECTORQUADCLOSED_H
+#ifndef __REGINA_NSVECTORQUADCLOSED_H
 #ifndef __DOXYGEN
-#define __NSVECTORQUADCLOSED_H
+#define __REGINA_NSVECTORQUADCLOSED_H
 #endif
 
 #include "regina-core.h"

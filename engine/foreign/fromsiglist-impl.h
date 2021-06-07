@@ -38,9 +38,9 @@
  *  no need for end users to include it explicitly.
  */
 
-#ifndef __FROMSIGLIST_IMPL_H_DETAIL
+#ifndef __REGINA_FROMSIGLIST_IMPL_H_DETAIL
 #ifndef __DOXYGEN
-#define __FROMSIGLIST_IMPL_H_DETAIL
+#define __REGINA_FROMSIGLIST_IMPL_H_DETAIL
 #endif
 
 #include <fstream>

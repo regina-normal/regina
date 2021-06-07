@@ -35,9 +35,9 @@
  *  quads in a tetrahedron.
  */
 
-#ifndef __PRISM_H
+#ifndef __REGINA_PRISM_H
 #ifndef __DOXYGEN
-#define __PRISM_H
+#define __REGINA_PRISM_H
 #endif
 
 #include <iostream>

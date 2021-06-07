@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for 2-dimensional triangulation packets.
  */
 
-#ifndef __XMLTRIREADER2_H
+#ifndef __REGINA_XMLTRIREADER2_H
 #ifndef __DOXYGEN
-#define __XMLTRIREADER2_H
+#define __REGINA_XMLTRIREADER2_H
 #endif
 
 #include "regina-core.h"

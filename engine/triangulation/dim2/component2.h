@@ -43,9 +43,9 @@
 // This header will be re-included from within triangulation2.h.
 #include "triangulation/dim2/triangulation2.h"
 
-#ifndef __COMPONENT2_H
+#ifndef __REGINA_COMPONENT2_H
 #ifndef __DOXYGEN
-#define __COMPONENT2_H
+#define __REGINA_COMPONENT2_H
 #endif
 
 namespace regina {

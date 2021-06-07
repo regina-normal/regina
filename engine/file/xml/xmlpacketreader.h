@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for individual packets.
  */
 
-#ifndef __XMLPACKETREADER_H
+#ifndef __REGINA_XMLPACKETREADER_H
 #ifndef __DOXYGEN
-#define __XMLPACKETREADER_H
+#define __REGINA_XMLPACKETREADER_H
 #endif
 
 #include "regina-core.h"

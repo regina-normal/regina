@@ -34,9 +34,9 @@
  *  \brief Deals with triangular pillow L(3,1) components of a triangulation.
  */
 
-#ifndef __L31PILLOW_H
+#ifndef __REGINA_L31PILLOW_H
 #ifndef __DOXYGEN
-#define __L31PILLOW_H
+#define __REGINA_L31PILLOW_H
 #endif
 
 #include "regina-core.h"

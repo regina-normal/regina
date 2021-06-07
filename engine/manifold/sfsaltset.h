@@ -35,9 +35,9 @@
  *  Seifert fibred space.
  */
 
-#ifndef __SFSALTSET_H
+#ifndef __REGINA_SFSALTSET_H
 #ifndef __DOXYGEN
-#define __SFSALTSET_H
+#define __REGINA_SFSALTSET_H
 #endif
 
 #include "regina-core.h"

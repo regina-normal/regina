@@ -52,9 +52,9 @@
 #error "The old REGISTER_PACKET macros have been removed.  Use forPacket() instead."
 #endif
 
-#ifndef __PACKETREGISTRY_H
+#ifndef __REGINA_PACKETREGISTRY_H
 #ifndef __DOXYGEN
-#define __PACKETREGISTRY_H
+#define __REGINA_PACKETREGISTRY_H
 #endif
 
 #include "packet/packettype.h"

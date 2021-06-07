@@ -34,9 +34,9 @@
  *  \brief Deals with signatures of splitting surfaces.
  */
 
-#ifndef __SIGNATURE_H
+#ifndef __REGINA_SIGNATURE_H
 #ifndef __DOXYGEN
-#define __SIGNATURE_H
+#define __REGINA_SIGNATURE_H
 #endif
 
 #include "regina-core.h"

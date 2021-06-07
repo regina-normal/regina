@@ -36,9 +36,9 @@
  *  Regina switches to use more modern C++ standards.
  */
 
-#ifndef __TYPEUTILS_H
+#ifndef __REGINA_TYPEUTILS_H
 #ifndef __DOXYGEN
-#define __TYPEUTILS_H
+#define __REGINA_TYPEUTILS_H
 #endif
 
 #include "regina-core.h"

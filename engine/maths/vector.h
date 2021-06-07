@@ -34,9 +34,9 @@
  *  \brief Provides a fast and generic vector class.
  */
 
-#ifndef __VECTOR_H
+#ifndef __REGINA_VECTOR_H
 #ifndef __DOXYGEN
-#define __VECTOR_H
+#define __REGINA_VECTOR_H
 #endif
 
 #include <algorithm>

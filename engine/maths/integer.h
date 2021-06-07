@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __INTEGER_H
+#ifndef __REGINA_INTEGER_H
 #ifndef __DOXYGEN
-#define __INTEGER_H
+#define __REGINA_INTEGER_H
 #endif
 
 /*! \file maths/integer.h

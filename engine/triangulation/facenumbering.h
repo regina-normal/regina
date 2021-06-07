@@ -35,9 +35,9 @@
  *  within a <i>dim</i>-dimensional simplex.
  */
 
-#ifndef __FACENUMBERING_H
+#ifndef __REGINA_FACENUMBERING_H
 #ifndef __DOXYGEN
-#define __FACENUMBERING_H
+#define __REGINA_FACENUMBERING_H
 #endif
 
 #include "triangulation/detail/facenumbering.h"

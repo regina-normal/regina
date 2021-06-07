@@ -34,9 +34,9 @@
  *  \brief Defines constants for the various packet types known to Regina.
  */
 
-#ifndef __PACKETTYPE_H
+#ifndef __REGINA_PACKETTYPE_H
 #ifndef __DOXYGEN
-#define __PACKETTYPE_H
+#define __REGINA_PACKETTYPE_H
 #endif
 
 #include "regina-core.h"

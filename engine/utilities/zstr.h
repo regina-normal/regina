@@ -43,8 +43,8 @@
 // Reference:
 // http://stackoverflow.com/questions/14086417/how-to-write-custom-input-stream-in-c
 
-#ifndef __ZSTR_HPP
-#define __ZSTR_HPP
+#ifndef __REGINA_ZSTR_HPP
+#define __REGINA_ZSTR_HPP
 
 #include <cassert>
 #include <fstream>

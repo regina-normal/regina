@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for various algebraic structures.
  */
 
-#ifndef __XMLALGEBRAREADER_H
+#ifndef __REGINA_XMLALGEBRAREADER_H
 #ifndef __DOXYGEN
-#define __XMLALGEBRAREADER_H
+#define __REGINA_XMLALGEBRAREADER_H
 #endif
 
 #include "regina-core.h"

@@ -35,9 +35,9 @@
  *  hypersurfaces in a 4-manifold triangulation.
  */
 
-#ifndef __NORMALHYPERSURFACES_H
+#ifndef __REGINA_NORMALHYPERSURFACES_H
 #ifndef __DOXYGEN
-#define __NORMALHYPERSURFACES_H
+#define __REGINA_NORMALHYPERSURFACES_H
 #endif
 
 #include <algorithm>

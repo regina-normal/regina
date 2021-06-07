@@ -34,9 +34,9 @@
  *  \brief Deals with a few specific hard-coded trivial triangulations.
  */
 
-#ifndef __TRIVIALTRI_H
+#ifndef __REGINA_TRIVIALTRI_H
 #ifndef __DOXYGEN
-#define __TRIVIALTRI_H
+#define __REGINA_TRIVIALTRI_H
 #endif
 
 #include "regina-core.h"

@@ -34,9 +34,9 @@
  *  \brief Deals with layered lens space components of a triangulation.
  */
 
-#ifndef __LAYEREDLENSSPACE_H
+#ifndef __REGINA_LAYEREDLENSSPACE_H
 #ifndef __DOXYGEN
-#define __LAYEREDLENSSPACE_H
+#define __REGINA_LAYEREDLENSSPACE_H
 #endif
 
 #include "regina-core.h"

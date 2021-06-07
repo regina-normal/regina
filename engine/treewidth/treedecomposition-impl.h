@@ -41,9 +41,9 @@
  *  common types.
  */
 
-#ifndef __TREEDECOMPOSITION_IMPL_H
+#ifndef __REGINA_TREEDECOMPOSITION_IMPL_H
 #ifndef __DOXYGEN
-#define __TREEDECOMPOSITION_IMPL_H
+#define __REGINA_TREEDECOMPOSITION_IMPL_H
 #endif
 
 #include "treewidth/treedecomposition.h"

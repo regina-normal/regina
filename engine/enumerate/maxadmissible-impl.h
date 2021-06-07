@@ -37,9 +37,9 @@
  *  is no need for end users to include it explicitly.
  */
 
-#ifndef __MAXADMISSIBLE_IMPL_H
+#ifndef __REGINA_MAXADMISSIBLE_IMPL_H
 #ifndef __DOXYGEN
-#define __MAXADMISSIBLE_IMPL_H
+#define __REGINA_MAXADMISSIBLE_IMPL_H
 #endif
 
 #include "enumerate/enumconstraints.h"

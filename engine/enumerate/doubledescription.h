@@ -35,9 +35,9 @@
  *  vertex enumeration.
  */
 
-#ifndef __DOUBLEDESCRIPTION_H
+#ifndef __REGINA_DOUBLEDESCRIPTION_H
 #ifndef __DOXYGEN
-#define __DOUBLEDESCRIPTION_H
+#define __REGINA_DOUBLEDESCRIPTION_H
 #endif
 
 #include "regina-core.h"

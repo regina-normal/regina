@@ -35,9 +35,9 @@
  *  surfaces in a 3-manifold.
  */
 
-#ifndef __NORMALSURFACES_H
+#ifndef __REGINA_NORMALSURFACES_H
 #ifndef __DOXYGEN
-#define __NORMALSURFACES_H
+#define __REGINA_NORMALSURFACES_H
 #endif
 
 #include <algorithm>

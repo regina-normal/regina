@@ -35,9 +35,9 @@
  *  triangulation.
  */
 
-#ifndef __NORMALHYPERSURFACE_H
+#ifndef __REGINA_NORMALHYPERSURFACE_H
 #ifndef __DOXYGEN
-#define __NORMALHYPERSURFACE_H
+#define __REGINA_NORMALHYPERSURFACE_H
 #endif
 
 #include <optional>

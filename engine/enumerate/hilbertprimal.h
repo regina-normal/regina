@@ -34,9 +34,9 @@
  *  \brief Provides a modified primal algorithm for Hilbert basis enumeration.
  */
 
-#ifndef __HILBERTPRIMAL_H
+#ifndef __REGINA_HILBERTPRIMAL_H
 #ifndef __DOXYGEN
-#define __HILBERTPRIMAL_H
+#define __REGINA_HILBERTPRIMAL_H
 #endif
 
 #include "regina-core.h"

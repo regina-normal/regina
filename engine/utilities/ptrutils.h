@@ -36,9 +36,9 @@
  *  instead.
  */
 
-#ifndef __PTRUTILS_H
+#ifndef __REGINA_PTRUTILS_H
 #ifndef __DOXYGEN
-#define __PTRUTILS_H
+#define __REGINA_PTRUTILS_H
 #endif
 
 #include <memory>

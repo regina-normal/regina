@@ -35,9 +35,9 @@
  *  and the like.
  */
 
-#ifndef __SIGUTILS_H
+#ifndef __REGINA_SIGUTILS_H
 #ifndef __DOXYGEN
-#define __SIGUTILS_H
+#define __REGINA_SIGUTILS_H
 #endif
 
 #include "regina-core.h"

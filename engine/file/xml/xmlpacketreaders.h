@@ -34,9 +34,9 @@
  *  \brief Deals with parsing XML data for various basic packet types.
  */
 
-#ifndef __XMLPACKETREADERS_H
+#ifndef __REGINA_XMLPACKETREADERS_H
 #ifndef __DOXYGEN
-#define __XMLPACKETREADERS_H
+#define __REGINA_XMLPACKETREADERS_H
 #endif
 
 #include "regina-core.h"

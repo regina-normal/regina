@@ -30,9 +30,9 @@
  *                                                                        *
  **************************************************************************/
 
-#ifndef __RATIONAL_H
+#ifndef __REGINA_RATIONAL_H
 #ifndef __DOXYGEN
-#define __RATIONAL_H
+#define __REGINA_RATIONAL_H
 #endif
 
 /*! \file maths/rational.h

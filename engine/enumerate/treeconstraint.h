@@ -34,9 +34,9 @@
  *  \brief Constraint classes for use with tree traversal enumeration methods.
  */
 
-#ifndef __TREECONSTRAINT_H
+#ifndef __REGINA_TREECONSTRAINT_H
 #ifndef __DOXYGEN
-#define __TREECONSTRAINT_H
+#define __REGINA_TREECONSTRAINT_H
 #endif
 
 #include "maths/integer.h"

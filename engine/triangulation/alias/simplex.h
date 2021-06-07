@@ -34,9 +34,9 @@
  *  \brief Provides dimension-specific aliases for dimension-agnostic routines.
  */
 
-#ifndef __ALIAS_SIMPLEX_H
+#ifndef __REGINA_ALIAS_SIMPLEX_H
 #ifndef __DOXYGEN
-#define __ALIAS_SIMPLEX_H
+#define __REGINA_ALIAS_SIMPLEX_H
 #endif
 
 #include "regina-core.h"

@@ -34,9 +34,9 @@
  *  \brief Deals with matrices of elements of various types.
  */
 
-#ifndef __MATRIX_H
+#ifndef __REGINA_MATRIX_H
 #ifndef __DOXYGEN
-#define __MATRIX_H
+#define __REGINA_MATRIX_H
 #endif
 
 #include <initializer_list>

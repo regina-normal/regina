@@ -35,9 +35,9 @@
  *  triangulated using saturated blocks.
  */
 
-#ifndef __BLOCKEDSFSPAIR_H
+#ifndef __REGINA_BLOCKEDSFSPAIR_H
 #ifndef __DOXYGEN
-#define __BLOCKEDSFSPAIR_H
+#define __REGINA_BLOCKEDSFSPAIR_H
 #endif
 
 #include "regina-core.h"

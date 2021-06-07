@@ -43,9 +43,9 @@
 // perm-impl.h.
 #include "maths/perm.h"
 
-#ifndef __PERM2_H
+#ifndef __REGINA_PERM2_H
 #ifndef __DOXYGEN
-#define __PERM2_H
+#define __REGINA_PERM2_H
 #endif
 
 #include <cstdlib>

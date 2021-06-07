@@ -34,9 +34,9 @@
  *  \brief Defines constants for normal surface coordinate systems.
  */
 
-#ifndef __NORMALCOORDS_H
+#ifndef __REGINA_NORMALCOORDS_H
 #ifndef __DOXYGEN
-#define __NORMALCOORDS_H
+#define __REGINA_NORMALCOORDS_H
 #endif
 
 #include "regina-core.h"

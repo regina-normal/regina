@@ -34,9 +34,9 @@
  *  \brief Provides access to the SnapPea kernel.
  */
 
-#ifndef __SNAPPEATRIANGULATION_H
+#ifndef __REGINA_SNAPPEATRIANGULATION_H
 #ifndef __DOXYGEN
-#define __SNAPPEATRIANGULATION_H
+#define __REGINA_SNAPPEATRIANGULATION_H
 #endif
 
 #include "regina-core.h"

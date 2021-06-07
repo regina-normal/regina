@@ -41,9 +41,9 @@
 // Make sure normalsurfaces.h is included first.
 #include "surfaces/normalsurfaces.h"
 
-#ifndef __NORMALSPEC_IMPL_H
+#ifndef __REGINA_NORMALSPEC_IMPL_H
 #ifndef __DOXYGEN
-#define __NORMALSPEC_IMPL_H
+#define __REGINA_NORMALSPEC_IMPL_H
 #endif
 
 namespace regina {

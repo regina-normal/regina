@@ -35,9 +35,9 @@
  *  triangulation.
  */
 
-#ifndef __SNAPPEDTWOSPHERE_H
+#ifndef __REGINA_SNAPPEDTWOSPHERE_H
 #ifndef __DOXYGEN
-#define __SNAPPEDTWOSPHERE_H
+#define __REGINA_SNAPPEDTWOSPHERE_H
 #endif
 
 #include "regina-core.h"

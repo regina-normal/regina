@@ -35,9 +35,9 @@
  *  space triangulations.
  */
 
-#ifndef __SATBLOCKTYPES_H
+#ifndef __REGINA_SATBLOCKTYPES_H
 #ifndef __DOXYGEN
-#define __SATBLOCKTYPES_H
+#define __REGINA_SATBLOCKTYPES_H
 #endif
 
 #include "regina-core.h"

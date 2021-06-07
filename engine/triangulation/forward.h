@@ -46,9 +46,9 @@
  *    type alias (as seen for example in some versions of gcc).
  */
 
-#ifndef __FORWARD_H
+#ifndef __REGINA_FORWARD_H
 #ifndef __DOXYGEN
-#define __FORWARD_H
+#define __REGINA_FORWARD_H
 #endif
 
 namespace regina {

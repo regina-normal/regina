@@ -34,9 +34,9 @@
  *  \brief Deals with layered chains in a triangulation.
  */
 
-#ifndef __LAYEREDCHAIN_H
+#ifndef __REGINA_LAYEREDCHAIN_H
 #ifndef __DOXYGEN
-#define __LAYEREDCHAIN_H
+#define __REGINA_LAYEREDCHAIN_H
 #endif
 
 #include "regina-core.h"
