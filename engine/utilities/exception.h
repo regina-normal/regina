@@ -34,9 +34,9 @@
  *  \brief Defines exception types thrown by Regina.
  */
 
-#ifndef __EXCEPTION_H
+#ifndef __REGINA_EXCEPTION_H
 #ifndef __DOXYGEN
-#define __EXCEPTION_H
+#define __REGINA_EXCEPTION_H
 #endif
 
 #include <exception>
