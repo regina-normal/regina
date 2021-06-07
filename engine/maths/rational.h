@@ -233,7 +233,7 @@ class Rational {
          *
          * @param other the rational whose value will be swapped with this.
          */
-        void swap(Rational& other);
+        void swap(Rational& other) noexcept;
 
         /**
          * Returns the numerator of this rational.
@@ -485,7 +485,7 @@ class Rational {
  * @param a the first rational whose contents should be swapped.
  * @param b the second rational whose contents should be swapped.
  */
-void swap(Rational& a, Rational& b);
+void swap(Rational& a, Rational& b) noexcept;
 
 /**
  * Writes the given rational to the given output stream.
@@ -597,8 +597,9 @@ inline Rational& Rational::operator = (Rational&& src) noexcept {
     return *this;
 }
 
-inline void Rational::swap(Rational& other) {
+inline void Rational::swap(Rational& other) noexcept {
     std::swap(flavour, other.flavour);
+    // Note: GMP marks mpq_swap() as __GMP_NOTHROW.
     mpq_swap(data, other.data);
 }
 
@@ -617,7 +618,7 @@ inline bool Rational::operator != (const Rational& compare) const {
     return ! (*this == compare);
 }
 
-inline void swap(Rational& a, Rational& b) {
+inline void swap(Rational& a, Rational& b) noexcept {
     a.swap(b);
 }
 

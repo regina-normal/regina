@@ -151,7 +151,7 @@ void SnapPeaAlgebraUI::refresh() {
             filledH1->setText(tri->homologyFilled()->utf8().c_str());
         else
             filledH1->setText(tri->homologyFilled()->str().c_str());
-        filledFundGroup->refresh(tri->fundamentalGroupFilled());
+        filledFundGroup->refresh(&tri->fundamentalGroupFilled());
 
         filledH1Title->show();
         filledH1->show();

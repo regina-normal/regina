@@ -590,6 +590,10 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * both SnapPea triangulations will be reset to null triangulations.
          * See the SnapPeaTriangulation class notes for further discussion.
          *
+         * \note This swap function is \e not marked \c noexcept, since it
+         * fires packet change events which may in turn call arbitrary
+         * code via any registered packet listeners.
+         *
          * @param other the SnapPea triangulation whose contents should
          * be swapped with this.
          */
@@ -1483,6 +1487,10 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
  * that (just like when you call any of the Triangulation<3> edit routines)
  * both SnapPea triangulations will be reset to null triangulations.
  * See the SnapPeaTriangulation class notes for further discussion.
+ *
+ * \note This swap function is \e not marked \c noexcept, since it
+ * fires packet change events which may in turn call arbitrary
+ * code via any registered packet listeners.
  *
  * @param lhs the triangulation whose contents should be swapped with \a rhs.
  * @param rhs the triangulation whose contents should be swapped with \a lhs.

@@ -226,7 +226,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
          * @param other the angle structure whose contents should be swapped
          * with this.
          */
-        void swap(AngleStructure& other);
+        void swap(AngleStructure& other) noexcept;
 
         /**
          * Returns the requested angle in this angle structure.
@@ -382,7 +382,7 @@ class AngleStructure : public ShortOutput<AngleStructure> {
  * @param a the first angle structure whose contents should be swapped.
  * @param b the second angle structure whose contents should be swapped.
  */
-void swap(AngleStructure& a, AngleStructure& b);
+void swap(AngleStructure& a, AngleStructure& b) noexcept;
 
 /*@}*/
 
@@ -439,7 +439,7 @@ inline AngleStructure& AngleStructure::operator = (AngleStructure&& value)
     return *this;
 }
 
-inline void AngleStructure::swap(AngleStructure& other) {
+inline void AngleStructure::swap(AngleStructure& other) noexcept {
     std::swap(vector_, other.vector_);
     std::swap(triangulation_, other.triangulation_);
     std::swap(flags_, other.flags_);
@@ -475,7 +475,7 @@ inline const Vector<Integer>* AngleStructure::rawVector() const {
     return vector_;
 }
 
-inline void swap(AngleStructure& a, AngleStructure& b) {
+inline void swap(AngleStructure& a, AngleStructure& b) noexcept {
     a.swap(b);
 }
 

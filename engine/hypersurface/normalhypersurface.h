@@ -634,7 +634,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * @param other the normal hypersurface whose contents should be swapped
          * with this.
          */
-        void swap(NormalHypersurface& other);
+        void swap(NormalHypersurface& other) noexcept;
 
         /**
          * Creates a newly allocated hypersurface that is the double of this
@@ -1050,7 +1050,7 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
  * @param a the first normal hypersurface whose contents should be swapped.
  * @param b the second normal hypersurface whose contents should be swapped.
  */
-void swap(NormalHypersurface& a, NormalHypersurface& b);
+void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept;
 
 /*@}*/
 
@@ -1174,7 +1174,7 @@ inline NormalHypersurface& NormalHypersurface::operator =
     return *this;
 }
 
-inline void NormalHypersurface::swap(NormalHypersurface& other) {
+inline void NormalHypersurface::swap(NormalHypersurface& other) noexcept {
     std::swap(vector_, other.vector_);
     std::swap(triangulation_, other.triangulation_);
     name_.swap(other.name_);
@@ -1272,7 +1272,7 @@ inline const Vector<LargeInteger>& NormalHypersurface::rawVector() const {
     return vector_->coords();
 }
 
-inline void swap(NormalHypersurface& a, NormalHypersurface& b) {
+inline void swap(NormalHypersurface& a, NormalHypersurface& b) noexcept {
     a.swap(b);
 }
 

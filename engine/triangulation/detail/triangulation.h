@@ -2120,6 +2120,10 @@ class TriangulationBase :
  *
  * See Triangulation<dim>::swap() for more details.
  *
+ * \note This swap function is \e not marked \c noexcept, since it
+ * fires packet change events which may in turn call arbitrary
+ * code via any registered packet listeners.
+ *
  * @param lhs the triangulation whose contents should be swapped with \a rhs.
  * @param rhs the triangulation whose contents should be swapped with \a lhs.
  */

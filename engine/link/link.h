@@ -945,6 +945,10 @@ class Link : public Packet {
          * This routine will behave correctly if \a other is in fact
          * this link.
          *
+         * \note This swap function is \e not marked \c noexcept, since it
+         * fires packet change events which may in turn call arbitrary
+         * code via any registered packet listeners.
+         *
          * @param other the link whose contents should be swapped with this.
          */
         void swap(Link& other);
@@ -4157,6 +4161,10 @@ class Link : public Packet {
  * that Link meets the C++ Swappable requirements.
  *
  * See Link::swap() for more details.
+ *
+ * \note This swap function is \e not marked \c noexcept, since it
+ * fires packet change events which may in turn call arbitrary
+ * code via any registered packet listeners.
  *
  * @param lhs the link whose contents should be swapped with \a rhs.
  * @param rhs the link whose contents should be swapped with \a lhs.

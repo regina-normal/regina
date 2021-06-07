@@ -989,7 +989,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * @param other the normal surface whose contents should be swapped
          * with this.
          */
-        void swap(NormalSurface& other);
+        void swap(NormalSurface& other) noexcept;
 
         /**
          * Creates a newly allocated surface that is the double of this
@@ -1876,7 +1876,7 @@ class NormalSurface : public ShortOutput<NormalSurface> {
  * @param a the first normal surface whose contents should be swapped.
  * @param b the second normal surface whose contents should be swapped.
  */
-void swap(NormalSurface& a, NormalSurface& b);
+void swap(NormalSurface& a, NormalSurface& b) noexcept;
 
 /*@}*/
 
@@ -2006,7 +2006,7 @@ inline NormalSurface& NormalSurface::operator = (NormalSurface&& value)
     return *this;
 }
 
-inline void NormalSurface::swap(NormalSurface& other) {
+inline void NormalSurface::swap(NormalSurface& other) noexcept {
     std::swap(vector_, other.vector_);
     std::swap(triangulation_, other.triangulation_);
     name_.swap(other.name_);
@@ -2158,7 +2158,7 @@ inline bool NormalSurface::systemAllowsOriented() const {
     return vector_->allowsOriented();
 }
 
-inline void swap(NormalSurface& a, NormalSurface& b) {
+inline void swap(NormalSurface& a, NormalSurface& b) noexcept {
     a.swap(b);
 }
 

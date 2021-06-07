@@ -249,6 +249,10 @@ class Triangulation :
          * This routine will behave correctly if \a other is in fact
          * this triangulation.
          *
+         * \note This swap function is \e not marked \c noexcept, since it
+         * fires packet change events which may in turn call arbitrary
+         * code via any registered packet listeners.
+         *
          * @param other the triangulation whose contents should be
          * swapped with this.
          */
