@@ -40,6 +40,7 @@
 #define __NORMALHYPERSURFACE_H
 #endif
 
+#include <optional>
 #include <utility>
 #include "regina-core.h"
 #include "core/output.h"
