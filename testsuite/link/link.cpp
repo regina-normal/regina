@@ -924,12 +924,12 @@ class LinkTest : public CppUnit::TestFixture {
             // Find a separating sphere.
             regina::NormalSurfaces* vtx =
                 regina::NormalSurfaces::enumerate(*c, regina::NS_STANDARD);
-            for (const regina::NormalSurface* s : vtx->surfaces()) {
-                if (s->eulerChar() != 2)
+            for (const regina::NormalSurface& s : vtx->surfaces()) {
+                if (s.eulerChar() != 2)
                     continue;
                 // s must be a 2-sphere.
 
-                Triangulation<3>* cut = s->cutAlong();
+                Triangulation<3>* cut = s.cutAlong();
                 cut->finiteToIdeal(); // Fills the sphere boundaries with balls.
                 if (cut->isConnected()) {
                     // Should never happen...

@@ -83,10 +83,10 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     VectorPtr* use = new VectorPtr[surfaces_.size()];
     unsigned long nUse = 0;
 
-    std::vector<NormalSurface*>::const_iterator it;
-    for (const NormalSurface* s : surfaces_)
-        if (! s->isVertexLinking())
-            use[nUse++] = &s->vector();
+    std::vector<NormalSurface>::const_iterator it;
+    for (const NormalSurface& s : surfaces_)
+        if (! s.isVertexLinking())
+            use[nUse++] = &s.vector();
 
     // We want to take all surfaces with maximal zero sets in quad space.
     // That is, we want surface S if and only if there is no other surface T
@@ -139,7 +139,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
                 for (quad = 0; quad < Variant::reducedPerTet; ++quad)
                     v->set(pos++,
                         (*use[i])[Variant::stdPos(tet, 4 + quad)]);
-            ans->surfaces_.push_back(new NormalSurface(owner, v));
+            ans->surfaces_.push_back(NormalSurface(owner, v));
         } else if (strict) {
             // We can drop this surface entirely from our list.
             // We don't want it for our final solution set, and if

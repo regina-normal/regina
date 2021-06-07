@@ -298,6 +298,8 @@ Version 6.1  [ TODO ]
               const references, not pointers.
             - Changed enumerate() to take the triangulation argument by
               reference, not by pointer.
+            - Changed sort() so the comparison function must now take
+              two hypersurfaces by reference, not by pointer.
         Class NormalSurface:
             - Renamed rawVector() to vector().  The old name is kept but
               deprecated.
@@ -317,6 +319,8 @@ Version 6.1  [ TODO ]
               not pointers.
             - Changed enumerate() to take the triangulation argument by
               reference, not by pointer.
+            - Changed sort() so the comparison function must now take
+              two surfaces by reference, not by pointer.
         Class NormalSurfaceVector, NormalHypersurfaceVector:
             - Renamed setElement() to set().  Since this is a virtual function,
               the old name has been removed completely.  If you have a

@@ -43,9 +43,9 @@ NormalSurfaces* NormalSurfaces::filter(const SurfaceFilter* filter) const {
             (which_ & (NS_EMBEDDED_ONLY | NS_IMMERSED_SINGULAR)) | NS_CUSTOM,
             algorithm_ | NS_ALG_CUSTOM);
 
-    for (NormalSurface* s : surfaces_)
-        if (filter->accept(*s))
-            ans->surfaces_.push_back(new NormalSurface(*s));
+    for (const NormalSurface& s : surfaces_)
+        if (filter->accept(s))
+            ans->surfaces_.push_back(s);
 
     parent()->insertChildLast(ans);
     return ans;
@@ -61,15 +61,15 @@ NormalSurfaces* NormalSurfaces::filterForLocallyCompatiblePairs()
         coords_, NS_CUSTOM | NS_EMBEDDED_ONLY, NS_ALG_CUSTOM);
 
     // Find all surfaces that have a compatible partner.
-    std::vector<NormalSurface*>::const_iterator first, second;
+    std::vector<NormalSurface>::const_iterator first, second;
     for (first = surfaces_.begin(); first != surfaces_.end(); ++first) {
         for (second = surfaces_.begin(); second != surfaces_.end();
                 ++second) {
             if (second == first)
                 continue;
 
-            if ((*first)->locallyCompatible(**second)) {
-                ans->surfaces_.push_back(new NormalSurface(**first));
+            if (first->locallyCompatible(*second)) {
+                ans->surfaces_.push_back(*first);
                 break;
             }
         }
@@ -89,20 +89,20 @@ NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
 
     // Collect all the surfaces that we might care about.
     // This means non-empty, connected and compact.
-    std::vector<NormalSurface*> interesting;
-    for (NormalSurface* s : surfaces_) {
-        if (s->isEmpty())
+    std::vector<const NormalSurface*> interesting;
+    for (const NormalSurface& s : surfaces_) {
+        if (s.isEmpty())
             continue;
-        if (! s->isCompact())
+        if (! s.isCompact())
             continue;
-        if (! s->isConnected())
+        if (! s.isConnected())
             continue;
 
-        interesting.push_back(s);
+        interesting.push_back(&s);
     }
 
     // Find all surfaces that have a disjoint partner.
-    std::vector<NormalSurface*>::iterator first, second;
+    std::vector<const NormalSurface*>::iterator first, second;
     for (first = interesting.begin(); first != interesting.end(); ++first) {
         for (second = interesting.begin(); second != interesting.end();
                 ++second) {
@@ -110,7 +110,7 @@ NormalSurfaces* NormalSurfaces::filterForDisjointPairs() const {
                 continue;
 
             if ((*first)->disjoint(**second)) {
-                ans->surfaces_.push_back(new NormalSurface(**first));
+                ans->surfaces_.push_back(**first);
                 break;
             }
         }
@@ -133,13 +133,13 @@ NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
 #ifdef DEBUG
     int which = 0;
 #endif
-    for (const NormalSurface* s : surfaces_) {
+    for (const NormalSurface& s : surfaces_) {
 #ifdef DEBUG
         std::cout << "Processing surface " << which++ << "..." << std::endl;
 #endif
-        if (s->isVertexLinking())
+        if (s.isVertexLinking())
             continue;
-        if (s->isThinEdgeLink().first)
+        if (s.isThinEdgeLink().first)
             continue;
 
         // If we have a one-sided surface, don't worry about taking the
@@ -147,9 +147,9 @@ NormalSurfaces* NormalSurfaces::filterForPotentiallyIncompressible()
         // surface has a compressing disc, then the complement of the
         // double cover has the same compressing disc, and this surface
         // can happily be tossed away.
-        t = s->cutAlong();
+        t = s.cutAlong();
         if (! t->hasSimpleCompressingDisc())
-            ans->surfaces_.push_back(new NormalSurface(*s));
+            ans->surfaces_.push_back(s);
         delete t;
     }
 

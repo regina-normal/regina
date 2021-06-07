@@ -62,9 +62,9 @@ class IncompressibleTest : public CppUnit::TestFixture {
         void tearDown() {
         }
 
-        void verifyNotIncompressible(const NormalSurface* s,
+        void verifyNotIncompressible(const NormalSurface& s,
                 const std::string& triName) {
-            if (s->isIncompressible()) {
+            if (s.isIncompressible()) {
                 CPPUNIT_FAIL(("A compressible surface in " + triName +
                     " is recognised as incompressible.").c_str());
             }
@@ -74,7 +74,7 @@ class IncompressibleTest : public CppUnit::TestFixture {
                 const std::string& triName) {
             NormalSurfaces* s = NormalSurfaces::enumerate(*tri,
                 regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
-            for (const NormalSurface* f : s->surfaces())
+            for (const NormalSurface& f : s->surfaces())
                 verifyNotIncompressible(f, triName);
             delete s;
             return tri;
@@ -84,8 +84,8 @@ class IncompressibleTest : public CppUnit::TestFixture {
                 const std::string& triName) {
             NormalSurfaces* s = NormalSurfaces::enumerate(*tri,
                 regina::NS_STANDARD, regina::NS_EMBEDDED_ONLY);
-            for (const NormalSurface* f : s->surfaces())
-                if (f->isIncompressible()) {
+            for (const NormalSurface& f : s->surfaces())
+                if (f.isIncompressible()) {
                     delete s;
                     return tri;
                 }

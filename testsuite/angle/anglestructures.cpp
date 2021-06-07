@@ -134,8 +134,8 @@ class AngleStructuresTest : public CppUnit::TestFixture {
                 bool strict, bool taut) {
             unsigned long tot = 0;
 
-            for (const AngleStructure* s : list->structures())
-                if (s->isStrict() == strict && s->isTaut() == taut)
+            for (const AngleStructure& s : list->structures())
+                if (s.isStrict() == strict && s.isTaut() == taut)
                     ++tot;
 
             std::ostringstream msg;
@@ -219,11 +219,11 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             unsigned long j, k;
             regina::Rational tmp, tot;
             regina::Edge<3>* e;
-            for (const AngleStructure* s : a->structures()) {
+            for (const AngleStructure& s : a->structures()) {
                 for (j = 0; j < tri->size(); ++j) {
                     tot = 0;
                     for (k = 0; k < 3; ++k) {
-                        tmp = s->angle(j, k);
+                        tmp = s.angle(j, k);
                         if (tmp != 0 && tmp != 1) {
                             std::ostringstream msg;
                             msg << "Taut angle structures for " << isoSig
@@ -248,7 +248,7 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
                     tot = 0;
                     for (k = 0; k < e->degree(); ++k) {
-                        tot += s->angle(
+                        tot += s.angle(
                             e->embedding(k).tetrahedron()->index(),
                             regina::quadSeparating[
                                 e->embedding(k).vertices()[0]][
@@ -327,12 +327,12 @@ class AngleStructuresTest : public CppUnit::TestFixture {
 
             unsigned nAll = 0, nTaut = 0;
 
-            for (const AngleStructure* a : all->structures())
-                if (a->isTaut())
+            for (const AngleStructure& a : all->structures())
+                if (a.isTaut())
                     ++nAll;
 
-            for (const AngleStructure* a : taut->structures())
-                if (a->isTaut())
+            for (const AngleStructure& a : taut->structures())
+                if (a.isTaut())
                     ++nTaut;
                 else {
                     std::ostringstream msg;
@@ -433,12 +433,12 @@ class AngleStructuresTest : public CppUnit::TestFixture {
             VecPtr* tautRaw = new VecPtr[nTaut + 1];
 
             unsigned long foundAll = 0;
-            for (const AngleStructure* a : all->structures())
-                if (a->isTaut())
-                    allRaw[foundAll++] = &(a->vector());
+            for (const AngleStructure& a : all->structures())
+                if (a.isTaut())
+                    allRaw[foundAll++] = &(a.vector());
             unsigned long i = 0;
-            for (const AngleStructure* a : taut->structures())
-                tautRaw[i++] = &(a->vector());
+            for (const AngleStructure& a : taut->structures())
+                tautRaw[i++] = &(a.vector());
 
             if (foundAll != nTaut) {
                 delete[] allRaw;

@@ -83,7 +83,7 @@ class AngleStructures : public Packet {
     REGINA_PACKET(AngleStructures, PACKET_ANGLESTRUCTURES)
 
     private:
-        std::vector<AngleStructure*> structures_;
+        std::vector<AngleStructure> structures_;
             /**< Contains the angle structures stored in this packet. */
         bool tautOnly_;
             /**< Stores whether we are only interested in taut structures.
@@ -101,11 +101,6 @@ class AngleStructures : public Packet {
                  after enumeration has taken place. */
 
     public:
-        /**
-         * Destroys this list and all the angle structures within.
-         */
-        virtual ~AngleStructures();
-
         /**
          * Returns the triangulation on which these angle structures lie.
          *
@@ -302,9 +297,9 @@ class AngleStructures : public Packet {
          * An output iterator used to insert angle structures into an
          * AngleStructures list.
          *
-         * Objects of type <tt>AngleStructure*</tt> and <tt>VectorInt*</tt>
-         * can be assigned to this iterator.  In the latter case, a
-         * surrounding AngleStructure will be automatically created.
+         * Objects of type <tt>VectorInt*</tt> can be assigned to this
+         * iterator, whereupon a surrounding AngleStructure will be
+         * automatically created.
          */
         struct StructureInserter : public std::iterator<
                 std::output_iterator_tag, VectorInt*> {
@@ -334,18 +329,6 @@ class AngleStructures : public Packet {
              */
             StructureInserter(const StructureInserter& cloneMe) = default;
 
-            /**
-             * Appends an angle structure to the end of the appropriate
-             * structure list.
-             *
-             * The given angle structure will be deallocated with the
-             * other angle structures in this list when the list is
-             * eventually destroyed.
-             *
-             * @param structure the angle structure to insert.
-             * @return this output iterator.
-             */
-            StructureInserter& operator =(AngleStructure* structure);
             /**
              * Appends the angle structure corresponding to the given
              * vector to the end of the appropriate structure list.
@@ -421,11 +404,6 @@ MatrixInt makeAngleEquations(const Triangulation<3>& tri);
 
 // Inline functions for AngleStructures
 
-inline AngleStructures::~AngleStructures() {
-    for (auto a : structures_)
-        delete a;
-}
-
 inline bool AngleStructures::isTautOnly() const {
     return tautOnly_;
 }
@@ -440,7 +418,7 @@ inline auto AngleStructures::structures() const {
 
 inline const AngleStructure& AngleStructures::structure(
         size_t index) const {
-    return *structures_[index];
+    return structures_[index];
 }
 
 inline bool AngleStructures::spansStrict() const {
@@ -470,15 +448,8 @@ inline AngleStructures::StructureInserter::StructureInserter(
 
 inline AngleStructures::StructureInserter&
         AngleStructures::StructureInserter::operator =(
-        AngleStructure* structure) {
-    list->structures_.push_back(structure);
-    return *this;
-}
-
-inline AngleStructures::StructureInserter&
-        AngleStructures::StructureInserter::operator =(
         VectorInt* vector) {
-    list->structures_.push_back(new AngleStructure(owner, vector));
+    list->structures_.push_back(AngleStructure(owner, vector));
     return *this;
 }
 

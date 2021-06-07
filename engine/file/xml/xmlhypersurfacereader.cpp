@@ -145,7 +145,7 @@ void XMLNormalHypersurfacesReader::endContentSubElement(
             if (NormalHypersurface* s =
                     dynamic_cast<XMLNormalHypersurfaceReader*>(subReader)->
                     hypersurface())
-                list_->surfaces_.push_back(s);
+                list_->surfaces_.push_back(std::move(*s));
 }
 
 XMLPacketReader* NormalHypersurfaces::xmlReader(Packet* parent,

@@ -122,8 +122,8 @@ void NormalHypersurfaces::writeTextLong(std::ostream& out) const {
 
     size_t n = surfaces_.size();
     out << "Number of hypersurfaces is " << n << '\n';
-    for (auto s : surfaces_) {
-        s->writeTextShort(out);
+    for (const NormalHypersurface& s : surfaces_) {
+        s.writeTextShort(out);
         out << '\n';
     }
 }
@@ -143,14 +143,14 @@ void NormalHypersurfaces::writeXMLPacketData(std::ostream& out) const {
 
     // Write the individual hypersurfaces.
     for (auto it = surfaces_.begin(); it != surfaces_.end(); it++)
-        (*it)->writeXMLData(out);
+        it->writeXMLData(out);
 }
 
 Packet* NormalHypersurfaces::internalClonePacket(Packet* parent) const {
     NormalHypersurfaces* ans = new NormalHypersurfaces(
         coords_, which_, algorithm_);
-    for (auto s : surfaces_) {
-        ans->surfaces_.push_back(new NormalHypersurface(*s,
+    for (const NormalHypersurface& s : surfaces_) {
+        ans->surfaces_.push_back(NormalHypersurface(s,
             *static_cast<Triangulation<4>*>(parent)));
     }
     return ans;

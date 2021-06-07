@@ -523,8 +523,8 @@ class SnapPeaTriangulationTest : public CppUnit::TestFixture {
                     "surfaces in quad space.");
 
             bool found[4] = {}; // initialises to false
-            for (const regina::NormalSurface* f : s->surfaces()) {
-                std::optional<regina::MatrixInt> m = f->boundaryIntersections();
+            for (const regina::NormalSurface& f : s->surfaces()) {
+                std::optional<regina::MatrixInt> m = f.boundaryIntersections();
                 if (! m) {
                     CPPUNIT_FAIL(
                         "Figure 8 knot complement: boundaryIntersections() "

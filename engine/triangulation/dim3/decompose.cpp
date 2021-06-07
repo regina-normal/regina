@@ -893,8 +893,8 @@ bool Triangulation<3>::hasCompressingDisc() const {
                     NormalSurfaces* q = NormalSurfaces::enumerate(
                         *use, NS_STANDARD);
 
-                    for (const NormalSurface* s : q->surfaces()) {
-                        if (s->isCompressingDisc(true)) {
+                    for (const NormalSurface& s : q->surfaces()) {
+                        if (s.isCompressingDisc(true)) {
                             delete use;
                             return *(compressingDisc_ = true);
                         }
@@ -950,9 +950,9 @@ bool Triangulation<3>::hasCompressingDisc() const {
         NormalSurfaces* q = NormalSurfaces::enumerate(*use, NS_STANDARD);
 
         // Run through all vertex surfaces looking for a compressing disc.
-        for (const NormalSurface* s : q->surfaces()) {
+        for (const NormalSurface& s : q->surfaces()) {
             // Use the fact that all vertex normal surfaces are connected.
-            if (s->isCompressingDisc(true)) {
+            if (s.isCompressingDisc(true)) {
                 delete use;
                 return *(compressingDisc_ = true);
             }

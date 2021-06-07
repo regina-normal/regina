@@ -93,7 +93,7 @@ void AngleStructures::enumerateInternal(Triangulation<3>& triang,
 
         TautEnumeration<LPConstraintNone, BanNone, Integer> search(triang);
         while (search.next(tracker)) {
-            structures_.push_back(new AngleStructure(search.buildStructure()));
+            structures_.push_back(search.buildStructure());
             if (tracker && tracker->isCancelled())
                 break;
         }
@@ -182,8 +182,8 @@ void AngleStructures::writeTextLong(std::ostream& o) const {
     writeTextShort(o);
     o << ":\n";
 
-    for (const AngleStructure* a : structures_) {
-        a->writeTextShort(o);
+    for (const AngleStructure& a : structures_) {
+        a.writeTextShort(o);
         o << '\n';
     }
 }
@@ -195,8 +195,8 @@ void AngleStructures::writeXMLPacketData(std::ostream& out) const {
     out << "  <angleparams tautonly=\"" << (tautOnly_ ? 'T' : 'F') << "\"/>\n";
 
     // Write the individual structures.
-    for (const AngleStructure* a : structures_)
-        a->writeXMLData(out);
+    for (const AngleStructure& a : structures_)
+        a.writeXMLData(out);
 
     // Write the properties.
     if (doesSpanStrict_.has_value())
@@ -209,8 +209,8 @@ void AngleStructures::writeXMLPacketData(std::ostream& out) const {
 
 Packet* AngleStructures::internalClonePacket(Packet* parent) const {
     AngleStructures* ans = new AngleStructures(tautOnly_);
-    for (auto s : structures_)
-        ans->structures_.push_back(new AngleStructure(*s,
+    for (const AngleStructure& s : structures_)
+        ans->structures_.push_back(AngleStructure(s,
             *static_cast<Triangulation<3>*>(parent)));
 
     ans->doesSpanStrict_ = doesSpanStrict_;
@@ -237,14 +237,14 @@ void AngleStructures::calculateSpanStrict() const {
 
     // Get the list of bad unchanging angles from the first structure.
     auto it = structures_.begin();
-    const AngleStructure* s = *it;
+    const AngleStructure& s = *it;
 
     Rational angle;
     unsigned long tet;
     int edges;
     for (tet = 0; tet < nTets; tet++)
         for (edges = 0; edges < 3; edges++) {
-            angle = s->angle(tet, edges);
+            angle = s.angle(tet, edges);
             if (angle == Rational::zero || angle == Rational::one) {
                 fixedAngles[3 * tet + edges] = angle;
                 nFixed++;
@@ -261,12 +261,12 @@ void AngleStructures::calculateSpanStrict() const {
     // Run through the rest of the structures to see if these bad angles
     // do ever change.
     for (it++; it != structures_.end(); it++) {
-        s = *it;
+        const AngleStructure& s = *it;
         for (tet = 0; tet < nTets; tet++)
             for (edges = 0; edges < 3; edges++) {
                 if (fixedAngles[3 * tet + edges] == Rational::undefined)
                     continue;
-                if (s->angle(tet, edges) != fixedAngles[3 * tet + edges]) {
+                if (s.angle(tet, edges) != fixedAngles[3 * tet + edges]) {
                     // Here's a bad angle that finally changed.
                     fixedAngles[3 * tet + edges] = Rational::undefined;
                     nFixed--;
@@ -285,8 +285,8 @@ void AngleStructures::calculateSpanStrict() const {
 }
 
 void AngleStructures::calculateSpanTaut() const {
-    for (const AngleStructure* s : structures_) {
-        if (s->isTaut()) {
+    for (const AngleStructure& s : structures_) {
+        if (s.isTaut()) {
             doesSpanTaut_ = true;
             return;
         }

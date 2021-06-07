@@ -427,17 +427,17 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 unsigned long central, bool splitting) {
             unsigned long tot = 0;
 
-            for (const NormalSurface* s : list->surfaces()) {
-                if (s->eulerChar() == euler &&
-                        s->isConnected() == connected &&
-                        s->isOrientable() == orient &&
-                        s->isTwoSided() == twoSided &&
-                        s->hasRealBoundary() == realBdry &&
-                        s->isVertexLinking() == vertexLink &&
-                        s->isCentral() == central &&
-                        s->isSplitting() == splitting) {
+            for (const NormalSurface& s : list->surfaces()) {
+                if (s.eulerChar() == euler &&
+                        s.isConnected() == connected &&
+                        s.isOrientable() == orient &&
+                        s.isTwoSided() == twoSided &&
+                        s.hasRealBoundary() == realBdry &&
+                        s.isVertexLinking() == vertexLink &&
+                        s.isCentral() == central &&
+                        s.isSplitting() == splitting) {
                     std::pair<const regina::Edge<3>*, const regina::Edge<3>*> links
-                        = s->isThinEdgeLink();
+                        = s.isThinEdgeLink();
                     unsigned linkCount;
                     if (links.first == 0)
                         linkCount = 0;
@@ -656,8 +656,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 figure8, NS_QUAD);
 
             testSize(list, "quad normal surfaces", 4);
-            for (const NormalSurface* s : list->surfaces())
-                testSurface(*s,
+            for (const NormalSurface& s : list->surfaces())
+                testSurface(s,
                     "the figure eight knot complement", "spun surface",
                     0 /* euler, N/A */, 0 /* connected, N/A */,
                     0 /* orient, N/A */, 0 /* two-sided, N/A */,
@@ -1813,9 +1813,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             // only those with chi=0.
             std::vector<const Vector<LargeInteger>*> filtered;
             NormalSurfaces* all = NormalSurfaces::enumerate(tri, NS_STANDARD);
-            for (const NormalSurface* s : all->surfaces())
-                if (s->eulerChar() == 0)
-                    filtered.push_back(&s->vector());
+            for (const NormalSurface& s : all->surfaces())
+                if (s.eulerChar() == 0)
+                    filtered.push_back(&s.vector());
 
             // Ensure that every vertex surface with chi=0 was picked up
             // in our custom list.
@@ -2151,27 +2151,27 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
         // be equal to (i) the surface s, (ii) two copies of the surface s,
         // or (iii) a double cover of the surface s.
         // Increment the relevant counters accordingly.
-        static void checkBoundaryType(const NormalSurface* s,
+        static void checkBoundaryType(const NormalSurface& s,
                 const Triangulation<3>* tri, unsigned& foundS,
                 unsigned& foundTwoCopies, unsigned& foundDoubleCover) {
             if (tri->countBoundaryComponents() == 1) {
                 const BoundaryComponent<3>* b = tri->boundaryComponent(0);
 
-                if (s->eulerChar() == b->eulerChar()
-                        && s->isOrientable() == b->isOrientable())
+                if (s.eulerChar() == b->eulerChar()
+                        && s.isOrientable() == b->isOrientable())
                     ++foundS;
-                if (s->eulerChar() * 2 == b->eulerChar() &&
-                        (b->isOrientable() || ! s->isOrientable()))
+                if (s.eulerChar() * 2 == b->eulerChar() &&
+                        (b->isOrientable() || ! s.isOrientable()))
                     ++foundDoubleCover;
             } else if (tri->countBoundaryComponents() == 2) {
                 const BoundaryComponent<3>* b0 = tri->boundaryComponent(0);
                 const BoundaryComponent<3>* b1 = tri->boundaryComponent(1);
 
                 if (
-                        s->eulerChar() == b0->eulerChar() &&
-                        s->eulerChar() == b1->eulerChar() &&
-                        s->isOrientable() == b0->isOrientable() &&
-                        s->isOrientable() == b1->isOrientable())
+                        s.eulerChar() == b0->eulerChar() &&
+                        s.eulerChar() == b1->eulerChar() &&
+                        s.isOrientable() == b0->isOrientable() &&
+                        s.isOrientable() == b1->isOrientable())
                     ++foundTwoCopies;
             }
         }
@@ -2196,20 +2196,20 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             Packet* p;
 
             // We use the fact that each normal surface is connected.
-            for (const NormalSurface* s : list->surfaces()) {
-                t.reset(s->cutAlong());
+            for (const NormalSurface& s : list->surfaces()) {
+                t.reset(s.cutAlong());
                 t->intelligentSimplify();
                 comp.reset(new Container());
                 nComp = t->splitIntoComponents(comp.get(), false);
 
-                NormalSurface sDouble = s->doubleSurface();
+                NormalSurface sDouble = s.doubleSurface();
                 tDouble.reset(sDouble.cutAlong());
                 tDouble->intelligentSimplify();
                 compDouble.reset(new Container());
                 nCompDouble = tDouble->splitIntoComponents(compDouble.get(),
                     false);
 
-                separating = (s->isTwoSided() && nComp > 1);
+                separating = (s.isTwoSided() && nComp > 1);
 
                 expected = (separating ? 2 : 1);
                 if (nComp != expected) {
@@ -2315,7 +2315,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     expectS = 2;
                     expectTwoCopies = 0;
                     expectDoubleCover = 0;
-                } else if (s->isTwoSided()) {
+                } else if (s.isTwoSided()) {
                     expectS = 0;
                     expectTwoCopies = 1;
                     expectDoubleCover = 0;
@@ -2348,7 +2348,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     expectS = 2;
                     expectTwoCopies = 1;
                     expectDoubleCover = 0;
-                } else if (s->isTwoSided()) {
+                } else if (s.isTwoSided()) {
                     expectS = 0;
                     expectTwoCopies = 2;
                     expectDoubleCover = 0;
@@ -2379,7 +2379,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 // Look for the product piece when cutting along the
                 // double surface.
                 for (p = compDouble->firstChild(); p; p = p->nextSibling()) {
-                    if (s->isTwoSided()) {
+                    if (s.isTwoSided()) {
                         if (mightBeUntwistedProduct(
                                 static_cast<Triangulation<3>*>(p)))
                             break;

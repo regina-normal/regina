@@ -57,8 +57,8 @@ MatrixInt NormalSurfaces::recreateMatchingEquations() const {
 
 void NormalSurfaces::writeAllSurfaces(std::ostream& out) const {
     out << "Number of surfaces is " << size() << '\n';
-    for (const NormalSurface* s : surfaces_) {
-        s->writeTextShort(out);
+    for (const NormalSurface& s : surfaces_) {
+        s.writeTextShort(out);
         out << '\n';
     }
 }
@@ -190,15 +190,15 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
 
     // Write the individual surfaces.
     std::vector<NormalSurface*>::const_iterator it;
-    for (const NormalSurface* s : surfaces_)
-        s->writeXMLData(out);
+    for (const NormalSurface& s : surfaces_)
+        s.writeXMLData(out);
 }
 
 Packet* NormalSurfaces::internalClonePacket(Packet* parent) const {
     NormalSurfaces* ans = new NormalSurfaces(
         coords_, which_, algorithm_);
-    for (auto s : surfaces_) {
-        ans->surfaces_.push_back(new NormalSurface(*s,
+    for (const NormalSurface& s : surfaces_) {
+        ans->surfaces_.push_back(NormalSurface(s,
             *static_cast<Triangulation<3>*>(parent)));
     }
     return ans;

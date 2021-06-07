@@ -36,7 +36,6 @@ if (${REGINA_INSTALL_DEV})
     memstream.h
     memutils.h
     osutils.h
-    property.h
     ptrutils.h
     qitmask.h
     randutils.h

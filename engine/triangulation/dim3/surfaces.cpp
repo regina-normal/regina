@@ -99,31 +99,31 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
     // appear as a vertex surface).  Otherwise fall back to standard coords.
     NormalSurfaces* surfaces = NormalSurfaces::enumerate(*this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
-    for (const NormalSurface* s : surfaces->surfaces()) {
+    for (const NormalSurface& s : surfaces->surfaces()) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are either (i) using standard coordinates, or
         // (ii) working with a non-ideal triangulation; we know the
         // vertex surfaces are compact also.
 
-        if (s->isVertexLinking())
+        if (s.isVertexLinking())
             continue;
 
         // Now they are compact, connected and non-vertex-linking.
         // We just need to pick out spheres and discs.
-        if (s->eulerChar() == 2) {
+        if (s.eulerChar() == 2) {
             // Must be a sphere; no bounded surface has chi=2.
-            NormalSurface* ans = new NormalSurface(std::move(*s));
+            NormalSurface* ans = new NormalSurface(s);
             delete surfaces;
             return ans;
-        } else if (s->eulerChar() == 1) {
-            if (s->hasRealBoundary()) {
+        } else if (s.eulerChar() == 1) {
+            if (s.hasRealBoundary()) {
                 // Must be a disc.
-                NormalSurface* ans = new NormalSurface(std::move(*s));
+                NormalSurface* ans = new NormalSurface(s);
                 delete surfaces;
                 return ans;
-            } else if (! s->isTwoSided()) {
+            } else if (! s.isTwoSided()) {
                 // A projective plane that doubles to a sphere.
-                NormalSurface* ans = new NormalSurface(s->doubleSurface());
+                NormalSurface* ans = new NormalSurface(s.doubleSurface());
                 delete surfaces;
                 return ans;
             }
@@ -171,7 +171,7 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
     unsigned oct;
     bool found, broken;
     LargeInteger coord;
-    for (const NormalSurface* s : surfaces->surfaces()) {
+    for (const NormalSurface& s : surfaces->surfaces()) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are working with a non-ideal triangulation, we know the
         // vertex surfaces are compact.
@@ -179,13 +179,13 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
         // Hunt for spheres with exactly one octagon.
         // Note that 1-sided projective planes are no good here,
         // since when doubled they give too many octagonal discs.
-        if (s->eulerChar() == 2) {
+        if (s.eulerChar() == 2) {
             // Euler char = 2 implies no real boundary.
             found = false; // At least one octagon found so far?
             broken = false; // More than one octagon found so far?
             for (tet = 0; tet < simplices_.size() && ! broken; ++tet)
                 for (oct = 0; oct < 3; ++oct) {
-                    coord = s->octs(tet, oct);
+                    coord = s.octs(tet, oct);
                     if (coord > 1) {
                         broken = true;
                         break;
@@ -199,7 +199,7 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
                 }
             if (found && ! broken) {
                 // This is it!
-                NormalSurface* ans = new NormalSurface(std::move(*s));
+                NormalSurface* ans = new NormalSurface(s);
                 delete surfaces;
                 return ans;
             }

@@ -91,7 +91,7 @@ class NormalHypersurfaces : public Packet {
         class VectorIterator;
 
     protected:
-        std::vector<NormalHypersurface*> surfaces_;
+        std::vector<NormalHypersurface> surfaces_;
             /**< Contains the normal hypersurfaces stored in this packet. */
         HyperCoords coords_;
             /**< Stores which coordinate system is being
@@ -107,11 +107,6 @@ class NormalHypersurfaces : public Packet {
                  inappropriate flags were passed). */
 
     public:
-        /**
-         * Destroys this list and all the hypersurfaces within.
-         */
-        virtual ~NormalHypersurfaces();
-
         /**
          * A unified routine for enumerating various classes of normal
          * hypersurfaces within a given triangulation.
@@ -314,7 +309,7 @@ class NormalHypersurfaces : public Packet {
          * \ifacespython Not present.
          *
          * @param comp a binary function (or function object) that
-         * accepts two const HyperSurface pointers, and returns \c true
+         * accepts two const HyperSurface references, and returns \c true
          * if and only if the first hypersurface should appear before the
          * second in the sorted list.
          */
@@ -374,7 +369,7 @@ class NormalHypersurfaces : public Packet {
         class VectorIterator : public std::iterator<
                 std::bidirectional_iterator_tag, Vector<LargeInteger>> {
             private:
-                std::vector<NormalHypersurface*>::const_iterator it_;
+                std::vector<NormalHypersurface>::const_iterator it_;
                     /**< An iterator into the underlying list of
                          hypersurfaces. */
 
@@ -467,7 +462,7 @@ class NormalHypersurfaces : public Packet {
                  * the internal list of normal hypersurfaces.
                  */
                 VectorIterator(
-                    const std::vector<NormalHypersurface*>::const_iterator& i);
+                    const std::vector<NormalHypersurface>::const_iterator& i);
 
             friend class NormalHypersurfaces;
         };
@@ -494,9 +489,8 @@ class NormalHypersurfaces : public Packet {
          * An output iterator used to insert hypersurfaces into an
          * NormalHypersurfaces.
          *
-         * Objects of type <tt>NormalHypersurface*</tt> and
-         * <tt>NormalHypersurfaceVector*</tt> can be assigned to this
-         * iterator.  In the latter case, a surrounding NormalHypersurface
+         * Objects of type <tt>NormalHypersurfaceVector*</tt> can be assigned
+         * to this iterator, whereupon a surrounding NormalHypersurface
          * will be automatically created.
          */
         struct HypersurfaceInserter : public std::iterator<
@@ -526,19 +520,6 @@ class NormalHypersurfaces : public Packet {
              */
             HypersurfaceInserter(const HypersurfaceInserter& cloneMe) = default;
 
-            /**
-             * Appends a normal hypersurface to the end of the appropriate
-             * surface list.
-             *
-             * The given hypersurface will be deallocated with the other
-             * hypersurfaces in this list when the list is eventually
-             * destroyed.
-             *
-             * @param hypersurface the normal hypersurface to insert.
-             * @return this output iterator.
-             */
-            HypersurfaceInserter& operator = (
-                NormalHypersurface* hypersurface);
             /**
              * Appends the normal hypersurface corresponding to the given
              * vector to the end of the appropriate hypersurface list.
@@ -779,11 +760,6 @@ EnumConstraints makeEmbeddedConstraints(const Triangulation<4>& triangulation,
 
 // Inline functions for NormalHypersurfaces
 
-inline NormalHypersurfaces::~NormalHypersurfaces() {
-    for (auto s : surfaces_)
-        delete s;
-}
-
 inline HyperCoords NormalHypersurfaces::coords() const {
     return coords_;
 }
@@ -810,7 +786,7 @@ inline auto NormalHypersurfaces::hypersurfaces() const {
 
 inline const NormalHypersurface& NormalHypersurfaces::hypersurface(
         size_t index) const {
-    return *surfaces_[index];
+    return surfaces_[index];
 }
 
 inline bool NormalHypersurfaces::dependsOnParent() const {
@@ -844,7 +820,7 @@ inline bool NormalHypersurfaces::VectorIterator::operator !=(
 
 inline const Vector<LargeInteger>&
         NormalHypersurfaces::VectorIterator::operator *() const {
-    return (*it_)->vector();
+    return it_->vector();
 }
 
 inline NormalHypersurfaces::VectorIterator&
@@ -870,7 +846,7 @@ inline NormalHypersurfaces::VectorIterator
 }
 
 inline NormalHypersurfaces::VectorIterator::VectorIterator(
-        const std::vector<NormalHypersurface*>::const_iterator& i) : it_(i) {
+        const std::vector<NormalHypersurface>::const_iterator& i) : it_(i) {
 }
 
 inline NormalHypersurfaces::VectorIterator
@@ -890,15 +866,8 @@ inline NormalHypersurfaces::HypersurfaceInserter::HypersurfaceInserter(
 
 inline NormalHypersurfaces::HypersurfaceInserter&
         NormalHypersurfaces::HypersurfaceInserter::operator =(
-        NormalHypersurface* surface) {
-    list_->surfaces_.push_back(surface);
-    return *this;
-}
-
-inline NormalHypersurfaces::HypersurfaceInserter&
-        NormalHypersurfaces::HypersurfaceInserter::operator =(
         NormalHypersurfaceVector* vector) {
-    list_->surfaces_.push_back(new NormalHypersurface(owner_, vector));
+    list_->surfaces_.push_back(NormalHypersurface(owner_, vector));
     return *this;
 }
 

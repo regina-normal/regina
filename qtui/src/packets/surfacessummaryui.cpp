@@ -167,25 +167,25 @@ void SurfacesSummaryUI::refresh() {
 
     regina::LargeInteger euler;
     std::pair<int, int> type;
-    for (const regina::NormalSurface* s : surfaces->surfaces()) {
-        if (! s->isCompact())
+    for (const regina::NormalSurface& s : surfaces->surfaces()) {
+        if (! s.isCompact())
             ++spun;
-        else if (s->hasRealBoundary()) {
-            euler = s->eulerChar();
+        else if (s.hasRealBoundary()) {
+            euler = s.eulerChar();
             allECsBounded.insert(euler);
 
-            type = std::make_pair(boolIndex(s->isTwoSided()),
-                boolIndex(s->isOrientable()));
+            type = std::make_pair(boolIndex(s.isTwoSided()),
+                boolIndex(s.isOrientable()));
             allTypesBounded.insert(type);
 
             ++countBounded[type.first][type.second][euler];
             ++bounded;
         } else {
-            euler = s->eulerChar();
+            euler = s.eulerChar();
             allECsClosed.insert(euler);
 
-            type = std::make_pair(boolIndex(s->isTwoSided()),
-                boolIndex(s->isOrientable()));
+            type = std::make_pair(boolIndex(s.isTwoSided()),
+                boolIndex(s.isOrientable()));
             allTypesClosed.insert(type);
 
             ++countClosed[type.first][type.second][euler];

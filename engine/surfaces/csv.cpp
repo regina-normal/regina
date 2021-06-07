@@ -82,32 +82,32 @@ namespace {
      * Writes a piece of the CSV data for the given normal surface
      * corresponding to the given set of optional fields.
      */
-    void writePropData(std::ostream& out, const NormalSurface* s, int fields) {
+    void writePropData(std::ostream& out, const NormalSurface& s, int fields) {
         if (fields & surfaceExportName) {
-            if (! s->name().empty())
-                writeCSVQuotedString(out, s->name().c_str());
+            if (! s.name().empty())
+                writeCSVQuotedString(out, s.name().c_str());
             out << ',';
         }
         if (fields & surfaceExportEuler) {
-            if (s->isCompact())
-                out << s->eulerChar();
+            if (s.isCompact())
+                out << s.eulerChar();
             out << ',';
         }
         if (fields & surfaceExportOrient) {
-            if (s->isCompact()) {
-                out << (s->isOrientable() ? "TRUE" : "FALSE");
+            if (s.isCompact()) {
+                out << (s.isOrientable() ? "TRUE" : "FALSE");
             }
             out << ',';
         }
         if (fields & surfaceExportSides) {
-            if (s->isCompact()) {
-                out << (s->isTwoSided() ? '2' : '1');
+            if (s.isCompact()) {
+                out << (s.isTwoSided() ? '2' : '1');
             }
             out << ',';
         }
         if (fields & surfaceExportBdry) {
-            if (! s->isCompact()) {
-                std::optional<MatrixInt> slopes = s->boundaryIntersections();
+            if (! s.isCompact()) {
+                std::optional<MatrixInt> slopes = s.boundaryIntersections();
                 if (slopes) {
                     out << "\"spun:";
                     for (unsigned i = 0; i < slopes->rows(); ++i)
@@ -117,7 +117,7 @@ namespace {
                     out << '\"';
                 } else
                     out << "spun";
-            } else if (s->hasRealBoundary())
+            } else if (s.hasRealBoundary())
                 out << "real";
             else
                 out << "none";
@@ -126,12 +126,12 @@ namespace {
         if (fields & surfaceExportLink) {
             // Mirror the information that gets shown in the Link column
             // in the GUI.
-            const Vertex<3>* v = s->isVertexLink();
+            const Vertex<3>* v = s.isVertexLink();
             if (v)
                 out << "\"Vertex " << v->index() << "\"";
             else {
                 std::pair<const regina::Edge<3>*, const regina::Edge<3>*> e =
-                    s->isThinEdgeLink();
+                    s.isThinEdgeLink();
                 if (e.second)
                     out << "\"Thin edges " << e.first->index()
                         << ", " << e.second->index() << "\"";
@@ -143,10 +143,10 @@ namespace {
         if (fields & surfaceExportType) {
             // Mirror the information that gets shown in the Type column
             // in the GUI.
-            if (s->isSplitting())
+            if (s.isSplitting())
                 out << "\"Splitting\"";
             else {
-                LargeInteger tot = s->isCentral();
+                LargeInteger tot = s.isCentral();
                 if (tot != 0)
                     out << "\"Central (" << tot << ")\"";
             }
@@ -193,17 +193,17 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
     out << std::endl;
 
     // Write the data for individual surfaces.
-    for (const NormalSurface* s : surfaces_) {
+    for (const NormalSurface& s : surfaces_) {
         writePropData(out, s, additionalFields);
 
         for (i = 0; i < n; ++i) {
-            out << s->triangles(i, 0) << ',';
-            out << s->triangles(i, 1) << ',';
-            out << s->triangles(i, 2) << ',';
-            out << s->triangles(i, 3) << ',';
-            out << s->quads(i, 0) << ',';
-            out << s->quads(i, 1) << ',';
-            out << s->quads(i, 2);
+            out << s.triangles(i, 0) << ',';
+            out << s.triangles(i, 1) << ',';
+            out << s.triangles(i, 2) << ',';
+            out << s.triangles(i, 3) << ',';
+            out << s.quads(i, 0) << ',';
+            out << s.quads(i, 1) << ',';
+            out << s.quads(i, 2);
 
             if (! allowsAlmostNormal()) {
                 if (i < n - 1)
@@ -212,9 +212,9 @@ bool NormalSurfaces::saveCSVStandard(const char* filename,
             }
             out << ',';
 
-            out << s->octs(i, 0) << ',';
-            out << s->octs(i, 1) << ',';
-            out << s->octs(i, 2);
+            out << s.octs(i, 0) << ',';
+            out << s.octs(i, 1) << ',';
+            out << s.octs(i, 2);
 
             if (i < n - 1)
                 out << ',';
@@ -247,11 +247,11 @@ bool NormalSurfaces::saveCSVEdgeWeight(const char* filename,
     out << std::endl;
 
     // Write the data for individual surfaces.
-    for (const NormalSurface* s : surfaces_) {
+    for (const NormalSurface& s : surfaces_) {
         writePropData(out, s, additionalFields);
 
         for (i = 0; i < n; ++i) {
-            out << s->edgeWeight(i);
+            out << s.edgeWeight(i);
 
             if (i < n - 1)
                 out << ',';

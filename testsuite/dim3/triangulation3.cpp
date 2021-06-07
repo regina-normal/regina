@@ -2102,23 +2102,23 @@ class Triangulation3Test : public TriangulationTest<3> {
                 expected = true;
                 NormalSurfaces* s = NormalSurfaces::enumerate(
                     *tri, regina::NS_STANDARD);
-                for (const NormalSurface* f : s->surfaces()) {
-                    if (f->eulerChar() == 2 &&
-                            (! f->hasRealBoundary()) &&
-                            ! f->isVertexLinking()) {
+                for (const NormalSurface& f : s->surfaces()) {
+                    if (f.eulerChar() == 2 &&
+                            (! f.hasRealBoundary()) &&
+                            ! f.isVertexLinking()) {
                         // Normal sphere
                         expected = false;
                         break;
-                    } else if (f->eulerChar() == 1 &&
-                            (! f->hasRealBoundary()) &&
-                            (! f->isTwoSided()) &&
-                            ! f->isVertexLinking()) {
+                    } else if (f.eulerChar() == 1 &&
+                            (! f.hasRealBoundary()) &&
+                            (! f.isTwoSided()) &&
+                            ! f.isVertexLinking()) {
                         // Normal projective plane that doubles to a
                         // normal sphere
                         expected = false;
                         break;
-                    } else if (f->eulerChar() == 1 &&
-                            f->hasRealBoundary() && ! f->isVertexLinking()) {
+                    } else if (f.eulerChar() == 1 &&
+                            f.hasRealBoundary() && ! f.isVertexLinking()) {
                         // Normal disc
                         expected = false;
                         break;

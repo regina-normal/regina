@@ -168,7 +168,7 @@ class NormalSurfaces : public Packet {
         class VectorIterator;
 
     protected:
-        std::vector<NormalSurface*> surfaces_;
+        std::vector<NormalSurface> surfaces_;
             /**< Contains the normal surfaces stored in this packet. */
         NormalCoords coords_;
             /**< Stores which coordinate system is being
@@ -184,11 +184,6 @@ class NormalSurfaces : public Packet {
                  or inappropriate flags were passed). */
 
     public:
-        /**
-         * Destroys this list and all the surfaces within.
-         */
-        virtual ~NormalSurfaces();
-
         /**
          * A unified routine for enumerating various classes of normal
          * surfaces within a given triangulation.
@@ -588,7 +583,7 @@ class NormalSurfaces : public Packet {
          * \ifacespython Not present.
          *
          * @param comp a binary function (or function object) that
-         * accepts two const NormalSurface pointers, and returns \c true
+         * accepts two const NormalSurface references, and returns \c true
          * if and only if the first surface should appear before the second
          * in the sorted list.
          */
@@ -874,7 +869,7 @@ class NormalSurfaces : public Packet {
         class VectorIterator : public std::iterator<
                 std::bidirectional_iterator_tag, Vector<LargeInteger>> {
             private:
-                std::vector<NormalSurface*>::const_iterator it_;
+                std::vector<NormalSurface>::const_iterator it_;
                     /**< An iterator into the underlying list of surfaces. */
 
             public:
@@ -966,7 +961,7 @@ class NormalSurfaces : public Packet {
                  * the internal list of normal surfaces.
                  */
                 VectorIterator(
-                    const std::vector<NormalSurface*>::const_iterator& i);
+                    const std::vector<NormalSurface>::const_iterator& i);
 
             friend class NormalSurfaces;
         };
@@ -993,9 +988,8 @@ class NormalSurfaces : public Packet {
          * An output iterator used to insert surfaces into an
          * NormalSurfaces.
          *
-         * Objects of type <tt>NormalSurface*</tt> and
-         * <tt>NormalSurfaceVector*</tt> can be assigned to this
-         * iterator.  In the latter case, a surrounding NormalSurface
+         * Objects of type <tt>NormalSurfaceVector*</tt> can be assigned to
+         * this iterator, whereupon a surrounding NormalSurface
          * will be automatically created.
          *
          * \warning The behaviour of this class has changed!
@@ -1035,17 +1029,6 @@ class NormalSurfaces : public Packet {
              */
             SurfaceInserter(const SurfaceInserter& cloneMe) = default;
 
-            /**
-             * Appends a normal surface to the end of the appropriate
-             * surface list.
-             *
-             * The given surface will be deallocated with the other
-             * surfaces in this list when the list is eventually destroyed.
-             *
-             * @param surface the normal surface to insert.
-             * @return this output iterator.
-             */
-            SurfaceInserter& operator =(NormalSurface* surface);
             /**
              * Appends the normal surface corresponding to the given
              * vector to the end of the appropriate surface list.
@@ -1165,7 +1148,7 @@ class NormalSurfaces : public Packet {
          */
         template <class Variant>
         void buildStandardFromReduced(const Triangulation<3>& owner,
-            const std::vector<NormalSurface*>& reducedList,
+            const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker = nullptr);
 
         /**
@@ -1186,7 +1169,7 @@ class NormalSurfaces : public Packet {
          */
         template <class Variant, class BitmaskType>
         void buildStandardFromReducedUsing(const Triangulation<3>& owner,
-            const std::vector<NormalSurface*>& reducedList,
+            const std::vector<NormalSurface>& reducedList,
             ProgressTracker* tracker);
 
         /**
@@ -1490,11 +1473,6 @@ EnumConstraints makeEmbeddedConstraints(const Triangulation<3>& triangulation,
 
 // Inline functions for NormalSurfaces
 
-inline NormalSurfaces::~NormalSurfaces() {
-    for (auto s : surfaces_)
-        delete s;
-}
-
 inline NormalCoords NormalSurfaces::coords() const {
     return coords_;
 }
@@ -1520,7 +1498,7 @@ inline auto NormalSurfaces::surfaces() const {
 }
 
 inline const NormalSurface& NormalSurfaces::surface(size_t index) const {
-    return *surfaces_[index];
+    return surfaces_[index];
 }
 
 inline bool NormalSurfaces::dependsOnParent() const {
@@ -1548,7 +1526,7 @@ inline bool NormalSurfaces::VectorIterator::operator !=(
 
 inline const Vector<LargeInteger>& NormalSurfaces::VectorIterator::
         operator *() const {
-    return (*it_)->vector();
+    return it_->vector();
 }
 
 inline NormalSurfaces::VectorIterator& NormalSurfaces::VectorIterator::
@@ -1574,16 +1552,14 @@ inline NormalSurfaces::VectorIterator NormalSurfaces::VectorIterator::
 }
 
 inline NormalSurfaces::VectorIterator::VectorIterator(
-        const std::vector<NormalSurface*>::const_iterator& i) : it_(i) {
+        const std::vector<NormalSurface>::const_iterator& i) : it_(i) {
 }
 
-inline NormalSurfaces::VectorIterator NormalSurfaces::beginVectors()
-        const {
+inline NormalSurfaces::VectorIterator NormalSurfaces::beginVectors() const {
     return VectorIterator(surfaces_.begin());
 }
 
-inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors()
-        const {
+inline NormalSurfaces::VectorIterator NormalSurfaces::endVectors() const {
     return VectorIterator(surfaces_.end());
 }
 
@@ -1594,15 +1570,8 @@ inline NormalSurfaces::SurfaceInserter::SurfaceInserter(
 
 inline NormalSurfaces::SurfaceInserter&
         NormalSurfaces::SurfaceInserter::operator =(
-        NormalSurface* surface) {
-    list->surfaces_.push_back(surface);
-    return *this;
-}
-
-inline NormalSurfaces::SurfaceInserter&
-        NormalSurfaces::SurfaceInserter::operator =(
         NormalSurfaceVector* vector) {
-    list->surfaces_.push_back(new NormalSurface(owner, vector));
+    list->surfaces_.push_back(NormalSurface(owner, vector));
     return *this;
 }
 

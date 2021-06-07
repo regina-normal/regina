@@ -434,7 +434,7 @@ void NormalSurfaces::Enumerator<Coords>::fillVertexTreeWith() {
     TreeEnumeration<typename LPArgs<Coords>::Constraint,
         BanNone, Integer> search(*triang_, LPArgs<Coords>::coords_);
     while (search.next(tracker_)) {
-        list_->surfaces_.push_back(new NormalSurface(search.buildSurface()));
+        list_->surfaces_.push_back(search.buildSurface());
         if (tracker_ && tracker_->isCancelled())
             break;
     }
@@ -648,7 +648,7 @@ void NormalSurfaces::Enumerator<Coords>::fillFundamentalFullCone() {
                     tmpInt.tryReduce();
                     v->set(i, tmpInt);
                 }
-                list_->surfaces_.push_back(new NormalSurface(*triang_, v));
+                list_->surfaces_.push_back(NormalSurface(*triang_, v));
             }
         }
 

@@ -174,19 +174,19 @@ void HyperSummaryUI::refresh() {
 
     std::string homology;
     std::pair<int, int> type;
-    for (const regina::NormalHypersurface* s : surfaces->hypersurfaces()) {
-        if (! s->isCompact())
+    for (const regina::NormalHypersurface& s : surfaces->hypersurfaces()) {
+        if (! s.isCompact())
             ++spun;
         else {
             if (unicode)
-                homology = s->homology().utf8();
+                homology = s.homology().utf8();
             else
-                homology = s->homology().str();
-            if (s->hasRealBoundary()) {
+                homology = s.homology().str();
+            if (s.hasRealBoundary()) {
                 allHomBounded.insert(homology);
 
-                type = std::make_pair(boolIndex(s->isTwoSided()),
-                    boolIndex(s->isOrientable()));
+                type = std::make_pair(boolIndex(s.isTwoSided()),
+                    boolIndex(s.isOrientable()));
                 allTypesBounded.insert(type);
 
                 ++countBounded[type.first][type.second][homology];
@@ -194,8 +194,8 @@ void HyperSummaryUI::refresh() {
             } else {
                 allHomClosed.insert(homology);
 
-                type = std::make_pair(boolIndex(s->isTwoSided()),
-                    boolIndex(s->isOrientable()));
+                type = std::make_pair(boolIndex(s.isTwoSided()),
+                    boolIndex(s.isOrientable()));
                 allTypesClosed.insert(type);
 
                 ++countClosed[type.first][type.second][homology];
