@@ -83,13 +83,12 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
         // For now, just use the safe arbitrary-precision Integer type.
         TreeSingleSoln<LPConstraintEulerPositive> tree(*this, NS_STANDARD);
         if (tree.find()) {
-            NormalSurface* s = tree.buildSurface();
-            if (! ((! s->hasRealBoundary()) &&
-                    (s->eulerChar() == 1) && s->isTwoSided()))
-                return s;
+            NormalSurface s = tree.buildSurface();
+            if (! ((! s.hasRealBoundary()) &&
+                    (s.eulerChar() == 1) && s.isTwoSided()))
+                return new NormalSurface(std::move(s));
             // Looks like we've found a two-sided projective plane.
             // Fall through to a full enumeration of vertex surfaces.
-            delete s;
         } else
             return nullptr;
     }
@@ -100,7 +99,6 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
     // appear as a vertex surface).  Otherwise fall back to standard coords.
     NormalSurfaces* surfaces = NormalSurfaces::enumerate(*this,
         (isValid() && ! isIdeal()) ? NS_QUAD : NS_STANDARD);
-    NormalSurface* ans = nullptr;
     for (const NormalSurface* s : surfaces->surfaces()) {
         // These are vertex surfaces, so we know they must be connected.
         // Because we are either (i) using standard coordinates, or
@@ -114,23 +112,26 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
         // We just need to pick out spheres and discs.
         if (s->eulerChar() == 2) {
             // Must be a sphere; no bounded surface has chi=2.
-            ans = new NormalSurface(std::move(*s));
-            break;
+            NormalSurface* ans = new NormalSurface(std::move(*s));
+            delete surfaces;
+            return ans;
         } else if (s->eulerChar() == 1) {
             if (s->hasRealBoundary()) {
                 // Must be a disc.
-                ans = new NormalSurface(std::move(*s));
-                break;
+                NormalSurface* ans = new NormalSurface(std::move(*s));
+                delete surfaces;
+                return ans;
             } else if (! s->isTwoSided()) {
                 // A projective plane that doubles to a sphere.
-                ans = s->doubleSurface();
-                break;
+                NormalSurface* ans = new NormalSurface(s->doubleSurface());
+                delete surfaces;
+                return ans;
             }
         }
     }
 
     delete surfaces;
-    return ans;
+    return nullptr;
 }
 
 NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
@@ -153,8 +154,7 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
             // which then implies that our surface here is almost normal
             // with exactly 1 octagon and Euler = 2.  This is exactly
             // what we're looking for.
-            NormalSurface* s = tree.buildSurface();
-            return s;
+            return new NormalSurface(tree.buildSurface());
         } else
             return nullptr;
     }
@@ -167,7 +167,6 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
 
     // Our vertex surfaces are guaranteed to be in smallest possible
     // integer coordinates, with at most one non-zero octagonal coordinate.
-    NormalSurface* ans = nullptr;
     unsigned long tet;
     unsigned oct;
     bool found, broken;
@@ -200,14 +199,15 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
                 }
             if (found && ! broken) {
                 // This is it!
-                ans = new NormalSurface(std::move(*s));
-                break;
+                NormalSurface* ans = new NormalSurface(std::move(*s));
+                delete surfaces;
+                return ans;
             }
         }
     }
 
     delete surfaces;
-    return ans;
+    return nullptr;
 }
 
 bool Triangulation<3>::isZeroEfficient() {

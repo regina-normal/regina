@@ -1479,9 +1479,7 @@ namespace {
                     // TreeSingleSoln guarantees that our solution is
                     // connected, and so it (or its double) is a sphere or
                     // a disc.
-                    ans = search.buildSurface();
-                    crush = ans->crush();
-                    delete ans;
+                    crush = search.buildSurface().crush();
                     delete t_[side];
 
                     // Find the piece in the crushed triangulation with the

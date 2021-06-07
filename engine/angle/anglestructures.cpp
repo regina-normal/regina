@@ -93,7 +93,7 @@ void AngleStructures::enumerateInternal(Triangulation<3>& triang,
 
         TautEnumeration<LPConstraintNone, BanNone, Integer> search(triang);
         while (search.next(tracker)) {
-            structures_.push_back(search.buildStructure());
+            structures_.push_back(new AngleStructure(search.buildStructure()));
             if (tracker && tracker->isCancelled())
                 break;
         }

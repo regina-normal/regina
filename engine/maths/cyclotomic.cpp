@@ -59,31 +59,28 @@ std::complex<double> Cyclotomic::evaluate(size_t whichRoot) const {
 }
 
 void Cyclotomic::invert() {
-    Polynomial<Rational>* self = polynomial();
+    Polynomial<Rational> self = polynomial();
     Polynomial<Rational> gcd, u, v;
 
-    self->gcdWithCoeffs(cyclotomic(field_), gcd, u, v);
+    self.gcdWithCoeffs(cyclotomic(field_), gcd, u, v);
 
     size_t i;
     for (i = 0; i < degree_ && i <= u.degree(); ++i)
         coeff_[i] = u[i];
     for ( ; i < degree_; ++i)
         coeff_[i] = 0;
-
-    delete self;
 }
 
 Cyclotomic Cyclotomic::inverse() const {
-    Polynomial<Rational>* self = polynomial();
+    Polynomial<Rational> self = polynomial();
     Polynomial<Rational> gcd, u, v;
 
-    self->gcdWithCoeffs(cyclotomic(field_), gcd, u, v);
+    self.gcdWithCoeffs(cyclotomic(field_), gcd, u, v);
 
     Rational* coeff = new Rational[degree_]; // initialises to zero
     for (size_t i = 0; i < degree_ && i <= u.degree(); ++i)
         coeff[i] = u[i];
 
-    delete self;
     return Cyclotomic(field_, degree_, coeff);
 }
 

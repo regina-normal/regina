@@ -54,6 +54,7 @@
 #include "surfaces/nsvectorstandard.h"
 #include "surfaces/normalsurfaces.h"
 #include "triangulation/dim3.h"
+#include "utilities/exception.h"
 
 /**
  * Optimisation flags:
@@ -87,7 +88,7 @@
 namespace regina {
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
+NormalSurface TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildSurface() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
@@ -97,12 +98,14 @@ NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
     else if (coords_ == NS_STANDARD || coords_ == NS_AN_STANDARD)
         v = new NSVectorStandard(7 * nTets_);
     else
-        return 0;
+        throw regina::FailedPrecondition(
+            "TreeTraversal::buildSurface() requires "
+            "standard/quad/quad-oct normal or almost normal coordinates");
 
     lpSlot_[nTypes_]->extractSolution(*v, type_);
 
     if (coords_ == NS_QUAD || coords_ == NS_STANDARD)
-        return new NormalSurface(origTableaux_.tri(), v);
+        return NormalSurface(origTableaux_.tri(), v);
 
     // We have an almost normal surface: restore the octagon
     // coordinates.
@@ -138,25 +141,27 @@ NormalSurface* TreeTraversal<LPConstraint, BanConstraint, IntType>::
         }
     }
     delete v;
-    return new NormalSurface(origTableaux_.tri(), an);
+    return NormalSurface(origTableaux_.tri(), an);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
-AngleStructure* TreeTraversal<LPConstraint, BanConstraint, IntType>::
+AngleStructure TreeTraversal<LPConstraint, BanConstraint, IntType>::
         buildStructure() const {
     // Note that the vector constructors automatically set all
     // elements to zero, as required by LPData::extractSolution().
     if (coords_ != NS_ANGLE)
-        return 0;
+        throw regina::FailedPrecondition(
+            "TreeTraversal::buildStructure() requires "
+            "angle structure coordinates");
 
     VectorInt* v = new VectorInt(3 * nTets_ + 1);
     lpSlot_[nTypes_]->extractSolution(*v, type_);
-    return new AngleStructure(origTableaux_.tri(), v);
+    return AngleStructure(origTableaux_.tri(), v);
 }
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const NormalSurface* s) const {
+        const NormalSurface& s) const {
     if (coords_ == NS_ANGLE)
         return false;
 
@@ -173,7 +178,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
     for (row = 0; row < matchingEqns->rows(); ++row) {
         LargeInteger ans; // Initialised to zero.
         for (col = 0; col < matchingEqns->columns(); ++col)
-            ans += (LargeInteger(matchingEqns->entry(row, col)) * (s->vector())[col]);
+            ans += (LargeInteger(matchingEqns->entry(row, col)) * (s.vector())[col]);
         if (ans != 0)
             return false;
     }
@@ -184,7 +189,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
 
 template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
-        const AngleStructure* s) const {
+        const AngleStructure& s) const {
     if (coords_ != NS_ANGLE)
         return false;
 
@@ -192,7 +197,7 @@ bool TreeTraversal<LPConstraint, BanConstraint, IntType>::verify(
     MatrixInt angleEqns = regina::makeAngleEquations(origTableaux_.tri());
 
     // Verify the angle equations.
-    if (! (angleEqns * s->vector()).isZero())
+    if (! (angleEqns * s.vector()).isZero())
         return false;
 
     // Verify any additional constraints.
@@ -948,9 +953,7 @@ template <class LPConstraint, typename BanConstraint, typename IntType>
 bool TautEnumeration<LPConstraint, BanConstraint, IntType>::
         writeStructure(const TautEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
-    AngleStructure* s = tree.buildStructure();
-    std::cout << s->str() << std::endl;
-    delete s;
+    std::cout << tree.buildStructure().str() << std::endl;
     return true;
 }
 

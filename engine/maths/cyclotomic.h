@@ -288,24 +288,13 @@ class Cyclotomic : public ShortOutput<Cyclotomic, true> {
          * that is, strictly less than the value returned by degree().
          * See the Cyclotomic class notes for further details.
          *
-         * This routine returns the polynomial representation as a newly
-         * allocated Polynomial<Rational> object.  The caller of this
-         * routine is responsible for destroying this new polynomial.
-         *
-         * The new polynomial will become independent of this Cyclotomic field
-         * element: if you subsequently change this field element then the
-         * new Polynomial object will not change, and likewise if you
-         * change the new Polynomial object then this Cyclotomic field
-         * element will not change.
-         *
          * \pre This field element has been initialised (either through
          * a non-default constructor, an assignment operator, or by
          * calling init()).
          *
-         * @return a new polynomial giving the full polynomial
-         * representation of this field element.
+         * @return the full polynomial representation of this field element.
          */
-        Polynomial<Rational>* polynomial() const;
+        Polynomial<Rational> polynomial() const;
         /**
          * Returns the value of this cyclotomic field element as a
          * complex number.
@@ -889,8 +878,8 @@ inline Rational& Cyclotomic::operator [] (size_t exp) {
     return coeff_[exp];
 }
 
-inline Polynomial<Rational>* Cyclotomic::polynomial() const {
-    return new Polynomial<Rational>(coeff_, coeff_ + degree_);
+inline Polynomial<Rational> Cyclotomic::polynomial() const {
+    return Polynomial<Rational>(coeff_, coeff_ + degree_);
 }
 
 inline bool Cyclotomic::operator == (const Cyclotomic& rhs) const {

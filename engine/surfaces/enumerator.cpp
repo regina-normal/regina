@@ -434,7 +434,7 @@ void NormalSurfaces::Enumerator<Coords>::fillVertexTreeWith() {
     TreeEnumeration<typename LPArgs<Coords>::Constraint,
         BanNone, Integer> search(*triang_, LPArgs<Coords>::coords_);
     while (search.next(tracker_)) {
-        list_->surfaces_.push_back(search.buildSurface());
+        list_->surfaces_.push_back(new NormalSurface(search.buildSurface()));
         if (tracker_ && tracker_->isCancelled())
             break;
     }

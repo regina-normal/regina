@@ -222,7 +222,7 @@ inline regina::NormalSurfaces* SurfaceModel::surfaces() const {
 
 inline const regina::NormalSurface* SurfaceModel::surface(
         const QModelIndex& index) const {
-    return surfaces_->surface(realIndex[index.row()]);
+    return &surfaces_->surface(realIndex[index.row()]);
 }
 
 inline size_t SurfaceModel::surfaceIndex(const QModelIndex& index) const {

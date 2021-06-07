@@ -73,15 +73,15 @@ NormalHypersurface* NormalHypersurface::clone() const {
     return ans;
 }
 
-NormalHypersurface* NormalHypersurface::doubleHypersurface() const {
-    NormalHypersurface* ans = new NormalHypersurface(*triangulation_,
+NormalHypersurface NormalHypersurface::doubleHypersurface() const {
+    NormalHypersurface ans(*triangulation_,
         dynamic_cast<NormalHypersurfaceVector*>(vector_->clone()));
 
-    *(ans->vector_) += *(ans->vector_);
+    *(ans.vector_) += *(ans.vector_);
 
     // Some properties can be copied straight across.
-    ans->realBoundary_ = realBoundary_;
-    ans->compact_ = compact_;
+    ans.realBoundary_ = realBoundary_;
+    ans.compact_ = compact_;
 
     // And some other properties are best left recalculated.
     return ans;
@@ -272,11 +272,10 @@ void NormalHypersurface::calculateFromTriangulation() const {
     size_t nComp = me->countComponents();
     delete me;
 
-    NormalHypersurface* twice = doubleHypersurface();
-    Triangulation<3>* cover = twice->triangulate();
+    NormalHypersurface twice = doubleHypersurface();
+    Triangulation<3>* cover = twice.triangulate();
     twoSided_ = (cover->countComponents() == 2 * nComp);
     delete cover;
-    delete twice;
 }
 
 } // namespace regina

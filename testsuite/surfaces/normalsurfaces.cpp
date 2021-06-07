@@ -289,7 +289,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 list->size() == expectedSize);
         }
 
-        void testSurface(const NormalSurface* surface, const char* triName,
+        void testSurface(const NormalSurface& surface, const char* triName,
                 const char* surfaceName, int euler, bool connected,
                 bool orient, bool twoSided, bool compact, bool realBdry,
                 bool vertexLink, unsigned edgeLink,
@@ -303,16 +303,16 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     << (compact ? "compact." : "non-compact.");
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->isCompact() == compact);
+                    surface.isCompact() == compact);
             }
             if (compact) {
                 std::ostringstream msg;
                 msg << "Surface [" << surfaceName << "] for " << triName
                     << " should have Euler char. " << euler << ", not "
-                    << surface->eulerChar() << '.';
+                    << surface.eulerChar() << '.';
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->eulerChar() == euler);
+                    surface.eulerChar() == euler);
             }
             if (compact) {
                 std::ostringstream msg;
@@ -324,7 +324,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     msg << "disconnected.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->isConnected() == connected);
+                    surface.isConnected() == connected);
             }
             if (compact) {
                 std::ostringstream msg;
@@ -336,7 +336,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     msg << "non-orientable.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->isOrientable() == orient);
+                    surface.isOrientable() == orient);
             }
             if (compact) {
                 std::ostringstream msg;
@@ -348,7 +348,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     msg << "1-sided.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->isTwoSided() == twoSided);
+                    surface.isTwoSided() == twoSided);
             }
             {
                 std::ostringstream msg;
@@ -357,7 +357,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     << (realBdry ? "real boundary." : "no real boundary.");
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->hasRealBoundary() == realBdry);
+                    surface.hasRealBoundary() == realBdry);
             }
             {
                 std::ostringstream msg;
@@ -368,7 +368,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 msg << "be vertex linking.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->isVertexLinking() == vertexLink);
+                    surface.isVertexLinking() == vertexLink);
             }
             {
                 std::ostringstream msg;
@@ -382,7 +382,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                     msg << "be the (thin) link of two edges.";
 
                 std::pair<const regina::Edge<3>*, const regina::Edge<3>*> links
-                    = surface->isThinEdgeLink();
+                    = surface.isThinEdgeLink();
                 unsigned ans;
                 if (links.first == 0)
                     ans = 0;
@@ -404,7 +404,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         << " disc(s).";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->isCentral() == central);
+                    surface.isCentral() == central);
             }
             {
                 std::ostringstream msg;
@@ -415,7 +415,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 msg << "be a splitting surface.";
 
                 CPPUNIT_ASSERT_MESSAGE(msg.str(),
-                    surface->isSplitting() == splitting);
+                    surface.isSplitting() == splitting);
             }
         }
 
@@ -485,8 +485,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             unsigned long i;
             for (i = 0; i < n; ++i) {
-                lhsRaw[i] = &lhs->surface(i)->vector();
-                rhsRaw[i] = &rhs->surface(i)->vector();
+                lhsRaw[i] = &lhs->surface(i).vector();
+                rhsRaw[i] = &rhs->surface(i).vector();
             }
 
             std::sort(lhsRaw, lhsRaw + n, lexLess<LargeInteger>);
@@ -657,7 +657,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
             testSize(list, "quad normal surfaces", 4);
             for (const NormalSurface* s : list->surfaces())
-                testSurface(s,
+                testSurface(*s,
                     "the figure eight knot complement", "spun surface",
                     0 /* euler, N/A */, 0 /* connected, N/A */,
                     0 /* orient, N/A */, 0 /* two-sided, N/A */,
@@ -1799,15 +1799,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             regina::TreeEnumeration<regina::LPConstraintEulerZero> tree(
                 tri, NS_STANDARD);
             while (tree.next()) {
-                NormalSurface* s = tree.buildSurface();
-                if (s->eulerChar() != 0) {
+                NormalSurface s = tree.buildSurface();
+                if (s.eulerChar() != 0) {
                     std::ostringstream msg;
                     msg << "Chi=0: custom list contains a surface with "
-                        "chi = " << s->eulerChar() << ": " << tri.label();
+                        "chi = " << s.eulerChar() << ": " << tri.label();
                     CPPUNIT_FAIL(msg.str());
                 }
-                eulerZero.push_back(new Vector<LargeInteger>(s->vector()));
-                delete s;
+                eulerZero.push_back(new Vector<LargeInteger>(s.vector()));
             }
 
             // Collect *all* vertex surfaces in the normal way, and extract
@@ -1937,20 +1936,19 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             unsigned long n = list->size();
 
             unsigned long i, j;
-            const NormalSurface *s, *t;
             std::pair<const Edge<3>*, const Edge<3>*> edges;
             unsigned long edge;
 
             for (i = 0; i < n; ++i) {
-                s = list->surface(i);
+                const NormalSurface& s = list->surface(i);
 
                 // For some types of surfaces we know exactly what it
                 // should be disjoint from.
-                if (s->isVertexLinking()) {
+                if (s.isVertexLinking()) {
                     // Vertex links are disjoint from everything.
                     for (j = 0; j < n; ++j) {
-                        t = list->surface(j);
-                        if (! s->disjoint(*t)) {
+                        const NormalSurface& t = list->surface(j);
+                        if (! s.disjoint(t)) {
                             std::ostringstream msg;
                             msg << "Surface #" << i << " for "
                                 << tri->label()
@@ -1960,7 +1958,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                             CPPUNIT_FAIL(msg.str());
                         }
                     }
-                } else if ((edges = s->isThinEdgeLink()).first) {
+                } else if ((edges = s.isThinEdgeLink()).first) {
                     // A thin edge link is disjoint from (i) all vertex
                     // links, and (ii) all surfaces that do not meet the
                     // relevant edge (except the edge link itself, if it
@@ -1972,9 +1970,9 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                         if (j == i)
                             continue;
 
-                        t = list->surface(j);
-                        if (t->isVertexLinking()) {
-                            if (! s->disjoint(*t)) {
+                        const NormalSurface& t = list->surface(j);
+                        if (t.isVertexLinking()) {
+                            if (! s.disjoint(t)) {
                                 std::ostringstream msg;
                                 msg << "Surface #" << i << " for "
                                     << tri->label()
@@ -1983,8 +1981,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                                     << ", which is a vertex link.";
                                 CPPUNIT_FAIL(msg.str());
                             }
-                        } else if (t->edgeWeight(edge) == 0) {
-                            if (! s->disjoint(*t)) {
+                        } else if (t.edgeWeight(edge) == 0) {
+                            if (! s.disjoint(t)) {
                                 std::ostringstream msg;
                                 msg << "Surface #" << i << " for "
                                     << tri->label()
@@ -1995,7 +1993,7 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                                 CPPUNIT_FAIL(msg.str());
                             }
                         } else {
-                            if (s->disjoint(*t)) {
+                            if (s.disjoint(t)) {
                                 std::ostringstream msg;
                                 msg << "Surface #" << i <<
                                     " is a thin edge link and therefore "
@@ -2010,14 +2008,14 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
 
                 // Ensure that the surface is disjoint from itself
                 // iff it is two-sided.
-                if (s->isTwoSided() && ! s->disjoint(*s)) {
+                if (s.isTwoSided() && ! s.disjoint(s)) {
                     std::ostringstream msg;
                     msg << "Surface #" << i << " for "
                         << tri->label()
                         << " is two-sided and therefore should be "
                         "disjoint from itself.";
                     CPPUNIT_FAIL(msg.str());
-                } else if ((! s->isTwoSided()) && s->disjoint(*s)) {
+                } else if ((! s.isTwoSided()) && s.disjoint(s)) {
                     std::ostringstream msg;
                     msg << "Surface #" << i << " for "
                         << tri->label()
@@ -2188,7 +2186,6 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
             std::unique_ptr<Container> comp;
             unsigned long nComp;
 
-            std::unique_ptr<NormalSurface> sDouble;
             std::unique_ptr<Triangulation<3>> tDouble;
             std::unique_ptr<Container> compDouble;
             unsigned long nCompDouble;
@@ -2205,8 +2202,8 @@ class NormalSurfacesTest : public CppUnit::TestFixture {
                 comp.reset(new Container());
                 nComp = t->splitIntoComponents(comp.get(), false);
 
-                sDouble.reset(s->doubleSurface());
-                tDouble.reset(sDouble->cutAlong());
+                NormalSurface sDouble = s->doubleSurface();
+                tDouble.reset(sDouble.cutAlong());
                 tDouble->intelligentSimplify();
                 compDouble.reset(new Container());
                 nCompDouble = tDouble->splitIntoComponents(compDouble.get(),

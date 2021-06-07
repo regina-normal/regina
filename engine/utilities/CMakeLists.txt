@@ -26,6 +26,7 @@ if (${REGINA_INSTALL_DEV})
     bitmanip.h
     bitmask.h
     boolset.h
+    exception.h
     flags.h
     i18nutils.h
     intutils.h

@@ -68,7 +68,7 @@ bool writeTypesAndVerify(
     std::cout << std::endl;
     */
 
-    NormalSurface* s = tree.buildSurface();
+    NormalSurface s = tree.buildSurface();
     if (! tree.verify(s))
         std::cout << "ERROR: Verification failed." << std::endl;
 
@@ -155,7 +155,7 @@ int main(int argc, char* argv[]) {
                         << std::endl;
 
                     // Sanity checking:
-                    NormalSurface* s = search.buildSurface();
+                    NormalSurface s = search.buildSurface();
                     if (! search.verify(s))
                         std::cout << "ERROR: Verification failed." << std::endl;
                 } else {

@@ -913,9 +913,7 @@ bool Triangulation<3>::hasCompressingDisc() const {
                 return *(compressingDisc_ = false);
             }
 
-            ans = search.buildSurface();
-            crush = ans->crush();
-            delete ans;
+            crush = search.buildSurface().crush();
             delete use;
 
             crush->splitIntoComponents();
@@ -1173,13 +1171,13 @@ bool Triangulation<3>::isHaken() const {
     unsigned i;
     for (i = 0; i < list->size(); ++i) {
         id[i].index = i;
-        id[i].euler = list->surface(i)->eulerChar().longValue();
+        id[i].euler = list->surface(i).eulerChar().longValue();
     }
     std::sort(id, id + list->size());
 
     for (i = 0; i < list->size(); ++i) {
         // std::cout << "Testing surface " << i << "..." << std::endl;
-        if (list->surface(id[i].index)->isIncompressible()) {
+        if (list->surface(id[i].index).isIncompressible()) {
             delete[] id;
             threeSphere_ = false; // Implied by Hakenness.
             return *(haken_ = true);

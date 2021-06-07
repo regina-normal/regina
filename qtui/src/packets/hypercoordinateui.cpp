@@ -96,42 +96,42 @@ int HyperModel::columnCount(const QModelIndex& /* unused parent*/) const {
 
 QVariant HyperModel::data(const QModelIndex& index, int role) const {
     if (role == Qt::DisplayRole) {
-        const regina::NormalHypersurface* s =
+        const regina::NormalHypersurface& s =
             surfaces_->hypersurface(index.row());
 
         if (index.column() == 0)
             return tr("%1.").arg(index.row());
         else if (index.column() == 1)
-            return s->name().c_str();
+            return s.name().c_str();
         else if (surfaces_->isEmbeddedOnly() && index.column() == 2) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
             if (ReginaPrefSet::global().displayUnicode)
-                return s->homology().utf8().c_str();
+                return s.homology().utf8().c_str();
             else
-                return s->homology().str().c_str();
+                return s.homology().str().c_str();
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
 
-            if (s->isOrientable())
+            if (s.isOrientable())
                 return QString(QChar(0x2713 /* tick */));
                 // return tr("Yes");
             else
                 return tr("Non-or.");
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
 
-            if (s->isTwoSided())
+            if (s.isTwoSided())
                 return "2";
             else
                 return "1";
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 2)) {
-            if (! s->isCompact()) {
+            if (! s.isCompact()) {
                 return tr("Non-compact");
-            } else if (s->hasRealBoundary())
+            } else if (s.hasRealBoundary())
                 return tr("Real");
             else
                 return QString(QChar(0x2014 /* emdash */));
@@ -140,9 +140,9 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
             const regina::Vertex<4>* v;
             const regina::Edge<4>* e;
 
-            if ((v = s->isVertexLink()))
+            if ((v = s.isVertexLink()))
                 return tr("Vertex %1").arg(v->index());
-            else if ((e = s->isThinEdgeLink())) {
+            else if ((e = s.isThinEdgeLink())) {
                 return tr("Edge %1").
                     arg(e->index());
             } else
@@ -150,7 +150,7 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
         } else {
             // The default case:
             regina::LargeInteger ans = Coordinates::getCoordinate(coordSystem_,
-                *s, index.column() - propertyColCount());
+                s, index.column() - propertyColCount());
             if (ans == (long)0)
                 return QVariant();
             else if (ans.isInfinite())
@@ -160,7 +160,7 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return surfaces_->hypersurface(index.row())->name().c_str();
+            return surfaces_->hypersurface(index.row()).name().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -172,30 +172,30 @@ QVariant HyperModel::data(const QModelIndex& index, int role) const {
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NormalHypersurface* s =
+        const regina::NormalHypersurface& s =
             surfaces_->hypersurface(index.row());
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
 
-            if (s->isOrientable())
+            if (s.isOrientable())
                 return QColor(Qt::darkGreen);
             else
                 return QColor(Qt::darkRed);
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
 
-            if (s->isTwoSided())
+            if (s.isTwoSided())
                 return QColor(Qt::darkGreen);
             else
                 return QColor(Qt::darkRed);
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 2)) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QColor(Qt::darkYellow);
-            else if (s->hasRealBoundary())
+            else if (s.hasRealBoundary())
                 return QColor(Qt::darkRed);
             else
                 return QColor(Qt::darkGreen);
@@ -268,8 +268,8 @@ bool HyperModel::setData(const QModelIndex& index, const QVariant& value,
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
         regina::Packet::ChangeEventSpan span(surfaces_);
-        const_cast<regina::NormalHypersurface*>(
-            surfaces_->hypersurface(index.row()))->
+        const_cast<regina::NormalHypersurface&>(
+            surfaces_->hypersurface(index.row())).
             setName(value.toString().toUtf8().constData());
         return true;
     } else
@@ -476,9 +476,9 @@ void HyperCoordinateUI::triangulate() {
 
     size_t whichSurface =
         table->selectionModel()->selectedIndexes().front().row();
-    const regina::NormalHypersurface* use = model->surfaces()->hypersurface(
+    const regina::NormalHypersurface& use = model->surfaces()->hypersurface(
         whichSurface);
-    if (! use->isCompact()) {
+    if (! use.isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only triangulate compact hypersurfaces."),
             tr("The surface you have selected is non-compact (i.e., has "
@@ -487,7 +487,7 @@ void HyperCoordinateUI::triangulate() {
     }
 
     // Go ahead and triangulate it.
-    regina::Triangulation<3>* ans = use->triangulate();
+    regina::Triangulation<3>* ans = use.triangulate();
     ans->setLabel(surfaces->triangulation().adornedLabel(
         "Hypersurface #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);

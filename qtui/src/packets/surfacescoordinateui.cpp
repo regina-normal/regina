@@ -88,7 +88,7 @@ void SurfaceModel::rebuild(regina::NormalCoords coordSystem,
     else {
         realIndex = new unsigned[surfaces_->size()];
         for (unsigned i = 0; i < surfaces_->size(); ++i)
-            if ((! filter) || filter->accept(*surfaces_->surface(i)))
+            if ((! filter) || filter->accept(surfaces_->surface(i)))
                 realIndex[nFiltered++] = i;
     }
 
@@ -133,38 +133,38 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
     unsigned surfaceIndex = realIndex[index.row()];
 
     if (role == Qt::DisplayRole) {
-        const regina::NormalSurface* s = surfaces_->surface(surfaceIndex);
+        const regina::NormalSurface& s = surfaces_->surface(surfaceIndex);
 
         if (index.column() == 0)
             return tr("%1.").arg(surfaceIndex);
         else if (index.column() == 1)
-            return s->name().c_str();
+            return s.name().c_str();
         else if (index.column() == 2) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
-            return s->eulerChar().stringValue().c_str();
+            return s.eulerChar().stringValue().c_str();
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
 
-            if (s->isOrientable())
+            if (s.isOrientable())
                 return QString(QChar(0x2713 /* tick */));
                 // return tr("Yes");
             else
                 return tr("Non-or.");
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
 
-            if (s->isTwoSided())
+            if (s.isTwoSided())
                 return "2";
             else
                 return "1";
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
-            if (! s->isCompact()) {
+            if (! s.isCompact()) {
                 std::optional<regina::MatrixInt> slopes =
-                    s->boundaryIntersections();
+                    s.boundaryIntersections();
                 if (slopes) {
                     QString ans = tr("Spun:");
                     // Display each boundary slope as (nu(L), -nu(M)).
@@ -175,9 +175,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
                     return ans;
                 } else
                     return tr("Spun");
-            } else if (s->hasRealBoundary()) {
+            } else if (s.hasRealBoundary()) {
                 if (surfaces_->isEmbeddedOnly())
-                    return QString::number(s->countBoundaries());
+                    return QString::number(s.countBoundaries());
                 else
                     return tr("Real");
             } else
@@ -187,9 +187,9 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             const regina::Vertex<3>* v;
             std::pair<const regina::Edge<3>*, const regina::Edge<3>*> e;
 
-            if ((v = s->isVertexLink()))
+            if ((v = s.isVertexLink()))
                 return tr("Vertex %1").arg(v->index());
-            else if ((e = s->isThinEdgeLink()).first) {
+            else if ((e = s.isThinEdgeLink()).first) {
                 if (e.second)
                     return tr("Thin edges %1, %2").
                         arg(e.first->index()).
@@ -202,20 +202,20 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 7) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 5)) {
             regina::LargeInteger tot;
-            if (s->isSplitting())
+            if (s.isSplitting())
                 return tr("Splitting");
-            else if ((tot = s->isCentral()) != 0)
+            else if ((tot = s.isCentral()) != 0)
                 return tr("Central (%1)").arg(tot.longValue());
             else
                 return QVariant();
         } else if (surfaces_->allowsAlmostNormal() &&
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
-            regina::DiscType oct = s->octPosition();
+            regina::DiscType oct = s.octPosition();
             if (! oct)
                 return QVariant();
             else {
-                regina::LargeInteger tot = s->octs(oct.tetIndex, oct.type);
+                regina::LargeInteger tot = s.octs(oct.tetIndex, oct.type);
                 if (tot == 1) {
                     return tr("K%1: %2 (1 oct)").
                         arg(oct.tetIndex).
@@ -230,7 +230,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         } else {
             // The default case:
             regina::LargeInteger ans = Coordinates::getCoordinate(coordSystem_,
-                *s, index.column() - propertyColCount());
+                s, index.column() - propertyColCount());
             if (ans == (long)0)
                 return QVariant();
             else if (ans.isInfinite())
@@ -240,7 +240,7 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
         }
     } else if (role == Qt::EditRole) {
         if (index.column() == 1)
-            return surfaces_->surface(surfaceIndex)->name().c_str();
+            return surfaces_->surface(surfaceIndex).name().c_str();
         else
             return QVariant();
     } else if (role == Qt::ToolTipRole) {
@@ -252,38 +252,38 @@ QVariant SurfaceModel::data(const QModelIndex& index, int role) const {
             return Coordinates::columnDesc(coordSystem_,
                 index.column() - propertyCols, this, surfaces_->triangulation());
     } else if (role == Qt::ForegroundRole) {
-        const regina::NormalSurface* s = surfaces_->surface(surfaceIndex);
+        const regina::NormalSurface& s = surfaces_->surface(surfaceIndex);
 
         if (surfaces_->isEmbeddedOnly() && index.column() == 3) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
 
-            if (s->isOrientable())
+            if (s.isOrientable())
                 return QColor(Qt::darkGreen);
             else
                 return QColor(Qt::darkRed);
         } else if (surfaces_->isEmbeddedOnly() && index.column() == 4) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QVariant();
 
-            if (s->isTwoSided())
+            if (s.isTwoSided())
                 return QColor(Qt::darkGreen);
             else
                 return QColor(Qt::darkRed);
         } else if ((surfaces_->isEmbeddedOnly() && index.column() == 5) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 3)) {
-            if (! s->isCompact())
+            if (! s.isCompact())
                 return QColor(Qt::darkYellow);
-            else if (s->hasRealBoundary())
+            else if (s.hasRealBoundary())
                 return QColor(Qt::darkRed);
             else
                 return QColor(Qt::darkGreen);
         } else if (surfaces_->allowsAlmostNormal() &&
                 ((surfaces_->isEmbeddedOnly() && index.column() == 8) ||
                 ((! surfaces_->isEmbeddedOnly()) && index.column() == 6))) {
-            regina::DiscType oct = s->octPosition();
+            regina::DiscType oct = s.octPosition();
             if (oct) {
-                if (s->octs(oct.tetIndex, oct.type) > 1)
+                if (s.octs(oct.tetIndex, oct.type) > 1)
                     return QColor(Qt::darkRed);
                 else
                     return QColor(Qt::darkGreen);
@@ -367,8 +367,8 @@ bool SurfaceModel::setData(const QModelIndex& index, const QVariant& value,
         // event (since a normal surface does not know what list it
         // belongs to).  Fire it here instead.
         regina::Packet::ChangeEventSpan span(surfaces_);
-        const_cast<regina::NormalSurface*>(
-            surfaces_->surface(realIndex[index.row()]))->
+        const_cast<regina::NormalSurface&>(
+            surfaces_->surface(realIndex[index.row()])).
             setName(value.toString().toUtf8().constData());
         return true;
     } else
@@ -647,9 +647,9 @@ void SurfacesCoordinateUI::cutAlong() {
 
     size_t whichSurface = model->surfaceIndex(
         table->selectionModel()->selectedIndexes().front());
-    const regina::NormalSurface* toCutAlong =
+    const regina::NormalSurface& toCutAlong =
         model->surfaces()->surface(whichSurface);
-    if (! toCutAlong->isCompact()) {
+    if (! toCutAlong.isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only cut along compact surfaces."),
             tr("The surface you have selected is non-compact "
@@ -659,7 +659,7 @@ void SurfacesCoordinateUI::cutAlong() {
 
     // Go ahead and cut along the surface.
     // Be nice and simplify the triangulation, which could be very large.
-    regina::Triangulation<3>* ans = toCutAlong->cutAlong();
+    regina::Triangulation<3>* ans = toCutAlong.cutAlong();
     ans->intelligentSimplify();
     ans->setLabel(surfaces->triangulation().adornedLabel(
         "Cut #" + std::to_string(whichSurface)));
@@ -677,9 +677,9 @@ void SurfacesCoordinateUI::crush() {
 
     size_t whichSurface = model->surfaceIndex(
         table->selectionModel()->selectedIndexes().front());
-    const regina::NormalSurface* toCrush =
+    const regina::NormalSurface& toCrush =
         model->surfaces()->surface(whichSurface);
-    if (! toCrush->isCompact()) {
+    if (! toCrush.isCompact()) {
         ReginaSupport::info(ui,
             tr("I can only crush compact surfaces."),
             tr("The surface you have selected is non-compact "
@@ -688,7 +688,7 @@ void SurfacesCoordinateUI::crush() {
     }
 
     // Go ahead and crush it.
-    regina::Triangulation<3>* ans = toCrush->crush();
+    regina::Triangulation<3>* ans = toCrush.crush();
     ans->setLabel(surfaces->triangulation().adornedLabel(
         "Crushed #" + std::to_string(whichSurface)));
     surfaces->insertChildLast(ans);

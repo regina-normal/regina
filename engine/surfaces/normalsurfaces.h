@@ -395,7 +395,7 @@ class NormalSurfaces : public Packet {
          *
          * @return the normal surface at the requested index in this set.
          */
-        const NormalSurface* surface(size_t index) const;
+        const NormalSurface& surface(size_t index) const;
         /**
          * Writes the number of surfaces in this set followed by the
          * details of each surface to the given output stream.  Output
@@ -1519,8 +1519,8 @@ inline auto NormalSurfaces::surfaces() const {
     return ListView(surfaces_);
 }
 
-inline const NormalSurface* NormalSurfaces::surface(size_t index) const {
-    return surfaces_[index];
+inline const NormalSurface& NormalSurfaces::surface(size_t index) const {
+    return *surfaces_[index];
 }
 
 inline bool NormalSurfaces::dependsOnParent() const {

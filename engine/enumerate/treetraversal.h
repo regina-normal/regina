@@ -344,10 +344,6 @@ class TreeTraversal : public BanConstraint {
          * This routine is for use only with normal (or almost normal)
          * surfaces, not taut angle structures.
          *
-         * The surface that is returned will be newly constructed, and
-         * it is the caller's responsibility to destroy it when it is no
-         * longer required.
-         *
          * If the current type vector does not represent a \e vertex
          * normal surface (which may be the case when calling
          * TreeSingleSoln::find()), then there may be many normal surfaces
@@ -364,22 +360,19 @@ class TreeTraversal : public BanConstraint {
          *
          * \pre We are working with normal or almost normal surfaces.
          * That is, the coordinate system passed to the TreeTraversal
-         * constructor was not NS_ANGLE.
+         * constructor was not NS_ANGLE.  This routine will throw a
+         * FailedPrecondition exception if this precondition is not met.
          *
          * @return a normal surface that has been found at the current stage
          * of the search.
          */
-        NormalSurface* buildSurface() const;
+        NormalSurface buildSurface() const;
 
         /**
          * Reconstructs the full taut angle structure that is represented by
          * the type vector at the current stage of the search.
          * This routine is for use only with taut angle structures,
          * not normal or almost normal surfaces.
-         *
-         * The angle structure that is returned will be newly constructed, and
-         * it is the caller's responsibility to destroy it when it is no
-         * longer required.
          *
          * There will always be a unique taut angle structure corresponding
          * to this type vector (this follows from the preconditions below).
@@ -392,12 +385,13 @@ class TreeTraversal : public BanConstraint {
          *
          * \pre We are working with angle structure coordinates; that is,
          * the coordinate system passed to the TreeTraversal constructor
-         * was NS_ANGLE.
+         * was NS_ANGLE.  This routine will throw a FailedPrecondition
+         * exception if this precondition is not met.
          *
          * @return the taut angle structure that has been found at the
          * current stage of the search.
          */
-        AngleStructure* buildStructure() const;
+        AngleStructure buildStructure() const;
 
         /**
          * Ensures that the given normal or almost normal surface satisfies
@@ -429,7 +423,7 @@ class TreeTraversal : public BanConstraint {
          * described above, or \c false if it fails one or more tests
          * (indicating a problem or error).
          */
-        bool verify(const NormalSurface* s) const;
+        bool verify(const NormalSurface& s) const;
 
         /**
          * Ensures that the given angle structure satisfies
@@ -455,7 +449,7 @@ class TreeTraversal : public BanConstraint {
          * described above, or \c false if it fails one or more tests
          * (indicating a problem or error).
          */
-        bool verify(const AngleStructure* s) const;
+        bool verify(const AngleStructure& s) const;
 
         // Mark this class as non-copyable.
         TreeTraversal(const TreeTraversal&) = delete;
@@ -765,8 +759,7 @@ class TreeEnumeration :
          * tree enumeration object: for instance, you can dump the type
          * vector using dumpTypes(), or you can reconstruct the full normal or
          * almost normal surface using buildSurface() and perform some other
-         * operations upon it.  If you do call buildSurface(), remember
-         * to delete the normal surface once you are finished with it.
+         * operations upon it.
          *
          * The tree traversal will block until your callback function
          * \a useSoln returns.  If the callback function returns \c true,
@@ -816,8 +809,7 @@ class TreeEnumeration :
          * tree enumeration object: for instance, you can dump the type
          * vector using dumpTypes(), or you can reconstruct the full normal or
          * almost normal surface using buildSurface() and perform some other
-         * operations upon it.  If you do call buildSurface(), remember
-         * to delete the normal surface once you are finished with it.
+         * operations upon it.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -1033,8 +1025,7 @@ class TautEnumeration :
          * enumeration object: for instance, you can dump the type
          * vector using dumpTypes(), or you can reconstruct the full taut
          * angle structure using buildStructure() and perform some other
-         * operations upon it.  If you do call buildStructure(), remember
-         * to delete the angle structure once you are finished with it.
+         * operations upon it.
          *
          * The enumeration will block until your callback function
          * \a useSoln returns.  If the callback function returns \c true,
@@ -1084,8 +1075,7 @@ class TautEnumeration :
          * enumeration object: for instance, you can dump the type
          * vector using dumpTypes(), or you can reconstruct the full
          * taut angle structure using buildStructure() and perform some other
-         * operations upon it.  If you do call buildStructure(), remember
-         * to delete the angle structure once you are finished with it.
+         * operations upon it.
          *
          * An optional progress tracker may be passed.  If so, this routine
          * will update the percentage progress and poll for cancellation
@@ -1351,8 +1341,7 @@ class TreeSingleSoln :
          * dumpTypes(), or you can reconstruct the full surface using
          * buildSurface().  Be warned that this class defines the type
          * vector in an unusual way (see the TreeSingleSoln class notes
-         * for details).  If you call buildSurface(), remember
-         * to delete the surface once you are finished with it.
+         * for details).
          *
          * \pre The algorithm has not yet been run, i.e., you have not called
          * find() before.
@@ -1463,9 +1452,7 @@ template <class LPConstraint, typename BanConstraint, typename IntType>
 inline bool TreeEnumeration<LPConstraint, BanConstraint, IntType>::
         writeSurface(const TreeEnumeration& tree, void*) {
     std::cout << "SOLN #" << tree.nSolns() << ": ";
-    NormalSurface* f = tree.buildSurface();
-    std::cout << f->str() << std::endl;
-    delete f;
+    std::cout << tree.buildSurface().str() << std::endl;
     return true;
 }
 

@@ -294,7 +294,7 @@ class NormalHypersurfaces : public Packet {
          *
          * @return the normal hypersurface at the requested index in this list.
          */
-        const NormalHypersurface* hypersurface(size_t index) const;
+        const NormalHypersurface& hypersurface(size_t index) const;
 
         virtual void writeTextShort(std::ostream& out) const override;
         virtual void writeTextLong(std::ostream& out) const override;
@@ -808,9 +808,9 @@ inline auto NormalHypersurfaces::hypersurfaces() const {
     return ListView(surfaces_);
 }
 
-inline const NormalHypersurface* NormalHypersurfaces::hypersurface(
+inline const NormalHypersurface& NormalHypersurfaces::hypersurface(
         size_t index) const {
-    return surfaces_[index];
+    return *surfaces_[index];
 }
 
 inline bool NormalHypersurfaces::dependsOnParent() const {

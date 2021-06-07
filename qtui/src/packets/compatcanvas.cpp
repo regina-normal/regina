@@ -260,14 +260,13 @@ void CompatCanvas::fillLocal(const NormalSurfaces& surfaces) {
     QBrush fill(Qt::darkCyan);
 
     unsigned i, j;
-    const NormalSurface *s, *t;
     for (i = 0; i < nSurfaces; ++i) {
-        s = surfaces.surface(i);
+        const NormalSurface& s = surfaces.surface(i);
 
         for (j = i; j < nSurfaces; ++j) {
-            t = surfaces.surface(j);
+            const NormalSurface& t = surfaces.surface(j);
 
-            if (s->locallyCompatible(*t)) {
+            if (s.locallyCompatible(t)) {
                 box = new QGraphicsRectItem(
                     gridX + i * cellSize, gridY + j * cellSize,
                     cellSize, cellSize);
@@ -304,14 +303,13 @@ void CompatCanvas::fillLocal(const NormalHypersurfaces& surfaces) {
     QBrush fill(Qt::darkCyan);
 
     unsigned i, j;
-    const NormalHypersurface *s, *t;
     for (i = 0; i < nSurfaces; ++i) {
-        s = surfaces.hypersurface(i);
+        const NormalHypersurface& s = surfaces.hypersurface(i);
 
         for (j = i; j < nSurfaces; ++j) {
-            t = surfaces.hypersurface(j);
+            const NormalHypersurface& t = surfaces.hypersurface(j);
 
-            if (s->locallyCompatible(*t)) {
+            if (s.locallyCompatible(t)) {
                 box = new QGraphicsRectItem(
                     gridX + i * cellSize, gridY + j * cellSize,
                     cellSize, cellSize);
@@ -346,12 +344,11 @@ void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
     // We know the surface list is non-empty.
 
     unsigned i, j;
-    const NormalSurface *s, *t;
 
     bool* usable = new bool[nSurfaces];
     for (i = 0; i < nSurfaces; ++i) {
-        s = surfaces.surface(i);
-        usable[i] = (s->isCompact() && (! s->isEmpty()) && s->isConnected());
+        const NormalSurface& s = surfaces.surface(i);
+        usable[i] = (s.isCompact() && (! s.isEmpty()) && s.isConnected());
     }
 
     QGraphicsRectItem* box;
@@ -380,15 +377,15 @@ void CompatCanvas::fillGlobal(const NormalSurfaces& surfaces) {
             continue;
         }
 
-        s = surfaces.surface(i);
+        const NormalSurface& s = surfaces.surface(i);
 
         for (j = i; j < nSurfaces; ++j) {
             if (! usable[j])
                 continue;
 
-            t = surfaces.surface(j);
+            const NormalSurface& t = surfaces.surface(j);
 
-            if (s->disjoint(*t)) {
+            if (s.disjoint(t)) {
                 box = new QGraphicsRectItem(
                     gridX + i * cellSize, gridY + j * cellSize,
                     cellSize, cellSize);

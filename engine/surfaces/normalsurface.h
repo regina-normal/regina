@@ -992,12 +992,11 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         void swap(NormalSurface& other) noexcept;
 
         /**
-         * Creates a newly allocated surface that is the double of this
-         * surface.
+         * Returns the double of this surface.
          *
          * @return the double of this normal surface.
          */
-        NormalSurface* doubleSurface() const;
+        NormalSurface doubleSurface() const;
 
         /**
          * Returns the number of triangular discs of the given type in

@@ -303,7 +303,7 @@ class LPConstraintBase {
          * linear function(s), but instead runs independent tests.
          * For instance, if this class is used to constraint Euler
          * characteristic, then ideally this routine would call
-         * s->eulerChar() and test the return value of that routine instead.
+         * s.eulerChar() and test the return value of that routine instead.
          *
          * If these linear constraints work with angle structure coordinates
          * (not normal or almost normal surfaces), then this routine should
@@ -313,7 +313,7 @@ class LPConstraintBase {
          * @return \c true if the given surface satisfies these linear
          * constraints, or \c false if it does not.
          */
-        static bool verify(const NormalSurface* s);
+        static bool verify(const NormalSurface& s);
 
         /**
          * Ensures that the given angle structure satisfies the extra
@@ -321,7 +321,7 @@ class LPConstraintBase {
          *
          * Ideally this test is not based on explicitly recomputing the
          * linear function(s), but instead runs independent tests;
-         * see the related routine verify(const NormalSurface*) for examples.
+         * see the related routine verify(const NormalSurface&) for examples.
          *
          * If these linear constraints work with normal or almost normal
          * surfaces (not angle structure coordinates), then this routine should
@@ -331,7 +331,7 @@ class LPConstraintBase {
          * @return \c true if the given angle structure satisfies these linear
          * constraints, or \c false if it does not.
          */
-        static bool verify(const AngleStructure* s);
+        static bool verify(const AngleStructure& s);
 
         /**
          * Indicates whether the given coordinate system is supported by
@@ -410,8 +410,8 @@ class LPConstraintNone : public LPConstraintSubspace {
         template<typename IntType>
         static void constrain(
             LPData<regina::LPConstraintNone, IntType>&, unsigned);
-        static bool verify(const NormalSurface*);
-        static bool verify(const AngleStructure*);
+        static bool verify(const NormalSurface&);
+        static bool verify(const AngleStructure&);
         static bool supported(NormalCoords coords);
 };
 
@@ -476,8 +476,8 @@ class LPConstraintEulerPositive : public LPConstraintBase {
         static void constrain(
             LPData<regina::LPConstraintEulerPositive, IntType>& lp,
             unsigned numCols);
-        static bool verify(const NormalSurface* s);
-        static bool verify(const AngleStructure*);
+        static bool verify(const NormalSurface& s);
+        static bool verify(const AngleStructure&);
         static bool supported(NormalCoords coords);
 };
 
@@ -545,8 +545,8 @@ class LPConstraintEulerZero : public LPConstraintSubspace {
         static void constrain(
             LPData<regina::LPConstraintEulerZero, IntType>& lp,
             unsigned numCols);
-        static bool verify(const NormalSurface* s);
-        static bool verify(const AngleStructure*);
+        static bool verify(const NormalSurface& s);
+        static bool verify(const AngleStructure&);
         static bool supported(NormalCoords coords);
 };
 
@@ -618,8 +618,8 @@ class LPConstraintNonSpun : public LPConstraintSubspace {
         static void constrain(
             LPData<regina::LPConstraintNonSpun, IntType>& lp,
             unsigned numCols);
-        static bool verify(const NormalSurface* s);
-        static bool verify(const AngleStructure*);
+        static bool verify(const NormalSurface& s);
+        static bool verify(const AngleStructure&);
         static bool supported(NormalCoords coords);
 };
 
@@ -944,11 +944,11 @@ inline void LPConstraintNone::constrain(
         LPData<regina::LPConstraintNone, IntType>&, unsigned) {
 }
 
-inline bool LPConstraintNone::verify(const NormalSurface*) {
+inline bool LPConstraintNone::verify(const NormalSurface&) {
     return true;
 }
 
-inline bool LPConstraintNone::verify(const AngleStructure*) {
+inline bool LPConstraintNone::verify(const AngleStructure&) {
     return true;
 }
 
@@ -999,11 +999,11 @@ inline void LPConstraintEulerPositive::constrain(
     lp.constrainPositive(numCols - 1);
 }
 
-inline bool LPConstraintEulerPositive::verify(const NormalSurface* s) {
-    return (s->eulerChar() > 0);
+inline bool LPConstraintEulerPositive::verify(const NormalSurface& s) {
+    return (s.eulerChar() > 0);
 }
 
-inline bool LPConstraintEulerPositive::verify(const AngleStructure*) {
+inline bool LPConstraintEulerPositive::verify(const AngleStructure&) {
     return false;
 }
 
@@ -1042,11 +1042,11 @@ inline void LPConstraintEulerZero::constrain(
     lp.constrainZero(numCols - 1);
 }
 
-inline bool LPConstraintEulerZero::verify(const NormalSurface* s) {
-    return (s->eulerChar() == 0);
+inline bool LPConstraintEulerZero::verify(const NormalSurface& s) {
+    return (s.eulerChar() == 0);
 }
 
-inline bool LPConstraintEulerZero::verify(const AngleStructure*) {
+inline bool LPConstraintEulerZero::verify(const AngleStructure&) {
     return false;
 }
 
@@ -1093,11 +1093,11 @@ inline void LPConstraintNonSpun::constrain(
     lp.constrainZero(numCols - 1);
 }
 
-inline bool LPConstraintNonSpun::verify(const NormalSurface* s) {
-    return s->isCompact();
+inline bool LPConstraintNonSpun::verify(const NormalSurface& s) {
+    return s.isCompact();
 }
 
-inline bool LPConstraintNonSpun::verify(const AngleStructure*) {
+inline bool LPConstraintNonSpun::verify(const AngleStructure&) {
     return false;
 }
 

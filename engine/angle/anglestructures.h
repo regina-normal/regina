@@ -171,7 +171,7 @@ class AngleStructures : public Packet {
          * this list; this must be between 0 and size()-1 inclusive.
          * @return the angle structure at the requested index.
          */
-        const AngleStructure* structure(size_t index) const;
+        const AngleStructure& structure(size_t index) const;
 
         /**
          * Determines whether any convex combination of the angle
@@ -438,9 +438,9 @@ inline auto AngleStructures::structures() const {
     return ListView(structures_);
 }
 
-inline const AngleStructure* AngleStructures::structure(
+inline const AngleStructure& AngleStructures::structure(
         size_t index) const {
-    return structures_[index];
+    return *structures_[index];
 }
 
 inline bool AngleStructures::spansStrict() const {

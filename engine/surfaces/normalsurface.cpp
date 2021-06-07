@@ -56,23 +56,23 @@ NormalSurface* NormalSurface::clone() const {
     return ans;
 }
 
-NormalSurface* NormalSurface::doubleSurface() const {
-    NormalSurface* ans = new NormalSurface(*triangulation_,
+NormalSurface NormalSurface::doubleSurface() const {
+    NormalSurface ans(*triangulation_,
         dynamic_cast<NormalSurfaceVector*>(vector_->clone()));
 
-    *(ans->vector_) += *(ans->vector_);
+    *(ans.vector_) += *(ans.vector_);
 
     // Some properties can be copied straight across.
-    ans->realBoundary_ = realBoundary_;
-    ans->compact_ = compact_;
+    ans.realBoundary_ = realBoundary_;
+    ans.compact_ = compact_;
     if (eulerChar_.has_value())
-        ans->eulerChar_ = (*eulerChar_) * 2;
+        ans.eulerChar_ = (*eulerChar_) * 2;
 
     // The following three properties can be used together to deduce how
     // they change in the clone.  However, until we sit down and check
     // through all possible cases we'll just leave them marked unknown.
 
-    // TODO: ans->orientable_, ans->twoSided_, ans->connected_
+    // TODO: ans.orientable_, ans.twoSided_, ans.connected_
 
     // And some other properties are best left recalculated.
 

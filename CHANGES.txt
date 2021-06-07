@@ -44,8 +44,8 @@ Version 6.1  [ TODO ]
               pointer.
         Class AngleStructures:
             - New function structures() for simpler iteration.
-            - Changed triangulation() to return a const reference, not a
-              non-const pointer.
+            - Changed triangulation() and surface() to return const references,
+              not pointers.
             - Changed enumerate() and enumerateTautDD() to take the
               triangulation argument by reference, not by pointer.
         Class AugTriSolidTorus:
@@ -88,6 +88,7 @@ Version 6.1  [ TODO ]
             - New compile-time constant dimension.
         Class Cyclotomic:
             - Added member and global swap() functions.
+            - Changed polynomial() to return by value, not by pointer.
         Class DiscType:
             - Almost everything in this class is now constexpr.
             - The class constant NONE is deprecated.  Just use DiscType().
@@ -111,6 +112,8 @@ Version 6.1  [ TODO ]
             - Everything in this class is now constexpr.
             - New class constants lexNumbering and oppositeDim.
             - Simplified the underlying web of template specialisations.
+        Class FailedPrecondition:
+            - New exception class.
         Class FaithfulAssignment:
             - New type trait to identify which of Regina's integer types
               can be losslessly assigned to which others.
@@ -227,6 +230,9 @@ Version 6.1  [ TODO ]
               and can take a pure Python function as its action argument.
         Class ListView:
             - New lightweight objects for basic read-only access to lists.
+        Class LPConstraintBase and all subclasses:
+            - The verify() routines now take their arguments by reference,
+              not by pointer.
         Class LPConstraintEuler, LPConstraintEulerPositive:
             - LPConstraintEuler has been renamed to LPConstraintEulerPositive.
               The old name is kept as a deprecated typedef.
@@ -283,12 +289,13 @@ Version 6.1  [ TODO ]
               operators, and member and global swap() functions.  The old
               clone() now is deprecated; use the copy constructor instead.
             - Changed triangulation() to return a reference, not a pointer.
+            - Changed doubleHypersurface() to return by value, not by pointer.
             - Constructors now take a reference to the triangulation, not a
               pointer.
         Class NormalHypersurfaces:
             - New function hypersurfaces() for simpler iteration.
-            - Changed triangulation() to return a const reference, not a
-              non-const pointer.
+            - Changed triangulation() and hypersurface() to return
+              const references, not pointers.
             - Changed enumerate() to take the triangulation argument by
               reference, not by pointer.
         Class NormalSurface:
@@ -300,13 +307,14 @@ Version 6.1  [ TODO ]
             - Changed triangulation() to return a reference, not a pointer.
             - Changed boundaryIntersections() to return a
               std::optional<MatrixInt>, not a pointer that could be null.
+            - Changed doubleSurface() to return by value, not by pointer.
             - Constructors now take a reference to the triangulation, not a
               pointer.
         Class NormalSurfaces:
             - New function surfaces() for simpler iteration.
             - New filter() method that takes a SurfaceFilter.
-            - Changed triangulation() to return a const reference, not a
-              non-const pointer.
+            - Changed triangulation() and surface() to return const references,
+              not pointers.
             - Changed enumerate() to take the triangulation argument by
               reference, not by pointer.
         Class NormalSurfaceVector, NormalHypersurfaceVector:
@@ -421,7 +429,11 @@ Version 6.1  [ TODO ]
               alias.  Also added a global regina::swap(Tangle&, Tangle&).
         Class TreeTraversal<...>
             - The verify() routines no longer allow a ready-made matrix of
-              matching/angle equations to be passed.
+              matching/angle equations to be passed; also, they now take
+              their arguments by reference (not by pointer).
+            - Changed buildStructure() and buildSurface() to return by value,
+              not by newly allocated pointer.  Now throws an exception (instead
+              of returning null) if the coordinate preconditions are not met.
         Class Triangulation<dim>:
             - New alias fromSig(), which is is identical to fromIsoSig().
             - Routine simplices(), faces(), components(), boundaryComponents(),

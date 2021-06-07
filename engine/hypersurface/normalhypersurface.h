@@ -637,12 +637,11 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         void swap(NormalHypersurface& other) noexcept;
 
         /**
-         * Creates a newly allocated hypersurface that is the double of this
-         * hypersurface.
+         * Returns the double of this hypersurface.
          *
          * @return the double of this normal hypersurface.
          */
-        NormalHypersurface* doubleHypersurface() const;
+        NormalHypersurface doubleHypersurface() const;
 
         /**
          * Returns the number of tetrahedron pieces of the given type in
