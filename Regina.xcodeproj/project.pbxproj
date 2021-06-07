@@ -583,7 +583,6 @@
 		052FA08D180600FB00FAE4DF /* boolset.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6B180600FB00FAE4DF /* boolset.h */; };
 		052FA08E180600FB00FAE4DF /* listoncall.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6C180600FB00FAE4DF /* listoncall.h */; };
 		052FA08F180600FB00FAE4DF /* markedvector.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E6D180600FB00FAE4DF /* markedvector.h */; };
-		052FA092180600FB00FAE4DF /* property.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E70180600FB00FAE4DF /* property.h */; };
 		052FA093180600FB00FAE4DF /* qitmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E71180600FB00FAE4DF /* qitmask.h */; };
 		052FA097180600FB00FAE4DF /* trieset.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E75180600FB00FAE4DF /* trieset.h */; };
 		052FA098180600FB00FAE4DF /* tritmask.h in Headers */ = {isa = PBXBuildFile; fileRef = 052F9E76180600FB00FAE4DF /* tritmask.h */; };
@@ -1484,6 +1483,7 @@
 		0598030726683C9F002D5D57 /* xmlsnappeareader.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C426683C6D002D5D57 /* xmlsnappeareader.cpp */; };
 		0598030826683C9F002D5D57 /* xmltrireader4.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802CC26683C6D002D5D57 /* xmltrireader4.cpp */; };
 		0598030926683C9F002D5D57 /* xmltrireader2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 059802C826683C6D002D5D57 /* xmltrireader2.cpp */; };
+		0598030B266EDDD5002D5D57 /* exception.h in Headers */ = {isa = PBXBuildFile; fileRef = 0598030A266EDDD5002D5D57 /* exception.h */; };
 		0598F9761DBC9D3700E6CE11 /* PythonConsoleController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */; };
 		05998ED219F9362D00855238 /* closed-hyp-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECB19F9360200855238 /* closed-hyp-census.rga */; };
 		05998ED319F9362D00855238 /* closed-nor-census.rga in CopyFiles */ = {isa = PBXBuildFile; fileRef = 05998ECC19F9360200855238 /* closed-nor-census.rga */; };
@@ -1866,7 +1866,6 @@
 		05C1BEEE1DCA89E3007C946B /* triangulation14.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BED21DCA89DA007C946B /* triangulation14.cpp */; };
 		05C1BEEF1DCA89E3007C946B /* triangulation15.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05C1BED31DCA89DA007C946B /* triangulation15.cpp */; };
 		05C1BEF11DCAB4DC007C946B /* isomorphism.h in Headers */ = {isa = PBXBuildFile; fileRef = 05C1BEF01DCAB4DC007C946B /* isomorphism.h */; };
-		05CA99E618078466006161DC /* registryutils.h in Headers */ = {isa = PBXBuildFile; fileRef = 05CA99E518078465006161DC /* registryutils.h */; };
 		05CAFB4E1C4CEA160001C253 /* face10.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB411C4CEA020001C253 /* face10.cpp */; };
 		05CAFB4F1C4CEA160001C253 /* face11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB421C4CEA020001C253 /* face11.cpp */; };
 		05CAFB501C4CEA160001C253 /* face12.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 05CAFB431C4CEA020001C253 /* face12.cpp */; };
@@ -2987,7 +2986,6 @@
 		052F9E6B180600FB00FAE4DF /* boolset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = boolset.h; sourceTree = "<group>"; };
 		052F9E6C180600FB00FAE4DF /* listoncall.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = listoncall.h; sourceTree = "<group>"; };
 		052F9E6D180600FB00FAE4DF /* markedvector.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = markedvector.h; sourceTree = "<group>"; };
-		052F9E70180600FB00FAE4DF /* property.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = property.h; sourceTree = "<group>"; };
 		052F9E71180600FB00FAE4DF /* qitmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = qitmask.h; sourceTree = "<group>"; };
 		052F9E75180600FB00FAE4DF /* trieset.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trieset.h; sourceTree = "<group>"; };
 		052F9E76180600FB00FAE4DF /* tritmask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = tritmask.h; sourceTree = "<group>"; };
@@ -3998,6 +3996,7 @@
 		059802DA26683C6D002D5D57 /* xmlsurfacereader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmlsurfacereader.h; sourceTree = "<group>"; };
 		059802DB26683C6D002D5D57 /* xmlalgebrareader.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = xmlalgebrareader.cpp; sourceTree = "<group>"; };
 		059802DC26683C6D002D5D57 /* xmltrireader4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = xmltrireader4.h; sourceTree = "<group>"; };
+		0598030A266EDDD5002D5D57 /* exception.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exception.h; sourceTree = "<group>"; };
 		0598F9721DBC97F800E6CE11 /* PythonConsoleController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PythonConsoleController.h; sourceTree = "<group>"; };
 		0598F9731DBC97F800E6CE11 /* PythonConsoleController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = PythonConsoleController.mm; sourceTree = "<group>"; };
 		05998ECB19F9360200855238 /* closed-hyp-census.rga */ = {isa = PBXFileReference; lastKnownFileType = file; path = "closed-hyp-census.rga"; sourceTree = "<group>"; };
@@ -4300,7 +4299,6 @@
 		05C1BED21DCA89DA007C946B /* triangulation14.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation14.cpp; sourceTree = "<group>"; };
 		05C1BED31DCA89DA007C946B /* triangulation15.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = triangulation15.cpp; sourceTree = "<group>"; };
 		05C1BEF01DCAB4DC007C946B /* isomorphism.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isomorphism.h; sourceTree = "<group>"; };
-		05CA99E518078465006161DC /* registryutils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = registryutils.h; sourceTree = "<group>"; };
 		05CAFB401C4CEA020001C253 /* face-bindings.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "face-bindings.h"; sourceTree = "<group>"; };
 		05CAFB411C4CEA020001C253 /* face10.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face10.cpp; sourceTree = "<group>"; };
 		05CAFB421C4CEA020001C253 /* face11.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = face11.cpp; sourceTree = "<group>"; };
@@ -5948,6 +5946,7 @@
 				052F9E6A180600FB00FAE4DF /* boolset.cpp */,
 				052F9E6B180600FB00FAE4DF /* boolset.h */,
 				052F9E63180600FB00FAE4DF /* CMakeLists.txt */,
+				0598030A266EDDD5002D5D57 /* exception.h */,
 				052F9E64180600FB00FAE4DF /* flags.h */,
 				052F9E65180600FB00FAE4DF /* i18nutils.cpp */,
 				052F9E66180600FB00FAE4DF /* i18nutils.h */,
@@ -5960,12 +5959,10 @@
 				052F9E68180600FB00FAE4DF /* memutils.h */,
 				052F9E77180600FB00FAE4DF /* osutils.cpp */,
 				052F9E78180600FB00FAE4DF /* osutils.h */,
-				052F9E70180600FB00FAE4DF /* property.h */,
 				052F9E79180600FB00FAE4DF /* ptrutils.h */,
 				052F9E71180600FB00FAE4DF /* qitmask.h */,
 				05754CE6258D7D6400236ED7 /* randutils.cpp */,
 				05754CE5258D7D6400236ED7 /* randutils.h */,
-				05CA99E518078465006161DC /* registryutils.h */,
 				052942CE1C5CDC8B0011C1E6 /* safepointeebase.h */,
 				052942CF1C5CDC8B0011C1E6 /* safeptr.h */,
 				0541AF511B8BE386002E166B /* sequence.h */,
@@ -7736,7 +7733,6 @@
 				052F9F5E180600FB00FAE4DF /* text.h in Headers */,
 				05A067111DFA68190047872E /* blockedsfstriple.h in Headers */,
 				0591E7D91C4F750200793A9C /* hscoordregistry-impl.h in Headers */,
-				05CA99E618078466006161DC /* registryutils.h in Headers */,
 				0513753E1809B8D3002E525B /* coordregistry.h in Headers */,
 				0568742520C5D86B001C435B /* tangle.h in Headers */,
 				05F2033320A17C1E00FC74ED /* dt-impl.h in Headers */,
@@ -7839,6 +7835,7 @@
 				05A067391DFA68190047872E /* spiralsolidtorus.h in Headers */,
 				05721EF21F97153E00A83FFC /* examplelink.h in Headers */,
 				052F9F9F180600FB00FAE4DF /* terse_triangulation.h in Headers */,
+				0598030B266EDDD5002D5D57 /* exception.h in Headers */,
 				052F9EC1180600FB00FAE4DF /* doubledescription.h in Headers */,
 				05A067191DFA68190047872E /* layeredlensspace.h in Headers */,
 				052F9EF4180600FB00FAE4DF /* treeconstraint.h in Headers */,
@@ -7872,7 +7869,6 @@
 				052FA08E180600FB00FAE4DF /* listoncall.h in Headers */,
 				052942D21C5CDC8B0011C1E6 /* safepointeebase.h in Headers */,
 				052F9EC0180600FB00FAE4DF /* doubledescription-impl.h in Headers */,
-				052FA092180600FB00FAE4DF /* property.h in Headers */,
 				052F9ECF180600FB00FAE4DF /* maxadmissible-impl.h in Headers */,
 				05A0670D1DFA68190047872E /* blockedsfsloop.h in Headers */,
 				059802E126683C6D002D5D57 /* xmlfilterreader.h in Headers */,
