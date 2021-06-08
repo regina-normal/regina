@@ -4323,12 +4323,8 @@ class Triangulation3Test : public TriangulationTest<3> {
                 CPPUNIT_FAIL(msg.str());
             }
 
-            NormalSurface* origSurface = tri->nonTrivialSphereOrDisc();
-            NormalSurface* postSurface = copy.nonTrivialSphereOrDisc();
-            bool isOrig0eff = ! origSurface;
-            bool isPost0eff = ! postSurface;
-            delete origSurface;
-            delete postSurface;
+            bool isOrig0eff = ! tri->nonTrivialSphereOrDisc();
+            bool isPost0eff = ! copy.nonTrivialSphereOrDisc();
 
             if (isOrig0eff && ! isPost0eff) {
                 std::ostringstream msg;

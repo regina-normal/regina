@@ -78,7 +78,6 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
 
     Triangulation<3>* processing;
     Triangulation<3>* crushed;
-    NormalSurface* sphere;
     while ((processing = static_cast<Triangulation<3>*>(
             toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
@@ -89,10 +88,9 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
         processing->makeOrphan();
 
         // Find a normal 2-sphere to crush.
-        sphere = processing->nonTrivialSphereOrDisc();
+        auto sphere = processing->nonTrivialSphereOrDisc();
         if (sphere) {
             crushed = sphere->crush();
-            delete sphere;
             delete processing;
 
             if (! crushed->isValid()) {
@@ -141,7 +139,6 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
                     //
                     // It follows then that this is a 3-sphere.
                     // Toss it away.
-                    delete sphere;
                     delete processing;
                 } else {
                     // Now we have a closed orientable one-vertex 0-efficient
@@ -155,10 +152,8 @@ long Triangulation<3>::connectedSumDecomposition(Packet* primeParent,
                     // coordinates paper, we can restrict this search further
                     // to vertex octagonal almost normal surfaces in
                     // quadrilateral-octagonal space.
-                    sphere = processing->octagonalAlmostNormalSphere();
-                    if (sphere) {
+                    if (processing->octagonalAlmostNormalSphere()) {
                         // It's a 3-sphere.  Toss this component away.
-                        delete sphere;
                         delete processing;
                     } else {
                         // It's a non-trivial prime component!
@@ -288,7 +283,6 @@ bool Triangulation<3>::isThreeSphere() const {
 
     Triangulation<3>* processing;
     Triangulation<3>* crushed;
-    NormalSurface* sphere;
     while ((processing = static_cast<Triangulation<3>*>(toProcess.lastChild()))) {
         // INV: Our triangulation is the connected sum of all the
         // children of toProcess.  Each of these children has trivial
@@ -299,10 +293,9 @@ bool Triangulation<3>::isThreeSphere() const {
         processing->makeOrphan();
 
         // Find a normal 2-sphere to crush.
-        sphere = processing->nonTrivialSphereOrDisc();
+        auto sphere = processing->nonTrivialSphereOrDisc();
         if (sphere) {
             crushed = sphere->crush();
-            delete sphere;
             delete processing;
 
             crushed->intelligentSimplify();
@@ -329,7 +322,6 @@ bool Triangulation<3>::isThreeSphere() const {
                 //
                 // It follows then that this is a 3-sphere.
                 // Toss it away.
-                delete sphere;
                 delete processing;
             } else {
                 // Now we have a closed orientable one-vertex 0-efficient
@@ -343,10 +335,8 @@ bool Triangulation<3>::isThreeSphere() const {
                 // coordinates paper, we can restrict this search further
                 // to vertex octagonal almost normal surfaces in
                 // quadrilateral-octagonal space.
-                sphere = processing->octagonalAlmostNormalSphere();
-                if (sphere) {
+                if (processing->octagonalAlmostNormalSphere()) {
                     // It's a 3-sphere.  Toss this component away.
-                    delete sphere;
                     delete processing;
                 } else {
                     // It's not a 3-sphere.  We're done!
@@ -463,7 +453,6 @@ bool Triangulation<3>::isSolidTorus() const {
     // This observation simplifies the crushing cases later on.
 
     // Pull out the big guns: normal surface time.
-    NormalSurface* s;
     Triangulation<3>* crushed;
     Packet* p;
     Triangulation<3>* comp;
@@ -482,7 +471,7 @@ bool Triangulation<3>::isSolidTorus() const {
         }
 
         // Find a non-trivial normal disc or sphere.
-        s = working->nonTrivialSphereOrDisc();
+        auto s = working->nonTrivialSphereOrDisc();
         if (! s) {
             // No non-trivial normal disc.  This cannot be a solid torus.
             delete working;
@@ -496,7 +485,6 @@ bool Triangulation<3>::isSolidTorus() const {
         // - cut along properly embedded discs;
         // - gain and/or lose 3-balls and/or 3-spheres.
         crushed = s->crush();
-        delete s;
         delete working;
         working = nullptr;
 
@@ -730,7 +718,6 @@ bool Triangulation<3>::isIrreducible() const {
 
     Triangulation<3>* processing;
     Triangulation<3>* crushed;
-    NormalSurface* sphere;
     while ((processing = static_cast<Triangulation<3>*>(
             toProcess.firstChild()))) {
         // INV: Our triangulation is the connected sum of all the
@@ -741,10 +728,9 @@ bool Triangulation<3>::isIrreducible() const {
         processing->makeOrphan();
 
         // Find a normal 2-sphere to crush.
-        sphere = processing->nonTrivialSphereOrDisc();
+        auto sphere = processing->nonTrivialSphereOrDisc();
         if (sphere) {
             crushed = sphere->crush();
-            delete sphere;
             delete processing;
 
             crushed->intelligentSimplify();
@@ -771,7 +757,6 @@ bool Triangulation<3>::isIrreducible() const {
                 //
                 // It follows then that this is a 3-sphere.
                 // Toss it away.
-                delete sphere;
                 delete processing;
             } else {
                 // Now we have a closed orientable one-vertex 0-efficient
@@ -785,10 +770,8 @@ bool Triangulation<3>::isIrreducible() const {
                 // coordinates paper, we can restrict this search further
                 // to vertex octagonal almost normal surfaces in
                 // quadrilateral-octagonal space.
-                sphere = processing->octagonalAlmostNormalSphere();
-                if (sphere) {
+                if (processing->octagonalAlmostNormalSphere()) {
                     // It's a 3-sphere.  Toss this component away.
-                    delete sphere;
                     delete processing;
                 } else {
                     // It's a non-trivial prime component!

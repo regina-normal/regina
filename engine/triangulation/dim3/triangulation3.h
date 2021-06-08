@@ -51,6 +51,7 @@
 #include "regina-core.h"
 #include "angle/anglestructure.h"
 #include "maths/cyclotomic.h"
+#include "surfaces/normalsurface.h"
 #include "treewidth/treedecomposition.h"
 #include "triangulation/detail/retriangulate.h"
 #include "triangulation/generic/triangulation.h"
@@ -911,16 +912,16 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * this triangulation, this routine is guaranteed to find one.
          *
          * Note that the surface returned (if any) depends upon this
-         * triangulation, and so the surface must be destroyed before this
+         * triangulation, and so the surface cannot be used after this
          * triangulation is destroyed.
          *
          * \warning This routine may, in some scenarios, temporarily modify the
          * packet tree by creating and then destroying a normal surface list.
          *
-         * @return a newly allocated non-vertex-linking normal sphere or
-         * disc, or \c nullptr if none exists.
+         * @return a non-vertex-linking normal sphere or disc, or no value if
+         * none exists.
          */
-        NormalSurface* nonTrivialSphereOrDisc();
+        std::optional<NormalSurface> nonTrivialSphereOrDisc();
         /**
          * A deprecated alias for nonTrivialSphereOrDisc(), which searches for
          * a non-vertex-linking normal sphere or disc within this triangulation.
@@ -928,17 +929,17 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * \deprecated This routine has been renamed to
          * nonTrivialSphereOrDisc().  See that routine for further details.
          *
-         * @return a newly allocated non-vertex-linking normal sphere or
-         * disc, or \c nullptr if none exists.
+         * @return a non-vertex-linking normal sphere or disc, or no value if
+         * none exists.
          */
-        [[deprecated]] NormalSurface* hasNonTrivialSphereOrDisc();
+        [[deprecated]] std::optional<NormalSurface> hasNonTrivialSphereOrDisc();
         /**
          * Searches for an octagonal almost normal 2-sphere within this
          * triangulation.  If such a surface exists, this routine is
          * guaranteed to find one.
          *
          * Note that the surface returned (if any) depends upon this
-         * triangulation, and so the surface must be destroyed before this
+         * triangulation, and so the surface cannot be used after this
          * triangulation is destroyed.
          *
          * \pre This triangulation is valid, closed, orientable, connected,
@@ -948,10 +949,10 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * \warning This routine may, in some scenarios, temporarily modify the
          * packet tree by creating and then destroying a normal surface list.
          *
-         * @return a newly allocated non-vertex-linking normal sphere or
-         * disc, or \c nullptr if none exists.
+         * @return an octagonal almost normal 2-sphere, or no value if
+         * none exists.
          */
-        NormalSurface* octagonalAlmostNormalSphere();
+        std::optional<NormalSurface> octagonalAlmostNormalSphere();
         /**
          * A deprecated alias for octagonalAlmostNormalSphere(), which searches
          * for an octagonal almost normal 2-sphere within this triangulation.
@@ -962,10 +963,11 @@ class Triangulation<3> : public Packet, public detail::TriangulationBase<3> {
          * \pre This triangulation is valid, closed, orientable, connected,
          * and 0-efficient.
          *
-         * @return a newly allocated non-vertex-linking normal sphere or
-         * disc, or \c nullptr if none exists.
+         * @return an octagonal almost normal 2-sphere, or no value if
+         * none exists.
          */
-        [[deprecated]] NormalSurface* hasOctagonalAlmostNormalSphere();
+        [[deprecated]] std::optional<NormalSurface>
+            hasOctagonalAlmostNormalSphere();
         /**
          * Searches for a strict angle structure on this triangulation.
          * Recall that a \e strict angle structure is one in which every
@@ -3350,11 +3352,13 @@ inline bool Triangulation<3>::knowsZeroEfficient() const {
     return zeroEfficient_.has_value();
 }
 
-inline NormalSurface* Triangulation<3>::hasNonTrivialSphereOrDisc() {
+inline std::optional<NormalSurface>
+        Triangulation<3>::hasNonTrivialSphereOrDisc() {
     return nonTrivialSphereOrDisc();
 }
 
-inline NormalSurface* Triangulation<3>::hasOctagonalAlmostNormalSphere() {
+inline std::optional<NormalSurface>
+        Triangulation<3>::hasOctagonalAlmostNormalSphere() {
     return octagonalAlmostNormalSphere();
 }
 

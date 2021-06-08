@@ -69,14 +69,14 @@ namespace regina {
  * vertex link.
  */
 
-NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
+std::optional<NormalSurface> Triangulation<3>::nonTrivialSphereOrDisc() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
-        return nullptr;
+        return std::nullopt;
 
     // Do we already know the answer?
     if (zeroEfficient_.has_value() && *zeroEfficient_)
-        return nullptr;
+        return std::nullopt;
 
     // Use combinatorial optimisation if we can.
     if (isValid() && countVertices() == 1) {
@@ -86,11 +86,11 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
             NormalSurface s = tree.buildSurface();
             if (! ((! s.hasRealBoundary()) &&
                     (s.eulerChar() == 1) && s.isTwoSided()))
-                return new NormalSurface(std::move(s));
+                return s;
             // Looks like we've found a two-sided projective plane.
             // Fall through to a full enumeration of vertex surfaces.
         } else
-            return nullptr;
+            return std::nullopt;
     }
 
     // Fall back to a slow-but-general method: enumerate all vertex surfaces.
@@ -112,18 +112,18 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
         // We just need to pick out spheres and discs.
         if (s.eulerChar() == 2) {
             // Must be a sphere; no bounded surface has chi=2.
-            NormalSurface* ans = new NormalSurface(s);
+            NormalSurface ans = s;
             delete surfaces;
             return ans;
         } else if (s.eulerChar() == 1) {
             if (s.hasRealBoundary()) {
                 // Must be a disc.
-                NormalSurface* ans = new NormalSurface(s);
+                NormalSurface ans = s;
                 delete surfaces;
                 return ans;
             } else if (! s.isTwoSided()) {
                 // A projective plane that doubles to a sphere.
-                NormalSurface* ans = new NormalSurface(s.doubleSurface());
+                NormalSurface ans = s.doubleSurface();
                 delete surfaces;
                 return ans;
             }
@@ -131,13 +131,13 @@ NormalSurface* Triangulation<3>::nonTrivialSphereOrDisc() {
     }
 
     delete surfaces;
-    return nullptr;
+    return std::nullopt;
 }
 
-NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
+std::optional<NormalSurface> Triangulation<3>::octagonalAlmostNormalSphere() {
     // Get the empty triangulation out of the way now.
     if (simplices_.empty())
-        return nullptr;
+        return std::nullopt;
 
     // Use combinatorial optimisation if we can.
     // This is good for large problems, but for small problems a full
@@ -154,9 +154,9 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
             // which then implies that our surface here is almost normal
             // with exactly 1 octagon and Euler = 2.  This is exactly
             // what we're looking for.
-            return new NormalSurface(tree.buildSurface());
+            return tree.buildSurface();
         } else
-            return nullptr;
+            return std::nullopt;
     }
 
     // Fall back to a slow-but-general method: enumerate all vertex surfaces.
@@ -199,7 +199,7 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
                 }
             if (found && ! broken) {
                 // This is it!
-                NormalSurface* ans = new NormalSurface(s);
+                NormalSurface ans = s;
                 delete surfaces;
                 return ans;
             }
@@ -207,7 +207,7 @@ NormalSurface* Triangulation<3>::octagonalAlmostNormalSphere() {
     }
 
     delete surfaces;
-    return nullptr;
+    return std::nullopt;
 }
 
 bool Triangulation<3>::isZeroEfficient() {
@@ -218,10 +218,8 @@ bool Triangulation<3>::isZeroEfficient() {
             // Operate on a clone of this triangulation, to avoid
             // changing the real packet tree.
             Triangulation<3> clone(*this, false);
-            NormalSurface* s = clone.nonTrivialSphereOrDisc();
-            if (s) {
+            if (clone.nonTrivialSphereOrDisc()) {
                 zeroEfficient_ = false;
-                delete s;
             } else {
                 zeroEfficient_ = true;
 
