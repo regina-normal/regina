@@ -820,7 +820,7 @@ inline bool NormalHypersurfaces::VectorIterator::operator !=(
 
 inline const Vector<LargeInteger>&
         NormalHypersurfaces::VectorIterator::operator *() const {
-    return it_->vector();
+    return it_->vector().coords();
 }
 
 inline NormalHypersurfaces::VectorIterator&

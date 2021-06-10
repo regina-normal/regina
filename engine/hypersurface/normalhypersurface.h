@@ -994,30 +994,32 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
         bool locallyCompatible(const NormalHypersurface& other) const;
 
         /**
-         * Gives read-only access to the raw vector that sits beneath this
-         * normal hypersurface.
+         * Gives read-only access to the vector that represents this
+         * hypersurface.
          *
-         * Generally users should not need this function.  However, it is
-         * provided here in case the need should arise (e.g., for reasons
-         * of efficiency).
+         * The vector is returned as a NormalHypersurfaceVector, which
+         * is a class that knows the underlying normal coordinate system.
+         * If you just want a plain Vector<LargeInteger>, you can call
+         * vector().coords() instead.
          *
-         * \warning An NormalHypersurface does not know what underlying
-         * coordinate system its raw vector uses.  Unless you already know
-         * the coordinate system in advance (i.e., you created the hypersurface
-         * yourself), it is best to keep to the coordinate-system-agnostic
-         * access functions such as NormalHypersurfaceVector::tetrahedra() and
-         * NormalHypersurfaceVector::prisms().
+         * \note If you just wish to access the numbers of tetrahedra,
+         * prisms and so on, you can use the functions tetrahedra(), prisms()
+         * and so on, which do not require any knowledge of the underlying
+         * coordinate system.
          *
          * \ifacespython Not present.
          *
-         * @return the underlying raw vector.
+         * @return the underlying vector.
          */
-        const Vector<LargeInteger>& vector() const;
+        const NormalHypersurfaceVector& vector() const;
 
         /**
-         * A deprecated alias for vector().
+         * A deprecated routine that gives read-only access to the raw
+         * vector of integers that represents this hypersurface.
          *
-         * \deprecated This routine has been renamed to vector().
+         * \deprecated This routine is now deprecated; instead call vector()
+         * to obtain the underlying vector as a NormalHypersurfaceVector, or
+         * call vector().coords() to obtain it as a plain Vector<LargeInteger>.
          *
          * \ifacespython Not present.
          *
@@ -1264,8 +1266,8 @@ inline const Edge<4>* NormalHypersurface::isThinEdgeLink() const {
     return vector_->isThinEdgeLink(*triangulation_);
 }
 
-inline const Vector<LargeInteger>& NormalHypersurface::vector() const {
-    return vector_->coords();
+inline const NormalHypersurfaceVector& NormalHypersurface::vector() const {
+    return *vector_;
 }
 
 inline const Vector<LargeInteger>& NormalHypersurface::rawVector() const {

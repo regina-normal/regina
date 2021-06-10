@@ -63,14 +63,9 @@ namespace regina {
  * If any particular lookup can be done more efficiently in the native
  * coordinate system, the corresponding routine should be overridden.
  *
- * Subclasses must however implement two variants of makeMirror():
- *
- * - a static function NormalSurfaceVector* makeMirror(
- *   const Vector<LargeInteger>&, const Triangulation<3>&), which builds the
- *   mirror vector from the native vector;
- * - a virtual function
- *   NormalSurfaceVector* makeMirror(const Triangulation<3>&) const,
- *   which simply calls the static function described above.
+ * Subclasses must however implement a virtual function
+ * NormalSurfaceVector* makeMirror(const Triangulation<3>&) const,
+ * which builds the mirror vector from the native vector.
  *
  * \ifacespython Not present.
  */
@@ -107,44 +102,12 @@ class NSVectorMirrored : public NormalSurfaceVector {
          * system (i.e., NSVectorStandard if this subclass is NSVectorQuad, or
          * NSVectorANStandard if this subclass is NSVectorQuadOct, and so on.)
          *
-         * Typically subclasses should implement this function by calling the
-         * corresponding static makeMirror() function, which does the real work.
-         *
          * @param triang the triangulation in which this normal surface lives.
          * @return a newly created vector that describes the same normal
          * surface in a "standard" coordinate system, as described above.
          */
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>& triang)
             const = 0;
-
-#ifdef __DOXYGEN
-        /**
-         * Creates a new mirror vector corresponding to the given vector.
-         * This function should be implemented by each subclass of
-         * NSVectorMirrored.
-         *
-         * This function must return a newly created vector that describes
-         * the given normal surface in a different coordinate system:
-         *
-         * - The given vector must be in the coordinate system described
-         *   by the subclass in which this function is implemented.
-         *
-         * - The return vector must be in the corresponding "standard"
-         *   coordinate system (i.e., NSVectorStandard if this subclass is
-         *   NSVectorQuad, or NSVectorANStandard if this subclass is
-         *   NSVectorQuadOct, and so on.)
-         *
-         * @param original a vector in the coordinate system corresponding to
-         * the subclass in which this function is implemented.
-         * @param triang the triangulation in which the corresponding
-         * normal surface lives.
-         * @return a newly created vector that describes the same normal
-         * surface in a "standard" coordinate system, as described above.
-         */
-        static NormalSurfaceVector* makeMirror(
-            const Vector<LargeInteger>& original,
-            const Triangulation<3>& triang);
-#endif
 
         virtual void set(size_t index, const LargeInteger& value) override;
         virtual NormalSurfaceVector& operator += (

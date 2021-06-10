@@ -1761,30 +1761,31 @@ class NormalSurface : public ShortOutput<NormalSurface> {
         std::optional<MatrixInt> boundaryIntersections() const;
 
         /**
-         * Gives read-only access to the raw vector that sits beneath this
-         * normal surface.
+         * Gives read-only access to the vector that represents this surface.
          *
-         * Generally users should not need this function.  However, it is
-         * provided here in case the need should arise (e.g., for reasons
-         * of efficiency).
+         * The vector is returned as a NormalSurfaceVector, which is a
+         * class that knows the underlying normal coordinate system.  If you
+         * just want a plain Vector<LargeInteger>, you can call
+         * vector().coords() instead.
          *
-         * \warning A NormalSurface does not know what underlying
-         * coordinate system its raw vector uses.  Unless you already know
-         * the coordinate system in advance (i.e., you created the surface
-         * yourself), it is best to keep to the coordinate-system-agnostic
-         * access functions such as NormalSurfaceVector::triangles()
-         * and NormalSurfaceVector::quads().
+         * \note If you just wish to access the numbers of triangles,
+         * quads and so on, you can use the functions triangles(), quads()
+         * and so on, which do not require any knowledge of the underlying
+         * coordinate system.
          *
          * \ifacespython Not present.
          *
-         * @return the underlying raw vector.
+         * @return the underlying vector.
          */
-        const Vector<LargeInteger>& vector() const;
+        const NormalSurfaceVector& vector() const;
 
         /**
-         * A deprecated alias for vector().
+         * A deprecated routine that gives read-only access to the raw
+         * vector of integers that represents this surface.
          *
-         * \deprecated This routine has been renamed to vector().
+         * \deprecated This routine is now deprecated; instead call vector()
+         * to obtain the underlying vector as a NormalSurfaceVector, or call
+         * vector().coords() to obtain it as a plain Vector<LargeInteger>.
          *
          * \ifacespython Not present.
          *
@@ -2137,8 +2138,8 @@ inline bool NormalSurface::normal() const {
     return ! octPosition();
 }
 
-inline const Vector<LargeInteger>& NormalSurface::vector() const {
-    return vector_->coords();
+inline const NormalSurfaceVector& NormalSurface::vector() const {
+    return *vector_;
 }
 
 inline const Vector<LargeInteger>& NormalSurface::rawVector() const {

@@ -419,9 +419,8 @@ void NormalSurfaces::buildStandardFromReducedUsing(
     RaySpecList list[2];
 
     NormalSurfaceVector* v;
-    std::vector<NormalSurface>::const_iterator qit;
-    for (qit = reducedList.begin(); qit != reducedList.end(); ++qit) {
-        v = Variant::ReducedVector::makeMirror(qit->vector(), owner);
+    for (const auto& s : reducedList) {
+        v = static_cast<const NSVectorMirrored&>(s.vector()).makeMirror(owner);
         list[0].push_back(new RaySpec<BitmaskType>(v->coords()));
         delete v;
     }

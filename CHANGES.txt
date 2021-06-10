@@ -283,8 +283,9 @@ Version 6.1  [ TODO ]
             - Class constants almostNormal, spun and oriented are now
               static constexpr bool, not enum constants.
         Class NormalHypersurface:
-            - Renamed rawVector() to vector().  The old name is kept but
-              deprecated.
+            - Replaced rawVector() with vector(), which now returns a
+              NormalHypersurfaceVector by reference (not a Vector by pointer).
+              The old name is kept but deprecated.
             - Added copy and move constructors, copy and move assignment
               operators, and member and global swap() functions.  The old
               clone() now is deprecated; use the copy constructor instead.
@@ -301,8 +302,9 @@ Version 6.1  [ TODO ]
             - Changed sort() so the comparison function must now take
               two hypersurfaces by reference, not by pointer.
         Class NormalSurface:
-            - Renamed rawVector() to vector().  The old name is kept but
-              deprecated.
+            - Replaced rawVector() with vector(), which now returns a
+              NormalSurfaceVector by reference (not a Vector by pointer).
+              The old name is kept but deprecated.
             - Added copy and move constructors, copy and move assignment
               operators, and member and global swap() functions.  The old
               clone() now is deprecated; use the copy constructor instead.
@@ -334,7 +336,8 @@ Version 6.1  [ TODO ]
               not by pointer.
         Class NSVectorMirrored:
             - Changed makeMirror() to take its triangulation by reference,
-              not by pointer.
+              not by pointer.  Also removed the static versions of makeMirror();
+              only the virtual (non-static) function is used.
         Class PacketInfo<...>:
             - Routine name() has been changed to a class constant.
               This change is backward incompatible (but probably affects noone).

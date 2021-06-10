@@ -86,7 +86,7 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     std::vector<NormalSurface>::const_iterator it;
     for (const NormalSurface& s : surfaces_)
         if (! s.isVertexLinking())
-            use[nUse++] = &s.vector();
+            use[nUse++] = &s.vector().coords();
 
     // We want to take all surfaces with maximal zero sets in quad space.
     // That is, we want surface S if and only if there is no other surface T

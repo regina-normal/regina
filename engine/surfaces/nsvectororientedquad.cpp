@@ -125,7 +125,7 @@ namespace {
 }
 
 NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
-        const Vector<LargeInteger>& original, const Triangulation<3>& triang) {
+        const Triangulation<3>& triang) const {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
     size_t nRows = 14 * triang.size();
@@ -141,7 +141,7 @@ NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
             ans->set(row + i, LargeInteger::infinity);
     for (row = 0; 14 * row < nRows; row++)
         for (i = 0; i < 6; i++)
-            ans->set(14 * row + 8 + i, original[6 * row + i]);
+            ans->set(14 * row + 8 + i, coords_[6 * row + i]);
 
     for (int orient = 0; orient < 2; ++orient) {
         // Run through the vertices and work out the triangular coordinates

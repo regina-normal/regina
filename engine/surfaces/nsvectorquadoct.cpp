@@ -122,7 +122,7 @@ namespace {
 }
 
 NormalSurfaceVector* NSVectorQuadOct::makeMirror(
-        const Vector<LargeInteger>& original, const Triangulation<3>& triang) {
+        const Triangulation<3>& triang) const {
     // We're going to do this by wrapping around each edge and seeing
     // what comes.
     unsigned long nRows = 10 * triang.size();
@@ -138,7 +138,7 @@ NormalSurfaceVector* NSVectorQuadOct::makeMirror(
             ans->set(row + i, LargeInteger::infinity);
     for (row = 0; 10 * row < nRows; ++row)
         for (i = 0; i < 6; i++)
-            ans->set(10 * row + 4 + i, original[6 * row + i]);
+            ans->set(10 * row + 4 + i, coords_[6 * row + i]);
 
     // Run through the vertices and work out the triangular coordinates
     // about each vertex in turn.

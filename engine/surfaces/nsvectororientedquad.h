@@ -103,9 +103,6 @@ class NSVectorOrientedQuad : public NSVectorMirrored {
         template <typename T>
         NSVectorOrientedQuad(const Vector<T>& cloneMe);
 
-        static NormalSurfaceVector* makeMirror(
-            const Vector<LargeInteger>& original,
-            const Triangulation<3>& triang);
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>& triang)
             const override;
 
@@ -136,11 +133,6 @@ inline NSVectorOrientedQuad::NSVectorOrientedQuad(
 template <typename T>
 inline NSVectorOrientedQuad::NSVectorOrientedQuad(const Vector<T>& cloneMe) :
         NSVectorMirrored(cloneMe) {
-}
-
-inline NormalSurfaceVector* NSVectorOrientedQuad::makeMirror(
-        const Triangulation<3>& triang) const {
-    return makeMirror(coords(), triang);
 }
 
 inline LargeInteger NSVectorOrientedQuad::quads(

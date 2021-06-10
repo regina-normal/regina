@@ -1526,7 +1526,7 @@ inline bool NormalSurfaces::VectorIterator::operator !=(
 
 inline const Vector<LargeInteger>& NormalSurfaces::VectorIterator::
         operator *() const {
-    return it_->vector();
+    return it_->vector().coords();
 }
 
 inline NormalSurfaces::VectorIterator& NormalSurfaces::VectorIterator::

@@ -100,9 +100,6 @@ class NSVectorQuadOct : public NSVectorMirrored {
         template <typename T>
         NSVectorQuadOct(const Vector<T>& cloneMe);
 
-        static NormalSurfaceVector* makeMirror(
-            const Vector<LargeInteger>& original,
-            const Triangulation<3>& triang);
         virtual NormalSurfaceVector* makeMirror(const Triangulation<3>& triang)
             const override;
 
@@ -125,11 +122,6 @@ inline NSVectorQuadOct::NSVectorQuadOct(
 template <typename T>
 inline NSVectorQuadOct::NSVectorQuadOct(const Vector<T>& cloneMe) :
         NSVectorMirrored(cloneMe) {
-}
-
-inline NormalSurfaceVector* NSVectorQuadOct::makeMirror(
-        const Triangulation<3>& triang) const {
-    return makeMirror(coords(), triang);
 }
 
 inline const Vertex<3>* NSVectorQuadOct::isVertexLink(
