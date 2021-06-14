@@ -178,9 +178,11 @@ const NMarkedAbelianGroup* NCellularData::markedGroup(
    std::map< GroupLocator, NMarkedAbelianGroup* > *mabgptr = 
 	const_cast< std::map< GroupLocator, NMarkedAbelianGroup* > *> 
         (&markedAbelianGroups);
+
    mabgptr->insert(std::pair<GroupLocator,NMarkedAbelianGroup*>(g_desc,mgptr)); 
   }
  // clean up
+
  if (tempMat != NULL) delete tempMat; 
  return mgptr;
 }
@@ -1581,7 +1583,7 @@ std::string embeddabilityString(const NTriangulation* tri,
   return retval;
 } // end embeddabilityString()
 
-} // end anonymous namespace
+} // end unnamed namespace
 
 bool NCellularData::boolInfo( const BoolRequest &b_desc) const
 { // TODO something!

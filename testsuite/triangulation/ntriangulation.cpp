@@ -73,6 +73,7 @@ using regina::NTetrahedron;
 using regina::NTriangle;
 using regina::NTriangulation;
 using regina::NVertex;
+using regina::NEdge;
 
 class NTriangulationTest : public TriangulationTest<3> {
     CPPUNIT_TEST_SUITE(NTriangulationTest);
@@ -108,6 +109,7 @@ class NTriangulationTest : public TriangulationTest<3> {
     CPPUNIT_TEST(drillEdge);
     CPPUNIT_TEST(puncture);
     CPPUNIT_TEST(connectedSumWithSelf);
+    CPPUNIT_TEST(divideEdges); 
     CPPUNIT_TEST(dehydration);
     CPPUNIT_TEST(simplification);
     CPPUNIT_TEST(reordering);
@@ -3742,6 +3744,67 @@ class NTriangulationTest : public TriangulationTest<3> {
 
         void connectedSumWithSelf() {
             testManualSmall(verifyConnectedSumWithSelf);
+        }
+
+        static void verifyDivideEdges( NTriangulation* tri ) {
+         // no point working on the empty triangulation.
+         if (tri->getNumberOfEdges()==0) return;
+         bool validFlag( tri->isValid() );
+         if (!validFlag) return;
+         bool idealFlag( tri->isIdeal() );
+         unsigned long connCount( tri->getNumberOfComponents() );
+
+         NTriangulation divideTri( *tri );  
+         std::set< const NEdge* > eList;
+         eList.insert( divideTri.getEdge(0) );  
+         divideTri.divideEdges( eList );
+         std::ostringstream msg;
+         if (divideTri.isValid() != validFlag) {
+                msg << " : divideEdges invalid.";
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.isIdeal() != idealFlag) {
+                msg <<" : divideEdges ideal change.";
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.getNumberOfComponents() != connCount) {
+                msg <<" : divideEdges component number change.";
+                msg <<" "<<divideTri.getNumberOfComponents()<<" != "<<
+                      connCount<<" ";
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.isClosed() != tri->isClosed()) {
+                msg<<" : divideEdges changed boundary. ";
+                msg<<" initial tri "<<(tri->isClosed() ? 
+                     "was closed" : "has boundary");
+                msg<<" while divideTri "<<(divideTri.isClosed() ? 
+                     "is closed." : "has boundary.");
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.getHomologyH1().str() !=
+                tri->getHomologyH1().str()) {
+                msg<<" : divideEdges changed H1.";
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.getHomologyH2().str() !=
+                tri->getHomologyH2().str()) {
+                msg<<" : divideEdges changed H2.";
+                CPPUNIT_FAIL(msg.str());
+         }
+        NTriangulation loopTri( *tri );
+        std::set< const NEdge* > loopList;
+        for (unsigned long i=0; i<loopTri.getNumberOfEdges(); i++)
+         if (loopTri.getEdge(i)->getVertex(0)==loopTri.getEdge(i)->getVertex(1))
+          loopList.insert(loopTri.getEdge(i));
+        loopTri.divideEdges( loopList );
+        for (unsigned long i=0; i<loopTri.getNumberOfEdges(); i++)
+         if (loopTri.getEdge(i)->getVertex(0)==loopTri.getEdge(i)->getVertex(1))
+           { msg<<" : divideEdges did not divide the right edges.";
+             CPPUNIT_FAIL(msg.str()); }
+        } // end verifyDivideEdges
+
+        void divideEdges() {
+         testManualSmall(verifyDivideEdges);
         }
 
         void verifyDehydration(const NTriangulation& tri) {

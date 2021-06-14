@@ -36,6 +36,7 @@
 #include <map>
 
 #include "dim4/dim4triangulation.h"
+#include "triangulation/nedge.h"
 
 namespace regina {
 
@@ -758,4 +759,397 @@ bool Dim4Triangulation::idealToFinite() {
     return true;
 }
 
-} // namespace regina
+namespace { // unnamed namespace for private structs for divideEdge
+
+// this is intended as a bitmask version of the old simpFacet class. Describes
+// a barycentre of a facet of a simplex. aDim is the hard-coded dimension limit
+// aDim==5 means 4-simplices are currently the max.
+struct bCtr {
+ static const unsigned long aDim = 5; // we're at most dealing with 4-simplices.
+ unsigned long code; // bitmask describing which vertices this is the
+  // barycenter of. 
+ bCtr() { code = 0; } // null constructor
+ static bCtr byCode(const unsigned long &num) // define by code.
+  { bCtr retval; retval.code = num; return retval; }
+ bCtr(const bCtr &oth) { code = oth.code; } // copy constructor
+ bCtr(const unsigned long &fac0)  { code = (1 << fac0); }
+ bCtr(const unsigned long &fac0, const unsigned long &fac1)
+  { code = (1 << fac0) | (1 << fac1); }
+ bCtr(const unsigned long &fac0, const unsigned long &fac1, 
+      const unsigned long &fac2)
+  { code = (1 << fac0) | (1 << fac1) | (1 << fac2); }
+ bCtr(const unsigned long &fac0, const unsigned long &fac1, 
+      const unsigned long &fac2, const unsigned long &fac3)
+  { code = (1 << fac0) | (1 << fac1) | (1 << fac2) | (1 << fac3); }
+ bCtr(const unsigned long &fac0, const unsigned long &fac1, 
+      const unsigned long &fac2, const unsigned long &fac3, const unsigned long &fac4)
+  { code = (1 << fac0) | (1 << fac1) | (1 << fac2) | (1 << fac3) | (1 << fac4); }
+ bCtr pushForward(const NPerm5 per) const
+  { // push forward 
+   bCtr retval;
+   for (unsigned long i=0; i<aDim; i++) if ( code & (1 << i) )
+    retval.code = retval.code | (1 << per[i]);
+   return retval;   
+  }
+ bCtr pullBack(const NPerm5 per) const
+  { // pull back
+   bCtr retval;
+   for (unsigned long i=0; i<aDim; i++) if ( code & (1 << per[i]) )
+    retval.code = retval.code | (1 << i);
+   return retval;   
+  }
+ unsigned long dFac() const
+  {
+   unsigned long retval(0);
+   for (unsigned long i=0; i<aDim; i++) if ( code & (1 << i) ) retval++;
+   return retval; 
+  }
+ bool operator<(const bCtr &oth) const
+  { // let's try a lexico sort on the dimension of the facets. 
+   if (dFac() < oth.dFac()) return true;
+   if (dFac() > oth.dFac()) return false;
+   if (code < oth.code) return true;
+   return false;
+   // return code < oth.code; // this is the old sort. 
+  }
+}; 
+
+// std output << operator
+std::ostream& operator<<(std::ostream& out, const bCtr &c) {
+ out << "<"; 
+ for (unsigned long i=0; i<bCtr::aDim; i++) out<<( ( (1 << i) & c.code) ? "1" : "0" );
+ out << ">";
+ return out;
+}
+
+// to be a replacement for the vtxSet struct.
+struct simpSubFac { // a simplicial sub-facet of a simplex. This encodes any
+ // sub-simplex of a simplex whose vertices consist of barycentres of the 
+ // facets of the original simplex. 
+ //
+ // it is up to the user to decide what the ambient dimension of the simplex
+ // is.  currently dim 4 is a hard-coded max, see aDim in the bCtr struct.
+ std::list< bCtr > vtxset;
+ // copy constructor
+ simpSubFac(const simpSubFac &other) : vtxset( other.vtxset ) {}
+ // empty constructor
+ simpSubFac() {}
+ // the not-subdivided n-dimensional simplex
+ simpSubFac(const unsigned long aDim)
+  { for (unsigned long i=0; i<=aDim; i++) vtxset.push_back( bCtr(i) ); }
+ // check to see if facet fac is part of this simplex
+ bool hasFacets( const std::list< bCtr > &fac ) const
+  { // both vtxset and fac must be sorted.
+   return std::includes( vtxset.begin(), vtxset.end(), 
+                         fac.begin(), fac.end() );
+  }
+ // if facet inF appears, replace it by outF.  Return true if successful.
+ bool replaceFacet( const bCtr &inF, const bCtr &outF )
+  {
+   for (std::list< bCtr >::iterator i=vtxset.begin(); i!=vtxset.end(); i++)
+    if ( !((*i) < inF ) && !(inF < (*i)) )
+     {
+      vtxset.erase(i);
+      vtxset.push_back( outF );
+      vtxset.sort();
+      return true;
+     }
+   return false;
+  }
+ // for sorting
+ bool operator<(const simpSubFac &other) const
+  {
+    std::list< bCtr >::const_iterator i=vtxset.begin();
+    std::list< bCtr >::const_iterator j=other.vtxset.begin();
+    while ( (i!=vtxset.end()) && (j!=other.vtxset.end()) )
+     {if ( (*i < *j) ) return true;  if ( (*j < *i) ) return false;
+      i++; j++; }
+    if ( (i == vtxset.end()) && (j != other.vtxset.end()) ) return true; 
+    return false;
+  }
+ // warning, this routine does not sort -- up to user to do if neccessary.
+ void coneOn( const bCtr &conePt )
+  {   vtxset.push_back( conePt );  }
+ simpSubFac pushForward( const NPerm5 &per ) const
+  {
+   simpSubFac retval;
+   for (std::list< bCtr >::const_iterator i = vtxset.begin(); i!=vtxset.end(); i++)
+    retval.vtxset.push_back( i->pushForward(per) ); 
+   retval.vtxset.sort();
+   return retval;
+  }
+ simpSubFac pullBack( const NPerm5 &per ) const
+  {
+   simpSubFac retval;
+   for (std::list< bCtr >::const_iterator i = vtxset.begin(); i!=vtxset.end(); i++)
+    retval.vtxset.push_back( i->pullBack(per) ); 
+   retval.vtxset.sort();
+   return retval;
+  }
+};
+
+// std output << operator
+std::ostream& operator<<(std::ostream& out, const simpSubFac &f) {
+ out << "{"; 
+ for (std::list< bCtr >::const_iterator i=f.vtxset.begin(); i!=f.vtxset.end(); i++) 
+  {
+   if (i!=f.vtxset.begin()) out<<","; 
+   out<<(*i);
+  }
+ out << "}";
+ return out;
+}
+
+} // end unnamed namespace
+
+// TODO: let's completely re-do the algorithm.  We'll divide the edges that
+//  need to be divided, and then call incidence relations to flesh-out division
+//  of higher-dimensional simplices.  Currently it's overly-wasteful and needing
+//  to deal with special cases. This way there's two things to check at every
+//  stage: the divisions of the lower-dimensional objects and whether or not the
+//  lower-dimensional facets are identified. 
+
+// We subdivide inductively from lowest to highest dimension.  We keep track of
+//  equivalence classes of vertices of an n-facet by a partition of n+1 points. 
+//  Thus an edge can be labelled (1,1) or (2), indicating distinct vertices or
+//  glued vertices respectively. 
+
+bool Dim4Triangulation::makeEdgeEndpointsDistinct()
+{
+  std::vector< std::list< simpSubFac > > penSubDiv( getNumberOfPentachora() );
+  // Step 1: Determine what kind of subdivision each pentachoron needs. 
+  //   Cases (1,1,1,1,1), (2,1,1,1), (2,2,1), (3,1,1), (3,2), (4,1), (5). 
+  //  For this we can have a ?map? from the actual vertex pointers to the
+  //   vertex indices in the pentachoron.
+  for (unsigned long i=0; i<getNumberOfPentachora(); i++)
+   {
+    const Dim4Pentachoron* pen( getPentachoron(i) );
+    std::map< const Dim4Vertex* , std::set<unsigned long> > vrtCt;
+    for (unsigned long j=0; j<5; j++) 
+     vrtCt[ pen->getVertex(j) ].insert( j );    
+    // Step 2: perform subdivision 
+
+    if (vrtCt.size() == 5) // all distinct, standard pen, no division.
+       penSubDiv[i].push_back( simpSubFac(4) );
+    else if (vrtCt.size() == 4) // pair glued
+      { // split in half.  Two pentachora to add to penSubDiv[i]
+        //  both share the 1,1,1 vertices, and the 2 barycentre, one
+        //  has one end of the 2, the other has the other. 
+        simpSubFac pen1, pen2;
+        for (std::map< const Dim4Vertex*, std::set< unsigned long> >::iterator j=vrtCt.begin();
+             j!=vrtCt.end(); j++)
+         if (j->second.size()==1) { pen1.vtxset.push_back(*(j->second.begin()));
+            pen2.vtxset.push_back(*(j->second.begin())); } 
+         else { // two element set, find them both. 
+          std::set< unsigned long >::iterator k=j->second.begin();
+          unsigned long v0( *k ); k++;
+          unsigned long v1( *k );
+          pen1.vtxset.push_back( v0 ); pen1.vtxset.push_back(bCtr(v0, v1));
+          pen2.vtxset.push_back( v1 ); pen1.vtxset.push_back(bCtr(v0, v1));
+         }
+       penSubDiv[i].push_back( pen1 ); 
+       penSubDiv[i].push_back( pen2 );
+      }
+    else if (vrtCt.size() == 3) // (2,2,1) or (3,1,1)
+      { // TODO
+      }
+    else if (vrtCt.size() == 2) // (3,2) or (4,1)
+      { // TODO
+      }
+    else // all glued.
+      { // TODO
+      }
+   }
+
+
+  // Step 3: Indexing.
+
+  std::vector< std::map< simpSubFac, unsigned long > > 
+        divPIdx( getNumberOfPentachora() );
+  std::vector< std::map< std::pair< simpSubFac, bCtr >, unsigned long > > 
+        divPvIdx( getNumberOfPentachora() );
+
+  // Step 4: glue all the new pentachora.
+  Dim4Triangulation newTri; // we will use swapContents with *this to turn
+   // our new triangulation into the ambient triangulation.
+  unsigned long count(0); // for building divPIdx
+  for (unsigned long i=0; i<getNumberOfPentachora(); i++)
+   { // all the gluings inside getSimplex(i), penSubdiv[i].
+    const Dim4Pentachoron* pen( getSimplex(i) );
+    // index the elements of penSubDiv[] lexicographically.
+    for (std::list< simpSubFac >::iterator j=penSubDiv[i].begin(); 
+         j!=penSubDiv[i].end(); j++)
+     {
+      divPIdx[i].insert( std::pair< simpSubFac, unsigned long >( *j, count ) );
+      count++; 
+      newTri.newSimplex(); // divPIdx is the index of this pentachoron.
+      // now index the vertices of this object.
+      unsigned long subcount(0);
+      for (std::list< bCtr >::iterator k=j->vtxset.begin(); k!=j->vtxset.end(); 
+           k++)
+       {
+        divPvIdx[i].insert( 
+         std::pair< std::pair< simpSubFac, bCtr >, unsigned long >
+          (std::pair< simpSubFac, bCtr >( *j, *k ), subcount ) );
+        subcount++;
+       }
+     } // end j loop
+   } // end i loop -- indexing
+
+  std::vector< std::map< simpSubFac, std::list< 
+               std::pair< simpSubFac, bCtr > > > > 
+        incidPen(getNumberOfPentachora()); 
+  // pents incident to the tetrahedra via the boundary relation, the 2nd element
+  // of the pair is the vertex we have to eliminate to get the vtxSet in the 
+  // domain of the map.
+
+  // preliminary step to build incidPen
+  for (unsigned long i=0; i<getNumberOfPentachora(); i++)
+   { 
+    for (std::list< simpSubFac >::iterator j=penSubDiv[i].begin(); 
+         j!=penSubDiv[i].end(); j++)
+     for (unsigned long k=0; k<5; k++)
+     {
+      simpSubFac delK( *j );// delete k-th element of *j
+      for (std::list< bCtr >::iterator l=delK.vtxset.begin(); 
+           l!=delK.vtxset.end(); l++)
+       if ( divPvIdx[i][std::pair< simpSubFac, bCtr >(*j, *l)] == k )
+         {
+         bCtr oldL( *l );
+         delK.vtxset.erase( l );
+         incidPen[i][ delK ].push_back( 
+          std::pair< simpSubFac, bCtr >(*j, oldL) );
+         break;
+         }
+#ifdef DEBUG
+     if (delK.vtxset.size() != 4) { 
+        std::cout<<"subdivide delK size error."<<std::endl; 
+        exit(1); 
+     }
+#endif
+     } // end k loop
+    // (a) internal gluings
+    for (std::map< simpSubFac, 
+         std::list< std::pair< simpSubFac, bCtr > > >::iterator 
+           j=incidPen[i].begin();
+         j!=incidPen[i].end(); j++)
+     if (j->second.size()==2) // we have a gluing.  Perform!
+     { // pen vtx for first incident object
+      simpSubFac pen0vtcs( j->second.front().first ); 
+      bCtr pen0ofac( j->second.front().second );
+      j->second.pop_front();
+       // pen vtx for second incident object
+      simpSubFac pen1vtcs( j->second.front().first ); 
+      bCtr pen1ofac( j->second.front().second );
+      j->second.pop_front();
+      unsigned long pen0idx( divPIdx[i][pen0vtcs] );
+      unsigned long pen1idx( divPIdx[i][pen1vtcs] );
+      std::vector< unsigned long > vrtsIn0, vrtsIn1;
+      vrtsIn0.reserve(5); vrtsIn1.reserve(5);
+      vrtsIn0.push_back( divPvIdx[i][std::pair< simpSubFac, bCtr >
+        (pen0vtcs, pen0ofac) ]);
+      vrtsIn1.push_back( divPvIdx[i][std::pair< simpSubFac, bCtr >
+        (pen1vtcs, pen1ofac) ]);
+      for (std::list< bCtr >::const_iterator k=j->first.vtxset.begin(); 
+           k!=j->first.vtxset.end(); k++)
+       vrtsIn0.push_back( divPvIdx[i][std::pair< simpSubFac, bCtr >
+        (pen0vtcs, *k) ]);
+      for (std::list< bCtr >::const_iterator k=j->first.vtxset.begin(); 
+           k!=j->first.vtxset.end(); k++)
+       vrtsIn1.push_back( divPvIdx[i][std::pair< simpSubFac, bCtr >
+        (pen1vtcs, *k) ]);
+      NPerm5 glueMap( vrtsIn0[0], vrtsIn1[0], vrtsIn0[1], vrtsIn1[1], 
+       vrtsIn0[2], vrtsIn1[2], vrtsIn0[3], vrtsIn1[3], vrtsIn0[4], vrtsIn1[4] );
+      newTri.getSimplex( pen0idx )->joinTo( vrtsIn0[0], 
+        newTri.getSimplex( pen1idx ), glueMap );
+     }
+    else
+     {
+#ifdef DEBUG
+      // sanity check that j->second.size()==1
+      if (j->second.size()!=1) { 
+        std::cout<<"divideEdge() facet count error!"<<std::endl; 
+        exit(1); 
+      }
+#endif
+      // check which tetrahedral facet this boundary facet is in...
+      simpSubFac pen0vtcs( j->second.front().first ); 
+      bCtr pen0ofac( j->second.front().second );
+      j->second.pop_front();
+#ifdef DEBUG
+      if (pen0ofac.code != 31) { 
+        std::cout<<"divideEdge() ambient pentachoral gluing across facet "<<
+                 <<"that is not <11111>."<<std::endl; 
+      exit(1); 
+      }
+#endif
+      unsigned long pen0idx( divPIdx[i][pen0vtcs] );
+      // step 1: if already glued, let's skip to the end.
+      if (newTri.getSimplex( pen0idx )->adjacentSimplex(  
+       divPvIdx[i][std::pair< simpSubFac, bCtr >(pen0vtcs, pen0ofac) ] )!=NULL )
+       continue;
+      // let's find the ambient tetrahedron. We are in pen i.  j->first is the 
+      // simpSubFac of the subtet.  So we'll take the union of the codes and 
+      // that should be the vertices of the ambient tet in pen i. 
+      unsigned long code(0);
+      for (std::list< bCtr >::const_iterator k=j->first.vtxset.begin(); 
+           k!=j->first.vtxset.end(); k++)
+       code = code | k->code;
+      // code is a bitfield with 5 bits, only one should be zero.  
+      // Let's figure that out
+      unsigned long vidx(0), zcount(0);
+      for (unsigned long k=0; k<5; k++) if ( !((1 << k) & code) )
+       { zcount++; vidx = k; }
+#ifdef DEBUG
+      if (zcount != 1) { std::cout<<"zcount error!"<<std::endl; 
+         std::cout<<"in apen "<<i<<" pen idx "<<pen0idx<<" gluing across ";
+         std::cout<<pen0ofac<<" and tet face consists of "<<j->first<<std::endl;
+         exit(1); 
+      }
+#endif
+      // abort if this tetrahedron is a boundary tetrahedron. 
+      if (getSimplex(i)->adjacentSimplex(vidx) == NULL) continue;
+
+      // find out what its glued to, and push out subfacet forward
+      //       quit if the pen index l>i. 
+      unsigned long gPenIdx( 
+        simplexIndex( getSimplex(i)->adjacentSimplex(vidx) ) );
+      NPerm5 gPenGlue( getSimplex(i)->adjacentGluing(vidx) );
+      if (gPenIdx > i) continue; // redundant gluing.
+      simpSubFac pushedFac( pen0vtcs.pushForward( gPenGlue ) );
+      unsigned long pushedIdx( divPIdx[gPenIdx][pushedFac] ); 
+      // the subpentachoron index in newTri
+#ifdef DEBUG
+      if (newTri.getSimplex( pushedIdx )==NULL)
+       { std::cout<<"simplex does not exist!"<<std::endl; exit(1); }
+#endif      
+      std::vector< unsigned long > vlist; // this is to be the gluing
+        // permutation, set up in vector form...
+      vlist.reserve(5);
+
+      for (std::list< bCtr >::iterator X=pen0vtcs.vtxset.begin(); 
+           X!=pen0vtcs.vtxset.end(); X++)
+        vlist.push_back( divPvIdx[gPenIdx][std::pair< simpSubFac, bCtr >
+        (pushedFac,X->pushForward(gPenGlue))] );
+#ifdef DEBUG
+      for (unsigned long x=0; x<5; x++) for (unsigned long y=x+1; y<5; y++)
+       if (vlist[x]==vlist[y])
+        { std::cout<<"Non permutation error."<<std::endl; exit(1); }
+#endif
+
+      newTri.getSimplex( pen0idx )->joinTo( 
+        divPvIdx[i][std::pair< simpSubFac, bCtr >(pen0vtcs, pen0ofac)],  
+        newTri.getSimplex( pushedIdx ),  
+        NPerm5( vlist[0], vlist[1], vlist[2], vlist[3], vlist[4] ) ); 
+
+     } // end facet only has one gluing fork.
+   } // end i loop pentachora internal gluings
+
+ swapContents( newTri );
+ return true;
+} // end divideEdges
+
+
+} // end namespace regina
+
+

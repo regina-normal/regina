@@ -456,23 +456,21 @@ public:
         signed long dim; 
         homology_coordinate_system hcs;	
 
-	/**
-	 *  Initialization constructor.
-     *
-     * @param newDim - dimension of the cells.  So if you choose n here, the 
-     *   matrix you request with this ChainComplexLocator will describe how 
-     *   you n-dimensional cells are incident to (n-1)-dimensional cells. 
-     * @param useHcs - which CW complex does this come from?
-	 */
-	ChainComplexLocator(unsigned long newDim, 
-        homology_coordinate_system useHcs);
-
-	/**
-	 *  Copy constructor.
-	 */
+   /**
+    *  Initialization constructor.
+    *
+    * @param newDim - dimension of the cells.  So if you choose n here, the 
+    *   matrix you request with this ChainComplexLocator will describe how 
+    *   you n-dimensional cells are incident to (n-1)-dimensional cells. 
+    * @param useHcs - which CW complex does this come from?
+    */
+   ChainComplexLocator(unsigned long newDim, homology_coordinate_system useHcs);
+    /**
+     *  Copy constructor.
+     */
     ChainComplexLocator(const ChainComplexLocator &cloneMe);
 
-	bool operator<(const ChainComplexLocator &rhs) const;
+    bool operator<(const ChainComplexLocator &rhs) const;
     bool operator==(const ChainComplexLocator &rhs) const;
     bool operator!=(const ChainComplexLocator &rhs) const;
     /**
@@ -492,23 +490,23 @@ public:
  struct ChainMapLocator { 
         ChainComplexLocator domain, range; 
 
-	/**
-	 *  Initialization constructor.
+    /**
+     *  Initialization constructor.
      *
      * @param Domain - the ChainComplexLocator describing the domain
      * @param Range  - the ChainComplexLocator describing the range.
-	 */
-	ChainMapLocator(const ChainComplexLocator &Domain, 
-        const ChainComplexLocator &Range);
+     */
+  ChainMapLocator(const ChainComplexLocator &Domain, 
+                  const ChainComplexLocator &Range);
 
-	/**
-	 *  Copy constructor.
+    /**
+     *  Copy constructor.
      *
      * @param cloneMe - object to copy.
-	 */
+     */
     ChainMapLocator(const ChainMapLocator &cloneMe);
 
-	bool operator<(const ChainMapLocator &rhs) const;
+    bool operator<(const ChainMapLocator &rhs) const;
     bool operator==(const ChainMapLocator &rhs) const;
     bool operator!=(const ChainMapLocator &rhs) const;
        
@@ -526,30 +524,30 @@ public:
         // if its an unMarkedGroup or MarkedGroup we need to know dimension, 
         // variance, coordinates, coefficients
     unsigned long dim;
-	variance_type var;
-	homology_coordinate_system hcs;	
-	unsigned long cof;
+    variance_type var;
+    homology_coordinate_system hcs;	
+    unsigned long cof;
 
-	/**
-	 *  Initialization constructor.
+    /**
+     *  Initialization constructor.
      *
      * @param newDim - dimension of group
      * @param newVar - coVariant or contraVariant? 
      * @param useHcs - which CW complex do you want to use?
      * @param useCof - 0 for integer coefficients, non-zero number
      *   n for Z/nZ coefficients.
-	 */
-	GroupLocator(unsigned long newDim, variance_type newVar, 
+     */
+    GroupLocator(unsigned long newDim, variance_type newVar, 
             homology_coordinate_system useHcs, 
-			unsigned long useCof);
-	/**
-	 *  Copy constructor.
+            unsigned long useCof);
+    /**
+     *  Copy constructor.
      *
      * @param cloneMe - the object to copy
-	 */
+     */
     GroupLocator(const GroupLocator &cloneMe);
 
-	bool operator<(const GroupLocator &rhs) const;
+    bool operator<(const GroupLocator &rhs) const;
     bool operator==(const GroupLocator &rhs) const;
     bool operator!=(const GroupLocator &rhs) const;
        
@@ -561,24 +559,24 @@ public:
   * NCellularData::homGroup requires a HomLocator object as an argument.   
   */
  struct HomLocator {
-	GroupLocator domain;
-	GroupLocator range;
+    GroupLocator domain;
+    GroupLocator range;
 
-	/**
-	 *  Initialization constructor.
+    /**
+     *  Initialization constructor.
      *
      * @param newDomain - domain of the group homomorphism
      * @param newRange  - range of the group homomorphism
-	 */
-	HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange);
-	/**
-	 *  Copy constructor.
+     */
+    HomLocator(const GroupLocator &newDomain, const GroupLocator &newRange);
+    /**
+     *  Copy constructor.
      *
      * @param cloneMe - object to copy.
-	 */
-	HomLocator(const HomLocator &cloneMe);
+     */
+    HomLocator(const HomLocator &cloneMe);
 
-	bool operator<(const HomLocator &rhs) const;
+    bool operator<(const HomLocator &rhs) const;
     bool operator==(const HomLocator &rhs) const;
     bool operator!=(const HomLocator &rhs) const;
 
@@ -621,27 +619,27 @@ public:
   * NCellularData::bilinearForm requires a FormLocator object as an argument.   
   */
  struct FormLocator {
-	GroupLocator ldomain;
-	GroupLocator rdomain;
+    GroupLocator ldomain;
+    GroupLocator rdomain;
     form_type ft;
 
-	/**
-	 *  Initialization constructor.
+    /**
+     *  Initialization constructor.
      * 
      * @param FT - what kind of form are you looking for?
      * @param newLdomain - the left group domain factor
      * @param newRdomain - the right group domain factor
-	 */
-	FormLocator(form_type FT, const GroupLocator &newLdomain, 
+     */
+    FormLocator(form_type FT, const GroupLocator &newLdomain, 
                 const GroupLocator &newRdomain);
-	/**
-	 *  Copy constructor.
+    /**
+     *  Copy constructor.
      *
      * @param cloneMe - the object to copy.
-	 */
-	FormLocator(const FormLocator &cloneMe);
+     */
+    FormLocator(const FormLocator &cloneMe);
 
-	bool operator<(const FormLocator &rhs) const;
+    bool operator<(const FormLocator &rhs) const;
     bool operator==(const FormLocator &rhs) const;
     bool operator!=(const FormLocator &rhs) const;
 
@@ -1450,7 +1448,7 @@ public:
      *  3) Torsion linking form    ie: tH_i(M;Z) x tH_j(M;Z) --> Q/Z 
      *     (not yet implemented)   when i+j=n-1, i,j>0. 
      *      So for 3-manifolds only defined for i,j = 1,1
-     *			  and for 4-manifolds i,j=1,2 or 2,1. 
+     *	      and for 4-manifolds i,j=1,2 or 2,1. 
      *      Present implementation has The range of the form in Q/Z will be 
      *   taken to be  Z_k where k is the largest
      *      ldomain and rdomain given   invariant factor of tH_j(M;Z), 
@@ -1557,9 +1555,9 @@ public:
 inline NCellularData::NCellularData(const NCellularData& g) : ShareableObject(),
         tri4(clonePtr(g.tri4)), tri3(clonePtr(g.tri3)), 
  // chain complex indexing
-	nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), rIx(g.rIx), 
+    nicIx(g.nicIx), icIx(g.icIx), dcIx(g.dcIx), bcIx(g.bcIx), rIx(g.rIx), 
  // chain maps 
-	sbiCM(g.sbiCM.size()), strCM(g.strCM.size()), schCM(g.schCM.size()), 
+    sbiCM(g.sbiCM.size()), strCM(g.strCM.size()), schCM(g.schCM.size()), 
         dbiCM(g.dbiCM.size()), dtrCM(g.dtrCM.size()), dchCM(g.dchCM.size()), 
         mbiCM(g.mbiCM.size()), mtrCM(g.mtrCM.size()), mchCM(g.mchCM.size()), 
         smCM(g.smCM.size()),   dmCM(g.dmCM.size()),   smbCM(g.smbCM.size()), 
@@ -1595,7 +1593,7 @@ for (abi = g.abelianGroups.begin(); abi != g.abelianGroups.end(); abi++)
  // markedAbelianGroups
 std::map< GroupLocator, NMarkedAbelianGroup* >::const_iterator mabi;
 for (mabi = g.markedAbelianGroups.begin(); mabi != g.markedAbelianGroups.end(); 
-     mabi++)	markedAbelianGroups.insert(  
+     mabi++)    markedAbelianGroups.insert(  
      std::pair< GroupLocator, NMarkedAbelianGroup* >
      (mabi->first, clonePtr(mabi->second) ) );
  // homMarkedAbelianGroups
@@ -1693,30 +1691,30 @@ inline NCellularData::~NCellularData() {
  // abelian groups
  std::map< GroupLocator, NAbelianGroup* >::iterator abi;
  for (abi = abelianGroups.begin(); abi != abelianGroups.end(); abi++)
-	delete abi->second;
+    delete abi->second;
  // marked abelian groups
  std::map< GroupLocator, NMarkedAbelianGroup* >::iterator mabi;
  for (mabi = markedAbelianGroups.begin(); 
       mabi != markedAbelianGroups.end(); mabi++)
-	delete mabi->second;
+    delete mabi->second;
  // hom marked abelian groups
  std::map< HomLocator, NHomMarkedAbelianGroup* >::iterator hmabi;
  for (hmabi = homMarkedAbelianGroups.begin(); 
       hmabi != homMarkedAbelianGroups.end(); hmabi++)
-	delete hmabi->second; 
+    delete hmabi->second; 
  // bilinear forms
  std::map< FormLocator, NBilinearForm* >::iterator fi;
  for (fi = bilinearForms.begin(); fi != bilinearForms.end(); fi++)
-	delete fi->second;
+    delete fi->second;
  // group presentations
  std::map< GroupPresLocator, NGroupPresentation* >::iterator gi;
  for (gi = groupPresentations.begin(); gi != groupPresentations.end(); gi++) 
-        delete gi->second;
+    delete gi->second;
  // homomorphisms of group presentations
  std::map< HomGroupPresLocator, NHomGroupPresentation* >::iterator hi;
  for (hi = homGroupPresentations.begin(); 
       hi != homGroupPresentations.end(); hi++)
-        delete hi->second; 
+    delete hi->second; 
  // alexanderChainComplexes
  std::map< ChainComplexLocator, NMatrixRing< 
            NSVPolynomialRing< NLargeInteger > >* >::iterator amci;

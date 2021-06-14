@@ -121,33 +121,35 @@ class REGINA_API Dim1Triangulation {
  * them and to check whether or not they are locally-trivial fiber bundles.
  * In the latter case, the code will also triangulate the fiber and at some
  * point we should give a description of the monodromy.  This algorithm assumes
- * a standard triangulation, i.e. no ideal vertices. 
+ * a standard triangulation, i.e. no ideal vertices.  This class has algorithms
+ * that may modify the underlying combinatorial structure of the triangulation
+ * in an effort to find a triangulation of the manifold that supports the 
+ * bundle structure.
  *
- * TODO: let's test the two routines, verifyPrimitiveH1 
- *  for dim2: test on cylinder and moebius bands with various cocy
- *  for dim3
- *  for dim4
- *       and verifySimpleS1Bundle 
- *  for dim2
- *  for dim3
- *  for dim4
+ * \todo for 4-manifolds, store the vertex-link data in this class. 
  *
- * TODO: consider migrating the test for fibering with the search, so that
- *  all the vertex link data is kept-around so that we don't have to recreate
- *  it multiple-times during the search. 
+ * \todo remove dependence on NCellularData, or otherwise pare-down the
+ *  NCellularData class so that only minimalist versions of the chain 
+ *  complex are pre-computed.  Right now NCellularData computes the CC
+ *  in all dimensions when we only care for the 2->1 and 1->0 maps for
+ *  computing H1. 
  */
 class REGINA_API NMapToS1 {
  private:
-  const Dim2Triangulation* tri2;
-  const NTriangulation* tri3;
-  const Dim4Triangulation* tri4;
+   Dim2Triangulation* tri2;
+   NTriangulation* tri3;
+   Dim4Triangulation* tri4;
  // dim2inc[vert] is a list of pairs of edges and numbers j in {0,1}.  Vertex
  //  j of this edge of vertex vert. 
- std::map< Dim2Vertex*, std::list< std::pair< Dim2Edge*, unsigned long > > > dim2inc;
- std::map< NVertex*,    std::list< std::pair< NEdge*,    unsigned long > > > dim3inc;
- std::map< Dim4Vertex*, std::list< std::pair< Dim4Edge*, unsigned long > > > dim4inc;
- // TODO: we should eventually store the vertex link data in here as well, at least
- //  for 3 and 4-manifolds
+   std::map< Dim2Vertex*, std::list< std::pair< Dim2Edge*, unsigned long > > > 
+    dim2inc;
+   std::map< NVertex*,    std::list< std::pair< NEdge*,    unsigned long > > > 
+    dim3inc;
+   std::map< Dim4Vertex*, std::list< std::pair< Dim4Edge*, unsigned long > > > 
+    dim4inc;
+
+   void builddimNinc();
+   
  public:
 
  /**
@@ -166,6 +168,11 @@ class REGINA_API NMapToS1 {
  NMapToS1( const Dim4Triangulation* tri );
 
  /**
+  * Destructor. 
+  */
+ ~NMapToS1();
+
+ /**
   * This routine verifies whether or not a 1-dimensional cochain with 
   * rational coefficients is a cohomologous to a primitive cochain with
   * integer coefficients, i.e. a class suitable for the fiberability
@@ -179,17 +186,25 @@ class REGINA_API NMapToS1 {
  bool verifyPrimitiveH1( const std::vector<NRational> &cocy ) const;
 
  /**
-  * This routine verifies whether or not a primitive an integral-primitive
-  * H1 cochain (with rational coefficients) is induced from a locally-trivial
-  * fibre bundle from the manifold to the circle.  The value of the cochain
-  * on a 1-cell is seen as the `winding number' around the circle. So this
-  * routine returns true if and only if the triangulation supports a locally
-  * trivial fibre bundle M --> S^1 such that on every simplex it is affine
-  * linear, i.e. it looks like the composite X --> R --exp-> S^1 where the
-  * first map is actually affine-linear, and the 2nd map is just the exponential
-  * map. Technically, this routine requires the bundle to be non-constant on
-  * the edges so the triangulation has to be of the type where if any edge
-  * is a closed loop, it must evaluate to a non-zero integer on the cocycle.
+  * This routine verifies whether or not an integral-primitive H1 cochain 
+  * (with rational coefficients) is induced from a locally-trivial
+  * fibre bundle from the manifold to the circle.  Precisely, we look for
+  * simplex-wise affine-linear (*) function from the manifold to the circle 
+  * which is non-constant on edges and which is a PL locally-trivial fibre
+  * bundle. 
+  *
+  * By an affine linear map to the circle, we mean that if we compose the
+  * function with the characteristic map for a simplex, and then lift that
+  * map to the universal cover of the circle (giving a map from the simplex
+  * to the real number) then that map is affine-linear. The cocycle would
+  * then represent the displacement along the edges of that lift.
+  *
+  * To accomplish this, the algorithm triangulates the level-sets in the
+  * star neighbourhood of a vertex in the original triangulation.  It then
+  * computes the intersection with the vertex link and checks to see that this
+  * manifold is a sphere (co-dimension two in the original triangulation). 
+  * This together with the cocycle being non-zero on edges is sufficient to
+  * guaranteed the map is a locally-trivial fibre bundle. 
   *
   * This is a fairly low-level routine that should usually be called by other
   * NMapToS1 routines.  But if you do use this routine, be sure to check your
@@ -198,8 +213,36 @@ class REGINA_API NMapToS1 {
   * power.
   *
   * Assumes the input cocycle is primitive. 
+  *
+  * @return true if and only if this cocycle is non-zero on all edges and
+  *  is induced by a locally-trivial fibre bundle from the manifold to the 
+  *  circle which is affine-linear on every simplex, in the sense of above.
+  *
+  * @param cocy is the cocycle this routine tests the triangulation against.
+  *  Please ensure the cocycle would pass the verifyPrimitiveH1 test before
+  *  calling verifySimpleS1Bundle. 
+  *
+  * @param diag_vec if passed as not-null, this routine will ensure it points to 
+  *  an allocated std::vector< signed long >* object. The vector describes,
+  *  for every vertex of the triangulation, the types of manifolds that appear
+  *  in the level-set links.  For 2-manifolds the i-th entry will consist of the
+  *  number of points in the level-set links of the i-th vertex. For 3-manifolds
+  *  the 2i-th entry will be the number of circles in the level-set link of 
+  *  the i-th vertex, and the (2i+1)-th entry will be the number of intervals
+  *  in the level-set link of the i-th vertex. For 4-manifolds one needs to
+  *  parse the vector as a lexicographical ordering of a vector. The i-th vector
+  *  will describe the level-set link of the i-th vertex.  The 0th entry of the
+  *  i-th vector will be the number of components.  The 2j+1-th entry will be
+  *  the genus of that component, and the 2j+2-th entry will be the number of
+  *  boundary circles in that component.  It is the end-user's responsibility
+  *  to deallocate diag_vec.  Note that the routine might be slightly slower
+  *  if you pass an allocated diag_vec argument, as without this argument the
+  *  algorithm fails at the first non-sphere vertex level-set link.  With an
+  *  allocated diag_vec, the homeomorphism type of all vertex level-set links
+  *  is determined. 
   */
- bool verifySimpleS1Bundle( const std::vector<NRational> &cocy) const;
+ bool verifySimpleS1Bundle( const std::vector<NRational> &cocy,
+                       std::vector< unsigned long > **diag_vec=NULL) const;
 
  /**
   * Provides a triangulation of the fibre.  Not tested extensively as of yet.
@@ -207,33 +250,48 @@ class REGINA_API NMapToS1 {
 void triangulateFibre( const std::vector<NRational> &cocy, 
  Dim1Triangulation** TRI1=NULL, 
  Dim2Triangulation** TRI2=NULL,  
- NTriangulation** TRI3=NULL );
+ NTriangulation**    TRI3=NULL );
 
  enum findS1BundleAbortReason { 
-        FSBAR_success, // bundle structure found 
-        FSBAR_trivialClosedLoop, // impossible to find bundle structure with this
-        // triangulation as it has a homologically trivial closed loop. Need to subdivide  
-        FSBAR_onevtx, // cocycle does not work, and not enough vertices to give any flexibility
-        FSBAR_other // currently just means the algorithm proceeded until the end, finding nothing. 
+        // bundle structure found 
+        FSBAR_success, 
+        // input triangulation is invalid -- currently the algorithm only
+        // applies to 3 and 4-manifolds. 
+        FSBAR_invalidinput,
+        // manifold's first homology group does not have rank 1.
+        FSBAR_h1rank,
+        // impossible to find bundle structure on this kind of triangulation
+        FSBAR_trivialClosedLoop, 
+        // cocycle does not work, and not enough vertices to give any 
+        // flexibility
+        FSBAR_onevtx, 
+        // currently just means the algorithm proceeded until the end, finding
+        // nothing. 
+        FSBAR_other  
         };
 
- // TODO: when regina is okay with C++11, uncomment this.
- /*
- static std::map< findS1BundleAbortReason, std::string > findS1BundleAbortString = {
-  {0, "Success"}, {1, "Edge which is a closed loop and homologically trivial"}, 
-  {2, "Triangulation only has one vertex, and this triangulation does not support a bundle structure"},
-  {3, "Algorithm did not find a bundle structure"} };
- */ 
+static std::string interpAbortString( findS1BundleAbortReason ab )
+ {
+  if (ab == FSBAR_success) return std::string("bundle structure found");
+  if (ab == FSBAR_invalidinput) return std::string("invalid input");
+  if (ab == FSBAR_h1rank) return std::string("algorithm demands H1 has rank 1");
+  if (ab == FSBAR_trivialClosedLoop) return std::string("homologically trivial closed-loop edge");
+  if (ab == FSBAR_onevtx) return std::string("not enough vertices");
+  else return std::string("nothing found");
+ }
 
  /**
   * Performs a search for a circle bundle structure. If it finds a circle bundle
-  * structure, cocy will be cocycle of the associated bundle.  You can call
-  * triangulateFibre on this cocycle if you want an explicit triangulation of
-  * the fibre.  
+  * structure, cocy will be cocycle of the associated bundle.  Keep in mind the
+  * search process may very well change the triangulation of the original
+  * manifold you called NMapToS1 with.  So if you need to interpret the cocycle
+  * you will need to look at the new triangulation.  TriangulateFibre knows the
+  * new triangulation, so calling it with this cocycle is perfectly valid.
   *
   * Currently only works for 3 and 4-manifold triangulations. 
   *
-  *
+  * @return true if a bundle structure is found.  False if it can not find
+  *  a bundle structure on the manifold.
   */
 bool findS1Bundle(findS1BundleAbortReason &FSBAR, 
       std::vector<NRational> &COCY);

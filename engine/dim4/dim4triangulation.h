@@ -1481,6 +1481,23 @@ class REGINA_API Dim4Triangulation : public NPacket,
          */
         bool collapseEdge(Dim4Edge* e, bool check = true, bool perform = true);
 
+        /**
+         * This algorithm subdivides by adding in new vertices appropriately in 
+         * a way that ensures the new triangulation has no closed 1-edge loops.
+         * The algorithm inserts barycentres of edges, triangles, tetrahedra
+         * and pentachora appropriately, building a refinement that is between
+         * the original triangulation and its barycentric subdivision. 
+         *
+         * \pre Triangulation must be valid for the algorithm to work.  If 
+         * your triangulation has self-gluings in the interior of facets 
+         * makeEdgeEndpointsDistinct() will certainly crash. 
+         * 
+         * @return true if the algorithm modified the triangulation. False
+         *  if it left the triangulation untouched -- this would only happen
+         *  if every edge had distinct endpoints.  
+         */
+        bool makeEdgeEndpointsDistinct();
+
         /*@}*/
         /**
          * \name Subdivisions and Covers

@@ -249,6 +249,13 @@ class REGINA_API Dim2Component : public ShareableObject, public NMarkedElement {
          */
         unsigned long getNumberOfBoundaryEdges() const;
 
+        /**
+         * Returns the Euler characteristic of this component.
+         *
+         * @return the Euler characteristic. 
+         */
+        signed long getEulerChar() const;
+
         void writeTextShort(std::ostream& out) const;
         void writeTextLong(std::ostream& out) const;
 
@@ -341,6 +348,10 @@ inline bool Dim2Component::isClosed() const {
 
 inline unsigned long Dim2Component::getNumberOfBoundaryEdges() const {
     return 2 * edges_.size() - 3 * triangles_.size();
+}
+
+inline signed long Dim2Component::getEulerChar() const {
+    return vertices_.size() - edges_.size() + triangles_.size();
 }
 
 } // namespace regina

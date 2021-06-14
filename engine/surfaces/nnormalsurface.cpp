@@ -468,6 +468,8 @@ normal_facet_data normal_facet_data::operator=(const normal_facet_data &other)
  return (*this);
 }
 
+
+
 } // end unnamed namespace
 
 // NNormalSurface::triangulate() is a recent addtion by Ryan. Not extensively

@@ -2147,6 +2147,23 @@ class REGINA_API NTriangulation : public NPacket,
         bool collapseEdge(NEdge* e, bool check = true, bool perform = true);
 
         /**
+         * This routine divides a collection of edges in two.  In the process, 
+         * every tetrahedron that is incident to this edge will be subdivided,
+         * in a manner that finds a minimal refinement.  We try to introduce
+         * the minimal amount of new vertices that the combinatorics of the
+         * triangulation will allow, and the new complex will always be some
+         * intermediate complex between the original and its barycentric
+         * subdivision, never quite equal to either.
+         *
+         * \pre Triangulation must be valid for the algorithm to work.  If 
+         * your triangulation has self-gluings in the interior of facets 
+         * divideEdges will certainly crash. 
+         *
+         * @param e the set of edges to cut in two.
+         */
+        void divideEdges(const std::set< const NEdge*> &e);
+
+        /**
          * Reorders the tetrahedra of this triangulation using a
          * breadth-first search, so that small-numbered tetrahedra are
          * adjacent to other small-numbered tetrahedra.

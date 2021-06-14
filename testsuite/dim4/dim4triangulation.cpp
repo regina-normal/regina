@@ -92,6 +92,7 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
     CPPUNIT_TEST(homologyH1);
     CPPUNIT_TEST(fundGroup);
     CPPUNIT_TEST(barycentricSubdivision);
+    CPPUNIT_TEST(makeEdgeEndpointsDistinct);
     CPPUNIT_TEST(eltMove15);
     CPPUNIT_TEST(vertexLinks);
     CPPUNIT_TEST(edgeLinks);
@@ -1260,6 +1261,69 @@ class Dim4TriangulationTest : public TriangulationTest<4> {
 
         void barycentricSubdivision() {
             testManualTiny(verifyBary);
+        }
+ 
+        static void verifyMakeEdgeEndpointsDistinct( Dim4Triangulation* tri ) {
+         // no point working on the empty triangulation.
+         if (tri->getNumberOfEdges()==0) return;
+         bool validFlag( tri->isValid() );
+         if (!validFlag) return;
+         bool idealFlag( tri->isIdeal() );
+         unsigned long connCount( tri->getNumberOfComponents() );
+
+         Dim4Triangulation divideTri( *tri );  
+         //std::set< const Dim4Edge* > eList;
+         //eList.insert( divideTri.getEdge(0) );  
+         divideTri.makeEdgeEndpointsDistinct();
+         std::ostringstream msg;
+         if (divideTri.isValid() != validFlag) {
+                msg << " : makeEdgeEndpointsDistinct invalid.";
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.isIdeal() != idealFlag) {
+                msg <<" : makeEdgeEndpointsDistinct ideal change.";
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.getNumberOfComponents() != connCount) {
+                msg <<" : makeEdgeEndpointsDistinct component number change.";
+                msg <<" "<<divideTri.getNumberOfComponents()<<" != "<<
+                      connCount<<" ";
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.isClosed() != tri->isClosed()) {
+                msg<<" : makeEdgeEndpointsDistinct changed boundary. ";
+                msg<<" initial tri "<<(tri->isClosed() ? "was closed" : "has boundary");
+                msg<<" while divideTri "<<(divideTri.isClosed() ? "is closed." : "has boundary.");
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.getHomologyH1().str() !=
+                tri->getHomologyH1().str()) {
+                msg<<" : makeEdgeEndpointsDistinct changed H1.";
+                CPPUNIT_FAIL(msg.str());
+         }
+         if (divideTri.getHomologyH2().str() !=
+                tri->getHomologyH2().str()) {
+                msg<<" : makeEdgeEndpointsDistinct changed H2.";
+                CPPUNIT_FAIL(msg.str());
+         }
+        // TODO: other tests?
+        // let's do a test that looks for 1-edge closed loops, calls makeEdgeEndpointsDistinct
+        //  on them.  Then checks to ensure the new triangulation has no 1-edge closed loops.
+std::cout<<"Common endpt test."<<std::endl;
+        Dim4Triangulation loopTri( *tri );
+        //std::set< const Dim4Edge* > loopList;
+        //for (unsigned long i=0; i<loopTri.getNumberOfEdges(); i++)
+        // if (loopTri.getEdge(i)->getVertex(0)==loopTri.getEdge(i)->getVertex(1))
+        //  loopList.insert(loopTri.getEdge(i));
+        loopTri.makeEdgeEndpointsDistinct();
+        for (unsigned long i=0; i<loopTri.getNumberOfEdges(); i++)
+         if (loopTri.getEdge(i)->getVertex(0)==loopTri.getEdge(i)->getVertex(1))
+           { msg<<" : makeEdgeEndpointsDistinct did not divide the right edges.";
+             CPPUNIT_FAIL(msg.str()); }
+        } // end verifymakeEdgeEndpointsDistinct
+
+        void makeEdgeEndpointsDistinct() {
+         testManualTiny(verifyMakeEdgeEndpointsDistinct);
         }
 
         static void verifyEltMove15(Dim4Triangulation* tri) {

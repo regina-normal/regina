@@ -44,27 +44,57 @@
 namespace regina {
 
 NMapToS1::NMapToS1( const Dim2Triangulation* tri )
-{ tri2=tri; tri3=NULL; tri4=NULL; 
- if (tri2) for (unsigned long i=0; i<tri2->getNumberOfEdges(); i++)
-  for (unsigned long j=0; j<2; j++)
-   dim2inc[ tri2->getEdge(i)->getVertex(j) ].push_back( 
-    std::pair< Dim2Edge*, unsigned long >(tri2->getEdge(i),j) );
+{ 
+ tri2=new Dim2Triangulation(*tri); tri3=NULL; tri4=NULL; 
+ builddimNinc();
 }
 
 NMapToS1::NMapToS1( const NTriangulation* tri )
-{ tri2=NULL; tri3=tri; tri4=NULL; 
- if (tri3) for (unsigned long i=0; i<tri3->getNumberOfEdges(); i++)
-  for (unsigned long j=0; j<2; j++)
-   dim3inc[ tri3->getEdge(i)->getVertex(j) ].push_back( 
-    std::pair< NEdge*, unsigned long >(tri3->getEdge(i), j) );
+{ 
+ tri2=NULL; tri3=new NTriangulation(*tri); tri4=NULL; 
+ if (tri3->isIdeal()) { tri3->idealToFinite(); tri3->intelligentSimplify(); }
+ builddimNinc();
 }
 
 NMapToS1::NMapToS1( const Dim4Triangulation* tri )
-{ tri2=NULL; tri3=NULL; tri4=tri; 
-  if (tri4) for (unsigned long i=0; i<tri4->getNumberOfEdges(); i++)
+{ 
+ tri2=NULL; tri3=NULL; tri4=new Dim4Triangulation(*tri); 
+ if (tri4->isIdeal()) { tri4->idealToFinite(); tri4->intelligentSimplify(); }
+ builddimNinc();
+}
+
+void NMapToS1::builddimNinc()
+{ // this routine is used to build and rebuild the dim?inc object, so 
+  // we need to erase the previous data if it exists.
+ if ( tri2 && !dim2inc.empty() ) dim2inc.clear();
+ if ( tri3 && !dim3inc.empty() ) dim3inc.clear();
+ if ( tri4 && !dim4inc.empty() ) dim4inc.clear();
+
+ if ( (tri2) ) 
+  for (unsigned long i=0; i<tri2->getNumberOfEdges(); i++)
+  for (unsigned long j=0; j<2; j++)
+   dim2inc[ tri2->getEdge(i)->getVertex(j) ].push_back( 
+    std::pair< Dim2Edge*, unsigned long >(tri2->getEdge(i),j) );
+
+ if ( (tri3) ) 
+  for (unsigned long i=0; i<tri3->getNumberOfEdges(); i++)
+  for (unsigned long j=0; j<2; j++)
+   dim3inc[ tri3->getEdge(i)->getVertex(j) ].push_back( 
+    std::pair< NEdge*, unsigned long >(tri3->getEdge(i), j) );
+
+ if ( (tri4) ) 
+  for (unsigned long i=0; i<tri4->getNumberOfEdges(); i++)
   for (unsigned long j=0; j<2; j++)
    dim4inc[ tri4->getEdge(i)->getVertex(j) ].push_back( 
     std::pair<Dim4Edge*, unsigned long >(tri4->getEdge(i),j) );
+}
+
+
+NMapToS1::~NMapToS1()
+{
+ if (tri2) delete tri2;
+ if (tri3) delete tri3;
+ if (tri4) delete tri4;
 }
 
 /**
@@ -172,10 +202,15 @@ bool NMapToS1::verifyPrimitiveH1( const std::vector<NRational> &cocy ) const
  * test. This condition forces the map to be a submersion provided level
  * sets are PL-submanifolds. 
  */
-bool NMapToS1::verifySimpleS1Bundle( const std::vector<NRational> &cocy) const
+bool NMapToS1::verifySimpleS1Bundle( const std::vector<NRational> &cocy,
+                                 std::vector< unsigned long > **diag_vec) const
 {
+ bool retval(true);
+
+ if (diag_vec!=NULL) (*diag_vec) = new std::vector< unsigned long >(0);
  if (tri2)
-  { // is the tri2 code done?
+  {
+   if (diag_vec!=NULL) (*diag_vec)->reserve( tri2->getNumberOfVertices() );
    for (unsigned long i=0; i<tri2->getNumberOfVertices(); i++)
     {
      const Dim2Vertex* vtx( tri2->getVertex(i) );
@@ -190,34 +225,42 @@ bool NMapToS1::verifySimpleS1Bundle( const std::vector<NRational> &cocy) const
        const Dim2Edge* edg1( tri->getEdge( vInc[2] ) );
        NPerm3 e0Inc( tri->getEdgeMapping( vInc[1] ) );
        NPerm3 e1Inc( tri->getEdgeMapping( vInc[2] ) );
-       if ( NRational( (e0Inc[0]==vInc[0]) ? 1 : -1 )*cocy[tri2->edgeIndex(edg0)]*
-            NRational( (e1Inc[0]==vInc[0]) ? 1 : -1 )*cocy[tri2->edgeIndex(edg1)] < 0 )
+       if ( NRational( (e0Inc[0]==vInc[0]) ? 1 : -1 )*
+            cocy[tri2->edgeIndex(edg0)]*
+            NRational( (e1Inc[0]==vInc[0]) ? 1 : -1 )*
+            cocy[tri2->edgeIndex(edg1)] < 0 )
          zCount++;
      }
+     // the diagnostic vector
+     if (diag_vec!=NULL) (*diag_vec)->push_back( zCount );
+      
      if ( ( (zCount != 2) && (!vtx->isBoundary()) ) ||
-          ( (zCount != 1) && (vtx->isBoundary()) ) ) return false;
+          ( (zCount != 1) && (vtx->isBoundary()) ) ) 
+      { retval = false; if (diag_vec==NULL) return false; }
     }
-   return true;
   }
  else if (tri3)
   {
+   if (diag_vec!=NULL) (*diag_vec)->reserve( 2*tri3->getNumberOfVertices() );
+
    for (unsigned long i=0; i<tri3->getNumberOfVertices(); i++)
     { // triangulate the level-set in the link of vertex i
      const NVertex* vtx( tri3->getVertex(i) );
      const std::vector<NVertexEmbedding>& vEmb( vtx->getEmbeddings() );
      // edgeMap[ed] == i means this edge of the level-set is in vEmb[i]. 
-     // the level-set separates one vertex from two in the triangle opposite vtx.
-     // ovIdx[ed] == j means vEmb[i][j] is that single vertex.  
+     // the level-set separates one vertex from two in the triangle opposite
+     // vtx. ovIdx[ed] == j means vEmb[i][j] is that single vertex.  
      std::map< Dim1Edge*, unsigned long > edgeMap; 
      std::map< Dim1Edge*, unsigned long > ovIdx; 
 
-     Dim1Triangulation levelSet; // the level-set in the vertex link for this vertex
+     // will be the level-set in the of vtx in its vertex link.
+     Dim1Triangulation levelSet; 
      for (std::vector<NVertexEmbedding>::const_iterator j=vEmb.begin(); 
           j!=vEmb.end(); j++)
       { // create the edges of levelSet
        const NTetrahedron* tet( j->getTetrahedron() );       
        NPerm4 vInc( j->getVertices() );
-       std::set<unsigned long> pvtx,nvtx; // indices of relatively pos/neg vertices
+       std::set<unsigned long> pvtx,nvtx; // indices of rel pos/neg vertices
        // compare cocy on  vInc[0] vs. vInc[k] k=1,2,3
        for (unsigned long k=1; k<4; k++)
         { // edge vInc[0] to vInc[1], vInc[2,3] are complementary
@@ -251,6 +294,7 @@ bool NMapToS1::verifySimpleS1Bundle( const std::vector<NRational> &cocy) const
        aSet.insert(3); aSet.erase( ovIdx[*j] );
        for (unsigned long k=0; k<2; k++)
         {// we order the edge by how it corresponds to the tetrahedron facets,
+
          // vtx 0 corresponds to aSet.begin(), vtx 1 is aSet.begin()++. 
          unsigned long facet( *aSet.begin() ); aSet.erase( facet );
          if ((*j)->vtx[k] != NULL) continue; // previously glued, so skip.
@@ -259,7 +303,8 @@ bool NMapToS1::verifySimpleS1Bundle( const std::vector<NRational> &cocy) const
          // build adjacent embedding and edge.
          const NTetrahedron* oTet( aTet->adjacentTetrahedron( vInc[facet] ) );
          unsigned long oVNum( aTet->adjacentGluing( vInc[facet] )[vInc[0]] );
-         // the pair (oTet, ovNum) is an NVertexEmbedding, so we look up its index.
+         // the pair (oTet, ovNum) is an NVertexEmbedding, so we look up
+         //  its index.
          unsigned long tEdg; // index of adjacent embedding
          NVertexEmbedding adjvEmb; Dim1Edge* adjEdg(NULL); unsigned long adjIDX;
          for (std::map< Dim1Edge*, unsigned long >::iterator EI=edgeMap.begin(); 
@@ -269,8 +314,9 @@ bool NMapToS1::verifySimpleS1Bundle( const std::vector<NRational> &cocy) const
                (vtx->getEmbedding(EI->second).getVertex()==oVNum))
             { 
              // edgeMap[ed] == i means this edge of the level-set is in vEmb[i]. 
-             // the level-set separates one vertex from two in the triangle opposite vtx.
-             // ovIdx[ed] == j means vEmb[i][j] is that single vertex.  
+             // the level-set separates one vertex from two in the triangle
+             // opposite vtx. ovIdx[ed] == j means vEmb[i][j] is that 
+             // single vertex.  
              adjvEmb = vtx->getEmbedding(EI->second); // embedding
              tEdg = EI->second; // vertex embedding index.
              adjEdg = EI->first; // edge pointer
@@ -296,19 +342,40 @@ bool NMapToS1::verifySimpleS1Bundle( const std::vector<NRational> &cocy) const
          #endif
 
          levelSet.joinEdges( *j, k, adjEdg, 
-          (aTet->adjacentGluing( vInc[facet] )[vInc[facet]]==oInc[*cSet.begin()]) ? 0 : 1); 
+          (aTet->adjacentGluing( vInc[facet] )[vInc[facet]]
+           == oInc[*cSet.begin()]) ? 0 : 1); 
+
         } // end k loop
       } // end the build gluings loop / end levelSet gluings
 
-     std::pair< unsigned long, unsigned long > comps( levelSet.componentTypes() );
+     std::pair< unsigned long, unsigned long > 
+               comps( levelSet.componentTypes() );
+
+     if (diag_vec != NULL)
+      {
+       (*diag_vec)->push_back( comps.first );
+       (*diag_vec)->push_back( comps.second );
+      }
+
      if ( (vtx->isBoundary() && ( (comps.first!=0) || (comps.second!=1) ) ) ||
           (!vtx->isBoundary() && ( (comps.first!=1) || (comps.second!=0) ) ) )
-       return false;
+      { retval = false; if (diag_vec==NULL) return false; }
     } // end loop i for vertices.
-   return true;
   }
  else // tri4
   {
+  /* For 4-manifolds one needs to parse the vector as a lexicographical 
+   *  ordering of a vector. 
+   *
+   * The i-th vector will describe the level-set link of the i-th vertex.  
+   *
+   *  The 0th entry of the i-th vector will be the number of components.  
+   *
+   *  The 2j+1-th entry will be
+   *  the genus of that component, and the 2j+2-th entry will be the number of
+   *  boundary circles in that component.   */
+   if (diag_vec!=NULL) (*diag_vec)->reserve( tri4->getNumberOfVertices() );
+
    for (unsigned long i=0; i<tri4->getNumberOfVertices(); i++)
     {
      const Dim4Vertex* vtx( tri4->getVertex(i) );
@@ -336,7 +403,6 @@ bool NMapToS1::verifySimpleS1Bundle( const std::vector<NRational> &cocy) const
                                       (cocy[tri4->edgeIndex( edg )] < 0) )
            pVtx.insert(k); else mVtx.insert(k);
         } // end k loop
-       // TODO: set up normal facet
        if ( (pVtx.size()==1) || (mVtx.size()==1) ) // tri facet
         { 
          NSV->setElement(
@@ -355,36 +421,58 @@ bool NMapToS1::verifySimpleS1Bundle( const std::vector<NRational> &cocy) const
      // step 2: declare the NNormalSurface using (1).
      NNormalSurface NSurf( vLink, NSV );
      Dim2Triangulation* levelSet( NSurf.triangulate() );
+
+     if (diag_vec!=NULL) { 
+        (*diag_vec)->reserve( (*diag_vec)->size() + 
+                                       levelSet->getNumberOfComponents() );
+        (*(*diag_vec))[i] = levelSet->getNumberOfComponents();
+
+        // run through components, and push_back genus, bdry comps...
+        for (unsigned long j=0; j<levelSet->getNumberOfComponents(); j++)
+         {
+          (*diag_vec)->push_back( 
+           ( 2 - (levelSet->getComponent(j)->getEulerChar() +
+           levelSet->getComponent(j)->getNumberOfBoundaryComponents() ) ) / 2 );
+          (*diag_vec)->push_back(
+            levelSet->getComponent(j)->getNumberOfBoundaryComponents() );
+         }
+        } // end diag_vec filling
+
      //  first step, number of components.
-     if (levelSet->getNumberOfComponents()!=1) return false;
+     if (levelSet->getNumberOfComponents()!=1) 
+       { retval = false; if (diag_vec==NULL) return false; }
      if (vtx->isBoundary())
       { // check levelset is D^2
-       if (levelSet->getNumberOfBoundaryComponents()!=1) return false;
-       if (levelSet->getEulerChar() != 1) return false;
+       if ( (levelSet->getNumberOfBoundaryComponents()!=1) || 
+            (levelSet->getEulerChar() != 1) ) 
+       { retval = false; if (diag_vec==NULL) return false; }
       }
      else
       { // check levelset is S^2
-       if (levelSet->getNumberOfBoundaryComponents()!=0) return false;
-       if (levelSet->getEulerChar() != 2) return false;
+       if (levelSet->getNumberOfBoundaryComponents()!=0)
+        { retval = false; if (diag_vec==NULL) return false; }
+       if (levelSet->getEulerChar() != 2)
+        { retval = false; if (diag_vec==NULL) return false; }
       }
      // done, clean up
      delete levelSet;     // delete NSV; Ben says NSurf takes ownership. 
      delete (*vInc);      delete (vInc); 
      delete vLink;
     }// end vertex loop i
-   return true;
   } // end tri4 case
 
  #ifdef DEBUG
- std::cout<<"NMapToS1::verifySimpleS1Bundle() ERROR. Should be unreachable code."<<std::endl;
- exit(1);
+ if (diag_vec != NULL) {
+  std::cout<<"NMapToS1::verifySimpleS1Bundle() ERROR. "<<
+             "Should be unreachable code."<<std::endl;
+  exit(1); }
  #endif
 
- return false;
+ return retval;
 }
 
-namespace { // unnamed namespace for class intended to be private to 
- // NMapToS1::triangulateFibre
+namespace { // unnamed namespace for class intended to be private  
+ // to NMapToS1::triangulateFibre
     struct EDGEID {
       unsigned long triIdx; // which triangle is it in?
       unsigned long linking;// which vertex does it link?
@@ -392,9 +480,12 @@ namespace { // unnamed namespace for class intended to be private to
       EDGEID( unsigned long TI, unsigned long LK, unsigned long LV )
        { triIdx = TI; linking = LK; level = LV; }
       bool operator<(const EDGEID &other) const
-       { if (triIdx < other.triIdx)   return true;   if (triIdx > other.triIdx) return false;
-         if (linking < other.linking) return true; if (linking > other.linking) return false; 
-         if (level < other.level)     return true;     if (level > other.level) return false;
+       { if (triIdx < other.triIdx)   return true;   
+         if (triIdx > other.triIdx)   return false;
+         if (linking < other.linking) return true; 
+         if (linking > other.linking) return false; 
+         if (level < other.level)     return true;     
+         if (level > other.level)     return false;
          return false; }
     };
 } // end unnamed namespace
@@ -414,9 +505,10 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
                                tri4->getNumberOfVertices() ); 
  std::map< unsigned long, NRational > vtxVal;
  // let's define vtxVals by vtxVal[0] = 0, and then the rest by crawling via a
- //  maximal tree in the 1-skeleton.  Maybe store vtxVal as a map< unsigned long, NRational >
- //  for purpose of definition? we can store a local std::set< vertex* > for the
- //  vertices we haven't explored. 
+ //  maximal tree in the 1-skeleton.  Maybe store vtxVal as a 
+ //  map< unsigned long, NRational > for purpose of definition? 
+ //  we can store a local std::set< vertex* > for the vertices we haven't 
+ //  explored. 
  std::set< unsigned long > expVrts;
  expVrts.insert(0);
  while (expVrts.size() != 0)
@@ -433,9 +525,11 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
 
    if (tri2) for (std::list< std::pair< Dim2Edge*, unsigned long > >::iterator 
      i=dim2Map.begin(); i!=dim2Map.end(); i++)
-    { // i->first is the edge, and i->second is the end corresponding to vertex vrtIdx. 
+    { // i->first is the edge, and i->second is the end corresponding 
+      //  to vertex vrtIdx. 
       unsigned long endpt( i->second ? 0 : 1 );
-      if (vtxVal.find( tri2->vertexIndex( i->first->getVertex( endpt ) ) )==vtxVal.end() )
+      if (vtxVal.find( tri2->vertexIndex( i->first->getVertex( endpt ) ) )
+           == vtxVal.end() )
        { // unexplored!
          expVrts.insert( tri2->vertexIndex( i->first->getVertex( endpt ) ) );
          vtxVal[ tri2->vertexIndex( i->first->getVertex( endpt ) ) ] = 
@@ -446,9 +540,11 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
     } else 
    if (tri3) for (std::list< std::pair< NEdge*, unsigned long > >::iterator 
      i=dim3Map.begin(); i!=dim3Map.end(); i++)
-    { // i->first is the edge, and i->second is the end corresponding to vertex vrtIdx. 
+    { // i->first is the edge, and i->second is the end corresponding 
+      // to vertex vrtIdx. 
       unsigned long endpt( i->second ? 0 : 1 );
-      if (vtxVal.find( tri3->vertexIndex( i->first->getVertex( endpt ) ) )==vtxVal.end() )
+      if (vtxVal.find( tri3->vertexIndex( i->first->getVertex( endpt ) ) )
+          == vtxVal.end() )
        { // unexplored!
          expVrts.insert( tri3->vertexIndex( i->first->getVertex( endpt ) ) );
          vtxVal[ tri3->vertexIndex( i->first->getVertex( endpt ) ) ] = 
@@ -459,9 +555,11 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
     } else // dim4 below 
     for (std::list< std::pair< Dim4Edge*, unsigned long > >::iterator 
      i=dim4Map.begin(); i!=dim4Map.end(); i++)
-    { // i->first is the edge, and i->second is the end corresponding to vertex vrtIdx. 
+    { // i->first is the edge, and i->second is the end corresponding to 
+      //  vertex vrtIdx. 
       unsigned long endpt( i->second ? 0 : 1 );
-      if (vtxVal.find( tri4->vertexIndex( i->first->getVertex( endpt ) ) )==vtxVal.end() )
+      if (vtxVal.find( tri4->vertexIndex( i->first->getVertex( endpt ) ) )
+          == vtxVal.end() )
        { // unexplored!
          expVrts.insert( tri4->vertexIndex( i->first->getVertex( endpt ) ) );
          vtxVal[ tri4->vertexIndex( i->first->getVertex( endpt ) ) ] = 
@@ -474,12 +572,12 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
 
  // let's do a sanity check that vtxVal is defined on all the vertices (and no
  // more) and define midPts at the same time. At the same time we should reduce
- // modulo 1 the vtxVals...   oh, we should turn the vtxVals into a set!  as they're
- // not ordered, and their may be duplicates. 
+ // modulo 1 the vtxVals...   oh, we should turn the vtxVals into a set!  
+ // as they're not ordered, and their may be duplicates. 
  std::set< NRational > setVal;
  unsigned long pIdx(0);
- for (std::map< unsigned long, NRational >::iterator i=vtxVal.begin(); i!=vtxVal.end();
-      i++)
+ for (std::map< unsigned long, NRational >::iterator i=vtxVal.begin(); 
+      i!=vtxVal.end(); i++)
   { 
     #ifdef DEBUG
     if (i!=vtxVal.begin()) if (i->first != pIdx+1) {
@@ -529,10 +627,14 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
     {// decide of in this is the minimum, if so, break. 
      if (tri2) 
       { // 3 possibilities for min, vtx 0 1 or 2.
-       if ( ( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->getEdge( (minVTX + 1) % 3 ) ) ]
-            * NRational( (tri2->getSimplex(i)->getEdgeMapping( (minVTX + 1) % 3)[0]==minVTX) ? 1 : -1, 1) > 0 )
-         && ( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->getEdge( (minVTX + 2) % 3 ) ) ]
-            * NRational( (tri2->getSimplex(i)->getEdgeMapping( (minVTX + 2) % 3)[0]==minVTX) ? 1 : -1, 1) > 0 ) )
+       if ( ( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->
+                        getEdge( (minVTX + 1) % 3 ) ) ]
+            * NRational( (tri2->getSimplex(i)->
+                getEdgeMapping( (minVTX + 1) % 3)[0]==minVTX) ? 1 : -1, 1) > 0 )
+         && ( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->
+                        getEdge( (minVTX + 2) % 3 ) ) ]
+            * NRational( (tri2->getSimplex(i)->getEdgeMapping( 
+                (minVTX + 2) % 3)[0]==minVTX) ? 1 : -1, 1) > 0 ) )
          break;
       }
      else 
@@ -542,12 +644,17 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
        {
         if (j==minVTX) continue;
         // get the edge between minVTX and j, get its edgeMapping, and eval cocy
-        unsigned long eNum( tri3 ? edgeNumber[minVTX][j] : Dim4Edge::edgeNumber[minVTX][j] );
-        if (tri3) if ( cocy[ tri3->edgeIndex( tri3->getSimplex(i)->getEdge( eNum ) ) ]
-           * NRational( (tri3->getSimplex(i)->getEdgeMapping( eNum )[0]==minVTX ) ? 1 : -1 ) > 0 )
+        unsigned long eNum( tri3 ? edgeNumber[minVTX][j] : 
+                                   Dim4Edge::edgeNumber[minVTX][j] );
+        if (tri3) if ( cocy[ tri3->edgeIndex( tri3->getSimplex(i)->
+                        getEdge( eNum ) ) ]
+           * NRational( (tri3->getSimplex(i)->getEdgeMapping( eNum )[0]==
+                        minVTX ) ? 1 : -1 ) > 0 )
           updircount++;
-        if (tri4) if ( cocy[ tri4->edgeIndex( tri4->getSimplex(i)->getEdge( eNum ) ) ]
-           * NRational( (tri4->getSimplex(i)->getEdgeMapping( eNum )[0]==minVTX ) ? 1 : -1 ) > 0 )
+        if (tri4) if ( cocy[ tri4->edgeIndex( tri4->getSimplex(i)->
+                getEdge( eNum ) ) ]
+           * NRational( (tri4->getSimplex(i)->getEdgeMapping( eNum )[0]==
+                minVTX ) ? 1 : -1 ) > 0 )
            updircount++;
        }
        if (updircount == (tri3 ? 3 : 4)) break;
@@ -558,32 +665,38 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
     { std::cout<<"minVTX out of bounds."<<std::endl; exit(1); }
    #endif
    // step 2: build simpInt[i]. Let's do this by building a 
-   //  map< NRational, unsigned long > which goes from the lifted values of the vertices
-   //   to the vertex index in the simplex. 
-   unsigned long minVtxIdx( tri2 ? tri2->vertexIndex( tri2->getSimplex(i)->getVertex(minVTX) ) :
-                            tri3 ? tri3->vertexIndex( tri3->getSimplex(i)->getVertex(minVTX) ) :
-                                   tri4->vertexIndex( tri4->getSimplex(i)->getVertex(minVTX) ) ); 
+   //  map< NRational, unsigned long > which goes from the lifted values of 
+   //   the vertices to the vertex index in the simplex. 
+   unsigned long minVtxIdx( 
+        tri2 ? tri2->vertexIndex( tri2->getSimplex(i)->getVertex(minVTX) ) :
+        tri3 ? tri3->vertexIndex( tri3->getSimplex(i)->getVertex(minVTX) ) :
+               tri4->vertexIndex( tri4->getSimplex(i)->getVertex(minVTX) ) ); 
    std::map< NRational, unsigned long > liftSimpVtxVal;
-   // we initialize at liftSimpVtxVal -- the lifts of vtxVal to the simplex that allows
-   // for continuous extension of the lift over the entire simplex. 
+   // we initialize at liftSimpVtxVal -- the lifts of vtxVal to the simplex 
+   // that allows for continuous extension of the lift over the entire simplex. 
    liftSimpVtxVal[ vtxVal[ minVtxIdx ] ] = minVTX;
    if (tri2)
     {
-     // put in the 2 vals for the edges from minVTX to minVTX+1 % 3 and minVTX+2 % 3
-     NRational V1( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->getEdge( (minVTX+2) % 3 ) ) ] );
+     // put in the 2 vals for the edges from minVTX to minVTX+1 % 3 
+     //  and minVTX+2 % 3
+     NRational V1( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->
+                       getEdge( (minVTX+2) % 3 ) ) ] );
      if ( (tri2->getSimplex(i)->getEdgeMapping( (minVTX+2) % 3 )[0]==minVTX) ? 
           (V1 > 0) : (V1 < 0) )
       liftSimpVtxVal[ vtxVal[ minVtxIdx ] + V1.abs() ] = (minVTX+1) % 3;
      #ifdef DEBUG
-     else { std::cout<<"NMapToS1::triangulateFibre() lift error 1."<<std::endl; exit(1); }
+     else { std::cout<<"NMapToS1::triangulateFibre() lift error 1."<<
+                       std::endl; exit(1); }
      #endif
 
-     NRational V2( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->getEdge( (minVTX+1) % 3 ) ) ] );
+     NRational V2( cocy[ tri2->edgeIndex( tri2->getSimplex(i)->
+                        getEdge( (minVTX+1) % 3 ) ) ] );
      if ( (tri2->getSimplex(i)->getEdgeMapping( (minVTX+1) % 3 )[0]==minVTX) ?
           (V2 > 0) : (V2 < 0) )
       liftSimpVtxVal[ vtxVal[ minVtxIdx ] + V2.abs() ] = (minVTX+2) % 3;
      #ifdef DEBUG
-     else { std::cout<<"NMapToS1::triangulateFibre() lift error 2."<<std::endl; exit(1); }
+     else { std::cout<<"NMapToS1::triangulateFibre() lift error 2."<<
+                       std::endl; exit(1); }
      #endif
     }
    else for (unsigned long j=0; j<(tri3 ? 4 : 5); j++)
@@ -591,17 +704,20 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
      if (minVTX==j) continue;
      unsigned long eNum( tri3 ? edgeNumber[ minVTX ][ j ] : 
                       Dim4Edge::edgeNumber[ minVTX ][ j ] );
-     NRational V1( cocy[ tri3 ? tri3->edgeIndex( tri3->getSimplex(i)->getEdge(eNum) ) :
-                                tri4->edgeIndex( tri4->getSimplex(i)->getEdge(eNum) ) ] );
+     NRational V1( cocy[ tri3 ? 
+        tri3->edgeIndex( tri3->getSimplex(i)->getEdge(eNum) ) :
+        tri4->edgeIndex( tri4->getSimplex(i)->getEdge(eNum) ) ] );
      if (tri3) { if ( (tri3->getSimplex(i)->getEdgeMapping( eNum )[0]==minVTX) ?
                   (V1 > 0) : (V1 < 0) )
       liftSimpVtxVal[ vtxVal[ minVtxIdx ] + V1.abs() ] = j;
-      else { std::cout<<"NMapToS1::triangulateFibre() lift error 3."<<std::endl; exit(1); } 
+      else { std::cout<<"NMapToS1::triangulateFibre() lift error 3."<<
+                        std::endl; exit(1); } 
       }
      else { if ( (tri4->getSimplex(i)->getEdgeMapping( eNum )[0]==minVTX) ?
                   (V1 > 0) : (V1 < 0) )
       liftSimpVtxVal[ vtxVal[ minVtxIdx ] + V1.abs() ] = j;
-      else { std::cout<<"NMapToS1::triangulateFibre() lift error 4."<<std::endl; exit(1); } 
+      else { std::cout<<"NMapToS1::triangulateFibre() lift error 4."<<
+                        std::endl; exit(1); } 
       }
     }
    // now liftSimpVtxVal defined!
@@ -609,7 +725,8 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
    // quick check that there are (tri2 ? 3 : tri3 ? 4 : 5) values 
    #ifdef DEBUG
    if (liftSimpVtxVal.size() != (tri2 ? 3 : tri3 ? 4 : 5) )
-    { std::cout<<"NMapToS1::triangulateFibre() lift error 5."<<std::endl; exit(1); }
+    { std::cout<<"NMapToS1::triangulateFibre() lift error 5."<<
+                 std::endl; exit(1); }
    #endif
    std::vector< NRational > vecLift; 
    std::vector< unsigned long > vrtLift; 
@@ -630,8 +747,8 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
  //  instead.  But this is small potatoes as it will likely never result in much
  //  time savings.
 
- // NOTE: this choice here is arbitrary, and we should allow varying it to check for robustness, 
- //  eventually to put into the test suite. 
+ // NOTE: this choice here is arbitrary, and we should allow varying it to check
+ //  for robustness, eventually to put into the test suite. 
  NRational LVL( *midPts.begin() ); // the level we compute the level-set at.
 
  // the number of solutions in an interval [simpInt[i][j], simpInt[i][j+1]]
@@ -640,8 +757,8 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
  // we can use divisionAlg() to compute this.  We will put these solution sets
  // in a vector of length the dimension of the simplex. 
  std::vector< std::vector<unsigned long> > normCount( simpInt.size() );
- unsigned long DIM( tri2 ? 2 : tri3 ? 3 : 4 );
- for (unsigned long i=0; i<simpInt.size(); i++) // simpInt.size() == num simplices
+ unsigned long DIM( tri2 ? 2 : tri3 ? 3 : 4 ); // simpInt.size() ==
+ for (unsigned long i=0; i<simpInt.size(); i++) //       num simplices
   { // this is the set-up normCount loop
    NRational Diff[DIM+1];
    for (unsigned long j=0; j<(DIM+1); j++)
@@ -651,7 +768,8 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
    for (unsigned long j=0; j<DIM; j++)
     normCount[i][j] = ( 
      (Diff[j+1].getNumerator().divisionAlg( Diff[j+1].getDenominator(), REM ) -
-      Diff[j].getNumerator().divisionAlg( Diff[j].getDenominator(), REM ) ).longValue() );
+      Diff[j].getNumerator().divisionAlg( Diff[j].getDenominator(), REM ) ).
+        longValue() );
   } 
 
  if (tri2)
@@ -660,28 +778,30 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
     // normCount[i][0, 1].  Let's start by creating the Dim1Triangulation, 
     // and a map to keep track of the edges. 
     #ifdef DEBUG
-    if (TRI1==NULL) { std::cout<<"NMapToS1::triangulateFibre called with a null pointer (2D)."<<std::endl;
+    if (TRI1==NULL) { std::cout<<"NMapToS1::triangulateFibre called with "<<
+                                 "a null pointer (2D)."<<std::endl;
                       exit(1); }
     #endif
     (*TRI1) = new Dim1Triangulation();
     // cast simpIntVrt into vector of NPerm3's. 
     std::vector< NPerm3 > simpIntPerm( simpIntVrt.size() );
     for (unsigned long i=0; i<simpIntPerm.size(); i++)
-     simpIntPerm[i] = NPerm3( simpIntVrt[i][0], simpIntVrt[i][1], simpIntVrt[i][2] );
+     simpIntPerm[i] = NPerm3( simpIntVrt[i][0], simpIntVrt[i][1], 
+                              simpIntVrt[i][2] );
     
     // let's create the edges
     std::map< Dim1Edge*, EDGEID > edIdx; // keeps track of edges. 
     std::map< EDGEID, Dim1Edge* > edIdxR;
     for (unsigned long i=0; i<tri2->getNumberOfSimplices(); i++)
-      for (unsigned long j=0; j<2; j++)
-        for (unsigned long k=0; k<normCount[i][j]; k++)
-         {
-          Dim1Edge* nEdg( (*TRI1)->newEdge() );
-          edIdx.insert( std::pair< Dim1Edge*, EDGEID >( nEdg, 
-           EDGEID(i, (j==0) ? simpIntPerm[i][0] : simpIntPerm[i][2], k) ) ); 
-          edIdxR.insert( std::pair< EDGEID, Dim1Edge* >(
-           EDGEID(i, (j==0) ? simpIntPerm[i][0] : simpIntPerm[i][2], k), nEdg ) );
-         }
+     for (unsigned long j=0; j<2; j++)
+      for (unsigned long k=0; k<normCount[i][j]; k++)
+       {
+        Dim1Edge* nEdg( (*TRI1)->newEdge() );
+        edIdx.insert( std::pair< Dim1Edge*, EDGEID >( nEdg, 
+         EDGEID(i, (j==0) ? simpIntPerm[i][0] : simpIntPerm[i][2], k) ) ); 
+        edIdxR.insert( std::pair< EDGEID, Dim1Edge* >(
+         EDGEID(i, (j==0) ? simpIntPerm[i][0] : simpIntPerm[i][2], k), nEdg ) );
+       }
 
     // *** Gluings ***
 
@@ -690,36 +810,41 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
     // simpIntVrt[i][1] is the middle vertex index.  0 to 1 is the long edge.
     // I suppose we can keep track via pair< ulong, ulong >, indicating the 
     // simplex index and 2*layer + 0 or 1 depending on if in top of bottom
-    // let's perform the gluings.  I guess run through all the non-boundary edges...
-    // seems like a good way to go
+    // let's perform the gluings.  I guess run through all the non-boundary 
+    // edges... seems like a good way to go
     for (unsigned long i=0; i<tri2->getNumberOfEdges(); i++)
      {
       const Dim2Edge* edg( tri2->getEdge(i) );
       if (edg->isBoundary()) continue;
       // now look at the two inclusions and assemble the gluing. 
-      unsigned long tri0idx( tri2->triangleIndex( edg->getEmbedding(0).getTriangle() ) );
+      unsigned long tri0idx( tri2->triangleIndex( 
+                edg->getEmbedding(0).getTriangle() ) );
       unsigned long vtx0( edg->getEmbedding(0).getEdge() );
       unsigned long opp0idx( (vtx0==simpIntPerm[tri0idx][1]) ? vtx0 :
                              (vtx0==simpIntPerm[tri0idx][0]) ? 
                             simpIntPerm[tri0idx][2] : simpIntPerm[tri0idx][0] );
       NPerm3 e0inc( edg->getEmbedding(0).getVertices() );
 
-      unsigned long tri1idx( tri2->triangleIndex( edg->getEmbedding(1).getTriangle() ) );
+      unsigned long tri1idx( tri2->triangleIndex( 
+                edg->getEmbedding(1).getTriangle() ) );
       unsigned long vtx1( edg->getEmbedding(1).getEdge() );
       unsigned long opp1idx( (vtx1==simpIntPerm[tri1idx][1]) ? vtx1 :
                              (vtx1==simpIntPerm[tri1idx][0]) ? 
                             simpIntPerm[tri1idx][2] : simpIntPerm[tri1idx][0] );
       NPerm3 e1inc( edg->getEmbedding(1).getVertices() );
 
-      // now we have to perform the gluings... first of all, how many edges are there
-      // being glued?  Decide if its all edges in the triangle, or only half.
+      // now we have to perform the gluings... first of all, how many edges are
+      // there being glued?  Decide if its all edges in the triangle, or 
+      // only half.
       bool glueboth0( (vtx0 == simpIntPerm[ tri0idx ][1]) );
       bool glueboth1( (vtx1 == simpIntPerm[ tri1idx ][1]) );
       // let's do a quick check to see the numbers add up on both sides. 
       unsigned long count0[3] = { normCount[ tri0idx ][0], 
-        normCount[ tri0idx ][0]+normCount[ tri0idx ][1], normCount[ tri0idx ][1] };
+        normCount[ tri0idx ][0]+normCount[ tri0idx ][1], 
+        normCount[ tri0idx ][1] };
       unsigned long count1[3] = { normCount[ tri1idx ][0], 
-        normCount[ tri1idx ][0]+normCount[ tri1idx ][1], normCount[ tri1idx ][1] };
+        normCount[ tri1idx ][0]+normCount[ tri1idx ][1], 
+        normCount[ tri1idx ][1] };
 
       #ifdef DEBUG
       if ( count0[ simpIntPerm[ tri0idx ].preImageOf( opp0idx ) ] !=
@@ -742,10 +867,13 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
            (j<count1[0]) ? simpIntPerm[tri1idx][0] : simpIntPerm[tri1idx][2],
            (!glueboth1) ? j : (j<count1[0]) ? j : j-count1[0] );
         #ifdef DEBUG
-        if (edIdxR.find(EID0)==edIdxR.end()) { std::cout<<"NMapToS1::triangulateFibre() EID0 not found."; exit(1); }
-        if (edIdxR.find(EID1)==edIdxR.end()) { std::cout<<"NMapToS1::triangulateFibre() EID1 not found."; exit(1); }
+        if (edIdxR.find(EID0)==edIdxR.end()) { std::cout<<"NMapToS1::"<<
+                "triangulateFibre() EID0 not found."; exit(1); }
+        if (edIdxR.find(EID1)==edIdxR.end()) { std::cout<<"NMapToS1::"<<
+                "triangulateFibre() EID1 not found."; exit(1); }
         #endif
-        (*TRI1)->joinEdges( edIdxR[EID0], glueboth0 ? 0 : 1, edIdxR[EID1], glueboth1 ? 0 : 1 );        
+        (*TRI1)->joinEdges( edIdxR[EID0], glueboth0 ? 0 : 1, 
+                            edIdxR[EID1], glueboth1 ? 0 : 1 );        
        }
      }
    return;
@@ -755,7 +883,8 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
     // [min, vtx1] [vtx1,vtx2] [vtx2,max]
     //  tri         quad         tri 
     #ifdef DEBUG
-    if (TRI2==NULL) { std::cout<<"NMapToS1::triangulateFibre called with a null pointer (3D)."<<std::endl;
+    if (TRI2==NULL) { std::cout<<"NMapToS1::triangulateFibre called with a"<<
+                                 " null pointer (3D)."<<std::endl;
                       exit(1); }
     #endif
     NNormalSurfaceVector* 
@@ -765,11 +894,11 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
     for (unsigned long i=0; i<tri3->getNumberOfSimplices(); i++)
      {
       NSV->setElement( 7*i + simpIntVrt[i][0], normCount[i][0] );
-      NSV->setElement( 7*i + 4 + vertexSplit[simpIntVrt[i][0]][simpIntVrt[i][1]], normCount[i][1] );
+      NSV->setElement( 7*i + 4 + vertexSplit[simpIntVrt[i][0]]
+                [simpIntVrt[i][1]], normCount[i][1] );
       NSV->setElement( 7*i + simpIntVrt[i][3], normCount[i][2] );
      }
-    // TODO: remove the cast once ben's const update is complete
-    NNormalSurface NSurf( const_cast<NTriangulation*>(tri3), NSV );
+    NNormalSurface NSurf( tri3, NSV );
     (*TRI2) = NSurf.triangulate();
   }
  else
@@ -777,7 +906,8 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
     // [min, vtx1] [vtx1, vtx2] [vtx2,vtx3] [vtx3,max]
     //  tri          prism         prism      tri
     #ifdef DEBUG
-    if (TRI3==NULL) { std::cout<<"NMapToS1::triangulateFibre called with a null pointer (4D)."<<std::endl;
+    if (TRI3==NULL) { std::cout<<"NMapToS1::triangulateFibre called with a"<<
+                                 " null pointer (4D)."<<std::endl;
                       exit(1); }
     #endif
 
@@ -795,94 +925,331 @@ void NMapToS1::triangulateFibre( const std::vector<NRational> &cocy,
        NSV->setElement( 15*i + simpIntVrt[i][4], normCount[i][3] );
      } 
 
-    // TODO: whatever it takes to remove the const_cast...
-    NNormalHypersurface NSurf( const_cast<Dim4Triangulation*>(tri4), NSV );
-
+    NNormalHypersurface NSurf( tri4, NSV );
     (*TRI3) = NSurf.triangulate();
-
     return;
   }
  // perhaps put a check here to ensure routine never gets to here. 
  return;
 }
 
-// TODO: once Dim4Triangulation::divideEdge routine is done, we can perform
-//  a search for 1-edge closed loops that map to 0 in the homology class of the
-//  bundle, and perform subdivision on those edges.
+// The current evolution of this routine involves the short and long term.
+//
+//  TODO: storing vertex links (in 4-manifold case) in the NMapToS1
+//   class to avoid repeatedly rebuilding them.  How much time does it save?
+//
+//  LONG TERM: once we have a flexible triangulation we can try more intelligent
+//   perturbations of the cocycle, in an attempt to designularize the level
+//   set vertex links.  We now have diagnostics/return values in 
+//   verifySimpleS1Bundle.  Let's start to use them dynamically. 
+//
 bool NMapToS1::findS1Bundle(findS1BundleAbortReason &FSBAR, 
       std::vector<NRational> &COCY)
 {
+ FSBAR = FSBAR_success; // temporary status holder for now.
+
  unsigned long numVrt( tri2 ? tri2->getNumberOfVertices() :
                        tri3 ? tri3->getNumberOfVertices() :
-                       tri4->getNumberOfVertices() );
+                              tri4->getNumberOfVertices() );
  unsigned long numEdg( tri2 ? tri2->getNumberOfEdges() : 
                        tri3 ? tri3->getNumberOfEdges() :
                        tri4->getNumberOfEdges() );
  unsigned long numTri( tri2 ? tri2->getNumberOfTriangles() :
                        tri3 ? tri3->getNumberOfTriangles() :
-                       tri4->getNumberOfTriangles() );
+                              tri4->getNumberOfTriangles() );
+std::cout<<"vrts: "<<numVrt<<" edges: "<<numEdg<<" tris: "<<numTri<<"\n";
 
  NCellularData* cDat;
  if      (tri3) cDat = new NCellularData( *tri3 );
  else if (tri4) cDat = new NCellularData( *tri4 );
- else { std::cout<<"NMapToS1::findS1Bundle() currently only accepts"<<
-                   " 3 and 4-manifolds."<<std::endl;
-        exit(1); } // TODO: fix to take 2-manifolds eventually.
- const NMarkedAbelianGroup* H1( cDat->markedGroup( NCellularData::GroupLocator(1, 
-    NCellularData::contraVariant, NCellularData::STD_coord, 0) ) );
+ else 
+  { // TODO: eventually add a 2-manifold algorithm.
+   FSBAR = FSBAR_invalidinput;
+   return false;
+  } // long-term it would be best to add a 2-manifolds constructor to
+    // NCellularData, and make ncellulardata class even more light-weight, 
+    // so that it only builds partial chain complexes. 
 
- // presently quit if H1 rank isn't just 1.
- if (H1->getRank() != 1) { delete cDat; return false; } 
+ const NMarkedAbelianGroup* H1( 
+    cDat->markedGroup( NCellularData::GroupLocator(1, 
+     NCellularData::contraVariant, NCellularData::STD_coord, 0) ) );
+
+ // presently quit if H1 rank isn't just 1. Eventually we might want to
+ //  consider a more elaborate search. 
+ if (H1->getRank() != 1) { delete cDat; FSBAR = FSBAR_h1rank; return false; } 
  // 1) find the cochain rep for the H^1 generator
  std::vector< NLargeInteger > ccGen( H1->getFreeRep(0) );
 
- for (unsigned long i=0; i<numEdg; i++)
-  { // quick check for homologically trivial edge that's a closed loop
+std::cout<<"ccGen (1): ";
+for (unsigned long i=0; i<ccGen.size(); i++)
+{
+ if (tri3) std::cout<<( (tri3->getEdge(i)->getVertex(0)==tri3->getEdge(i)->getVertex(1)) ? 
+    "\033[1;31m" : "\033[1;37m" )<<ccGen[i]<<"\033[0m ";
+ if (tri4) std::cout<<( (tri4->getEdge(i)->getVertex(0)==tri4->getEdge(i)->getVertex(1)) ? 
+    "\033[1;31m" : "\033[1;37m" )<<ccGen[i]<<"\033[0m ";
+}
+std::cout<<"\n";
+
+ // 2) build table of the bad edges
+ std::set< unsigned long > badEdgeIdx;
+  for (unsigned long i=0; i<numEdg; i++)
+  {
    if (tri2 ? tri2->getEdge(i)->getVertex(0) == tri2->getEdge(i)->getVertex(1) :
        tri3 ? tri3->getEdge(i)->getVertex(0) == tri3->getEdge(i)->getVertex(1) :
               tri4->getEdge(i)->getVertex(0) == tri4->getEdge(i)->getVertex(1) )
-   if (ccGen[i] == NLargeInteger::zero) 
-    { FSBAR = FSBAR_trivialClosedLoop; delete cDat; return false; }
-  } 
+   if (ccGen[i] == NLargeInteger::zero)
+    badEdgeIdx.insert(i);
+  }
 
- // 2) find the generators of the image of the C^0 --> C^1 map, the transpose
- //    of the boundary map C_1 --> C_0. We can use H1->getN() for this. Technically
- //    this is the same as the dim?inc data, but more usable. 
+ // Special case: if there are no bad edges, let's cast ccGen into a cocycle
+ // and check it. 
+std::cout<<"badEdgeIdx: ";
+for (std::set< unsigned long >::const_iterator i = badEdgeIdx.begin(); i!= badEdgeIdx.end(); i++)
+ std::cout<<(*i)<<" ";
+std::cout<<"\n";
+
+ if (badEdgeIdx.empty())
+  {
+   std::vector< NRational > cocy( ccGen.size() );
+   for (unsigned long i=0; i<ccGen.size(); i++)
+    cocy[i] = NRational( ccGen[i], NLargeInteger::one );
+
+   if ( verifyPrimitiveH1( cocy ) ) if (verifySimpleS1Bundle(cocy)) 
+    { COCY=cocy; FSBAR = FSBAR_success; return true; }
+  }
+
+ if (tri2) { FSBAR = FSBAR_invalidinput; delete cDat; return false; }
+ // TODO: perhaps adapt this in the 2-dimensional case, but perhaps that's
+ //  a waste of time?  We might want to make an inductive algorithm, in that
+ //  case the 2-dimensional situation will be important.
+
+ // Step (a) cast badEdgeIdx appropriately and call divideEdges. 
+ delete cDat;  cDat=NULL;
+ if (tri3)
+  {
+   std::set< const NEdge* > splitEdges;
+   for (std::set< unsigned long >::iterator i=badEdgeIdx.begin(); i!=badEdgeIdx.end(); i++)
+    splitEdges.insert( tri3->getEdge(*i) );
+// TODO: fix   tri3->divideEdges(splitEdges);   
+  }
+ else
+  {
+   std::set< const Dim4Edge* > splitEdges;
+   for (std::set< unsigned long >::iterator i=badEdgeIdx.begin(); i!=badEdgeIdx.end(); i++)
+    splitEdges.insert( tri4->getEdge(*i) );
+// TODO: fix   tri4->divideEdges(splitEdges);   
+  }
+ // we should perhaps consider this preamble to be something to go into a
+ // conditionTriangulation routine. 
+std::cout<<"After divideEdges, triangulation has "<<(tri3 ? tri3->getNumberOfSimplices() : 
+        tri4->getNumberOfSimplices())<<" simplices and ";
+// okay this is a problem.  A 2-knot exterior with 6 pens after idealtofinite and intelligentsimplify
+// has 72 pens, but then it has only 1 vertex with 11 bad edges.  After divideOnEdges we have
+// 2688 simplices...  Ouch.  
+std::cout<<(tri3 ? tri3->getNumberOfVertices() : tri4->getNumberOfVertices())<<" vertices ";
+std::cout<<(tri3 ? tri3->getNumberOfEdges() : tri4->getNumberOfEdges())<<" edges ";
+std::cout<<(tri3 ? tri3->getNumberOfTriangles() : tri4->getNumberOfTriangles())<<" triangles"<<std::endl;
+ // Step (b) If we can find appropriate edges to collapse, let's try to do that.
+ //  the idea will be to look through pairs of edges, check to see if they 
+ //  start and end at the same places (or reverse), if so, check if the loop
+ //  is homologically trivial.  If the first edge has no such 2nd edge, then we
+ //  can crush it... I think.   There might be special cases so we should 
+ //  consider possibly backtracking / undoing the move if it leads to bad 
+ //  business.  TODO
+ 
+ // we'll make this some kind of while loop.  While didsomething
+ // TODO: perhaps consider a collapse edge routine that does not need homological data
+ //  to make decisions.  First collapse all edges that do not have a complementary edge
+ //  forming a 2-edge closed loop. 
+ bool hFlag(false); // we've given up on homology-less computations when true
+ bool didSomething(true);
+ while (didSomething)
+  {
+   didSomething = false;
+   if (cDat) { delete cDat; cDat = NULL; }
+   if      (hFlag && tri3) cDat = new NCellularData( *tri3 );
+   else if (hFlag && tri4) cDat = new NCellularData( *tri4 );
+   if (hFlag) {
+   H1 = cDat->markedGroup( NCellularData::GroupLocator(1, 
+        NCellularData::contraVariant, NCellularData::STD_coord, 0) );
+   ccGen = H1->getFreeRep(0);
+
+   for (unsigned long i=0;i<ccGen.size();i++) {
+     std::cout<<( (tri4->getEdge(i)->getVertex(0)==tri4->getEdge(i)->getVertex(1)) ? 
+     "\033[1;31m" : "\033[1;37m" )<<ccGen[i]<<"\033[0m ";
+     }
+    std::cout<<"\n";
+    } // end hFlag branch
+
+   numVrt = ( tri2 ? tri2->getNumberOfVertices() :
+              tri3 ? tri3->getNumberOfVertices() :
+                     tri4->getNumberOfVertices() );
+   numEdg = ( tri2 ? tri2->getNumberOfEdges() : 
+              tri3 ? tri3->getNumberOfEdges() :
+                     tri4->getNumberOfEdges() );
+   numTri = ( tri2 ? tri2->getNumberOfTriangles() :
+              tri3 ? tri3->getNumberOfTriangles() :
+                     tri4->getNumberOfTriangles() );
+std::cout<<"collapseEdge loop: numVrt "<<numVrt<<" numEdg "<<numEdg<<" numTri "<<numTri
+ <<" simp: "<<(tri3 ? tri3->getNumberOfTetrahedra() : tri4->getNumberOfPentachora())<<std::endl;
+if (hFlag) std::cout<<"Checking for null 1-edge loops.\n";
+if (hFlag) for (unsigned long i=0; i<numEdg; i++)
+ if ( (tri3 ? tri3->getEdge(i)->getVertex(0)==tri3->getEdge(i)->getVertex(1) :
+              tri4->getEdge(i)->getVertex(0)==tri4->getEdge(i)->getVertex(1)) && (ccGen[i]==0) )
+ { std::cout<<"Edge "<<i<<" is closed and H1-trivial.   Impossible?"<<std::endl; exit(1); }
+// TODO: the problem appears to be that after the divide edges routine, we still have
+//  1-edge closed loops that are trivial in H1.  Why is that?? Probably I made a mistake
+//  implementing divideEdges...
+
+   for (unsigned long i=0; i<numEdg; i++)
+    {
+     // if we find a collapsible edge, try collapsing it in another copy of
+     // the triangulation. Ben verified that if there are no 2-edge closed 
+     // loops to begin with, there will not be any 1-edge closed loops in
+     // the end. So we look for a 2nd edge that has the same endpoints as this
+     // edge, but so that the associated closed loop is null.  If we find such
+     // a thing, we abort.  If no such 2nd edge exists, we collapse. 
+     bool foundBadSecondEdge(false);
+     for (unsigned long j=0; j<numEdg; j++)
+      {
+       if (i==j) continue;
+       // edge i and j connect vertex to vertex
+       if ( (tri3 ? ( (tri3->getEdge(i)->getVertex(0) == tri3->getEdge(j)->getVertex(0)) &&
+                      (tri3->getEdge(i)->getVertex(1) == tri3->getEdge(j)->getVertex(1)) ) : false ) ||
+            (tri4 ? ( (tri4->getEdge(i)->getVertex(0) == tri4->getEdge(j)->getVertex(0)) &&
+                      (tri4->getEdge(i)->getVertex(1) == tri4->getEdge(j)->getVertex(1)) ) : false ) )
+        { // two distinct edges form closed loop, unoriented.
+         if ( ( (hFlag) && (ccGen[i] - ccGen[j] == 0) ) || (!hFlag) ) foundBadSecondEdge=true;
+        } else
+       if ( (tri3 ? ( (tri3->getEdge(i)->getVertex(0) == tri3->getEdge(j)->getVertex(1)) &&
+                      (tri3->getEdge(i)->getVertex(1) == tri3->getEdge(j)->getVertex(0)) ) : false ) ||
+            (tri4 ? ( (tri4->getEdge(i)->getVertex(0) == tri4->getEdge(j)->getVertex(1)) &&
+                      (tri4->getEdge(i)->getVertex(1) == tri4->getEdge(j)->getVertex(0)) ) : false ) )
+        { // two distinct edges form closed oriented loop
+         if ( ( (hFlag) && (ccGen[i] + ccGen[j] == 0) ) || (!hFlag) ) foundBadSecondEdge=true;
+        }
+       if (foundBadSecondEdge) break;
+      } // end j loop
+     if (foundBadSecondEdge) continue; // jump to next i.
+     // no such edge exists, so we collapse edge i.
+     bool edgeCollapsePerformed;
+     if (tri3) edgeCollapsePerformed = 
+        tri3->collapseEdge( tri3->getEdge(i), true, true ); 
+     else if (tri4) edgeCollapsePerformed = 
+        tri4->collapseEdge( tri4->getEdge(i), true, true );
+if (edgeCollapsePerformed) std::cout<<"Collapse on edge "<<i<<"\n";
+     // loop back to start of while loop if edge was collapsed.
+     if (edgeCollapsePerformed) { didSomething = true; break; }
+    } // end i loop
+   if ( (!hFlag) && (didSomething==false) ) { 
+     std::cout<<"hFlag turned on!\n"; 
+     hFlag = true; didSomething = true; 
+     }
+  } // end while (didSomething)
+
+if (tri4) if (tri4->getNumberOfPentachora() > 1000) exit(1);
+
+ builddimNinc();
+std::cout<<"ccGen (2): ";
+for (unsigned long i=0; i<ccGen.size(); i++)
+ std::cout<<ccGen[i]<<" ";
+std::cout<<"\n";
+   std::vector< NRational > cocy( ccGen.size() );
+
+ // TODO: try ccGen for cocy, if no zero entries in cocycle. 
+
+ // Step (c) find the generators of the image of the C^0 --> C^1 map, the transpose
+ //    of the boundary map C_1 --> C_0. We can use H1->getN() for this. 
+ //    Technically this is the same as the dim?inc data, but more usable. 
+
+ // Step (d) Use feedback from the vertex level-set links to modify the
+ //   potential fibering cocycle. 
+
  NMatrixInt C0C1Map( H1->getN() );
  delete cDat; // we don't need this anymore
 
- // check if ccGen works straight-up
- std::vector< NRational > cocy( ccGen.size() );
- for (unsigned long i=0; i<cocy.size(); i++)
-  cocy[i] = NRational( ccGen[i], NLargeInteger(1) );
- if (!verifyPrimitiveH1( cocy ) ) 
-  { 
-   std::cout<<"NMapToS1::findS1Bundle initialization error!"<<std::endl;
-   exit(1); 
-  }
- if (verifySimpleS1Bundle(cocy)) { COCY=cocy; FSBAR = FSBAR_success; return true; }
- if (numVrt==1) { FSBAR = FSBAR_onevtx; return false; }
+ if (numVrt==1) 
+    { FSBAR = FSBAR_onevtx; 
+      #ifdef DEBUG    
+      std::cout<<"vrts "<<numVrt<<" edg "<<numEdg<<" tris "<<numTri<<"\n";
+      std::cout<<"NMapToS1::findS1Bundle routine should never go here."<<
+                 std::endl; 
+      exit(1); 
+      #endif
+      return false;
+    }
 
  // if not, and if numVrt > 1, try perturbations.
 
- // 3) explore the space of perturbations of our generator, relevant to the bundle
- //    construction. Eventually we should make this a routine that considers the level-set
- //    vertex links and attempts moves that desingularize.  Right now let's start with 
- //    single perturbations and see where it gets us. 
+ // TODO: invent a new reason to quit the search.  If we can find an edge where
+ //  no cocycle modification can change the edges value
+
+ // 3) explore the space of perturbations of our generator, relevant to the 
+ //    bundle construction. Eventually we should make this a routine that 
+ //    considers the level-set vertex links and attempts moves that 
+ //    desingularize.  Right now let's start with single perturbations and 
+ //    see where it gets us. 
+ std::vector< unsigned long > **diag_vec( new std::vector< unsigned long >* );
+
  for (unsigned long k=0; k<5; k++)
   { // let's make several attempts
    for (unsigned long j=0; j<cocy.size(); j++)
     cocy[j] = NRational( ccGen[j], NLargeInteger(1) );
    for (unsigned long i=0; i<numVrt; i++)
-    {
-     NLargeInteger randDen( NLargeInteger(14).randomBoundedByThis() + 2 ); // random number in [2,15]
+    { // random number in [2,15]
+     NLargeInteger randDen( NLargeInteger(14).randomBoundedByThis() + 2 ); 
      NLargeInteger randNum( randDen.randomBoundedByThis() );
      for (unsigned long j=0; j<cocy.size(); j++)
-      cocy[j] += NRational(randNum,randDen)*NRational( C0C1Map.entry(j,i), NLargeInteger(1) );
+      cocy[j] += NRational(randNum,randDen)*NRational( C0C1Map.entry(j,i), 
+        NLargeInteger(1) );
     }
-   if ( verifyPrimitiveH1( cocy ) ) if ( verifySimpleS1Bundle( cocy ) ) 
-        { COCY=cocy; FSBAR = FSBAR_success; return true; } 
+   if ( verifyPrimitiveH1( cocy ) ) 
+    {
+     if ( verifySimpleS1Bundle( cocy, diag_vec ) ) 
+      { 
+       delete(*diag_vec);
+       delete(diag_vec);
+       COCY=cocy; FSBAR = FSBAR_success; return true; 
+      } 
+     // TODO: output diag_vec
+std::cout<<"Level-set links: ";
+     unsigned long vNum(0); // current vertex
+     unsigned long vChangeIdx(0); // change-of-vertex index
+     for (unsigned long i=0; i<(*diag_vec)->size(); i++)
+      {
+       if (i==vChangeIdx) {
+        if (i!=0) vNum++;
+        vChangeIdx += 2*(*(*diag_vec))[i]+1;
+        std::cout<<"vtx "<<vNum<<" ";
+        std::cout<<"C"<<(*(*diag_vec))[i]<<":";
+        i++;
+       }
+      std::cout<<"g"<<(*(*diag_vec))[i];
+      i++;
+      std::cout<<"b"<<(*(*diag_vec))[i];
+      }
+  /*  For 4-manifolds one needs to
+   *  parse the vector as a lexicographical ordering of a vector. The i-th vector
+   *  will describe the level-set link of the i-th vertex.  The 0th entry of the
+   *  i-th vector will be the number of components.  The 2j+1-th entry will be
+   *  the genus of that component, and the 2j+2-th entry will be the number of
+   *  boundary circles in that component.  It is the end-user's responsibility
+   *  to deallocate diag_vec.  Note that the routine might be slightly slower
+   *  if you pass an allocated diag_vec argument, as without this argument the
+   *  algorithm fails at the first non-sphere vertex level-set link.  With an
+   *  allocated diag_vec, the homeomorphism type of all vertex level-set links
+   *  is determined.  */
+     delete(*diag_vec);
+    }
+   else {
+    std::cout<<"Non-primitive. cocy ";
+    for (unsigned long i=0; i<cocy.size(); i++)
+     std::cout<<((i!=0) ? "," : "(")<<cocy[i];
+    std::cout<<")\n";
+    }
   }
+// bool verifySimpleS1Bundle( const std::vector<NRational> &cocy,
+//                       std::vector< unsigned long > **diag_vec=NULL) const;
 
  FSBAR = FSBAR_other;
  return false;
@@ -926,19 +1293,11 @@ bool Dim1Triangulation::joinEdges( Dim1Edge* edg0, unsigned vtx0,
  return true;
 }
 
-std::pair< unsigned long, unsigned long > Dim1Triangulation::componentTypes() const
+std::pair< unsigned long, unsigned long > 
+    Dim1Triangulation::componentTypes() const
 {
  std::pair<unsigned long, unsigned long > retval; // circles, intervals.
  std::set< Dim1Edge* > eCopy( edges );
-
-//unsigned long CC(0);
-//for (std::set< Dim1Edge* >::iterator i=edges.begin(); i!=edges.end(); i++) {
-// std::cout<<"Edge "<<CC<<" "<<(*i)<<" vtx 0 "<<(((*i)->vtx[0]==NULL) ? "NULL" : "GLUD")<<(*i)->vtx[0]<<
-//                         " vtx 1 "<<(((*i)->vtx[1]==NULL) ? "NULL" : "GLUD")<<(*i)->vtx[1]<<"\n";
-// CC++; }
-// TODO: currently this identifies a circle in 2-tet triangulation of S1 x S2 as an 
-//       interval.  Something is wrong!
- 
  while (!eCopy.empty())
   {
    Dim1Edge* seedp( *eCopy.begin() );
@@ -949,8 +1308,7 @@ std::pair< unsigned long, unsigned long > Dim1Triangulation::componentTypes() co
    while (!todo.empty())
     {
      Dim1Edge* newPOP( *todo.begin() );
-
-     bool LRvec[2] = { false, false }; // should we explore vtx 0 or 1 in newPOP?
+     bool LRvec[2] = { false, false }; 
 
      for (unsigned long i=0; i<2; i++) { 
       if ( newPOP->vtx[i] == NULL ) foundEndPt = true;
