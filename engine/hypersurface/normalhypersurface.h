@@ -177,9 +177,10 @@ struct HyperInfo;
  *   implemented.</li>
  * </ul>
  *
- * \ifacespython Not present.
+ * \ifacespython The base class NormalHypersurfaceVector is available, but
+ * the subclasses for individual coordinate systems are not.
  */
-class NormalHypersurfaceVector {
+class NormalHypersurfaceVector : public ShortOutput<NormalHypersurfaceVector> {
     public:
         typedef LargeInteger Element;
             /**< The type of each element in the vector. */
@@ -193,11 +194,17 @@ class NormalHypersurfaceVector {
          * Creates a new vector all of whose entries are initialised to
          * zero.
          *
+         * \ifacespython Not present, since this is an abstract base class
+         * and it cannot be instantiated directly.
+         *
          * @param length the number of elements in the new vector.
          */
         NormalHypersurfaceVector(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
+         *
+         * \ifacespython Not present, since this is an abstract base class
+         * and it cannot be instantiated directly.
          *
          * @param cloneMe the vector to clone.
          */
@@ -414,6 +421,9 @@ class NormalHypersurfaceVector {
          *
          * See ::makeMatchingEquations() for further details.
          *
+         * \ifacespython Not present; use the global
+         * regina::makeMatchingEquations() instead.
+         *
          * @param triangulation the triangulation upon which these
          * matching equations will be based.
          * @return the set of normal hypersurface matching equations.
@@ -429,6 +439,9 @@ class NormalHypersurfaceVector {
          * coordinate system corresponding to this particular
          * subclass of NormalHypersurfaceVector.
          *
+         * \ifacespython Not present; use the global
+         * regina::makeEmbeddedConstraints() instead.
+         *
          * @param triangulation the triangulation upon which these
          * validity constraints will be based.
          * @return a newly allocated set of constraints.
@@ -437,6 +450,16 @@ class NormalHypersurfaceVector {
             static EnumConstraints makeEmbeddedConstraints(
                 const Triangulation<4>& triangulation);
         #endif
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
         // Make this class non-assignable, since we do not want to
         // accidentally change coordinate systems.
@@ -1007,8 +1030,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * and so on, which do not require any knowledge of the underlying
          * coordinate system.
          *
-         * \ifacespython Not present.
-         *
          * @return the underlying vector.
          */
         const NormalHypersurfaceVector& vector() const;
@@ -1020,8 +1041,6 @@ class NormalHypersurface : public ShortOutput<NormalHypersurface> {
          * \deprecated This routine is now deprecated; instead call vector()
          * to obtain the underlying vector as a NormalHypersurfaceVector, or
          * call vector().coords() to obtain it as a plain Vector<LargeInteger>.
-         *
-         * \ifacespython Not present.
          *
          * @return the underlying raw vector.
          */
@@ -1094,6 +1113,10 @@ inline NormalHypersurfaceVector& NormalHypersurfaceVector::operator += (
 
 inline void NormalHypersurfaceVector::scaleDown() {
     coords_.scaleDown();
+}
+
+inline void NormalHypersurfaceVector::writeTextShort(std::ostream& out) const {
+    coords_.writeTextShort(out);
 }
 
 // Inline functions for NormalHypersurface

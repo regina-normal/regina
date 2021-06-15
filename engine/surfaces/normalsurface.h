@@ -347,9 +347,10 @@ struct NormalInfo;
  *
  * \todo \optlong Investigate using sparse vectors for storage.
  *
- * \ifacespython Not present.
+ * \ifacespython The base class NormalSurfaceVector is available, but the
+ * subclasses for individual coordinate systems are not.
  */
-class NormalSurfaceVector {
+class NormalSurfaceVector : public ShortOutput<NormalSurfaceVector> {
     public:
         typedef LargeInteger Element;
             /**< The type of each element in the vector. */
@@ -363,11 +364,17 @@ class NormalSurfaceVector {
          * Creates a new vector all of whose entries are initialised to
          * zero.
          *
+         * \ifacespython Not present, since this is an abstract base class
+         * and it cannot be instantiated directly.
+         *
          * @param length the number of elements in the new vector.
          */
         NormalSurfaceVector(size_t length);
         /**
          * Creates a new vector that is a clone of the given vector.
+         *
+         * \ifacespython Not present, since this is an abstract base class
+         * and it cannot be instantiated directly.
          *
          * @param cloneMe the vector to clone.
          */
@@ -759,6 +766,9 @@ class NormalSurfaceVector {
          *
          * See regina::makeMatchingEquations() for further details.
          *
+         * \ifacespython Not present; use the global
+         * regina::makeMatchingEquations() instead.
+         *
          * @param triangulation the triangulation upon which these
          * matching equations will be based.
          * @return the set of normal surface matching equations.
@@ -774,6 +784,9 @@ class NormalSurfaceVector {
          * coordinate system corresponding to this particular
          * subclass of NormalSurfaceVector.
          *
+         * \ifacespython Not present; use the global
+         * regina::makeEmbeddedConstraints() instead.
+         *
          * @param triangulation the triangulation upon which these
          * validity constraints will be based.
          * @return a newly allocated set of constraints.
@@ -782,6 +795,16 @@ class NormalSurfaceVector {
             static EnumConstraints makeEmbeddedConstraints(
                 const Triangulation<3>& triangulation);
         #endif
+
+        /**
+         * Writes a short text representation of this object to the
+         * given output stream.
+         *
+         * \ifacespython Not present.
+         *
+         * @param out the output stream to which to write.
+         */
+        void writeTextShort(std::ostream& out) const;
 
         // Make this class non-assignable, since we do not want to
         // accidentally change coordinate systems.
@@ -1773,8 +1796,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * and so on, which do not require any knowledge of the underlying
          * coordinate system.
          *
-         * \ifacespython Not present.
-         *
          * @return the underlying vector.
          */
         const NormalSurfaceVector& vector() const;
@@ -1786,8 +1807,6 @@ class NormalSurface : public ShortOutput<NormalSurface> {
          * \deprecated This routine is now deprecated; instead call vector()
          * to obtain the underlying vector as a NormalSurfaceVector, or call
          * vector().coords() to obtain it as a plain Vector<LargeInteger>.
-         *
-         * \ifacespython Not present.
          *
          * @return the underlying raw vector.
          */
@@ -1917,6 +1936,10 @@ inline NormalSurfaceVector& NormalSurfaceVector::operator += (
 
 inline void NormalSurfaceVector::scaleDown() {
     coords_.scaleDown();
+}
+
+inline void NormalSurfaceVector::writeTextShort(std::ostream& out) const {
+    coords_.writeTextShort(out);
 }
 
 // Inline functions for NormalSurface

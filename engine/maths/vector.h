@@ -97,8 +97,9 @@ class Rational;
  * \pre An element \c t of type T can be written to an output stream
  * \c out using the standard expression <tt>out << t</tt>.
  *
- * \ifacespython Not present in general, although the specific type
- * Vector<Integer> is available under the name VectorInt.
+ * \ifacespython Not present in general, although the specific types
+ * Vector<Integer> and Vector<LargeInteger> are available under the names
+ * VectorInt and VectorLarge respectively.
  */
 template <class T>
 class Vector : public ShortOutput<Vector<T>> {
@@ -678,6 +679,9 @@ const T Vector<T>::minusOne(-1);
 /**
  * A vector of arbitrary-precision integers.
  *
+ * This is the underlying vector class that Regina uses to store
+ * angle structures.
+ *
  * \ifacespython This instance of the Vector template class is made
  * available to Python.
  */
@@ -687,13 +691,23 @@ typedef Vector<Integer> VectorInt;
  * A vector of arbitrary-precision integers that allows infinite elements.
  *
  * This is the underlying vector class that Regina uses to store
- * normal surfaces and angle structures.
+ * normal surfaces and hypersurfaces.
+ *
+ * \ifacespython This instance of the Vector template class is made
+ * available to Python.
+ */
+typedef Vector<LargeInteger> VectorLarge;
+
+/**
+ * Deprecated alias for a vector of arbitrary-precision integers that
+ * allows infinite elements.
  *
  * \deprecated Prior to Regina 6.1, Ray was its own separate subclass of
  * Vector<LargeInteger>.  Now the additional members of Ray have been
  * merged directly into the Vector class, and so you should just use
- * Vector<LargeInteger> instead.  Only the \e name Ray is deprecated;
- * the class Vector<LargeInteger> that it refers to remains in active use.
+ * Vector<LargeInteger> (or the typedef VectorLarge) instead.  Note that
+ * only the \e name Ray is deprecated; the \e class Vector<LargeInteger>
+ * that it refers to remains in active use.
  *
  * \ifacespython Not present.
  */

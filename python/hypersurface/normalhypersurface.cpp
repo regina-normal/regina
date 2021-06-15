@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "hypersurface/hscoordregistry.h"
 #include "hypersurface/normalhypersurface.h"
 #include "triangulation/dim3.h"
@@ -42,6 +43,29 @@ using regina::NormalHypersurfaceVector;
 using regina::Triangulation;
 
 void addNormalHypersurface(pybind11::module_& m) {
+    auto v = pybind11::class_<NormalHypersurfaceVector>(m,
+            "NormalHypersurfaceVector")
+        .def("coords", &NormalHypersurfaceVector::coords)
+        .def("clone", &NormalHypersurfaceVector::clone)
+        .def("size", &NormalHypersurfaceVector::size)
+        .def("__getitem__", [](const NormalHypersurfaceVector& v,
+                size_t index) {
+            return v[index];
+        }, pybind11::return_value_policy::reference_internal)
+        .def("set", &NormalHypersurfaceVector::set)
+        .def(pybind11::self += pybind11::self)
+        .def("scaleDown", &NormalHypersurfaceVector::scaleDown)
+        .def("isCompact", &NormalHypersurfaceVector::isCompact)
+        .def("isVertexLinking", &NormalHypersurfaceVector::isVertexLinking)
+        .def("isVertexLink", &NormalHypersurfaceVector::isVertexLink)
+        .def("isThinEdgeLink", &NormalHypersurfaceVector::isThinEdgeLink)
+        .def("tetrahedra", &NormalHypersurfaceVector::tetrahedra)
+        .def("prisms", &NormalHypersurfaceVector::prisms)
+        .def("edgeWeight", &NormalHypersurfaceVector::edgeWeight)
+    ;
+    regina::python::add_output(v, true /* __repr__ */);
+    regina::python::add_eq_operators(v);
+
     auto c = pybind11::class_<NormalHypersurface>(m, "NormalHypersurface")
         .def(pybind11::init<const NormalHypersurface&>())
         .def(pybind11::init<const NormalHypersurface&,
@@ -101,6 +125,10 @@ void addNormalHypersurface(pybind11::module_& m) {
         .def("sameSurface", &NormalHypersurface::sameSurface)
         .def("embedded", &NormalHypersurface::embedded)
         .def("locallyCompatible", &NormalHypersurface::locallyCompatible)
+        .def("vector", &NormalHypersurface::vector,
+            pybind11::return_value_policy::reference_internal)
+        .def("rawVector", &NormalHypersurface::rawVector,
+            pybind11::return_value_policy::reference_internal)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

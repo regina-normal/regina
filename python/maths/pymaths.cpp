@@ -40,6 +40,7 @@ void addLargeInteger(pybind11::module_& m);
 void addLaurent(pybind11::module_& m);
 void addLaurent2(pybind11::module_& m);
 void addVectorInt(pybind11::module_& m);
+void addVectorLarge(pybind11::module_& m);
 void addMatrix2(pybind11::module_& m);
 void addMatrixInt(pybind11::module_& m);
 void addPerm2(pybind11::module_& m);
@@ -61,6 +62,7 @@ void addMathsClasses(pybind11::module_& m) {
     addLaurent(m);
     addLaurent2(m);
     addVectorInt(m);
+    addVectorLarge(m);
     addMatrix2(m);
     addMatrixInt(m);
     addPerm2(m);

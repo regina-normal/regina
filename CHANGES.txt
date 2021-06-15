@@ -332,6 +332,8 @@ Version 6.1  [ TODO ]
               is now a template constructor that takes any const Vector<T>&.
             - Operator += now returns a reference, as it should.
             - New typedef Element, for better compatibility with Vector.
+            - Now derives from ShortOutput<...> and provides the corresponding
+              output routines.
             - All query routines now take the triangulation by reference,
               not by pointer.
         Class NSVectorMirrored:
@@ -507,8 +509,9 @@ Version 6.1  [ TODO ]
             - Deprecated class constants zero, one and minusOne; just use
               0, 1 and -1 instead.
             - Added member and global swap() functions.
-        Class VectorInt:
-            - New typedef for Vector<Integer>, for compatibility with MatrixInt.
+        Class VectorInt, VectorLarge:
+            - New typedefs for Vector<Integer> and Vector<LargeInteger>, for
+              compatibility with MatrixInt.
         Class XMLCallback:
             - The state constants have now been rolled into a State enum type.
         Function allowsNonOrientableLinks(), allowsInvalidFaces():

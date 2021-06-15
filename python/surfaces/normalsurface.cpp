@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/operators.h"
 #include "maths/matrix.h"
 #include "surfaces/coordregistry.h"
 #include "surfaces/normalsurface.h"
@@ -63,6 +64,38 @@ namespace {
 }
 
 void addNormalSurface(pybind11::module_& m) {
+    auto v = pybind11::class_<NormalSurfaceVector>(m, "NormalSurfaceVector")
+        .def("coords", &NormalSurfaceVector::coords)
+        .def("clone", &NormalSurfaceVector::clone)
+        .def("size", &NormalSurfaceVector::size)
+        .def("__getitem__", [](const NormalSurfaceVector& v, size_t index) {
+            return v[index];
+        }, pybind11::return_value_policy::reference_internal)
+        .def("set", &NormalSurfaceVector::set)
+        .def(pybind11::self += pybind11::self)
+        .def("scaleDown", &NormalSurfaceVector::scaleDown)
+        .def("allowsAlmostNormal", &NormalSurfaceVector::allowsAlmostNormal)
+        .def("allowsSpun", &NormalSurfaceVector::allowsSpun)
+        .def("allowsOriented", &NormalSurfaceVector::allowsOriented)
+        .def("hasMultipleOctDiscs", &NormalSurfaceVector::hasMultipleOctDiscs)
+        .def("isCompact", &NormalSurfaceVector::isCompact)
+        .def("isVertexLinking", &NormalSurfaceVector::isVertexLinking)
+        .def("isVertexLink", &NormalSurfaceVector::isVertexLink)
+        .def("isThinEdgeLink", &NormalSurfaceVector::isThinEdgeLink)
+        .def("isSplitting", &NormalSurfaceVector::isSplitting)
+        .def("isCentral", &NormalSurfaceVector::isCentral)
+        .def("triangles", &NormalSurfaceVector::triangles)
+        .def("orientedTriangles",
+        &NormalSurfaceVector::orientedTriangles)
+        .def("quads", &NormalSurfaceVector::quads)
+        .def("orientedQuads", &NormalSurfaceVector::orientedQuads)
+        .def("octs", &NormalSurfaceVector::octs)
+        .def("edgeWeight", &NormalSurfaceVector::edgeWeight)
+        .def("arcs", &NormalSurfaceVector::arcs)
+    ;
+    regina::python::add_output(v, true /* __repr__ */);
+    regina::python::add_eq_operators(v);
+
     auto c = pybind11::class_<NormalSurface>(m, "NormalSurface")
         .def(pybind11::init<const NormalSurface&>())
         .def(pybind11::init<const NormalSurface&, const Triangulation<3>&>())
@@ -134,6 +167,10 @@ void addNormalSurface(pybind11::module_& m) {
         .def("locallyCompatible", &NormalSurface::locallyCompatible)
         .def("disjoint", &NormalSurface::disjoint)
         .def("boundaryIntersections", &NormalSurface::boundaryIntersections)
+        .def("vector", &NormalSurface::vector,
+            pybind11::return_value_policy::reference_internal)
+        .def("rawVector", &NormalSurface::rawVector,
+            pybind11::return_value_policy::reference_internal)
         .def("systemAllowsAlmostNormal",
             &NormalSurface::systemAllowsAlmostNormal)
         .def("systemAllowsSpun", &NormalSurface::systemAllowsSpun)

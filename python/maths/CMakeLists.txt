@@ -22,6 +22,7 @@ SET ( FILES
   pymaths.cpp
   rational.cpp
   vectorint.cpp
+  vectorlarge.cpp
   )
 
 # Prepend folder name

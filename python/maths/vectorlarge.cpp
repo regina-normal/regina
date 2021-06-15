@@ -31,33 +31,61 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
-#include "angle/anglestructure.h"
-#include "triangulation/dim3.h"
+#include "../pybind11/operators.h"
+#include "maths/vector.h"
 #include "../helpers.h"
 
-using namespace regina::python;
-using regina::AngleStructure;
+using pybind11::overload_cast;
+using regina::VectorLarge;
 
-void addAngleStructure(pybind11::module_& m) {
-    auto c = pybind11::class_<AngleStructure>(m, "AngleStructure")
-        .def(pybind11::init<const AngleStructure&>())
-        .def(pybind11::init<const AngleStructure&,
-            const regina::Triangulation<3>&>())
-        .def("clone", &AngleStructure::clone)
-        .def("swap", &AngleStructure::swap)
-        .def("angle", &AngleStructure::angle)
-        .def("triangulation", &AngleStructure::triangulation)
-        .def("isStrict", &AngleStructure::isStrict)
-        .def("isTaut", &AngleStructure::isTaut)
-        .def("isVeering", &AngleStructure::isVeering)
-        .def("vector", &AngleStructure::vector,
-            pybind11::return_value_policy::reference_internal)
-        .def("rawVector", &AngleStructure::vector, // deprecated
-            pybind11::return_value_policy::reference_internal)
+void addVectorLarge(pybind11::module_& m) {
+    auto c = pybind11::class_<VectorLarge>(m, "VectorLarge")
+        .def(pybind11::init<size_t>())
+        .def(pybind11::init<size_t, const regina::Integer&>())
+        .def(pybind11::init<const VectorLarge&>())
+        .def(pybind11::init([](pybind11::list l) {
+            regina::Integer* coeffs =
+                regina::python::seqFromList<regina::Integer>(l);
+            VectorLarge* ans = new VectorLarge(coeffs, coeffs + l.size());
+            delete[] coeffs;
+            return ans;
+        }))
+        .def("size", &VectorLarge::size)
+        .def("__getitem__", [](const VectorLarge& v, size_t index) {
+            return v[index];
+        }, pybind11::return_value_policy::reference_internal)
+        .def("set", &VectorLarge::set)
+        .def("setElement", &VectorLarge::set) // deprecated
+        .def("__setitem__", [](VectorLarge& v, size_t index,
+                const regina::Integer& value) {
+            v.set(index, value);
+        })
+        .def(pybind11::self += pybind11::self)
+        .def(pybind11::self -= pybind11::self)
+        .def(pybind11::self *= regina::Integer())
+        .def(pybind11::self + pybind11::self)
+        .def(pybind11::self - pybind11::self)
+        .def(pybind11::self * regina::Integer())
+        .def(pybind11::self * pybind11::self)
+        .def("negate", &VectorLarge::negate)
+        .def("norm", &VectorLarge::norm)
+        .def("elementSum", &VectorLarge::elementSum)
+        .def("addCopies", &VectorLarge::addCopies)
+        .def("subtractCopies", &VectorLarge::subtractCopies)
+        .def("isZero", &VectorLarge::isZero)
+        // The C-style casts below are to avoid a compile error under gcc7
+        // (but not gcc8), where the compiler cannot determine the type of a
+        // template member function.
+        .def("scaleDown",
+            (void (VectorLarge::*)())
+            &VectorLarge::scaleDown)
+        .def_readonly_static("zero", &VectorLarge::zero)
+        .def_readonly_static("one", &VectorLarge::one)
+        .def_readonly_static("minusOne", &VectorLarge::minusOne)
     ;
-    regina::python::add_output(c);
+    regina::python::add_output(c, true /* __repr__ */);
     regina::python::add_eq_operators(c);
 
-    m.def("swap", (void(*)(AngleStructure&, AngleStructure&))(regina::swap));
+    m.def("swap", (void(*)(VectorLarge&, VectorLarge&))(regina::swap));
 }
 
