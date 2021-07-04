@@ -69,6 +69,7 @@ void addLaurent2(pybind11::module_& m) {
                 std::pair<long, long> exponents, const regina::Integer& value) {
             p.set(exponents.first, exponents.second, value);
         })
+        .def(pybind11::self < pybind11::self)
         .def(pybind11::self *= regina::Integer())
         .def(pybind11::self /= regina::Integer())
         .def(pybind11::self += pybind11::self)

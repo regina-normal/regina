@@ -209,6 +209,8 @@ Version 6.1  [ TODO ]
         Class Laurent, Laurent2:
             - Added member and global swap() functions.
             - Added invertX(), and (for Laurent2 only) invertY().
+            - Added a less-than operator for Laurent2, to order polynomials
+              using a well-defined (but unimportant) total order.
         Class LightweightSequence<T>:
             - Added member and global swap() functions.
         Class Link:
