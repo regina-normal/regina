@@ -81,6 +81,7 @@ void addLaurent(pybind11::module_& m) {
         .def("scaleUp", &Laurent<regina::Integer>::scaleUp)
         .def("scaleDown", &Laurent<regina::Integer>::scaleDown)
         .def("negate", &Laurent<regina::Integer>::negate)
+        .def("invertX", &Laurent<regina::Integer>::invertX)
         .def("str", overload_cast<const char*>(
             &Laurent<regina::Integer>::str, pybind11::const_))
         .def("utf8", overload_cast<const char*>(

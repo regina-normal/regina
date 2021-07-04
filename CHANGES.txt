@@ -208,7 +208,7 @@ Version 6.1  [ TODO ]
               types.
         Class Laurent, Laurent2:
             - Added member and global swap() functions.
-            - Added invertX() and invertY() to Laurent2.
+            - Added invertX(), and (for Laurent2 only) invertY().
         Class LightweightSequence<T>:
             - Added member and global swap() functions.
         Class Link:

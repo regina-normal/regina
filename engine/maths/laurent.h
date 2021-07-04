@@ -434,6 +434,14 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
         void negate();
 
         /**
+         * Replaces <tt>x</tt> with <tt>x^-1</tt> in this polynomial.
+         * This polynomial is changed directly.
+         *
+         * Calling this routine is equivalent to calling <tt>scaleUp(-1)</tt>.
+         */
+        void invertX();
+
+        /**
          * Multiplies this polynomial by the given constant.
          *
          * @param scalar the scalar factor to multiply by.
@@ -1155,6 +1163,28 @@ inline void Laurent<T>::negate() {
     for (long exp = minExp_; exp <= maxExp_; ++exp)
         if (coeff_[exp - base_] != 0)
             coeff_[exp - base_] = -coeff_[exp - base_];
+}
+
+template <typename T>
+inline void Laurent<T>::invertX() {
+    if (minExp_ == maxExp_ && base_ == minExp_) {
+        // Just a single coefficient.
+        minExp_ = -minExp_;
+        maxExp_ = -maxExp_;
+        base_ = -base_;
+        return;
+    }
+
+    T* newCoeff = new T[maxExp_ - minExp_ + 1];
+    for (long i = maxExp_ - minExp_; i >= 0; --i)
+        newCoeff[i] = coeff_[maxExp_ - base_ - i];
+
+    base_ = -maxExp_;
+    maxExp_ = -minExp_;
+    minExp_ = base_;
+
+    delete[] coeff_;
+    coeff_ = newCoeff;
 }
 
 template <typename T>
