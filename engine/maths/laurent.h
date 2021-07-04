@@ -429,7 +429,7 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
 
         /**
          * Negates this polynomial.
-         * This field element is changed directly.
+         * This polynomial is changed directly.
          */
         void negate();
 

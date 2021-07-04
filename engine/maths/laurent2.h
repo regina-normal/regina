@@ -328,9 +328,21 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
 
         /**
          * Negates this polynomial.
-         * This field element is changed directly.
+         * This polynomial is changed directly.
          */
         void negate();
+
+        /**
+         * Replaces <tt>x</tt> with <tt>x^-1</tt> in this polynomial.
+         * This polynomial is changed directly.
+         */
+        void invertX();
+
+        /**
+         * Replaces <tt>y</tt> with <tt>y^-1</tt> in this polynomial.
+         * This polynomial is changed directly.
+         */
+        void invertY();
 
         /**
          * Multiplies this polynomial by the given constant.
@@ -744,6 +756,24 @@ template <typename T>
 inline void Laurent2<T>::negate() {
     for (auto it = coeff_.begin(); it != coeff_.end(); ++it)
         it->second = -it->second;
+}
+
+template <typename T>
+inline void Laurent2<T>::invertX() {
+    std::map<Exponents, T> newCoeff;
+    for (auto c : coeff_)
+        newCoeff.insert(std::make_pair(
+            std::make_pair(- c.first.first, c.first.second), c.second));
+    coeff_ = std::move(newCoeff);
+}
+
+template <typename T>
+inline void Laurent2<T>::invertY() {
+    std::map<Exponents, T> newCoeff;
+    for (auto c : coeff_)
+        newCoeff.insert(std::make_pair(
+            std::make_pair(c.first.first, - c.first.second), c.second));
+    coeff_ = std::move(newCoeff);
 }
 
 template <typename T>

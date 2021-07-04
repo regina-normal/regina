@@ -53,6 +53,8 @@ void addLaurent2(pybind11::module_& m) {
         .def("set", &Laurent2<regina::Integer>::set)
         .def("swap", &Laurent2<regina::Integer>::swap)
         .def("negate", &Laurent2<regina::Integer>::negate)
+        .def("invertX", &Laurent2<regina::Integer>::invertX)
+        .def("invertY", &Laurent2<regina::Integer>::invertY)
         .def("str", overload_cast<const char*, const char*>(
             &Laurent2<regina::Integer>::str, pybind11::const_),
             pybind11::arg(), pybind11::arg("varY") = nullptr)
