@@ -286,6 +286,54 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         bool operator < (const Laurent2<T>& rhs) const;
 
         /**
+         * Compares this against the given polynomial under a total
+         * ordering of all two-variable Laurent polynomials.
+         *
+         * The particular total order that Regina uses is not important,
+         * and may change between Regina releases (though such changes
+         * should be very infrequent).  The main purpose of this routine
+         * is to support algorithms that require a "canonical" choice of
+         * polynomial from amongst many alternatives.
+         *
+         * @param rhs the polynomial to compare with this.
+         * @return \c true if and only if this is greater than the given
+         * polynomial under the total order that Regina uses.
+         */
+        bool operator > (const Laurent2<T>& rhs) const;
+
+        /**
+         * Compares this against the given polynomial under a total
+         * ordering of all two-variable Laurent polynomials.
+         *
+         * The particular total order that Regina uses is not important,
+         * and may change between Regina releases (though such changes
+         * should be very infrequent).  The main purpose of this routine
+         * is to support algorithms that require a "canonical" choice of
+         * polynomial from amongst many alternatives.
+         *
+         * @param rhs the polynomial to compare with this.
+         * @return \c true if and only if this is less than or equal to the
+         * given polynomial under the total order that Regina uses.
+         */
+        bool operator <= (const Laurent2<T>& rhs) const;
+
+        /**
+         * Compares this against the given polynomial under a total
+         * ordering of all two-variable Laurent polynomials.
+         *
+         * The particular total order that Regina uses is not important,
+         * and may change between Regina releases (though such changes
+         * should be very infrequent).  The main purpose of this routine
+         * is to support algorithms that require a "canonical" choice of
+         * polynomial from amongst many alternatives.
+         *
+         * @param rhs the polynomial to compare with this.
+         * @return \c true if and only if this is greater than or equal to
+         * the given polynomial under the total order that Regina uses.
+         */
+        bool operator >= (const Laurent2<T>& rhs) const;
+
+        /**
          * Sets this to be a copy of the given polynomial.
          *
          * This and the given polynomial need not have the same range of
@@ -750,6 +798,21 @@ inline bool Laurent2<T>::operator != (const Laurent2<T>& rhs) const {
 template <typename T>
 inline bool Laurent2<T>::operator < (const Laurent2<T>& rhs) const {
     return coeff_ < rhs.coeff_;
+}
+
+template <typename T>
+inline bool Laurent2<T>::operator > (const Laurent2<T>& rhs) const {
+    return coeff_ > rhs.coeff_;
+}
+
+template <typename T>
+inline bool Laurent2<T>::operator <= (const Laurent2<T>& rhs) const {
+    return coeff_ <= rhs.coeff_;
+}
+
+template <typename T>
+inline bool Laurent2<T>::operator >= (const Laurent2<T>& rhs) const {
+    return coeff_ >= rhs.coeff_;
 }
 
 template <typename T>

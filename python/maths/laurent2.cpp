@@ -70,6 +70,9 @@ void addLaurent2(pybind11::module_& m) {
             p.set(exponents.first, exponents.second, value);
         })
         .def(pybind11::self < pybind11::self)
+        .def(pybind11::self > pybind11::self)
+        .def(pybind11::self <= pybind11::self)
+        .def(pybind11::self >= pybind11::self)
         .def(pybind11::self *= regina::Integer())
         .def(pybind11::self /= regina::Integer())
         .def(pybind11::self += pybind11::self)
