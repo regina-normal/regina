@@ -30,25 +30,13 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "utilities/base64.h"
 
-void addBase64(pybind11::module_& m);
-void addIntUtils(pybind11::module_& m);
-void addLocale(pybind11::module_& m);
-void addBoolSet(pybind11::module_& m);
-void addOSUtils(pybind11::module_& m);
-void addRandUtils(pybind11::module_& m);
-void addStringUtils(pybind11::module_& m);
-void addXMLUtils(pybind11::module_& m);
-
-void addUtilitiesClasses(pybind11::module_& m) {
-    addBase64(m);
-    addIntUtils(m);
-    addLocale(m);
-    addBoolSet(m);
-    addOSUtils(m);
-    addRandUtils(m);
-    addStringUtils(m);
-    addXMLUtils(m);
+void addBase64(pybind11::module_& m) {
+    m.def("base64Length", regina::base64Length);
+    m.def("isBase64", regina::isBase64);
+    m.attr("base64Table") = regina::base64Table;
+    m.attr("base64Spare") = regina::base64Spare;
 }
 

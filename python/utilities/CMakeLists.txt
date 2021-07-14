@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  base64.cpp
   boolset.cpp
   i18nutils.cpp
   intutils.cpp

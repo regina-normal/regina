@@ -81,8 +81,6 @@ namespace regina {
  * number of bytes.  This is the number of characters used (excluding the
  * null terminator) by the routine base64Encode(const char*, size_t, char**).
  *
- * \ifacespython Not present.
- *
  * @param bytes the number of raw input bytes.
  * @return the corresponding number of base64 printable output characters.
  */
@@ -97,13 +95,35 @@ size_t base64Length(size_t bytes);
  * Note that the equals sign (=) is padding, and is not considered by
  * this routine to be a base64 printable character.
  *
- * \ifacespython Not present.
- *
  * @param ch any character.
  * @return \c true if the given character is one of the base64 printable
  * characters used in Regina, or \c false if it is not.
  */
 bool isBase64(char ch);
+
+/**
+ * The table of all base64 printable characters, as used by the base64 routines
+ * in Regina.
+ *
+ * This is the translation table as described in RFC1113.
+ * It is presented as a string of length 64.
+ */
+inline constexpr char base64Table[] =
+    "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+/**
+ * A table of printable characters that are \e not amongst the base64
+ * printable characters used by Regina.
+ *
+ * These characters could be used (for example) to mark the boundaries of
+ * base64 blocks.
+ *
+ * These characters are presented as a string of length at least 3.
+ * Future versions of Regina may append new characters to the end of this
+ * string, but the existing characters base64Spare[0], base64Spare[1], etc.
+ * will not change.
+ */
+inline constexpr char base64Spare[] = "_-.";
 
 /**
  * Encodes the given sequence of raw bytes in base64, and writes the

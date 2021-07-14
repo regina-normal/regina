@@ -255,11 +255,6 @@ VERSION HISTORY:
 \******************************************************************* */
 
 /*
-** Translation Table as described in RFC1113
-*/
-static const char cb64[]="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
-
-/*
 ** Translation Table to decode (created by author)
 */
 static const char cd64[]="|$$$}rstuvwxyz{$$$$$$$>?@ABCDEFGHIJKLMNOPQRSTUVW$$$$$$XYZ[\\]^_`abcdefghijklmnopq";
@@ -280,12 +275,14 @@ void base64Encode(const char* in, size_t inlen, char* out, size_t outlen) {
             inc[i] = 0;
 
         // encode 3 8-bit binary bytes as 4 '6-bit' characters
-        outc[0] = (unsigned char) cb64[ (int)(inc[0] >> 2) ];
-        outc[1] = (unsigned char) cb64[ (int)(((inc[0] & 0x03) << 4) |
+        outc[0] = (unsigned char) base64Table[ (int)(inc[0] >> 2) ];
+        outc[1] = (unsigned char) base64Table[ (int)(((inc[0] & 0x03) << 4) |
             ((inc[1] & 0xf0) >> 4)) ];
-        outc[2] = (unsigned char) (len > 1 ? cb64[(int)(((inc[1] & 0x0f) << 2) |
-            ((inc[2] & 0xc0) >> 6)) ] : '=');
-        outc[3] = (unsigned char) (len > 2 ? cb64[(int)(inc[2] & 0x3f)] : '=');
+        outc[2] = (unsigned char) (len > 1 ?
+            base64Table[(int)(((inc[1] & 0x0f) << 2) |
+                ((inc[2] & 0xc0) >> 6)) ] : '=');
+        outc[3] = (unsigned char) (len > 2 ?
+            base64Table[(int)(inc[2] & 0x3f)] : '=');
 
         for( i = 0; i < 4 && outlen; i++ ) {
             *out++ = outc[i];

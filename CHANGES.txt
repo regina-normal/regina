@@ -552,6 +552,8 @@ Version 6.1  [ TODO ]
               size (and may even be uninitialised) before they are passed in.
         Function torsionAutInverse():
             - Now returns a MatrixInt by value.
+        Global constants base64Table, base64Spare:
+            - Added to support the base64 encoding/decoding routines.
         Global arrays quadSeparating, quadMeeting, quadDefn, quadPartner,
                 quadString:
             - These are all now inline constexpr.
