@@ -39,6 +39,7 @@
 #define __REGINA_STRINGUTILS_H
 #endif
 
+#include <iostream>
 #include <string>
 #include "regina-core.h"
 
@@ -410,6 +411,54 @@ std::string superscript(T value);
  */
 template <typename T>
 std::string subscript(T value);
+
+/**
+ * Encodes the given C++ integer as a short printable string.
+ *
+ * The encoding will have the following properties:
+ *
+ * - It will use only printable ASCII characters (the 94 ASCII values from
+ *   33 to 126 inclusive).
+ *
+ * - It aims to be short: it will never be longer than the usual decimal
+ *   representation, and for larger integers it may be considerably shorter
+ *   (asymptotically, it should be a little over half the length).
+ *
+ * - Integers with the same value (even if they use different underlying C++
+ *   types) will encode to the same string.  Conversely, integers with different
+ *   values will encode to different strings.  In particular, the strings can
+ *   in theory be decoded (even if there is no such routine offered here).
+ *
+ * - When reading an encoded string character-by-character, the encoding
+ *   contains enough information to know when the last character has been read.
+ *   In other words, you can encode a \e sequence of integers by simply
+ *   concatenating the encoded strings with no separators, and this will also
+ *   be one-to-one (i.e., two different sequences will never encode to the
+ *   same concatenated string).
+ *
+ * The encoded string will be written to the given output stream.
+ *
+ * Currently there is no decoding routine, since this routine was originally
+ * designed for applications such as perfect hashing.  Such a decoding
+ * routine should, however, be straightforward, and may be added in the future.
+ *
+ * This routine supports passing infinity as the given value (which is
+ * only relevant when the integer type \a Int is regina::LargeInteger).
+ *
+ * \ifacespython This template function is instantiated in Python for integer
+ * types \a Int = \c long, regina::Integer, and regina::LargeInteger.  Moreover,
+ * the output stream argument is not present; instead this function returns
+ * the encoded string.
+ *
+ * \tparam Int The type of integer to encode; this must be either (i) a native
+ * C++ integer type, or (ii) one of Regina's arbitrary precision integer types
+ * (i.e., regina::Integer or regina::LargeInteger).
+ *
+ * @param out the output stream to which the encoded string will be written.
+ * @param value the integer to encode.
+ */
+template <typename Int>
+void streamEncode(std::ostream& out, Int value);
 
 /*@}*/
 

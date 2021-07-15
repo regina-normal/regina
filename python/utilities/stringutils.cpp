@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "utilities/stringutils.h"
+#include <sstream>
 
 using pybind11::overload_cast;
 
@@ -53,5 +54,21 @@ void addStringUtils(pybind11::module_& m) {
         &regina::superscript<false>));
     m.def("superscript", overload_cast<const regina::LargeInteger&>(
         &regina::superscript<true>));
+
+    m.def("streamEncode", [](long value) {
+        std::ostringstream out;
+        regina::streamEncode(out, value);
+        return out.str();
+    });
+    m.def("streamEncode", [](const regina::Integer& value) {
+        std::ostringstream out;
+        regina::streamEncode(out, value);
+        return out.str();
+    });
+    m.def("streamEncode", [](const regina::LargeInteger& value) {
+        std::ostringstream out;
+        regina::streamEncode(out, value);
+        return out.str();
+    });
 }
 

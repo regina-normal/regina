@@ -550,6 +550,9 @@ Version 6.1  [ TODO ]
         Function smithNormalForm(), metricalSmithNormalForm():
             - The change of basis matrices no longer need to have the correct
               size (and may even be uninitialised) before they are passed in.
+        Function streamEncode():
+            - New function to help with perfect hashes of arbitrarily large
+              integers.
         Function torsionAutInverse():
             - Now returns a MatrixInt by value.
         Global constants base64Table, base64Spare:
