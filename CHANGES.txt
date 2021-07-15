@@ -211,6 +211,7 @@ Version 6.1  [ TODO ]
             - Added invertX(), and (for Laurent2 only) invertY().
             - Added operators < > <= >= for Laurent2, to order polynomials
               using a well-defined (but unimportant) total order.
+            - Added encode() for Laurent2 to help with perfect hashing.
         Class LightweightSequence<T>:
             - Added member and global swap() functions.
         Class Link:

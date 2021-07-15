@@ -520,6 +520,34 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          */
         std::string utf8(const char* varX, const char* varY = nullptr) const;
 
+        /**
+         * Encodes this polynomial as a (relatively) short printable string.
+         *
+         * This routine is based on streamEncode() for integers, and follows
+         * the same design principles:
+         *
+         * - It will use only printable ASCII characters.
+         *
+         * - It aims to be short.
+         *
+         * - The encoding is one-to-one.
+         *
+         * - When reading an encoded polynomial character-by-character, the
+         *   encoding contains enough information to know when the last
+         *   character has been read.
+         *
+         * Like streamEncode(), this routine is designed for applications such
+         * as perfect hashing, and so does not provide a decoding function
+         * (though writing one should be straightforward).
+         *
+         * \pre The template parameter \a T is either a native C++ integer
+         * type or else one of Regina's arbitrary precision integer types
+         * (i.e., regina::Integer or regina::LargeInteger).
+         *
+         * @return the encoded string representing this polynomial.
+         */
+        std::string encode() const;
+
     private:
         /**
          * Removes all entries from coeff_ whose coefficients are zero.
@@ -1145,6 +1173,20 @@ inline Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
     // We might have zeroed out some coefficients.
     ans.removeZeroes();
     return ans;
+}
+
+template <typename T>
+inline std::string Laurent2<T>::encode() const {
+    std::ostringstream out;
+    for (const auto& c : coeff_) {
+        // Write the coefficient (which must be non-zero), then the exponents.
+        // This way we can use streamEncode(0) as an unambiguous terminator.
+        streamEncode(out, c.second);
+        streamEncode(out, c.first.first);
+        streamEncode(out, c.first.second);
+    }
+    streamEncode(out, 0);
+    return out.str();
 }
 
 } // namespace regina
