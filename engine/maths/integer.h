@@ -43,10 +43,8 @@
 #include <stdint.h> // MPIR (and thus SAGE) needs this *before* gmp.h.
 #include <stddef.h> // OSX needs this before gmp.h to avoid a ::ptrdiff_t error.
 #include <gmp.h>
-#include <iostream>
-#include <string>
 #include "regina-core.h"
-#include "utilities/intutils.h"
+#include "utilities/tightencoding.h"
 
 /**
  * \hideinitializer
@@ -1462,6 +1460,37 @@ class IntegerBase : private InfinityBase<supportInfinity> {
          */
         void tryReduce();
 
+        /**
+         * Writes the tight encoding of this integer to the given output
+         * stream.  See the page on \ref "tight encodings" for details.
+         *
+         * There is also a corresponding global regina::tightEncode()
+         * function, for better compatibility with native C++ integer types.
+         * The global function is more efficient if the integer argument is an
+         * rvalue reference (since this const member function induces an extra
+         * deep copy).
+         *
+         * \ifacespython Not present; use tightEncoding() instead.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this integer.
+         * See the page on \ref "tight encodings" for details.
+         *
+         * There is also a corresponding global regina::tightEncoding()
+         * function, for better compatibility with native C++ integer types.
+         * The global function is more efficient if the integer argument is an
+         * rvalue reference (since this const member function induces an extra
+         * deep copy).
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
+
     private:
         /**
          * Initialises this integer to infinity.
@@ -1599,6 +1628,38 @@ IntegerBase<supportInfinity> operator + (long lhs,
 template <bool supportInfinity>
 IntegerBase<supportInfinity> operator * (long lhs,
     const IntegerBase<supportInfinity>& rhs);
+
+/**
+ * Writes the tight encoding of the given arbitrary precision integer to the
+ * given output stream.  See the page on \ref "tight encodings" for details.
+ *
+ * This global function does the same thing as the member function
+ * IntegerBase::tightEncode().  However, this global function is more efficient
+ * if the integer argument is an rvalue reference (since the const member
+ * function induces an extra deep copy).
+ *
+ * \ifacespython Not present; use tightEncoding() instead.
+ *
+ * @param out the output stream to which the encoded string will be written.
+ * @param value the integer to encode.
+ */
+template <bool supportInfinity>
+void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value);
+
+/**
+ * Returns the tight encoding of the given arbitrary precision integer.
+ * See the page on \ref "tight encodings" for details.
+ *
+ * This global function does the same thing as the member function
+ * IntegerBase::tightEncoding().  However, this global function is more
+ * efficient if the integer argument is an rvalue reference (since the const
+ * member function induces an extra deep copy).
+ *
+ * @param value the integer to encode.
+ * @return the resulting encoded string.
+ */
+template <bool supportInfinity>
+std::string tightEncoding(IntegerBase<supportInfinity> value);
 
 /**
  * A wrapper class for a native, fixed-precision integer type of the
@@ -3288,6 +3349,18 @@ inline void IntegerBase<supportInfinity>::tryReduce() {
 }
 
 template <bool supportInfinity>
+inline void IntegerBase<supportInfinity>::tightEncode(std::ostream& out) const {
+    regina::detail::tightEncodeInteger(out, *this);
+}
+
+template <bool supportInfinity>
+inline std::string IntegerBase<supportInfinity>::tightEncoding() const {
+    std::ostringstream out;
+    regina::detail::tightEncodeInteger(out, *this);
+    return out.str();
+}
+
+template <bool supportInfinity>
 inline void IntegerBase<supportInfinity>::forceLarge() {
     large_ = new __mpz_struct[1];
     mpz_init_set_si(large_, small_);
@@ -3336,6 +3409,18 @@ template <bool supportInfinity>
 inline void swap(IntegerBase<supportInfinity>& a,
         IntegerBase<supportInfinity>& b) noexcept {
     a.swap(b);
+}
+
+template <bool supportInfinity>
+void tightEncode(std::ostream& out, IntegerBase<supportInfinity> value) {
+    regina::detail::tightEncodeInteger(out, std::move(value));
+}
+
+template <bool supportInfinity>
+std::string tightEncoding(IntegerBase<supportInfinity> value) {
+    std::ostringstream out;
+    regina::detail::tightEncodeInteger(out, std::move(value));
+    return out.str();
 }
 
 // Inline functions for NativeInteger

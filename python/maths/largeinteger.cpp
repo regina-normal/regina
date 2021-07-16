@@ -123,6 +123,7 @@ void addLargeInteger(pybind11::module_& m) {
         .def_static("randomCornerBinary", &LargeInteger::randomCornerBinary)
         .def("makeLarge", &LargeInteger::makeLarge)
         .def("tryReduce", &LargeInteger::tryReduce)
+        .def("tightEncoding", &LargeInteger::tightEncoding)
         .def(long() + pybind11::self)
         .def(long() * pybind11::self)
         .def_readonly_static("zero", &LargeInteger::zero)
@@ -133,6 +134,8 @@ void addLargeInteger(pybind11::module_& m) {
     regina::python::add_output_ostream(c, true /* __repr__ */);
 
     m.def("swap", (void(*)(LargeInteger&, LargeInteger&))(regina::swap));
+    m.def("tightEncoding",
+        (std::string(*)(LargeInteger))(regina::tightEncoding));
 
     pybind11::implicitly_convertible<long, LargeInteger>();
     pybind11::implicitly_convertible<std::string, LargeInteger>();

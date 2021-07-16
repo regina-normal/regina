@@ -4,7 +4,7 @@
 # Copyright (c) 2015-2021, Ben Burton
 # For further details contact Ben Burton (bab@debian.org).
 #
-# Tests the streamEncode() functions.
+# Tests the tightEncode() functions.
 #
 # This file is a single component of Regina's python test suite.  To run
 # the python test suite, move to the main python directory in the source
@@ -34,12 +34,20 @@
 from __future__ import print_function
 
 def doLong(val):
-	print(streamEncode(val),
-		streamEncode(Integer(val)),
-		streamEncode(LargeInteger(val)))
+	enc = tightEncoding(val)
+	print(enc)
+	for i in [ tightEncoding(Integer(val)), tightEncoding(LargeInteger(val)),
+			Integer(val).tightEncoding(), LargeInteger(val).tightEncoding() ]:
+		if i != enc:
+			print("ERROR: Inconsistent encodings")
 
 def doLarge(val):
-	print(streamEncode(Integer(val)), streamEncode(LargeInteger(val)))
+	enc = tightEncoding(Integer(val))
+	print(enc)
+	for i in [ tightEncoding(Integer(val)), tightEncoding(LargeInteger(val)),
+			Integer(val).tightEncoding(), LargeInteger(val).tightEncoding() ]:
+		if i != enc:
+			print("ERROR: Inconsistent encodings")
 
 doLong(0)
 doLong(-44)
@@ -73,5 +81,6 @@ doLong(368729)
 doLarge('1000000000000000000000000000000000000000')
 doLarge('-1000000000000000000000000000000000000000')
 
-print(streamEncode(LargeInteger.infinity))
+print(tightEncoding(LargeInteger.infinity))
+print(LargeInteger.infinity.tightEncoding())
 

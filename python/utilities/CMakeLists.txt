@@ -10,6 +10,7 @@ SET ( FILES
   pyutilities.cpp
   randutils.cpp
   stringutils.cpp
+  tightencoding.cpp
   xmlutils.cpp
   )
 

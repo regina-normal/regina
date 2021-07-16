@@ -45,6 +45,7 @@ if (${REGINA_INSTALL_DEV})
     sigutils.h
     stringutils.h
     stringutils-impl.h
+    tightencoding.h
     trieset.h
     tritmask.h
     typeutils.h

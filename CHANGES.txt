@@ -199,6 +199,8 @@ Version 6.1  [ TODO ]
               are likewise no longer explicit.
             - Added move constructors and move assignment operators.
             - Added a global swap() to complement the member swap().
+            - Added tightEncode() and tightEncoding() to help with perfect
+              hashing.
         Class Isomorphism<dim>, IsomorphismBase<dim>:
             - Added member and global swap() functions to Isomorphism<dim>.
             - Removed the IsomorphismBase<dim> base class; all functionality
@@ -211,7 +213,8 @@ Version 6.1  [ TODO ]
             - Added invertX(), and (for Laurent2 only) invertY().
             - Added operators < > <= >= for Laurent2, to order polynomials
               using a well-defined (but unimportant) total order.
-            - Added encode() for Laurent2 to help with perfect hashing.
+            - Added tightEncode() and tightEncoding() to help with perfect
+              hashing.
         Class LightweightSequence<T>:
             - Added member and global swap() functions.
         Class Link:
@@ -551,9 +554,9 @@ Version 6.1  [ TODO ]
         Function smithNormalForm(), metricalSmithNormalForm():
             - The change of basis matrices no longer need to have the correct
               size (and may even be uninitialised) before they are passed in.
-        Function streamEncode():
-            - New function to help with perfect hashes of arbitrarily large
-              integers.
+        Function tightEncode(), tightEncoding():
+            - New global function to help with perfect hashes of different
+              types of integers.
         Function torsionAutInverse():
             - Now returns a MatrixInt by value.
         Global constants base64Table, base64Spare:

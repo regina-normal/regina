@@ -40,10 +40,10 @@
  */
 
 #include "utilities/stringutils.h"
+#include "utilities/tightencoding.h"
 #include "core/output.h"
 #include <iostream>
 #include <map>
-#include <sstream>
 
 namespace regina {
 
@@ -521,32 +521,33 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
         std::string utf8(const char* varX, const char* varY = nullptr) const;
 
         /**
-         * Encodes this polynomial as a (relatively) short printable string.
+         * Writes the tight encoding of this polynomial to the given output
+         * stream.  See the page on \ref "tight encodings" for details.
          *
-         * This routine is based on streamEncode() for integers, and follows
-         * the same design principles:
+         * \pre The coefficient type \a T must have a corresponding global
+         * regina::tightEncode() function.  This is true for native C++ integer
+         * types, as well as Regina's arbitrary precision integer types
+         * (Integer and LargeInteger).
          *
-         * - It will use only printable ASCII characters.
+         * \ifacespython Not present; use tightEncoding() instead.
          *
-         * - It aims to be short.
-         *
-         * - The encoding is one-to-one.
-         *
-         * - When reading an encoded polynomial character-by-character, the
-         *   encoding contains enough information to know when the last
-         *   character has been read.
-         *
-         * Like streamEncode(), this routine is designed for applications such
-         * as perfect hashing, and so does not provide a decoding function
-         * (though writing one should be straightforward).
-         *
-         * \pre The template parameter \a T is either a native C++ integer
-         * type or else one of Regina's arbitrary precision integer types
-         * (i.e., regina::Integer or regina::LargeInteger).
-         *
-         * @return the encoded string representing this polynomial.
+         * @param out the output stream to which the encoded string will
+         * be written.
          */
-        std::string encode() const;
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this polynomial.
+         * See the page on \ref "tight encodings" for details.
+         *
+         * \pre The coefficient type \a T must have a corresponding global
+         * regina::tightEncode() function.  This is true for native C++ integer
+         * types, as well as Regina's arbitrary precision integer types
+         * (Integer and LargeInteger).
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
 
     private:
         /**
@@ -1176,16 +1177,21 @@ inline Laurent2<T> operator * (const Laurent2<T>& lhs, const Laurent2<T>& rhs) {
 }
 
 template <typename T>
-inline std::string Laurent2<T>::encode() const {
-    std::ostringstream out;
+inline void Laurent2<T>::tightEncode(std::ostream& out) const {
     for (const auto& c : coeff_) {
-        // Write the coefficient (which must be non-zero), then the exponents.
-        // This way we can use streamEncode(0) as an unambiguous terminator.
-        streamEncode(out, c.second);
-        streamEncode(out, c.first.first);
-        streamEncode(out, c.first.second);
+        // Write the coefficient (which must be non-zero) before the exponents.
+        // This way we can use tightEncode(0) as an unambiguous terminator.
+        regina::tightEncode(out, c.second);
+        regina::tightEncode(out, c.first.first);
+        regina::tightEncode(out, c.first.second);
     }
-    streamEncode(out, 0);
+    regina::tightEncode(out, 0);
+}
+
+template <typename T>
+inline std::string Laurent2<T>::tightEncoding() const {
+    std::ostringstream out;
+    tightEncode(out);
     return out.str();
 }
 

@@ -40,9 +40,9 @@
  */
 
 #include "utilities/stringutils.h"
+#include "utilities/tightencoding.h"
 #include "core/output.h"
 #include <iostream>
-#include <sstream>
 
 namespace regina {
 
@@ -554,6 +554,35 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
          * @return this polynomial as a unicode-enabled human-readable string.
          */
         std::string utf8(const char* variable) const;
+
+        /**
+         * Writes the tight encoding of this polynomial to the given output
+         * stream.  See the page on \ref "tight encodings" for details.
+         *
+         * \pre The coefficient type \a T must have a corresponding global
+         * regina::tightEncode() function.  This is true for native C++ integer
+         * types, as well as Regina's arbitrary precision integer types
+         * (Integer and LargeInteger).
+         *
+         * \ifacespython Not present; use tightEncoding() instead.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this polynomial.
+         * See the page on \ref "tight encodings" for details.
+         *
+         * \pre The coefficient type \a T must have a corresponding global
+         * regina::tightEncode() function.  This is true for native C++ integer
+         * types, as well as Regina's arbitrary precision integer types
+         * (Integer and LargeInteger).
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
 
     private:
         /**
@@ -1346,6 +1375,27 @@ template <typename T>
 inline std::string Laurent<T>::utf8(const char* variable) const {
     std::ostringstream out;
     writeTextShort(out, true, variable);
+    return out.str();
+}
+
+template <typename T>
+inline void Laurent<T>::tightEncode(std::ostream& out) const {
+    // Write the non-zero coefficients with their exponents, and then
+    // terminate with zero.
+    for (long exp = minExp(); exp <= maxExp(); ++exp) {
+        if ((*this)[exp] == 0)
+            continue;
+
+        regina::tightEncode(out, (*this)[exp]);
+        regina::tightEncode(out, exp);
+    }
+    regina::tightEncode(out, 0);
+}
+
+template <typename T>
+inline std::string Laurent<T>::tightEncoding() const {
+    std::ostringstream out;
+    tightEncode(out);
     return out.str();
 }
 

@@ -119,6 +119,7 @@ void addInteger(pybind11::module_& m) {
         .def_static("randomCornerBinary", &Integer::randomCornerBinary)
         .def("makeLarge", &Integer::makeLarge)
         .def("tryReduce", &Integer::tryReduce)
+        .def("tightEncoding", &Integer::tightEncoding)
         .def(long() + pybind11::self)
         .def(long() * pybind11::self)
         .def_readonly_static("zero", &Integer::zero)
@@ -128,6 +129,7 @@ void addInteger(pybind11::module_& m) {
     regina::python::add_output_ostream(c, true /* __repr__ */);
 
     m.def("swap", (void(*)(Integer&, Integer&))(regina::swap));
+    m.def("tightEncoding", (std::string(*)(Integer))(regina::tightEncoding));
 
     pybind11::implicitly_convertible<long, Integer>();
     pybind11::implicitly_convertible<std::string, Integer>();
