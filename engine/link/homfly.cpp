@@ -41,6 +41,7 @@
 // #define DUMP_STATES
 // #define DUMP_STAGES
 // #define IDENTIFY_NONVIABLE_KEYS
+// #define REPORT_TEST_PATHS
 
 // When tracking progress for Kauffman's algorithm, we update our
 // progress after exactly PROGRESS_POS steps in the link traversal.
@@ -1543,7 +1544,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                         case 8:
                             // One strand is from a forgotten crossing.
                             // Merge it with the other.
+#ifdef REPORT_TEST_PATHS
                             std::cerr << "loop1a 8 merge" << std::endl;
+#endif
                             kNew = *kChild;
                             kNew[pos[1][1]] = id[0][0];
 
@@ -1574,7 +1577,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             } else {
                                 // Just merge the two free ends.
                                 if (pos[0][0] + 1 == pos[1][1]) {
+#ifdef REPORT_TEST_PATHS
                                     std::cerr << "loop1a 9 merge" << std::endl;
+#endif
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[0][0],
                                         kNew.begin());
@@ -1640,7 +1645,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             if (pos[0][1] + 1 == pos[1][0]) {
                                 // We are closing off a loop.
                                 if (pos[0][1] == kChild->size() - 2) {
+#ifdef REPORT_TEST_PATHS
                                     std::cerr << "loop1b 6 pass" << std::endl;
+#endif
                                     std::copy(kChild->begin(),
                                         kChild->end() - 2, kNew.begin());
 
@@ -1659,7 +1666,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                             } else {
                                 // Just merge the two free ends.
                                 if (pos[1][0] + 1 == pos[0][1]) {
+#ifdef REPORT_TEST_PATHS
                                     std::cerr << "loop1b 6 merge" << std::endl;
+#endif
                                     std::copy(kChild->begin(),
                                         kChild->begin() + pos[1][0],
                                         kNew.begin());
@@ -1869,7 +1878,9 @@ Laurent2<Integer> Link::homflyTreewidth(ProgressTracker* tracker) const {
                                 // d=a
                                 // Pass:
                                 if (pos[0][1] == kChild->size() - 2) {
+#ifdef REPORT_TEST_PATHS
                                     std::cerr << "3a pass" << std::endl;
+#endif
                                     for (i = 0; i < kChild->size(); i += 2) {
                                         std::copy(kChild->begin(),
                                             kChild->begin() + i,
