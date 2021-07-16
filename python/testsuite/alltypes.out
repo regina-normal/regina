@@ -1402,6 +1402,9 @@ Equality type : EqualityType.BY_VALUE
 NormalHypersurface : class
 Equality type : EqualityType.BY_REFERENCE
 
+NormalHypersurfaceVector : class
+Equality type : EqualityType.BY_REFERENCE
+
 NormalHypersurfaces : class
 Equality type : EqualityType.BY_REFERENCE
 
@@ -1409,6 +1412,9 @@ NormalList : class
 Equality type : EqualityType.BY_VALUE
 
 NormalSurface : class
+Equality type : EqualityType.BY_REFERENCE
+
+NormalSurfaceVector : class
 Equality type : EqualityType.BY_REFERENCE
 
 NormalSurfaces : class
@@ -1853,6 +1859,9 @@ TxIParallelCore : class
 Equality type : EqualityType.BY_REFERENCE
 
 VectorInt : class
+Equality type : EqualityType.BY_VALUE
+
+VectorLarge : class
 Equality type : EqualityType.BY_VALUE
 
 Vertex10 : typedef ->  Face10_0
