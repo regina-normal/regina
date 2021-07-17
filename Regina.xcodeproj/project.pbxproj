@@ -1049,7 +1049,6 @@
 		0564A8091811D921002CC2AE /* dehydrationhandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4291811D91E002CC2AE /* dehydrationhandler.cpp */; };
 		0564A80A1811D921002CC2AE /* exportdialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A42B1811D91E002CC2AE /* exportdialog.cpp */; };
 		0564A80B1811D921002CC2AE /* importdialog.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A42D1811D91E002CC2AE /* importdialog.cpp */; };
-		0564A80C1811D921002CC2AE /* isosighandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A42F1811D91E002CC2AE /* isosighandler.cpp */; };
 		0564A80D1811D921002CC2AE /* orbhandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4311811D91E002CC2AE /* orbhandler.cpp */; };
 		0564A80E1811D921002CC2AE /* pdfhandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4351811D91E002CC2AE /* pdfhandler.cpp */; };
 		0564A80F1811D921002CC2AE /* pythonhandler.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 0564A4371811D91E002CC2AE /* pythonhandler.cpp */; };
@@ -3345,8 +3344,6 @@
 		0564A42C1811D91E002CC2AE /* exportdialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = exportdialog.h; sourceTree = "<group>"; };
 		0564A42D1811D91E002CC2AE /* importdialog.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = importdialog.cpp; sourceTree = "<group>"; };
 		0564A42E1811D91E002CC2AE /* importdialog.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = importdialog.h; sourceTree = "<group>"; };
-		0564A42F1811D91E002CC2AE /* isosighandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = isosighandler.cpp; sourceTree = "<group>"; };
-		0564A4301811D91E002CC2AE /* isosighandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = isosighandler.h; sourceTree = "<group>"; };
 		0564A4311811D91E002CC2AE /* orbhandler.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = orbhandler.cpp; sourceTree = "<group>"; };
 		0564A4321811D91E002CC2AE /* orbhandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = orbhandler.h; sourceTree = "<group>"; };
 		0564A4331811D91E002CC2AE /* packetexporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = packetexporter.h; sourceTree = "<group>"; };
@@ -3745,6 +3742,7 @@
 		057B0CAD26A2AC4E0017F5EA /* tightencode.test */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tightencode.test; sourceTree = "<group>"; };
 		057B0CAE26A2AC4E0017F5EA /* tightencode.out */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = tightencode.out; sourceTree = "<group>"; };
 		057B0CAF26A2AC670017F5EA /* iterators.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = iterators.h; sourceTree = "<group>"; };
+		057B0CB126A2B8B60017F5EA /* sighandler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sighandler.h; sourceTree = "<group>"; };
 		057ED8E72581B49E004F0068 /* QtSvg.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtSvg.framework; path = "../../Qt/5.15.2-macos/lib/QtSvg.framework"; sourceTree = "<group>"; };
 		057ED8E82581B49E004F0068 /* QtCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtCore.framework; path = "../../Qt/5.15.2-macos/lib/QtCore.framework"; sourceTree = "<group>"; };
 		057ED8E92581B49E004F0068 /* QtPrintSupport.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QtPrintSupport.framework; path = "../../Qt/5.15.2-macos/lib/QtPrintSupport.framework"; sourceTree = "<group>"; };
@@ -6718,8 +6716,6 @@
 				0564A42C1811D91E002CC2AE /* exportdialog.h */,
 				0564A42D1811D91E002CC2AE /* importdialog.cpp */,
 				0564A42E1811D91E002CC2AE /* importdialog.h */,
-				0564A42F1811D91E002CC2AE /* isosighandler.cpp */,
-				0564A4301811D91E002CC2AE /* isosighandler.h */,
 				0564A4311811D91E002CC2AE /* orbhandler.cpp */,
 				0564A4321811D91E002CC2AE /* orbhandler.h */,
 				0564A4331811D91E002CC2AE /* packetexporter.h */,
@@ -6732,6 +6728,7 @@
 				0564A43A1811D91E002CC2AE /* recogniserhandler.h */,
 				0564A43B1811D91E002CC2AE /* reginahandler.cpp */,
 				0564A43C1811D91E002CC2AE /* reginahandler.h */,
+				057B0CB126A2B8B60017F5EA /* sighandler.h */,
 				0564A43D1811D91E002CC2AE /* snappeahandler.cpp */,
 				0564A43E1811D91E002CC2AE /* snappeahandler.h */,
 				0564A43F1811D91E002CC2AE /* sourcehandler.cpp */,
@@ -9899,7 +9896,6 @@
 				0564A9841811D921002CC2AE /* sharedtempfile.cpp in Sources */,
 				0564A8021811D921002CC2AE /* codecchooser.cpp in Sources */,
 				0564A9531811D921002CC2AE /* gaprunner.cpp in Sources */,
-				0564A80C1811D921002CC2AE /* isosighandler.cpp in Sources */,
 				0564A9451811D921002CC2AE /* newpackets.cpp in Sources */,
 				0564A7FD1811D921002CC2AE /* edgeintchooser.cpp in Sources */,
 				0564A8121811D921002CC2AE /* snappeahandler.cpp in Sources */,
