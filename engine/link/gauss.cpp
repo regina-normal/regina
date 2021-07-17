@@ -43,13 +43,21 @@
 // types (with the feature test macro now defined) only appeared in gcc-11.1.
 //
 #if __has_include(<charconv>)
-  #include <charconv>
-  // We can use std::to_chars().
-  #define __regina_has_to_chars 1
+  #ifndef __APPLE__
+    #include <charconv>
+    // We can use std::to_chars().
+    #define __regina_has_to_chars 1
+  #else
+    // On macOS, Xcode provides std::to_chars() but only enables it
+    // for macOS 15 / iOS 13 and above.
+    // Until we can check this properly, just use the same fallback as below.
+    #include <cstdio>
+    #undef __regina_has_to_chars
+  #endif
 #else
   #warning This compiler does not support std::to_chars().
   // Fall back to snprintf().
-  #include<cstdio>
+  #include <cstdio>
   #undef __regina_has_to_chars
 #endif
 
