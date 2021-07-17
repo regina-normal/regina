@@ -57,6 +57,15 @@ def stopAfter10(sig, tri):
     return (count >= 10)
 
 ########################################################################
+# Callback actions that we pass to enumerateCovers():
+########################################################################
+
+def displayCover(tri, type):
+    t = Triangulation3(tri)
+    t.intelligentSimplify()
+    print('    ' + str(type) + ': ' + t.homology().str())
+
+########################################################################
 # Full tests that we can run on a triangulation or link:
 ########################################################################
 
@@ -95,6 +104,11 @@ def testCollect(obj, height, threads):
     sigs.sort()
     for i in sigs:
         print('    ' + i)
+
+def testCovers(link, sheets):
+    print(link.label() + ' -> all covers, sheets = ' + str(sheets))
+    tri = SnapPeaTriangulation(link.complement())
+    tri.enumerateCovers(sheets, SnapPeaTriangulation.all_covers, displayCover)
 
 ########################################################################
 # Individual test cases:
@@ -142,5 +156,12 @@ print()
 link = ExampleLink.monster()
 testStopAfter10(link, 1, 1)
 testStopAfter10(link, 1, 2)
+print()
+
+link = ExampleLink.trefoil()
+testCovers(link, 2)
+testCovers(link, 3)
+testCovers(link, 4)
+testCovers(link, 5)
 print()
 

@@ -42,6 +42,7 @@
 #include "regina-core.h"
 #include "triangulation/dim3.h"
 #include <complex>
+#include <functional>
 
 // Forward declaration of SnapPea structures.
 namespace regina::snappea {
@@ -341,11 +342,11 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          * Describes the different types of solution that can be found when
          * solving for a hyperbolic structure.
          *
-         * Although this enumeration is identical to SnapPea's own
-         * SolutionType, it is declared again in this class because Regina
-         * code should not in general be interacting directly with the
-         * SnapPea kernel.  Values may be freely converted between the
-         * two enumeration types by simple assignment and/or typecasting.
+         * This enumeration is identical to SnapPea's own SolutionType enum;
+         * it is declared again here because Regina code should not in
+         * general interact directly with the SnapPea kernel.  Values may be
+         * freely converted between the two enumeration types by simple
+         * assignment and/or typecasting.
          *
          * \warning This enumeration must always be kept in sync with
          * SnapPea's own SolutionType enumeration.
@@ -372,6 +373,60 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
             externally_computed
                 /**< Tetrahedron shapes were inserted into the triangulation. */
         } SolutionType;
+
+        /**
+         * Indicates which types of covers should be enumerated when calling
+         * enumerateCovers().
+         *
+         * This enumeration is identical to SnapPea's PermutationSubgroup enum,
+         * though the values here are named differently.  The enumeration
+         * is declared again here because Regina code should not in
+         * general interact directly with the SnapPea kernel.  Values may be
+         * freely converted between the two enumeration types by simple
+         * assignment and/or typecasting.
+         *
+         * \warning This enumeration must always be kept in sync with
+         * SnapPea's PermutationSubgroup enumeration.
+         */
+        typedef enum {
+            cyclic_covers,
+                /**< Indicates that only cyclic covers should be enumerated.
+                     This corresponds to the SnapPea constant
+                     \a permutation_subgroup_Zn. */
+            all_covers
+                /**< Indicates that all covers should be enumerated.
+                     This corresponds to the SnapPea constant
+                     \a permutation_subgroup_Sn. */
+        } CoverEnumerationType;
+
+        /**
+         * Indicates the different types of covers that can be produced
+         * by enumerateCovers().
+         *
+         * This enumeration is identical to SnapPea's own CoveringType enum;
+         * it is declared again here because Regina code should not in
+         * general interact directly with the SnapPea kernel.  Values may be
+         * freely converted between the two enumeration types by simple
+         * assignment and/or typecasting.
+         *
+         * \warning This enumeration must always be kept in sync with
+         * SnapPea's own CoveringType enumeration.
+         */
+        typedef enum {
+            unknown_cover,
+                /**< Indicates that SnapPea has not yet computed the covering
+                     type. */
+            irregular_cover,
+                /**< Indicates a covering where there exist two lifts of a
+                     point in the base manifold with no covering transformation
+                     that takes one to the other. */
+            regular_cover,
+                /**< Indicates a covering that is not cyclic, and where for
+                     any two lifts of a point in the base manfiold, there is a
+                     covering transformation taking one to the other. */
+            cyclic_cover
+                /**< Indicates a cyclic covering. */
+        } CoverType;
 
     private:
         regina::snappea::Triangulation* data_;
@@ -1180,6 +1235,107 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
             bool minimiseNumberOfGenerators = true,
             bool tryHardToShortenRelators = true) const;
 
+        /**
+         * Enumerates connected <i>k</i>-sheeted covers of the underlying
+         * manifold.  The number of sheets \a k is passed as the first argument
+         * to this function.
+         *
+         * Regina does this (with the help of SnapPea) by:
+         *
+         * - enumerating all transitive representations of the fundamental
+         *   group into either the symmetric group <i>S(k)</i> or the cyclic
+         *   group <i>Z_k</i> (according to the parameter \a type), using the
+         *   SnapPea function <tt>find_representations()</tt>; and then
+         *
+         * - building the cover that corresponds to each representation,
+         *   using the SnapPea function <tt>construct_cover()</tt>.
+         *
+         * Each covering space is produced once up to equivalence; here
+         * equivalent covers correspond to conjugate representations of
+         * the fundamental group.
+         *
+         * To enumerate \e all <i>k</i>-sheeted covers up to equivalence,
+         * set \a type to \a all_covers.  Be warned, however, that this becomes
+         * enormously slow as the number of sheets \a k grows.  An alternative
+         * is to enumerate only cyclic covers by setting \a type to
+         * \a cyclic_covers; this significantly limits the set of covers
+         * produced but is also much faster for larger \a k.
+         *
+         * For each cover that is produced, this routine will call \a action
+         * (which must be a function or some other callable object).
+         *
+         * - The first argument to \a action must be a reference to a
+         *   SnapPeaTriangulation.  This will be the newly produced cover.
+         *   \a action may, if it chooses, modify the triangulation that
+         *   it receives (though it must not delete it).  The triangulation
+         *   will be destroyed immediately after \a action is called.
+         *
+         * - The second argument to \a action must be of type
+         *   \a SnapPeaTriangulation::CoverType.
+         *   This will indicate the type of cover that has been constructed;
+         *   see the SnapPeaTriangulation::CoverType documentation for details.
+         *   In the same call to enumerateCovers() you may observe different
+         *   types of covers being produced (i.e., this value is computed
+         *   individually for each cover).  You should, however, never see
+         *   the value \a unknown_cover.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
+         *
+         * - \a action must not make changes to this original triangulation
+         *   (i.e., the SnapPeaTriangulation upon which enumerateCovers()
+         *   is being called).
+         *
+         * Be aware that this routine does the bulk of its work before
+         * any covers are produced.  Specifically, because of the design of
+         * the SnapPea kernel, this routine first enumerates all requested
+         * representations of the fundamental group (which is the slow part),
+         * and only then does it construct the cover and call \a action for
+         * each representation, one at a time.
+         *
+         * \pre This is not a null triangulation.
+         *
+         * \warning If you are enumerating all covers, then the argument
+         * \a sheets should be \e very small.
+         *
+         * \warning The covers that are produced will typically use far more
+         * tetrahedra than necessary.  If size is important then you should
+         * take a copy using Regina's native type Triangulation<3> and call
+         * intelligentSimplify() on that.  Note that you cannot call
+         * intelligentSimplify() directly on a SnapPeaTriangulation, since
+         * (like all modifying functions inherited from Triangulation<3>)
+         * this will nullify the SnapPeaTriangulation.  See the class
+         * notes for further explanation.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap them in std::ref or
+         * std::cref.
+         *
+         * \apinotfinal
+         *
+         * \ifacespython This function is available in Python, and the
+         * \a action argument may be a pure Python function.  However, its
+         * form is more restricted: the arguments \a args are removed, so you
+         * must simply call it as enumerateCovers(sheets, type, action).
+         *
+         * @param sheets the number of sheets in the covers to produce
+         * (i.e., the number \a k in the description above); this must
+         * be a positive integer.
+         * @param type indicates whether to enumerate all covers (up to
+         * equivalence) or only cyclic covers.
+         * @param action a function (or other callable object) to call
+         * for each cover that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial triangulation and type arguments.
+         * @return the total number of covers found.
+         */
+        template <typename Action, typename... Args>
+        size_t enumerateCovers(int sheets, CoverEnumerationType type,
+            Action&& action, Args&&... args) const;
+
         /*@}*/
         /**
          * \name Manipulating SnapPea triangulations
@@ -1469,6 +1625,17 @@ class SnapPeaTriangulation : public Triangulation<3>, public PacketListener {
          */
         void reset(regina::snappea::Triangulation* data);
 
+        /**
+         * A much less templated version of enumerateCovers().
+         *
+         * This is identical to enumerateCovers(), except that the type
+         * of the action function is now known precisely.  This means
+         * that the implementation can be kept out of the main headers.
+         */
+        size_t enumerateCoversInternal(int sheets, CoverEnumerationType type,
+            std::function<void(SnapPeaTriangulation&, CoverType)>&& action)
+            const;
+
     friend class regina::XMLSnapPeaReader;
 };
 
@@ -1574,6 +1741,15 @@ inline Triangulation<3>* SnapPeaTriangulation::canonise() const {
 
 inline void SnapPeaTriangulation::randomise() {
     randomize();
+}
+
+template <typename Action, typename... Args>
+inline size_t SnapPeaTriangulation::enumerateCovers(int sheets,
+        CoverEnumerationType type, Action&& action, Args&&... args) const {
+    return enumerateCoversInternal(sheets, type,
+        std::bind(std::forward<Action>(action),
+            std::placeholders::_1, std::placeholders::_2,
+            std::forward<Args>(args)...));
 }
 
 inline Packet* SnapPeaTriangulation::internalClonePacket(Packet*) const {

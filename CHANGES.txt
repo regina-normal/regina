@@ -419,6 +419,8 @@ Version 6.1  [ TODO ]
             - Class constants for the census sections are now constexpr.
         Class SnapPeaTriangulation:
             - Added member and global swap() functions.
+            - Added new routine enumerateCovers(), which combines SnapPea's
+              find_representations() and construct_cover().
             - Changed slopeEquations() to return a std::optional<MatrixInt>,
               not a pointer that could be null.
             - Changed gluingEquations() and gluingEquationsRect() to return a

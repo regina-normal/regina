@@ -906,5 +906,27 @@ void SnapPeaTriangulation::reset(regina::snappea::Triangulation* data) {
     sync();
 }
 
+size_t SnapPeaTriangulation::enumerateCoversInternal(int sheets,
+        CoverEnumerationType type,
+        std::function<void(SnapPeaTriangulation&, CoverType)>&& action) const {
+    if (! data_)
+        return 0;
+
+    regina::snappea::RepresentationList* reps =
+        regina::snappea::find_representations(data_, sheets,
+        static_cast<regina::snappea::PermutationSubgroup>(type));
+
+    size_t ans = 0;
+    for (auto rep = reps->list; rep; rep = rep->next) {
+        SnapPeaTriangulation cover;
+        cover.reset(regina::snappea::construct_cover(data_, rep, sheets));
+        action(cover, static_cast<CoverType>(rep->covering_type));
+        ++ans;
+    }
+
+    free_representation_list(reps);
+    return ans;
+}
+
 } // namespace regina
 

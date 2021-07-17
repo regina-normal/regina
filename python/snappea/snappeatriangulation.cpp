@@ -32,6 +32,7 @@
 
 #include "../pybind11/pybind11.h"
 #include "../pybind11/complex.h"
+#include "../pybind11/functional.h"
 #include "maths/matrix.h"
 #include "snappea/snappeatriangulation.h"
 #include "utilities/safeptr.h"
@@ -108,6 +109,12 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
         .def("canonise", &SnapPeaTriangulation::canonise)
         .def("randomize", &SnapPeaTriangulation::randomize)
         .def("randomise", &SnapPeaTriangulation::randomise)
+        .def("enumerateCovers", [](const SnapPeaTriangulation& tri,
+                int sheets, SnapPeaTriangulation::CoverEnumerationType type,
+                const std::function<void(SnapPeaTriangulation&,
+                    SnapPeaTriangulation::CoverType)>& action) {
+            return tri.enumerateCovers(sheets, type, action);
+        })
         .def_static("kernelMessagesEnabled",
             &SnapPeaTriangulation::kernelMessagesEnabled)
         .def_static("enableKernelMessages",
@@ -140,6 +147,21 @@ void addSnapPeaTriangulation(pybind11::module_& m) {
 
     // For backward compatibility with the old boost.python bindings:
     m.attr("SolutionType") = st;
+
+    auto cet = pybind11::enum_<SnapPeaTriangulation::CoverEnumerationType>(
+            c2, "CoverEnumerationType")
+        .value("cyclic_covers", SnapPeaTriangulation::cyclic_covers)
+        .value("all_covers", SnapPeaTriangulation::all_covers)
+        .export_values()
+    ;
+
+    auto ct = pybind11::enum_<SnapPeaTriangulation::CoverType>(c2, "CoverType")
+        .value("unknown_cover", SnapPeaTriangulation::unknown_cover)
+        .value("irregular_cover", SnapPeaTriangulation::irregular_cover)
+        .value("regular_cover", SnapPeaTriangulation::regular_cover)
+        .value("cyclic_cover", SnapPeaTriangulation::cyclic_cover)
+        .export_values()
+    ;
 
     m.def("swap",
         (void(*)(SnapPeaTriangulation&, SnapPeaTriangulation&))(regina::swap));

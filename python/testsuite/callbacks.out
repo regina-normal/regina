@@ -90,3 +90,16 @@ Monster unknot -> stop after 10, height = 1, threads = 1
 Monster unknot -> stop after 10, height = 1, threads = 2
     search terminated early, count: 10
 
+Trefoil -> all covers, sheets = 2
+    CoverType.cyclic_cover: Z + Z_3
+Trefoil -> all covers, sheets = 3
+    CoverType.irregular_cover: 2 Z
+    CoverType.cyclic_cover: Z + 2 Z_2
+Trefoil -> all covers, sheets = 4
+    CoverType.irregular_cover: 2 Z
+    CoverType.irregular_cover: Z + Z_2
+    CoverType.cyclic_cover: Z + Z_3
+Trefoil -> all covers, sheets = 5
+    CoverType.cyclic_cover: Z
+    CoverType.irregular_cover: Z + Z_3
+
