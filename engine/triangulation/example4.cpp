@@ -294,7 +294,6 @@ Triangulation<4>* Example<4>::bundleWithMonodromy(
     Packet::ChangeEventSpan span(ans);
     ans->setLabel(base.label() + " x I / ~");
 
-    Perm<5> id;
     unsigned long n = base.size();
     unsigned long i;
     for (i = 0; i < n; ++i)

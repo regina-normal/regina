@@ -575,7 +575,6 @@ SatCube* SatCube::isBlockCube(const SatAnnulus& annulus,
 
     SatCube* ans = new SatCube();
 
-    const Perm<4> id;
     ans->annulus_[0] = annulus;
     ans->annulus_[1].tet[0] = annulus.tet[1];
     ans->annulus_[1].tet[1] = bdry2;

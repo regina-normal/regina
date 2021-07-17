@@ -189,7 +189,6 @@ void NormalSurfaces::writeXMLPacketData(std::ostream& out) const {
     out << "\"/>\n";
 
     // Write the individual surfaces.
-    std::vector<NormalSurface*>::const_iterator it;
     for (const NormalSurface& s : surfaces_)
         s.writeXMLData(out);
 }

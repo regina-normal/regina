@@ -573,8 +573,6 @@ bool Triangulation<4>::shellBoundary(Pentachoron<4>* p,
 
 bool Triangulation<4>::collapseEdge(Edge<4>* e, bool check, bool perform) {
     // Find the pentachora to remove.
-    Perm<5> p;
-
     if (check) {
         // We need a valid edge before we test anything else.
         // From this we know that the edge link is a disc or sphere.

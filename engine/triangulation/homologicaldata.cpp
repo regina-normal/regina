@@ -249,7 +249,7 @@ void HomologicalData::computeChainComplexes() {
     long int temp;
     unsigned long i,j;
 
-    Perm<4> p1,p2;
+    Perm<4> p1;
 
     // This fills out matrix A1
     for (i=0;i<tri->countEdges();i++) {

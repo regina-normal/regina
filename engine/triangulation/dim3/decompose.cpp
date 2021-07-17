@@ -858,7 +858,6 @@ bool Triangulation<3>::hasCompressingDisc() const {
     // Nope.  Decide whether we can use the fast linear programming
     // machinery or whether we need to do a full vertex surface enumeration.
     if (use->isOrientable() && use->countBoundaryComponents() == 1) {
-        NormalSurface* ans;
         Triangulation<3>* crush;
         Triangulation<3>* comp;
 

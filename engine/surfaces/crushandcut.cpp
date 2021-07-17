@@ -1425,7 +1425,6 @@ namespace {
                 long ec = t_[side]->boundaryComponent(0)->eulerChar();
 
                 // Look for a normal disc or sphere to crush.
-                NormalSurface* ans;
                 Triangulation<3>* crush;
                 bool found;
                 while (true) {

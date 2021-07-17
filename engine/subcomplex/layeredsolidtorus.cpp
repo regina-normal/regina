@@ -721,7 +721,6 @@ Triangulation<3>* LayeredSolidTorus::flatten(const Triangulation<3>* original,
     Tetrahedron<3>* curr;
     Tetrahedron<3>* next;
     FacePair currBdryFaces;
-    Perm<4> adjPerm;
 
     curr = newBase;
     currBdryFaces = FacePair(baseFace_[0], baseFace_[1]).complement();
