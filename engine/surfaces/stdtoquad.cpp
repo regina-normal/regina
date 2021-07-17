@@ -83,7 +83,6 @@ NormalSurfaces* NormalSurfaces::internalStandardToReduced() const {
     VectorPtr* use = new VectorPtr[surfaces_.size()];
     unsigned long nUse = 0;
 
-    std::vector<NormalSurface>::const_iterator it;
     for (const NormalSurface& s : surfaces_)
         if (! s.isVertexLinking())
             use[nUse++] = &s.vector().coords();

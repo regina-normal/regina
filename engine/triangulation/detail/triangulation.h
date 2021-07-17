@@ -3220,7 +3220,6 @@ const GroupPresentation& TriangulationBase<dim>::fundamentalGroup() const {
     Simplex<dim>* simp;
     int facet;
     Face<dim, dim-1>* gen;
-    GroupExpression* rel;
     for (Face<dim, dim-2>* f : faces<dim-2>()) {
         if (! f->isBoundary()) {
             // Put in the relation corresponding to this triangle.
