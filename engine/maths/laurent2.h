@@ -478,7 +478,6 @@ class Laurent2 : public ShortOutput<Laurent2<T>, true> {
          * \c null, in which case the default symbol <tt>'x'</tt> will be used.
          * @param varY the symbol to use for the variable \a y.  This may be
          * \c null, in which case the default symbol <tt>'y'</tt> will be used.
-         * @return a reference to the given output stream.
          */
         void writeTextShort(std::ostream& out, bool utf8 = false,
             const char* varX = nullptr, const char* varY = nullptr) const;

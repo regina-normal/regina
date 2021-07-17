@@ -207,7 +207,7 @@ struct Base64SigEncoding {
      * for details of the encoding.
      *
      * @param c the base64 character to decode.
-     * @result an array into which the resulting trits should be placed;
+     * @param result an array into which the resulting trits should be placed;
      * this must have size at least 3.
      */
     static void decodeTrits(char c, char* result) {

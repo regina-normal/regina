@@ -1900,7 +1900,7 @@ class Link : public Packet {
          * @return the writhe of the component containing the given strand,
          * or 0 if the given strand is a null strand.
          */
-        long writheOfComponent(StrandRef strand) const;
+        long writheOfComponent(StrandRef component) const;
 
         /**
          * Returns the writhe of a single component of this link diagram.
