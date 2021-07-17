@@ -369,6 +369,25 @@ class AbelianGroup : public ShortOutput<AbelianGroup, true> {
         void swap(AbelianGroup& other) noexcept;
 
         /**
+         * Writes the tight encoding of this abelian group to the given output
+         * stream.  See the page on \ref "tight encodings" for details.
+         *
+         * \ifacespython Not present; use tightEncoding() instead.
+         *
+         * @param out the output stream to which the encoded string will
+         * be written.
+         */
+        void tightEncode(std::ostream& out) const;
+
+        /**
+         * Returns the tight encoding of this abelian group.
+         * See the page on \ref "tight encodings" for details.
+         *
+         * @return the resulting encoded string.
+         */
+        std::string tightEncoding() const;
+
+        /**
          * Writes a chunk of XML containing this abelian group.
          *
          * \ifacespython Not present.
@@ -485,6 +504,19 @@ inline bool AbelianGroup::operator == (const AbelianGroup& other) const {
 
 inline bool AbelianGroup::operator != (const AbelianGroup& other) const {
     return (rank_ != other.rank_ || invariantFactors != other.invariantFactors);
+}
+
+inline void AbelianGroup::tightEncode(std::ostream& out) const {
+    regina::tightEncode(out, rank_);
+    for (const auto& i : invariantFactors)
+        regina::tightEncode(out, i);
+    regina::tightEncode(out, 0);
+}
+
+inline std::string AbelianGroup::tightEncoding() const {
+    std::ostringstream out;
+    tightEncode(out);
+    return out.str();
 }
 
 inline void swap(AbelianGroup& a, AbelianGroup& b) noexcept {

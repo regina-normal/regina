@@ -336,6 +336,70 @@ class Laurent : public ShortOutput<Laurent<T>, true> {
         bool operator != (const Laurent<T>& rhs) const;
 
         /**
+         * Compares this against the given polynomial under a total
+         * ordering of all one-variable Laurent polynomials.
+         *
+         * The particular total order that Regina uses is not important,
+         * and may change between Regina releases (though such changes
+         * should be very infrequent).  The main purpose of this routine
+         * is to support algorithms that require a "canonical" choice of
+         * polynomial from amongst many alternatives.
+         *
+         * @param rhs the polynomial to compare with this.
+         * @return \c true if and only if this is less than the given
+         * polynomial under the total order that Regina uses.
+         */
+        bool operator < (const Laurent<T>& rhs) const;
+
+        /**
+         * Compares this against the given polynomial under a total
+         * ordering of all one-variable Laurent polynomials.
+         *
+         * The particular total order that Regina uses is not important,
+         * and may change between Regina releases (though such changes
+         * should be very infrequent).  The main purpose of this routine
+         * is to support algorithms that require a "canonical" choice of
+         * polynomial from amongst many alternatives.
+         *
+         * @param rhs the polynomial to compare with this.
+         * @return \c true if and only if this is greater than the given
+         * polynomial under the total order that Regina uses.
+         */
+        bool operator > (const Laurent<T>& rhs) const;
+
+        /**
+         * Compares this against the given polynomial under a total
+         * ordering of all one-variable Laurent polynomials.
+         *
+         * The particular total order that Regina uses is not important,
+         * and may change between Regina releases (though such changes
+         * should be very infrequent).  The main purpose of this routine
+         * is to support algorithms that require a "canonical" choice of
+         * polynomial from amongst many alternatives.
+         *
+         * @param rhs the polynomial to compare with this.
+         * @return \c true if and only if this is less than or equal to the
+         * given polynomial under the total order that Regina uses.
+         */
+        bool operator <= (const Laurent<T>& rhs) const;
+
+        /**
+         * Compares this against the given polynomial under a total
+         * ordering of all one-variable Laurent polynomials.
+         *
+         * The particular total order that Regina uses is not important,
+         * and may change between Regina releases (though such changes
+         * should be very infrequent).  The main purpose of this routine
+         * is to support algorithms that require a "canonical" choice of
+         * polynomial from amongst many alternatives.
+         *
+         * @param rhs the polynomial to compare with this.
+         * @return \c true if and only if this is greater than or equal to
+         * the given polynomial under the total order that Regina uses.
+         */
+        bool operator >= (const Laurent<T>& rhs) const;
+
+        /**
          * Sets this to be a copy of the given polynomial.
          *
          * This and the given polynomial need not have the same minimum
@@ -1054,6 +1118,58 @@ inline bool Laurent<T>::operator != (const Laurent<T>& rhs) const {
         if ((*this)[i] != rhs[i])
             return true;
     return false;
+}
+
+template <typename T>
+bool Laurent<T>::operator < (const Laurent<T>& rhs) const {
+    if (minExp_ < rhs.minExp_)
+        return true;
+    else if (minExp_ > rhs.minExp_)
+        return false;
+
+    if (maxExp_ < rhs.maxExp_)
+        return true;
+    else if (maxExp_ > rhs.maxExp_)
+        return false;
+
+    for (long i = minExp_; i <= maxExp_; ++i)
+        if ((*this)[i] < rhs[i])
+            return true;
+        else if ((*this)[i] > rhs[i])
+            return false;
+
+    return false;
+}
+
+template <typename T>
+inline bool Laurent<T>::operator > (const Laurent<T>& rhs) const {
+    return (rhs < *this);
+}
+
+template <typename T>
+bool Laurent<T>::operator <= (const Laurent<T>& rhs) const {
+    if (minExp_ < rhs.minExp_)
+        return true;
+    else if (minExp_ > rhs.minExp_)
+        return false;
+
+    if (maxExp_ < rhs.maxExp_)
+        return true;
+    else if (maxExp_ > rhs.maxExp_)
+        return false;
+
+    for (long i = minExp_; i <= maxExp_; ++i)
+        if ((*this)[i] < rhs[i])
+            return true;
+        else if ((*this)[i] > rhs[i])
+            return false;
+
+    return true;
+}
+
+template <typename T>
+inline bool Laurent<T>::operator >= (const Laurent<T>& rhs) const {
+    return (rhs <= *this);
 }
 
 template <typename T>

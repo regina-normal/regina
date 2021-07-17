@@ -95,6 +95,7 @@ void addAbelianGroup(pybind11::module_& m) {
         .def("isFree", &AbelianGroup::isFree)
         .def("isZn", &AbelianGroup::isZn)
         .def("utf8", &AbelianGroup::utf8)
+        .def("tightEncoding", &AbelianGroup::tightEncoding)
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);
