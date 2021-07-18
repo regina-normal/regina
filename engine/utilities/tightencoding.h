@@ -326,7 +326,7 @@ inline std::string tightEncoding(unsigned long long value) {
 namespace detail {
     template <typename Int>
     void tightEncodeInteger(std::ostream& out, Int value) {
-        static_assert(std::is_integral<Int>::value ||
+        static_assert(std::is_integral_v<Int> ||
                 IsReginaArbitraryPrecisionInteger<Int>::value,
             "tightEncodeInteger() requires either a native C++ integer type "
             "or one of Regina's arbitrary precision integer types.");
@@ -344,13 +344,20 @@ namespace detail {
         }
 
         // The best-case scenario: a single "digit" character.
-        if (value > -45 && value <= 45) {
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                out << char(value.longValue() + 77); // 33 <= char <= 122
-            } else {
-                out << char(value + 77); // 33 <= char <= 122
+        if constexpr (std::is_unsigned_v<Int>) {
+            if (value <= 45) {
+                out << char(value + 77); // char <= 122
+                return;
             }
-            return;
+        } else {
+            if (value > -45 && value <= 45) {
+                if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+                    out << char(value.longValue() + 77); // 33 <= char <= 122
+                } else {
+                    out << char(value + 77); // 33 <= char <= 122
+                }
+                return;
+            }
         }
 
         // From here, the original value must have been >= 2 decimal digits.
@@ -360,13 +367,20 @@ namespace detail {
             value -= 45;
 
         // The next-best scenario: marker plus one "digit" character.
-        if (value > -45 && value <= 45) {
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                out << '~' << char(value.longValue() + 77);
-            } else {
+        if constexpr (std::is_unsigned_v<Int>) {
+            if (value <= 45) {
                 out << '~' << char(value + 77);
+                return;
             }
-            return;
+        } else {
+            if (value > -45 && value <= 45) {
+                if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+                    out << '~' << char(value.longValue() + 77);
+                } else {
+                    out << '~' << char(value + 77);
+                }
+                return;
+            }
         }
 
         // From here, the original value must have been >= 3 decimal digits.
@@ -376,17 +390,27 @@ namespace detail {
             value -= 45;
 
         // The next-best scenario: marker plus two "digit" characters.
-        if (value > -4050 && value <= 4050) {
-            // Note: T could be char, so cast to an int before we
-            // start doing any arithmetic.
-            int i;
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                i = int(value.longValue()) + 4049; // 0 <= i < 8100 = 90*90
-            } else {
-                i = int(value) + 4049; // 0 <= i < 8100 = 90*90
+        if constexpr (std::is_unsigned_v<Int>) {
+            if (value <= 4050) {
+                // Note: T could be char, so cast to an unsigned int before we
+                // start doing any arithmetic.
+                unsigned i = unsigned(value) + 4049; // i < 8100 = 90*90
+                out << '|' << char((i % 90) + 33) << char((i / 90) + 33);
+                return;
             }
-            out << '|' << char((i % 90) + 33) << char((i / 90) + 33);
-            return;
+        } else {
+            if (value > -4050 && value <= 4050) {
+                // Note: T could be char, so cast to an int before we
+                // start doing any arithmetic.
+                int i;
+                if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+                    i = int(value.longValue()) + 4049; // 0 <= i < 8100 = 90*90
+                } else {
+                    i = int(value) + 4049; // 0 <= i < 8100 = 90*90
+                }
+                out << '|' << char((i % 90) + 33) << char((i / 90) + 33);
+                return;
+            }
         }
 
         // From here, the original value must have been >= 4 decimal digits,
@@ -397,19 +421,32 @@ namespace detail {
             value -= 4050;
 
         // The next-best scenario: marker plus three "digit" characters.
-        if (value > -364500 && value <= 364500) {
-            // Note: T could still be short int, so cast to a long before we
-            // start doing any arithmetic.
-            long i;
-            if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
-                i = value.longValue() + 364499; // 0 <= i < 729000 = 90*90*90
-            } else {
-                i = long(value) + 364499; // 0 <= i < 729000 = 90*90*90
+        if constexpr (std::is_unsigned_v<Int>) {
+            if (value <= 364500) {
+                // Note: T could still be unsigned short, so cast to an
+                // unsigned long before we start doing any arithmetic.
+                unsigned long i =
+                    (unsigned long)(value) + 364499; // i < 729000 = 90^3
+                out << '}' << char((i % 90) + 33);
+                i /= 90;
+                out << char((i % 90) + 33) << char((i / 90) + 33);
+                return;
             }
-            out << '}' << char((i % 90) + 33);
-            i /= 90;
-            out << char((i % 90) + 33) << char((i / 90) + 33);
-            return;
+        } else {
+            if (value > -364500 && value <= 364500) {
+                // Note: T could still be short int, so cast to a long before
+                // we start doing any arithmetic.
+                long i;
+                if constexpr (IsReginaArbitraryPrecisionInteger<Int>::value) {
+                    i = value.longValue() + 364499; // 0 <= i < 729000 = 90^3
+                } else {
+                    i = long(value) + 364499; // 0 <= i < 729000 = 90^3
+                }
+                out << '}' << char((i % 90) + 33);
+                i /= 90;
+                out << char((i % 90) + 33) << char((i / 90) + 33);
+                return;
+            }
         }
 
         // From here, the original value must have been >= 6 decimal digits,
@@ -432,13 +469,22 @@ namespace detail {
         } else {
             next = value % 45;
         }
-        if (value > 0) {
-            value /= 45;
+        if constexpr (std::is_unsigned_v<Int>) {
+            if (value > 0) {
+                value /= 45;
+            } else {
+                // value == 0, since the type is unsigned.
+                next = 45; // for consistency with the signed case
+            }
         } else {
-            if (next < 0)
-                next = -next;
-            next += 45;
-            value = -(value / 45);
+            if (value > 0) {
+                value /= 45;
+            } else {
+                if (next < 0)
+                    next = -next;
+                next += 45;
+                value = -(value / 45);
+            }
         }
         out << '{' << char(next + 33);
 

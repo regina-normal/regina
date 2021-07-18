@@ -49,6 +49,13 @@ def doLarge(val):
 		if i != enc:
 			print("ERROR: Inconsistent encodings")
 
+def doUnsigned(val):
+	# We can test encodings for unsigned types via AbelianGroup,
+	# which stores the rank as an unsigned integer.
+	a = AbelianGroup()
+	a.addRank(val)
+	print(a.tightEncoding())
+
 doLong(0)
 doLong(-44)
 doLong(45)
@@ -83,4 +90,18 @@ doLarge('-1000000000000000000000000000000000000000')
 
 print(tightEncoding(LargeInteger.infinity))
 print(LargeInteger.infinity.tightEncoding())
+
+doUnsigned(0)
+doUnsigned(1)
+doUnsigned(45)
+doUnsigned(46)
+doUnsigned(90)
+doUnsigned(91)
+doUnsigned(4140)
+doUnsigned(4141)
+doUnsigned(368640)
+doUnsigned(368641)
+doUnsigned(368684)
+doUnsigned(368685)
+doUnsigned(368729)
 
