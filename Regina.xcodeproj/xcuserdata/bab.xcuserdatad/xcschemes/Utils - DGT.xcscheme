@@ -15,7 +15,7 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "057B0CB926A506B20017F5EA"
-               BuildableName = "Utils - DGT"
+               BuildableName = "dgt"
                BlueprintName = "Utils - DGT"
                ReferencedContainer = "container:Regina.xcodeproj">
             </BuildableReference>
@@ -45,7 +45,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "057B0CB926A506B20017F5EA"
-            BuildableName = "Utils - DGT"
+            BuildableName = "dgt"
             BlueprintName = "Utils - DGT"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
@@ -62,7 +62,7 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "057B0CB926A506B20017F5EA"
-            BuildableName = "Utils - DGT"
+            BuildableName = "dgt"
             BlueprintName = "Utils - DGT"
             ReferencedContainer = "container:Regina.xcodeproj">
          </BuildableReference>
