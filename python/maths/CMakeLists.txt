@@ -10,6 +10,7 @@ SET ( FILES
   integer.cpp
   largeinteger.cpp
   matrix2.cpp
+  matrixbool.cpp
   matrixint.cpp
   numbertheory.cpp
   perm.cpp

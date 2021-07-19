@@ -30,51 +30,55 @@
  *                                                                        *
  **************************************************************************/
 
-namespace pybind11 { class module_; }
+#include "../pybind11/pybind11.h"
+#include "maths/matrix.h"
+#include "maths/vector.h"
+#include "../helpers.h"
 
-void addBinom(pybind11::module_& m);
-void addMatrixOps(pybind11::module_& m);
-void addCyclotomic(pybind11::module_& m);
-void addInteger(pybind11::module_& m);
-void addLargeInteger(pybind11::module_& m);
-void addLaurent(pybind11::module_& m);
-void addLaurent2(pybind11::module_& m);
-void addVectorInt(pybind11::module_& m);
-void addVectorLarge(pybind11::module_& m);
-void addMatrix2(pybind11::module_& m);
-void addMatrixBool(pybind11::module_& m);
-void addMatrixInt(pybind11::module_& m);
-void addPerm2(pybind11::module_& m);
-void addPerm3(pybind11::module_& m);
-void addPerm4(pybind11::module_& m);
-void addPerm5(pybind11::module_& m);
-void addPerm(pybind11::module_& m);
-void addPolynomial(pybind11::module_& m);
-void addPrimes(pybind11::module_& m);
-void addRational(pybind11::module_& m);
-void addNumberTheory(pybind11::module_& m);
+using pybind11::overload_cast;
+using regina::Matrix;
 
-void addMathsClasses(pybind11::module_& m) {
-    addBinom(m);
-    addMatrixOps(m);
-    addCyclotomic(m);
-    addInteger(m);
-    addLargeInteger(m);
-    addLaurent(m);
-    addLaurent2(m);
-    addVectorInt(m);
-    addVectorLarge(m);
-    addMatrix2(m);
-    addMatrixBool(m);
-    addMatrixInt(m);
-    addPerm2(m);
-    addPerm3(m);
-    addPerm4(m);
-    addPerm5(m);
-    addPerm(m);
-    addPolynomial(m);
-    addPrimes(m);
-    addRational(m);
-    addNumberTheory(m);
+void addMatrixBool(pybind11::module_& m) {
+    auto c = pybind11::class_<Matrix<bool>>(m, "MatrixBool")
+        .def(pybind11::init<unsigned long, unsigned long>())
+        .def(pybind11::init<const Matrix<bool>&>())
+        .def("initialise", &Matrix<bool>::initialise)
+        .def("initialise", [](Matrix<bool>& matrix, pybind11::list values) {
+            if (values.size() != matrix.rows() * matrix.columns())
+                throw pybind11::index_error(
+                    "Initialisation list has the wrong length");
+            unsigned long r, c;
+            unsigned i = 0;
+            for (r = 0; r < matrix.rows(); ++r)
+                for (c = 0; c < matrix.columns(); ++c) {
+                    // Accept any type that we know how to convert to a bool.
+                    try {
+                        matrix.entry(r, c) = values[i].cast<bool>();
+                        ++i;
+                        continue;
+                    } catch (pybind11::cast_error const &) {
+                        throw std::invalid_argument(
+                            "List element not convertible to boolean");
+                    }
+                }
+        })
+        .def("swap", &Matrix<bool>::swap)
+        .def("rows", &Matrix<bool>::rows)
+        .def("columns", &Matrix<bool>::columns)
+        .def("entry",
+            overload_cast<unsigned long, unsigned long>(&Matrix<bool>::entry),
+            pybind11::return_value_policy::reference_internal)
+        .def("set", [](Matrix<bool>& m, unsigned long row, unsigned long col,
+                bool value){
+            m.entry(row, col) = value;
+        })
+        .def("transpose", &Matrix<bool>::transpose)
+        .def("swapRows", &Matrix<bool>::swapRows)
+        .def("swapColumns", &Matrix<bool>::swapColumns)
+    ;
+    regina::python::add_output(c);
+    regina::python::add_eq_operators(c);
+
+    m.def("swap", (void(*)(Matrix<bool>&, Matrix<bool>&))(regina::swap));
 }
 

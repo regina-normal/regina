@@ -51,6 +51,7 @@
 #include "utilities/ptrutils.h"
 #include "algebra/markedabeliangroup.h"
 #include "algebra/abeliangroup.h"
+#include "maths/matrix.h"
 
 // There are more includes at the end of this file.
 
@@ -1398,6 +1399,21 @@ class GroupPresentation : public Output<GroupPresentation> {
         size_t enumerateCovers(Action&& action, Args&&... args) const;
 
         /**
+         * Returns a matrix indicating which generators are used by
+         * which relations.
+         *
+         * The rows of the matrix correspond to the relations 0,1,...,
+         * and the columns correspond to the generators 0,1,....
+         * The matrix entry in row \a r, column \a g will be \c true
+         * if and only if relation \a r uses generator \a g.
+         *
+         * \pre The numbers of generators and relations are both non-zero.
+         *
+         * @return the incidence matrix between relators and generators.
+         */
+        Matrix<bool> incidence() const;
+
+        /**
          * Returns a TeX representation of this group presentation.
          * See writeTeX() for details on how this is formed.
          *
@@ -1641,6 +1657,35 @@ class GroupPresentation : public Output<GroupPresentation> {
         template <int index>
         size_t enumerateCoversInternal(
             std::function<void(GroupPresentation&)>&& action);
+
+        /**
+         * Relabels the generators and reorders the relations in the
+         * hope that an initial subset of generators will cover a large
+         * initial subset of relations.
+         *
+         * This routine works by:
+         *
+         * - reordering the relations so that the relations that appear first
+         *   use a smaller subset of distinct generators; and then
+         *
+         * - relabelling the generators so that these initial relations
+         *   use generators with smaller labels.
+         *
+         * There are non-obvious trade-offs to be made here, and so the
+         * precise algorithm (and hence the precise reordering/relabelling)
+         * is subject to change in future versions of Regina.
+         *
+         * If the argument \a genRange is non-null, then this array will
+         * be filled so that genRange[i] is one more than the maximum
+         * generator label that appears amongst all relations 0,...,<i>i</i>
+         * after the relabelling has taken place.
+         *
+         * @param genRange an array whose size is at least the number of
+         * relations, which will be filled as described above.  The contents
+         * of this array will be ignored, and will be overwritten.
+         * This argument may be \c null if you do not need this data.
+         */
+        void minimaxGenerators(unsigned long* genRange = nullptr);
 };
 
 /**

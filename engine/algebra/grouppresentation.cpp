@@ -2270,5 +2270,19 @@ void GroupPresentation::proliferateRelators(unsigned long depth) {
         relations_.push_back(std::move(r));
 }
 
+Matrix<bool> GroupPresentation::incidence() const {
+    Matrix<bool> inc(relations_.size(), nGenerators_);
+    inc.initialise(false);
+
+    size_t row = 0;
+    for (const auto& r : relations_) {
+        for (const auto& t : r.terms())
+            inc.entry(row, t.generator) = true;
+        ++row;
+    }
+
+    return inc;
+}
+
 } // namespace regina
 

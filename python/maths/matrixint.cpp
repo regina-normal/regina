@@ -83,6 +83,7 @@ void addMatrixInt(pybind11::module_& m) {
         .def("isZero",
             (bool (MatrixInt::*)() const)
             &MatrixInt::isZero<>)
+        .def("swap", &MatrixInt::swap)
         .def("swapRows", &MatrixInt::swapRows)
         .def("swapColumns", &MatrixInt::swapColumns)
         .def_static("identity",

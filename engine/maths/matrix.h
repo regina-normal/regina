@@ -157,8 +157,9 @@ template <class> class Vector;
  * requirement.  It is designed to avoid deep copies wherever possible,
  * even when passing or returning objects by value.
  *
- * \ifacespython Not present in general, although the specific type
- * Matrix<Integer> is available under the name MatrixInt.
+ * \ifacespython Not present in general, although the specific types
+ * Matrix<Integer> and Matrix<bool> are available under the names
+ * MatrixInt and MatrixBool respectively.
  *
  * \tparam T the type of each individual matrix element.
  * \tparam ring \c true if we should enable member functions that only

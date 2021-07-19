@@ -277,6 +277,8 @@ Version 6.1  [ TODO ]
             - New default constructor that leaves the matrix in an
               uninitialised state.
             - Added member and global swap() functions.
+            - The type Matrix<bool> is now wrapped in Python under the name
+              MatrixBool.
         Class ModelLinkGraph:
             - Added a copy assignment operator.
             - Added a move constructor and move assignment operator.
