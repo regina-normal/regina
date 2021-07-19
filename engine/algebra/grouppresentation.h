@@ -187,6 +187,20 @@ class GroupExpression : public ShortOutput<GroupExpression> {
          */
         GroupExpression();
         /**
+         * Creates a new expression containing a single term.
+         *
+         * @param term the term to use as the new expression.
+         */
+        GroupExpression(const GroupExpressionTerm& term);
+        /**
+         * Creates a new expression containing a single term.
+         *
+         * @param generator the number of the generator to use in the term.
+         * @param exponent the exponent to which the given generator is
+         * raised in the term.
+         */
+        GroupExpression(unsigned long generator, long exponent);
+        /**
          * Creates a new expression that is a clone of the given expression.
          */
         GroupExpression(const GroupExpression&) = default;
@@ -1312,6 +1326,78 @@ class GroupPresentation : public Output<GroupPresentation> {
         bool identifySimplyIsomorphicTo(const GroupPresentation& other) const;
 
         /**
+         * Enumerates all transitive representations of this group into
+         * the symmetric group <i>S(k)</i>.  Each representation is
+         * produced exactly once up to conjugacy.
+         *
+         * Each such representation corresponds to an index \a k subgroup,
+         * and the multiset of the abelianisations of all these subgroups is
+         * a group invariant that (for small enough \a k) can be computed
+         * in reasonable time.
+         *
+         * If this is the fundamental group of a manifold, then each
+         * such representation also corresponds to a connected
+         * <i>k</i>-sheeted cover.
+         *
+         * For each representation that is produced, this routine will call
+         * \a action (which must be a function or some other callable object).
+         *
+         * - The first argument to \a action must be a reference to a
+         *   GroupPresentation.  This will be the index \a k subgroup
+         *   corresponding to the representation.  \a action may, if it
+         *   chooses, modify the subgroup presentation that it receives
+         *   (though it must not delete it).  The subgroup presentation
+         *   will be destroyed immediately after \a action is called.
+         *
+         * - If there are any additional arguments supplied in the list \a args,
+         *   then these will be passed as subsequent arguments to \a action.
+         *
+         * - \a action must return \c void.
+         *
+         * - It is completely safe for \a action to (if you wish) make changes
+         *   to the original presentation (i.e., the group presentation upon
+         *   which enumerateCovers() is being called).  This will not interfere
+         *   with the enumeration or change the results in any way.
+         *
+         * This routine produces a constant stream of output (i.e., it
+         * calls \a action as soon as each representation is found).
+         *
+         * Internally, this routine calls intelligentSimplify() on a copy of
+         * the group before performing the enumeration (i.e., the caller
+         * should not worry about simplifying the group first).
+         *
+         * \warning The running time is <tt>(k!)^g</tt>, where \a k is the
+         * subgroup index described above, and \a g is the number of
+         * generators of this group presentation.  In particular, the
+         * running time grows \e extremely quickly with \a k.
+         *
+         * \warning By default, the arguments \a args will be copied (or moved)
+         * when they are passed to \a action.  If you need to pass some
+         * argument(s) by reference, you must wrap them in std::ref or
+         * std::cref.
+         *
+         * \apinotfinal
+         *
+         * \ifacespython This function is available in Python, and the
+         * \a action argument may be a pure Python function.  However, its
+         * form is more restricted.  The template parameter \a index becomes
+         * the first argument to the function, and the arguments \a args are
+         * removed entirely.  This means that Python users should call this
+         * function as enumerateCovers(index, action).
+         *
+         * \tparam index the number \a k in the description above; in other
+         * words, the index of the resulting subgroups.  Currently this
+         * must be between 2 and 5 inclusive.
+         * @param action a function (or other callable object) to call
+         * for each representation that is found.
+         * @param args any additional arguments that should be passed to
+         * \a action, following the initial subgroup presentation argument.
+         * @return the total number of representations found.
+         */
+        template <int index, typename Action, typename... Args>
+        size_t enumerateCovers(Action&& action, Args&&... args) const;
+
+        /**
          * Returns a TeX representation of this group presentation.
          * See writeTeX() for details on how this is formed.
          *
@@ -1540,6 +1626,21 @@ class GroupPresentation : public Output<GroupPresentation> {
             const GroupExpression &that_word,
             const WordSubstitutionData &sub_data );
 
+        /**
+         * Contains the bulk of the implementation for enumerateCovers().
+         *
+         * Unlike enumerateCovers(), this routine is designed to work on
+         * a temporary non-const copy of the original group.  This means that
+         * it is free to simplify the group, reorder the generators, and/or
+         * make other changes it thinks may help speed up the enumeration.
+         *
+         * The arguments are similar to enumerateCovers(), except that the
+         * type of the action function is now known precisely.  This means
+         * that the implementation can be kept out of the main headers.
+         */
+        template <int index>
+        size_t enumerateCoversInternal(
+            std::function<void(GroupPresentation&)>&& action);
 };
 
 /**
@@ -1596,6 +1697,15 @@ inline bool GroupExpressionTerm::operator < (
 // Inline functions for GroupExpression
 
 inline GroupExpression::GroupExpression() {
+}
+
+inline GroupExpression::GroupExpression(const GroupExpressionTerm& term) {
+    terms_.push_back(term);
+}
+
+inline GroupExpression::GroupExpression(unsigned long generator,
+        long exponent) {
+    terms_.push_back(GroupExpressionTerm(generator, exponent));
 }
 
 inline void GroupExpression::swap(GroupExpression& other) noexcept {
@@ -1754,6 +1864,16 @@ inline std::optional<HomGroupPresentation>
 inline std::optional<HomGroupPresentation>
         GroupPresentation::prettyRewritingDetail() {
     return prettyRewriting();
+}
+
+template <int index, typename Action, typename... Args>
+inline size_t GroupPresentation::enumerateCovers(
+        Action&& action, Args&&... args) const {
+    // Do the real work on a temporary copy of this presentation that we
+    // can be free to modify as we see fit.
+    return GroupPresentation(*this).enumerateCoversInternal<index>(std::bind(
+        std::forward<Action>(action), std::placeholders::_1,
+        std::forward<Args>(args)...));
 }
 
 } // namespace regina

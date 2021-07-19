@@ -31,6 +31,7 @@
  **************************************************************************/
 
 #include "../pybind11/pybind11.h"
+#include "../pybind11/functional.h"
 #include "../pybind11/operators.h"
 #include "../pybind11/stl.h"
 #include "algebra/abeliangroup.h"
@@ -60,6 +61,8 @@ void addGroupPresentation(pybind11::module_& m) {
 
     auto c2 = pybind11::class_<GroupExpression>(m, "GroupExpression")
         .def(pybind11::init<>())
+        .def(pybind11::init<const GroupExpressionTerm&>())
+        .def(pybind11::init<unsigned long, long>())
         .def(pybind11::init<const GroupExpression&>())
         .def(pybind11::init([](const std::string& str) {
             return new GroupExpression(str, nullptr);
@@ -158,6 +161,20 @@ void addGroupPresentation(pybind11::module_& m) {
         .def("relatorLength", &GroupPresentation::relatorLength)
         .def("abelianisation", &GroupPresentation::abelianisation)
         .def("markedAbelianisation", &GroupPresentation::markedAbelianisation)
+        .def("enumerateCovers", [](const GroupPresentation& p, int index,
+                const std::function<void(GroupPresentation&)>& action)
+                -> size_t {
+            switch (index) {
+                case 2: return p.enumerateCovers<2>(action);
+                case 3: return p.enumerateCovers<3>(action);
+                case 4: return p.enumerateCovers<4>(action);
+                case 5: return p.enumerateCovers<5>(action);
+            }
+            PyErr_SetString(PyExc_ValueError,
+                "The index passed to enumerateCovers() must be between "
+                "2 and 5 inclusive.");
+            return 0;
+        })
         .def("toTeX", &GroupPresentation::toTeX)
         .def("compact", &GroupPresentation::compact)
         .def("writeTeX", [](const GroupPresentation& p) {
