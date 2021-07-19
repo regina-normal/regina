@@ -72,7 +72,7 @@ size_t GroupPresentation::enumerateCoversInternal(
     while (true) {
         bool backtrack = false;
 
-        // TODO: Analyse the current partial reps.
+        // TODO: Analyse the current partial reps to prune the search tree.
 
         // Move on to the next generator.
         if (! backtrack) {
@@ -94,15 +94,32 @@ size_t GroupPresentation::enumerateCoversInternal(
                                 comb = p * comb;
                         }
                     }
-                    if (! comb.isIdentity()) {
-                        backtrack = true;
-                        break;
+                    if (! comb.isIdentity())
+                        goto candidateDone;
+                }
+
+                // Is it conjugacy minimal?
+                // TODO: We can make this *much* faster.
+                for (Index idx = 0; idx < Perm<index>::nPerms; ++idx) {
+                    Perm<index> p = Perm<index>::Sn[idx];
+                    for (unsigned long g = 0; g < nGenerators_; ++g) {
+                        Index alt = (p * Perm<index>::Sn[rep[g]] * p.inverse()).
+                            SnIndex();
+                        if (alt < rep[g]) {
+                            // Not conjugacy minimal.
+                            goto candidateDone;
+                        }
+                        if (alt > rep[g]) {
+                            // Move on to test the next permutation.
+                            g = nGenerators_;
+                            break;
+                        }
                     }
                 }
 
-                if (! backtrack) {
-                    // TODO: Conjugacy minimal?
-
+                // Put this next block inside braces because it declares
+                // local variables but we have gotos that jump over it.
+                {
                     // Is it transitive?
                     //
                     // Use a depth-first search to see if we can reach
@@ -181,6 +198,10 @@ size_t GroupPresentation::enumerateCoversInternal(
                             }
                         }
 
+                        // TODO: Instead of adding trivial relations,
+                        // just strip these generators out of the
+                        // original relations.  Don't forget to reindex
+                        // the surviving generators also.
                         for (int i = 0; i < index - 1; ++i)
                             sub.relations_.push_back(GroupExpression(
                                 spanningTree[i], 1));
@@ -196,6 +217,8 @@ size_t GroupPresentation::enumerateCoversInternal(
                         action(sub);
                     }
                 }
+
+candidateDone:
 
                 --pos;
                 backtrack = true;
