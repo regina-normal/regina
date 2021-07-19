@@ -209,8 +209,9 @@ size_t GroupPresentation::enumerateCoversInternal(
             }
         }
 
-        // Check consistency with the group relations that containly only
-        // generators whose reps have been chosen so far.
+        // Check consistency with the group relations that we haven't
+        // yet checked, and that containly only generators whose reps
+        // have been chosen so far.
         if (! backtrack) {
             for (size_t r = (pos == 0 ? 0 : relnRange[pos - 1]);
                     r < relnRange[pos]; ++r) {
