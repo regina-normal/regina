@@ -1363,14 +1363,16 @@ class GroupPresentation : public Output<GroupPresentation> {
          * This routine produces a constant stream of output (i.e., it
          * calls \a action as soon as each representation is found).
          *
-         * Internally, this routine calls intelligentSimplify() on a copy of
-         * the group before performing the enumeration (i.e., the caller
-         * should not worry about simplifying the group first).
-         *
          * \warning The running time is <tt>(k!)^g</tt>, where \a k is the
          * subgroup index described above, and \a g is the number of
          * generators of this group presentation.  In particular, the
          * running time grows \e extremely quickly with \a k.
+         *
+         * \warning This routine does \e not simplify the group presentation
+         * before it runs.  You should make sure that you have simplified
+         * the presentation, either using Regina or some other tool, before
+         * running this routine, since (as noted above) the running time
+         * is exponential in the number of generators.
          *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some

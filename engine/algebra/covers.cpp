@@ -117,10 +117,6 @@ void GroupPresentation::minimaxGenerators(unsigned long* genRange) {
 template <int index>
 size_t GroupPresentation::enumerateCoversInternal(
         std::function<void(GroupPresentation&)>&& action) {
-    // This is an expensive operation.
-    // Have one last crack at simplifying the group first.
-    intelligentSimplify();
-
     if (nGenerators_ == 0) {
         // We have the trivial group.
         // There is only one trivial representation, and it is not transitive.
