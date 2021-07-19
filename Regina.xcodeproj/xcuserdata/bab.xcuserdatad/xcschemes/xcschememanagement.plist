@@ -27,7 +27,7 @@
 		<key>Timing.xcscheme_^#shared#^_</key>
 		<dict>
 			<key>orderHint</key>
-			<integer>16</integer>
+			<integer>17</integer>
 		</dict>
 		<key>Utils - CensusLookup.xcscheme</key>
 		<dict>
@@ -36,47 +36,54 @@
 			<key>orderHint</key>
 			<integer>8</integer>
 		</dict>
-		<key>Utils - RegConcat.xcscheme</key>
+		<key>Utils - DGT.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>9</integer>
 		</dict>
-		<key>Utils - RegConvert.xcscheme</key>
+		<key>Utils - RegConcat.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>10</integer>
 		</dict>
-		<key>Utils - RegFileDump.xcscheme</key>
+		<key>Utils - RegConvert.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>11</integer>
 		</dict>
-		<key>Utils - RegFileType.xcscheme</key>
+		<key>Utils - RegFileDump.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
 			<integer>12</integer>
 		</dict>
+		<key>Utils - RegFileType.xcscheme</key>
+		<dict>
+			<key>isShown</key>
+			<false/>
+			<key>orderHint</key>
+			<integer>13</integer>
+		</dict>
 		<key>Utils - Retriangulate.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>15</integer>
+			<integer>16</integer>
 		</dict>
 		<key>Utils - SigCensus.xcscheme</key>
 		<dict>
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>13</integer>
+			<integer>14</integer>
 		</dict>
 		<key>Utils - TriCensus.xcscheme</key>
 		<dict>
@@ -90,7 +97,7 @@
 			<key>isShown</key>
 			<false/>
 			<key>orderHint</key>
-			<integer>14</integer>
+			<integer>15</integer>
 		</dict>
 		<key>iOS debug.xcscheme_^#shared#^_</key>
 		<dict>
@@ -181,6 +188,11 @@
 			<true/>
 		</dict>
 		<key>0575E6581805F36D009E3FC4</key>
+		<dict>
+			<key>primary</key>
+			<true/>
+		</dict>
+		<key>057B0CB926A506B20017F5EA</key>
 		<dict>
 			<key>primary</key>
 			<true/>

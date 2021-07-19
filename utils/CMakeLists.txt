@@ -4,6 +4,7 @@ include_directories("${POPT_INCLUDE_DIR}")
 
 set(UTILS
   censuslookup
+  dgt
   regconcat
   regconvert
   regfiledump
