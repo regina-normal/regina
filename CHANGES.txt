@@ -371,8 +371,13 @@ Version 6.1  [ TODO ]
             - Almost everything in the permutation classes is now constexpr.
             - Routines index() and atIndex() are now deprecated.
               Use orderedSnIndex() and orderedSn[...] instead.
+        Class Perm<2>:
+            - New (and trivial) routine isConjugacyMinimal().
+        Class Perm<3>:
+            - New routine isConjugacyMinimal().
         Class Perm<4>:
             - All of the changes listed for Perm<n> above.
+            - New routine isConjugacyMinimal().
             - Added a new typedef Code2; this is identical to Code, but
               it allows you to express more clearly in your source code
               which generation of code is being used.
@@ -383,6 +388,7 @@ Version 6.1  [ TODO ]
               The old names are now deprecated.
         Class Perm<5>:
             - All of the changes listed for Perm<n> above.
+            - New routine isConjugacyMinimal().
             - Changed the internal representation; as a result there are new
               routines permCode2(), fromPermCode2(), setPermCode2() and
               isPermCode2(), and a new type Code2.  The old first-generation

@@ -747,6 +747,22 @@ class Perm<3> {
         template <int k>
         static constexpr Perm<3> contract(Perm<k> p);
 
+        /**
+         * Is this permutation minimal in its conjugacy class?
+         *
+         * Here "minimal" means that, amongst all its conjugates, this
+         * permutation has the smallest index in the array Perm<3>::Sn.
+         *
+         * See Sn for further information on how permutations are indexed.
+         *
+         * This routine is extremely fast for Perm<3>, since it essentially
+         * uses a hard-coded lookup table.
+         *
+         * @return \c true if and only if this permutation is minimal in its
+         * conjugacy class.
+         */
+        constexpr bool isConjugacyMinimal() const;
+
     private:
         /**
          * Contains the images of every element under every possible
@@ -987,6 +1003,10 @@ inline constexpr Perm<3>::Index Perm<3>::index() const {
 
 inline constexpr Perm<3> Perm<3>::atIndex(Index i) {
     return orderedS3[i];
+}
+
+inline constexpr bool Perm<3>::isConjugacyMinimal() const {
+    return (code_ < 3);
 }
 
 } // namespace regina

@@ -633,6 +633,22 @@ class Perm<2> {
         template <int k>
         static constexpr Perm<2> contract(Perm<k> p);
 
+        /**
+         * Is this permutation minimal in its conjugacy class?
+         *
+         * Here "minimal" means that, amongst all its conjugates, this
+         * permutation has the smallest index in the array Perm<2>::Sn.
+         *
+         * See Sn for further information on how permutations are indexed.
+         *
+         * This routine is extremely fast for Perm<2>, since the answer
+         * is always \c true.
+         *
+         * @return \c true if and only if this permutation is minimal in its
+         * conjugacy class.
+         */
+        constexpr bool isConjugacyMinimal() const;
+
     private:
         /**
          * Creates a permutation from the given internal code.
@@ -781,6 +797,11 @@ inline constexpr Perm<2>::Index Perm<2>::index() const {
 
 inline constexpr Perm<2> Perm<2>::atIndex(Index i) {
     return Perm<2>(static_cast<Code>(i));
+}
+
+inline constexpr bool Perm<2>::isConjugacyMinimal() const {
+    // All (i.e., both) permutations are minimal.
+    return true;
 }
 
 } // namespace regina

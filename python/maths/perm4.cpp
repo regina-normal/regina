@@ -115,6 +115,7 @@ void addPerm4(pybind11::module_& m) {
         .def("SnIndex", &Perm<4>::SnIndex)
         .def("orderedS4Index", &Perm<4>::orderedS4Index)
         .def("orderedSnIndex", &Perm<4>::orderedS4Index)
+        .def("isConjugacyMinimal", &Perm<4>::isConjugacyMinimal)
         .def_static("extend", &Perm<4>::extend<2>)
         .def_static("extend", &Perm<4>::extend<3>)
         .def_property_readonly_static("codeType",

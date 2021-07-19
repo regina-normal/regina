@@ -73,6 +73,14 @@ size_t GroupPresentation::enumerateCoversInternal(
         bool backtrack = false;
 
         // TODO: Analyse the current partial reps to prune the search tree.
+        if (pos == 0 && ! Perm<index>::Sn[rep[0]].isConjugacyMinimal())
+            backtrack = true;
+        else if (pos == 1 && rep[0] == 0 &&
+                ! Perm<index>::Sn[rep[1]].isConjugacyMinimal())
+            backtrack = true;
+        else if (pos == 2 && rep[0] == 0 && rep[1] == 0 &&
+                ! Perm<index>::Sn[rep[2]].isConjugacyMinimal())
+            backtrack = true;
 
         // Move on to the next generator.
         if (! backtrack) {
@@ -99,20 +107,24 @@ size_t GroupPresentation::enumerateCoversInternal(
                 }
 
                 // Is it conjugacy minimal?
-                // TODO: We can make this *much* faster.
-                for (Index idx = 0; idx < Perm<index>::nPerms; ++idx) {
-                    Perm<index> p = Perm<index>::Sn[idx];
-                    for (unsigned long g = 0; g < nGenerators_; ++g) {
-                        Index alt = (p * Perm<index>::Sn[rep[g]] * p.inverse()).
-                            SnIndex();
-                        if (alt < rep[g]) {
-                            // Not conjugacy minimal.
-                            goto candidateDone;
-                        }
-                        if (alt > rep[g]) {
-                            // Move on to test the next permutation.
-                            g = nGenerators_;
-                            break;
+                // Note: for index 2, *everything* is conjugacy minimal.
+                if constexpr (index > 2) {
+                    // TODO: We can make this *much* faster.
+                    for (Index idx = 0; idx < Perm<index>::nPerms; ++idx) {
+                        Perm<index> p = Perm<index>::Sn[idx];
+                        for (unsigned long g = 0; g < nGenerators_; ++g) {
+                            Index alt =
+                                (p * Perm<index>::Sn[rep[g]] * p.inverse()).
+                                SnIndex();
+                            if (alt < rep[g]) {
+                                // Not conjugacy minimal.
+                                goto candidateDone;
+                            }
+                            if (alt > rep[g]) {
+                                // Move on to test the next permutation.
+                                g = nGenerators_;
+                                break;
+                            }
                         }
                     }
                 }

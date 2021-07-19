@@ -1118,6 +1118,22 @@ class Perm<5> {
         template <int k>
         static constexpr Perm<5> contract(Perm<k> p);
 
+        /**
+         * Is this permutation minimal in its conjugacy class?
+         *
+         * Here "minimal" means that, amongst all its conjugates, this
+         * permutation has the smallest index in the array Perm<5>::Sn.
+         *
+         * See Sn for further information on how permutations are indexed.
+         *
+         * This routine is extremely fast for Perm<5>, since it essentially
+         * uses a hard-coded lookup table.
+         *
+         * @return \c true if and only if this permutation is minimal in its
+         * conjugacy class.
+         */
+        constexpr bool isConjugacyMinimal() const;
+
     private:
         /**
          * Contains the images of every element under every possible
@@ -1648,6 +1664,11 @@ inline constexpr int Perm<5>::S5Index(int a, int b, int c, int d, int e) {
 
     // Then switch to the plain (unordered) S5 index.
     return convOrderedUnordered(ans);
+}
+
+inline constexpr bool Perm<5>::isConjugacyMinimal() const {
+    return (code2_ < 3 || code2_ == 6 || code2_ == 9 ||
+        code2_ == 27 || code2_ == 32);
 }
 
 } // namespace regina

@@ -121,6 +121,7 @@ void addPerm5(pybind11::module_& m) {
         .def("SnIndex", &Perm<5>::SnIndex)
         .def("orderedS5Index", &Perm<5>::orderedS5Index)
         .def("orderedSnIndex", &Perm<5>::orderedS5Index)
+        .def("isConjugacyMinimal", &Perm<5>::isConjugacyMinimal)
         .def_static("extend", &Perm<5>::extend<2>)
         .def_static("extend", &Perm<5>::extend<3>)
         .def_static("extend", &Perm<5>::extend<4>)
