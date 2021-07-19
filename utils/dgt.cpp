@@ -954,7 +954,14 @@ int main(int argc, char* argv[]) {
     }
     
     std::string dim_flag = argv[1];
-    if ((dim_flag != "3") || (dim_flag != "4") || (dim_flag != "-3") || (dim_flag != "-4") ) {
+    int dim_flag_int;
+    if (std::string(argv[1]).find('3') != std::string::npos) {
+        dim_flag_int = 3;
+    }
+    else if (std::string(argv[1]).find('4') != std::string::npos) {
+        dim_flag_int = 4;
+    }
+    else {
         std::cout << "Inavlid dimension. DGT is for 3 and 4 manifolds only.\n";
         exit(0);
     }
@@ -1156,7 +1163,7 @@ int main(int argc, char* argv[]) {
 
 //    size_t size = pdc_g.size();
     
-    if ((dim_flag == "-4") || (dim_flag == "4")) {
+    if (dim_flag_int == 4) {
         std::vector<std::array<vertex3, 4>> component_ql = find_component_quadris(pdc_g);
         std::cout << std::endl;
         std::cout << "Performing " << component_ql.size() << " quadricolour substitution";
@@ -1203,7 +1210,7 @@ int main(int argc, char* argv[]) {
             printGluList(pdc_g);
         }
     }
-    else if ((dim_flag == "-3") || (dim_flag == "3")) {
+    else if (dim_flag_int == 3) {
         if (output_type == false) {
             std::vector<std::tuple<int,int,int>> gl = genGluList(pdc_g);
             regina::Triangulation<3> tmp_t;
