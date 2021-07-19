@@ -171,6 +171,31 @@ size_t GroupPresentation::enumerateCoversInternal(
     while (true) {
         bool backtrack = false;
 
+        // Check consistency with the group relations that we haven't
+        // yet checked, and that containly only generators whose reps
+        // have been chosen so far.
+        if (! backtrack) {
+            for (size_t r = (pos == 0 ? 0 : relnRange[pos - 1]);
+                    r < relnRange[pos]; ++r) {
+                Perm<index> p, comb;
+                for (const auto& t : relations_[r].terms()) {
+                    p = Perm<index>::Sn[rep[t.generator]];
+                    if (t.exponent > 0) {
+                        for (long i = 0; i < t.exponent; ++i)
+                            comb = p * comb;
+                    } else if (t.exponent < 0) {
+                        p = p.inverse();
+                        for (long i = 0; i > t.exponent; --i)
+                            comb = p * comb;
+                    }
+                }
+                if (! comb.isIdentity()) {
+                    backtrack = true;
+                    break;
+                }
+            }
+        }
+
         // Check that the reps are conjugacy minimal, so far.
         // Note: for index 2, *everything* is conjugacy minimal.
         if constexpr (index > 2) {
@@ -205,31 +230,6 @@ size_t GroupPresentation::enumerateCoversInternal(
                             break;
                         }
                     }
-                }
-            }
-        }
-
-        // Check consistency with the group relations that we haven't
-        // yet checked, and that containly only generators whose reps
-        // have been chosen so far.
-        if (! backtrack) {
-            for (size_t r = (pos == 0 ? 0 : relnRange[pos - 1]);
-                    r < relnRange[pos]; ++r) {
-                Perm<index> p, comb;
-                for (const auto& t : relations_[r].terms()) {
-                    p = Perm<index>::Sn[rep[t.generator]];
-                    if (t.exponent > 0) {
-                        for (long i = 0; i < t.exponent; ++i)
-                            comb = p * comb;
-                    } else if (t.exponent < 0) {
-                        p = p.inverse();
-                        for (long i = 0; i > t.exponent; --i)
-                            comb = p * comb;
-                    }
-                }
-                if (! comb.isIdentity()) {
-                    backtrack = true;
-                    break;
                 }
             }
         }
