@@ -914,7 +914,6 @@ int main(int argc, char* argv[]) {
     negCurlA.from_simple_edges(negCurlA_el);
     negCurlB.from_simple_edges(negCurlB_el);
 
-    std::string dim_flag = argv[1];
     bool output_type = false;
     bool bdy_type = false;
     /*
@@ -952,6 +951,12 @@ int main(int argc, char* argv[]) {
         if (std::string(argv[3]).find('r') != std::string::npos) {
             bdy_type = true;
         }
+    }
+    
+    std::string dim_flag = argv[1];
+    if ((dim_flag != "3") || (dim_flag != "4") || (dim_flag != "-3") || (dim_flag != "-4") ) {
+        std::cout << "Inavlid dimension. DGT is for 3 and 4 manifolds only.\n";
+        exit(0);
     }
     
     pdcode pdcTmp;
@@ -1221,10 +1226,7 @@ int main(int argc, char* argv[]) {
             printGluList(pdc_g);
         }
     }
-    else {
-        std::cout << "Inavlid dimension. DGT is for 3 and 4 manifolds only.\n";
-    }
-
+    
     return 0;
 
 }
