@@ -322,7 +322,6 @@ size_t GroupPresentation::enumerateCoversInternal(
                         sub.relations_.push_back(GroupExpression(
                             spanningTree[i], 1));
 
-                    sub.intelligentSimplify();
                     action(sub);
                 }
 

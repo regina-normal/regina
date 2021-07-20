@@ -1374,6 +1374,12 @@ class GroupPresentation : public Output<GroupPresentation> {
          * running this routine, since (as noted above) the running time
          * is exponential in the number of generators.
          *
+         * \warning Likewise, this routine does not simplify the subgroup
+         * presentations before passing them to \a action.  These presentations
+         * can be quite large, and (for example) if all you care about is their
+         * abelianisations then you are better off using the \e abelian group
+         * simplification / computation instead (which is much faster).
+         *
          * \warning By default, the arguments \a args will be copied (or moved)
          * when they are passed to \a action.  If you need to pass some
          * argument(s) by reference, you must wrap them in std::ref or
