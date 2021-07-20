@@ -76,7 +76,11 @@ void GroupPresentation::minimaxGenerators(unsigned long* genRange) {
             for (size_t g = gensUsed; g < nGenerators_; ++g)
                 if (inc.entry(r, relabelInv[g]))
                     ++curr;
-            if (curr < best) {
+            // TOOD: Make this test quicker by precomputing word lengths.
+            if (curr < best ||
+                    (curr == best &&
+                     relations_[r].wordLength() <
+                     relations_[useRow].wordLength())) {
                 best = curr;
                 useRow = r;
             }
