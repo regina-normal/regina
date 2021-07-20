@@ -304,15 +304,27 @@ std::string GroupPresentation::recogniseGroup(bool moreUtf8) const {
 }
 
 AbelianGroup GroupPresentation::abelianisation() const {
-    // create presentation matrices to pass to AbelianGroup(M, N)
-    MatrixInt N(countGenerators(), countRelations() );
-    // run through rels, increment N entries appropriately
-    for (unsigned long j=0; j<countRelations(); j++) {
-        GroupExpression Rj ( relation(j) );
-        for (unsigned long i=0; i<Rj.countTerms(); i++)
-            N.entry( Rj.generator(i), j ) += Rj.exponent(i);
+    if (nGenerators_ == 0)
+        return AbelianGroup();
+
+    AbelianGroup g;
+
+    if (relations_.empty()) {
+        // Free group becomes free abelian group.
+        g.addRank(nGenerators_);
+    } else {
+        MatrixInt m(relations_.size(), nGenerators_);
+
+        size_t row = 0;
+        for (const auto& r : relations_) {
+            for (const auto& t : r.terms())
+                m.entry(row, t.generator) += t.exponent;
+            ++row;
+        }
+        g.addGroup(m);
     }
-    return AbelianGroup(MatrixInt(1, countGenerators()) /* zero matrix */, N);
+
+    return g;
 }
 
 MarkedAbelianGroup GroupPresentation::markedAbelianisation() const {
