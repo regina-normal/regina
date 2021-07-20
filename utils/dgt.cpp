@@ -593,7 +593,7 @@ std::vector<int> pdc_orientations(pdcode code) {
     std::array<int, 4> positive = {1,1,-1,-1};
 
     for (int i=0; i<code.size(); i++) {
-        std::set<int> xset = std::set(begin(code[i]),end(code[i]));
+        std::set<int> xset(begin(code[i]),end(code[i]));
         if (xset.size() == 4) {
             inout[i][0] = 1;
             inout[i][2] = -1;
