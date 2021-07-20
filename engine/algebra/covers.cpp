@@ -161,11 +161,10 @@ size_t GroupPresentation::enumerateCoversInternal(
     }
 
     // Prepare to choose an S(index) representative for each generator.
-    // The representative for generator i will be Perm<index>::Sn[rep[i]].
+    // The representative for generator i will be rep[i].
+    // All representatives will be initialised to the identity.
     size_t nReps = 0;
-    typedef typename Perm<index>::Index Index;
-    Index* rep = new Index[nGenerators_];
-    std::fill(rep, rep + nGenerators_, 0);
+    Perm<index>* rep = new Perm<index>[nGenerators_];
 
     size_t pos = 0; // The generator whose current rep we are about to try.
     while (true) {
@@ -177,14 +176,13 @@ size_t GroupPresentation::enumerateCoversInternal(
         if (! backtrack) {
             for (size_t r = (pos == 0 ? 0 : relnRange[pos - 1]);
                     r < relnRange[pos]; ++r) {
-                Perm<index> p, comb;
+                Perm<index> comb;
                 for (const auto& t : relations_[r].terms()) {
-                    p = Perm<index>::Sn[rep[t.generator]];
                     if (t.exponent > 0) {
                         for (long i = 0; i < t.exponent; ++i)
-                            comb = p * comb;
+                            comb = rep[t.generator] * comb;
                     } else if (t.exponent < 0) {
-                        p = p.inverse();
+                        Perm<index> p = rep[t.generator].inverse();
                         for (long i = 0; i > t.exponent; --i)
                             comb = p * comb;
                     }
@@ -201,35 +199,31 @@ size_t GroupPresentation::enumerateCoversInternal(
         if constexpr (index > 2) {
             if (! backtrack) {
                 if (pos == 0) {
-                    if (! Perm<index>::Sn[rep[0]].isConjugacyMinimal())
+                    if (! rep[0].isConjugacyMinimal())
                         backtrack = true;
                 } else {
                     // TODO: We can make this faster.
-                    for (Index idx = 0; idx < Perm<index>::nPerms; ++idx) {
-                        Perm<index> p = Perm<index>::Sn[idx];
+                    Perm<index> p;
+                    do {
                         unsigned long g;
                         for (g = 0; g < pos; ++g) {
-                            if (p * Perm<index>::Sn[rep[g]] * p.inverse() !=
-                                    Perm<index>::Sn[rep[g]]) {
+                            if (p * rep[g] * p.inverse() != rep[g]) {
                                 // This does not preserve the previous reps.
                                 break;
                             }
                         }
-                        if (g < pos) {
-                            // Move on to the next permutation.
-                            continue;
+                        if (g == pos) {
+                            // We didn't break from the previous loop.
+                            // Now see how this permutation affects the
+                            // current rep that we have just chosen.
+                            if ((p * rep[pos] * p.inverse()) < rep[pos]) {
+                                // Not conjugacy minimal.
+                                backtrack = true;
+                                break;
+                            }
                         }
-                        // Now see how this permutation affects the
-                        // current rep that we have just chosen.
-                        Index alt =
-                            (p * Perm<index>::Sn[rep[pos]] * p.inverse()).
-                            SnIndex();
-                        if (alt < rep[pos]) {
-                            // Not conjugacy minimal.
-                            backtrack = true;
-                            break;
-                        }
-                    }
+                        ++p;
+                    } while (! p.isIdentity());
                 }
             }
         }
@@ -267,7 +261,7 @@ size_t GroupPresentation::enumerateCoversInternal(
                 while (nFound < index && stackSize > 0) {
                     int from = stack[--stackSize];
                     for (unsigned long i = 0; i < nGenerators_; ++i) {
-                        int to = Perm<index>::Sn[rep[i]][from];
+                        int to = rep[i][from];
                         if (! seen[to]) {
                             seen[to] = true;
                             stack[stackSize++] = to;
@@ -297,15 +291,14 @@ size_t GroupPresentation::enumerateCoversInternal(
                             int sheet = start;
                             Perm<index> p;
                             for (const auto& t : r.terms()) {
-                                p = Perm<index>::Sn[rep[t.generator]];
                                 if (t.exponent > 0) {
                                     for (long i = 0; i < t.exponent; ++i) {
                                         e.addTermLast(
                                             t.generator * index + sheet, 1);
-                                        sheet = p[sheet];
+                                        sheet = rep[t.generator][sheet];
                                     }
                                 } else if (t.exponent < 0) {
-                                    p = p.inverse();
+                                    Perm<index> p = rep[t.generator].inverse();
                                     for (long i = 0; i > t.exponent; --i) {
                                         sheet = p[sheet];
                                         e.addTermLast(
@@ -339,11 +332,12 @@ size_t GroupPresentation::enumerateCoversInternal(
 
         if (backtrack) {
             while (true) {
-                if (++rep[pos] < Perm<index>::nPerms)
+                ++rep[pos];
+                if (! rep[pos].isIdentity())
                     break;
                 if (pos == 0)
                     goto finished;
-                rep[pos--] = 0;
+                rep[pos--] = Perm<index>(); // reset to identity
             }
         }
     }

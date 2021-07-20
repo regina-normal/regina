@@ -455,6 +455,45 @@ class Perm<2> {
         constexpr bool isIdentity() const;
 
         /**
+         * A preincrement operator that changes this be the next permutation
+         * in the array Perm<2>::Sn.  If this is the last such permutation
+         * then this will wrap around to become the first permutation in
+         * Perm<2>::Sn, which is the identity.
+         *
+         * \ifacespython Not present.
+         *
+         * @return a reference to this permutation after the increment.
+         */
+        Perm<2>& operator ++();
+
+        /**
+         * A postincrement operator that changes this be the next permutation
+         * in the array Perm<2>::Sn.  If this is the last such permutation
+         * then this will wrap around to become the first permutation in
+         * Perm<2>::Sn, which is the identity.
+         *
+         * \ifacespython Not present.
+         *
+         * @return a copy of this permutation before the increment took place.
+         */
+        constexpr Perm<2> operator ++(int);
+
+        /**
+         * Determines if this appears earlier than the given permutation
+         * in the array Perm<2>::Sn.
+         *
+         * For the special case of permutations on two elements, this
+         * ordering is consistent with the ordering implied by compareWith()
+         * (but beware: for other permutation classes this is not true).
+         * Also, like all permutation classes, this ordering is consistent
+         * with the ordering implied by the ++ operators.
+         *
+         * @param rhs the permutation to compare this against.
+         * @return \c true if and only if this appears before \a rhs in \a Sn.
+         */
+        constexpr bool operator < (const Perm<2>& rhs) const;
+
+        /**
          * Returns the <i>i</i>th rotation.
          * This maps <i>k</i> to <i>k</i>&nbsp;+&nbsp;<i>i</i> (mod 2)
          * for all \a k.
@@ -742,6 +781,21 @@ inline constexpr int Perm<2>::compareWith(const Perm<2>& other) const {
 
 inline constexpr bool Perm<2>::isIdentity() const {
     return (code_ == 0);
+}
+
+inline Perm<2>& Perm<2>::operator ++() {
+    code_ ^= 1;
+    return *this;
+}
+
+inline constexpr Perm<2> Perm<2>::operator ++(int) {
+    Perm<2> ans(code_);
+    code_ ^= 1;
+    return ans;
+}
+
+inline constexpr bool Perm<2>::operator < (const Perm<2>& rhs) const {
+    return code_ < rhs.code_;
 }
 
 inline constexpr Perm<2> Perm<2>::rot(int i) {

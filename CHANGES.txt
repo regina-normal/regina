@@ -375,11 +375,14 @@ Version 6.1  [ TODO ]
               Use orderedSnIndex() and orderedSn[...] instead.
         Class Perm<2>:
             - New (and trivial) routine isConjugacyMinimal().
+            - New ++ and < operators.
         Class Perm<3>:
             - New routine isConjugacyMinimal().
+            - New ++ and < operators.
         Class Perm<4>:
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().
+            - New ++ and < operators.
             - Added a new typedef Code2; this is identical to Code, but
               it allows you to express more clearly in your source code
               which generation of code is being used.
@@ -391,6 +394,7 @@ Version 6.1  [ TODO ]
         Class Perm<5>:
             - All of the changes listed for Perm<n> above.
             - New routine isConjugacyMinimal().
+            - New ++ and < operators.
             - Changed the internal representation; as a result there are new
               routines permCode2(), fromPermCode2(), setPermCode2() and
               isPermCode2(), and a new type Code2.  The old first-generation

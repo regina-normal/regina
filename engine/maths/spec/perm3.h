@@ -518,6 +518,10 @@ class Perm<3> {
          * Lexicographically compares the images of (0,1,2) under this
          * and the given permutation.
          *
+         * Note that this does \e not yield the same ordering of permutations
+         * as used by the less-than and increment operators.  Moreover,
+         * compareWith() is slower than the less-than operator to compute.
+         *
          * @param other the permutation with which to compare this.
          * @return -1 if this permutation produces a smaller image, 0 if
          * the permutations are equal and 1 if this permutation produces
@@ -532,6 +536,44 @@ class Perm<3> {
          * @return \c true if and only if this is the identity permutation.
          */
         constexpr bool isIdentity() const;
+
+        /**
+         * A preincrement operator that changes this be the next permutation
+         * in the array Perm<3>::Sn.  If this is the last such permutation
+         * then this will wrap around to become the first permutation in
+         * Perm<3>::Sn, which is the identity.
+         *
+         * \ifacespython Not present.
+         *
+         * @return a reference to this permutation after the increment.
+         */
+        Perm<3>& operator ++();
+
+        /**
+         * A postincrement operator that changes this be the next permutation
+         * in the array Perm<3>::Sn.  If this is the last such permutation
+         * then this will wrap around to become the first permutation in
+         * Perm<3>::Sn, which is the identity.
+         *
+         * \ifacespython Not present.
+         *
+         * @return a copy of this permutation before the increment took place.
+         */
+        constexpr Perm<3> operator ++(int);
+
+        /**
+         * Determines if this appears earlier than the given permutation
+         * in the array Perm<3>::Sn.
+         *
+         * Note that this is \e not the same ordering of permutations as
+         * the ordering implied by compareWith().  This is, however,
+         * consistent with the ordering implied by the ++ operators,
+         * and this order is also faster to compute than compareWith().
+         *
+         * @param rhs the permutation to compare this against.
+         * @return \c true if and only if this appears before \a rhs in \a Sn.
+         */
+        constexpr bool operator < (const Perm<3>& rhs) const;
 
         /**
          * Returns the <i>i</i>th rotation.
@@ -955,6 +997,23 @@ inline constexpr int Perm<3>::compareWith(const Perm<3>& other) const {
 
 inline constexpr bool Perm<3>::isIdentity() const {
     return (code_ == 0);
+}
+
+inline Perm<3>& Perm<3>::operator ++() {
+    if (++code_ == 6)
+        code_ = 0;
+    return *this;
+}
+
+inline constexpr Perm<3> Perm<3>::operator ++(int) {
+    Perm<3> ans(code_);
+    if (++code_ == 6)
+        code_ = 0;
+    return ans;
+}
+
+inline constexpr bool Perm<3>::operator < (const Perm<3>& rhs) const {
+    return code_ < rhs.code_;
 }
 
 inline constexpr Perm<3> Perm<3>::rot(int i) {
