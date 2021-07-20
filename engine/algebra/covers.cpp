@@ -165,6 +165,7 @@ size_t GroupPresentation::enumerateCoversInternal(
     // All representatives will be initialised to the identity.
     size_t nReps = 0;
     Perm<index>* rep = new Perm<index>[nGenerators_];
+    Perm<index>* repInv = new Perm<index>[nGenerators_];
 
     size_t pos = 0; // The generator whose current rep we are about to try.
     while (true) {
@@ -182,9 +183,8 @@ size_t GroupPresentation::enumerateCoversInternal(
                         for (long i = 0; i < t.exponent; ++i)
                             comb = rep[t.generator] * comb;
                     } else if (t.exponent < 0) {
-                        Perm<index> p = rep[t.generator].inverse();
                         for (long i = 0; i > t.exponent; --i)
-                            comb = p * comb;
+                            comb = repInv[t.generator] * comb;
                     }
                 }
                 if (! comb.isIdentity()) {
@@ -298,9 +298,8 @@ size_t GroupPresentation::enumerateCoversInternal(
                                         sheet = rep[t.generator][sheet];
                                     }
                                 } else if (t.exponent < 0) {
-                                    Perm<index> p = rep[t.generator].inverse();
                                     for (long i = 0; i > t.exponent; --i) {
-                                        sheet = p[sheet];
+                                        sheet = repInv[t.generator][sheet];
                                         e.addTermLast(
                                             t.generator * index + sheet,
                                             -1);
@@ -333,17 +332,19 @@ size_t GroupPresentation::enumerateCoversInternal(
         if (backtrack) {
             while (true) {
                 ++rep[pos];
+                repInv[pos] = rep[pos].inverse();
                 if (! rep[pos].isIdentity())
                     break;
                 if (pos == 0)
                     goto finished;
-                rep[pos--] = Perm<index>(); // reset to identity
+                --pos;
             }
         }
     }
 
 finished:
 
+    delete[] repInv;
     delete[] rep;
     delete[] relnRange;
     delete[] genRange;
