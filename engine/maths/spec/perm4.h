@@ -1387,14 +1387,14 @@ inline constexpr bool Perm<4>::isIdentity() const {
 }
 
 inline Perm<4>& Perm<4>::operator ++() {
-    if (++code_ == nPerms)
+    if (++code_ == 24)
         code_ = 0;
     return *this;
 }
 
 inline constexpr Perm<4> Perm<4>::operator ++(int) {
     Perm<4> ans(code_);
-    if (++code_ == nPerms)
+    if (++code_ == 24)
         code_ = 0;
     return ans;
 }
