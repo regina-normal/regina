@@ -40,6 +40,7 @@
 #endif
 
 #include <algorithm>
+#include <functional>
 #include <list>
 #include <optional>
 #include <vector>
