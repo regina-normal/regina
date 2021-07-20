@@ -136,6 +136,7 @@ bool populateTests(CppUnit::TextTestRunner& runner, int argc, char* argv[]) {
 
     // Algebra:
     sets.insert(std::make_pair("grouppresentation", &addGroupPresentation));
+    sets.insert(std::make_pair("covers", &addCovers));
 
     // 2-manifold triangulations:
     sets.insert(std::make_pair("triangulation2", &addTriangulation2));

@@ -2,6 +2,7 @@
 
 # Files to compile
 SET ( FILES
+  covers.cpp
   grouppresentation.cpp
   )
 

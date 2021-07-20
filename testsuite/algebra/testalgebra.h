@@ -42,5 +42,6 @@
 
 #include <cppunit/ui/text/TestRunner.h>
 
+void addCovers(CppUnit::TextUi::TestRunner& runner);
 void addGroupPresentation(CppUnit::TextUi::TestRunner& runner);
 
