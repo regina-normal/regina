@@ -53,6 +53,8 @@ class Perm3Test : public CppUnit::TestFixture {
     CPPUNIT_TEST(clear);
     CPPUNIT_TEST(S2);
     CPPUNIT_TEST(rot);
+    CPPUNIT_TEST(conjugacy);
+    CPPUNIT_TEST(increment);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -588,6 +590,59 @@ class Perm3Test : public CppUnit::TestFixture {
                             << " gives the wrong image " << p[j] << ".";
                         CPPUNIT_FAIL(msg.str());
                     }
+            }
+        }
+
+        void conjugacy() {
+            for (int i = 0; i < 6; ++i) {
+                Perm<3> p = Perm<3>::Sn[i];
+
+                // Manually decide if p is conjugacy minimal.
+                bool min = true;
+                for (int j = 0; j < 6; ++j) {
+                    Perm<3> q = Perm<3>::Sn[j];
+                    if ((q * p * q.inverse()).SnIndex() < i) {
+                        min = false;
+                        break;
+                    }
+                }
+
+                if (p.isConjugacyMinimal() != min) {
+                    std::ostringstream msg;
+                    msg << "Permutation " << p << " gives wrong result "
+                        "for isConjugacyMinimal().";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void increment() {
+            int i = 0;
+            Perm<3> p;
+            Perm<3> q;
+
+            do {
+                if (p != q) {
+                    std::ostringstream msg;
+                    msg << "Preincrement and postincrement do not match for "
+                        "permutation " << i << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (p.SnIndex() != i) {
+                    std::ostringstream msg;
+                    msg << "Increment gives wrong index for permutation "
+                        << i << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                ++i; ++p; ++q;
+            } while (! p.isIdentity());
+
+            if (i != 6) {
+                CPPUNIT_FAIL("Increment does not wrap around after 120 steps.");
+            }
+            if (! q.isIdentity()) {
+                CPPUNIT_FAIL("Preincrement and postincrement do not "
+                    "wrap around together.");
             }
         }
 };
