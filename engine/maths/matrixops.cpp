@@ -150,7 +150,6 @@ void smithNormalForm(MatrixInt& matrix) {
     }
 }
 
-
 void smithNormalForm(MatrixInt& matrix,
         MatrixInt& rowSpaceBasis, MatrixInt& rowSpaceBasisInv,
         MatrixInt& colSpaceBasis, MatrixInt& colSpaceBasisInv) {
@@ -1069,7 +1068,7 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
 }
 
 /**
- *  This routine converts mxn matrix "matrix" into its Smith Normal Form.
+ * This routine converts mxn matrix "matrix" into its Smith Normal Form.
  * It assumes rowSpaceBasis and rowSpaceBasisInv are pointers to MatrixInts, 
  * if alloceted, having dimension mxm, and colSpaceBasis and colSpaceBasisInv
  * has dimensions nxn.  These matrices record the row and columns operations
@@ -1082,19 +1081,19 @@ void metricRowOp(const unsigned long &currStage, const unsigned long &i,
  *
  *    (*colSpaceBasisInv) * after_matrix * (*rowSpaceBasisInv) == orig_matrix
  *
- *  If any of rowSpaceBasis, colSpaceBasis or rowSpaceBasisInv or 
- * colSpaceBasisInv are not allocated, this algotithm does not bother to compute
- * them (and is correspondingly faster. 
+ * If any of rowSpaceBasis, colSpaceBasis or rowSpaceBasisInv or
+ * colSpaceBasisInv are not allocated, this algotithm does not bother to
+ * compute them (and is correspondingly faster).
  *
- *  This routine uses a first-order technique to intelligently choose the
+ * This routine uses a first-order technique to intelligently choose the
  * pivot when computing the Smith Normal Form, attempting to keep the matrix
  * sparse and its norm small throughout the reduction process.  The technique
  * is loosely based on the papers: 
  *
- *  Havas, Holt, Rees. Recognizing badly Presented Z-modules. Linear Algebra
+ * Havas, Holt, Rees. Recognizing badly Presented Z-modules. Linear Algebra
  * and its Applications. 192:137--163 (1993). 
  *
- *  Markowitz. The elimination form of the inverse and its application to linear
+ * Markowitz. The elimination form of the inverse and its application to linear
  * programming. Management Sci. 3:255--269 (1957).
  */
 void metricalSmithNormalForm(MatrixInt& matrix,
@@ -1109,91 +1108,92 @@ void metricalSmithNormalForm(MatrixInt& matrix,
     if (colSpaceBasisInv)
         *colSpaceBasisInv = MatrixInt::identity(matrix.rows());
 
-    // set up metrics. 
+    // set up metrics.
     std::vector<Integer> rowNorm(matrix.rows(), Integer::zero);
     std::vector<Integer> colNorm(matrix.columns(), Integer::zero);
     std::vector<Integer> rowGCD(matrix.rows(), Integer::zero);
-    for (unsigned long i=0; i<matrix.rows(); i++) 
-     for (unsigned long j=0; j<matrix.columns(); j++)
-      { rowNorm[i] += matrix.entry(i,j).abs();
-        colNorm[j] += matrix.entry(i,j).abs();
-        rowGCD[i]  = rowGCD[i].gcd(matrix.entry(i,j)); }
+    for (unsigned long i=0; i<matrix.rows(); i++)
+        for (unsigned long j=0; j<matrix.columns(); j++) {
+            rowNorm[i] += matrix.entry(i,j).abs();
+            colNorm[j] += matrix.entry(i,j).abs();
+            rowGCD[i]  = rowGCD[i].gcd(matrix.entry(i,j));
+        }
 
-        unsigned long currStage = 0;
-        unsigned long i, j;
-        while (metricFindPivot(currStage, matrix, i, j, 
-                               rowNorm, colNorm, rowGCD))
-        { // entry i,j is now the pivot, so we move it to currStage, currStage.
-            if (i != currStage) metricSwitchRows(currStage, currStage, i, 
-                    matrix, colSpaceBasis, colSpaceBasisInv, rowNorm, rowGCD);
-            if (j != currStage) metricSwitchCols(currStage, currStage, j, 
-                    matrix, rowSpaceBasis, rowSpaceBasisInv, colNorm);
-            Integer g, u, v;
-rowMuckerLoop: 
-        // we come back here if the column operations later on mess 
-        // up row currStage first we do the col ops, eliminating 
+    unsigned long currStage = 0;
+    unsigned long i, j;
+    while (metricFindPivot(currStage, matrix, i, j, rowNorm, colNorm, rowGCD)) {
+        // entry i,j is now the pivot, so we move it to currStage, currStage.
+        if (i != currStage)
+            metricSwitchRows(currStage, currStage, i, matrix, colSpaceBasis,
+                colSpaceBasisInv, rowNorm, rowGCD);
+        if (j != currStage)
+            metricSwitchCols(currStage, currStage, j, matrix, rowSpaceBasis,
+                rowSpaceBasisInv, colNorm);
+        Integer g, u, v;
+rowMuckerLoop:
+        // we come back here if the column operations later on mess
+        // up row currStage first we do the col ops, eliminating
         // entries to the right of currStage, currStage
-            for (j=currStage+1; j<matrix.columns(); j++) 
-             if (matrix.entry(currStage, j) != 0)
-            {
+        for (j=currStage+1; j<matrix.columns(); j++)
+            if (matrix.entry(currStage, j) != 0) {
                 g = matrix.entry(currStage, currStage).gcdWithCoeffs(
                      matrix.entry(currStage, j), u, v);
-                metricColOp(currStage, currStage, j, matrix, u, 
-                            -matrix.entry(currStage,j).divExact(g), v, 
-                            matrix.entry(currStage, currStage).divExact(g), 
+                metricColOp(currStage, currStage, j, matrix, u,
+                            -matrix.entry(currStage,j).divExact(g), v,
+                            matrix.entry(currStage, currStage).divExact(g),
                             rowSpaceBasis, rowSpaceBasisInv, rowNorm, colNorm);
             }
-            // then the row ops, eliminating entries below currStage, currStage
-            for (i=currStage+1; i<matrix.rows(); i++) 
-             if (matrix.entry(i, currStage) != 0)
-            {
+        // then the row ops, eliminating entries below currStage, currStage
+        for (i=currStage+1; i<matrix.rows(); i++)
+            if (matrix.entry(i, currStage) != 0) {
                 g = matrix.entry(currStage, currStage).gcdWithCoeffs(
                      matrix.entry(i, currStage), u, v);
-                metricRowOp(currStage, currStage, i, matrix, u, v, 
-                            -matrix.entry(i,currStage).divExact(g), 
-                            matrix.entry(currStage,currStage).divExact(g), 
-                    colSpaceBasis, colSpaceBasisInv, rowNorm, colNorm, rowGCD);
+                metricRowOp(currStage, currStage, i, matrix, u, v,
+                            -matrix.entry(i,currStage).divExact(g),
+                            matrix.entry(currStage,currStage).divExact(g),
+                            colSpaceBasis, colSpaceBasisInv, rowNorm, colNorm,
+                            rowGCD);
             }
-            // scan row currStage, if it isn't zero, goto rowMuckerLoop
-            for (j=currStage+1; j<matrix.columns(); j++) 
-             if (matrix.entry(currStage, j) != 0) goto rowMuckerLoop;
-            // ensure matrix.entry(currStage, currStage) is positive
-            if (matrix.entry(currStage, currStage)<0)
-            { // we'll make it a column operation
-                for (i=currStage; i<matrix.rows(); i++) 
-                    matrix.entry(i, currStage).negate();
-                if (rowSpaceBasis) for (i=0; i<matrix.columns(); i++)
+        // scan row currStage, if it isn't zero, goto rowMuckerLoop
+        for (j=currStage+1; j<matrix.columns(); j++)
+            if (matrix.entry(currStage, j) != 0) goto rowMuckerLoop;
+        // ensure matrix.entry(currStage, currStage) is positive
+        if (matrix.entry(currStage, currStage)<0) {
+            // we'll make it a column operation
+            for (i=currStage; i<matrix.rows(); i++)
+                matrix.entry(i, currStage).negate();
+            if (rowSpaceBasis)
+                for (i=0; i<matrix.columns(); i++)
                     rowSpaceBasis->entry( i, currStage ).negate();
-                if (rowSpaceBasisInv) for (i=0; i<matrix.columns(); i++)
+            if (rowSpaceBasisInv)
+                for (i=0; i<matrix.columns(); i++)
                     rowSpaceBasisInv->entry( currStage, i ).negate();
-            }
-     // run through rows currStage+1 to bottom, check if divisible by 
-     //  matrix.entry(cs,cs). if not, record row and gcd( matrix.entry(cs,cs), 
-     //  rowGCD[this row],  pick the row with the lowest of these gcds...
-            unsigned long rowT=currStage;
-            Integer bestGCD(matrix.entry(currStage, currStage).abs());       
-            for (i=currStage+1; i<matrix.rows(); i++)       
-            {
-                g = matrix.entry(currStage, currStage).gcd(rowGCD[i]).abs();
-                if ( g < bestGCD )
-                { rowT = i; bestGCD = g; }
-            }
-            if ( rowT > currStage )
-            {
-                metricRowOp(currStage, currStage, rowT, matrix, 
-                        Integer::one, Integer::one, 
-                        Integer::zero, Integer::one, colSpaceBasis, 
-                        colSpaceBasisInv, rowNorm, colNorm, rowGCD);
-                goto rowMuckerLoop;
-            }
-            // done
-            currStage++;
         }
-        // no pivot found -- matrix down and to the right of currStage is zero.
-        // so we're done.
+        // run through rows currStage+1 to bottom, check if divisible by
+        // matrix.entry(cs,cs). if not, record row and gcd(matrix.entry(cs,cs),
+        //  rowGCD[this row],  pick the row with the lowest of these gcds...
+        unsigned long rowT=currStage;
+        Integer bestGCD(matrix.entry(currStage, currStage).abs());
+        for (i=currStage+1; i<matrix.rows(); i++) {
+            g = matrix.entry(currStage, currStage).gcd(rowGCD[i]).abs();
+            if ( g < bestGCD ) {
+                rowT = i;
+                bestGCD = g;
+            }
+        }
+        if ( rowT > currStage ) {
+            metricRowOp(currStage, currStage, rowT, matrix,
+                    Integer::one, Integer::one,
+                    Integer::zero, Integer::one, colSpaceBasis,
+                    colSpaceBasisInv, rowNorm, colNorm, rowGCD);
+            goto rowMuckerLoop;
+        }
+        // done
+        currStage++;
+    }
+    // no pivot found -- matrix down and to the right of currStage is zero.
+    // so we're done.
 }
-
-
 
 } // namespace regina
 
