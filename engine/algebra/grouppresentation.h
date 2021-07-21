@@ -772,6 +772,12 @@ class GroupPresentation : public Output<GroupPresentation> {
          */
         GroupPresentation(GroupPresentation&& src) noexcept = default;
         /**
+         * Creates the free group on the given number of generators.
+         *
+         * @param nGenerators the number of generators.
+         */
+        GroupPresentation(unsigned long nGenerators);
+        /**
          * Constructor that allows you to directly pass an arbitrary number
          * of relators in string format.
          *
@@ -1844,6 +1850,10 @@ inline void swap(GroupExpression& lhs, GroupExpression& rhs) noexcept {
 // Inline functions for GroupPresentation
 
 inline GroupPresentation::GroupPresentation() : nGenerators_(0) {
+}
+
+inline GroupPresentation::GroupPresentation(unsigned long nGenerators) :
+        nGenerators_(nGenerators) {
 }
 
 inline void GroupPresentation::swap(GroupPresentation& other) noexcept {

@@ -120,6 +120,7 @@ void addGroupPresentation(pybind11::module_& m) {
 
     auto c3 = pybind11::class_<GroupPresentation>(m, "GroupPresentation")
         .def(pybind11::init<>())
+        .def(pybind11::init<unsigned long>())
         .def(pybind11::init<const GroupPresentation&>())
         .def("swap", &GroupPresentation::swap)
         .def("addGenerator", &GroupPresentation::addGenerator,

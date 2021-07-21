@@ -149,6 +149,7 @@ Version 6.1  [ TODO ]
         Class GroupPresentation:
             - Added new routine enumerateCovers().
             - Added move constructors and move assignment operators.
+            - New constructor to create free groups.
             - Functions abelianisation() and markedAbelianisation() now
               return groups by value (which can then be moved from).
             - Function addRelation() now takes its argument by value.
