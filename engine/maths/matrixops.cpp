@@ -55,15 +55,11 @@ void smithNormalForm(MatrixInt& matrix) {
             }
         if (flag) {
             // Empty row!
-            if (currStage == nonEmptyRows-1) {
-                nonEmptyRows--;
-                continue;
-            }
             // Switch it with a row at the bottom.
-            for (i=currStage; i<nonEmptyCols; i++)
-                matrix.entry(currStage, i).swap(
-                    matrix.entry(nonEmptyRows-1, i));
-            nonEmptyRows--;
+            if (currStage != nonEmptyRows-1)
+                matrix.swapRows(currStage, nonEmptyRows - 1);
+
+            --nonEmptyRows;
             continue;
         }
 
@@ -76,15 +72,13 @@ void smithNormalForm(MatrixInt& matrix) {
             }
         if (flag) {
             // Empty column!
-            if (currStage == nonEmptyCols-1) {
-                nonEmptyCols--;
-                continue;
-            }
             // Switch it with a column on the end.
-            for (i=currStage; i<nonEmptyRows; i++)
-                matrix.entry(i, currStage).swap(
-                    matrix.entry(i, nonEmptyCols-1));
-            nonEmptyCols--;
+            if (currStage != nonEmptyCols-1) {
+                for (i=currStage; i<nonEmptyRows; i++)
+                    matrix.entry(i, currStage).swap(
+                        matrix.entry(i, nonEmptyCols-1));
+            }
+            --nonEmptyCols;
             continue;
         }
 
@@ -144,8 +138,7 @@ void smithNormalForm(MatrixInt& matrix) {
                     // Add row i to the current stage row and start this
                     // stage over.
                     for (k=currStage+1; k<nonEmptyCols; k++)
-                        matrix.entry(currStage, k) +=
-                            matrix.entry(i, k);
+                        matrix.entry(currStage, k) += matrix.entry(i, k);
                     goto loopStart;
                 }
 
@@ -153,7 +146,7 @@ void smithNormalForm(MatrixInt& matrix) {
         // Make sure the diagonal entry is positive before leaving it.
         if (matrix.entry(currStage, currStage) < 0)
             matrix.entry(currStage, currStage).negate();
-        currStage++;
+        ++currStage;
     }
 }
 
@@ -186,19 +179,13 @@ void smithNormalForm(MatrixInt& matrix,
             }
         if (flag) {
             // Empty row!
-            if (currStage == nonEmptyRows-1) {
-                nonEmptyRows--;
-                continue;
-            }
             // Switch it with a row at the bottom.
-            for (i=currStage; i<nonEmptyCols; i++) {
-                matrix.entry(currStage, i).swap(
-                    matrix.entry(nonEmptyRows-1, i));
+            if (currStage != nonEmptyRows-1) {
+                matrix.swapRows(currStage, nonEmptyRows - 1);
+                colSpaceBasis.swapRows(currStage, nonEmptyRows - 1);
+                colSpaceBasisInv.swapColumns(currStage, nonEmptyRows - 1);
             }
-            colSpaceBasis.swapRows(currStage, nonEmptyRows-1);
-            colSpaceBasisInv.swapColumns(currStage, nonEmptyRows-1);
-
-            nonEmptyRows--;
+            --nonEmptyRows;
             continue;
         }
 
@@ -211,19 +198,16 @@ void smithNormalForm(MatrixInt& matrix,
             }
         if (flag) {
             // Empty column!
-            if (currStage == nonEmptyCols-1) {
-                nonEmptyCols--;
-                continue;
-            }
             // Switch it with a column on the end.
-            for (i=currStage; i<nonEmptyRows; i++) {
-                matrix.entry(i, currStage).swap(
-                    matrix.entry(i, nonEmptyCols-1));
+            if (currStage != nonEmptyCols-1) {
+                for (i=currStage; i<nonEmptyRows; i++) {
+                    matrix.entry(i, currStage).swap(
+                        matrix.entry(i, nonEmptyCols-1));
+                }
+                rowSpaceBasis.swapColumns(currStage, nonEmptyCols - 1);
+                rowSpaceBasisInv.swapRows(currStage, nonEmptyCols - 1);
             }
-            rowSpaceBasis.swapColumns(currStage, nonEmptyCols-1);
-            rowSpaceBasisInv.swapRows(currStage, nonEmptyCols-1);
-
-            nonEmptyCols--;
+            --nonEmptyCols;
             continue;
         }
 

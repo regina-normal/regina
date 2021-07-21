@@ -573,21 +573,23 @@ class Matrix : public Output<Matrix<T>> {
         /**
          * Swaps the elements of the two given rows in the matrix.
          *
+         * This operation is constant time (unlike swapping columns,
+         * which is linear time).
+         *
          * \pre The two given rows are between 0 and rows()-1 inclusive.
          *
          * @param first the first row to swap.
          * @param second the second row to swap.
          */
         void swapRows(unsigned long first, unsigned long second) {
-            T tmp;
-            for (unsigned long i = 0; i < cols_; i++) {
-                tmp = data_[first][i];
-                data_[first][i] = data_[second][i];
-                data_[second][i] = tmp;
-            }
+            if (first != second)
+                std::swap(data_[first], data_[second]);
         }
         /**
          * Swaps the elements of the two given columns in the matrix.
+         *
+         * This operation is linear time (unlike swapping rows,
+         * which is constant time).
          *
          * \pre The two given columns are between 0 and columns()-1 inclusive.
          *
@@ -595,11 +597,12 @@ class Matrix : public Output<Matrix<T>> {
          * @param second the second column to swap.
          */
         void swapColumns(unsigned long first, unsigned long second) {
-            T tmp;
-            for (unsigned long i = 0; i < rows_; i++) {
-                tmp = data_[i][first];
-                data_[i][first] = data_[i][second];
-                data_[i][second] = tmp;
+            if (first != second) {
+                // Give ourselves a chance to use a customised swap(),
+                // if one exists for type T.
+                using std::swap;
+                for (unsigned long i = 0; i < rows_; i++)
+                    swap(data_[i][first], data_[i][second]);
             }
         }
 
