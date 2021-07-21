@@ -56,6 +56,7 @@ class CoversTest : public CppUnit::TestFixture {
     CPPUNIT_TEST(knots);
     CPPUNIT_TEST(freeAbelian);
     CPPUNIT_TEST(free);
+    CPPUNIT_TEST(cyclic);
 
     CPPUNIT_TEST_SUITE_END();
 
@@ -358,7 +359,6 @@ class CoversTest : public CppUnit::TestFixture {
                     << expectedCount << ".";
                 CPPUNIT_FAIL(msg.str());
             }
-            std::cerr << "DONE[" << index << ", " << rank << "]" << std::endl;
         }
 
         void free() {
@@ -372,6 +372,81 @@ class CoversTest : public CppUnit::TestFixture {
                 verifyFree<4>(rank);
             for (int rank = 0; rank <= 3; ++rank)
                 verifyFree<5>(rank);
+        }
+
+        template <int index>
+        void verifyCyclic(long order) {
+            // If index divides order then we should have exactly one
+            // result, which must be Z_{order/index}.
+            // Otherwise we should have no results at all.
+
+            long expectedOrder = (order % index == 0 ? order / index : 0);
+            bool badCover = false;
+            size_t nFound = 0;
+
+            GroupPresentation src(1);
+            src.addRelation(regina::GroupExpression(0, order));
+            size_t ans = src.enumerateCovers<index>([&](GroupPresentation& g) {
+                g.intelligentSimplify();
+
+                if (expectedOrder == 1) {
+                    if (g.countGenerators() != 0)
+                        badCover = true;
+                } else {
+                    if (g.countGenerators() != 1)
+                        badCover = true;
+                    else if (g.countRelations() != 1)
+                        badCover = true;
+                    else {
+                        long exp = g.relation(0).terms().front().exponent;
+                        if (exp != expectedOrder && exp != -expectedOrder)
+                            badCover = true;
+                    }
+                }
+
+                ++nFound;
+            });
+
+            if (order % index == 0) {
+                if (badCover) {
+                    std::ostringstream msg;
+                    msg << "Z_" << order << " yielded an index " << index
+                        << " subgroup that was not the expected Z_"
+                        << expectedOrder << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (ans != nFound) {
+                    std::ostringstream msg;
+                    msg << "Z_" << order << " yielded inconsistent "
+                        "numbers of subgroups for index " << index << ".";
+                    CPPUNIT_FAIL(msg.str());
+                }
+                if (ans != 1) {
+                    std::ostringstream msg;
+                    msg << "Z_" << order << " yielded " << ans
+                        << "subgroups for index " << index
+                        << " instead of the expected 1.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            } else {
+                if (ans != 0) {
+                    std::ostringstream msg;
+                    msg << "Z_" << order << " yielded an index " << index
+                        << " subgroup, which should not exist.";
+                    CPPUNIT_FAIL(msg.str());
+                }
+            }
+        }
+
+        void cyclic() {
+            for (int order = 1; order <= 13; ++order)
+                verifyCyclic<2>(order);
+            for (int order = 1; order <= 13; ++order)
+                verifyCyclic<3>(order);
+            for (int order = 1; order <= 13; ++order)
+                verifyCyclic<4>(order);
+            for (int order = 1; order <= 13; ++order)
+                verifyCyclic<5>(order);
         }
 };
 

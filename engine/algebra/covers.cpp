@@ -128,12 +128,15 @@ size_t GroupPresentation::enumerateCoversInternal(
     }
 
     if (nGenerators_ == 1) {
-        // To be transitive, the representation of the one generator must be
-        // a cycle, and all such representations are conjugate.
+        // To be transitive, the representation of the unique generator must
+        // be a cycle, and all such representations are conjugate (so there
+        // is at most one cover to generate).
         //
         // To satisfy the relations:
+        //
         // - If we are Z, then there are no non-trivial relations and so
         //   they are vacuously satisfied.  The resulting subgroup is also Z.
+        //
         // - If we are Z_n, then n must be a multiple of index.  The resulting
         //   subgroup is Z_(n/index).
         //
