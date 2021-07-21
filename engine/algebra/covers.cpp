@@ -288,42 +288,57 @@ size_t GroupPresentation::enumerateCoversInternal(
 
                     GroupPresentation sub;
                     sub.nGenerators_ = index * nGenerators_;
+                    sub.relations_.reserve(index * relations_.size());
 
-                    sub.relations_.reserve(index * relations_.size() +
-                        nGenerators_ - 1);
+                    std::sort(spanningTree, spanningTree + index - 1);
+
+                    unsigned long* rewrite =
+                        new unsigned long[sub.nGenerators_];
+
+                    // Work out how the subgroup generators will be relabelled
+                    // once the spanning tree is removed.
+                    unsigned long treeIdx = 0;
+                    for (unsigned long i = 0; i < sub.nGenerators_; ++i) {
+                        if (treeIdx < index - 1 && spanningTree[treeIdx] == i) {
+                            // This generator will be removed from the subgroup.
+                            rewrite[i] = sub.nGenerators_;
+                            ++treeIdx;
+                        } else
+                            rewrite[i] = i - treeIdx;
+                    }
+                    sub.nGenerators_ -= (index - 1);
 
                     for (const auto& r : relations_) {
                         for (int start = 0; start < index; ++start) {
                             GroupExpression e;
                             int sheet = start;
                             Perm<index> p;
+                            unsigned long gen;
                             for (const auto& t : r.terms()) {
                                 if (t.exponent > 0) {
                                     for (long i = 0; i < t.exponent; ++i) {
-                                        e.addTermLast(
-                                            t.generator * index + sheet, 1);
+                                        gen = rewrite[
+                                            t.generator * index + sheet];
+                                        if (gen < sub.nGenerators_)
+                                            e.addTermLast(gen, 1);
                                         sheet = rep[t.generator][sheet];
                                     }
                                 } else if (t.exponent < 0) {
                                     for (long i = 0; i > t.exponent; --i) {
                                         sheet = repInv[t.generator][sheet];
-                                        e.addTermLast(
-                                            t.generator * index + sheet,
-                                            -1);
+                                        gen = rewrite[
+                                            t.generator * index + sheet];
+                                        if (gen < sub.nGenerators_)
+                                            e.addTermLast(gen, -1);
                                     }
                                 }
                             }
-                            sub.relations_.push_back(std::move(e));
+                            if (! e.terms().empty())
+                                sub.relations_.push_back(std::move(e));
                         }
                     }
 
-                    // TODO: Instead of adding trivial relations,
-                    // just strip these generators out of the
-                    // original relations.  Don't forget to reindex
-                    // the surviving generators also.
-                    for (int i = 0; i < index - 1; ++i)
-                        sub.relations_.push_back(GroupExpression(
-                            spanningTree[i], 1));
+                    delete[] rewrite;
 
                     ++nReps;
                     action(sub);
