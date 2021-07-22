@@ -455,7 +455,7 @@ class Perm<2> {
         constexpr bool isIdentity() const;
 
         /**
-         * A preincrement operator that changes this be the next permutation
+         * A preincrement operator that changes this to be the next permutation
          * in the array Perm<2>::Sn.  If this is the last such permutation
          * then this will wrap around to become the first permutation in
          * Perm<2>::Sn, which is the identity.
@@ -467,7 +467,7 @@ class Perm<2> {
         Perm<2>& operator ++();
 
         /**
-         * A postincrement operator that changes this be the next permutation
+         * A postincrement operator that changes this to be the next permutation
          * in the array Perm<2>::Sn.  If this is the last such permutation
          * then this will wrap around to become the first permutation in
          * Perm<2>::Sn, which is the identity.
