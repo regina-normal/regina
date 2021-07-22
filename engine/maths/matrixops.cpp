@@ -41,46 +41,38 @@ void smithNormalForm(MatrixInt& matrix) {
     unsigned long nonEmptyCols = matrix.columns();
     bool flag;
     unsigned long i, j, k;
+    unsigned long pivotRow, pivotCol;
     Integer d, u, v, a, b;
     Integer tmp;
     while ((currStage < nonEmptyRows) && (currStage < nonEmptyCols)) {
         loopStart:
 
-        // Have we got an empty row?
-        flag = true;
-        for (i=currStage; i<nonEmptyCols; i++)
-            if (matrix.entry(currStage, i) != 0) {
-                flag = false;
-                break;
+        // Find a good pivot.
+        // For now we just take the non-zero entry with smallest absolute value.
+        tmp = 0;
+        // TODO: Adjust nonEmptyRows and nonEmptyCols as we iterate here.
+        for (i = currStage; i < nonEmptyRows; ++i)
+            for (j = currStage; j < nonEmptyCols; ++j) {
+                Integer pivotVal = matrix.entry(i, j).abs();
+                if (pivotVal > 0)
+                    if (tmp == 0 || pivotVal < tmp) {
+                        tmp = pivotVal;
+                        pivotRow = i;
+                        pivotCol = j;
+                    }
             }
-        if (flag) {
-            // Empty row!
-            // Switch it with a row at the bottom.
-            if (currStage != nonEmptyRows-1)
-                matrix.swapRows(currStage, nonEmptyRows - 1 /*, currStage */);
 
-            --nonEmptyRows;
-            continue;
+        if (tmp == 0) {
+            // The matrix is zero from here on - which means we are done!
+            break;
         }
 
-        // Have we got an empty column?
-        flag = true;
-        for (i=currStage; i<nonEmptyRows; i++)
-            if (matrix.entry(i, currStage) != 0) {
-                flag = false;
-                break;
-            }
-        if (flag) {
-            // Empty column!
-            // Switch it with a column on the end.
-            if (currStage != nonEmptyCols-1)
-                matrix.swapCols(currStage, nonEmptyCols - 1, currStage);
+        if (pivotRow != currStage)
+            matrix.swapRows(currStage, pivotRow);
+        if (pivotCol != currStage)
+            matrix.swapCols(currStage, pivotCol, currStage);
 
-            --nonEmptyCols;
-            continue;
-        }
-
-        // Get zeros in the current row.
+        // Make zeros for the remainder of the current row.
         for (i=currStage+1; i<nonEmptyCols; i++) {
             if (matrix.entry(currStage, i) == 0)
                 continue;
@@ -94,7 +86,7 @@ void smithNormalForm(MatrixInt& matrix) {
             matrix.combCols(currStage, i, u, v, -b, a, currStage);
         }
 
-        // Get zeros in the current column.
+        // Make zeros for the remainder of the current column.
         // Check to see if we change anything and thus muck up the row.
         flag = false;
         for (i=currStage+1; i<nonEmptyRows; i++) {
@@ -111,8 +103,16 @@ void smithNormalForm(MatrixInt& matrix) {
             matrix.combRows(currStage, i, u, v, -b, a, currStage);
         }
         if (flag) {
-            // The clean row was mucked up.
-            continue;
+            flag = false;
+            for (i=currStage+1; i<nonEmptyCols; i++)
+                if (matrix.entry(currStage, i) != 0) {
+                    flag = true;
+                    break;
+                }
+            if (flag) {
+                // The clean row was mucked up.
+                continue;
+            }
         }
 
         // Check that entry (currStage, currStage) divides everything else.
