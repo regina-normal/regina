@@ -76,7 +76,7 @@ namespace regina {
  * codes have changed as of Regina 6.1:
  *
  * - \e First-generation codes were used internally in Regina 6.0 and earlier.
- *   These codes were characters whose lowest three bits represented the
+ *   These codes were integers whose lowest three bits represented the
  *   image of 0, whose next lowest three bits represented the image of 1,
  *   and so on.  The routines permCode1(), setPermCode1(), fromPermCode1()
  *   and isPermCode1() continue to work with first-generation codes for

@@ -131,7 +131,7 @@ enum PermCodeType {
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  These codes are constructed as follows:
  *
- * - For 5 &le; \a n &le; 16, the code is essentially a packed array
+ * - For 6 &le; \a n &le; 16, the code is essentially a packed array
  *   that holds the images of 0,...,<i>n</i>-1 in a single native integer type.
  *   More precisely, the internal code is an unsigned integer of type \a Code,
  *   whose lowest \a imageBits bits represent the image of 0, whose next
@@ -144,7 +144,9 @@ enum PermCodeType {
  *
  * For \a n = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
  * triangulations), this template is specialised: the code is highly optimised
- * and also offers some extra functionality.
+ * and also offers some extra functionality.  For \a n &ge; 6,
+ * this template is generic and most operations require more time (in
+ * particular, there are no harded-coded lookup tables).
  *
  * \ifacespython Python does not support templates.  For each
  * \a n = 2,...,16, this class is available in Python under the
@@ -164,8 +166,8 @@ class Perm {
          * to store the image of a single integer.
          *
          * This constant refers to the "image packing" codes that are
-         * used for \a n &ge; 5, as described in the Perm class notes.
-         * For \a n &le; 4 the permutation codes are constructed in a
+         * used for \a n &ge; 6, as described in the Perm class notes.
+         * For \a n &le; 5 the permutation codes are constructed in a
          * different way, and so this constant is not present.
          *
          * The full permutation code packs \a n such images together,
@@ -185,9 +187,9 @@ class Perm {
          * internal permutation code.
          *
          * This typedef is present for all values of \a n, though its
-         * precise size depends on how the permutation code is
-         * constructed.  In particular, this type is defined differently
-         * for \a n &le; 4 than for \a n &ge; 5.
+         * precise size depends on how the permutation code is constructed.
+         * For \a n = 4 and 5, it is a deprecated typedef that refers to
+         * older (first-generation) permutation codes that are no longer used.
          */
         typedef typename IntOfMinSize<(imageBits * n + 7) / 8>::utype Code;
 
