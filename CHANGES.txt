@@ -273,11 +273,14 @@ Version 6.1  [ TODO ]
             - New routines rowEchelonForm() and columnEchelonForm() for
               matrices over Regina's integer types (including MatrixInt).
             - New operator * for multiplying a matrix by a vector.
+            - New routines combRows() and combCols().
             - New constructor that takes a hard-coded list of entries
               via a C++11 initialiser list.
             - New default constructor that leaves the matrix in an
               uninitialised state.
             - Added member and global swap() functions.
+            - Several row and column operations now take an extra optional
+              parameter to operate on only part of the row/column.
             - Renamed swapColumns() to swapCols().  The old name is kept
               as a deprecated alias.
             - Routine swapRows() is now constant time.

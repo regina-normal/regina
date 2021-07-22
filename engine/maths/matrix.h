@@ -576,6 +576,11 @@ class Matrix : public Output<Matrix<T>> {
          * This operation is constant time (unlike swapping columns,
          * which is linear time).
          *
+         * Unlike swapCols(), this operation does not take a \fromCol argument.
+         * This is because swapping rows is already as fast possible
+         * (internally, just a single pointer swap), and so iterating along
+         * only part of the row would slow the routine down considerably.
+         *
          * \pre The two given rows are between 0 and rows()-1 inclusive.
          *
          * @param first the first row to swap.
@@ -591,17 +596,25 @@ class Matrix : public Output<Matrix<T>> {
          * This operation is linear time (unlike swapping rows,
          * which is constant time).
          *
+         * If the optional argument \a fromRow is passed, then the
+         * operation will only be performed for the elements from that
+         * row down to the bottom of each column (inclusive).
+         *
          * \pre The two given columns are between 0 and columns()-1 inclusive.
+         * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
          *
          * @param first the first column to swap.
          * @param second the second column to swap.
+         * @param fromRow the starting point in each column from which the
+         * operation will be performed.
          */
-        void swapColumns(unsigned long first, unsigned long second) {
+        void swapCols(unsigned long first, unsigned long second,
+                unsigned long fromRow = 0) {
             if (first != second) {
                 // Give ourselves a chance to use a customised swap(),
                 // if one exists for type T.
                 using std::swap;
-                for (unsigned long i = 0; i < rows_; i++)
+                for (unsigned long i = fromRow; i < rows_; i++)
                     swap(data_[i][first], data_[i][second]);
             }
         }
@@ -732,6 +745,12 @@ class Matrix : public Output<Matrix<T>> {
          * \pre The two given rows are distinct and between 0 and
          * rows()-1 inclusive.
          *
+         * \warning If you only wish to add a portion of a row, be careful:
+         * you cannot just pass the usual \a fromCol argument, since this will
+         * be interpreted as a coefficient to be used with the other version
+         * of addRow() that adds \e several copies of the source row.
+         * Instead you will need to call addRowFrom().
+         *
          * @param source the row to add.
          * @param dest the row that will be added to.
          */
@@ -741,26 +760,58 @@ class Matrix : public Output<Matrix<T>> {
                 this->data_[dest][i] += this->data_[source][i];
         }
         /**
-         * Adds the given number of copies of the given source row to
-         * the given destination row.
+         * Adds a portion of the given source row to the given destination row.
          *
-         * Note that \a copies is passed by value in case it is an
-         * element of the row to be changed.
+         * This is similar to addRow(), except that the operation will
+         * only be performed for the elements from the column \a fromCol
+         * to the rightmost end of the row (inclusive).
          *
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
          * \pre The two given rows are distinct and between 0 and
          * rows()-1 inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
          *
          * @param source the row to add.
          * @param dest the row that will be added to.
-         * @param copies the number of copies of \a source to add to
-         * \a dest.
+         * @param fromCol the starting point in the row from which the
+         * operation will be performed.
+         */
+        REGINA_ENABLE_FOR_RING(void) addRowFrom(
+                unsigned long source, unsigned long dest,
+                unsigned long fromCol) {
+            for (unsigned long i = fromCol; i < this->cols_; i++)
+                this->data_[dest][i] += this->data_[source][i];
+        }
+        /**
+         * Adds the given number of copies of the given source row to
+         * the given destination row.
+         *
+         * Note that \a copies is passed by value in case it is an
+         * element of the row to be changed.
+         *
+         * If the optional argument \a fromCol is passed, then the
+         * operation will only be performed for the elements from that
+         * column to the rightmost end of the row (inclusive).
+         *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
+         * \pre The two given rows are distinct and between 0 and
+         * rows()-1 inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
+         *
+         * @param source the row to add.
+         * @param dest the row that will be added to.
+         * @param copies the number of copies of \a source to add to \a dest.
+         * @param fromCol the starting point in the row from which the
+         * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) addRow(
-                unsigned long source, unsigned long dest, T copies) {
-            for (unsigned long i = 0; i < this->cols_; i++)
+                unsigned long source, unsigned long dest, T copies,
+                unsigned long fromCol = 0) {
+            for (unsigned long i = fromCol; i < this->cols_; i++)
                 this->data_[dest][i] += copies * this->data_[source][i];
         }
         /**
@@ -768,6 +819,12 @@ class Matrix : public Output<Matrix<T>> {
          *
          * This routine is only available when the template argument \a ring
          * is \c true.
+         *
+         * \warning If you only wish to add a portion of a column, be careful:
+         * you cannot just pass the usual \a fromRow argument, since this will
+         * be interpreted as a coefficient to be used with the other version
+         * of addCol() that adds \e several copies of the source column.
+         * Instead you will need to call addColFrom().
          *
          * \pre The two given columns are distinct and between 0 and
          * columns()-1 inclusive.
@@ -781,26 +838,59 @@ class Matrix : public Output<Matrix<T>> {
                 this->data_[i][dest] += this->data_[i][source];
         }
         /**
-         * Adds the given number of copies of the given source column to
-         * the given destination column.
+         * Adds a portion of the given source column to the given destination
+         * column.
          *
-         * Note that \a copies is passed by value in case it is an
-         * element of the row to be changed.
+         * This is similar to addCol(), except that the operation will
+         * only be performed for the elements from the row \a fromRow
+         * down to the bottom of the column (inclusive).
          *
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
          * \pre The two given columns are distinct and between 0 and
          * columns()-1 inclusive.
+         * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
          *
          * @param source the columns to add.
          * @param dest the column that will be added to.
-         * @param copies the number of copies of \a source to add to
-         * \a dest.
+         * @param fromRow the starting point in the column from which the
+         * operation will be performed.
+         */
+        REGINA_ENABLE_FOR_RING(void) addColFrom(
+                unsigned long source, unsigned long dest,
+                unsigned long fromRow = 0) {
+            for (unsigned long i = fromRow; i < this->rows_; i++)
+                this->data_[i][dest] += this->data_[i][source];
+        }
+        /**
+         * Adds the given number of copies of the given source column to
+         * the given destination column.
+         *
+         * Note that \a copies is passed by value in case it is an
+         * element of the row to be changed.
+         *
+         * If the optional argument \a fromRow is passed, then the
+         * operation will only be performed for the elements from that
+         * row down to the bottom of the column (inclusive).
+         *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
+         * \pre The two given columns are distinct and between 0 and
+         * columns()-1 inclusive.
+         * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
+         *
+         * @param source the columns to add.
+         * @param dest the column that will be added to.
+         * @param copies the number of copies of \a source to add to \a dest.
+         * @param fromRow the starting point in the column from which the
+         * operation will be performed.
          */
         REGINA_ENABLE_FOR_RING(void) addCol(
-                unsigned long source, unsigned long dest, T copies) {
-            for (unsigned long i = 0; i < this->rows_; i++)
+                unsigned long source, unsigned long dest, T copies,
+                unsigned long fromRow = 0) {
+            for (unsigned long i = fromRow; i < this->rows_; i++)
                 this->data_[i][dest] += copies * this->data_[i][source];
         }
         /**
@@ -809,16 +899,24 @@ class Matrix : public Output<Matrix<T>> {
          * Note that \a factor is passed by value in case it is an
          * element of the row to be changed.
          *
+         * If the optional argument \a fromCol is passed, then the
+         * operation will only be performed for the elements from that
+         * column to the rightmost end of the row (inclusive).
+         *
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
          * \pre The given row is between 0 and rows()-1 inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
          *
          * @param row the row to work with.
          * @param factor the factor by which to multiply the given row.
+         * @param fromCol the starting point in the row from which the
+         * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) multRow(unsigned long row, T factor) {
-            for (unsigned long i = 0; i < this->cols_; i++)
+        REGINA_ENABLE_FOR_RING(void) multRow(unsigned long row, T factor,
+                unsigned long fromCol = 0) {
+            for (unsigned long i = fromCol; i < this->cols_; i++)
                 this->data_[row][i] *= factor;
         }
         /**
@@ -827,17 +925,121 @@ class Matrix : public Output<Matrix<T>> {
          * Note that \a factor is passed by value in case it is an
          * element of the row to be changed.
          *
+         * If the optional argument \a fromRow is passed, then the
+         * operation will only be performed for the elements from that
+         * row down to the bottom of the column (inclusive).
+         *
          * This routine is only available when the template argument \a ring
          * is \c true.
          *
          * \pre The given column is between 0 and columns()-1 inclusive.
+         * \pre If passed, \a fromRow is between 0 and rows() -1 inclusive.
          *
          * @param column the column to work with.
          * @param factor the factor by which to multiply the given column.
+         * @param fromRow the starting point in the column from which the
+         * operation will be performed.
          */
-        REGINA_ENABLE_FOR_RING(void) multCol(unsigned long column, T factor) {
-            for (unsigned long i = 0; i < this->rows_; i++)
+        REGINA_ENABLE_FOR_RING(void) multCol(unsigned long column, T factor,
+                unsigned long fromRow = 0) {
+            for (unsigned long i = fromRow; i < this->rows_; i++)
                 this->data_[i][column] *= factor;
+        }
+        /**
+         * Rewrites two rows as linear combinations of those two rows.
+         *
+         * Specifically, if \a R1 and \a R2 are the original values of
+         * rows \a row1 and \a row2 respectively, then:
+         *
+         * - Row \a row1 will become <tt>coeff11 * R1 + coeff12 * R2</tt>;
+         * - Row \a row2 will become <tt>coeff21 * R1 + coeff22 * R2</tt>.
+         *
+         * The four coefficients are passed by value, in case they are
+         * elements of the rows to be changed.
+         *
+         * If the optional argument \a fromCol is passed, then the
+         * operation will only be performed for the elements from that
+         * column to the rightmost end of each row (inclusive).
+         *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
+         * \pre The two given rows are distinct and between 0 and
+         * rows()-1 inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
+         *
+         * @param row1 the first row to operate on.
+         * @param row2 the second row to operate on.
+         * @param coeff11 the coefficient of row \a row1 to use when
+         * rewriting row \a row1.
+         * @param coeff12 the coefficient of row \a row2 to use when
+         * rewriting row \a row1.
+         * @param coeff21 the coefficient of row \a row1 to use when
+         * rewriting row \a row2.
+         * @param coeff22 the coefficient of row \a row2 to use when
+         * rewriting row \a row2.
+         * @param fromCol the starting point in the rows from which the
+         * operation will be performed.
+         */
+        REGINA_ENABLE_FOR_RING(void) combRows(
+                unsigned long row1, unsigned long row2,
+                T coeff11, T coeff12, T coeff21, T coeff22,
+                unsigned long fromCol = 0) {
+            for (unsigned long i = fromCol; i < this->cols_; ++i) {
+                T tmp = coeff11 * this->data_[row1][i] +
+                    coeff12 * this->data_[row2][i];
+                this->data_[row2][i] = coeff21 * this->data_[row1][i] +
+                    coeff22 * this->data_[row2][i];
+                this->data_[row1][i] = std::move(tmp);
+            }
+        }
+        /**
+         * Rewrites two columns as linear combinations of those two columns.
+         *
+         * Specifically, if \a C1 and \a C2 are the original values of
+         * columns \a col1 and \a col2 respectively, then:
+         *
+         * - Column \a col1 will become <tt>coeff11 * C1 + coeff12 * C2</tt>;
+         * - Column \a col2 will become <tt>coeff21 * C1 + coeff22 * C2</tt>.
+         *
+         * The four coefficients are passed by value, in case they are
+         * elements of the columns to be changed.
+         *
+         * If the optional argument \a fromRow is passed, then the
+         * operation will only be performed for the elements from that
+         * column down to the bottom of each column (inclusive).
+         *
+         * This routine is only available when the template argument \a ring
+         * is \c true.
+         *
+         * \pre The two given columns are distinct and between 0 and
+         * columns()-1 inclusive.
+         * \pre If passed, \a fromCol is between 0 and columns() -1 inclusive.
+         *
+         * @param col1 the first column to operate on.
+         * @param col2 the second column to operate on.
+         * @param coeff11 the coefficient of column \a col1 to use when
+         * rewriting column \a col1.
+         * @param coeff12 the coefficient of column \a col2 to use when
+         * rewriting column \a col1.
+         * @param coeff21 the coefficient of column \a col1 to use when
+         * rewriting column \a col2.
+         * @param coeff22 the coefficient of column \a col2 to use when
+         * rewriting column \a col2.
+         * @param fromCol the starting point in the columns from which the
+         * operation will be performed.
+         */
+        REGINA_ENABLE_FOR_RING(void) combCols(
+                unsigned long col1, unsigned long col2,
+                T coeff11, T coeff12, T coeff21, T coeff22,
+                unsigned long fromRow = 0) {
+            for (unsigned long i = fromRow; i < this->rows_; ++i) {
+                T tmp = coeff11 * this->data_[i][col1] +
+                    coeff12 * this->data_[i][col2];
+                this->data_[i][col2] = coeff21 * this->data_[i][col1] +
+                    coeff22 * this->data_[i][col2];
+                this->data_[i][col1] = std::move(tmp);
+            }
         }
 
         /**

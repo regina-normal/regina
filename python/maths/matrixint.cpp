@@ -85,7 +85,8 @@ void addMatrixInt(pybind11::module_& m) {
             &MatrixInt::isZero<>)
         .def("swap", &MatrixInt::swap)
         .def("swapRows", &MatrixInt::swapRows)
-        .def("swapCols", &MatrixInt::swapCols)
+        .def("swapCols", &MatrixInt::swapCols,
+            pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
         .def("swapColumns", &MatrixInt::swapCols) // deprecated
         .def_static("identity",
             (MatrixInt (*)(unsigned long))
@@ -96,21 +97,49 @@ void addMatrixInt(pybind11::module_& m) {
         .def("addRow",
             (void (MatrixInt::*)(unsigned long, unsigned long))
             &MatrixInt::addRow<>)
+        .def("addRowFrom",
+            (void (MatrixInt::*)(unsigned long, unsigned long, unsigned long))
+            &MatrixInt::addRowFrom<>)
         .def("addRow",
-            (void (MatrixInt::*)(unsigned long, unsigned long, regina::Integer))
-            &MatrixInt::addRow<>)
+            (void (MatrixInt::*)(unsigned long, unsigned long,
+                regina::Integer, unsigned long))
+            &MatrixInt::addRow<>,
+            pybind11::arg(), pybind11::arg(), pybind11::arg(),
+                pybind11::arg("fromCol") = 0)
         .def("addCol",
             (void (MatrixInt::*)(unsigned long, unsigned long))
             &MatrixInt::addCol<>)
+        .def("addColFrom",
+            (void (MatrixInt::*)(unsigned long, unsigned long, unsigned long))
+            &MatrixInt::addColFrom<>)
         .def("addCol",
-            (void (MatrixInt::*)(unsigned long, unsigned long, regina::Integer))
-            &MatrixInt::addCol<>)
+            (void (MatrixInt::*)(unsigned long, unsigned long,
+                regina::Integer, unsigned long))
+            &MatrixInt::addCol<>,
+            pybind11::arg(), pybind11::arg(), pybind11::arg(),
+                pybind11::arg("fromRow") = 0)
         .def("multRow",
-            (void (MatrixInt::*)(unsigned long, regina::Integer))
-            &MatrixInt::multRow<>)
+            (void (MatrixInt::*)(unsigned long, regina::Integer, unsigned long))
+            &MatrixInt::multRow<>,
+            pybind11::arg(), pybind11::arg(), pybind11::arg("fromCol") = 0)
         .def("multCol",
-            (void (MatrixInt::*)(unsigned long, regina::Integer))
-            &MatrixInt::multCol<>)
+            (void (MatrixInt::*)(unsigned long, regina::Integer, unsigned long))
+            &MatrixInt::multCol<>,
+            pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
+        .def("combRows",
+            (void (MatrixInt::*)(unsigned long, unsigned long,
+                regina::Integer, regina::Integer,
+                regina::Integer, regina::Integer, unsigned long))
+            &MatrixInt::combRows<>,
+            pybind11::arg(), pybind11::arg(), pybind11::arg(), pybind11::arg(),
+                pybind11::arg(), pybind11::arg(), pybind11::arg("fromCol") = 0)
+        .def("combCols",
+            (void (MatrixInt::*)(unsigned long, unsigned long,
+                regina::Integer, regina::Integer,
+                regina::Integer, regina::Integer, unsigned long))
+            &MatrixInt::combCols<>,
+            pybind11::arg(), pybind11::arg(), pybind11::arg(), pybind11::arg(),
+                pybind11::arg(), pybind11::arg(), pybind11::arg("fromRow") = 0)
         .def("det",
             (regina::Integer (MatrixInt::*)() const)
             &MatrixInt::det<>)

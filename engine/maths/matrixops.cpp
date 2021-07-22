@@ -57,7 +57,7 @@ void smithNormalForm(MatrixInt& matrix) {
             // Empty row!
             // Switch it with a row at the bottom.
             if (currStage != nonEmptyRows-1)
-                matrix.swapRows(currStage, nonEmptyRows - 1);
+                matrix.swapRows(currStage, nonEmptyRows - 1 /*, currStage */);
 
             --nonEmptyRows;
             continue;
@@ -73,11 +73,9 @@ void smithNormalForm(MatrixInt& matrix) {
         if (flag) {
             // Empty column!
             // Switch it with a column on the end.
-            if (currStage != nonEmptyCols-1) {
-                for (i=currStage; i<nonEmptyRows; i++)
-                    matrix.entry(i, currStage).swap(
-                        matrix.entry(i, nonEmptyCols-1));
-            }
+            if (currStage != nonEmptyCols-1)
+                matrix.swapCols(currStage, nonEmptyCols - 1, currStage);
+
             --nonEmptyCols;
             continue;
         }
@@ -93,13 +91,7 @@ void smithNormalForm(MatrixInt& matrix) {
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to columns currStage and i.
-            for (j=currStage; j<nonEmptyRows; j++) {
-                tmp = u * matrix.entry(j, currStage) +
-                    v * matrix.entry(j, i);
-                matrix.entry(j, i) = a * matrix.entry(j, i) -
-                    b * matrix.entry(j, currStage);
-                matrix.entry(j, currStage) = tmp;
-            }
+            matrix.combCols(currStage, i, u, v, -b, a, currStage);
         }
 
         // Get zeros in the current column.
@@ -116,36 +108,28 @@ void smithNormalForm(MatrixInt& matrix) {
             a.divByExact(d);
             b.divByExact(d);
             // Do a modification to rows currStage and i.
-            for (j=currStage; j<nonEmptyCols; j++) {
-                tmp = u * matrix.entry(currStage, j) +
-                    v * matrix.entry(i, j);
-                matrix.entry(i, j) = a * matrix.entry(i, j) -
-                    b * matrix.entry(currStage, j);
-                matrix.entry(currStage, j) = tmp;
-            }
+            matrix.combRows(currStage, i, u, v, -b, a, currStage);
         }
         if (flag) {
             // The clean row was mucked up.
             continue;
         }
 
-        // Check that entry (currStage, currStage) divides everything
-        // else.
+        // Check that entry (currStage, currStage) divides everything else.
+        Integer& diag = matrix.entry(currStage, currStage);
         for (i=currStage+1; i<nonEmptyRows; i++)
             for (j=currStage+1; j<nonEmptyCols; j++)
-                if ((matrix.entry(i, j) % matrix.entry(currStage, currStage))
-                        != 0) {
+                if ((matrix.entry(i, j) % diag) != 0) {
                     // Add row i to the current stage row and start this
                     // stage over.
-                    for (k=currStage+1; k<nonEmptyCols; k++)
-                        matrix.entry(currStage, k) += matrix.entry(i, k);
+                    matrix.addRowFrom(i, currStage, currStage + 1);
                     goto loopStart;
                 }
 
         // This stage is complete!
         // Make sure the diagonal entry is positive before leaving it.
-        if (matrix.entry(currStage, currStage) < 0)
-            matrix.entry(currStage, currStage).negate();
+        if (diag < 0)
+            diag.negate();
         ++currStage;
     }
 }
@@ -182,7 +166,7 @@ void smithNormalForm(MatrixInt& matrix,
             if (currStage != nonEmptyRows-1) {
                 matrix.swapRows(currStage, nonEmptyRows - 1);
                 colSpaceBasis.swapRows(currStage, nonEmptyRows - 1);
-                colSpaceBasisInv.swapColumns(currStage, nonEmptyRows - 1);
+                colSpaceBasisInv.swapCols(currStage, nonEmptyRows - 1);
             }
             --nonEmptyRows;
             continue;
@@ -203,7 +187,7 @@ void smithNormalForm(MatrixInt& matrix,
                     matrix.entry(i, currStage).swap(
                         matrix.entry(i, nonEmptyCols-1));
                 }
-                rowSpaceBasis.swapColumns(currStage, nonEmptyCols - 1);
+                rowSpaceBasis.swapCols(currStage, nonEmptyCols - 1);
                 rowSpaceBasisInv.swapRows(currStage, nonEmptyCols - 1);
             }
             --nonEmptyCols;
@@ -973,7 +957,7 @@ void metricSwitchRows(const unsigned long &currStage, const unsigned long &i,
 {
     rowNorm[i].swap(rowNorm[j]); rowGCD[i].swap(rowGCD[j]);
     if (colBasis) colBasis->swapRows(i, j); 
-    if (colBasisInv) colBasisInv->swapColumns(i, j);
+    if (colBasisInv) colBasisInv->swapCols(i, j);
     for (unsigned long k=currStage; k<matrix.columns(); k++)
         matrix.entry(i, k).swap(matrix.entry(j,k));
 }
@@ -985,7 +969,7 @@ void metricSwitchCols(const unsigned long &currStage, const unsigned long &i,
         std::vector<Integer> &colNorm)
 {
     colNorm[i].swap(colNorm[j]); 
-    if (rowBasis) rowBasis->swapColumns(i, j); 
+    if (rowBasis) rowBasis->swapCols(i, j); 
     if (rowBasisInv) rowBasisInv->swapRows(i, j);
     for (unsigned long k=currStage; k<matrix.rows(); k++)
         matrix.entry(k, i).swap(matrix.entry(k, j));
