@@ -74,7 +74,8 @@ void addMatrixBool(pybind11::module_& m) {
         })
         .def("transpose", &Matrix<bool>::transpose)
         .def("swapRows", &Matrix<bool>::swapRows)
-        .def("swapColumns", &Matrix<bool>::swapColumns)
+        .def("swapCols", &Matrix<bool>::swapCols)
+        .def("swapColumns", &Matrix<bool>::swapCols) // deprecated
     ;
     regina::python::add_output(c);
     regina::python::add_eq_operators(c);

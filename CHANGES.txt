@@ -278,6 +278,8 @@ Version 6.1  [ TODO ]
             - New default constructor that leaves the matrix in an
               uninitialised state.
             - Added member and global swap() functions.
+            - Renamed swapColumns() to swapCols().  The old name is kept
+              as a deprecated alias.
             - Routine swapRows() is now constant time.
             - The type Matrix<bool> is now wrapped in Python under the name
               MatrixBool.

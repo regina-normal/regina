@@ -1142,7 +1142,7 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
                 *retval = tempHom * (*retval);
         } // j0==j1 is the column such that entry (i,j1) is +-1.
         nielsenTransposition(i, j1);
-        abMat.swapColumns(i, j1);
+        abMat.swapCols(i, j1);
         // NOTE: the matrix will have the form:
         //       [ * * * ]
         //       [ 0 D 0 ]  At this point, with D a diagonal +-1 matrix.
@@ -1198,7 +1198,7 @@ std::optional<HomGroupPresentation> GroupPresentation::homologicalAlignment() {
         } // j0==j1 is the column such that entry (i,j1) is +-1.
         if (i!=j1) {
             nielsenTransposition(i, j1);
-            abMat.swapColumns(i, j1);
+            abMat.swapCols(i, j1);
         }
     }
     // now we're at [ P 0 0 ]

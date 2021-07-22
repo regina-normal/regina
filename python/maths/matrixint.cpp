@@ -85,7 +85,8 @@ void addMatrixInt(pybind11::module_& m) {
             &MatrixInt::isZero<>)
         .def("swap", &MatrixInt::swap)
         .def("swapRows", &MatrixInt::swapRows)
-        .def("swapColumns", &MatrixInt::swapColumns)
+        .def("swapCols", &MatrixInt::swapCols)
+        .def("swapColumns", &MatrixInt::swapCols) // deprecated
         .def_static("identity",
             (MatrixInt (*)(unsigned long))
             &MatrixInt::identity<>)

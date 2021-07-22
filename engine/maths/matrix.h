@@ -605,6 +605,21 @@ class Matrix : public Output<Matrix<T>> {
                     swap(data_[i][first], data_[i][second]);
             }
         }
+        /**
+         * Deprecated routine that swaps the elements of the two given columns
+         * in the matrix.
+         *
+         * \deprecated This routine has been renamed to swapCols().
+         *
+         * \pre The two given columns are between 0 and columns()-1 inclusive.
+         *
+         * @param first the first column to swap.
+         * @param second the second column to swap.
+         */
+        [[deprecated]] void swapColumns(unsigned long first,
+                unsigned long second) {
+            swapCols(first, second);
+        }
 
         /**
          * Writes a short text representation of this object to the
@@ -1232,7 +1247,7 @@ class Matrix : public Output<Matrix<T>> {
 
                 if (i > currCol) {
                     // Swap columns so this first non-zero entry is currCol.
-                    swapColumns(currCol, i);
+                    swapCols(currCol, i);
                 }
 
                 // Now our first non-zero entry is in currCol.

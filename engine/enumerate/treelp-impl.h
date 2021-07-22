@@ -210,7 +210,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool) {
         if (tmp[i] == i)
             continue;
 
-        eqns_.swapColumns(i, tmp[i]);
+        eqns_.swapCols(i, tmp[i]);
 
         // Adjust links to the old column i, which is now column tmp[i].
         for (j = i + 1; j < eqns_.columns(); ++j)
@@ -417,7 +417,7 @@ void LPInitialTableaux<LPConstraint>::reorder(bool enumeration) {
         if (tmp[i] == i)
             continue;
 
-        eqns_.swapColumns(i, tmp[i]);
+        eqns_.swapCols(i, tmp[i]);
 
         // Adjust links to the old column i, which is now column tmp[i].
         for (j = i + 1; j < eqns_.columns(); ++j)
