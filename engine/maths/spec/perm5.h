@@ -1144,7 +1144,7 @@ class Perm<5> {
          * Restricts a <i>k</i>-element permutation to an 5-element
          * permutation, where \a k &gt; 5.
          *
-         * The resulting permutation will map 0,...,3 to their
+         * The resulting permutation will map 0,...,4 to their
          * respective images under \a p, and will ignore the "unused" images
          * \a p[5],...,\a p[<i>k</i>-1].
          *
