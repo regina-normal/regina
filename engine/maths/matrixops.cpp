@@ -313,7 +313,6 @@ void smithNormalForm(MatrixInt& matrix,
         }
         currStage++;
     }
-
 }
 
 unsigned rowBasis(MatrixInt& matrix) {
