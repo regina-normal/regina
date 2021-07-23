@@ -211,6 +211,13 @@ void addFaceNumbering(CppUnit::TextUi::TestRunner& runner) {
     runner.addTest(FaceNumberingTest<5, 3>::suite());
     runner.addTest(FaceNumberingTest<5, 4>::suite());
 
+    runner.addTest(FaceNumberingTest<6, 0>::suite());
+    runner.addTest(FaceNumberingTest<6, 1>::suite());
+    runner.addTest(FaceNumberingTest<6, 2>::suite());
+    runner.addTest(FaceNumberingTest<6, 3>::suite());
+    runner.addTest(FaceNumberingTest<6, 4>::suite());
+    runner.addTest(FaceNumberingTest<6, 5>::suite());
+
     runner.addTest(FaceNumberingTest<7, 0>::suite());
     runner.addTest(FaceNumberingTest<7, 1>::suite());
     runner.addTest(FaceNumberingTest<7, 2>::suite());

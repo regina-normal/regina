@@ -66,3 +66,11 @@ testFaceClass(Face6_3)
 testFaceClass(Face6_4)
 testFaceClass(Face6_5)
 
+testFaceClass(Face7_0)
+testFaceClass(Face7_1)
+testFaceClass(Face7_2)
+testFaceClass(Face7_3)
+testFaceClass(Face7_4)
+testFaceClass(Face7_5)
+testFaceClass(Face7_6)
+

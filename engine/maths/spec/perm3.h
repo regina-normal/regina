@@ -75,7 +75,8 @@ namespace regina {
  * Thus the internal code may be a useful means for passing permutation
  * objects to and from the engine.  For Perm<3>, the internal code is an
  * integer between 0 and 5 inclusive that gives the index of the
- * permutation in the array Perm<3>::S3.
+ * permutation in the array Perm<3>::S3.  This is consistent with the
+ * second-generation codes used in classes Perm<4>, Perm<5> and Perm<6>.
  *
  * To use this class, simply include the main permutation header maths/perm.h.
  *

@@ -136,12 +136,14 @@ enum PermCodeType {
  *   More precisely, the internal code is an unsigned integer of type \a Code,
  *   whose lowest \a imageBits bits represent the image of 0, whose next
  *   lowest \a imageBits bits represent the image of 1, and so on.
+ *   This scheme is consistent with the old first-generation codes for
+ *   \a n = 4,5,6, which are still supported but no longer used internally.
  *
  * - For \a n &le; 6, the code is an index into a hard-coded list of
- *   all possible permutations (i.e., an index into the symmetric group
- *   <i>S<sub>n</sub></i>).  For details, see the documentation for
- *   the specialisations Perm<2>, Perm<3>, Perm<4>, Perm<5> and Perm<6>
- *   respectively.
+ *   all possible permutations; more precisely, an index into the symmetric
+ *   group Perm<n>::Sn.  The ordering of Perm<n>::Sn is "almost lexicographic",
+ *   in that we swap some pairs of indices (2<i>k</i>, 2<i>k</i>+1) to ensure
+ *   that the even permutations are precisely those with even indices.
  *
  * For \a n = 2,...,5 (which appear throughout 2-, 3- and 4-manifold
  * triangulations), this template is specialised: the code is highly optimised
